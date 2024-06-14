@@ -60,7 +60,7 @@ public abstract class AbstractToggleUseSoftWrapsAction extends ToggleAction impl
       Editor editor = getEditor(e);
       if (editor != null) {
         EditorSettings settings = editor.getSettings();
-        if (settings instanceof SettingsImpl && ((SettingsImpl)settings).getSoftWrapAppliancePlace() != myAppliancePlace) {
+        if (settings instanceof SettingsImpl settingsImpl && settingsImpl.getSoftWrapAppliancePlace() != myAppliancePlace) {
           e.getPresentation().setEnabledAndVisible(false);
           return;
         }

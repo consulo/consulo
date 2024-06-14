@@ -17,26 +17,25 @@
 package consulo.ide.impl.idea.moduleDependencies;
 
 import consulo.application.AllIcons;
-import consulo.application.CommonBundle;
+import consulo.application.HelpManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
+import consulo.application.util.graph.GraphAlgorithms;
 import consulo.component.util.graph.DFSTBuilder;
 import consulo.component.util.graph.Graph;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.containers.Convertor;
-import consulo.application.util.graph.GraphAlgorithms;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.language.editor.scope.AnalysisScopeBundle;
+import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
 import consulo.language.pom.NavigatableWithText;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
+import consulo.navigation.Navigatable;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ui.view.internal.ProjectSettingsService;
 import consulo.ui.ex.SimpleTextAttributes;
@@ -52,14 +51,13 @@ import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.content.Content;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
@@ -118,7 +116,7 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
       return;
     }
     myModulesGraph = buildGraph();
-    DFSTBuilder<Module> builder = new DFSTBuilder<Module>(myModulesGraph);
+    DFSTBuilder<Module> builder = new DFSTBuilder<>(myModulesGraph);
     if (builder.isAcyclic()){
       mySplitter.setProportion(1.f);
     } else {
@@ -137,8 +135,11 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
   private JComponent createNorthPanel(){
     DefaultActionGroup group = new DefaultActionGroup();
 
-    group.add(new AnAction(CommonBundle.message("action.close"), AnalysisScopeBundle.message("action.close.modules.dependencies.description"),
-                           AllIcons.Actions.Cancel){
+    group.add(new AnAction(
+      CommonLocalize.actionClose(),
+      AnalysisScopeLocalize.actionCloseModulesDependenciesDescription(),
+      AllIcons.Actions.Cancel
+    ){
       @Override
       public void actionPerformed(AnActionEvent e) {
         DependenciesAnalyzeManager.getInstance(myProject).closeContent(myContent);
@@ -147,8 +148,11 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
 
     appendDependenciesAction(group);
 
-    group.add(new ToggleAction(AnalysisScopeBundle.message("action.module.dependencies.direction"), "", isForwardDirection() ? AllIcons.Actions.SortAsc
-                                                                                                                             : AllIcons.Actions.SortDesc){
+    group.add(new ToggleAction(
+      AnalysisScopeLocalize.actionModuleDependenciesDirection(),
+      LocalizeValue.empty(),
+      isForwardDirection() ? AllIcons.Actions.SortAsc : AllIcons.Actions.SortDesc
+    ){
       @Override
       public boolean isSelected(AnActionEvent e) {
         return isForwardDirection();
@@ -183,9 +187,11 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
 
   private static void appendDependenciesAction(final DefaultActionGroup group) {
     final AnAction analyzeDepsAction = ActionManager.getInstance().getAction(IdeActions.ACTION_ANALYZE_DEPENDENCIES);
-    group.add(new AnAction(analyzeDepsAction.getTemplatePresentation().getText(),
-                           analyzeDepsAction.getTemplatePresentation().getDescription(),
-                           AllIcons.Toolwindows.ToolWindowInspection){
+    group.add(new AnAction(
+      analyzeDepsAction.getTemplatePresentation().getTextValue(),
+      analyzeDepsAction.getTemplatePresentation().getDescriptionValue(),
+      AllIcons.Toolwindows.ToolWindowInspection
+    ) {
 
       @Override
       public void actionPerformed(AnActionEvent e) {
@@ -207,7 +213,8 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
     int index = 1;
     for (List<Module> modules : cycles) {
       final DefaultMutableTreeNode cycle = new DefaultMutableTreeNode(
-        AnalysisScopeBundle.message("module.dependencies.cycle.node.text", Integer.toString(index++).toUpperCase()));
+        AnalysisScopeLocalize.moduleDependenciesCycleNodeText(Integer.toString(index++).toUpperCase()).get()
+      );
       root.add(cycle);
       cycle.add(new DefaultMutableTreeNode(new MyUserObject(false, module)));
       for (Module moduleInCycle : modules) {
@@ -223,15 +230,14 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
     root.removeAllChildren();
     myModulesGraph = buildGraph();
     setSplitterProportion();
-    ProgressManager.getInstance().runProcessWithProgressSynchronously(new Runnable() {
-      @Override
-      public void run() {
+    ProgressManager.getInstance().runProcessWithProgressSynchronously(
+      () -> {
         final ProgressIndicator progressIndicator = ProgressManager.getInstance().getProgressIndicator();
-        final Map<Module, Boolean> inCycle = new HashMap<Module, Boolean>();
+        final Map<Module, Boolean> inCycle = new HashMap<>();
         for (Module module : myModules) {
           if (progressIndicator != null) {
             if (progressIndicator.isCanceled()) return;
-            progressIndicator.setText(AnalysisScopeBundle.message("update.module.tree.progress.text", module.getName()));
+            progressIndicator.setTextValue(AnalysisScopeLocalize.updateModuleTreeProgressText(module.getName()));
           }
           if (!module.isDisposed()) {
             Boolean isInCycle = inCycle.get(module);
@@ -247,31 +253,31 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
             }
           }
         }
-      }
-    }, AnalysisScopeBundle.message("update.module.tree.progress.title"), true, myProject);
+      },
+      AnalysisScopeLocalize.updateModuleTreeProgressTitle().get(),
+      true,
+      myProject
+    );
     sortSubTree(root);
     myLeftTreeModel.reload();
   }
 
   private static void sortSubTree(final DefaultMutableTreeNode root) {
-    TreeUtil.sort(root, new Comparator() {
-      @Override
-      public int compare(final Object o1, final Object o2) {
-        DefaultMutableTreeNode node1 = (DefaultMutableTreeNode)o1;
-        DefaultMutableTreeNode node2 = (DefaultMutableTreeNode)o2;
-        if (!(node1.getUserObject() instanceof MyUserObject)){
-          return 1;
-        }
-        else if (!(node2.getUserObject() instanceof MyUserObject)){
-          return -1;
-        }
-        return (node1.getUserObject().toString().compareToIgnoreCase(node2.getUserObject().toString()));
+    TreeUtil.sort(root, (o1, o2) -> {
+      DefaultMutableTreeNode node1 = (DefaultMutableTreeNode)o1;
+      DefaultMutableTreeNode node2 = (DefaultMutableTreeNode)o2;
+      if (!(node1.getUserObject() instanceof MyUserObject)){
+        return 1;
       }
+      else if (!(node2.getUserObject() instanceof MyUserObject)){
+        return -1;
+      }
+      return (node1.getUserObject().toString().compareToIgnoreCase(node2.getUserObject().toString()));
     });
   }
 
   private void selectCycleUpward(final DefaultMutableTreeNode selection){
-    ArrayList<DefaultMutableTreeNode> selectionNodes = new ArrayList<DefaultMutableTreeNode>();
+    ArrayList<DefaultMutableTreeNode> selectionNodes = new ArrayList<>();
     selectionNodes.add(selection);
     DefaultMutableTreeNode current = (DefaultMutableTreeNode)selection.getParent();
     boolean flag = false;
@@ -331,35 +337,29 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
       }
     });
 
-    myLeftTree.addTreeSelectionListener(new TreeSelectionListener() {
-      @Override
-      public void valueChanged(TreeSelectionEvent e) {
-        final TreePath selectionPath = myLeftTree.getSelectionPath();
-        if (selectionPath != null) {
+    myLeftTree.addTreeSelectionListener(e -> {
+      final TreePath selectionPath = myLeftTree.getSelectionPath();
+      if (selectionPath != null) {
 
-          myPathField.setText(StringUtil.join(selectionPath.getPath(), o -> {
-            final Object userObject = ((DefaultMutableTreeNode)o).getUserObject();
-            if (userObject instanceof MyUserObject) {
-              return ((MyUserObject)userObject).getModule().getName();
-            }
-            return "";
-          }, ":"));
-
-          final DefaultMutableTreeNode selection = (DefaultMutableTreeNode)selectionPath.getLastPathComponent();
-          if (selection != null){
-            TreeUtil.traverseDepth(selection, new TreeUtil.Traverse() {
-              @Override
-              public boolean accept(Object node) {
-                DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode)node;
-                if (treeNode.getUserObject() instanceof MyUserObject){
-                  ((MyUserObject)treeNode.getUserObject()).setInCycle(false);
-                }
-                return true;
-              }
-            });
-            selectCycleUpward(selection);
-            buildRightTree(((MyUserObject)selection.getUserObject()).getModule());
+        myPathField.setText(StringUtil.join(selectionPath.getPath(), o -> {
+          final Object userObject = ((DefaultMutableTreeNode)o).getUserObject();
+          if (userObject instanceof MyUserObject) {
+            return ((MyUserObject)userObject).getModule().getName();
           }
+          return "";
+        }, ":"));
+
+        final DefaultMutableTreeNode selection = (DefaultMutableTreeNode)selectionPath.getLastPathComponent();
+        if (selection != null){
+          TreeUtil.traverseDepth(selection, node -> {
+            DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode)node;
+            if (treeNode.getUserObject() instanceof MyUserObject){
+              ((MyUserObject)treeNode.getUserObject()).setInCycle(false);
+            }
+            return true;
+          });
+          selectCycleUpward(selection);
+          buildRightTree(((MyUserObject)selection.getUserObject()).getModule());
         }
       }
     });
@@ -412,12 +412,7 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
     UIUtil.setLineStyleAngled(tree);
 
     TreeUtil.installActions(tree);
-    new TreeSpeedSearch(tree, new Convertor<TreePath, String>() {
-      @Override
-      public String convert(TreePath o) {
-        return o.getLastPathComponent().toString();
-      }
-    }, true);
+    new TreeSpeedSearch(tree, o -> o.getLastPathComponent().toString(), true);
     PopupHandler.installUnknownPopupHandler(tree, createTreePopupActions(isRightTree, tree), ActionManager.getInstance());
   }
 
@@ -512,7 +507,7 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
 
     @Override
     public Object getData(@Nonnull Key dataId) {
-      if (CommonDataKeys.PROJECT == dataId){
+      if (Project.KEY == dataId){
         return myProject;
       }
       if (LangDataKeys.MODULE_CONTEXT == dataId){
@@ -524,10 +519,10 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
           }
         }
       }
-      if (PlatformDataKeys.HELP_ID == dataId) {
+      if (HelpManager.HELP_ID == dataId) {
         return ourHelpID;
       }
-      if (PlatformDataKeys.NAVIGATABLE == dataId) {
+      if (Navigatable.KEY == dataId) {
         final TreePath selectionPath = myTree.getLeadSelectionPath();
         if (selectionPath != null && selectionPath.getLastPathComponent() instanceof DefaultMutableTreeNode){
           DefaultMutableTreeNode node = (DefaultMutableTreeNode)selectionPath.getLastPathComponent();

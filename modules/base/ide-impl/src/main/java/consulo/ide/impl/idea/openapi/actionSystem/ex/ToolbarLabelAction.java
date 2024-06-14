@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.openapi.actionSystem.ex;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.annotation.RequiredUIAccess;

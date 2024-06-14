@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.diff.impl.string;
 
 import consulo.ide.impl.idea.openapi.diff.LineTokenizerBase;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -389,7 +389,7 @@ public class DiffString implements CharSequence {
 
     @Nonnull
     public DiffString[] execute() {
-      ArrayList<DiffString> lines = new ArrayList<DiffString>();
+      ArrayList<DiffString> lines = new ArrayList<>();
       doExecute(lines);
       return ContainerUtil.toArray(lines, new DiffString[lines.size()]);
     }

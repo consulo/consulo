@@ -15,26 +15,24 @@
  */
 package consulo.ide.impl.idea.lang.customFolding;
 
-import consulo.ide.IdeBundle;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.ide.impl.idea.openapi.actionSystem.PopupAction;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorPopupHelper;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
+import consulo.ide.impl.idea.openapi.actionSystem.PopupAction;
+import consulo.language.Language;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.folding.CustomFoldingBuilder;
 import consulo.language.editor.folding.FoldingBuilder;
 import consulo.language.editor.folding.FoldingDescriptor;
-import consulo.language.editor.internal.CompositeFoldingBuilder;
 import consulo.language.editor.folding.LanguageFolding;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.language.Language;
+import consulo.language.editor.internal.CompositeFoldingBuilder;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.NotificationType;
@@ -43,10 +41,11 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.popup.Balloon;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.undoRedo.CommandProcessor;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -58,14 +57,14 @@ public class GotoCustomRegionAction extends AnAction implements DumbAware, Popup
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull final AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
-    final Editor editor = e.getData(CommonDataKeys.EDITOR);
+    final Project project = e.getData(Project.KEY);
+    final Editor editor = e.getData(Editor.KEY);
     if (Boolean.TRUE.equals(e.getData(PlatformDataKeys.IS_MODAL_CONTEXT))) {
       return;
     }
     if (project != null && editor != null) {
       if (DumbService.getInstance(project).isDumb()) {
-        DumbService.getInstance(project).showDumbModeNotification(IdeBundle.message("goto.custom.region.message.dumb.mode"));
+        DumbService.getInstance(project).showDumbModeNotification(IdeLocalize.gotoCustomRegionMessageDumbMode().get());
         return;
       }
       CommandProcessor processor = CommandProcessor.getInstance();
@@ -78,7 +77,7 @@ public class GotoCustomRegionAction extends AnAction implements DumbAware, Popup
         else {
           notifyCustomRegionsUnavailable(editor, project);
         }
-      }, IdeBundle.message("goto.custom.region.command"), null);
+      }, IdeLocalize.gotoCustomRegionCommand().get(), null);
     }
   }
 
@@ -86,9 +85,9 @@ public class GotoCustomRegionAction extends AnAction implements DumbAware, Popup
   @Override
   public void update(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
-    presentation.setText(IdeBundle.message("goto.custom.region.menu.item"));
-    final Editor editor = e.getData(CommonDataKeys.EDITOR);
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    presentation.setTextValue(IdeLocalize.gotoCustomRegionMenuItem());
+    final Editor editor = e.getData(Editor.KEY);
+    final Project project = e.getData(Project.KEY);
     boolean isAvailable = editor != null && project != null;
     presentation.setEnabled(isAvailable);
     presentation.setVisible(isAvailable);
@@ -131,9 +130,15 @@ public class GotoCustomRegionAction extends AnAction implements DumbAware, Popup
 
   private static void notifyCustomRegionsUnavailable(@Nonnull Editor editor, @Nonnull Project project) {
     final JBPopupFactory popupFactory = JBPopupFactory.getInstance();
-    Balloon balloon =
-            popupFactory.createHtmlTextBalloonBuilder(IdeBundle.message("goto.custom.region.message.unavailable"), NotificationType.INFO, null).setFadeoutTime(2000)
-                    .setHideOnClickOutside(true).setHideOnKeyOutside(true).createBalloon();
+    Balloon balloon = popupFactory.createHtmlTextBalloonBuilder(
+        IdeLocalize.gotoCustomRegionMessageUnavailable().get(),
+        NotificationType.INFO,
+        null
+      )
+      .setFadeoutTime(2000)
+      .setHideOnClickOutside(true)
+      .setHideOnKeyOutside(true)
+      .createBalloon();
     Disposer.register(project, balloon);
     balloon.show(EditorPopupHelper.getInstance().guessBestPopupLocation(editor), Balloon.Position.below);
   }

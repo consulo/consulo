@@ -16,17 +16,17 @@
 package consulo.ide.impl.idea.openapi.diff.impl.dir.actions;
 
 import consulo.application.AllIcons;
+import consulo.ide.impl.idea.openapi.diff.impl.dir.DirDiffTableModel;
+import consulo.platform.Platform;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.action.ShortcutSet;
-import consulo.ide.impl.idea.openapi.diff.impl.dir.DirDiffTableModel;
-import consulo.application.util.SystemInfo;
 
 /**
  * @author Konstantin Bulenkov
  */
 public class RefreshDirDiffAction extends DirDiffAction {
-  public static final CustomShortcutSet REFRESH_SHORTCUT = CustomShortcutSet.fromString(SystemInfo.isMac ? "meta R" : "F5");
+  public static final CustomShortcutSet REFRESH_SHORTCUT = CustomShortcutSet.fromString(Platform.current().os().isMac() ? "meta R" : "F5");
 
   public RefreshDirDiffAction(DirDiffTableModel model) {
     super(model);

@@ -27,10 +27,10 @@ import consulo.component.persist.scheme.SchemeManager;
 import consulo.component.persist.scheme.SchemeManagerFactory;
 import consulo.container.plugin.PluginManager;
 import consulo.ide.impl.idea.ide.ui.LafManager;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.logging.Logger;
 import consulo.ui.ex.awt.ComponentTreeEventDispatcher;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.style.StyleManager;
 import consulo.util.io.URLUtil;
 import consulo.util.jdom.JDOMUtil;
 import consulo.util.xml.serializer.WriteExternalException;
@@ -153,7 +153,7 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
   }
 
   public TextAttributes getDefaultAttributes(TextAttributesKey key) {
-    final boolean dark = UIUtil.isUnderDarkTheme() && getScheme("Darcula") != null;
+    final boolean dark = StyleManager.get().getCurrentStyle().isDark() && getScheme(EditorColorsScheme.DARCULA_SCHEME_NAME) != null;
     // It is reasonable to fetch attributes from Default color scheme. Otherwise if we launch IDE and then
     // try switch from custom colors scheme (e.g. with dark background) to default one. Editor will show
     // incorrect highlighting with "traces" of color scheme which was active during IDE startup.
@@ -166,8 +166,10 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
       Class<? extends AdditionalTextAttributesProvider> providerClass = provider.getClass();
       if (editorColorsScheme == null) {
         if (!isUnitTestOrHeadlessMode()) {
-          LOG.warn("Cannot find scheme: " + provider.getColorSchemeName() + " from plugin: " + PluginManager.getPlugin(providerClass)
-                                                                                                            .getPluginId());
+          LOG.warn(
+            "Cannot find scheme: " + provider.getColorSchemeName() +
+              " from plugin: " + PluginManager.getPlugin(providerClass).getPluginId()
+          );
         }
         return;
       }
@@ -225,15 +227,12 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
   public EditorColorsScheme[] getAllSchemes() {
     List<EditorColorsScheme> schemes = mySchemeManager.getAllSchemes();
     EditorColorsScheme[] result = schemes.toArray(new EditorColorsScheme[schemes.size()]);
-    Arrays.sort(result, new Comparator<EditorColorsScheme>() {
-      @Override
-      public int compare(@Nonnull EditorColorsScheme s1, @Nonnull EditorColorsScheme s2) {
-        if (isDefaultScheme(s1) && !isDefaultScheme(s2)) return -1;
-        if (!isDefaultScheme(s1) && isDefaultScheme(s2)) return 1;
-        if (s1.getName().equals(DEFAULT_NAME)) return -1;
-        if (s2.getName().equals(DEFAULT_NAME)) return 1;
-        return s1.getName().compareToIgnoreCase(s2.getName());
-      }
+    Arrays.sort(result, (s1, s2) -> {
+      if (isDefaultScheme(s1) && !isDefaultScheme(s2)) return -1;
+      if (!isDefaultScheme(s1) && isDefaultScheme(s2)) return 1;
+      if (s1.getName().equals(DEFAULT_NAME)) return -1;
+      if (s2.getName().equals(DEFAULT_NAME)) return 1;
+      return s1.getName().compareToIgnoreCase(s2.getName());
     });
     return result;
   }

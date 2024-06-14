@@ -16,12 +16,12 @@
 package consulo.ide.impl.idea.openapi.application.ex;
 
 import consulo.application.Application;
-import consulo.ui.ex.awt.CopyPasteManager;
-import consulo.application.util.SystemInfo;
 import consulo.logging.Logger;
-
+import consulo.platform.Platform;
+import consulo.ui.ex.awt.CopyPasteManager;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.datatransfer.DataFlavor;
 import java.util.function.Supplier;
 
@@ -33,7 +33,7 @@ public class ClipboardUtil {
       return supplier.get();
     }
     catch (IllegalStateException e) {
-      if (SystemInfo.isWindows) {
+      if (Platform.current().os().isWindows()) {
         LOG.debug("Clipboard is busy");
       }
       else {

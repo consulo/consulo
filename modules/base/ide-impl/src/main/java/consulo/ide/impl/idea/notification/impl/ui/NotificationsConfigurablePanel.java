@@ -15,14 +15,13 @@
  */
 package consulo.ide.impl.idea.notification.impl.ui;
 
-import consulo.application.util.SystemInfo;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.notification.impl.NotificationSettings;
 import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
-import consulo.ui.ex.awt.table.ComboBoxTableRenderer;
-import consulo.ui.ex.awt.table.StripeTable;
 import consulo.ide.impl.project.ui.impl.NotificationGroupRegistrator;
 import consulo.localize.LocalizeValue;
+import consulo.platform.Platform;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.ui.ex.SystemNotifications;
@@ -32,14 +31,16 @@ import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.ui.ex.awt.speedSearch.TableSpeedSearch;
+import consulo.ui.ex.awt.table.ComboBoxTableRenderer;
+import consulo.ui.ex.awt.table.StripeTable;
 import consulo.ui.ex.awt.tree.IndexTreePathState;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.tree.table.TreeTable;
 import consulo.ui.ex.awt.tree.table.TreeTableModel;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import javax.swing.table.TableColumn;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -69,7 +70,7 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
     setLayout(new BorderLayout(5, 5));
     myTable = new NotificationsTreeTable();
 
-    myDisplayBalloons = new JCheckBox("Display balloon notifications");
+    myDisplayBalloons = new JCheckBox(IdeLocalize.displayBalloonNotifications().get());
     myDisplayBalloons.setMnemonic('b');
     myDisplayBalloons.addActionListener(e -> myTable.repaint());
 
@@ -110,7 +111,8 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
     }
 
     NotificationsConfigurationImpl configuration = NotificationsConfigurationImpl.getInstanceImpl();
-    return configuration.SHOW_BALLOONS != myDisplayBalloons.isSelected() || configuration.SYSTEM_NOTIFICATIONS != mySystemNotifications.isSelected();
+    return configuration.SHOW_BALLOONS != myDisplayBalloons.isSelected()
+      || configuration.SYSTEM_NOTIFICATIONS != mySystemNotifications.isSelected();
   }
 
   public void apply() {
@@ -240,15 +242,9 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
       displayTypeColumn.setCellEditor(new ComboBoxTableRenderer<>(NotificationDisplayType.values()) {
         @Override
         public boolean isCellEditable(EventObject event) {
-          if (!myDisplayBalloons.isSelected()) {
-            return false;
-          }
-
-          if (event instanceof MouseEvent) {
-            return ((MouseEvent)event).getClickCount() >= 1;
-          }
-
-          return false;
+          return myDisplayBalloons.isSelected()
+            && event instanceof MouseEvent mouseEvent
+            && mouseEvent.getClickCount() >= 1;
         }
 
         @Override
@@ -270,7 +266,7 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
       logColumn.setMaxWidth(logColumn.getPreferredWidth());
       logColumn.setCellRenderer(new BooleanTableCellRenderer());
 
-      if (SystemInfo.isMac) {
+      if (Platform.current().os().isMac()) {
         final TableColumn readAloudColumn = getColumnModel().getColumn(READ_ALOUD_COLUMN);
         readAloudColumn.setMaxWidth(readAloudColumn.getPreferredWidth());
         readAloudColumn.setCellRenderer(new BooleanTableCellRenderer());
@@ -323,7 +319,15 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
     }
 
     @Override
-    public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+    public Component getTreeCellRendererComponent(
+      JTree tree,
+      Object value,
+      boolean selected,
+      boolean expanded,
+      boolean leaf,
+      int row,
+      boolean hasFocus
+    ) {
       setForeground(selected ? myTable.getSelectionForeground() : myTable.getForeground());
       setText(value.toString());
       return this;
@@ -341,7 +345,8 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
 
       for (NotificationSettings setting : NotificationsConfigurationImpl.getInstanceImpl().getAllSettings()) {
         NotificationGroup group = NotificationGroupRegistrator.last().get(setting.getGroupId());
-        SettingsWrapper wrapper = new SettingsWrapper(setting, group == null ? LocalizeValue.of(setting.getGroupId()) : group.getDisplayName());
+        SettingsWrapper wrapper =
+          new SettingsWrapper(setting, group == null ? LocalizeValue.of(setting.getGroupId()) : group.getDisplayName());
         mySettings.add(wrapper);
 
         DefaultMutableTreeNode treeNode = new DefaultMutableTreeNode(wrapper, false);
@@ -366,7 +371,7 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
 
     @Override
     public int getColumnCount() {
-      return SystemInfo.isMac ? 4 : 3;
+      return Platform.current().os().isMac() ? 4 : 3;
     }
 
     @Override
@@ -448,8 +453,8 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
 
     public TreePath removeRow(int row) {
       Pair<DefaultMutableTreeNode, Object> rowValue = getRowValue(row);
-      if (rowValue.second instanceof SettingsWrapper) {
-        ((SettingsWrapper)rowValue.second).remove();
+      if (rowValue.second instanceof SettingsWrapper settingsWrapper) {
+        settingsWrapper.remove();
       }
       else {
         removeChildSettings(rowValue.first);
@@ -462,8 +467,8 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
       for (int i = 0; i < count; i++) {
         DefaultMutableTreeNode child = (DefaultMutableTreeNode)node.getChildAt(i);
         Object object = child.getUserObject();
-        if (object instanceof SettingsWrapper) {
-          ((SettingsWrapper)object).remove();
+        if (object instanceof SettingsWrapper settingsWrapper) {
+          settingsWrapper.remove();
         }
         else {
           removeChildSettings(child);

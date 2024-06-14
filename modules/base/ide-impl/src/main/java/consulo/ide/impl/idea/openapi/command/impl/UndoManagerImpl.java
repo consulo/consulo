@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.openapi.command.impl;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.CommonBundle;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
@@ -31,29 +30,25 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.FileEditorStateLevel;
 import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.text.TextEditorProvider;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.project.ui.internal.WindowManagerEx;
-import consulo.util.lang.ObjectUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.internal.ExternalChangeAction;
 import consulo.logging.Logger;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.internal.ProjectEx;
-import consulo.ui.ex.action.ActionsBundle;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.undoRedo.*;
 import consulo.undoRedo.event.CommandEvent;
 import consulo.undoRedo.event.CommandListener;
-import consulo.util.lang.EmptyRunnable;
-import consulo.util.lang.Pair;
+import consulo.util.lang.*;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
@@ -175,8 +170,8 @@ public class UndoManagerImpl implements UndoManager, Disposable {
     }
 
     for (UndoProvider undoProvider : myUndoProviders) {
-      if (undoProvider instanceof Disposable) {
-        Disposer.register(this, (Disposable)undoProvider);
+      if (undoProvider instanceof Disposable disposable) {
+        Disposer.register(this, disposable);
       }
     }
   }
@@ -221,12 +216,12 @@ public class UndoManagerImpl implements UndoManager, Disposable {
         Editor editor = null;
         final Application application = ApplicationManager.getApplication();
         if (application.isUnitTestMode() || application.isHeadlessEnvironment()) {
-          editor = DataManager.getInstance().getDataContext().getData(CommonDataKeys.EDITOR);
+          editor = DataManager.getInstance().getDataContext().getData(Editor.KEY);
         }
         else {
           Component component = WindowManagerEx.getInstanceEx().getFocusedComponent(myProject);
           if (component != null) {
-            editor = DataManager.getInstance().getDataContext(component).getData(CommonDataKeys.EDITOR);
+            editor = DataManager.getInstance().getDataContext(component).getData(Editor.KEY);
           }
         }
 
@@ -390,7 +385,7 @@ public class UndoManagerImpl implements UndoManager, Disposable {
       }
     };
 
-    String name = getUndoOrRedoActionNameAndDescription((FileEditor)editor, isUndoInProgress()).second;
+    String name = getUndoOrRedoActionNameAndDescription(editor, isUndoInProgress()).second;
     CommandProcessor.getInstance().executeCommand(myProject, executeUndoOrRedoAction, name, null, myMerger.getUndoConfirmationPolicy());
     if (exception[0] != null) throw exception[0];
   }
@@ -434,7 +429,7 @@ public class UndoManagerImpl implements UndoManager, Disposable {
   }
 
   private static Collection<DocumentReference> getDocRefs(@Nullable Object editor) {
-    if (editor instanceof TextEditor && ((TextEditor)editor).getEditor().isViewer()) {
+    if (editor instanceof TextEditor textEditor && textEditor.getEditor().isViewer()) {
       return null;
     }
     if (editor == null) {
@@ -447,8 +442,8 @@ public class UndoManagerImpl implements UndoManager, Disposable {
   static Set<DocumentReference> getDocumentReferences(@Nonnull FileEditor editor) {
     Set<DocumentReference> result = new HashSet<>();
 
-    if (editor instanceof DocumentReferenceProvider) {
-      result.addAll(((DocumentReferenceProvider)editor).getDocumentReferences());
+    if (editor instanceof DocumentReferenceProvider documentReferenceProvider) {
+      result.addAll(documentReferenceProvider.getDocumentReferences());
       return result;
     }
 
@@ -489,11 +484,15 @@ public class UndoManagerImpl implements UndoManager, Disposable {
     String shortActionName = StringUtil.first(desc, 30, true);
 
     if (desc.isEmpty()) {
-      desc = undo ? ActionsBundle.message("action.undo.description.empty") : ActionsBundle.message("action.redo.description.empty");
+      desc = undo
+        ? ActionLocalize.actionUndoDescriptionEmpty().get()
+        : ActionLocalize.actionRedoDescriptionEmpty().get();
     }
 
-    return Pair.create((undo ? ActionsBundle.message("action.undo.text", shortActionName) : ActionsBundle.message("action.redo.text", shortActionName)).trim(),
-                       (undo ? ActionsBundle.message("action.undo.description", desc) : ActionsBundle.message("action.redo.description", desc)).trim());
+    return Pair.create(
+      (undo ? ActionLocalize.actionUndoText(shortActionName) : ActionLocalize.actionRedoText(shortActionName)).get().trim(),
+      (undo ? ActionLocalize.actionUndoDescription(desc) : ActionLocalize.actionRedoDescription(desc)).get().trim()
+    );
   }
 
   @Nullable
@@ -610,7 +609,8 @@ public class UndoManagerImpl implements UndoManager, Disposable {
   private void flushMergers() {
     assert myProject == null || !myProject.isDisposed();
     // Run dummy command in order to flush all mergers...
-    CommandProcessor.getInstance().executeCommand(myProject, EmptyRunnable.getInstance(), CommonBundle.message("drop.undo.history.command.name"), null);
+    CommandProcessor.getInstance()
+      .executeCommand(myProject, EmptyRunnable.getInstance(), CommonLocalize.dropUndoHistoryCommandName().get(), null);
   }
 
   @TestOnly

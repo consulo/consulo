@@ -24,7 +24,6 @@ import consulo.application.AccessRule;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ApplicationPropertiesComponent;
-import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.application.impl.internal.JobScheduler;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.ui.RemoteDesktopService;
@@ -38,11 +37,14 @@ import consulo.container.plugin.PluginManager;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.diagnostic.VMOptions;
 import consulo.ide.impl.idea.ide.plugins.UninstallPluginAction;
-import consulo.project.ui.internal.NotificationsConfiguration;
 import consulo.ide.impl.idea.openapi.application.PreloadingActivity;
 import consulo.ide.impl.plugins.PluginActionListener;
 import consulo.ide.impl.updateSettings.impl.UpdateHistory;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
+import consulo.platform.base.localize.IdeLocalize;
+import consulo.project.ui.internal.NotificationsConfiguration;
 import consulo.project.ui.notification.*;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -59,6 +61,7 @@ import consulo.util.lang.TimeoutUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.PropertyKey;
 
 import javax.swing.*;
@@ -98,8 +101,11 @@ public class SystemHealthMonitor extends PreloadingActivity {
     startDiskSpaceMonitoring();
   }
 
+  @NonNls
   private void checkObsoletePlugins() {
-    List<PluginDescriptor> plugins = PluginManager.getPlugins().stream().filter(it -> PluginIds.getObsoletePlugins().contains(it.getPluginId())).collect(Collectors.toList());
+    List<PluginDescriptor> plugins = PluginManager.getPlugins().stream()
+      .filter(it -> PluginIds.getObsoletePlugins().contains(it.getPluginId()))
+      .collect(Collectors.toList());
     if (plugins.isEmpty()) {
       return;
     }
@@ -131,7 +137,9 @@ public class SystemHealthMonitor extends PreloadingActivity {
           }
 
           if (!pluginIds.isEmpty()) {
-            Application.get().getMessageBus().syncPublisher(PluginActionListener.class).pluginsUninstalled(pluginIds.toArray(PluginId[]::new));
+            Application.get().getMessageBus()
+              .syncPublisher(PluginActionListener.class)
+              .pluginsUninstalled(pluginIds.toArray(PluginId[]::new));
           }
         }
       });
@@ -141,7 +149,9 @@ public class SystemHealthMonitor extends PreloadingActivity {
   }
 
   private void checkExperimentalPlugins() {
-    List<PluginDescriptor> plugins = PluginManager.getPlugins().stream().filter(PluginDescriptor::isExperimental).collect(Collectors.toList());
+    List<PluginDescriptor> plugins = PluginManager.getPlugins().stream()
+      .filter(PluginDescriptor::isExperimental)
+      .collect(Collectors.toList());
     if (plugins.isEmpty()) {
       return;
     }
@@ -179,7 +189,7 @@ public class SystemHealthMonitor extends PreloadingActivity {
 
   private void checkEARuntime() {
     if (StringUtil.endsWithIgnoreCase(System.getProperty("java.version", ""), "-ea")) {
-      showNotification(new KeyHyperlinkAdapter("unsupported.jvm.ea.message"));
+      showNotification(new KeyHyperlinkAdapter("unsupported.jvm.ea.message"), IdeLocalize.unsupportedJvmEaMessage());
     }
   }
 
@@ -187,19 +197,22 @@ public class SystemHealthMonitor extends PreloadingActivity {
     int minReservedCodeCacheSize = 240;
     int reservedCodeCacheSize = VMOptions.readOption(VMOptions.MemoryKind.CODE_CACHE, true);
     if (reservedCodeCacheSize > 0 && reservedCodeCacheSize < minReservedCodeCacheSize) {
-      showNotification(new KeyHyperlinkAdapter("vmoptions.warn.message"), reservedCodeCacheSize, minReservedCodeCacheSize);
+      showNotification(
+        new KeyHyperlinkAdapter("vmoptions.warn.message"),
+        IdeLocalize.vmoptionsWarnMessage(reservedCodeCacheSize, minReservedCodeCacheSize)
+      );
     }
   }
 
   private void checkSignalBlocking() {
-    if (SystemInfo.isUnix && JnaLoader.isLoaded()) {
+    if (Platform.current().os().isUnix() && JnaLoader.isLoaded()) {
       try {
         LibC lib = Native.load("c", LibC.class);
         Memory buf = new Memory(1024);
         if (lib.sigaction(LibC.SIGINT, null, buf) == 0) {
           long handler = Native.POINTER_SIZE == 8 ? buf.getLong(0) : buf.getInt(0);
           if (handler == LibC.SIG_IGN) {
-            showNotification(new KeyHyperlinkAdapter("ide.sigint.ignored.message"));
+            showNotification(new KeyHyperlinkAdapter("ide.sigint.ignored.message"), IdeLocalize.ideSigintIgnoredMessage());
           }
         }
       }
@@ -211,34 +224,41 @@ public class SystemHealthMonitor extends PreloadingActivity {
 
   private void checkHiDPIMode() {
     // if switched from JRE-HiDPI to IDE-HiDPI
-    boolean switchedHiDPIMode = SystemInfo.isJetBrainsJvm && "true".equalsIgnoreCase(System.getProperty("sun.java2d.uiScale.enabled")) && !UIUtil.isJreHiDPIEnabled();
-    if (SystemInfo.isWindows && ((switchedHiDPIMode && JBUI.isHiDPI(JBUI.sysScale())) || RemoteDesktopService.isRemoteSession())) {
-      showNotification(new KeyHyperlinkAdapter("ide.set.hidpi.mode"));
+    boolean switchedHiDPIMode = SystemInfo.isJetBrainsJvm
+      && "true".equalsIgnoreCase(System.getProperty("sun.java2d.uiScale.enabled"))
+      && !UIUtil.isJreHiDPIEnabled();
+    if (
+      Platform.current().os().isWindows()
+        && ((switchedHiDPIMode && JBUI.isHiDPI(JBUI.sysScale())) || RemoteDesktopService.isRemoteSession())
+    ) {
+      showNotification(new KeyHyperlinkAdapter("ide.set.hidpi.mode"), IdeLocalize.ideSetHidpiMode());
     }
   }
 
-  private void showNotification(KeyHyperlinkAdapter adapter, Object... params) {
-    @PropertyKey(resourceBundle = "consulo.ide.IdeBundle") String key = adapter.key;
+  private void showNotification(KeyHyperlinkAdapter adapter, LocalizeValue message) {
     boolean ignored = adapter.isIgnored();
-    LOG.info("issue detected: " + key + (ignored ? " (ignored)" : ""));
+    LOG.info("issue detected: " + message + (ignored ? " (ignored)" : ""));
     if (ignored) return;
-
-    String message = IdeBundle.message(key, params);
 
     Application app = Application.get();
     app.invokeLater(() -> {
-      Notification notification = GROUP.createNotification("", message, NotificationType.WARNING, new NotificationListener.Adapter() {
-        @Override
-        protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent e) {
-          adapter.hyperlinkActivated(e);
+      Notification notification = GROUP.createNotification(
+        "",
+        message.get(),
+        NotificationType.WARNING,
+        new NotificationListener.Adapter() {
+          @Override
+          protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent e) {
+            adapter.hyperlinkActivated(e);
+          }
         }
-      });
+      );
 
       notification.addAction(new DumbAwareAction("Do not show again") {
         @RequiredUIAccess
         @Override
         public void actionPerformed(@Nonnull AnActionEvent e) {
-          myProperties.setValue("ignore." + key, "true");
+          myProperties.setValue("ignore." + adapter.key, "true");
           notification.expire();
         }
       });
@@ -256,78 +276,86 @@ public class SystemHealthMonitor extends PreloadingActivity {
     final AtomicBoolean reported = new AtomicBoolean();
     final ThreadLocal<Future<Long>> ourFreeSpaceCalculation = new ThreadLocal<>();
 
-    JobScheduler.getScheduler().schedule(new Runnable() {
-      private static final long LOW_DISK_SPACE_THRESHOLD = 50 * 1024 * 1024;
-      private static final long MAX_WRITE_SPEED_IN_BPS = 500 * 1024 * 1024;  // 500 MB/sec is near max SSD sequential write speed
+    JobScheduler.getScheduler().schedule(
+      new Runnable() {
+        private static final long
+          LOW_DISK_SPACE_THRESHOLD = 50 * 1024 * 1024,
+          MAX_WRITE_SPEED_IN_BPS = 500 * 1024 * 1024;  // 500 MB/sec is near max SSD sequential write speed
 
-      @Override
-      public void run() {
-        if (!reported.get()) {
-          Future<Long> future = ourFreeSpaceCalculation.get();
-          if (future == null) {
-            ourFreeSpaceCalculation.set(future = ApplicationManager.getApplication().executeOnPooledThread(() -> {
-              // file.getUsableSpace() can fail and return 0 e.g. after MacOSX restart or awakening from sleep
-              // so several times try to recalculate usable space on receiving 0 to be sure
-              long fileUsableSpace = file.getUsableSpace();
-              while (fileUsableSpace == 0) {
-                TimeoutUtil.sleep(5000);  // hopefully we will not hummer disk too much
-                fileUsableSpace = file.getUsableSpace();
-              }
-
-              return fileUsableSpace;
-            }));
-          }
-          if (!future.isDone() || future.isCancelled()) {
-            restart(1);
-            return;
-          }
-
-          try {
-            final long fileUsableSpace = future.get();
-            final long timeout = Math.min(3600, Math.max(5, (fileUsableSpace - LOW_DISK_SPACE_THRESHOLD) / MAX_WRITE_SPEED_IN_BPS));
-            ourFreeSpaceCalculation.set(null);
-
-            if (fileUsableSpace < LOW_DISK_SPACE_THRESHOLD) {
-              ThrowableComputable<NotificationsConfiguration, RuntimeException> action = () -> NotificationsConfiguration.getNotificationsConfiguration();
-              if (AccessRule.read(action) == null) {
-                ourFreeSpaceCalculation.set(future);
-                restart(1);
-                return;
-              }
-              reported.compareAndSet(false, true);
-
-              //noinspection SSBasedInspection
-              SwingUtilities.invokeLater(() -> {
-                String productName = ApplicationNamesInfo.getInstance().getFullProductName();
-                String message = IdeBundle.message("low.disk.space.message", productName);
-                if (fileUsableSpace < 100 * 1024) {
-                  LOG.warn(message + " (" + fileUsableSpace + ")");
-                  Messages.showErrorDialog(message, "Fatal Configuration Problem");
-                  reported.compareAndSet(true, false);
-                  restart(timeout);
+        @Override
+        public void run() {
+          if (!reported.get()) {
+            Future<Long> future = ourFreeSpaceCalculation.get();
+            if (future == null) {
+              ourFreeSpaceCalculation.set(future = ApplicationManager.getApplication().executeOnPooledThread(() -> {
+                // file.getUsableSpace() can fail and return 0 e.g. after MacOSX restart or awakening from sleep
+                // so several times try to recalculate usable space on receiving 0 to be sure
+                long fileUsableSpace = file.getUsableSpace();
+                while (fileUsableSpace == 0) {
+                  TimeoutUtil.sleep(5000);  // hopefully we will not hummer disk too much
+                  fileUsableSpace = file.getUsableSpace();
                 }
-                else {
-                  GROUP.createNotification(message, file.getPath(), NotificationType.ERROR, null).whenExpired(() -> {
+
+                return fileUsableSpace;
+              }));
+            }
+            if (!future.isDone() || future.isCancelled()) {
+              restart(1);
+              return;
+            }
+
+            try {
+              final long fileUsableSpace = future.get();
+              final long rawTimeout = (fileUsableSpace - LOW_DISK_SPACE_THRESHOLD) / MAX_WRITE_SPEED_IN_BPS;
+              final long timeout = Math.min(3600, Math.max(5, rawTimeout));
+              ourFreeSpaceCalculation.set(null);
+
+              if (fileUsableSpace < LOW_DISK_SPACE_THRESHOLD) {
+                ThrowableComputable<NotificationsConfiguration, RuntimeException> action =
+                  () -> NotificationsConfiguration.getNotificationsConfiguration();
+                if (AccessRule.read(action) == null) {
+                  ourFreeSpaceCalculation.set(future);
+                  restart(1);
+                  return;
+                }
+                reported.compareAndSet(false, true);
+
+                //noinspection SSBasedInspection
+                SwingUtilities.invokeLater(() -> {
+                  LocalizeValue message = IdeLocalize.lowDiskSpaceMessage(Application.get().getName());
+                  if (fileUsableSpace < 100 * 1024) {
+                    LOG.warn(message + " (" + fileUsableSpace + ")");
+                    Messages.showErrorDialog(message.get(), "Fatal Configuration Problem");
                     reported.compareAndSet(true, false);
                     restart(timeout);
-                  }).notify(null);
-                }
-              });
+                  }
+                  else {
+                    GROUP.createNotification(message.get(), file.getPath(), NotificationType.ERROR, null)
+                      .whenExpired(() -> {
+                        reported.compareAndSet(true, false);
+                        restart(timeout);
+                      })
+                      .notify(null);
+                  }
+                });
+              }
+              else {
+                restart(timeout);
+              }
             }
-            else {
-              restart(timeout);
+            catch (Exception ex) {
+              LOG.error(ex);
             }
-          }
-          catch (Exception ex) {
-            LOG.error(ex);
           }
         }
-      }
 
-      private void restart(long timeout) {
-        JobScheduler.getScheduler().schedule(this, timeout, TimeUnit.SECONDS);
-      }
-    }, 1, TimeUnit.SECONDS);
+        private void restart(long timeout) {
+          JobScheduler.getScheduler().schedule(this, timeout, TimeUnit.SECONDS);
+        }
+      },
+      1,
+      TimeUnit.SECONDS
+    );
   }
 
   @SuppressWarnings({"SpellCheckingInspection", "SameParameterValue"})
@@ -341,7 +369,7 @@ public class SystemHealthMonitor extends PreloadingActivity {
   private class KeyHyperlinkAdapter extends HyperlinkAdapter {
     private final String key;
 
-    private KeyHyperlinkAdapter(@PropertyKey(resourceBundle = "consulo.ide.IdeBundle") String key) {
+    private KeyHyperlinkAdapter(String key) {
       this.key = key;
     }
 

@@ -15,11 +15,11 @@
  */
 package consulo.ide.impl.idea.openapi.editor.colors.impl;
 
-import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
+import consulo.util.lang.StringUtil;
 import org.jdom.Element;
 
 import java.awt.*;
@@ -38,7 +38,7 @@ class ValueElementReader {
   private static final String MAC = "mac";
   private static final String LINUX = "linux";
   private static final String WINDOWS = "windows";
-  private static final String OS = SystemInfo.isWindows ? WINDOWS : SystemInfo.isMac ? MAC : LINUX;
+  private static final String OS = Platform.current().os().isWindows() ? WINDOWS : Platform.current().os().isMac() ? MAC : LINUX;
   private static final Logger LOG = Logger.getInstance(ValueElementReader.class);
 
   private String myAttribute;

@@ -2,28 +2,28 @@
 
 package consulo.ide.impl.idea.openapi.diff.impl.settings;
 
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.TextAttributes;
+import consulo.diff.localize.DiffLocalize;
 import consulo.ide.impl.idea.application.options.colors.ColorAndFontDescription;
 import consulo.ide.impl.idea.application.options.colors.ColorAndFontOptions;
 import consulo.ide.impl.idea.application.options.colors.EditorSchemeAttributeDescriptor;
 import consulo.ide.impl.idea.application.options.colors.OptionsPanelImpl;
 import consulo.ide.impl.idea.diff.util.TextDiffTypeFactory;
-import consulo.ide.impl.idea.openapi.diff.DiffBundle;
-import consulo.colorScheme.EditorColorsScheme;
-import consulo.colorScheme.TextAttributes;
 import consulo.ide.impl.idea.util.EventDispatcher;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.CheckBox;
 import consulo.ui.ColorBox;
 import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.style.StandardColors;
 import consulo.ui.util.FormBuilder;
 import consulo.util.lang.ObjectUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 
 class DiffColorDescriptionPanel implements OptionsPanelImpl.ColorDescriptionPanel {
@@ -46,13 +46,22 @@ class DiffColorDescriptionPanel implements OptionsPanelImpl.ColorDescriptionPane
     myPanel = VerticalLayout.create();
 
     FormBuilder builder = FormBuilder.create();
-    builder.addLabeled(Label.create(DiffBundle.message("merge.color.options.background.color.label")), myBackgroundColorPanel = ColorBox.create());
-    builder.addLabeled(Label.create(DiffBundle.message("merge.color.options.ignored.color.label")), myIgnoredColorPanel = ColorBox.create());
-    builder.addLabeled(Label.create(DiffBundle.message("merge.color.options.stripe.mark.color.label")), myStripeMarkColorPanel = ColorBox.create());
+    builder.addLabeled(
+      Label.create(DiffLocalize.mergeColorOptionsBackgroundColorLabel()),
+      myBackgroundColorPanel = ColorBox.create()
+    );
+    builder.addLabeled(
+      Label.create(DiffLocalize.mergeColorOptionsIgnoredColorLabel()),
+      myIgnoredColorPanel = ColorBox.create()
+    );
+    builder.addLabeled(
+      Label.create(DiffLocalize.mergeColorOptionsStripeMarkColorLabel()),
+      myStripeMarkColorPanel = ColorBox.create()
+    );
 
     myPanel.add(builder.build());
 
-    myInheritIgnoredCheckBox = CheckBox.create(DiffBundle.message("option.inherit.ignored.color"));
+    myInheritIgnoredCheckBox = CheckBox.create(DiffLocalize.optionInheritIgnoredColor());
     myPanel.add(myInheritIgnoredCheckBox);
 
     myBackgroundColorPanel.addValueListener(event -> onSettingsChanged());

@@ -7,7 +7,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.util.Patches;
-import consulo.application.util.SystemInfo;
 import consulo.application.util.mac.foundation.Foundation;
 import consulo.application.util.mac.foundation.ID;
 import consulo.application.util.registry.Registry;
@@ -15,9 +14,9 @@ import consulo.awt.hacking.DataTransfererHacking;
 import consulo.awt.hacking.XClipboardHacking;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.application.ex.ClipboardUtil;
-import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.ide.impl.idea.util.concurrency.FutureResult;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.util.lang.Pair;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -28,8 +27,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.*;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
@@ -67,10 +64,10 @@ public class ClipboardSynchronizer implements Disposable {
     if (application.isHeadlessEnvironment() && application.isUnitTestMode()) {
       myClipboardHandler = new HeadlessClipboardHandler();
     }
-    else if (Patches.SLOW_GETTING_CLIPBOARD_CONTENTS && SystemInfo.isMac) {
+    else if (Patches.SLOW_GETTING_CLIPBOARD_CONTENTS && Platform.current().os().isMac()) {
       myClipboardHandler = new MacClipboardHandler();
     }
-    else if (Patches.SLOW_GETTING_CLIPBOARD_CONTENTS && SystemInfo.isXWindow) {
+    else if (Patches.SLOW_GETTING_CLIPBOARD_CONTENTS && Platform.current().os().isXWindow()) {
       myClipboardHandler = new XWinClipboardHandler();
     }
     else {
@@ -166,7 +163,7 @@ public class ClipboardSynchronizer implements Disposable {
       return Toolkit.getDefaultToolkit().getSystemClipboard();
     }
     catch (IllegalStateException e) {
-      if (SystemInfo.isWindows) {
+      if (Platform.current().os().isWindows()) {
         LOG.debug("Clipboard is busy");
       }
       else {

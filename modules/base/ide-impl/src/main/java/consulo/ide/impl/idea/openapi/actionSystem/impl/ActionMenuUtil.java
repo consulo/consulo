@@ -29,8 +29,8 @@ import java.awt.*;
 public class ActionMenuUtil {
   public static void showDescriptionInStatusBar(boolean isIncluded, Component component, String description) {
     IdeFrame ideFrame = null;
-    if (component instanceof Window) {
-      ideFrame = TargetAWT.from((Window)component).getUserData(IdeFrame.KEY);
+    if (component instanceof Window window) {
+      ideFrame = TargetAWT.from(window).getUserData(IdeFrame.KEY);
     }
 
     if (ideFrame == null) {

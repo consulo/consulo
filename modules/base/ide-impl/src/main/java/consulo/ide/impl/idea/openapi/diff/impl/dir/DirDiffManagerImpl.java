@@ -104,9 +104,7 @@ public class DirDiffManagerImpl extends DirDiffManager {
 
   @Override
   public DiffElement createDiffElement(Object obj) {
-    if (obj instanceof VirtualFile) {
-      final VirtualFile file = (VirtualFile)obj;
-
+    if (obj instanceof VirtualFile file) {
       VirtualFile archiveRootForLocalFile = ArchiveVfsUtil.getArchiveRootForLocalFile(file);
       return archiveRootForLocalFile != null ? new ArchiveFileDiffElement(archiveRootForLocalFile) : new VirtualFileDiffElement(file);
     }

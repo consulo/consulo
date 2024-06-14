@@ -46,8 +46,8 @@ public abstract class TextComponentEditorAction extends EditorAction {
     final Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
     if (editor != null) return editor;
     final Object data = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-    if (data instanceof JTextComponent) {
-      return new TextComponentEditorImpl(dataContext.getData(CommonDataKeys.PROJECT), (JTextComponent) data);
+    if (data instanceof JTextComponent textComponent) {
+      return new TextComponentEditorImpl(dataContext.getData(CommonDataKeys.PROJECT), textComponent);
     }
     return null;
   }

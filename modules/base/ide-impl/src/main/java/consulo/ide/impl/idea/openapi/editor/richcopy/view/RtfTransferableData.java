@@ -20,11 +20,10 @@ import consulo.ide.impl.idea.openapi.editor.richcopy.model.ColorRegistry;
 import consulo.ide.impl.idea.openapi.editor.richcopy.model.FontNameRegistry;
 import consulo.ide.impl.idea.openapi.editor.richcopy.model.MarkupHandler;
 import consulo.ide.impl.idea.openapi.editor.richcopy.model.SyntaxInfo;
-import consulo.application.util.SystemInfo;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.platform.Platform;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
-
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import jakarta.annotation.Nonnull;
 
 import java.awt.*;
@@ -87,7 +86,7 @@ public class RtfTransferableData extends AbstractSyntaxAwareInputStreamTransfera
   }
 
   private static int[] getAdjustedColorComponents(RGBColor color) {
-    if (SystemInfo.isMac) {
+    if (Platform.current().os().isMac()) {
       // on Mac OS color components are expected in Apple's 'Generic RGB' color space
       ColorSpace genericRgbSpace = MacOSApplicationProvider.getInstance().getGenericRgbColorSpace();
       if (genericRgbSpace != null) {

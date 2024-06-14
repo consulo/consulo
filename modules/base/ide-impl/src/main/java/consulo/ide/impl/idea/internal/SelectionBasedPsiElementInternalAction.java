@@ -1,7 +1,5 @@
 package consulo.ide.impl.idea.internal;
 
-import consulo.language.editor.LangDataKeys;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.refactoring.IntroduceTargetChooser;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.Application;
@@ -56,12 +54,9 @@ public abstract class SelectionBasedPsiElementInternalAction<T extends PsiElemen
   }
 
   protected void showError(@Nonnull final Editor editor) {
-    ApplicationManager.getApplication().invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        final String errorHint = "Cannot find element of class " + myClass.getSimpleName() + " at selection/offset";
-        HintManager.getInstance().showErrorHint(editor, errorHint);
-      }
+    ApplicationManager.getApplication().invokeLater(() -> {
+      final String errorHint = "Cannot find element of class " + myClass.getSimpleName() + " at selection/offset";
+      HintManager.getInstance().showErrorHint(editor, errorHint);
     });
   }
 
@@ -70,20 +65,10 @@ public abstract class SelectionBasedPsiElementInternalAction<T extends PsiElemen
     editor.getSelectionModel().setSelection(textRange.getStartOffset(), textRange.getEndOffset());
     final String informationHint = getInformationHint(first);
     if (informationHint != null) {
-      ApplicationManager.getApplication().invokeLater(new Runnable() {
-        @Override
-        public void run() {
-          HintManager.getInstance().showInformationHint(editor, informationHint);
-        }
-      });
+      ApplicationManager.getApplication().invokeLater(() -> HintManager.getInstance().showInformationHint(editor, informationHint));
     }
     else {
-      ApplicationManager.getApplication().invokeLater(new Runnable() {
-        @Override
-        public void run() {
-          HintManager.getInstance().showErrorHint(editor, getErrorHint());
-        }
-      });
+      ApplicationManager.getApplication().invokeLater(() -> HintManager.getInstance().showErrorHint(editor, getErrorHint()));
     }
   }
 
@@ -124,11 +109,11 @@ public abstract class SelectionBasedPsiElementInternalAction<T extends PsiElemen
 
   @Nullable
   private static Editor getEditor(@Nonnull AnActionEvent e) {
-    return e.getDataContext().getData(PlatformDataKeys.EDITOR);
+    return e.getDataContext().getData(Editor.KEY);
   }
 
   @Nullable
   private static PsiFile getPsiFile(@Nonnull AnActionEvent e) {
-    return e.getDataContext().getData(LangDataKeys.PSI_FILE);
+    return e.getDataContext().getData(PsiFile.KEY);
   }
 }

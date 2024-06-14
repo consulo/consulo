@@ -1,30 +1,30 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.editor.richcopy;
 
-import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
-import consulo.language.editor.rawHighlight.HighlightInfoType;
 import consulo.application.ApplicationManager;
-import consulo.colorScheme.EditorColorsScheme;
-import consulo.colorScheme.FontPreferences;
-import consulo.colorScheme.TextAttributesKey;
-import consulo.document.MarkupIterator;
-import consulo.codeEditor.markup.MarkupModelEx;
-import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.codeEditor.EditorHighlighter;
 import consulo.codeEditor.HighlighterIterator;
-import consulo.ide.impl.idea.openapi.editor.impl.FontFallbackIterator;
 import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.codeEditor.markup.MarkupModel;
+import consulo.codeEditor.markup.MarkupModelEx;
+import consulo.codeEditor.markup.RangeHighlighterEx;
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.FontPreferences;
 import consulo.colorScheme.TextAttributes;
+import consulo.colorScheme.TextAttributesKey;
+import consulo.document.MarkupIterator;
+import consulo.ide.impl.idea.openapi.editor.impl.FontFallbackIterator;
 import consulo.ide.impl.idea.openapi.editor.richcopy.model.SyntaxInfo;
-import consulo.application.util.SystemInfo;
-import consulo.language.ast.TokenType;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
+import consulo.language.ast.TokenType;
+import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
+import consulo.language.editor.rawHighlight.HighlightInfoType;
+import consulo.platform.Platform;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.util.UISettingsUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -531,9 +531,9 @@ public final class SyntaxInfoBuilder {
       myDefaultBackground = scheme.getDefaultBackground();
 
       int javaFontSize = scheme.getEditorFontSize();
-      float fontSize = SystemInfo.isMac || ApplicationManager.getApplication().isHeadlessEnvironment()
-                       ? javaFontSize
-                       : javaFontSize * 0.75f / UISettingsUtil.getDefFontScale(); // matching font size in external apps
+      float fontSize = Platform.current().os().isMac() || ApplicationManager.getApplication().isHeadlessEnvironment()
+        ? javaFontSize
+        : javaFontSize * 0.75f / UISettingsUtil.getDefFontScale(); // matching font size in external apps
 
       builder = new SyntaxInfo.Builder(myDefaultForeground, myDefaultBackground, fontSize);
       myIndentSymbolsToStrip = indentSymbolsToStrip;

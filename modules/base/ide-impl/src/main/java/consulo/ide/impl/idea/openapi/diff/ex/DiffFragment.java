@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.diff.ex;
 
 import consulo.ide.impl.idea.openapi.diff.impl.string.DiffString;
 import consulo.ide.impl.idea.openapi.diff.impl.string.DiffStringBuilder;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.TestOnly;
 
 import jakarta.annotation.Nullable;
@@ -59,19 +59,18 @@ public class DiffFragment {
 
   public void appendText1(@Nullable DiffString str) {
     if (str == null) return;
-    if (myText1 instanceof DiffStringBuilder) {
-      ((DiffStringBuilder)myText1).append(str);
+    if (myText1 instanceof DiffStringBuilder diffStringBuilder) {
+      diffStringBuilder.append(str);
       return;
     }
 
-    if (myText1 instanceof DiffString) {
-      DiffString text1 = (DiffString)myText1;
-      if (DiffString.canInplaceConcatenate(text1, str)) {
-        myText1 = DiffString.concatenate(text1, str);
+    if (myText1 instanceof DiffString diffString) {
+      if (DiffString.canInplaceConcatenate(diffString, str)) {
+        myText1 = DiffString.concatenate(diffString, str);
       }
       else {
-        DiffStringBuilder builder = new DiffStringBuilder(text1.length() + str.length());
-        builder.append(text1);
+        DiffStringBuilder builder = new DiffStringBuilder(diffString.length() + str.length());
+        builder.append(diffString);
         builder.append(str);
         myText1 = builder;
       }
@@ -83,19 +82,18 @@ public class DiffFragment {
 
   public void appendText2(@Nullable DiffString str) {
     if (str == null) return;
-    if (myText2 instanceof DiffStringBuilder) {
-      ((DiffStringBuilder)myText2).append(str);
+    if (myText2 instanceof DiffStringBuilder diffStringBuilder) {
+      diffStringBuilder.append(str);
       return;
     }
 
-    if (myText2 instanceof DiffString) {
-      DiffString text2 = (DiffString)myText2;
-      if (DiffString.canInplaceConcatenate(text2, str)) {
-        myText2 = DiffString.concatenate(text2, str);
+    if (myText2 instanceof DiffString diffString) {
+      if (DiffString.canInplaceConcatenate(diffString, str)) {
+        myText2 = DiffString.concatenate(diffString, str);
       }
       else {
-        DiffStringBuilder builder = new DiffStringBuilder(text2.length() + str.length());
-        builder.append(text2);
+        DiffStringBuilder builder = new DiffStringBuilder(diffString.length() + str.length());
+        builder.append(diffString);
         builder.append(str);
         myText2 = builder;
       }
@@ -108,8 +106,8 @@ public class DiffFragment {
   @Nullable
   public DiffString getText1() {
     if (myText1 == null) return null;
-    if (myText1 instanceof DiffString) return (DiffString)myText1;
-    if (myText1 instanceof DiffStringBuilder) return ((DiffStringBuilder)myText1).toDiffString();
+    if (myText1 instanceof DiffString diffString) return diffString;
+    if (myText1 instanceof DiffStringBuilder diffStringBuilder) return diffStringBuilder.toDiffString();
 
     throw new IllegalStateException("Bad DiffFragment: " + myText1.getClass());
   }
@@ -117,8 +115,8 @@ public class DiffFragment {
   @Nullable
   public DiffString getText2() {
     if (myText2 == null) return null;
-    if (myText2 instanceof DiffString) return (DiffString)myText2;
-    if (myText2 instanceof DiffStringBuilder) return ((DiffStringBuilder)myText2).toDiffString();
+    if (myText2 instanceof DiffString diffString) return diffString;
+    if (myText2 instanceof DiffStringBuilder diffStringBuilder) return diffStringBuilder.toDiffString();
 
     throw new IllegalStateException("Bad DiffFragment: " + myText2.getClass());
   }

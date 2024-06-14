@@ -25,7 +25,7 @@ package consulo.ide.impl.idea.openapi.diff.impl.patch;
 import consulo.project.Project;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.application.util.LineTokenizer;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.util.collection.SmartList;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;

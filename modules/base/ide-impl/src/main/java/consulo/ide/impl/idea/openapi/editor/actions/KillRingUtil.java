@@ -20,7 +20,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ide.impl.idea.openapi.ide.KillRingTransferable;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -57,10 +57,9 @@ public class KillRingUtil {
     String s = document.getCharsSequence().subSequence(startOffset, endOffset).toString();
     s = StringUtil.convertLineSeparators(s);
     CopyPasteManager.getInstance().setContents(new KillRingTransferable(s, document, startOffset, endOffset, cut));
-    if (editor instanceof EditorEx) {
-      EditorEx ex = (EditorEx)editor;
-      if (ex.isStickySelection()) {
-        ex.setStickySelection(false);
+    if (editor instanceof EditorEx editorEx) {
+      if (editorEx.isStickySelection()) {
+        editorEx.setStickySelection(false);
       }
     }
   }

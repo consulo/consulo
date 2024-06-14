@@ -15,19 +15,20 @@
  */
 package consulo.ide.impl.idea.openapi.editor.impl;
 
-import consulo.application.impl.internal.ApplicationNamesInfo;
+import consulo.application.Application;
 import consulo.ide.impl.idea.openapi.keymap.KeyboardSettingsExternalizable;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapPanel;
 import consulo.ide.setting.ShowSettingsUtil;
+import consulo.localize.LocalizeValue;
 import consulo.project.ui.internal.NotificationsConfiguration;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.notification.*;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.project.ui.wm.IdeFrame;
-import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
 
@@ -60,17 +61,14 @@ public class KeyboardInternationalizationNotificationManager {
   }
 
   public static Notification createNotification(@Nonnull final NotificationGroup group, @Nullable NotificationListener listener) {
-
-    final String productName = ApplicationNamesInfo.getInstance().getProductName();
+    final LocalizeValue productName = Application.get().getName();
 
     Window recentFocusedWindow = TargetAWT.to(WindowManagerEx.getInstanceEx().getMostRecentFocusedWindow());
 
-    String text = "<html>We have found out that you are using a non-english keyboard layout. You can <a href='enable'>enable</a> smart layout support for " +
-                  KeyboardSettingsExternalizable.getDisplayLanguageNameForComponent(recentFocusedWindow) +
-                  " language." +
-                  "You can change this option in the settings of " +
-                  productName +
-                  " <a href='settings'>more...</a></html>";
+    String text = "<html>We have found out that you are using a non-english keyboard layout." +
+      " You can <a href='enable'>enable</a> smart layout support for " +
+      KeyboardSettingsExternalizable.getDisplayLanguageNameForComponent(recentFocusedWindow) + " language." +
+      " You can change this option in the settings of " + productName + " <a href='settings'>more...</a></html>";
 
     String title = "Enable smart keyboard internalization for " + productName + ".";
 

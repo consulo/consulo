@@ -24,7 +24,6 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
-import consulo.language.editor.CommonDataKeys;
 import consulo.codeEditor.EditorBundle;
 import consulo.codeEditor.action.EditorActionUtil;
 import consulo.dataContext.DataContext;
@@ -39,7 +38,7 @@ import consulo.document.ReadOnlyFragmentModificationException;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
@@ -68,7 +67,7 @@ public class TabAction extends EditorAction {
       }
       CommandProcessor.getInstance().setCurrentCommandGroupId(EditorActionUtil.EDIT_COMMAND_GROUP);
       CommandProcessor.getInstance().setCurrentCommandName(EditorBundle.message("typing.command.name"));
-      Project project = dataContext.getData(CommonDataKeys.PROJECT);
+      Project project = dataContext.getData(Project.KEY);
       insertTabAtCaret(editor, caret, project);
     }
 

@@ -15,18 +15,18 @@
  */
 package consulo.ide.impl.idea.openapi.diff.impl;
 
-import consulo.application.CommonBundle;
-import consulo.ide.impl.idea.openapi.diff.impl.string.DiffString;
+import consulo.application.util.diff.Diff;
+import consulo.application.util.diff.FilesTooBigForDiffException;
+import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.diff.ex.DiffFragment;
 import consulo.ide.impl.idea.openapi.diff.impl.highlighting.FragmentSide;
 import consulo.ide.impl.idea.openapi.diff.impl.highlighting.Util;
 import consulo.ide.impl.idea.openapi.diff.impl.processing.DiffCorrection;
 import consulo.ide.impl.idea.openapi.diff.impl.processing.Formatting;
 import consulo.ide.impl.idea.openapi.diff.impl.processing.Word;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.document.util.TextRange;
-import consulo.application.util.diff.Diff;
-import consulo.application.util.diff.FilesTooBigForDiffException;
+import consulo.ide.impl.idea.openapi.diff.impl.string.DiffString;
+import consulo.platform.base.localize.CommonLocalize;
+import consulo.util.lang.Comparing;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
@@ -94,7 +94,7 @@ public abstract class ComparisonPolicy {
 
   private static class DefaultPolicy extends ComparisonPolicy {
     public DefaultPolicy() {
-      super(CommonBundle.message("comparison.policy.default.name"));
+      super(CommonLocalize.comparisonPolicyDefaultName().get());
     }
 
     @Nonnull
@@ -123,7 +123,7 @@ public abstract class ComparisonPolicy {
 
   private static class TrimSpacePolicy extends ComparisonPolicy {
     public TrimSpacePolicy() {
-      super(CommonBundle.message("comparison.policy.trim.space.name"));
+      super(CommonLocalize.comparisonPolicyTrimSpaceName().get());
     }
 
     @Nonnull
@@ -173,7 +173,7 @@ public abstract class ComparisonPolicy {
   private static class IgnoreSpacePolicy extends ComparisonPolicy
           implements DiffCorrection.FragmentProcessor<DiffCorrection.FragmentsCollector> {
     public IgnoreSpacePolicy() {
-      super(CommonBundle.message("comparison.policy.ignore.spaces.name"));
+      super(CommonLocalize.comparisonPolicyIgnoreSpacesName().get());
     }
 
     @Nonnull
