@@ -40,9 +40,9 @@ public final class LaterInvocator {
   private static final List<Object> ourModalEntities = Lists.newLockFreeCopyOnWriteList();
 
   // Per-project modal entities
-  private static final Map<Project, List<Dialog>> projectToModalEntities = ContainerUtil.createWeakMap();
-  private static final Map<Project, Stack<ModalityState>> projectToModalEntitiesStack = ContainerUtil.createWeakMap();
-  private static final Stack<IdeaModalityStateEx> ourModalityStack = new Stack<>((IdeaModalityStateEx)IdeaModalityState.NON_MODAL);
+  private static final Map<Project, List<Dialog>> projectToModalEntities = Maps.newWeakHashMap();
+  private static final Map<Project, Stack<ModalityState>> projectToModalEntitiesStack = Maps.newWeakHashMap();
+  private static final Stack<IdeaModalityStateEx> ourModalityStack = new Stack<>((IdeaModalityStateEx)ModalityStateImpl.NON_MODAL);
   private static final EventDispatcher<ModalityStateListener> ourModalityStateMulticaster = EventDispatcher.create(ModalityStateListener.class);
 
   private static final FlushQueue ourEdtQueue = new FlushQueue(SwingUtilities::invokeLater);

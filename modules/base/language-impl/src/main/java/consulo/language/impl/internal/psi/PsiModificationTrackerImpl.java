@@ -16,13 +16,13 @@ import consulo.language.psi.event.PsiTreeChangePreprocessor;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
-import consulo.util.lang.function.Condition;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.util.Map;
+import java.util.function.Predicate;
 
 /**
  * @author mike
@@ -70,11 +70,13 @@ public class PsiModificationTrackerImpl implements PsiModificationTracker, PsiTr
     incCountersInner();
   }
 
+  @RequiredWriteAction
   private void fireEvent() {
     Application.get().assertWriteAccessAllowed();
     myPublisher.modificationCountChanged();
   }
 
+  @RequiredWriteAction
   private void incCountersInner() {
     myModificationCount.incModificationCount();
     fireEvent();
@@ -154,26 +156,23 @@ public class PsiModificationTrackerImpl implements PsiModificationTracker, PsiTr
     return myModificationCount;
   }
 
-  //@ApiStatus.Experimental
   public void incLanguageModificationCount(@Nullable Language language) {
     if (language == null) return;
     myLanguageTrackers.get(language).incModificationCount();
   }
 
-  //@ApiStatus.Experimental
   @Nonnull
   public ModificationTracker forLanguage(@Nonnull Language language) {
     SimpleModificationTracker languageTracker = myLanguageTrackers.get(language);
     return () -> languageTracker.getModificationCount() + myAllLanguagesTracker.getModificationCount();
   }
 
-  //@ApiStatus.Experimental
   @Nonnull
-  public ModificationTracker forLanguages(@Nonnull Condition<? super Language> condition) {
+  public ModificationTracker forLanguages(@Nonnull Predicate<? super Language> condition) {
     return () -> {
       long result = myAllLanguagesTracker.getModificationCount();
       for (Language l : myLanguageTrackers.keySet()) {
-        if (!condition.value(l)) continue;
+        if (!condition.test(l)) continue;
         result += myLanguageTrackers.get(l).getModificationCount();
       }
       return result;
