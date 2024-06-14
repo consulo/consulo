@@ -19,6 +19,8 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 
 import jakarta.annotation.Nonnull;
+
+import java.io.Closeable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -26,7 +28,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author VISTALL
  * @since 25/01/2023
  */
-public abstract class BindingLoader<B> {
+public abstract class BindingLoader<B> implements Closeable {
   protected final AtomicBoolean myLocked = new AtomicBoolean();
 
   public void analyzeBindings() {
