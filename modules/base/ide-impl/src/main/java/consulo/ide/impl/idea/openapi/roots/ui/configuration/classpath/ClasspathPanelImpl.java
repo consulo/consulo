@@ -38,6 +38,7 @@ import consulo.ide.ui.OrderEntryAppearanceService;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.content.layer.ModifiableRootModel;
@@ -170,8 +171,8 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
     }, KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0), WHEN_FOCUSED);
 
     myEditButton = new DumbAwareAction(
-      ProjectLocalize.moduleClasspathButtonEdit().get(),
-      null,
+      ProjectLocalize.moduleClasspathButtonEdit(),
+      LocalizeValue.empty(),
       IconUtil.getEditIcon()
     ) {
       @RequiredUIAccess

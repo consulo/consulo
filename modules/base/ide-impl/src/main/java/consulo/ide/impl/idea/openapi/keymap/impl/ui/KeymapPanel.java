@@ -44,7 +44,6 @@ import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.internal.ActionToolbarsHolder;
-import consulo.ui.ex.keymap.KeyMapBundle;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.keymap.localize.KeyMapLocalize;
@@ -241,7 +240,7 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
     if (ideFrame != null && KeyboardSettingsExternalizable.isSupportedKeyboardLayout(ideFrame.getComponent())) {
       String displayLanguage = ideFrame.getComponent().getInputContext().getLocale().getDisplayLanguage();
       myNonEnglishKeyboardSupportOption = new JCheckBox(new AbstractAction(
-        displayLanguage + " " + KeyMapBundle.message("use.non.english.keyboard.layout.support")
+        displayLanguage + " " + KeyMapLocalize.useNonEnglishKeyboardLayoutSupport().get()
       ) {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -379,7 +378,11 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
 
     panel.add(myFilterComponent, new GridBagConstraints(1, 0, 1, 1, 0, 0, GridBagConstraints.EAST, GridBagConstraints.NONE, JBUI.insetsTop(8), 0, 0));
 
-    group.add(new DumbAwareAction(KeyMapBundle.message("filter.shortcut.action.text"), KeyMapBundle.message("filter.shortcut.action.text"), AllIcons.Actions.ShortcutFilter) {
+    group.add(new DumbAwareAction(
+      KeyMapLocalize.filterShortcutActionText(),
+      KeyMapLocalize.filterShortcutActionText(),
+      AllIcons.Actions.ShortcutFilter
+    ) {
       @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -388,7 +391,7 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
           myPopup = JBPopupFactory.getInstance()
             .createComponentPopupBuilder(createFilteringPanel(), null)
             .setRequestFocus(true)
-            .setTitle(KeyMapBundle.message("filter.settings.popup.title"))
+            .setTitle(KeyMapLocalize.filterSettingsPopupTitle().get())
             .setCancelKeyEnabled(false)
             .setMovable(true)
             .createPopup();
@@ -396,7 +399,11 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
         myPopup.showUnderneathOf(searchToolbar);
       }
     });
-    group.add(new DumbAwareAction(KeyMapBundle.message("filter.clear.action.text"), KeyMapBundle.message("filter.clear.action.text"), AllIcons.Actions.GC) {
+    group.add(new DumbAwareAction(
+      KeyMapLocalize.filterClearActionText(),
+      KeyMapLocalize.filterClearActionText(),
+      AllIcons.Actions.GC
+    ) {
       @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -424,7 +431,7 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
 
   private JPanel createKeymapNamePanel() {
     JPanel panel = new JPanel(new GridBagLayout());
-    myBaseKeymapLabel = new JLabel(KeyMapBundle.message("parent.keymap.label"));
+    myBaseKeymapLabel = new JLabel(KeyMapLocalize.parentKeymapLabel().get());
     panel.add(myBaseKeymapLabel, new GridBagConstraints(
       0,
       0,
@@ -444,8 +451,8 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
   private JPanel createFilteringPanel() {
     myActionsTree.reset(getSelectedKeymap(), getCurrentQuickListIds());
 
-    final JLabel firstLabel = new JLabel(KeyMapBundle.message("filter.first.stroke.input"));
-    final JCheckBox enable2Shortcut = new JCheckBox(KeyMapBundle.message("filter.second.stroke.input"));
+    final JLabel firstLabel = new JLabel(KeyMapLocalize.filterFirstStrokeInput().get());
+    final JCheckBox enable2Shortcut = new JCheckBox(KeyMapLocalize.filterSecondStrokeInput().get());
     final ShortcutTextField firstShortcut = new ShortcutTextField();
     final ShortcutTextField secondShortcut = new ShortcutTextField();
 
@@ -590,11 +597,11 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
     if (conflicts.size() > 0) {
       int result = Messages.showYesNoCancelDialog(
         myRootPanel,
-        KeyMapBundle.message("conflict.shortcut.dialog.message"),
-        KeyMapBundle.message("conflict.shortcut.dialog.title"),
-        KeyMapBundle.message("conflict.shortcut.dialog.remove.button"),
-        KeyMapBundle.message("conflict.shortcut.dialog.leave.button"),
-        KeyMapBundle.message("conflict.shortcut.dialog.cancel.button"),
+        KeyMapLocalize.conflictShortcutDialogMessage().get(),
+        KeyMapLocalize.conflictShortcutDialogTitle().get(),
+        KeyMapLocalize.conflictShortcutDialogRemoveButton().get(),
+        KeyMapLocalize.conflictShortcutDialogLeaveButton().get(),
+        KeyMapLocalize.conflictShortcutDialogCancelButton().get(),
         Messages.getWarningIcon()
       );
 
@@ -620,7 +627,7 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
 
     mySelectedKeymap.addShortcut(actionId, keyboardShortcut);
     if (StringUtil.startsWithChar(actionId, '$')) {
-      mySelectedKeymap.addShortcut(KeyMapBundle.message("editor.shortcut", actionId.substring(1)), keyboardShortcut);
+      mySelectedKeymap.addShortcut(KeyMapLocalize.editorShortcut(actionId.substring(1)).get(), keyboardShortcut);
     }
 
     repaintLists();
@@ -664,11 +671,11 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
     if (actionIds.length > 1 || (actionIds.length == 1 && !actionId.equals(actionIds[0]))) {
       int result = Messages.showYesNoCancelDialog(
         myRootPanel,
-        KeyMapBundle.message("conflict.shortcut.dialog.message"),
-        KeyMapBundle.message("conflict.shortcut.dialog.title"),
-        KeyMapBundle.message("conflict.shortcut.dialog.remove.button"),
-        KeyMapBundle.message("conflict.shortcut.dialog.leave.button"),
-        KeyMapBundle.message("conflict.shortcut.dialog.cancel.button"),
+        KeyMapLocalize.conflictShortcutDialogMessage().get(),
+        KeyMapLocalize.conflictShortcutDialogTitle().get(),
+        KeyMapLocalize.conflictShortcutDialogRemoveButton().get(),
+        KeyMapLocalize.conflictShortcutDialogLeaveButton().get(),
+        KeyMapLocalize.conflictShortcutDialogCancelButton().get(),
         Messages.getWarningIcon()
       );
 
@@ -693,7 +700,7 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
 
     mySelectedKeymap.addShortcut(actionId, mouseShortcut);
     if (StringUtil.startsWithChar(actionId, '$')) {
-      mySelectedKeymap.addShortcut(KeyMapBundle.message("editor.shortcut", actionId.substring(1)), mouseShortcut);
+      mySelectedKeymap.addShortcut(KeyMapLocalize.editorShortcut(actionId.substring(1)).get(), mouseShortcut);
     }
 
     repaintLists();
@@ -714,10 +721,10 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
 
     KeymapImpl newKeymap = selectedKeymap.deriveKeymap();
 
-    String newKeymapName = KeyMapBundle.message("new.keymap.name", selectedKeymap.getPresentableName());
+    String newKeymapName = KeyMapLocalize.newKeymapName(selectedKeymap.getPresentableName()).get();
     if (!tryNewKeymapName(newKeymapName)) {
       for (int i = 0; ; i++) {
-        newKeymapName = KeyMapBundle.message("new.indexed.keymap.name", selectedKeymap.getPresentableName(), i);
+        newKeymapName = KeyMapLocalize.newIndexedKeymapName(selectedKeymap.getPresentableName(), i).get();
         if (tryNewKeymapName(newKeymapName)) {
           break;
         }
@@ -753,7 +760,7 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
 
     mySelectedKeymap.removeShortcut(actionId, shortcut);
     if (StringUtil.startsWithChar(actionId, '$')) {
-      mySelectedKeymap.removeShortcut(KeyMapBundle.message("editor.shortcut", actionId.substring(1)), shortcut);
+      mySelectedKeymap.removeShortcut(KeyMapLocalize.editorShortcut(actionId.substring(1)).get(), shortcut);
     }
 
     repaintLists();
@@ -767,10 +774,10 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
     }
     KeymapImpl newKeymap = keymap.deriveKeymap();
 
-    String newKeymapName = KeyMapBundle.message("new.keymap.name", keymap.getPresentableName());
+    String newKeymapName = KeyMapLocalize.newKeymapName(keymap.getPresentableName()).get();
     if (!tryNewKeymapName(newKeymapName)) {
       for (int i = 0; ; i++) {
-        newKeymapName = KeyMapBundle.message("new.indexed.keymap.name", keymap.getPresentableName(), i);
+        newKeymapName = KeyMapLocalize.newIndexedKeymapName(keymap.getPresentableName(), i).get();
         if (tryNewKeymapName(newKeymapName)) {
           break;
         }
@@ -800,7 +807,12 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
     if (keymap == null) {
       return;
     }
-    int result = Messages.showYesNoDialog(myRootPanel, KeyMapBundle.message("delete.keymap.dialog.message"), KeyMapBundle.message("delete.keymap.dialog.title"), Messages.getWarningIcon());
+    int result = Messages.showYesNoDialog(
+      myRootPanel,
+      KeyMapLocalize.deleteKeymapDialogMessage().get(),
+      KeyMapLocalize.deleteKeymapDialogTitle().get(),
+      Messages.getWarningIcon()
+    );
     if (result != Messages.YES) {
       return;
     }
@@ -854,7 +866,7 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
 
     if (myKeymapListModel.getSize() == 0) {
       KeymapImpl keymap = new KeymapImpl();
-      keymap.setName(KeyMapBundle.message("keymap.no.name"));
+      keymap.setName(KeyMapLocalize.keymapNoName().get());
       myKeymapListModel.addElement(keymap);
     }
 
@@ -883,7 +895,7 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
     for (int i = 0; i < myKeymapListModel.getSize(); i++) {
       final Keymap modelKeymap = (Keymap)myKeymapListModel.getElementAt(i);
       if (StringUtil.isEmptyOrSpaces(modelKeymap.getName())) {
-        throw new ConfigurationException(KeyMapBundle.message("configuration.all.keymaps.should.have.non.empty.names.error.message"));
+        throw new ConfigurationException(KeyMapLocalize.configurationAllKeymapsShouldHaveNonEmptyNamesErrorMessage().get());
       }
     }
   }
@@ -894,7 +906,7 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
       final Keymap modelKeymap = (Keymap)myKeymapListModel.getElementAt(i);
       String name = modelKeymap.getName();
       if (keymapNames.contains(name)) {
-        throw new ConfigurationException(KeyMapBundle.message("configuration.all.keymaps.should.have.unique.names.error.message"));
+        throw new ConfigurationException(KeyMapLocalize.configurationAllKeymapsShouldHaveUniqueNamesErrorMessage().get());
       }
       keymapNames.add(name);
     }
@@ -912,7 +924,7 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
     for (int i = 0; i < myKeymapListModel.getSize(); i++) {
       panelKeymaps[i] = (Keymap)myKeymapListModel.getElementAt(i);
     }
-    return !Comparing.equal(managerKeymaps, panelKeymaps);
+    return !Arrays.equals(managerKeymaps, panelKeymaps);
   }
 
   public void selectAction(String actionId) {
@@ -950,7 +962,7 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
   @Override
   @Nls
   public String getDisplayName() {
-    return KeyMapBundle.message("keymap.display.name");
+    return KeyMapLocalize.keymapDisplayName().get();
   }
 
   @RequiredUIAccess

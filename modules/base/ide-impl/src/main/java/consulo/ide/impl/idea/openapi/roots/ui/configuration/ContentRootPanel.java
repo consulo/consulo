@@ -376,10 +376,11 @@ public abstract class ContentRootPanel extends JPanel {
 
 
   public void setSelected(boolean selected) {
+    boolean darkMode = StyleManager.get().getCurrentStyle().isDark();
     if (selected) {
       myHeader.setBackground(SELECTED_HEADER_COLOR);
-      setBackground(StyleManager.get().getCurrentStyle().isDark() ? UIUtil.getPanelBackground() : SELECTED_CONTENT_COLOR);
-      myBottom.setBackground(StyleManager.get().getCurrentStyle().isDark() ? UIUtil.getPanelBackground() : SELECTED_HEADER_COLOR);
+      setBackground(darkMode ? UIUtil.getPanelBackground() : SELECTED_CONTENT_COLOR);
+      myBottom.setBackground(darkMode ? UIUtil.getPanelBackground() : SELECTED_HEADER_COLOR);
       for (final JComponent component : myComponentToForegroundMap.keySet()) {
         component.setForeground(myComponentToForegroundMap.get(component));
       }
@@ -387,7 +388,7 @@ public abstract class ContentRootPanel extends JPanel {
     else {
       myHeader.setBackground(HEADER_COLOR);
       setBackground(CONTENT_COLOR);
-      myBottom.setBackground(UIUtil.isUnderDarcula() ? UIUtil.getPanelBackground() : HEADER_COLOR);
+      myBottom.setBackground(darkMode ? UIUtil.getPanelBackground() : HEADER_COLOR);
       for (final JComponent component : myComponentToForegroundMap.keySet()) {
         component.setForeground(UNSELECTED_TEXT_COLOR);
       }
@@ -429,11 +430,12 @@ public abstract class ContentRootPanel extends JPanel {
       }
       */
       final Stroke saved = g.getStroke();
-      if (!Platform.current().os().isMac() && !StyleManager.get().getCurrentStyle().isDark()) {
+      boolean darkMode = StyleManager.get().getCurrentStyle().isDark();
+      if (!Platform.current().os().isMac() && !darkMode) {
         g.setStroke(new BasicStroke(1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0, DASH, y1 % 2));
       }
 
-      if (StyleManager.get().getCurrentStyle().isDark()) {
+      if (darkMode) {
         UIUtil.drawDottedLine(g, x1, y1, x2, y2, null, g.getColor());
       }
       else {
