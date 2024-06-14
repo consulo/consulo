@@ -682,7 +682,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
 
           logStart(project);
         }
-      }, IdeaModalityState.NON_MODAL, project::isDisposedOrDisposeInProgress);
+      }, IdeaModalityState.nonModal(), project::isDisposedOrDisposeInProgress);
     }
   }
 

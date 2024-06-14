@@ -222,7 +222,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
           app.runWriteAction(() -> fireBeforeFileTypesChanged());
           myPatternsTable.removeAllAssociations(scheme);
           app.runWriteAction(() -> fireFileTypesChanged(null, scheme));
-        }, IdeaModalityState.NON_MODAL);
+        }, IdeaModalityState.nonModal());
       }
 
       @Nonnull

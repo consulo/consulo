@@ -405,7 +405,7 @@ public class DesktopApplicationImpl extends BaseApplication {
 
     exiting = true;
     try {
-      if (!force && !exitConfirmed && getDefaultModalityState() != IdeaModalityState.NON_MODAL) {
+      if (!force && !exitConfirmed && getDefaultModalityState() != IdeaModalityState.nonModal()) {
         return;
       }
 
@@ -429,7 +429,7 @@ public class DesktopApplicationImpl extends BaseApplication {
         runnable.run();
       }
       else {
-        invokeLater(runnable, IdeaModalityState.NON_MODAL);
+        invokeLater(runnable, IdeaModalityState.nonModal());
       }
     }
     finally {

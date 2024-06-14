@@ -750,7 +750,7 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
       if (updated.length() > 0) {
         final Throwable e = new Throwable(updated.toString());
         // avoid direct forceRebuild as it produces dependency cycle (IDEA-105485)
-        ApplicationManager.getApplication().invokeLater(() -> forceRebuild(e), IdeaModalityState.NON_MODAL);
+        ApplicationManager.getApplication().invokeLater(() -> forceRebuild(e), IdeaModalityState.nonModal());
       }
 
       myInitialized = true;

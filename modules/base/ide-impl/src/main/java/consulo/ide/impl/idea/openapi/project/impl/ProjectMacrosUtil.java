@@ -86,7 +86,7 @@ public class ProjectMacrosUtil {
 
     final Runnable r = () -> result[0] = showMacrosConfigurationDialog(project, usedMacros);
 
-    WaitForProgressToShow.runOrInvokeAndWaitAboveProgress(r, IdeaModalityState.NON_MODAL);
+    WaitForProgressToShow.runOrInvokeAndWaitAboveProgress(r, IdeaModalityState.nonModal());
     return result[0];
   }
 

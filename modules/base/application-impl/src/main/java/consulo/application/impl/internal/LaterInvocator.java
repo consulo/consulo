@@ -67,7 +67,7 @@ public final class LaterInvocator {
       }
 
       Window owner = window.getOwner();
-     IdeaModalityStateEx ownerState = owner == null ? (IdeaModalityStateEx)IdeaModalityState.NON_MODAL : modalityStateForWindow(owner);
+     IdeaModalityStateEx ownerState = owner == null ? (IdeaModalityStateEx)IdeaModalityState.nonModal() : modalityStateForWindow(owner);
       return isModalDialog(window) ? ownerState.appendEntity(window) : ownerState;
     });
   }
@@ -195,7 +195,7 @@ public final class LaterInvocator {
     projectToModalEntities.put(project, modalEntitiesList);
     modalEntitiesList.add(dialog);
 
-    Stack<ModalityState> modalEntitiesStack = projectToModalEntitiesStack.getOrDefault(project, new Stack<>(IdeaModalityStateEx.NON_MODAL));
+    Stack<ModalityState> modalEntitiesStack = projectToModalEntitiesStack.getOrDefault(project, new Stack<>(IdeaModalityState.nonModal()));
     projectToModalEntitiesStack.put(project, modalEntitiesStack);
     modalEntitiesStack.push(new IdeaModalityStateEx(ourModalEntities));
   }
@@ -274,7 +274,7 @@ public final class LaterInvocator {
     while (!ourModalEntities.isEmpty()) {
       leaveModal(ourModalEntities.get(ourModalEntities.size() - 1));
     }
-    LOG.assertTrue(getCurrentModalityState() == IdeaModalityStateEx.NON_MODAL, getCurrentModalityState());
+    LOG.assertTrue(getCurrentModalityState() == IdeaModalityState.nonModal(), getCurrentModalityState());
     reincludeSkippedItemsAndRequestFlush();
   }
 

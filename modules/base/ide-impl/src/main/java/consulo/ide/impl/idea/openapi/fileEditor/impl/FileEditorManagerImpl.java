@@ -1681,7 +1681,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
             LOG.debug("updating file status in tab for " + file.getPath());
           }
           updateFileStatus(file);
-        }, IdeaModalityState.NON_MODAL, myProject.getDisposed());
+        }, IdeaModalityState.nonModal(), myProject.getDisposed());
       }
     }
 

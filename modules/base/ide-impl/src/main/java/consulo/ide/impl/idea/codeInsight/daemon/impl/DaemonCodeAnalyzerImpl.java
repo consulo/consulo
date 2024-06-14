@@ -895,7 +895,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
       }
     }
 
-    if (app.getCurrentModalityState() != IdeaModalityState.NON_MODAL) {
+    if (app.getCurrentModalityState() != IdeaModalityState.nonModal()) {
       return activeTextEditors;
     }
 

@@ -19,8 +19,8 @@ import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.project.DumbService;
-
 import jakarta.annotation.Nonnull;
+
 import java.awt.*;
 
 /**
@@ -52,9 +52,6 @@ import java.awt.*;
 @DeprecationInfo("Use Application methods")
 public abstract class IdeaModalityState implements consulo.ui.ModalityState {
   @Nonnull
-  public static final IdeaModalityState NON_MODAL = ModalityStateImpl.NON_MODAL;
-
-  @Nonnull
   public static IdeaModalityState current() {
     return (IdeaModalityState)ApplicationManager.getApplication().getCurrentModalityState();
   }
@@ -72,6 +69,10 @@ public abstract class IdeaModalityState implements consulo.ui.ModalityState {
   @Nonnull
   public static IdeaModalityState defaultModalityState() {
     return (IdeaModalityState)ApplicationManager.getApplication().getDefaultModalityState();
+  }
+
+  public static IdeaModalityState nonModal() {
+    return ModalityStateImpl.NON_MODAL;
   }
 
   public abstract boolean dominates(@Nonnull IdeaModalityState anotherState);

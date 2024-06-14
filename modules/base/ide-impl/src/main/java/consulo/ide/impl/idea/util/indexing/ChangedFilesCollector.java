@@ -209,7 +209,7 @@ final class ChangedFilesCollector extends IndexedFilesListener {
           startDumbMode.run();
         }
         else {
-          app.invokeLater(startDumbMode, IdeaModalityState.NON_MODAL);
+          app.invokeLater(startDumbMode, IdeaModalityState.nonModal());
         }
       }
     }

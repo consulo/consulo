@@ -73,7 +73,7 @@ public final class GistManagerImpl extends GistManager {
       for (Project project : ProjectManager.getInstance().getOpenProjects()) {
         PsiManager.getInstance(project).dropPsiCaches();
       }
-    }, IdeaModalityState.NON_MODAL);
+    }, IdeaModalityState.nonModal());
   }
 
   @TestOnly

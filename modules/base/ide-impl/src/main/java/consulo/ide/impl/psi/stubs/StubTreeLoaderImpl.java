@@ -250,7 +250,7 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
       // avoid deadlock by requesting reindex later.
       // processError may be invoked under stub index's read action and requestReindex in EDT starts dumb mode in writeAction (IDEA-197296)
       FileBasedIndex.getInstance().requestReindex(vFile);
-    }, IdeaModalityState.NON_MODAL);
+    }, IdeaModalityState.nonModal());
 
     return null;
   }

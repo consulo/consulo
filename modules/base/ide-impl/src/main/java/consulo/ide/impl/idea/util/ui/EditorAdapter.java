@@ -93,7 +93,7 @@ public class EditorAdapter {
     }
 
     if (myFlushAlarm.getActiveRequestCount() == 0) {
-      myFlushAlarm.addRequest(myFlushDeferredRunnable, 200, IdeaModalityState.NON_MODAL);
+      myFlushAlarm.addRequest(myFlushDeferredRunnable, 200, IdeaModalityState.nonModal());
     }
   }
 

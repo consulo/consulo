@@ -63,7 +63,7 @@ public class ChangesBrowserDialog extends DialogWrapper {
     setTitle(VcsBundle.message("dialog.title.changes.browser"));
     setCancelButtonText(CommonBundle.getCloseButtonText());
     final IdeaModalityState currentState = IdeaModalityState.current();
-    if ((mode != Mode.Choose) && (IdeaModalityState.NON_MODAL.equals(currentState))) {
+    if ((mode != Mode.Choose) && (IdeaModalityState.nonModal().equals(currentState))) {
       setModal(false);
     }
     myAppender = new AsynchConsumer<List<CommittedChangeList>>() {

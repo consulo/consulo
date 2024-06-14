@@ -666,7 +666,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
   }
 
   private static void showDumbModeWarningLaterIfNobodyConsumesEvent(final InputEvent e, final AnActionEvent... actionEvents) {
-    if (IdeaModalityState.current() == IdeaModalityState.NON_MODAL) {
+    if (IdeaModalityState.current() == IdeaModalityState.nonModal()) {
       ApplicationManager.getApplication().invokeLater(() -> {
         if (e.isConsumed()) return;
 

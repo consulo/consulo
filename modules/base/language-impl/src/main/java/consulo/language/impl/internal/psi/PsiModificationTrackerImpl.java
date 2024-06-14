@@ -27,6 +27,7 @@ import java.util.function.Predicate;
 /**
  * @author mike
  */
+@SuppressWarnings("ExtensionImplIsNotAnnotated") // registered in PsiManagerImpl
 @Singleton
 @ServiceImpl
 public class PsiModificationTrackerImpl implements PsiModificationTracker, PsiTreeChangePreprocessor {
@@ -63,10 +64,6 @@ public class PsiModificationTrackerImpl implements PsiModificationTracker, PsiTr
   @Override
   @RequiredWriteAction
   public void incCounter() {
-    incCountersInner();
-  }
-
-  public void incOutOfCodeBlockModificationCounter() {
     incCountersInner();
   }
 
@@ -134,25 +131,9 @@ public class PsiModificationTrackerImpl implements PsiModificationTracker, PsiTr
     return myModificationCount.getModificationCount();
   }
 
-  @Override
-  public long getOutOfCodeBlockModificationCount() {
-    return myModificationCount.getModificationCount();
-  }
-
-  @Override
-  public long getJavaStructureModificationCount() {
-    return myModificationCount.getModificationCount();
-  }
-
   @Nonnull
   @Override
-  public ModificationTracker getOutOfCodeBlockModificationTracker() {
-    return myModificationCount;
-  }
-
-  @Nonnull
-  @Override
-  public ModificationTracker getJavaStructureModificationTracker() {
+  public ModificationTracker getModificationTracker() {
     return myModificationCount;
   }
 

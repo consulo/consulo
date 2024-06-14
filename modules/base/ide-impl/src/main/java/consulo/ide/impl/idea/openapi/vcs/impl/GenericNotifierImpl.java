@@ -92,7 +92,7 @@ public abstract class GenericNotifierImpl<T, Key> {
     if (application.isDispatchThread()) {
       runnable.run();
     } else {
-      application.invokeLater(runnable, IdeaModalityState.NON_MODAL, myProject.getDisposed());
+      application.invokeLater(runnable, IdeaModalityState.nonModal(), myProject.getDisposed());
     }
   }
 

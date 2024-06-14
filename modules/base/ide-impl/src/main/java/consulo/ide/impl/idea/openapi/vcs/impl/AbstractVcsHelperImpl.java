@@ -535,7 +535,7 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
     }
 
     if (ok) {
-      if (myProject.isDefault() || (ProjectLevelVcsManager.getInstance(myProject).getAllActiveVcss().length == 0) || (!IdeaModalityState.NON_MODAL.equals(IdeaModalityState.current()))) {
+      if (myProject.isDefault() || (ProjectLevelVcsManager.getInstance(myProject).getAllActiveVcss().length == 0) || (!IdeaModalityState.nonModal().equals(IdeaModalityState.current()))) {
         final List<CommittedChangeList> versions = new ArrayList<>();
 
         if (parent == null || !parent.isValid()) {

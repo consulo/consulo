@@ -74,6 +74,6 @@ public class ExtensionListenerByLayerListenerInvoker implements ModuleRootLayerL
       for (Couple<ModuleExtension> couple : list) {
         moduleExtensionChangeListener.beforeExtensionChanged(couple.getFirst(), couple.getSecond());
       }
-    }, IdeaModalityState.NON_MODAL);
+    }, IdeaModalityState.nonModal());
   }
 }

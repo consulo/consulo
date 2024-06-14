@@ -95,7 +95,7 @@ public class DesktopDataManagerImpl extends BaseDataManager {
         return (T)component;
       }
       if (PlatformDataKeys.MODALITY_STATE == dataId) {
-        return (T)(component != null ? IdeaModalityState.stateForComponent(component) : IdeaModalityState.NON_MODAL);
+        return (T)(component != null ? IdeaModalityState.stateForComponent(component) : IdeaModalityState.nonModal());
       }
 
       Object data = calcData(dataId, component);

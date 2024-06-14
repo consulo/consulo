@@ -98,7 +98,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
                 Messages.showErrorDialog(InspectionsBundle.message("inspection.error.loading.message", 0, profile.getName()),
                                          InspectionsBundle.message("inspection.errors.occurred.dialog.title"));
               }
-            }, IdeaModalityState.NON_MODAL);
+            }, IdeaModalityState.nonModal());
           }
           return profile;
         }
@@ -204,7 +204,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
             Messages.showErrorDialog(InspectionsBundle.message("inspection.error.loading.message", 0, file),
                                      InspectionsBundle.message("inspection.errors.occurred.dialog.title"));
           }
-        }, IdeaModalityState.NON_MODAL);
+        }, IdeaModalityState.nonModal());
       }
     }
     return getProfile(path, false);

@@ -159,7 +159,7 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor {
             Messages.showErrorDialog(myProject, VcsBundle.message("create.patch.error.title", "Can not write patch to specified file: " +
                                                                                               file.getPath()), CommonBundle.getErrorTitle());
           }
-        }, IdeaModalityState.NON_MODAL, myProject);
+        }, IdeaModalityState.nonModal(), myProject);
         return;
       }
 

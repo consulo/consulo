@@ -138,7 +138,7 @@ public class ExternalJavaDocAction extends AnAction {
             }
           }).showInBestPositionFor(DataManager.getInstance().getDataContext(contextComponent));
         }
-      }, IdeaModalityState.NON_MODAL);
+      }, IdeaModalityState.nonModal());
     });
 
   }

@@ -8,7 +8,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.component.util.ModificationTracker;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -91,41 +90,33 @@ public interface PsiModificationTracker extends ModificationTracker {
   long getModificationCount();
 
   /**
-   * @return Same as {@link #getJavaStructureModificationCount()}, but also includes changes in non-Java files, e.g. XML. Rarely needed.
-   * @deprecated rarely supported by language plugins; also a wrong way for optimisations
-   */
-  @Deprecated
-  long getOutOfCodeBlockModificationCount();
-
-  /**
-   * @return an object returning {@link #getOutOfCodeBlockModificationCount()}
-   * @deprecated rarely supported by language plugins; also a wrong way for optimisations
-   */
-  @Deprecated
-  @Nonnull
-  ModificationTracker getOutOfCodeBlockModificationTracker();
-
-  /**
-   * Tracks structural Java modifications, i.e. the ones on class/method/field/file level. Modifications inside method bodies are not tracked.
-   * Useful to work with resolve caches that only depend on Java structure, and not the method code.
-   *
-   * @return current counter value. Increased whenever any physical PSI in Java structure is changed.
-   * @deprecated rarely supported by JVM language plugins; also a wrong way for optimisations
-   */
-  @Deprecated
-  long getJavaStructureModificationCount();
-
-  /**
-   * @return an object returning {@link #getJavaStructureModificationCount()}
-   * @deprecated rarely supported by JVM language plugins; also a wrong way for optimisations
-   */
-  @Deprecated
-  @Nonnull
-  ModificationTracker getJavaStructureModificationTracker();
-
-  /**
    * Increase count. Required write action. Please we careful calling this method
    */
   @RequiredWriteAction
   void incCounter();
+
+  @Nonnull
+  ModificationTracker getModificationTracker();
+
+  @Deprecated
+  default long getOutOfCodeBlockModificationCount() {
+    return getModificationCount();
+  }
+
+  @Deprecated
+  @Nonnull
+  default ModificationTracker getOutOfCodeBlockModificationTracker() {
+    return getModificationTracker();
+  }
+
+  @Deprecated
+  default long getJavaStructureModificationCount() {
+    return getModificationCount();
+  }
+
+  @Deprecated
+  @Nonnull
+  default ModificationTracker getJavaStructureModificationTracker() {
+    return getModificationTracker();
+  }
 }

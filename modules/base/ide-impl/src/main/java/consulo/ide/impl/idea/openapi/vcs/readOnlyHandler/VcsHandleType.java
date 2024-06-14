@@ -77,7 +77,7 @@ public class VcsHandleType extends HandleType {
             myChangeListManager.moveChangesTo(list, changes.toArray(new Change[changes.size()]));
           }
         }
-      }, InvokeAfterUpdateMode.SILENT, "", IdeaModalityState.NON_MODAL);
+      }, InvokeAfterUpdateMode.SILENT, "", IdeaModalityState.nonModal());
     }
   }
 

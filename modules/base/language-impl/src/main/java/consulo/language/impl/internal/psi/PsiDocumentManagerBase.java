@@ -45,6 +45,7 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ModalityState;
+import consulo.ui.UIAccess;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.collection.Maps;
@@ -335,7 +336,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     final Document document = getTopLevelDocument(doc);
 
     if (isEventSystemEnabled(document)) {
-      myProject.getApplication().assertWriteAccessAllowed();
+      UIAccess.assertIsUIThread();
     }
 
     if (!isCommitted(document)) {

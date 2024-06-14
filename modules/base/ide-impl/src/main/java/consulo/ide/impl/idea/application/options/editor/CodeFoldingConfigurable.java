@@ -108,6 +108,6 @@ public class CodeFoldingConfigurable extends SimpleConfigurableByProperties impl
         }
       }
       EditorGeneralConfigurable.reinitAllEditors();
-    }, IdeaModalityState.NON_MODAL);
+    }, IdeaModalityState.nonModal());
   }
 }

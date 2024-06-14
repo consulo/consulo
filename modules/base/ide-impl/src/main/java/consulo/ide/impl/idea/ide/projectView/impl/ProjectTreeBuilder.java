@@ -184,7 +184,7 @@ public class ProjectTreeBuilder extends BaseProjectTreeBuilder {
             synchronized (myFilesToRefresh) {
               myFilesToRefresh.removeAll(filesToRefresh);
             }
-          }, 200, IdeaModalityState.NON_MODAL);
+          }, 200, IdeaModalityState.nonModal());
         }
       }
     }

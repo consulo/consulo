@@ -226,7 +226,7 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
           myContentManager.addContent(myChangeListTodosContent);
           myIsVisible = true;
         }
-      }, IdeaModalityState.NON_MODAL);
+      }, IdeaModalityState.nonModal());
     }
   }
 
@@ -283,7 +283,7 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
           panel.rebuildCache(ObjectUtil.notNull(files.get(panel), new HashSet<>()));
           panel.updateTree();
         }
-      }, IdeaModalityState.NON_MODAL);
+      }, IdeaModalityState.nonModal());
     });
   }
 

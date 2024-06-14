@@ -318,7 +318,7 @@ class SearchForUsagesRunnable implements Runnable {
       notifyByFindBalloon(null, NotificationType.WARNING, myProcessPresentation, myProject,
                           Collections.singletonList(StringUtil.escapeXml(UsageViewManagerImpl.getProgressTitle(myPresentation))));
       findStartedBalloonShown.set(true);
-    }, 300, IdeaModalityState.NON_MODAL);
+    }, 300, IdeaModalityState.nonModal());
     UsageSearcher usageSearcher = mySearcherFactory.get();
 
     usageSearcher.generate(usage -> {
@@ -415,7 +415,7 @@ class SearchForUsagesRunnable implements Runnable {
             }
           }
         }
-      }, IdeaModalityState.NON_MODAL, myProject.getDisposed());
+      }, IdeaModalityState.nonModal(), myProject.getDisposed());
     }
     else if (usageCount == 1 && !myProcessPresentation.isShowPanelIfOnlyOneUsage()) {
       ApplicationManager.getApplication().invokeLater(() -> {
@@ -433,7 +433,7 @@ class SearchForUsagesRunnable implements Runnable {
         lines.add(createOptionsHtml(mySearchFor));
         NotificationType type = myOutOfScopeUsages.get() == 0 ? NotificationType.INFO : NotificationType.WARNING;
         notifyByFindBalloon(createGotToOptionsListener(mySearchFor), type, myProcessPresentation, myProject, lines);
-      }, IdeaModalityState.NON_MODAL, myProject.getDisposed());
+      }, IdeaModalityState.nonModal(), myProject.getDisposed());
     }
     else {
       final UsageViewImpl usageView = myUsageViewRef.get();
@@ -459,7 +459,7 @@ class SearchForUsagesRunnable implements Runnable {
         ApplicationManager.getApplication().invokeLater(() -> {
           NotificationType type = myOutOfScopeUsages.get() == 0 ? NotificationType.INFO : NotificationType.WARNING;
           notifyByFindBalloon(hyperlinkListener, type, myProcessPresentation, myProject, lines);
-        }, IdeaModalityState.NON_MODAL, myProject.getDisposed());
+        }, IdeaModalityState.nonModal(), myProject.getDisposed());
       }
     }
 

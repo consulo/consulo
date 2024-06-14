@@ -454,7 +454,7 @@ public class ChooseByNamePopup extends ChooseByNameBase implements ChooseByNameP
   public List<Object> calcPopupElements(@Nonnull String text, boolean checkboxState) {
     List<Object> elements = List.of("empty");
     Semaphore semaphore = new Semaphore(1);
-    scheduleCalcElements(text, checkboxState, IdeaModalityState.NON_MODAL, SelectMostRelevant.INSTANCE, set -> {
+    scheduleCalcElements(text, checkboxState, IdeaModalityState.nonModal(), SelectMostRelevant.INSTANCE, set -> {
       elements.clear();
       elements.addAll(set);
       semaphore.up();

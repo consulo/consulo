@@ -212,6 +212,6 @@ public class ModuleVcsDetector implements Disposable {
           vcsManager.removeDirectoryMapping(mapping);
         }
       }
-    }, IdeaModalityState.NON_MODAL);
+    }, IdeaModalityState.nonModal());
   }
 }

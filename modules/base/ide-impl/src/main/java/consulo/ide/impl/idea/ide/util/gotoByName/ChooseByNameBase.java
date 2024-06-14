@@ -1563,7 +1563,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
             ensureNamesLoaded(everywhere);
             indicator.setIndeterminate(true);
             final TooManyUsagesStatus tooManyUsagesStatus = TooManyUsagesStatus.createFor(indicator);
-            myCalcUsagesThread = new CalcElementsThread(text, everywhere, IdeaModalityState.NON_MODAL, PreserveSelection.INSTANCE, __ -> {
+            myCalcUsagesThread = new CalcElementsThread(text, everywhere, IdeaModalityState.nonModal(), PreserveSelection.INSTANCE, __ -> {
             }) {
               @Override
               protected boolean isOverflow(@Nonnull Set<Object> elementsArray) {
