@@ -25,6 +25,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.macro.PathMacros;
 import consulo.ide.impl.idea.openapi.options.ex.SingleConfigurableEditor;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.localize.ProjectLocalize;
@@ -40,12 +41,12 @@ public class ProjectMacrosUtil {
   }
 
   public static boolean showMacrosConfigurationDialog(Project project, final Collection<String> undefinedMacros) {
-    final String text = ProjectLocalize.projectLoadUndefinedPathVariablesMessage().get();
+    final LocalizeValue text = ProjectLocalize.projectLoadUndefinedPathVariablesMessage();
     final Application application = ApplicationManager.getApplication();
     if (application.isHeadlessEnvironment() || application.isUnitTestMode()) {
       throw new RuntimeException(text + ": " + StringUtil.join(undefinedMacros, ", "));
     }
-    final UndefinedMacrosConfigurable configurable = new UndefinedMacrosConfigurable(text, undefinedMacros);
+    final UndefinedMacrosConfigurable configurable = new UndefinedMacrosConfigurable(text.get(), undefinedMacros);
     final SingleConfigurableEditor editor = new SingleConfigurableEditor(project, configurable);
     editor.show();
     return editor.isOK();

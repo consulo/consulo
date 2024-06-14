@@ -89,7 +89,7 @@ public class OverrideFileTypeAction extends AnAction {
     ChangeToThisFileTypeAction(@Nonnull String displayText, @Nonnull VirtualFile[] files, @Nonnull FileType type) {
       super(
         displayText,
-        ActionLocalize.actionChangetothisfiletypeactionDescription(type.getDescription().get()).get(),
+        ActionLocalize.actionChangetothisfiletypeactionDescription(type.getDescription()).get(),
         type.getIcon()
       );
       myFiles = files;
