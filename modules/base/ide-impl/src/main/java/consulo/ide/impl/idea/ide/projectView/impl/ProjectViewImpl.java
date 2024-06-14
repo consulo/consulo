@@ -1229,7 +1229,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
           };
           ApplicationManager.getApplication().runWriteAction(action);
         },
-        title,
+        title.get(),
         null
       );
     }
