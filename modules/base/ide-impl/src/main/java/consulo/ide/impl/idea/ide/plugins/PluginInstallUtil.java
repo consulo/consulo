@@ -22,6 +22,7 @@ import consulo.container.plugin.PluginId;
 import consulo.ide.impl.idea.ide.startup.StartupActionScriptManager;
 import consulo.ide.impl.idea.util.containers.ArrayListSet;
 import consulo.ide.impl.plugins.InstalledPluginsState;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.IdeLocalize;
 import consulo.ui.ex.awt.Messages;
 import jakarta.annotation.Nonnull;
@@ -66,8 +67,8 @@ public class PluginInstallUtil {
 
   @Messages.YesNoResult
   private static int showRestartIDEADialog(final String title) {
-    String message = IdeLocalize.messageIdeaRestartRequired(Application.get().getName()).get();
-    return Messages.showYesNoDialog(message, title, "Restart", POSTPONE, Messages.getQuestionIcon());
+    LocalizeValue message = IdeLocalize.messageIdeaRestartRequired(Application.get().getName());
+    return Messages.showYesNoDialog(message.get(), title, "Restart", POSTPONE, Messages.getQuestionIcon());
   }
 
   public static void shutdownOrRestartApp(String title) {

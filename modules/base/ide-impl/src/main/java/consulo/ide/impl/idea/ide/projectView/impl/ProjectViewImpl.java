@@ -59,6 +59,7 @@ import consulo.language.psi.*;
 import consulo.language.util.ModuleUtilCore;
 import consulo.localHistory.LocalHistory;
 import consulo.localHistory.LocalHistoryAction;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.content.ModuleFileIndex;
@@ -1206,26 +1207,31 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
 
     private void detachLibrary(@Nonnull final LibraryOrderEntry orderEntry, @Nonnull Project project) {
       final Module module = orderEntry.getOwnerModule();
-      String message = IdeLocalize.detachLibraryFromModule(orderEntry.getPresentableName(), module.getName()).get();
-      String title = IdeLocalize.detachLibrary().get();
-      int ret = Messages.showOkCancelDialog(project, message, title, Messages.getQuestionIcon());
+      LocalizeValue message = IdeLocalize.detachLibraryFromModule(orderEntry.getPresentableName(), module.getName());
+      LocalizeValue title = IdeLocalize.detachLibrary();
+      int ret = Messages.showOkCancelDialog(project, message.get(), title.get(), Messages.getQuestionIcon());
       if (ret != Messages.OK) return;
-      CommandProcessor.getInstance().executeCommand(module.getProject(), () -> {
-        final Runnable action = () -> {
-          ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
-          OrderEntry[] orderEntries = rootManager.getOrderEntries();
-          ModifiableRootModel model = rootManager.getModifiableModel();
-          OrderEntry[] modifiableEntries = model.getOrderEntries();
-          for (int i = 0; i < orderEntries.length; i++) {
-            OrderEntry entry = orderEntries[i];
-            if (entry instanceof LibraryOrderEntry && ((LibraryOrderEntry)entry).getLibrary() == orderEntry.getLibrary()) {
-              model.removeOrderEntry(modifiableEntries[i]);
+      CommandProcessor.getInstance().executeCommand(
+        module.getProject(),
+        () -> {
+          final Runnable action = () -> {
+            ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
+            OrderEntry[] orderEntries = rootManager.getOrderEntries();
+            ModifiableRootModel model = rootManager.getModifiableModel();
+            OrderEntry[] modifiableEntries = model.getOrderEntries();
+            for (int i = 0; i < orderEntries.length; i++) {
+              OrderEntry entry = orderEntries[i];
+              if (entry instanceof LibraryOrderEntry libraryOrderEntry && libraryOrderEntry.getLibrary() == orderEntry.getLibrary()) {
+                model.removeOrderEntry(modifiableEntries[i]);
+              }
             }
-          }
-          model.commit();
-        };
-        ApplicationManager.getApplication().runWriteAction(action);
-      }, title, null);
+            model.commit();
+          };
+          ApplicationManager.getApplication().runWriteAction(action);
+        },
+        title,
+        null
+      );
     }
 
     @Nullable

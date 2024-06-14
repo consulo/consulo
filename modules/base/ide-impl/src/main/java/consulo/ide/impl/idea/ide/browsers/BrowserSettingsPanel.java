@@ -40,7 +40,8 @@ import java.util.function.Function;
 import static consulo.ide.impl.idea.util.ui.table.TableModelEditor.EditableColumnInfo;
 
 final class BrowserSettingsPanel {
-  private static final FileChooserDescriptor APP_FILE_CHOOSER_DESCRIPTOR = FileChooserDescriptorFactory.createSingleFileOrExecutableAppDescriptor();
+  private static final FileChooserDescriptor APP_FILE_CHOOSER_DESCRIPTOR =
+    FileChooserDescriptorFactory.createSingleFileOrExecutableAppDescriptor();
 
   private static final EditableColumnInfo<ConfigurableWebBrowser, String> PATH_COLUMN_INFO = new EditableColumnInfo<>("Path") {
     @Override
@@ -77,44 +78,49 @@ final class BrowserSettingsPanel {
     }
   };
 
-  private static final ColumnInfo[] COLUMNS = {ACTIVE_COLUMN_INFO, new EditableColumnInfo<ConfigurableWebBrowser, String>("Name") {
-    @Override
-    public String valueOf(ConfigurableWebBrowser item) {
-      return item.getName();
-    }
+  private static final ColumnInfo[] COLUMNS = {
+    ACTIVE_COLUMN_INFO,
+    new EditableColumnInfo<ConfigurableWebBrowser, String>("Name") {
+      @Override
+      public String valueOf(ConfigurableWebBrowser item) {
+        return item.getName();
+      }
 
-    @Override
-    public void setValue(ConfigurableWebBrowser item, String value) {
-      item.setName(value);
-    }
-  }, new ColumnInfo<ConfigurableWebBrowser, BrowserFamily>("Family") {
-    @Override
-    public Class getColumnClass() {
-      return BrowserFamily.class;
-    }
+      @Override
+      public void setValue(ConfigurableWebBrowser item, String value) {
+        item.setName(value);
+      }
+    },
+    new ColumnInfo<ConfigurableWebBrowser, BrowserFamily>("Family") {
+      @Override
+      public Class getColumnClass() {
+        return BrowserFamily.class;
+      }
 
-    @Override
-    public BrowserFamily valueOf(ConfigurableWebBrowser item) {
-      return item.getFamily();
-    }
+      @Override
+      public BrowserFamily valueOf(ConfigurableWebBrowser item) {
+        return item.getFamily();
+      }
 
-    @Override
-    public void setValue(ConfigurableWebBrowser item, BrowserFamily value) {
-      item.setFamily(value);
-      item.setSpecificSettings(value.createBrowserSpecificSettings());
-    }
+      @Override
+      public void setValue(ConfigurableWebBrowser item, BrowserFamily value) {
+        item.setFamily(value);
+        item.setSpecificSettings(value.createBrowserSpecificSettings());
+      }
 
-    @Nonnull
-    @Override
-    public TableCellRenderer getRenderer(ConfigurableWebBrowser item) {
-      return IconTableCellRenderer.ICONABLE;
-    }
+      @Nonnull
+      @Override
+      public TableCellRenderer getRenderer(ConfigurableWebBrowser item) {
+        return IconTableCellRenderer.ICONABLE;
+      }
 
-    @Override
-    public boolean isCellEditable(ConfigurableWebBrowser item) {
-      return !WebBrowserManager.getInstance().isPredefinedBrowser(item);
-    }
-  }, PATH_COLUMN_INFO};
+      @Override
+      public boolean isCellEditable(ConfigurableWebBrowser item) {
+        return !WebBrowserManager.getInstance().isPredefinedBrowser(item);
+      }
+    },
+    PATH_COLUMN_INFO
+  };
   
   private final Provider<WebSearchOptions> myWebSearchOptionsProvider;
 
@@ -138,7 +144,7 @@ final class BrowserSettingsPanel {
     myWebSearchOptionsProvider = webSearchOptionsProvider;
     root = new JPanel(new BorderLayout());
 
-    myShowBrowserPopupCheckBox = CheckBox.create("Show browser popup in the editor");
+    myShowBrowserPopupCheckBox = CheckBox.create(LocalizeValue.localizeTODO("Show browser popup in the editor"));
 
     myAlternativeBrowserPathBox = FileChooserTextBoxBuilder.create(null)
       .fileChooserDescriptor(APP_FILE_CHOOSER_DESCRIPTOR)
@@ -191,20 +197,29 @@ final class BrowserSettingsPanel {
 
       @Override
       public ConfigurableWebBrowser clone(@Nonnull ConfigurableWebBrowser item, boolean forInPlaceEditing) {
-        return new ConfigurableWebBrowser(forInPlaceEditing ? item.getId() : UUID.randomUUID(), item.getFamily(), item.getName(), item.getPath(), item.isActive(),
-                                          forInPlaceEditing ? item.getSpecificSettings() : cloneSettings(item));
+        return new ConfigurableWebBrowser(
+          forInPlaceEditing ? item.getId() : UUID.randomUUID(),
+          item.getFamily(),
+          item.getName(),
+          item.getPath(),
+          item.isActive(),
+          forInPlaceEditing ? item.getSpecificSettings() : cloneSettings(item)
+        );
       }
 
       @Override
-      public void edit(@Nonnull ConfigurableWebBrowser browser, @Nonnull Function<ConfigurableWebBrowser, ConfigurableWebBrowser> mutator, boolean isAdd) {
+      public void edit(
+        @Nonnull ConfigurableWebBrowser browser,
+        @Nonnull Function<ConfigurableWebBrowser, ConfigurableWebBrowser> mutator,
+        boolean isAdd
+      ) {
         BrowserSpecificSettings settings = cloneSettings(browser);
         if (settings == null) {
           return;
         }
 
-        ShowSettingsUtil.getInstance().editConfigurable(browsersTable, settings.createConfigurable()).doWhenDone(() -> {
-          mutator.apply(browser).setSpecificSettings(settings);
-        });
+        ShowSettingsUtil.getInstance().editConfigurable(browsersTable, settings.createConfigurable())
+          .doWhenDone(() -> mutator.apply(browser).setSpecificSettings(settings));
       }
 
       @Nullable
@@ -242,8 +257,12 @@ final class BrowserSettingsPanel {
     defaultBrowserPanel.left(LabeledBuilder.simple(LocalizeValue.localizeTODO("Default Browser:"), myDefaultBrowserPolicyComboBox));
     defaultBrowserPanel.center(myAlternativeBrowserPathBox.getComponent());
 
-    ComboBox.Builder<WebSearchEngine> webSearchEngineBuilder = ComboBox.<WebSearchEngine>builder().fillByEnum(WebSearchEngine.class, WebSearchEngine::getPresentableName);
-    bottomPanel.add(LabeledBuilder.sided(LocalizeValue.localizeTODO("Web Search Engine:"), myWebSearchEngineComboBox = webSearchEngineBuilder.build()));
+    ComboBox.Builder<WebSearchEngine> webSearchEngineBuilder =
+      ComboBox.<WebSearchEngine>builder().fillByEnum(WebSearchEngine.class, WebSearchEngine::getPresentableName);
+    bottomPanel.add(LabeledBuilder.sided(
+      LocalizeValue.localizeTODO("Web Search Engine:"),
+      myWebSearchEngineComboBox = webSearchEngineBuilder.build()
+    ));
 
     bottomPanel.add(myShowBrowserPopupCheckBox);
 
@@ -309,21 +328,19 @@ final class BrowserSettingsPanel {
     GeneralSettings generalSettings = GeneralSettings.getInstance();
 
     DefaultBrowserPolicy defaultBrowserPolicy = getDefaultBrowser();
-    if (getDefaultBrowserPolicy(browserManager) != defaultBrowserPolicy || browserManager.isShowBrowserHover() != myShowBrowserPopupCheckBox.getValueOrError()) {
+    if (getDefaultBrowserPolicy(browserManager) != defaultBrowserPolicy
+      || browserManager.isShowBrowserHover() != myShowBrowserPopupCheckBox.getValueOrError()) {
       return true;
     }
 
-    if (defaultBrowserPolicy == DefaultBrowserPolicy.ALTERNATIVE && !Comparing.strEqual(generalSettings.getBrowserPathOrDefault(), myAlternativeBrowserPathBox.getValue())) {
+    if (defaultBrowserPolicy == DefaultBrowserPolicy.ALTERNATIVE
+      && !Comparing.strEqual(generalSettings.getBrowserPathOrDefault(), myAlternativeBrowserPathBox.getValue())) {
       return true;
     }
 
     WebSearchOptions webSearchOptions = myWebSearchOptionsProvider.get();
 
-    if(webSearchOptions.getEngine() != myWebSearchEngineComboBox.getValue()) {
-      return true;
-    }
-
-    return browsersEditor.isModified();
+    return webSearchOptions.getEngine() != myWebSearchEngineComboBox.getValue() || browsersEditor.isModified();
   }
 
   @RequiredUIAccess
@@ -377,8 +394,8 @@ final class BrowserSettingsPanel {
   }
 
   public void selectBrowser(@Nonnull WebBrowser browser) {
-    if (browser instanceof ConfigurableWebBrowser) {
-      browsersEditor.selectItem((ConfigurableWebBrowser)browser);
+    if (browser instanceof ConfigurableWebBrowser configurableWebBrowser) {
+      browsersEditor.selectItem(configurableWebBrowser);
     }
   }
 }
