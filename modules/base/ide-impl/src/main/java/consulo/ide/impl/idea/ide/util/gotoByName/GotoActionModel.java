@@ -11,7 +11,6 @@ import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.ui.UISettings;
 import consulo.application.util.NotNullLazyValue;
 import consulo.application.util.Semaphore;
-import consulo.application.util.SystemInfo;
 import consulo.application.util.VolatileNotNullLazyValue;
 import consulo.application.util.matcher.MatcherTextRange;
 import consulo.application.util.matcher.WordPrefixMatcher;
@@ -21,21 +20,20 @@ import consulo.component.util.localize.BundleBase;
 import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
 import consulo.dataContext.DataContext;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.base.BaseShowSettingsUtil;
 import consulo.ide.impl.idea.ide.actions.ApplyIntentionAction;
 import consulo.ide.impl.idea.ide.ui.search.BooleanOptionDescription;
 import consulo.ide.impl.idea.ide.ui.search.OptionDescription;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.ArrayUtilRt;
-import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.ToggleSwitch;
@@ -48,10 +46,13 @@ import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
-import org.jetbrains.annotations.NonNls;
-
+import consulo.ui.style.StyleManager;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.ObjectUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -132,26 +133,26 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
 
   @Override
   public String getPromptText() {
-    return IdeBundle.message("prompt.gotoaction.enter.action");
+    return IdeLocalize.promptGotoactionEnterAction().get();
   }
 
   @Nullable
   @Override
   public String getCheckBoxName() {
-    return IdeBundle.message("checkbox.disabled.included");
+    return IdeLocalize.checkboxDisabledIncluded().get();
   }
 
 
   @Nonnull
   @Override
   public String getNotInMessage() {
-    return IdeBundle.message("label.no.enabled.actions.found");
+    return IdeLocalize.labelNoEnabledActionsFound().get();
   }
 
   @Nonnull
   @Override
   public String getNotFoundMessage() {
-    return IdeBundle.message("label.no.actions.found");
+    return IdeLocalize.labelNoActionsFound().get();
   }
 
   @Override
@@ -332,7 +333,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
   public String getGroupName(@Nonnull OptionDescription description) {
     //if (description instanceof RegistryTextOptionDescriptor) return "Registry";
     String groupName = description.getGroupName();
-    String settings = SystemInfo.isMac ? "Preferences" : "Settings";
+    String settings = Platform.current().os().isMac() ? "Preferences" : "Settings";
     if (groupName == null || groupName.equals(description.getHit())) return settings;
     return settings + " > " + groupName;
   }
@@ -783,7 +784,8 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
       }
       else if (value instanceof OptionDescription) {
         if (!isSelected && !(value instanceof BooleanOptionDescription)) {
-          Color descriptorBg = UIUtil.isUnderDarcula() ? ColorUtil.brighter(UIUtil.getListBackground(), 1) : LightColors.SLIGHTLY_GRAY;
+          Color descriptorBg = StyleManager.get().getCurrentStyle().isDark()
+            ? ColorUtil.brighter(UIUtil.getListBackground(), 1) : LightColors.SLIGHTLY_GRAY;
           panel.setBackground(descriptorBg);
           nameComponent.setBackground(descriptorBg);
         }

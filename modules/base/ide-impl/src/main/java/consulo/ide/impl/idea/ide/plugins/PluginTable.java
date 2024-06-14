@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.plugins;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awt.ColumnInfo;

@@ -11,7 +11,7 @@ import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.application.util.matcher.NameUtil;
 import consulo.component.ProcessCanceledException;
 import consulo.ide.impl.idea.ide.actions.searcheverywhere.FoundItemDescriptor;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.CollectConsumer;
 import consulo.ide.impl.idea.util.SynchronizedCollectConsumer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

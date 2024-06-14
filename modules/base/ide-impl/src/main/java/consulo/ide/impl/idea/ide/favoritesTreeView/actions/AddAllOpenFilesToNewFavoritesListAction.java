@@ -17,11 +17,11 @@
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
 import consulo.application.AllIcons;
-import consulo.ide.IdeBundle;
+import consulo.language.editor.CommonDataKeys;
+import consulo.platform.base.localize.IdeLocalize;
+import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.project.Project;
 
 /**
  * User: anna
@@ -29,8 +29,11 @@ import consulo.project.Project;
  */
 class AddAllOpenFilesToNewFavoritesListAction extends AnAction {
   public AddAllOpenFilesToNewFavoritesListAction() {
-    super(IdeBundle.message("action.add.all.open.tabs.to.new.favorites.list"),
-          IdeBundle.message("action.add.to.new.favorites.list"), AllIcons.General.AddFavoritesList);
+    super(
+      IdeLocalize.actionAddAllOpenTabsToNewFavoritesList(),
+      IdeLocalize.actionAddToNewFavoritesList(),
+      AllIcons.General.AddFavoritesList
+    );
   }
 
   @Override

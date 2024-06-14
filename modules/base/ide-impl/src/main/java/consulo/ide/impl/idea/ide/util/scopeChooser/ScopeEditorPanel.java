@@ -16,58 +16,53 @@
 package consulo.ide.impl.idea.ide.util.scopeChooser;
 
 import consulo.application.AllIcons;
-import consulo.ide.IdeBundle;
-import consulo.ui.UIAccessScheduler;
-import consulo.ui.ex.awt.action.ComboBoxAction;
 import consulo.application.ApplicationManager;
+import consulo.application.progress.ProgressManager;
+import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.component.ProcessCanceledException;
+import consulo.component.extension.Extensions;
+import consulo.configurable.ConfigurationException;
 import consulo.content.scope.*;
 import consulo.execution.ui.awt.RawCommandLineEditor;
-import consulo.ide.impl.psi.search.scope.packageSet.IntersectionPackageSet;
-import consulo.ide.impl.psi.search.scope.packageSet.UnionPackageSet;
-import consulo.ui.ex.DarculaColors;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.JBColor;
-import consulo.component.extension.Extensions;
-import consulo.module.Module;
-import consulo.module.ModuleManager;
-import consulo.configurable.ConfigurationException;
-import consulo.component.ProcessCanceledException;
-import consulo.application.progress.ProgressManager;
-import consulo.project.Project;
-import consulo.ui.ex.awt.PopupHandler;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.VerticalFlowLayout;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
-import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.packageDependencies.DependencyUISettings;
 import consulo.ide.impl.idea.packageDependencies.ui.*;
-import consulo.ide.impl.idea.ui.*;
-import consulo.ui.ex.awt.tree.Tree;
-import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.tree.TreeUtil;
-import consulo.ui.ex.update.Activatable;
-import consulo.ui.ex.awt.update.UiNotifyConnector;
+import consulo.ide.impl.idea.ui.SmartExpander;
+import consulo.ide.impl.psi.search.scope.packageSet.IntersectionPackageSet;
+import consulo.ide.impl.psi.search.scope.packageSet.UnionPackageSet;
 import consulo.localize.LocalizeValue;
+import consulo.module.Module;
+import consulo.module.ModuleManager;
+import consulo.platform.base.localize.IdeLocalize;
+import consulo.project.Project;
+import consulo.ui.UIAccessScheduler;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.DarculaColors;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.PopupHandler;
+import consulo.ui.ex.awt.ScrollPaneFactory;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.VerticalFlowLayout;
+import consulo.ui.ex.awt.action.ComboBoxAction;
+import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
+import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
+import consulo.ui.ex.awt.tree.Tree;
+import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.awt.update.UiNotifyConnector;
+import consulo.ui.ex.update.Activatable;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.TreeWillExpandListener;
 import javax.swing.tree.ExpandVetoException;
 import javax.swing.tree.TreePath;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.ArrayList;
@@ -120,12 +115,7 @@ public class ScopeEditorPanel {
 
     myTreeExpansionMonitor = PackageTreeExpansionMonitor.install(myPackageTree, myProject);
 
-    myTreeMarker = new Marker() {
-      @Override
-      public boolean isMarked(VirtualFile file) {
-        return myCurrentScope != null && myCurrentScope.contains(file, project, myHolder);
-      }
-    };
+    myTreeMarker = file -> myCurrentScope != null && myCurrentScope.contains(file, project, myHolder);
 
     myPatternField.setDialogCaption("Pattern");
     myPatternField.addValueListener(event -> onTextChange());
@@ -171,7 +161,7 @@ public class ScopeEditorPanel {
 
   private void updateCaretPositionText() {
     if (myErrorMessage != null) {
-      myCaretPositionLabel.setText(IdeBundle.message("label.scope.editor.caret.position", myCaretPosition + 1));
+      myCaretPositionLabel.setText(IdeLocalize.labelScopeEditorCaretPosition(myCaretPosition + 1).get());
     }
     else {
       myCaretPositionLabel.setText("");
@@ -242,21 +232,18 @@ public class ScopeEditorPanel {
   }
 
   private JComponent createActionsPanel() {
-    final JButton include = new JButton(IdeBundle.message("button.include"));
-    final JButton includeRec = new JButton(IdeBundle.message("button.include.recursively"));
-    final JButton exclude = new JButton(IdeBundle.message("button.exclude"));
-    final JButton excludeRec = new JButton(IdeBundle.message("button.exclude.recursively"));
-    myPackageTree.getSelectionModel().addTreeSelectionListener(new TreeSelectionListener() {
-      @Override
-      public void valueChanged(TreeSelectionEvent e) {
-        final boolean recursiveEnabled = isButtonEnabled(true, e.getPaths(), e);
-        includeRec.setEnabled(recursiveEnabled);
-        excludeRec.setEnabled(recursiveEnabled);
+    final JButton include = new JButton(IdeLocalize.buttonInclude().get());
+    final JButton includeRec = new JButton(IdeLocalize.buttonIncludeRecursively().get());
+    final JButton exclude = new JButton(IdeLocalize.buttonExclude().get());
+    final JButton excludeRec = new JButton(IdeLocalize.buttonExcludeRecursively().get());
+    myPackageTree.getSelectionModel().addTreeSelectionListener(e -> {
+      final boolean recursiveEnabled = isButtonEnabled(true, e.getPaths(), e);
+      includeRec.setEnabled(recursiveEnabled);
+      excludeRec.setEnabled(recursiveEnabled);
 
-        final boolean nonRecursiveEnabled = isButtonEnabled(false, e.getPaths(), e);
-        include.setEnabled(nonRecursiveEnabled);
-        exclude.setEnabled(nonRecursiveEnabled);
-      }
+      final boolean nonRecursiveEnabled = isButtonEnabled(false, e.getPaths(), e);
+      include.setEnabled(nonRecursiveEnabled);
+      exclude.setEnabled(nonRecursiveEnabled);
     });
 
     JPanel buttonsPanel = new JPanel(new VerticalFlowLayout());
@@ -265,30 +252,10 @@ public class ScopeEditorPanel {
     buttonsPanel.add(exclude);
     buttonsPanel.add(excludeRec);
 
-    include.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        includeSelected(false);
-      }
-    });
-    includeRec.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        includeSelected(true);
-      }
-    });
-    exclude.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        excludeSelected(false);
-      }
-    });
-    excludeRec.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        excludeSelected(true);
-      }
-    });
+    include.addActionListener(e -> includeSelected(false));
+    includeRec.addActionListener(e -> includeSelected(true));
+    exclude.addActionListener(e -> excludeSelected(false));
+    excludeRec.addActionListener(e -> excludeSelected(true));
 
     return buttonsPanel;
   }
@@ -326,7 +293,9 @@ public class ScopeEditorPanel {
       if (myCurrentScope == null) {
         myCurrentScope = new ComplementPackageSet(set);
       } else if (myCurrentScope instanceof InvalidPackageSet) {
-        myCurrentScope = StringUtil.isEmpty(myCurrentScope.getText()) ? new ComplementPackageSet(set) : new IntersectionPackageSet(myCurrentScope, new ComplementPackageSet(set));
+        myCurrentScope = StringUtil.isEmpty(myCurrentScope.getText())
+          ? new ComplementPackageSet(set)
+          : new IntersectionPackageSet(myCurrentScope, new ComplementPackageSet(set));
       }
       else {
         final boolean[] append = {true};
@@ -405,11 +374,11 @@ public class ScopeEditorPanel {
   private ArrayList<PackageSet> getSelectedSets(boolean recursively) {
     int[] rows = myPackageTree.getSelectionRows();
     if (rows == null) return null;
-    final ArrayList<PackageSet> result = new ArrayList<PackageSet>();
+    final ArrayList<PackageSet> result = new ArrayList<>();
     for (int row : rows) {
       final PackageDependenciesNode node = (PackageDependenciesNode)myPackageTree.getPathForRow(row).getLastPathComponent();
-      final PackageSet set = PatternDialectProvider.findById(DependencyUISettings.getInstance().getScopeType()).createPackageSet(node,
-                                                                                                                                 recursively);
+      final PackageSet set = PatternDialectProvider.findById(DependencyUISettings.getInstance().getScopeType())
+        .createPackageSet(node, recursively);
       if (set != null) {
         result.add(set);
       }
@@ -420,12 +389,7 @@ public class ScopeEditorPanel {
 
   private JComponent createTreeToolbar() {
     final DefaultActionGroup group = new DefaultActionGroup();
-    final Runnable update = new Runnable() {
-      @Override
-      public void run() {
-        rebuild(true);
-      }
-    };
+    final Runnable update = () -> rebuild(true);
     group.add(new FlattenPackagesAction(update));
     final PatternDialectProvider[] dialectProviders = Extensions.getExtensions(PatternDialectProvider.EP_NAME);
     for (PatternDialectProvider provider : dialectProviders) {
@@ -451,43 +415,32 @@ public class ScopeEditorPanel {
 
   private void rebuild(final boolean updateText, @Nullable final Runnable runnable, final boolean requestFocus, final int delayMillis){
     myUpdateAlarm.cancel(false);
-    final Runnable request = new Runnable() {
-      @Override
-      public void run() {
-        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
-          @Override
-          public void run() {
-            if (updateText) {
-              final String text = myCurrentScope != null ? myCurrentScope.getText() : null;
-              SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                  try {
-                    myIsInUpdate = true;
-                    myPatternField.setText(text);
-                  }
-                  finally {
-                    myIsInUpdate = false;
-                  }
-                }
-              });
-            }
-
-            try {
-              if (!myProject.isDisposed()) {
-                updateTreeModel(requestFocus);
-              }
-            }
-            catch (ProcessCanceledException e) {
-              return;
-            }
-            if (runnable != null) {
-              runnable.run();
-            }
+    final Runnable request = () -> ApplicationManager.getApplication().executeOnPooledThread((Runnable) () -> {
+      if (updateText) {
+        final String text = myCurrentScope != null ? myCurrentScope.getText() : null;
+        SwingUtilities.invokeLater(() -> {
+          try {
+            myIsInUpdate = true;
+            myPatternField.setText(text);
+          }
+          finally {
+            myIsInUpdate = false;
           }
         });
       }
-    };
+
+      try {
+        if (!myProject.isDisposed()) {
+          updateTreeModel(requestFocus);
+        }
+      }
+      catch (ProcessCanceledException e) {
+        return;
+      }
+      if (runnable != null) {
+        runnable.run();
+      }
+    });
     myUpdateAlarm = AppExecutorUtil.getAppScheduledExecutorService().schedule(request, delayMillis, TimeUnit.MILLISECONDS);
   }
 
@@ -524,13 +477,13 @@ public class ScopeEditorPanel {
 
   private ActionGroup createTreePopupActions() {
     final DefaultActionGroup actionGroup = new DefaultActionGroup();
-    actionGroup.add(new AnAction(IdeBundle.message("button.include")) {
+    actionGroup.add(new AnAction(IdeLocalize.buttonInclude()) {
       @Override
       public void actionPerformed(AnActionEvent e) {
         includeSelected(false);
       }
     });
-    actionGroup.add(new AnAction(IdeBundle.message("button.include.recursively")) {
+    actionGroup.add(new AnAction(IdeLocalize.buttonIncludeRecursively()) {
       @Override
       public void actionPerformed(AnActionEvent e) {
         includeSelected(true);
@@ -542,13 +495,13 @@ public class ScopeEditorPanel {
       }
     });
 
-    actionGroup.add(new AnAction(IdeBundle.message("button.exclude")) {
+    actionGroup.add(new AnAction(IdeLocalize.buttonExclude()) {
       @Override
       public void actionPerformed(AnActionEvent e) {
         excludeSelected(false);
       }
     });
-    actionGroup.add(new AnAction(IdeBundle.message("button.exclude.recursively")) {
+    actionGroup.add(new AnAction(IdeLocalize.buttonExcludeRecursively()) {
       @Override
       public void actionPerformed(AnActionEvent e) {
         excludeSelected(true);
@@ -567,47 +520,40 @@ public class ScopeEditorPanel {
     PanelProgressIndicator progress = createProgressIndicator(requestFocus);
     progress.setBordersVisible(false);
     myCurrentProgress = progress;
-    Runnable updateModel = new Runnable() {
-      @Override
-      public void run() {
-        final ProcessCanceledException [] ex = new ProcessCanceledException[1];
-        ApplicationManager.getApplication().runReadAction(new Runnable() {
-          @Override
-          public void run() {
-            if (myProject.isDisposed()) return;
-            try {
-              myTreeExpansionMonitor.freeze();
-              final TreeModel model = PatternDialectProvider.findById(DependencyUISettings.getInstance().getScopeType()).createTreeModel(myProject, myTreeMarker);
-              ((PackageDependenciesNode)model.getRoot()).sortChildren();
-              if (myErrorMessage == null) {
-                myMatchingCountLabel
-                  .setText(IdeBundle.message("label.scope.contains.files", model.getMarkedFileCount(), model.getTotalFileCount()));
-                myMatchingCountLabel.setForeground(new JLabel().getForeground());
-              }
-              else {
-                showErrorMessage();
-              }
-
-              SwingUtilities.invokeLater(new Runnable(){
-                @Override
-                public void run() { //not under progress
-                  myPackageTree.setModel(model);
-                  myTreeExpansionMonitor.restore();
-                }
-              });
-            } catch (ProcessCanceledException e) {
-              ex[0] = e;
-            }
-            finally {
-              myCurrentProgress = null;
-              //update label
-              setToComponent(myMatchingCountLabel, requestFocus);
-            }
+    Runnable updateModel = () -> {
+      final ProcessCanceledException [] ex = new ProcessCanceledException[1];
+      ApplicationManager.getApplication().runReadAction(() -> {
+        if (myProject.isDisposed()) return;
+        try {
+          myTreeExpansionMonitor.freeze();
+          final TreeModel model = PatternDialectProvider.findById(DependencyUISettings.getInstance().getScopeType())
+            .createTreeModel(myProject, myTreeMarker);
+          ((PackageDependenciesNode)model.getRoot()).sortChildren();
+          if (myErrorMessage == null) {
+            myMatchingCountLabel.setText(
+              IdeLocalize.labelScopeContainsFiles(model.getMarkedFileCount(), model.getTotalFileCount()).get()
+            );
+            myMatchingCountLabel.setForeground(new JLabel().getForeground());
           }
-        });
-        if (ex[0] != null) {
-          throw ex[0];
+          else {
+            showErrorMessage();
+          }
+
+          SwingUtilities.invokeLater(() -> { //not under progress
+            myPackageTree.setModel(model);
+            myTreeExpansionMonitor.restore();
+          });
+        } catch (ProcessCanceledException e) {
+          ex[0] = e;
         }
+        finally {
+          myCurrentProgress = null;
+          //update label
+          setToComponent(myMatchingCountLabel, requestFocus);
+        }
+      });
+      if (ex[0] != null) {
+        throw ex[0];
       }
     };
     ProgressManager.getInstance().runProcess(updateModel, progress);
@@ -665,13 +611,15 @@ public class ScopeEditorPanel {
     private static final Color PARTIAL_INCLUDED = new JBColor(new Color(0, 50, 160), DarculaColors.BLUE);
 
     @Override
-    public void customizeCellRenderer(JTree tree,
-                                      Object value,
-                                      boolean selected,
-                                      boolean expanded,
-                                      boolean leaf,
-                                      int row,
-                                      boolean hasFocus) {
+    public void customizeCellRenderer(
+      JTree tree,
+      Object value,
+      boolean selected,
+      boolean expanded,
+      boolean leaf,
+      int row,
+      boolean hasFocus
+    ) {
       if (value instanceof PackageDependenciesNode) {
         PackageDependenciesNode node = (PackageDependenciesNode)value;
         setIcon(node.getIcon());
@@ -726,8 +674,11 @@ public class ScopeEditorPanel {
     private final Runnable myUpdate;
 
     public FilterLegalsAction(final Runnable update) {
-      super(IdeBundle.message("action.show.included.only"),
-            IdeBundle.message("action.description.show.included.only"), AllIcons.General.Filter);
+      super(
+        IdeLocalize.actionShowIncludedOnly(),
+        IdeLocalize.actionDescriptionShowIncludedOnly(),
+        AllIcons.General.Filter
+      );
       myUpdate = update;
     }
 

@@ -17,63 +17,47 @@
 package consulo.ide.impl.idea.ide.fileTemplates.impl;
 
 import com.google.common.annotations.VisibleForTesting;
-import consulo.language.editor.template.TemplateColors;
-import consulo.ide.IdeBundle;
-import consulo.fileTemplate.FileTemplate;
-import consulo.fileTemplate.FileTemplateManager;
-import consulo.fileTemplate.impl.internal.UrlUtil;
-import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
-import consulo.language.editor.highlight.SyntaxHighlighter;
-import consulo.language.editor.highlight.SyntaxHighlighterBase;
-import consulo.language.editor.highlight.SyntaxHighlighterFactory;
-import consulo.language.file.FileTypeManager;
-import consulo.language.lexer.Lexer;
-import consulo.language.lexer.MergingLexerAdapter;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorFactory;
-import consulo.codeEditor.EditorSettings;
+import consulo.application.ui.wm.IdeFocusManager;
+import consulo.codeEditor.*;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributesKey;
-import consulo.document.event.DocumentAdapter;
-import consulo.document.event.DocumentEvent;
-import consulo.codeEditor.EditorEx;
-import consulo.language.editor.highlight.LayerDescriptor;
-import consulo.language.editor.highlight.LayeredLexerEditorHighlighter;
-import consulo.codeEditor.EditorHighlighter;
-import consulo.language.editor.highlight.EditorHighlighterFactory;
-import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeChooser;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
-import consulo.language.plain.PlainTextFileType;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Splitter;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.document.Document;
+import consulo.document.event.DocumentAdapter;
+import consulo.document.event.DocumentEvent;
+import consulo.fileTemplate.FileTemplate;
+import consulo.fileTemplate.FileTemplateManager;
+import consulo.fileTemplate.impl.internal.UrlUtil;
+import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeChooser;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.application.ui.wm.IdeFocusManager;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.xml.util.XmlStringUtil;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
+import consulo.language.editor.highlight.*;
+import consulo.language.editor.template.TemplateColors;
+import consulo.language.file.FileTypeManager;
+import consulo.language.file.light.LightVirtualFile;
+import consulo.language.lexer.Lexer;
+import consulo.language.lexer.MergingLexerAdapter;
+import consulo.language.plain.PlainTextFileType;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
-import consulo.language.ast.IElementType;
-import consulo.language.ast.TokenSet;
-import consulo.language.file.light.LightVirtualFile;
-import consulo.ui.ex.awt.BrowserHyperlinkListener;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.SeparatorFactory;
-import consulo.ui.ex.awt.HorizontalLayout;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.JBHtmlEditorKit;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.logging.Logger;
+import consulo.platform.base.localize.IdeLocalize;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.*;
+import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -134,18 +118,34 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
   public void setShowInternalMessage(String message) {
     myTopPanel.removeAll();
     if (message == null) {
-      myTopPanel.add(new JLabel(IdeBundle.message("label.name")),
-                     new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
-                                            JBUI.insetsRight(2), 0, 0));
-      myTopPanel.add(myNameField,
-                     new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER,
-                                            GridBagConstraints.HORIZONTAL, JBUI.insets(3, 2), 0, 0));
-      myTopPanel.add(new JLabel(IdeBundle.message("label.extension")),
-                     new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
-                                            JBUI.insets(0, 2), 0, 0));
-      myTopPanel.add(myExtensionField,
-                     new GridBagConstraints(3, 0, 1, 1, .3, 0.0, GridBagConstraints.CENTER,
-                                            GridBagConstraints.HORIZONTAL, JBUI.insetsLeft(2), 0, 0));
+      myTopPanel.add(
+        new JLabel(IdeLocalize.labelName().get()),
+        new GridBagConstraints(
+          0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
+          JBUI.insetsRight(2), 0, 0
+        )
+      );
+      myTopPanel.add(
+        myNameField,
+        new GridBagConstraints(
+          1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER,
+          GridBagConstraints.HORIZONTAL, JBUI.insets(3, 2), 0, 0
+        )
+      );
+      myTopPanel.add(
+        new JLabel(IdeLocalize.labelExtension().get()),
+        new GridBagConstraints(
+          2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
+          JBUI.insets(0, 2), 0, 0
+        )
+      );
+      myTopPanel.add(
+        myExtensionField,
+        new GridBagConstraints(
+          3, 0, 1, 1, .3, 0.0, GridBagConstraints.CENTER,
+          GridBagConstraints.HORIZONTAL, JBUI.insetsLeft(2), 0, 0
+        )
+      );
       myExtensionField.setColumns(7);
     }
     myMainPanel.revalidate();
@@ -158,7 +158,7 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
 
   @Override
   public String getDisplayName() {
-    return IdeBundle.message("title.edit.file.template");
+    return IdeLocalize.titleEditFileTemplate().get();
   }
 
   @RequiredUIAccess
@@ -168,8 +168,8 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
     myNameField = new JTextField();
     myExtensionField = new JTextField();
     mySplitter = new Splitter(true, myProportion);
-    myAdjustBox = new JCheckBox(IdeBundle.message("checkbox.reformat.according.to.style"));
-    myLiveTemplateBox = new JCheckBox(IdeBundle.message("checkbox.enable.live.templates"));
+    myAdjustBox = new JCheckBox(IdeLocalize.checkboxReformatAccordingToStyle().get());
+    myLiveTemplateBox = new JCheckBox(IdeLocalize.checkboxEnableLiveTemplates().get());
     myTemplateEditor = createEditor();
 
     myDescriptionComponent = new JEditorPane();
@@ -181,19 +181,35 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
     myTopPanel = new JPanel(new GridBagLayout());
 
     JPanel descriptionPanel = new JPanel(new GridBagLayout());
-    descriptionPanel.add(SeparatorFactory.createSeparator(IdeBundle.message("label.description"), null),
-                         new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
-                                                JBUI.insetsBottom(2), 0, 0));
-    descriptionPanel.add(ScrollPaneFactory.createScrollPane(myDescriptionComponent),
-                         new GridBagConstraints(0, 1, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                                                JBUI.insetsTop(2), 0, 0));
+    descriptionPanel.add(
+      SeparatorFactory.createSeparator(IdeLocalize.labelDescription().get(), null),
+      new GridBagConstraints(
+        0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+        JBUI.insetsBottom(2), 0, 0
+      )
+    );
+    descriptionPanel.add(
+      ScrollPaneFactory.createScrollPane(myDescriptionComponent),
+      new GridBagConstraints(
+        0, 1, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+        JBUI.insetsTop(2), 0, 0
+      )
+    );
 
-    myMainPanel.add(myTopPanel,
-                    new GridBagConstraints(0, 0, 4, 1, 1.0, 0.0, GridBagConstraints.CENTER,
-                                           GridBagConstraints.HORIZONTAL, JBUI.emptyInsets(), 0, 0));
-    myMainPanel.add(mySplitter,
-                    new GridBagConstraints(0, 2, 4, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                                           JBUI.emptyInsets(), 0, 0));
+    myMainPanel.add(
+      myTopPanel,
+      new GridBagConstraints(
+        0, 0, 4, 1, 1.0, 0.0, GridBagConstraints.CENTER,
+        GridBagConstraints.HORIZONTAL, JBUI.emptyInsets(), 0, 0
+      )
+    );
+    myMainPanel.add(
+      mySplitter,
+      new GridBagConstraints(
+        0, 2, 4, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+        JBUI.emptyInsets(), 0, 0
+      )
+    );
 
     mySplitter.setSecondComponent(descriptionPanel);
     setShowInternalMessage(null);
@@ -312,7 +328,7 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
       String extension = myExtensionField.getText();
       String filename = name + "." + extension;
       if (name.length() == 0 || !isValidFilename(filename)) {
-        throw new ConfigurationException(IdeBundle.message("error.invalid.template.file.name.or.extension"));
+        throw new ConfigurationException(IdeLocalize.errorInvalidTemplateFileNameOrExtension().get());
       }
       FileType fileType = FileTypeManager.getInstance().getFileTypeByFileName(filename);
       if (fileType == UnknownFileType.INSTANCE) {
@@ -386,8 +402,12 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
     final FileType fileType = myVelocityFileType;
     if (fileType == UnknownFileType.INSTANCE) return null;
 
-    final PsiFile file = PsiFileFactory.getInstance(myProject).createFileFromText(name + ".txt.ft", fileType, text, 0, true);
-    file.getViewProvider().putUserData(FileTemplateManager.DEFAULT_TEMPLATE_PROPERTIES, FileTemplateManager.getInstance(myProject).getDefaultProperties());
+    final PsiFile file = PsiFileFactory.getInstance(myProject)
+      .createFileFromText(name + ".txt.ft", fileType, text, 0, true);
+    file.getViewProvider().putUserData(
+      FileTemplateManager.DEFAULT_TEMPLATE_PROPERTIES,
+      FileTemplateManager.getInstance(myProject).getDefaultProperties()
+    );
     return file;
   }
 
@@ -459,15 +479,15 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
 
   public void focusToNameField() {
     myNameField.selectAll();
-    IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> {
-      IdeFocusManager.getGlobalInstance().requestFocus(myNameField, true);
-    });
+    IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(
+      () -> IdeFocusManager.getGlobalInstance().requestFocus(myNameField, true)
+    );
   }
 
   public void focusToExtensionField() {
     myExtensionField.selectAll();
-    IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> {
-      IdeFocusManager.getGlobalInstance().requestFocus(myExtensionField, true);
-    });
+    IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(
+      () -> IdeFocusManager.getGlobalInstance().requestFocus(myExtensionField, true)
+    );
   }
 }

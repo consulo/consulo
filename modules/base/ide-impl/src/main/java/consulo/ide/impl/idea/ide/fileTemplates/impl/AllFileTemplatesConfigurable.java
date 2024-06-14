@@ -29,7 +29,9 @@ import consulo.fileTemplate.impl.internal.FileTemplateRegistratorImpl;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.actionSystem.DefaultCompactActionGroup;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.IdeLocalize;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.setting.ShowSettingsUtil;
@@ -62,11 +64,6 @@ import static consulo.fileTemplate.FileTemplateManager.*;
 @ExtensionImpl
 public class AllFileTemplatesConfigurable implements SearchableConfigurable, Configurable.NoMargin, Configurable.NoScroll, ProjectConfigurable {
   private static final Logger LOG = Logger.getInstance(AllFileTemplatesConfigurable.class);
-
-  private static final String TEMPLATES_TITLE = IdeBundle.message("tab.filetemplates.templates");
-  private static final String INCLUDES_TITLE = IdeBundle.message("tab.filetemplates.includes");
-  private static final String CODE_TITLE = IdeBundle.message("tab.filetemplates.code");
-  private static final String OTHER_TITLE = IdeBundle.message("tab.filetemplates.j2ee");
 
   private final Project myProject;
   private final FileTemplateManager myManager;
@@ -106,7 +103,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
   }
 
   private void onAdd() {
-    createTemplate(IdeBundle.message("template.unnamed"), PlainTextFileType.INSTANCE.getDefaultExtension(), "");
+    createTemplate(IdeLocalize.templateUnnamed().get(), PlainTextFileType.INSTANCE.getDefaultExtension(), "");
   }
 
   private FileTemplate createTemplate(final @Nonnull String prefName, final @Nonnull String extension, final @Nonnull String content) {
@@ -155,7 +152,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
 
   @Override
   public String getDisplayName() {
-    return IdeBundle.message("title.file.templates");
+    return IdeLocalize.titleFileTemplates().get();
   }
 
   @Override
@@ -178,19 +175,19 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
   @RequiredUIAccess
   @Override
   public JComponent createComponent(@Nonnull Disposable parentUIDisposable) {
-    myTemplatesList = new FileTemplateTabAsList(TEMPLATES_TITLE) {
+    myTemplatesList = new FileTemplateTabAsList(IdeLocalize.tabFiletemplatesTemplates().get()) {
       @Override
       public void onTemplateSelected() {
         onListSelectionChanged();
       }
     };
-    myIncludesList = new FileTemplateTabAsList(INCLUDES_TITLE) {
+    myIncludesList = new FileTemplateTabAsList(IdeLocalize.tabFiletemplatesIncludes().get()) {
       @Override
       public void onTemplateSelected() {
         onListSelectionChanged();
       }
     };
-    myCodeTemplatesList = new FileTemplateTabAsList(CODE_TITLE) {
+    myCodeTemplatesList = new FileTemplateTabAsList(IdeLocalize.tabFiletemplatesCode().get()) {
       @Override
       public void onTemplateSelected() {
         onListSelectionChanged();
@@ -202,7 +199,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
 
     List<FileTemplateGroupDescriptorFactory> factories = FileTemplateGroupDescriptorFactory.EP_NAME.getExtensionList();
     if (!factories.isEmpty()) {
-      myOtherTemplatesList = new FileTemplateTabAsTree(OTHER_TITLE) {
+      myOtherTemplatesList = new FileTemplateTabAsTree(IdeLocalize.tabFiletemplatesJ2ee().get()) {
         @Override
         public void onTemplateSelected() {
           onListSelectionChanged();
@@ -211,7 +208,6 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
         @Override
         protected FileTemplateNode initModel() {
           SortedSet<FileTemplateGroupDescriptor> categories = new TreeSet<>((o1, o2) -> o1.getTitle().compareTo(o2.getTitle()));
-
 
           for (FileTemplateGroupDescriptorFactory templateGroupFactory : factories) {
             ContainerUtil.addIfNotNull(categories, templateGroupFactory.getFileTemplatesDescriptor());
@@ -244,7 +240,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
     myTabbedPane.addChangeListener(e -> onTabChanged());
 
     DefaultActionGroup group = new DefaultActionGroup();
-    AnAction removeAction = new AnAction(IdeBundle.message("action.remove.template"), null, AllIcons.General.Remove) {
+    AnAction removeAction = new AnAction(IdeLocalize.actionRemoveTemplate(), LocalizeValue.empty(), AllIcons.General.Remove) {
       @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -259,7 +255,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
         e.getPresentation().setEnabled(selectedItem != null && !isInternalTemplate(selectedItem.getName(), myCurrentTab.getTitle()));
       }
     };
-    AnAction addAction = new AnAction(IdeBundle.message("action.create.template"), null, AllIcons.General.Add) {
+    AnAction addAction = new AnAction(IdeLocalize.actionCreateTemplate(), LocalizeValue.empty(), AllIcons.General.Add) {
       @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -273,7 +269,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
         e.getPresentation().setEnabled(!(myCurrentTab == myCodeTemplatesList || myCurrentTab == myOtherTemplatesList));
       }
     };
-    AnAction cloneAction = new AnAction(IdeBundle.message("action.copy.template"), null, PlatformIconGroup.actionsCopy()) {
+    AnAction cloneAction = new AnAction(IdeLocalize.actionCopyTemplate(), LocalizeValue.empty(), PlatformIconGroup.actionsCopy()) {
       @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -284,11 +280,12 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
       @Override
       public void update(@Nonnull AnActionEvent e) {
         super.update(e);
-        e.getPresentation()
-                .setEnabled(myCurrentTab != myCodeTemplatesList && myCurrentTab != myOtherTemplatesList && myCurrentTab.getSelectedTemplate() != null);
+        e.getPresentation().setEnabled(
+          myCurrentTab != myCodeTemplatesList && myCurrentTab != myOtherTemplatesList && myCurrentTab.getSelectedTemplate() != null
+        );
       }
     };
-    AnAction resetAction = new AnAction(IdeBundle.message("action.reset.to.default"), null, AllIcons.General.Reset) {
+    AnAction resetAction = new AnAction(IdeLocalize.actionResetToDefault(), LocalizeValue.empty(), AllIcons.General.Reset) {
       @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -356,12 +353,15 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
 
   private void onReset() {
     FileTemplate selected = myCurrentTab.getSelectedTemplate();
-    if (selected instanceof BundledFileTemplate) {
-      if (Messages.showOkCancelDialog(IdeBundle.message("prompt.reset.to.original.template"), IdeBundle.message("title.reset.template"),
-                                      Messages.getQuestionIcon()) != Messages.OK) {
+    if (selected instanceof BundledFileTemplate bundledFileTemplate) {
+      if (Messages.showOkCancelDialog(
+        IdeLocalize.promptResetToOriginalTemplate().get(),
+        IdeLocalize.titleResetTemplate().get(),
+        Messages.getQuestionIcon()
+      ) != Messages.OK) {
         return;
       }
-      ((BundledFileTemplate)selected).revertToDefaults();
+      bundledFileTemplate.revertToDefaults();
       myEditor.reset();
       myModified = true;
     }
@@ -413,7 +413,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
         if (Arrays.asList(myCurrentTab.getTemplates()).contains(prevTemplate)) {
           myCurrentTab.selectTemplate(prevTemplate);
         }
-        Messages.showErrorDialog(myMainPanel, e.getMessage(), IdeBundle.message("title.cannot.save.current.template"));
+        Messages.showErrorDialog(myMainPanel, e.getMessage(), IdeLocalize.titleCannotSaveCurrentTemplate().get());
         return false;
       }
     }
@@ -441,16 +441,16 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
     if (templateName == null) {
       return false;
     }
-    if (Comparing.strEqual(templateTabTitle, TEMPLATES_TITLE)) {
+    if (Comparing.strEqual(templateTabTitle, IdeLocalize.tabFiletemplatesTemplates().get())) {
       return isInternalTemplateName(templateName);
     }
-    if (Comparing.strEqual(templateTabTitle, CODE_TITLE)) {
+    if (Comparing.strEqual(templateTabTitle, IdeLocalize.tabFiletemplatesCode().get())) {
       return true;
     }
-    if (Comparing.strEqual(templateTabTitle, OTHER_TITLE)) {
+    if (Comparing.strEqual(templateTabTitle, IdeLocalize.tabFiletemplatesJ2ee().get())) {
       return true;
     }
-    if (Comparing.strEqual(templateTabTitle, INCLUDES_TITLE)) {
+    if (Comparing.strEqual(templateTabTitle, IdeLocalize.tabFiletemplatesIncludes().get())) {
       return Comparing.strEqual(templateName, FILE_HEADER_TEMPLATE_NAME);
     }
     return false;
@@ -502,7 +502,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
       final String currName = template.getName();
       if (currName.length() == 0) {
         itemWithError = template;
-        errorString = IdeBundle.message("error.please.specify.template.name");
+        errorString = IdeLocalize.errorPleaseSpecifyTemplateName().get();
         break;
       }
       if (allNames.contains(currName)) {
@@ -570,7 +570,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
   }
 
   public void selectTemplatesTab() {
-    selectTab(TEMPLATES_TITLE);
+    selectTab(IdeLocalize.tabFiletemplatesTemplates().get());
   }
 
   private boolean selectTab(String tabName) {
@@ -600,7 +600,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
   public void disposeUIResources() {
     if (myCurrentTab != null) {
       final PropertiesComponent propertiesComponent = PropertiesComponent.getInstance();
-      propertiesComponent.setValue(CURRENT_TAB, myCurrentTab.getTitle(), TEMPLATES_TITLE);
+      propertiesComponent.setValue(CURRENT_TAB, myCurrentTab.getTitle(), IdeLocalize.tabFiletemplatesTemplates().get());
       final FileTemplate template = myCurrentTab.getSelectedTemplate();
       if (template != null) {
         propertiesComponent.setValue(SELECTED_TEMPLATE, template.getName());
@@ -675,10 +675,16 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
       if (!myChangesCache.containsKey(myScheme)) {
         Map<String, FileTemplate[]> templates = new HashMap<>();
         FileTemplate[] allTemplates = myTemplatesList.getTemplates();
-        templates.put(DEFAULT_TEMPLATES_CATEGORY,
-                      ContainerUtil.filter(allTemplates, template -> !myInternalTemplateNames.contains(template.getName())).toArray(FileTemplate.EMPTY_ARRAY));
-        templates.put(INTERNAL_TEMPLATES_CATEGORY,
-                      ContainerUtil.filter(allTemplates, template -> myInternalTemplateNames.contains(template.getName())).toArray(FileTemplate.EMPTY_ARRAY));
+        templates.put(
+          DEFAULT_TEMPLATES_CATEGORY,
+          ContainerUtil.filter(allTemplates, template -> !myInternalTemplateNames.contains(template.getName()))
+            .toArray(FileTemplate.EMPTY_ARRAY)
+        );
+        templates.put(
+          INTERNAL_TEMPLATES_CATEGORY,
+          ContainerUtil.filter(allTemplates, template -> myInternalTemplateNames.contains(template.getName()))
+            .toArray(FileTemplate.EMPTY_ARRAY)
+        );
         templates.put(INCLUDES_TEMPLATES_CATEGORY, myIncludesList.getTemplates());
         templates.put(CODE_TEMPLATES_CATEGORY, myCodeTemplatesList.getTemplates());
         templates.put(J2EE_TEMPLATES_CATEGORY, myOtherTemplatesList == null ? FileTemplate.EMPTY_ARRAY : myOtherTemplatesList.getTemplates());

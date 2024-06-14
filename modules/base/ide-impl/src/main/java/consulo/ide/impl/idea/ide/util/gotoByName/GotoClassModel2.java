@@ -15,8 +15,6 @@
  */
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
-import consulo.application.util.SystemInfo;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.navigation.ChooseByNameContributor;
@@ -25,10 +23,12 @@ import consulo.language.Language;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.navigation.NavigationItem;
+import consulo.platform.Platform;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -60,29 +60,29 @@ public class GotoClassModel2 extends FilteringGotoByModel<Language> {
   @Override
   @Nullable
   public String getPromptText() {
-    return IdeBundle.message("prompt.gotoclass.enter.class.name");
+    return IdeLocalize.promptGotoclassEnterClassName().get();
   }
 
   @Override
   public String getCheckBoxName() {
-    return IdeBundle.message("checkbox.include.non.project.classes");
+    return IdeLocalize.checkboxIncludeNonProjectClasses().get();
   }
 
   @Override
   public String getNotInMessage() {
-    return IdeBundle.message("label.no.matches.found.in.project");
+    return IdeLocalize.labelNoMatchesFoundInProject().get();
   }
 
   @Override
   public String getNotFoundMessage() {
-    return IdeBundle.message("label.no.matches.found");
+    return IdeLocalize.labelNoMatchesFound().get();
   }
 
   @Override
   public char getCheckBoxMnemonic() {
     // Some combination like Alt+N, Ant+O, etc are a dead symbols, therefore
     // we have to change mnemonics for Mac users.
-    return SystemInfo.isMac?'P':'n';
+    return Platform.current().os().isMac() ? 'P' : 'n';
   }
 
   @Override

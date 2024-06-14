@@ -16,14 +16,13 @@
 
 package consulo.ide.impl.idea.ide.macro;
 
-import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.application.HelpManager;
 import consulo.dataContext.DataManager;
-import consulo.ide.IdeBundle;
-import consulo.language.editor.CommonDataKeys;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.module.Module;
 import consulo.pathMacro.Macro;
 import consulo.pathMacro.MacroManager;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBList;
@@ -31,12 +30,10 @@ import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.SeparatorFactory;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -54,9 +51,9 @@ public final class MacrosDialog extends DialogWrapper {
 
   public MacrosDialog(Project project, @Nullable Module module) {
     super(project, true);
-    MacroManager.getInstance().cacheMacrosPreview(SimpleDataContext.builder().add(CommonDataKeys.PROJECT, project).add(CommonDataKeys.MODULE, module).build());
-    setTitle(IdeBundle.message("title.macros"));
-    setOKButtonText(IdeBundle.message("button.insert"));
+    MacroManager.getInstance().cacheMacrosPreview(SimpleDataContext.builder().add(Project.KEY, project).add(Module.KEY, module).build());
+    setTitle(IdeLocalize.titleMacros());
+    setOKButtonText(IdeLocalize.buttonInsert().get());
 
     myMacrosModel = new DefaultListModel();
     myMacrosList = new JBList(myMacrosModel);
@@ -68,8 +65,8 @@ public final class MacrosDialog extends DialogWrapper {
   public MacrosDialog(Component parent) {
     super(parent, true);
     MacroManager.getInstance().cacheMacrosPreview(DataManager.getInstance().getDataContext(parent));
-    setTitle(IdeBundle.message("title.macros"));
-    setOKButtonText(IdeBundle.message("button.insert"));
+    setTitle(IdeLocalize.titleMacros());
+    setOKButtonText(IdeLocalize.buttonInsert().get());
 
     myMacrosModel = new DefaultListModel();
     myMacrosList = new JBList(myMacrosModel);
@@ -82,8 +79,8 @@ public final class MacrosDialog extends DialogWrapper {
   protected void init() {
     super.init();
 
-    java.util.List<Macro> macros = new ArrayList<Macro>(MacroManager.getInstance().getMacros());
-    Collections.sort(macros, new Comparator<Macro>() {
+    java.util.List<Macro> macros = new ArrayList<>(MacroManager.getInstance().getMacros());
+    Collections.sort(macros, new Comparator<>() {
       @Override
       public int compare(Macro macro1, Macro macro2) {
         String name1 = macro1.getName();
@@ -138,7 +135,7 @@ public final class MacrosDialog extends DialogWrapper {
     constr.gridy = 0;
     constr.anchor = GridBagConstraints.WEST;
     constr.fill = GridBagConstraints.HORIZONTAL;
-    panel.add(SeparatorFactory.createSeparator(IdeBundle.message("label.macros"), null), constr);
+    panel.add(SeparatorFactory.createSeparator(IdeLocalize.labelMacros().get(), null), constr);
 
     // macros list
     constr = new GridBagConstraints();
@@ -157,7 +154,7 @@ public final class MacrosDialog extends DialogWrapper {
     constr.gridy = 2;
     constr.anchor = GridBagConstraints.WEST;
     constr.fill = GridBagConstraints.HORIZONTAL;
-    panel.add(SeparatorFactory.createSeparator(IdeBundle.message("label.macro.preview"), null), constr);
+    panel.add(SeparatorFactory.createSeparator(IdeLocalize.labelMacroPreview().get(), null), constr);
 
     // preview
     constr = new GridBagConstraints();
@@ -193,18 +190,15 @@ public final class MacrosDialog extends DialogWrapper {
   }
 
   private void addListeners() {
-    myMacrosList.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-      @Override
-      public void valueChanged(ListSelectionEvent e) {
-        Macro macro = getSelectedMacro();
-        if (macro == null) {
-          myPreviewTextarea.setText("");
-          setOKActionEnabled(false);
-        }
-        else {
-          myPreviewTextarea.setText(macro.preview());
-          setOKActionEnabled(true);
-        }
+    myMacrosList.getSelectionModel().addListSelectionListener(e -> {
+      Macro macro = getSelectedMacro();
+      if (macro == null) {
+        myPreviewTextarea.setText("");
+        setOKActionEnabled(false);
+      }
+      else {
+        myPreviewTextarea.setText(macro.preview());
+        setOKActionEnabled(true);
       }
     });
 

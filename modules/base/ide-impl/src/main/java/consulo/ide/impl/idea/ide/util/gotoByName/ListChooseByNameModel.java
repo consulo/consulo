@@ -1,7 +1,7 @@
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.application.util.matcher.NameUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ui.ex.awt.UIUtil;

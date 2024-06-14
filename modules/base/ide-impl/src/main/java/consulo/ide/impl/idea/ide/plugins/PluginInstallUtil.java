@@ -15,19 +15,18 @@
  */
 package consulo.ide.impl.idea.ide.plugins;
 
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.startup.StartupActionScriptManager;
 import consulo.application.Application;
-import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.application.internal.ApplicationEx;
-import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.util.containers.ArrayListSet;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
+import consulo.ide.impl.idea.ide.startup.StartupActionScriptManager;
+import consulo.ide.impl.idea.util.containers.ArrayListSet;
 import consulo.ide.impl.plugins.InstalledPluginsState;
-
+import consulo.platform.base.localize.IdeLocalize;
+import consulo.ui.ex.awt.Messages;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,23 +44,29 @@ public class PluginInstallUtil {
 
   @Messages.YesNoResult
   public static int showShutDownIDEADialog() {
-    return showShutDownIDEADialog(IdeBundle.message("title.plugins.changed"));
+    return showShutDownIDEADialog(IdeLocalize.titlePluginsChanged().get());
   }
 
   @Messages.YesNoResult
   private static int showShutDownIDEADialog(final String title) {
-    String message = IdeBundle.message("message.idea.shutdown.required", ApplicationNamesInfo.getInstance().getFullProductName());
-    return Messages.showYesNoDialog(message, title, "Shut Down", POSTPONE, Messages.getQuestionIcon());
+    String message = IdeLocalize.messageIdeaShutdownRequired(Application.get().getName()).get();
+    return Messages.showYesNoDialog(
+      message,
+      title,
+      "Shut Down",
+      POSTPONE,
+      Messages.getQuestionIcon()
+    );
   }
 
   @Messages.YesNoResult
   public static int showRestartIDEADialog() {
-    return showRestartIDEADialog(IdeBundle.message("title.plugins.changed"));
+    return showRestartIDEADialog(IdeLocalize.titlePluginsChanged().get());
   }
 
   @Messages.YesNoResult
   private static int showRestartIDEADialog(final String title) {
-    String message = IdeBundle.message("message.idea.restart.required", ApplicationNamesInfo.getInstance().getFullProductName());
+    String message = IdeLocalize.messageIdeaRestartRequired(Application.get().getName()).get();
     return Messages.showYesNoDialog(message, title, "Restart", POSTPONE, Messages.getQuestionIcon());
   }
 

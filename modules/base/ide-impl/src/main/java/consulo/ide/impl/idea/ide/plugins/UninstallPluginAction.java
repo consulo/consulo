@@ -21,17 +21,18 @@ import consulo.application.dumb.DumbAware;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.plugins.InstalledPluginsState;
 import consulo.ide.impl.plugins.PluginActionListener;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.Messages;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +46,11 @@ public class UninstallPluginAction extends AnAction implements DumbAware {
   private final PluginManagerMain host;
 
   public UninstallPluginAction(PluginManagerMain mgr, PluginTable table) {
-    super(IdeBundle.message("action.uninstall.plugin"), IdeBundle.message("action.uninstall.plugin"), AllIcons.Actions.Uninstall);
+    super(
+      IdeLocalize.actionUninstallPlugin(),
+      IdeLocalize.actionUninstallPlugin(),
+      AllIcons.Actions.Uninstall
+    );
 
     pluginTable = table;
     host = mgr;
@@ -87,15 +92,22 @@ public class UninstallPluginAction extends AnAction implements DumbAware {
   }
 
   public static void uninstall(PluginManagerMain host, PluginDescriptor... selection) {
-    String message;
+    LocalizeValue message;
 
     if (selection.length == 1) {
-      message = IdeBundle.message("prompt.uninstall.plugin", selection[0].getName());
+      message = IdeLocalize.promptUninstallPlugin(selection[0].getName());
     }
     else {
-      message = IdeBundle.message("prompt.uninstall.several.plugins", selection.length);
+      message = IdeLocalize.promptUninstallSeveralPlugins(selection.length);
     }
-    if (Messages.showYesNoDialog(host.getMainPanel(), message, IdeBundle.message("title.plugin.uninstall"), Messages.getQuestionIcon()) != Messages.YES) return;
+    if (Messages.showYesNoDialog(
+      host.getMainPanel(),
+      message.get(),
+      IdeLocalize.titlePluginUninstall().get(),
+      Messages.getQuestionIcon()
+    ) != Messages.YES) {
+      return;
+    }
 
     List<PluginId> uninstalledPluginIds = new ArrayList<>();
     for (PluginDescriptor descriptor : selection) {
@@ -106,8 +118,13 @@ public class UninstallPluginAction extends AnAction implements DumbAware {
       //  not empty - issue warning instead of simple prompt.
       List<PluginDescriptor> dependant = host.getDependentList(descriptor);
       if (dependant.size() > 0) {
-        message = IdeBundle.message("several.plugins.depend.on.0.continue.to.remove", descriptor.getName());
-        actualDelete = (Messages.showYesNoDialog(host.getMainPanel(), message, IdeBundle.message("title.plugin.uninstall"), Messages.getQuestionIcon()) == Messages.YES);
+        message = IdeLocalize.severalPluginsDependOn0ContinueToRemove(descriptor.getName());
+        actualDelete = (Messages.showYesNoDialog(
+          host.getMainPanel(),
+          message.get(),
+          IdeLocalize.titlePluginUninstall().get(),
+          Messages.getQuestionIcon()
+        ) == Messages.YES);
       }
 
       if (actualDelete && uninstallPlugin(descriptor, host)) {

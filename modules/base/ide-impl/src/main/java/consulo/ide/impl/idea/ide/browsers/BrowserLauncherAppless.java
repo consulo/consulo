@@ -15,47 +15,49 @@
  */
 package consulo.ide.impl.idea.ide.browsers;
 
+import consulo.application.ApplicationManager;
 import consulo.application.CommonBundle;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.Task;
 import consulo.application.util.Patches;
+import consulo.application.util.SystemInfo;
+import consulo.container.boot.ContainerPathManager;
+import consulo.ide.impl.idea.ide.BrowserUtil;
+import consulo.ide.impl.idea.ide.GeneralSettings;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.impl.idea.util.PathUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.io.ZipUtil;
+import consulo.logging.Logger;
+import consulo.platform.Platform;
+import consulo.platform.base.localize.CommonLocalize;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.local.ExecUtil;
-import consulo.ide.impl.idea.ide.BrowserUtil;
-import consulo.ide.impl.idea.ide.GeneralSettings;
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.util.PathUtil;
-import consulo.application.ApplicationManager;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.Task;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
-import consulo.util.lang.Pair;
-import consulo.util.lang.ref.Ref;
-import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.StandardFileSystems;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ui.ex.awt.internal.GuiUtils;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.io.URLUtil;
-import consulo.ide.impl.idea.util.io.ZipUtil;
 import consulo.ui.ex.awt.OptionsDialog;
+import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.container.boot.ContainerPathManager;
-import consulo.logging.Logger;
+import consulo.util.io.URLUtil;
+import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.ref.Ref;
+import consulo.virtualFileSystem.StandardFileSystems;
 import consulo.webBrowser.BrowserLauncher;
 import consulo.webBrowser.BrowserSpecificSettings;
 import consulo.webBrowser.UrlOpener;
 import consulo.webBrowser.WebBrowser;
-import org.jetbrains.annotations.Contract;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Contract;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
@@ -78,7 +80,10 @@ public class BrowserLauncherAppless extends BrowserLauncher {
   }
 
   public static boolean canUseSystemDefaultBrowserPolicy() {
-    return isDesktopActionSupported(Desktop.Action.BROWSE) || SystemInfo.isMac || SystemInfo.isWindows || SystemInfo.isUnix && SystemInfo.hasXdgOpen();
+    return isDesktopActionSupported(Desktop.Action.BROWSE)
+      || Platform.current().os().isMac()
+      || Platform.current().os().isWindows()
+      || Platform.current().os().isUnix() && SystemInfo.hasXdgOpen();
   }
 
   private static GeneralSettings getGeneralSettingsInstance() {
@@ -91,13 +96,13 @@ public class BrowserLauncherAppless extends BrowserLauncher {
 
   @Nullable
   private static List<String> getDefaultBrowserCommand() {
-    if (SystemInfo.isWindows) {
+    if (Platform.current().os().isWindows()) {
       return Arrays.asList(ExecUtil.getWindowsShellName(), "/c", "start", GeneralCommandLine.inescapableQuote(""));
     }
-    else if (SystemInfo.isMac) {
+    else if (Platform.current().os().isMac()) {
       return Collections.singletonList(ExecUtil.getOpenCommandPath());
     }
-    else if (SystemInfo.isUnix && SystemInfo.hasXdgOpen()) {
+    else if (Platform.current().os().isUnix() && SystemInfo.hasXdgOpen()) {
       return Collections.singletonList("xdg-open");
     }
     else {
@@ -161,7 +166,7 @@ public class BrowserLauncherAppless extends BrowserLauncher {
       File file = new File(url);
       if (!browse && isDesktopActionSupported(Desktop.Action.OPEN)) {
         if (!file.exists()) {
-          doShowError(IdeBundle.message("error.file.does.not.exist", file.getPath()), null, null, null, null);
+          doShowError(IdeLocalize.errorFileDoesNotExist(file.getPath()).get(), null, null, null, null);
           return;
         }
 
@@ -179,7 +184,7 @@ public class BrowserLauncherAppless extends BrowserLauncher {
     }
 
     if (uri == null) {
-      doShowError(IdeBundle.message("error.malformed.url", url), null, null, null, null);
+      doShowError(IdeLocalize.errorMalformedUrl(url).get(), null, null, null, null);
     }
     else {
       browse(uri);
@@ -220,19 +225,16 @@ public class BrowserLauncherAppless extends BrowserLauncher {
       }
 
       if (!currentTimestamp.equals(previousTimestamp)) {
-        final Ref<Boolean> extract = new Ref<Boolean>();
-        Runnable r = new Runnable() {
-          @Override
-          public void run() {
-            final ConfirmExtractDialog dialog = new ConfirmExtractDialog();
-            if (dialog.isToBeShown()) {
-              dialog.show();
-              extract.set(dialog.isOK());
-            }
-            else {
-              dialog.close(DialogWrapper.OK_EXIT_CODE);
-              extract.set(true);
-            }
+        final Ref<Boolean> extract = new Ref<>();
+        Runnable r = () -> {
+          final ConfirmExtractDialog dialog = new ConfirmExtractDialog();
+          if (dialog.isToBeShown()) {
+            dialog.show();
+            extract.set(dialog.isOK());
+          }
+          else {
+            dialog.close(DialogWrapper.OK_EXIT_CODE);
+            extract.set(true);
           }
         };
 
@@ -264,51 +266,46 @@ public class BrowserLauncherAppless extends BrowserLauncher {
           }
         }
 
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
+        ApplicationManager.getApplication().invokeLater(() -> new Task.Backgroundable(null, "Extracting files...", true) {
           @Override
-          public void run() {
-            new Task.Backgroundable(null, "Extracting files...", true) {
-              @Override
-              public void run(@Nonnull final ProgressIndicator indicator) {
-                final int size = zipFile.size();
-                final int[] counter = new int[]{0};
+          public void run(@Nonnull final ProgressIndicator indicator) {
+            final int size = zipFile.size();
+            final int[] counter = new int[]{0};
 
-                class MyFilter implements FilenameFilter {
-                  private final Set<File> myImportantDirs = ContainerUtil.newHashSet(outputDir, new File(outputDir, "resources"));
-                  private final boolean myImportantOnly;
+            class MyFilter implements FilenameFilter {
+              private final Set<File> myImportantDirs = ContainerUtil.newHashSet(outputDir, new File(outputDir, "resources"));
+              private final boolean myImportantOnly;
 
-                  private MyFilter(boolean importantOnly) {
-                    myImportantOnly = importantOnly;
-                  }
-
-                  @Override
-                  public boolean accept(@Nonnull File dir, @Nonnull String name) {
-                    indicator.checkCanceled();
-                    boolean result = myImportantOnly == myImportantDirs.contains(dir);
-                    if (result) {
-                      indicator.setFraction(((double)counter[0]) / size);
-                      counter[0]++;
-                    }
-                    return result;
-                  }
-                }
-
-                try {
-                  try {
-                    ZipUtil.extract(zipFile, outputDir, new MyFilter(true));
-                    ZipUtil.extract(zipFile, outputDir, new MyFilter(false));
-                    FileUtil.writeToFile(timestampFile, currentTimestamp);
-                  }
-                  finally {
-                    zipFile.close();
-                  }
-                }
-                catch (IOException ignore) {
-                }
+              private MyFilter(boolean importantOnly) {
+                myImportantOnly = importantOnly;
               }
-            }.queue();
+
+              @Override
+              public boolean accept(@Nonnull File dir, @Nonnull String name) {
+                indicator.checkCanceled();
+                boolean result = myImportantOnly == myImportantDirs.contains(dir);
+                if (result) {
+                  indicator.setFraction(((double)counter[0]) / size);
+                  counter[0]++;
+                }
+                return result;
+              }
+            }
+
+            try {
+              try {
+                ZipUtil.extract(zipFile, outputDir, new MyFilter(true));
+                ZipUtil.extract(zipFile, outputDir, new MyFilter(false));
+                FileUtil.writeToFile(timestampFile, currentTimestamp);
+              }
+              finally {
+                zipFile.close();
+              }
+            }
+            catch (IOException ignore) {
+            }
           }
-        });
+        }.queue());
       }
 
       return VfsUtilCore.pathToUrl(FileUtil.toSystemIndependentName(new File(outputDir, pair.second).getPath())) + anchor;
@@ -353,7 +350,7 @@ public class BrowserLauncherAppless extends BrowserLauncher {
     @Override
     @Nonnull
     protected Action[] createActions() {
-      setOKButtonText(CommonBundle.getYesButtonText());
+      setOKButtonText(CommonLocalize.buttonYes().get());
       return new Action[]{getOKAction(), getCancelAction()};
     }
 
@@ -431,18 +428,21 @@ public class BrowserLauncherAppless extends BrowserLauncher {
       return true;
     }
 
-    String message = browser != null ? browser.getBrowserNotFoundMessage() : IdeBundle.message("error.please.specify.path.to.web.browser", CommonBundle.settingsActionPath());
-    doShowError(message, browser, project, IdeBundle.message("title.browser.not.found"), launchTask);
+    String message = browser != null
+      ? browser.getBrowserNotFoundMessage()
+      : IdeLocalize.errorPleaseSpecifyPathToWebBrowser(CommonBundle.settingsActionPath()).get();
+    doShowError(message, browser, project, IdeLocalize.titleBrowserNotFound().get(), launchTask);
     return false;
   }
 
-  private boolean doLaunch(@Nullable String url,
-                           @Nonnull List<String> command,
-                           @Nullable final WebBrowser browser,
-                           @Nullable final Project project,
-                           @Nonnull String[] additionalParameters,
-                           @Nullable Runnable launchTask) {
-
+  private boolean doLaunch(
+    @Nullable String url,
+    @Nonnull List<String> command,
+    @Nullable final WebBrowser browser,
+    @Nullable final Project project,
+    @Nonnull String[] additionalParameters,
+    @Nullable Runnable launchTask
+  ) {
     if (url != null && url.startsWith("jar:")) {
       String files = extractFiles(url);
       if (files == null) {
@@ -501,6 +501,6 @@ public class BrowserLauncherAppless extends BrowserLauncher {
   }
 
   public static boolean isOpenCommandUsed(@Nonnull GeneralCommandLine command) {
-    return SystemInfo.isMac && ExecUtil.getOpenCommandPath().equals(command.getExePath());
+    return Platform.current().os().isMac() && ExecUtil.getOpenCommandPath().equals(command.getExePath());
   }
 }

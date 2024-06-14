@@ -1,17 +1,17 @@
 package consulo.ide.impl.idea.ide.browsers;
 
 import consulo.application.AllIcons;
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.PathUtil;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.ui.image.Image;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import consulo.webBrowser.BrowserFamily;
 import consulo.webBrowser.BrowserSpecificSettings;
 import consulo.webBrowser.WebBrowser;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -158,7 +158,7 @@ final class ConfigurableWebBrowser extends WebBrowser {
   @Override
   @Nonnull
   public String getBrowserNotFoundMessage() {
-    return IdeBundle.message("error.0.browser.path.not.specified", getName());
+    return IdeLocalize.error0BrowserPathNotSpecified(getName()).get();
   }
 
   @Override

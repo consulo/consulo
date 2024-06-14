@@ -16,18 +16,17 @@
 
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
 import consulo.bookmark.ui.view.FavoritesTreeNodeDescriptor;
-import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeViewPanel;
 import consulo.dataContext.DataContext;
+import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
+import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeViewPanel;
 import consulo.language.editor.CommonDataKeys;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnSeparator;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -71,7 +70,7 @@ public class SendToFavoritesGroup extends ActionGroup {
 
   private static class SendToNewFavoritesListAction extends AnAction {
     public SendToNewFavoritesListAction() {
-      super(IdeBundle.message("action.send.to.new.favorites.list"));
+      super(IdeLocalize.actionSendToNewFavoritesList());
     }
 
     @Override

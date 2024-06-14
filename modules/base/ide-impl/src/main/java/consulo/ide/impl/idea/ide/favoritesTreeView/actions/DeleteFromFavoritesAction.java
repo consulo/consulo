@@ -16,25 +16,29 @@
 
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
+import consulo.application.dumb.DumbAware;
 import consulo.bookmark.ui.view.FavoritesListNode;
 import consulo.bookmark.ui.view.FavoritesListProvider;
 import consulo.bookmark.ui.view.FavoritesTreeNodeDescriptor;
-import consulo.ide.IdeBundle;
-import consulo.ui.ex.awt.dnd.DnDAwareTree;
-import consulo.ide.impl.idea.ide.favoritesTreeView.*;
+import consulo.dataContext.DataContext;
+import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
+import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeUtil;
+import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeViewPanel;
+import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesViewTreeBuilder;
+import consulo.ide.impl.idea.util.IconUtil;
+import consulo.language.editor.CommonDataKeys;
+import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
+import consulo.platform.base.localize.IdeLocalize;
+import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
 import consulo.ui.ex.awt.CommonActionsPanel;
-import consulo.ide.impl.idea.util.IconUtil;
-import consulo.logging.Logger;
-import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.awt.dnd.DnDAwareTree;
 import jakarta.annotation.Nonnull;
+
 import java.util.*;
 
 /**
@@ -45,7 +49,11 @@ public class DeleteFromFavoritesAction extends AnAction implements DumbAware {
   private static final Logger LOG = Logger.getInstance(DeleteFromFavoritesAction.class);
 
   public DeleteFromFavoritesAction() {
-    super(IdeBundle.message("action.remove.from.current.favorites"), null, IconUtil.getRemoveIcon());
+    super(
+      IdeLocalize.actionRemoveFromCurrentFavorites(),
+      LocalizeValue.empty(),
+      IconUtil.getRemoveIcon()
+    );
 
     registerCustomShortcutSet(CommonActionsPanel.getCommonShortcut(CommonActionsPanel.Buttons.REMOVE), null);
   }

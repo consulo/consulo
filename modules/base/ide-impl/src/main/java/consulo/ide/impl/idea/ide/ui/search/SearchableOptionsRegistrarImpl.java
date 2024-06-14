@@ -17,29 +17,29 @@
 package consulo.ide.impl.idea.ide.ui.search;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ApplicationBundle;
 import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
 import consulo.container.plugin.PluginManager;
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.plugins.PluginsConfigurable;
 import consulo.language.codeStyle.CodeStyle;
 import consulo.logging.Logger;
+import consulo.platform.base.localize.ApplicationLocalize;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.util.interner.Interner;
 import consulo.util.io.ResourceUtil;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Document;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.event.DocumentEvent;
 import java.io.IOException;
 import java.net.URL;
@@ -165,7 +165,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
         words.addAll(getProcessedWordsWithoutStemming(description));
       }
       for (String word : words) {
-        addOption(word, null, plugin.getName(), PluginsConfigurable.ID, IdeBundle.message("title.plugins"));
+        addOption(word, null, plugin.getName(), PluginsConfigurable.ID, IdeLocalize.titlePlugins().get());
       }
     });
 
@@ -380,13 +380,13 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
       for (OptionDescription description : configs) {
         String groupName = myId2Name.get(description.getConfigurableId());
         if (perProject) {
-          if (Comparing.strEqual(groupName, ApplicationBundle.message("title.global.code.style"))) {
-            groupName = ApplicationBundle.message("title.project.code.style");
+          if (Comparing.strEqual(groupName, ApplicationLocalize.titleGlobalCodeStyle().get())) {
+            groupName = ApplicationLocalize.titleProjectCodeStyle().get();
           }
         }
         else {
-          if (Comparing.strEqual(groupName, ApplicationBundle.message("title.project.code.style"))) {
-            groupName = ApplicationBundle.message("title.global.code.style");
+          if (Comparing.strEqual(groupName, ApplicationLocalize.titleProjectCodeStyle().get())) {
+            groupName = ApplicationLocalize.titleGlobalCodeStyle().get();
           }
         }
         Set<String> foundHits = result.get(groupName);

@@ -7,7 +7,6 @@ import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.impl.internal.performance.PerformanceWatcher;
 import consulo.application.ui.UISettings;
 import consulo.application.util.Semaphore;
-import consulo.application.util.SystemInfo;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.externalService.statistic.FeatureUsageTracker;
@@ -15,6 +14,7 @@ import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.psi.statistics.StatisticsInfo;
 import consulo.ide.impl.psi.statistics.StatisticsManager;
 import consulo.language.psi.PsiElement;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.ui.ModalityState;
 import consulo.ui.ex.awt.UIUtil;
@@ -158,7 +158,7 @@ public class ChooseByNamePopup extends ChooseByNameBase implements ChooseByNameP
       preferredScrollPaneSize.width = screen.width;
       if (model.getSize() <= myList.getVisibleRowCount()) {
         JScrollBar hsb = myListScrollPane.getHorizontalScrollBar();
-        if (hsb != null && (!SystemInfo.isMac || hsb.isOpaque())) {
+        if (hsb != null && (!Platform.current().os().isMac() || hsb.isOpaque())) {
           Dimension size = hsb.getPreferredSize();
           if (size != null) preferredScrollPaneSize.height += size.height;
         }

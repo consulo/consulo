@@ -1,13 +1,13 @@
 package consulo.ide.impl.idea.ide.projectView.impl;
 
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ui.view.ProjectView;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.ToggleAction;
+import consulo.util.lang.Comparing;
 
 /**
 * @author anna
@@ -17,7 +17,11 @@ public abstract class ShowModulesAction extends ToggleAction {
   private Project myProject;
 
   public ShowModulesAction(Project project) {
-    super(IdeBundle.message("action.show.modules"), IdeBundle.message("action.description.show.modules"), PlatformIconGroup.actionsGroupbymodule());
+    super(
+      IdeLocalize.actionShowModules(),
+      IdeLocalize.actionDescriptionShowModules(),
+      PlatformIconGroup.actionsGroupbymodule()
+    );
     myProject = project;
   }
 

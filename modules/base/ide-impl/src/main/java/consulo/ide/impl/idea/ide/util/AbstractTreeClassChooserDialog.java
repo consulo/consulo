@@ -21,7 +21,6 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.function.Processor;
 import consulo.disposer.Disposer;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.projectView.BaseProjectTreeBuilder;
 import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectTreeStructure;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectAbstractTreeStructureBase;
@@ -35,7 +34,9 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.search.FindSymbolParameters;
 import consulo.language.psi.util.SymbolPresentationUtil;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.content.scope.ProjectAwareSearchScope;
 import consulo.project.content.scope.ProjectScopes;
@@ -94,24 +95,28 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
     this(title, project, ProjectScopes.getProjectScope(project), elementClass, null, initialClass);
   }
 
-  public AbstractTreeClassChooserDialog(String title,
-                                        @Nonnull Project project,
-                                        ProjectAwareSearchScope scope,
-                                        @Nonnull Class<T> elementClass,
-                                        @Nullable Predicate<T> classFilter,
-                                        @Nullable T initialClass) {
+  public AbstractTreeClassChooserDialog(
+    String title,
+    @Nonnull Project project,
+    ProjectAwareSearchScope scope,
+    @Nonnull Class<T> elementClass,
+    @Nullable Predicate<T> classFilter,
+    @Nullable T initialClass
+  ) {
     this(title, project, scope, elementClass, classFilter, null, initialClass, false, true);
   }
 
-  public AbstractTreeClassChooserDialog(String title,
-                                        @Nonnull Project project,
-                                        ProjectAwareSearchScope scope,
-                                        @Nonnull Class<T> elementClass,
-                                        @Nullable Predicate<T> classFilter,
-                                        @Nullable T baseClass,
-                                        @Nullable T initialClass,
-                                        boolean isShowMembers,
-                                        boolean isShowLibraryContents) {
+  public AbstractTreeClassChooserDialog(
+    String title,
+    @Nonnull Project project,
+    ProjectAwareSearchScope scope,
+    @Nonnull Class<T> elementClass,
+    @Nullable Predicate<T> classFilter,
+    @Nullable T baseClass,
+    @Nullable T initialClass,
+    boolean isShowMembers,
+    boolean isShowLibraryContents
+  ) {
     super(project, true);
     myScope = scope;
     myElementClass = elementClass;
@@ -269,8 +274,8 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
 
     Disposer.register(myDisposable, myGotoByNamePanel);
 
-    myTabbedPane.addTab(IdeBundle.message("tab.chooser.search.by.name"), dummyPanel);
-    myTabbedPane.addTab(IdeBundle.message("tab.chooser.project"), scrollPane);
+    myTabbedPane.addTab(IdeLocalize.tabChooserSearchByName().get(), dummyPanel);
+    myTabbedPane.addTab(IdeLocalize.tabChooserProject().get(), scrollPane);
 
     myGotoByNamePanel.invoke(new MyCallback(), getModalityState(), false);
 

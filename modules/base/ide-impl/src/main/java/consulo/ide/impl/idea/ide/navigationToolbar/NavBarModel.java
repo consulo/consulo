@@ -2,7 +2,7 @@
 
 package consulo.ide.impl.idea.ide.navigationToolbar;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.ide.navigationToolbar.NavBarModelExtension;
 import consulo.util.lang.function.PairProcessor;
@@ -13,8 +13,6 @@ import consulo.application.ui.UISettings;
 import consulo.application.util.function.CommonProcessors;
 import consulo.application.util.function.Processor;
 import consulo.dataContext.DataContext;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.LangDataKeys;
 import consulo.language.psi.*;
 import consulo.module.Module;
 import consulo.module.content.ProjectFileIndex;
@@ -101,12 +99,12 @@ public class NavBarModel {
     }
 
     if (psiElement == null) {
-      psiElement = dataContext.getData(CommonDataKeys.PSI_FILE);
+      psiElement = dataContext.getData(PsiFile.KEY);
     }
     if (psiElement == null) {
-      psiElement = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
+      psiElement = dataContext.getData(PsiElement.KEY);
       if (psiElement == null) {
-        psiElement = findFileSystemItem(dataContext.getData(CommonDataKeys.PROJECT), dataContext.getData(CommonDataKeys.VIRTUAL_FILE));
+        psiElement = findFileSystemItem(dataContext.getData(Project.KEY), dataContext.getData(VirtualFile.KEY));
       }
     }
 
@@ -134,9 +132,9 @@ public class NavBarModel {
 
   private Object calculateRoot(DataContext dataContext) {
     // Narrow down the root element to the first interesting one
-    Module root = dataContext.getData(LangDataKeys.MODULE);
+    Module root = dataContext.getData(Module.KEY);
 
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Project project = dataContext.getData(Project.KEY);
     if (project == null) return null;
 
     Object projectChild;

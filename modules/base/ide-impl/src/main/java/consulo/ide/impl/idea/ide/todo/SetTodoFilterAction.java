@@ -17,14 +17,15 @@ package consulo.ide.impl.idea.ide.todo;
 
 import consulo.application.dumb.DumbAware;
 import consulo.application.ui.util.TodoPanelSettings;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.todo.configurable.TodoConfigurable;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.setting.ShowSettingsUtil;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
+import consulo.util.lang.Comparing;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -43,8 +44,12 @@ public class SetTodoFilterAction extends ActionGroup implements DumbAware {
   private final TodoPanelSettings myToDoSettings;
   private final Consumer<TodoFilter> myTodoFilterConsumer;
 
-  public SetTodoFilterAction(final Project project, final TodoPanelSettings toDoSettings, final Consumer<TodoFilter> todoFilterConsumer) {
-    super(IdeBundle.message("action.filter.todo.items"), null, PlatformIconGroup.generalFilter());
+  public SetTodoFilterAction(
+    final Project project,
+    final TodoPanelSettings toDoSettings,
+    final Consumer<TodoFilter> todoFilterConsumer
+  ) {
+    super(IdeLocalize.actionFilterTodoItems(), LocalizeValue.empty(), PlatformIconGroup.generalFilter());
     setPopup(true);
     myProject = project;
     myToDoSettings = toDoSettings;
@@ -56,21 +61,29 @@ public class SetTodoFilterAction extends ActionGroup implements DumbAware {
   public AnAction[] getChildren(@Nullable AnActionEvent e) {
     TodoFilter[] filters = TodoConfiguration.getInstance().getTodoFilters();
     List<AnAction> group = new ArrayList<>();
-    group.add(new TodoFilterApplier(IdeBundle.message("action.todo.show.all"),
-                                    IdeBundle.message("action.description.todo.show.all"), null, myToDoSettings, myTodoFilterConsumer));
+    group.add(new TodoFilterApplier(
+      IdeLocalize.actionTodoShowAll().get(),
+      IdeLocalize.actionDescriptionTodoShowAll().get(),
+      null,
+      myToDoSettings,
+      myTodoFilterConsumer
+    ));
     for (TodoFilter filter : filters) {
       group.add(new TodoFilterApplier(filter.getName(), null, filter, myToDoSettings, myTodoFilterConsumer));
     }
     group.add(AnSeparator.create());
-    group.add(new DumbAwareAction(IdeBundle.message("action.todo.edit.filters"),
-                                  IdeBundle.message("action.todo.edit.filters"),
-                                  PlatformIconGroup.generalSettings()) {
-                @RequiredUIAccess
-                @Override
-                public void actionPerformed(@Nonnull AnActionEvent e) {
-                  ShowSettingsUtil.getInstance().showAndSelect(myProject, TodoConfigurable.class);
-                }
-              }
+    group.add(
+      new DumbAwareAction(
+        IdeLocalize.actionTodoEditFilters(),
+        IdeLocalize.actionTodoEditFilters(),
+        PlatformIconGroup.generalSettings()
+      ) {
+        @RequiredUIAccess
+        @Override
+        public void actionPerformed(@Nonnull AnActionEvent e) {
+          ShowSettingsUtil.getInstance().showAndSelect(myProject, TodoConfigurable.class);
+        }
+      }
     );
     return group.toArray(AnAction[]::new);
   }
@@ -87,11 +100,13 @@ public class SetTodoFilterAction extends ActionGroup implements DumbAware {
      * @param settings
      * @param todoFilterConsumer
      */
-    TodoFilterApplier(String text,
-                      String description,
-                      TodoFilter filter,
-                      TodoPanelSettings settings,
-                      Consumer<TodoFilter> todoFilterConsumer) {
+    TodoFilterApplier(
+      String text,
+      String description,
+      TodoFilter filter,
+      TodoPanelSettings settings,
+      Consumer<TodoFilter> todoFilterConsumer
+    ) {
       super(null, description, null);
       mySettings = settings;
       myTodoFilterConsumer = todoFilterConsumer;

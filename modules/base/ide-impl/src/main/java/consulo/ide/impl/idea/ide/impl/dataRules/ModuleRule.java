@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.ide.impl.dataRules;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataManager;
-import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataProvider;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
@@ -42,7 +41,7 @@ public class ModuleRule implements GetDataRule<Module> {
   @Nonnull
   @Override
   public Key<Module> getKey() {
-    return CommonDataKeys.MODULE;
+    return Module.KEY;
   }
 
   @Override
@@ -51,9 +50,9 @@ public class ModuleRule implements GetDataRule<Module> {
     if (moduleContext != null) {
       return moduleContext;
     }
-    Project project = dataProvider.getDataUnchecked(CommonDataKeys.PROJECT);
+    Project project = dataProvider.getDataUnchecked(Project.KEY);
     if (project == null) {
-      PsiElement element = dataProvider.getDataUnchecked(LangDataKeys.PSI_ELEMENT);
+      PsiElement element = dataProvider.getDataUnchecked(PsiElement.KEY);
       if (element == null || !element.isValid()) return null;
       project = element.getProject();
     }

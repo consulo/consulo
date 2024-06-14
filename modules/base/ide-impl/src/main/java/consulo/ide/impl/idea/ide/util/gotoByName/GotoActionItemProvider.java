@@ -12,13 +12,12 @@ import consulo.ide.impl.idea.openapi.actionSystem.*;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionManagerImpl;
 import consulo.application.ReadAction;
 import consulo.dataContext.DataContext;
-import consulo.language.editor.CommonDataKeys;
 import consulo.logging.Logger;
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.application.util.NotNullLazyValue;
 import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.application.util.matcher.NameUtil;
 import consulo.application.util.matcher.WordPrefixMatcher;
 import consulo.ui.ex.action.QuickActionProvider;
@@ -98,8 +97,8 @@ public class GotoActionItemProvider implements ChooseByNameItemProvider {
   }
 
   private boolean processTopHits(String pattern, Processor<? super MatchedValue> consumer, DataContext dataContext) {
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
-    final CollectConsumer<Object> collector = new CollectConsumer<Object>();
+    Project project = dataContext.getData(Project.KEY);
+    final CollectConsumer<Object> collector = new CollectConsumer<>();
     for (SearchTopHitProvider provider : SearchTopHitProvider.EP_NAME.getExtensionList()) {
       if (provider instanceof consulo.ide.impl.idea.ide.ui.OptionsTopHitProvider.CoveredByToggleActions) continue;
       if (provider instanceof consulo.ide.impl.idea.ide.ui.OptionsTopHitProvider && !((consulo.ide.impl.idea.ide.ui.OptionsTopHitProvider)provider).isEnabled(project)) continue;
