@@ -457,7 +457,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
       else {
         myProgressLabel.setText(text);
       }
-    }, 50, IdeaModalityState.nonModal());
+    }, 50, IdeaModalityState.NON_MODAL);
 
   }
 

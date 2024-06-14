@@ -1,7 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.projectView.impl;
 
-import consulo.application.util.SystemInfo;
+import consulo.application.TransactionGuard;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.ide.dnd.FileCopyPasteUtil;
@@ -16,6 +16,7 @@ import consulo.language.editor.refactoring.copy.CopyHandler;
 import consulo.language.editor.refactoring.move.MoveHandler;
 import consulo.language.psi.*;
 import consulo.module.Module;
+import consulo.platform.Platform;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
@@ -80,7 +81,7 @@ abstract class ProjectViewDropTarget implements DnDNativeTarget {
     }
     else {
       // it seems like it's not possible to obtain dragged items _before_ accepting _drop_ on Macs, so just skip this check
-      if (!SystemInfo.isMac) {
+      if (!Platform.current().os().isMac()) {
         PsiFileSystemItem[] psiFiles = getPsiFiles(FileCopyPasteUtil.getFileListFromAttachedObject(event.getAttachedObject()));
         if (psiFiles == null || psiFiles.length == 0) return false;
         if (!MoveHandler.isValidTarget(getPsiElement(target), psiFiles)) return false;
@@ -290,7 +291,7 @@ abstract class ProjectViewDropTarget implements DnDNativeTarget {
           }
         }
       };
-      getActionHandler().invoke(myProject, sources, context);
+      TransactionGuard.getInstance().submitTransactionAndWait(() -> getActionHandler().invoke(myProject, sources, context));
     }
 
     private RefactoringActionHandler getActionHandler() {
@@ -362,7 +363,7 @@ abstract class ProjectViewDropTarget implements DnDNativeTarget {
         LOG.assertTrue(containingFile != null, targetElement);
         psiDirectory = containingFile.getContainingDirectory();
       }
-      CopyHandler.doCopy(sources, psiDirectory);
+      TransactionGuard.getInstance().submitTransactionAndWait(() -> CopyHandler.doCopy(sources, psiDirectory));
     }
 
     @Override
