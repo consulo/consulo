@@ -76,7 +76,8 @@ public class BrowserLauncherAppless extends BrowserLauncher {
   public static BrowserLauncherAppless INSTANCE = new BrowserLauncherAppless();
 
   private static boolean isDesktopActionSupported(Desktop.Action action) {
-    return !Patches.SUN_BUG_ID_6457572 && !Patches.SUN_BUG_ID_6486393 && Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(action);
+    return !Patches.SUN_BUG_ID_6457572 && !Patches.SUN_BUG_ID_6486393
+      && Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(action);
   }
 
   public static boolean canUseSystemDefaultBrowserPolicy() {
@@ -392,38 +393,49 @@ public class BrowserLauncherAppless extends BrowserLauncher {
   }
 
   @Override
-  public boolean browseUsingPath(@Nullable final String url,
-                                 @Nullable String browserPath,
-                                 @Nullable final WebBrowser browser,
-                                 @Nullable final Project project,
-                                 @Nonnull final String[] additionalParameters) {
+  public boolean browseUsingPath(
+    @Nullable final String url,
+    @Nullable String browserPath,
+    @Nullable final WebBrowser browser,
+    @Nullable final Project project,
+    @Nonnull final String[] additionalParameters
+  ) {
     Runnable launchTask = null;
     if (browserPath == null && browser != null) {
       browserPath = PathUtil.toSystemDependentName(browser.getPath());
-      launchTask = new Runnable() {
-        @Override
-        public void run() {
-          browseUsingPath(url, null, browser, project, additionalParameters);
-        }
-      };
+      launchTask = () -> browseUsingPath(url, null, browser, project, additionalParameters);
     }
     return doLaunch(url, browserPath, browser, project, additionalParameters, launchTask);
   }
 
-  private boolean doLaunch(@Nullable String url,
-                           @Nullable String browserPath,
-                           @Nullable WebBrowser browser,
-                           @Nullable Project project,
-                           @Nonnull String[] additionalParameters,
-                           @Nullable Runnable launchTask) {
+  private boolean doLaunch(
+    @Nullable String url,
+    @Nullable String browserPath,
+    @Nullable WebBrowser browser,
+    @Nullable Project project,
+    @Nonnull String[] additionalParameters,
+    @Nullable Runnable launchTask
+  ) {
     if (!checkPath(browserPath, browser, project, launchTask)) {
       return false;
     }
-    return doLaunch(url, BrowserUtil.getOpenBrowserCommand(browserPath, false), browser, project, additionalParameters, launchTask);
+    return doLaunch(
+      url,
+      BrowserUtil.getOpenBrowserCommand(browserPath, false),
+      browser,
+      project,
+      additionalParameters,
+      launchTask
+    );
   }
 
   @Contract("null, _, _, _ -> false")
-  public boolean checkPath(@Nullable String browserPath, @Nullable WebBrowser browser, @Nullable Project project, @Nullable Runnable launchTask) {
+  public boolean checkPath(
+    @Nullable String browserPath,
+    @Nullable WebBrowser browser,
+    @Nullable Project project,
+    @Nullable Runnable launchTask
+  ) {
     if (!StringUtil.isEmptyOrSpaces(browserPath)) {
       return true;
     }
@@ -474,10 +486,22 @@ public class BrowserLauncherAppless extends BrowserLauncher {
     }
   }
 
-  protected void checkCreatedProcess(@Nullable WebBrowser browser, @Nullable Project project, @Nonnull GeneralCommandLine commandLine, @Nonnull Process process, @Nullable Runnable launchTask) {
+  protected void checkCreatedProcess(
+    @Nullable WebBrowser browser,
+    @Nullable Project project,
+    @Nonnull GeneralCommandLine commandLine,
+    @Nonnull Process process,
+    @Nullable Runnable launchTask
+  ) {
   }
 
-  protected void doShowError(@Nullable String error, @Nullable WebBrowser browser, @Nullable Project project, String title, @Nullable Runnable launchTask) {
+  protected void doShowError(
+    @Nullable String error,
+    @Nullable WebBrowser browser,
+    @Nullable Project project,
+    String title,
+    @Nullable Runnable launchTask
+  ) {
     // Not started yet. Not able to show message up. (Could happen in License panel under Linux).
     LOG.warn(error);
   }
@@ -490,7 +514,10 @@ public class BrowserLauncherAppless extends BrowserLauncher {
           command.addParameter("--args");
         }
         else {
-          LOG.warn("'open' command doesn't allow to pass command line arguments so they will be ignored: " + StringUtil.join(specific, ", ") + " " + Arrays.toString(additional));
+          LOG.warn(
+            "'open' command doesn't allow to pass command line arguments" +
+              " so they will be ignored: " + StringUtil.join(specific, ", ") + " " + Arrays.toString(additional)
+          );
           return;
         }
       }
