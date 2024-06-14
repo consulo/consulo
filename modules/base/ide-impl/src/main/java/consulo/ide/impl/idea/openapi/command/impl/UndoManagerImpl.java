@@ -385,7 +385,7 @@ public class UndoManagerImpl implements UndoManager, Disposable {
       }
     };
 
-    String name = getUndoOrRedoActionNameAndDescription((FileEditor)editor, isUndoInProgress()).second;
+    String name = getUndoOrRedoActionNameAndDescription(editor, isUndoInProgress()).second;
     CommandProcessor.getInstance().executeCommand(myProject, executeUndoOrRedoAction, name, null, myMerger.getUndoConfirmationPolicy());
     if (exception[0] != null) throw exception[0];
   }

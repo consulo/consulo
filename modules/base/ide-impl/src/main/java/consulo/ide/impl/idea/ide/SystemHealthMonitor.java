@@ -258,7 +258,7 @@ public class SystemHealthMonitor extends PreloadingActivity {
         @RequiredUIAccess
         @Override
         public void actionPerformed(@Nonnull AnActionEvent e) {
-          myProperties.setValue("ignore." + message, "true");
+          myProperties.setValue("ignore." + adapter.key, "true");
           notification.expire();
         }
       });
