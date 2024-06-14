@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.projectView.actions;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.ApplicationManager;
 import consulo.module.Module;
@@ -42,10 +43,12 @@ public class MarkRootAction extends DumbAwareAction {
   @Nullable
   private final ContentFolderTypeProvider myContentFolderType;
 
-  public MarkRootAction(@Nullable String text,
-                           @Nullable String description,
-                           @Nullable Image icon,
-                           @Nullable ContentFolderTypeProvider contentFolderTypeProvider) {
+  public MarkRootAction(
+    @Nonnull LocalizeValue text,
+    @Nonnull LocalizeValue description,
+    @Nullable Image icon,
+    @Nullable ContentFolderTypeProvider contentFolderTypeProvider
+  ) {
     super(text, description, icon);
     myContentFolderType = contentFolderTypeProvider;
   }

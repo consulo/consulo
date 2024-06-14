@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.ide.projectView.actions;
 
 import consulo.application.AllIcons;
 import consulo.language.content.LanguageContentFolderScopes;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.ContentEntry;
@@ -32,8 +33,8 @@ import consulo.virtualFileSystem.VirtualFile;
 public class UnmarkRootAction extends MarkRootAction {
   public UnmarkRootAction() {
     super(
-      ActionLocalize.actionUnmarkrootText().get(),
-      null,
+      ActionLocalize.actionUnmarkrootText(),
+      LocalizeValue.empty(),
       AllIcons.Actions.Cancel,
       null
     );
