@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.ide.scopeView.nodes;
 
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.component.util.Iconable;
 import consulo.virtualFileSystem.status.FileStatusManager;
 import consulo.ide.impl.idea.packageDependencies.ui.PackageDependenciesNode;

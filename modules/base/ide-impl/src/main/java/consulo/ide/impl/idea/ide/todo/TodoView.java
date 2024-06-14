@@ -17,30 +17,30 @@ import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.util.lang.ObjectUtil;
-import consulo.versionControlSystem.PluginVcsMappingListener;
-import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.versionControlSystem.VcsListener;
-import consulo.versionControlSystem.VcsMappingListener;
-import consulo.versionControlSystem.change.ChangeListManager;
-import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.language.file.event.FileTypeEvent;
 import consulo.language.file.event.FileTypeListener;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.OptionTag;
+import consulo.versionControlSystem.PluginVcsMappingListener;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.VcsListener;
+import consulo.versionControlSystem.VcsMappingListener;
+import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.*;
 
@@ -113,7 +113,7 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
   public void initToolWindow(@Nonnull ToolWindow toolWindow) {
     // Create panels
     ContentFactory contentFactory = ContentFactory.getInstance();
-    Content allTodosContent = contentFactory.createContent(null, IdeBundle.message("title.project"), false);
+    Content allTodosContent = contentFactory.createContent(null, IdeLocalize.titleProject().get(), false);
     myAllTodos = new TodoPanel(myProject, state.all, false, allTodosContent) {
       @Override
       protected TodoTreeBuilder createTreeBuilder(JTree tree, Project project) {
@@ -127,7 +127,7 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
     if (toolWindow instanceof ToolWindowEx) {
       DefaultActionGroup group = new DefaultActionGroup() {
         {
-          getTemplatePresentation().setText(IdeBundle.message("group.view.options"));
+          getTemplatePresentation().setTextValue(IdeLocalize.groupViewOptions());
           setPopup(true);
           add(myAllTodos.createAutoScrollToSourceAction());
           addSeparator();
@@ -137,7 +137,7 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
       ((ToolWindowEx)toolWindow).setAdditionalGearActions(group);
     }
 
-    Content currentFileTodosContent = contentFactory.createContent(null, IdeBundle.message("title.todo.current.file"), false);
+    Content currentFileTodosContent = contentFactory.createContent(null, IdeLocalize.titleTodoCurrentFile().get(), false);
     CurrentFileTodosPanel currentFileTodos = new CurrentFileTodosPanel(myProject, state.current, currentFileTodosContent) {
       @Override
       protected TodoTreeBuilder createTreeBuilder(JTree tree, Project project) {

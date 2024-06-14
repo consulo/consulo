@@ -17,7 +17,6 @@
 package consulo.ide.impl.idea.ide.impl.dataRules;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataProvider;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
@@ -48,7 +47,7 @@ public class VirtualFileArrayRule implements GetDataRule<VirtualFile[]> {
   @Nonnull
   @Override
   public Key<VirtualFile[]> getKey() {
-    return CommonDataKeys.VIRTUAL_FILE_ARRAY;
+    return VirtualFile.KEY_OF_ARRAY;
   }
 
   @Override
@@ -70,7 +69,7 @@ public class VirtualFileArrayRule implements GetDataRule<VirtualFile[]> {
       return ModuleRootManager.getInstance(selectedModule).getContentRoots();
     }
 
-    PsiElement[] psiElements = dataProvider.getDataUnchecked(LangDataKeys.PSI_ELEMENT_ARRAY);
+    PsiElement[] psiElements = dataProvider.getDataUnchecked(PsiElement.KEY_OF_ARRAY);
     if (psiElements != null && psiElements.length != 0) {
       return getFilesFromPsiElements(psiElements);
     }
@@ -83,12 +82,12 @@ public class VirtualFileArrayRule implements GetDataRule<VirtualFile[]> {
 
     //
 
-    PsiFile psiFile = dataProvider.getDataUnchecked(LangDataKeys.PSI_FILE);
+    PsiFile psiFile = dataProvider.getDataUnchecked(PsiFile.KEY);
     if (psiFile != null && psiFile.getVirtualFile() != null) {
       return new VirtualFile[]{psiFile.getVirtualFile()};
     }
 
-    PsiElement elem = dataProvider.getDataUnchecked(LangDataKeys.PSI_ELEMENT);
+    PsiElement elem = dataProvider.getDataUnchecked(PsiElement.KEY);
     if (elem != null) {
       return getFilesFromPsiElement(elem);
     }

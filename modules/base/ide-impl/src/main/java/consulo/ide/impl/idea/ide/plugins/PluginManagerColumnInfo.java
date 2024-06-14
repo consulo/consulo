@@ -15,16 +15,17 @@
  */
 package consulo.ide.impl.idea.ide.plugins;
 
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.application.util.DateFormatUtil;
-import consulo.ui.ex.awt.ColumnInfo;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.ide.impl.plugins.InstalledPluginsState;
-
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.IdeLocalize;
+import consulo.ui.ex.awt.ColumnInfo;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import java.util.Comparator;
@@ -32,7 +33,6 @@ import java.util.Comparator;
 /**
  * User: stathik
  * Date: Dec 11, 2003
- * Time: 2:55:50 PM
  */
 public abstract class PluginManagerColumnInfo extends ColumnInfo<PluginDescriptor, String> {
   public static final int COLUMN_NAME = 0;
@@ -42,20 +42,19 @@ public abstract class PluginManagerColumnInfo extends ColumnInfo<PluginDescripto
   private static final float mgByte = 1024.0f * 1024.0f;
   private static final float kByte = 1024.0f;
 
-
-  public static final String[] COLUMNS = {
-          IdeBundle.message("column.plugins.name"),
-          IdeBundle.message("column.plugins.downloads"),
-          IdeBundle.message("column.plugins.rate"),
-          IdeBundle.message("column.plugins.date"),
-          IdeBundle.message("column.plugins.category")
+  public static final LocalizeValue[] COLUMNS = {
+    IdeLocalize.columnPluginsName(),
+    IdeLocalize.columnPluginsDownloads(),
+    IdeLocalize.columnPluginsRate(),
+    IdeLocalize.columnPluginsDate(),
+    IdeLocalize.columnPluginsCategory()
   };
 
   private final int columnIdx;
   private final PluginTableModel myModel;
 
   public PluginManagerColumnInfo(int columnIdx, PluginTableModel model) {
-    super(COLUMNS[columnIdx]);
+    super(COLUMNS[columnIdx].get());
     this.columnIdx = columnIdx;
     myModel = model;
   }
@@ -71,12 +70,12 @@ public abstract class PluginManagerColumnInfo extends ColumnInfo<PluginDescripto
     }
     if (columnIdx == COLUMN_DATE) {
       //  Base class IdeaPluginDescriptor does not declare this field.
-      long date = (base instanceof PluginNode) ? ((PluginNode)base).getDate() : 0;
+      long date = (base instanceof PluginNode pluginNode) ? pluginNode.getDate() : 0;
       if (date != 0) {
         return DateFormatUtil.formatDate(date);
       }
       else {
-        return IdeBundle.message("plugin.info.not.available");
+        return IdeLocalize.pluginInfoNotAvailable().get();
       }
     }
     else if (columnIdx == COLUMN_RATE) {
@@ -125,11 +124,11 @@ public abstract class PluginManagerColumnInfo extends ColumnInfo<PluginDescripto
         if (o1 instanceof PluginNode && o2 instanceof PluginNode) {
           final int status1 = ((PluginNode)o1).getInstallStatus();
           final int status2 = ((PluginNode)o2).getInstallStatus();
-          if (isDownloaded((PluginNode)o1)){
-            if (!isDownloaded((PluginNode)o2)) return up;
+          if (isDownloaded(o1)){
+            if (!isDownloaded(o2)) return up;
             return comparator.compare(o1, o2);
           }
-          if (isDownloaded((PluginNode)o2)) return -up;
+          if (isDownloaded(o2)) return -up;
 
           if (status1 == PluginNode.STATUS_DELETED) {
             if (status2 != PluginNode.STATUS_DELETED) return up;
@@ -138,7 +137,7 @@ public abstract class PluginManagerColumnInfo extends ColumnInfo<PluginDescripto
           if (status2 == PluginNode.STATUS_DELETED) return -up;
 
           if (status1 == PluginNode.STATUS_INSTALLED) {
-            if (status2 !=PluginNode.STATUS_INSTALLED) return up;
+            if (status2 != PluginNode.STATUS_INSTALLED) return up;
             final boolean hasNewerVersion1 = InstalledPluginsTableModel.hasNewerVersion(o1.getPluginId());
             final boolean hasNewerVersion2 = InstalledPluginsTableModel.hasNewerVersion(o2.getPluginId());
             if (hasNewerVersion1 != hasNewerVersion2) {
@@ -186,8 +185,8 @@ public abstract class PluginManagerColumnInfo extends ColumnInfo<PluginDescripto
     }
     if (isSortByDate()) {
       return (o1, o2) -> {
-        long date1 = (o1 instanceof PluginNode) ? ((PluginNode)o1).getDate() : 0;
-        long date2 = (o2 instanceof PluginNode) ? ((PluginNode)o2).getDate() : 0;
+        long date1 = (o1 instanceof PluginNode pluginNode1) ? pluginNode1.getDate() : 0;
+        long date2 = (o2 instanceof PluginNode pluginNode2) ? pluginNode2.getDate() : 0;
         if (date1 < date2) {
           return -1;
         }
@@ -201,7 +200,7 @@ public abstract class PluginManagerColumnInfo extends ColumnInfo<PluginDescripto
   @SuppressWarnings({"HardCodedStringLiteral"})
   public static String getFormattedSize(String size) {
     if (size.equals("-1")) {
-      return IdeBundle.message("plugin.info.unknown");
+      return IdeLocalize.pluginInfoUnknown().get();
     }
     else if (size.length() >= 4) {
       if (size.length() < 7) {

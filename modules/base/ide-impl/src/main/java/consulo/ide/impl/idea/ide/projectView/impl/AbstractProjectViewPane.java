@@ -13,22 +13,15 @@ import consulo.component.util.BusyObject;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposer;
-import consulo.ide.IdeBundle;
-import consulo.ui.ex.awt.tree.DefaultTreeExpander;
 import consulo.ide.impl.idea.ide.dnd.DnDEventImpl;
 import consulo.ide.impl.idea.ide.dnd.TransferableWrapper;
-import consulo.ui.ex.awt.dnd.DnDAwareTree;
 import consulo.ide.impl.idea.ide.projectView.BaseProjectTreeBuilder;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.AbstractModuleNode;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.AbstractProjectNode;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.ModuleGroupNode;
-import consulo.project.ui.view.tree.AbstractTreeStructureBase;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.ui.tree.project.ProjectFileNode;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.PsiCopyPasteManager;
 import consulo.language.editor.refactoring.move.MoveHandler;
@@ -40,6 +33,7 @@ import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
 import consulo.navigation.Navigatable;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ui.view.ProjectView;
 import consulo.project.ui.view.ProjectViewPane;
@@ -64,14 +58,16 @@ import consulo.util.concurrent.Promises;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.KeyWithDefaultValue;
 import consulo.util.dataholder.UserDataHolderBase;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.xml.serializer.JDOMExternalizerUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jdom.Element;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
@@ -166,7 +162,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
 
   @Nonnull
   protected String getManualOrderOptionText() {
-    return IdeBundle.message("action.manual.order");
+    return IdeLocalize.actionManualOrder().get();
   }
 
   /**
@@ -274,9 +270,9 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     if (builder != null) {
       builder.queueUpdateFrom(element, forceResort, updateStructure);
     }
-    else if (element instanceof PsiElement) {
+    else if (element instanceof PsiElement psiElement) {
       AsyncProjectViewSupport support = getAsyncSupport();
-      if (support != null) support.updateByElement((PsiElement)element, updateStructure);
+      if (support != null) support.updateByElement(psiElement, updateStructure);
     }
   }
 
@@ -297,7 +293,11 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
       }
       BaseProjectTreeBuilder builder = (BaseProjectTreeBuilder)getTreeBuilder();
       if (builder != null) {
-        builder.selectInWidth(toSelect, requestFocus, node -> node instanceof AbstractModuleNode || node instanceof ModuleGroupNode || node instanceof AbstractProjectNode);
+        builder.selectInWidth(
+          toSelect,
+          requestFocus,
+          node -> node instanceof AbstractModuleNode || node instanceof ModuleGroupNode || node instanceof AbstractProjectNode
+        );
       }
     };
     if (requestFocus) {
@@ -344,22 +344,23 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
   public Object getData(@Nonnull Key<?> dataId) {
     if (PlatformDataKeys.TREE_EXPANDER == dataId) return getTreeExpander();
 
-    Object data = myTreeStructure instanceof AbstractTreeStructureBase ? ((AbstractTreeStructureBase)myTreeStructure).getDataFromProviders(getSelectedNodes(AbstractTreeNode.class), dataId) : null;
+    Object data = myTreeStructure instanceof AbstractTreeStructureBase treeStructureBase
+      ? treeStructureBase.getDataFromProviders(getSelectedNodes(AbstractTreeNode.class), dataId) : null;
     if (data != null) {
       return data;
     }
-    if (CommonDataKeys.NAVIGATABLE_ARRAY == dataId) {
+    if (Navigatable.KEY_OF_ARRAY == dataId) {
       TreePath[] paths = getSelectionPaths();
       if (paths == null) return null;
       final ArrayList<Navigatable> navigatables = new ArrayList<>();
       for (TreePath path : paths) {
         Object node = path.getLastPathComponent();
         Object userObject = TreeUtil.getUserObject(node);
-        if (userObject instanceof Navigatable) {
-          navigatables.add((Navigatable)userObject);
+        if (userObject instanceof Navigatable navigatableUserObject) {
+          navigatables.add(navigatableUserObject);
         }
-        else if (node instanceof Navigatable) {
-          navigatables.add((Navigatable)node);
+        else if (node instanceof Navigatable navigatableNode) {
+          navigatables.add(navigatableNode);
         }
       }
       return navigatables.isEmpty() ? null : navigatables.toArray(Navigatable[]::new);
@@ -411,10 +412,18 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
   public List<PsiElement> getElementsFromNode(@Nullable Object node) {
     Object value = getValueFromNode(node);
     JBIterable<?> it = value instanceof PsiElement || value instanceof VirtualFile
-                       ? JBIterable.of(value)
-                       : value instanceof Object[] ? JBIterable.of((Object[])value) : value instanceof Iterable ? JBIterable.from((Iterable<?>)value) : JBIterable.of(TreeUtil.getUserObject(node));
-    return it.flatten(o -> o instanceof RootsProvider ? ((RootsProvider)o).getRoots() : Collections.singleton(o))
-            .map(o -> o instanceof VirtualFile ? PsiUtilCore.findFileSystemItem(myProject, (VirtualFile)o) : o).filter(PsiElement.class).filter(PsiElement::isValid).toList();
+      ? JBIterable.of(value)
+      : value instanceof Object[]
+      ? JBIterable.of((Object[])value)
+      : value instanceof Iterable
+      ? JBIterable.from((Iterable<?>)value)
+      : JBIterable.of(TreeUtil.getUserObject(node));
+    return it
+      .flatten(o -> o instanceof RootsProvider rootsProvider ? rootsProvider.getRoots() : Collections.singleton(o))
+      .map(o -> o instanceof VirtualFile ? PsiUtilCore.findFileSystemItem(myProject, (VirtualFile)o) : o)
+      .filter(PsiElement.class)
+      .filter(PsiElement::isValid)
+      .toList();
   }
 
   /**
@@ -428,8 +437,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
 
   @Nullable
   protected Module getNodeModule(@Nullable final Object element) {
-    if (element instanceof PsiElement) {
-      PsiElement psiElement = (PsiElement)element;
+    if (element instanceof PsiElement psiElement) {
       return ModuleUtilCore.findModuleForPsiElement(psiElement);
     }
     return null;
@@ -443,8 +451,8 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     for (TreePath path : paths) {
       Object lastPathComponent = path.getLastPathComponent();
       Object element = getValueFromNode(lastPathComponent);
-      if (element instanceof Object[]) {
-        Collections.addAll(list, (Object[])element);
+      if (element instanceof Object[] array) {
+        Collections.addAll(list, array);
       }
       else if (element != null) {
         list.add(element);
@@ -470,15 +478,13 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
   public static Object extractValueFromNode(@Nullable Object node) {
     Object userObject = TreeUtil.getUserObject(node);
     Object element = null;
-    if (userObject instanceof AbstractTreeNode) {
-      AbstractTreeNode descriptor = (AbstractTreeNode)userObject;
+    if (userObject instanceof AbstractTreeNode descriptor) {
       element = descriptor.getValue();
     }
-    else if (userObject instanceof NodeDescriptor) {
-      NodeDescriptor descriptor = (NodeDescriptor)userObject;
+    else if (userObject instanceof NodeDescriptor descriptor) {
       element = descriptor.getElement();
-      if (element instanceof AbstractTreeNode) {
-        element = ((AbstractTreeNode)element).getValue();
+      if (element instanceof AbstractTreeNode treeNode) {
+        element = treeNode.getValue();
       }
     }
     else if (userObject != null) {
@@ -543,8 +549,8 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
   @SuppressWarnings("unchecked")
   public <T> T getUserData(@Nonnull Key<T> key) {
     T value = super.getUserData(key);
-    if (value == null && key instanceof KeyWithDefaultValue) {
-      return (T)((KeyWithDefaultValue)key).getDefaultValue();
+    if (value == null && key instanceof KeyWithDefaultValue keyWithDefaultValue) {
+      return (T)keyWithDefaultValue.getDefaultValue();
     }
     return value;
   }
@@ -631,11 +637,11 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     final PsiElement[] elements = getSelectedPSIElements();
     if (elements.length == 1) {
       final PsiElement element = elements[0];
-      if (element instanceof PsiDirectory) {
-        return new PsiDirectory[]{(PsiDirectory)element};
+      if (element instanceof PsiDirectory directory) {
+        return new PsiDirectory[]{directory};
       }
-      else if (element instanceof PsiDirectoryContainer) {
-        return ((PsiDirectoryContainer)element).getDirectories();
+      else if (element instanceof PsiDirectoryContainer directoryContainer) {
+        return directoryContainer.getDirectories();
       }
       else {
         final PsiFile containingFile = element.getContainingFile();
@@ -645,8 +651,8 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
             return new PsiDirectory[]{psiDirectory};
           }
           final VirtualFile file = containingFile.getVirtualFile();
-          if (file instanceof VirtualFileWindow) {
-            final VirtualFile delegate = ((VirtualFileWindow)file).getDelegate();
+          if (file instanceof VirtualFileWindow virtualFileWindow) {
+            final VirtualFile delegate = virtualFileWindow.getDelegate();
             final PsiFile delegatePsiFile = containingFile.getManager().findFile(delegate);
             if (delegatePsiFile != null && delegatePsiFile.getContainingDirectory() != null) {
               return new PsiDirectory[]{delegatePsiFile.getContainingDirectory()};
@@ -660,8 +666,8 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
       TreePath path = getSelectedPath();
       if (path != null) {
         Object component = path.getLastPathComponent();
-        if (component instanceof DefaultMutableTreeNode) {
-          return getSelectedDirectoriesInAmbiguousCase(((DefaultMutableTreeNode)component).getUserObject());
+        if (component instanceof DefaultMutableTreeNode treeNode) {
+          return getSelectedDirectoriesInAmbiguousCase(treeNode.getUserObject());
         }
         return getSelectedDirectoriesInAmbiguousCase(component);
       }
@@ -671,8 +677,8 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
 
   @Nonnull
   protected PsiDirectory[] getSelectedDirectoriesInAmbiguousCase(Object userObject) {
-    if (userObject instanceof AbstractModuleNode) {
-      final Module module = ((AbstractModuleNode)userObject).getValue();
+    if (userObject instanceof AbstractModuleNode moduleNode) {
+      final Module module = moduleNode.getValue();
       if (module != null) {
         final ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
         final VirtualFile[] sourceRoots = moduleRootManager.getSourceRoots();
@@ -687,8 +693,8 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
         return dirs.toArray(PsiDirectory.EMPTY_ARRAY);
       }
     }
-    else if (userObject instanceof ProjectViewNode) {
-      VirtualFile file = ((ProjectViewNode)userObject).getVirtualFile();
+    else if (userObject instanceof ProjectViewNode projectViewNode) {
+      VirtualFile file = projectViewNode.getVirtualFile();
       if (file != null && file.isValid() && file.isDirectory()) {
         PsiDirectory directory = PsiManager.getInstance(myProject).findDirectory(file);
         if (directory != null) {
@@ -705,8 +711,8 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
   public static PsiElement[] getTransferedPsiElements(@Nonnull Transferable transferable) {
     try {
       final Object transferData = transferable.getTransferData(DnDEventImpl.ourDataFlavor);
-      if (transferData instanceof TransferableWrapper) {
-        return ((TransferableWrapper)transferData).getPsiElements();
+      if (transferData instanceof TransferableWrapper wrapper) {
+        return wrapper.getPsiElements();
       }
       return null;
     }
@@ -719,8 +725,8 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
   public static TreeNode[] getTransferedTreeNodes(@Nonnull Transferable transferable) {
     try {
       final Object transferData = transferable.getTransferData(DnDEventImpl.ourDataFlavor);
-      if (transferData instanceof TransferableWrapper) {
-        return ((TransferableWrapper)transferData).getTreeNodes();
+      if (transferData instanceof TransferableWrapper wrapper) {
+        return wrapper.getTreeNodes();
       }
       return null;
     }
@@ -918,16 +924,14 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
 
   @Nullable
   public static TreeVisitor createVisitor(@Nonnull Object object) {
-    if (object instanceof AbstractTreeNode) {
-      AbstractTreeNode node = (AbstractTreeNode)object;
+    if (object instanceof AbstractTreeNode node) {
       object = node.getValue();
     }
-    if (object instanceof ProjectFileNode) {
-      ProjectFileNode node = (ProjectFileNode)object;
+    if (object instanceof ProjectFileNode node) {
       object = node.getVirtualFile();
     }
-    if (object instanceof VirtualFile) return createVisitor((VirtualFile)object);
-    if (object instanceof PsiElement) return createVisitor((PsiElement)object);
+    if (object instanceof VirtualFile virtualFile) return createVisitor(virtualFile);
+    if (object instanceof PsiElement element) return createVisitor(element);
     LOG.warn("unsupported object: " + object);
     return null;
   }

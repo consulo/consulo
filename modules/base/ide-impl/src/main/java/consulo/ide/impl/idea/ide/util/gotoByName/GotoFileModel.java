@@ -10,7 +10,8 @@ import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.actions.GotoFileItemProvider;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.platform.base.localize.IdeLocalize;
+import consulo.util.lang.StringUtil;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ide.impl.idea.ui.IdeUICustomization;
 import consulo.ide.navigation.GotoFileContributor;
@@ -78,7 +79,7 @@ public class GotoFileModel extends FilteringGotoByModel<FileType> implements Dum
 
   @Override
   public String getPromptText() {
-    return IdeBundle.message("prompt.gotofile.enter.file.name");
+    return IdeLocalize.promptGotofileEnterFileName().get();
   }
 
   @Override
@@ -96,7 +97,7 @@ public class GotoFileModel extends FilteringGotoByModel<FileType> implements Dum
   @Nonnull
   @Override
   public String getNotFoundMessage() {
-    return IdeBundle.message("label.no.files.found");
+    return IdeLocalize.labelNoFilesFound().get();
   }
 
   @Override
@@ -189,9 +190,11 @@ public class GotoFileModel extends FilteringGotoByModel<FileType> implements Dum
   }
 
   @Nonnull
-  public static PsiElementListCellRenderer.ItemMatchers convertToFileItemMatchers(@Nonnull PsiElementListCellRenderer.ItemMatchers defaultMatchers,
-                                                                                  @Nonnull PsiFileSystemItem value,
-                                                                                  @Nonnull GotoFileModel model) {
+  public static PsiElementListCellRenderer.ItemMatchers convertToFileItemMatchers(
+    @Nonnull PsiElementListCellRenderer.ItemMatchers defaultMatchers,
+    @Nonnull PsiFileSystemItem value,
+    @Nonnull GotoFileModel model
+  ) {
     String shortName = model.getElementName(value);
     String fullName = model.getFullName(value);
     if (shortName != null && fullName != null && defaultMatchers.nameMatcher instanceof MinusculeMatcher) {

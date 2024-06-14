@@ -25,14 +25,12 @@ import consulo.application.util.registry.Registry;
 import consulo.component.ProcessCanceledException;
 import consulo.dataContext.*;
 import consulo.disposer.Disposer;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.find.PsiElement2UsageTargetAdapter;
 import consulo.ide.impl.idea.ide.actions.CopyReferenceAction;
 import consulo.ide.impl.idea.ide.actions.GotoFileAction;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeManagerEx;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupOwner;
 import consulo.ide.impl.idea.ui.popup.PopupPositionManager;
@@ -44,7 +42,6 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.psi.statistics.StatisticsInfo;
 import consulo.ide.impl.psi.statistics.StatisticsManager;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
@@ -52,7 +49,9 @@ import consulo.language.editor.ui.awt.EditorAWTUtil;
 import consulo.language.impl.internal.psi.AstLoadingFilter;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
@@ -75,9 +74,11 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ui.style.StyleManager;
 import consulo.usage.*;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -285,23 +286,23 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
       if (myCalcElementsThread != null) {
         return null;
       }
-      if (CommonDataKeys.PSI_ELEMENT == dataId) {
+      if (PsiElement.KEY == dataId) {
         Object element = getChosenElement();
 
         if (element instanceof PsiElement) {
           return element;
         }
 
-        if (element instanceof DataProvider) {
-          return ((DataProvider)element).getData(dataId);
+        if (element instanceof DataProvider dataProvider) {
+          return dataProvider.getData(dataId);
         }
       }
-      else if (LangDataKeys.PSI_ELEMENT_ARRAY == dataId) {
+      else if (PsiElement.KEY_OF_ARRAY == dataId) {
         final List<Object> chosenElements = getChosenElements();
         List<PsiElement> result = new ArrayList<>(chosenElements.size());
         for (Object element : chosenElements) {
-          if (element instanceof PsiElement) {
-            result.add((PsiElement)element);
+          if (element instanceof PsiElement psiElement) {
+            result.add(psiElement);
           }
         }
         return PsiUtilCore.toPsiElementArray(result);
@@ -389,7 +390,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
 
     String checkBoxName = myModel.getCheckBoxName();
     Color fg = UIUtil.getLabelDisabledForeground();
-    Color color = UIUtil.isUnderDarcula() ? ColorUtil.shift(fg, 1.2) : ColorUtil.shift(fg, 0.7);
+    Color color = StyleManager.get().getCurrentStyle().isDark() ? ColorUtil.shift(fg, 1.2) : ColorUtil.shift(fg, 0.7);
     String text = checkBoxName == null
       ? ""
       : "<html>" + checkBoxName +
@@ -412,10 +413,10 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
     addCard(myCheckBox, CHECK_BOX_CARD);
 
     addCard(new HintLabel(myModel.getNotInMessage()), NOT_FOUND_IN_PROJECT_CARD);
-    addCard(new HintLabel(IdeBundle.message("label.choosebyname.no.matches.found")), NOT_FOUND_CARD);
+    addCard(new HintLabel(IdeLocalize.labelChoosebynameNoMatchesFound().get()), NOT_FOUND_CARD);
     JPanel searching = new JPanel(new BorderLayout(5, 0));
     searching.add(new AsyncProcessIcon("searching"), BorderLayout.WEST);
-    searching.add(new HintLabel(IdeBundle.message("label.choosebyname.searching")), BorderLayout.CENTER);
+    searching.add(new HintLabel(IdeLocalize.labelChoosebynameSearching().get()), BorderLayout.CENTER);
     addCard(searching, SEARCHING_CARD);
     myCard.show(myCardContainer, CHECK_BOX_CARD);
 
@@ -431,11 +432,11 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
         List<Object> objects = myListModel.getItems();
         List<PsiElement> elements = new ArrayList<>(objects.size());
         for (Object object : objects) {
-          if (object instanceof PsiElement) {
-            elements.add((PsiElement)object);
+          if (object instanceof PsiElement psiElement) {
+            elements.add(psiElement);
           }
-          else if (object instanceof DataProvider) {
-            ContainerUtil.addIfNotNull(elements, ((DataProvider)object).getDataUnchecked(CommonDataKeys.PSI_ELEMENT));
+          else if (object instanceof DataProvider dataProvider) {
+            ContainerUtil.addIfNotNull(elements, dataProvider.getDataUnchecked(PsiElement.KEY));
           }
         }
         return PsiUtilCore.toPsiElementArray(elements);
@@ -732,10 +733,10 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
       if (element instanceof PsiElement) {
         myTextFieldPanel.updateHint((PsiElement)element);
       }
-      else if (element instanceof DataProvider) {
-        final Object o = ((DataProvider)element).getData(CommonDataKeys.PSI_ELEMENT);
-        if (o instanceof PsiElement) {
-          myTextFieldPanel.updateHint((PsiElement)o);
+      else if (element instanceof DataProvider dataProvider) {
+        final Object o = dataProvider.getData(PsiElement.KEY);
+        if (o instanceof PsiElement psiElement) {
+          myTextFieldPanel.updateHint(psiElement);
         }
       }
     }
@@ -872,14 +873,14 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
     JLayeredPane layeredPane;
     final Window window = TargetAWT.to(WindowManager.getInstance().suggestParentWindow(myProject));
 
-    if (window instanceof JFrame) {
-      layeredPane = ((JFrame)window).getLayeredPane();
+    if (window instanceof JFrame jFrame) {
+      layeredPane = jFrame.getLayeredPane();
     }
-    else if (window instanceof JDialog) {
-      layeredPane = ((JDialog)window).getLayeredPane();
+    else if (window instanceof JDialog jDialog) {
+      layeredPane = jDialog.getLayeredPane();
     }
-    else if (window instanceof JWindow) {
-      layeredPane = ((JWindow)window).getLayeredPane();
+    else if (window instanceof JWindow jWindow) {
+      layeredPane = jWindow.getLayeredPane();
     }
     else {
       throw new IllegalStateException("cannot find parent window: project=" + myProject + (myProject != null ? "; open=" + myProject.isOpen() : "") + "; window=" + window);

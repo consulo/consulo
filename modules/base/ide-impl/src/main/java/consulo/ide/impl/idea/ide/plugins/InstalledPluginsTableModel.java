@@ -19,7 +19,7 @@ import consulo.container.impl.PluginValidator;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.plugins.InstalledPluginsState;
 import consulo.ui.ex.awt.BooleanTableCellRenderer;
 import consulo.ui.ex.awt.ColumnInfo;

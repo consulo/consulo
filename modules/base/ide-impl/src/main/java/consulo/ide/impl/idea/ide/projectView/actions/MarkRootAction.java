@@ -16,12 +16,10 @@
 package consulo.ide.impl.idea.ide.projectView.actions;
 
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.LangDataKeys;
 import consulo.application.ApplicationManager;
 import consulo.module.Module;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.ContentEntry;
@@ -55,8 +53,8 @@ public class MarkRootAction extends DumbAwareAction {
   @RequiredUIAccess
   @Override
   public void actionPerformed(AnActionEvent e) {
-    Module module = e.getData(LangDataKeys.MODULE);
-    VirtualFile[] vFiles = e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
+    Module module = e.getData(Module.KEY);
+    VirtualFile[] vFiles = e.getData(VirtualFile.KEY_OF_ARRAY);
     assert vFiles != null;
     final ModifiableRootModel model = ModuleRootManager.getInstance(module).getModifiableModel();
     for (VirtualFile vFile : vFiles) {
@@ -74,12 +72,7 @@ public class MarkRootAction extends DumbAwareAction {
         }
       }
     }
-    ApplicationManager.getApplication().runWriteAction(new Runnable() {
-      @Override
-      public void run() {
-        model.commit();
-      }
-    });
+    ApplicationManager.getApplication().runWriteAction(() -> model.commit());
   }
 
   @Nullable
@@ -102,8 +95,8 @@ public class MarkRootAction extends DumbAwareAction {
   }
 
   public boolean canMark(AnActionEvent e) {
-    Module module = e.getData(LangDataKeys.MODULE);
-    VirtualFile[] vFiles = e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
+    Module module = e.getData(Module.KEY);
+    VirtualFile[] vFiles = e.getData(VirtualFile.KEY_OF_ARRAY);
     if (module == null || vFiles == null) {
       return false;
     }

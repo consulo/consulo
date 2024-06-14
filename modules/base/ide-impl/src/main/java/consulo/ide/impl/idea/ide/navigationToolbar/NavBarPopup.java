@@ -1,28 +1,24 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.navigationToolbar;
 
-import consulo.ide.impl.idea.ide.navigationToolbar.ui.NavBarUIManager;
-import consulo.dataContext.DataProvider;
-import consulo.ui.ex.awt.HintHint;
-import consulo.ui.ex.awt.DialogWrapper;
 import consulo.application.util.Queryable;
-import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.ui.*;
-import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.awt.CollectionListModel;
-import consulo.ui.ex.awt.JBList;
-import consulo.ide.ui.popup.HintUpdateSupply;
-import consulo.ide.impl.idea.ui.speedSearch.ListWithFilter;
-import consulo.ui.ex.awt.ScrollingUtil;
-import consulo.util.collection.JBIterable;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
+import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.ide.navigationToolbar.ui.NavBarUIManager;
+import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.ide.impl.idea.ui.ListActions;
+import consulo.ide.impl.idea.ui.speedSearch.ListWithFilter;
+import consulo.ide.ui.popup.HintUpdateSupply;
+import consulo.platform.Platform;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
+import consulo.util.collection.JBIterable;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -50,14 +46,14 @@ public class NavBarPopup extends LightweightHint implements Disposable {
     getList().addMouseListener(new MouseAdapter() {
       @Override
       public void mouseReleased(final MouseEvent e) {
-        if (SystemInfo.isWindows) {
+        if (Platform.current().os().isWindows()) {
           click(e);
         }
       }
 
       @Override
       public void mousePressed(final MouseEvent e) {
-        if (!SystemInfo.isWindows) {
+        if (!Platform.current().os().isWindows()) {
           click(e);
         }
       }

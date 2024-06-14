@@ -21,7 +21,6 @@ import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.TypeSafeDataProvider;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
@@ -46,10 +45,10 @@ import consulo.util.collection.FactoryMap;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -169,9 +168,9 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
     defaultExpandTree();
 
     if (myOptionControls == null) {
-      myCopyJavadocCheckbox = new NonFocusableCheckBox(IdeBundle.message("checkbox.copy.javadoc"));
+      myCopyJavadocCheckbox = new NonFocusableCheckBox(IdeLocalize.checkboxCopyJavadoc().get());
       if (myIsInsertOverrideVisible) {
-        myInsertOverrideAnnotationCheckbox = new NonFocusableCheckBox(IdeBundle.message("checkbox.insert.at.override"));
+        myInsertOverrideAnnotationCheckbox = new NonFocusableCheckBox(IdeLocalize.checkboxInsertAtOverride().get());
         myOptionControls = new JCheckBox[]{myCopyJavadocCheckbox, myInsertOverrideAnnotationCheckbox};
       }
       else {
@@ -532,7 +531,7 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
   }
 
   private static void sortNode(ParentNode node, final Comparator<ElementNode> sortComparator) {
-    ArrayList<ElementNode> arrayList = new ArrayList<ElementNode>();
+    ArrayList<ElementNode> arrayList = new ArrayList<>();
     Enumeration<TreeNode> children = node.children();
     while (children.hasMoreElements()) {
       arrayList.add((ElementNode)children.nextElement());
@@ -555,15 +554,15 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
 
     DefaultMutableTreeNode root = getRootNode();
     if (!myShowClasses || myContainerNodes.isEmpty()) {
-      List<ParentNode> otherObjects = new ArrayList<ParentNode>();
+      List<ParentNode> otherObjects = new ArrayList<>();
       Enumeration<TreeNode> children = getRootNodeChildren();
-      ParentNode newRoot = new ParentNode(null, new MemberChooserObjectBase(getAllContainersNodeName()), new Ref<Integer>(0));
+      ParentNode newRoot = new ParentNode(null, new MemberChooserObjectBase(getAllContainersNodeName()), new Ref<>(0));
       while (children.hasMoreElements()) {
         final ParentNode nextElement = (ParentNode)children.nextElement();
         if (nextElement instanceof ContainerNode) {
           final ContainerNode containerNode = (ContainerNode)nextElement;
           Enumeration<TreeNode> memberNodes = containerNode.children();
-          List<MemberNode> memberNodesList = new ArrayList<MemberNode>();
+          List<MemberNode> memberNodesList = new ArrayList<>();
           while (memberNodes.hasMoreElements()) {
             memberNodesList.add((MemberNode)memberNodes.nextElement());
           }
@@ -584,7 +583,7 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
       while (children.hasMoreElements()) {
         ParentNode allClassesNode = (ParentNode)children.nextElement();
         Enumeration<TreeNode> memberNodes = allClassesNode.children();
-        ArrayList<MemberNode> arrayList = new ArrayList<MemberNode>();
+        ArrayList<MemberNode> arrayList = new ArrayList<>();
         while (memberNodes.hasMoreElements()) {
           arrayList.add((MemberNode)memberNodes.nextElement());
         }
@@ -608,7 +607,7 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
   }
 
   protected String getAllContainersNodeName() {
-    return IdeBundle.message("node.memberchooser.all.classes");
+    return IdeLocalize.nodeMemberchooserAllClasses().get();
   }
 
   private Enumeration<TreeNode> getRootNodeChildren() {
@@ -620,7 +619,7 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
   }
 
   private Pair<ElementNode, List<ElementNode>> storeSelection() {
-    List<ElementNode> selectedNodes = new ArrayList<ElementNode>();
+    List<ElementNode> selectedNodes = new ArrayList<>();
     TreePath[] paths = myTree.getSelectionPaths();
     if (paths != null) {
       for (TreePath path : paths) {
@@ -637,7 +636,7 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
 
     DefaultMutableTreeNode root = getRootNode();
 
-    ArrayList<TreePath> toSelect = new ArrayList<TreePath>();
+    ArrayList<TreePath> toSelect = new ArrayList<>();
     for (ElementNode node : selectedNodes) {
       DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode)node;
       if (root.isNodeDescendant(treeNode)) {
@@ -705,7 +704,7 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
           }
         }
       }
-      mySelectedElements = new LinkedHashSet<T>();
+      mySelectedElements = new LinkedHashSet<>();
       for (MemberNode selectedNode : mySelectedNodes) {
         mySelectedElements.add((T)selectedNode.getDelegate());
       }
@@ -765,7 +764,7 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
 
   private class SelectNoneAction extends AbstractAction {
     public SelectNoneAction() {
-      super(IdeBundle.message("action.select.none"));
+      super(IdeLocalize.actionSelectNone().get());
     }
 
     @Override
@@ -809,7 +808,11 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
 
   private class SortEmAction extends ToggleAction {
     public SortEmAction() {
-      super(IdeBundle.message("action.sort.alphabetically"), IdeBundle.message("action.sort.alphabetically"), AllIcons.ObjectBrowser.Sorted);
+      super(
+        IdeLocalize.actionSortAlphabetically(),
+        IdeLocalize.actionSortAlphabetically(),
+        AllIcons.ObjectBrowser.Sorted
+      );
     }
 
     @Override
@@ -856,7 +859,11 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
 
   private class ExpandAllAction extends AnAction {
     public ExpandAllAction() {
-      super(IdeBundle.message("action.expand.all"), IdeBundle.message("action.expand.all"), AllIcons.Actions.Expandall);
+      super(
+        IdeLocalize.actionExpandAll(),
+        IdeLocalize.actionExpandAll(),
+        AllIcons.Actions.Expandall
+      );
     }
 
     @Override
@@ -867,7 +874,11 @@ public class MemberChooser<T extends ClassMember> extends DialogWrapper implemen
 
   private class CollapseAllAction extends AnAction {
     public CollapseAllAction() {
-      super(IdeBundle.message("action.collapse.all"), IdeBundle.message("action.collapse.all"), AllIcons.Actions.Collapseall);
+      super(
+        IdeLocalize.actionCollapseAll(),
+        IdeLocalize.actionCollapseAll(),
+        AllIcons.Actions.Collapseall
+      );
     }
 
     @Override

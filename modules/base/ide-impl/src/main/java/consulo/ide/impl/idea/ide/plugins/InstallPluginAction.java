@@ -15,29 +15,29 @@
  */
 package consulo.ide.impl.idea.ide.plugins;
 
-import consulo.language.editor.CommonDataKeys;
-import consulo.application.CommonBundle;
 import consulo.application.AllIcons;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
+import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
+import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.ide.impl.plugins.InstalledPluginsState;
 import consulo.ide.impl.updateSettings.impl.PlatformOrPluginDialog;
 import consulo.ide.impl.updateSettings.impl.PlatformOrPluginNode;
 import consulo.ide.impl.updateSettings.impl.PlatformOrPluginUpdateResult;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.platform.base.localize.IdeLocalize;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -92,7 +92,7 @@ public class InstallPluginAction extends AnAction implements DumbAware {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    install(e.getData(CommonDataKeys.PROJECT), null);
+    install(e.getData(Project.KEY), null);
   }
 
   @RequiredUIAccess
@@ -119,8 +119,11 @@ public class InstallPluginAction extends AnAction implements DumbAware {
 
       if (pluginNode != null) {
         if (pluginNode.isExperimental()) {
-          if (Messages.showOkCancelDialog("Are you sure install experimental plugin? Plugin can make IDE unstable, and may not implement expected features", "Consulo", Messages.getWarningIcon()) !=
-              Messages.OK) {
+          if (Messages.showOkCancelDialog(
+            "Are you sure install experimental plugin? Plugin can make IDE unstable, and may not implement expected features",
+            Application.get().getName().get(),
+            Messages.getWarningIcon()
+          ) != Messages.OK) {
             return;
           }
         }
@@ -237,8 +240,14 @@ public class InstallPluginAction extends AnAction implements DumbAware {
 
       int result;
       if (!disabled.isEmpty() && !disabledDependants.isEmpty()) {
-        result = Messages.showYesNoCancelDialog(XmlStringUtil.wrapInHtml(message), CommonBundle.getWarningTitle(), "Enable all", "Enable updated plugin" + (disabled.size() > 1 ? "s" : ""),
-                                                CommonBundle.getCancelButtonText(), Messages.getQuestionIcon());
+        result = Messages.showYesNoCancelDialog(
+          XmlStringUtil.wrapInHtml(message),
+          CommonLocalize.titleWarning().get(),
+          "Enable all",
+          "Enable updated plugin" + (disabled.size() > 1 ? "s" : ""),
+          CommonLocalize.buttonCancel().get(),
+          Messages.getQuestionIcon()
+        );
         if (result == Messages.CANCEL) return false;
       }
       else {
@@ -251,7 +260,7 @@ public class InstallPluginAction extends AnAction implements DumbAware {
           message += "plugin dependenc" + (disabledDependants.size() > 1 ? "ies" : "y");
         }
         message += "?</body></html>";
-        result = Messages.showYesNoDialog(message, CommonBundle.getWarningTitle(), Messages.getQuestionIcon());
+        result = Messages.showYesNoDialog(message, CommonLocalize.titleWarning().get(), Messages.getQuestionIcon());
         if (result == Messages.NO) return false;
       }
 

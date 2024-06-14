@@ -17,8 +17,8 @@
 package consulo.ide.impl.idea.ide.fileTemplates.impl;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.application.util.DateFormatUtil;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
@@ -28,25 +28,25 @@ import consulo.fileTemplate.FileTemplate;
 import consulo.fileTemplate.FileTemplateManager;
 import consulo.fileTemplate.FileTemplatesScheme;
 import consulo.fileTemplate.impl.internal.*;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeManagerEx;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.language.file.FileTypeManager;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.impl.internal.ProjectStorageUtil;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.SystemProperties;
 import consulo.util.xml.serializer.XmlSerializerUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -72,11 +72,13 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
   }
 
   @Inject
-  public FileTemplateManagerImpl(@Nonnull FileTypeManager typeManager,
-                                 FileTemplateSettings projectSettings,
-                                 ExportableFileTemplateSettings defaultSettings,
-                                 ProjectManager pm,
-                                 final Project project) {
+  public FileTemplateManagerImpl(
+    @Nonnull FileTypeManager typeManager,
+    FileTemplateSettings projectSettings,
+    ExportableFileTemplateSettings defaultSettings,
+    ProjectManager pm,
+    final Project project
+  ) {
     myTypeManager = (FileTypeManagerEx)typeManager;
     myProjectSettings = projectSettings;
     myDefaultSettings = defaultSettings;
@@ -203,8 +205,8 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
     map.put("MINUTE", getCalendarValue(calendar, Calendar.MINUTE));
     map.put("SECOND", getCalendarValue(calendar, Calendar.SECOND));
 
-    map.put("USER", SystemProperties.getUserName());
-    map.put("PRODUCT_NAME", ApplicationNamesInfo.getInstance().getFullProductName());
+    map.put("USER", Platform.current().user().name());
+    map.put("PRODUCT_NAME", Application.get().getName().get());
 
     map.put("DS", "$"); // Dollar sign, strongly needed for PHP, JS, etc. See WI-8979
 
@@ -309,11 +311,9 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
   @NonNls
   @Nonnull
   private String getDefaultClassTemplateText(@Nonnull @NonNls String templateName) {
-    return IdeBundle.message("template.default.class.comment", ApplicationNamesInfo.getInstance().getFullProductName()) +
-           "package $PACKAGE_NAME$;\n" +
-           "public " +
-           internalTemplateToSubject(templateName) +
-           " $NAME$ { }";
+    return IdeLocalize.templateDefaultClassComment(Application.get().getName()) +
+      "package $PACKAGE_NAME$;\n" +
+      "public " + internalTemplateToSubject(templateName) + " $NAME$ { }";
   }
 
   @Override
