@@ -48,8 +48,8 @@ public class MacOSDefaultKeymap extends DefaultKeymapImpl {
   }
 
   public static Shortcut convertShortcutFromParent(Shortcut parentShortcut) {
-    if (parentShortcut instanceof MouseShortcut) {
-      return convertMouseShortcut((MouseShortcut)parentShortcut);
+    if (parentShortcut instanceof MouseShortcut mouseShortcut) {
+      return convertMouseShortcut(mouseShortcut);
     }
 
     KeyboardShortcut key = (KeyboardShortcut)parentShortcut;

@@ -32,7 +32,8 @@ import consulo.dataContext.DataSink;
 import consulo.dataContext.TypeSafeDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.localize.LocalizeValue;
+import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.ide.impl.idea.openapi.vcs.changes.BackgroundFromStartOption;
 import consulo.ide.impl.idea.util.BufferedListConsumer;
@@ -46,12 +47,15 @@ import consulo.ui.ex.awt.Messages;
 import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.commited.*;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.versionBrowser.ChangeBrowserSettings;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -220,18 +224,24 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
     });
   }
 
+  @NonNls
   private void refreshChangesFromCache(final boolean cacheOnly) {
     final CommittedChangesCache cache = CommittedChangesCache.getInstance(myProject);
     cache.hasCachesForAnyRoot(notEmpty -> {
       if (!notEmpty) {
         if (cacheOnly) {
-          myBrowser.getEmptyText().setText(VcsBundle.message("committed.changes.not.loaded.message"));
+          myBrowser.getEmptyText().setText(VcsLocalize.committedChangesNotLoadedMessage().get());
           return;
         }
         if (!CacheSettingsDialog.showSettingsDialog(myProject)) return;
       }
-      cache.getProjectChangesAsync(mySettings, myMaxCount, cacheOnly, committedChangeLists -> updateFilteredModel(committedChangeLists, false),
-                                   vcsExceptions -> AbstractVcsHelper.getInstance(myProject).showErrors(vcsExceptions, "Error refreshing VCS history"));
+      cache.getProjectChangesAsync(
+        mySettings,
+        myMaxCount,
+        cacheOnly,
+        committedChangeLists -> updateFilteredModel(committedChangeLists, false),
+        vcsExceptions -> AbstractVcsHelper.getInstance(myProject).showErrors(vcsExceptions, "Error refreshing VCS history")
+      );
     });
   }
 
@@ -267,19 +277,14 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
     if (committedChangeLists == null) {
       return;
     }
-    final String emptyText;
-    if (reset) {
-      emptyText = VcsBundle.message("committed.changes.not.loaded.message");
-    }
-    else {
-      emptyText = VcsBundle.message("committed.changes.empty.message");
-    }
-    myBrowser.getEmptyText().setText(emptyText);
+    final LocalizeValue emptyText = reset ? VcsLocalize.committedChangesNotLoadedMessage() : VcsLocalize.committedChangesEmptyMessage();
+    myBrowser.getEmptyText().setText(emptyText.get());
     myBrowser.setItems(committedChangeLists, CommittedChangesBrowserUseCase.COMMITTED);
   }
 
   public void setChangesFilter() {
-    CommittedChangesFilterDialog filterDialog = new CommittedChangesFilterDialog(myProject, myProvider.createFilterUI(true), mySettings);
+    CommittedChangesFilterDialog filterDialog =
+      new CommittedChangesFilterDialog(myProject, myProvider.createFilterUI(true), mySettings);
     filterDialog.show();
     if (filterDialog.isOK()) {
       mySettings = filterDialog.getSettings();

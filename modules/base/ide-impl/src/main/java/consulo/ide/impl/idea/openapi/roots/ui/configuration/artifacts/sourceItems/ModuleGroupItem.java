@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceIte
 
 import consulo.application.AllIcons;
 import consulo.ui.ex.tree.PresentationData;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.PackagingSourceItem;

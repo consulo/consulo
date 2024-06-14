@@ -15,25 +15,26 @@
  */
 package consulo.ide.impl.idea.openapi.fileChooser.actions;
 
-import consulo.application.CommonBundle;
-import consulo.ui.ex.DeleteProvider;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
-import consulo.application.ApplicationBundle;
 import consulo.application.WriteAction;
-import consulo.undoRedo.CommandProcessor;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.UIBundle;
+import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
+import consulo.platform.base.localize.ApplicationLocalize;
+import consulo.platform.base.localize.CommonLocalize;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.DeleteProvider;
+import consulo.ui.ex.UIBundle;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.localize.UILocalize;
+import consulo.undoRedo.CommandProcessor;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.NonNls;
+
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -43,19 +44,24 @@ public final class VirtualFileDeleteProvider implements DeleteProvider {
 
   @Override
   public boolean canDeleteElement(@Nonnull DataContext dataContext) {
-    final VirtualFile[] files = dataContext.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
+    final VirtualFile[] files = dataContext.getData(VirtualFile.KEY_OF_ARRAY);
     return files != null && files.length > 0;
   }
 
   @Override
   public void deleteElement(@Nonnull DataContext dataContext) {
-    final VirtualFile[] files = dataContext.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
+    final VirtualFile[] files = dataContext.getData(VirtualFile.KEY_OF_ARRAY);
     if (files == null || files.length == 0) return;
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Project project = dataContext.getData(Project.KEY);
 
     String message = createConfirmationMessage(files);
-    int returnValue = Messages.showOkCancelDialog(message, UIBundle.message("delete.dialog.title"), ApplicationBundle.message("button.delete"),
-                                                  CommonBundle.getCancelButtonText(), Messages.getQuestionIcon());
+    int returnValue = Messages.showOkCancelDialog(
+      message,
+      UILocalize.deleteDialogTitle().get(),
+      ApplicationLocalize.buttonDelete().get(),
+      CommonLocalize.buttonCancel().get(),
+      Messages.getQuestionIcon()
+    );
     if (returnValue != Messages.OK) return;
 
     Arrays.sort(files, FileComparator.getInstance());
@@ -104,14 +110,18 @@ public final class VirtualFileDeleteProvider implements DeleteProvider {
     }, "Deleting files", null);
   }
 
+  @NonNls
   private static void reportDeletionProblem(List<String> problems) {
     boolean more = false;
     if (problems.size() > 10) {
       problems = problems.subList(0, 10);
       more = true;
     }
-    Messages.showMessageDialog("Could not erase files or folders:\n  " + StringUtil.join(problems, ",\n  ") + (more ? "\n  ..." : ""),
-                               UIBundle.message("error.dialog.title"), Messages.getErrorIcon());
+    Messages.showMessageDialog(
+      "Could not erase files or folders:\n  " + StringUtil.join(problems, ",\n  ") + (more ? "\n  ..." : ""),
+      UILocalize.errorDialogTitle().get(),
+      Messages.getErrorIcon()
+    );
   }
 
   private static final class FileComparator implements Comparator<VirtualFile> {
@@ -134,7 +144,7 @@ public final class VirtualFileDeleteProvider implements DeleteProvider {
         return UIBundle.message("are.you.sure.you.want.to.delete.selected.folder.confirmation.message", filesToDelete[0].getName());
       }
       else {
-        return UIBundle.message("are.you.sure.you.want.to.delete.selected.file.confirmation.message", filesToDelete[0].getName());
+        return UILocalize.areYouSureYouWantToDeleteSelectedFileConfirmationMessage(filesToDelete[0].getName()).get();
       }
     }
     else {

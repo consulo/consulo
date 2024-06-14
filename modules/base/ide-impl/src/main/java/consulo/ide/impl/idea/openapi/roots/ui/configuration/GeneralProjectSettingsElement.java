@@ -16,16 +16,17 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 
 import consulo.compiler.util.ModuleCompilerUtil;
-import consulo.ide.setting.ShowSettingsUtil;
-import consulo.project.Project;
-import consulo.project.ProjectBundle;
-import consulo.module.content.layer.ModuleRootModel;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.*;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.util.collection.Chunk;
 import consulo.component.util.graph.Graph;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.*;
 import consulo.ide.setting.ProjectStructureSettingsUtil;
+import consulo.ide.setting.ShowSettingsUtil;
+import consulo.localize.LocalizeValue;
+import consulo.module.content.layer.ModuleRootModel;
+import consulo.project.Project;
+import consulo.project.localize.ProjectLocalize;
+import consulo.util.collection.Chunk;
 import consulo.util.concurrent.AsyncResult;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NonNls;
 
 import java.util.*;
@@ -65,23 +66,28 @@ public class GeneralProjectSettingsElement extends ProjectStructureElement {
     }
     if (!cycles.isEmpty()) {
       final PlaceInProjectStructureBase place = new PlaceInProjectStructureBase(GeneralProjectSettingsElement::navigateToModules, this);
-      final String message;
-      final String description;
+      final LocalizeValue message;
+      final LocalizeValue description;
       if (cycles.size() > 1) {
-        message = "Circular dependencies";
+        message = LocalizeValue.localizeTODO("Circular dependencies");
         @NonNls final String br = "<br>&nbsp;&nbsp;&nbsp;&nbsp;";
         StringBuilder cyclesString = new StringBuilder();
         for (int i = 0; i < cycles.size(); i++) {
           cyclesString.append(br).append(i + 1).append(". ").append(cycles.get(i));
         }
-        description = ProjectBundle.message("module.circular.dependency.warning.description", cyclesString);
+        description = ProjectLocalize.moduleCircularDependencyWarningDescription(cyclesString);
       }
       else {
-        message = ProjectBundle.message("module.circular.dependency.warning.short", cycles.get(0));
+        message = ProjectLocalize.moduleCircularDependencyWarningShort(cycles.get(0));
         description = null;
       }
-      problemsHolder.registerProblem(new ProjectStructureProblemDescription(message, description, place, ProjectStructureProblemType.warning("module-circular-dependency"),
-                                                                            Collections.<ConfigurationErrorQuickFix>emptyList()));
+      problemsHolder.registerProblem(new ProjectStructureProblemDescription(
+        message.get(),
+        description.get(),
+        place,
+        ProjectStructureProblemType.warning("module-circular-dependency"),
+        Collections.<ConfigurationErrorQuickFix>emptyList()
+      ));
     }
   }
 

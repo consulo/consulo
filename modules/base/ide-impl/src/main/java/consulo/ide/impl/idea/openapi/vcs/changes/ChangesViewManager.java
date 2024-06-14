@@ -23,7 +23,6 @@ import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.util.NotNullLazyValue;
-import consulo.application.util.SystemInfo;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -33,13 +32,13 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.diff.util.DiffUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.IgnoredSettingsAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelveChangesManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.*;
 import consulo.ide.impl.idea.util.FunctionUtil;
 import consulo.language.impl.DebugUtil;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.TreeExpander;
@@ -49,19 +48,20 @@ import consulo.ui.ex.awt.dnd.DnDEvent;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.content.Content;
+import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.*;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.intellij.lang.annotations.JdkConstants;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -264,7 +264,7 @@ public class ChangesViewManager implements ChangesViewI, Disposable, PersistentS
 
   @JdkConstants.InputEventMask
   private static int ctrlMask() {
-    return SystemInfo.isMac ? InputEvent.META_DOWN_MASK : InputEvent.CTRL_DOWN_MASK;
+    return Platform.current().os().isMac() ? InputEvent.META_DOWN_MASK : InputEvent.CTRL_DOWN_MASK;
   }
 
   private void updateProgressComponent(@Nonnull final Supplier<JComponent> progress) {
@@ -441,7 +441,7 @@ public class ChangesViewManager implements ChangesViewI, Disposable, PersistentS
         }
       }
       else {
-        updateProgressText(VcsBundle.message("error.updating.changes", updateException.getMessage()), true);
+        updateProgressText(VcsLocalize.errorUpdatingChanges(updateException.getMessage()).get(), true);
       }
     }
   }
@@ -467,7 +467,11 @@ public class ChangesViewManager implements ChangesViewI, Disposable, PersistentS
 
   private class ToggleShowFlattenAction extends ToggleAction implements DumbAware {
     public ToggleShowFlattenAction() {
-      super(VcsBundle.message("changes.action.show.directories.text"), VcsBundle.message("changes.action.show.directories.description"), AllIcons.Actions.GroupByPackage);
+      super(
+        VcsLocalize.changesActionShowDirectoriesText(),
+        VcsLocalize.changesActionShowDirectoriesDescription(),
+        AllIcons.Actions.GroupByPackage
+      );
     }
 
     public boolean isSelected(AnActionEvent e) {
@@ -481,7 +485,11 @@ public class ChangesViewManager implements ChangesViewI, Disposable, PersistentS
 
   private class ToggleShowIgnoredAction extends ToggleAction implements DumbAware {
     public ToggleShowIgnoredAction() {
-      super(VcsBundle.message("changes.action.show.ignored.text"), VcsBundle.message("changes.action.show.ignored.description"), AllIcons.Actions.ShowHiddens);
+      super(
+        VcsLocalize.changesActionShowIgnoredText(),
+        VcsLocalize.changesActionShowIgnoredDescription(),
+        AllIcons.Actions.ShowHiddens
+      );
     }
 
     public boolean isSelected(AnActionEvent e) {

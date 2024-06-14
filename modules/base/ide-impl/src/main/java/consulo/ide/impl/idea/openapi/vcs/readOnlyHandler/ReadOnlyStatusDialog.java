@@ -15,24 +15,21 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.readOnlyHandler;
 
-import consulo.ide.IdeBundle;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
 import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.ReadonlyStatusHandler;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.awt.CollectionComboBoxModel;
-import consulo.ui.ex.awt.ColoredListCellRenderer;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.IdeLocalize;
+import consulo.project.Project;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.OptionsDialog;
-import consulo.ui.ex.awt.UIUtil;
-
+import consulo.ui.ex.awt.*;
+import consulo.util.lang.StringUtil;
+import consulo.versionControlSystem.localize.VcsLocalize;
+import consulo.virtualFileSystem.ReadonlyStatusHandler;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -55,17 +52,12 @@ public class ReadOnlyStatusDialog extends OptionsDialog {
 
   public ReadOnlyStatusDialog(Project project, final FileInfo[] files) {
     super(project);
-    setTitle(IdeBundle.message("dialog.title.clear.read.only.file.status"));
+    setTitle(VcsLocalize.dialogTitleClearReadOnlyFileStatus());
     myFiles = files;
     myFileList.setPreferredSize(getDialogPreferredSize());
     initFileList();
 
-    ActionListener listener = new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        myChangelist.setEnabled(myUsingVcsRadioButton.isSelected());
-      }
-    };
+    ActionListener listener = e -> myChangelist.setEnabled(myUsingVcsRadioButton.isSelected());
     myUsingVcsRadioButton.addActionListener(listener);
     myUsingFileSystemRadioButton.addActionListener(listener);
     (myUsingVcsRadioButton.isEnabled() ? myUsingVcsRadioButton : myUsingFileSystemRadioButton).setSelected(true);
@@ -179,8 +171,8 @@ public class ReadOnlyStatusDialog extends OptionsDialog {
     }
     else {
       String list = StringUtil.join(files, info -> info.getFile().getPresentableUrl(), "<br>");
-      String message = IdeBundle.message("handle.ro.file.status.failed", list);
-      Messages.showErrorDialog(getRootPane(), message, IdeBundle.message("dialog.title.clear.read.only.file.status"));
+      LocalizeValue message = IdeLocalize.handleRoFileStatusFailed(list);
+      Messages.showErrorDialog(getRootPane(), message.get(), VcsLocalize.dialogTitleClearReadOnlyFileStatus().get());
       myFiles = files.toArray(new FileInfo[files.size()]);
       initFileList();
     }

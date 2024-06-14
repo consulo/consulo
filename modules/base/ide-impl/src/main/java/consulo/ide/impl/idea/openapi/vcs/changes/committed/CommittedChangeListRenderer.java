@@ -15,22 +15,23 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
+import consulo.application.util.DateFormatUtil;
+import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.IssueLinkRenderer;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
+import consulo.ui.image.Image;
 import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.CachingCommittedChangesProvider;
-import consulo.versionControlSystem.VcsBundle;
-import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.IssueLinkRenderer;
 import consulo.versionControlSystem.change.commited.CommittedChangeListDecorator;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
-import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.application.util.DateFormatUtil;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.plaf.TreeUI;
@@ -89,6 +90,7 @@ public class CommittedChangeListRenderer extends ColoredTreeCellRenderer {
     }
   }
 
+  @NonNls
   public void renderChangeList(JComponent tree, CommittedChangeList changeList) {
     final Container parent = tree.getParent();
     final int rowX = getRowX(myTree, 2);
@@ -119,7 +121,7 @@ public class CommittedChangeListRenderer extends ColoredTreeCellRenderer {
     boolean partial = (changeList instanceof ReceivedChangeList) && ((ReceivedChangeList)changeList).isPartial();
     int descWidth = 0;
     if (partial) {
-      final String partialMarker = VcsBundle.message("committed.changes.partial.list") + " ";
+      final String partialMarker = VcsLocalize.committedChangesPartialList().get() + " ";
       append(partialMarker, SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
       descWidth += boldMetrics.stringWidth(partialMarker);
     }
@@ -148,7 +150,7 @@ public class CommittedChangeListRenderer extends ColoredTreeCellRenderer {
     }
 
     if (description.isEmpty() && !truncated) {
-      append(VcsBundle.message("committed.changes.empty.comment"), SimpleTextAttributes.GRAYED_ATTRIBUTES);
+      append(VcsLocalize.committedChangesEmptyComment().get(), SimpleTextAttributes.GRAYED_ATTRIBUTES);
       appendFixedTextFragmentWidth(descMaxWidth);
     }
     else if (descMaxWidth < 0) {
@@ -159,16 +161,16 @@ public class CommittedChangeListRenderer extends ColoredTreeCellRenderer {
       appendFixedTextFragmentWidth(descMaxWidth);
     }
     else {
-      final String moreMarker = VcsBundle.message("changes.browser.details.marker");
-      int moreWidth = fontMetrics.stringWidth(moreMarker);
+      final LocalizeValue moreMarker = VcsLocalize.changesBrowserDetailsMarker();
+      int moreWidth = fontMetrics.stringWidth(moreMarker.get());
       int remainingWidth = descMaxWidth - moreWidth - numberWidth - branchWidth;
       description = truncateDescription(description, fontMetrics, remainingWidth);
       myRenderer.appendTextWithLinks(description);
       if (!StringUtil.isEmpty(description)) {
         append(" ", SimpleTextAttributes.REGULAR_ATTRIBUTES);
-        append(moreMarker, SimpleTextAttributes.LINK_ATTRIBUTES, new CommittedChangesTreeBrowser.MoreLauncher(myProject, changeList));
+        append(moreMarker.get(), SimpleTextAttributes.LINK_ATTRIBUTES, new CommittedChangesTreeBrowser.MoreLauncher(myProject, changeList));
       } else if (remainingWidth > 0) {
-        append(moreMarker, SimpleTextAttributes.LINK_ATTRIBUTES, new CommittedChangesTreeBrowser.MoreLauncher(myProject, changeList));
+        append(moreMarker.get(), SimpleTextAttributes.LINK_ATTRIBUTES, new CommittedChangesTreeBrowser.MoreLauncher(myProject, changeList));
       }
       // align value is for the latest added piece
       appendFixedTextFragmentWidth(descMaxWidth);

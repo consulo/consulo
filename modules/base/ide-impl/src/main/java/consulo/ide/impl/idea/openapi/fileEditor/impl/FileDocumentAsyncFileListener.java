@@ -83,14 +83,14 @@ final class FileDocumentAsyncFileListener implements AsyncFileListener {
       @Override
       public void afterVfsChange() {
         for (VFileEvent event : events) {
-          if (event instanceof VFileContentChangeEvent && ((VFileContentChangeEvent)event).getFile().isValid()) {
-            myFileDocumentManager.contentsChanged((VFileContentChangeEvent)event);
+          if (event instanceof VFileContentChangeEvent vFileContentChangeEvent && event.getFile().isValid()) {
+            myFileDocumentManager.contentsChanged(vFileContentChangeEvent);
           }
-          else if (event instanceof VFileDeleteEvent && ((VFileDeleteEvent)event).getFile().isValid()) {
-            myFileDocumentManager.fileDeleted((VFileDeleteEvent)event);
+          else if (event instanceof VFileDeleteEvent vFileDeleteEvent && event.getFile().isValid()) {
+            myFileDocumentManager.fileDeleted(vFileDeleteEvent);
           }
-          else if (event instanceof VFilePropertyChangeEvent && ((VFilePropertyChangeEvent)event).getFile().isValid()) {
-            myFileDocumentManager.propertyChanged((VFilePropertyChangeEvent)event);
+          else if (event instanceof VFilePropertyChangeEvent vFilePropertyChangeEvent && event.getFile().isValid()) {
+            myFileDocumentManager.propertyChanged(vFilePropertyChangeEvent);
           }
         }
         ObjectUtil.reachabilityFence(strongRefsToDocuments);

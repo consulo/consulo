@@ -12,6 +12,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.ui;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -35,9 +36,9 @@ public abstract class TextFieldAction extends AnAction implements CustomComponen
   private final String myDescription;
   private final Image myIcon;
 
-  protected TextFieldAction(String text, String description, Image icon, final int initSize) {
+  protected TextFieldAction(LocalizeValue text, LocalizeValue description, Image icon, final int initSize) {
     super(text, description, icon);
-    myDescription = description;
+    myDescription = description.get();
     myIcon = icon;
     myField = new JTextField(initSize);
     myField.addKeyListener(new KeyAdapter() {

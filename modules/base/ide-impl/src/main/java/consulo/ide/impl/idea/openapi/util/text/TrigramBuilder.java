@@ -20,6 +20,7 @@
 package consulo.ide.impl.idea.openapi.util.text;
 
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
+import consulo.util.lang.StringUtil;
 
 import java.util.function.IntPredicate;
 

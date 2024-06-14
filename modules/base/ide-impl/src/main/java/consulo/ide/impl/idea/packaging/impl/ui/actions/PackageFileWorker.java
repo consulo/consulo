@@ -15,25 +15,22 @@
  */
 package consulo.ide.impl.idea.packaging.impl.ui.actions;
 
-import consulo.ide.impl.idea.openapi.deployment.DeploymentUtil;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.compiler.artifact.Artifact;
-import consulo.compiler.artifact.element.ArtifactRootElement;
-import consulo.compiler.artifact.element.CompositePackagingElement;
-import consulo.compiler.artifact.ArtifactUtil;
-import consulo.compiler.artifact.PackagingElementPath;
-import consulo.compiler.artifact.element.ArchivePackagingElement;
-import consulo.ide.impl.idea.util.PathUtil;
-import consulo.util.io.zip.JBZipEntry;
-import consulo.util.io.zip.JBZipFile;
 import consulo.application.AccessRule;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
-import consulo.compiler.CompilerBundle;
+import consulo.compiler.artifact.Artifact;
+import consulo.compiler.artifact.ArtifactUtil;
+import consulo.compiler.artifact.PackagingElementPath;
+import consulo.compiler.artifact.element.ArchivePackagingElement;
+import consulo.compiler.artifact.element.ArtifactRootElement;
+import consulo.compiler.artifact.element.CompositePackagingElement;
+import consulo.compiler.localize.CompilerLocalize;
+import consulo.ide.impl.idea.openapi.deployment.DeploymentUtil;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.ide.impl.idea.util.PathUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -42,11 +39,14 @@ import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
 import consulo.util.concurrent.AsyncResult;
+import consulo.util.io.zip.JBZipEntry;
+import consulo.util.io.zip.JBZipFile;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.Trinity;
 import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -58,7 +58,8 @@ import java.util.List;
  * @author nik
  */
 public class PackageFileWorker {
-  public static final NotificationGroup ARTIFACT_PACKAGING_GROUP = NotificationGroup.balloonGroup("artifactPackaging", LocalizeValue.localizeTODO("Artifact Packaging"));
+  public static final NotificationGroup ARTIFACT_PACKAGING_GROUP =
+    NotificationGroup.balloonGroup("artifactPackaging", LocalizeValue.localizeTODO("Artifact Packaging"));
 
   private static final Logger LOG = Logger.getInstance(PackageFileWorker.class);
   private final File myFile;
@@ -91,8 +92,10 @@ public class PackageFileWorker {
                 packageFile(file, project, artifacts);
               }
               catch (IOException e) {
-                String message = CompilerBundle.message("message.tect.package.file.io.error", e.toString());
-                Notifications.Bus.notify(new Notification(ARTIFACT_PACKAGING_GROUP, "Cannot package file", message, NotificationType.ERROR));
+                String message = CompilerLocalize.messageTectPackageFileIoError(e.toString()).get();
+                Notifications.Bus.notify(
+                  new Notification(ARTIFACT_PACKAGING_GROUP, "Cannot package file", message, NotificationType.ERROR)
+                );
               }
             });
             callback.setDone();

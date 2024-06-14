@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.ui.tabs;
 
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;
 import consulo.ide.impl.psi.search.scope.NonProjectFilesScope;

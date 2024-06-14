@@ -15,15 +15,15 @@
  */
 package consulo.ide.impl.idea.openapi.fileChooser.actions;
 
+import consulo.application.util.NullableLazyValue;
+import consulo.application.util.SystemInfo;
+import consulo.ide.impl.idea.openapi.fileChooser.FileSystemTree;
+import consulo.platform.Platform;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.local.ExecUtil;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ide.impl.idea.openapi.fileChooser.FileSystemTree;
-import consulo.application.util.NullableLazyValue;
-import consulo.application.util.SystemInfo;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.util.lang.SystemProperties;
 import jakarta.annotation.Nullable;
 
 import java.io.File;
@@ -58,7 +58,7 @@ public class GotoDesktopDirAction extends FileChooserAction {
 
   @Nullable
   private static VirtualFile getDesktopDirectory() {
-    File desktop = new File(SystemProperties.getUserHome(), "Desktop");
+    File desktop = new File(Platform.current().user().homePath().toFile(), "Desktop");
 
     if (!desktop.isDirectory() && SystemInfo.hasXdgOpen()) {
       String path = ExecUtil.execAndReadLine(new GeneralCommandLine("xdg-user-dir", "DESKTOP"));

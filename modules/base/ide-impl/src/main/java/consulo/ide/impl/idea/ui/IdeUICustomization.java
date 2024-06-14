@@ -1,8 +1,8 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ui;
 
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.platform.base.localize.IdeLocalize;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -34,7 +34,7 @@ public class IdeUICustomization {
    * Returns the name of the "Close Project" action (with mnemonic if needed).
    */
   public String getCloseProjectActionText() {
-    return IdeBundle.message("action.close.project");
+    return IdeLocalize.actionCloseProject().get();
   }
 
   /**

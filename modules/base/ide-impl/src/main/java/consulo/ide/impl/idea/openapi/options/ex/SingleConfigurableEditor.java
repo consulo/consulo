@@ -15,30 +15,25 @@
  */
 package consulo.ide.impl.idea.openapi.options.ex;
 
-import consulo.application.CommonBundle;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.HelpManager;
+import consulo.application.dumb.IndexNotReadyException;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
-import consulo.application.dumb.IndexNotReadyException;
-import consulo.project.Project;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
-import consulo.ui.ex.awt.CustomLineBorder;
-import consulo.ui.ex.awt.util.Alarm;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.BorderLayoutPanel;
+import consulo.configurable.internal.ConfigurableUIMigrationUtil;
 import consulo.ide.impl.base.BaseShowSettingsUtil;
 import consulo.logging.Logger;
-import consulo.configurable.internal.ConfigurableUIMigrationUtil;
+import consulo.platform.base.localize.CommonLocalize;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import org.jetbrains.annotations.NonNls;
-
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.util.Alarm;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -241,7 +236,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
     private final Alarm myUpdateAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
 
     public ApplyAction() {
-      super(CommonBundle.getApplyButtonText());
+      super(CommonLocalize.buttonApply().get());
       final Runnable updateRequest = new Runnable() {
         @Override
         public void run() {
@@ -272,7 +267,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
         if (myConfigurable.isModified()) {
           myConfigurable.apply();
           myChangesWereApplied = true;
-          setCancelButtonText(CommonBundle.getCloseButtonText());
+          setCancelButtonText(CommonLocalize.buttonClose().get());
         }
       }
       catch (ConfigurationException e) {
@@ -299,8 +294,8 @@ public class SingleConfigurableEditor extends DialogWrapper {
   @RequiredUIAccess
   @Override
   public JComponent getPreferredFocusedComponent() {
-    if (myConfigurable instanceof Configurable.HoldPreferredFocusedComponent) {
-      JComponent preferred = ConfigurableUIMigrationUtil.getPreferredFocusedComponent((Configurable.HoldPreferredFocusedComponent)myConfigurable);
+    if (myConfigurable instanceof Configurable.HoldPreferredFocusedComponent preferredFocusedComponent) {
+      JComponent preferred = ConfigurableUIMigrationUtil.getPreferredFocusedComponent(preferredFocusedComponent);
       if (preferred != null) return preferred;
     }
     return IdeFocusTraversalPolicy.getPreferredFocusedComponent(myCenterPanel);

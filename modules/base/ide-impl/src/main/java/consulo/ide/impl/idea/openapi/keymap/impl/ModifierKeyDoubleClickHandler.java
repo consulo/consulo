@@ -20,20 +20,19 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.application.util.SystemInfo;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.util.lang.Clock;
 import consulo.util.lang.Couple;
 import gnu.trove.TIntIntHashMap;
-import gnu.trove.TIntIntProcedure;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -100,7 +99,7 @@ public class ModifierKeyDoubleClickHandler implements Disposable {
   }
 
   public static int getMultiCaretActionModifier() {
-    return SystemInfo.isMac ? KeyEvent.VK_ALT : KeyEvent.VK_CONTROL;
+    return Platform.current().os().isMac() ? KeyEvent.VK_ALT : KeyEvent.VK_CONTROL;
   }
 
   /**
@@ -159,8 +158,7 @@ public class ModifierKeyDoubleClickHandler implements Disposable {
 
     @Override
     public boolean test(@Nonnull AWTEvent event) {
-      if (event instanceof KeyEvent) {
-        final KeyEvent keyEvent = (KeyEvent)event;
+      if (event instanceof KeyEvent keyEvent) {
         final int keyCode = keyEvent.getKeyCode();
         LOG.debug("", this, event);
         if (keyCode == myModifierKeyCode) {
@@ -202,12 +200,9 @@ public class ModifierKeyDoubleClickHandler implements Disposable {
 
     private boolean hasOtherModifiers(KeyEvent keyEvent) {
       final int modifiers = keyEvent.getModifiers();
-      return !KEY_CODE_TO_MODIFIER_MAP.forEachEntry(new TIntIntProcedure() {
-        @Override
-        public boolean execute(int keyCode, int modifierMask) {
-          return keyCode == myModifierKeyCode || (modifiers & modifierMask) == 0;
-        }
-      });
+      return !KEY_CODE_TO_MODIFIER_MAP.forEachEntry(
+        (keyCode, modifierMask) -> keyCode == myModifierKeyCode || (modifiers & modifierMask) == 0
+      );
     }
 
     private void handleModifier(KeyEvent event) {

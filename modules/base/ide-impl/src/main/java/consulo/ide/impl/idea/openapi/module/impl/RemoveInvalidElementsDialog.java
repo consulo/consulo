@@ -20,10 +20,11 @@ import consulo.module.ConfigurationErrorDescription;
 import consulo.module.ConfigurationErrorType;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.VerticalFlowLayout;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -69,15 +70,16 @@ public class RemoveInvalidElementsDialog extends DialogWrapper {
     }
     init();
     setOKButtonText(ProjectBundle.message(type.canIgnore() ? "button.text.ignore.selected" : "button.text.remove.selected"));
-    setCancelButtonText(ProjectBundle.message("button.text.keep.all"));
+    setCancelButtonText(ProjectLocalize.buttonTextKeepAll().get());
   }
 
-
-  public static void showDialog(@Nonnull Project project,
-                                @Nonnull String title,
-                                ConfigurationErrorType type,
-                                @Nonnull String invalidElements,
-                                @Nonnull List<ConfigurationErrorDescription> errors) {
+  public static void showDialog(
+    @Nonnull Project project,
+    @Nonnull String title,
+    ConfigurationErrorType type,
+    @Nonnull String invalidElements,
+    @Nonnull List<ConfigurationErrorDescription> errors
+  ) {
     if (errors.isEmpty()) {
       return;
     }

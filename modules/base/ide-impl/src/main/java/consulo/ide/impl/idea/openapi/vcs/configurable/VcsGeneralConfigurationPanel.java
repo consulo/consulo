@@ -15,29 +15,32 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.configurable;
 
-import consulo.ide.impl.idea.ide.actions.ShowFilePathAction;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vcs.*;
+import consulo.ide.impl.idea.ide.actions.ShowFilePathAction;
+import consulo.ide.impl.idea.openapi.vcs.VcsShowConfirmationOptionImpl;
+import consulo.ide.impl.idea.openapi.vcs.VcsShowOptionsSettingImpl;
 import consulo.ide.impl.idea.openapi.vcs.ex.ProjectLevelVcsManagerEx;
 import consulo.ide.impl.idea.openapi.vcs.readOnlyHandler.ReadonlyStatusHandlerImpl;
+import consulo.localize.LocalizeValue;
+import consulo.platform.Platform;
+import consulo.project.Project;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.AbstractVcs;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.VcsShowConfirmationOption;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
-import consulo.ui.ex.awt.UIUtil;
-import org.jetbrains.annotations.Nls;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Nls;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class VcsGeneralConfigurationPanel implements SearchableConfigurable {
 
@@ -60,8 +63,7 @@ public class VcsGeneralConfigurationPanel implements SearchableConfigurable {
   private final Project myProject;
   private JPanel myPromptsPanel;
 
-
-  Map<VcsShowOptionsSettingImpl, JCheckBox> myPromptOptions = new LinkedHashMap<VcsShowOptionsSettingImpl, JCheckBox>();
+  Map<VcsShowOptionsSettingImpl, JCheckBox> myPromptOptions = new LinkedHashMap<>();
   private JPanel myRemoveConfirmationPanel;
   private JPanel myAddConfirmationPanel;
   private JCheckBox myCbOfferToMoveChanges;
@@ -99,8 +101,10 @@ public class VcsGeneralConfigurationPanel implements SearchableConfigurable {
     }
 
     myPromptsPanel.setSize(myPromptsPanel.getPreferredSize());                           // todo check text!
-    myOnPatchCreation.setName((SystemInfo.isMac ? "Reveal patch in" : "Show patch in ") +
-                              ShowFilePathAction.getFileManagerName() + " after creation:");
+    myOnPatchCreation.setName(
+      (Platform.current().os().isMac() ? "Reveal patch in" : "Show patch in ") +
+        ShowFilePathAction.getFileManagerName() + " after creation:"
+    );
   }
 
   public void apply() throws ConfigurationException {
@@ -128,15 +132,13 @@ public class VcsGeneralConfigurationPanel implements SearchableConfigurable {
     settings.SHOW_PATCH_IN_EXPLORER = getShowPatchValue();
   }
   
-  @jakarta.annotation.Nullable
+  @Nullable
   private Boolean getShowPatchValue() {
     final int index = myOnPatchCreation.getSelectedIndex();
     if (index == 0) {
       return null;
-    } else if (index == 1) {
-      return true;
     } else {
-      return false;
+      return index == 1;
     }
   }
 
@@ -269,7 +271,7 @@ public class VcsGeneralConfigurationPanel implements SearchableConfigurable {
       final JCheckBox checkBox = myPromptOptions.get(setting);
       checkBox.setEnabled(setting.isApplicableTo(activeVcses) || myProject.isDefault());
       if (!myProject.isDefault()) {
-        checkBox.setToolTipText(VcsBundle.message("tooltip.text.action.applicable.to.vcses", composeText(setting.getApplicableVcses())));
+        checkBox.setToolTipText(VcsLocalize.tooltipTextActionApplicableToVcses(composeText(setting.getApplicableVcses())).get());
       }
     }
 
@@ -278,17 +280,19 @@ public class VcsGeneralConfigurationPanel implements SearchableConfigurable {
       final VcsShowConfirmationOptionImpl addConfirmation = vcsManager.getConfirmation(VcsConfiguration.StandardConfirmation.ADD);
       UIUtil.setEnabled(myAddConfirmationPanel, addConfirmation.isApplicableTo(activeVcses), true);
       myAddConfirmationPanel.setToolTipText(
-        VcsBundle.message("tooltip.text.action.applicable.to.vcses", composeText(addConfirmation.getApplicableVcses())));
+        VcsLocalize.tooltipTextActionApplicableToVcses(composeText(addConfirmation.getApplicableVcses())).get()
+      );
 
       final VcsShowConfirmationOptionImpl removeConfirmation = vcsManager.getConfirmation(VcsConfiguration.StandardConfirmation.REMOVE);
       UIUtil.setEnabled(myRemoveConfirmationPanel, removeConfirmation.isApplicableTo(activeVcses), true);
       myRemoveConfirmationPanel.setToolTipText(
-        VcsBundle.message("tooltip.text.action.applicable.to.vcses", composeText(removeConfirmation.getApplicableVcses())));
+        VcsLocalize.tooltipTextActionApplicableToVcses(composeText(removeConfirmation.getApplicableVcses())).get()
+      );
     }
   }
 
   private static String composeText(final List<AbstractVcs> applicableVcses) {
-    final TreeSet<String> result = new TreeSet<String>();
+    final TreeSet<String> result = new TreeSet<>();
     for (AbstractVcs abstractVcs : applicableVcses) {
       result.add(abstractVcs.getDisplayName());
     }

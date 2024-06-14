@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.ide.impl.idea.util.containers.DistinctRootsCollection;
-import consulo.ide.impl.idea.util.io.URLUtil;
+import consulo.util.io.URLUtil;
 import consulo.logging.Logger;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;

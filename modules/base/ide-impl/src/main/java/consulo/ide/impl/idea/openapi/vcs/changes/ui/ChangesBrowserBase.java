@@ -15,39 +15,38 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
-import consulo.diff.DiffDialogHints;
-import consulo.ide.impl.idea.diff.util.DiffUserDataKeysEx;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.TypeSafeDataProvider;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.ui.ex.DeleteProvider;
+import consulo.diff.DiffDialogHints;
 import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.diff.util.DiffUserDataKeysEx;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.ui.ex.awt.action.CheckboxAction;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.logging.Logger;
 import consulo.ide.impl.idea.openapi.fileChooser.actions.VirtualFileDeleteProvider;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ide.impl.idea.openapi.vcs.changes.RemoteRevisionsCache;
+import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ShowDiffAction;
+import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ShowDiffContext;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.editor.PlatformDataKeys;
+import consulo.logging.Logger;
+import consulo.navigation.Navigatable;
 import consulo.project.Project;
+import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.ScrollPaneFactory;
+import consulo.ui.ex.awt.action.CheckboxAction;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsDataKeys;
-import consulo.ide.impl.idea.openapi.vcs.changes.*;
-import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ShowDiffAction;
-import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ShowDiffContext;
 import consulo.versionControlSystem.change.*;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import org.intellij.lang.annotations.JdkConstants;
-import org.jetbrains.annotations.Contract;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.intellij.lang.annotations.JdkConstants;
+import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -55,14 +54,14 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.io.File;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.stream.Stream;
 
-import static consulo.versionControlSystem.change.ChangesUtil.getAfterRevisionsFiles;
-import static consulo.versionControlSystem.change.ChangesUtil.getNavigatableArray;
 import static consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowserNode.UNVERSIONED_FILES_TAG;
 import static consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesListView.*;
+import static consulo.versionControlSystem.change.ChangesUtil.getAfterRevisionsFiles;
+import static consulo.versionControlSystem.change.ChangesUtil.getNavigatableArray;
 
 public abstract class ChangesBrowserBase<T> extends JPanel implements TypeSafeDataProvider, Disposable {
   private static final Logger LOG = Logger.getInstance(ChangesBrowserBase.class);
@@ -79,7 +78,7 @@ public abstract class ChangesBrowserBase<T> extends JPanel implements TypeSafeDa
   protected final JPanel myHeaderPanel;
   private JComponent myBottomPanel;
   private DefaultActionGroup myToolBarGroup;
-  private String myToggleActionTitle = VcsBundle.message("commit.dialog.include.action.name");
+  private String myToggleActionTitle = VcsLocalize.commitDialogIncludeActionName().get();
 
   private JComponent myDiffBottomComponent;
 
@@ -118,7 +117,7 @@ public abstract class ChangesBrowserBase<T> extends JPanel implements TypeSafeDa
     ChangeNodeDecorator decorator =
             ChangesBrowser.MyUseCase.LOCAL_CHANGES.equals(useCase) ? RemoteRevisionsCache.getInstance(myProject).getChangesNodeDecorator() : null;
 
-    myViewer = new ChangesTreeList<T>(myProject, changes, capableOfExcludingChanges, highlightProblems, inclusionListener, decorator) {
+    myViewer = new ChangesTreeList<>(myProject, changes, capableOfExcludingChanges, highlightProblems, inclusionListener, decorator) {
       protected DefaultTreeModel buildTreeModel(final List<T> changes, ChangeNodeDecorator changeNodeDecorator) {
         return ChangesBrowserBase.this.buildTreeModel(changes, changeNodeDecorator, isShowFlatten());
       }
@@ -222,11 +221,11 @@ public abstract class ChangesBrowserBase<T> extends JPanel implements TypeSafeDa
       final Change highestSelection = ObjectUtil.tryCast(myViewer.getHighestLeadSelection(), Change.class);
       sink.put(VcsDataKeys.CHANGE_LEAD_SELECTION, (highestSelection == null) ? new Change[]{} : new Change[]{highestSelection});
     }
-    else if (key == CommonDataKeys.VIRTUAL_FILE_ARRAY) {
-      sink.put(CommonDataKeys.VIRTUAL_FILE_ARRAY, getSelectedFiles().toArray(VirtualFile[]::new));
+    else if (key == VirtualFile.KEY_OF_ARRAY) {
+      sink.put(VirtualFile.KEY_OF_ARRAY, getSelectedFiles().toArray(VirtualFile[]::new));
     }
-    else if (key == CommonDataKeys.NAVIGATABLE_ARRAY) {
-      sink.put(CommonDataKeys.NAVIGATABLE_ARRAY, getNavigatableArray(myProject, getSelectedFiles()));
+    else if (key == Navigatable.KEY_OF_ARRAY) {
+      sink.put(Navigatable.KEY_OF_ARRAY, getNavigatableArray(myProject, getSelectedFiles()));
     }
     else if (VcsDataKeys.IO_FILE_ARRAY.equals(key)) {
       sink.put(VcsDataKeys.IO_FILE_ARRAY, getSelectedIoFiles());

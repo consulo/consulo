@@ -16,22 +16,23 @@
 package consulo.ide.impl.idea.ide.ui.customization;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.openapi.keymap.impl.ui.ActionsTreeUtil;
-import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapGroupImpl;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.project.ui.internal.IdeFrameEx;
-import consulo.project.ui.internal.WindowManagerEx;
 import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
+import consulo.ide.impl.idea.openapi.keymap.impl.ui.ActionsTreeUtil;
+import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapGroupImpl;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.logging.Logger;
+import consulo.project.ui.internal.IdeFrameEx;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.keymap.localize.KeyMapLocalize;
 import consulo.ui.image.Image;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.DefaultJDOMExternalizer;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
@@ -40,7 +41,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.io.File;
@@ -74,25 +74,21 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, JDOMExterna
 
   @Inject
   public CustomActionsSchemaImpl(Application application) {
-    myIdToNameList.add(new Pair(IdeActions.GROUP_MAIN_MENU, ActionsTreeUtil.MAIN_MENU_TITLE));
-    myIdToNameList.add(new Pair(IdeActions.GROUP_MAIN_TOOLBAR, ActionsTreeUtil.MAIN_TOOLBAR));
-    myIdToNameList.add(new Pair(IdeActions.GROUP_EDITOR_POPUP, ActionsTreeUtil.EDITOR_POPUP));
+    myIdToNameList.add(new Pair(IdeActions.GROUP_MAIN_MENU, KeyMapLocalize.mainMenuActionTitle().get()));
+    myIdToNameList.add(new Pair(IdeActions.GROUP_MAIN_TOOLBAR, KeyMapLocalize.mainToolbarTitle().get()));
+    myIdToNameList.add(new Pair(IdeActions.GROUP_EDITOR_POPUP, KeyMapLocalize.editorPopupMenuTitle().get()));
     myIdToNameList.add(new Pair(IdeActions.GROUP_EDITOR_GUTTER, "Editor Gutter Popup Menu"));
-    myIdToNameList.add(new Pair(IdeActions.GROUP_EDITOR_TAB_POPUP, ActionsTreeUtil.EDITOR_TAB_POPUP));
-    myIdToNameList.add(new Pair(IdeActions.GROUP_PROJECT_VIEW_POPUP, ActionsTreeUtil.PROJECT_VIEW_POPUP));
+    myIdToNameList.add(new Pair(IdeActions.GROUP_EDITOR_TAB_POPUP, KeyMapLocalize.editorTabPopupMenuTitle().get()));
+    myIdToNameList.add(new Pair(IdeActions.GROUP_PROJECT_VIEW_POPUP, KeyMapLocalize.projectViewPopupMenuTitle().get()));
     myIdToNameList.add(new Pair(IdeActions.GROUP_SCOPE_VIEW_POPUP, "Scope View Popup Menu"));
-    myIdToNameList.add(new Pair(IdeActions.GROUP_FAVORITES_VIEW_POPUP, ActionsTreeUtil.FAVORITES_POPUP));
-    myIdToNameList.add(new Pair(IdeActions.GROUP_COMMANDER_POPUP, ActionsTreeUtil.COMMANDER_POPUP));
-    myIdToNameList.add(new Pair(IdeActions.GROUP_J2EE_VIEW_POPUP, ActionsTreeUtil.J2EE_POPUP));
+    myIdToNameList.add(new Pair(IdeActions.GROUP_FAVORITES_VIEW_POPUP, KeyMapLocalize.favoritesPopupTitle().get()));
+    myIdToNameList.add(new Pair(IdeActions.GROUP_COMMANDER_POPUP, KeyMapLocalize.commenderViewPopupMenuTitle().get()));
+    myIdToNameList.add(new Pair(IdeActions.GROUP_J2EE_VIEW_POPUP, KeyMapLocalize.j2eeViewPopupMenuTitle().get()));
     myIdToNameList.add(new Pair(IdeActions.GROUP_NAVBAR_POPUP, "Navigation Bar"));
     myIdToNameList.add(new Pair("NavBarToolBar", "Navigation Bar Toolbar"));
 
-    CustomizableActionGroupProvider.CustomizableActionGroupRegistrar registrar = new CustomizableActionGroupProvider.CustomizableActionGroupRegistrar() {
-      @Override
-      public void addCustomizableActionGroup(@Nonnull String groupId, @Nonnull String groupTitle) {
-        myIdToNameList.add(new Pair(groupId, groupTitle));
-      }
-    };
+    CustomizableActionGroupProvider.CustomizableActionGroupRegistrar registrar =
+      (groupId, groupTitle) -> myIdToNameList.add(new Pair(groupId, groupTitle));
     
     for (CustomizableActionGroupProvider provider : CustomizableActionGroupProvider.EP_NAME.getExtensionList(application)) {
       provider.registerGroups(registrar);
@@ -164,7 +160,7 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, JDOMExterna
     Element schElement = element;
     final String activeName = element.getAttributeValue(ACTIVE);
     if (activeName != null) {
-      for (Element toolbarElement : (Iterable<Element>)element.getChildren(ACTIONS_SCHEMA)) {
+      for (Element toolbarElement : element.getChildren(ACTIONS_SCHEMA)) {
         for (Object o : toolbarElement.getChildren("option")) {
           if (Comparing.strEqual(((Element)o).getAttributeValue("name"), "myName") && Comparing.strEqual(((Element)o).getAttributeValue("value"), activeName)) {
             schElement = toolbarElement;
@@ -303,12 +299,7 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, JDOMExterna
         myIconCustomizations.put(actionId, iconPath);
       }
     }
-    SwingUtilities.invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        initActionIcons();
-      }
-    });
+    SwingUtilities.invokeLater(() -> initActionIcons());
   }
 
   private void writeIcons(Element parent) {

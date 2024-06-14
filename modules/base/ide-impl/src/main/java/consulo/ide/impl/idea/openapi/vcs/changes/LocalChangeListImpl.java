@@ -2,9 +2,9 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.application.ReadAction;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.history.VcsRevisionNumber;

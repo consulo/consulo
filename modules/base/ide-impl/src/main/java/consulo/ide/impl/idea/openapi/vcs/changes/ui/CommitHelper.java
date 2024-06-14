@@ -25,13 +25,10 @@ import consulo.application.util.Semaphore;
 import consulo.application.util.function.Computable;
 import consulo.document.Document;
 import consulo.ide.impl.idea.ide.util.DelegatingProgressIndicator;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
 import consulo.ide.impl.idea.openapi.vcs.changes.VetoSavingCommittingDocumentsAdapter;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.MoveChangesToAnotherListAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesCache;
-import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
-import consulo.versionControlSystem.update.RefreshVFsSynchronously;
 import consulo.ide.impl.idea.util.NullableFunction;
 import consulo.ide.impl.idea.util.ui.ConfirmationDialog;
 import consulo.localHistory.LocalHistory;
@@ -42,20 +39,24 @@ import consulo.project.ui.notification.NotificationType;
 import consulo.project.util.WaitForProgressToShow;
 import consulo.ui.ex.awt.Messages;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.checkin.CheckinEnvironment;
 import consulo.versionControlSystem.checkin.CheckinHandler;
-
+import consulo.versionControlSystem.localize.VcsLocalize;
+import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
+import consulo.versionControlSystem.update.RefreshVFsSynchronously;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
 public class CommitHelper {
-  public static final Key<Object> DOCUMENT_BEING_COMMITTED_KEY = new Key<Object>("DOCUMENT_BEING_COMMITTED");
+  public static final Key<Object> DOCUMENT_BEING_COMMITTED_KEY = new Key<>("DOCUMENT_BEING_COMMITTED");
 
   private final static Logger LOG = Logger.getInstance(CommitHelper.class);
   private final Project myProject;
@@ -72,21 +73,23 @@ public class CommitHelper {
   private final NullableFunction<Object, Object> myAdditionalData;
   @Nullable
   private final CommitResultHandler myCustomResultHandler;
-  private final List<Document> myCommittingDocuments = new ArrayList<Document>();
+  private final List<Document> myCommittingDocuments = new ArrayList<>();
   private final VcsConfiguration myConfiguration;
   private final VcsDirtyScopeManager myDirtyScopeManager;
   private final HashSet<String> myFeedback;
 
-  public CommitHelper(final Project project,
-                      final ChangeList changeList,
-                      final List<Change> includedChanges,
-                      final String actionName,
-                      final String commitMessage,
-                      final List<CheckinHandler> handlers,
-                      final boolean allOfDefaultChangeListChangesIncluded,
-                      final boolean synchronously,
-                      final NullableFunction<Object, Object> additionalDataHolder,
-                      @Nullable CommitResultHandler customResultHandler) {
+  public CommitHelper(
+    final Project project,
+    final ChangeList changeList,
+    final List<Change> includedChanges,
+    final String actionName,
+    final String commitMessage,
+    final List<CheckinHandler> handlers,
+    final boolean allOfDefaultChangeListChangesIncluded,
+    final boolean synchronously,
+    final NullableFunction<Object, Object> additionalDataHolder,
+    @Nullable CommitResultHandler customResultHandler
+  ) {
     myProject = project;
     myChangeList = changeList;
     myIncludedChanges = includedChanges;
@@ -99,7 +102,7 @@ public class CommitHelper {
     myCustomResultHandler = customResultHandler;
     myConfiguration = VcsConfiguration.getInstance(myProject);
     myDirtyScopeManager = VcsDirtyScopeManager.getInstance(myProject);
-    myFeedback = new HashSet<String>();
+    myFeedback = new HashSet<>();
   }
 
   public boolean doCommit() {
@@ -116,12 +119,7 @@ public class CommitHelper {
 
   private boolean doCommit(final GeneralCommitProcessor processor) {
 
-    final Runnable action = new Runnable() {
-      @Override
-      public void run() {
-        delegateCommitToVcsThread(processor);
-      }
-    };
+    final Runnable action = () -> delegateCommitToVcsThread(processor);
 
     if (myForceSyncCommit) {
       ProgressManager.getInstance().runProcessWithProgressSynchronously(action, myActionName, true, myProject);
@@ -165,22 +163,16 @@ public class CommitHelper {
     final Semaphore endSemaphore = new Semaphore();
     endSemaphore.down();
 
-    ChangeListManagerImpl.getInstanceImpl(myProject).executeOnUpdaterThread(new Runnable() {
-      @Override
-      public void run() {
-        indicator.setText("Performing VCS commit...");
-        try {
-          ProgressManager.getInstance().runProcess(new Runnable() {
-            @Override
-            public void run() {
-              indicator.checkCanceled();
-              generalCommit(processor);
-            }
-          }, indicator);
-        }
-        finally {
-          endSemaphore.up();
-        }
+    ChangeListManagerImpl.getInstanceImpl(myProject).executeOnUpdaterThread(() -> {
+      indicator.setText("Performing VCS commit...");
+      try {
+        ProgressManager.getInstance().runProcess(() -> {
+          indicator.checkCanceled();
+          generalCommit(processor);
+        }, indicator);
+      }
+      finally {
+        endSemaphore.up();
       }
     });
 
@@ -238,23 +230,13 @@ public class CommitHelper {
   private void generalCommit(final GeneralCommitProcessor processor) {
     try {
       final Application appManager = ApplicationManager.getApplication();
-      appManager.runReadAction(new Runnable() {
-        @Override
-        public void run() {
-          markCommittingDocuments();
-        }
-      });
+      appManager.runReadAction(() -> markCommittingDocuments());
 
       try {
         processor.callSelf();
       }
       finally {
-        appManager.runReadAction(new Runnable() {
-          @Override
-          public void run() {
-            unmarkCommittingDocuments();
-          }
-        });
+        appManager.runReadAction(() -> unmarkCommittingDocuments());
       }
 
       processor.doBeforeRefresh();
@@ -274,15 +256,16 @@ public class CommitHelper {
     finally {
       commitCompleted(processor.getVcsExceptions(), processor);
       processor.customRefresh();
-      WaitForProgressToShow.runOrInvokeLaterAboveProgress(new Runnable() {
-        @Override
-        public void run() {
+      WaitForProgressToShow.runOrInvokeLaterAboveProgress(
+        () -> {
           final Runnable runnable = processor.postRefresh();
           if (runnable != null) {
             runnable.run();
           }
-        }
-      }, null, myProject);
+        },
+        null,
+        myProject
+      );
     }
   }
 
@@ -295,12 +278,7 @@ public class CommitHelper {
 
     @Override
     public void callSelf() {
-      ChangesUtil.processItemsByVcs(myIncludedChanges, new ChangesUtil.VcsSeparator<Change>() {
-        @Override
-        public AbstractVcs getVcsFor(final Change item) {
-          return myVcs;
-        }
-      }, this);
+      ChangesUtil.processItemsByVcs(myIncludedChanges, item -> myVcs, this);
     }
 
     @Override
@@ -353,9 +331,9 @@ public class CommitHelper {
     protected final List<Change> myChangesFailedToCommit;
 
     protected GeneralCommitProcessor() {
-      myPathsToRefresh = new ArrayList<FilePath>();
-      myVcsExceptions = new ArrayList<VcsException>();
-      myChangesFailedToCommit = new ArrayList<Change>();
+      myPathsToRefresh = new ArrayList<>();
+      myVcsExceptions = new ArrayList<>();
+      myChangesFailedToCommit = new ArrayList<>();
     }
 
     public abstract void callSelf();
@@ -406,7 +384,7 @@ public class CommitHelper {
       myAfterVcsRefreshModification = ChangeListsModificationAfterCommit.NOTHING;
       if (myChangeList instanceof LocalChangeList) {
         final LocalChangeList localList = (LocalChangeList)myChangeList;
-        final boolean containsAll = new HashSet<Change>(myIncludedChanges).containsAll(new HashSet<Change>(myChangeList.getChanges()));
+        final boolean containsAll = new HashSet<>(myIncludedChanges).containsAll(new HashSet<>(myChangeList.getChanges()));
         if (containsAll && !localList.isDefault() && !localList.isReadOnly()) {
           myAfterVcsRefreshModification = ChangeListsModificationAfterCommit.DELETE_LIST;
         }
@@ -448,7 +426,7 @@ public class CommitHelper {
 
     @Override
     public void afterFailedCheckIn() {
-      moveToFailedList(myChangeList, myCommitMessage, getChangesFailedToCommit(), VcsBundle.message("commit.dialog.failed.commit.template", myChangeList.getName()), myProject);
+      moveToFailedList(myChangeList, myCommitMessage, getChangesFailedToCommit(), VcsLocalize.commitDialogFailedCommitTemplate(myChangeList.getName()).get(), myProject);
     }
 
     @Override
@@ -456,24 +434,16 @@ public class CommitHelper {
       final ChangeListManagerImpl clManager = (ChangeListManagerImpl)ChangeListManager.getInstance(myProject);
       clManager.showLocalChangesInvalidated();
 
-      myAction = ApplicationManager.getApplication().runReadAction(new Computable<LocalHistoryAction>() {
-        @Override
-        public LocalHistoryAction compute() {
-          return LocalHistory.getInstance().startAction(myActionName);
-        }
-      });
+      myAction = ApplicationManager.getApplication().runReadAction((Computable<LocalHistoryAction>)() -> LocalHistory.getInstance().startAction(myActionName));
     }
 
     @Override
     public void customRefresh() {
-      final List<Change> toRefresh = new ArrayList<Change>();
-      ChangesUtil.processChangesByVcs(myProject, myIncludedChanges, new ChangesUtil.PerVcsProcessor<Change>() {
-        @Override
-        public void process(AbstractVcs vcs, List<Change> items) {
-          CheckinEnvironment ce = vcs.getCheckinEnvironment();
-          if (ce != null && ce.isRefreshAfterCommitNeeded()) {
-            toRefresh.addAll(items);
-          }
+      final List<Change> toRefresh = new ArrayList<>();
+      ChangesUtil.processChangesByVcs(myProject, myIncludedChanges, (vcs, items) -> {
+        CheckinEnvironment ce = vcs.getCheckinEnvironment();
+        if (ce != null && ce.isRefreshAfterCommitNeeded()) {
+          toRefresh.addAll(items);
         }
       });
 
@@ -483,54 +453,48 @@ public class CommitHelper {
 
       final ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
       if (indicator != null) {
-        indicator.setText(VcsBundle.message("commit.dialog.refresh.files"));
+        indicator.setTextValue(VcsLocalize.commitDialogRefreshFiles());
       }
       RefreshVFsSynchronously.updateChanges(toRefresh);
     }
 
     @Override
     public Runnable postRefresh() {
-      return new Runnable() {
-        @Override
-        public void run() {
-          // to be completely sure
-          if (myAction != null) {
-            myAction.finish();
-          }
-          if (!myProject.isDisposed()) {
-            // after vcs refresh is completed, outdated notifiers should be removed if some exists...
-            final ChangeListManager clManager = ChangeListManager.getInstance(myProject);
-            clManager.invokeAfterUpdate(new Runnable() {
-              @Override
-              public void run() {
-                if (myCommitSuccess) {
-                  // do delete/ move of change list if needed
-                  if (ChangeListsModificationAfterCommit.DELETE_LIST.equals(myAfterVcsRefreshModification)) {
-                    if (!myKeepChangeListAfterCommit) {
-                      clManager.removeChangeList(myChangeList.getName());
-                    }
-                  }
-                  else if (ChangeListsModificationAfterCommit.MOVE_OTHERS.equals(myAfterVcsRefreshModification)) {
-                    ChangelistMoveOfferDialog dialog = new ChangelistMoveOfferDialog(myConfiguration);
-                    if (dialog.showAndGet()) {
-                      final Collection<Change> changes = clManager.getDefaultChangeList().getChanges();
-                      MoveChangesToAnotherListAction.askAndMove(myProject, changes, null);
-                    }
-                  }
+      return () -> {
+        // to be completely sure
+        if (myAction != null) {
+          myAction.finish();
+        }
+        if (!myProject.isDisposed()) {
+          // after vcs refresh is completed, outdated notifiers should be removed if some exists...
+          final ChangeListManager clManager = ChangeListManager.getInstance(myProject);
+          clManager.invokeAfterUpdate(() -> {
+            if (myCommitSuccess) {
+              // do delete/ move of change list if needed
+              if (ChangeListsModificationAfterCommit.DELETE_LIST.equals(myAfterVcsRefreshModification)) {
+                if (!myKeepChangeListAfterCommit) {
+                  clManager.removeChangeList(myChangeList.getName());
                 }
-                final CommittedChangesCache cache = CommittedChangesCache.getInstance(myProject);
-                // in background since commit must have authorized
-                cache.refreshAllCachesAsync(false, true);
-                cache.refreshIncomingChangesAsync();
               }
-            }, InvokeAfterUpdateMode.SILENT, null, vcsDirtyScopeManager -> {
-              for (FilePath path : myPathsToRefresh) {
-                vcsDirtyScopeManager.fileDirty(path);
+              else if (ChangeListsModificationAfterCommit.MOVE_OTHERS.equals(myAfterVcsRefreshModification)) {
+                ChangelistMoveOfferDialog dialog = new ChangelistMoveOfferDialog(myConfiguration);
+                if (dialog.showAndGet()) {
+                  final Collection<Change> changes = clManager.getDefaultChangeList().getChanges();
+                  MoveChangesToAnotherListAction.askAndMove(myProject, changes, null);
+                }
               }
-            }, null);
+            }
+            final CommittedChangesCache cache = CommittedChangesCache.getInstance(myProject);
+            // in background since commit must have authorized
+            cache.refreshAllCachesAsync(false, true);
+            cache.refreshIncomingChangesAsync();
+          }, InvokeAfterUpdateMode.SILENT, null, vcsDirtyScopeManager -> {
+            for (FilePath path : myPathsToRefresh) {
+              vcsDirtyScopeManager.fileDirty(path);
+            }
+          }, null);
 
-            LocalHistory.getInstance().putSystemLabel(myProject, myActionName + ": " + myCommitMessage);
-          }
+          LocalHistory.getInstance().putSystemLabel(myProject, myActionName + ": " + myCommitMessage);
         }
       };
     }
@@ -543,12 +507,7 @@ public class CommitHelper {
 
     @Override
     public void doVcsRefresh() {
-      ApplicationManager.getApplication().runReadAction(new Runnable() {
-        @Override
-        public void run() {
-          vcsRefresh();
-        }
-      });
+      ApplicationManager.getApplication().runReadAction(() -> vcsRefresh());
     }
   }
 
@@ -570,7 +529,7 @@ public class CommitHelper {
    */
   @Nonnull
   public static Collection<Document> markCommittingDocuments(@Nonnull Project project, @Nonnull List<Change> changes) {
-    Collection<Document> committingDocs = new ArrayList<Document>();
+    Collection<Document> committingDocs = new ArrayList<>();
     for (Change change : changes) {
       Document doc = ChangesUtil.getFilePath(change).getDocument();
       if (doc != null) {
@@ -617,7 +576,7 @@ public class CommitHelper {
     if ((errorsSize == 0) && (warningsSize == 0)) {
       final ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
       if (indicator != null) {
-        indicator.setText(VcsBundle.message("commit.dialog.completed.successfully"));
+        indicator.setTextValue(VcsLocalize.commitDialogCompletedSuccessfully());
       }
     }
     else {
@@ -630,32 +589,40 @@ public class CommitHelper {
     }
   }
 
-  private void showErrorDialogAndMoveToAnotherList(final GeneralCommitProcessor processor, final int errorsSize, final int warningsSize, @Nonnull final List<VcsException> errors) {
-    WaitForProgressToShow.runOrInvokeLaterAboveProgress(new Runnable() {
-      @Override
-      public void run() {
-        String message;
-        if (errorsSize > 0 && warningsSize > 0) {
-          message = VcsBundle.message("message.text.commit.failed.with.errors.and.warnings");
-        }
-        else if (errorsSize > 0) {
-          message = StringUtil.pluralize(VcsBundle.message("message.text.commit.failed.with.error"), errorsSize);
-        }
-        else {
-          message = StringUtil.pluralize(VcsBundle.message("message.text.commit.finished.with.warning"), warningsSize);
-        }
-        message += ":\n" + StringUtil.join(errors, e -> e.getMessage(), "\n");
-        //new VcsBalloonProblemNotifier(myProject, message, MessageType.ERROR).run();
-        Messages.showErrorDialog(message, VcsBundle.message("message.title.commit"));
+  private void showErrorDialogAndMoveToAnotherList(
+    final GeneralCommitProcessor processor,
+    final int errorsSize,
+    final int warningsSize,
+    @Nonnull final List<VcsException> errors
+  ) {
+    WaitForProgressToShow.runOrInvokeLaterAboveProgress(() -> {
+      String message;
+      if (errorsSize > 0 && warningsSize > 0) {
+        message = VcsLocalize.messageTextCommitFailedWithErrorsAndWarnings().get();
+      }
+      else if (errorsSize > 0) {
+        message = StringUtil.pluralize(VcsBundle.message("message.text.commit.failed.with.error"), errorsSize);
+      }
+      else {
+        message = StringUtil.pluralize(VcsLocalize.messageTextCommitFinishedWithWarnings().get(), warningsSize);
+      }
+      message += ":\n" + StringUtil.join(errors, e -> e.getMessage(), "\n");
+      //new VcsBalloonProblemNotifier(myProject, message, MessageType.ERROR).run();
+      Messages.showErrorDialog(message, VcsLocalize.messageTitleCommit().get());
 
-        if (errorsSize > 0) {
-          processor.afterFailedCheckIn();
-        }
+      if (errorsSize > 0) {
+        processor.afterFailedCheckIn();
       }
     }, null, myProject);
   }
 
-  public static void moveToFailedList(final ChangeList changeList, final String commitMessage, final List<Change> failedChanges, final String newChangelistName, final Project project) {
+  public static void moveToFailedList(
+    final ChangeList changeList,
+    final String commitMessage,
+    final List<Change> failedChanges,
+    final String newChangelistName,
+    final Project project
+  ) {
     // No need to move since we'll get exactly the same changelist.
     if (failedChanges.containsAll(changeList.getChanges())) return;
 
@@ -677,8 +644,13 @@ public class CommitHelper {
           return true;
         }
       };
-      boolean result = ConfirmationDialog
-              .requestForConfirmation(option, project, VcsBundle.message("commit.failed.confirm.prompt"), VcsBundle.message("commit.failed.confirm.title"), Messages.getQuestionIcon());
+      boolean result = ConfirmationDialog.requestForConfirmation(
+        option,
+        project,
+        VcsLocalize.commitFailedConfirmPrompt().get(),
+        VcsLocalize.commitFailedConfirmTitle().get(),
+        Messages.getQuestionIcon()
+      );
       if (!result) return;
     }
 
@@ -695,7 +667,7 @@ public class CommitHelper {
   }
 
   private static List<VcsException> collectErrors(final List<VcsException> vcsExceptions) {
-    final ArrayList<VcsException> result = new ArrayList<VcsException>();
+    final ArrayList<VcsException> result = new ArrayList<>();
     for (VcsException vcsException : vcsExceptions) {
       if (!vcsException.isWarning()) {
         result.add(vcsException);

@@ -16,14 +16,14 @@
 
 package consulo.ide.impl.idea.packageDependencies.ui;
 
-import consulo.language.editor.scope.AnalysisScopeBundle;
 import consulo.application.AllIcons;
-import consulo.module.Module;
-import consulo.project.ui.view.internal.ProjectSettingsService;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
 import consulo.language.pom.NavigatableWithText;
 import consulo.language.psi.PsiFile;
+import consulo.module.Module;
+import consulo.project.ui.view.internal.ProjectSettingsService;
 import consulo.ui.image.Image;
+import consulo.util.lang.Comparing;
 
 import java.util.Set;
 
@@ -66,7 +66,7 @@ public class ModuleNode extends PackageDependenciesNode implements NavigatableWi
   }
 
   public String toString() {
-    return myModule == null ? AnalysisScopeBundle.message("unknown.node.text") : myModule.getName();
+    return myModule == null ? AnalysisScopeLocalize.unknownNodeText().get() : myModule.getName();
   }
 
   public String getModuleName() {

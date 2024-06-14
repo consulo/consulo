@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.tasks.actions.context;
 
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.project.Project;
 import consulo.fileEditor.FileEditorManager;
 import consulo.codeEditor.Editor;

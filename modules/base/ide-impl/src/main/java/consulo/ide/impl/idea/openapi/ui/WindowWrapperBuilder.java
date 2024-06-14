@@ -4,7 +4,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.WindowWrapper;
 import consulo.ui.ex.awt.WindowWrapper.Mode;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.FrameWrapper;
 

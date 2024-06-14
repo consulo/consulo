@@ -17,36 +17,32 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot;
 
 import consulo.application.AllIcons;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.ActionToolbar;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.module.ModifiableModuleModel;
-import consulo.module.Module;
-import consulo.module.ModuleWithNameAlreadyExistsException;
 import consulo.configurable.ConfigurationException;
-import consulo.project.ProjectBundle;
-import consulo.module.content.layer.ModifiableRootModel;
+import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModuleEditor;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModulesConfiguratorImpl;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ModuleProjectStructureElement;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
-import consulo.ui.ex.awt.ComboBox;
-import consulo.ui.ex.awt.LabeledComponent;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.MutableCollectionComboBoxModel;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.BorderLayoutPanel;
-import consulo.disposer.Disposable;
-import consulo.ide.setting.module.ModulesConfigurator;
 import consulo.ide.impl.roots.ui.configuration.projectRoot.moduleLayerActions.DeleteLayerAction;
 import consulo.ide.impl.roots.ui.configuration.projectRoot.moduleLayerActions.NewLayerAction;
+import consulo.ide.setting.module.ModulesConfigurator;
+import consulo.module.ModifiableModuleModel;
+import consulo.module.Module;
+import consulo.module.ModuleWithNameAlreadyExistsException;
+import consulo.module.content.layer.ModifiableRootModel;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.ActionToolbar;
+import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.awt.*;
 import consulo.ui.image.Image;
-
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.event.ItemEvent;
 import java.util.ArrayList;
@@ -144,7 +140,7 @@ public class ModuleConfigurable extends ProjectStructureElementConfigurable<Modu
 
   @Override
   public String getBannerSlogan() {
-    return ProjectBundle.message("project.roots.module.banner.text", myModuleName);
+    return ProjectLocalize.projectRootsModuleBannerText(myModuleName).get();
   }
 
   @Override

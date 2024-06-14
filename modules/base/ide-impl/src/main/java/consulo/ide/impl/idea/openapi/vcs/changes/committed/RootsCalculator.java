@@ -30,7 +30,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static consulo.ide.impl.idea.openapi.util.text.StringUtil.join;
+import static consulo.util.lang.StringUtil.join;
 import static consulo.ide.impl.idea.util.containers.ContainerUtil.addAll;
 import static consulo.ide.impl.idea.util.containers.ContainerUtil.newArrayList;
 import static consulo.versionControlSystem.util.VcsUtil.getFilePath;

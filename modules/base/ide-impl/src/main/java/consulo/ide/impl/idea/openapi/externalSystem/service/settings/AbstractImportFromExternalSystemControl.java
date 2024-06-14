@@ -15,18 +15,17 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.service.settings;
 
+import consulo.configurable.ConfigurationException;
 import consulo.externalSystem.ExternalSystemManager;
+import consulo.externalSystem.localize.ExternalSystemLocalize;
 import consulo.externalSystem.model.ProjectSystemId;
+import consulo.externalSystem.service.execution.ExternalSystemSettingsControl;
 import consulo.externalSystem.setting.AbstractExternalSystemSettings;
 import consulo.externalSystem.setting.ExternalProjectSettings;
 import consulo.externalSystem.setting.ExternalSystemSettingsListener;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
-import consulo.externalSystem.ExternalSystemBundle;
-import consulo.externalSystem.service.execution.ExternalSystemSettingsControl;
-import consulo.configurable.ConfigurationException;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -100,14 +99,14 @@ public abstract class AbstractImportFromExternalSystemControl<ProjectSettings ex
 
   public void apply(String linkedProjectPath, @Nullable Project currentProject) throws ConfigurationException {
     if (StringUtil.isEmpty(linkedProjectPath)) {
-      throw new ConfigurationException(ExternalSystemBundle.message("error.project.undefined"));
+      throw new ConfigurationException(ExternalSystemLocalize.errorProjectUndefined().get());
     }
     else if (currentProject != null) {
       ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(myExternalSystemId);
       assert manager != null;
       AbstractExternalSystemSettings<?, ?, ?> settings = manager.getSettingsProvider().apply(currentProject);
       if (settings.getLinkedProjectSettings(linkedProjectPath) != null) {
-        throw new ConfigurationException(ExternalSystemBundle.message("error.project.already.registered"));
+        throw new ConfigurationException(ExternalSystemLocalize.errorProjectAlreadyRegistered().get());
       }
     }
 

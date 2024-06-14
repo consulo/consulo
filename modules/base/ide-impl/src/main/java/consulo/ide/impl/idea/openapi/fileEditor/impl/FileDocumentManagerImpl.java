@@ -24,8 +24,6 @@ import consulo.ide.impl.idea.openapi.editor.impl.EditorFactoryImpl;
 import consulo.ide.impl.idea.openapi.editor.impl.TrailingSpacesStripper;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.text.TextEditorImpl;
 import consulo.ide.impl.idea.openapi.project.ProjectUtil;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.SafeWriteRequestor;
 import consulo.ide.impl.idea.pom.core.impl.PomModelImpl;
 import consulo.ide.impl.idea.util.ExceptionUtil;
@@ -39,6 +37,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.internal.ExternalChangeAction;
 import consulo.logging.Logger;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
 import consulo.project.ProjectManager;
@@ -46,9 +45,12 @@ import consulo.project.internal.ProjectManagerEx;
 import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBScrollPane;
+import consulo.ui.ex.localize.UILocalize;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.encoding.EncodingManager;
 import consulo.virtualFileSystem.event.VFileContentChangeEvent;
@@ -425,8 +427,8 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
       ioException = e;
     }
     if (!saveNeeded) {
-      if (document instanceof DocumentEx) {
-        ((DocumentEx)document).setModificationStamp(file.getModificationStamp());
+      if (document instanceof DocumentEx documentEx) {
+        documentEx.setModificationStamp(file.getModificationStamp());
       }
       removeFromUnsaved(document);
       updateModifiedProperty(file);
@@ -457,8 +459,8 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
     for (Project project : ProjectManager.getInstance().getOpenProjects()) {
       FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);
       for (FileEditor editor : fileEditorManager.getAllEditors(file)) {
-        if (editor instanceof TextEditorImpl) {
-          ((TextEditorImpl)editor).updateModifiedProperty();
+        if (editor instanceof TextEditorImpl textEditor) {
+          textEditor.updateModifiedProperty();
         }
       }
     }
@@ -483,7 +485,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
 
   private static boolean needsRefresh(@Nonnull VirtualFile file) {
     final VirtualFileSystem fs = file.getFileSystem();
-    return fs instanceof NewVirtualFileSystem && file.getTimeStamp() != ((NewVirtualFileSystem)fs).getTimeStamp(file);
+    return fs instanceof NewVirtualFileSystem vfs && file.getTimeStamp() != vfs.getTimeStamp(file);
   }
 
   @Nonnull
@@ -633,26 +635,32 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
     final Project project = ProjectLocator.getInstance().guessProjectForFile(file);
     boolean[] isReloadable = {isReloadable(file, document, project)};
     if (isReloadable[0]) {
-      CommandProcessor.getInstance().executeCommand(project, () -> ApplicationManager.getApplication().runWriteAction(new ExternalChangeAction.ExternalDocumentChange(document, project) {
-        @Override
-        public void run() {
-          if (!isBinaryWithoutDecompiler(file)) {
-            LoadTextUtil.clearCharsetAutoDetectionReason(file);
-            file.setBOM(null); // reset BOM in case we had one and the external change stripped it away
-            file.setCharset(null, null, false);
-            boolean wasWritable = document.isWritable();
-            document.setReadOnly(false);
-            boolean tooLarge = RawFileLoader.getInstance().isTooLarge(file.getLength());
-            isReloadable[0] = isReloadable(file, document, project);
-            if (isReloadable[0]) {
-              CharSequence reloaded = tooLarge ? LoadTextUtil.loadText(file, getPreviewCharCount(file)) : LoadTextUtil.loadText(file);
-              ((DocumentEx)document).replaceText(reloaded, file.getModificationStamp());
-              document.putUserData(BIG_FILE_PREVIEW, tooLarge ? Boolean.TRUE : null);
+      CommandProcessor.getInstance().executeCommand(
+        project,
+        () -> ApplicationManager.getApplication().runWriteAction(new ExternalChangeAction.ExternalDocumentChange(document, project) {
+          @Override
+          public void run() {
+            if (!isBinaryWithoutDecompiler(file)) {
+              LoadTextUtil.clearCharsetAutoDetectionReason(file);
+              file.setBOM(null); // reset BOM in case we had one and the external change stripped it away
+              file.setCharset(null, null, false);
+              boolean wasWritable = document.isWritable();
+              document.setReadOnly(false);
+              boolean tooLarge = RawFileLoader.getInstance().isTooLarge(file.getLength());
+              isReloadable[0] = isReloadable(file, document, project);
+              if (isReloadable[0]) {
+                CharSequence reloaded = tooLarge ? LoadTextUtil.loadText(file, getPreviewCharCount(file)) : LoadTextUtil.loadText(file);
+                ((DocumentEx)document).replaceText(reloaded, file.getModificationStamp());
+                document.putUserData(BIG_FILE_PREVIEW, tooLarge ? Boolean.TRUE : null);
+              }
+              document.setReadOnly(!wasWritable);
             }
-            document.setReadOnly(!wasWritable);
           }
-        }
-      }), UIBundle.message("file.cache.conflict.action"), null, UndoConfirmationPolicy.REQUEST_CONFIRMATION);
+        }),
+        UILocalize.fileCacheConflictAction().get(),
+        null,
+        UndoConfirmationPolicy.REQUEST_CONFIRMATION
+      );
     }
     if (isReloadable[0]) {
       myMultiCaster.fileContentReloaded(file, document);
@@ -736,7 +744,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
     final DialogWrapper dialog = new DialogWrapper(null) {
       {
         init();
-        setTitle(UIBundle.message("cannot.save.files.dialog.title"));
+        setTitle(UILocalize.cannotSaveFilesDialogTitle());
       }
 
       @Override
@@ -746,7 +754,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
         myOKAction.putValue(DEFAULT_ACTION, null);
 
         if (!myOnClose) {
-          myCancelAction.putValue(Action.NAME, CommonBundle.getCloseButtonText());
+          myCancelAction.putValue(Action.NAME, CommonLocalize.buttonClose().get());
         }
       }
 
@@ -754,7 +762,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
       protected JComponent createCenterPanel() {
         final JPanel panel = new JPanel(new BorderLayout(0, 5));
 
-        panel.add(new JLabel(UIBundle.message("cannot.save.files.dialog.message")), BorderLayout.NORTH);
+        panel.add(new JLabel(UILocalize.cannotSaveFilesDialogMessage().get()), BorderLayout.NORTH);
 
         final JTextPane area = new JTextPane();
         area.setText(text);

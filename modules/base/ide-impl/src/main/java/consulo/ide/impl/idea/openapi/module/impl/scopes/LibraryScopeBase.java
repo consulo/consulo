@@ -19,7 +19,7 @@ import consulo.module.Module;
 import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.scope.GlobalSearchScope;
 import jakarta.annotation.Nonnull;

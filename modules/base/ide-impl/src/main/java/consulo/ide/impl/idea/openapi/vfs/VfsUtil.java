@@ -15,9 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vfs;
 
-import consulo.application.util.SystemInfo;
 import consulo.application.util.function.Processor;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.SystemInfoRt;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
@@ -25,8 +23,10 @@ import consulo.ide.impl.idea.util.PathUtil;
 import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.language.file.FileTypeManager;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.util.io.Url;
 import consulo.util.io.Urls;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.SystemProperties;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
@@ -253,7 +253,7 @@ public class VfsUtil extends VfsUtilCore {
   public static URI toUri(@Nonnull File file) {
     String path = file.toURI().getPath();
     try {
-      if (SystemInfo.isWindows && path.charAt(0) != '/') {
+      if (Platform.current().os().isWindows() && path.charAt(0) != '/') {
         path = '/' + path;
       }
       return new URI(StandardFileSystems.FILE_PROTOCOL, "", path, null, null);
@@ -283,7 +283,7 @@ public class VfsUtil extends VfsUtilCore {
       }
     }
 
-    if (SystemInfo.isWindows && uri.startsWith(LocalFileSystem.PROTOCOL_PREFIX)) {
+    if (Platform.current().os().isWindows() && uri.startsWith(LocalFileSystem.PROTOCOL_PREFIX)) {
       int firstSlashIndex = index + "://".length();
       if (uri.charAt(firstSlashIndex) != '/') {
         uri = LocalFileSystem.PROTOCOL_PREFIX + '/' + uri.substring(firstSlashIndex);
@@ -449,7 +449,7 @@ public class VfsUtil extends VfsUtilCore {
 
   @Nullable
   public static VirtualFile getUserHomeDir() {
-    final String path = SystemProperties.getUserHome();
+    final String path = Platform.current().user().homePath().toString();
     return LocalFileSystem.getInstance().findFileByPath(FileUtil.toSystemIndependentName(path));
   }
 
@@ -523,7 +523,11 @@ public class VfsUtil extends VfsUtilCore {
 
   public static boolean equalsIgnoreParameters(@Nonnull Url url, @Nonnull VirtualFile file) {
     if (file.isInLocalFileSystem()) {
-      return url.isInLocalFileSystem() && (SystemInfoRt.isFileSystemCaseSensitive ? url.getPath().equals(file.getPath()) : url.getPath().equalsIgnoreCase(file.getPath()));
+      return url.isInLocalFileSystem() && (
+        SystemInfoRt.isFileSystemCaseSensitive
+          ? url.getPath().equals(file.getPath())
+          : url.getPath().equalsIgnoreCase(file.getPath())
+      );
     }
     else if (url.isInLocalFileSystem()) {
       return false;

@@ -21,7 +21,6 @@ import consulo.find.FindModel;
 import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
 import consulo.colorScheme.TextAttributes;
 import consulo.language.inject.InjectedLanguageManager;
-import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataProvider;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.EditorColors;
@@ -40,7 +39,7 @@ import consulo.colorScheme.EffectType;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.BalloonBuilder;
 import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.logging.Logger;
@@ -88,10 +87,10 @@ public class UsagePreviewPanel extends UsageContextPanelBase implements DataProv
   @Nullable
   @Override
   public Object getData(@Nonnull @NonNls Key dataId) {
-    if (CommonDataKeys.EDITOR == dataId && myEditor != null) {
+    if (Editor.KEY == dataId && myEditor != null) {
       return myEditor;
     }
-    if (Registry.is("ide.find.preview.navigate.to.caret") && CommonDataKeys.NAVIGATABLE_ARRAY == dataId && myEditor instanceof EditorEx) {
+    if (Registry.is("ide.find.preview.navigate.to.caret") && Navigatable.KEY_OF_ARRAY == dataId && myEditor instanceof EditorEx) {
       LogicalPosition position = myEditor.getCaretModel().getLogicalPosition();
       VirtualFile file = FileDocumentManager.getInstance().getFile(myEditor.getDocument());
       if (file != null) {

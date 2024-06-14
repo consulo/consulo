@@ -38,7 +38,7 @@ import consulo.disposer.Disposable;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.EditorNotifications;
 import consulo.ide.impl.idea.openapi.util.Getter;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.CalledInAwt;
 import consulo.ide.impl.idea.openapi.vcs.VcsConnectionProblem;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.ChangeListRemoveConfirmation;
@@ -50,6 +50,7 @@ import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
 import consulo.ide.impl.idea.openapi.vcs.impl.VcsRootIterator;
 import consulo.ide.impl.idea.openapi.vcs.readOnlyHandler.ReadonlyStatusHandlerImpl;
 import consulo.versionControlSystem.internal.ChangeListManagerEx;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.util.EventDispatcher;
@@ -89,6 +90,7 @@ import consulo.virtualFileSystem.status.FileStatusManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
 import jakarta.annotation.Nonnull;
@@ -171,12 +173,13 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     return (ChangeListManagerImpl)project.getInstance(ChangeListManager.class);
   }
 
-
   @Inject
-  public ChangeListManagerImpl(Project project,
-                               VcsConfiguration config,
-                               ApplicationConcurrency applicationConcurrency,
-                               EditorNotifications editorNotifications) {
+  public ChangeListManagerImpl(
+    Project project,
+    VcsConfiguration config,
+    ApplicationConcurrency applicationConcurrency,
+    EditorNotifications editorNotifications
+  ) {
     myProject = project;
     myConfig = config;
     myFreezeName = new AtomicReference<>(null);
@@ -240,6 +243,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
    *
    * @return true if the changelists have to be deleted, false if not.
    */
+  @NonNls
   private boolean showRemoveEmptyChangeListsProposal(@Nonnull final VcsConfiguration config, @Nonnull Collection<? extends LocalChangeList> lists) {
     if (lists.isEmpty()) {
       return false;
@@ -367,11 +371,13 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
   }
 
   @Override
-  public void invokeAfterUpdate(final Runnable afterUpdate,
-                                final InvokeAfterUpdateMode mode,
-                                final String title,
-                                final java.util.function.Consumer<VcsDirtyScopeManager> dirtyScopeManagerFiller,
-                                final ModalityState state) {
+  public void invokeAfterUpdate(
+    final Runnable afterUpdate,
+    final InvokeAfterUpdateMode mode,
+    final String title,
+    final java.util.function.Consumer<VcsDirtyScopeManager> dirtyScopeManagerFiller,
+    final ModalityState state
+  ) {
     myUpdater.invokeAfterUpdate(afterUpdate, mode, title, dirtyScopeManagerFiller, state);
   }
 
@@ -1209,11 +1215,11 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     });
 
     if (!exceptions.isEmpty()) {
-      StringBuilder message = new StringBuilder(VcsBundle.message("error.adding.files.prompt"));
+      StringBuilder message = new StringBuilder(VcsLocalize.errorAddingFilesPrompt().get());
       for (VcsException ex : exceptions) {
         message.append("\n").append(ex.getMessage());
       }
-      Messages.showErrorDialog(myProject, message.toString(), VcsBundle.message("error.adding.files.title"));
+      Messages.showErrorDialog(myProject, message.toString(), VcsLocalize.errorAddingFilesTitle().get());
     }
 
     for (VirtualFile file : allProcessedFiles) {
@@ -1227,22 +1233,28 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
 
     if (moveRequired || syncUpdateRequired) {
       // find the changes for the added files and move them to the necessary changelist
-      InvokeAfterUpdateMode updateMode = syncUpdateRequired ? InvokeAfterUpdateMode.SYNCHRONOUS_CANCELLABLE : InvokeAfterUpdateMode.BACKGROUND_NOT_CANCELLABLE;
+      InvokeAfterUpdateMode updateMode = syncUpdateRequired
+        ? InvokeAfterUpdateMode.SYNCHRONOUS_CANCELLABLE : InvokeAfterUpdateMode.BACKGROUND_NOT_CANCELLABLE;
 
-      invokeAfterUpdate(() -> {
-        ApplicationManager.getApplication().runReadAction(() -> {
-          synchronized (myDataLock) {
-            List<Change> newChanges = findChanges(allProcessedFiles);
-            foundChanges.set(newChanges);
+      invokeAfterUpdate(
+        () -> {
+          ApplicationManager.getApplication().runReadAction(() -> {
+            synchronized (myDataLock) {
+              List<Change> newChanges = findChanges(allProcessedFiles);
+              foundChanges.set(newChanges);
 
-            if (moveRequired && !newChanges.isEmpty()) {
-              moveChangesTo(list, newChanges.toArray(new Change[newChanges.size()]));
+              if (moveRequired && !newChanges.isEmpty()) {
+                moveChangesTo(list, newChanges.toArray(new Change[newChanges.size()]));
+              }
             }
-          }
-        });
+          });
 
-        myChangesViewManager.scheduleRefresh();
-      }, updateMode, VcsBundle.message("change.lists.manager.add.unversioned"), null);
+          myChangesViewManager.scheduleRefresh();
+        },
+        updateMode,
+        VcsLocalize.changeListsManagerAddUnversioned().get(),
+        null
+      );
 
       if (changesConsumer != null) {
         changesConsumer.accept(foundChanges.get());

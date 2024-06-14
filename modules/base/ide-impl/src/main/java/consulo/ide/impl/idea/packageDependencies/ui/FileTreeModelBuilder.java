@@ -16,47 +16,46 @@
 
 package consulo.ide.impl.idea.packageDependencies.ui;
 
-import consulo.language.editor.scope.AnalysisScopeBundle;
-import consulo.ui.ex.awt.dnd.DnDAwareTree;
-import consulo.project.ui.view.tree.ModuleGroup;
-import consulo.ide.impl.idea.ide.scopeView.nodes.BasePsiNode;
-import consulo.module.Module;
-import consulo.module.ModuleManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
-import consulo.project.Project;
 import consulo.content.ContentIterator;
-import consulo.module.content.ProjectFileIndex;
-import consulo.module.content.ProjectRootManager;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.ide.scopeView.nodes.BasePsiNode;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileSystemItem;
-import java.util.HashSet;
-import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.logging.Logger;
+import consulo.module.Module;
+import consulo.module.ModuleManager;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
+import consulo.project.Project;
+import consulo.project.ui.view.tree.ModuleGroup;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.dnd.DnDAwareTree;
+import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.util.dataholder.Key;
-
+import consulo.util.lang.Comparing;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 public class FileTreeModelBuilder {
   public static final Key<Integer> FILE_COUNT = Key.create("FILE_COUNT");
-  public static final String SCANNING_PACKAGES_MESSAGE = AnalysisScopeBundle.message("package.dependencies.build.progress.text");
   private final ProjectFileIndex myFileIndex;
   private final Project myProject;
   private static final Logger LOG = Logger.getInstance(FileTreeModelBuilder.class);
@@ -70,9 +69,9 @@ public class FileTreeModelBuilder {
   private final Marker myMarker;
   private final boolean myAddUnmarkedFiles;
   private final PackageDependenciesNode myRoot;
-  private final Map<VirtualFile,DirectoryNode> myModuleDirNodes = new HashMap<VirtualFile, DirectoryNode>();
-  private final Map<Module, ModuleNode> myModuleNodes = new HashMap<Module, ModuleNode>();
-  private final Map<String, ModuleGroupNode> myModuleGroupNodes = new HashMap<String, ModuleGroupNode>();
+  private final Map<VirtualFile,DirectoryNode> myModuleDirNodes = new HashMap<>();
+  private final Map<Module, ModuleNode> myModuleNodes = new HashMap<>();
+  private final Map<String, ModuleGroupNode> myModuleGroupNodes = new HashMap<>();
   private int myScannedFileCount = 0;
   private int myTotalFileCount = 0;
   private int myMarkedFileCount = 0;
@@ -116,14 +115,11 @@ public class FileTreeModelBuilder {
   private void countFiles(Project project) {
     final Integer fileCount = project.getUserData(FILE_COUNT);
     if (fileCount == null) {
-      myFileIndex.iterateContent(new ContentIterator() {
-        @Override
-        public boolean processFile(VirtualFile fileOrDir) {
-          if (!fileOrDir.isDirectory()) {
-            counting();
-          }
-          return true;
+      myFileIndex.iterateContent(fileOrDir -> {
+        if (!fileOrDir.isDirectory()) {
+          counting();
         }
+        return true;
       });
       project.putUserData(FILE_COUNT, myTotalFileCount);
     } else {
@@ -140,25 +136,22 @@ public class FileTreeModelBuilder {
   }
 
   public TreeModel build(final Project project, final boolean showProgress, @Nullable final Runnable successRunnable) {
-    final Runnable buildingRunnable = new Runnable() {
-      @Override
-      public void run() {
-        ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
-        if (indicator != null) {
-          indicator.setText(SCANNING_PACKAGES_MESSAGE);
-          indicator.setIndeterminate(true);
-        }
-        countFiles(project);
-        if (indicator != null) {
-          indicator.setIndeterminate(false);
-        }
-        myFileIndex.iterateContent(new MyContentIterator());
+    final Runnable buildingRunnable = () -> {
+      ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
+      if (indicator != null) {
+        indicator.setTextValue(AnalysisScopeLocalize.packageDependenciesBuildProgressText());
+        indicator.setIndeterminate(true);
       }
+      countFiles(project);
+      if (indicator != null) {
+        indicator.setIndeterminate(false);
+      }
+      myFileIndex.iterateContent(new MyContentIterator());
     };
     final TreeModel treeModel = new TreeModel(myRoot);
     if (showProgress) {
       final Task.Backgroundable backgroundable =
-        new Task.Backgroundable(project, AnalysisScopeBundle.message("package.dependencies.build.process.title")) {
+        new Task.Backgroundable(project, AnalysisScopeLocalize.packageDependenciesBuildProcessTitle().get()) {
           @Override
           public void run(@Nonnull ProgressIndicator indicator) {
             buildingRunnable.run();
@@ -197,7 +190,11 @@ public class FileTreeModelBuilder {
 
   private static void update(ProgressIndicator indicator, boolean indeterminate, double fraction) {
     if (indicator instanceof PanelProgressIndicator) {
-      ((PanelProgressIndicator)indicator).update(SCANNING_PACKAGES_MESSAGE, indeterminate, fraction);
+      ((PanelProgressIndicator)indicator).update(
+        AnalysisScopeLocalize.packageDependenciesBuildProgressText().get(),
+        indeterminate,
+        fraction
+      );
     } else {
       if (fraction != -1) {
         indicator.setFraction(fraction);
@@ -210,20 +207,21 @@ public class FileTreeModelBuilder {
       myShowFiles = true;
     }
 
-    Runnable buildingRunnable = new Runnable() {
-      @Override
-      public void run() {
-        for (final PsiFile file : files) {
-          if (file != null) {
-            buildFileNode(file.getVirtualFile(), null);
-          }
+    Runnable buildingRunnable = () -> {
+      for (final PsiFile file : files) {
+        if (file != null) {
+          buildFileNode(file.getVirtualFile(), null);
         }
       }
     };
 
     if (showProgress) {
-      ProgressManager.getInstance().runProcessWithProgressSynchronously(buildingRunnable, AnalysisScopeBundle
-        .message("package.dependencies.build.process.title"), false, myProject);
+      ProgressManager.getInstance().runProcessWithProgressSynchronously(
+        buildingRunnable,
+        AnalysisScopeLocalize.packageDependenciesBuildProcessTitle().get(),
+        false,
+        myProject
+      );
     }
     else {
       buildingRunnable.run();
@@ -423,7 +421,7 @@ public class FileTreeModelBuilder {
 
   @Nullable
   public static PackageDependenciesNode[] findNodeForPsiElement(PackageDependenciesNode parent, PsiElement element){
-    final Set<PackageDependenciesNode> result = new HashSet<PackageDependenciesNode>();
+    final Set<PackageDependenciesNode> result = new HashSet<>();
     for (int i = 0; i < parent.getChildCount(); i++){
       final TreeNode treeNode = parent.getChildAt(i);
       if (treeNode instanceof PackageDependenciesNode){
@@ -473,12 +471,7 @@ public class FileTreeModelBuilder {
           parentWrapper.add(nestedNode);
           nestedNode.removeUpReference();
           if (myTree != null && expand) {
-            final Runnable expandRunnable = new Runnable() {
-              @Override
-              public void run() {
-                myTree.expandPath(new TreePath(nestedNode.getPath()));
-              }
-            };
+            final Runnable expandRunnable = () -> myTree.expandPath(new TreePath(nestedNode.getPath()));
             SwingUtilities.invokeLater(expandRunnable);
           }
           return parentWrapper;

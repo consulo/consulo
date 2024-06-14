@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.application.AllIcons;
 import consulo.application.util.UserHomeFileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.project.Project;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awtUnsafe.TargetAWT;

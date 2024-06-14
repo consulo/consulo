@@ -25,7 +25,6 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
@@ -35,6 +34,7 @@ import consulo.versionControlSystem.action.VcsContext;
 import consulo.versionControlSystem.action.VcsContextFactory;
 import consulo.versionControlSystem.annotate.AnnotationProvider;
 import consulo.versionControlSystem.annotate.FileAnnotation;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
@@ -73,7 +73,7 @@ public class AnnotateLocalFileAction {
 
   public static boolean isSuspended(AnActionEvent e) {
     VirtualFile file = assertNotNull(VcsContextFactory.getInstance().createContextOn(e).getSelectedFile());
-    return VcsAnnotateUtil.getBackgroundableLock(e.getRequiredData(CommonDataKeys.PROJECT), file).isLocked();
+    return VcsAnnotateUtil.getBackgroundableLock(e.getRequiredData(Project.KEY), file).isLocked();
   }
 
   public static boolean isAnnotated(AnActionEvent e) {
@@ -103,8 +103,8 @@ public class AnnotateLocalFileAction {
       if (editor == null) {
         FileEditor[] fileEditors = FileEditorManager.getInstance(project).openFile(selectedFile, false);
         for (FileEditor fileEditor : fileEditors) {
-          if (fileEditor instanceof TextEditor) {
-            editor = ((TextEditor)fileEditor).getEditor();
+          if (fileEditor instanceof TextEditor textEditor) {
+            editor = textEditor.getEditor();
           }
         }
       }
@@ -128,7 +128,7 @@ public class AnnotateLocalFileAction {
 
     VcsAnnotateUtil.getBackgroundableLock(project, file).lock();
 
-    final Task.Backgroundable annotateTask = new Task.Backgroundable(project, VcsBundle.message("retrieving.annotations"), true) {
+    final Task.Backgroundable annotateTask = new Task.Backgroundable(project, VcsLocalize.retrievingAnnotations().get(), true) {
       @Override
       public void run(final @Nonnull ProgressIndicator indicator) {
         try {
@@ -156,7 +156,7 @@ public class AnnotateLocalFileAction {
 
         if (!exceptionRef.isNull()) {
           LOG.warn(exceptionRef.get());
-          AbstractVcsHelper.getInstance(project).showErrors(Collections.singletonList(exceptionRef.get()), VcsBundle.message("message.title.annotate"));
+          AbstractVcsHelper.getInstance(project).showErrors(Collections.singletonList(exceptionRef.get()), VcsLocalize.messageTitleAnnotate().get());
         }
 
         if (!fileAnnotationRef.isNull()) {

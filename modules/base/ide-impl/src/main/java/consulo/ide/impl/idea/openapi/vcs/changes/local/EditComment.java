@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.local;
 
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.versionControlSystem.change.ChangeListListener;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListWorker;
 import consulo.versionControlSystem.change.LocalChangeList;

@@ -23,7 +23,6 @@ import consulo.ui.ex.popup.MultiSelectionListPopupStep;
 import consulo.task.impl.internal.TaskManagerImpl;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.task.ChangeListInfo;
 import consulo.task.LocalTask;
@@ -58,22 +57,24 @@ public class SwitchTaskAction extends BaseTaskAction {
   @Override
   public void actionPerformed(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     assert project != null;
     ListPopupImpl popup = createPopup(dataContext, null, true);
     popup.showCenteredInCurrentWindow(project);
   }
 
-  public static ListPopupImpl createPopup(final DataContext dataContext,
-                                          @Nullable final Runnable onDispose,
-                                          boolean withTitle) {
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+  public static ListPopupImpl createPopup(
+    final DataContext dataContext,
+    @Nullable final Runnable onDispose,
+    boolean withTitle
+  ) {
+    final Project project = dataContext.getData(Project.KEY);
     final Ref<Boolean> shiftPressed = Ref.create(false);
     final Ref<JComponent> componentRef = Ref.create();
     List<TaskListItem> items = project == null ? Collections.<TaskListItem>emptyList() :
-                               createPopupActionGroup(project, shiftPressed, dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT));
+      createPopupActionGroup(project, shiftPressed, dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT));
     final String title = withTitle ? "Switch to Task" : null;
-    ListPopupStep<TaskListItem> step = new MultiSelectionListPopupStep<TaskListItem>(title, items) {
+    ListPopupStep<TaskListItem> step = new MultiSelectionListPopupStep<>(title, items) {
       @Override
       public PopupStep<?> onChosen(List<TaskListItem> selectedValues, boolean finalChoice) {
         if (finalChoice) {
@@ -165,10 +166,12 @@ public class SwitchTaskAction extends BaseTaskAction {
   }
 
   @Nonnull
-  private static List<TaskListItem> createPopupActionGroup(@Nonnull final Project project,
-                                                           final Ref<Boolean> shiftPressed,
-                                                           final Component contextComponent) {
-    List<TaskListItem> group = new ArrayList<TaskListItem>();
+  private static List<TaskListItem> createPopupActionGroup(
+    @Nonnull final Project project,
+    final Ref<Boolean> shiftPressed,
+    final Component contextComponent
+  ) {
+    List<TaskListItem> group = new ArrayList<>();
 
     final AnAction action = ActionManager.getInstance().getAction(GotoTaskAction.ID);
     assert action instanceof GotoTaskAction;
@@ -185,7 +188,7 @@ public class SwitchTaskAction extends BaseTaskAction {
     LocalTask activeTask = manager.getActiveTask();
     List<LocalTask> localTasks = manager.getLocalTasks();
     Collections.sort(localTasks, TaskManagerImpl.TASK_UPDATE_COMPARATOR);
-    ArrayList<LocalTask> temp = new ArrayList<LocalTask>();
+    ArrayList<LocalTask> temp = new ArrayList<>();
     for (final LocalTask task : localTasks) {
       if (task == activeTask) {
         continue;

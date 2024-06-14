@@ -15,61 +15,58 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.patch.tool;
 
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.application.AllIcons;
+import consulo.codeEditor.*;
+import consulo.codeEditor.event.VisibleAreaListener;
+import consulo.dataContext.DataProvider;
 import consulo.diff.DiffContentFactory;
-import consulo.ide.impl.idea.diff.DiffContext;
 import consulo.diff.DiffDialogHints;
 import consulo.diff.DiffManager;
+import consulo.diff.DiffUserDataKeys;
+import consulo.diff.content.DocumentContent;
+import consulo.diff.localize.DiffLocalize;
+import consulo.diff.request.SimpleDiffRequest;
+import consulo.diff.util.Side;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.document.Document;
+import consulo.document.impl.DocumentImpl;
+import consulo.ide.impl.idea.diff.DiffContext;
 import consulo.ide.impl.idea.diff.actions.ProxyUndoRedoAction;
 import consulo.ide.impl.idea.diff.actions.impl.FocusOppositePaneAction;
 import consulo.ide.impl.idea.diff.actions.impl.SetEditorSettingsAction;
-import consulo.diff.DiffUserDataKeys;
-import consulo.diff.content.DocumentContent;
 import consulo.ide.impl.idea.diff.merge.MergeModelBase;
-import consulo.diff.request.SimpleDiffRequest;
 import consulo.ide.impl.idea.diff.tools.fragmented.LineNumberConvertor;
 import consulo.ide.impl.idea.diff.tools.holders.TextEditorHolder;
 import consulo.ide.impl.idea.diff.tools.util.*;
 import consulo.ide.impl.idea.diff.tools.util.base.TextDiffSettingsHolder.TextDiffSettings;
 import consulo.ide.impl.idea.diff.tools.util.base.TextDiffViewerUtil;
 import consulo.ide.impl.idea.diff.tools.util.side.TwosideContentPanel;
-import consulo.ide.impl.idea.diff.util.*;
-import consulo.application.AllIcons;
-import consulo.ide.impl.idea.openapi.actionSystem.*;
+import consulo.ide.impl.idea.diff.util.DiffDividerDrawUtil;
+import consulo.ide.impl.idea.diff.util.DiffDrawUtil;
+import consulo.ide.impl.idea.diff.util.DiffUtil;
+import consulo.ide.impl.idea.diff.util.LineRange;
+import consulo.ide.impl.idea.openapi.actionSystem.CompositeShortcutSet;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.diff.util.Side;
-import consulo.language.editor.CommonDataKeys;
-import consulo.undoRedo.UndoConfirmationPolicy;
-import consulo.ide.impl.idea.openapi.diff.DiffBundle;
-import consulo.codeEditor.event.VisibleAreaListener;
-import consulo.codeEditor.EditorEx;
-import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
-import consulo.document.impl.DocumentImpl;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.dataContext.DataProvider;
-import consulo.codeEditor.Caret;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.LogicalPosition;
-import consulo.codeEditor.ScrollType;
-import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.BooleanGetter;
 import consulo.ide.impl.idea.openapi.vcs.CalledInAwt;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.AppliedTextPatch;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.annotation.access.RequiredWriteAction;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.document.Document;
+import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
 import consulo.logging.Logger;
+import consulo.project.Project;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -80,7 +77,7 @@ import java.util.List;
 class ApplyPatchViewer implements DataProvider, Disposable {
   public static final Logger LOG = Logger.getInstance(ApplyPatchViewer.class);
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private final Project myProject;
   @Nonnull
   private final DiffContext myContext;
@@ -154,7 +151,6 @@ class ApplyPatchViewer implements DataProvider, Disposable {
 
     myPatchEditor.getGutterComponentEx().setForceShowRightFreePaintersArea(true);
     ((EditorMarkupModel)myPatchEditor.getMarkupModel()).setErrorStripeVisible(false);
-
 
     List<TextEditorHolder> holders = ContainerUtil.list(myResultHolder, myPatchHolder);
     List<EditorEx> editors = ContainerUtil.list(myResultEditor, myPatchEditor);
@@ -266,7 +262,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
     return myPanel;
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   public JComponent getPreferredFocusedComponent() {
     return myResultEditor.getContentComponent();
   }
@@ -294,7 +290,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
   @Nullable
   @Override
   public Object getData(@Nonnull @NonNls Key<?> dataId) {
-    if (CommonDataKeys.PROJECT == dataId) {
+    if (Project.KEY == dataId) {
       return myProject;
     }
     else if (DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE == dataId) {
@@ -325,10 +321,8 @@ class ApplyPatchViewer implements DataProvider, Disposable {
       if (!isReadOnly()) DiffUtil.putNonundoableOperation(myProject, outputDocument);
     });
 
-
     PatchChangeBuilder builder = new PatchChangeBuilder();
     builder.exec(myPatchRequest.getPatch().getHunks());
-
 
     Document patchDocument = myPatchEditor.getDocument();
     patchDocument.setText(builder.getPatchContent());
@@ -341,7 +335,6 @@ class ApplyPatchViewer implements DataProvider, Disposable {
       int offset = patchDocument.getLineStartOffset(lines.get(i));
       DiffDrawUtil.createLineSeparatorHighlighter(myPatchEditor, offset, offset, BooleanGetter.TRUE);
     }
-
 
     List<PatchChangeBuilder.Hunk> hunks = builder.getHunks();
 
@@ -374,14 +367,12 @@ class ApplyPatchViewer implements DataProvider, Disposable {
       myPatchChanges.add(myModelChanges.get(index));
     }
 
-
     myFoldingModel.install(myResultChanges, getFoldingModelSettings());
 
     for (ApplyPatchChange change : myModelChanges) {
       change.reinstallHighlighters();
     }
     myStatusPanel.update();
-
 
     myContentPanel.setPainter(new MyDividerPainter());
 
@@ -415,10 +406,15 @@ class ApplyPatchViewer implements DataProvider, Disposable {
         topShift = targetY - scrollOffset;
       }
 
-      int[] offsets = SyncScrollSupport.getTargetOffsets(myResultEditor, myPatchEditor,
-                                                         resultRange.start, resultRange.end,
-                                                         patchRange.start, patchRange.end,
-                                                         topShift);
+      int[] offsets = SyncScrollSupport.getTargetOffsets(
+        myResultEditor,
+        myPatchEditor,
+        resultRange.start,
+        resultRange.end,
+        patchRange.start,
+        patchRange.end,
+        topShift
+      );
 
       DiffUtil.moveCaret(myResultEditor, resultRange.start);
       DiffUtil.moveCaret(myPatchEditor, patchRange.start);
@@ -436,9 +432,15 @@ class ApplyPatchViewer implements DataProvider, Disposable {
     myContentPanel.repaintDivider();
   }
 
-  public void executeCommand(@Nullable String commandName,
-                             @Nonnull final Runnable task) {
-    myModel.executeMergeCommand(commandName, null, UndoConfirmationPolicy.DEFAULT, false, null, task);
+  public void executeCommand(@Nullable String commandName, @Nonnull final Runnable task) {
+    myModel.executeMergeCommand(
+      commandName,
+      null,
+      UndoConfirmationPolicy.DEFAULT,
+      false,
+      null,
+      task
+    );
   }
 
   class MyModel extends MergeModelBase<ApplyPatchChange.State> {
@@ -521,8 +523,10 @@ class ApplyPatchViewer implements DataProvider, Disposable {
       super(shortcut);
       getTemplatePresentation().setText("Ignore");
       getTemplatePresentation().setIcon(AllIcons.Diff.Remove);
-      setShortcutSet(new CompositeShortcutSet(ActionManager.getInstance().getAction("Diff.IgnoreRightSide").getShortcutSet(),
-                                              ActionManager.getInstance().getAction("Diff.ApplyLeftSide").getShortcutSet()));
+      setShortcutSet(new CompositeShortcutSet(
+        ActionManager.getInstance().getAction("Diff.IgnoreRightSide").getShortcutSet(),
+        ActionManager.getInstance().getAction("Diff.ApplyLeftSide").getShortcutSet()
+      ));
     }
 
     @Override
@@ -554,7 +558,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
       }
 
       Presentation presentation = e.getPresentation();
-      Editor editor = e.getData(CommonDataKeys.EDITOR);
+      Editor editor = e.getData(Editor.KEY);
 
       Side side = Side.fromValue(ContainerUtil.list(myResultEditor, myPatchEditor), editor);
       if (side == null) {
@@ -568,7 +572,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
 
     @Override
     public void actionPerformed(@Nonnull final AnActionEvent e) {
-      Editor editor = e.getData(CommonDataKeys.EDITOR);
+      Editor editor = e.getData(Editor.KEY);
       final Side side = Side.fromValue(ContainerUtil.list(myResultEditor, myPatchEditor), editor);
       if (editor == null || side == null) return;
 
@@ -577,9 +581,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
 
       String title = e.getPresentation().getText() + " in patch resolve";
 
-      executeCommand(title, () -> {
-        apply(selectedChanges);
-      });
+      executeCommand(title, () -> apply(selectedChanges));
     }
 
     private boolean isSomeChangeSelected(@Nonnull Side side) {
@@ -701,9 +703,13 @@ class ApplyPatchViewer implements DataProvider, Disposable {
       DocumentContent resultContent = myPatchRequest.getResultContent();
       DocumentContent localContent = DiffContentFactory.getInstance().create(myPatchRequest.getLocalContent(), resultContent);
 
-      SimpleDiffRequest request = new SimpleDiffRequest(myPatchRequest.getTitle(),
-                                                        localContent, resultContent,
-                                                        myPatchRequest.getLocalTitle(), myPatchRequest.getResultTitle());
+      SimpleDiffRequest request = new SimpleDiffRequest(
+        myPatchRequest.getTitle(),
+        localContent,
+        resultContent,
+        myPatchRequest.getLocalTitle(),
+        myPatchRequest.getResultTitle()
+      );
 
       LogicalPosition currentPosition = DiffUtil.getCaretPosition(myResultEditor);
       request.putUserData(DiffUserDataKeys.SCROLL_TO_LINE, Pair.create(Side.RIGHT, currentPosition.line));
@@ -770,7 +776,14 @@ class ApplyPatchViewer implements DataProvider, Disposable {
         ColorValue color = change.getDiffType().getColor(myPatchEditor);
 
         // do not abort - ranges are ordered in patch order, but they can be not ordered in terms of resultRange
-        handler.process(resultRange.start, resultRange.end, patchRange.start, patchRange.end, color, change.isResolved());
+        handler.process(
+          resultRange.start,
+          resultRange.end,
+          patchRange.start,
+          patchRange.end,
+          color,
+          change.isResolved()
+        );
       }
     }
   }
@@ -782,13 +795,18 @@ class ApplyPatchViewer implements DataProvider, Disposable {
       super(new EditorEx[]{editor}, disposable);
     }
 
-    public void install(@jakarta.annotation.Nullable List<ApplyPatchChange> changes,
-                        @Nonnull FoldingModelSupport.Settings settings) {
+    public void install(
+      @Nullable List<ApplyPatchChange> changes,
+      @Nonnull FoldingModelSupport.Settings settings
+    ) {
       //noinspection ConstantConditions
-      Iterator<int[]> it = map(changes, fragment -> new int[]{
-              fragment.getResultRange().start,
-              fragment.getResultRange().end
-      });
+      Iterator<int[]> it = map(
+        changes,
+        fragment -> new int[]{
+          fragment.getResultRange().start,
+          fragment.getResultRange().end
+        }
+      );
       install(it, null, settings);
     }
   }
@@ -817,15 +835,15 @@ class ApplyPatchViewer implements DataProvider, Disposable {
       }
 
       if (totalUnresolved == 0) {
-        return DiffBundle.message("apply.somehow.status.message.all.applied", notApplied);
+        return DiffLocalize.applySomehowStatusMessageAllApplied().get();
       }
       if (totalUnresolved == notApplied) {
-        return DiffBundle.message("apply.somehow.status.message.cant.apply", notApplied);
+        return DiffLocalize.applySomehowStatusMessageCantApply(notApplied).get();
       }
       else {
-        String message = DiffBundle.message("apply.somehow.status.message.cant.apply.some", notApplied, totalUnresolved);
+        String message = DiffLocalize.applySomehowStatusMessageCantApplySome(notApplied, totalUnresolved).get();
         if (alreadyApplied == 0) return message;
-        return message + ". " + DiffBundle.message("apply.somehow.status.message.already.applied", alreadyApplied);
+        return message + ". " + DiffLocalize.applySomehowStatusMessageAlreadyApplied(alreadyApplied).get();
       }
     }
   }

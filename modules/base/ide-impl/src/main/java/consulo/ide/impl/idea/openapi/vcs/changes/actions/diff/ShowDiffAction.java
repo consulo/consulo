@@ -15,25 +15,24 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.actions.diff;
 
+import consulo.application.dumb.DumbAware;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.diff.DiffManager;
-import consulo.diff.chain.DiffRequestChain;
 import consulo.diff.DiffUserDataKeys;
-import consulo.ui.ex.action.ActionsBundle;
+import consulo.diff.chain.DiffRequestChain;
+import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
+import consulo.ide.impl.idea.openapi.vcs.changes.FakeRevision;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.logging.Logger;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.project.Project;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.logging.Logger;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
-import consulo.util.lang.function.Condition;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.function.Condition;
 import consulo.versionControlSystem.VcsDataKeys;
-import consulo.ide.impl.idea.openapi.vcs.changes.*;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.versionControlSystem.change.*;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -47,7 +46,7 @@ public class ShowDiffAction extends AnAction implements DumbAware {
 
   public void update(@Nonnull AnActionEvent e) {
     Change[] changes = e.getData(VcsDataKeys.CHANGES);
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (ActionPlaces.MAIN_MENU.equals(e.getPlace())) {
       e.getPresentation().setEnabled(project != null && changes != null && changes.length > 0);
     }
@@ -56,11 +55,11 @@ public class ShowDiffAction extends AnAction implements DumbAware {
     }
   }
 
-  public static boolean canShowDiff(@Nullable Project project, @jakarta.annotation.Nullable Change[] changes) {
+  public static boolean canShowDiff(@Nullable Project project, @Nullable Change[] changes) {
     return changes != null && canShowDiff(project, Arrays.asList(changes));
   }
 
-  public static boolean canShowDiff(@jakarta.annotation.Nullable Project project, @Nullable List<Change> changes) {
+  public static boolean canShowDiff(@Nullable Project project, @Nullable List<Change> changes) {
     if (changes == null || changes.size() == 0) return false;
     for (Change change : changes) {
       if (ChangeDiffRequestProducer.canCreate(project, change)) return true;
@@ -69,7 +68,7 @@ public class ShowDiffAction extends AnAction implements DumbAware {
   }
 
   public void actionPerformed(@Nonnull final AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     final Change[] changes = e.getData(VcsDataKeys.CHANGES);
     if (project == null || !canShowDiff(project, changes)) return;
     if (ChangeListManager.getInstance(project).isFreezedWithNotification(null)) return;
@@ -79,42 +78,44 @@ public class ShowDiffAction extends AnAction implements DumbAware {
 
     // this trick is essential since we are under some conditions to refresh changes;
     // but we can only rely on callback after refresh
-    final Runnable performer = new Runnable() {
-      public void run() {
-        Change[] convertedChanges;
-        if (needsConversion) {
-          convertedChanges = loadFakeRevisions(project, changes);
-        }
-        else {
-          convertedChanges = changes;
-        }
-
-        if (convertedChanges == null || convertedChanges.length == 0) {
-          return;
-        }
-
-        Change selectedChane = null;
-        List<Change> result = null;
-
-        if (convertedChanges.length == 1) {
-          selectedChane = convertedChanges[0];
-          ChangeList changeList = ((ChangeListManagerImpl)ChangeListManager.getInstance(project)).getIdentityChangeList(selectedChane);
-          if (changeList != null) {
-            result = changesInList != null ? changesInList : new ArrayList<>(changeList.getChanges());
-          }
-        }
-        if (result == null) result = ContainerUtil.newArrayList(convertedChanges);
-
-        //ContainerUtil.sort(result, ChangesComparator.getInstance(false));
-        int index = selectedChane == null ? 0 : Math.max(0, ContainerUtil.indexOfIdentity(result, selectedChane));
-
-        showDiffForChange(project, result, index);
+    final Runnable performer = () -> {
+      Change[] convertedChanges;
+      if (needsConversion) {
+        convertedChanges = loadFakeRevisions(project, changes);
       }
+      else {
+        convertedChanges = changes;
+      }
+
+      if (convertedChanges == null || convertedChanges.length == 0) {
+        return;
+      }
+
+      Change selectedChane = null;
+      List<Change> result = null;
+
+      if (convertedChanges.length == 1) {
+        selectedChane = convertedChanges[0];
+        ChangeList changeList = ((ChangeListManagerImpl)ChangeListManager.getInstance(project)).getIdentityChangeList(selectedChane);
+        if (changeList != null) {
+          result = changesInList != null ? changesInList : new ArrayList<>(changeList.getChanges());
+        }
+      }
+      if (result == null) result = ContainerUtil.newArrayList(convertedChanges);
+
+      //ContainerUtil.sort(result, ChangesComparator.getInstance(false));
+      int index = selectedChane == null ? 0 : Math.max(0, ContainerUtil.indexOfIdentity(result, selectedChane));
+
+      showDiffForChange(project, result, index);
     };
 
     if (needsConversion) {
-      ChangeListManager.getInstance(project).invokeAfterUpdate(performer, InvokeAfterUpdateMode.BACKGROUND_CANCELLABLE,
-                                                               ActionsBundle.actionText("ChangesView.Diff"), IdeaModalityState.current());
+      ChangeListManager.getInstance(project).invokeAfterUpdate(
+        performer,
+        InvokeAfterUpdateMode.BACKGROUND_CANCELLABLE,
+        ActionLocalize.actionChangesviewDiffText().get(),
+        IdeaModalityState.current()
+      );
     }
     else {
       performer.run();

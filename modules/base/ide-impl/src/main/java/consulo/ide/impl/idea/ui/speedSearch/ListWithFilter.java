@@ -6,7 +6,7 @@
 package consulo.ide.impl.idea.ui.speedSearch;
 
 import consulo.ui.ex.awt.util.PopupUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.awt.LightColors;
 import consulo.ui.ex.awt.SearchTextField;
 import consulo.application.ui.wm.IdeFocusManager;

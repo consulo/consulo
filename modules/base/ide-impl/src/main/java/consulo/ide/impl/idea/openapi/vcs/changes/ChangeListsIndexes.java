@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import com.google.common.collect.Sets;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.BaseRevision;

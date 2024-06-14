@@ -8,7 +8,7 @@ import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.ide.impl.idea.openapi.ui.popup.ListPopupStepEx;
 import consulo.ui.ex.popup.MultiSelectionListPopupStep;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.ui.ListActions;
 import consulo.ide.impl.idea.ui.popup.ClosableByLeftArrow;
 import consulo.ide.impl.idea.ui.popup.NextStepHandler;
@@ -17,7 +17,6 @@ import consulo.ide.impl.psi.statistics.StatisticsInfo;
 import consulo.ide.impl.psi.statistics.StatisticsManager;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.ide.ui.popup.HintUpdateSupply;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -67,7 +66,7 @@ public class ListPopupImpl extends WizardPopup implements ListPopup, NextStepHan
    */
   @Deprecated
   public ListPopupImpl(@Nonnull ListPopupStep aStep) {
-    this(DataManager.getInstance().getDataContext().getData(CommonDataKeys.PROJECT), null, aStep, null);
+    this(DataManager.getInstance().getDataContext().getData(Project.KEY), null, aStep, null);
   }
 
   public ListPopupImpl(@Nullable Project project, @Nonnull ListPopupStep aStep) {

@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.fileTypes.impl;
 
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.file.FileTypeManager;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 
 import jakarta.annotation.Nonnull;

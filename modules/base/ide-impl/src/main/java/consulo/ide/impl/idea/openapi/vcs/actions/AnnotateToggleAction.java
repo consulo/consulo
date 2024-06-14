@@ -23,11 +23,11 @@ import consulo.colorScheme.EditorColorsScheme;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.localVcs.UpToDateLineNumberProvider;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.vcs.annotate.AnnotationGutterActionProvider;
 import consulo.ide.impl.idea.openapi.vcs.impl.UpToDateLineNumberProviderImpl;
 import consulo.ide.impl.idea.ui.EditorNotificationPanel;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.action.AnActionEvent;
@@ -36,11 +36,11 @@ import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.ex.awt.LightColors;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.Couple;
 import consulo.util.lang.ObjectUtil;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.action.AnnotateToggleActionProvider;
 import consulo.versionControlSystem.annotate.AnnotationSourceSwitcher;
 import consulo.versionControlSystem.annotate.FileAnnotation;
@@ -48,10 +48,12 @@ import consulo.versionControlSystem.annotate.LineAnnotationAspect;
 import consulo.versionControlSystem.change.VcsAnnotationLocalChangesListener;
 import consulo.versionControlSystem.history.VcsFileRevision;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -94,51 +96,55 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware {
     if (provider != null) provider.perform(e, selected);
   }
 
-  public static void doAnnotate(@Nonnull final Editor editor,
-                                @Nonnull final Project project,
-                                @Nullable final VirtualFile currentFile,
-                                @Nonnull final FileAnnotation fileAnnotation,
-                                @Nonnull final AbstractVcs vcs) {
+  public static void doAnnotate(
+    @Nonnull final Editor editor,
+    @Nonnull final Project project,
+    @Nullable final VirtualFile currentFile,
+    @Nonnull final FileAnnotation fileAnnotation,
+    @Nonnull final AbstractVcs vcs
+  ) {
     UpToDateLineNumberProvider upToDateLineNumberProvider = new UpToDateLineNumberProviderImpl(editor.getDocument(), project);
     doAnnotate(editor, project, currentFile, fileAnnotation, vcs, upToDateLineNumberProvider);
   }
 
-  public static void doAnnotate(@Nonnull final Editor editor,
-                                @Nonnull final Project project,
-                                @Nullable final VirtualFile currentFile,
-                                @Nonnull final FileAnnotation fileAnnotation,
-                                @Nonnull final AbstractVcs vcs,
-                                @Nonnull final UpToDateLineNumberProvider upToDateLineNumbers) {
+  public static void doAnnotate(
+    @Nonnull final Editor editor,
+    @Nonnull final Project project,
+    @Nullable final VirtualFile currentFile,
+    @Nonnull final FileAnnotation fileAnnotation,
+    @Nonnull final AbstractVcs vcs,
+    @Nonnull final UpToDateLineNumberProvider upToDateLineNumbers
+  ) {
     doAnnotate(editor, project, currentFile, fileAnnotation, vcs, upToDateLineNumbers, true);
   }
 
-  private static void doAnnotate(@Nonnull final Editor editor,
-                                 @Nonnull final Project project,
-                                 @Nullable final VirtualFile currentFile,
-                                 @Nonnull final FileAnnotation fileAnnotation,
-                                 @Nonnull final AbstractVcs vcs,
-                                 @Nonnull final UpToDateLineNumberProvider upToDateLineNumbers,
-                                 final boolean warnAboutSuspiciousAnnotations) {
+  private static void doAnnotate(
+    @Nonnull final Editor editor,
+    @Nonnull final Project project,
+    @Nullable final VirtualFile currentFile,
+    @Nonnull final FileAnnotation fileAnnotation,
+    @Nonnull final AbstractVcs vcs,
+    @Nonnull final UpToDateLineNumberProvider upToDateLineNumbers,
+    final boolean warnAboutSuspiciousAnnotations
+  ) {
     if (warnAboutSuspiciousAnnotations) {
       int expectedLines = Math.max(upToDateLineNumbers.getLineCount(), 1);
       int actualLines = Math.max(fileAnnotation.getLineCount(), 1);
       if (Math.abs(expectedLines - actualLines) > 1) { // 1 - for different conventions about files ending with line separator
-        editor.setHeaderComponent(new MyEditorNotificationPanel(editor, vcs, () -> {
-          doAnnotate(editor, project, currentFile, fileAnnotation, vcs, upToDateLineNumbers, false);
-        }));
+        editor.setHeaderComponent(new MyEditorNotificationPanel(
+          editor,
+          vcs,
+          () -> doAnnotate(editor, project, currentFile, fileAnnotation, vcs, upToDateLineNumbers, false)
+        ));
         return;
       }
     }
 
-    Disposable disposable = new Disposable() {
-      @Override
-      public void dispose() {
-        fileAnnotation.dispose();
-      }
-    };
+    Disposable disposable = () -> fileAnnotation.dispose();
 
     if (fileAnnotation.getFile() != null && fileAnnotation.getFile().isInLocalFileSystem()) {
-      VcsAnnotationLocalChangesListener changesListener = ProjectLevelVcsManager.getInstance(project).getAnnotationLocalChangesListener();
+      VcsAnnotationLocalChangesListener changesListener =
+        ProjectLevelVcsManager.getInstance(project).getAnnotationLocalChangesListener();
 
       changesListener.registerAnnotation(fileAnnotation.getFile(), fileAnnotation);
       Disposer.register(disposable, () -> changesListener.unregisterAnnotation(fileAnnotation.getFile(), fileAnnotation));
@@ -146,12 +152,10 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware {
 
     editor.getGutter().closeAllAnnotations();
 
-    fileAnnotation.setCloser(() -> {
-      UIUtil.invokeLaterIfNeeded(() -> {
-        if (project.isDisposed()) return;
-        editor.getGutter().closeAllAnnotations();
-      });
-    });
+    fileAnnotation.setCloser(() -> UIUtil.invokeLaterIfNeeded(() -> {
+      if (project.isDisposed()) return;
+      editor.getGutter().closeAllAnnotations();
+    }));
 
     fileAnnotation.setReloader(newFileAnnotation -> {
       if (editor.getGutter().isAnnotationsShown()) {
@@ -301,6 +305,7 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware {
     return null;
   }
 
+  @NonNls
   private static class MyEditorNotificationPanel extends EditorNotificationPanel {
     private final Editor myEditor;
     private final Runnable myShowAnnotations;
@@ -310,15 +315,11 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware {
       myEditor = editor;
       myShowAnnotations = doShowAnnotations;
 
-      setText(VcsBundle.message("annotation.wrong.line.number.notification.text", vcs.getDisplayName()));
+      setText(VcsLocalize.annotationWrongLineNumberNotificationText(vcs.getDisplayName()).get());
 
-      createActionLabel("Display anyway", () -> {
-        showAnnotations();
-      });
-
-      createActionLabel("Hide", () -> {
-        hideNotification();
-      }).setToolTipText("Hide this notification");
+      createActionLabel("Display anyway", () -> showAnnotations());
+      createActionLabel("Hide", () -> hideNotification())
+        .setToolTipText("Hide this notification");
     }
 
     public void showAnnotations() {

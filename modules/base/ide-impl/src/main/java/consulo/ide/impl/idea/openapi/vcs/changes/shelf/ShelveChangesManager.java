@@ -37,9 +37,10 @@ import consulo.ide.impl.idea.openapi.diff.impl.patch.*;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.ApplyFilePatchBase;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.formove.CustomBinaryPatchApplier;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.formove.PatchApplier;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.localize.LocalizeValue;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.CalledInAny;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.ApplyPatchDefaultExecutor;
@@ -58,7 +59,6 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.SmartList;
 import consulo.util.io.CharsetToolkit;
 import consulo.util.lang.Pair;
-import consulo.util.lang.function.Condition;
 import consulo.util.lang.ref.Ref;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
@@ -66,6 +66,7 @@ import consulo.util.xml.serializer.JDOMExternalizerUtil;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.*;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
@@ -78,6 +79,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -291,12 +293,7 @@ public class ShelveChangesManager implements JDOMExternalizable {
 
   @Nonnull
   private List<ShelvedChangeList> getRecycled(final boolean recycled) {
-    return ContainerUtil.newUnmodifiableList(ContainerUtil.filter(mySchemeManager.getAllSchemes(), new Condition<ShelvedChangeList>() {
-      @Override
-      public boolean value(ShelvedChangeList list) {
-        return recycled == list.isRecycled();
-      }
-    }));
+    return ContainerUtil.newUnmodifiableList(ContainerUtil.filter(mySchemeManager.getAllSchemes(), list -> recycled == list.isRecycled()));
   }
 
   public ShelvedChangeList shelveChanges(final Collection<Change> changes, final String commitMessage, final boolean rollback) throws IOException, VcsException {
@@ -327,17 +324,16 @@ public class ShelveChangesManager implements JDOMExternalizable {
     try {
       File patchPath = getPatchFileInConfigDir(schemePatchDir);
       ProgressManager.checkCanceled();
-      final List<FilePatch> patches = IdeaTextPatchBuilder.buildPatch(myProject, textChanges, myProject.getBaseDir().getPresentableUrl(), false);
+      final List<FilePatch> patches =
+        IdeaTextPatchBuilder.buildPatch(myProject, textChanges, myProject.getBaseDir().getPresentableUrl(), false);
       ProgressManager.checkCanceled();
 
       CommitContext commitContext = new CommitContext();
       baseRevisionsOfDvcsIntoContext(textChanges, commitContext);
-      myFileProcessor.savePathFile(new CompoundShelfFileProcessor.ContentProvider() {
-        @Override
-        public void writeContentTo(@Nonnull final Writer writer, @Nonnull CommitContext commitContext) throws IOException {
-          UnifiedDiffWriter.write(myProject, patches, writer, "\n", commitContext);
-        }
-      }, patchPath, commitContext);
+      myFileProcessor.savePathFile(
+        (writer, commitContext1) ->
+          UnifiedDiffWriter.write(myProject, patches, writer, "\n", commitContext1), patchPath, commitContext
+      );
 
       changeList = new ShelvedChangeList(patchPath.toString(), commitMessage.replace('\n', ' '), binaryFiles);
       changeList.markToDelete(markToBeDeleted);
@@ -351,8 +347,8 @@ public class ShelveChangesManager implements JDOMExternalizable {
         if (progressIndicator != null) {
           progressIndicator.startNonCancelableSection();
         }
-        new RollbackWorker(myProject, operationName, modalContext).
-                doRollback(changes, true, null, VcsBundle.message("shelve.changes.action"));
+        new RollbackWorker(myProject, operationName, modalContext)
+          .doRollback(changes, true, null, VcsLocalize.shelveChangesAction().get());
       }
     }
     finally {
@@ -362,20 +358,34 @@ public class ShelveChangesManager implements JDOMExternalizable {
     return changeList;
   }
 
-  public void unshelveSilentlyAsynchronously(@Nonnull final Project project,
-                                             @Nonnull final List<ShelvedChangeList> selectedChangeLists,
-                                             @Nonnull final List<ShelvedChange> selectedChanges,
-                                             @Nonnull final List<ShelvedBinaryFile> selectedBinaryChanges,
-                                             @Nullable final LocalChangeList forcePredefinedOneChangelist) {
-    ProgressManager.getInstance().run(new Task.Backgroundable(project, VcsBundle.message("unshelve.changes.progress.title"), true) {
+  public void unshelveSilentlyAsynchronously(
+    @Nonnull final Project project,
+    @Nonnull final List<ShelvedChangeList> selectedChangeLists,
+    @Nonnull final List<ShelvedChange> selectedChanges,
+    @Nonnull final List<ShelvedBinaryFile> selectedBinaryChanges,
+    @Nullable final LocalChangeList forcePredefinedOneChangelist
+  ) {
+    ProgressManager.getInstance().run(new Task.Backgroundable(
+      project,
+      VcsBundle.message("unshelve.changes.progress.title"),
+      true
+    ) {
       @Override
       public void run(@Nonnull ProgressIndicator indicator) {
         for (ShelvedChangeList changeList : selectedChangeLists) {
-          List<ShelvedChange> changesForChangelist = ContainerUtil.newArrayList(ContainerUtil.intersection(changeList.getChanges((Project)myProject), selectedChanges));
-          List<ShelvedBinaryFile> binariesForChangelist = ContainerUtil.newArrayList(ContainerUtil.intersection(changeList.getBinaryFiles(), selectedBinaryChanges));
+          List<ShelvedChange> changesForChangelist = ContainerUtil.newArrayList(
+            ContainerUtil.intersection(changeList.getChanges((Project)myProject), selectedChanges)
+          );
+          List<ShelvedBinaryFile> binariesForChangelist =
+            ContainerUtil.newArrayList(ContainerUtil.intersection(changeList.getBinaryFiles(), selectedBinaryChanges));
           boolean shouldUnshelveAllList = changesForChangelist.isEmpty() && binariesForChangelist.isEmpty();
-          unshelveChangeList(changeList, shouldUnshelveAllList ? null : changesForChangelist, shouldUnshelveAllList ? null : binariesForChangelist,
-                             forcePredefinedOneChangelist != null ? forcePredefinedOneChangelist : getChangeListUnshelveTo(changeList), true);
+          unshelveChangeList(
+            changeList,
+            shouldUnshelveAllList ? null : changesForChangelist,
+            shouldUnshelveAllList ? null : binariesForChangelist,
+            forcePredefinedOneChangelist != null ? forcePredefinedOneChangelist : getChangeListUnshelveTo(changeList),
+            true
+          );
         }
       }
     });
@@ -418,22 +428,27 @@ public class ShelveChangesManager implements JDOMExternalizable {
   }
 
   private boolean dvcsUsedInProject() {
-    return Arrays.stream(ProjectLevelVcsManager.getInstance(myProject).getAllActiveVcss()).
-            anyMatch(vcs -> VcsType.distributed.equals(vcs.getType()));
+    return Arrays.stream(ProjectLevelVcsManager.getInstance(myProject).getAllActiveVcss())
+      .anyMatch(vcs -> VcsType.distributed.equals(vcs.getType()));
   }
 
-  public ShelvedChangeList importFilePatches(final String fileName, final List<FilePatch> patches, final PatchEP[] patchTransitExtensions) throws IOException {
+  public ShelvedChangeList importFilePatches(
+    final String fileName,
+    final List<FilePatch> patches,
+    final PatchEP[] patchTransitExtensions
+  ) throws IOException {
     try {
       File schemePatchDir = generateUniqueSchemePatchDir(fileName, true);
       File patchPath = getPatchFileInConfigDir(schemePatchDir);
-      myFileProcessor.savePathFile(new CompoundShelfFileProcessor.ContentProvider() {
-        @Override
-        public void writeContentTo(@Nonnull final Writer writer, @Nonnull CommitContext commitContext) throws IOException {
-          UnifiedDiffWriter.write(myProject, patches, writer, "\n", patchTransitExtensions, commitContext);
-        }
-      }, patchPath, new CommitContext());
+      myFileProcessor.savePathFile(
+        (writer, commitContext) ->
+          UnifiedDiffWriter.write(myProject, patches, writer, "\n", patchTransitExtensions, commitContext),
+        patchPath,
+        new CommitContext()
+      );
 
-      final ShelvedChangeList changeList = new ShelvedChangeList(patchPath.toString(), fileName.replace('\n', ' '), new SmartList<>());
+      final ShelvedChangeList changeList =
+        new ShelvedChangeList(patchPath.toString(), fileName.replace('\n', ' '), new SmartList<>());
       changeList.setName(schemePatchDir.getName());
       mySchemeManager.addNewScheme(changeList, false);
       return changeList;
@@ -540,10 +555,19 @@ public class ShelveChangesManager implements JDOMExternalizable {
 
   @Nonnull
   // for create patch only
-  public static File suggestPatchName(Project project, @Nonnull final String commitMessage, final File file, String extension) {
+  public static File suggestPatchName(
+    Project project,
+    @Nonnull final String commitMessage,
+    final File file,
+    String extension
+  ) {
     @NonNls String defaultPath = shortenAndSanitize(commitMessage);
     while (true) {
-      final File nonexistentFile = FileUtil.findSequentNonexistentFile(file, defaultPath, extension == null ? VcsConfiguration.getInstance(project).getPatchFileExtension() : extension);
+      final File nonexistentFile = FileUtil.findSequentNonexistentFile(
+        file,
+        defaultPath,
+        extension == null ? VcsConfiguration.getInstance(project).getPatchFileExtension() : extension
+      );
       if (nonexistentFile.getName().length() >= PatchNameChecker.MAX) {
         defaultPath = defaultPath.substring(0, defaultPath.length() - 1);
         continue;
@@ -565,24 +589,38 @@ public class ShelveChangesManager implements JDOMExternalizable {
   }
 
   @CalledInAny
-  public void unshelveChangeList(final ShelvedChangeList changeList,
-                                 @Nullable final List<ShelvedChange> changes,
-                                 @Nullable final List<ShelvedBinaryFile> binaryFiles,
-                                 @Nullable final LocalChangeList targetChangeList,
-                                 boolean showSuccessNotification) {
-    unshelveChangeList(changeList, changes, binaryFiles, targetChangeList, showSuccessNotification, false, false, null, null);
+  public void unshelveChangeList(
+    final ShelvedChangeList changeList,
+    @Nullable final List<ShelvedChange> changes,
+    @Nullable final List<ShelvedBinaryFile> binaryFiles,
+    @Nullable final LocalChangeList targetChangeList,
+    boolean showSuccessNotification
+  ) {
+    unshelveChangeList(
+      changeList,
+      changes,
+      binaryFiles,
+      targetChangeList,
+      showSuccessNotification,
+      false,
+      false,
+      null,
+      null
+    );
   }
 
   @CalledInAny
-  public void unshelveChangeList(final ShelvedChangeList changeList,
-                                 @Nullable final List<ShelvedChange> changes,
-                                 @Nullable final List<ShelvedBinaryFile> binaryFiles,
-                                 @Nullable final LocalChangeList targetChangeList,
-                                 final boolean showSuccessNotification,
-                                 final boolean systemOperation,
-                                 final boolean reverse,
-                                 final String leftConflictTitle,
-                                 final String rightConflictTitle) {
+  public void unshelveChangeList(
+    final ShelvedChangeList changeList,
+    @Nullable final List<ShelvedChange> changes,
+    @Nullable final List<ShelvedBinaryFile> binaryFiles,
+    @Nullable final LocalChangeList targetChangeList,
+    final boolean showSuccessNotification,
+    final boolean systemOperation,
+    final boolean reverse,
+    final String leftConflictTitle,
+    final String rightConflictTitle
+  ) {
     final List<FilePatch> remainingPatches = new ArrayList<>();
 
     final CommitContext commitContext = new CommitContext();
@@ -610,12 +648,20 @@ public class ShelveChangesManager implements JDOMExternalizable {
       patches.add(new ShelvedBinaryFilePatch(shelvedBinaryFile));
     }
 
-    ApplicationManager.getApplication().invokeAndWait(new Runnable() {
-      @Override
-      public void run() {
+    ApplicationManager.getApplication().invokeAndWait(
+      () -> {
         final BinaryPatchApplier binaryPatchApplier = new BinaryPatchApplier();
-        final PatchApplier<ShelvedBinaryFilePatch> patchApplier =
-                new PatchApplier<>(myProject, myProject.getBaseDir(), patches, targetChangeList, binaryPatchApplier, commitContext, reverse, leftConflictTitle, rightConflictTitle);
+        final PatchApplier<ShelvedBinaryFilePatch> patchApplier = new PatchApplier<>(
+          myProject,
+          myProject.getBaseDir(),
+          patches,
+          targetChangeList,
+          binaryPatchApplier,
+          commitContext,
+          reverse,
+          leftConflictTitle,
+          rightConflictTitle
+        );
         patchApplier.setIsSystemOperation(systemOperation);
         patchApplier.execute(showSuccessNotification, systemOperation);
         if (isRemoveFilesFromShelf() || systemOperation) {
@@ -627,15 +673,18 @@ public class ShelveChangesManager implements JDOMExternalizable {
             saveRemainingPatches(changeList, remainingPatches, remainingBinaries, commitContext);
           }
         }
-      }
-    }, IdeaModalityState.defaultModalityState());
+      },
+      IdeaModalityState.defaultModalityState()
+    );
   }
 
-  private static List<TextFilePatch> loadTextPatches(final Project project,
-                                                     final ShelvedChangeList changeList,
-                                                     final List<ShelvedChange> changes,
-                                                     final List<FilePatch> remainingPatches,
-                                                     final CommitContext commitContext) throws IOException, PatchSyntaxException {
+  private static List<TextFilePatch> loadTextPatches(
+    final Project project,
+    final ShelvedChangeList changeList,
+    final List<ShelvedChange> changes,
+    final List<FilePatch> remainingPatches,
+    final CommitContext commitContext
+  ) throws IOException, PatchSyntaxException {
     final List<TextFilePatch> textFilePatches = loadPatches(project, changeList.PATH, commitContext);
 
     if (changes != null) {
@@ -667,12 +716,10 @@ public class ShelveChangesManager implements JDOMExternalizable {
 
   public void cleanUnshelved(final boolean onlyMarkedToDelete, long timeBefore) {
     final Date limitDate = new Date(timeBefore);
-    final List<ShelvedChangeList> toDelete = ContainerUtil.filter(mySchemeManager.getAllSchemes(), new Condition<ShelvedChangeList>() {
-      @Override
-      public boolean value(ShelvedChangeList list) {
-        return (list.isRecycled()) && list.DATE.before(limitDate) && (!onlyMarkedToDelete || list.isMarkedToDelete());
-      }
-    });
+    final List<ShelvedChangeList> toDelete = ContainerUtil.filter(
+      mySchemeManager.getAllSchemes(),
+      list -> (list.isRecycled()) && list.DATE.before(limitDate) && (!onlyMarkedToDelete || list.isMarkedToDelete())
+    );
     clearShelvedLists(toDelete);
   }
 
@@ -685,7 +732,9 @@ public class ShelveChangesManager implements JDOMExternalizable {
 
     @Override
     @Nonnull
-    public ApplyPatchStatus apply(final List<Pair<VirtualFile, ApplyFilePatchBase<ShelvedBinaryFilePatch>>> patches) throws IOException {
+    public ApplyPatchStatus apply(
+      final List<Pair<VirtualFile, ApplyFilePatchBase<ShelvedBinaryFilePatch>>> patches
+    ) throws IOException {
       for (Pair<VirtualFile, ApplyFilePatchBase<ShelvedBinaryFilePatch>> patch : patches) {
         final ShelvedBinaryFilePatch shelvedPatch = patch.getSecond().getPatch();
         unshelveBinaryFile(shelvedPatch.getShelvedBinaryFile(), patch.getFirst());
@@ -701,7 +750,11 @@ public class ShelveChangesManager implements JDOMExternalizable {
     }
   }
 
-  private static List<ShelvedBinaryFile> getBinaryFilesToUnshelve(final ShelvedChangeList changeList, final List<ShelvedBinaryFile> binaryFiles, final List<ShelvedBinaryFile> remainingBinaries) {
+  private static List<ShelvedBinaryFile> getBinaryFilesToUnshelve(
+    final ShelvedChangeList changeList,
+    final List<ShelvedBinaryFile> binaryFiles,
+    final List<ShelvedBinaryFile> remainingBinaries
+  ) {
     if (binaryFiles == null) {
       return new ArrayList<>(changeList.getBinaryFiles());
     }
@@ -753,9 +806,14 @@ public class ShelveChangesManager implements JDOMExternalizable {
     return false;
   }
 
-  private static void writePatchesToFile(final Project project, final String path, final List<FilePatch> remainingPatches, CommitContext commitContext) {
+  private static void writePatchesToFile(
+    final Project project,
+    final String path,
+    final List<FilePatch> remainingPatches,
+    CommitContext commitContext
+  ) {
     try {
-      try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(path), CharsetToolkit.UTF8_CHARSET)) {
+      try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(path), StandardCharsets.UTF_8)) {
         UnifiedDiffWriter.write(project, remainingPatches, writer, "\n", commitContext);
       }
     }
@@ -764,7 +822,12 @@ public class ShelveChangesManager implements JDOMExternalizable {
     }
   }
 
-  public void saveRemainingPatches(final ShelvedChangeList changeList, final List<FilePatch> remainingPatches, final List<ShelvedBinaryFile> remainingBinaries, CommitContext commitContext) {
+  public void saveRemainingPatches(
+    final ShelvedChangeList changeList,
+    final List<FilePatch> remainingPatches,
+    final List<ShelvedBinaryFile> remainingBinaries,
+    CommitContext commitContext
+  ) {
     ShelvedChangeList listCopy;
     try {
       listCopy = !changeList.isRecycled() ? createRecycledChangelist(changeList) : null;
@@ -790,7 +853,11 @@ public class ShelveChangesManager implements JDOMExternalizable {
     final File newPatchDir = generateUniqueSchemePatchDir(changeList.DESCRIPTION, true);
     final File newPath = getPatchFileInConfigDir(newPatchDir);
     FileUtil.copy(new File(changeList.PATH), newPath);
-    final ShelvedChangeList listCopy = new ShelvedChangeList(newPath.getAbsolutePath(), changeList.DESCRIPTION, new ArrayList<>(changeList.getBinaryFiles()));
+    final ShelvedChangeList listCopy = new ShelvedChangeList(
+      newPath.getAbsolutePath(),
+      changeList.DESCRIPTION,
+      new ArrayList<>(changeList.getBinaryFiles())
+    );
     listCopy.markToDelete(changeList.isMarkedToDelete());
     listCopy.setName(newPatchDir.getName());
     return listCopy;
@@ -825,10 +892,12 @@ public class ShelveChangesManager implements JDOMExternalizable {
 
   private void recycleChangeList(@Nonnull final ShelvedChangeList listCopy, @Nullable final ShelvedChangeList newList) {
     if (newList != null) {
-      for (Iterator<ShelvedBinaryFile> shelvedChangeListIterator = listCopy.getBinaryFiles().iterator(); shelvedChangeListIterator.hasNext(); ) {
+      for (Iterator<ShelvedBinaryFile> shelvedChangeListIterator = listCopy.getBinaryFiles().iterator();
+           shelvedChangeListIterator.hasNext(); ) {
         final ShelvedBinaryFile binaryFile = shelvedChangeListIterator.next();
         for (ShelvedBinaryFile newBinary : newList.getBinaryFiles()) {
-          if (Comparing.equal(newBinary.BEFORE_PATH, binaryFile.BEFORE_PATH) && Comparing.equal(newBinary.AFTER_PATH, binaryFile.AFTER_PATH)) {
+          if (Comparing.equal(newBinary.BEFORE_PATH, binaryFile.BEFORE_PATH)
+            && Comparing.equal(newBinary.AFTER_PATH, binaryFile.AFTER_PATH)) {
             shelvedChangeListIterator.remove();
           }
         }
@@ -836,7 +905,8 @@ public class ShelveChangesManager implements JDOMExternalizable {
       for (Iterator<ShelvedChange> iterator = listCopy.getChanges(myProject).iterator(); iterator.hasNext(); ) {
         final ShelvedChange change = iterator.next();
         for (ShelvedChange newChange : newList.getChanges(myProject)) {
-          if (Comparing.equal(change.getBeforePath(), newChange.getBeforePath()) && Comparing.equal(change.getAfterPath(), newChange.getAfterPath())) {
+          if (Comparing.equal(change.getBeforePath(), newChange.getBeforePath())
+            && Comparing.equal(change.getAfterPath(), newChange.getAfterPath())) {
             iterator.remove();
           }
         }
@@ -897,16 +967,29 @@ public class ShelveChangesManager implements JDOMExternalizable {
   }
 
   @Nonnull
-  public static List<TextFilePatch> loadPatches(Project project, final String patchPath, CommitContext commitContext) throws IOException, PatchSyntaxException {
+  public static List<TextFilePatch> loadPatches(
+    Project project,
+    final String patchPath,
+    CommitContext commitContext
+  ) throws IOException, PatchSyntaxException {
     return loadPatches(project, patchPath, commitContext, true);
   }
 
   @Nonnull
-  static List<? extends FilePatch> loadPatchesWithoutContent(Project project, final String patchPath, CommitContext commitContext) throws IOException, PatchSyntaxException {
+  static List<? extends FilePatch> loadPatchesWithoutContent(
+    Project project,
+    final String patchPath,
+    CommitContext commitContext
+  ) throws IOException, PatchSyntaxException {
     return loadPatches(project, patchPath, commitContext, false);
   }
 
-  private static List<TextFilePatch> loadPatches(Project project, final String patchPath, CommitContext commitContext, boolean loadContent) throws IOException, PatchSyntaxException {
+  private static List<TextFilePatch> loadPatches(
+    Project project,
+    final String patchPath,
+    CommitContext commitContext,
+    boolean loadContent
+  ) throws IOException, PatchSyntaxException {
     char[] text = FileUtil.loadFileText(new File(patchPath), CharsetToolkit.UTF8);
     PatchReader reader = new PatchReader(new CharArrayCharSequence(text), loadContent);
     final List<TextFilePatch> textFilePatches = reader.readTextPatches();

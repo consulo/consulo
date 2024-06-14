@@ -34,7 +34,7 @@ import java.util.Map.Entry;
 
 import static consulo.application.ApplicationBundle.message;
 import static consulo.ide.impl.idea.application.options.colors.ColorAndFontOptions.selectOrEditColor;
-import static consulo.ide.impl.idea.openapi.util.text.StringUtil.naturalCompare;
+import static consulo.util.lang.StringUtil.naturalCompare;
 import static consulo.ide.impl.idea.util.containers.ContainerUtil.newSmartList;
 import static javax.swing.SwingConstants.LEFT;
 

@@ -16,21 +16,21 @@
 
 package consulo.ide.impl.idea.openapi.vcs.changes.shelf;
 
+import consulo.ide.impl.idea.openapi.vcs.changes.TextRevisionNumber;
 import consulo.project.Project;
 import consulo.util.xml.serializer.DefaultJDOMExternalizer;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.versionControlSystem.base.FilePathImpl;
-import consulo.virtualFileSystem.status.FileStatus;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ContentRevision;
 import consulo.versionControlSystem.change.CurrentBinaryContentRevision;
-import consulo.ide.impl.idea.openapi.vcs.changes.TextRevisionNumber;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
-import org.jdom.Element;
+import consulo.versionControlSystem.localize.VcsLocalize;
+import consulo.virtualFileSystem.status.FileStatus;
 import jakarta.annotation.Nonnull;
+import org.jdom.Element;
 
 import java.io.File;
 
@@ -82,7 +82,7 @@ public class ShelvedBinaryFile implements JDOMExternalizable {
         @Nonnull
         @Override
         public VcsRevisionNumber getRevisionNumber() {
-          return new TextRevisionNumber(VcsBundle.message("local.version.title"));
+          return new TextRevisionNumber(VcsLocalize.localVersionTitle().get());
         }
       };
     }

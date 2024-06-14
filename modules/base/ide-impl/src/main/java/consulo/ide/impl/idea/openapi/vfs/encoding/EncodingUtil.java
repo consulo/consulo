@@ -19,7 +19,7 @@ import consulo.disposer.Disposer;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
 import consulo.application.util.function.ThrowableComputable;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtilRt;
 import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;

@@ -29,7 +29,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.desktop.awt.editor.DesktopAWTEditor;
 import consulo.ide.impl.idea.openapi.editor.impl.EditorTextFieldRendererDocument;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.project.Project;
 import consulo.ui.ex.awt.CellRendererPanel;

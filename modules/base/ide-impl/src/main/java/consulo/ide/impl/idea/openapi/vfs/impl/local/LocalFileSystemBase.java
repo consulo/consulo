@@ -7,6 +7,7 @@ import consulo.application.util.SystemInfo;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.DiskQueryRelay;
 import consulo.ide.impl.idea.openapi.vfs.SafeWriteRequestor;
+import consulo.platform.Platform;
 import consulo.virtualFileSystem.internal.VirtualFileManagerEx;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.VfsImplUtil;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.FakeVirtualFile;
@@ -71,7 +72,7 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
   @Nonnull
   protected static String toIoPath(@Nonnull VirtualFile file) {
     String path = file.getPath();
-    if (path.length() == 2 && SystemInfo.isWindows && consulo.util.io.PathUtil.startsWithWindowsDrive(path)) {
+    if (path.length() == 2 && Platform.current().os().isWindows() && consulo.util.io.PathUtil.startsWithWindowsDrive(path)) {
       // makes 'C:' resolve to a root directory of the drive C:, not the current directory on that drive
       path += '/';
     }
@@ -82,7 +83,7 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
   private static File convertToIOFileAndCheck(@Nonnull VirtualFile file) throws FileNotFoundException {
     File ioFile = convertToIOFile(file);
 
-    if (SystemInfo.isUnix && file.is(VFileProperty.SPECIAL)) { // avoid opening fifo files
+    if (Platform.current().os().isUnix() && file.is(VFileProperty.SPECIAL)) { // avoid opening fifo files
       throw new FileNotFoundException("Not a file: " + ioFile + " (type=" + FileSystemUtil.getAttributes(ioFile) + ')');
     }
 
@@ -159,7 +160,7 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
         return path;
       }
     }
-    else if (SystemInfo.isWindows) {
+    else if (Platform.current().os().isWindows()) {
       if (path.charAt(0) == '/' && !path.startsWith("//")) {
         path = path.substring(1);  // hack over new File(path).toURI().toURL().getFile()
       }
@@ -182,7 +183,7 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
 
   private static boolean isAbsoluteFileOrDriveLetter(@Nonnull File file) {
     String path = file.getPath();
-    if (SystemInfo.isWindows && path.length() == 2 && path.charAt(1) == ':') {
+    if (Platform.current().os().isWindows() && path.length() == 2 && path.charAt(1) == ':') {
       // just drive letter.
       // return true, despite the fact that technically it's not an absolute path
       return true;
@@ -608,7 +609,7 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
       if (path.startsWith(customRootPath)) return customRootPath;
     }
 
-    if (SystemInfo.isWindows) {
+    if (Platform.current().os().isWindows()) {
       if (path.length() >= 2 && path.charAt(1) == ':') {
         // Drive letter
         return StringUtil.toUpperCase(path.substring(0, 2));
@@ -667,7 +668,7 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
 
       File canonicalFile = ioFile.getCanonicalFile();
       String canonicalFileName = canonicalFile.getName();
-      if (!SystemInfo.isUnix) {
+      if (!Platform.current().os().isUnix()) {
         return canonicalFileName;
       }
 
@@ -716,7 +717,7 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
 
   @Override
   public FileAttributes getAttributes(@Nonnull VirtualFile file) {
-    return SystemInfo.isWindows && file.getParent() == null && file.getPath().startsWith("//")
+    return Platform.current().os().isWindows() && file.getParent() == null && file.getPath().startsWith("//")
       ? UNC_ROOT_ATTRIBUTES
       : myAttrGetter.accessDiskWithCheckCanceled(file);
   }

@@ -124,9 +124,9 @@ public abstract class AbstractDependencyDataService<E extends AbstractDependency
             // that's why we can't use target dependency object as is but need to get a reference to the current
             // entry object from the model instead.
             for (OrderEntry entry : moduleRootModel.getOrderEntries()) {
-              if (entry instanceof ExportableOrderEntry) {
-                ExportableOrderEntry orderEntry = (ExportableOrderEntry)entry;
-                if (orderEntry.getPresentableName().equals(dependency.getPresentableName()) && orderEntry.getScope().equals(dependency.getScope())) {
+              if (entry instanceof ExportableOrderEntry orderEntry) {
+                if (orderEntry.getPresentableName().equals(dependency.getPresentableName())
+                  && orderEntry.getScope().equals(dependency.getScope())) {
                   moduleRootModel.removeOrderEntry(entry);
                   break;
                 }

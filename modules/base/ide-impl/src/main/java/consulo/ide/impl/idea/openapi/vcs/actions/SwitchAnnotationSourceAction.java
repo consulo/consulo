@@ -15,13 +15,13 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
+import consulo.codeEditor.EditorGutterComponentEx;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.codeEditor.EditorGutterComponentEx;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.annotate.AnnotationSource;
 import consulo.versionControlSystem.annotate.AnnotationSourceSwitcher;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.versionControlSystem.localize.VcsLocalize;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -30,8 +30,6 @@ import java.util.function.Consumer;
  * @author Konstantin Bulenkov
  */
 class SwitchAnnotationSourceAction extends AnAction {
-  private final static String ourShowMerged = VcsBundle.message("annotation.switch.to.merged.text");
-  private final static String ourHideMerged = VcsBundle.message("annotation.switch.to.original.text");
   private final AnnotationSourceSwitcher mySwitcher;
   private final EditorGutterComponentEx myGutter;
   private final List<Consumer<AnnotationSource>> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
@@ -49,7 +47,11 @@ class SwitchAnnotationSourceAction extends AnAction {
 
   @Override
   public void update(final AnActionEvent e) {
-    e.getPresentation().setText(myShowMerged ? ourHideMerged : ourShowMerged);
+    e.getPresentation().setTextValue(
+      myShowMerged
+        ? VcsLocalize.annotationSwitchToOriginalText()
+        : VcsLocalize.annotationSwitchToMergedText()
+    );
   }
 
   public void actionPerformed(AnActionEvent e) {

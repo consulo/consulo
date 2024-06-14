@@ -4,16 +4,15 @@ package consulo.ide.impl.idea.openapi.vfs.newvfs.impl;
 import consulo.application.ApplicationManager;
 import consulo.application.util.SystemInfo;
 import consulo.ide.impl.idea.openapi.application.impl.ApplicationInfoImpl;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.ChildInfoImpl;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.FSRecords;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFS;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.language.psi.cache.PsiCachedValue;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.util.collection.CharSequenceHashingStrategy;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.Sets;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
@@ -22,7 +21,9 @@ import consulo.util.collection.primitive.ints.IntSets;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.keyFMap.KeyFMap;
 import consulo.util.io.FileAttributes;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.PairConsumer;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.ChildInfo;
@@ -348,7 +349,7 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
             LOG.error(ourPersistence + " returned duplicate file names(" + name1 + "," + name2 + ")" +
                       " caseSensitive: " + caseSensitive +
                       " SystemInfo.isFileSystemCaseSensitive: " + SystemInfo.isFileSystemCaseSensitive +
-                      " SystemInfo.OS: " + SystemInfo.OS_NAME + " " + SystemInfo.OS_VERSION +
+                      " Platform.current().os(): " + Platform.current().os().name() + " " + Platform.current().os().version() +
                       " wasChildrenLoaded: " + wasChildrenLoaded +
                       " in the dir: " + this + ";" +
                       " children: " + Arrays.stream(childrenIds).map(Objects::toString).collect(Collectors.joining(", ")));
@@ -673,7 +674,7 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
     int d = name1.length() - name2.length();
     if (d != 0) return d;
     for (int i = 0; i < name1.length(); i++) {
-      // consulo.ide.impl.idea.openapi.util.text.StringUtil.compare(String,String,boolean) inconsistent
+      // consulo.util.lang.StringUtil.compare(String,String,boolean) inconsistent
       d = StringUtil.compare(name1.charAt(i), name2.charAt(i), !caseSensitive);
       if (d != 0) return d;
     }

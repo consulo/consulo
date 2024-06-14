@@ -16,14 +16,14 @@
 
 package consulo.ide.impl.idea.packageDependencies.actions;
 
-import consulo.language.editor.scope.AnalysisScope;
-import consulo.language.editor.scope.AnalysisScopeBundle;
-import consulo.project.Project;
 import consulo.ide.impl.idea.packageDependencies.BackwardDependenciesBuilder;
 import consulo.ide.impl.idea.packageDependencies.DependenciesBuilder;
+import consulo.language.editor.scope.AnalysisScope;
+import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
 import consulo.language.psi.PsiFile;
-
+import consulo.project.Project;
 import jakarta.annotation.Nullable;
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -37,7 +37,7 @@ public class BackwardDependenciesHandler extends DependenciesHandlerBase {
   private final AnalysisScope myScopeOfInterest;
 
   public BackwardDependenciesHandler(Project project, AnalysisScope scope, final AnalysisScope selectedScope) {
-    this(project, Collections.singletonList(scope), selectedScope, new HashSet<PsiFile>());
+    this(project, Collections.singletonList(scope), selectedScope, new HashSet<>());
   }
 
   public BackwardDependenciesHandler(final Project project, final List<AnalysisScope> scopes, final @Nullable AnalysisScope scopeOfInterest, Set<PsiFile> excluded) {
@@ -47,12 +47,12 @@ public class BackwardDependenciesHandler extends DependenciesHandlerBase {
 
   @Override
   protected String getProgressTitle() {
-    return AnalysisScopeBundle.message("backward.dependencies.progress.text");
+    return AnalysisScopeLocalize.backwardDependenciesProgressText().get();
   }
 
   @Override
   protected String getPanelDisplayName(final AnalysisScope scope) {
-    return AnalysisScopeBundle.message("backward.dependencies.toolwindow.title", scope.getDisplayName());
+    return AnalysisScopeLocalize.backwardDependenciesToolwindowTitle(scope.getDisplayName()).get();
   }
 
   @Override

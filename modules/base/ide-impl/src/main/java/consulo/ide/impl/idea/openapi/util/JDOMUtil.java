@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.util;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.logging.Logger;

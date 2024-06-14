@@ -15,18 +15,18 @@
  */
 package consulo.ide.impl.idea.ui.tabs.impl;
 
-import consulo.ide.IdeBundle;
 import consulo.application.ui.UISettings;
-import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.ui.InplaceButton;
 import consulo.ide.impl.idea.ui.MouseDragHelper;
-import consulo.ui.ex.awt.util.ScreenUtil;
+import consulo.ide.impl.idea.ui.util.Axis;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.tab.JBTabsPosition;
 import consulo.ui.ex.awt.tab.TabInfo;
-import consulo.ide.impl.idea.ui.util.Axis;
-
+import consulo.ui.ex.awt.util.ScreenUtil;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -244,10 +244,12 @@ class DragHelper extends MouseDragHelper {
       Point p = new Point(event.getPoint());
       p = SwingUtilities.convertPoint(event.getComponent(), p, myTabs);
       if (myTabs.getVisibleRect().contains(p) && myPressedOnScreenPoint.distance(new RelativePoint(event).getScreenPoint()) > 15) {
-        final int answer = Messages.showOkCancelDialog(myTabs,
-                                                       IdeBundle.message("alphabetical.mode.is.on.warning"),
-                                                       IdeBundle.message("title.warning"),
-                                                       Messages.getQuestionIcon());
+        final int answer = Messages.showOkCancelDialog(
+          myTabs,
+          IdeLocalize.alphabeticalModeIsOnWarning().get(),
+          IdeLocalize.titleWarning().get(),
+          Messages.getQuestionIcon()
+        );
         if (answer == Messages.OK) {
           UISettings.getInstance().EDITOR_TABS_ALPHABETICAL_SORT = false;
           myTabs.relayout(true, false);

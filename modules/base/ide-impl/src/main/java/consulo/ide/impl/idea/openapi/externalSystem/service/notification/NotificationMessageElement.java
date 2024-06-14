@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.externalSystem.service.notification;
 
 import consulo.application.AllIcons;
 import consulo.ide.impl.idea.ide.errorTreeView.*;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.navigation.Navigatable;
 import consulo.ide.impl.idea.ui.CustomizeColoredTreeCellRenderer;
 import consulo.ui.ex.JBColor;

@@ -21,30 +21,30 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.disposer.Disposer;
 import consulo.ide.ServiceManager;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.event.ContentManagerAdapter;
 import consulo.ui.ex.content.event.ContentManagerEvent;
+import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.Trinity;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsMappingListener;
 import consulo.versionControlSystem.VcsToolWindow;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.util.*;
 
@@ -169,7 +169,7 @@ public class ChangesViewContentManager implements ChangesViewContentI {
       image = vcs.getIcon();
     }
     else {
-      displayName = LocalizeValue.of(UIBundle.message("tool.window.name.version.control"));
+      displayName = UILocalize.toolWindowNameVersionControl();
       image = PlatformIconGroup.toolwindowsToolwindowchanges();
     }
 

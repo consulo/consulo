@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.vfs.newvfs.impl;
 
 import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.text.FilePathHashingStrategy;
 import consulo.logging.Logger;
 import consulo.util.collection.Sets;

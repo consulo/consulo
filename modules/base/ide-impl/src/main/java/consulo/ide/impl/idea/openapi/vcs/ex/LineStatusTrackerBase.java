@@ -29,7 +29,7 @@ import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.component.ProcessCanceledException;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.CalledInAwt;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.util.diff.FilesTooBigForDiffException;

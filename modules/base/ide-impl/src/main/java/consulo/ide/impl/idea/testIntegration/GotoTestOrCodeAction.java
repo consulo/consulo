@@ -16,21 +16,19 @@
 
 package consulo.ide.impl.idea.testIntegration;
 
+import consulo.codeEditor.Editor;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.language.editor.testIntegration.TestFinderHelper;
-import consulo.ui.ex.action.ActionsBundle;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.ui.ex.action.Presentation;
-import consulo.codeEditor.Editor;
-import consulo.project.Project;
+import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.editor.util.PsiUtilBase;
-import jakarta.annotation.Nonnull;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
+import jakarta.annotation.Nonnull;
 
 public class GotoTestOrCodeAction extends BaseCodeInsightAction {
   @Override
@@ -48,8 +46,8 @@ public class GotoTestOrCodeAction extends BaseCodeInsightAction {
       return;
     }
     p.setEnabled(false);
-    Project project = event.getData(CommonDataKeys.PROJECT);
-    Editor editor = event.getData(PlatformDataKeys.EDITOR);
+    Project project = event.getData(Project.KEY);
+    Editor editor = event.getData(Editor.KEY);
     if (editor == null || project == null) return;
 
     PsiFile psiFile = PsiUtilBase.getPsiFileInEditor(editor, project);
@@ -61,11 +59,11 @@ public class GotoTestOrCodeAction extends BaseCodeInsightAction {
 
     p.setEnabled(true);
     if (TestFinderHelper.isTest(element)) {
-      p.setText(ActionsBundle.message("action.GotoTestSubject.text"));
-      p.setDescription(ActionsBundle.message("action.GotoTestSubject.description"));
+      p.setTextValue(ActionLocalize.actionGototestsubjectText());
+      p.setDescriptionValue(ActionLocalize.actionGototestsubjectDescription());
     } else {
-      p.setText(ActionsBundle.message("action.GotoTest.text"));
-      p.setDescription(ActionsBundle.message("action.GotoTest.description"));
+      p.setTextValue(ActionLocalize.actionGototestText());
+      p.setDescriptionValue(ActionLocalize.actionGototestDescription());
     }
   }
 }

@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.ValidationInfo;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.CommitSession;
 import consulo.ui.ex.awt.IdeFocusTraversalPolicy;

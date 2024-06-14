@@ -22,7 +22,7 @@ import consulo.language.editor.PlatformDataKeys;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.JBColor;
 import consulo.ide.impl.idea.util.ui.HtmlPanel;
 import consulo.ui.ex.awt.StatusText;

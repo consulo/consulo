@@ -16,10 +16,7 @@
 
 package consulo.ide.impl.idea.tools;
 
-import consulo.ide.impl.idea.execution.util.ExecutionErrorDialog;
 import consulo.component.persist.scheme.SchemeElement;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.dataContext.DataContext;
 import consulo.document.FileDocumentManager;
 import consulo.execution.RunnerRegistry;
@@ -27,8 +24,7 @@ import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ExecutionEnvironmentBuilder;
 import consulo.execution.runner.ProgramRunner;
-import consulo.execution.ui.RunContentDescriptor;
-import consulo.language.editor.CommonDataKeys;
+import consulo.ide.impl.idea.execution.util.ExecutionErrorDialog;
 import consulo.pathMacro.Macro;
 import consulo.pathMacro.MacroManager;
 import consulo.process.ExecutionException;
@@ -38,10 +34,12 @@ import consulo.process.event.ProcessListener;
 import consulo.process.internal.OSProcessHandler;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
-import org.jetbrains.annotations.NonNls;
-
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -68,7 +66,7 @@ public class Tool implements SchemeElement {
   private String myProgram;
   private String myParameters;
 
-  private ArrayList<FilterInfo> myOutputFilters = new ArrayList<FilterInfo>();
+  private ArrayList<FilterInfo> myOutputFilters = new ArrayList<>();
 
   public Tool() {
   }
@@ -199,7 +197,7 @@ public class Tool implements SchemeElement {
   }
 
   public void setOutputFilters(FilterInfo[] filters) {
-    myOutputFilters = new ArrayList<FilterInfo>();
+    myOutputFilters = new ArrayList<>();
     if (filters != null) {
       for (int i = 0; i < filters.length; i++) {
         myOutputFilters.add(filters[i]);
@@ -227,7 +225,7 @@ public class Tool implements SchemeElement {
     myWorkingDirectory = source.getWorkingDirectory();
     myProgram = source.getProgram();
     myParameters = source.getParameters();
-    myOutputFilters = new ArrayList<FilterInfo>(Arrays.asList(source.getOutputFilters()));
+    myOutputFilters = new ArrayList<>(Arrays.asList(source.getOutputFilters()));
   }
 
   public boolean equals(Object obj) {
@@ -271,7 +269,7 @@ public class Tool implements SchemeElement {
    * @return <code>true</code> if task has been started successfully
    */
   public boolean execute(AnActionEvent event, DataContext dataContext, long executionId, @Nullable final ProcessListener processListener) {
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Project project = dataContext.getData(Project.KEY);
     if (project == null) {
       return false;
     }
@@ -286,13 +284,10 @@ public class Tool implements SchemeElement {
           .runProfile(profile)
           .build();
         executionEnvironment.setExecutionId(executionId);
-        runner.execute(executionEnvironment, new ProgramRunner.Callback() {
-          @Override
-          public void processStarted(RunContentDescriptor descriptor) {
-            ProcessHandler processHandler = descriptor.getProcessHandler();
-            if (processHandler != null && processListener != null) {
-              processHandler.addProcessListener(processListener);
-            }
+        runner.execute(executionEnvironment, descriptor -> {
+          ProcessHandler processHandler = descriptor.getProcessHandler();
+          if (processHandler != null && processListener != null) {
+            processHandler.addProcessListener(processListener);
           }
         });
         return true;
@@ -320,7 +315,7 @@ public class Tool implements SchemeElement {
   @Nullable
   public GeneralCommandLine createCommandLine(DataContext dataContext) {
     if (StringUtil.isEmpty(getWorkingDirectory())) {
-      setWorkingDirectory(dataContext.getData(CommonDataKeys.PROJECT).getBasePath());
+      setWorkingDirectory(dataContext.getData(Project.KEY).getBasePath());
     }
 
     GeneralCommandLine commandLine = new GeneralCommandLine();
