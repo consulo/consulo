@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.openapi.roots.ui;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AllIcons;
-import consulo.application.util.SystemInfo;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkType;
@@ -28,7 +27,6 @@ import consulo.ide.impl.idea.openapi.roots.ui.util.CompositeAppearance;
 import consulo.ide.impl.idea.openapi.roots.ui.util.SimpleTextCellAppearance;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.util.PathUtil;
-import consulo.ide.impl.idea.util.io.URLUtil;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ide.setting.module.OrderEntryTypeEditor;
@@ -39,21 +37,23 @@ import consulo.module.Module;
 import consulo.module.content.layer.ContentFolder;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntryType;
+import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
-import consulo.project.ProjectBundle;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
+import consulo.util.io.URLUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.pointer.LightFilePointer;
-import jakarta.inject.Singleton;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Singleton;
+
 import java.awt.*;
 import java.io.File;
 import java.util.function.Consumer;
@@ -94,7 +94,7 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
 
     final String[] files = library.getUrls(BinariesOrderRootType.getInstance());
     if (files.length == 0) {
-      return SimpleTextCellAppearance.invalid(ProjectBundle.message("library.empty.library.item"), AllIcons.Nodes.PpLib);
+      return SimpleTextCellAppearance.invalid(ProjectLocalize.libraryEmptyLibraryItem().get(), AllIcons.Nodes.PpLib);
     }
     else if (files.length == 1) {
       return forVirtualFilePointer(new LightFilePointer(files[0]));
@@ -108,7 +108,7 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
   @Override
   public CellAppearanceEx forSdk(@Nullable final Sdk jdk, final boolean isInComboBox, final boolean selected, final boolean showVersion) {
     if (jdk == null) {
-      return SimpleTextCellAppearance.invalid(ProjectBundle.message("unknown.sdk"), AllIcons.Actions.Help);
+      return SimpleTextCellAppearance.invalid(ProjectLocalize.unknownSdk().get(), AllIcons.Actions.Help);
     }
 
     String name = jdk.getName();
@@ -123,8 +123,8 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
       String versionString = jdk.getVersionString();
       if (versionString != null && !versionString.equals(name)) {
         SimpleTextAttributes textAttributes = isInComboBox && !selected
-                                              ? SimpleTextAttributes.SYNTHETIC_ATTRIBUTES
-                                              : SystemInfo.isMac && selected ? new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, Color.WHITE) : SimpleTextAttributes.GRAY_ATTRIBUTES;
+          ? SimpleTextAttributes.SYNTHETIC_ATTRIBUTES
+          : Platform.current().os().isMac() && selected ? new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, Color.WHITE) : SimpleTextAttributes.GRAY_ATTRIBUTES;
         ending.addComment(versionString, textAttributes);
       }
     }

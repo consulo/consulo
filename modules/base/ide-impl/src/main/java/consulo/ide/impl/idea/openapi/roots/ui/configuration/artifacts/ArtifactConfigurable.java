@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts;
 import consulo.configurable.ConfigurationException;
 import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.LabeledComponent;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactType;
 

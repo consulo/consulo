@@ -18,7 +18,7 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.ConfigurationError;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.ex.popup.BaseListPopupStep;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.RelativePoint;
 import jakarta.annotation.Nonnull;
 

@@ -15,12 +15,12 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts;
 
-import consulo.compiler.CompilerBundle;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactType;
 import consulo.compiler.artifact.ArtifactUtil;
 import consulo.compiler.artifact.ModifiableArtifact;
 import consulo.compiler.artifact.element.*;
+import consulo.compiler.localize.CompilerLocalize;
 import consulo.content.library.Library;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataSink;
@@ -31,21 +31,21 @@ import consulo.ide.impl.idea.ide.impl.TypeSafeDataProviderAdapter;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.actions.*;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.LibrarySourceItem;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.SourceItemsTree;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.IconUtil;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
-import consulo.project.ProjectBundle;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.tree.DefaultTreeExpander;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -54,8 +54,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Collections;
 
 /**
@@ -82,9 +80,11 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
   private final ArtifactValidationManagerImpl myValidationManager;
   private boolean myDisposed;
 
-  public ArtifactEditorImpl(final @Nonnull ArtifactsStructureConfigurableContext context,
-                            @Nonnull Artifact artifact,
-                            @Nonnull ArtifactEditorSettings settings) {
+  public ArtifactEditorImpl(
+    final @Nonnull ArtifactsStructureConfigurableContext context,
+    @Nonnull Artifact artifact,
+    @Nonnull ArtifactEditorSettings settings
+  ) {
     myContext = createArtifactEditorContext(context);
     myOriginalArtifact = artifact;
     myProject = context.getProject();
@@ -98,17 +98,19 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     myTopPanel.setBorder(new EmptyBorder(0, 10, 0, 10));
     myBuildOnMakeCheckBox.setSelected(artifact.isBuildOnMake());
     final String outputPath = artifact.getOutputPath();
-    myOutputDirectoryField.addBrowseFolderListener(CompilerBundle.message("dialog.title.output.directory.for.artifact"), CompilerBundle
-            .message("chooser.description.select.output.directory.for.0.artifact", getArtifact().getName()), myProject,
-                                                   FileChooserDescriptorFactory.createSingleFolderDescriptor());
+    myOutputDirectoryField.addBrowseFolderListener(
+      CompilerLocalize.dialogTitleOutputDirectoryForArtifact().get(),
+      CompilerLocalize.chooserDescriptionSelectOutputDirectoryFor0Artifact(getArtifact().getName()).get(),
+      myProject,
+      FileChooserDescriptorFactory.createSingleFolderDescriptor()
+    );
     myShowSpecificContentOptionsGroup = createShowSpecificContentOptionsGroup();
-    myShowSpecificContentOptionsButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        ActionManager.getInstance().createActionPopupMenu(ActionPlaces.UNKNOWN, myShowSpecificContentOptionsGroup).getComponent()
-                .show(myShowSpecificContentOptionsButton, 0, 0);
-      }
-    });
+    myShowSpecificContentOptionsButton.addActionListener(
+      e -> ActionManager.getInstance()
+        .createActionPopupMenu(ActionPlaces.UNKNOWN, myShowSpecificContentOptionsGroup)
+        .getComponent()
+        .show(myShowSpecificContentOptionsButton, 0, 0)
+    );
     setOutputPath(outputPath);
     myValidationManager = new ArtifactValidationManagerImpl(this);
     updateShowContentCheckbox();
@@ -131,7 +133,8 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
   }
 
   public void apply() {
-    final ModifiableArtifact modifiableArtifact = myContext.getOrCreateModifiableArtifactModel().getOrCreateModifiableArtifact(myOriginalArtifact);
+    final ModifiableArtifact modifiableArtifact =
+      myContext.getOrCreateModifiableArtifactModel().getOrCreateModifiableArtifact(myOriginalArtifact);
     modifiableArtifact.setBuildOnMake(myBuildOnMakeCheckBox.isSelected());
     modifiableArtifact.setOutputPath(getConfiguredOutputPath());
     myPropertiesEditors.applyProperties();
@@ -204,7 +207,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     link.addHyperlinkListener(new HyperlinkAdapter() {
       @Override
       protected void hyperlinkActivated(HyperlinkEvent e) {
-        final JLabel label = new JLabel(ProjectBundle.message("artifact.source.items.tree.tooltip"));
+        final JLabel label = new JLabel(ProjectLocalize.artifactSourceItemsTreeTooltip().get());
         label.setBorder(HintUtil.createHintBorder());
         label.setBackground(HintUtil.INFORMATION_COLOR);
         label.setOpaque(true);
@@ -227,20 +230,17 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     scrollPaneWrap.setBorder(new EmptyBorder(0, 0, 0, 0));
     leftPanel.setBorder(new EmptyBorder(0, 0, 0, 0));
 
-    myShowContentCheckBox.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        final ThreeStateCheckBox.State state = myShowContentCheckBox.getState();
-        if (state == ThreeStateCheckBox.State.SELECTED) {
-          mySubstitutionParameters.setSubstituteAll();
-        }
-        else if (state == ThreeStateCheckBox.State.NOT_SELECTED) {
-          mySubstitutionParameters.setSubstituteNone();
-        }
-        myShowContentCheckBox.setThirdStateEnabled(false);
-        myLayoutTreeComponent.rebuildTree();
-        onShowContentSettingsChanged();
+    myShowContentCheckBox.addActionListener(e -> {
+      final ThreeStateCheckBox.State state = myShowContentCheckBox.getState();
+      if (state == ThreeStateCheckBox.State.SELECTED) {
+        mySubstitutionParameters.setSubstituteAll();
       }
+      else if (state == ThreeStateCheckBox.State.NOT_SELECTED) {
+        mySubstitutionParameters.setSubstituteNone();
+      }
+      myShowContentCheckBox.setThirdStateEnabled(false);
+      myLayoutTreeComponent.rebuildTree();
+      onShowContentSettingsChanged();
     });
 
     ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, createToolbarActionGroup(), true);
@@ -332,7 +332,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
   }
 
   private ActionGroup createAddGroup() {
-    DefaultActionGroup group = new DefaultActionGroup(ProjectBundle.message("artifacts.add.copy.action"), true);
+    DefaultActionGroup group = new DefaultActionGroup(ProjectLocalize.artifactsAddCopyAction().get(), true);
     group.getTemplatePresentation().setIcon(IconUtil.getAddIcon());
     for (PackagingElementType<?> type : PackagingElementFactory.getInstance(myProject).getAllElementTypes()) {
       if (type.isAvailableForAdd(getContext(), getArtifact())) {
@@ -370,20 +370,21 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     doReplaceElement(pathToParent, element, replacement);
   }
 
-  private void doReplaceElement(final @Nonnull String pathToParent, final @Nonnull PackagingElement<?> element, final @Nullable PackagingElement replacement) {
-    myLayoutTreeComponent.editLayout(new Runnable() {
-      @Override
-      public void run() {
-        final CompositePackagingElement<?> parent = findCompositeElementByPath(pathToParent);
-        if (parent == null) return;
-        for (PackagingElement<?> child : parent.getChildren()) {
-          if (child.isEqualTo(element)) {
-            parent.removeChild(child);
-            if (replacement != null) {
-              parent.addOrFindChild(replacement);
-            }
-            break;
+  private void doReplaceElement(
+    final @Nonnull String pathToParent,
+    final @Nonnull PackagingElement<?> element,
+    final @Nullable PackagingElement replacement
+  ) {
+    myLayoutTreeComponent.editLayout(() -> {
+      final CompositePackagingElement<?> parent = findCompositeElementByPath(pathToParent);
+      if (parent == null) return;
+      for (PackagingElement<?> child : parent.getChildren()) {
+        if (child.isEqualTo(element)) {
+          parent.removeChild(child);
+          if (replacement != null) {
+            parent.addOrFindChild(replacement);
           }
+          break;
         }
       }
     });
@@ -427,18 +428,17 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     if (Comparing.equal(oldDefaultPath, getConfiguredOutputPath())) {
       setOutputPath(ArtifactUtil.getDefaultArtifactOutputPath(newArtifactName, myProject));
       final CompositePackagingElement<?> root = getRootElement();
-      if (root instanceof ArchivePackagingElement) {
+      if (root instanceof ArchivePackagingElement archivePackagingElement) {
         String oldFileName = ArtifactUtil.suggestArtifactFileName(oldArtifactName);
-        final String name = ((ArchivePackagingElement)root).getArchiveFileName();
+        final String name = archivePackagingElement.getArchiveFileName();
         final String fileName = FileUtil.getNameWithoutExtension(name);
         final String extension = FileUtilRt.getExtension(name);
         if (fileName.equals(oldFileName) && extension.length() > 0) {
-          myLayoutTreeComponent.editLayout(new Runnable() {
-            @Override
-            public void run() {
-              ((ArchivePackagingElement)getRootElement()).setArchiveFileName(ArtifactUtil.suggestArtifactFileName(newArtifactName) + "." + extension);
-            }
-          });
+          myLayoutTreeComponent.editLayout(
+            () -> archivePackagingElement.setArchiveFileName(
+              ArtifactUtil.suggestArtifactFileName(newArtifactName) + "." + extension
+            )
+          );
           myLayoutTreeComponent.updateRootNode();
         }
       }
@@ -456,7 +456,8 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
   }
 
   public void setArtifactType(ArtifactType artifactType) {
-    final ModifiableArtifact modifiableArtifact = myContext.getOrCreateModifiableArtifactModel().getOrCreateModifiableArtifact(myOriginalArtifact);
+    final ModifiableArtifact modifiableArtifact =
+      myContext.getOrCreateModifiableArtifactModel().getOrCreateModifiableArtifact(myOriginalArtifact);
     modifiableArtifact.setArtifactType(artifactType);
 
     myPropertiesEditors.removeTabs(myTabbedPane);
@@ -464,7 +465,8 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     myPropertiesEditors.addTabs(myTabbedPane);
 
     final CompositePackagingElement<?> oldRootElement = getRootElement();
-    final CompositePackagingElement<?> newRootElement = artifactType.createRootElement(PackagingElementFactory.getInstance(myProject), getArtifact().getName());
+    final CompositePackagingElement<?> newRootElement =
+      artifactType.createRootElement(PackagingElementFactory.getInstance(myProject), getArtifact().getName());
     ArtifactUtil.copyChildren(oldRootElement, newRootElement, myProject);
     myLayoutTreeComponent.setRootElement(newRootElement);
   }

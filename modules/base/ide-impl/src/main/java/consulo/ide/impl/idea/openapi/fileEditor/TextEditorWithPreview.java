@@ -105,10 +105,10 @@ public class TextEditorWithPreview extends UserDataHolderBase implements FileEdi
       splitter.setSecondComponent(myPreview.getComponent());
 
       myToolbarWrapper = new SplitEditorToolbar(splitter);
-      myToolbarWrapper.addGutterToTrack(((EditorGutterComponentEx)(myEditor).getEditor().getGutter()));
+      myToolbarWrapper.addGutterToTrack(((EditorGutterComponentEx)myEditor.getEditor().getGutter()));
 
-      if (myPreview instanceof TextEditor) {
-        myToolbarWrapper.addGutterToTrack(((EditorGutterComponentEx)((TextEditor)myPreview).getEditor().getGutter()));
+      if (myPreview instanceof TextEditor textEditor) {
+        myToolbarWrapper.addGutterToTrack(((EditorGutterComponentEx)textEditor.getEditor().getGutter()));
       }
 
       if (myLayout == null) {
@@ -124,8 +124,7 @@ public class TextEditorWithPreview extends UserDataHolderBase implements FileEdi
 
   @Override
   public void setState(@Nonnull FileEditorState state) {
-    if (state instanceof MyFileEditorState) {
-      final MyFileEditorState compositeState = (MyFileEditorState)state;
+    if (state instanceof MyFileEditorState compositeState) {
       if (compositeState.getFirstState() != null) {
         myEditor.setState(compositeState.getFirstState());
       }
@@ -237,9 +236,9 @@ public class TextEditorWithPreview extends UserDataHolderBase implements FileEdi
 
     @Override
     public boolean canBeMergedWith(FileEditorState otherState, FileEditorStateLevel level) {
-      return otherState instanceof MyFileEditorState &&
-             (myFirstState == null || myFirstState.canBeMergedWith(((MyFileEditorState)otherState).myFirstState, level)) &&
-             (mySecondState == null || mySecondState.canBeMergedWith(((MyFileEditorState)otherState).mySecondState, level));
+      return otherState instanceof MyFileEditorState fileEditorState
+        && (myFirstState == null || myFirstState.canBeMergedWith(fileEditorState.myFirstState, level))
+        && (mySecondState == null || mySecondState.canBeMergedWith(fileEditorState.mySecondState, level));
     }
   }
 

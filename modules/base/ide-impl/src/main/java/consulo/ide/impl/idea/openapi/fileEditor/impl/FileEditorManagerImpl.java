@@ -54,10 +54,8 @@ import consulo.fileEditor.impl.internal.FileEditorProviderManagerImpl;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.fileEditor.text.TextEditorProvider;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.fileEditor.FileEditorsSplittersBase;
 import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -69,6 +67,7 @@ import consulo.logging.Logger;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.navigation.OpenFileDescriptor;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
@@ -91,6 +90,7 @@ import consulo.util.collection.SmartList;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.NullUtils;
 import consulo.util.lang.Pair;
 import consulo.util.lang.Trinity;
@@ -238,7 +238,8 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
   }
 
   public static boolean isDumbAware(@Nonnull FileEditor editor) {
-    return Boolean.TRUE.equals(editor.getUserData(DUMB_AWARE)) && (!(editor instanceof PossiblyDumbAware) || ((PossiblyDumbAware)editor).isDumbAware());
+    return Boolean.TRUE.equals(editor.getUserData(DUMB_AWARE))
+      && (!(editor instanceof PossiblyDumbAware) || ((PossiblyDumbAware)editor).isDumbAware());
   }
 
   //-------------------------------------------------------------------------------
@@ -256,8 +257,8 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     all.add(getMainSplitters());
     Set<DockContainer> dockContainers = myDockManager.getContainers();
     for (DockContainer each : dockContainers) {
-      if (each instanceof DockableEditorTabbedContainer) {
-        all.add(((DockableEditorTabbedContainer)each).getSplitters());
+      if (each instanceof DockableEditorTabbedContainer dockableEditorTabbedContainer) {
+        all.add(dockableEditorTabbedContainer.getSplitters());
       }
     }
 
@@ -275,8 +276,8 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
       }
       Component focusOwner = fm.getFocusOwner();
       DockContainer container = myDockManager.getContainerFor(focusOwner);
-      if (container instanceof DockableEditorTabbedContainer) {
-        result.setDone(((DockableEditorTabbedContainer)container).getSplitters());
+      if (container instanceof DockableEditorTabbedContainer dockableEditorTabbedContainer) {
+        result.setDone(dockableEditorTabbedContainer.getSplitters());
       }
       else {
         result.setDone(getMainSplitters());
@@ -305,8 +306,8 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         container = myDockManager.getContainerFor(focusOwner);
       }
 
-      if (container instanceof DockableEditorTabbedContainer) {
-        return ((DockableEditorTabbedContainer)container).getSplitters();
+      if (container instanceof DockableEditorTabbedContainer dockableEditorTabbedContainer) {
+        return dockableEditorTabbedContainer.getSplitters();
       }
     }
     return getMainSplitters();
@@ -554,11 +555,16 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     assertDispatchThread();
     ourOpenFilesSetModificationCount.incrementAndGet();
 
-    CommandProcessor.getInstance().executeCommand(myProject, () -> {
-      if (window.isFileOpen(file)) {
-        window.closeFile(file, true, transferFocus);
-      }
-    }, IdeBundle.message("command.close.active.editor"), null);
+    CommandProcessor.getInstance().executeCommand(
+      myProject,
+      () -> {
+        if (window.isFileOpen(file)) {
+          window.closeFile(file, true, transferFocus);
+        }
+      },
+      IdeLocalize.commandCloseActiveEditor().get(),
+      null
+    );
     removeSelectionRecord(file, window);
   }
 
@@ -772,8 +778,8 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
               return null;
             }
             LOG.assertTrue(provider.accept(myProject, file), "Provider " + provider + " doesn't accept file " + file);
-            return provider instanceof AsyncFileEditorProvider ? ((AsyncFileEditorProvider)provider).createEditorAsync(myProject,
-                                                                                                                       file) : null;
+            return provider instanceof AsyncFileEditorProvider asyncFileEditorProvider
+              ? asyncFileEditorProvider.createEditorAsync(myProject, file) : null;
           };
           builders[i] = AccessRule.read(action);
         }
@@ -863,8 +869,8 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
 
       // Notify editors about selection changes
       window.getOwner().setCurrentWindow(window, focusEditor);
-      if (window.getOwner() instanceof FileEditorsSplittersBase) {
-        ((FileEditorsSplittersBase)window.getOwner()).afterFileOpen(file);
+      if (window.getOwner() instanceof FileEditorsSplittersBase fileEditorsSplittersBase) {
+        fileEditorsSplittersBase.afterFileOpen(file);
       }
       addSelectionRecord(file, window);
 
@@ -1060,16 +1066,16 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
 
       boolean navigated = false;
       for (final FileEditor editor : editors) {
-        if (editor instanceof NavigatableFileEditor && getSelectedEditor(descriptor.getFile()) == editor) { // try to navigate opened editor
-          navigated = navigateAndSelectEditor((NavigatableFileEditor)editor, descriptor);
+        if (editor instanceof NavigatableFileEditor navigatableFileEditor && getSelectedEditor(descriptor.getFile()) == editor) { // try to navigate opened editor
+          navigated = navigateAndSelectEditor(navigatableFileEditor, descriptor);
           if (navigated) break;
         }
       }
 
       if (!navigated) {
         for (final FileEditor editor : editors) {
-          if (editor instanceof NavigatableFileEditor && getSelectedEditor(descriptor.getFile()) != editor) { // try other editors
-            if (navigateAndSelectEditor((NavigatableFileEditor)editor, descriptor)) {
+          if (editor instanceof NavigatableFileEditor navigatableFileEditor && getSelectedEditor(descriptor.getFile()) != editor) { // try other editors
+            if (navigateAndSelectEditor(navigatableFileEditor, descriptor)) {
               break;
             }
           }
@@ -1116,9 +1122,9 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
   public Editor openTextEditor(@Nonnull final OpenFileDescriptor descriptor, final boolean focusEditor) {
     final Collection<FileEditor> fileEditors = openEditor(descriptor, focusEditor);
     for (FileEditor fileEditor : fileEditors) {
-      if (fileEditor instanceof TextEditor) {
+      if (fileEditor instanceof TextEditor textEditor) {
         setSelectedEditor(descriptor.getFile(), TextEditorProvider.getInstance().getEditorTypeId());
-        Editor editor = ((TextEditor)fileEditor).getEditor();
+        Editor editor = textEditor.getEditor();
         return getOpenedEditor(editor, focusEditor);
       }
     }
@@ -1139,8 +1145,8 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     final FileEditorWindow currentWindow = requiredUIThread ? getMainSplitters().getCurrentWindow() : getSplitters().getCurrentWindow();
     if (currentWindow != null) {
       final FileEditorWithProviderComposite selectedEditor = currentWindow.getSelectedEditor();
-      if (selectedEditor != null && selectedEditor.getSelectedEditor() instanceof TextEditor) {
-        return ((TextEditor)selectedEditor.getSelectedEditor()).getEditor();
+      if (selectedEditor != null && selectedEditor.getSelectedEditor() instanceof TextEditor textEditor) {
+        textEditor.getEditor();
       }
     }
 
@@ -1206,7 +1212,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
   @Override
   @Nullable
   public FileEditorWithProvider getSelectedEditorWithProvider(@Nonnull VirtualFile file) {
-    if (file instanceof VirtualFileWindow) file = ((VirtualFileWindow)file).getDelegate();
+    if (file instanceof VirtualFileWindow virtualFileWindow) file = virtualFileWindow.getDelegate();
     final FileEditorWithProviderComposite composite = getCurrentEditorWithProviderComposite(file);
     if (composite != null) {
       return composite.getSelectedEditorWithProvider();
@@ -1237,7 +1243,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
   @Nonnull
   public FileEditor[] getEditors(@Nonnull VirtualFile file) {
     assertReadAccess();
-    if (file instanceof VirtualFileWindow) file = ((VirtualFileWindow)file).getDelegate();
+    if (file instanceof VirtualFileWindow virtualFileWindow) file = virtualFileWindow.getDelegate();
 
     final FileEditorWithProviderComposite composite = getCurrentEditorWithProviderComposite(file);
     if (composite != null) {
@@ -1833,8 +1839,8 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
   public FileEditorsSplitters getSplittersFor(Component c) {
     FileEditorsSplitters splitters = null;
     DockContainer dockContainer = myDockManager.getContainerFor(c);
-    if (dockContainer instanceof DockableEditorTabbedContainer) {
-      splitters = ((DockableEditorTabbedContainer)dockContainer).getSplitters();
+    if (dockContainer instanceof DockableEditorTabbedContainer dockableEditorTabbedContainer) {
+      splitters = dockableEditorTabbedContainer.getSplitters();
     }
 
     if (splitters == null) {

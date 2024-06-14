@@ -27,7 +27,7 @@ import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.LabeledComponent;
 import consulo.ui.ex.awt.VerticalFlowLayout;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.FakeVirtualFile;

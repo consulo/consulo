@@ -15,11 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.module.impl.scopes;
 
-import consulo.application.util.function.Processor;
 import consulo.content.OrderRootType;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.base.SourcesOrderRootType;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.util.NotNullFunction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.psi.PsiBundle;
@@ -37,12 +35,13 @@ import consulo.module.content.scope.ModuleWithDependenciesScope;
 import consulo.module.impl.internal.layer.ModuleRootsProcessor;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
+import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.*;
 
 public class ModuleWithDependenciesScopeImpl extends GlobalSearchScope implements ModuleWithDependenciesScope {
@@ -92,20 +91,17 @@ public class ModuleWithDependenciesScopeImpl extends GlobalSearchScope implement
 
     final LinkedHashSet<Module> modules = ContainerUtil.newLinkedHashSet();
 
-    en.forEach(new Processor<OrderEntry>() {
-      @Override
-      public boolean process(OrderEntry each) {
-        if (each instanceof ModuleOrderEntry) {
-          ContainerUtil.addIfNotNull(modules, ((ModuleOrderEntry)each).getModule());
-        }
-        else if (each instanceof ModuleSourceOrderEntry) {
-          ContainerUtil.addIfNotNull(modules, each.getOwnerModule());
-        }
-        return true;
+    en.forEach(each -> {
+      if (each instanceof ModuleOrderEntry moduleOrderEntry) {
+        ContainerUtil.addIfNotNull(modules, moduleOrderEntry.getModule());
       }
+      else if (each instanceof ModuleSourceOrderEntry) {
+        ContainerUtil.addIfNotNull(modules, each.getOwnerModule());
+      }
+      return true;
     });
 
-    myModules = new HashSet<Module>(modules);
+    myModules = new HashSet<>(modules);
 
     final LinkedHashSet<VirtualFile> roots = ContainerUtil.newLinkedHashSet();
 

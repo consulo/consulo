@@ -1,26 +1,26 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon;
 
+import consulo.content.bundle.Sdk;
+import consulo.content.library.Library;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModuleEditor;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModulesConfiguratorImpl;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.setting.ShowSettingsUtil;
+import consulo.ide.setting.module.ModulesConfigurator;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
-import consulo.ide.setting.ShowSettingsUtil;
 import consulo.module.content.layer.ModuleRootModel;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
 import consulo.module.content.layer.orderEntry.ModuleOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
-import consulo.project.ProjectBundle;
-import consulo.content.bundle.Sdk;
-import consulo.content.library.Library;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModuleEditor;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModulesConfiguratorImpl;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.setting.module.ModulesConfigurator;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
-
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +52,13 @@ public class ModuleProjectStructureElement extends ProjectStructureElement {
 
     for (Module each : all) {
       if (each != myModule && myModulesConfigurator.getRealName(each).equals(myModulesConfigurator.getRealName(myModule))) {
-        problemsHolder.registerProblem(ProjectBundle.message("project.roots.module.duplicate.name.message"), null, ProjectStructureProblemType.error("duplicate-module-name"), createPlace(), null);
+        problemsHolder.registerProblem(
+          ProjectLocalize.projectRootsModuleDuplicateNameMessage().get(),
+          null,
+          ProjectStructureProblemType.error("duplicate-module-name"),
+          createPlace(),
+          null
+        );
         break;
       }
     }
@@ -68,26 +74,24 @@ public class ModuleProjectStructureElement extends ProjectStructureElement {
     for (OrderEntry entry : entries) {
       if (!entry.isValid()) {
         if (entry instanceof ModuleExtensionWithSdkOrderEntry && ((ModuleExtensionWithSdkOrderEntry)entry).getSdkName() == null) {
-          problemsHolder
-                  .registerProblem(ProjectBundle.message("project.roots.module.jdk.problem.message"), null, ProjectStructureProblemType.error("module-sdk-not-defined"), createPlace(entry), null);
+          problemsHolder.registerProblem(
+            ProjectLocalize.projectRootsModuleJdkProblemMessage().get(),
+            null,
+            ProjectStructureProblemType.error("module-sdk-not-defined"),
+            createPlace(entry),
+            null
+          );
         }
         else {
-          problemsHolder.registerProblem(ProjectBundle.message("project.roots.library.problem.message", StringUtil.escapeXml(entry.getPresentableName())), null,
-                                         ProjectStructureProblemType.error("invalid-module-dependency"), createPlace(entry), null);
+          problemsHolder.registerProblem(
+            ProjectLocalize.projectRootsLibraryProblemMessage(StringUtil.escapeXml(entry.getPresentableName())).get(),
+            null,
+            ProjectStructureProblemType.error("invalid-module-dependency"),
+            createPlace(entry),
+            null
+          );
         }
       }
-      //todo[nik] highlight libraries with invalid paths in ClasspathEditor
-      //else if (entry instanceof LibraryOrderEntry) {
-      //  final LibraryEx library = (LibraryEx)((LibraryOrderEntry)entry).getLibrary();
-      //  if (library != null) {
-      //    if (!library.allPathsValid(OrderRootType.CLASSES)) {
-      //      problemsHolder.registerError(ProjectBundle.message("project.roots.tooltip.library.misconfigured", entry.getName()));
-      //    }
-      //    else if (!library.allPathsValid(OrderRootType.SOURCES)) {
-      //      problemsHolder.registerWarning(ProjectBundle.message("project.roots.tooltip.library.misconfigured", entry.getName()));
-      //    }
-      //  }
-      //}
     }
   }
 

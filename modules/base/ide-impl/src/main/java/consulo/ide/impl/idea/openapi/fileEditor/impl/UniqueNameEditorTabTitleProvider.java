@@ -8,7 +8,7 @@ import consulo.fileEditor.EditorTabTitleProvider;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 

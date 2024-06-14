@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.openapi.project;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.application.util.SystemInfo;
 import consulo.application.util.UserHomeFileUtil;
 import consulo.fileEditor.UniqueVFilePathBuilder;
 import consulo.ide.impl.idea.openapi.module.ModuleUtil;
@@ -24,15 +23,16 @@ import consulo.ide.impl.idea.openapi.roots.libraries.LibraryUtil;
 import consulo.module.Module;
 import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
 import consulo.project.ui.util.ProjectUIUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFilePathWrapper;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.nio.file.Path;
 
@@ -72,13 +72,15 @@ public class ProjectUtil {
   }
 
   @Nonnull
-  public static String calcRelativeToProjectPath(@Nonnull final VirtualFile file,
-                                                 @Nullable final Project project,
-                                                 final boolean includeFilePath,
-                                                 final boolean includeUniqueFilePath,
-                                                 final boolean keepModuleAlwaysOnTheLeft) {
-    if (file instanceof VirtualFilePathWrapper) {
-      return includeFilePath ? ((VirtualFilePathWrapper)file).getPresentablePath() : file.getName();
+  public static String calcRelativeToProjectPath(
+    @Nonnull final VirtualFile file,
+    @Nullable final Project project,
+    final boolean includeFilePath,
+    final boolean includeUniqueFilePath,
+    final boolean keepModuleAlwaysOnTheLeft
+  ) {
+    if (file instanceof VirtualFilePathWrapper virtualFilePathWrapper) {
+      return includeFilePath ? virtualFilePathWrapper.getPresentablePath() : file.getName();
     }
     String url;
     if (includeFilePath) {
@@ -103,13 +105,13 @@ public class ProjectUtil {
         }
       }
 
-      if (SystemInfo.isMac && file.getFileSystem() instanceof ArchiveFileSystem) {
-        final VirtualFile fileForJar = ((ArchiveFileSystem)file.getFileSystem()).getLocalVirtualFileFor(file);
+      if (Platform.current().os().isMac() && file.getFileSystem() instanceof ArchiveFileSystem archiveFileSystem) {
+        final VirtualFile fileForJar = archiveFileSystem.getLocalVirtualFileFor(file);
         if (fileForJar != null) {
           final OrderEntry libraryEntry = LibraryUtil.findLibraryEntry(file, project);
           if (libraryEntry != null) {
-            if (libraryEntry instanceof ModuleExtensionWithSdkOrderEntry) {
-              url = url + " - [" + ((ModuleExtensionWithSdkOrderEntry)libraryEntry).getSdkName() + "]";
+            if (libraryEntry instanceof ModuleExtensionWithSdkOrderEntry moduleExtensionWithSdkOrderEntry) {
+              url = url + " - [" + moduleExtensionWithSdkOrderEntry.getSdkName() + "]";
             }
             else {
               url = url + " - [" + libraryEntry.getPresentableName() + "]";
@@ -123,7 +125,9 @@ public class ProjectUtil {
 
       final Module module = ModuleUtil.findModuleForFile(file, project);
       if (module == null) return url;
-      return !keepModuleAlwaysOnTheLeft && SystemInfo.isMac ? url + " - [" + module.getName() + "]" : "[" + module.getName() + "] - " + url;
+      return !keepModuleAlwaysOnTheLeft && Platform.current().os().isMac()
+        ? url + " - [" + module.getName() + "]"
+        : "[" + module.getName() + "] - " + url;
     }
   }
 

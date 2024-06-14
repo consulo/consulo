@@ -8,7 +8,7 @@ import consulo.ide.impl.idea.ide.highlighter.FileTypeRegistrator;
 import consulo.ide.impl.idea.ide.highlighter.custom.impl.CustomFileTypeEditor;
 import consulo.ide.impl.idea.openapi.fileTypes.UserFileType;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.ExternalizableFileType;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ide.impl.idea.util.ArrayUtilRt;
 import consulo.ide.impl.idea.util.text.StringTokenizer;
@@ -126,9 +126,9 @@ public class AbstractFileType extends UserFileType<AbstractFileType> implements 
   public void copyFrom(@Nonnull UserFileType newType) {
     super.copyFrom(newType);
 
-    if (newType instanceof AbstractFileType) {
+    if (newType instanceof AbstractFileType abstractFileType) {
       mySyntaxTable = ((CustomSyntaxTableFileType)newType).getSyntaxTable();
-      myExternalInfo.copy(((AbstractFileType)newType).myExternalInfo);
+      myExternalInfo.copy(abstractFileType.myExternalInfo);
     }
   }
 
@@ -373,8 +373,8 @@ public class AbstractFileType extends UserFileType<AbstractFileType> implements 
   @Nullable
   static Element writeMapping(String typeName, @Nonnull FileNameMatcher matcher, boolean specifyTypeName) {
     Element mapping = new Element(ELEMENT_MAPPING);
-    if (matcher instanceof ExtensionFileNameMatcherImpl) {
-      mapping.setAttribute(ATTRIBUTE_EXT, ((ExtensionFileNameMatcherImpl)matcher).getExtension());
+    if (matcher instanceof ExtensionFileNameMatcherImpl extensionFileNameMatcher) {
+      mapping.setAttribute(ATTRIBUTE_EXT, extensionFileNameMatcher.getExtension());
     }
     else if (writePattern(matcher, mapping)) {
       return null;
@@ -388,11 +388,11 @@ public class AbstractFileType extends UserFileType<AbstractFileType> implements 
   }
 
   static boolean writePattern(FileNameMatcher matcher, Element mapping) {
-    if (matcher instanceof WildcardFileNameMatcher) {
-      mapping.setAttribute(ATTRIBUTE_PATTERN, ((WildcardFileNameMatcher)matcher).getPattern());
+    if (matcher instanceof WildcardFileNameMatcher wildcardFileNameMatcher) {
+      mapping.setAttribute(ATTRIBUTE_PATTERN, wildcardFileNameMatcher.getPattern());
     }
-    else if (matcher instanceof ExactFileNameMatcher) {
-      mapping.setAttribute(ATTRIBUTE_PATTERN, ((ExactFileNameMatcher)matcher).getFileName());
+    else if (matcher instanceof ExactFileNameMatcher exactFileNameMatcher) {
+      mapping.setAttribute(ATTRIBUTE_PATTERN, exactFileNameMatcher.getFileName());
     }
     else {
       return true;

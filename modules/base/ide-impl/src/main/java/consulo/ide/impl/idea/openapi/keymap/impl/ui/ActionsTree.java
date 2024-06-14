@@ -20,14 +20,13 @@ import consulo.dataContext.DataManager;
 import consulo.application.ui.UISettings;
 import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickList;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.KeymapImpl;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
@@ -83,8 +82,8 @@ public class ActionsTree {
           if (rowBounds.intersects(clip)) {
             Object node = getPathForRow(row).getLastPathComponent();
 
-            if (node instanceof DefaultMutableTreeNode) {
-              Object data = ((DefaultMutableTreeNode)node).getUserObject();
+            if (node instanceof DefaultMutableTreeNode defaultMutableTreeNode) {
+              Object data = defaultMutableTreeNode.getUserObject();
               Rectangle fullRowRect = new Rectangle(visibleRect.x, rowBounds.y, visibleRect.width, rowBounds.height);
               paintRowData(this, data, fullRowRect, (Graphics2D)g);
             }
@@ -124,8 +123,8 @@ public class ActionsTree {
   @Nullable
   public String getSelectedActionId() {
     Object userObject = getSelectedObject();
-    if (userObject instanceof String) return (String)userObject;
-    if (userObject instanceof QuickList) return ((QuickList)userObject).getActionId();
+    if (userObject instanceof String actionId) return actionId;
+    if (userObject instanceof QuickList quickList) return quickList.getActionId();
     return null;
   }
 
@@ -162,7 +161,7 @@ public class ActionsTree {
     myRoot.removeAllChildren();
 
     ActionManager actionManager = ActionManager.getInstance();
-    Project project = DataManager.getInstance().getDataContext(myComponent).getData(CommonDataKeys.PROJECT);
+    Project project = DataManager.getInstance().getDataContext(myComponent).getData(Project.KEY);
     KeymapGroupImpl mainGroup = ActionsTreeUtil.createMainGroup(project, myKeymap, allQuickLists, filter, true, filter != null && filter.length() > 0 ?
                                                                                                                 ActionsTreeUtil.isActionFiltered(filter, true) :
                                                                                                                 (shortcut != null ? ActionsTreeUtil.isActionFiltered(actionManager, myKeymap, shortcut) : null));
@@ -196,19 +195,18 @@ public class ActionsTree {
 
     ArrayList children = group.getChildren();
     for (Object child : children) {
-      if (child instanceof KeymapGroupImpl) {
-        if (isGroupChanged((KeymapGroupImpl)child, oldKeymap, newKeymap)) {
+      if (child instanceof KeymapGroupImpl keymapGroup) {
+        if (isGroupChanged(keymapGroup, oldKeymap, newKeymap)) {
           return true;
         }
       }
-      else if (child instanceof String) {
-        String actionId = (String)child;
+      else if (child instanceof String actionId) {
         if (isActionChanged(actionId, oldKeymap, newKeymap)) {
           return true;
         }
       }
-      else if (child instanceof QuickList) {
-        String actionId = ((QuickList)child).getActionId();
+      else if (child instanceof QuickList quickList) {
+        String actionId = quickList.getActionId();
         if (isActionChanged(actionId, oldKeymap, newKeymap)) {
           return true;
         }
@@ -245,7 +243,7 @@ public class ActionsTree {
   }
 
   private ArrayList<DefaultMutableTreeNode> getNodesByPaths(ArrayList<String> paths){
-    final ArrayList<DefaultMutableTreeNode> result = new ArrayList<DefaultMutableTreeNode>();
+    final ArrayList<DefaultMutableTreeNode> result = new ArrayList<>();
     Enumeration enumeration = ((DefaultMutableTreeNode)myTree.getModel().getRoot()).preorderEnumeration();
     while (enumeration.hasMoreElements()) {
       DefaultMutableTreeNode node = (DefaultMutableTreeNode)enumeration.nextElement();
@@ -260,24 +258,22 @@ public class ActionsTree {
   @Nullable
   private String getPath(DefaultMutableTreeNode node) {
     final Object userObject = node.getUserObject();
-    if (userObject instanceof String) {
-      String actionId = (String)userObject;
-
+    if (userObject instanceof String actionId) {
       final TreeNode parent = node.getParent();
-      if (parent instanceof DefaultMutableTreeNode) {
-        final Object object = ((DefaultMutableTreeNode)parent).getUserObject();
-        if (object instanceof KeymapGroupImpl) {
-          return ((KeymapGroupImpl)object).getActionQualifiedPath(actionId);
+      if (parent instanceof DefaultMutableTreeNode defaultMutableTreeNode) {
+        final Object object = defaultMutableTreeNode.getUserObject();
+        if (object instanceof KeymapGroupImpl keymapGroup) {
+          return keymapGroup.getActionQualifiedPath(actionId);
         }
       }
 
       return myMainGroup.getActionQualifiedPath(actionId);
     }
-    if (userObject instanceof KeymapGroupImpl) {
-      return ((KeymapGroupImpl)userObject).getQualifiedPath();
+    if (userObject instanceof KeymapGroupImpl keymapGroup) {
+      return keymapGroup.getQualifiedPath();
     }
-    if (userObject instanceof QuickList) {
-      return ((QuickList)userObject).getDisplayName();
+    if (userObject instanceof QuickList quickList) {
+      return quickList.getDisplayName();
     }
     return null;
   }
@@ -294,8 +290,8 @@ public class ActionsTree {
     private ArrayList<String> mySelectionPaths;
 
     public void storePaths() {
-      myPathsToExpand = new ArrayList<String>();
-      mySelectionPaths = new ArrayList<String>();
+      myPathsToExpand = new ArrayList<>();
+      mySelectionPaths = new ArrayList<>();
 
       DefaultMutableTreeNode root = (DefaultMutableTreeNode)myTree.getModel().getRoot();
 
@@ -352,7 +348,7 @@ public class ActionsTree {
 
 
     private ArrayList<TreeNode> childrenToArray(DefaultMutableTreeNode node) {
-      ArrayList<TreeNode> arrayList = new ArrayList<TreeNode>();
+      ArrayList<TreeNode> arrayList = new ArrayList<>();
       for(int i = 0; i < node.getChildCount(); i++){
         arrayList.add(node.getChildAt(i));
       }
@@ -368,11 +364,10 @@ public class ActionsTree {
       String text;
       boolean bound = false;
 
-      if (value instanceof DefaultMutableTreeNode) {
-        Object userObject = ((DefaultMutableTreeNode)value).getUserObject();
+      if (value instanceof DefaultMutableTreeNode defaultMutableTreeNode) {
+        Object userObject = defaultMutableTreeNode.getUserObject();
         boolean changed;
-        if (userObject instanceof KeymapGroupImpl) {
-          KeymapGroupImpl group = (KeymapGroupImpl)userObject;
+        if (userObject instanceof KeymapGroupImpl group) {
           text = group.getName();
 
           changed = originalKeymap != null && isGroupChanged(group, originalKeymap, myKeymap);
@@ -381,8 +376,7 @@ public class ActionsTree {
             icon = CLOSE_ICON;
           }
         }
-        else if (userObject instanceof String) {
-          String actionId = (String)userObject;
+        else if (userObject instanceof String actionId) {
           bound = myShowBoundActions && ((KeymapImpl)myKeymap).isActionBound(actionId);
           AnAction action = ActionManager.getInstance().getActionOrStub(actionId);
           if (action != null) {
@@ -400,8 +394,7 @@ public class ActionsTree {
           }
           changed = originalKeymap != null && isActionChanged(actionId, originalKeymap, myKeymap);
         }
-        else if (userObject instanceof QuickList) {
-          QuickList list = (QuickList)userObject;
+        else if (userObject instanceof QuickList list) {
           icon = AllIcons.Actions.QuickList;
           text = list.getDisplayName();
 
@@ -444,11 +437,11 @@ public class ActionsTree {
   
   private void paintRowData(Tree tree, Object data, Rectangle bounds, Graphics2D g) {
     Shortcut[] shortcuts;
-    if (data instanceof String) {
-      shortcuts = myKeymap.getShortcuts((String)data);            
+    if (data instanceof String actionId) {
+      shortcuts = myKeymap.getShortcuts(actionId);
     }
-    else if (data instanceof QuickList) {
-      shortcuts = myKeymap.getShortcuts(((QuickList)data).getActionId());
+    else if (data instanceof QuickList quickList) {
+      shortcuts = myKeymap.getShortcuts(quickList.getActionId());
     }
     else {
       shortcuts = null;

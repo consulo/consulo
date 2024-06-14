@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

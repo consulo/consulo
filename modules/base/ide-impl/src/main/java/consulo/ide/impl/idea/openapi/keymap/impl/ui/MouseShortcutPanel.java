@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.keymap.impl.ui;
 
+import consulo.platform.Platform;
 import consulo.ui.ex.action.MouseShortcut;
 import consulo.application.util.SystemInfo;
 import consulo.ui.ex.JBColor;
@@ -69,7 +70,7 @@ public final class MouseShortcutPanel extends ShortcutPanel<MouseShortcut> {
     myClickCount = allowDoubleClick ? 2 : 1;
     addMouseListener(myMouseListener);
     addMouseWheelListener(myMouseListener);
-    if (SystemInfo.isMac && SystemInfo.isJetBrainsJvm) {
+    if (Platform.current().os().isMac() && SystemInfo.isJetBrainsJvm) {
       new MacGestureSupportForMouseShortcutPanel(this, () -> myMouseShortcut = null);
     }
     setBackground(BACKGROUND);

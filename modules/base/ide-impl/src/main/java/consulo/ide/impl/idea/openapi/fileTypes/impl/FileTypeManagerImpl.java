@@ -258,7 +258,8 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
                 "; file.is(VFileProperty.SPECIAL): " +
                 (file == null ? null : file.is(VFileProperty.SPECIAL)) +
                 "; packedFlags.get(id): " +
-                (file instanceof VirtualFileWithId ? readableFlags(packedFlags.get(((VirtualFileWithId)file).getId())) : null) +
+                (file instanceof VirtualFileWithId virtualFileWithId
+                  ? readableFlags(packedFlags.get(virtualFileWithId.getId())) : null) +
                 "; file.getFileSystem():" +
                 (file == null ? null : file.getFileSystem()) +
                 ")");
@@ -494,8 +495,8 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
     if (file.getUserData(DETECTED_FROM_CONTENT_FILE_TYPE_KEY) != null) {
       return true;
     }
-    if (file instanceof VirtualFileWithId) {
-      int id = ((VirtualFileWithId)file).getId();
+    if (file instanceof VirtualFileWithId virtualFileWithId) {
+      int id = virtualFileWithId.getId();
       // do not re-detect binary files
       return (packedFlags.get(id) & (AUTO_DETECT_WAS_RUN_MASK | AUTO_DETECTED_AS_BINARY_MASK)) == AUTO_DETECT_WAS_RUN_MASK;
     }
@@ -610,8 +611,8 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
       return fileType;
     }
 
-    if (file instanceof LightVirtualFile) {
-      FileType fileType = ((LightVirtualFile)file).getAssignedFileType();
+    if (file instanceof LightVirtualFile lightVirtualFile) {
+      FileType fileType = lightVirtualFile.getAssignedFileType();
       if (fileType != null) {
         return fileType;
       }
@@ -639,8 +640,8 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
   @Nonnull
   private FileType getOrDetectFromContent(@Nonnull VirtualFile file, @Nullable byte[] content) {
     if (!isDetectable(file)) return UnknownFileType.INSTANCE;
-    if (file instanceof VirtualFileWithId) {
-      int id = ((VirtualFileWithId)file).getId();
+    if (file instanceof VirtualFileWithId virtualFileWithId) {
+      int id = virtualFileWithId.getId();
 
       long flags = packedFlags.get(id);
       if (!BitUtil.isSet(flags, ATTRIBUTES_WERE_LOADED_MASK)) {
@@ -1012,8 +1013,8 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
       return file.getFileType().equals(type);
     }
 
-    if (file instanceof LightVirtualFile) {
-      FileType assignedFileType = ((LightVirtualFile)file).getAssignedFileType();
+    if (file instanceof LightVirtualFile lightVirtualFile) {
+      FileType assignedFileType = lightVirtualFile.getAssignedFileType();
       if (assignedFileType != null) {
         return type.equals(assignedFileType);
       }
@@ -1024,7 +1025,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
       return overriddenFileType.equals(type);
     }
 
-    if (type instanceof FileTypeIdentifiableByVirtualFile && ((FileTypeIdentifiableByVirtualFile)type).isMyFileType(file)) {
+    if (type instanceof FileTypeIdentifiableByVirtualFile fakeFileType && fakeFileType.isMyFileType(file)) {
       return true;
     }
 
@@ -1083,9 +1084,12 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
     myPatternsTable.removeAllAssociations(fileType);
     myInitialAssociations.removeAllAssociations(fileType);
     mySchemeManager.removeScheme(fileType);
-    if (fileType instanceof FileTypeIdentifiableByVirtualFile) {
-      final FileTypeIdentifiableByVirtualFile fakeFileType = (FileTypeIdentifiableByVirtualFile)fileType;
-      mySpecialFileTypes = ArrayUtil.remove(mySpecialFileTypes, fakeFileType, FileTypeIdentifiableByVirtualFile.ARRAY_FACTORY);
+    if (fileType instanceof FileTypeIdentifiableByVirtualFile fakeFileType) {
+      mySpecialFileTypes = ArrayUtil.remove(
+        mySpecialFileTypes,
+        fakeFileType,
+        FileTypeIdentifiableByVirtualFile.ARRAY_FACTORY
+      );
     }
   }
 
@@ -1429,8 +1433,12 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
       myInitialAssociations.addAssociation(matcher, fileType);
     }
 
-    if (fileType instanceof FileTypeIdentifiableByVirtualFile) {
-      mySpecialFileTypes = ArrayUtil.append(mySpecialFileTypes, (FileTypeIdentifiableByVirtualFile)fileType, FileTypeIdentifiableByVirtualFile.ARRAY_FACTORY);
+    if (fileType instanceof FileTypeIdentifiableByVirtualFile fileTypeIdentifiableByVirtualFile) {
+      mySpecialFileTypes = ArrayUtil.append(
+        mySpecialFileTypes,
+        fileTypeIdentifiableByVirtualFile,
+        FileTypeIdentifiableByVirtualFile.ARRAY_FACTORY
+      );
     }
   }
 
@@ -1480,8 +1488,8 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
 
     if (isDefault) {
       myDefaultTypes.add(type);
-      if (type instanceof ExternalizableFileType) {
-        ((ExternalizableFileType)type).markDefaultSettings();
+      if (type instanceof ExternalizableFileType externalizableFileType) {
+        externalizableFileType.markDefaultSettings();
       }
     }
     else {
@@ -1554,8 +1562,8 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
     }
     for (FileType fileType : fileTypes) {
       mySchemeManager.addNewScheme(fileType, true);
-      if (fileType instanceof AbstractFileType) {
-        ((AbstractFileType)fileType).initSupport();
+      if (fileType instanceof AbstractFileType abstractFileType) {
+        abstractFileType.initSupport();
       }
     }
     myPatternsTable = assocTable.copy();
@@ -1615,9 +1623,8 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
     if (fileType == PlainTextFileType.INSTANCE) return;
     for (FileNameMatcher matcher : pair.matchers) {
       registerReDetectedMapping(fileType.getId(), matcher);
-      if (matcher instanceof ExtensionFileNameMatcherImpl) {
+      if (matcher instanceof ExtensionFileNameMatcherImpl extMatcher) {
         // also check exact file name matcher
-        ExtensionFileNameMatcherImpl extMatcher = (ExtensionFileNameMatcherImpl)matcher;
         registerReDetectedMapping(fileType.getId(), new ExactFileNameMatcherImpl("." + extMatcher.getExtension()));
       }
     }

@@ -15,17 +15,18 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.actions;
 
-import consulo.application.CommonBundle;
-import consulo.project.ProjectBundle;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactTypeCellRenderer;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutTreeComponent;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.compiler.artifact.ArtifactType;
 import consulo.compiler.artifact.PlainArtifactType;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactTypeCellRenderer;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutTreeComponent;
+import consulo.platform.base.localize.CommonLocalize;
+import consulo.project.localize.ProjectLocalize;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.event.DocumentAdapter;
+import consulo.util.lang.StringUtil;
+import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -42,7 +43,7 @@ public class ExtractArtifactDialog extends DialogWrapper implements IExtractArti
   public ExtractArtifactDialog(ArtifactEditorContext context, LayoutTreeComponent treeComponent, String initialName) {
     super(treeComponent.getLayoutTree(), true);
     myContext = context;
-    setTitle(ProjectBundle.message("dialog.title.extract.artifact"));
+    setTitle(ProjectLocalize.dialogTitleExtractArtifact());
     for (ArtifactType type : ArtifactType.EP_NAME.getExtensions()) {
       myTypeBox.addItem(type);
     }
@@ -59,10 +60,15 @@ public class ExtractArtifactDialog extends DialogWrapper implements IExtractArti
   }
 
   @Override
+  @NonNls
   protected void doOKAction() {
     final String artifactName = getArtifactName();
     if (myContext.getArtifactModel().findArtifact(artifactName) != null) {
-      Messages.showErrorDialog(myContext.getProject(), "Artifact '" + artifactName + "' already exists!", CommonBundle.getErrorTitle());
+      Messages.showErrorDialog(
+        myContext.getProject(),
+        "Artifact '" + artifactName + "' already exists!",
+        CommonLocalize.titleError().get()
+      );
       return;
     }
     super.doOKAction();

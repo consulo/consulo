@@ -21,7 +21,7 @@ import consulo.externalSystem.setting.ExternalProjectSettings;
 import consulo.ide.impl.idea.openapi.externalSystem.settings.ExternalSystemSettingsListenerAdapter;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsDirectoryMapping;
 import consulo.virtualFileSystem.LocalFileSystem;

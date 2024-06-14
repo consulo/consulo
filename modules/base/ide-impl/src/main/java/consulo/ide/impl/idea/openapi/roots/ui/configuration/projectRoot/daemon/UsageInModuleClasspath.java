@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon;
 import consulo.application.AllIcons;
 import consulo.module.Module;
 import consulo.module.content.layer.orderEntry.DependencyScope;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.setting.module.ModulesConfigurator;
 import consulo.ui.image.Image;
 

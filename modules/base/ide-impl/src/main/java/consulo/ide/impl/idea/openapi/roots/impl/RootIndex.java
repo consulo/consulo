@@ -32,7 +32,7 @@ import consulo.project.Project;
 import consulo.content.internal.LibraryEx;
 import consulo.content.library.Library;
 import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.VFileEvent;
@@ -153,10 +153,10 @@ public class RootIndex {
             info.packagePrefix.put(classRoot, "");
           }
 
-          if (orderEntry instanceof LibraryOrderEntry) {
-            Library library = ((LibraryOrderEntry)orderEntry).getLibrary();
+          if (orderEntry instanceof LibraryOrderEntry libraryOrderEntry) {
+            Library library = libraryOrderEntry.getLibrary();
             if (library != null) {
-              for (VirtualFile root : ((LibraryEx)library).getExcludedRoots()) {
+              for (VirtualFile root : library.getExcludedRoots()) {
                 info.excludedFromLibraries.putValue(root, library);
               }
               for (VirtualFile root : sourceRoots) {
@@ -167,7 +167,6 @@ public class RootIndex {
               }
             }
           }
-
         }
       }
     }
@@ -197,8 +196,8 @@ public class RootIndex {
     for (final Module module : ModuleManager.getInstance(myProject).getModules()) {
       final ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
       for (OrderEntry orderEntry : moduleRootManager.getOrderEntries()) {
-        if (orderEntry instanceof ModuleOrderEntry) {
-          final Module depModule = ((ModuleOrderEntry)orderEntry).getModule();
+        if (orderEntry instanceof ModuleOrderEntry moduleOrderEntry) {
+          final Module depModule = moduleOrderEntry.getModule();
           if (depModule != null) {
             VirtualFile[] importedClassRoots = OrderEnumerator.orderEntries(depModule).exportedOnly().recursively().classes().usingCache().getRoots();
             for (VirtualFile importedClassRoot : importedClassRoots) {

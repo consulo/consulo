@@ -7,7 +7,7 @@ import consulo.content.library.LibraryProperties;
 import consulo.content.library.LibraryType;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.util.ArrayUtilRt;
-import consulo.ide.impl.idea.util.io.URLUtil;
+import consulo.util.io.URLUtil;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.TriConsumer;
 import consulo.virtualFileSystem.VirtualFile;
