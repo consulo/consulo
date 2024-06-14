@@ -3,9 +3,9 @@ package consulo.ide.impl.psi.impl;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
-import consulo.application.TransactionGuard;
 import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.application.impl.internal.progress.StandardProgressIndicatorBase;
 import consulo.application.progress.EmptyProgressIndicator;
@@ -85,7 +85,7 @@ public final class DocumentCommitThread implements Disposable, DocumentCommitPro
 
     PsiDocumentManagerBase documentManager = (PsiDocumentManagerBase)PsiDocumentManager.getInstance(project);
     if (documentManager.isEventSystemEnabled(document)) {
-      TransactionGuard.getInstance().assertWriteSafeContext(modality);
+      Application.get().assertWriteAccessAllowed();
     }
 
     PsiFile psiFile = documentManager.getCachedPsiFile(document);

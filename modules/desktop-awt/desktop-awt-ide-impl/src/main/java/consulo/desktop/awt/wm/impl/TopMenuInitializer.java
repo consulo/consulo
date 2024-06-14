@@ -15,21 +15,20 @@
  */
 package consulo.desktop.awt.wm.impl;
 
-import consulo.ide.impl.idea.ide.CommandLineProcessor;
-import consulo.dataContext.DataManager;
-import consulo.application.impl.internal.start.ApplicationStarter;
-import consulo.language.editor.CommonDataKeys;
 import consulo.application.Application;
-import consulo.application.TransactionGuard;
+import consulo.application.impl.internal.start.ApplicationStarter;
+import consulo.application.impl.internal.start.CommandLineArgs;
+import consulo.dataContext.DataManager;
+import consulo.ide.impl.actions.AboutManager;
+import consulo.ide.impl.idea.ide.CommandLineProcessor;
 import consulo.ide.setting.ShowSettingsUtil;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.wm.WindowManager;
-import consulo.ide.impl.actions.AboutManager;
-import consulo.application.impl.internal.start.CommandLineArgs;
 import consulo.ui.Window;
-
 import jakarta.annotation.Nonnull;
+
 import java.awt.*;
 import java.io.File;
 import java.util.List;
@@ -37,7 +36,7 @@ import java.util.List;
 /**
  * @author VISTALL
  * @since 2020-10-19
- *
+ * <p>
  * Just register Desktop actions if can. At current moment - only macOS impl this methods
  */
 public class TopMenuInitializer {
@@ -55,7 +54,7 @@ public class TopMenuInitializer {
         Window window = WindowManager.getInstance().suggestParentWindow(dataManager.getDataContext().getData(CommonDataKeys.PROJECT));
 
         AboutManager aboutManager = application.getComponent(AboutManager.class);
-        
+
         aboutManager.showAsync(window);
       });
     }
@@ -65,15 +64,14 @@ public class TopMenuInitializer {
         final Project project = getNotNullProject();
         final ShowSettingsUtil showSettingsUtil = ShowSettingsUtil.getInstance();
         if (!showSettingsUtil.isAlreadyShown(project)) {
-          TransactionGuard.submitTransaction(project, () -> showSettingsUtil.showSettingsDialog(project));
+          showSettingsUtil.showSettingsDialog(project);
         }
       });
     }
 
     if (desktop.isSupported(Desktop.Action.APP_QUIT_HANDLER)) {
       desktop.setQuitHandler((e, response) -> {
-        final Application app = Application.get();
-        TransactionGuard.submitTransaction(app, app::exit);
+        application.exit();
       });
     }
 
@@ -83,13 +81,12 @@ public class TopMenuInitializer {
 
         if (files != null) {
           File file = files.get(0);
-          TransactionGuard.submitTransaction(Application.get(), () -> {
-            CommandLineArgs args = new CommandLineArgs();
-            args.setFile(file.getPath());
 
-            CommandLineProcessor.processExternalCommandLine(args, null).doWhenDone(project1 -> {
-              ApplicationStarter.getInstance().setPerformProjectLoad(false);
-            });
+          CommandLineArgs args = new CommandLineArgs();
+          args.setFile(file.getPath());
+
+          CommandLineProcessor.processExternalCommandLine(args, null).doWhenDone(project1 -> {
+            ApplicationStarter.getInstance().setPerformProjectLoad(false);
           });
         }
       });

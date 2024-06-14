@@ -6,7 +6,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
-import consulo.application.TransactionGuard;
 import consulo.application.WriteAction;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.progress.ProgressManager;
@@ -21,7 +20,6 @@ import consulo.ide.impl.idea.find.findInProject.FindInProjectManager;
 import consulo.ide.impl.idea.find.impl.FindInProjectUtil;
 import consulo.ide.impl.idea.find.impl.FindManagerImpl;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ui.ex.awt.MessageDialogBuilder;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.usages.impl.UsageViewImpl;
@@ -35,6 +33,7 @@ import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.KeyboardShortcut;
+import consulo.ui.ex.awt.MessageDialogBuilder;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.content.Content;
 import consulo.undoRedo.CommandProcessor;
@@ -43,11 +42,11 @@ import consulo.usage.rule.UsageInFile;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
@@ -227,10 +226,8 @@ public class ReplaceInProjectManager {
       @Override
       public void findingUsagesFinished(final UsageView usageView) {
         if (context[0] != null && !processPresentation.isShowFindOptionsPrompt()) {
-          TransactionGuard.submitTransaction(myProject, () -> {
-            replaceUsagesUnderCommand(context[0], usageView.getUsages());
-            context[0].invalidateExcludedSetCache();
-          });
+          replaceUsagesUnderCommand(context[0], usageView.getUsages());
+          context[0].invalidateExcludedSetCache();
         }
       }
     });

@@ -4,10 +4,8 @@ package consulo.ide.impl.idea.openapi.actionSystem.impl;
 import consulo.annotation.component.*;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.TransactionGuard;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.impl.internal.performance.ActivityTracker;
-import consulo.application.internal.TransactionGuardEx;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.registry.Registry;
@@ -1405,7 +1403,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   private void tryToExecuteNow(@Nonnull AnAction action, final InputEvent inputEvent, final Component contextComponent, final String place, final ActionCallback result) {
     final Presentation presentation = action.getTemplatePresentation().clone();
 
-    IdeFocusManager.findInstanceByContext(getContextBy(contextComponent)).doWhenFocusSettlesDown(() -> ((TransactionGuardEx)TransactionGuard.getInstance()).performUserActivity(() -> {
+    IdeFocusManager.findInstanceByContext(getContextBy(contextComponent)).doWhenFocusSettlesDown((() -> {
       final DataContext context = getContextBy(contextComponent);
 
       AnActionEvent event = new AnActionEvent(inputEvent, context, place != null ? place : ActionPlaces.UNKNOWN, presentation, this, inputEvent.getModifiersEx());

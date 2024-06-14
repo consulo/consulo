@@ -4,8 +4,6 @@ package consulo.language.impl.internal.psi;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.application.TransactionGuard;
-import consulo.application.internal.TransactionGuardEx;
 import consulo.application.util.ConcurrentFactoryMap;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.util.ModificationTracker;
@@ -16,14 +14,14 @@ import consulo.language.psi.*;
 import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.language.psi.event.PsiTreeChangePreprocessor;
 import consulo.logging.Logger;
-import consulo.project.event.DumbModeListener;
 import consulo.project.Project;
+import consulo.project.event.DumbModeListener;
 import consulo.util.lang.function.Condition;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.Map;
 
 /**
@@ -73,7 +71,7 @@ public class PsiModificationTrackerImpl implements PsiModificationTracker, PsiTr
   }
 
   private void fireEvent() {
-    ((TransactionGuardEx)TransactionGuard.getInstance()).assertWriteActionAllowed();
+    Application.get().assertWriteAccessAllowed();
     myPublisher.modificationCountChanged();
   }
 

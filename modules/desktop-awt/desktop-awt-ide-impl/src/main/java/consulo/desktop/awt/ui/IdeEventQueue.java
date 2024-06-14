@@ -18,13 +18,11 @@ package consulo.desktop.awt.ui;
 import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.TransactionGuard;
 import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.impl.internal.performance.ActivityTracker;
 import consulo.application.impl.internal.start.ApplicationStarter;
 import consulo.application.internal.ApplicationWithIntentWriteLock;
 import consulo.application.internal.FrequentEventDetector;
-import consulo.application.internal.TransactionGuardEx;
 import consulo.application.progress.ProgressManager;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.wm.ExpirableRunnable;
@@ -93,7 +91,6 @@ public class IdeEventQueue extends EventQueue {
   private static final Set<Class<? extends Runnable>> ourRunnablesWithWrite = Set.of(InvocationUtil2.FLUSH_NOW_CLASS);
   private static final boolean ourDefaultEventWithWrite = true;
 
-  private static TransactionGuardEx ourTransactionGuard;
   private static ProgressManager ourProgressManager;
 
   private final List<Runnable> myActivityListeners = Lists.newLockFreeCopyOnWriteList();
@@ -473,12 +470,7 @@ public class IdeEventQueue extends EventQueue {
 
   @Nullable
   static AccessToken startActivity(@Nonnull AWTEvent e) {
-    if (ourTransactionGuard == null && appIsLoaded()) {
-      if (ApplicationManager.getApplication() != null && !ApplicationManager.getApplication().isDisposed()) {
-        ourTransactionGuard = (TransactionGuardEx)TransactionGuard.getInstance();
-      }
-    }
-    return ourTransactionGuard == null ? null : ourTransactionGuard.startActivity(isInputEvent(e) || e instanceof ItemEvent || e instanceof FocusEvent);
+    return AccessToken.EMPTY_ACCESS_TOKEN;
   }
 
   private void processException(@Nonnull Throwable t) {

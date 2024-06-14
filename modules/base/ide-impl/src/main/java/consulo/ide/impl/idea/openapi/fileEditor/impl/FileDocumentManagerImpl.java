@@ -3,7 +3,6 @@ package consulo.ide.impl.idea.openapi.fileEditor.impl;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.*;
-import consulo.application.internal.TransactionGuardEx;
 import consulo.codeEditor.EditorFactory;
 import consulo.component.ComponentManager;
 import consulo.component.messagebus.MessageBus;
@@ -57,12 +56,12 @@ import consulo.virtualFileSystem.event.VFileDeleteEvent;
 import consulo.virtualFileSystem.event.VFilePropertyChangeEvent;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.impl.internal.RawFileLoaderImpl;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
@@ -285,7 +284,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
 
   private void saveAllDocumentsLater() {
     // later because some document might have been blocked by PSI right now
-    TransactionGuard.getInstance().submitTransactionLater(ApplicationManager.getApplication(), () -> {
+    Application.get().invokeLater(() -> {
       final Document[] unsavedDocuments = getUnsavedDocuments();
       for (Document document : unsavedDocuments) {
         VirtualFile file = getFile(document);
@@ -305,7 +304,6 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
   @Override
   public void saveAllDocuments(boolean isExplicit) {
     ApplicationManager.getApplication().assertIsDispatchThread();
-    ((TransactionGuardEx)TransactionGuard.getInstance()).assertWriteActionAllowed();
 
     myMultiCaster.beforeAllDocumentsSaving();
     if (myUnsavedDocuments.isEmpty()) return;
@@ -345,7 +343,6 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
 
   public void saveDocument(@Nonnull final Document document, final boolean explicit) {
     ApplicationManager.getApplication().assertIsDispatchThread();
-    ((TransactionGuardEx)TransactionGuard.getInstance()).assertWriteActionAllowed();
 
     if (!myUnsavedDocuments.contains(document)) return;
 

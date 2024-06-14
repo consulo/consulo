@@ -18,8 +18,6 @@ package consulo.document.impl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
-import consulo.application.TransactionGuard;
-import consulo.application.internal.TransactionGuardEx;
 import consulo.component.ProcessCanceledException;
 import consulo.application.util.function.Processor;
 import consulo.disposer.Disposable;
@@ -679,10 +677,6 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
       final Application application = ApplicationManager.getApplication();
       if (application != null) {
         application.assertWriteAccessAllowed();
-        VirtualFile file = FileDocumentManager.getInstance().getFile(this);
-        if (file != null && file.isInLocalFileSystem()) {
-          ((TransactionGuardEx)TransactionGuard.getInstance()).assertWriteActionAllowed();
-        }
       }
     }
   }

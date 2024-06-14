@@ -22,33 +22,33 @@ package consulo.ide.impl.idea.util.indexing;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.impl.internal.performance.PerformanceWatcher;
-import consulo.ide.IdeBundle;
 import consulo.application.ApplicationManager;
-import consulo.application.TransactionGuard;
+import consulo.application.impl.internal.performance.PerformanceWatcher;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.util.function.Processor;
+import consulo.application.util.registry.Registry;
+import consulo.content.ContentIterator;
 import consulo.disposer.Disposable;
+import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.openapi.project.CacheUpdateRunner;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.IndexableFileSet;
 import consulo.logging.Logger;
-import consulo.application.progress.ProgressIndicator;
-import consulo.ide.impl.idea.openapi.project.*;
-import consulo.content.ContentIterator;
 import consulo.module.content.PushedFilePropertiesUpdater;
-import consulo.project.*;
+import consulo.project.DumbModeTask;
+import consulo.project.DumbService;
+import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
-import consulo.project.startup.StartupManager;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.project.event.ProjectManagerListener;
+import consulo.project.startup.StartupManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
-import consulo.application.util.function.Processor;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import java.util.Collection;
 
@@ -85,11 +85,9 @@ public class FileBasedIndexProjectHandler implements IndexableFileSet, Disposabl
       PushedFilePropertiesUpdater.getInstance(project).initializeProperties();
 
       // schedule dumb mode start after the read action we're currently in
-      TransactionGuard.submitTransaction(project, () -> {
-        if (FileBasedIndex.getInstance() instanceof FileBasedIndexImpl) {
-          DumbService.getInstance(project).queueTask(new UnindexedFilesUpdater(project));
-        }
-      });
+      if (FileBasedIndex.getInstance() instanceof FileBasedIndexImpl) {
+        DumbService.getInstance(project).queueTask(new UnindexedFilesUpdater(project));
+      }
 
       myIndex.registerIndexableSet(this, project);
       project.getMessageBus().connect(this).subscribe(ProjectManagerListener.class, new ProjectManagerListener() {

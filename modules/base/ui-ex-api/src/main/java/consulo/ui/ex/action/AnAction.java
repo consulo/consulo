@@ -17,7 +17,6 @@ package consulo.ui.ex.action;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ActionAPI;
-import consulo.application.TransactionGuard;
 import consulo.application.dumb.DumbAware;
 import consulo.application.dumb.PossiblyDumbAware;
 import consulo.disposer.Disposable;
@@ -378,16 +377,6 @@ public abstract class AnAction implements PossiblyDumbAware {
   @Override
   public boolean isDumbAware() {
     return this instanceof DumbAware;
-  }
-
-  /**
-   * @return whether this action should be wrapped into a single transaction. PSI/VFS-related actions
-   * that can show progresses or modal dialogs should return true. The default value is false, to prevent
-   * transaction-related assertions from actions in harmless dialogs like "Enter password" shown inside invokeLater.
-   * @see TransactionGuard
-   */
-  public boolean startInTransaction() {
-    return false;
   }
 
   public boolean isCanUseProjectAsDefault() {

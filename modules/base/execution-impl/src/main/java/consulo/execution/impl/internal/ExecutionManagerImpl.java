@@ -351,7 +351,7 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
       }
     };
 
-    compileAndRun(UIAccess.current(), () -> TransactionGuard.submitTransaction(project, startRunnable), environment, () -> {
+    compileAndRun(UIAccess.current(), startRunnable, environment, () -> {
       if (!project.isDisposed()) {
         myInProgress.remove(entry);
         project.getMessageBus().syncPublisher(ExecutionListener.class).processNotStarted(executor.getId(), environment);

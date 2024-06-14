@@ -1,15 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.execution.console;
 
-import consulo.ide.impl.idea.ide.GeneralSettings;
-import consulo.ui.ex.action.EmptyAction;
-import consulo.language.editor.highlight.EditorHighlighterFactory;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.util.lang.ObjectUtil;
 import consulo.application.ApplicationManager;
-import consulo.application.TransactionGuard;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorFactory;
@@ -24,12 +16,19 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.event.FileEditorManagerListener;
+import consulo.ide.impl.idea.ide.GeneralSettings;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.language.editor.highlight.EditorHighlighterFactory;
 import consulo.project.Project;
+import consulo.ui.ex.action.EmptyAction;
 import consulo.ui.ex.action.IdeActions;
+import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 
 import static consulo.ide.impl.idea.openapi.editor.actions.IncrementalFindAction.SEARCH_DISABLED;
@@ -66,7 +65,7 @@ public class ConsoleExecutionEditor implements Disposable {
     public void focusGained(@Nonnull Editor editor) {
       myCurrentEditor = (EditorEx)editor;
       if (GeneralSettings.getInstance().isSaveOnFrameDeactivation()) {
-        TransactionGuard.submitTransaction(ConsoleExecutionEditor.this, () -> FileDocumentManager.getInstance().saveAllDocuments()); // PY-12487
+        FileDocumentManager.getInstance().saveAllDocuments();
       }
     }
 

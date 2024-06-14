@@ -2,7 +2,6 @@
 package consulo.language.impl.internal.psi;
 
 import consulo.application.*;
-import consulo.application.internal.TransactionGuardEx;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
@@ -216,7 +215,6 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
   @Override
   public void commitAllDocuments() {
     ApplicationManager.getApplication().assertIsWriteThread();
-    ((TransactionGuardEx)TransactionGuard.getInstance()).assertWriteActionAllowed();
 
     if (myUncommittedDocuments.isEmpty()) return;
 
@@ -337,7 +335,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     final Document document = getTopLevelDocument(doc);
 
     if (isEventSystemEnabled(document)) {
-      ((TransactionGuardEx)TransactionGuard.getInstance()).assertWriteActionAllowed();
+      myProject.getApplication().assertWriteAccessAllowed();
     }
 
     if (!isCommitted(document)) {
@@ -594,7 +592,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     }
     actions.add(action);
 
-    if (modality != ModalityState.nonModal() && TransactionGuard.getInstance().isWriteSafeModality(modality)) {
+    if (modality != ModalityState.nonModal()) {
       // this client obviously expects all documents to be committed ASAP even inside modal dialog
       for (Document document : myUncommittedDocuments) {
         retainProviderAndCommitAsync(document, "re-added because performWhenAllCommitted(" + modality + ") was called", modality);

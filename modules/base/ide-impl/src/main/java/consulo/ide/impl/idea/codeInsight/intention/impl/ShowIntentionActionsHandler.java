@@ -2,45 +2,43 @@
 
 package consulo.ide.impl.idea.codeInsight.intention.impl;
 
-import consulo.language.editor.action.CodeInsightActionHandler;
-import consulo.language.editor.FileModificationService;
-import consulo.language.editor.DaemonCodeAnalyzer;
+import consulo.application.ApplicationManager;
+import consulo.application.WriteAction;
+import consulo.application.dumb.IndexNotReadyException;
+import consulo.application.util.registry.Registry;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.ScrollType;
+import consulo.externalService.impl.internal.statistic.FeatureUsageTrackerImpl;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.IntentionsUI;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.ShowIntentionsPass;
-import consulo.language.editor.hint.HintManager;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
+import consulo.ide.impl.idea.openapi.application.impl.ApplicationInfoImpl;
+import consulo.ide.impl.psi.stubs.StubTextInconsistencyException;
+import consulo.language.editor.DaemonCodeAnalyzer;
+import consulo.language.editor.FileModificationService;
+import consulo.language.editor.action.CodeInsightActionHandler;
+import consulo.language.editor.completion.lookup.LookupEx;
+import consulo.language.editor.completion.lookup.LookupManager;
+import consulo.language.editor.hint.HintManager;
+import consulo.language.editor.impl.internal.template.TemplateManagerImpl;
+import consulo.language.editor.impl.internal.template.TemplateStateImpl;
+import consulo.language.editor.inject.EditorWindow;
+import consulo.language.editor.inspection.SuppressIntentionActionFromFix;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.IntentionActionDelegate;
 import consulo.language.editor.intention.PsiElementBaseIntentionAction;
-import consulo.language.editor.completion.lookup.LookupEx;
-import consulo.language.editor.completion.lookup.LookupManager;
-import consulo.language.editor.impl.internal.template.TemplateManagerImpl;
-import consulo.language.editor.impl.internal.template.TemplateStateImpl;
-import consulo.language.editor.inspection.SuppressIntentionActionFromFix;
-import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.externalService.impl.internal.statistic.FeatureUsageTrackerImpl;
-import consulo.language.editor.inject.EditorWindow;
 import consulo.language.inject.InjectedLanguageManager;
-import consulo.application.ApplicationManager;
-import consulo.application.TransactionGuard;
-import consulo.application.WriteAction;
-import consulo.ide.impl.idea.openapi.application.impl.ApplicationInfoImpl;
-import consulo.undoRedo.CommandProcessor;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.ScrollType;
-import consulo.application.dumb.IndexNotReadyException;
-import consulo.project.Project;
-import consulo.util.lang.Pair;
-import consulo.application.util.registry.Registry;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
-import consulo.ide.impl.psi.stubs.StubTextInconsistencyException;
-import consulo.util.lang.function.PairProcessor;
+import consulo.project.Project;
+import consulo.undoRedo.CommandProcessor;
+import consulo.util.lang.Pair;
 import consulo.util.lang.ThreeState;
-
+import consulo.util.lang.function.PairProcessor;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -184,7 +182,7 @@ public class ShowIntentionActionsHandler implements CodeInsightActionHandler {
     Pair<PsiFile, Editor> pair = chooseFileForAction(hostFile, hostEditor, action);
     if (pair == null) return false;
 
-    CommandProcessor.getInstance().executeCommand(project, () -> TransactionGuard.getInstance().submitTransactionAndWait(() -> invokeIntention(action, pair.second, pair.first)), text, null);
+    CommandProcessor.getInstance().executeCommand(project, () -> invokeIntention(action, pair.second, pair.first), text, null);
 
     checkPsiTextConsistency(hostFile);
 

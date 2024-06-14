@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.openapi.actionSystem.ex;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.TransactionGuard;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.application.util.SystemInfo;
@@ -24,7 +23,6 @@ import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
-import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.PausesStat;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.util.ModuleUtilCore;
@@ -39,11 +37,12 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.util.TextWithMnemonic;
 import consulo.util.lang.Comparing;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -311,28 +310,11 @@ public class ActionUtil {
   }
 
   public static void performActionDumbAware(AnAction action, AnActionEvent e) {
-    Runnable runnable = new Runnable() {
-      @Override
-      public void run() {
-        try {
-          action.actionPerformed(e);
-        }
-        catch (IndexNotReadyException e1) {
-          showDumbModeWarning(e);
-        }
-      }
-
-      @Override
-      public String toString() {
-        return action + " of " + action.getClass();
-      }
-    };
-
-    if (action.startInTransaction()) {
-      TransactionGuard.getInstance().submitTransactionAndWait(runnable);
+    try {
+      action.actionPerformed(e);
     }
-    else {
-      runnable.run();
+    catch (IndexNotReadyException e1) {
+      showDumbModeWarning(e);
     }
   }
 

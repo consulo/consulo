@@ -18,9 +18,7 @@ package consulo.ide.impl.idea.find.actions;
 import consulo.application.AccessRule;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
-import consulo.application.TransactionGuard;
 import consulo.application.progress.ProgressIndicator;
-import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.application.util.function.Processor;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.application.util.registry.Registry;
@@ -30,6 +28,7 @@ import consulo.content.scope.SearchScope;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposer;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorLocation;
 import consulo.fileEditor.TextEditor;
@@ -46,7 +45,6 @@ import consulo.ide.impl.idea.openapi.actionSystem.PopupAction;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.text.AsyncEditorLoader;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
-import consulo.ui.ex.awt.util.PopupUtil;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.InplaceButton;
@@ -67,9 +65,9 @@ import consulo.language.psi.PsiReference;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
+import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
-import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.ActiveComponent;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
@@ -79,6 +77,7 @@ import consulo.ui.ex.awt.speedSearch.SpeedSearchComparator;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awt.table.ListTableModel;
 import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ex.awt.util.PopupUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.ex.popup.JBPopup;
@@ -88,10 +87,10 @@ import consulo.usage.*;
 import consulo.usage.rule.UsageFilteringRuleListener;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -178,11 +177,6 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
     myUsageViewSettings.GROUP_BY_PACKAGE = false;
     myUsageViewSettings.GROUP_BY_USAGE_TYPE = false;
     myUsageViewSettings.GROUP_BY_SCOPE = false;
-  }
-
-  @Override
-  public boolean startInTransaction() {
-    return true;
   }
 
   @Override
@@ -665,11 +659,6 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
           cancel(popup[0]);
           showDialogAndFindUsages(handler, popupPosition, editor, maxUsages);
         }
-
-        @Override
-        public boolean startInTransaction() {
-          return true;
-        }
       }.registerCustomShortcutSet(new CustomShortcutSet(shortcut.getFirstKeyStroke()), table);
     }
     shortcut = getShowUsagesShortcut();
@@ -679,11 +668,6 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
         public void actionPerformed(@Nonnull AnActionEvent e) {
           cancel(popup[0]);
           searchEverywhere(options, handler, editor, popupPosition, maxUsages);
-        }
-
-        @Override
-        public boolean startInTransaction() {
-          return true;
         }
       }.registerCustomShortcutSet(new CustomShortcutSet(shortcut.getFirstKeyStroke()), table);
     }
@@ -738,11 +722,6 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
       {
         AnAction action = ActionManager.getInstance().getAction(IdeActions.ACTION_FIND_USAGES);
         setShortcutSet(action.getShortcutSet());
-      }
-
-      @Override
-      public boolean startInTransaction() {
-        return true;
       }
 
       @Override
@@ -1051,7 +1030,7 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
   }
 
   private void appendMoreUsages(Editor editor, @Nonnull RelativePoint popupPosition, @Nonnull FindUsagesHandler handler, int maxUsages, @Nonnull FindUsagesOptions options) {
-    TransactionGuard.submitTransaction(handler.getProject(), () -> showElementUsages(editor, popupPosition, handler, maxUsages + getUsagesPageSize(), options));
+    showElementUsages(editor, popupPosition, handler, maxUsages + getUsagesPageSize(), options);
   }
 
   private static void addUsageNodes(@Nonnull GroupNode root, @Nonnull final UsageViewImpl usageView, @Nonnull List<UsageNode> outNodes) {

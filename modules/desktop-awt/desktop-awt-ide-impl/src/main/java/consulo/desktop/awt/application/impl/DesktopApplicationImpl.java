@@ -102,8 +102,6 @@ public class DesktopApplicationImpl extends BaseApplication {
   private final boolean myHeadlessMode;
   private final boolean myIsInternal;
 
-  private DesktopTransactionGuardImpl myTransactionGuardImpl;
-
   private volatile boolean myDisposeInProgress;
 
   public DesktopApplicationImpl(
@@ -172,24 +170,9 @@ public class DesktopApplicationImpl extends BaseApplication {
     return super.getProfiles() | ComponentProfiles.AWT;
   }
 
-  private DesktopTransactionGuardImpl transactionGuard() {
-    if (myTransactionGuardImpl == null) {
-      myTransactionGuardImpl = new DesktopTransactionGuardImpl();
-    }
-    return myTransactionGuardImpl;
-  }
-
-  @Nonnull
-  @Override
-  protected Runnable wrapLaterInvocation(Runnable action, IdeaModalityState state) {
-    return transactionGuard().wrapLaterInvocation(action, state);
-  }
-
   @Override
   protected void bootstrapInjectingContainer(@Nonnull InjectingContainerBuilder builder) {
     super.bootstrapInjectingContainer(builder);
-
-    builder.bind(TransactionGuard.class).to(transactionGuard());
   }
 
   @RequiredUIAccess
@@ -253,8 +236,7 @@ public class DesktopApplicationImpl extends BaseApplication {
     @Nonnull final consulo.ui.ModalityState state,
     @Nonnull final BooleanSupplier expired
   ) {
-    Runnable r = transactionGuard().wrapLaterInvocation(runnable, (IdeaModalityState)state);
-    LaterInvocator.invokeLaterWithCallback(() -> runIntendedWriteActionOnCurrentThread(r), state, expired, null);
+    LaterInvocator.invokeLaterWithCallback(() -> runIntendedWriteActionOnCurrentThread(runnable), state, expired, null);
   }
 
   @RequiredUIAccess
@@ -354,8 +336,7 @@ public class DesktopApplicationImpl extends BaseApplication {
       throw new IllegalStateException("Calling invokeAndWait from read-action leads to possible deadlock.");
     }
 
-    Runnable r = transactionGuard().wrapLaterInvocation(runnable, (IdeaModalityState)modalityState);
-    LaterInvocator.invokeAndWait(() -> runIntendedWriteActionOnCurrentThread(r), (IdeaModalityState)modalityState);
+    LaterInvocator.invokeAndWait(() -> runIntendedWriteActionOnCurrentThread(runnable), modalityState);
   }
 
   @Override

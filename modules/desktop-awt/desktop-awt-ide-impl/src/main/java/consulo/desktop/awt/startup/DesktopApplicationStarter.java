@@ -194,10 +194,10 @@ public class DesktopApplicationStarter extends ApplicationStarter {
       RecentProjectsManagerBase recentProjectsManager = (RecentProjectsManagerBase)RecentProjectsManager.getInstance();
 
       if (recentProjectsManager.willReopenProjectOnStart() && !args.isNoRecentProjects()) {
-        app.invokeLater(windowManager::showFrame, IdeaModalityState.any());
+        SwingUtilities.invokeLater(windowManager::showFrame);
       }
       else {
-        app.invokeLater(() -> WelcomeFrameManager.getInstance().showFrame(), IdeaModalityState.any());
+        SwingUtilities.invokeLater(() -> WelcomeFrameManager.getInstance().showFrame());
       }
 
       app.invokeLater(() -> {
@@ -218,7 +218,7 @@ public class DesktopApplicationStarter extends ApplicationStarter {
         SwingUtilities.invokeLater(() -> reportPluginError(myPluginsInitializeInfo));
 
         UsageTrigger.trigger("consulo.app.started");
-      }, IdeaModalityState.NON_MODAL);
+      }, app.getNoneModalityState());
     }
   }
 

@@ -2,10 +2,7 @@
 
 package consulo.ide.impl.idea.codeInsight.completion;
 
-import consulo.application.AppUIExecutor;
-import consulo.application.ApplicationManager;
-import consulo.application.TransactionGuard;
-import consulo.application.WriteAction;
+import consulo.application.*;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
 import consulo.application.util.registry.Registry;
@@ -531,12 +528,7 @@ public class CodeCompletionHandlerBase {
         }
         indicator.disposeIndicator();
       };
-      if (isTestingMode()) {
-        wrapper.run();
-      }
-      else {
-        TransactionGuard.getInstance().submitTransactionLater(indicator, wrapper);
-      }
+      Application.get().invokeLater(wrapper);
     }
     else {
       indicator.disposeIndicator();

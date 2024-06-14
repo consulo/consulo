@@ -2,7 +2,6 @@
 package consulo.ide.impl.idea.xdebugger.impl.ui;
 
 import consulo.application.ApplicationManager;
-import consulo.application.TransactionGuard;
 import consulo.codeEditor.DocumentMarkupModel;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
@@ -23,18 +22,18 @@ import consulo.execution.debug.ui.DebuggerColors;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
-import consulo.ide.impl.idea.openapi.editor.impl.EditorMouseHoverPopupControl;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
-import consulo.project.ui.util.AppUIUtil;
+import consulo.ide.impl.idea.openapi.editor.impl.EditorMouseHoverPopupControl;
 import consulo.ide.impl.idea.xdebugger.impl.XDebuggerUtilImpl;
 import consulo.ide.impl.idea.xdebugger.impl.XSourcePositionImpl;
 import consulo.ide.impl.idea.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
 import consulo.project.Project;
+import consulo.project.ui.util.AppUIUtil;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -62,24 +61,21 @@ public class ExecutionPointHighlighter {
 
   public void show(final @Nonnull XSourcePosition position, final boolean notTopFrame, @Nullable final GutterIconRenderer gutterIconRenderer) {
     updateRequested.set(false);
-    TransactionGuard.submitTransaction(myProject, () -> {
-      updateRequested.set(false);
 
-      mySourcePosition = position;
+    mySourcePosition = position;
 
-      clearDescriptor();
-      myOpenFileDescriptor = XSourcePositionImpl.createOpenFileDescriptor(myProject, position);
-      if (!XDebuggerSettingManagerImpl.getInstanceImpl().getGeneralSettings().isScrollToCenter()) {
-        myOpenFileDescriptor.setScrollType(notTopFrame ? ScrollType.CENTER : ScrollType.MAKE_VISIBLE);
-      }
-      //see IDEA-125645 and IDEA-63459
-      //myOpenFileDescriptor.setUseCurrentWindow(true);
+    clearDescriptor();
+    myOpenFileDescriptor = XSourcePositionImpl.createOpenFileDescriptor(myProject, position);
+    if (!XDebuggerSettingManagerImpl.getInstanceImpl().getGeneralSettings().isScrollToCenter()) {
+      myOpenFileDescriptor.setScrollType(notTopFrame ? ScrollType.CENTER : ScrollType.MAKE_VISIBLE);
+    }
+    //see IDEA-125645 and IDEA-63459
+    //myOpenFileDescriptor.setUseCurrentWindow(true);
 
-      myGutterIconRenderer = gutterIconRenderer;
-      myNotTopFrame = notTopFrame;
+    myGutterIconRenderer = gutterIconRenderer;
+    myNotTopFrame = notTopFrame;
 
-      doShow(true);
-    });
+    doShow(true);
   }
 
   public void hide() {

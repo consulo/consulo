@@ -20,7 +20,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.AccessRule;
 import consulo.application.ApplicationManager;
-import consulo.application.TransactionGuard;
 import consulo.application.WriteAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
@@ -60,11 +59,11 @@ import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.StandardFileSystems;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -569,7 +568,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Persist
 
   protected void fireModulesAdded() {
     for (final Module module : myModuleModel.myModules) {
-      TransactionGuard.getInstance().submitTransactionAndWait(() -> fireModuleAddedInWriteAction(module));
+      fireModuleAddedInWriteAction(module);
     }
   }
 

@@ -2,41 +2,40 @@
 package consulo.ide.impl.idea.openapi.roots.impl;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
 import consulo.application.WriteAction;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.module.content.*;
-import consulo.component.extension.ExtensionException;
-import consulo.module.Module;
-import consulo.module.ModuleManager;
-import consulo.application.ReadAction;
-import consulo.module.content.layer.event.ModuleRootEvent;
-import consulo.module.content.layer.event.ModuleRootListener;
-import consulo.component.ProcessCanceledException;
+import consulo.application.impl.internal.progress.ProgressWrapper;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.application.impl.internal.progress.ProgressWrapper;
-import consulo.ide.impl.idea.openapi.project.*;
 import consulo.application.util.ClearableLazyValue;
-import consulo.util.lang.function.Condition;
-import consulo.util.lang.EmptyRunnable;
+import consulo.component.ProcessCanceledException;
+import consulo.component.extension.ExtensionException;
+import consulo.ide.impl.idea.openapi.project.CacheUpdateRunner;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.project.*;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.impl.internal.psi.PsiManagerEx;
-import consulo.language.impl.internal.file.FileManagerImpl;
-import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.psi.stub.FileBasedIndex;
 import consulo.ide.impl.idea.util.indexing.FileBasedIndexProjectHandler;
-import consulo.application.ApplicationManager;
-import consulo.application.TransactionGuard;
+import consulo.language.impl.internal.file.FileManagerImpl;
+import consulo.language.impl.internal.psi.PsiManagerEx;
+import consulo.language.psi.stub.FileBasedIndex;
 import consulo.logging.Logger;
+import consulo.module.Module;
+import consulo.module.ModuleManager;
+import consulo.module.content.*;
+import consulo.module.content.layer.event.ModuleRootEvent;
+import consulo.module.content.layer.event.ModuleRootListener;
+import consulo.project.*;
+import consulo.ui.ex.awt.internal.GuiUtils;
+import consulo.util.lang.EmptyRunnable;
+import consulo.util.lang.function.Condition;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.*;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -413,7 +412,7 @@ public final class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesU
         runnable.run();
       }
       else {
-        TransactionGuard.submitTransaction(project, runnable);
+        project.getUIAccess().give(runnable);
       }
     }
   }

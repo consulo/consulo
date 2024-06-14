@@ -25,11 +25,6 @@ import consulo.project.ProjectManager;
 import consulo.ui.annotation.RequiredUIAccess;
 
 public class ShowStructureSettingsAction extends AnAction implements DumbAware {
-  @Override
-  public boolean startInTransaction() {
-    return true;
-  }
-
   @RequiredUIAccess
   @Override
   public void actionPerformed(AnActionEvent e) {

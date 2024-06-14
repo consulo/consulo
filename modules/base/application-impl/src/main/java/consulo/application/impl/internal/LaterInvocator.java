@@ -1,9 +1,6 @@
 // Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.impl.internal;
 
-import consulo.application.TransactionGuard;
-import consulo.application.impl.internal.start.ApplicationStarterCore;
-import consulo.application.internal.TransactionGuardEx;
 import consulo.application.util.Semaphore;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
@@ -177,11 +174,6 @@ public final class LaterInvocator {
       ourModalityStack.push(appendedState);
     }
 
-    TransactionGuardEx guard = ApplicationStarterCore.isLoaded() ? (TransactionGuardEx)TransactionGuard.getInstance() : null;
-    if (guard != null) {
-      guard.enteredModality(appendedState);
-    }
-
     reincludeSkippedItemsAndRequestFlush();
   }
 
@@ -248,6 +240,8 @@ public final class LaterInvocator {
   }
 
   private static void removeModality(@Nonnull Object modalEntity, int index) {
+    assertIsDispatchThread();
+
     ourModalEntities.remove(index);
     synchronized (ourModalityStack) {
       ourModalityStack.remove(index + 1);

@@ -18,9 +18,7 @@ package consulo.desktop.awt.ui.keymap;
 import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.TransactionGuard;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.internal.TransactionGuardEx;
 import consulo.application.util.registry.Registry;
 import consulo.awt.hacking.AWTKeyStrokeHacking;
 import consulo.dataContext.DataContext;
@@ -655,7 +653,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
         return true;
       }
 
-      ((TransactionGuardEx)TransactionGuard.getInstance()).performUserActivity(() -> processor.performAction(e, action, actionEvent));
+      processor.performAction(e, action, actionEvent);
       actionManager.fireAfterActionPerformed(action, actionEvent.getDataContext(), actionEvent);
       return true;
     }
@@ -880,13 +878,11 @@ public final class IdeKeyEventDispatcher implements Disposable {
     }
 
     private static void invokeAction(@Nonnull final AnAction action, final DataContext ctx) {
-      TransactionGuard.submitTransaction(ApplicationManager.getApplication(), () -> {
-        final AnActionEvent event =
-          new AnActionEvent(null, ctx, ActionPlaces.UNKNOWN, action.getTemplatePresentation().clone(), ActionManager.getInstance(), 0);
-        if (ActionUtil.lastUpdateAndCheckDumb(action, event, true)) {
-          ActionUtil.performActionDumbAware(action, event);
-        }
-      });
+      final AnActionEvent event =
+        new AnActionEvent(null, ctx, ActionPlaces.UNKNOWN, action.getTemplatePresentation().clone(), ActionManager.getInstance(), 0);
+      if (ActionUtil.lastUpdateAndCheckDumb(action, event, true)) {
+        ActionUtil.performActionDumbAware(action, event);
+      }
     }
 
     @Override

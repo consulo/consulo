@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.openapi.project.impl;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.application.TransactionGuard;
 import consulo.application.WriteAction;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.impl.internal.LaterInvocator;
@@ -40,7 +39,6 @@ import consulo.ide.impl.idea.conversion.ConversionResult;
 import consulo.ide.impl.idea.conversion.ConversionService;
 import consulo.ide.impl.idea.ide.impl.ProjectUtil;
 import consulo.ide.impl.idea.ide.startup.impl.StartupManagerImpl;
-import consulo.module.impl.internal.ModuleManagerComponent;
 import consulo.ide.impl.idea.openapi.project.ProjectReloadState;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.impl.ZipHandler;
@@ -48,6 +46,7 @@ import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.language.impl.internal.psi.SingleProjectHolder;
 import consulo.logging.Logger;
 import consulo.module.ModuleManager;
+import consulo.module.impl.internal.ModuleManagerComponent;
 import consulo.module.impl.internal.ModuleManagerImpl;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
@@ -223,7 +222,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
     }
     finally {
       if (!succeed && !project.isDefault()) {
-        TransactionGuard.submitTransaction(project, () -> WriteAction.run(() -> Disposer.dispose(project)));
+        WriteAction.run(() -> Disposer.dispose(project));
       }
     }
   }
@@ -708,7 +707,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
     }
     finally {
       if (!succeed && !project.isDefault()) {
-        TransactionGuard.submitTransaction(project, () -> WriteAction.run(() -> Disposer.dispose(project)));
+        project.getUIAccess().give(() -> WriteAction.run(() -> Disposer.dispose(project)));
       }
     }
   }
