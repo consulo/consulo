@@ -1,7 +1,6 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.projectView.impl;
 
-import consulo.application.TransactionGuard;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.ide.dnd.FileCopyPasteUtil;
@@ -258,12 +257,22 @@ abstract class ProjectViewDropTarget implements DnDNativeTarget {
       if (target == null) return;
 
       if (DumbService.isDumb(myProject)) {
-        Messages.showMessageDialog(myProject, "Move refactoring is not available while indexing is in progress", "Indexing", null);
+        Messages.showMessageDialog(
+          myProject,
+          "Move refactoring is not available while indexing is in progress",
+          "Indexing",
+          null
+        );
         return;
       }
 
       if (!myProject.isInitialized()) {
-        Messages.showMessageDialog(myProject, "Move refactoring is not available while project initialization is in progress", "Project Initialization", null);
+        Messages.showMessageDialog(
+          myProject,
+          "Move refactoring is not available while project initialization is in progress",
+          "Project Initialization",
+          null
+        );
         return;
       }
 
@@ -277,7 +286,7 @@ abstract class ProjectViewDropTarget implements DnDNativeTarget {
       }
 
       DataContext context = new DataContext() {
-        @jakarta.annotation.Nullable
+        @Nullable
         @Override
         public <T> T getData(@Nonnull Key<T> dataId) {
           if (LangDataKeys.TARGET_MODULE == dataId) {
@@ -291,7 +300,7 @@ abstract class ProjectViewDropTarget implements DnDNativeTarget {
           }
         }
       };
-      TransactionGuard.getInstance().submitTransactionAndWait(() -> getActionHandler().invoke(myProject, sources, context));
+      getActionHandler().invoke(myProject, sources, context);
     }
 
     private RefactoringActionHandler getActionHandler() {
@@ -363,7 +372,7 @@ abstract class ProjectViewDropTarget implements DnDNativeTarget {
         LOG.assertTrue(containingFile != null, targetElement);
         psiDirectory = containingFile.getContainingDirectory();
       }
-      TransactionGuard.getInstance().submitTransactionAndWait(() -> CopyHandler.doCopy(sources, psiDirectory));
+      CopyHandler.doCopy(sources, psiDirectory);
     }
 
     @Override

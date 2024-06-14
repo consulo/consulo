@@ -472,7 +472,7 @@ public class CommanderPanel extends JPanel {
     if (LangDataKeys.PASTE_TARGET_PSI_ELEMENT == dataId) {
       final AbstractTreeNode parentNode = myBuilder.getParentNode();
       final Object element = parentNode != null ? parentNode.getValue() : null;
-      return element instanceof PsiElement && ((PsiElement)element).isValid() ? element : null;
+      return element instanceof PsiElement psiElement && psiElement.isValid() ? element : null;
     }
     if (Navigatable.KEY_OF_ARRAY == dataId) {
       return getNavigatables();
@@ -607,7 +607,7 @@ public class CommanderPanel extends JPanel {
             });
           }
         },
-        IdeaModalityState.NON_MODAL
+        IdeaModalityState.nonModal()
       );
     }
 

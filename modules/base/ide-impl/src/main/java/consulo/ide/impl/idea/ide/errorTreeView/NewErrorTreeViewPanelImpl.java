@@ -102,7 +102,13 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
     this(project, helpId, createExitAction, createToolbar, null);
   }
 
-  public NewErrorTreeViewPanelImpl(Project project, String helpId, boolean createExitAction, boolean createToolbar, @Nullable Runnable rerunAction) {
+  public NewErrorTreeViewPanelImpl(
+    Project project,
+    String helpId,
+    boolean createExitAction,
+    boolean createToolbar,
+    @Nullable Runnable rerunAction
+  ) {
     myProject = project;
     myHelpId = helpId;
     myConfiguration = ErrorTreeViewConfiguration.getInstance(project);
@@ -448,19 +454,21 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
       return;
     }
     myUpdateAlarm.cancelAllRequests();
-    myUpdateAlarm.addRequest(() -> {
-      final float fraction = myFraction;
-      final String text = myProgressText;
-      if (fraction > 0.0f) {
-        myProgressLabel.setText((int)(fraction * 100 + 0.5) + "%  " + text);
-      }
-      else {
-        myProgressLabel.setText(text);
-      }
-    }, 50, IdeaModalityState.NON_MODAL);
-
+    myUpdateAlarm.addRequest(
+      () -> {
+        final float fraction = myFraction;
+        final String text = myProgressText;
+        if (fraction > 0.0f) {
+          myProgressLabel.setText((int)(fraction * 100 + 0.5) + "%  " + text);
+        }
+        else {
+          myProgressLabel.setText(text);
+        }
+      },
+      50,
+      IdeaModalityState.nonModal()
+    );
   }
-
 
   private void initProgressPanel() {
     if (myProgressPanel == null) {
