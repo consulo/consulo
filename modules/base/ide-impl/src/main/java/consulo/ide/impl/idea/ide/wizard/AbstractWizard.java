@@ -1,29 +1,24 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.wizard;
 
-import consulo.application.CommonBundle;
-import consulo.ide.IdeBundle;
 import consulo.application.ApplicationManager;
 import consulo.application.HelpManager;
-import consulo.project.Project;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.Messages;
-import consulo.application.util.SystemInfo;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.ui.ex.awt.JBCardLayout;
-import consulo.ui.ex.awt.OpaquePanel;
 import consulo.ide.impl.idea.ui.mac.TouchbarDataKeys;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.logging.Logger;
-import org.jetbrains.annotations.NonNls;
-
+import consulo.platform.Platform;
+import consulo.platform.base.localize.CommonLocalize;
+import consulo.platform.base.localize.IdeLocalize;
+import consulo.project.Project;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.update.UiNotifyConnector;
+import consulo.ui.style.StyleManager;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -45,12 +40,7 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
   private Component myCurrentStepComponent;
   private JBCardLayout.SwipeDirection myTransitionDirection = JBCardLayout.SwipeDirection.AUTO;
   private final Map<Component, String> myComponentToIdMap = new HashMap<>();
-  private final StepListener myStepListener = new StepListener() {
-    @Override
-    public void stateChanged() {
-      updateStep();
-    }
-  };
+  private final StepListener myStepListener = () -> updateStep();
 
   public AbstractWizard(final String title, final Component dialogParent) {
     super(dialogParent, true);
@@ -67,29 +57,27 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
   private void initWizard(final String title) {
     setTitle(title);
     myCurrentStep = 0;
-    myPreviousButton = new JButton(IdeBundle.message("button.wizard.previous"));
-    myNextButton = new JButton(IdeBundle.message("button.wizard.next"));
-    myCancelButton = new JButton(CommonBundle.getCancelButtonText());
-    myHelpButton = new JButton(CommonBundle.getHelpButtonText());
+    myPreviousButton = new JButton(IdeLocalize.buttonWizardPrevious().get());
+    myNextButton = new JButton(IdeLocalize.buttonWizardNext().get());
+    myCancelButton = new JButton(CommonLocalize.buttonCancel().get());
+    myHelpButton = new JButton(CommonLocalize.buttonHelp().get());
     myContentPanel = new JPanel(new JBCardLayout());
 
     myIcon = new TallImageComponent(null);
 
     JRootPane rootPane = getRootPane();
     if (rootPane != null) {        // it will be null in headless mode, i.e. tests
-      rootPane.registerKeyboardAction(new ActionListener() {
-        @Override
-        public void actionPerformed(final ActionEvent e) {
-          helpAction();
-        }
-      }, KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
+      rootPane.registerKeyboardAction(
+        e -> helpAction(),
+        KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0),
+        JComponent.WHEN_IN_FOCUSED_WINDOW
+      );
 
-      rootPane.registerKeyboardAction(new ActionListener() {
-        @Override
-        public void actionPerformed(final ActionEvent e) {
-          helpAction();
-        }
-      }, KeyStroke.getKeyStroke(KeyEvent.VK_HELP, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
+      rootPane.registerKeyboardAction(
+        e -> helpAction(),
+        KeyStroke.getKeyStroke(KeyEvent.VK_HELP, 0),
+        JComponent.WHEN_IN_FOCUSED_WINDOW
+      );
     }
   }
 
@@ -100,11 +88,11 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
 
     JPanel buttonPanel = new JPanel();
 
-    if (SystemInfo.isMac) {
+    if (Platform.current().os().isMac()) {
       panel.add(buttonPanel, BorderLayout.EAST);
       buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
 
-      if (!UIUtil.isUnderDarcula()) {
+      if (!StyleManager.get().getCurrentStyle().isDark()) {
         myHelpButton.putClientProperty("JButton.buttonType", "help");
       }
 
@@ -148,48 +136,30 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
     }
 
     myPreviousButton.setEnabled(false);
-    myPreviousButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(final ActionEvent e) {
-        doPreviousAction();
+    myPreviousButton.addActionListener(e -> doPreviousAction());
+    myNextButton.addActionListener(e -> {
+      if (isLastStep()) {
+        // Commit data of current step and perform OK action
+        final Step currentStep = mySteps.get(myCurrentStep);
+        LOG.assertTrue(currentStep != null);
+        try {
+          currentStep._commit(true);
+          doOKAction();
+        }
+        catch (final CommitStepException exc) {
+          String message = exc.getMessage();
+          if (message != null) {
+            Messages.showErrorDialog(myContentPanel, message);
+          }
+        }
       }
-    });
-    myNextButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(final ActionEvent e) {
-        if (isLastStep()) {
-          // Commit data of current step and perform OK action
-          final Step currentStep = mySteps.get(myCurrentStep);
-          LOG.assertTrue(currentStep != null);
-          try {
-            currentStep._commit(true);
-            doOKAction();
-          }
-          catch (final CommitStepException exc) {
-            String message = exc.getMessage();
-            if (message != null) {
-              Messages.showErrorDialog(myContentPanel, message);
-            }
-          }
-        }
-        else {
-          doNextAction();
-        }
+      else {
+        doNextAction();
       }
     });
 
-    myCancelButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(final ActionEvent e) {
-        doCancelAction();
-      }
-    });
-    myHelpButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(final ActionEvent e) {
-        helpAction();
-      }
-    });
+    myCancelButton.addActionListener(e -> doCancelAction());
+    myHelpButton.addActionListener(e -> helpAction());
 
     return panel;
   }
@@ -284,8 +254,8 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
   public void addStep(@Nonnull final T step, int index) {
     mySteps.add(index, step);
 
-    if (step instanceof StepAdapter) {
-      ((StepAdapter)step).registerStepListener(myStepListener);
+    if (step instanceof StepAdapter stepAdapter) {
+      stepAdapter.registerStepListener(myStepListener);
     }
     // card layout is used
     final Component component = step.getComponent();
@@ -464,15 +434,15 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
   public void updateButtons(boolean lastStep, boolean canGoNext, boolean firstStep) {
     if (lastStep) {
       if (mySteps.size() > 1) {
-        myNextButton.setText(UIUtil.removeMnemonic(IdeBundle.message("button.finish")));
+        myNextButton.setText(UIUtil.removeMnemonic(IdeLocalize.buttonFinish().get()));
         myNextButton.setMnemonic('F');
       }
       else {
-        myNextButton.setText(IdeBundle.message("button.ok"));
+        myNextButton.setText(IdeLocalize.buttonOk().get());
       }
     }
     else {
-      myNextButton.setText(UIUtil.removeMnemonic(IdeBundle.message("button.wizard.next")));
+      myNextButton.setText(UIUtil.removeMnemonic(IdeLocalize.buttonWizardNext().get()));
       myNextButton.setMnemonic('N');
     }
     myNextButton.setEnabled(canGoNext);

@@ -55,9 +55,8 @@ public class RemoveBomAction extends AnAction implements DumbAware {
     for (VirtualFile virtualFile : filesToProcess) {
       byte[] bom = virtualFile.getBOM();
       assert bom != null;
-      if (virtualFile instanceof NewVirtualFile) {
+      if (virtualFile instanceof NewVirtualFile file) {
         virtualFile.setBOM(null);
-        NewVirtualFile file = (NewVirtualFile)virtualFile;
         try {
           byte[] bytes = file.contentsToByteArray();
           byte[] contentWithStrippedBom = new byte[bytes.length - bom.length];

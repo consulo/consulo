@@ -54,10 +54,10 @@ public class BackspaceAction extends EditorAction {
     public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
       MacUIUtil.hideCursor();
       CommandProcessor.getInstance().setCurrentCommandGroupId(EditorActionUtil.DELETE_COMMAND_GROUP);
-      if (editor instanceof EditorWindow) {
+      if (editor instanceof EditorWindow editorWindow) {
         // manipulate actual document/editor instead of injected
         // since the latter have trouble finding the right location of caret movement in the case of multi-shred injected fragments
-        editor = ((EditorWindow)editor).getDelegate();
+        editor = editorWindow.getDelegate();
       }
       doBackSpaceAtCaret(editor);
     }

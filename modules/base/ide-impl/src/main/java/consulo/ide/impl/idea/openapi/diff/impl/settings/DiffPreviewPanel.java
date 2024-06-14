@@ -12,6 +12,7 @@ import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.codeEditor.event.EditorMouseMotionListener;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.diff.content.DiffContent;
+import consulo.diff.localize.DiffLocalize;
 import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.util.ThreeSide;
 import consulo.disposer.Disposer;
@@ -26,15 +27,14 @@ import consulo.ide.impl.idea.diff.tools.util.base.IgnorePolicy;
 import consulo.ide.impl.idea.diff.util.DiffLineSeparatorRenderer;
 import consulo.ide.impl.idea.diff.util.DiffUtil;
 import consulo.ide.impl.idea.diff.util.TextDiffTypeFactory.TextDiffTypeImpl;
-import consulo.ide.impl.idea.openapi.diff.DiffBundle;
 import consulo.ide.impl.idea.util.EventDispatcher;
-import consulo.util.lang.ObjectUtil;
 import consulo.project.Project;
 import consulo.ui.ex.awt.JBUI;
-import org.jetbrains.annotations.TestOnly;
-
+import consulo.util.lang.ObjectUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.TestOnly;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
@@ -111,7 +111,7 @@ class DiffPreviewPanel implements PreviewPanel {
     @Nullable
     @Override
     public String getTitle() {
-      return DiffBundle.message("merge.color.options.dialog.title");
+      return DiffLocalize.mergeColorOptionsDialogTitle().get();
     }
   }
 

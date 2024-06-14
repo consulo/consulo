@@ -10,8 +10,9 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ui.style.StyleManager;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.ui.BalloonImpl;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.ui.color.ColorValue;
@@ -461,7 +462,7 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
 
   @SuppressWarnings({"UnusedParameters"})
   public String getUlImg(boolean awtTooltip) {
-    return UIUtil.isUnderDarcula() ? "/general/mdot-white.png" : "/general/mdot.png";
+    return StyleManager.get().getCurrentStyle().isDark() ? "/general/mdot-white.png" : "/general/mdot.png";
   }
 
   @SuppressWarnings({"UnusedParameters"})

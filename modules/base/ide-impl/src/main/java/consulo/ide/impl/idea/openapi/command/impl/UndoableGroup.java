@@ -15,28 +15,29 @@
  */
 package consulo.ide.impl.idea.openapi.command.impl;
 
-import consulo.application.CommonBundle;
+import consulo.application.ApplicationManager;
+import consulo.document.DocumentReference;
+import consulo.document.internal.DocumentEx;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.psi.PsiDocumentManager;
 import consulo.localHistory.LocalHistory;
 import consulo.localHistory.LocalHistoryAction;
-import consulo.application.ApplicationManager;
-import consulo.undoRedo.UndoConfirmationPolicy;
-import consulo.document.DocumentReference;
-import consulo.undoRedo.UndoableAction;
-import consulo.undoRedo.UnexpectedUndoException;
-import consulo.document.internal.DocumentEx;
+import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.undoRedo.UndoConfirmationPolicy;
+import consulo.undoRedo.UndoableAction;
+import consulo.undoRedo.UnexpectedUndoException;
 import consulo.undoRedo.internal.FinishMarkAction;
 import consulo.undoRedo.internal.StartMarkAction;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.logging.Logger;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.*;
 
 class UndoableGroup {
@@ -102,8 +103,10 @@ class UndoableGroup {
   private void undoOrRedo(boolean isUndo) {
     LocalHistoryAction action;
     if (myProject != null && isGlobal()) {
-      String actionName = CommonBundle.message(isUndo ? "local.vcs.action.name.undo.command" : "local.vcs.action.name.redo.command", myCommandName);
-      action = LocalHistory.getInstance().startAction(actionName);
+      LocalizeValue actionName = isUndo
+        ? CommonLocalize.localVcsActionNameUndoCommand(myCommandName)
+        : CommonLocalize.localVcsActionNameRedoCommand(myCommandName);
+      action = LocalHistory.getInstance().startAction(actionName.get());
     }
     else {
       action = LocalHistoryAction.NULL;
@@ -176,30 +179,20 @@ class UndoableGroup {
     final List<FinishMarkAction> finishMarks = new ArrayList<>();
     final List<StartMarkAction> startMarks = new ArrayList<>();
     for (UndoableAction action : myActions) {
-      if (action instanceof StartMarkAction) {
-        startMarks.add((StartMarkAction)action);
-      } else if (action instanceof FinishMarkAction) {
-        finishMarks.add((FinishMarkAction)action);
+      if (action instanceof StartMarkAction startMarkAction) {
+        startMarks.add(startMarkAction);
+      } else if (action instanceof FinishMarkAction finishMarkAction) {
+        finishMarks.add(finishMarkAction);
       }
     }
     final int startNmb = startMarks.size();
     final int finishNmb = finishMarks.size();
     if (startNmb != finishNmb) {
       if (isUndo) {
-        if (finishNmb > startNmb) {
-          return true;
-        }
-        else {
-          return false;
-        }
+        return finishNmb > startNmb;
       }
       else {
-        if (startNmb > finishNmb) {
-          return true;
-        }
-        else {
-          return false;
-        }
+        return startNmb > finishNmb;
       }
     }
     return isInsideStartFinishGroup;
@@ -256,12 +249,12 @@ class UndoableGroup {
     String message;
 
     if (isUndo) {
-      title = CommonBundle.message("cannot.undo.dialog.title");
-      message = CommonBundle.message("cannot.undo.message");
+      title = CommonLocalize.cannotUndoDialogTitle().get();
+      message = CommonLocalize.cannotUndoMessage().get();
     }
     else {
-      title = CommonBundle.message("cannot.redo.dialog.title");
-      message = CommonBundle.message("cannot.redo.message");
+      title = CommonLocalize.cannotRedoDialogTitle().get();
+      message = CommonLocalize.cannotRedoMessage().get();
     }
 
     if (!ApplicationManager.getApplication().isUnitTestMode()) {
@@ -307,11 +300,11 @@ class UndoableGroup {
 
   public String getCommandName() {
     for (UndoableAction action : myActions) {
-      if (action instanceof StartMarkAction) {
-        String commandName = ((StartMarkAction)action).getCommandName();
+      if (action instanceof StartMarkAction startMarkAction) {
+        String commandName = startMarkAction.getCommandName();
         if (commandName != null) return commandName;
-      } else if (action instanceof FinishMarkAction) {
-        String commandName = ((FinishMarkAction)action).getCommandName();
+      } else if (action instanceof FinishMarkAction finishMarkAction) {
+        String commandName = finishMarkAction.getCommandName();
         if (commandName != null) return commandName;
       }
     }
@@ -325,7 +318,7 @@ class UndoableGroup {
   @Nullable
   public StartMarkAction getStartMark() {
     for (UndoableAction action : myActions) {
-      if (action instanceof StartMarkAction) return (StartMarkAction)action;
+      if (action instanceof StartMarkAction startMarkAction) return startMarkAction;
     }
     return null;
   }
@@ -333,7 +326,7 @@ class UndoableGroup {
   @Nullable
   public FinishMarkAction getFinishMark() {
     for (UndoableAction action : myActions) {
-      if (action instanceof FinishMarkAction) return (FinishMarkAction)action;
+      if (action instanceof FinishMarkAction finishMarkAction) return finishMarkAction;
     }
     return null;
   }

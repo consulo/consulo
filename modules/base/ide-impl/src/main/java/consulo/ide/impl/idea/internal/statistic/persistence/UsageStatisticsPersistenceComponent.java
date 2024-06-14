@@ -22,7 +22,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.externalService.statistic.ConvertUsagesUtil;
 import consulo.externalService.statistic.UsageDescriptor;
 import consulo.ide.impl.idea.internal.statistic.configurable.SendPeriod;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;

@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.index;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.psi.stubs.StubUpdatingIndex;
 import consulo.ide.impl.psi.stubs.provided.StubProvidedIndexExtension;
 import consulo.language.psi.stub.FileBasedIndexExtension;

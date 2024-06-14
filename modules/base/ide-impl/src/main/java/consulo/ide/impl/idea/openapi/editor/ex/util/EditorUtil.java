@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.openapi.editor.ex.util;
 import consulo.application.ApplicationManager;
 import consulo.application.WriteAction;
 import consulo.application.ui.UISettings;
-import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.*;
@@ -41,11 +40,11 @@ import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.text.TextEditorProvider;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.text.TextEditorImpl;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.highlight.EmptyEditorHighlighter;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.language.editor.ui.awt.EditorAWTUtil;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
@@ -53,10 +52,10 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
-import org.intellij.lang.annotations.JdkConstants;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.intellij.lang.annotations.JdkConstants;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -83,8 +82,8 @@ public final class EditorUtil {
 
   @Nullable
   public static EditorEx getEditorEx(@Nullable FileEditor fileEditor) {
-    Editor editor = fileEditor instanceof TextEditor ? ((TextEditor)fileEditor).getEditor() : null;
-    return editor instanceof EditorEx ? (EditorEx)editor : null;
+    Editor editor = fileEditor instanceof TextEditor textEditor ? textEditor.getEditor() : null;
+    return editor instanceof EditorEx editorEx ? editorEx : null;
   }
 
   public static int getLastVisualLineColumnNumber(@Nonnull Editor editor, final int line) {
@@ -384,7 +383,7 @@ public final class EditorUtil {
 
   public static boolean isChangeFontSize(@Nonnull MouseWheelEvent e) {
     if (e.getWheelRotation() == 0) return false;
-    return SystemInfo.isMac ? !e.isControlDown() && e.isMetaDown() && !e.isAltDown() && !e.isShiftDown() : e.isControlDown() && !e.isMetaDown() && !e
+    return Platform.current().os().isMac() ? !e.isControlDown() && e.isMetaDown() && !e.isAltDown() && !e.isShiftDown() : e.isControlDown() && !e.isMetaDown() && !e
       .isAltDown() && !e.isShiftDown();
   }
 
@@ -485,7 +484,7 @@ public final class EditorUtil {
     }
     // for injected editors disposal will happen only when host editor is disposed,
     // but this seems to be the best we can do (there are no notifications on disposal of injected editor)
-    Editor hostEditor = editor instanceof EditorWindow ? ((EditorWindow)editor).getDelegate() : editor;
+    Editor hostEditor = editor instanceof EditorWindow editorWindow ? editorWindow.getDelegate() : editor;
     EditorFactory.getInstance().addEditorFactoryListener(new EditorFactoryAdapter() {
       @Override
       public void editorReleased(@Nonnull EditorFactoryEvent event) {
@@ -522,7 +521,7 @@ public final class EditorUtil {
       taskWithScrolling.run();
     }
     else {
-      boolean animationWasEnabled = ((CodeEditorScrollingModelBase)scrollingModel).isAnimationEnabled();
+      boolean animationWasEnabled = scrollingModel.isAnimationEnabled();
       scrollingModel.disableAnimation();
       try {
         taskWithScrolling.run();
@@ -628,14 +627,14 @@ public final class EditorUtil {
   @Nonnull
   public static DataContext getEditorDataContext(@Nonnull Editor editor) {
     DataContext context = DataManager.getInstance().getDataContext(editor.getContentComponent());
-    if (context.getData(CommonDataKeys.PROJECT) == editor.getProject()) {
+    if (context.getData(Project.KEY) == editor.getProject()) {
       return context;
     }
     return new DataContext() {
       @Nullable
       @Override
       public <T> T getData(@Nonnull Key<T> dataId) {
-        if (CommonDataKeys.PROJECT == dataId) {
+        if (Project.KEY == dataId) {
           return (T)editor.getProject();
         }
         return context.getData(dataId);

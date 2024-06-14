@@ -23,16 +23,16 @@ import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.ApplyFilePatchBase;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.ApplyFilePatchFactory;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.ApplyTextFilePatch;
 import consulo.versionControlSystem.*;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeChooser;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.util.lang.function.Condition;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.*;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.RelativePathCalculator;
 import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelvedBinaryFilePatch;
@@ -152,7 +152,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
   public List<FilePatch> execute() {
     List<FilePatch> failedPatches = ContainerUtil.newArrayList();
     try {
-      final List<CheckPath> checkers = new ArrayList<CheckPath>(myPatches.size());
+      final List<CheckPath> checkers = new ArrayList<>(myPatches.size());
       for (FilePatch patch : myPatches) {
         final CheckPath checker = getChecker(patch);
         checkers.add(checker);
@@ -199,16 +199,16 @@ public class PathsVerifier<BinaryType extends FilePatch> {
   @Nonnull
   public Collection<FilePatch> filterBadFileTypePatches() {
     List<Pair<VirtualFile, ApplyTextFilePatch>> failedTextPatches =
-            ContainerUtil.findAll(myTextPatches, new Condition<Pair<VirtualFile, ApplyTextFilePatch>>() {
-              @Override
-              public boolean value(Pair<VirtualFile, ApplyTextFilePatch> textPatch) {
-                final VirtualFile file = textPatch.getFirst();
-                if (file.isDirectory()) return false;
-                return !isFileTypeOk(file);
-              }
-            });
+      ContainerUtil.findAll(myTextPatches, textPatch -> {
+        final VirtualFile file = textPatch.getFirst();
+        if (file.isDirectory()) return false;
+        return !isFileTypeOk(file);
+      });
     myTextPatches.removeAll(failedTextPatches);
-    return ContainerUtil.map(failedTextPatches, (Function<Pair<VirtualFile, ApplyTextFilePatch>, FilePatch>)patchInfo -> patchInfo.getSecond().getPatch());
+    return ContainerUtil.map(
+      failedTextPatches,
+      (Function<Pair<VirtualFile, ApplyTextFilePatch>, FilePatch>)patchInfo -> patchInfo.getSecond().getPatch()
+    );
   }
 
   private boolean isFileTypeOk(@Nonnull VirtualFile file) {
@@ -306,7 +306,11 @@ public class PathsVerifier<BinaryType extends FilePatch> {
     }
 
     // before exists; after does not exist
-    protected boolean precheck(final VirtualFile beforeFile, final VirtualFile afterFile, final DelayedPrecheckContext context) {
+    protected boolean precheck(
+      final VirtualFile beforeFile,
+      final VirtualFile afterFile,
+      final DelayedPrecheckContext context
+    ) {
       if (beforeFile == null) {
         setErrorMessage(fileNotFoundMessage(myBeforeName));
       } else if (afterFile != null) {
@@ -392,26 +396,26 @@ public class PathsVerifier<BinaryType extends FilePatch> {
   }
 
   private void addPatch(final FilePatch patch, final VirtualFile file) {
-    final Pair<VirtualFile, ApplyFilePatchBase> patchPair = Pair.create(file, ApplyFilePatchFactory.createGeneral(patch));
     if (patch instanceof TextFilePatch) {
       myTextPatches.add(Pair.create(file, ApplyFilePatchFactory.create((TextFilePatch)patch)));
     } else {
-      final ApplyFilePatchBase<BinaryType> applyBinaryPatch = (ApplyFilePatchBase<BinaryType>)((patch instanceof BinaryFilePatch)
-                                                                                               ? ApplyFilePatchFactory
-                                                                                                       .create((BinaryFilePatch)patch)
-                                                                                               : ApplyFilePatchFactory
-                                                                                                       .create((ShelvedBinaryFilePatch)patch));
+      final ApplyFilePatchBase<BinaryType> applyBinaryPatch =
+        (ApplyFilePatchBase<BinaryType>)(
+          (patch instanceof BinaryFilePatch binaryFilePatch)
+            ? ApplyFilePatchFactory.create(binaryFilePatch)
+            : ApplyFilePatchFactory.create((ShelvedBinaryFilePatch)patch)
+        );
       myBinaryPatches.add(Pair.create(file, applyBinaryPatch));
     }
     myWritableFiles.add(file);
   }
 
   private static String fileNotFoundMessage(final String path) {
-    return VcsBundle.message("cannot.find.file.to.patch", path);
+    return VcsLocalize.cannotFindFileToPatch(path).get();
   }
 
   private static String fileAlreadyExists(final String path) {
-    return VcsBundle.message("cannot.apply.file.already.exists", path);
+    return VcsLocalize.cannotApplyFileAlreadyExists(path).get();
   }
 
   private void revert(final String errorMessage) {

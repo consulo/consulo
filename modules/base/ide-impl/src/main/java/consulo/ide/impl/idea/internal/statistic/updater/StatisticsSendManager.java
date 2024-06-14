@@ -20,15 +20,15 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.internal.ApplicationInfo;
-import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.disposer.Disposable;
+import consulo.externalService.impl.internal.PermanentInstallationID;
 import consulo.ide.impl.external.api.StatisticsBean;
 import consulo.ide.impl.externalService.impl.WebServiceApi;
 import consulo.ide.impl.externalService.impl.WebServiceApiSender;
 import consulo.ide.impl.externalService.impl.statistics.SendStatisticsUtil;
 import consulo.ide.impl.idea.internal.statistic.persistence.UsageStatisticsPersistenceComponent;
-import consulo.externalService.impl.internal.PermanentInstallationID;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.event.ProjectManagerListener;
@@ -37,12 +37,12 @@ import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.UIAccess;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -146,11 +146,10 @@ public class StatisticsSendManager implements Disposable {
 
   // FIXME [VISTALL] at current moment we not show this notification
   public Notification createNotification(@Nonnull final NotificationGroup group, @Nullable NotificationListener listener) {
-    final String fullProductName = ApplicationNamesInfo.getInstance().getFullProductName();
+    final String fullProductName = Application.get().getName().get();
     final String companyName = ApplicationInfo.getInstance().getCompanyName();
 
-    String text = "<html>Please click <a href='allow'>I agree</a> if you want to help make " +
-                  fullProductName +
+    String text = "<html>Please click <a href='allow'>I agree</a> if you want to help make " + fullProductName +
                   " better or <a href='decline'>I don't agree</a> otherwise. <a href='settings'>more...</a></html>";
 
     String title = "Help improve " + fullProductName + " by sending anonymous usage statistics to " + companyName;

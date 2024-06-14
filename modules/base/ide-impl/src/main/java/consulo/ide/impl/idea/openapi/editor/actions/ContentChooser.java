@@ -16,16 +16,14 @@
 package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.application.AllIcons;
-import consulo.application.CommonBundle;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.EditorFontType;
 import consulo.document.Document;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.speedSearch.ListWithFilter;
-import consulo.util.lang.ObjectUtil;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.*;
@@ -34,9 +32,11 @@ import consulo.ui.ex.awt.speedSearch.FilteringListModel;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
-
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -75,7 +75,7 @@ public abstract class ContentChooser<Data> extends DialogWrapper {
     mySplitter.setSplitterProportionKey(getDimensionServiceKey() + ".splitter");
     myList = new JBList(new CollectionListModel<Item>());
 
-    setOKButtonText(CommonBundle.getOkButtonText());
+    setOKButtonText(CommonLocalize.buttonOk().get());
     setTitle(title);
 
     init();

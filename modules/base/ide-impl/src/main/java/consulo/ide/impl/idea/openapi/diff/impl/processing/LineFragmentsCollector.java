@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.openapi.diff.ex.DiffFragment;
 import consulo.ide.impl.idea.openapi.diff.impl.fragments.LineFragment;
 import consulo.ide.impl.idea.openapi.diff.impl.util.TextDiffTypeEnum;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.annotation.DeprecationInfo;
 
 import jakarta.annotation.Nonnull;

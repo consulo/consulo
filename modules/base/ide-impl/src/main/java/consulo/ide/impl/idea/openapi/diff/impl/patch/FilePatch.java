@@ -22,7 +22,7 @@
  */
 package consulo.ide.impl.idea.openapi.diff.impl.patch;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 
 public abstract class FilePatch {
   private String myBeforeName;

@@ -8,7 +8,7 @@ import consulo.document.Document;
 import consulo.ide.impl.idea.openapi.editor.CaretStateTransferableData;
 import consulo.ide.impl.idea.openapi.ide.CutElementMarker;
 import consulo.ide.impl.idea.openapi.ide.KillRingTransferable;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ui.ex.awt.CopyPasteManager;
 import jakarta.inject.Inject;

@@ -38,7 +38,6 @@ import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;
 import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.Language;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -253,7 +252,10 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
             defaultActionGroup.add((AnAction)binding, constraints, this);
           }
           else {
-            LOG.error(actionImpl.id() + ": can't add to group which not instance of DefaultActionGroup: " + ref.getFirst().getClass().getName());
+            LOG.error(
+              actionImpl.id() + ": can't add to group which not instance of DefaultActionGroup: " +
+                ref.getFirst().getClass().getName()
+            );
           }
         }
       }
@@ -591,8 +593,8 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
     synchronized (myLock) {
       action = myId2Action.get(id);
-      if (action instanceof ActionStubBase) {
-        action = replaceStub((ActionStubBase)action, converted);
+      if (action instanceof ActionStubBase actionStubBase) {
+        action = replaceStub(actionStubBase, converted);
       }
       return action;
     }
@@ -616,8 +618,8 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
   @Override
   public String getId(@Nonnull AnAction action) {
-    if (action instanceof ActionStubBase) {
-      return ((ActionStubBase)action).getId();
+    if (action instanceof ActionStubBase actionStubBase) {
+      return actionStubBase.getId();
     }
     synchronized (myLock) {
       return myAction2Id.get(action);
@@ -722,9 +724,9 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
           return;
         }
         AnAction prev = replaceAction(id, action, pluginId);
-        if (action instanceof DefaultActionGroup && prev instanceof DefaultActionGroup) {
+        if (action instanceof DefaultActionGroup actionGroup && prev instanceof DefaultActionGroup prevActionGroup) {
           if (Boolean.parseBoolean(element.getAttributeValue(KEEP_CONTENT_ATTR_NAME))) {
-            ((DefaultActionGroup)action).copyFromGroup((DefaultActionGroup)prev);
+            actionGroup.copyFromGroup(prevActionGroup);
           }
         }
       }
@@ -814,8 +816,8 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
       // icon
       String iconPath = element.getAttributeValue(ICON_ATTR_NAME);
-      if (group instanceof XmlActionGroupStub) {
-        ((XmlActionGroupStub)group).setIconPath(iconPath);
+      if (group instanceof XmlActionGroupStub xmlActionGroupStub) {
+        xmlActionGroupStub.setIconPath(iconPath);
       }
       else if (iconPath != null) {
         if (iconPath.contains("@")) {
@@ -832,8 +834,8 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
       String popup = element.getAttributeValue(POPUP_ATTR_NAME);
       if (popup != null) {
         group.setPopup(Boolean.valueOf(popup));
-        if (group instanceof XmlActionGroupStub) {
-          ((XmlActionGroupStub)group).setPopupDefinedInXml(true);
+        if (group instanceof XmlActionGroupStub xmlActionGroupStub) {
+          xmlActionGroupStub.setPopupDefinedInXml(true);
         }
       }
       if (customClass && element.getAttributeValue(USE_SHORTCUT_OF_ATTR_NAME) != null) {
@@ -902,8 +904,8 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
       assertActionIsGroupOrStub(action);
     }
 
-    String name = action instanceof XmlActionStub ? ((XmlActionStub)action).getClassName() : action.getClass().getName();
-    String id = action instanceof XmlActionStub ? ((XmlActionStub)action).getId() : myAction2Id.get(action);
+    String name = action instanceof XmlActionStub xmlActionStub ? xmlActionStub.getClassName() : action.getClass().getName();
+    String id = action instanceof XmlActionStub xmlActionStub ? xmlActionStub.getId() : myAction2Id.get(action);
     String actionName = name + " (" + id + ")";
 
     if (!ADD_TO_GROUP_ELEMENT_NAME.equals(element.getName())) {
@@ -931,7 +933,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   }
 
   private void addToGroupInner(AnAction group, AnAction action, Constraints constraints, boolean secondary) {
-    String actionId = action instanceof ActionStubBase ? ((ActionStubBase)action).getId() : myAction2Id.get(action);
+    String actionId = action instanceof ActionStubBase actionStub ? actionStub.getId() : myAction2Id.get(action);
     ((DefaultActionGroup)group).addAction(action, constraints, this).setAsSecondary(secondary);
     myId2GroupId.putValue(actionId, myAction2Id.get(group));
   }
@@ -948,13 +950,11 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
       parentGroup = getActionImpl(IdeActions.GROUP_OTHER_MENU, true);
     }
     if (!(parentGroup instanceof DefaultActionGroup)) {
-      reportActionError(pluginId, actionName +
-                                  ": group with id \"" +
-                                  groupId +
-                                  "\" should be instance of " +
-                                  DefaultActionGroup.class.getName() +
-                                  " but was " +
-                                  (parentGroup != null ? parentGroup.getClass() : "[null]"));
+      reportActionError(
+        pluginId,
+        actionName + ": group with id \"" + groupId + "\" should be instance of " + DefaultActionGroup.class.getName() +
+          " but was " + (parentGroup != null ? parentGroup.getClass() : "[null]")
+      );
       return null;
     }
     return parentGroup;
@@ -1197,18 +1197,18 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
   public void addActionPopup(@Nonnull Object menu) {
     myPopups.add(menu);
-    if (menu instanceof ActionPopupMenu) {
+    if (menu instanceof ActionPopupMenu actionPopupMenu) {
       for (ActionPopupMenuListener listener : myActionPopupMenuListeners) {
-        listener.actionPopupMenuCreated((ActionPopupMenu)menu);
+        listener.actionPopupMenuCreated(actionPopupMenu);
       }
     }
   }
 
   public void removeActionPopup(@Nonnull Object menu) {
     final boolean removed = myPopups.remove(menu);
-    if (removed && menu instanceof ActionPopupMenu) {
+    if (removed && menu instanceof ActionPopupMenu actionPopupMenu) {
       for (ActionPopupMenuListener listener : myActionPopupMenuListeners) {
-        listener.actionPopupMenuReleased((ActionPopupMenu)menu);
+        listener.actionPopupMenuReleased(actionPopupMenu);
       }
     }
   }
@@ -1251,8 +1251,8 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   private AnAction replaceAction(@Nonnull String actionId, @Nonnull AnAction newAction, @Nullable PluginId pluginId) {
     AnAction oldAction = newAction instanceof OverridingAction ? getAction(actionId) : getActionOrStub(actionId);
     if (oldAction != null) {
-      if (newAction instanceof OverridingAction) {
-        myBaseActions.put((OverridingAction)newAction, oldAction);
+      if (newAction instanceof OverridingAction newOverridingAction) {
+        myBaseActions.put(newOverridingAction, oldAction);
       }
       boolean isGroup = oldAction instanceof ActionGroup;
       if (isGroup != newAction instanceof ActionGroup) {
@@ -1292,12 +1292,12 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   public void fireBeforeActionPerformed(@Nonnull AnAction action, @Nonnull DataContext dataContext, @Nonnull AnActionEvent event) {
     myPrevPerformedActionId = myLastPreformedActionId;
     myLastPreformedActionId = getId(action);
-    if (myLastPreformedActionId == null && action instanceof ActionIdProvider) {
-      myLastPreformedActionId = ((ActionIdProvider)action).getId();
+    if (myLastPreformedActionId == null && action instanceof ActionIdProvider actionIdProvider) {
+      myLastPreformedActionId = actionIdProvider.getId();
     }
     //noinspection AssignmentToStaticFieldFromInstanceMethod
     LastActionTracker.ourLastActionId = myLastPreformedActionId;
-    final PsiFile file = dataContext.getData(CommonDataKeys.PSI_FILE);
+    final PsiFile file = dataContext.getData(PsiFile.KEY);
     final Language language = file != null ? file.getLanguage() : null;
     //ActionsCollector.getInstance().record(CommonDataKeys.PROJECT.getData(dataContext), action, event, language);
     for (AnActionListener listener : myActionListeners) {
@@ -1330,11 +1330,8 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     for (final Shortcut shortcut : shortcuts) {
       // Shortcut can be MouseShortcut here.
       // For example IdeaVIM often assigns them
-      if (shortcut instanceof KeyboardShortcut) {
-        final KeyboardShortcut kb = (KeyboardShortcut)shortcut;
-        if (kb.getSecondKeyStroke() == null) {
-          return (KeyboardShortcut)shortcut;
-        }
+      if (shortcut instanceof KeyboardShortcut kb && kb.getSecondKeyStroke() == null) {
+        return kb;
       }
     }
 

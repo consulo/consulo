@@ -20,12 +20,10 @@
  */
 package consulo.ide.impl.idea.internal;
 
-import consulo.language.editor.CommonDataKeys;
 import consulo.application.internal.ApplicationManagerEx;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressManager;
-import consulo.content.ContentIterator;
 import consulo.logging.Logger;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
@@ -33,7 +31,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VFileProperty;
-import consulo.virtualFileSystem.VirtualFile;
+import org.jetbrains.annotations.NonNls;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,35 +49,29 @@ public class LoadAllContentsAction extends AnAction implements DumbAware {
   AtomicLong totalSize = new AtomicLong();
 
   @Override
+  @NonNls
   public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getDataContext().getData(CommonDataKeys.PROJECT);
+    final Project project = e.getDataContext().getData(Project.KEY);
     String m = "Started loading content";
     LOG.info(m);
     System.out.println(m);
     long start = System.currentTimeMillis();
     count.set(0);
     totalSize.set(0);
-    ApplicationManagerEx.getApplicationEx().runProcessWithProgressSynchronously(new Runnable() {
-      @Override
-      public void run() {
-        ProjectRootManager.getInstance(project).getFileIndex().iterateContent(new ContentIterator() {
-          @Override
-          public boolean processFile(VirtualFile fileOrDir) {
-            if (fileOrDir.isDirectory() || fileOrDir.is(VFileProperty.SPECIAL)) return true;
-            try {
-              count.incrementAndGet();
-              byte[] bytes = RawFileLoader.getInstance().loadFileBytes(new File(fileOrDir.getPath()));
-              totalSize.addAndGet(bytes.length);
-              ProgressManager.getInstance().getProgressIndicator().setText(fileOrDir.getPresentableUrl());
-            }
-            catch (IOException e1) {
-              LOG.error(e1);
-            }
-            return true;
-          }
-        });
-       }
-    }, "Loading", false, project);
+    ApplicationManagerEx.getApplicationEx().runProcessWithProgressSynchronously(
+      () -> ProjectRootManager.getInstance(project).getFileIndex().iterateContent(fileOrDir -> {
+        if (fileOrDir.isDirectory() || fileOrDir.is(VFileProperty.SPECIAL)) return true;
+        try {
+          count.incrementAndGet();
+          byte[] bytes = RawFileLoader.getInstance().loadFileBytes(new File(fileOrDir.getPath()));
+          totalSize.addAndGet(bytes.length);
+          ProgressManager.getInstance().getProgressIndicator().setText(fileOrDir.getPresentableUrl());
+        }
+        catch (IOException e1) {
+          LOG.error(e1);
+        }
+        return true;
+      }), "Loading", false, project);
     long end = System.currentTimeMillis();
     String message = "Finished loading content of " + count + " files. Total size=" + StringUtil.formatFileSize(totalSize.get()) +
                      ". Elapsed=" + ((end - start) / 1000) + "sec.";
@@ -87,9 +79,8 @@ public class LoadAllContentsAction extends AnAction implements DumbAware {
     System.out.println(message);
   }
 
-
   @Override
   public void update(final AnActionEvent e) {
-    e.getPresentation().setEnabled(e.getData(CommonDataKeys.PROJECT) != null);
+    e.getPresentation().setEnabled(e.getData(Project.KEY) != null);
   }
 }

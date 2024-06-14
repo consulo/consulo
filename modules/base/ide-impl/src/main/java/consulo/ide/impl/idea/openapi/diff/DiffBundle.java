@@ -15,12 +15,18 @@
  */
 package consulo.ide.impl.idea.openapi.diff;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.component.util.localize.AbstractBundle;
+import consulo.diff.localize.DiffLocalize;
 import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author lesya
  */
+@Deprecated(forRemoval = true)
+@DeprecationInfo("Use DiffLocalize")
+@MigratedExtensionsTo(DiffLocalize.class)
 public class DiffBundle extends AbstractBundle {
   private static final DiffBundle ourInstance = new DiffBundle();
 

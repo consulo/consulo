@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.editor.ex.util;
 
-import consulo.application.util.SystemInfo;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.RealEditor;
+import consulo.platform.Platform;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.DesktopAntialiasingTypeUtil;
 import consulo.ui.ex.awt.util.MacUIUtil;
@@ -46,11 +46,11 @@ public class EditorUIUtil {
   }
 
   public static void hideCursorInEditor(Editor editor) {
-    if (SystemInfo.isMac) {
+    if (Platform.current().os().isMac()) {
       MacUIUtil.hideCursor();
     }
-    else if (editor instanceof RealEditor) {
-      ((RealEditor)editor).hideCursor();
+    else if (editor instanceof RealEditor realEditor) {
+      realEditor.hideCursor();
     }
   }
 }

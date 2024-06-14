@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.openapi.diff.impl.highlighting;
 
 import consulo.ide.impl.idea.openapi.diff.impl.string.DiffString;
 import consulo.ide.impl.idea.openapi.diff.ex.DiffFragment;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import consulo.application.util.diff.Diff;
 import consulo.logging.Logger;
 import consulo.util.collection.primitive.ints.IntSet;

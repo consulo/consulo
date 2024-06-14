@@ -20,7 +20,7 @@ import consulo.undoRedo.BasicUndoableAction;
 import consulo.document.DocumentReference;
 import consulo.undoRedo.UndoableAction;
 import consulo.fileEditor.FileEditor;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.ide.impl.idea.util.ArrayUtil;

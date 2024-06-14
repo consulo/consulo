@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.ide.impl.idea.application.options.EditorFontsConstants;
-import consulo.language.editor.CommonDataKeys;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorBundle;
@@ -52,11 +51,8 @@ public abstract class ChangeEditorFontSizeAction extends AnAction implements Dum
 
   @Nullable
   private static RealEditor getEditor(AnActionEvent e) {
-    final Editor editor = e.getData(CommonDataKeys.EDITOR);
-    if (editor instanceof RealEditor) {
-      return (RealEditor)editor;
-    }
-    return null;
+    final Editor editor = e.getData(Editor.KEY);
+    return editor instanceof RealEditor realEditor ? realEditor : null;
   }
 
   @RequiredUIAccess
