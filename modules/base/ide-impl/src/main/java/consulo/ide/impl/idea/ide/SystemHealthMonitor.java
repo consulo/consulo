@@ -369,7 +369,7 @@ public class SystemHealthMonitor extends PreloadingActivity {
   private class KeyHyperlinkAdapter extends HyperlinkAdapter {
     private final String key;
 
-    private KeyHyperlinkAdapter(@PropertyKey(resourceBundle = "consulo.ide.IdeBundle") String key) {
+    private KeyHyperlinkAdapter(String key) {
       this.key = key;
     }
 
