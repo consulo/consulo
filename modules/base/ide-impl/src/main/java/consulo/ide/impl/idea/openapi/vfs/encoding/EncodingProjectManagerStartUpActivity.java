@@ -39,6 +39,6 @@ final class EncodingProjectManagerStartUpActivity implements PostStartupActivity
 
   @Override
   public void runActivity(@Nonnull Project project, UIAccess uiAccess) {
-    GuiUtils.invokeLaterIfNeeded(() -> ((EncodingProjectManagerImpl)EncodingProjectManager.getInstance(project)).reloadAlreadyLoadedDocuments(), IdeaModalityState.NON_MODAL, project.getDisposed());
+    GuiUtils.invokeLaterIfNeeded(() -> ((EncodingProjectManagerImpl)EncodingProjectManager.getInstance(project)).reloadAlreadyLoadedDocuments(), IdeaModalityState.nonModal(), project.getDisposed());
   }
 }

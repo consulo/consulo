@@ -130,7 +130,7 @@ public class ShelvedChangesViewManager {
         public void run() {
           updateChangesContent();
         }
-      }, IdeaModalityState.NON_MODAL);
+      }, IdeaModalityState.nonModal());
     });
     myMoveRenameInfo = new HashMap<>();
 

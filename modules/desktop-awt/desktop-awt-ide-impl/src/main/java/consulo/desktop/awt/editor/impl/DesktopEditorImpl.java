@@ -3,9 +3,7 @@ package consulo.desktop.awt.editor.impl;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.TransactionGuard;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.internal.TransactionGuardEx;
 import consulo.application.progress.ProgressManager;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.wm.IdeFocusManager;
@@ -3430,7 +3428,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
       if (myDraggedRange != null || myGutterComponent.myDnDInProgress)
         return; // on Mac we receive events even if drag-n-drop is in progress
       validateMousePointer(e);
-      ((TransactionGuardEx)TransactionGuard.getInstance()).performUserActivity(() -> runMouseDraggedCommand(e));
+      runMouseDraggedCommand(e);
       EditorMouseEvent event = new EditorMouseEvent(DesktopEditorImpl.this, e, getMouseEventArea(e));
       if (event.getArea() == EditorMouseEventArea.LINE_MARKERS_AREA) {
         myGutterComponent.mouseDragged(e);
@@ -3681,7 +3679,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
 
       final DesktopEditorImpl editor = getEditor(source);
       if (action == MOVE && !editor.isViewer() && editor.myDraggedRange != null) {
-        ((TransactionGuardEx)TransactionGuard.getInstance()).performUserActivity(() -> removeDraggedOutFragment(editor));
+        removeDraggedOutFragment(editor);
       }
 
       editor.clearDnDContext();

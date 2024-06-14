@@ -17,8 +17,8 @@ package consulo.component.internal.inject;
 
 import consulo.annotation.component.*;
 import consulo.component.bind.InjectingBinding;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,6 +33,26 @@ public class InjectingBindingLoader extends BindingLoader<InjectingBinding> {
   private final InjectingBindingHolder myActions = new InjectingBindingHolder(myLocked);
 
   public InjectingBindingLoader() {
+  }
+
+  @Override
+  public void close() {
+    for (InjectingBindingHolder value : myServices.values()) {
+      value.clear();
+    }
+
+    for (InjectingBindingHolder value : myExtensions.values()) {
+      value.clear();
+    }
+
+    for (InjectingBindingHolder value : myTopics.values()) {
+      value.clear();
+    }
+
+    myServices.clear();
+    myExtensions.clear();
+    myTopics.clear();
+    myActions.clear();
   }
 
   @Nonnull

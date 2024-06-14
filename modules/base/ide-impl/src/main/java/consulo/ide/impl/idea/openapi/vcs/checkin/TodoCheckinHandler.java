@@ -240,7 +240,7 @@ public class TodoCheckinHandler extends CheckinHandler {
           });
         }
       }
-    }, IdeaModalityState.NON_MODAL, myProject.getDisposed());
+    }, IdeaModalityState.nonModal(), myProject.getDisposed());
   }
 
   private static LocalizeValue createMessage(TodoCheckinHandlerWorker worker) {

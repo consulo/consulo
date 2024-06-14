@@ -219,7 +219,7 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
           public void run() {
             updateFilteredModel(Collections.<CommittedChangeList>emptyList(), true);
           }
-        }, IdeaModalityState.NON_MODAL, myProject.getDisposed());
+        }, IdeaModalityState.nonModal(), myProject.getDisposed());
       }
     });
   }

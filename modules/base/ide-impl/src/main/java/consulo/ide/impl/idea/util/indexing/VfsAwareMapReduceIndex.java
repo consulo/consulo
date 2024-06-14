@@ -4,7 +4,6 @@ package consulo.ide.impl.idea.util.indexing;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.TransactionGuard;
 import consulo.application.progress.ProgressManager;
 import consulo.content.scope.SearchScope;
 import consulo.ide.impl.idea.openapi.application.impl.ApplicationInfoImpl;
@@ -12,9 +11,9 @@ import consulo.ide.impl.idea.util.ConcurrencyUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.indexing.impl.*;
 import consulo.ide.impl.idea.util.indexing.impl.forward.*;
-import consulo.language.internal.psi.stub.IdIndex;
 import consulo.index.io.*;
 import consulo.index.io.internal.DebugAssertions;
+import consulo.language.internal.psi.stub.IdIndex;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.FileBasedIndexExtension;
 import consulo.language.psi.stub.IdFilter;
@@ -24,10 +23,10 @@ import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.collection.primitive.ints.IntObjectMap;
 import consulo.util.io.ByteArraySequence;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.TestOnly;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.TestOnly;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -56,7 +55,8 @@ public class VfsAwareMapReduceIndex<Key, Value, Input> extends MapReduceIndex<Ke
   private final boolean myUpdateMappings;
   private final boolean mySingleEntryIndex;
 
-  public VfsAwareMapReduceIndex(@Nonnull IndexExtension<Key, Value, Input> extension, @Nonnull IndexStorage<Key, Value> storage) throws IOException {
+  public VfsAwareMapReduceIndex(@Nonnull IndexExtension<Key, Value, Input> extension,
+                                @Nonnull IndexStorage<Key, Value> storage) throws IOException {
     this(extension, storage, hasSnapshotMapping(extension) ? new SnapshotInputMappings<>(extension) : null);
     if (!(myIndexId instanceof ID<?, ?>)) {
       throw new IllegalArgumentException("myIndexId should be instance of consulo.ide.impl.idea.util.indexing.ID");
@@ -66,8 +66,14 @@ public class VfsAwareMapReduceIndex<Key, Value, Input> extends MapReduceIndex<Ke
   public VfsAwareMapReduceIndex(@Nonnull IndexExtension<Key, Value, Input> extension,
                                 @Nonnull IndexStorage<Key, Value> storage,
                                 @Nullable SnapshotInputMappings<Key, Value, Input> snapshotInputMappings) throws IOException {
-    this(extension, storage, snapshotInputMappings != null ? new SharedIntMapForwardIndex(extension, snapshotInputMappings.getInputIndexStorageFile(), true) : getForwardIndexMap(extension),
-         snapshotInputMappings != null ? snapshotInputMappings.getForwardIndexAccessor() : getForwardIndexAccessor(extension), snapshotInputMappings, null);
+    this(extension,
+         storage,
+         snapshotInputMappings != null ? new SharedIntMapForwardIndex(extension,
+                                                                      snapshotInputMappings.getInputIndexStorageFile(),
+                                                                      true) : getForwardIndexMap(extension),
+         snapshotInputMappings != null ? snapshotInputMappings.getForwardIndexAccessor() : getForwardIndexAccessor(extension),
+         snapshotInputMappings,
+         null);
   }
 
   public VfsAwareMapReduceIndex(@Nonnull IndexExtension<Key, Value, Input> extension,
@@ -140,7 +146,10 @@ public class VfsAwareMapReduceIndex<Key, Value, Input> extends MapReduceIndex<Ke
 
   @Nonnull
   protected InputDataDiffBuilder<Key, Value> getKeysDiffBuilderInMemoryMode(int inputId, @Nonnull Map<Key, Value> keysAndValues) {
-    return mySingleEntryIndex ? new SingleEntryIndexForwardIndexAccessor.SingleValueDiffBuilder(inputId, keysAndValues) : new MapInputDataDiffBuilder<>(inputId, keysAndValues);
+    return mySingleEntryIndex ? new SingleEntryIndexForwardIndexAccessor.SingleValueDiffBuilder(inputId,
+                                                                                                keysAndValues) : new MapInputDataDiffBuilder<>(
+      inputId,
+      keysAndValues);
   }
 
   @Override
@@ -249,7 +258,9 @@ public class VfsAwareMapReduceIndex<Key, Value, Input> extends MapReduceIndex<Ke
   }
 
   @Override
-  public boolean processAllKeys(@Nonnull Predicate<? super Key> processor, @Nonnull SearchScope scope, @Nullable IdFilter idFilter) throws StorageException {
+  public boolean processAllKeys(@Nonnull Predicate<? super Key> processor,
+                                @Nonnull SearchScope scope,
+                                @Nullable IdFilter idFilter) throws StorageException {
     final Lock lock = getReadLock();
     lock.lock();
     try {
@@ -279,7 +290,8 @@ public class VfsAwareMapReduceIndex<Key, Value, Input> extends MapReduceIndex<Ke
     }
     if (getForwardIndexAccessor() instanceof AbstractMapForwardIndexAccessor) {
       ByteArraySequence serializedInputData = getForwardIndex().get(fileId);
-      AbstractMapForwardIndexAccessor<Key, Value, ?> forwardIndexAccessor = (AbstractMapForwardIndexAccessor<Key, Value, ?>)getForwardIndexAccessor();
+      AbstractMapForwardIndexAccessor<Key, Value, ?> forwardIndexAccessor =
+        (AbstractMapForwardIndexAccessor<Key, Value, ?>)getForwardIndexAccessor();
       return forwardIndexAccessor.convertToInputDataMap(serializedInputData);
     }
     // in future we will get rid of forward index for SingleEntryFileBasedIndexExtension
@@ -304,15 +316,7 @@ public class VfsAwareMapReduceIndex<Key, Value, Input> extends MapReduceIndex<Ke
 
   @Override
   protected void requestRebuild(@Nonnull Throwable ex) {
-    Runnable action = () -> FileBasedIndex.getInstance().requestRebuild((ID<?, ?>)myIndexId, ex);
-    Application application = ApplicationManager.getApplication();
-    if (application.isUnitTestMode() || application.isHeadlessEnvironment()) {
-      // avoid deadlock due to synchronous update in DumbServiceImpl#queueTask
-      TransactionGuard.getInstance().submitTransactionLater(application, action);
-    }
-    else {
-      action.run();
-    }
+    FileBasedIndex.getInstance().requestRebuild((ID<?, ?>)myIndexId, ex);
   }
 
   @Override
@@ -360,7 +364,8 @@ public class VfsAwareMapReduceIndex<Key, Value, Input> extends MapReduceIndex<Ke
   @Nullable
   private static ForwardIndex getForwardIndexMap(@Nonnull IndexExtension<?, ?, ?> indexExtension) throws IOException {
     if (!shouldCreateForwardIndex(indexExtension)) return null;
-    if (indexExtension instanceof SingleEntryFileBasedIndexExtension<?>) return new EmptyForwardIndex(); // indexStorage and forwardIndex are same here
+    if (indexExtension instanceof SingleEntryFileBasedIndexExtension<?>)
+      return new EmptyForwardIndex(); // indexStorage and forwardIndex are same here
     File indexStorageFile = IndexInfrastructure.getInputIndexStorageFile((ID<?, ?>)indexExtension.getName());
     return new PersistentMapBasedForwardIndex(indexStorageFile, false);
   }

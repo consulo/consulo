@@ -5,14 +5,15 @@ import com.google.common.annotations.VisibleForTesting;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.HeavyProcessLatch;
 import consulo.application.ReadAction;
-import consulo.application.TransactionGuard;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.event.ApplicationListener;
-import consulo.application.HeavyProcessLatch;
+import consulo.application.impl.internal.concurent.BoundedTaskExecutor;
 import consulo.application.impl.internal.start.StartupUtil;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
+import consulo.application.util.NotNullLazyValue;
 import consulo.application.util.function.Computable;
 import consulo.application.util.function.Processor;
 import consulo.application.util.function.Processors;
@@ -33,17 +34,10 @@ import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.editor.impl.EditorHighlighterCache;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.FileTypeManagerImpl;
 import consulo.ide.impl.idea.openapi.project.DumbServiceImpl;
-import consulo.language.impl.util.NoAccessDuringPsiEvents;
 import consulo.ide.impl.idea.openapi.project.ProjectUtil;
 import consulo.ide.impl.idea.openapi.roots.impl.PushedFilePropertiesUpdaterImpl;
-import consulo.util.lang.Comparing;
-import consulo.application.util.NotNullLazyValue;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.AsyncEventSupport;
-import consulo.index.io.StorageException;
-import consulo.index.io.ValueContainer;
-import consulo.virtualFileSystem.ManagingFS;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.FlushingDaemon;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFS;
@@ -52,17 +46,13 @@ import consulo.ide.impl.idea.util.ArrayUtilRt;
 import consulo.ide.impl.idea.util.ConcurrencyUtil;
 import consulo.ide.impl.idea.util.ThrowableConvertor;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.psi.stub.gist.GistManager;
 import consulo.ide.impl.idea.util.indexing.hash.FileContentHashIndex;
 import consulo.ide.impl.idea.util.indexing.hash.FileContentHashIndexExtension;
-import consulo.index.io.InvertedIndexValueIterator;
 import consulo.ide.impl.idea.util.indexing.provided.ProvidedIndexExtension;
 import consulo.ide.impl.idea.util.indexing.provided.ProvidedIndexExtensionLocator;
-import consulo.language.internal.psi.stub.IdIndex;
 import consulo.ide.impl.psi.impl.cache.impl.id.PlatformIdTableBuilding;
 import consulo.ide.impl.psi.stubs.SerializationManagerEx;
-import consulo.index.io.ID;
-import consulo.index.io.IndexExtension;
+import consulo.index.io.*;
 import consulo.index.io.data.DataOutputStream;
 import consulo.index.io.data.IOUtil;
 import consulo.language.ast.ASTNode;
@@ -76,12 +66,15 @@ import consulo.language.impl.internal.psi.PsiTreeChangeEventImpl;
 import consulo.language.impl.internal.psi.stub.FileContentImpl;
 import consulo.language.impl.internal.psi.stub.SubstitutedFileType;
 import consulo.language.impl.psi.PsiFileImpl;
+import consulo.language.impl.util.NoAccessDuringPsiEvents;
+import consulo.language.internal.psi.stub.IdIndex;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.scope.EverythingGlobalScope;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.stub.*;
+import consulo.language.psi.stub.gist.GistManager;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -97,23 +90,20 @@ import consulo.util.collection.SmartList;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.collection.primitive.ints.IntSet;
-import consulo.application.impl.internal.concurent.BoundedTaskExecutor;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.ShutDownTracker;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.SystemProperties;
-import consulo.util.lang.function.Condition;
 import consulo.util.lang.ref.Ref;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.virtualFileSystem.NewVirtualFile;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileWithId;
+import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.fileType.FileNameMatcher;
 import consulo.virtualFileSystem.fileType.FileType;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.io.*;
 import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
@@ -1489,15 +1479,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
       if (!myInitialized) return;
       advanceIndexVersion(indexId);
 
-      Runnable rebuildRunnable = () -> scheduleIndexRebuild("checkRebuild");
-
-      if (myIsUnitTestMode) {
-        rebuildRunnable.run();
-      }
-      else {
-        // we do invoke later since we can have read lock acquired
-        TransactionGuard.getInstance().submitTransactionLater(app, rebuildRunnable);
-      }
+      scheduleIndexRebuild("checkRebuild");
     }
   }
 

@@ -18,7 +18,6 @@ package consulo.desktop.awt.application;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.SaveAndSyncHandler;
-import consulo.application.TransactionGuard;
 import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.ui.FrameStateManager;
@@ -79,7 +78,7 @@ public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements
 
     myIdleListener = () -> {
       if (mySettings.isAutoSaveIfInactive() && canSyncOrSave()) {
-        TransactionGuard.submitTransaction(myApplication, () -> ((FileDocumentManagerEx)fileDocumentManager).saveAllDocuments(false));
+        ((FileDocumentManagerEx)fileDocumentManager).saveAllDocuments(false);
       }
     };
     IdeEventQueue.getInstance().addIdleListener(myIdleListener, mySettings.getInactiveTimeout() * 1000);
@@ -101,12 +100,10 @@ public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements
       @Override
       public void onFrameDeactivated() {
         LOG.debug("save(): enter");
-        TransactionGuard.submitTransaction(myApplication, () -> {
-          if (canSyncOrSave()) {
-            saveProjectsAndDocuments();
-          }
-          LOG.debug("save(): exit");
-        });
+        if (canSyncOrSave()) {
+          saveProjectsAndDocuments();
+        }
+        LOG.debug("save(): exit");
       }
 
       @Override

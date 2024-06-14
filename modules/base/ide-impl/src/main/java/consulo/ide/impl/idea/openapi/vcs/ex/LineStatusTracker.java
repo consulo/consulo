@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.ex;
 
-import consulo.application.TransactionGuard;
 import consulo.codeEditor.DocumentMarkupModel;
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.codeEditor.markup.RangeHighlighter;
@@ -25,14 +24,14 @@ import consulo.document.impl.DocumentImpl;
 import consulo.document.util.TextRange;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
-import consulo.versionControlSystem.change.VcsDirtyScopeManager;
 import consulo.ide.impl.idea.ui.EditorNotificationPanel;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
+import consulo.versionControlSystem.change.VcsDirtyScopeManager;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.util.List;
 
@@ -173,14 +172,12 @@ public class LineStatusTracker extends LineStatusTrackerBase {
   @RequiredUIAccess
   protected void fireFileUnchanged() {
     // later to avoid saving inside document change event processing.
-    TransactionGuard.getInstance().submitTransactionLater(getProject(), () -> {
-      FileDocumentManager.getInstance().saveDocument(myDocument);
-      List<Range> ranges = getRanges();
-      if (ranges == null || ranges.isEmpty()) {
-        // file was modified, and now it's not -> dirty local change
-        myVcsDirtyScopeManager.fileDirty(myVirtualFile);
-      }
-    });
+    FileDocumentManager.getInstance().saveDocument(myDocument);
+    List<Range> ranges = getRanges();
+    if (ranges == null || ranges.isEmpty()) {
+      // file was modified, and now it's not -> dirty local change
+      myVcsDirtyScopeManager.fileDirty(myVirtualFile);
+    }
   }
 
   @Override

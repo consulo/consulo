@@ -4,9 +4,7 @@ package consulo.ide.impl.idea.ui.popup;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
-import consulo.application.TransactionGuard;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.internal.TransactionGuardEx;
 import consulo.application.ui.ApplicationWindowStateService;
 import consulo.application.ui.WindowStateService;
 import consulo.application.ui.wm.IdeFocusManager;
@@ -773,7 +771,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     for (JBPopupListener each : myListeners) {
       each.onClosed(new LightweightWindowEvent(this, myOk));
     }
-    
+
     Disposer.dispose(this, false);
     if (myProjectDisposable != null) {
       Disposer.dispose(myProjectDisposable);
@@ -1495,7 +1493,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
       getFocusManager().doWhenFocusSettlesDown(() -> {
 
         if (IdeaModalityState.current().equals(modalityState)) {
-          ((TransactionGuardEx)TransactionGuard.getInstance()).performUserActivity(finalRunnable);
+          finalRunnable.run();
         }
         else {
           LOG.debug("Final runnable of popup is skipped");

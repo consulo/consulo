@@ -153,7 +153,7 @@ public class CommittedChangesTreeBrowser extends JPanel implements TypeSafeDataP
 
   private void updateGrouping() {
     if (myGroupingStrategy.changedSinceApply()) {
-      ApplicationManager.getApplication().invokeLater(() -> updateModel(), IdeaModalityState.NON_MODAL);
+      ApplicationManager.getApplication().invokeLater(() -> updateModel(), IdeaModalityState.nonModal());
     }
   }
 
@@ -502,7 +502,7 @@ public class CommittedChangesTreeBrowser extends JPanel implements TypeSafeDataP
   }
 
   public void setLoading(final boolean value) {
-    new AbstractCalledLater(myProject, IdeaModalityState.NON_MODAL) {
+    new AbstractCalledLater(myProject, IdeaModalityState.nonModal()) {
       public void run() {
         myChangesTree.setPaintBusy(value);
       }

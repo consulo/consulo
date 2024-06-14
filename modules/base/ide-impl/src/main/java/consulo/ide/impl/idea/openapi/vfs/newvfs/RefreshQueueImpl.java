@@ -3,21 +3,22 @@ package consulo.ide.impl.idea.openapi.vfs.newvfs;
 
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.*;
+import consulo.application.AppUIExecutor;
+import consulo.application.Application;
+import consulo.application.HeavyProcessLatch;
 import consulo.application.event.ApplicationListener;
 import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
 import consulo.application.impl.internal.progress.SensitiveProgressWrapper;
 import consulo.application.internal.ApplicationEx;
-import consulo.application.internal.TransactionGuardEx;
+import consulo.application.internal.FrequentEventDetector;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.concurrent.PooledThreadExecutor;
 import consulo.application.util.registry.Registry;
 import consulo.disposer.Disposable;
-import consulo.application.internal.FrequentEventDetector;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.ui.ModalityState;
+import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.RefreshQueue;
 import consulo.virtualFileSystem.RefreshSession;
 import consulo.virtualFileSystem.VfsBundle;
@@ -76,11 +77,10 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
 
   public void execute(@Nonnull RefreshSessionImpl session) {
     if (session.isAsynchronous()) {
-      queueSession(session, session.getTransaction());
+      queueSession(session, session.getModality());
     }
     else {
       if (myApplication.isWriteThread()) {
-        ((TransactionGuardEx)TransactionGuard.getInstance()).assertWriteActionAllowed();
         doScan(session);
         session.fireEvents(session.getEvents(), null);
       }
@@ -89,13 +89,13 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
           LOG.error("Do not call synchronous refresh under read lock (except from EDT) - " + "this will cause a deadlock if there are any events to fire.");
           return;
         }
-        queueSession(session, TransactionGuard.getInstance().getContextTransaction());
+        queueSession(session, session.getModality());
         session.waitFor();
       }
     }
   }
 
-  private void queueSession(@Nonnull RefreshSessionImpl session, @Nullable TransactionId transaction) {
+  private void queueSession(@Nonnull RefreshSessionImpl session, @Nonnull ModalityState modality) {
     myQueue.execute(() -> {
       startRefreshActivity();
       try {
@@ -106,24 +106,24 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
       finally {
         finishRefreshActivity();
         if (Registry.is("vfs.async.event.processing")) {
-          scheduleAsynchronousPreprocessing(session, transaction);
+          scheduleAsynchronousPreprocessing(session, modality);
         }
         else {
-          TransactionGuard.getInstance().submitTransaction(myApplication, transaction, () -> session.fireEvents(session.getEvents(), null));
+          AppUIExecutor.onWriteThread(modality).later().submit(() -> session.fireEvents(session.getEvents(), null));
         }
       }
     });
     myEventCounter.eventHappened(session);
   }
 
-  protected void scheduleAsynchronousPreprocessing(@Nonnull RefreshSessionImpl session, @Nullable TransactionId transaction) {
+  protected void scheduleAsynchronousPreprocessing(@Nonnull RefreshSessionImpl session, @Nonnull ModalityState modality) {
     try {
       myEventProcessingQueue.execute(() -> {
         startRefreshActivity();
         try {
           HeavyProcessLatch.INSTANCE.performOperation(HeavyProcessLatch.Type.Syncing,
                                                       "Processing VFS events. " + session,
-                                                      () -> processAndFireEvents(session, transaction));
+                                                      () -> processAndFireEvents(session, modality));
         }
         finally {
           finishRefreshActivity();
@@ -147,10 +147,10 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
     }
   }
 
-  private void processAndFireEvents(@Nonnull RefreshSessionImpl session, @Nullable TransactionId transaction) {
+  private void processAndFireEvents(@Nonnull RefreshSessionImpl session, @Nonnull ModalityState modality) {
     while (true) {
       ProgressIndicator progress = new SensitiveProgressWrapper(myRefreshIndicator);
-      boolean success = ProgressIndicatorUtils.runWithWriteActionPriority(() -> tryProcessingEvents(session, transaction), progress);
+      boolean success = ProgressIndicatorUtils.runWithWriteActionPriority(() -> tryProcessingEvents(session, modality), progress);
       if (success) {
         break;
       }
@@ -159,7 +159,7 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
     }
   }
 
-  protected void tryProcessingEvents(@Nonnull RefreshSessionImpl session, @Nullable TransactionId transaction) {
+  protected void tryProcessingEvents(@Nonnull RefreshSessionImpl session, @Nonnull ModalityState modality) {
     List<? extends VFileEvent> events = ContainerUtil.filter(session.getEvents(), e -> {
       VirtualFile file = e instanceof VFileCreateEvent ? ((VFileCreateEvent)e).getParent() : e.getFile();
       return file == null || file.isValid();
@@ -168,12 +168,12 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
     List<AsyncFileListener.ChangeApplier> appliers = AsyncEventSupport.runAsyncListeners(events);
 
     long stamp = myWriteActionCounter.get();
-    TransactionGuard.getInstance().submitTransaction(ApplicationManager.getApplication(), transaction, () -> {
+    AppUIExecutor.onWriteThread(modality).later().submit(() -> {
       if (stamp == myWriteActionCounter.get()) {
         session.fireEvents(events, appliers);
       }
       else {
-        scheduleAsynchronousPreprocessing(session, transaction);
+        scheduleAsynchronousPreprocessing(session, modality);
       }
     });
   }

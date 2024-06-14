@@ -2,26 +2,22 @@
 package consulo.ide.impl.idea.openapi.vfs.newvfs;
 
 import consulo.application.ApplicationManager;
-import consulo.application.TransactionGuard;
-import consulo.application.TransactionId;
 import consulo.application.WriteAction;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.internal.TransactionGuardEx;
 import consulo.application.util.Semaphore;
-import consulo.language.editor.impl.internal.daemon.FileStatusMapImpl;
-import consulo.virtualFileSystem.internal.VirtualFileManagerEx;
 import consulo.ide.impl.idea.openapi.vfs.impl.local.LocalFileSystemImpl;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.RefreshWorker;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.editor.impl.internal.daemon.FileStatusMapImpl;
 import consulo.logging.Logger;
 import consulo.ui.ModalityState;
+import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.AsyncFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;
-import consulo.virtualFileSystem.NewVirtualFile;
-
+import consulo.virtualFileSystem.internal.VirtualFileManagerEx;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -47,21 +43,24 @@ public class RefreshSessionImpl extends RefreshSession {
   private final List<VFileEvent> myEvents = new ArrayList<>();
   private volatile RefreshWorker myWorker;
   private volatile boolean myCancelled;
-  private final TransactionId myTransaction;
+  private final ModalityState myModality;
   private boolean myLaunched;
 
-  public RefreshSessionImpl(boolean async, boolean recursive, @Nullable Runnable finishRunnable, @Nonnull ModalityState context) {
+  public RefreshSessionImpl(boolean async, boolean recursive, @Nullable Runnable finishRunnable, @Nonnull ModalityState modality) {
     myIsAsync = async;
     myIsRecursive = recursive;
     myFinishRunnable = finishRunnable;
-    myTransaction = ((TransactionGuardEx)TransactionGuard.getInstance()).getModalityTransaction(context);
-    LOG.assertTrue(context == IdeaModalityState.NON_MODAL || context != IdeaModalityState.any(), "Refresh session should have a specific modality");
+    myModality = getSaneModalityState(modality);
     myStartTrace = rememberStartTrace();
   }
 
   public RefreshSessionImpl(@Nonnull List<? extends VFileEvent> events) {
     this(false, false, null, IdeaModalityState.defaultModalityState());
     myEvents.addAll(events);
+  }
+
+  private static ModalityState getSaneModalityState(ModalityState state) {
+    return state != ModalityState.any() ? state : ModalityState.nonModal();
   }
 
   private Throwable rememberStartTrace() {
@@ -219,9 +218,9 @@ public class RefreshSessionImpl extends RefreshSession {
     mySemaphore.waitFor();
   }
 
-  @Nullable
-  TransactionId getTransaction() {
-    return myTransaction;
+  @Nonnull
+  ModalityState getModality() {
+    return myModality;
   }
 
   @Override

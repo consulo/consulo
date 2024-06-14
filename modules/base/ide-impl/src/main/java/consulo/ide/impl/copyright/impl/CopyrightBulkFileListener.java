@@ -151,6 +151,6 @@ public class CopyrightBulkFileListener implements BulkFileListener {
           new UpdateCopyrightProcessor(project, module, file).run();
         }
       }
-    }, IdeaModalityState.NON_MODAL, project.getDisposed());
+    }, IdeaModalityState.nonModal(), project.getDisposed());
   }
 }

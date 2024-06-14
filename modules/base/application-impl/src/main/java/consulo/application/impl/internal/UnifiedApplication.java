@@ -18,7 +18,6 @@ package consulo.application.impl.internal;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentProfiles;
 import consulo.application.ApplicationManager;
-import consulo.application.TransactionGuard;
 import consulo.application.impl.internal.start.StartupProgress;
 import consulo.component.ComponentManager;
 import consulo.component.impl.internal.ComponentBinding;
@@ -27,10 +26,10 @@ import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ref.SimpleReference;
-import org.jetbrains.annotations.Nls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Nls;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.function.BooleanSupplier;
@@ -56,8 +55,6 @@ public abstract class UnifiedApplication extends BaseApplication {
   @Override
   protected void bootstrapInjectingContainer(@Nonnull InjectingContainerBuilder builder) {
     super.bootstrapInjectingContainer(builder);
-
-    builder.bind(TransactionGuard.class).to(new UnifiedTransactionGuardImpl());
   }
 
   @Override

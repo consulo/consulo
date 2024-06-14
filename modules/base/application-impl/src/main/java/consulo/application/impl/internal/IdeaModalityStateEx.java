@@ -62,7 +62,7 @@ public class IdeaModalityStateEx extends IdeaModalityState {
 
   @NonNls
   public String toString() {
-    return this == NON_MODAL ? "ModalityState.NON_MODAL" : "ModalityState:{" + StringUtil.join(getModalEntities(),
+    return this == nonModal() ? "ModalityState.NON_MODAL" : "ModalityState:{" + StringUtil.join(getModalEntities(),
                                                                                                it -> "[" + it + "]",
                                                                                                ", ") + "}";
   }

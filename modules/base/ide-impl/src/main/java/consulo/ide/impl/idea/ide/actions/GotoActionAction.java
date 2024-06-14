@@ -1,11 +1,10 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.TransactionGuard;
 import consulo.application.dumb.DumbAware;
 import consulo.application.ui.UISettings;
-import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
@@ -271,13 +270,11 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
     if (element instanceof OptionDescription) {
       OptionDescription optionDescription = (OptionDescription)element;
       String configurableId = optionDescription.getConfigurableId();
-      Disposable disposable = project != null ? project : ApplicationManager.getApplication();
-      TransactionGuard guard = TransactionGuard.getInstance();
       if (optionDescription.hasExternalEditor()) {
-        guard.submitTransactionLater(disposable, () -> optionDescription.invokeInternalEditor());
+        optionDescription.invokeInternalEditor();
       }
       else {
-        guard.submitTransactionLater(disposable, () -> ShowSettingsUtil.getInstance().showSettingsDialog(project, configurableId, enteredText));
+        ShowSettingsUtil.getInstance().showSettingsDialog(project, configurableId, enteredText);
       }
     }
     else {
@@ -293,7 +290,7 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
     // element could be AnAction (SearchEverywhere)
     if (component == null) return;
     AnAction action = element instanceof AnAction ? (AnAction)element : ((GotoActionModel.ActionWrapper)element).getAction();
-    TransactionGuard.getInstance().submitTransactionLater(ApplicationManager.getApplication(), () -> {
+    Application.get().invokeLater(() -> {
       DataManager instance = DataManager.getInstance();
       DataContext context = instance != null ? instance.getDataContext(component) : DataContext.EMPTY_CONTEXT;
       InputEvent inputEvent = e != null ? e.getInputEvent() : null;

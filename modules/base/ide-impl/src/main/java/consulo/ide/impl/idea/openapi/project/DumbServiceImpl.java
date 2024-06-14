@@ -38,6 +38,7 @@ import consulo.project.event.DumbModeListener;
 import consulo.project.startup.StartupManager;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.ModalityState;
 import consulo.ui.NotificationType;
 import consulo.ui.ex.AppIcon;
 import consulo.ui.ex.AppIconScheme;
@@ -68,7 +69,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
   private final AtomicReference<State> myState = new AtomicReference<>(State.SMART);
   private volatile Throwable myDumbEnterTrace;
   private volatile Throwable myDumbStart;
-  private volatile TransactionId myDumbStartTransaction;
+  private volatile ModalityState myModalityState;
   private final DumbModeListener myPublisher;
   private long myModificationCount;
   private final Set<Object> myQueuedEquivalences = new HashSet<>();
@@ -290,21 +291,14 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
   @VisibleForTesting
   void queueAsynchronousTask(@Nonnull DumbModeTask task) {
     Throwable trace = new Throwable(); // please report exceptions here to peter
-    TransactionId contextTransaction = TransactionGuard.getInstance().getContextTransaction();
-    Runnable runnable = () -> queueTaskOnEdt(task, contextTransaction, trace);
-    if (ApplicationManager.getApplication().isDispatchThread()) {
-      runnable.run(); // will log errors if not already in a write-safe context
-    }
-    else {
-      TransactionGuard.submitTransaction(myProject, runnable);
-    }
+    myProject.getUIAccess().giveIfNeed(() -> queueTaskOnEdt(task, ModalityState.nonModal(), trace));
   }
 
-  private void queueTaskOnEdt(@Nonnull DumbModeTask task, @Nullable TransactionId contextTransaction, @Nonnull Throwable trace) {
+  private void queueTaskOnEdt(@Nonnull DumbModeTask task, @Nonnull ModalityState modalityState, @Nonnull Throwable trace) {
     if (!addTaskToQueue(task)) return;
 
     if (myState.get() == State.SMART || myState.get() == State.WAITING_FOR_FINISH) {
-      enterDumbMode(contextTransaction, trace);
+      enterDumbMode(modalityState, trace);
       ApplicationManager.getApplication().invokeLater(this::startBackgroundProcess, myProject.getDisposed());
     }
   }
@@ -324,7 +318,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
     return true;
   }
 
-  private void enterDumbMode(@Nullable TransactionId contextTransaction, @Nonnull Throwable trace) {
+  private void enterDumbMode(@Nonnull ModalityState modalityState, @Nonnull Throwable trace) {
     boolean wasSmart = !isDumb();
     WriteAction.run(() -> {
       synchronized (myRunWhenSmartQueue) {
@@ -332,7 +326,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
       }
       myDumbStart = trace;
       myDumbEnterTrace = new Throwable();
-      myDumbStartTransaction = contextTransaction;
+      myModalityState = modalityState;
       myModificationCount++;
     });
     if (wasSmart) {
@@ -352,7 +346,9 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
       // The current suspender, however, might have already got suspended between the point of the last check cancelled call and
       // this point. If it has happened it will be cleaned up when the suspender is closed on the background process thread.
       myCurrentSuspender = null;
-      StartupManager.getInstance(myProject).runWhenProjectIsInitialized(() -> TransactionGuard.getInstance().submitTransaction(myProject, myDumbStartTransaction, this::updateFinished));
+      StartupManager.getInstance(myProject).runWhenProjectIsInitialized(() -> {
+        myProject.getUIAccess().give(this::updateFinished);
+      });
     }
   }
 

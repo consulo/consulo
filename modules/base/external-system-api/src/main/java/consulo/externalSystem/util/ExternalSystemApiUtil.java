@@ -18,12 +18,10 @@ package consulo.externalSystem.util;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ApplicationPropertiesComponent;
-import consulo.application.TransactionGuard;
 import consulo.application.progress.PerformInBackgroundOption;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.application.util.Semaphore;
-import consulo.application.util.registry.Registry;
 import consulo.content.OrderRootType;
 import consulo.content.library.Library;
 import consulo.dataContext.DataProvider;
@@ -652,7 +650,6 @@ public class ExternalSystemApiUtil {
   }
 
   public static void executeProjectChangeAction(boolean synchronous, @Nonnull final DisposeAwareProjectChange task) {
-    TransactionGuard.getInstance().assertWriteSafeContext(Application.get().getDefaultModalityState());
     executeOnEdt(synchronous, () -> ApplicationManager.getApplication().runWriteAction(task));
   }
 

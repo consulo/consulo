@@ -1,9 +1,6 @@
 // Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.impl.internal;
 
-import consulo.application.TransactionGuard;
-import consulo.application.impl.internal.start.ApplicationStarterCore;
-import consulo.application.internal.TransactionGuardEx;
 import consulo.application.util.Semaphore;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
@@ -43,9 +40,9 @@ public final class LaterInvocator {
   private static final List<Object> ourModalEntities = Lists.newLockFreeCopyOnWriteList();
 
   // Per-project modal entities
-  private static final Map<Project, List<Dialog>> projectToModalEntities = ContainerUtil.createWeakMap();
-  private static final Map<Project, Stack<ModalityState>> projectToModalEntitiesStack = ContainerUtil.createWeakMap();
-  private static final Stack<IdeaModalityStateEx> ourModalityStack = new Stack<>((IdeaModalityStateEx)IdeaModalityState.NON_MODAL);
+  private static final Map<Project, List<Dialog>> projectToModalEntities = Maps.newWeakHashMap();
+  private static final Map<Project, Stack<ModalityState>> projectToModalEntitiesStack = Maps.newWeakHashMap();
+  private static final Stack<IdeaModalityStateEx> ourModalityStack = new Stack<>((IdeaModalityStateEx)ModalityStateImpl.NON_MODAL);
   private static final EventDispatcher<ModalityStateListener> ourModalityStateMulticaster = EventDispatcher.create(ModalityStateListener.class);
 
   private static final FlushQueue ourEdtQueue = new FlushQueue(SwingUtilities::invokeLater);
@@ -70,7 +67,7 @@ public final class LaterInvocator {
       }
 
       Window owner = window.getOwner();
-     IdeaModalityStateEx ownerState = owner == null ? (IdeaModalityStateEx)IdeaModalityState.NON_MODAL : modalityStateForWindow(owner);
+     IdeaModalityStateEx ownerState = owner == null ? (IdeaModalityStateEx)IdeaModalityState.nonModal() : modalityStateForWindow(owner);
       return isModalDialog(window) ? ownerState.appendEntity(window) : ownerState;
     });
   }
@@ -177,11 +174,6 @@ public final class LaterInvocator {
       ourModalityStack.push(appendedState);
     }
 
-    TransactionGuardEx guard = ApplicationStarterCore.isLoaded() ? (TransactionGuardEx)TransactionGuard.getInstance() : null;
-    if (guard != null) {
-      guard.enteredModality(appendedState);
-    }
-
     reincludeSkippedItemsAndRequestFlush();
   }
 
@@ -203,7 +195,7 @@ public final class LaterInvocator {
     projectToModalEntities.put(project, modalEntitiesList);
     modalEntitiesList.add(dialog);
 
-    Stack<ModalityState> modalEntitiesStack = projectToModalEntitiesStack.getOrDefault(project, new Stack<>(IdeaModalityStateEx.NON_MODAL));
+    Stack<ModalityState> modalEntitiesStack = projectToModalEntitiesStack.getOrDefault(project, new Stack<>(IdeaModalityState.nonModal()));
     projectToModalEntitiesStack.put(project, modalEntitiesStack);
     modalEntitiesStack.push(new IdeaModalityStateEx(ourModalEntities));
   }
@@ -248,6 +240,8 @@ public final class LaterInvocator {
   }
 
   private static void removeModality(@Nonnull Object modalEntity, int index) {
+    assertIsDispatchThread();
+
     ourModalEntities.remove(index);
     synchronized (ourModalityStack) {
       ourModalityStack.remove(index + 1);
@@ -280,7 +274,7 @@ public final class LaterInvocator {
     while (!ourModalEntities.isEmpty()) {
       leaveModal(ourModalEntities.get(ourModalEntities.size() - 1));
     }
-    LOG.assertTrue(getCurrentModalityState() == IdeaModalityStateEx.NON_MODAL, getCurrentModalityState());
+    LOG.assertTrue(getCurrentModalityState() == IdeaModalityState.nonModal(), getCurrentModalityState());
     reincludeSkippedItemsAndRequestFlush();
   }
 

@@ -3,7 +3,6 @@ package consulo.ide.impl.idea.openapi.vfs.encoding;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
-import consulo.application.TransactionGuard;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.function.Processor;
 import consulo.component.persist.PersistentStateComponent;
@@ -369,7 +368,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
         return true;
       }
       ProgressManager.progress(IdeLocalize.progressTextReloadingFiles().get(), file.getPresentableUrl());
-      TransactionGuard.submitTransaction(ApplicationManager.getApplication(), () -> clearAndReload(file, project));
+      project.getUIAccess().give(() -> clearAndReload(file, project));
       return true;
     };
   }
@@ -440,7 +439,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
       Document cachedDocument = FileDocumentManager.getInstance().getCachedDocument(file);
       if (cachedDocument != null) {
         ProgressManager.progress(IdeLocalize.progressTextReloadingFile().get(), file.getPresentableUrl());
-        TransactionGuard.submitTransaction(myProject, () -> reload(file, myProject, (FileDocumentManagerImpl)FileDocumentManager.getInstance()));
+        reload(file, myProject, (FileDocumentManagerImpl)FileDocumentManager.getInstance());
       }
       // for not loaded files deep under project, reset encoding to give them chance re-detect the right one later
       else if (file.isCharsetSet() && !file.equals(root)) {

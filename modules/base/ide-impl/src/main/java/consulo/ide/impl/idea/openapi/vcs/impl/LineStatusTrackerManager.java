@@ -384,7 +384,7 @@ public class LineStatusTrackerManager implements LineStatusTrackerManagerI {
     }
 
     private void nonModalAliveInvokeLater(@Nonnull Runnable runnable) {
-      myApplication.invokeLater(runnable, IdeaModalityState.NON_MODAL, () -> isDisabled());
+      myApplication.invokeLater(runnable, IdeaModalityState.nonModal(), () -> isDisabled());
     }
 
     private void reportTrackerBaseLoadFailed() {

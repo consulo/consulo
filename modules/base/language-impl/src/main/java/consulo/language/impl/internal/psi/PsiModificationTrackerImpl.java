@@ -4,8 +4,6 @@ package consulo.language.impl.internal.psi;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.application.TransactionGuard;
-import consulo.application.internal.TransactionGuardEx;
 import consulo.application.util.ConcurrentFactoryMap;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.util.ModificationTracker;
@@ -16,19 +14,20 @@ import consulo.language.psi.*;
 import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.language.psi.event.PsiTreeChangePreprocessor;
 import consulo.logging.Logger;
-import consulo.project.event.DumbModeListener;
 import consulo.project.Project;
-import consulo.util.lang.function.Condition;
+import consulo.project.event.DumbModeListener;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.Map;
+import java.util.function.Predicate;
 
 /**
  * @author mike
  */
+@SuppressWarnings("ExtensionImplIsNotAnnotated") // registered in PsiManagerImpl
 @Singleton
 @ServiceImpl
 public class PsiModificationTrackerImpl implements PsiModificationTracker, PsiTreeChangePreprocessor {
@@ -68,15 +67,13 @@ public class PsiModificationTrackerImpl implements PsiModificationTracker, PsiTr
     incCountersInner();
   }
 
-  public void incOutOfCodeBlockModificationCounter() {
-    incCountersInner();
-  }
-
+  @RequiredWriteAction
   private void fireEvent() {
-    ((TransactionGuardEx)TransactionGuard.getInstance()).assertWriteActionAllowed();
+    Application.get().assertWriteAccessAllowed();
     myPublisher.modificationCountChanged();
   }
 
+  @RequiredWriteAction
   private void incCountersInner() {
     myModificationCount.incModificationCount();
     fireEvent();
@@ -134,48 +131,29 @@ public class PsiModificationTrackerImpl implements PsiModificationTracker, PsiTr
     return myModificationCount.getModificationCount();
   }
 
-  @Override
-  public long getOutOfCodeBlockModificationCount() {
-    return myModificationCount.getModificationCount();
-  }
-
-  @Override
-  public long getJavaStructureModificationCount() {
-    return myModificationCount.getModificationCount();
-  }
-
   @Nonnull
   @Override
-  public ModificationTracker getOutOfCodeBlockModificationTracker() {
+  public ModificationTracker getModificationTracker() {
     return myModificationCount;
   }
 
-  @Nonnull
-  @Override
-  public ModificationTracker getJavaStructureModificationTracker() {
-    return myModificationCount;
-  }
-
-  //@ApiStatus.Experimental
   public void incLanguageModificationCount(@Nullable Language language) {
     if (language == null) return;
     myLanguageTrackers.get(language).incModificationCount();
   }
 
-  //@ApiStatus.Experimental
   @Nonnull
   public ModificationTracker forLanguage(@Nonnull Language language) {
     SimpleModificationTracker languageTracker = myLanguageTrackers.get(language);
     return () -> languageTracker.getModificationCount() + myAllLanguagesTracker.getModificationCount();
   }
 
-  //@ApiStatus.Experimental
   @Nonnull
-  public ModificationTracker forLanguages(@Nonnull Condition<? super Language> condition) {
+  public ModificationTracker forLanguages(@Nonnull Predicate<? super Language> condition) {
     return () -> {
       long result = myAllLanguagesTracker.getModificationCount();
       for (Language l : myLanguageTrackers.keySet()) {
-        if (!condition.value(l)) continue;
+        if (!condition.test(l)) continue;
         result += myLanguageTrackers.get(l).getModificationCount();
       }
       return result;

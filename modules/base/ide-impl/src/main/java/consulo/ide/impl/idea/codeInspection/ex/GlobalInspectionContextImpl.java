@@ -19,7 +19,6 @@ package consulo.ide.impl.idea.codeInspection.ex;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.TransactionGuard;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
 import consulo.application.impl.internal.progress.SensitiveProgressWrapper;
@@ -51,8 +50,8 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.FileModificationService;
 import consulo.language.editor.annotation.ProblemGroup;
 import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
-import consulo.language.editor.impl.inspection.reference.RefManagerImpl;
 import consulo.language.editor.impl.inspection.GlobalInspectionContextBase;
+import consulo.language.editor.impl.inspection.reference.RefManagerImpl;
 import consulo.language.editor.impl.inspection.scheme.GlobalInspectionToolWrapper;
 import consulo.language.editor.impl.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.language.editor.impl.internal.inspection.scheme.ToolsImpl;
@@ -60,7 +59,10 @@ import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.reference.RefElement;
 import consulo.language.editor.inspection.reference.RefEntity;
 import consulo.language.editor.inspection.reference.RefVisitor;
-import consulo.language.editor.inspection.scheme.*;
+import consulo.language.editor.inspection.scheme.InspectionManager;
+import consulo.language.editor.inspection.scheme.InspectionProfile;
+import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
+import consulo.language.editor.inspection.scheme.Tools;
 import consulo.language.editor.internal.inspection.ScopeToolState;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.editor.scope.AnalysisScope;
@@ -93,11 +95,11 @@ import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.TripleFunction;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -940,7 +942,7 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
       }
     };
 
-    TransactionGuard.submitTransaction(getProject(), runnable);
+    getProject().getUIAccess().give(runnable);
   }
 
   private static boolean isBinary(@Nonnull PsiFile file) {

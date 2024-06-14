@@ -19,6 +19,8 @@ import consulo.component.bind.TopicBinding;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,5 +45,10 @@ public class TopicBindingLoader extends BindingLoader<TopicBinding> {
   @Nullable
   public TopicBinding getBinding(@Nonnull String className) {
     return myBindings.get(className);
+  }
+
+  @Override
+  public void close() throws IOException {
+    myBindings.clear();
   }
 }

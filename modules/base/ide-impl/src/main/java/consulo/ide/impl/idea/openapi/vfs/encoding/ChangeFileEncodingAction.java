@@ -178,14 +178,14 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
       public void undo() {
         // invoke later because changing document inside undo/redo is not allowed
         Application application = ApplicationManager.getApplication();
-        application.invokeLater(undo, IdeaModalityState.NON_MODAL, (project == null ? application : project).getDisposed());
+        application.invokeLater(undo, IdeaModalityState.nonModal(), (project == null ? application : project).getDisposed());
       }
 
       @Override
       public void redo() {
         // invoke later because changing document inside undo/redo is not allowed
         Application application = ApplicationManager.getApplication();
-        application.invokeLater(redo, IdeaModalityState.NON_MODAL, (project == null ? application : project).getDisposed());
+        application.invokeLater(redo, IdeaModalityState.nonModal(), (project == null ? application : project).getDisposed());
       }
     };
 

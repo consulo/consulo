@@ -163,7 +163,7 @@ public class ChangesViewManager implements ChangesViewI, Disposable, PersistentS
     myProject.getUIAccess().give(() -> myContentManager.addContent(myContent));
 
     scheduleRefresh();
-    myProject.getMessageBus().connect().subscribe(RemoteRevisionChangeListener.class, () -> ApplicationManager.getApplication().invokeLater(() -> refreshView(), IdeaModalityState.NON_MODAL, myProject.getDisposed()));
+    myProject.getMessageBus().connect().subscribe(RemoteRevisionChangeListener.class, () -> ApplicationManager.getApplication().invokeLater(() -> refreshView(), IdeaModalityState.nonModal(), myProject.getDisposed()));
 
     myDetailsOn = VcsConfiguration.getInstance(myProject).LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN;
     changeDetails();
@@ -317,7 +317,7 @@ public class ChangesViewManager implements ChangesViewI, Disposable, PersistentS
         public void run() {
           refreshView();
         }
-      }, 100, IdeaModalityState.NON_MODAL);
+      }, 100, IdeaModalityState.nonModal());
     }
   }
 

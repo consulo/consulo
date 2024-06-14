@@ -338,7 +338,7 @@ public abstract class ChangesBrowserBase<T> extends JPanel implements TypeSafeDa
   }
 
   private static boolean isInFrame() {
-    return IdeaModalityState.current().equals(IdeaModalityState.NON_MODAL);
+    return IdeaModalityState.current().equals(IdeaModalityState.nonModal());
   }
 
   protected List<AnAction> createDiffActions() {

@@ -5,7 +5,6 @@ package consulo.language.editor.refactoring;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
-import consulo.application.TransactionGuard;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.function.Processor;
@@ -419,7 +418,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
     Runnable refactoringRunnable = () -> {
       Set<UsageInfo> usagesToRefactor = UsageViewUtil.getNotExcludedUsageInfos(usageView);
       final UsageInfo[] infos = usagesToRefactor.toArray(UsageInfo.EMPTY_ARRAY);
-      TransactionGuard.getInstance().submitTransactionAndWait(() -> {
+      myProject.getUIAccess().giveAndWait(() -> {
         if (ensureElementsWritable(infos, viewDescriptor)) {
           execute(infos);
         }

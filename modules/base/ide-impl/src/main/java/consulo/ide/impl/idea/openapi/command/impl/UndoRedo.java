@@ -15,20 +15,19 @@
  */
 package consulo.ide.impl.idea.openapi.command.impl;
 
-import consulo.application.CommonBundle;
 import consulo.application.ApplicationManager;
-import consulo.application.TransactionGuard;
-import consulo.document.DocumentReference;
-import consulo.undoRedo.UndoableAction;
+import consulo.application.CommonBundle;
 import consulo.document.Document;
+import consulo.document.DocumentReference;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorState;
 import consulo.fileEditor.FileEditorStateLevel;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.undoRedo.UndoableAction;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.ArrayList;
@@ -189,30 +188,25 @@ abstract class UndoRedo {
   private void reportCannotUndo(String message, Collection<DocumentReference> problemFiles) {
     if (ApplicationManager.getApplication().isUnitTestMode()) {
       throw new RuntimeException(
-              message + "\n" + StringUtil.join(problemFiles, StringUtil.createToStringFunction(DocumentReference.class), "\n"));
+        message + "\n" + StringUtil.join(problemFiles, StringUtil.createToStringFunction(DocumentReference.class), "\n"));
     }
     new CannotUndoReportDialog(myManager.getProject(), message, problemFiles).show();
   }
 
   private boolean askUser() {
-    final boolean[] isOk = new boolean[1];
-    TransactionGuard.getInstance().submitTransactionAndWait(() -> {
-      String actionText = getActionName(myUndoableGroup.getCommandName());
+    String actionText = getActionName(myUndoableGroup.getCommandName());
 
-      if (actionText.length() > 80) {
-        actionText = actionText.substring(0, 80) + "... ";
-      }
+    if (actionText.length() > 80) {
+      actionText = actionText.substring(0, 80) + "... ";
+    }
 
-      isOk[0] = Messages.showOkCancelDialog(myManager.getProject(), actionText + "?", getActionName(),
-                                            Messages.getQuestionIcon()) == Messages.OK;
-    });
-    return isOk[0];
+    return Messages.showOkCancelDialog(myManager.getProject(), actionText + "?", getActionName(),Messages.getQuestionIcon()) == Messages.OK;
   }
 
   private boolean restore(EditorAndState pair, boolean onlyIfDiffers) {
     if (myEditor == null ||
-        !myEditor.isValid() || // editor can be invalid if underlying file is deleted during undo (e.g. after undoing scratch file creation)
-        pair == null || pair.getEditor() == null) {
+      !myEditor.isValid() || // editor can be invalid if underlying file is deleted during undo (e.g. after undoing scratch file creation)
+      pair == null || pair.getEditor() == null) {
       return false;
     }
 

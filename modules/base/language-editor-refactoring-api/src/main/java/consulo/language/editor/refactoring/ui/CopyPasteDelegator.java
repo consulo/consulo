@@ -3,7 +3,6 @@
 package consulo.language.editor.refactoring.ui;
 
 import consulo.application.Application;
-import consulo.application.TransactionGuard;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.language.editor.CommonDataKeys;
@@ -28,9 +27,9 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.function.Conditions;
 import consulo.virtualFileSystem.LocalFileSystem;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.io.File;
 import java.util.List;
@@ -148,10 +147,10 @@ public class CopyPasteDelegator implements CopyPasteSupport {
         final Module module = dataContext.getData(LangDataKeys.MODULE);
         PsiElement target = getPasteTarget(dataContext, module);
         if (isCopied[0]) {
-          TransactionGuard.getInstance().submitTransactionAndWait(() -> pasteAfterCopy(elements, module, target, true));
+          pasteAfterCopy(elements, module, target, true);
         }
         else if (MoveHandler.canMove(elements, target)) {
-          TransactionGuard.getInstance().submitTransactionAndWait(() -> pasteAfterCut(dataContext, elements, target));
+          pasteAfterCut(dataContext, elements, target);
         }
         else {
           return false;

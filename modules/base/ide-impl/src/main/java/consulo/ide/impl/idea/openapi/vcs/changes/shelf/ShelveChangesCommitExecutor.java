@@ -112,7 +112,7 @@ public class ShelveChangesCommitExecutor extends LocalCommitExecutor {
           public void run() {
             Messages.showErrorDialog(myProject, VcsBundle.message("create.patch.error.title", ex.getMessage()), CommonBundle.getErrorTitle());
           }
-        }, IdeaModalityState.NON_MODAL, myProject);
+        }, IdeaModalityState.nonModal(), myProject);
       }
     }
 

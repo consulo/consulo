@@ -87,11 +87,6 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
   }
 
   @Override
-  public boolean startInTransaction() {
-    return true;
-  }
-
-  @Override
   public void actionPerformed(AnActionEvent e) {
     performForContext(e.getDataContext(), true);
   }

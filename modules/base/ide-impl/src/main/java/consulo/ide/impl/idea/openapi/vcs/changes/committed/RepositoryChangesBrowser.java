@@ -115,7 +115,7 @@ public class RepositoryChangesBrowser extends ChangesBrowser implements DataProv
       super.update(event);
       event.getPresentation().setIcon(AllIcons.Actions.EditSource);
       event.getPresentation().setText("Edit Source");
-      if ((!IdeaModalityState.NON_MODAL.equals(IdeaModalityState.current())) || CommittedChangesBrowserUseCase.IN_AIR.equals(event.getData(CommittedChangesBrowserUseCase.DATA_KEY))) {
+      if ((!IdeaModalityState.nonModal().equals(IdeaModalityState.current())) || CommittedChangesBrowserUseCase.IN_AIR.equals(event.getData(CommittedChangesBrowserUseCase.DATA_KEY))) {
         event.getPresentation().setEnabled(false);
       }
       else {

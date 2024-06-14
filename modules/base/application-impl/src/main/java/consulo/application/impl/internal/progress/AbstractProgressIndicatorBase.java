@@ -3,9 +3,7 @@ package consulo.application.impl.internal.progress;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.TransactionGuard;
 import consulo.application.impl.internal.IdeaModalityStateEx;
-import consulo.application.internal.TransactionGuardEx;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.component.ProcessCanceledException;
@@ -254,7 +252,6 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
     if (modalityProgress != null) {
       application.assertIsDispatchThread();
       modalityState = ((IdeaModalityStateEx)modalityState).appendProgress(modalityProgress);
-      ((TransactionGuardEx)TransactionGuard.getInstance()).enteredModality(modalityState);
     }
 
     myModalityState = modalityState;

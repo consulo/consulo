@@ -35,11 +35,6 @@ import consulo.ui.ex.action.Presentation;
 
 public class CopyElementAction extends AnAction {
   @Override
-  public boolean startInTransaction() {
-    return true;
-  }
-
-  @Override
   public void actionPerformed(AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
     final Project project = dataContext.getData(CommonDataKeys.PROJECT);

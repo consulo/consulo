@@ -313,7 +313,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
             myConsumer.accept(new ArrayList<CommittedChangeList>(myResult));
           }
         }
-      }, IdeaModalityState.NON_MODAL);
+      }, IdeaModalityState.nonModal());
     }
   }
 
@@ -945,7 +945,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
         debug("Incoming changes refresh complete, clearing cached incoming changes");
         notifyReloadIncomingChanges();
       }
-    }, IdeaModalityState.NON_MODAL, myProject.getDisposed());
+    }, IdeaModalityState.nonModal(), myProject.getDisposed());
   }
 
   public void refreshAllCachesAsync(final boolean initIfEmpty, final boolean inBackground) {

@@ -3,7 +3,6 @@ package consulo.language.psi;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.application.TransactionGuard;
 import consulo.document.Document;
 import consulo.language.file.FileViewProvider;
 import consulo.project.Project;
@@ -94,7 +93,7 @@ public abstract class PsiDocumentManager {
    * Before a modified document is committed, accessing its PSI may return elements
    * corresponding to original (unmodified) state of the document.<p/>
    * <p>
-   * Should be called in UI thread in a write-safe context (see {@link TransactionGuard})
+   * Should be called in UI thread
    */
   public abstract void commitAllDocuments();
 
@@ -116,7 +115,7 @@ public abstract class PsiDocumentManager {
    * Before a modified document is committed, accessing its PSI may return elements
    * corresponding to original (unmodified) state of the document.<p/>
    * <p>
-   * Should be called in UI thread in a write-safe context (see {@link TransactionGuard}).
+   * Should be called in UI thread
    *
    * @param document the document to commit.
    */

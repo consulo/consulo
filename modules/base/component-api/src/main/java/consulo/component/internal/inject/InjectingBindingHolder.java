@@ -34,6 +34,10 @@ public class InjectingBindingHolder {
     myLocked = locked;
   }
 
+  public void clear() {
+    myBindings.clear();
+  }
+
   public void addBinding(InjectingBinding binding) {
     if (myLocked.get()) {
       throw new IllegalArgumentException("locked");

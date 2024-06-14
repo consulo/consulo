@@ -191,7 +191,7 @@ public class VcsHistoryProviderBackgroundableProxy {
         }
         finally {
           cachedPartner.finished();
-          ApplicationManager.getApplication().invokeLater(() -> handler.completed(resultingActionKey), IdeaModalityState.NON_MODAL);
+          ApplicationManager.getApplication().invokeLater(() -> handler.completed(resultingActionKey), IdeaModalityState.nonModal());
         }
       }
     });

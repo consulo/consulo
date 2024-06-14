@@ -15,35 +15,30 @@
  */
 package consulo.ide.impl.idea.usages.impl;
 
-import consulo.find.FindManager;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.application.internal.TooManyUsagesStatus;
-import consulo.ui.ex.awt.Messages;
-import consulo.util.lang.StringUtil;
-import consulo.ui.ex.awt.HyperlinkAdapter;
-import consulo.usage.UsageInfo2UsageAdapter;
-import consulo.ide.impl.idea.usages.UsageLimitUtil;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.codeEditor.util.RangeBlinker;
-import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.application.AccessRule;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
-import consulo.application.TransactionGuard;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.impl.internal.performance.PerformanceWatcher;
 import consulo.application.impl.internal.progress.ProgressWrapper;
+import consulo.application.internal.TooManyUsagesStatus;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.function.Processor;
 import consulo.application.util.function.Processors;
 import consulo.codeEditor.CodeInsightColors;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.util.RangeBlinker;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributes;
 import consulo.content.scope.SearchScope;
 import consulo.disposer.Disposer;
 import consulo.document.util.Segment;
+import consulo.find.FindManager;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.ide.impl.idea.usages.UsageLimitUtil;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.project.Project;
@@ -51,14 +46,17 @@ import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.NotificationType;
 import consulo.ui.ex.action.KeyboardShortcut;
+import consulo.ui.ex.awt.HyperlinkAdapter;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.popup.Balloon;
 import consulo.usage.*;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -219,7 +217,7 @@ class SearchForUsagesRunnable implements Runnable {
       @Override
       protected void hyperlinkActivated(HyperlinkEvent e) {
         if (e.getDescription().equals(FIND_OPTIONS_HREF_TARGET)) {
-          TransactionGuard.getInstance().submitTransactionAndWait(() -> FindManager.getInstance(myProject).showSettingsAndFindUsages(targets));
+          FindManager.getInstance(myProject).showSettingsAndFindUsages(targets);
         }
       }
     };
@@ -233,8 +231,7 @@ class SearchForUsagesRunnable implements Runnable {
         if (e.getDescription().equals(SEARCH_IN_PROJECT_HREF_TARGET)) {
           PsiElement psiElement = getPsiElement(mySearchFor);
           if (psiElement != null) {
-            TransactionGuard.getInstance().submitTransactionAndWait(
-                    () -> FindManager.getInstance(myProject).findUsagesInScope(psiElement, GlobalSearchScope.projectScope(myProject)));
+            FindManager.getInstance(myProject).findUsagesInScope(psiElement, GlobalSearchScope.projectScope(myProject));
           }
         }
       }
@@ -321,7 +318,7 @@ class SearchForUsagesRunnable implements Runnable {
       notifyByFindBalloon(null, NotificationType.WARNING, myProcessPresentation, myProject,
                           Collections.singletonList(StringUtil.escapeXml(UsageViewManagerImpl.getProgressTitle(myPresentation))));
       findStartedBalloonShown.set(true);
-    }, 300, IdeaModalityState.NON_MODAL);
+    }, 300, IdeaModalityState.nonModal());
     UsageSearcher usageSearcher = mySearcherFactory.get();
 
     usageSearcher.generate(usage -> {
@@ -418,7 +415,7 @@ class SearchForUsagesRunnable implements Runnable {
             }
           }
         }
-      }, IdeaModalityState.NON_MODAL, myProject.getDisposed());
+      }, IdeaModalityState.nonModal(), myProject.getDisposed());
     }
     else if (usageCount == 1 && !myProcessPresentation.isShowPanelIfOnlyOneUsage()) {
       ApplicationManager.getApplication().invokeLater(() -> {
@@ -436,7 +433,7 @@ class SearchForUsagesRunnable implements Runnable {
         lines.add(createOptionsHtml(mySearchFor));
         NotificationType type = myOutOfScopeUsages.get() == 0 ? NotificationType.INFO : NotificationType.WARNING;
         notifyByFindBalloon(createGotToOptionsListener(mySearchFor), type, myProcessPresentation, myProject, lines);
-      }, IdeaModalityState.NON_MODAL, myProject.getDisposed());
+      }, IdeaModalityState.nonModal(), myProject.getDisposed());
     }
     else {
       final UsageViewImpl usageView = myUsageViewRef.get();
@@ -462,7 +459,7 @@ class SearchForUsagesRunnable implements Runnable {
         ApplicationManager.getApplication().invokeLater(() -> {
           NotificationType type = myOutOfScopeUsages.get() == 0 ? NotificationType.INFO : NotificationType.WARNING;
           notifyByFindBalloon(hyperlinkListener, type, myProcessPresentation, myProject, lines);
-        }, IdeaModalityState.NON_MODAL, myProject.getDisposed());
+        }, IdeaModalityState.nonModal(), myProject.getDisposed());
       }
     }
 

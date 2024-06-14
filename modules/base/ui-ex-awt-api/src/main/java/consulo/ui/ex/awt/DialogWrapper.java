@@ -725,7 +725,7 @@ public abstract class DialogWrapper {
             "alt pressed " + (char)eachInfo.getMnemonic()
           ));
 
-          new NoTransactionAction() {
+          new DumbAwareAction() {
             @RequiredUIAccess
             @Override
             public void actionPerformed(AnActionEvent e) {
@@ -1320,7 +1320,7 @@ public abstract class DialogWrapper {
     myPeer.setContentPane(root);
 
     final CustomShortcutSet sc = new CustomShortcutSet(SHOW_OPTION_KEYSTROKE);
-    final AnAction toggleShowOptions = new NoTransactionAction() {
+    final AnAction toggleShowOptions = new DumbAwareAction() {
       @RequiredUIAccess
       @Override
       public void actionPerformed(AnActionEvent e) {
@@ -1392,7 +1392,7 @@ public abstract class DialogWrapper {
   }
 
   protected static void installEnterHook(JComponent root) {
-    new NoTransactionAction() {
+    new DumbAwareAction() {
       @RequiredUIAccess
       @Override
       public void actionPerformed(AnActionEvent e) {
@@ -2565,12 +2565,5 @@ public abstract class DialogWrapper {
     DOT,
     SIGN,
     LINE
-  }
-
-  private static abstract class NoTransactionAction extends DumbAwareAction {
-    @Override
-    public boolean startInTransaction() {
-      return false;
-    }
   }
 }

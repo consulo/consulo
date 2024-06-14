@@ -37,7 +37,7 @@ module consulo.language.editor.impl {
   exports consulo.language.editor.impl.internal.markup to consulo.ide.impl, consulo.desktop.swt.ide.impl, consulo.desktop.awt.ide.impl;
   exports consulo.language.editor.impl.internal.hint to consulo.ide.impl, consulo.desktop.awt.ide.impl;
 
-  opens consulo.language.editor.impl.internal.template to consulo.util.xml.serializer;
+  opens consulo.language.editor.impl.internal.template to consulo.util.xml.serializer, consulo.application.impl;
   opens consulo.language.editor.impl.internal.inspection.scheme to consulo.util.xml.serializer, consulo.component.impl;
   // listener calls via messagebus
   opens consulo.language.editor.impl.internal.rawHighlight to consulo.compiler.impl;

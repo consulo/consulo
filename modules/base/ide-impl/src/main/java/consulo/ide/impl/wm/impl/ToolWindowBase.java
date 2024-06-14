@@ -118,7 +118,7 @@ public abstract class ToolWindowBase implements ToolWindowEx {
     UIAccess.assertIsUIThread();
 
     final UiActivity activity = new UiActivity.Focus("toolWindow:" + myId);
-    UiActivityMonitor.getInstance().addActivity(myToolWindowManager.getProject(), activity, IdeaModalityState.NON_MODAL);
+    UiActivityMonitor.getInstance().addActivity(myToolWindowManager.getProject(), activity, IdeaModalityState.nonModal());
 
     myToolWindowManager.activateToolWindow(myId, forced, autoFocusContents);
 

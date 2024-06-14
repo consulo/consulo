@@ -45,7 +45,7 @@ class FictiveBackgroundable extends Task.Backgroundable {
 
   public void run(@Nonnull ProgressIndicator indicator) {
     myWaiter.run(indicator);
-    runOrInvokeLaterAboveProgress(() -> myWaiter.onSuccess(), notNull(myState, IdeaModalityState.NON_MODAL), (Project)myProject);
+    runOrInvokeLaterAboveProgress(() -> myWaiter.onSuccess(), notNull(myState, IdeaModalityState.nonModal()), (Project)myProject);
   }
 
   @Override

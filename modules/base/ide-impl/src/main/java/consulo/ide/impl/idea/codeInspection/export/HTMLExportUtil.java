@@ -47,7 +47,7 @@ public class HTMLExportUtil {
           );
         }
       };
-      ApplicationManager.getApplication().invokeLater(showError, IdeaModalityState.NON_MODAL);
+      ApplicationManager.getApplication().invokeLater(showError, IdeaModalityState.nonModal());
       throw new ProcessCanceledException();
     }
   }
@@ -68,7 +68,7 @@ public class HTMLExportUtil {
           );
         }
       };
-      ApplicationManager.getApplication().invokeLater(showError, IdeaModalityState.NON_MODAL);
+      ApplicationManager.getApplication().invokeLater(showError, IdeaModalityState.nonModal());
       throw new ProcessCanceledException();
     }
   }

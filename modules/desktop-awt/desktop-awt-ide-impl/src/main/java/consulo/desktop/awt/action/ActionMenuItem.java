@@ -15,8 +15,6 @@
  */
 package consulo.desktop.awt.action;
 
-import consulo.application.ApplicationManager;
-import consulo.application.TransactionGuard;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.dataContext.DataContext;
@@ -107,14 +105,6 @@ public class ActionMenuItem extends JBCheckBoxMenuItem {
   public void prepare() {
     init();
     installSynchronizer();
-  }
-
-  /**
-   * We have to make this method public to allow BegMenuItemUI to invoke it.
-   */
-  @Override
-  public void fireActionPerformed(final ActionEvent event) {
-    TransactionGuard.submitTransaction(ApplicationManager.getApplication(), () -> ActionMenuItem.super.fireActionPerformed(event));
   }
 
   @Override

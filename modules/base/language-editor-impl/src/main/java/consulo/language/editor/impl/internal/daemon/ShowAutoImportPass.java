@@ -4,7 +4,6 @@ package consulo.language.editor.impl.internal.daemon;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.TransactionGuard;
 import consulo.application.progress.ProgressIndicator;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
@@ -26,8 +25,8 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.Pair;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -62,7 +61,7 @@ public class ShowAutoImportPass extends TextEditorHighlightingPass {
 
   @Override
   public void doApplyInformationToEditor() {
-    TransactionGuard.submitTransaction(myProject, this::showImports);
+    myProject.getUIAccess().give(() -> showImports());
   }
 
   private void showImports() {

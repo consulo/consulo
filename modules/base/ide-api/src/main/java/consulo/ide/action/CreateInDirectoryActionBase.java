@@ -73,11 +73,6 @@ public abstract class CreateInDirectoryActionBase extends AnAction {
   }
 
   @Override
-  public boolean startInTransaction() {
-    return true;
-  }
-
-  @Override
   public boolean isDumbAware() {
     return false;
   }

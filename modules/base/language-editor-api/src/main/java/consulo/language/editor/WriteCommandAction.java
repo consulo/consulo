@@ -17,7 +17,6 @@ package consulo.language.editor;
 
 import consulo.application.*;
 import consulo.application.util.function.ThrowableComputable;
-import consulo.component.ProcessCanceledException;
 import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -26,9 +25,9 @@ import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.ref.Ref;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.function.Supplier;
@@ -152,16 +151,7 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
     }
 
     final RunResult<T> result = new RunResult<>(this);
-    if (dispatchThread) {
-      performWriteCommandAction(result);
-    }
-    else {
-      try {
-        TransactionGuard.getInstance().submitTransactionAndWait(() -> performWriteCommandAction(result));
-      }
-      catch (ProcessCanceledException ignored) {
-      }
-    }
+    performWriteCommandAction(result);
     return result;
   }
 

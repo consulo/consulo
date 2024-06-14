@@ -179,7 +179,7 @@ public class ExternalStorageManager {
           if (PluginInstallUtil.showRestartIDEADialog() == Messages.YES) {
             Application.get().restart(true);
           }
-        }, IdeaModalityState.NON_MODAL);
+        }, IdeaModalityState.nonModal());
       }
     }
     catch (Exception e) {
@@ -216,7 +216,7 @@ public class ExternalStorageManager {
 
       LOG.info("Reloading components: " + reloadComponentNames);
 
-      AppUIExecutor.onWriteThread(IdeaModalityState.NON_MODAL).later().execute(() -> {
+      AppUIExecutor.onWriteThread(IdeaModalityState.nonModal()).later().execute(() -> {
         myApplicationStore.reinitComponents(reloadComponentNames, true);
 
         myApplication.invokeLater(() -> {
@@ -279,7 +279,7 @@ public class ExternalStorageManager {
       // add action for restart
       StartupActionScriptManager.addActionCommand(new StartupActionScriptManager.CreateFileCommand(myStorage.getInitializedFile()));
 
-      myApplication.invokeLater(this::showRestartDialog, IdeaModalityState.NON_MODAL);
+      myApplication.invokeLater(this::showRestartDialog, IdeaModalityState.nonModal());
     }
     catch (NoContentException ignored) {
       // there no content on server. it will throw at doGetBytes. In this case we need initialize all data
@@ -296,7 +296,7 @@ public class ExternalStorageManager {
 
       // if there plugins change - require restart
       if (myPluginManager.updatePlugins(indicator)) {
-        myApplication.invokeLater(this::showRestartDialog, IdeaModalityState.NON_MODAL);
+        myApplication.invokeLater(this::showRestartDialog, IdeaModalityState.nonModal());
       }
     }
     catch (IOException e) {

@@ -73,7 +73,7 @@ public class ZipperUpdater {
             myAlarm.addRequest(request, urgent ? 0 : myDelay, IdeaModalityState.any());
           }
           else if (!ApplicationManager.getApplication().isDispatchThread()) {
-            myAlarm.addRequest(request, urgent ? 0 : myDelay, IdeaModalityState.NON_MODAL);
+            myAlarm.addRequest(request, urgent ? 0 : myDelay, IdeaModalityState.nonModal());
           }
           else {
             myAlarm.addRequest(request, urgent ? 0 : myDelay);

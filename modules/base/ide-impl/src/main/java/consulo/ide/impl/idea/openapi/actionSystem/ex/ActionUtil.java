@@ -16,20 +16,19 @@
 package consulo.ide.impl.idea.openapi.actionSystem.ex;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.Application;
-import consulo.application.TransactionGuard;
 import consulo.application.dumb.IndexNotReadyException;
+import consulo.application.impl.internal.ApplicationNamesInfo;
+import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.util.PausesStat;
+import consulo.language.editor.CommonDataKeys;
 import consulo.language.util.ModuleUtilCore;
-import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
-import consulo.platform.Platform;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
@@ -43,7 +42,6 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.awt.*;
@@ -68,16 +66,12 @@ public class ActionUtil {
     return anyActionFromGroupMatches(group, true, Predicate.isEqual(action));
   }
 
-  public static boolean anyActionFromGroupMatches(
-    @Nonnull ActionGroup group,
-    boolean processPopupSubGroups,
-    @Nonnull Predicate<? super AnAction> condition
-  ) {
+  public static boolean anyActionFromGroupMatches(@Nonnull ActionGroup group, boolean processPopupSubGroups, @Nonnull Predicate<? super AnAction> condition) {
     for (AnAction child : group.getChildren(null)) {
       if (condition.test(child)) return true;
-      if (child instanceof ActionGroup childGroup) {
-        if ((processPopupSubGroups || !childGroup.isPopup())
-          && anyActionFromGroupMatches(childGroup, processPopupSubGroups, condition)) {
+      if (child instanceof ActionGroup) {
+        ActionGroup childGroup = (ActionGroup)child;
+        if ((processPopupSubGroups || !childGroup.isPopup()) && anyActionFromGroupMatches(childGroup, processPopupSubGroups, condition)) {
           return true;
         }
       }
@@ -85,14 +79,10 @@ public class ActionUtil {
     return false;
   }
 
-  public static void recursiveRegisterShortcutSet(
-    @Nonnull ActionGroup group,
-    @Nonnull JComponent component,
-    @Nullable Disposable parentDisposable
-  ) {
+  public static void recursiveRegisterShortcutSet(@Nonnull ActionGroup group, @Nonnull JComponent component, @Nullable Disposable parentDisposable) {
     for (AnAction action : group.getChildren(null)) {
-      if (action instanceof ActionGroup childGroup) {
-        recursiveRegisterShortcutSet(childGroup, component, parentDisposable);
+      if (action instanceof ActionGroup) {
+        recursiveRegisterShortcutSet((ActionGroup)action, component, parentDisposable);
       }
       action.registerCustomShortcutSet(component, parentDisposable);
     }
@@ -107,7 +97,7 @@ public class ActionUtil {
         actionNames.add(s);
       }
 
-      final Project _project = event.getData(Project.KEY);
+      final Project _project = event.getData(CommonDataKeys.PROJECT);
       if (_project != null && project == null) {
         project = _project;
       }
@@ -121,10 +111,9 @@ public class ActionUtil {
   }
 
   @Nonnull
-  @NonNls
   private static String getActionUnavailableMessage(@Nonnull List<String> actionNames) {
     String message;
-    final String beAvailableUntil = " available while " + Application.get().getName() + " is updating indices";
+    final String beAvailableUntil = " available while " + ApplicationNamesInfo.getInstance().getProductName() + " is updating indices";
     if (actionNames.isEmpty()) {
       message = "This action is not" + beAvailableUntil;
     }
@@ -139,8 +128,7 @@ public class ActionUtil {
 
   @Nonnull
   public static String getUnavailableMessage(@Nonnull String action, boolean plural) {
-    return action + (plural ? " are" : " is") + " not available" +
-        " while " + Application.get().getName() + " is updating indices";
+    return action + (plural ? " are" : " is") + " not available while " + ApplicationNamesInfo.getInstance().getProductName() + " is updating indices";
   }
 
   private static int insidePerformDumbAwareUpdate;
@@ -217,7 +205,7 @@ public class ActionUtil {
 
   @RequiredReadAction
   private static boolean checkModuleExtensions(AnAction action, AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       return true;
     }
@@ -234,7 +222,7 @@ public class ActionUtil {
       }
     }
     else {
-      Module module = e.getData(Module.KEY);
+      Module module = e.getData(CommonDataKeys.MODULE);
       if (module != null) {
         boolean result = checkModuleForModuleExtensions(module, moduleExtensionIds);
         if (result) {
@@ -242,7 +230,7 @@ public class ActionUtil {
         }
       }
 
-      VirtualFile[] virtualFiles = e.getData(VirtualFile.KEY_OF_ARRAY);
+      VirtualFile[] virtualFiles = e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
       if (virtualFiles != null) {
         for (VirtualFile virtualFile : virtualFiles) {
           Module moduleForFile = ModuleUtilCore.findModuleForFile(virtualFile, project);
@@ -322,28 +310,11 @@ public class ActionUtil {
   }
 
   public static void performActionDumbAware(AnAction action, AnActionEvent e) {
-    Runnable runnable = new Runnable() {
-      @Override
-      public void run() {
-        try {
-          action.actionPerformed(e);
-        }
-        catch (IndexNotReadyException e1) {
-          showDumbModeWarning(e);
-        }
-      }
-
-      @Override
-      public String toString() {
-        return action + " of " + action.getClass();
-      }
-    };
-
-    if (action.startInTransaction()) {
-      TransactionGuard.getInstance().submitTransactionAndWait(runnable);
+    try {
+      action.actionPerformed(e);
     }
-    else {
-      runnable.run();
+    catch (IndexNotReadyException e1) {
+      showDumbModeWarning(e);
     }
   }
 
@@ -448,17 +419,12 @@ public class ActionUtil {
 
   @Nullable
   public static ShortcutSet getMnemonicAsShortcut(@Nonnull AnAction action) {
-    int mnemonic = KeyEvent.getExtendedKeyCodeForChar(
-      TextWithMnemonic.parse(action.getTemplatePresentation().getTextWithMnemonic()).getMnemonic()
-    );
+    int mnemonic = KeyEvent.getExtendedKeyCodeForChar(TextWithMnemonic.parse(action.getTemplatePresentation().getTextWithMnemonic()).getMnemonic());
     if (mnemonic != KeyEvent.VK_UNDEFINED) {
-      KeyboardShortcut ctrlAltShortcut = new KeyboardShortcut(
-        KeyStroke.getKeyStroke(mnemonic, InputEvent.ALT_DOWN_MASK | InputEvent.CTRL_DOWN_MASK),
-        null
-      );
+      KeyboardShortcut ctrlAltShortcut = new KeyboardShortcut(KeyStroke.getKeyStroke(mnemonic, InputEvent.ALT_DOWN_MASK | InputEvent.CTRL_DOWN_MASK), null);
       KeyboardShortcut altShortcut = new KeyboardShortcut(KeyStroke.getKeyStroke(mnemonic, InputEvent.ALT_DOWN_MASK), null);
       CustomShortcutSet shortcutSet;
-      if (Platform.current().os().isMac()) {
+      if (SystemInfo.isMac) {
         if (Registry.is("ide.mac.alt.mnemonic.without.ctrl")) {
           shortcutSet = new CustomShortcutSet(ctrlAltShortcut, altShortcut);
         }

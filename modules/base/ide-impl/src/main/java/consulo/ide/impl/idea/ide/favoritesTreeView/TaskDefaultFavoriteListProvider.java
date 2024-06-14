@@ -219,7 +219,7 @@ public class TaskDefaultFavoriteListProvider extends AbstractFavoritesListProvid
       public void run() {
         popup.showInCenterOf(tree);
       }
-    }, IdeaModalityState.NON_MODAL, project.getDisposed());
+    }, IdeaModalityState.nonModal(), project.getDisposed());
   }
 
   //private Operation getCustomEditOperation() {

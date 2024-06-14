@@ -59,7 +59,7 @@ public class OpenRepositoryVersionAction extends AnAction implements DumbAware {
     e.getPresentation().setEnabled(project != null && changes != null &&
                                    (! CommittedChangesBrowserUseCase.IN_AIR.equals(e.getDataContext().getData(CommittedChangesBrowserUseCase.DATA_KEY))) &&
                                    hasValidChanges(changes) &&
-                                   IdeaModalityState.NON_MODAL.equals(IdeaModalityState.current()));
+                                   IdeaModalityState.nonModal().equals(IdeaModalityState.current()));
   }
 
   private static boolean hasValidChanges(final Change[] changes) {

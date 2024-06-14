@@ -217,7 +217,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
           if (myUsagePreviewPanel.isVisible()) {
             updatePreviewPanel();
           }
-        }, IdeaModalityState.NON_MODAL, myProject.getDisposed());
+        }, IdeaModalityState.nonModal(), myProject.getDisposed());
       }
     });
 

@@ -43,22 +43,16 @@ import consulo.ui.ex.action.UpdateInBackground;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.lang.function.Condition;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
 
 public abstract class BaseRefactoringAction extends AnAction implements UpdateInBackground {
-  private final Condition<Language> myLanguageCondition = language -> isAvailableForLanguage(language);
-
-  @Override
-  public boolean startInTransaction() {
-    return true;
-  }
-
+  private final Predicate<Language> myLanguageCondition = language -> isAvailableForLanguage(language);
 
   protected abstract boolean isAvailableInEditorOnly();
 
