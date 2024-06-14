@@ -16,48 +16,41 @@
 package consulo.ide.impl.idea.ide.ui.customization;
 
 import consulo.application.AllIcons;
-import consulo.ide.IdeBundle;
 import consulo.application.Application;
+import consulo.configurable.ConfigurationException;
+import consulo.disposer.Disposable;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickList;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickListsManager;
+import consulo.ide.impl.idea.openapi.keymap.impl.ui.ActionsTree;
+import consulo.ide.impl.idea.openapi.keymap.impl.ui.ActionsTreeUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapGroupImpl;
+import consulo.ide.impl.idea.openapi.util.NotWorkingIconLoader;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.ide.impl.idea.packageDependencies.ui.TreeExpansionMonitor;
+import consulo.logging.Logger;
+import consulo.platform.base.localize.IdeLocalize;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
+import consulo.project.ui.internal.IdeFrameEx;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnSeparator;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickList;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickListsManager;
-import consulo.fileChooser.FileChooserDescriptor;
-import consulo.ide.impl.idea.openapi.keymap.impl.ui.ActionsTree;
-import consulo.ide.impl.idea.openapi.keymap.impl.ui.ActionsTreeUtil;
-import consulo.configurable.ConfigurationException;
-import consulo.project.Project;
-import consulo.project.ProjectManager;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.TextFieldWithBrowseButton;
-import consulo.ui.ex.awt.VerticalFlowLayout;
-import consulo.ide.impl.idea.openapi.util.NotWorkingIconLoader;
-import consulo.util.lang.ObjectUtil;
-import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.internal.IdeFrameEx;
-import consulo.project.ui.internal.WindowManagerEx;
-import consulo.ide.impl.idea.packageDependencies.ui.TreeExpansionMonitor;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
-import consulo.ui.ex.awt.InsertPathAction;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.internal.ImageLoader;
-import consulo.ui.ex.awt.EmptyIcon;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.BorderLayoutPanel;
+import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.disposer.Disposable;
-import consulo.logging.Logger;
-
+import consulo.ui.ex.keymap.localize.KeyMapLocalize;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.tree.*;
@@ -136,7 +129,7 @@ public class CustomizableActionsPanel implements Disposable {
       myRestoreDefaultButton.setEnabled(!findActionsUnderSelection().isEmpty());
     });
 
-    myAddActionButton = new JButton(IdeBundle.message("button.add.action.after"));
+    myAddActionButton = new JButton(IdeLocalize.buttonAddActionAfter().get());
     myAddActionButton.addActionListener(e -> {
       final List<TreePath> expandedPaths = TreeUtil.collectExpandedPaths(myActionsTree);
       final TreePath selectionPath = myActionsTree.getLeadSelectionPath();
@@ -163,7 +156,7 @@ public class CustomizableActionsPanel implements Disposable {
       TreeUtil.restoreExpandedPaths(myActionsTree, expandedPaths);
     });
 
-    myEditIconButton = new JButton(IdeBundle.message("button.edit.action.icon"));
+    myEditIconButton = new JButton(IdeLocalize.buttonEditActionIcon().get());
     myEditIconButton.addActionListener(e -> {
       myRestoreAllDefaultButton.setEnabled(true);
       final List<TreePath> expandedPaths = TreeUtil.collectExpandedPaths(myActionsTree);
@@ -178,7 +171,7 @@ public class CustomizableActionsPanel implements Disposable {
       TreeUtil.restoreExpandedPaths(myActionsTree, expandedPaths);
     });
 
-    myAddSeparatorButton = new JButton(IdeBundle.message("button.add.separator"));
+    myAddSeparatorButton = new JButton(IdeLocalize.buttonAddSeparator().get());
     myAddSeparatorButton.addActionListener(e -> {
       final List<TreePath> expandedPaths = TreeUtil.collectExpandedPaths(myActionsTree);
       final TreePath selectionPath = myActionsTree.getLeadSelectionPath();
@@ -192,7 +185,7 @@ public class CustomizableActionsPanel implements Disposable {
       TreeUtil.restoreExpandedPaths(myActionsTree, expandedPaths);
     });
 
-    myRemoveActionButton = new JButton(IdeBundle.message("button.remove"));
+    myRemoveActionButton = new JButton(IdeLocalize.buttonRemove().get());
     myRemoveActionButton.addActionListener(e -> {
       final List<TreePath> expandedPaths = TreeUtil.collectExpandedPaths(myActionsTree);
       final TreePath[] selectionPath = myActionsTree.getSelectionPaths();
@@ -207,7 +200,7 @@ public class CustomizableActionsPanel implements Disposable {
       TreeUtil.restoreExpandedPaths(myActionsTree, expandedPaths);
     });
 
-    myMoveActionUpButton = new JButton(IdeBundle.message("button.move.up.u"));
+    myMoveActionUpButton = new JButton(IdeLocalize.buttonMoveUpU().get());
     myMoveActionUpButton.addActionListener(e -> {
       final List<TreePath> expandedPaths = TreeUtil.collectExpandedPaths(myActionsTree);
       final TreePath[] selectionPath = myActionsTree.getSelectionPaths();
@@ -228,7 +221,7 @@ public class CustomizableActionsPanel implements Disposable {
       }
     });
 
-    myMoveActionDownButton = new JButton(IdeBundle.message("button.move.down.d"));
+    myMoveActionDownButton = new JButton(IdeLocalize.buttonMoveDownD().get());
     myMoveActionDownButton.addActionListener(e -> {
       final List<TreePath> expandedPaths = TreeUtil.collectExpandedPaths(myActionsTree);
       final TreePath[] selectionPath = myActionsTree.getSelectionPaths();
@@ -331,8 +324,11 @@ public class CustomizableActionsPanel implements Disposable {
   private void editToolbarIcon(String actionId, DefaultMutableTreeNode node) {
     final AnAction anAction = ActionManager.getInstance().getAction(actionId);
     if (isToolbarAction(node) && anAction.getTemplatePresentation() != null && anAction.getTemplatePresentation().getIcon() == null) {
-      final int exitCode = Messages.showOkCancelDialog(IdeBundle.message("error.adding.action.without.icon.to.toolbar"), IdeBundle.message("title.unable.to.add.action.without.icon.to.toolbar"),
-                                                       Messages.getInformationIcon());
+      final int exitCode = Messages.showOkCancelDialog(
+        IdeLocalize.errorAddingActionWithoutIconToToolbar().get(),
+        IdeLocalize.titleUnableToAddActionWithoutIconToToolbar().get(),
+        Messages.getInformationIcon()
+      );
       if (exitCode == Messages.OK) {
         mySelectedSchema.addIconCustomization(actionId, null);
         anAction.getTemplatePresentation().setIcon(AllIcons.Toolbar.Unknown);
@@ -511,8 +507,8 @@ public class CustomizableActionsPanel implements Disposable {
 
   private static boolean isToolbarAction(DefaultMutableTreeNode node) {
     return node.getParent() != null &&
-           ((DefaultMutableTreeNode)node.getParent()).getUserObject() instanceof KeymapGroupImpl &&
-           ((KeymapGroupImpl)((DefaultMutableTreeNode)node.getParent()).getUserObject()).getName().equals(ActionsTreeUtil.MAIN_TOOLBAR);
+      ((DefaultMutableTreeNode)node.getParent()).getUserObject() instanceof KeymapGroupImpl &&
+      ((KeymapGroupImpl)((DefaultMutableTreeNode)node.getParent()).getUserObject()).getName().equals(KeyMapLocalize.mainToolbarTitle().get());
   }
 
   @Nullable
@@ -522,7 +518,11 @@ public class CustomizableActionsPanel implements Disposable {
 
   protected boolean doSetIcon(DefaultMutableTreeNode node, @Nullable String path, Component component) {
     if (StringUtil.isNotEmpty(path) && !new File(path).isFile()) {
-      Messages.showErrorDialog(component, IdeBundle.message("error.file.not.found.message", path), IdeBundle.message("title.choose.action.icon"));
+      Messages.showErrorDialog(
+        component,
+        IdeLocalize.errorFileNotFoundMessage(path).get(),
+        IdeLocalize.titleChooseActionIcon().get()
+      );
       return false;
     }
 
@@ -542,7 +542,11 @@ public class CustomizableActionsPanel implements Disposable {
         Icon icon = new File(path).exists() ? NotWorkingIconLoader.getIcon(image) : null;
         if (icon != null) {
           if (icon.getIconWidth() > EmptyIcon.ICON_18.getIconWidth() || icon.getIconHeight() > EmptyIcon.ICON_18.getIconHeight()) {
-            Messages.showErrorDialog(component, IdeBundle.message("custom.icon.validation.message"), IdeBundle.message("title.choose.action.icon"));
+            Messages.showErrorDialog(
+              component,
+              IdeLocalize.customIconValidationMessage().get(),
+              IdeLocalize.titleChooseActionIcon().get()
+            );
             return false;
           }
           node.setUserObject(Pair.create(actionId, icon));
@@ -574,7 +578,12 @@ public class CustomizableActionsPanel implements Disposable {
         return file.getName().endsWith(".png");
       }
     };
-    textField.addBrowseFolderListener(IdeBundle.message("title.browse.icon"), IdeBundle.message("prompt.browse.icon.for.selected.action"), null, fileChooserDescriptor);
+    textField.addBrowseFolderListener(
+      IdeLocalize.titleBrowseIcon().get(),
+      IdeLocalize.promptBrowseIconForSelectedAction().get(),
+      null,
+      fileChooserDescriptor
+    );
     InsertPathAction.addTo(textField.getTextField(), fileChooserDescriptor);
     return textField;
   }
@@ -585,7 +594,7 @@ public class CustomizableActionsPanel implements Disposable {
 
     protected EditIconDialog(DefaultMutableTreeNode node) {
       super(false);
-      setTitle(IdeBundle.message("title.choose.action.icon"));
+      setTitle(IdeLocalize.titleChooseActionIcon());
       init();
       myNode = node;
       final String actionId = getActionId(node);
@@ -655,13 +664,14 @@ public class CustomizableActionsPanel implements Disposable {
 
     FindAvailableActionsDialog() {
       super(false);
-      setTitle(IdeBundle.message("action.choose.actions.to.add"));
+      setTitle(IdeLocalize.actionChooseActionsToAdd());
       init();
     }
 
     @Override
     protected JComponent createCenterPanel() {
-      KeymapGroupImpl rootGroup = ActionsTreeUtil.createMainGroup(null, null, QuickListsManager.getInstance().getAllQuickLists());
+      KeymapGroupImpl rootGroup =
+        ActionsTreeUtil.createMainGroup(null, null, QuickListsManager.getInstance().getAllQuickLists());
       DefaultMutableTreeNode root = ActionsTreeUtil.createNode(rootGroup);
       DefaultTreeModel model = new DefaultTreeModel(root);
       myTree = new Tree();
@@ -669,7 +679,7 @@ public class CustomizableActionsPanel implements Disposable {
       myTree.setCellRenderer(new MyTreeCellRenderer());
       final ActionManager actionManager = ActionManager.getInstance();
 
-      mySetIconButton = new JButton(IdeBundle.message("button.set.icon"));
+      mySetIconButton = new JButton(IdeLocalize.buttonSetIcon().get());
       mySetIconButton.setEnabled(false);
       mySetIconButton.addActionListener(e -> {
         final TreePath selectionPath = myTree.getSelectionPath();
@@ -687,7 +697,7 @@ public class CustomizableActionsPanel implements Disposable {
       });
       JPanel northPanel = new JPanel(new BorderLayout());
       northPanel.add(myTextField, BorderLayout.CENTER);
-      final JLabel label = new JLabel(IdeBundle.message("label.icon.path"));
+      final JLabel label = new JLabel(IdeLocalize.labelIconPath().get());
       label.setLabelFor(myTextField.getChildComponent());
       northPanel.add(label, BorderLayout.WEST);
       northPanel.add(mySetIconButton, BorderLayout.EAST);
