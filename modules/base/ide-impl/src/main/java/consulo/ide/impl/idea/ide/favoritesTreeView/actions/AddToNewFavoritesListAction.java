@@ -17,13 +17,14 @@
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
 import consulo.application.AllIcons;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
+import consulo.language.editor.CommonDataKeys;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.IdeLocalize;
+import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.project.Project;
 
 import java.util.Collection;
 
@@ -33,8 +34,11 @@ import java.util.Collection;
  */
 class AddToNewFavoritesListAction extends AnAction {
   public AddToNewFavoritesListAction() {
-    super(IdeBundle.message("action.add.to.new.favorites.list"),
-          "Add To New Favorites List", AllIcons.General.AddFavoritesList);
+    super(
+      IdeLocalize.actionAddToNewFavoritesList(),
+      LocalizeValue.localizeTODO("Add To New Favorites List"),
+      AllIcons.General.AddFavoritesList
+    );
   }
 
   @Override

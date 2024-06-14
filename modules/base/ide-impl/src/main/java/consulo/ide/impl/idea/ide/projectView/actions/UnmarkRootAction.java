@@ -16,24 +16,28 @@
 package consulo.ide.impl.idea.ide.projectView.actions;
 
 import consulo.application.AllIcons;
-import consulo.ui.ex.action.ActionsBundle;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.LangDataKeys;
+import consulo.language.content.LanguageContentFolderScopes;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
+import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ContentFolder;
-import consulo.module.content.ModuleRootManager;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.content.LanguageContentFolderScopes;
 
 /**
  * @author yole
  */
 public class UnmarkRootAction extends MarkRootAction {
   public UnmarkRootAction() {
-    super(ActionsBundle.message("action.UnmarkRoot.text"), null, AllIcons.Actions.Cancel, null);
+    super(
+      ActionLocalize.actionUnmarkrootText(),
+      LocalizeValue.empty(),
+      AllIcons.Actions.Cancel,
+      null
+    );
   }
 
   @Override
@@ -42,8 +46,8 @@ public class UnmarkRootAction extends MarkRootAction {
   }
 
   public boolean canUnmark(AnActionEvent e) {
-    Module module = e.getData(LangDataKeys.MODULE);
-    VirtualFile[] vFiles = e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
+    Module module = e.getData(Module.KEY);
+    VirtualFile[] vFiles = e.getData(VirtualFile.KEY_OF_ARRAY);
     if (module == null || vFiles == null) {
       return false;
     }

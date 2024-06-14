@@ -17,25 +17,21 @@
 package consulo.ide.impl.idea.ide.favoritesTreeView;
 
 import consulo.application.AllIcons;
-import consulo.bookmark.ui.view.event.FavoritesListener;
 import consulo.bookmark.ui.view.BookmarkNodeProvider;
 import consulo.bookmark.ui.view.FavoritesListNode;
 import consulo.bookmark.ui.view.FavoritesListProvider;
 import consulo.bookmark.ui.view.FavoritesTreeNodeDescriptor;
+import consulo.bookmark.ui.view.event.FavoritesListener;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.IdeBundle;
 import consulo.ide.IdeView;
 import consulo.ide.impl.idea.ide.favoritesTreeView.actions.*;
-import consulo.project.ui.view.internal.node.LibraryGroupElement;
-import consulo.project.ui.view.internal.node.NamedLibraryElement;
 import consulo.ide.impl.idea.ide.ui.customization.CustomizationUtil;
 import consulo.ide.impl.idea.ide.util.DeleteHandler;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
-import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.EditSourceOnEnterKeyHandler;
 import consulo.ide.util.DirectoryChooserUtil;
@@ -52,7 +48,10 @@ import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.Navigatable;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
+import consulo.project.ui.view.internal.node.LibraryGroupElement;
+import consulo.project.ui.view.internal.node.NamedLibraryElement;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.project.ui.view.tree.ModuleGroup;
 import consulo.project.ui.wm.ToolWindowManager;
@@ -72,11 +71,12 @@ import consulo.ui.ex.awt.tree.LoadingNode;
 import consulo.ui.ex.awt.tree.NodeRenderer;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.tree.action.CollapseAllAction;
+import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.util.dataholder.Key;
+import consulo.util.io.URLUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -423,14 +423,14 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
     if (LangDataKeys.NO_NEW_ACTION == dataId) {
       return Boolean.TRUE;
     }
-    if (CommonDataKeys.PSI_ELEMENT == dataId) {
+    if (PsiElement.KEY == dataId) {
       PsiElement[] elements = getSelectedPsiElements();
       if (elements.length != 1) {
         return null;
       }
       return elements[0] != null && elements[0].isValid() ? elements[0] : null;
     }
-    if (LangDataKeys.PSI_ELEMENT_ARRAY == dataId) {
+    if (PsiElement.KEY_OF_ARRAY == dataId) {
       final PsiElement[] elements = getSelectedPsiElements();
       ArrayList<PsiElement> result = new ArrayList<>();
       for (PsiElement element : elements) {
@@ -662,7 +662,7 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
       }
       final PsiElement[] elements = PsiUtilCore.toPsiElementArray(validElements);
 
-      LocalHistoryAction a = LocalHistory.getInstance().startAction(IdeBundle.message("progress.deleting"));
+      LocalHistoryAction a = LocalHistory.getInstance().startAction(IdeLocalize.progressDeleting().get());
       try {
         DeleteHandler.deletePsiElement(elements, myProject);
       }
@@ -681,8 +681,8 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
           if (element instanceof PsiDirectory) {
             final VirtualFile virtualFile = ((PsiDirectory)element).getVirtualFile();
             final String path = virtualFile.getPath();
-            if (path.endsWith(ArchiveFileSystem.ARCHIVE_SEPARATOR)) { // if is jar-file root
-              final VirtualFile vFile = LocalFileSystem.getInstance().findFileByPath(path.substring(0, path.length() - ArchiveFileSystem.ARCHIVE_SEPARATOR.length()));
+            if (path.endsWith(URLUtil.ARCHIVE_SEPARATOR)) { // if is jar-file root
+              final VirtualFile vFile = LocalFileSystem.getInstance().findFileByPath(path.substring(0, path.length() - URLUtil.ARCHIVE_SEPARATOR.length()));
               if (vFile != null) {
                 final PsiFile psiFile = PsiManager.getInstance(myProject).findFile(vFile);
                 if (psiFile != null) {

@@ -15,20 +15,17 @@
  */
 package consulo.ide.impl.idea.ide.highlighter.custom.impl;
 
-import consulo.application.CommonBundle;
-import consulo.ide.IdeBundle;
-import consulo.language.internal.custom.SyntaxTable;
-import consulo.ide.impl.idea.openapi.fileTypes.impl.AbstractFileType;
 import consulo.configurable.ConfigurationException;
 import consulo.execution.configuration.ui.SettingsEditor;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.fileTypes.impl.AbstractFileType;
+import consulo.language.internal.custom.SyntaxTable;
+import consulo.platform.base.localize.CommonLocalize;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.ui.ex.awt.*;
-import consulo.ui.ex.awt.FormBuilder;
-import consulo.ui.ex.awt.GridBag;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.util.ListUtil;
-
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -42,11 +39,11 @@ import java.awt.event.MouseEvent;
 public class CustomFileTypeEditor extends SettingsEditor<AbstractFileType> {
   private final JTextField myFileTypeName = new JTextField();
   private final JTextField myFileTypeDescr = new JTextField();
-  private final JCheckBox myIgnoreCase = new JCheckBox(IdeBundle.message("checkbox.customfiletype.ignore.case"));
-  private final JCheckBox mySupportBraces = new JCheckBox(IdeBundle.message("checkbox.customfiletype.support.paired.braces"));
-  private final JCheckBox mySupportBrackets = new JCheckBox(IdeBundle.message("checkbox.customfiletype.support.paired.brackets"));
-  private final JCheckBox mySupportParens = new JCheckBox(IdeBundle.message("checkbox.customfiletype.support.paired.parens"));
-  private final JCheckBox mySupportEscapes = new JCheckBox(IdeBundle.message("checkbox.customfiletype.support.string.escapes"));
+  private final JCheckBox myIgnoreCase = new JCheckBox(IdeLocalize.checkboxCustomfiletypeIgnoreCase().get());
+  private final JCheckBox mySupportBraces = new JCheckBox(IdeLocalize.checkboxCustomfiletypeSupportPairedBraces().get());
+  private final JCheckBox mySupportBrackets = new JCheckBox(IdeLocalize.checkboxCustomfiletypeSupportPairedBrackets().get());
+  private final JCheckBox mySupportParens = new JCheckBox(IdeLocalize.checkboxCustomfiletypeSupportPairedParens().get());
+  private final JCheckBox mySupportEscapes = new JCheckBox(IdeLocalize.checkboxCustomfiletypeSupportStringEscapes().get());
 
   private final JTextField myLineComment = new JTextField(5);
   private final JCheckBox myCommentAtLineStart = new JCheckBox(UIUtil.replaceMnemonicAmpersand("&Only at line start"));
@@ -110,8 +107,7 @@ public class CustomFileTypeEditor extends SettingsEditor<AbstractFileType> {
 
   public void applyEditorTo(AbstractFileType type) throws ConfigurationException {
     if (myFileTypeName.getText().trim().length() == 0) {
-      throw new ConfigurationException(IdeBundle.message("error.name.cannot.be.empty"),
-                                       CommonBundle.getErrorTitle());
+      throw new ConfigurationException(IdeLocalize.errorNameCannotBeEmpty().get(), CommonLocalize.titleError().get());
     }
     else if (myFileTypeDescr.getText().trim().length() == 0) {
       myFileTypeDescr.setText(myFileTypeName.getText());
@@ -139,13 +135,16 @@ public class CustomFileTypeEditor extends SettingsEditor<AbstractFileType> {
 
     JPanel fileTypePanel = new JPanel(new BorderLayout());
     JPanel info = FormBuilder.createFormBuilder()
-      .addLabeledComponent(IdeBundle.message("editbox.customfiletype.name"), myFileTypeName)
-      .addLabeledComponent(IdeBundle.message("editbox.customfiletype.description"), myFileTypeDescr).getPanel();
+      .addLabeledComponent(IdeLocalize.editboxCustomfiletypeName().get(), myFileTypeName)
+      .addLabeledComponent(IdeLocalize.editboxCustomfiletypeDescription().get(), myFileTypeDescr).getPanel();
     info.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
     fileTypePanel.add(info, BorderLayout.NORTH);
 
     JPanel highlighterPanel = new JPanel();
-    highlighterPanel.setBorder(IdeBorderFactory.createTitledBorder(IdeBundle.message("group.customfiletype.syntax.highlighting"), false));
+    highlighterPanel.setBorder(IdeBorderFactory.createTitledBorder(
+      IdeLocalize.groupCustomfiletypeSyntaxHighlighting().get(),
+      false
+    ));
     highlighterPanel.setLayout(new BorderLayout());
     JPanel commentsAndNumbersPanel = new JPanel();
     commentsAndNumbersPanel.setLayout(new GridBagLayout());
@@ -156,18 +155,24 @@ public class CustomFileTypeEditor extends SettingsEditor<AbstractFileType> {
       .setDefaultAnchor(GridBagConstraints.WEST)
       .setDefaultInsets(1, 5, 1, 5);
 
-    commentsAndNumbersPanel.add(new JLabel(IdeBundle.message("editbox.customfiletype.line.comment")), gb.nextLine().next());
+    commentsAndNumbersPanel.add(
+      new JLabel(IdeLocalize.editboxCustomfiletypeLineComment().get()),
+      gb.nextLine().next()
+    );
     commentsAndNumbersPanel.add(myLineComment, gb.next());
     commentsAndNumbersPanel.add(myCommentAtLineStart, gb.next().coverLine(2));
 
-    commentsAndNumbersPanel.add(new JLabel(IdeBundle.message("editbox.customfiletype.block.comment.start")), gb.nextLine().next());
+    commentsAndNumbersPanel.add(
+      new JLabel(IdeLocalize.editboxCustomfiletypeBlockCommentStart().get()),
+      gb.nextLine().next()
+    );
     commentsAndNumbersPanel.add(myBlockCommentStart, gb.next());
-    commentsAndNumbersPanel.add(new JLabel(IdeBundle.message("editbox.customfiletype.block.comment.end")), gb.next());
+    commentsAndNumbersPanel.add(new JLabel(IdeLocalize.editboxCustomfiletypeBlockCommentEnd().get()), gb.next());
     commentsAndNumbersPanel.add(myBlockCommentEnd, gb.next());
 
-    commentsAndNumbersPanel.add(new JLabel(IdeBundle.message("editbox.customfiletype.hex.prefix")), gb.nextLine().next());
+    commentsAndNumbersPanel.add(new JLabel(IdeLocalize.editboxCustomfiletypeHexPrefix().get()), gb.nextLine().next());
     commentsAndNumbersPanel.add(myHexPrefix, gb.next());
-    commentsAndNumbersPanel.add(new JLabel(IdeBundle.message("editbox.customfiletype.number.postfixes")), gb.next());
+    commentsAndNumbersPanel.add(new JLabel(IdeLocalize.editboxCustomfiletypeNumberPostfixes().get()), gb.next());
     commentsAndNumbersPanel.add(myNumPostfixes, gb.next());
 
     commentsAndNumbersPanel.add(mySupportBraces, gb.nextLine().next().coverLine(2));
@@ -181,8 +186,9 @@ public class CustomFileTypeEditor extends SettingsEditor<AbstractFileType> {
     highlighterPanel.add(_panel1, BorderLayout.NORTH);
 
     TabbedPaneWrapper tabbedPaneWrapper = new TabbedPaneWrapper(this);
-    tabbedPaneWrapper.getComponent().setBorder(IdeBorderFactory.createTitledBorder(IdeBundle.message("listbox.customfiletype.keywords"),
-                                                                                   false));
+    tabbedPaneWrapper.getComponent().setBorder(
+      IdeBorderFactory.createTitledBorder(IdeLocalize.listboxCustomfiletypeKeywords().get(), false)
+    );
     tabbedPaneWrapper.addTab(" 1 ", createKeywordsPanel(0));
     tabbedPaneWrapper.addTab(" 2 ", createKeywordsPanel(1));
     tabbedPaneWrapper.addTab(" 3 ", createKeywordsPanel(2));
@@ -212,22 +218,17 @@ public class CustomFileTypeEditor extends SettingsEditor<AbstractFileType> {
 
   private JPanel createKeywordsPanel(final int index) {
     JPanel panel = ToolbarDecorator.createDecorator(myKeywordsLists[index])
-      .setAddAction(new AnActionButtonRunnable() {
-        @Override
-        public void run(AnActionButton button) {
-          ModifyKeywordDialog dialog = new ModifyKeywordDialog(myKeywordsLists[index], "");
-          dialog.show();
-          if (dialog.isOK()) {
-            String keywordName = dialog.getKeywordName();
-            if (!myKeywordModels[index].contains(keywordName)) myKeywordModels[index].addElement(keywordName);
-          }
+      .setAddAction(button -> {
+        ModifyKeywordDialog dialog = new ModifyKeywordDialog(myKeywordsLists[index], "");
+        dialog.show();
+        if (dialog.isOK()) {
+          String keywordName = dialog.getKeywordName();
+          if (!myKeywordModels[index].contains(keywordName)) myKeywordModels[index].addElement(keywordName);
         }
-      }).setRemoveAction(new AnActionButtonRunnable() {
-        @Override
-        public void run(AnActionButton button) {
-          ListUtil.removeSelectedItems(myKeywordsLists[index]);
-        }
-      }).disableUpDownActions().createPanel();
+      })
+      .setRemoveAction(button -> ListUtil.removeSelectedItems(myKeywordsLists[index]))
+      .disableUpDownActions()
+      .createPanel();
     panel.setBorder(null);
     return panel;
   }

@@ -23,28 +23,27 @@ import consulo.content.internal.scope.CustomScopesProvider;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
 import consulo.content.scope.PackageSet;
-import consulo.execution.ExecutionBundle;
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.ide.impl.idea.util.IconUtil;
-import consulo.ide.impl.idea.util.containers.Convertor;
-import consulo.ui.ex.awt.MasterDetailsComponent;
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.language.editor.scope.NamedScopeManager;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
-import consulo.project.ProjectBundle;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.InputValidator;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.MasterDetailsComponent;
 import consulo.ui.ex.awt.MasterDetailsState;
 import consulo.ui.ex.awt.MasterDetailsStateService;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.image.Image;
-import consulo.util.lang.function.Condition;
+import consulo.util.lang.Comparing;
 import consulo.util.xml.serializer.annotation.AbstractCollection;
 import consulo.util.xml.serializer.annotation.Tag;
 import jakarta.annotation.Nonnull;
@@ -52,8 +51,6 @@ import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 
 import javax.swing.*;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
@@ -103,22 +100,19 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
 
   @Override
   protected ArrayList<AnAction> createActions(final boolean fromPopup) {
-    final ArrayList<AnAction> result = new ArrayList<AnAction>();
+    final ArrayList<AnAction> result = new ArrayList<>();
     result.add(new MyAddAction(fromPopup));
-    result.add(new MyDeleteAction(forAll(new Condition<Object>() {
-      @Override
-      public boolean value(final Object o) {
-        if (o instanceof MyNode) {
-          final Object editableObject = ((MyNode)o).getConfigurable().getEditableObject();
-          return editableObject instanceof NamedScope;
-        }
-        return false;
+    result.add(new MyDeleteAction(forAll(o -> {
+      if (o instanceof MyNode) {
+        final Object editableObject = ((MyNode)o).getConfigurable().getEditableObject();
+        return editableObject instanceof NamedScope;
       }
+      return false;
     })));
     result.add(new MyCopyAction());
     result.add(new MySaveAsAction());
-    result.add(new MyMoveAction(ExecutionBundle.message("move.up.action.name"), IconUtil.getMoveUpIcon(), -1));
-    result.add(new MyMoveAction(ExecutionBundle.message("move.down.action.name"), IconUtil.getMoveDownIcon(), 1));
+    result.add(new MyMoveAction(ExecutionLocalize.moveUpActionName(), IconUtil.getMoveUpIcon(), -1));
+    result.add(new MyMoveAction(ExecutionLocalize.moveDownActionName(), IconUtil.getMoveDownIcon(), 1));
     return result;
   }
 
@@ -133,9 +127,13 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
   @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
-    final Set<MyNode> roots = new HashSet<MyNode>();
+    final Set<MyNode> roots = new HashSet<>();
     roots.add(myRoot);
-    checkApply(roots, ProjectBundle.message("rename.message.prefix.scope"), ProjectBundle.message("rename.scope.title"));
+    checkApply(
+      roots,
+      ProjectLocalize.renameMessagePrefixScope().get(),
+      ProjectLocalize.renameScopeTitle().get()
+    );
     super.apply();
     processScopes();
 
@@ -145,7 +143,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
   @Override
   protected void checkApply(Set<MyNode> rootNodes, String prefix, String title) throws ConfigurationException {
     super.checkApply(rootNodes, prefix, title);
-    final Set<String> predefinedScopes = new HashSet<String>();
+    final Set<String> predefinedScopes = new HashSet<>();
     for (CustomScopesProvider scopesProvider : myProject.getExtensionList(CustomScopesProvider.class)) {
       scopesProvider.acceptScopes(namedScope -> predefinedScopes.add(namedScope.getName()));
     }
@@ -156,7 +154,10 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
         final String name = scopeConfigurable.getDisplayName();
         if (predefinedScopes.contains(name)) {
           selectNodeInTree(node);
-          throw new ConfigurationException("Scope name equals to predefined one", ProjectBundle.message("rename.scope.title"));
+          throw new ConfigurationException(
+            "Scope name equals to predefined one",
+            ProjectLocalize.renameScopeTitle().get()
+          );
         }
       }
     }
@@ -189,8 +190,8 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
   }
 
   private void processScopes() {
-    final List<NamedScope> localScopes = new ArrayList<NamedScope>();
-    final List<NamedScope> sharedScopes = new ArrayList<NamedScope>();
+    final List<NamedScope> localScopes = new ArrayList<>();
+    final List<NamedScope> sharedScopes = new ArrayList<>();
     for (int i = 0; i < myRoot.getChildCount(); i++) {
       final MyNode node = (MyNode)myRoot.getChildAt(i);
       final ScopeConfigurable scopeConfigurable = (ScopeConfigurable)node.getConfigurable();
@@ -217,13 +218,10 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
 
 
     final List<String> order = getScopesState().myOrder;
-    TreeUtil.sort(myRoot, new Comparator<DefaultMutableTreeNode>() {
-      @Override
-      public int compare(final DefaultMutableTreeNode o1, final DefaultMutableTreeNode o2) {
-        final int idx1 = order.indexOf(((MyNode)o1).getDisplayName());
-        final int idx2 = order.indexOf(((MyNode)o2).getDisplayName());
-        return idx1 - idx2;
-      }
+    TreeUtil.sort(myRoot, (o1, o2) -> {
+      final int idx1 = order.indexOf(((MyNode)o1).getDisplayName());
+      final int idx2 = order.indexOf(((MyNode)o2).getDisplayName());
+      return idx1 - idx2;
     });
   }
 
@@ -248,7 +246,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
   }
 
   private static Collection<NamedScope> getPredefinedScopes(Project project) {
-    final Collection<NamedScope> result = new ArrayList<NamedScope>();
+    final Collection<NamedScope> result = new ArrayList<>();
     result.addAll(NamedScopeManager.getInstance(project).getPredefinedScopes());
     result.addAll(DependencyValidationManager.getInstance(project).getPredefinedScopes());
     return result;
@@ -256,29 +254,21 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
 
   @Override
   protected void initTree() {
-    myTree.getSelectionModel().addTreeSelectionListener(new TreeSelectionListener() {
-      @Override
-      public void valueChanged(TreeSelectionEvent e) {
-        final TreePath path = e.getOldLeadSelectionPath();
-        if (path != null) {
-          final MyNode node = (MyNode)path.getLastPathComponent();
-          final MasterDetailsConfigurable namedConfigurable = node.getConfigurable();
-          if (namedConfigurable instanceof ScopeConfigurable) {
-            ((ScopeConfigurable)namedConfigurable).cancelCurrentProgress();
-          }
+    myTree.getSelectionModel().addTreeSelectionListener(e -> {
+      final TreePath path = e.getOldLeadSelectionPath();
+      if (path != null) {
+        final MyNode node = (MyNode)path.getLastPathComponent();
+        final MasterDetailsConfigurable namedConfigurable = node.getConfigurable();
+        if (namedConfigurable instanceof ScopeConfigurable) {
+          ((ScopeConfigurable)namedConfigurable).cancelCurrentProgress();
         }
       }
     });
     super.initTree();
     myTree.setShowsRootHandles(false);
-    new TreeSpeedSearch(myTree, new Convertor<TreePath, String>() {
-      @Override
-      public String convert(final TreePath treePath) {
-        return ((MyNode)treePath.getLastPathComponent()).getDisplayName();
-      }
-    }, true);
+    new TreeSpeedSearch(myTree, treePath -> ((MyNode)treePath.getLastPathComponent()).getDisplayName(), true);
 
-    myTree.getEmptyText().setText(IdeBundle.message("scopes.no.scoped"));
+    myTree.getEmptyText().setText(IdeLocalize.scopesNoScoped().get());
   }
 
   @Override
@@ -298,7 +288,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
 
   @Override
   public String getDisplayName() {
-    return IdeBundle.message("scopes.display.name");
+    return IdeLocalize.scopesDisplayName().get();
   }
 
   @Override
@@ -318,7 +308,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
 
   private String createUniqueName() {
     String str = InspectionsBundle.message("inspection.profile.unnamed");
-    final HashSet<String> treeScopes = new HashSet<String>();
+    final HashSet<String> treeScopes = new HashSet<>();
     obtainCurrentScopes(treeScopes);
     if (!treeScopes.contains(str)) return str;
     int i = 1;
@@ -344,25 +334,32 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
   }
 
   private void createScope(final boolean isLocal, String title, final PackageSet set) {
-    final String newName = Messages.showInputDialog(myTree, IdeBundle.message("add.scope.name.label"), title, Messages.getInformationIcon(), createUniqueName(), new InputValidator() {
-      @RequiredUIAccess
-      @Override
-      public boolean checkInput(String inputString) {
-        final NamedScopesHolder holder = isLocal ? myLocalScopesManager : mySharedScopesManager;
-        for (NamedScope scope : holder.getPredefinedScopes()) {
-          if (Comparing.strEqual(scope.getName(), inputString.trim())) {
-            return false;
+    final String newName = Messages.showInputDialog(
+      myTree,
+      IdeLocalize.addScopeNameLabel().get(),
+      title,
+      Messages.getInformationIcon(),
+      createUniqueName(),
+      new InputValidator() {
+        @RequiredUIAccess
+        @Override
+        public boolean checkInput(String inputString) {
+          final NamedScopesHolder holder = isLocal ? myLocalScopesManager : mySharedScopesManager;
+          for (NamedScope scope : holder.getPredefinedScopes()) {
+            if (Comparing.strEqual(scope.getName(), inputString.trim())) {
+              return false;
+            }
           }
+          return inputString.trim().length() > 0;
         }
-        return inputString.trim().length() > 0;
-      }
 
-      @RequiredUIAccess
-      @Override
-      public boolean canClose(String inputString) {
-        return checkInput(inputString);
+        @RequiredUIAccess
+        @Override
+        public boolean canClose(String inputString) {
+          return checkInput(inputString);
+        }
       }
-    });
+    );
     if (newName != null) {
       final NamedScope scope = new NamedScope(newName, set);
       addNewScope(scope, isLocal);
@@ -393,7 +390,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
     private final boolean myFromPopup;
 
     public MyAddAction(boolean fromPopup) {
-      super(IdeBundle.message("add.scope.popup.title"), true);
+      super(IdeLocalize.addScopePopupTitle().get(), true);
       myFromPopup = fromPopup;
       final Presentation presentation = getTemplatePresentation();
       presentation.setIcon(IconUtil.getAddIcon());
@@ -415,18 +412,26 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
       if (myChildren == null) {
         myChildren = new AnAction[2];
-        myChildren[0] = new AnAction(IdeBundle.message("add.local.scope.action.text"), IdeBundle.message("add.local.scope.action.text"), myLocalScopesManager.getIcon()) {
+        myChildren[0] = new AnAction(
+          IdeLocalize.addLocalScopeActionText(),
+          IdeLocalize.addLocalScopeActionText(),
+          myLocalScopesManager.getIcon()
+        ) {
           @RequiredUIAccess
           @Override
           public void actionPerformed(AnActionEvent e) {
-            createScope(true, IdeBundle.message("add.scope.dialog.title"), null);
+            createScope(true, IdeLocalize.addScopeDialogTitle().get(), null);
           }
         };
-        myChildren[1] = new AnAction(IdeBundle.message("add.shared.scope.action.text"), IdeBundle.message("add.shared.scope.action.text"), mySharedScopesManager.getIcon()) {
+        myChildren[1] = new AnAction(
+          IdeLocalize.addSharedScopeActionText(),
+          IdeLocalize.addSharedScopeActionText(),
+          mySharedScopesManager.getIcon()
+        ) {
           @RequiredUIAccess
           @Override
           public void actionPerformed(AnActionEvent e) {
-            createScope(false, IdeBundle.message("add.scope.dialog.title"), null);
+            createScope(false, IdeLocalize.addScopeDialogTitle().get(), null);
           }
         };
       }
@@ -467,7 +472,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
   private class MyMoveAction extends AnAction {
     private final int myDirection;
 
-    protected MyMoveAction(String text, Image icon, int direction) {
+    protected MyMoveAction(LocalizeValue text, Image icon, int direction) {
       super(text, text, icon);
       myDirection = direction;
     }
@@ -500,7 +505,11 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
 
   private class MyCopyAction extends AnAction {
     public MyCopyAction() {
-      super(ExecutionBundle.message("copy.configuration.action.name"), ExecutionBundle.message("copy.configuration.action.name"), PlatformIconGroup.actionsCopy());
+      super(
+        ExecutionLocalize.copyConfigurationActionName(),
+        ExecutionLocalize.copyConfigurationActionName(),
+        PlatformIconGroup.actionsCopy()
+      );
       registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_MASK)), myTree);
     }
 
@@ -524,7 +533,11 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
 
   private class MySaveAsAction extends AnAction {
     public MySaveAsAction() {
-      super(ExecutionBundle.message("action.name.save.as.configuration"), ExecutionBundle.message("action.name.save.as.configuration"), AllIcons.Actions.Menu_saveall);
+      super(
+        ExecutionLocalize.actionNameSaveAsConfiguration(),
+        ExecutionLocalize.actionNameSaveAsConfiguration(),
+        AllIcons.Actions.Menu_saveall
+      );
     }
 
     @RequiredUIAccess
@@ -539,10 +552,10 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
           PackageSet set = scopeConfigurable.getEditableObject().getValue();
           if (set != null) {
             if (scopeConfigurable.getHolder() == mySharedScopesManager) {
-              createScope(false, IdeBundle.message("scopes.save.dialog.title.shared"), set.createCopy());
+              createScope(false, IdeLocalize.scopesSaveDialogTitleShared().get(), set.createCopy());
             }
             else {
-              createScope(true, IdeBundle.message("scopes.save.dialog.title.local"), set.createCopy());
+              createScope(true, IdeLocalize.scopesSaveDialogTitleLocal().get(), set.createCopy());
             }
           }
         }
@@ -559,6 +572,6 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
   public static class ScopeChooserConfigurableState extends MasterDetailsState {
     @Tag("order")
     @AbstractCollection(surroundWithTag = false, elementTag = "scope", elementValueAttribute = "name")
-    public List<String> myOrder = new ArrayList<String>();
+    public List<String> myOrder = new ArrayList<>();
   }
 }

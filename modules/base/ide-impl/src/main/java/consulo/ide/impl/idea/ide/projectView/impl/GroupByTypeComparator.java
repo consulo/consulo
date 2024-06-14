@@ -25,7 +25,7 @@ import consulo.ui.ex.tree.NodeDescriptor;
 import java.util.Collection;
 import java.util.Comparator;
 
-import static consulo.ide.impl.idea.openapi.util.text.StringUtil.naturalCompare;
+import static consulo.util.lang.StringUtil.naturalCompare;
 
 /**
  * @author cdr

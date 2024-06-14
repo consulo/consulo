@@ -16,57 +16,52 @@
 
 package consulo.ide.impl.idea.ide.commander;
 
-import consulo.language.editor.LangDataKeys;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.localHistory.LocalHistory;
-import consulo.localHistory.LocalHistoryAction;
-import consulo.language.editor.refactoring.ui.CopyPasteDelegator;
-import consulo.project.ui.view.commander.AbstractListBuilder;
-import consulo.project.ui.view.commander.TopLevelNode;
-import consulo.ui.ex.DeleteProvider;
-import consulo.ide.IdeBundle;
-import consulo.ide.IdeView;
-import consulo.project.ui.view.tree.ProjectViewNode;
-import consulo.project.ui.view.tree.ModuleGroup;
-import consulo.ide.impl.idea.ide.projectView.impl.ProjectAbstractTreeStructureBase;
-import consulo.project.ui.view.internal.node.LibraryGroupElement;
-import consulo.project.ui.view.internal.node.NamedLibraryElement;
-import consulo.fileEditor.structureView.StructureViewTreeElement;
-import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
-import consulo.ide.impl.idea.ide.util.DeleteHandler;
-import consulo.ide.util.DirectoryChooserUtil;
-import consulo.language.psi.util.EditSourceUtil;
-import consulo.language.editor.util.EditorHelper;
-import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.ui.ex.JBColor;
-import consulo.dataContext.DataContext;
-import consulo.logging.Logger;
-import consulo.module.Module;
-import consulo.project.Project;
-import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.PopupHandler;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.ScrollingUtil;
-import consulo.ui.ex.awt.event.DoubleClickListener;
-import consulo.ui.ex.awt.speedSearch.ListSpeedSearch;
-import consulo.util.dataholder.Key;
-import consulo.application.util.SystemInfo;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.project.ui.wm.ToolWindowManager;
-import consulo.navigation.Navigatable;
+import consulo.dataContext.DataContext;
+import consulo.fileEditor.structureView.StructureViewTreeElement;
+import consulo.ide.IdeView;
+import consulo.ide.impl.idea.ide.projectView.impl.ProjectAbstractTreeStructureBase;
+import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
+import consulo.ide.impl.idea.ide.util.DeleteHandler;
+import consulo.ide.impl.idea.ui.RightAlignedLabelUI;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.util.DirectoryChooserUtil;
+import consulo.language.editor.LangDataKeys;
+import consulo.language.editor.PlatformDataKeys;
+import consulo.language.editor.refactoring.ui.CopyPasteDelegator;
+import consulo.language.editor.util.EditorHelper;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
-import consulo.ide.impl.idea.ui.*;
-import consulo.ui.ex.awt.JBList;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.UIUtil;
-import org.jetbrains.annotations.NonNls;
+import consulo.language.psi.util.EditSourceUtil;
+import consulo.localHistory.LocalHistory;
+import consulo.localHistory.LocalHistoryAction;
+import consulo.logging.Logger;
+import consulo.module.Module;
+import consulo.navigation.Navigatable;
+import consulo.platform.Platform;
+import consulo.platform.base.localize.IdeLocalize;
+import consulo.project.Project;
+import consulo.project.ui.view.commander.AbstractListBuilder;
+import consulo.project.ui.view.commander.TopLevelNode;
+import consulo.project.ui.view.internal.node.LibraryGroupElement;
+import consulo.project.ui.view.internal.node.NamedLibraryElement;
+import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.project.ui.view.tree.ModuleGroup;
+import consulo.project.ui.view.tree.ProjectViewNode;
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.ex.*;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.event.DoubleClickListener;
+import consulo.ui.ex.awt.speedSearch.ListSpeedSearch;
+import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -130,19 +125,26 @@ public class CommanderPanel extends JPanel {
 
     ScrollingUtil.installActions(myList);
 
-    myList.registerKeyboardAction(new ActionListener() {
-      @Override
-      public void actionPerformed(final ActionEvent e) {
+    myList.registerKeyboardAction(
+      e -> {
         if (myBuilder == null) return;
         myBuilder.buildRoot();
-      }
-    }, KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SLASH, SystemInfo.isMac ? InputEvent.META_MASK : InputEvent.CTRL_MASK),
-                                  JComponent.WHEN_FOCUSED);
+      },
+      KeyStroke.getKeyStroke(
+        KeyEvent.VK_BACK_SLASH,
+        Platform.current().os().isMac() ? InputEvent.META_MASK : InputEvent.CTRL_MASK
+      ),
+      JComponent.WHEN_FOCUSED
+    );
 
     myList.getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), ACTION_DRILL_DOWN);
-    myList.getInputMap(WHEN_FOCUSED)
-      .put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, SystemInfo.isMac ? InputEvent.META_MASK : InputEvent.CTRL_MASK),
-           ACTION_DRILL_DOWN);
+    myList.getInputMap(WHEN_FOCUSED).put(
+      KeyStroke.getKeyStroke(
+        KeyEvent.VK_PAGE_DOWN,
+        Platform.current().os().isMac() ? InputEvent.META_MASK : InputEvent.CTRL_MASK
+      ),
+      ACTION_DRILL_DOWN
+    );
     myList.getActionMap().put(ACTION_DRILL_DOWN, new AbstractAction() {
       @Override
       public void actionPerformed(final ActionEvent e) {
@@ -157,8 +159,13 @@ public class CommanderPanel extends JPanel {
       }
     }.installOn(myList);
 
-    myList.getInputMap(WHEN_FOCUSED)
-      .put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, SystemInfo.isMac ? InputEvent.META_MASK : InputEvent.CTRL_MASK), ACTION_GO_UP);
+    myList.getInputMap(WHEN_FOCUSED).put(
+      KeyStroke.getKeyStroke(
+        KeyEvent.VK_PAGE_UP,
+        Platform.current().os().isMac() ? InputEvent.META_MASK : InputEvent.CTRL_MASK
+      ),
+      ACTION_GO_UP
+    );
     myList.getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0), ACTION_GO_UP);
     myList.getActionMap().put(ACTION_GO_UP, new AbstractAction() {
       @Override
@@ -172,7 +179,6 @@ public class CommanderPanel extends JPanel {
       public void actionPerformed(final ActionEvent e) {
       }
     });
-
 
     if (enablePopupMenu) {
       myList.addMouseListener(new PopupHandler() {
@@ -278,7 +284,8 @@ public class CommanderPanel extends JPanel {
 
   private boolean topElementIsSelected() {
     int[] selectedIndices = myList.getSelectedIndices();
-    return selectedIndices.length == 1 && selectedIndices[0] == 0 && myModel.getElementAt(selectedIndices[0]) instanceof TopLevelNode;
+    return selectedIndices.length == 1 && selectedIndices[0] == 0
+      && myModel.getElementAt(selectedIndices[0]) instanceof TopLevelNode;
   }
 
   public final void setBuilder(final AbstractListBuilder builder) {
@@ -455,28 +462,28 @@ public class CommanderPanel extends JPanel {
   public final Object getDataImpl(final Key<?> dataId) {
     if (myBuilder == null) return null;
     final Object selectedValue = getSelectedValue();
-    if (LangDataKeys.PSI_ELEMENT == dataId) {
+    if (PsiElement.KEY == dataId) {
       final PsiElement selectedElement = getSelectedElement();
       return selectedElement != null && selectedElement.isValid() ? selectedElement : null;
     }
-    if (LangDataKeys.PSI_ELEMENT_ARRAY == dataId) {
+    if (PsiElement.KEY_OF_ARRAY == dataId) {
       return filterInvalidElements(getSelectedElements());
     }
     if (LangDataKeys.PASTE_TARGET_PSI_ELEMENT == dataId) {
       final AbstractTreeNode parentNode = myBuilder.getParentNode();
       final Object element = parentNode != null ? parentNode.getValue() : null;
-      return element instanceof PsiElement && ((PsiElement)element).isValid() ? element : null;
+      return element instanceof PsiElement psiElement && psiElement.isValid() ? element : null;
     }
-    if (PlatformDataKeys.NAVIGATABLE_ARRAY == dataId) {
+    if (Navigatable.KEY_OF_ARRAY == dataId) {
       return getNavigatables();
     }
-    if (PlatformDataKeys.COPY_PROVIDER == dataId) {
+    if (CopyProvider.KEY == dataId) {
       return myCopyPasteDelegator != null ? myCopyPasteDelegator.getCopyProvider() : null;
     }
-    if (PlatformDataKeys.CUT_PROVIDER == dataId) {
+    if (CutProvider.KEY == dataId) {
       return myCopyPasteDelegator != null ? myCopyPasteDelegator.getCutProvider() : null;
     }
-    if (PlatformDataKeys.PASTE_PROVIDER == dataId) {
+    if (PasteProvider.KEY == dataId) {
       return myCopyPasteDelegator != null ? myCopyPasteDelegator.getPasteProvider() : null;
     }
     if (IdeView.KEY == dataId) {
@@ -485,7 +492,7 @@ public class CommanderPanel extends JPanel {
     if (PlatformDataKeys.DELETE_ELEMENT_PROVIDER == dataId) {
       return myDeleteElementProvider;
     }
-    if (LangDataKeys.MODULE == dataId) {
+    if (Module.KEY == dataId) {
       return selectedValue instanceof Module ? selectedValue : null;
     }
     if (ModuleGroup.ARRAY_DATA_KEY == dataId) {
@@ -565,7 +572,7 @@ public class CommanderPanel extends JPanel {
   private final class MyDeleteElementProvider implements DeleteProvider {
     @Override
     public void deleteElement(@Nonnull final DataContext dataContext) {
-      LocalHistoryAction a = LocalHistory.getInstance().startAction(IdeBundle.message("progress.deleting"));
+      LocalHistoryAction a = LocalHistory.getInstance().startAction(IdeLocalize.progressDeleting().get());
       try {
         final PsiElement[] elements = getSelectedElements();
         DeleteHandler.deletePsiElement(elements, myProject);
@@ -589,22 +596,19 @@ public class CommanderPanel extends JPanel {
       if (!isDirectory) {
         EditorHelper.openInEditor(element);
       }
-      ApplicationManager.getApplication().invokeLater(new Runnable() {
-        @Override
-        public void run() {
+      ApplicationManager.getApplication().invokeLater(
+        () -> {
           myBuilder.selectElement(element, PsiUtilCore.getVirtualFile(element));
           if (!isDirectory) {
-            ApplicationManager.getApplication().invokeLater(new Runnable() {
-              @Override
-              public void run() {
-                if (myMoveFocus) {
-                  ToolWindowManager.getInstance(myProject).activateEditorComponent();
-                }
+            ApplicationManager.getApplication().invokeLater(() -> {
+              if (myMoveFocus) {
+                ToolWindowManager.getInstance(myProject).activateEditorComponent();
               }
             });
           }
-        }
-      }, IdeaModalityState.nonModal());
+        },
+        IdeaModalityState.nonModal()
+      );
     }
 
     private PsiDirectory getDirectory() {

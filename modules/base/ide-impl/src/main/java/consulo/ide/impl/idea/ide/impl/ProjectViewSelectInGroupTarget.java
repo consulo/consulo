@@ -20,7 +20,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.ide.CompositeSelectInTarget;
 import consulo.project.ui.view.ProjectView;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.project.ui.view.SelectInContext;
 import consulo.project.ui.view.SelectInTarget;
 import consulo.project.ui.wm.ToolWindowId;

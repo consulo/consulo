@@ -16,7 +16,7 @@ import consulo.codeEditor.EditorHighlighter;
 import consulo.codeEditor.HighlighterIterator;
 import consulo.colorScheme.TextAttributes;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.document.util.TextRange;
 import consulo.language.psi.search.TodoItem;
 import consulo.ui.ex.awt.HighlightedRegion;
