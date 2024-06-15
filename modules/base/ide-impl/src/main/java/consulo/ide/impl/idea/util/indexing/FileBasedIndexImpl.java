@@ -793,7 +793,8 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
 
   private static void handleDumbMode(@Nullable Project project) {
     ProgressManager.checkCanceled(); // DumbModeAction.CANCEL
-    throw IndexNotReadyException.create(project == null ? null : DumbServiceImpl.getInstance(project).getDumbModeStartTrace());
+    DumbServiceImpl dumbService = (DumbServiceImpl)DumbService.getInstance(project);
+    throw IndexNotReadyException.create(project == null ? null : dumbService.getDumbModeStartTrace());
   }
 
   @Override

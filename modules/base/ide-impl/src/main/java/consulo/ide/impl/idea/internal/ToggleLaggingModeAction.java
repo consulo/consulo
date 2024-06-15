@@ -16,13 +16,13 @@
 package consulo.ide.impl.idea.internal;
 
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.openapi.project.DumbServiceImpl;
 import consulo.language.editor.CommonDataKeys;
+import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.awt.util.Alarm;
 
 /**
  * @author peter
@@ -53,7 +53,7 @@ public class ToggleLaggingModeAction extends AnAction implements DumbAware {
   public void update(final AnActionEvent e) {
     final Presentation presentation = e.getPresentation();
     final Project project = e.getData(CommonDataKeys.PROJECT);
-    presentation.setEnabled(project != null && myLagging == DumbServiceImpl.getInstance(project).isDumb());
+    presentation.setEnabled(project != null && myLagging == DumbService.getInstance(project).isDumb());
     if (myLagging) {
       presentation.setText("Exit lagging mode");
     }

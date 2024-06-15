@@ -26,7 +26,6 @@ import consulo.application.util.concurrent.SequentialTaskExecutor;
 import consulo.application.util.registry.Registry;
 import consulo.content.ContentIterator;
 import consulo.document.FileDocumentManager;
-import consulo.ide.impl.idea.openapi.project.DumbServiceImpl;
 import consulo.ide.impl.idea.util.ConcurrencyUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.psi.PsiManager;
@@ -34,14 +33,15 @@ import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.IndexableFileSet;
 import consulo.localHistory.LocalHistory;
 import consulo.project.DumbModeTask;
+import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.util.collection.primitive.ints.IntObjectMap;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.VFileEvent;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -195,7 +195,7 @@ final class ChangedFilesCollector extends IndexedFilesListener {
       if (Registry.is("try.starting.dumb.mode.where.many.files.changed")) {
         Runnable startDumbMode = () -> {
           for (Project project : ProjectManager.getInstance().getOpenProjects()) {
-            DumbServiceImpl dumbService = DumbServiceImpl.getInstance(project);
+            DumbService dumbService = DumbService.getInstance(project);
             DumbModeTask task = FileBasedIndexProjectHandler.createChangedFilesIndexingTask(project);
 
             if (task != null) {

@@ -7,6 +7,7 @@ import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.impl.internal.progress.ProgressWrapper;
+import consulo.application.internal.TooManyUsagesStatus;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.function.Processor;
@@ -27,12 +28,9 @@ import consulo.find.*;
 import consulo.ide.impl.idea.find.FindProgressIndicator;
 import consulo.ide.impl.idea.find.FindUtil;
 import consulo.ide.impl.idea.find.findInProject.FindInProjectManager;
-import consulo.application.internal.TooManyUsagesStatus;
-import consulo.ide.impl.idea.openapi.project.DumbServiceImpl;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.internal.VirtualFileManagerEx;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.psi.*;
@@ -45,6 +43,7 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.navigation.ItemPresentation;
+import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.content.scope.ProjectScopes;
 import consulo.ui.ex.action.ActionManager;
@@ -60,6 +59,7 @@ import consulo.virtualFileSystem.LocalFileProvider;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.internal.VirtualFileManagerEx;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.PropertyKey;
@@ -82,7 +82,7 @@ public class FindInProjectUtil {
     Project project = dataContext.getData(CommonDataKeys.PROJECT);
 
     Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
-    if (project != null && editor == null && !DumbServiceImpl.getInstance(project).isDumb()) {
+    if (project != null && editor == null && !DumbService.getInstance(project).isDumb()) {
       try {
         psiElement = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
       }

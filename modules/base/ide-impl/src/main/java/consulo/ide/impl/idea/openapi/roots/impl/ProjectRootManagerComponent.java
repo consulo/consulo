@@ -24,7 +24,6 @@ import consulo.component.store.impl.internal.BatchUpdateListener;
 import consulo.content.OrderRootType;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.module.impl.scopes.ModuleScopeProviderImpl;
-import consulo.ide.impl.idea.openapi.project.DumbServiceImpl;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -45,6 +44,7 @@ import consulo.module.content.layer.orderEntry.OrderEntryWithTracking;
 import consulo.module.content.scope.ModuleScopeProvider;
 import consulo.module.impl.internal.ProjectRootManagerImpl;
 import consulo.project.DumbModeTask;
+import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.content.WatchedRootsProvider;
 import consulo.util.lang.Pair;
@@ -161,7 +161,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
     }
 
     if (myDoLogCachesUpdate) LOG.debug("refresh");
-    DumbServiceImpl dumbService = DumbServiceImpl.getInstance(myProject);
+    DumbService dumbService = DumbService.getInstance(myProject);
     DumbModeTask task = FileBasedIndexProjectHandler.createChangedFilesIndexingTask(myProject);
     if (task != null) {
       dumbService.queueTask(task);
@@ -285,7 +285,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
     }
     else if (!ApplicationManager.getApplication().isUnitTestMode()) LOG.info("project roots have changed");
 
-    DumbServiceImpl dumbService = DumbServiceImpl.getInstance(myProject);
+    DumbService dumbService = DumbService.getInstance(myProject);
     if (FileBasedIndex.getInstance() instanceof FileBasedIndexImpl) {
       dumbService.queueTask(new UnindexedFilesUpdater(myProject));
     }

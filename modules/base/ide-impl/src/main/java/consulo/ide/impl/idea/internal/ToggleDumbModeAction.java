@@ -15,15 +15,15 @@
  */
 package consulo.ide.impl.idea.internal;
 
+import consulo.application.dumb.DumbAware;
+import consulo.application.progress.ProgressIndicator;
+import consulo.language.editor.CommonDataKeys;
+import consulo.project.DumbModeTask;
+import consulo.project.DumbService;
+import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.Presentation;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.dumb.DumbAware;
-import consulo.project.DumbModeTask;
-import consulo.ide.impl.idea.openapi.project.DumbServiceImpl;
-import consulo.project.Project;
 import consulo.util.lang.TimeoutUtil;
 import jakarta.annotation.Nonnull;
 
@@ -43,7 +43,7 @@ public class ToggleDumbModeAction extends AnAction implements DumbAware {
       final Project project = e.getData(CommonDataKeys.PROJECT);
       if (project == null) return;
 
-      DumbServiceImpl.getInstance(project).queueTask(new DumbModeTask() {
+      DumbService.getInstance(project).queueTask(new DumbModeTask() {
         @Override
         public void performInDumbMode(@Nonnull ProgressIndicator indicator) {
           while (myDumb) {
@@ -59,7 +59,7 @@ public class ToggleDumbModeAction extends AnAction implements DumbAware {
   public void update(final AnActionEvent e) {
     final Presentation presentation = e.getPresentation();
     final Project project = e.getData(CommonDataKeys.PROJECT);
-    presentation.setEnabled(project != null && myDumb == DumbServiceImpl.getInstance(project).isDumb());
+    presentation.setEnabled(project != null && myDumb == DumbService.getInstance(project).isDumb());
     if (myDumb) {
       presentation.setText("Exit Dumb Mode");
     }
