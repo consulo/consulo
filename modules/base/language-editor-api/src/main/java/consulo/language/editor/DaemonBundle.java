@@ -15,12 +15,18 @@
  */
 package consulo.language.editor;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.component.util.localize.AbstractBundle;
+import consulo.language.editor.localize.DaemonLocalize;
 import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author max
  */
+@Deprecated(forRemoval = true)
+@DeprecationInfo("Use DaemonLocalize")
+@MigratedExtensionsTo(DaemonLocalize.class)
 public class DaemonBundle extends AbstractBundle{
   private static final DaemonBundle ourInstance = new DaemonBundle();
 

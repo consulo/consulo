@@ -16,7 +16,10 @@
 
 package consulo.ui.ex.keymap;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.component.util.localize.AbstractBundle;
+import consulo.ui.ex.keymap.localize.KeyMapLocalize;
 import org.jetbrains.annotations.PropertyKey;
 
 /**
@@ -24,6 +27,9 @@ import org.jetbrains.annotations.PropertyKey;
  * Date: 01.09.2005
  * Time: 17:13:10
  */
+@Deprecated(forRemoval = true)
+@DeprecationInfo("Use KeyMapLocalize")
+@MigratedExtensionsTo(KeyMapLocalize.class)
 public class KeyMapBundle extends AbstractBundle {
   private static KeyMapBundle ourInstance = new KeyMapBundle();
 

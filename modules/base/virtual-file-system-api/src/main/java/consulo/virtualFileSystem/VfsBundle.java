@@ -16,12 +16,18 @@
 
 package consulo.virtualFileSystem;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.component.util.localize.AbstractBundle;
+import consulo.virtualFileSystem.localize.VirtualFileSystemLocalize;
 import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author yole
  */
+@Deprecated(forRemoval = true)
+@DeprecationInfo("Use VirtualFileSystemLocalize")
+@MigratedExtensionsTo(VirtualFileSystemLocalize.class)
 public class VfsBundle extends AbstractBundle {
   private static final VfsBundle ourInstance = new VfsBundle();
 

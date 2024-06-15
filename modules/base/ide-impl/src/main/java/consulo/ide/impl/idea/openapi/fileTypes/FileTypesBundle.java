@@ -15,12 +15,18 @@
  */
 package consulo.ide.impl.idea.openapi.fileTypes;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.component.util.localize.AbstractBundle;
+import consulo.virtualFileSystem.fileType.localize.FileTypeLocalize;
 import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author yole
  */
+@Deprecated(forRemoval = true)
+@DeprecationInfo("Use FileTypeLocalize")
+@MigratedExtensionsTo(FileTypeLocalize.class)
 public class FileTypesBundle extends AbstractBundle{
   private static final FileTypesBundle ourInstance = new FileTypesBundle();
 

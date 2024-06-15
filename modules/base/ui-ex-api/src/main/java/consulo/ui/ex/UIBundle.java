@@ -15,9 +15,15 @@
  */
 package consulo.ui.ex;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.component.util.localize.AbstractBundle;
+import consulo.ui.ex.localize.UILocalize;
 import org.jetbrains.annotations.PropertyKey;
 
+@Deprecated(forRemoval = true)
+@DeprecationInfo("Use UILocalize")
+@MigratedExtensionsTo(UILocalize.class)
 public class UIBundle extends AbstractBundle{
   private static final UIBundle ourInstance = new UIBundle();
 
