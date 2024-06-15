@@ -1315,7 +1315,7 @@ checkbox.show.parameter.name.hints:
 fs.case.sensitivity.mismatch.title:
   text: Filesystem Case-Sensitivity Mismatch
 fs.case.sensitivity.mismatch.message:
-  text: The project seems to be located on a case-{0,choice,0#|1#in}sensitive file system.<br> This does not match the IDE setting (controlled by property "<tt>idea.case.sensitive.fs</tt>")<br> <a href="https://confluence.jetbrains.com/display/IDEADEV/Filesystem+Case-Sensitivity+Mismatch">More details.</a>
+  text: The project seems to be located on a case-{0,choice,0#|1#in}sensitive file system.<br> This does not match the IDE setting (controlled by property "<tt>consulo.case.sensitive.fs</tt>")<br> <a href="https://confluence.jetbrains.com/display/IDEADEV/Filesystem+Case-Sensitivity+Mismatch">More details.</a>
 integer.field.value.expected:
   text: A value is expected
 integer.field.value.out.of.range:

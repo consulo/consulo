@@ -17,6 +17,7 @@ package consulo.util.io;
 
 import consulo.util.collection.HashingStrategy;
 import consulo.util.io.internal.LocalFileUrl;
+import consulo.util.io.internal.OSInfo;
 import consulo.util.io.internal.UrlImpl;
 import consulo.util.lang.StringUtil;
 import org.slf4j.Logger;

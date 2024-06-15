@@ -15,6 +15,7 @@
  */
 package consulo.util.io;
 
+import consulo.util.io.internal.OSInfo;
 import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.nio.file.Files;

@@ -16,6 +16,7 @@
 package consulo.util.io;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.util.io.internal.OSInfo;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import org.slf4j.LoggerFactory;

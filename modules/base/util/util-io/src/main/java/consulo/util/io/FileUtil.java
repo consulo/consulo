@@ -19,6 +19,7 @@ package consulo.util.io;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.HashingStrategy;
+import consulo.util.io.internal.OSInfo;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ThreeState;
 import org.intellij.lang.annotations.RegExp;

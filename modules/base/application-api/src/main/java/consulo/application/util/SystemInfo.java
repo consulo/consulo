@@ -39,10 +39,6 @@ public class SystemInfo {
   public static final String JAVA_RUNTIME_VERSION = System.getProperty("java.runtime.version");
   public static final String ARCH_DATA_MODEL = System.getProperty("sun.arch.data.model");
 
-  @Deprecated
-  @DeprecationInfo("Always true")
-  public static final boolean IS_AT_LEAST_JAVA9 = true;
-
   public static final boolean is32Bit = ARCH_DATA_MODEL == null || ARCH_DATA_MODEL.equals("32");
   public static final boolean is64Bit = !is32Bit;
 
@@ -58,7 +54,7 @@ public class SystemInfo {
   public static final boolean isFreeBSD = _OS_NAME.startsWith("freebsd");
   public static final boolean isSolaris = _OS_NAME.startsWith("sunos");
 
-  public static final boolean isFileSystemCaseSensitive = isUnix && !isMac || "true".equalsIgnoreCase(System.getProperty("idea.case.sensitive.fs"));
+  public static final boolean isFileSystemCaseSensitive = isUnix || "true".equalsIgnoreCase(System.getProperty("consulo.case.sensitive.fs"));
 
   public static final boolean isAppleJvm = isAppleJvm();
   public static final boolean isOracleJvm = isOracleJvm();

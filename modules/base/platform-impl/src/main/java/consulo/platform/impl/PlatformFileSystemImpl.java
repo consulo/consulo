@@ -28,16 +28,13 @@ import java.util.Map;
  * @since 25/04/2023
  */
 public class PlatformFileSystemImpl implements PlatformFileSystem {
-  private boolean isFileSystemCaseSensitive;
-  private boolean areSymLinksSupported;
+  private boolean myIsFileSystemCaseSensitive;
+  private boolean myAreSymLinksSupported;
 
   public PlatformFileSystemImpl(Platform platform, Map<String, String> jvmProperties) {
     PlatformOperatingSystem os = platform.os();
-    isFileSystemCaseSensitive = os.isUnix() && !os.isMac() ||
-      "true".equalsIgnoreCase(jvmProperties.get("idea.case.sensitive.fs")) ||
-      "true".equalsIgnoreCase(jvmProperties.get("consulo.case.sensitive.fs"));
-
-    areSymLinksSupported = os.isUnix() || os.isWindows() && os.asWindows().isWindows7OrNewer();
+    myIsFileSystemCaseSensitive = os.isUnix() || "true".equalsIgnoreCase(jvmProperties.get("consulo.case.sensitive.fs"));
+    myAreSymLinksSupported = os.isUnix() || os.isWindows() && os.asWindows().isWindows7OrNewer();
   }
 
   @Nonnull
@@ -54,11 +51,11 @@ public class PlatformFileSystemImpl implements PlatformFileSystem {
 
   @Override
   public boolean isCaseSensitive() {
-    return isFileSystemCaseSensitive;
+    return myIsFileSystemCaseSensitive;
   }
 
   @Override
   public boolean areSymLinksSupported() {
-    return areSymLinksSupported;
+    return myAreSymLinksSupported;
   }
 }

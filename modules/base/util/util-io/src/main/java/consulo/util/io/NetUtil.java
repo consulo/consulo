@@ -15,6 +15,7 @@
  */
 package consulo.util.io;
 
+import consulo.util.io.internal.OSInfo;
 import consulo.util.lang.SystemProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

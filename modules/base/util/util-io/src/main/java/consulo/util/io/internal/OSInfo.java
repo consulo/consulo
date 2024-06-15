@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.util.io;
+package consulo.util.io.internal;
 
 /**
  * @author VISTALL
@@ -21,15 +21,15 @@ package consulo.util.io;
  * <p>
  * Internal version of OS check
  */
-class OSInfo {
+public class OSInfo {
   static final String OS_NAME = System.getProperty("os.name");
 
   private static final String _OS_NAME = OS_NAME.toLowerCase();
-  static final boolean isWindows = _OS_NAME.startsWith("windows");
-  static final boolean isOS2 = _OS_NAME.startsWith("os/2") || _OS_NAME.startsWith("os2");
-  static final boolean isMac = _OS_NAME.startsWith("mac");
-  static final boolean isLinux = _OS_NAME.startsWith("linux");
-  static final boolean isUnix = !isWindows && !isOS2;
+  public static final boolean isWindows = _OS_NAME.startsWith("windows");
+  public static final boolean isMac = _OS_NAME.startsWith("mac");
+  public static final boolean isLinux = _OS_NAME.startsWith("linux");
+  public static final boolean isUnix = !isWindows;
 
-   static final boolean isFileSystemCaseSensitive = isUnix && !isMac || "true".equalsIgnoreCase(System.getProperty("idea.case.sensitive.fs"));
+  public static final boolean isFileSystemCaseSensitive =
+    isUnix || "true".equalsIgnoreCase(System.getProperty("consulo.case.sensitive.fs"));
 }

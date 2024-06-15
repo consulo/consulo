@@ -15,6 +15,7 @@
  */
 package consulo.util.io;
 
+import consulo.util.io.internal.OSInfo;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
