@@ -19,16 +19,16 @@ import consulo.application.ApplicationManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.wm.StatusBar;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Trinity;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.*;
 
 /**
@@ -57,11 +57,11 @@ public class LogModel implements Disposable {
     }
     myStamps.put(notification, stamp);
     setStatusMessage(notification, stamp);
-    fireModelChanged();
+    fireModelChanged(myProject);
   }
 
-  private static void fireModelChanged() {
-    ApplicationManager.getApplication().getMessageBus().syncPublisher(LogModelListener.class).modelChanged();
+  private static void fireModelChanged(Project project) {
+    ApplicationManager.getApplication().getMessageBus().syncPublisher(LogModelListener.class).modelChanged(project);
   }
 
   List<Notification> takeNotifications() {
@@ -70,7 +70,7 @@ public class LogModel implements Disposable {
       result = getNotifications();
       myNotifications.clear();
     }
-    fireModelChanged();
+    fireModelChanged(myProject);
     return result;
   }
 
@@ -125,7 +125,7 @@ public class LogModel implements Disposable {
     if (oldStatus != null && notification == oldStatus.first) {
       setStatusToImportant();
     }
-    fireModelChanged();
+    fireModelChanged(myProject);
   }
 
   private void setStatusToImportant() {

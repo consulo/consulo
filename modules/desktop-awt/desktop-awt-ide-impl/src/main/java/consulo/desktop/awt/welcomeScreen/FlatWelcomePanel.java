@@ -19,13 +19,13 @@ package consulo.desktop.awt.welcomeScreen;
 import consulo.application.ApplicationProperties;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.dataContext.DataManager;
-import consulo.desktop.awt.internal.notification.IdeNotificationArea;
 import consulo.desktop.awt.startup.splash.AnimatedLogoLabel;
 import consulo.disposer.Disposable;
 import consulo.externalService.statistic.UsageTrigger;
 import consulo.ide.impl.welcomeScreen.BaseWelcomeScreenPanel;
 import consulo.ide.impl.welcomeScreen.WelcomeScreenConstants;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.ui.internal.NotificationIconBuilder;
 import consulo.project.ui.notification.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
@@ -109,7 +109,6 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel {
 
     panel.add(toolbar, BorderLayout.EAST);
 
-
     panel.setBorder(JBUI.Borders.empty(0, 0, 8, 11));
     return panel;
   }
@@ -125,21 +124,7 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel {
     });
     panel.setVisible(false);
     myEventListener = types -> {
-      NotificationType type1 = null;
-      for (NotificationType t : types) {
-        if (NotificationType.ERROR == t) {
-          type1 = NotificationType.ERROR;
-          break;
-        }
-        if (NotificationType.WARNING == t) {
-          type1 = NotificationType.WARNING;
-        }
-        else if (type1 == null && NotificationType.INFORMATION == t) {
-          type1 = NotificationType.INFORMATION;
-        }
-      }
-
-      actionLinkRef.get().setIcon(TargetAWT.to(IdeNotificationArea.createIconWithNotificationCount(type1, types.size())));
+      actionLinkRef.get().setIcon(TargetAWT.to(NotificationIconBuilder.getIcon(types)));
       panel.setVisible(true);
     };
     myEventLocation = () -> {

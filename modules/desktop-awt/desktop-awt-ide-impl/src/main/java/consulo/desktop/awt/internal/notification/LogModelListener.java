@@ -18,6 +18,7 @@ package consulo.desktop.awt.internal.notification;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 import consulo.annotation.component.TopicBroadcastDirection;
+import consulo.project.Project;
 
 /**
  * @author VISTALL
@@ -25,5 +26,5 @@ import consulo.annotation.component.TopicBroadcastDirection;
  */
 @TopicAPI(value = ComponentScope.APPLICATION, direction = TopicBroadcastDirection.NONE)
 public interface LogModelListener {
-  void modelChanged();
+  void modelChanged(Project project);
 }

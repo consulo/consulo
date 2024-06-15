@@ -33,11 +33,9 @@ import consulo.ide.impl.idea.execution.impl.EditorHyperlinkSupport;
 import consulo.ide.impl.idea.notification.impl.NotificationSettings;
 import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
 import consulo.project.Project;
-import consulo.project.event.ProjectManagerAdapter;
 import consulo.project.event.ProjectManagerListener;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationDisplayType;
@@ -51,6 +49,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.style.StandardColors;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -100,7 +99,7 @@ class EventLogConsole {
     editor.getSettings().setUseSoftWraps(true);
 
     installNotificationsFont(editor);
-    myProjectModel.getProject().getMessageBus().connect().subscribe(ProjectManagerListener.class, new ProjectManagerAdapter() {
+    myProjectModel.getProject().getMessageBus().connect().subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
       @Override
       public void projectClosed(Project project, UIAccess uiAccess) {
         if (project == myProjectModel.getProject()) {

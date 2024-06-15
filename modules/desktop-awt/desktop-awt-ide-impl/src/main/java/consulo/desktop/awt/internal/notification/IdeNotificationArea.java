@@ -19,10 +19,9 @@ import consulo.application.Application;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.project.ui.internal.NotificationIconBuilder;
 import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.wm.CustomStatusBarWidget;
 import consulo.project.ui.wm.IconLikeCustomStatusBarWidget;
 import consulo.project.ui.wm.StatusBar;
@@ -35,7 +34,6 @@ import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -52,9 +50,10 @@ public class IdeNotificationArea implements CustomStatusBarWidget, IconLikeCusto
     myLabel = Label.create();
     myLabel.addClickListener(event -> EventLog.toggleLog(getProject(), null));
 
-    MessageBusConnection connection = Application.get().getMessageBus().connect(this);
+    Application application = Application.get();
+    MessageBusConnection connection = application.getMessageBus().connect(this);
     connection.subscribe(UISettingsListener.class, source -> updateStatus());
-    connection.subscribe(LogModelListener.class, () -> Application.get().invokeLater(IdeNotificationArea.this::updateStatus));
+    connection.subscribe(LogModelListener.class, (project) -> application.invokeLater(IdeNotificationArea.this::updateStatus));
   }
 
   @Nonnull
@@ -86,8 +85,9 @@ public class IdeNotificationArea implements CustomStatusBarWidget, IconLikeCusto
   @RequiredUIAccess
   private void updateStatus() {
     final Project project = getProject();
-    ArrayList<Notification> notifications = EventLog.getLogModel(project).getNotifications();
-    applyIconToStatusAndToolWindow(project, createIconWithNotificationCount(notifications));
+    List<Notification> notifications = EventLog.getLogModel(project).getNotifications();
+
+    applyIconToStatusAndToolWindow(project, NotificationIconBuilder.getIcon(notifications.stream().map(Notification::getType).toList()));
 
     int count = notifications.size();
     myLabel.setToolTipText(count > 0 ? String.format("%s notification%s pending", count, count == 1 ? "" : "s") : "No new notifications");
@@ -110,24 +110,6 @@ public class IdeNotificationArea implements CustomStatusBarWidget, IconLikeCusto
     }
   }
 
-  @Nonnull
-  private Image createIconWithNotificationCount(ArrayList<Notification> notifications) {
-    return createIconWithNotificationCount(getMaximumType(notifications), notifications.size());
-  }
-
-  @Nonnull
-  public static Image createIconWithNotificationCount(NotificationType type, int size) {
-    if (size == 0) {
-      return PlatformIconGroup.toolwindowsNotifications();
-    }
-
-    if (type == NotificationType.ERROR) {
-      return PlatformIconGroup.toolwindowsNotificationsnewimportant();
-    }
-
-    return PlatformIconGroup.toolwindowsNotificationsnew();
-  }
-
   @Nullable
   @Override
   public Component getUIComponent() {
@@ -137,24 +119,5 @@ public class IdeNotificationArea implements CustomStatusBarWidget, IconLikeCusto
   @Override
   public boolean isUnified() {
     return true;
-  }
-
-  @Nullable
-  private static NotificationType getMaximumType(List<Notification> notifications) {
-    NotificationType result = null;
-    for (Notification notification : notifications) {
-      if (NotificationType.ERROR == notification.getType()) {
-        return NotificationType.ERROR;
-      }
-
-      if (NotificationType.WARNING == notification.getType()) {
-        result = NotificationType.WARNING;
-      }
-      else if (result == null && NotificationType.INFORMATION == notification.getType()) {
-        result = NotificationType.INFORMATION;
-      }
-    }
-
-    return result;
   }
 }

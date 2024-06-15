@@ -65,7 +65,6 @@ public class NotificationProjectTracker implements Disposable {
     myEventLogConsole = new EventLogConsole(myProjectModel);
   }
 
-
   public EventLogConsole getEventLogConsole() {
     return myEventLogConsole;
   }
