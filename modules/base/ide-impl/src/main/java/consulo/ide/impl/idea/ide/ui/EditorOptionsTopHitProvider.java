@@ -20,7 +20,7 @@ import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.ide.impl.idea.ide.ui.search.BooleanOptionDescription;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
-import consulo.platform.base.localize.ApplicationLocalize;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;

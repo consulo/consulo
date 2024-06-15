@@ -25,7 +25,7 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.plugins.PluginsConfigurable;
 import consulo.language.codeStyle.CodeStyle;
 import consulo.logging.Logger;
-import consulo.platform.base.localize.ApplicationLocalize;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.util.interner.Interner;

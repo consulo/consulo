@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ui;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.platform.base.localize.ApplicationLocalize;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.FontInfo;
 import consulo.util.lang.Comparing;

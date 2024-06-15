@@ -32,6 +32,7 @@ module consulo.application.api {
   exports consulo.application.macro;
   exports consulo.application.presentation;
   exports consulo.application.json;
+  exports consulo.application.localize;
 
   exports consulo.application.internal to
           consulo.ide.impl,

@@ -22,7 +22,7 @@ import consulo.configurable.SimpleConfigurableByProperties;
 import consulo.configurable.StandardConfigurableIds;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.localize.ApplicationLocalize;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;

@@ -37,7 +37,7 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localHistory.LocalHistory;
 import consulo.localHistory.LocalHistoryAction;
-import consulo.platform.base.localize.ApplicationLocalize;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.DumbService;

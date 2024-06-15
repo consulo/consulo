@@ -25,7 +25,7 @@ import consulo.language.editor.CodeInsightSettings;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.localize.ApplicationLocalize;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.project.Project;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;

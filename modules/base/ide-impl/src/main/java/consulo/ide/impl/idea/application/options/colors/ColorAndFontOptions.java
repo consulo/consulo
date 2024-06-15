@@ -52,7 +52,7 @@ import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.language.editor.scope.ScopeAttributesUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
-import consulo.platform.base.localize.ApplicationLocalize;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.annotation.RequiredUIAccess;

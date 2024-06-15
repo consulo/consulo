@@ -12,7 +12,7 @@ import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.Language;
 import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
 import consulo.language.psi.PsiFile;
-import consulo.platform.base.localize.ApplicationLocalize;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.ui.ex.UIBundle;

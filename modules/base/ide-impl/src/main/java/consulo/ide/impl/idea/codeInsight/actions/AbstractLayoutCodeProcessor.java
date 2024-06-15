@@ -32,7 +32,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 import consulo.module.Module;
-import consulo.platform.base.localize.ApplicationLocalize;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ProjectCoreUtil;

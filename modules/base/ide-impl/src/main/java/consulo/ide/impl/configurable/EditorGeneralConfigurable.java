@@ -43,7 +43,7 @@ import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.DaemonCodeAnalyzerSettings;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
-import consulo.platform.base.localize.ApplicationLocalize;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.*;

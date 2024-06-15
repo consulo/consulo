@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.disposer.Disposable;
-import consulo.platform.base.localize.ApplicationLocalize;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBCheckBox;

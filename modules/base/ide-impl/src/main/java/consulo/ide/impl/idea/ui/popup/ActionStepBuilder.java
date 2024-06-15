@@ -8,7 +8,7 @@ import consulo.ide.impl.idea.openapi.actionSystem.impl.BasePresentationFactory;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import consulo.util.lang.StringUtil;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.localize.ApplicationLocalize;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;

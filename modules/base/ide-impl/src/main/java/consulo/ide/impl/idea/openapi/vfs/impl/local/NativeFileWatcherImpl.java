@@ -6,7 +6,7 @@ import consulo.application.ApplicationManager;
 import consulo.component.util.NativeFileLoader;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
-import consulo.platform.base.localize.ApplicationLocalize;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.process.ProcessOutputTypes;
 import consulo.process.internal.OSProcessHandler;
 import consulo.process.io.BaseDataReader;

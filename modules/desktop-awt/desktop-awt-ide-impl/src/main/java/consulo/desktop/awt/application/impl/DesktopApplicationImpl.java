@@ -57,7 +57,7 @@ import consulo.ide.impl.idea.openapi.project.impl.ProjectManagerImpl;
 import consulo.logging.Logger;
 import consulo.logging.attachment.Attachment;
 import consulo.logging.attachment.AttachmentFactory;
-import consulo.platform.base.localize.ApplicationLocalize;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;

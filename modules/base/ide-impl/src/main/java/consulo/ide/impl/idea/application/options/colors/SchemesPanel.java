@@ -25,7 +25,7 @@ import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.platform.base.localize.ApplicationLocalize;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.ui.Button;
 import consulo.ui.ComboBox;
 import consulo.ui.Component;
