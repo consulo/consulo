@@ -15,19 +15,19 @@
  */
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
-import consulo.ide.IdeBundle;
-import consulo.ide.navigation.GotoSymbolContributor;
-import consulo.language.Language;
 import consulo.ide.navigation.ChooseByNameContributor;
 import consulo.ide.navigation.GotoClassOrTypeContributor;
-import consulo.navigation.NavigationItem;
-import consulo.project.Project;
-import consulo.application.util.SystemInfo;
+import consulo.ide.navigation.GotoSymbolContributor;
+import consulo.language.Language;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.SymbolPresentationUtil;
-
+import consulo.navigation.NavigationItem;
+import consulo.platform.Platform;
+import consulo.platform.base.localize.IdeLocalize;
+import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -50,36 +50,36 @@ public class GotoSymbolModel2 extends FilteringGotoByModel<Language> {
     if (result == null) {
       return result;
     }
-    final Collection<Language> items = new HashSet<Language>(result);
+    final Collection<Language> items = new HashSet<>(result);
     items.add(Language.ANY);
     return items;
   }
 
   @Override
   public String getPromptText() {
-    return IdeBundle.message("prompt.gotosymbol.enter.symbol.name");
+    return IdeLocalize.promptGotosymbolEnterSymbolName().get();
   }
 
   @Override
   public String getCheckBoxName() {
-    return IdeBundle.message("checkbox.include.non.project.symbols");
+    return IdeLocalize.checkboxIncludeNonProjectSymbols().get();
   }
 
   @Override
   public String getNotInMessage() {
-    return IdeBundle.message("label.no.matches.found.in.project");
+    return IdeLocalize.labelNoMatchesFoundInProject().get();
   }
 
   @Override
   public String getNotFoundMessage() {
-    return IdeBundle.message("label.no.matches.found");
+    return IdeLocalize.labelNoMatchesFound().get();
   }
 
   @Override
   public char getCheckBoxMnemonic() {
     // Some combination like Alt+N, Ant+O, etc are a dead sysmbols, therefore
     // we have to change mnemonics for Mac users.
-    return SystemInfo.isMac?'P':'n';
+    return Platform.current().os().isMac() ? 'P' : 'n';
   }
 
   @Override

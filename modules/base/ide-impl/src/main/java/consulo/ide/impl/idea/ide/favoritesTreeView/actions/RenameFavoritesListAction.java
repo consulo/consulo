@@ -18,10 +18,10 @@ package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeViewPanel;
 import consulo.language.editor.CommonDataKeys;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -32,7 +32,11 @@ import consulo.ui.ex.action.AnActionEvent;
  */
 public class RenameFavoritesListAction extends AnAction implements DumbAware {
   public RenameFavoritesListAction() {
-    super(IdeBundle.message("action.rename.favorites.list"), IdeBundle.message("action.rename.favorites.list"), null);
+    super(
+      IdeLocalize.actionRenameFavoritesList(),
+      IdeLocalize.actionRenameFavoritesList(),
+      null
+    );
   }
 
   @Override

@@ -3,7 +3,7 @@
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
 import consulo.language.editor.ui.PsiElementListCellRenderer;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ide.impl.idea.util.ui.FilePathSplittingPolicy;

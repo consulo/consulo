@@ -17,32 +17,28 @@ package consulo.ide.impl.idea.ide.plugins;
 
 import consulo.application.AllIcons;
 import consulo.application.Application;
-import consulo.application.CommonBundle;
 import consulo.application.eap.EarlyAccessProgramManager;
-import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.application.internal.ApplicationEx;
 import consulo.configurable.ConfigurableSession;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.disposer.Disposable;
 import consulo.externalService.update.UpdateSettings;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.BrowserUtil;
 import consulo.ide.impl.idea.ide.plugins.sorters.SortByStatusAction;
 import consulo.ide.impl.idea.ide.ui.search.SearchableOptionsRegistrar;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.ide.impl.plugins.PluginDescriptionPanel;
 import consulo.localize.LocalizeKey;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.base.localize.CommonLocalize;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.platform.base.localize.RepositoryTagLocalize;
 import consulo.project.Project;
-import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnActionEvent;
@@ -52,10 +48,12 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchBase;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.awt.util.TableUtil;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -74,7 +72,11 @@ import java.util.stream.Collectors;
  * @since Dec 25, 2003
  */
 public abstract class PluginManagerMain implements Disposable {
-  public static final NotificationGroup ourPluginsLifecycleGroup = new NotificationGroup("Plugins Lifecycle Group", NotificationDisplayType.STICKY_BALLOON, true);
+  public static final NotificationGroup ourPluginsLifecycleGroup = new NotificationGroup(
+    "Plugins Lifecycle Group",
+    NotificationDisplayType.STICKY_BALLOON,
+    true
+  );
 
   public static Logger LOG = Logger.getInstance(PluginManagerMain.class);
 
@@ -207,7 +209,12 @@ public abstract class PluginManagerMain implements Disposable {
   public void refresh() {
     final PluginDescriptor[] descriptors = myPluginTable.getSelectedObjects();
     List<PluginDescriptor> allPlugins = myPluginsModel.getAllPlugins();
-    myDescriptionPanel.update(descriptors != null && descriptors.length == 1 ? descriptors[0] : null, this, allPlugins, myFilter.getFilter());
+    myDescriptionPanel.update(
+      descriptors != null && descriptors.length == 1 ? descriptors[0] : null,
+      this,
+      allPlugins,
+      myFilter.getFilter()
+    );
   }
 
   public void setRequireShutdown(boolean val) {
@@ -265,7 +272,11 @@ public abstract class PluginManagerMain implements Disposable {
       List<String> errorMessages = new ArrayList<>();
 
       try {
-        ref.set(RepositoryHelper.loadOnlyPluginsFromRepository(null, UpdateSettings.getInstance().getChannel(), earlyAccessProgramManager));
+        ref.set(RepositoryHelper.loadOnlyPluginsFromRepository(
+          null,
+          UpdateSettings.getInstance().getChannel(),
+          earlyAccessProgramManager
+        ));
       }
       catch (Throwable e) {
         LOG.info(e);
@@ -281,8 +292,13 @@ public abstract class PluginManagerMain implements Disposable {
           propagateUpdates(list);
         }
         if (!errorMessages.isEmpty()) {
-          if (Messages.showOkCancelDialog(IdeBundle.message("error.list.of.plugins.was.not.loaded", StringUtil.join(errorMessages, ", ")), IdeBundle.message("title.plugins"),
-                                          CommonBundle.message("button.retry"), CommonBundle.getCancelButtonText(), Messages.getErrorIcon()) == Messages.OK) {
+          if (Messages.showOkCancelDialog(
+            IdeLocalize.errorListOfPluginsWasNotLoaded(StringUtil.join(errorMessages, ", ")).get(),
+            IdeLocalize.titlePlugins().get(),
+            CommonLocalize.buttonRetry().get(),
+            CommonLocalize.buttonCancel().get(),
+            Messages.getErrorIcon()
+          ) == Messages.OK) {
             loadPluginsFromHostInBackground(earlyAccessProgramManager);
           }
         }
@@ -299,7 +315,8 @@ public abstract class PluginManagerMain implements Disposable {
 
   @RequiredUIAccess
   protected void loadAvailablePlugins() {
-    EarlyAccessProgramManager earlyAccessProgramManager = ConfigurableSession.get().getOrCopy(Application.get(), EarlyAccessProgramManager.class);
+    EarlyAccessProgramManager earlyAccessProgramManager =
+      ConfigurableSession.get().getOrCopy(Application.get(), EarlyAccessProgramManager.class);
 
     loadPluginsFromHostInBackground(earlyAccessProgramManager);
   }
@@ -313,8 +330,7 @@ public abstract class PluginManagerMain implements Disposable {
   }
 
   public boolean isModified() {
-    if (requireShutdown) return true;
-    return false;
+    return requireShutdown;
   }
 
   public String apply() {
@@ -439,30 +455,34 @@ public abstract class PluginManagerMain implements Disposable {
     final SearchableOptionsRegistrar optionsRegistrar = SearchableOptionsRegistrar.getInstance();
     final HashSet<String> descriptionSet = new HashSet<>(search);
     descriptionSet.removeAll(optionsRegistrar.getProcessedWords(description));
-    if (descriptionSet.isEmpty()) {
-      return true;
-    }
-    return false;
+    return descriptionSet.isEmpty();
   }
 
-
-  public static void notifyPluginsWereInstalled(@Nonnull Collection<? extends PluginDescriptor> installed, Project project) {
+  @NonNls
+  public static void notifyPluginsWereInstalled(
+    @Nonnull Collection<? extends PluginDescriptor> installed,
+    Project project
+  ) {
     String pluginName = installed.size() == 1 ? installed.iterator().next().getName() : null;
-    notifyPluginsWereUpdated(pluginName != null ? "Plugin \'" + pluginName + "\' was successfully installed" : "Plugins were installed", project);
+    notifyPluginsWereUpdated(
+      pluginName != null ? "Plugin \'" + pluginName + "\' was successfully installed" : "Plugins were installed",
+      project
+    );
   }
 
   public static void notifyPluginsWereUpdated(final String title, final Project project) {
     final ApplicationEx app = (ApplicationEx)Application.get();
+    final LocalizeValue appName = app.getName();
     final boolean restartCapable = app.isRestartCapable();
     String message = restartCapable
-                     ? IdeBundle.message("message.idea.restart.required", ApplicationNamesInfo.getInstance().getFullProductName())
-                     : IdeBundle.message("message.idea.shutdown.required", ApplicationNamesInfo.getInstance().getFullProductName());
-    message += "<br><a href=";
-    message += restartCapable ? "\"restart\">Restart now" : "\"shutdown\">Shutdown";
-    message += "</a>";
-    ourPluginsLifecycleGroup.createNotification(title, XmlStringUtil.wrapInHtml(message), NotificationType.INFORMATION, new NotificationListener() {
-      @Override
-      public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
+      ? IdeLocalize.messageIdeaRestartRequired(appName).get()
+      : IdeLocalize.messageIdeaShutdownRequired(appName).get();
+    message += "<br><a href=" + (restartCapable ? "\"restart\">Restart now" : "\"shutdown\">Shutdown") + "</a>";
+    ourPluginsLifecycleGroup.createNotification(
+      title,
+      XmlStringUtil.wrapInHtml(message),
+      NotificationType.INFORMATION,
+      (notification, event) -> {
         notification.expire();
         if (restartCapable) {
           app.restart(true);
@@ -471,7 +491,7 @@ public abstract class PluginManagerMain implements Disposable {
           app.exit(true, true);
         }
       }
-    }).notify(project);
+    ).notify(project);
   }
 
   public class MyPluginsFilter extends FilterComponent {

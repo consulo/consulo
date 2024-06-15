@@ -37,36 +37,29 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.ide.IdeBundle;
 import consulo.ide.IdeView;
-import consulo.language.content.ProjectRootsUtil;
-import consulo.language.editor.refactoring.ui.CopyPasteDelegator;
 import consulo.ide.impl.idea.ide.impl.ProjectViewSelectInTarget;
 import consulo.ide.impl.idea.ide.projectView.HelpID;
-import consulo.project.ui.view.ProjectViewPane;
-import consulo.project.ui.view.internal.node.LibraryGroupElement;
-import consulo.project.ui.view.internal.node.NamedLibraryElement;
-import consulo.project.ui.view.tree.*;
-import consulo.ide.impl.idea.ide.projectView.impl.nodes.*;
+import consulo.ide.impl.idea.ide.projectView.impl.nodes.LibraryGroupNode;
+import consulo.ide.impl.idea.ide.projectView.impl.nodes.NamedLibraryElementNode;
 import consulo.ide.impl.idea.ide.scopeView.ScopeViewPane;
 import consulo.ide.impl.idea.ide.util.DeleteHandler;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.io.URLUtil;
 import consulo.ide.impl.projectView.ProjectViewEx;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.ide.impl.wm.impl.ToolWindowContentUI;
 import consulo.ide.util.DirectoryChooserUtil;
-import consulo.language.editor.CommonDataKeys;
+import consulo.language.content.ProjectRootsUtil;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
+import consulo.language.editor.refactoring.ui.CopyPasteDelegator;
 import consulo.language.editor.util.EditorHelper;
 import consulo.language.psi.*;
 import consulo.language.util.ModuleUtilCore;
 import consulo.localHistory.LocalHistory;
 import consulo.localHistory.LocalHistoryAction;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.content.ModuleFileIndex;
@@ -77,11 +70,16 @@ import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.view.ProjectViewAutoScrollFromSourceHandler;
+import consulo.project.ui.view.ProjectViewPane;
 import consulo.project.ui.view.SelectInContext;
 import consulo.project.ui.view.SelectInTarget;
+import consulo.project.ui.view.internal.node.LibraryGroupElement;
+import consulo.project.ui.view.internal.node.NamedLibraryElement;
+import consulo.project.ui.view.tree.*;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.ToolWindowManagerListener;
@@ -97,6 +95,7 @@ import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.event.ContentManagerAdapter;
 import consulo.ui.ex.content.event.ContentManagerEvent;
+import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowContentUiType;
 import consulo.ui.ex.tree.NodeDescriptor;
@@ -105,19 +104,21 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
+import consulo.util.io.URLUtil;
 import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -636,8 +637,13 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
   private void createToolbarActions() {
     if (myActionGroup == null) return;
     myActionGroup.removeAll();
-    myActionGroup.addAction(new PaneOptionAction(myFlattenPackages, IdeBundle.message("action.flatten.packages"), IdeBundle.message("action.flatten.packages"),
-                                                 AllIcons.ObjectBrowser.FlattenPackages, ourFlattenPackagesDefaults) {
+    myActionGroup.addAction(new PaneOptionAction(
+      myFlattenPackages,
+      IdeLocalize.actionFlattenPackages().get(),
+      IdeLocalize.actionFlattenPackages().get(),
+      AllIcons.ObjectBrowser.FlattenPackages,
+      ourFlattenPackagesDefaults
+    ) {
       @Override
       public void setSelected(AnActionEvent event, boolean flag) {
         final AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
@@ -660,7 +666,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
       @RequiredUIAccess
       public void update(AnActionEvent e) {
         super.update(e);
-        Project project = e.getData(CommonDataKeys.PROJECT);
+        Project project = e.getData(Project.KEY);
         assert project != null;
         final Presentation presentation = e.getPresentation();
         if (!PsiPackageSupportProviders.isPackageSupported(project)) {
@@ -670,11 +676,13 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     }).setAsSecondary(true);
 
     class FlattenPackagesDependableAction extends PaneOptionAction {
-      FlattenPackagesDependableAction(@Nonnull Map<String, Boolean> optionsMap,
-                                      @Nonnull String text,
-                                      @Nonnull String description,
-                                      @Nonnull Image icon,
-                                      boolean optionDefaultValue) {
+      FlattenPackagesDependableAction(
+        @Nonnull Map<String, Boolean> optionsMap,
+        @Nonnull String text,
+        @Nonnull String description,
+        @Nonnull Image icon,
+        boolean optionDefaultValue
+      ) {
         super(optionsMap, text, description, icon, optionDefaultValue);
       }
 
@@ -690,7 +698,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
       @Override
       public void update(AnActionEvent e) {
         super.update(e);
-        Project project = e.getData(CommonDataKeys.PROJECT);
+        Project project = e.getData(Project.KEY);
         assert project != null;
         final Presentation presentation = e.getPresentation();
         if (!PsiPackageSupportProviders.isPackageSupported(project)) {
@@ -702,9 +710,13 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
       }
     }
     myActionGroup.addAction(new HideEmptyMiddlePackagesAction()).setAsSecondary(true);
-    myActionGroup.addAction(new FlattenPackagesDependableAction(myAbbreviatePackageNames, IdeBundle.message("action.abbreviate.qualified.package.names"),
-                                                                IdeBundle.message("action.abbreviate.qualified.package.names"),
-                                                                AllIcons.ObjectBrowser.AbbreviatePackageNames, ourAbbreviatePackagesDefaults) {
+    myActionGroup.addAction(new FlattenPackagesDependableAction(
+      myAbbreviatePackageNames,
+      IdeLocalize.actionAbbreviateQualifiedPackageNames().get(),
+      IdeLocalize.actionAbbreviateQualifiedPackageNames().get(),
+      AllIcons.ObjectBrowser.AbbreviatePackageNames,
+      ourAbbreviatePackagesDefaults
+    ) {
       @Override
       public boolean isSelected(AnActionEvent event) {
         return isFlattenPackages(myCurrentViewId) && isAbbreviatePackageNames(myCurrentViewId);
@@ -728,8 +740,13 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
       }
     }).setAsSecondary(true);
     if (isShowMembersOptionSupported()) {
-      myActionGroup.addAction(new PaneOptionAction(myShowMembers, IdeBundle.message("action.show.members"), IdeBundle.message("action.show.hide.members"),
-                                                   AllIcons.ObjectBrowser.ShowMembers, ourShowMembersDefaults) {
+      myActionGroup.addAction(new PaneOptionAction(
+        myShowMembers,
+        IdeLocalize.actionShowMembers().get(),
+        IdeLocalize.actionShowHideMembers().get(),
+        AllIcons.ObjectBrowser.ShowMembers,
+        ourShowMembersDefaults
+      ) {
         @Override
         public boolean isSelected(AnActionEvent event) {
           if (isGlobalOptions()) return getGlobalOptions().getShowMembers();
@@ -918,10 +935,11 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
       changeView(pane.getId());
     };
 
-    new PopupChooserBuilder(list).
-            setTitle(IdeBundle.message("title.popup.views")).
-            setItemChoosenCallback(runnable).
-            createPopup().showInCenterOf(getComponent());
+    new PopupChooserBuilder(list)
+      .setTitle(IdeLocalize.titlePopupViews().get())
+      .setItemChoosenCallback(runnable)
+      .createPopup()
+      .showInCenterOf(getComponent());
   }
 
   @Override
@@ -965,7 +983,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
       }
       final PsiElement[] elements = PsiUtilCore.toPsiElementArray(validElements);
 
-      LocalHistoryAction a = LocalHistory.getInstance().startAction(IdeBundle.message("progress.deleting"));
+      LocalHistoryAction a = LocalHistory.getInstance().startAction(IdeLocalize.progressDeleting().get());
       try {
         DeleteHandler.deletePsiElement(elements, myProject);
       }
@@ -1051,20 +1069,20 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
         if (paneSpecificData != null) return paneSpecificData;
       }
 
-      if (CommonDataKeys.PSI_ELEMENT == dataId) {
+      if (PsiElement.KEY == dataId) {
         if (currentProjectViewPane == null) return null;
         final PsiElement[] elements = currentProjectViewPane.getSelectedPSIElements();
         return elements.length == 1 ? elements[0] : null;
       }
-      if (LangDataKeys.PSI_ELEMENT_ARRAY == dataId) {
+      if (PsiElement.KEY_OF_ARRAY == dataId) {
         if (currentProjectViewPane == null) {
           return null;
         }
         PsiElement[] elements = currentProjectViewPane.getSelectedPSIElements();
         return elements.length == 0 ? null : elements;
       }
-      if (LangDataKeys.MODULE == dataId) {
-        VirtualFile[] virtualFiles = getDataUnchecked(CommonDataKeys.VIRTUAL_FILE_ARRAY);
+      if (Module.KEY == dataId) {
+        VirtualFile[] virtualFiles = getDataUnchecked(VirtualFile.KEY_OF_ARRAY);
         if (virtualFiles == null || virtualFiles.length <= 1) return null;
         final Set<Module> modules = new HashSet<>();
         for (VirtualFile virtualFile : virtualFiles) {
@@ -1189,26 +1207,31 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
 
     private void detachLibrary(@Nonnull final LibraryOrderEntry orderEntry, @Nonnull Project project) {
       final Module module = orderEntry.getOwnerModule();
-      String message = IdeBundle.message("detach.library.from.module", orderEntry.getPresentableName(), module.getName());
-      String title = IdeBundle.message("detach.library");
-      int ret = Messages.showOkCancelDialog(project, message, title, Messages.getQuestionIcon());
+      LocalizeValue message = IdeLocalize.detachLibraryFromModule(orderEntry.getPresentableName(), module.getName());
+      LocalizeValue title = IdeLocalize.detachLibrary();
+      int ret = Messages.showOkCancelDialog(project, message.get(), title.get(), Messages.getQuestionIcon());
       if (ret != Messages.OK) return;
-      CommandProcessor.getInstance().executeCommand(module.getProject(), () -> {
-        final Runnable action = () -> {
-          ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
-          OrderEntry[] orderEntries = rootManager.getOrderEntries();
-          ModifiableRootModel model = rootManager.getModifiableModel();
-          OrderEntry[] modifiableEntries = model.getOrderEntries();
-          for (int i = 0; i < orderEntries.length; i++) {
-            OrderEntry entry = orderEntries[i];
-            if (entry instanceof LibraryOrderEntry && ((LibraryOrderEntry)entry).getLibrary() == orderEntry.getLibrary()) {
-              model.removeOrderEntry(modifiableEntries[i]);
+      CommandProcessor.getInstance().executeCommand(
+        module.getProject(),
+        () -> {
+          final Runnable action = () -> {
+            ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
+            OrderEntry[] orderEntries = rootManager.getOrderEntries();
+            ModifiableRootModel model = rootManager.getModifiableModel();
+            OrderEntry[] modifiableEntries = model.getOrderEntries();
+            for (int i = 0; i < orderEntries.length; i++) {
+              OrderEntry entry = orderEntries[i];
+              if (entry instanceof LibraryOrderEntry libraryOrderEntry && libraryOrderEntry.getLibrary() == orderEntry.getLibrary()) {
+                model.removeOrderEntry(modifiableEntries[i]);
+              }
             }
-          }
-          model.commit();
-        };
-        ApplicationManager.getApplication().runWriteAction(action);
-      }, title, null);
+            model.commit();
+          };
+          ApplicationManager.getApplication().runWriteAction(action);
+        },
+        title.get(),
+        null
+      );
     }
 
     @Nullable
@@ -1682,19 +1705,19 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     public void update(AnActionEvent e) {
       super.update(e);
       final Presentation presentation = e.getPresentation();
-      Project project = e.getData(CommonDataKeys.PROJECT);
+      Project project = e.getData(Project.KEY);
       assert project != null;
       if (!PsiPackageSupportProviders.isPackageSupported(project)) {
         presentation.setVisible(false);
         return;
       }
       if (isHideEmptyMiddlePackages(myCurrentViewId)) {
-        presentation.setText(IdeBundle.message("action.hide.empty.middle.packages"));
-        presentation.setDescription(IdeBundle.message("action.show.hide.empty.middle.packages"));
+        presentation.setTextValue(IdeLocalize.actionHideEmptyMiddlePackages());
+        presentation.setDescriptionValue(IdeLocalize.actionShowHideEmptyMiddlePackages());
       }
       else {
-        presentation.setText(IdeBundle.message("action.compact.empty.middle.packages"));
-        presentation.setDescription(IdeBundle.message("action.show.compact.empty.middle.packages"));
+        presentation.setTextValue(IdeLocalize.actionCompactEmptyMiddlePackages());
+        presentation.setDescriptionValue(IdeLocalize.actionShowCompactEmptyMiddlePackages());
       }
     }
   }
@@ -1950,7 +1973,11 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
 
   private class ManualOrderAction extends ToggleAction implements DumbAware {
     private ManualOrderAction() {
-      super(IdeBundle.message("action.manual.order"), IdeBundle.message("action.manual.order"), AllIcons.ObjectBrowser.Sorted);
+      super(
+        IdeLocalize.actionManualOrder(),
+        IdeLocalize.actionManualOrder(),
+        AllIcons.ObjectBrowser.Sorted
+      );
     }
 
     @Override
@@ -1975,7 +2002,11 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
 
   private class SortByTypeAction extends ToggleAction implements DumbAware {
     private SortByTypeAction() {
-      super(IdeBundle.message("action.sort.by.type"), IdeBundle.message("action.sort.by.type"), AllIcons.ObjectBrowser.SortByType);
+      super(
+        IdeLocalize.actionSortByType(),
+        IdeLocalize.actionSortByType(),
+        AllIcons.ObjectBrowser.SortByType
+      );
     }
 
     @Override

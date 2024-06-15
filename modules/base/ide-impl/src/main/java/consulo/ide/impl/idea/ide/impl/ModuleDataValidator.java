@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.ide.impl;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataValidator;
-import consulo.language.editor.CommonDataKeys;
 import consulo.module.Module;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
@@ -32,7 +31,7 @@ public class ModuleDataValidator implements DataValidator<Module> {
   @Nonnull
   @Override
   public Key<Module> getKey() {
-    return CommonDataKeys.MODULE;
+    return Module.KEY;
   }
 
   @Nullable

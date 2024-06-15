@@ -15,34 +15,32 @@
  */
 package consulo.ide.impl.idea.ide.util;
 
-import consulo.application.CommonBundle;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.EditorSettings;
 import consulo.document.Document;
 import consulo.document.impl.DocumentImpl;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.editor.impl.EditorFactoryImpl;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.plain.PlainTextFileType;
 import consulo.logging.Logger;
+import consulo.platform.base.localize.CommonLocalize;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.macro.ProjectPathMacroManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.action.ExporterToTextFile;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.SystemProperties;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -58,11 +56,11 @@ public class ExportToFileUtil {
     if (file.exists()) {
       int result = Messages.showYesNoCancelDialog(
         project,
-        IdeBundle.message("error.text.file.already.exists", fileName),
-        IdeBundle.message("title.warning"),
-            IdeBundle.message("action.overwrite"),
-            IdeBundle.message("action.append"),
-            CommonBundle.getCancelButtonText(),
+        IdeLocalize.errorTextFileAlreadyExists(fileName).get(),
+        IdeLocalize.titleWarning().get(),
+        IdeLocalize.actionOverwrite().get(),
+        IdeLocalize.actionAppend().get(),
+        CommonLocalize.buttonCancel().get(),
         Messages.getWarningIcon()
       );
 
@@ -98,8 +96,8 @@ public class ExportToFileUtil {
     catch (IOException e) {
       Messages.showMessageDialog(
         project,
-        IdeBundle.message("error.writing.to.file", fileName),
-        CommonBundle.getErrorTitle(),
+        IdeLocalize.errorWritingToFile(fileName).get(),
+        CommonLocalize.titleError().get(),
         Messages.getErrorIcon()
       );
     }
@@ -122,16 +120,11 @@ public class ExportToFileUtil {
       myFileButton = new FixedSizeButton(myTfFile);
 
       setHorizontalStretch(1.5f);
-      setTitle(IdeBundle.message("title.export.preview"));
-      setOKButtonText(IdeBundle.message("button.save"));
+      setTitle(IdeLocalize.titleExportPreview());
+      setOKButtonText(IdeLocalize.buttonSave().get());
       init();
       try {
-        myListener = new ChangeListener() {
-          @Override
-          public void stateChanged(ChangeEvent e) {
-            initText();
-          }
-        };
+        myListener = e -> initText();
         myExporter.addSettingsChangedListener(myListener);
       }
       catch (TooManyListenersException e) {
@@ -187,7 +180,7 @@ public class ExportToFileUtil {
       panel.setLayout(new GridBagLayout());
       GridBagConstraints gbConstraints = new GridBagConstraints();
       gbConstraints.fill = GridBagConstraints.HORIZONTAL;
-      JLabel promptLabel = new JLabel(IdeBundle.message("editbox.export.to.file"));
+      JLabel promptLabel = new JLabel(IdeLocalize.editboxExportToFile().get());
       gbConstraints.weightx = 0;
       panel.add(promptLabel, gbConstraints);
       gbConstraints.weightx = 1;
@@ -206,12 +199,7 @@ public class ExportToFileUtil {
       textField.setText(defaultFilePath);
 
       button.addActionListener(
-          new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent e) {
-            browseFile();
-          }
-        }
+        e -> browseFile()
       );
 
       return panel;
@@ -253,8 +241,8 @@ public class ExportToFileUtil {
 
     protected class CopyToClipboardAction extends AbstractAction {
       public CopyToClipboardAction() {
-        super(IdeBundle.message("button.copy"));
-        putValue(AbstractAction.SHORT_DESCRIPTION, IdeBundle.message("description.copy.text.to.clipboard"));
+        super(IdeLocalize.buttonCopy().get());
+        putValue(AbstractAction.SHORT_DESCRIPTION, IdeLocalize.descriptionCopyTextToClipboard().get());
       }
 
       @Override
@@ -263,5 +251,5 @@ public class ExportToFileUtil {
         CopyPasteManager.getInstance().setContents(new StringSelection(s));
       }
     }
-  };
+  }
 }

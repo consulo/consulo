@@ -2,37 +2,38 @@
 package consulo.ide.impl.idea.ide.browsers;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.ide.GeneralSettings;
-import consulo.application.util.SystemInfo;
-import consulo.util.lang.function.Condition;
-import consulo.util.lang.function.Conditions;
 import consulo.component.persist.PersistentStateComponent;
-import consulo.ide.ServiceManager;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import consulo.ide.impl.idea.openapi.util.*;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.util.collection.SmartList;
+import consulo.component.util.SimpleModificationTracker;
+import consulo.ide.ServiceManager;
+import consulo.ide.impl.idea.ide.GeneralSettings;
+import consulo.ide.impl.idea.openapi.util.JDOMUtil;
+import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.SmartList;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.function.Condition;
+import consulo.util.lang.function.Conditions;
 import consulo.util.xml.serializer.SkipDefaultValuesSerializationFilters;
 import consulo.util.xml.serializer.XmlSerializer;
-import consulo.component.util.SimpleModificationTracker;
-import consulo.logging.Logger;
 import consulo.webBrowser.BrowserFamily;
 import consulo.webBrowser.BrowserSpecificSettings;
 import consulo.webBrowser.DefaultBrowserPolicy;
 import consulo.webBrowser.WebBrowser;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.*;
 
 @Singleton
 @ServiceImpl
 @State(name = "WebBrowsersConfiguration", storages = @Storage("web-browsers.xml"))
-public class WebBrowserManager extends SimpleModificationTracker implements PersistentStateComponent<Element>, consulo.webBrowser.WebBrowserManager {
+public class WebBrowserManager extends SimpleModificationTracker
+  implements PersistentStateComponent<Element>, consulo.webBrowser.WebBrowserManager {
   private static final Logger LOG = Logger.getInstance(WebBrowserManager.class);
 
   // default standard browser ID must be constant across all IDE versions on all machines for all users
@@ -44,17 +45,43 @@ public class WebBrowserManager extends SimpleModificationTracker implements Pers
   private static final UUID PREDEFINED_EXPLORER_ID = UUID.fromString("16BF23D4-93E0-4FFC-BFD6-CB13575177B0");
   private static final UUID PREDEFINED_EDGE_ID = UUID.fromString("B2A9DCA7-9D0B-4E1E-98A8-AFB19C1328D2");
 
-  private static final UUID[] PREDEFINED_BROWSER_IDS =
-          new UUID[]{PREDEFINED_CHROME_ID, PREDEFINED_FIREFOX_ID, PREDEFINED_SAFARI_ID, PREDEFINED_OPERA_ID, PREDEFINED_YANDEX_ID, PREDEFINED_EXPLORER_ID, PREDEFINED_EDGE_ID};
+  private static final UUID[] PREDEFINED_BROWSER_IDS = new UUID[] {
+    PREDEFINED_CHROME_ID,
+    PREDEFINED_FIREFOX_ID,
+    PREDEFINED_SAFARI_ID,
+    PREDEFINED_OPERA_ID,
+    PREDEFINED_YANDEX_ID,
+    PREDEFINED_EXPLORER_ID,
+    PREDEFINED_EDGE_ID
+  };
 
   private static final String EDGE_COMMAND = "microsoft-edge";
 
   private static List<ConfigurableWebBrowser> getPredefinedBrowsers() {
-    return Arrays.asList(new ConfigurableWebBrowser(PREDEFINED_CHROME_ID, BrowserFamily.CHROME), new ConfigurableWebBrowser(PREDEFINED_FIREFOX_ID, BrowserFamily.FIREFOX),
-                         new ConfigurableWebBrowser(PREDEFINED_SAFARI_ID, BrowserFamily.SAFARI), new ConfigurableWebBrowser(PREDEFINED_OPERA_ID, BrowserFamily.OPERA),
-                         new ConfigurableWebBrowser(PREDEFINED_YANDEX_ID, BrowserFamily.CHROME, "Yandex", SystemInfo.isWindows ? "browser" : (SystemInfo.isMac ? "Yandex" : "yandex"), false,
-                                                    BrowserFamily.CHROME.createBrowserSpecificSettings()), new ConfigurableWebBrowser(PREDEFINED_EXPLORER_ID, BrowserFamily.EXPLORER),
-                         new ConfigurableWebBrowser(PREDEFINED_EDGE_ID, BrowserFamily.EXPLORER, "Edge", SystemInfo.isWindows ? EDGE_COMMAND : null, true, null));
+    return Arrays.asList(
+      new ConfigurableWebBrowser(PREDEFINED_CHROME_ID, BrowserFamily.CHROME),
+      new ConfigurableWebBrowser(PREDEFINED_FIREFOX_ID, BrowserFamily.FIREFOX),
+      new ConfigurableWebBrowser(PREDEFINED_SAFARI_ID, BrowserFamily.SAFARI),
+      new ConfigurableWebBrowser(PREDEFINED_OPERA_ID, BrowserFamily.OPERA),
+      new ConfigurableWebBrowser(
+        PREDEFINED_YANDEX_ID,
+        BrowserFamily.CHROME,
+        "Yandex",
+        Platform.current().os().isWindows() ? "browser" :
+          (Platform.current().os().isMac() ? "Yandex" : "yandex"),
+        false,
+        BrowserFamily.CHROME.createBrowserSpecificSettings()
+      ),
+      new ConfigurableWebBrowser(PREDEFINED_EXPLORER_ID, BrowserFamily.EXPLORER),
+      new ConfigurableWebBrowser(
+        PREDEFINED_EDGE_ID,
+        BrowserFamily.EXPLORER,
+        "Edge",
+        Platform.current().os().isWindows() ? EDGE_COMMAND : null,
+        true,
+        null
+      )
+    );
   }
 
   private List<ConfigurableWebBrowser> browsers;
@@ -70,7 +97,8 @@ public class WebBrowserManager extends SimpleModificationTracker implements Pers
   }
 
   public static boolean isYandexBrowser(@Nonnull WebBrowser browser) {
-    return browser.getFamily().equals(BrowserFamily.CHROME) && (browser.getId().equals(PREDEFINED_YANDEX_ID) || checkNameAndPath("Yandex", browser));
+    return browser.getFamily().equals(BrowserFamily.CHROME)
+      && (browser.getId().equals(PREDEFINED_YANDEX_ID) || checkNameAndPath("Yandex", browser));
   }
 
   public static boolean isDartium(@Nonnull WebBrowser browser) {
@@ -78,7 +106,11 @@ public class WebBrowserManager extends SimpleModificationTracker implements Pers
   }
 
   public static boolean isEdge(@Nonnull WebBrowser browser) {
-    return browser.getFamily() == BrowserFamily.EXPLORER && (browser.getId().equals(PREDEFINED_EDGE_ID) || checkNameAndPath(EDGE_COMMAND, browser) || checkNameAndPath("MicrosoftEdge", browser));
+    return browser.getFamily() == BrowserFamily.EXPLORER && (
+      browser.getId().equals(PREDEFINED_EDGE_ID)
+        || checkNameAndPath(EDGE_COMMAND, browser)
+        || checkNameAndPath("MicrosoftEdge", browser)
+    );
   }
 
   static boolean checkNameAndPath(@Nonnull String what, @Nonnull WebBrowser browser) {
@@ -255,8 +287,14 @@ public class WebBrowserManager extends SimpleModificationTracker implements Pers
         path = family.getExecutionPath();
       }
 
-      list.add(new ConfigurableWebBrowser(id, family, StringUtil.notNullize(child.getAttributeValue("name"), family.getName()), path, activeValue == null || Boolean.parseBoolean(activeValue),
-                                          specificSettings));
+      list.add(new ConfigurableWebBrowser(
+        id,
+        family,
+        StringUtil.notNullize(child.getAttributeValue("name"), family.getName()),
+        path,
+        activeValue == null || Boolean.parseBoolean(activeValue),
+        specificSettings
+      ));
     }
 
     // add removed/new predefined browsers
@@ -327,12 +365,14 @@ public class WebBrowserManager extends SimpleModificationTracker implements Pers
     incModificationCount();
   }
 
-  public WebBrowser addBrowser(final @Nonnull UUID id,
-                               final @Nonnull BrowserFamily family,
-                               final @Nonnull String name,
-                               final @Nullable String path,
-                               final boolean active,
-                               final BrowserSpecificSettings specificSettings) {
+  public WebBrowser addBrowser(
+    final @Nonnull UUID id,
+    final @Nonnull BrowserFamily family,
+    final @Nonnull String name,
+    final @Nullable String path,
+    final boolean active,
+    final BrowserSpecificSettings specificSettings
+  ) {
     final ConfigurableWebBrowser browser = new ConfigurableWebBrowser(id, family, name, path, active, specificSettings);
     browsers.add(browser);
     incModificationCount();

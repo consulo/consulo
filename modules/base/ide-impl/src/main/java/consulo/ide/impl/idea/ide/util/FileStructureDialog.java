@@ -16,63 +16,52 @@
 
 package consulo.ide.impl.idea.ide.util;
 
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.commander.CommanderPanel;
-import consulo.ide.impl.idea.ide.commander.ProjectListBuilder;
-import consulo.ide.impl.idea.ide.structureView.newStructureView.TreeModelWrapper;
-import consulo.language.editor.structureView.PsiStructureViewFactory;
-import consulo.project.ui.view.tree.AbstractTreeNode;
-import consulo.ide.impl.idea.ide.util.treeView.smartTree.SmartTreeStructure;
-import consulo.ui.ex.action.IdeActions;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
-import consulo.language.editor.util.PsiUtilBase;
-import consulo.ui.ex.awt.IdeBorderFactory;
-import consulo.ui.ex.awt.ScrollingUtil;
-import consulo.ui.ex.awt.speedSearch.SpeedSearchBase;
-import consulo.ui.ex.awt.speedSearch.SpeedSearchComparator;
-import consulo.project.ui.wm.dock.DockManager;
-import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.application.ApplicationManager;
-import consulo.ui.ex.awt.SideBorder;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.fileEditor.structureView.StructureViewModel;
 import consulo.fileEditor.structureView.StructureViewTreeElement;
 import consulo.fileEditor.structureView.TreeBasedStructureViewBuilder;
 import consulo.fileEditor.structureView.tree.*;
+import consulo.ide.impl.idea.ide.commander.CommanderPanel;
+import consulo.ide.impl.idea.ide.commander.ProjectListBuilder;
+import consulo.ide.impl.idea.ide.structureView.newStructureView.TreeModelWrapper;
+import consulo.ide.impl.idea.ide.util.treeView.smartTree.SmartTreeStructure;
+import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.language.editor.structureView.PsiStructureViewFactory;
+import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.navigation.Navigatable;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
+import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.project.ui.wm.dock.DockManager;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchBase;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchComparator;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
-import kava.beans.PropertyChangeEvent;
-import kava.beans.PropertyChangeListener;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import kava.beans.PropertyChangeEvent;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -265,20 +254,17 @@ public class FileStructureDialog extends DialogWrapper {
   }
 
   private void addNarrowDownCheckbox(final JPanel panel) {
-    final JCheckBox checkBox = new JCheckBox(IdeBundle.message("checkbox.narrow.down.the.list.on.typing"));
+    final JCheckBox checkBox = new JCheckBox(IdeLocalize.checkboxNarrowDownTheListOnTyping().get());
     checkBox.setSelected(PropertiesComponent.getInstance().isTrueValue(ourPropertyKey));
-    checkBox.addChangeListener(new ChangeListener() {
-      @Override
-      public void stateChanged(ChangeEvent e) {
-        myShouldNarrowDown = checkBox.isSelected();
-        PropertiesComponent.getInstance().setValue(ourPropertyKey, Boolean.toString(myShouldNarrowDown));
+    checkBox.addChangeListener(e -> {
+      myShouldNarrowDown = checkBox.isSelected();
+      PropertiesComponent.getInstance().setValue(ourPropertyKey, Boolean.toString(myShouldNarrowDown));
 
-        ProjectListBuilder builder = (ProjectListBuilder)myCommanderPanel.getBuilder();
-        if (builder == null) {
-          return;
-        }
-        builder.addUpdateRequest();
+      ProjectListBuilder builder = (ProjectListBuilder)myCommanderPanel.getBuilder();
+      if (builder == null) {
+        return;
       }
+      builder.addUpdateRequest();
     });
 
     checkBox.setFocusable(false);
@@ -297,42 +283,39 @@ public class FileStructureDialog extends DialogWrapper {
 
 
     final JCheckBox chkFilter = new JCheckBox();
-    chkFilter.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(final ActionEvent e) {
-        ProjectListBuilder builder = (ProjectListBuilder)myCommanderPanel.getBuilder();
-        PsiElement currentParent = null;
-        if (builder != null) {
-          final AbstractTreeNode parentNode = builder.getParentNode();
-          final Object value = parentNode.getValue();
-          if (value instanceof StructureViewTreeElement) {
-            final Object elementValue = ((StructureViewTreeElement)value).getValue();
-            if (elementValue instanceof PsiElement) {
-              currentParent = (PsiElement) elementValue;
-            }
+    chkFilter.addActionListener(e -> {
+      ProjectListBuilder builder = (ProjectListBuilder)myCommanderPanel.getBuilder();
+      PsiElement currentParent = null;
+      if (builder != null) {
+        final AbstractTreeNode parentNode = builder.getParentNode();
+        final Object value = parentNode.getValue();
+        if (value instanceof StructureViewTreeElement) {
+          final Object elementValue = ((StructureViewTreeElement)value).getValue();
+          if (elementValue instanceof PsiElement) {
+            currentParent = (PsiElement) elementValue;
           }
         }
-        final boolean state = chkFilter.isSelected();
-        myTreeActionsOwner.setActionIncluded(action, action instanceof FileStructureFilter ? !state : state);
-        myTreeStructure.rebuildTree();
-        if (builder != null) {
-          if (currentParent != null) {
-            boolean oldNarrowDown = myShouldNarrowDown;
-            myShouldNarrowDown = false;
-            try {
-              builder.enterElement(currentParent, PsiUtilBase.getVirtualFile(currentParent));
-            }
-            finally {
-              myShouldNarrowDown = oldNarrowDown;
-            }
+      }
+      final boolean state = chkFilter.isSelected();
+      myTreeActionsOwner.setActionIncluded(action, action instanceof FileStructureFilter ? !state : state);
+      myTreeStructure.rebuildTree();
+      if (builder != null) {
+        if (currentParent != null) {
+          boolean oldNarrowDown = myShouldNarrowDown;
+          myShouldNarrowDown = false;
+          try {
+            builder.enterElement(currentParent, PsiUtilBase.getVirtualFile(currentParent));
           }
-          builder.updateList(true);
+          finally {
+            myShouldNarrowDown = oldNarrowDown;
+          }
         }
+        builder.updateList(true);
+      }
 
-        if (SpeedSearchBase.hasActiveSpeedSearch(myCommanderPanel.getList())) {
-          final SpeedSearchSupply supply = SpeedSearchBase.getSupply(myCommanderPanel.getList());
-          if (supply != null && supply.isPopupActive()) supply.refreshSelection();
-        }
+      if (SpeedSearchBase.hasActiveSpeedSearch(myCommanderPanel.getList())) {
+        final SpeedSearchSupply supply = SpeedSearchBase.getSupply(myCommanderPanel.getList());
+        if (supply != null && supply.isPopupActive()) supply.refreshSelection();
       }
     });
     chkFilter.setFocusable(false);
@@ -370,30 +353,27 @@ public class FileStructureDialog extends DialogWrapper {
     public MyCommanderPanel(Project _project) {
       super(_project, false, true);
       myList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-      myListSpeedSearch.addChangeListener(new PropertyChangeListener() {
-        @Override
-        public void propertyChange(PropertyChangeEvent evt) {
-          ProjectListBuilder builder = (ProjectListBuilder)getBuilder();
-          if (builder == null) {
-            return;
-          }
-          builder.addUpdateRequest(hasPrefixShortened(evt));
-          ApplicationManager.getApplication().invokeLater(new Runnable() {
-            @Override
-            public void run() {
-              int index = myList.getSelectedIndex();
-              if (index != -1 && index < myList.getModel().getSize()) {
-                myList.clearSelection();
-                ScrollingUtil.selectItem(myList, index);
-              }
-              else {
-                ScrollingUtil.ensureSelectionExists(myList);
-              }
-            }
-          });
-
-          myList.repaint(); // to update match highlighting
+      myListSpeedSearch.addChangeListener(evt -> {
+        ProjectListBuilder builder = (ProjectListBuilder)getBuilder();
+        if (builder == null) {
+          return;
         }
+        builder.addUpdateRequest(hasPrefixShortened(evt));
+        ApplicationManager.getApplication().invokeLater(new Runnable() {
+          @Override
+          public void run() {
+            int index = myList.getSelectedIndex();
+            if (index != -1 && index < myList.getModel().getSize()) {
+              myList.clearSelection();
+              ScrollingUtil.selectItem(myList, index);
+            }
+            else {
+              ScrollingUtil.ensureSelectionExists(myList);
+            }
+          }
+        });
+
+        myList.repaint(); // to update match highlighting
       });
       myListSpeedSearch.setComparator(createSpeedSearchComparator());
     }
@@ -405,14 +385,11 @@ public class FileStructureDialog extends DialogWrapper {
 
     @Override
     public boolean navigateSelectedElement() {
-      final Ref<Boolean> succeeded = new Ref<Boolean>();
+      final Ref<Boolean> succeeded = new Ref<>();
       final CommandProcessor commandProcessor = CommandProcessor.getInstance();
-      commandProcessor.executeCommand(myProject, new Runnable() {
-        @Override
-        public void run() {
-          succeeded.set(MyCommanderPanel.super.navigateSelectedElement());
-          IdeDocumentHistory.getInstance(myProject).includeCurrentCommandAsNavigation();
-        }
+      commandProcessor.executeCommand(myProject, () -> {
+        succeeded.set(MyCommanderPanel.super.navigateSelectedElement());
+        IdeDocumentHistory.getInstance(myProject).includeCurrentCommandAsNavigation();
       }, "Navigate", null);
       if (succeeded.get()) {
         close(CANCEL_EXIT_CODE);
@@ -426,7 +403,7 @@ public class FileStructureDialog extends DialogWrapper {
 
       if (selectedElement instanceof TreeElement) selectedElement = ((StructureViewTreeElement)selectedElement).getValue();
 
-      if (PlatformDataKeys.NAVIGATABLE == dataId) {
+      if (Navigatable.KEY == dataId) {
         return selectedElement instanceof Navigatable ? selectedElement : myNavigatable;
       }
 
@@ -469,7 +446,7 @@ public class FileStructureDialog extends DialogWrapper {
         return childElements;
       }
 
-      ArrayList<Object> filteredElements = new ArrayList<Object>(childElements.length);
+      ArrayList<Object> filteredElements = new ArrayList<>(childElements.length);
       SpeedSearchComparator speedSearchComparator = createSpeedSearchComparator();
 
       for (Object child : childElements) {

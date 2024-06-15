@@ -19,7 +19,7 @@ import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ui.ex.awt.dnd.DnDEvent;
 import consulo.ui.ex.awt.dnd.DnDNativeTarget;
 import consulo.util.lang.function.Condition;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

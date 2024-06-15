@@ -16,22 +16,20 @@
 
 package consulo.ide.impl.idea.ide.util.scopeChooser;
 
-import consulo.ide.IdeBundle;
 import consulo.configurable.ConfigurationException;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.ui.NamedConfigurable;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.content.scope.NamedScope;
-import consulo.language.editor.scope.NamedScopeManager;
 import consulo.content.scope.NamedScopesHolder;
 import consulo.content.scope.PackageSet;
+import consulo.ide.impl.idea.openapi.ui.NamedConfigurable;
+import consulo.language.editor.packageDependency.DependencyValidationManager;
+import consulo.language.editor.scope.NamedScopeManager;
+import consulo.platform.base.localize.IdeLocalize;
+import consulo.project.Project;
+import consulo.util.lang.Comparing;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * User: anna
@@ -50,14 +48,9 @@ public class ScopeConfigurable extends NamedConfigurable<NamedScope> {
     myScope = scope;
     myShareScope = shareScope;
     myProject = project;
-    mySharedCheckbox = new JCheckBox(IdeBundle.message("share.scope.checkbox.title"), shareScope);
+    mySharedCheckbox = new JCheckBox(IdeLocalize.shareScopeCheckboxTitle().get(), shareScope);
     myPanel = new ScopeEditorPanel(project, getHolder());
-    mySharedCheckbox.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(final ActionEvent e) {
-        myPanel.setHolder(getHolder());
-      }
-    });
+    mySharedCheckbox.addActionListener(e -> myPanel.setHolder(getHolder()));
   }
 
   @Override
@@ -76,7 +69,7 @@ public class ScopeConfigurable extends NamedConfigurable<NamedScope> {
 
   @Override
   public String getBannerSlogan() {
-    return IdeBundle.message("scope.banner.text", myScope.getName());
+    return IdeLocalize.scopeBannerText(myScope.getName()).get();
   }
 
   @Override
