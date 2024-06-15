@@ -16,12 +16,18 @@
 
 package consulo.execution.debug;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.component.util.localize.AbstractBundle;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author nik
  */
+@Deprecated(forRemoval = true)
+@DeprecationInfo("Use XDebuggerLocalize")
+@MigratedExtensionsTo(XDebuggerLocalize.class)
 public class XDebuggerBundle extends AbstractBundle {
   private static final XDebuggerBundle ourInstance = new XDebuggerBundle();
 

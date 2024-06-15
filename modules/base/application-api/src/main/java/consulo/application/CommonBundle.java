@@ -16,6 +16,7 @@
 
 package consulo.application;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.component.util.localize.BundleBase;
 import consulo.platform.Platform;
 import org.jetbrains.annotations.NonNls;
@@ -30,6 +31,8 @@ import java.util.ResourceBundle;
 /**
  * @author yole
  */
+@Deprecated(forRemoval = true)
+@DeprecationInfo("Use CommonLocalize")
 @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
 public class CommonBundle extends BundleBase {
   public static boolean assertKeyIsFound = false;

@@ -2,11 +2,17 @@
 
 package consulo.build.ui;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.internal.MigratedExtensionsTo;
+import consulo.build.ui.localize.BuildLocalize;
 import consulo.component.util.localize.AbstractBundle;
 import org.jetbrains.annotations.PropertyKey;
 
 import jakarta.annotation.Nonnull;
 
+@Deprecated(forRemoval = true)
+@DeprecationInfo("Use BuildLocalize")
+@MigratedExtensionsTo(BuildLocalize.class)
 public final class BuildBundle extends AbstractBundle {
   private static final String BUNDLE = "consulo.build.ui.BuildBundle";
   private static final BuildBundle INSTANCE = new BuildBundle();

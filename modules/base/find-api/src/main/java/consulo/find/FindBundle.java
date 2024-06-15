@@ -16,7 +16,10 @@
 
 package consulo.find;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.application.CommonBundle;
+import consulo.find.localize.FindLocalize;
 import org.jetbrains.annotations.PropertyKey;
 
 import java.lang.ref.Reference;
@@ -26,6 +29,9 @@ import java.util.ResourceBundle;
 /**
  * @author yole
  */
+@Deprecated(forRemoval = true)
+@DeprecationInfo("Use FindLocalize")
+@MigratedExtensionsTo(FindLocalize.class)
 public class FindBundle {
   private static Reference<ResourceBundle> ourBundle;
 

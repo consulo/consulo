@@ -15,12 +15,15 @@
  */
 package consulo.application;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.component.util.localize.AbstractBundle;
 import org.jetbrains.annotations.PropertyKey;
 
 /**
  * Provides access to localized properties for the application component of IDEA.
  */
+@Deprecated(forRemoval = true)
+@DeprecationInfo("Use ApplicationLocalize")
 public class ApplicationBundle extends AbstractBundle {
   public static final String BUNDLE = "consulo.application.ApplicationBundle";
 

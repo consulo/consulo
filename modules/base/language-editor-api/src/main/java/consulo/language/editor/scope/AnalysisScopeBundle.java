@@ -15,12 +15,18 @@
  */
 package consulo.language.editor.scope;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.component.util.localize.AbstractBundle;
+import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
 import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author max
  */
+@Deprecated(forRemoval = true)
+@DeprecationInfo("Use AnalysisScopeLocalize")
+@MigratedExtensionsTo(AnalysisScopeLocalize.class)
 public class AnalysisScopeBundle extends AbstractBundle {
   private static final AnalysisScopeBundle ourInstance = new AnalysisScopeBundle();
 
