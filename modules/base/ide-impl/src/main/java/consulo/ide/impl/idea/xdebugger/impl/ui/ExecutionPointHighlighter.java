@@ -61,21 +61,24 @@ public class ExecutionPointHighlighter {
 
   public void show(final @Nonnull XSourcePosition position, final boolean notTopFrame, @Nullable final GutterIconRenderer gutterIconRenderer) {
     updateRequested.set(false);
+    myProject.getUIAccess().give(() -> {
+      updateRequested.set(false);
 
-    mySourcePosition = position;
+      mySourcePosition = position;
 
-    clearDescriptor();
-    myOpenFileDescriptor = XSourcePositionImpl.createOpenFileDescriptor(myProject, position);
-    if (!XDebuggerSettingManagerImpl.getInstanceImpl().getGeneralSettings().isScrollToCenter()) {
-      myOpenFileDescriptor.setScrollType(notTopFrame ? ScrollType.CENTER : ScrollType.MAKE_VISIBLE);
-    }
-    //see IDEA-125645 and IDEA-63459
-    //myOpenFileDescriptor.setUseCurrentWindow(true);
+      clearDescriptor();
+      myOpenFileDescriptor = XSourcePositionImpl.createOpenFileDescriptor(myProject, position);
+      if (!XDebuggerSettingManagerImpl.getInstanceImpl().getGeneralSettings().isScrollToCenter()) {
+        myOpenFileDescriptor.setScrollType(notTopFrame ? ScrollType.CENTER : ScrollType.MAKE_VISIBLE);
+      }
+      //see IDEA-125645 and IDEA-63459
+      //myOpenFileDescriptor.setUseCurrentWindow(true);
 
-    myGutterIconRenderer = gutterIconRenderer;
-    myNotTopFrame = notTopFrame;
+      myGutterIconRenderer = gutterIconRenderer;
+      myNotTopFrame = notTopFrame;
 
-    doShow(true);
+      doShow(true);
+    });
   }
 
   public void hide() {
