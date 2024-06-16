@@ -23,20 +23,19 @@ import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.FileChooserFactory;
 import consulo.fileChooser.PathChooserDialog;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.ui.ex.awt.ErrorLabel;
 import consulo.ide.impl.idea.ui.popup.ActionPopupStep;
 import consulo.ide.impl.idea.ui.popup.PopupFactoryImpl;
 import consulo.ide.impl.idea.ui.popup.list.PopupListElementRenderer;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.ErrorLabel;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.UIUtil;
@@ -138,15 +137,16 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
       Application.get().invokeLater(() -> {
-        Project project = e.getData(CommonDataKeys.PROJECT);
+        Project project = e.getData(Project.KEY);
 
         FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
         descriptor.setUseApplicationDialog();
 
-        PathChooserDialog chooser = FileChooserFactory.getInstance()
-                                                      .createPathChooser(descriptor,
-                                                                         project,
-                                                                         e.getDataContext().getData(UIExAWTDataKey.CONTEXT_COMPONENT));
+        PathChooserDialog chooser = FileChooserFactory.getInstance().createPathChooser(
+          descriptor,
+          project,
+          e.getDataContext().getData(UIExAWTDataKey.CONTEXT_COMPONENT)
+        );
 
         chooser.chooseAsync(project.getBaseDir()).doWhenDone(virtualFiles -> {
           List<String> recentDirectories = RunAnythingContextRecentDirectoryCache.getInstance(project).getState().paths;
@@ -200,7 +200,9 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
           }
 
           myTextLabel.setText(event.getPresentation().getText());
-          myInfoLabel.setForeground(isSelected ? UIUtil.getListSelectionForeground(true) : UIUtil.getInactiveTextColor());
+          myInfoLabel.setForeground(
+            isSelected ? UIUtil.getListSelectionForeground(true) : UIUtil.getInactiveTextColor()
+          );
         }
       };
     }
@@ -210,16 +212,21 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
     private final List<PopupFactoryImpl.ActionItem> myActions;
     private final Runnable myUpdateToolbar;
 
-    public ChooseContextPopupStep(List<PopupFactoryImpl.ActionItem> actions, DataContext dataContext, Runnable updateToolbar) {
+    public ChooseContextPopupStep(
+      List<PopupFactoryImpl.ActionItem> actions,
+      DataContext dataContext,
+      Runnable updateToolbar
+    ) {
       super(actions,
-            IdeBundle.message("run.anything.context.title.working.directory"),
-            () -> dataContext,
-            null,
-            true,
-            Conditions.alwaysFalse(),
-            false,
-            true,
-            null);
+        IdeLocalize.runAnythingContextTitleWorkingDirectory().get(),
+        () -> dataContext,
+        null,
+        true,
+        Conditions.alwaysFalse(),
+        false,
+        true,
+        null
+      );
       myActions = actions;
       myUpdateToolbar = updateToolbar;
     }
@@ -228,12 +235,11 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
     public ListSeparator getSeparatorAbove(PopupFactoryImpl.ActionItem value) {
       AnAction action = value.getAction();
       if (action instanceof BrowseDirectoryItem) {
-        return new ListSeparator(IdeBundle.message("run.anything.context.separator.directories"));
+        return new ListSeparator(IdeLocalize.runAnythingContextSeparatorDirectories().get());
       }
-      else if (action instanceof ModuleItem && action == ContainerUtil.filter(myActions, it -> it.getAction() instanceof ModuleItem)
-                                                                      .get(0)
-                                                                      .getAction()) {
-        return new ListSeparator(IdeBundle.message("run.anything.context.separator.modules"));
+      else if (action instanceof ModuleItem
+        && action == ContainerUtil.filter(myActions, it -> it.getAction() instanceof ModuleItem).get(0).getAction()) {
+        return new ListSeparator(IdeLocalize.runAnythingContextSeparatorModules().get());
       }
       return super.getSeparatorAbove(value);
     }
@@ -284,9 +290,14 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
   @Nonnull
   @Override
   public JComponent createCustomComponent(@Nonnull Presentation presentation, @Nonnull String place) {
-    presentation.setDescription(IdeBundle.message("run.anything.context.tooltip"));
+    presentation.setDescriptionValue(IdeLocalize.runAnythingContextTooltip());
     ActionButtonFactory actionButtonFactory = ActionButtonFactory.getInstance();
-    return actionButtonFactory.createWithText(this, presentation, place, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE).getComponent();
+    return actionButtonFactory.createWithText(
+      this,
+      presentation,
+      place,
+      ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE
+    ).getComponent();
   }
 
   @RequiredUIAccess
@@ -313,7 +324,7 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) {
       return;
     }
@@ -329,16 +340,21 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
     };
 
     DataContext dataContext = e.getDataContext();
-    List<PopupFactoryImpl.ActionItem> actionItems = ActionPopupStep.createActionItems(new DefaultActionGroup(createItems()),
-                                                                                      dataContext,
-                                                                                      false,
-                                                                                      false,
-                                                                                      true,
-                                                                                      true,
-                                                                                      ActionPlaces.POPUP,
-                                                                                      null);
+    List<PopupFactoryImpl.ActionItem> actionItems = ActionPopupStep.createActionItems(
+      new DefaultActionGroup(createItems()),
+      dataContext,
+      false,
+      false,
+      true,
+      true,
+      ActionPlaces.POPUP,
+      null
+    );
 
-    ChooseContextPopup popup = new ChooseContextPopup(new ChooseContextPopupStep(actionItems, dataContext, updateToolbar), dataContext);
+    ChooseContextPopup popup = new ChooseContextPopup(
+      new ChooseContextPopupStep(actionItems, dataContext, updateToolbar),
+      dataContext
+    );
     popup.setSize(new Dimension(300, 300));
     popup.setRequestFocus(false);
     popup.showUnderneathOf(component);

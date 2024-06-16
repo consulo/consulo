@@ -2,15 +2,15 @@
 package consulo.ide.impl.idea.ide.actions.runAnything;
 
 import consulo.application.dumb.DumbAware;
-import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.execution.executor.Executor;
 import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.actions.GotoActionBase;
 import consulo.ide.impl.idea.ide.actions.runAnything.activity.RunAnythingProvider;
 import consulo.ide.impl.idea.openapi.keymap.impl.ModifierKeyDoubleClickHandler;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
+import consulo.platform.Platform;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -94,8 +94,9 @@ public class RunAnythingAction extends AnAction implements CustomComponentAction
     ActionButton button = factory.create(this, presentation, place, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE);
     button.setCustomShortcutBuilder(() -> {
       if (myIsDoubleCtrlRegistered) {
-        return IdeBundle.message("run.anything.double.ctrl.shortcut",
-                                 SystemInfo.isMac ? FontUtil.thinSpace() + MacKeymapUtil.CONTROL : "Ctrl");
+        return IdeLocalize.runAnythingDoubleCtrlShortcut(
+          Platform.current().os().isMac() ? FontUtil.thinSpace() + MacKeymapUtil.CONTROL : "Ctrl"
+        ).get();
       }
       //keymap shortcut is added automatically
       return null;

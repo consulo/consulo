@@ -1,22 +1,22 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.application.util.SystemInfo;
 import consulo.application.util.UserHomeFileUtil;
 import consulo.component.util.Iconable;
 import consulo.fileEditor.VfsPresentationUtil;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoFileCellRenderer;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.util.lang.ObjectUtil;
 import consulo.language.editor.ui.PsiElementListCellRenderer;
 import consulo.language.psi.*;
 import consulo.language.psi.util.SymbolPresentationUtil;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
@@ -99,7 +99,7 @@ public class SearchEverywherePsiRenderer extends PsiElementListCellRenderer<PsiE
 
     int fullWidth = fm.stringWidth(adjustedText);
     if (fullWidth < maxWidth) return adjustedText;
-    String separator = text.contains("/") ? "/" : SystemInfo.isWindows && text.contains("\\") ? "\\" : text.contains(".") ? "." : text.contains("-") ? "-" : " ";
+    String separator = text.contains("/") ? "/" : Platform.current().os().isWindows() && text.contains("\\") ? "\\" : text.contains(".") ? "." : text.contains("-") ? "-" : " ";
     LinkedList<String> parts = new LinkedList<>(StringUtil.split(text, separator));
     int index;
     while (parts.size() > 1) {

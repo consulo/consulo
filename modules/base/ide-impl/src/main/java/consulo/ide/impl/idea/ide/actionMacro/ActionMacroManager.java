@@ -26,12 +26,12 @@ import consulo.component.persist.Storage;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.ui.playback.PlaybackContext;
 import consulo.ide.impl.idea.openapi.ui.playback.PlaybackRunner;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.logging.Logger;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.StatusBar;
@@ -104,8 +104,8 @@ public class ActionMacroManager implements JDOMExternalizable, Disposable {
         else if (myIsRecording) {
           myRecordingMacro.appendAction(id);
           String shortcut = null;
-          if (event.getInputEvent() instanceof KeyEvent) {
-            shortcut = KeymapUtil.getKeystrokeText(KeyStroke.getKeyStrokeForEvent((KeyEvent)event.getInputEvent()));
+          if (event.getInputEvent() instanceof KeyEvent keyEvent) {
+            shortcut = KeymapUtil.getKeystrokeText(KeyStroke.getKeyStrokeForEvent(keyEvent));
           }
           notifyUser(dataContext, id + (shortcut != null ? " (" + shortcut + ")" : ""), false);
           myLastActionInputEvent.add(event.getInputEvent());
@@ -157,10 +157,12 @@ public class ActionMacroManager implements JDOMExternalizable, Disposable {
     myLastActionInputEvent.clear();
     String macroName;
     do {
-      macroName = Messages.showInputDialog(project,
-                                           IdeBundle.message("prompt.enter.macro.name"),
-                                           IdeBundle.message("title.enter.macro.name"),
-                                           Messages.getQuestionIcon());
+      macroName = Messages.showInputDialog(
+        project,
+        IdeLocalize.promptEnterMacroName().get(),
+        IdeLocalize.titleEnterMacroName().get(),
+        Messages.getQuestionIcon()
+      );
       if (macroName == null) {
         myRecordingMacro = null;
         return;
@@ -186,7 +188,7 @@ public class ActionMacroManager implements JDOMExternalizable, Disposable {
     else {
       for (int i = 0; i < myMacros.size(); i++) {
         ActionMacro macro = myMacros.get(i);
-        if (IdeBundle.message("macro.noname").equals(macro.getName())) {
+        if (IdeLocalize.macroNoname().get().equals(macro.getName())) {
           myMacros.set(i, myRecordingMacro);
           myRecordingMacro = null;
           break;
@@ -232,17 +234,7 @@ public class ActionMacroManager implements JDOMExternalizable, Disposable {
 
     myIsPlaying = true;
 
-    runner.run().doWhenDone(new Runnable() {
-      @Override
-      public void run() {
-        frame.getStatusBar().setInfo("Script execution finished");
-      }
-    }).doWhenProcessed(new Runnable() {
-      @Override
-      public void run() {
-        myIsPlaying = false;
-      }
-    });
+    runner.run().doWhenDone(() -> frame.getStatusBar().setInfo("Script execution finished")).doWhenProcessed(() -> myIsPlaying = false);
   }
 
   public boolean isRecording() {
@@ -311,9 +303,11 @@ public class ActionMacroManager implements JDOMExternalizable, Disposable {
     final ActionManagerEx actionManager = (ActionManagerEx)ActionManager.getInstance();
     final String actionId = ActionMacro.MACRO_ACTION_PREFIX + name;
     if (actionManager.getAction(actionId) != null) {
-      if (Messages.showYesNoDialog(IdeBundle.message("message.macro.exists", name),
-                                   IdeBundle.message("title.macro.name.already.used"),
-                                   Messages.getWarningIcon()) != 0) {
+      if (Messages.showYesNoDialog(
+        IdeLocalize.messageMacroExists(name).get(),
+        IdeLocalize.titleMacroNameAlreadyUsed().get(),
+        Messages.getWarningIcon()
+      ) != 0) {
         return false;
       }
       actionManager.unregisterAction(actionId);
@@ -363,8 +357,8 @@ public class ActionMacroManager implements JDOMExternalizable, Disposable {
 
     @Override
     public boolean test(AWTEvent e) {
-      if (isRecording() && e instanceof KeyEvent) {
-        postProcessKeyEvent((KeyEvent)e);
+      if (isRecording() && e instanceof KeyEvent keyEvent) {
+        postProcessKeyEvent(keyEvent);
       }
       return false;
     }
@@ -418,8 +412,6 @@ public class ActionMacroManager implements JDOMExternalizable, Disposable {
     }
 
     Optional<ActionMacroWidget> optional = statusBar.findWidget(widget -> widget instanceof ActionMacroWidget);
-    optional.ifPresent(actionMacroWidget -> {
-      actionMacroWidget.notifyUser(text, typing);
-    });
+    optional.ifPresent(actionMacroWidget -> actionMacroWidget.notifyUser(text, typing));
   }
 }

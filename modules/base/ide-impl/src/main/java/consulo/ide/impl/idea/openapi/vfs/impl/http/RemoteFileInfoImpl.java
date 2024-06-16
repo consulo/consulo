@@ -15,22 +15,22 @@
  */
 package consulo.ide.impl.idea.openapi.vfs.impl.http;
 
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.application.WriteAction;
+import consulo.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.application.WriteAction;
 import consulo.logging.Logger;
 import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.virtualFileSystem.VfsBundle;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import consulo.virtualFileSystem.http.event.FileDownloadingListener;
 import consulo.virtualFileSystem.http.RemoteContentProvider;
 import consulo.virtualFileSystem.http.RemoteFileInfo;
 import consulo.virtualFileSystem.http.RemoteFileState;
-
+import consulo.virtualFileSystem.http.event.FileDownloadingListener;
+import consulo.virtualFileSystem.localize.VirtualFileSystemLocalize;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -105,7 +105,7 @@ public class RemoteFileInfoImpl implements RemoteFileInfo {
       }
       catch (IOException e) {
         LOG.info(e);
-        errorOccurred(VfsBundle.message("cannot.create.local.file", e.getMessage()), false);
+        errorOccurred(VirtualFileSystemLocalize.cannotCreateLocalFile(e.getMessage()).get(), false);
         return;
       }
       myCancelled.set(false);
@@ -126,7 +126,10 @@ public class RemoteFileInfoImpl implements RemoteFileInfo {
     final File localIOFile;
 
     synchronized (myLock) {
-      LOG.debug("Downloading finished, size = " + myLocalFile.length() + ", file type=" + (fileType != null ? fileType.getName() : "null"));
+      LOG.debug(
+        "Downloading finished, size = " + myLocalFile.length() + "," +
+          " file type=" + (fileType != null ? fileType.getName() : "null")
+      );
       if (fileType != null) {
         String fileName = myLocalFile.getName();
         int dot = fileName.lastIndexOf('.');
@@ -134,7 +137,7 @@ public class RemoteFileInfoImpl implements RemoteFileInfo {
         if (dot == -1 || !extension.equals(fileName.substring(dot + 1))) {
           File newFile = FileUtil.findSequentNonexistentFile(myLocalFile.getParentFile(), fileName, extension);
           try {
-            FileUtil.rename(myLocalFile, newFile);
+            consulo.ide.impl.idea.openapi.util.io.FileUtil.rename(myLocalFile, newFile);
             myLocalFile = newFile;
           }
           catch (IOException e) {

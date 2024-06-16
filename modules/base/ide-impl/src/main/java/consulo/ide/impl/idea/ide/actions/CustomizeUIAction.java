@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.ide.impl.idea.ide.ui.customization.CustomizationConfigurable;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 
@@ -31,7 +30,7 @@ public class CustomizeUIAction extends AnAction {
   }
 
   public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     ShowSettingsUtil.getInstance().editConfigurable(project, new CustomizationConfigurable());
   }
 }

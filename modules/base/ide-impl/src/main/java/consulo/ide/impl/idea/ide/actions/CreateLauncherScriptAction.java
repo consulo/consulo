@@ -15,27 +15,27 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.application.Application;
+import consulo.application.ApplicationBundle;
+import consulo.application.localize.ApplicationLocalize;
+import consulo.container.boot.ContainerPathManager;
+import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.local.ExecUtil;
 import consulo.process.util.CapturingProcessUtil;
+import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.action.Presentation;
-import consulo.application.ApplicationBundle;
-import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.Project;
+import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
-import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.container.boot.ContainerPathManager;
-import consulo.logging.Logger;
-
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -44,8 +44,8 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
 
-import static consulo.util.lang.Pair.pair;
 import static consulo.ide.impl.idea.util.containers.ContainerUtil.newHashMap;
+import static consulo.util.lang.Pair.pair;
 
 /**
  * @author yole
@@ -55,7 +55,7 @@ public class CreateLauncherScriptAction extends DumbAwareAction {
   private static final String CONTENTS = "/Contents";
 
   public static boolean isAvailable() {
-    return SystemInfo.isUnix;
+    return Platform.current().os().isUnix();
   }
 
   @Override
@@ -70,7 +70,7 @@ public class CreateLauncherScriptAction extends DumbAwareAction {
   public void actionPerformed(@Nonnull AnActionEvent e) {
     if (!isAvailable()) return;
 
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     CreateLauncherScriptDialog dialog = new CreateLauncherScriptDialog(project);
     if (!dialog.showAndGet()) {
       return;
@@ -94,7 +94,7 @@ public class CreateLauncherScriptAction extends DumbAwareAction {
     assert name != null;
     File target = new File(path, name);
     if (target.exists()) {
-      String message = ApplicationBundle.message("launcher.script.overwrite", target);
+      String message = ApplicationLocalize.launcherScriptOverwrite(target).get();
       String title = ApplicationBundle.message("launcher.script.title");
       if (Messages.showOkCancelDialog(project, message, title, Messages.getQuestionIcon()) != Messages.OK) {
         return;
@@ -121,8 +121,8 @@ public class CreateLauncherScriptAction extends DumbAwareAction {
                 "mkdir -p \"" + scriptTargetDirPath + "\"\n" +
                 "install -g 0 -o 0 \"" + scriptFile.getCanonicalPath() + "\" \"" + pathName + "\"";
         File installationScript = ExecUtil.createTempExecutableScript("launcher_installer", ".sh", installationScriptSrc);
-        String prompt = ApplicationBundle.message("launcher.script.sudo.prompt", scriptTargetDirPath);
-        CapturingProcessUtil.execAndGetOutput(new GeneralCommandLine(installationScript.getPath()).withSudo(prompt));
+        LocalizeValue prompt = ApplicationLocalize.launcherScriptSudoPrompt(scriptTargetDirPath);
+        CapturingProcessUtil.execAndGetOutput(new GeneralCommandLine(installationScript.getPath()).withSudo(prompt.get()));
       }
     }
     catch (Exception e) {
@@ -130,8 +130,14 @@ public class CreateLauncherScriptAction extends DumbAwareAction {
       if (!StringUtil.isEmptyOrSpaces(message)) {
         LOG.warn(e);
         Notifications.Bus.notify(
-                new Notification(Notifications.SYSTEM_MESSAGES_GROUP, "Failed to create launcher script", message, NotificationType.ERROR),
-                project);
+          new Notification(
+            Notifications.SYSTEM_MESSAGES_GROUP,
+            "Failed to create launcher script",
+            message,
+            NotificationType.ERROR
+          ),
+          project
+        );
       }
       else {
         LOG.error(e);
@@ -141,8 +147,8 @@ public class CreateLauncherScriptAction extends DumbAwareAction {
 
   private static File createLauncherScriptFile() throws IOException, ExecutionException {
     String runPath = ContainerPathManager.get().getHomePath();
-    String productName = ApplicationNamesInfo.getInstance().getProductName().toLowerCase(Locale.US);
-    if (!SystemInfo.isMac) runPath += "/bin/" + productName + ".sh";
+    String productName = Application.get().getName().get().toLowerCase(Locale.US);
+    if (!Platform.current().os().isMac()) runPath += "/bin/" + productName + ".sh";
     else if (runPath.endsWith(CONTENTS)) runPath = runPath.substring(0, runPath.length() - CONTENTS.length());
 
     ClassLoader loader = CreateLauncherScriptAction.class.getClassLoader();
@@ -167,7 +173,7 @@ public class CreateLauncherScriptAction extends DumbAwareAction {
       super(project);
       init();
       setTitle(ApplicationBundle.message("launcher.script.title"));
-      String productName = ApplicationNamesInfo.getInstance().getProductName();
+      String productName = Application.get().getName().get();
       myTitle.setText(myTitle.getText().replace("$APP_NAME$", productName));
       myNameField.setText(defaultScriptName());
     }

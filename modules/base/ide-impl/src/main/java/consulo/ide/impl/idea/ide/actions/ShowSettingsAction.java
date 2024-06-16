@@ -15,17 +15,16 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.application.CommonBundle;
 import consulo.application.AllIcons;
+import consulo.application.CommonBundle;
+import consulo.application.dumb.DumbAware;
+import consulo.ide.setting.ShowSettingsUtil;
+import consulo.platform.Platform;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ide.setting.ShowSettingsUtil;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
-import consulo.project.ProjectManager;
-import consulo.application.util.SystemInfo;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -34,13 +33,17 @@ public class ShowSettingsAction extends AnAction implements DumbAware {
 
   @Inject
   public ShowSettingsAction(Provider<ShowSettingsUtil> showSettingsUtil) {
-    super(CommonBundle.settingsAction(), CommonBundle.settingsActionDescription(), AllIcons.General.Settings);
+    super(
+      CommonBundle.settingsAction(),
+      CommonBundle.settingsActionDescription(),
+      AllIcons.General.Settings
+    );
     myShowSettingsUtil = showSettingsUtil;
   }
 
   @Override
   public void update(AnActionEvent e) {
-    if (SystemInfo.isMac && e.getPlace().equals(ActionPlaces.MAIN_MENU)) {
+    if (Platform.current().os().isMac() && e.getPlace().equals(ActionPlaces.MAIN_MENU)) {
       // It's called from Preferences in App menu.
       e.getPresentation().setVisible(false);
     }
@@ -50,7 +53,7 @@ public class ShowSettingsAction extends AnAction implements DumbAware {
   }
 
   public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) {
       project = ProjectManager.getInstance().getDefaultProject();
     }

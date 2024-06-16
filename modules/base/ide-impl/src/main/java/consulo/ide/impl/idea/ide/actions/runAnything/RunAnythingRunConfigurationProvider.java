@@ -2,14 +2,14 @@
 package consulo.ide.impl.idea.ide.actions.runAnything;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.execution.actions.ChooseRunConfigurationPopup;
-import consulo.ide.IdeBundle;
 import consulo.dataContext.DataContext;
-import consulo.project.Project;
+import consulo.ide.impl.idea.execution.actions.ChooseRunConfigurationPopup;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.platform.base.localize.IdeLocalize;
+import consulo.project.Project;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class RunAnythingRunConfigurationProvider extends consulo.ide.impl.idea.i
   @Nonnull
   @Override
   public String getCompletionGroupTitle() {
-    return IdeBundle.message("run.anything.run.configurations.group.title");
+    return IdeLocalize.runAnythingRunConfigurationsGroupTitle().get();
   }
 
   @Nonnull

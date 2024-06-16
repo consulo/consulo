@@ -15,65 +15,59 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
-import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.PathChooserDialog;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.FileEditorProviderManager;
-import consulo.ide.IdeBundle;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.ide.impl.ProjectUtil;
 import consulo.ide.impl.idea.openapi.fileChooser.FileElement;
 import consulo.ide.impl.idea.openapi.fileChooser.impl.FileChooserUtil;
-import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeChooser;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.platform.base.localize.IdeLocalize;
+import consulo.project.Project;
 import consulo.project.internal.ProjectOpenProcessor;
 import consulo.project.internal.ProjectOpenProcessors;
-import consulo.language.editor.CommonDataKeys;
-import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class OpenFileAction extends AnAction implements DumbAware {
+  @NonNls
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    @Nullable final Project project = e.getData(CommonDataKeys.PROJECT);
+    @Nullable final Project project = e.getData(Project.KEY);
     final boolean showFiles = project != null;
 
     final FileChooserDescriptor descriptor = new OpenProjectFileChooserDescriptor(true) {
       @RequiredUIAccess
       @Override
       public boolean isFileSelectable(VirtualFile file) {
-        if (super.isFileSelectable(file)) {
-          return true;
-        }
-        if (file.isDirectory()) {
-          return false;
-        }
-        return showFiles && !FileElement.isArchive(file);
+        return super.isFileSelectable(file) || (!file.isDirectory() && showFiles && !FileElement.isArchive(file));
       }
 
       @Override
       public boolean isFileVisible(VirtualFile file, boolean showHiddenFiles) {
         if (!file.isDirectory() && isFileSelectable(file)) {
-          if (!showHiddenFiles && FileElement.isFileHidden(file)) return false;
-          return true;
+          return showHiddenFiles || !FileElement.isFileHidden(file);
         }
         return super.isFileVisible(file, showHiddenFiles);
       }
@@ -91,7 +85,11 @@ public class OpenFileAction extends AnAction implements DumbAware {
     FileChooser.chooseFiles(descriptor, project, VfsUtil.getUserHomeDir()).doWhenDone(files -> {
       for (VirtualFile file : files) {
         if (!descriptor.isFileSelectable(file)) { // on Mac, it could be selected anyway
-          Messages.showInfoMessage(project, file.getPresentableUrl() + " contains no " + ApplicationNamesInfo.getInstance().getFullProductName() + " project", "Cannot Open Project");
+          Messages.showInfoMessage(
+            project,
+            file.getPresentableUrl() + " contains no " + Application.get().getName() + " project",
+            "Cannot Open Project"
+          );
           return;
         }
       }
@@ -106,7 +104,7 @@ public class OpenFileAction extends AnAction implements DumbAware {
     for (ProjectOpenProcessor processor : providers) {
       processor.collectFileSamples(fileSamples::add);
     }
-    return IdeBundle.message("import.project.chooser.header", StringUtil.join(fileSamples, ", <br>"));
+    return IdeLocalize.importProjectChooserHeader(StringUtil.join(fileSamples, ", <br>")).get();
   }
 
   @RequiredUIAccess
@@ -118,9 +116,19 @@ public class OpenFileAction extends AnAction implements DumbAware {
       }
 
       if (OpenProjectFileChooserDescriptor.canOpen(file)) {
-        int answer = Messages.showYesNoDialog(project, IdeBundle.message("message.open.file.is.project", file.getName()), IdeBundle.message("title.open.project"), Messages.getQuestionIcon());
+        int answer = Messages.showYesNoDialog(
+          project,
+          IdeLocalize.messageOpenFileIsProject(file.getName()).get(),
+          IdeLocalize.titleOpenProject().get(),
+          Messages.getQuestionIcon()
+        );
         if (answer == 0) {
-          ProjectUtil.openAsync(file.getPath(), project, false, UIAccess.current()).doWhenDone(openedProject -> FileChooserUtil.setLastOpenedFile(openedProject, file));
+          ProjectUtil.openAsync(
+            file.getPath(),
+            project,
+            false,
+            UIAccess.current()
+          ).doWhenDone(openedProject -> FileChooserUtil.setLastOpenedFile(openedProject, file));
           return;
         }
       }
@@ -144,8 +152,12 @@ public class OpenFileAction extends AnAction implements DumbAware {
   public static void openFile(final VirtualFile virtualFile, final Project project) {
     FileEditorProviderManager editorProviderManager = FileEditorProviderManager.getInstance();
     if (editorProviderManager.getProviders(project, virtualFile).length == 0) {
-      Messages.showMessageDialog(project, IdeBundle.message("error.files.of.this.type.cannot.be.opened", ApplicationNamesInfo.getInstance().getProductName()),
-                                 IdeBundle.message("title.cannot.open.file"), Messages.getErrorIcon());
+      Messages.showMessageDialog(
+        project,
+        IdeLocalize.errorFilesOfThisTypeCannotBeOpened(Application.get().getName()).get(),
+        IdeLocalize.titleCannotOpenFile().get(),
+        Messages.getErrorIcon()
+      );
       return;
     }
 

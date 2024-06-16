@@ -15,17 +15,17 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.versionControlSystem.AllVcses;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
 import consulo.util.lang.ObjectUtil;
 import consulo.versionControlSystem.AbstractVcs;
-import consulo.versionControlSystem.VcsBundle;
-
+import consulo.versionControlSystem.AllVcses;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ class StartUseVcsDialog extends DialogWrapper {
   StartUseVcsDialog(@Nonnull Project project) {
     super(project, true);
     myProject = project;
-    setTitle(VcsBundle.message("dialog.enable.version.control.integration.title"));
+    setTitle(VcsLocalize.dialogEnableVersionControlIntegrationTitle());
 
     init();
   }
@@ -59,7 +59,7 @@ class StartUseVcsDialog extends DialogWrapper {
 
   @Override
   protected JComponent createCenterPanel() {
-    final JLabel selectText = new JLabel(VcsBundle.message("dialog.enable.version.control.integration.select.vcs.label.text"));
+    final JLabel selectText = new JLabel(VcsLocalize.dialogEnableVersionControlIntegrationSelectVcsLabelText().get());
     selectText.setUI(new MultiLineLabelUI());
 
     final JPanel mainPanel = new JPanel(new GridBagLayout());
@@ -95,7 +95,7 @@ class StartUseVcsDialog extends DialogWrapper {
     myVcsComboBox.addActionListener(e -> validateVcs());
     validateVcs();
 
-    final JLabel helpText = new JLabel(VcsBundle.message("dialog.enable.version.control.integration.hint.text"));
+    final JLabel helpText = new JLabel(VcsLocalize.dialogEnableVersionControlIntegrationHintText().get());
     helpText.setUI(new MultiLineLabelUI());
     helpText.setForeground(UIUtil.getInactiveTextColor());
 

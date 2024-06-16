@@ -15,18 +15,17 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
-import consulo.ide.impl.idea.ui.tabs.impl.TabLabel;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.document.FileDocumentManager;
-import consulo.ide.IdeBundle;
-import consulo.language.editor.CommonDataKeys;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
+import consulo.ide.impl.idea.ui.tabs.impl.TabLabel;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileSystemItem;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -34,9 +33,9 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.util.List;
@@ -47,9 +46,9 @@ public class CopyPathProvider extends DumbAwareAction {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     DataContext dataContext = e.getDataContext();
-    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
+    Editor editor = dataContext.getData(Editor.KEY);
 
     DataContext customDataContext = createCustomDataContext(dataContext);
 
@@ -57,7 +56,7 @@ public class CopyPathProvider extends DumbAwareAction {
     if (project != null) {
       String copy = getQualifiedName(project, elements, editor, customDataContext);
       CopyPasteManager.getInstance().setContents(new StringSelection(copy));
-      CopyReferenceUtil.setStatusBarText(project, IdeBundle.message("message.path.to.fqn.has.been.copied", copy));
+      CopyReferenceUtil.setStatusBarText(project, IdeLocalize.messagePathToFqnHasBeenCopied(copy).get());
 
       CopyReferenceUtil.highlight(editor, project, elements);
     }
@@ -74,7 +73,10 @@ public class CopyPathProvider extends DumbAwareAction {
       return dataContext;
     }
 
-    return SimpleDataContext.builder().setParent(dataContext).add(LangDataKeys.VIRTUAL_FILE, (VirtualFile)file).add(LangDataKeys.VIRTUAL_FILE_ARRAY, new VirtualFile[]{(VirtualFile)file}).build();
+    return SimpleDataContext.builder().setParent(dataContext)
+      .add(LangDataKeys.VIRTUAL_FILE, (VirtualFile)file)
+      .add(VirtualFile.KEY_OF_ARRAY, new VirtualFile[]{(VirtualFile)file})
+      .build();
   }
 
   @RequiredUIAccess
@@ -82,9 +84,9 @@ public class CopyPathProvider extends DumbAwareAction {
   public void update(@Nonnull AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
 
-    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
+    Editor editor = dataContext.getData(Editor.KEY);
 
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
 
     e.getPresentation().setEnabledAndVisible(project != null && getQualifiedName(project, CopyReferenceUtil.getElementsToCopy(editor, dataContext), editor, dataContext) != null);
   }
@@ -107,7 +109,7 @@ public class CopyPathProvider extends DumbAwareAction {
       });
 
       if (files.isEmpty()) {
-        VirtualFile[] contextFiles = dataContext.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
+        VirtualFile[] contextFiles = dataContext.getData(VirtualFile.KEY_OF_ARRAY);
         if(contextFiles != null && contextFiles.length > 0) {
           files = List.of(contextFiles);
         }

@@ -18,7 +18,6 @@ import consulo.fileEditor.EditorTabPresentationUtil;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.VfsIconUtil;
 import consulo.ide.impl.idea.ide.util.gotoByName.QuickSearchComponent;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
@@ -27,8 +26,6 @@ import consulo.ide.impl.idea.openapi.fileEditor.impl.EditorHistoryManagerImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.IdeDocumentHistoryImpl;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
 import consulo.ide.impl.idea.ui.CaptionPanel;
 import consulo.ide.impl.idea.ui.ListActions;
@@ -37,11 +34,12 @@ import consulo.ide.impl.idea.ui.speedSearch.NameFilteringListModel;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
+import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.wm.ToolWindowManager;
@@ -66,8 +64,10 @@ import consulo.ui.ex.util.TextAttributesUtil;
 import consulo.ui.style.StandardColors;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
@@ -108,13 +108,13 @@ public class Switcher extends AnAction implements DumbAware {
   @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setEnabled(e.getData(CommonDataKeys.PROJECT) != null);
+    e.getPresentation().setEnabled(e.getData(Project.KEY) != null);
   }
 
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) return;
 
     SwitcherPanel switcher = SWITCHER_KEY.get(project);
@@ -150,20 +150,24 @@ public class Switcher extends AnAction implements DumbAware {
    */
   @Deprecated
   @Nullable
-  public static SwitcherPanel createAndShowSwitcher(@Nonnull AnActionEvent e,
-                                                    @Nonnull String title,
-                                                    boolean pinned,
-                                                    @Nullable final VirtualFile[] vFiles) {
+  public static SwitcherPanel createAndShowSwitcher(
+    @Nonnull AnActionEvent e,
+    @Nonnull String title,
+    boolean pinned,
+    @Nullable final VirtualFile[] vFiles
+  ) {
     return createAndShowSwitcher(e, title, "RecentFiles", pinned, vFiles != null);
   }
 
   @Nullable
-  public static SwitcherPanel createAndShowSwitcher(@Nonnull AnActionEvent e,
-                                                    @Nonnull String title,
-                                                    @Nonnull String actionId,
-                                                    boolean onlyEdited,
-                                                    boolean pinned) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+  public static SwitcherPanel createAndShowSwitcher(
+    @Nonnull AnActionEvent e,
+    @Nonnull String title,
+    @Nonnull String actionId,
+    boolean onlyEdited,
+    boolean pinned
+  ) {
+    Project project = e.getData(Project.KEY);
     if (project == null) return null;
     SwitcherPanel switcher = SWITCHER_KEY.get(project);
     if (switcher != null) {
@@ -187,11 +191,13 @@ public class Switcher extends AnAction implements DumbAware {
   }
 
   @Nonnull
-  private static SwitcherPanel createAndShowSwitcher(@Nonnull Project project,
-                                                     @Nonnull String title,
-                                                     @Nonnull String actionId,
-                                                     boolean onlyEdited,
-                                                     boolean pinned) {
+  private static SwitcherPanel createAndShowSwitcher(
+    @Nonnull Project project,
+    @Nonnull String title,
+    @Nonnull String actionId,
+    boolean onlyEdited,
+    boolean pinned
+  ) {
     SwitcherPanel switcher = new SwitcherPanel(project, title, actionId, onlyEdited, pinned);
     SWITCHER_KEY.set(project, switcher);
     return switcher;
@@ -201,7 +207,7 @@ public class Switcher extends AnAction implements DumbAware {
     @RequiredUIAccess
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
-      Project project = e.getData(CommonDataKeys.PROJECT);
+      Project project = e.getData(Project.KEY);
       SwitcherPanel switcherPanel = SWITCHER_KEY.get(project);
       if (switcherPanel != null) {
         switcherPanel.toggleShowEditedFiles();
@@ -211,7 +217,7 @@ public class Switcher extends AnAction implements DumbAware {
     @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
-      Project project = e.getData(CommonDataKeys.PROJECT);
+      Project project = e.getData(Project.KEY);
       e.getPresentation().setEnabledAndVisible(SWITCHER_KEY.get(project) != null);
     }
 
@@ -242,7 +248,7 @@ public class Switcher extends AnAction implements DumbAware {
     @Nullable
     @Override
     public Object getData(@Nonnull @NonNls Key dataId) {
-      if (CommonDataKeys.PROJECT == dataId) {
+      if (Project.KEY == dataId) {
         return this.project;
       }
       if (PlatformDataKeys.SELECTED_ITEM == dataId) {
@@ -250,7 +256,7 @@ public class Switcher extends AnAction implements DumbAware {
         Object o = ContainerUtil.getOnlyItem(list);
         return o instanceof FileInfo ? ((FileInfo)o).first : null;
       }
-      if (CommonDataKeys.VIRTUAL_FILE_ARRAY == dataId) {
+      if (VirtualFile.KEY_OF_ARRAY == dataId) {
         final List list = getSelectedList().getSelectedValuesList();
         if (!list.isEmpty()) {
           final List<VirtualFile> vFiles = new ArrayList<>();
@@ -264,7 +270,6 @@ public class Switcher extends AnAction implements DumbAware {
       }
       return null;
     }
-
 
     private class MyFocusTraversalPolicy extends FocusTraversalPolicy {
 
@@ -489,7 +494,7 @@ public class Switcher extends AnAction implements DumbAware {
             myHint == null || !myHint.isVisible() ? null : myHint.getUserData(PopupUpdateProcessorBase.class);
           if (popupUpdater != null) {
             DataContext dataContext = DataManager.getInstance().getDataContext(SwitcherPanel.this);
-            popupUpdater.updatePopup(dataContext.getData(CommonDataKeys.PSI_ELEMENT));
+            popupUpdater.updatePopup(dataContext.getData(PsiElement.KEY));
           }
         }
       };
@@ -514,8 +519,11 @@ public class Switcher extends AnAction implements DumbAware {
       ScrollingUtil.ensureSelectionExists(files);
 
       myShowOnlyEditedFilesCheckBox = new MyCheckBox(ToggleCheckBoxAction.isEnabled() ? TOGGLE_CHECK_BOX_ACTION_ID : actionId, onlyEdited);
-      myTopPanel =
-        createTopPanel(myShowOnlyEditedFilesCheckBox, isCheckboxMode() ? IdeBundle.message("title.popup.recent.files") : title, pinned);
+      myTopPanel = createTopPanel(
+        myShowOnlyEditedFilesCheckBox,
+        isCheckboxMode() ? IdeLocalize.titlePopupRecentFiles().get() : title,
+        pinned
+      );
       if (isCheckboxMode()) {
         myShowOnlyEditedFilesCheckBox.addActionListener(e -> setShowOnlyEditedFiles(myShowOnlyEditedFilesCheckBox.isSelected()));
         myShowOnlyEditedFilesCheckBox.addActionListener(e -> toolWindows.repaint());
@@ -637,7 +645,9 @@ public class Switcher extends AnAction implements DumbAware {
     }
 
     static String getRecentLocationsLabel(@Nonnull Supplier<Boolean> showEdited) {
-      return showEdited.get() ? IdeBundle.message("recent.locations.changed.locations") : IdeBundle.message("recent.locations.popup.title");
+      return showEdited.get()
+        ? IdeLocalize.recentLocationsChangedLocations().get()
+        : IdeLocalize.recentLocationsPopupTitle().get();
     }
 
     private boolean keyEvent(KeyEvent event) {
@@ -1090,7 +1100,10 @@ public class Switcher extends AnAction implements DumbAware {
       else if (values.get(0) instanceof ToolWindow) {
         ToolWindow toolWindow = (ToolWindow)values.get(0);
         ProjectIdeFocusManager.getInstance(project)
-                              .doWhenFocusSettlesDown(() -> toolWindow.activate(null, true, true), IdeaModalityState.current());
+          .doWhenFocusSettlesDown(
+            () -> toolWindow.activate(null, true, true),
+            IdeaModalityState.current()
+          );
       }
       else {
         ProjectIdeFocusManager.getInstance(project).doWhenFocusSettlesDown(() -> {
@@ -1329,7 +1342,7 @@ public class Switcher extends AnAction implements DumbAware {
     private static String layoutText(@Nonnull String actionId) {
       ShortcutSet shortcuts = getActiveKeymapShortcuts(actionId);
       return "<html>" +
-        IdeBundle.message("recent.files.checkbox.label") +
+        IdeLocalize.recentFilesCheckboxLabel() +
         " <font color=\"" +
         SHORTCUT_HEX_COLOR +
         "\">" +

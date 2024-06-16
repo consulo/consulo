@@ -1,27 +1,22 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.vfs.newvfs.impl;
 
-import consulo.application.ui.UISettings;
 import consulo.application.ApplicationManager;
-import consulo.language.impl.internal.psi.LoadTextUtil;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.virtualFileSystem.VFileProperty;
-import consulo.virtualFileSystem.VfsBundle;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.ide.impl.idea.openapi.vfs.*;
-import consulo.virtualFileSystem.encoding.EncodingManager;
-import consulo.virtualFileSystem.encoding.EncodingRegistry;
-import consulo.virtualFileSystem.NewVirtualFile;
-import consulo.virtualFileSystem.NewVirtualFileSystem;
+import consulo.application.ui.UISettings;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFS;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFSImpl;
-import consulo.util.lang.LocalTimeCounter;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
-import consulo.ide.impl.idea.util.text.StringFactory;
-import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NonNls;
+import consulo.language.impl.internal.psi.LoadTextUtil;
+import consulo.util.lang.LocalTimeCounter;
+import consulo.virtualFileSystem.*;
+import consulo.virtualFileSystem.encoding.EncodingManager;
+import consulo.virtualFileSystem.encoding.EncodingRegistry;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.localize.VirtualFileSystemLocalize;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -71,7 +66,8 @@ public abstract class VirtualFileSystemEntry extends NewVirtualFile {
 
   // for NULL_FILE
   private VirtualFileSystemEntry() {
-    // although in general mySegment is always @NotNull, in this case we made an exception to be able to instantiate special singleton NULL_VIRTUAL_FILE
+    // although in general mySegment is always @NotNull,
+    // in this case we made an exception to be able to instantiate special singleton NULL_VIRTUAL_FILE
     //noinspection ConstantConditions
     mySegment = null;
     myParent = null;
@@ -185,13 +181,13 @@ public abstract class VirtualFileSystemEntry extends NewVirtualFile {
     int prefixLen = protocol.length() + "://".length();
     char[] chars = appendPathOnFileSystem(prefixLen, new int[]{prefixLen});
     copyString(chars, copyString(chars, 0, protocol), "://");
-    return StringFactory.createShared(chars);
+    return new String(chars);
   }
 
   @Override
   @Nonnull
   public String getPath() {
-    return StringFactory.createShared(appendPathOnFileSystem(0, new int[]{0}));
+    return new String(appendPathOnFileSystem(0, new int[]{0}));
   }
 
   @Override
@@ -244,11 +240,11 @@ public abstract class VirtualFileSystemEntry extends NewVirtualFile {
   @Override
   public VirtualFile copy(final Object requestor, @Nonnull final VirtualFile newParent, @Nonnull final String copyName) throws IOException {
     if (getFileSystem() != newParent.getFileSystem()) {
-      throw new IOException(VfsBundle.message("file.copy.error", newParent.getPresentableUrl()));
+      throw new IOException(VirtualFileSystemLocalize.fileCopyError(newParent.getPresentableUrl()).get());
     }
 
     if (!newParent.isDirectory()) {
-      throw new IOException(VfsBundle.message("file.copy.target.must.be.directory"));
+      throw new IOException(VirtualFileSystemLocalize.fileCopyTargetMustBeDirectory().get());
     }
 
     return EncodingRegistry.doActionAndRestoreEncoding(this, () -> ourPersistence.copyFile(requestor, this, newParent, copyName));
@@ -259,7 +255,7 @@ public abstract class VirtualFileSystemEntry extends NewVirtualFile {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
 
     if (getFileSystem() != newParent.getFileSystem()) {
-      throw new IOException(VfsBundle.message("file.move.error", newParent.getPresentableUrl()));
+      throw new IOException(VirtualFileSystemLocalize.fileMoveError(newParent.getPresentableUrl()).get());
     }
 
     EncodingRegistry.doActionAndRestoreEncoding(this, () -> {
@@ -292,7 +288,7 @@ public abstract class VirtualFileSystemEntry extends NewVirtualFile {
 
   private void validateName(@Nonnull String name) throws IOException {
     if (!getFileSystem().isValidName(name)) {
-      throw new IOException(VfsBundle.message("file.invalid.name.error", name));
+      throw new IOException(VirtualFileSystemLocalize.fileInvalidNameError(name).get());
     }
   }
 
@@ -313,7 +309,7 @@ public abstract class VirtualFileSystemEntry extends NewVirtualFile {
 
   public void setNewName(@Nonnull String newName) {
     if (!getFileSystem().isValidName(newName)) {
-      throw new IllegalArgumentException(VfsBundle.message("file.invalid.name.error", newName));
+      throw new IllegalArgumentException(VirtualFileSystemLocalize.fileInvalidNameError(newName).get());
     }
 
     VirtualDirectoryImpl parent = getParent();

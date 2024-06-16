@@ -65,8 +65,8 @@ public class ActivateToolWindowAction extends DumbAwareAction {
     ActionManager actionManager = ActionManager.getInstance();
     String actionId = getActionIdForToolWindow(toolWindow.getId());
     AnAction action = actionManager.getAction(actionId);
-    if (action instanceof ActivateToolWindowAction) {
-      ((ActivateToolWindowAction)action).updatePresentation(action.getTemplatePresentation(), toolWindow);
+    if (action instanceof ActivateToolWindowAction activateToolWindowAction) {
+      activateToolWindowAction.updatePresentation(action.getTemplatePresentation(), toolWindow);
     }
   }
 
@@ -134,8 +134,8 @@ public class ActivateToolWindowAction extends DumbAwareAction {
     Keymap activeKeymap = KeymapManager.getInstance().getActiveKeymap();
     Shortcut[] shortcuts = activeKeymap.getShortcuts(getActionIdForToolWindow(id));
     for (Shortcut shortcut : shortcuts) {
-      if (shortcut instanceof KeyboardShortcut) {
-        KeyStroke keyStroke = ((KeyboardShortcut)shortcut).getFirstKeyStroke();
+      if (shortcut instanceof KeyboardShortcut keyboardShortcut) {
+        KeyStroke keyStroke = keyboardShortcut.getFirstKeyStroke();
         int modifiers = keyStroke.getModifiers();
         if (modifiers == (InputEvent.ALT_DOWN_MASK | InputEvent.ALT_MASK) ||
             modifiers == InputEvent.ALT_MASK ||

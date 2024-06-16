@@ -7,7 +7,7 @@ import consulo.ide.impl.idea.ide.actions.GotoClassPresentationUpdater;
 import consulo.ide.impl.idea.ide.util.gotoByName.FilteringGotoByModel;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoClassModel2;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoClassSymbolConfiguration;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.ui.IdeUICustomization;
 import consulo.language.DependentLanguage;
 import consulo.language.Language;

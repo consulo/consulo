@@ -6,7 +6,6 @@ import consulo.application.Application;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.ui.UISettings;
-import consulo.application.util.SystemInfo;
 import consulo.component.ProcessCanceledException;
 import consulo.dataContext.DataContext;
 import consulo.execution.executor.DefaultRunExecutor;
@@ -14,7 +13,6 @@ import consulo.execution.executor.Executor;
 import consulo.execution.executor.ExecutorRegistry;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.fileEditor.FileEditorManager;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.actions.BigPopupUI;
 import consulo.ide.impl.idea.ide.actions.bigPopup.ShowFilterAction;
 import consulo.ide.impl.idea.ide.actions.runAnything.activity.RunAnythingProvider;
@@ -30,12 +28,13 @@ import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.BooleanFunction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.LangDataKeys;
 import consulo.language.util.ModuleUtilCore;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
+import consulo.platform.Platform;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
@@ -55,14 +54,12 @@ import consulo.util.concurrent.ActionCallback;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
-import javax.accessibility.Accessible;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
+import javax.accessibility.Accessible;
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -147,7 +144,12 @@ public class RunAnythingPopupUI extends BigPopupUI {
           return;
         }
 
-        adjustEmptyText(mySearchField, field -> true, "", IdeBundle.message("run.anything.help.list.empty.secondary.text"));
+        adjustEmptyText(
+          mySearchField,
+          field -> true,
+          "",
+          IdeLocalize.runAnythingHelpListEmptySecondaryText().get()
+        );
       }
     });
 
@@ -191,10 +193,12 @@ public class RunAnythingPopupUI extends BigPopupUI {
   }
 
   private static void adjustMainListEmptyText(@Nonnull TextBoxWithExtensions editor) {
-    adjustEmptyText(editor,
-                    field -> field.getText().isEmpty(),
-                    IdeBundle.message("run.anything.main.list.empty.primary.text"),
-                    IdeBundle.message("run.anything.main.list.empty.secondary.text"));
+    adjustEmptyText(
+      editor,
+      field -> field.getText().isEmpty(),
+      IdeLocalize.runAnythingMainListEmptyPrimaryText().get(),
+      IdeLocalize.runAnythingMainListEmptySecondaryText().get()
+    );
   }
 
   private static boolean isHelpMode(@Nonnull String pattern) {
@@ -351,28 +355,25 @@ public class RunAnythingPopupUI extends BigPopupUI {
   }
 
   public void initResultsList() {
-    myResultsList.addListSelectionListener(new ListSelectionListener() {
-      @Override
-      public void valueChanged(ListSelectionEvent e) {
-        updateAdText(getDataContext());
+    myResultsList.addListSelectionListener(e -> {
+      updateAdText(getDataContext());
 
-        Object selectedValue = myResultsList.getSelectedValue();
-        if (selectedValue == null) return;
+      Object selectedValue = myResultsList.getSelectedValue();
+      if (selectedValue == null) return;
 
-        String lastInput = mySearchField.getValueOrError();
-        myIsItemSelected = true;
+      String lastInput = mySearchField.getValueOrError();
+      myIsItemSelected = true;
 
-        if (isMoreItem(myResultsList.getSelectedIndex())) {
-          if (myLastInputText != null) {
-            mySearchField.setValue(myLastInputText);
-          }
-          return;
+      if (isMoreItem(myResultsList.getSelectedIndex())) {
+        if (myLastInputText != null) {
+          mySearchField.setValue(myLastInputText);
         }
-
-        mySearchField.setValue(selectedValue instanceof RunAnythingItem ? ((RunAnythingItem)selectedValue).getCommand() : myLastInputText);
-
-        if (myLastInputText == null) myLastInputText = lastInput;
+        return;
       }
+
+      mySearchField.setValue(selectedValue instanceof RunAnythingItem ? ((RunAnythingItem)selectedValue).getCommand() : myLastInputText);
+
+      if (myLastInputText == null) myLastInputText = lastInput;
     });
   }
 
@@ -392,14 +393,14 @@ public class RunAnythingPopupUI extends BigPopupUI {
   @Override
   @Nonnull
   public JPanel createTopLeftPanel() {
-    myTextFieldTitle = new JLabel(IdeBundle.message("run.anything.run.anything.title"));
+    myTextFieldTitle = new JLabel(IdeLocalize.runAnythingRunAnythingTitle().get());
     JPanel topPanel = new NonOpaquePanel(new BorderLayout());
     Color foregroundColor = UIUtil.getLabelForeground();
 
 
     myTextFieldTitle.setForeground(foregroundColor);
     myTextFieldTitle.setBorder(BorderFactory.createEmptyBorder(3, 5, 5, 0));
-    if (SystemInfo.isMac) {
+    if (Platform.current().os().isMac()) {
       myTextFieldTitle.setFont(myTextFieldTitle.getFont().deriveFont(Font.BOLD, myTextFieldTitle.getFont().getSize() - 1f));
     }
     else {
@@ -414,9 +415,9 @@ public class RunAnythingPopupUI extends BigPopupUI {
   @Nonnull
   private DataContext getDataContext() {
     HashMap<Key, Object> dataMap = new HashMap<>();
-    dataMap.put(CommonDataKeys.PROJECT, getProject());
-    dataMap.put(LangDataKeys.MODULE, getModule());
-    dataMap.put(CommonDataKeys.VIRTUAL_FILE, getWorkDirectory());
+    dataMap.put(Project.KEY, getProject());
+    dataMap.put(Module.KEY, getModule());
+    dataMap.put(VirtualFile.KEY, getWorkDirectory());
     dataMap.put(EXECUTOR_KEY, getExecutor());
     dataMap.put(RunAnythingProvider.EXECUTING_CONTEXT, myChooseContextAction.getSelectedContext());
     return SimpleDataContext.getSimpleContext(dataMap, myActionEvent.getDataContext());
@@ -442,20 +443,20 @@ public class RunAnythingPopupUI extends BigPopupUI {
       }
 
       private void updateByModifierKeysEvent(@Nonnull consulo.ui.event.KeyEvent e) {
-        String message;
+        LocalizeValue message;
         if (e.withShift() && e.withAlt()) {
-          message = IdeBundle.message("run.anything.run.in.context.debug.title");
+          message = IdeLocalize.runAnythingRunInContextDebugTitle();
         }
         else if (e.withShift()) {
-          message = IdeBundle.message("run.anything.run.debug.title");
+          message = IdeLocalize.runAnythingRunDebugTitle();
         }
         else if (e.withAlt()) {
-          message = IdeBundle.message("run.anything.run.in.context.title");
+          message = IdeLocalize.runAnythingRunInContextTitle();
         }
         else {
-          message = IdeBundle.message("run.anything.run.anything.title");
+          message = IdeLocalize.runAnythingRunAnythingTitle();
         }
-        myTextFieldTitle.setText(message);
+        myTextFieldTitle.setText(message.get());
         updateMatchedRunConfigurationStuff(e.withAlt());
       }
     });
@@ -465,10 +466,12 @@ public class RunAnythingPopupUI extends BigPopupUI {
     mySearchField.setVisibleLength(SEARCH_FIELD_COLUMNS);
   }
 
-  public static void adjustEmptyText(@Nonnull TextBoxWithExtensions textEditor,
-                                     @Nonnull BooleanFunction<JBTextField> function,
-                                     @Nonnull String leftText,
-                                     @Nonnull String rightText) {
+  public static void adjustEmptyText(
+    @Nonnull TextBoxWithExtensions textEditor,
+    @Nonnull BooleanFunction<JBTextField> function,
+    @Nonnull String leftText,
+    @Nonnull String rightText
+  ) {
     textEditor.setPlaceholder(leftText);
 
     //textEditor.putClientProperty("StatusVisibleFunction", function);
@@ -481,9 +484,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
   }
 
   private void setHandleMatchedConfiguration() {
-    mySearchField.addValueListener(event -> {
-      updateMatchedRunConfigurationStuff(ALT_IS_PRESSED.get());
-    });
+    mySearchField.addValueListener(event -> updateMatchedRunConfigurationStuff(ALT_IS_PRESSED.get()));
   }
 
   private void updateMatchedRunConfigurationStuff(boolean isAltPressed) {
@@ -643,7 +644,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
             myAlarm.cancelAllRequests();
             myAlarm.addRequest(() -> {
               if (DumbService.getInstance(myProject).isDumb()) {
-                myResultsList.setEmptyText(IdeBundle.message("run.anything.indexing.mode.not.supported"));
+                myResultsList.setEmptyText(IdeLocalize.runAnythingIndexingModeNotSupported().get());
                 return;
               }
 
@@ -680,8 +681,9 @@ public class RunAnythingPopupUI extends BigPopupUI {
       }
       finally {
         if (!isCanceled()) {
-          Application.get()
-                     .invokeLater(() -> myResultsList.getEmptyText().setText(IdeBundle.message("run.anything.command.empty.list.title")));
+          Application.get().invokeLater(
+            () -> myResultsList.getEmptyText().setText(IdeLocalize.runAnythingCommandEmptyListTitle().get())
+          );
         }
         if (!myDone.isProcessed()) {
           myDone.setDone();
@@ -843,15 +845,15 @@ public class RunAnythingPopupUI extends BigPopupUI {
   }
 
   public RunAnythingPopupUI(@Nonnull AnActionEvent actionEvent) {
-    super(actionEvent.getData(CommonDataKeys.PROJECT));
+    super(actionEvent.getData(Project.KEY));
 
     myActionEvent = actionEvent;
 
     myCurrentWorker = ActionCallback.DONE;
-    myVirtualFile = actionEvent.getData(CommonDataKeys.VIRTUAL_FILE);
+    myVirtualFile = actionEvent.getData(VirtualFile.KEY);
 
-    myProject = ObjectUtil.notNull(myActionEvent.getData(CommonDataKeys.PROJECT));
-    myModule = myActionEvent.getData(LangDataKeys.MODULE);
+    myProject = ObjectUtil.notNull(myActionEvent.getData(Project.KEY));
+    myModule = myActionEvent.getData(Module.KEY);
 
     init();
 
@@ -892,13 +894,17 @@ public class RunAnythingPopupUI extends BigPopupUI {
       searchFinishedHandler.run();
     }).registerCustomShortcutSet(escape == null ? CommonShortcuts.ESCAPE : escape.getShortcutSet(), this);
 
-    DumbAwareAction.create(e -> {
-      Application.get().invokeLater(() -> executeCommand());
-    }).registerCustomShortcutSet(CustomShortcutSet.fromString("ENTER",
-                                                              "shift ENTER",
-                                                              "alt ENTER",
-                                                              "alt shift ENTER",
-                                                              "meta ENTER"), (JComponent)TargetAWT.to(mySearchField), this);
+    DumbAwareAction.create(e -> Application.get().invokeLater(() -> executeCommand())).registerCustomShortcutSet(
+      CustomShortcutSet.fromString(
+        "ENTER",
+        "shift ENTER",
+        "alt ENTER",
+        "alt shift ENTER",
+        "meta ENTER"
+      ),
+      (JComponent)TargetAWT.to(mySearchField),
+      this
+    );
 
     DumbAwareAction.create(e -> {
       RunAnythingSearchListModel model = getSearchingModel(myResultsList);
@@ -982,9 +988,10 @@ public class RunAnythingPopupUI extends BigPopupUI {
   @Nonnull
   @Override
   protected String getInitialHint() {
-    return IdeBundle.message("run.anything.hint.initial.text",
-                             KeymapUtil.getKeystrokeText(UP_KEYSTROKE),
-                             KeymapUtil.getKeystrokeText(DOWN_KEYSTROKE));
+    return IdeLocalize.runAnythingHintInitialText(
+      KeymapUtil.getKeystrokeText(UP_KEYSTROKE),
+      KeymapUtil.getKeystrokeText(DOWN_KEYSTROKE)
+    ).get();
   }
 
   //@Nonnull
@@ -1024,7 +1031,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
     @Override
     protected ElementsChooser<?> createChooser() {
       ElementsChooser<RunAnythingGroup> res =
-        new ElementsChooser<RunAnythingGroup>(new ArrayList<>(RunAnythingCompletionGroup.MAIN_GROUPS), false) {
+        new ElementsChooser<>(new ArrayList<>(RunAnythingCompletionGroup.MAIN_GROUPS), false) {
           @Override
           protected String getItemText(@Nonnull RunAnythingGroup value) {
             return value.getTitle();

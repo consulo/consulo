@@ -16,14 +16,12 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.impl.idea.ide.TitledHandler;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
-import consulo.ide.IdeBundle;
-import consulo.language.editor.CommonDataKeys;
+import consulo.ide.impl.idea.ide.TitledHandler;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.logging.Logger;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.action.ActionPlaces;
@@ -33,8 +31,9 @@ import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.ui.image.Image;
-
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.event.KeyEvent;
@@ -65,19 +64,21 @@ public class DeleteAction extends AnAction implements DumbAware {
   public void update(AnActionEvent event){
     String place = event.getPlace();
     Presentation presentation = event.getPresentation();
-    if (ActionPlaces.PROJECT_VIEW_POPUP.equals(place) || ActionPlaces.COMMANDER_POPUP.equals(place))
-      presentation.setText(IdeBundle.message("action.delete.ellipsis"));
-    else
-      presentation.setText(IdeBundle.message("action.delete"));
+    if (ActionPlaces.PROJECT_VIEW_POPUP.equals(place) || ActionPlaces.COMMANDER_POPUP.equals(place)) {
+      presentation.setTextValue(IdeLocalize.actionDeleteEllipsis());
+    }
+    else {
+      presentation.setTextValue(IdeLocalize.actionDelete());
+    }
+
     DataContext dataContext = event.getDataContext();
-    Project project = event.getData(CommonDataKeys.PROJECT);
+    Project project = event.getData(Project.KEY);
     if (project == null) {
       presentation.setEnabled(false);
       return;
     }
     DeleteProvider provider = getDeleteProvider(dataContext);
-    if (event.getInputEvent() instanceof KeyEvent) {
-      KeyEvent keyEvent = (KeyEvent)event.getInputEvent();
+    if (event.getInputEvent() instanceof KeyEvent keyEvent) {
       Object component = event.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
       if (component instanceof JTextComponent) provider = null; // Do not override text deletion
       if (keyEvent.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
@@ -93,8 +94,8 @@ public class DeleteAction extends AnAction implements DumbAware {
         }
       }
     }
-    if (provider instanceof TitledHandler) {
-      presentation.setText(((TitledHandler)provider).getActionTitle());
+    if (provider instanceof TitledHandler titledHandler) {
+      presentation.setText(titledHandler.getActionTitle());
     }
     final boolean canDelete = provider != null && provider.canDeleteElement(dataContext);
     if (ActionPlaces.isPopupPlace(event.getPlace())) {

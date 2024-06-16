@@ -19,17 +19,16 @@ import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.actions.searcheverywhere.FileSearchEverywhereContributor;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNameFilter;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNamePopup;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoFileConfiguration;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoFileModel;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.file.FileTypeManager;
 import consulo.language.psi.PsiFile;
 import consulo.navigation.Navigatable;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
@@ -59,13 +58,13 @@ public class GotoFileAction extends GotoActionBase implements DumbAware {
 
   @Override
   public void gotoActionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     if (project == null) return;
 
     FeatureUsageTracker.getInstance().triggerFeatureUsed("navigation.popup.file");
 
     final GotoFileModel gotoFileModel = new GotoFileModel(project);
-    GotoActionCallback<FileType> callback = new GotoActionCallback<FileType>() {
+    GotoActionCallback<FileType> callback = new GotoActionCallback<>() {
       @Override
       protected ChooseByNameFilter<FileType> createFilter(@Nonnull ChooseByNamePopup popup) {
         return new GotoFileFilter(popup, gotoFileModel, project);
@@ -89,7 +88,14 @@ public class GotoFileAction extends GotoActionBase implements DumbAware {
         }
       }
     };
-    showNavigationPopup(e, gotoFileModel, callback, IdeBundle.message("go.to.file.toolwindow.title"), true, true);
+    showNavigationPopup(
+      e,
+      gotoFileModel,
+      callback,
+      IdeLocalize.goToFileToolwindowTitle().get(),
+      true,
+      true
+    );
   }
 
   protected static class GotoFileFilter extends ChooseByNameFilter<FileType> {

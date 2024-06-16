@@ -20,14 +20,15 @@ import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.WinDef;
 import consulo.annotation.UsedInPlugin;
 import consulo.application.Application;
-import consulo.application.CommonBundle;
 import consulo.application.util.*;
 import consulo.application.util.concurrent.PooledThreadExecutor;
 import consulo.dataContext.DataManager;
-import consulo.ide.IdeBundle;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.platform.PlatformFileSystem;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.platform.base.localize.CommonLocalize;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.internal.CapturingProcessHandler;
@@ -38,7 +39,6 @@ import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.action.ActionsBundle;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.DialogWrapper;
@@ -50,7 +50,6 @@ import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.image.Image;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.SystemProperties;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
@@ -101,8 +100,8 @@ public class ShowFilePathAction extends AnAction {
     @Nonnull
     @Override
     protected String compute() {
-      if (SystemInfo.isMac) return "Finder";
-      if (SystemInfo.isWindows) return "Explorer";
+      if (Platform.current().os().isMac()) return "Finder";
+      if (Platform.current().os().isWindows()) return "Explorer";
       return readDesktopEntryKey("Name").orElse("File Manager");
     }
   };
@@ -133,25 +132,28 @@ public class ShowFilePathAction extends AnAction {
   private static String getXdgDataDirectories() {
     String dataHome = System.getenv("XDG_DATA_HOME");
     String dataDirs = System.getenv("XDG_DATA_DIRS");
-    return StringUtil.defaultIfEmpty(dataHome, SystemProperties.getUserHome() + "/.local/share") + ':' + StringUtil.defaultIfEmpty(dataDirs, "/usr/local/share:/usr/share");
+    return StringUtil.defaultIfEmpty(dataHome, Platform.current().user().homePath() + "/.local/share") +
+      ':' + StringUtil.defaultIfEmpty(dataDirs, "/usr/local/share:/usr/share");
   }
 
   @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    boolean visible = !SystemInfo.isMac && isSupported();
+    boolean visible = !Platform.current().os().isMac() && isSupported();
     e.getPresentation().setVisible(visible);
     if (visible) {
       VirtualFile file = getFile(e);
       e.getPresentation().setEnabled(file != null);
-      e.getPresentation().setText(ActionsBundle.message("action.ShowFilePath.tuned", file != null && file.isDirectory() ? 1 : 0));
+      e.getPresentation().setTextValue(ActionLocalize.actionShowfilepathTuned(file != null && file.isDirectory() ? 1 : 0));
     }
   }
 
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    show(getFile(e), popup -> DataManager.getInstance().getDataContextFromFocus().doWhenDone(popup::showInBestPositionFor));
+    show(getFile(e), popup -> DataManager.getInstance()
+      .getDataContextFromFocus()
+      .doWhenDone(popup::showInBestPositionFor));
   }
 
   public static void show(final VirtualFile file, final MouseEvent e) {
@@ -193,7 +195,7 @@ public class ShowFilePathAction extends AnAction {
 
   private static String getPresentableUrl(final VirtualFile eachParent) {
     String url = eachParent.getPresentableUrl();
-    if (eachParent.getParent() == null && SystemInfo.isWindows) {
+    if (eachParent.getParent() == null && Platform.current().os().isWindows()) {
       url += "\\";
     }
     return url;
@@ -221,7 +223,11 @@ public class ShowFilePathAction extends AnAction {
   }
 
   public static boolean isSupported() {
-    return SystemInfo.isWindows || SystemInfo.isMac || SystemInfo.hasXdgOpen() || Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.OPEN);
+    return Platform.current().os().isWindows()
+      || Platform.current().os().isMac()
+      || SystemInfo.hasXdgOpen()
+      || Desktop.isDesktopSupported()
+      && Desktop.getDesktop().isSupported(Desktop.Action.OPEN);
   }
 
   @Nonnull
@@ -270,7 +276,7 @@ public class ShowFilePathAction extends AnAction {
     String dir = FileUtil.toSystemDependentName(FileUtil.toCanonicalPath(_dir.getPath()));
     String toSelect = _toSelect != null ? FileUtil.toSystemDependentName(FileUtil.toCanonicalPath(_toSelect.getPath())) : null;
 
-    if (SystemInfo.isWindows) {
+    if (Platform.current().os().isWindows()) {
       String cmd = toSelect != null ? "explorer /select,\"" + shortPath(toSelect) + '"' : "explorer /root,\"" + shortPath(dir) + '"';
       LOG.debug(cmd);
       PooledThreadExecutor.getInstance().execute(() -> {
@@ -283,7 +289,7 @@ public class ShowFilePathAction extends AnAction {
         }
       });
     }
-    else if (SystemInfo.isMac) {
+    else if (Platform.current().os().isMac()) {
       GeneralCommandLine cmd = toSelect != null ? new GeneralCommandLine("open", "-R", toSelect) : new GeneralCommandLine("open", dir);
       schedule(cmd);
     }
@@ -361,7 +367,7 @@ public class ShowFilePathAction extends AnAction {
       @Nonnull
       @Override
       public String getDoNotShowMessage() {
-        return CommonBundle.message("dialog.options.do.not.ask");
+        return CommonLocalize.dialogOptionsDoNotAsk().get();
       }
     };
     showDialog(project, message, title, file, option);
@@ -369,7 +375,14 @@ public class ShowFilePathAction extends AnAction {
   }
 
   public static void showDialog(Project project, String message, String title, File file, DialogWrapper.DoNotAskOption option) {
-    if (Messages.showOkCancelDialog(project, message, title, RevealFileAction.getActionName(), IdeBundle.message("action.close"), Messages.getInformationIcon(), option) == Messages.OK) {
+    if (Messages.showOkCancelDialog(
+      project,
+      message,
+      title,
+      RevealFileAction.getActionName(),
+      IdeLocalize.actionClose().get(),
+      Messages.getInformationIcon(), option
+    ) == Messages.OK) {
       openFile(file);
     }
   }

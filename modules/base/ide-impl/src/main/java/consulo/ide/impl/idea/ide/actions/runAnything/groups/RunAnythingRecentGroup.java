@@ -1,14 +1,13 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.runAnything.groups;
 
-import consulo.ide.IdeBundle;
+import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingCache;
 import consulo.ide.impl.idea.ide.actions.runAnything.activity.RunAnythingProvider;
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItem;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
-import consulo.project.Project;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.platform.base.localize.IdeLocalize;
+import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
@@ -23,13 +22,13 @@ public class RunAnythingRecentGroup extends RunAnythingGroupBase {
   @Nonnull
   @Override
   public String getTitle() {
-    return IdeBundle.message("run.anything.recent.group.title");
+    return IdeLocalize.runAnythingRecentGroupTitle().get();
   }
 
   @Nonnull
   @Override
   public Collection<RunAnythingItem> getGroupItems(@Nonnull DataContext dataContext, @Nonnull String pattern) {
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Project project = dataContext.getData(Project.KEY);
     assert project != null;
 
     Collection<RunAnythingItem> collector = new ArrayList<>();

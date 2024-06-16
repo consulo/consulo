@@ -15,27 +15,25 @@
  */
 package consulo.ide.impl.idea.ide.actionMacro;
 
-import consulo.ide.IdeBundle;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionManager;
 import consulo.codeEditor.action.TypedAction;
+import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.openapi.ui.playback.commands.KeyCodeTypeCommand;
 import consulo.ide.impl.idea.openapi.ui.playback.commands.TypeCommand;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.util.xml.serializer.InvalidDataException;
-import consulo.util.xml.serializer.JDOMExternalizable;
-import consulo.util.lang.Pair;
-import consulo.util.xml.serializer.WriteExternalException;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.dataContext.DataContext;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
+import consulo.util.xml.serializer.InvalidDataException;
+import consulo.util.xml.serializer.JDOMExternalizable;
+import consulo.util.xml.serializer.WriteExternalException;
+import jakarta.annotation.Nonnull;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -117,20 +115,19 @@ public class ActionMacro implements JDOMExternalizable {
     final ActionDescriptor[] actions = getActions();
     for (ActionDescriptor action : actions) {
       Element actionNode = null;
-      if (action instanceof TypedDescriptor) {
+      if (action instanceof TypedDescriptor typedDescriptor) {
         actionNode = new Element(ELEMENT_TYPING);
-        TypedDescriptor typedDescriptor = (TypedDescriptor)action;
         actionNode.setText(typedDescriptor.getText().replaceAll(" ", "&#x20;"));
         actionNode.setAttribute(ATTRIBUTE_KEY_CODES, unparseKeyCodes(
-          new Pair<List<Integer>, List<Integer>>(typedDescriptor.getKeyCodes(), typedDescriptor.getKeyModifiers())));
+          new Pair<>(typedDescriptor.getKeyCodes(), typedDescriptor.getKeyModifiers())));
       }
-      else if (action instanceof IdActionDescriptor) {
+      else if (action instanceof IdActionDescriptor idActionDescriptor) {
         actionNode = new Element(ELEMENT_ACTION);
-        actionNode.setAttribute(ATTRIBUTE_ID, ((IdActionDescriptor)action).getActionId());
+        actionNode.setAttribute(ATTRIBUTE_ID, idActionDescriptor.getActionId());
       }
-      else if (action instanceof ShortcutActionDesciption) {
+      else if (action instanceof ShortcutActionDesciption shortcutActionDesciption) {
         actionNode = new Element(ELEMENT_SHORTCUT);
-        actionNode.setAttribute(ATTRIBUTE_TEXT, ((ShortcutActionDesciption)action).getText());
+        actionNode.setAttribute(ATTRIBUTE_TEXT, shortcutActionDesciption.getText());
       }
 
 
@@ -187,8 +184,8 @@ public class ActionMacro implements JDOMExternalizable {
 
   public void appendKeytyped(char c, int keyCode, @JdkConstants.InputEventMask int modifiers) {
     ActionDescriptor lastAction = myActions.size() > 0 ? myActions.get(myActions.size() - 1) : null;
-    if (lastAction instanceof TypedDescriptor) {
-      ((TypedDescriptor)lastAction).addChar(c, keyCode, modifiers);
+    if (lastAction instanceof TypedDescriptor typedDescriptor) {
+      typedDescriptor.addChar(c, keyCode, modifiers);
     }
     else {
       myActions.add(new TypedDescriptor(c, keyCode, modifiers));
@@ -211,8 +208,8 @@ public class ActionMacro implements JDOMExternalizable {
 
     private String myText;
 
-    private final List<Integer> myKeyCodes = new ArrayList<Integer>();
-    private final List<Integer> myModifiers = new ArrayList<Integer>();
+    private final List<Integer> myKeyCodes = new ArrayList<>();
+    private final List<Integer> myModifiers = new ArrayList<>();
 
     public TypedDescriptor(@Nonnull String text, List<Integer> keyCodes, List<Integer> modifiers) {
       myText = text;
@@ -274,11 +271,11 @@ public class ActionMacro implements JDOMExternalizable {
     }
 
     public String toString() {
-      return IdeBundle.message("action.descriptor.typing", myText);
+      return IdeLocalize.actionDescriptorTyping(myText).get();
     }
 
     public void playBack(DataContext context) {
-      Editor editor = context.getData(PlatformDataKeys.EDITOR);
+      Editor editor = context.getData(Editor.KEY);
       final TypedAction typedAction = EditorActionManager.getInstance().getTypedAction();
       for (final char aChar : myText.toCharArray()) {
         typedAction.actionPerformed(editor, aChar, context);
@@ -314,7 +311,7 @@ public class ActionMacro implements JDOMExternalizable {
     }
 
     public String toString() {
-      return IdeBundle.message("action.descriptor.keystroke", myKeyStroke);
+      return IdeLocalize.actionDescriptorKeystroke(myKeyStroke).get();
     }
 
     public String getText() {
@@ -334,7 +331,7 @@ public class ActionMacro implements JDOMExternalizable {
     }
 
     public String toString() {
-      return IdeBundle.message("action.descriptor.action", actionId);
+      return IdeLocalize.actionDescriptorAction(actionId).get();
     }
 
     public Object clone() {

@@ -18,8 +18,7 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.application.dumb.DumbAware;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.language.editor.CommonDataKeys;
+import consulo.util.lang.Comparing;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -34,7 +33,7 @@ public class CloseAllEditorsButActiveAction extends AnAction implements DumbAwar
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
     VirtualFile selectedFile;
     final FileEditorWindow window = e.getData(FileEditorWindow.DATA_KEY);
@@ -55,7 +54,7 @@ public class CloseAllEditorsButActiveAction extends AnAction implements DumbAwar
   @Override
   public void update(@Nonnull AnActionEvent event) {
     Presentation presentation = event.getPresentation();
-    Project project = event.getData(CommonDataKeys.PROJECT);
+    Project project = event.getData(Project.KEY);
     if (project == null) {
       presentation.setEnabled(false);
       return;

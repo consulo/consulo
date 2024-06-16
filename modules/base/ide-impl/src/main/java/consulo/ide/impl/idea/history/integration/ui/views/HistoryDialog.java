@@ -16,10 +16,17 @@
 
 package consulo.ide.impl.idea.history.integration.ui.views;
 
-import consulo.application.CommonBundle;
+import consulo.application.AllIcons;
+import consulo.application.ApplicationManager;
+import consulo.application.HelpManager;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.Task;
+import consulo.application.util.function.Computable;
 import consulo.diff.content.DiffContent;
 import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.request.SimpleDiffRequest;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.history.core.LocalHistoryFacade;
 import consulo.ide.impl.idea.history.integration.IdeaGateway;
 import consulo.ide.impl.idea.history.integration.LocalHistoryBundle;
@@ -29,42 +36,31 @@ import consulo.ide.impl.idea.history.integration.ui.models.FileDifferenceModel;
 import consulo.ide.impl.idea.history.integration.ui.models.HistoryDialogModel;
 import consulo.ide.impl.idea.history.integration.ui.models.RevisionProcessingProgress;
 import consulo.ide.impl.idea.history.utils.LocalHistoryLog;
-import consulo.application.AllIcons;
-import consulo.ui.ex.action.ContextHelpAction;
 import consulo.ide.impl.idea.ide.actions.ShowFilePathAction;
-import consulo.ui.ex.awt.*;
-import consulo.application.ApplicationManager;
-import consulo.application.HelpManager;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.Task;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.ui.*;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.*;
-import consulo.ui.ex.popup.Balloon;
-import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ide.impl.idea.openapi.ui.MessageType;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.versionControlSystem.VcsException;
-import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.CreatePatchConfigurationPanel;
-import consulo.util.lang.Couple;
-import consulo.util.lang.ref.Ref;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
-import consulo.ide.impl.idea.ui.*;
+import consulo.ide.impl.idea.ui.ExcludingTraversalPolicy;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.CommonLocalize;
+import consulo.project.Project;
 import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.awt.JBLayeredPane;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.internal.ImageLoader;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
-import consulo.application.util.function.Computable;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.ex.popup.Balloon;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.image.Image;
-
+import consulo.util.lang.Couple;
+import consulo.util.lang.ref.Ref;
+import consulo.versionControlSystem.VcsException;
+import consulo.versionControlSystem.change.ChangesUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -73,8 +69,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.function.Consumer;
-
-import static consulo.ide.impl.idea.history.integration.LocalHistoryBundle.message;
 
 public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameWrapper {
   private static final int UPDATE_DIFFS = 1;
@@ -192,11 +186,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
     ActionGroup actions = createRevisionsActions();
 
     myToolBar = createRevisionsToolbar(actions);
-    myRevisionsList = new RevisionsList(new RevisionsList.SelectionListener() {
-      public void revisionsSelected(final int first, final int last) {
-        scheduleDiffUpdate(Couple.of(first, last));
-      }
-    });
+    myRevisionsList = new RevisionsList((first, last) -> scheduleDiffUpdate(Couple.of(first, last)));
     addPopupMenuToComponent(myRevisionsList.getComponent(), actions);
 
 
@@ -242,7 +232,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
     return m.createActionPopupMenu(ActionPlaces.UNKNOWN, ag);
   }
 
-  private void scheduleDiffUpdate(@jakarta.annotation.Nullable final Couple<Integer> toSelect) {
+  private void scheduleDiffUpdate(@Nullable final Couple<Integer> toSelect) {
     doScheduleUpdate(UPDATE_DIFFS, () -> {
       synchronized (myModel) {
         if (toSelect == null) {
@@ -330,7 +320,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
   protected ContentDiffRequest createDifference(final FileDifferenceModel m) {
     final Ref<ContentDiffRequest> requestRef = new Ref<>();
 
-    new Task.Modal(myProject, message("message.processing.revisions"), false) {
+    new Task.Modal(myProject, LocalHistoryBundle.message("message.processing.revisions"), false) {
       public void run(@Nonnull final ProgressIndicator i) {
         ApplicationManager.getApplication().runReadAction(() -> {
           RevisionProcessingProgressAdapter p = new RevisionProcessingProgressAdapter(i);
@@ -385,7 +375,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
 
       List<String> errors = r.checkCanRevert();
       if (!errors.isEmpty()) {
-        showError(message("message.cannot.revert.because", formatErrors(errors)));
+        showError(LocalHistoryBundle.message("message.cannot.revert.because", formatErrors(errors)));
         return;
       }
       r.revert();
@@ -393,7 +383,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
       showNotification(r.getCommandName());
     }
     catch (IOException e) {
-      showError(message("message.error.during.revert", e));
+      showError(LocalHistoryBundle.message("message.error.during.revert", e));
     }
   }
 
@@ -401,8 +391,12 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
     List<String> questions = r.askUserForProceeding();
     if (questions.isEmpty()) return true;
 
-    return Messages.showYesNoDialog(myProject, message("message.do.you.want.to.proceed", formatQuestions(questions)),
-                                    CommonBundle.getWarningTitle(), Messages.getWarningIcon()) == Messages.YES;
+    return Messages.showYesNoDialog(
+      myProject,
+      LocalHistoryBundle.message("message.do.you.want.to.proceed", formatQuestions(questions)),
+      CommonLocalize.titleWarning().get(),
+      Messages.getWarningIcon()
+    ) == Messages.YES;
   }
 
   private String formatQuestions(List<String> questions) {
@@ -453,7 +447,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
   private void createPatch() {
     try {
       if (!myModel.canPerformCreatePatch()) {
-        showError(message("message.cannot.create.patch.because.of.unavailable.content"));
+        showError(LocalHistoryBundle.message("message.cannot.create.patch.because.of.unavailable.content"));
         return;
       }
 
@@ -467,10 +461,10 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
       ShowFilePathAction.openFile(new File(p.getFileName()));
     }
     catch (VcsException e) {
-      showError(message("message.error.during.create.patch", e));
+      showError(LocalHistoryBundle.message("message.error.during.create.patch", e));
     }
     catch (IOException e) {
-      showError(message("message.error.during.create.patch", e));
+      showError(LocalHistoryBundle.message("message.error.during.create.patch", e));
     }
   }
 
@@ -480,7 +474,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
 
   private boolean showAsDialog(CreatePatchConfigurationPanel p) {
     final DialogWrapper dialogWrapper = new MyDialogWrapper(myProject, p);
-    dialogWrapper.setTitle(message("create.patch.dialog.title"));
+    dialogWrapper.setTitle(LocalHistoryBundle.message("create.patch.dialog.title"));
     dialogWrapper.setModal(true);
     dialogWrapper.show();
     return dialogWrapper.getExitCode() == DialogWrapper.OK_EXIT_CODE;
@@ -488,7 +482,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
 
 
   public void showError(String s) {
-    Messages.showErrorDialog(myProject, s, CommonBundle.getErrorTitle());
+    Messages.showErrorDialog(myProject, s, CommonLocalize.titleError().get());
   }
 
   protected void showHelp() {
@@ -526,7 +520,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
 
   private class RevertAction extends MyAction {
     public RevertAction() {
-      super(message("action.revert"), null, AllIcons.Actions.Rollback);
+      super(LocalHistoryBundle.message("action.revert"), null, AllIcons.Actions.Rollback);
     }
 
     @Override
@@ -542,7 +536,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
 
   private class CreatePatchAction extends MyAction {
     public CreatePatchAction() {
-      super(message("action.create.patch"), null, PlatformIconGroup.filetypesPatch());
+      super(LocalHistoryBundle.message("action.create.patch"), null, PlatformIconGroup.filetypesPatch());
     }
 
     @Override
@@ -564,11 +558,11 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
     }
 
     public void processingLeftRevision() {
-      myIndicator.setText(message("message.processing.left.revision"));
+      myIndicator.setText(LocalHistoryBundle.message("message.processing.left.revision"));
     }
 
     public void processingRightRevision() {
-      myIndicator.setText(message("message.processing.right.revision"));
+      myIndicator.setText(LocalHistoryBundle.message("message.processing.right.revision"));
     }
 
     public void processed(int percentage) {
@@ -636,7 +630,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
     @Nonnull
     private final CreatePatchConfigurationPanel myPanel;
 
-    protected MyDialogWrapper(@jakarta.annotation.Nullable Project project, @Nonnull CreatePatchConfigurationPanel centralPanel) {
+    protected MyDialogWrapper(@Nullable Project project, @Nonnull CreatePatchConfigurationPanel centralPanel) {
       super(project, true);
       myPanel = centralPanel;
       init();

@@ -2,12 +2,9 @@
 package consulo.ide.impl.idea.ide.actions.runAnything;
 
 import consulo.dataContext.DataContext;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.actions.runAnything.activity.RunAnythingProvider;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.SeparatorComponent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.project.Project;
@@ -21,9 +18,10 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
-
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -32,10 +30,9 @@ import java.util.List;
 
 public class RunAnythingUtil {
   public static final Logger LOG = Logger.getInstance(RunAnythingUtil.class);
-  public static final String SHIFT_SHORTCUT_TEXT = KeymapUtil.getShortcutText(KeyboardShortcut.fromString(("SHIFT")));
-  public static final String AD_DEBUG_TEXT = IdeBundle.message("run.anything.ad.run.with.debug", SHIFT_SHORTCUT_TEXT);
-  public static final String AD_DELETE_COMMAND_TEXT = IdeBundle.message("run.anything.ad.command.delete", KeymapUtil.getShortcutText(KeyboardShortcut.fromString("shift BACK_SPACE")));
-  public static final String AD_CONTEXT_TEXT = IdeBundle.message("run.anything.ad.run.in.context", KeymapUtil.getShortcutText(KeyboardShortcut.fromString("pressed ALT")));
+  public static final String SHIFT_SHORTCUT_TEXT = KeymapUtil.getShortcutText(KeyboardShortcut.fromString("SHIFT"));
+  public static final String SHIFT_BACK_SPACE = KeymapUtil.getShortcutText(KeyboardShortcut.fromString("shift BACK_SPACE"));
+  public static final String PRESSED_ALT = KeymapUtil.getShortcutText(KeyboardShortcut.fromString("pressed ALT"));
   private static final Key<Collection<Pair<String, String>>> RUN_ANYTHING_WRAPPED_COMMANDS = Key.create("RUN_ANYTHING_WRAPPED_COMMANDS");
 
   static Font getTitleFont() {
@@ -47,7 +44,11 @@ public class RunAnythingUtil {
     titleLabel.setFont(getTitleFont());
     titleLabel.setForeground(UIUtil.getLabelDisabledForeground());
 
-    SeparatorComponent separatorComponent = new SeparatorComponent(titleLabel.getPreferredSize().height / 2, new JBColor(Gray._220, Gray._80), null);
+    SeparatorComponent separatorComponent = new SeparatorComponent(
+      titleLabel.getPreferredSize().height / 2,
+      new JBColor(Gray._220, Gray._80),
+      null
+    );
 
     JPanel panel = new JPanel(new BorderLayout());
     panel.add(titleLabel, BorderLayout.WEST);
@@ -87,7 +88,7 @@ public class RunAnythingUtil {
 
   @Nonnull
   public static Project fetchProject(@Nonnull DataContext dataContext) {
-    return ObjectUtil.assertNotNull(dataContext.getData(CommonDataKeys.PROJECT));
+    return ObjectUtil.assertNotNull(dataContext.getData(Project.KEY));
   }
 
   public static boolean executeMatched(@Nonnull DataContext dataContext, @Nonnull String pattern) {

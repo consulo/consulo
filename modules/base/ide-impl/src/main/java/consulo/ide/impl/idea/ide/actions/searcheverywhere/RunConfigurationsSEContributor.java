@@ -1,34 +1,34 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
-import consulo.execution.executor.Executor;
-import consulo.execution.executor.ExecutorRegistry;
-import consulo.execution.RunnerAndConfigurationSettings;
-import consulo.ide.impl.idea.execution.actions.ChooseRunConfigurationPopup;
-import consulo.execution.configuration.RunConfiguration;
-import consulo.execution.executor.DefaultRunExecutor;
-import consulo.execution.runner.ProgramRunner;
-import consulo.dataContext.DataManager;
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.application.progress.ProgressIndicator;
-import consulo.project.Project;
-import consulo.util.dataholder.Key;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.project.ui.wm.ToolWindowId;
+import consulo.application.util.function.Processor;
 import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.application.util.matcher.NameUtil;
-import consulo.ui.ex.awt.SimpleColoredComponent;
+import consulo.dataContext.DataManager;
+import consulo.execution.RunnerAndConfigurationSettings;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.executor.DefaultRunExecutor;
+import consulo.execution.executor.Executor;
+import consulo.execution.executor.ExecutorRegistry;
+import consulo.execution.runner.ProgramRunner;
+import consulo.ide.impl.idea.execution.actions.ChooseRunConfigurationPopup;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.platform.base.localize.IdeLocalize;
+import consulo.project.Project;
+import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.JBUIScale;
-import consulo.util.lang.ObjectUtil;
-import consulo.application.util.function.Processor;
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.JBUIScale;
+import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.awt.UIUtil;
-import org.intellij.lang.annotations.MagicConstant;
+import consulo.util.dataholder.Key;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
+import org.intellij.lang.annotations.MagicConstant;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -40,8 +40,16 @@ import java.util.function.Supplier;
 
 public class RunConfigurationsSEContributor implements SearchEverywhereContributor<ChooseRunConfigurationPopup.ItemWrapper> {
 
-  private final SearchEverywhereCommandInfo RUN_COMMAND = new SearchEverywhereCommandInfo("run", IdeBundle.message("searcheverywhere.runconfigurations.command.run.description"), this);
-  private final SearchEverywhereCommandInfo DEBUG_COMMAND = new SearchEverywhereCommandInfo("debug", IdeBundle.message("searcheverywhere.runconfigurations.command.debug.description"), this);
+  private final SearchEverywhereCommandInfo RUN_COMMAND = new SearchEverywhereCommandInfo(
+    "run",
+    IdeLocalize.searcheverywhereRunconfigurationsCommandRunDescription().get(),
+    this
+  );
+  private final SearchEverywhereCommandInfo DEBUG_COMMAND = new SearchEverywhereCommandInfo(
+    "debug",
+    IdeLocalize.searcheverywhereRunconfigurationsCommandDebugDescription().get(),
+    this
+  );
 
   private final static int RUN_MODE = 0;
   private final static int DEBUG_MODE = 1;
@@ -65,7 +73,7 @@ public class RunConfigurationsSEContributor implements SearchEverywhereContribut
   @Nonnull
   @Override
   public String getGroupName() {
-    return IdeBundle.message("searcheverywhere.run.configs.tab.name");
+    return IdeLocalize.searcheverywhereRunConfigsTabName().get();
   }
 
   @Override

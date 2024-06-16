@@ -15,36 +15,34 @@
  */
 package consulo.ide.impl.idea.openapi.vfs.impl.jar;
 
-import consulo.index.io.EnumeratorStringDescriptor;
-import consulo.index.io.PersistentHashMap;
-import consulo.index.io.PersistentHashMapValueStorage;
-import consulo.project.ui.notification.NotificationGroup;
-import consulo.project.ui.notification.NotificationType;
-import consulo.index.io.data.DataExternalizer;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.NotNullLazyValue;
-import consulo.util.lang.ShutDownTracker;
-import consulo.index.io.data.DataInputOutputUtil;
-import consulo.util.io.FileAttributes;
-import consulo.virtualFileSystem.impl.internal.mediator.FileSystemUtil;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.index.io.data.IOUtil;
-import consulo.virtualFileSystem.VfsBundle;
+import consulo.application.util.function.CommonProcessors;
+import consulo.container.boot.ContainerPathManager;
 import consulo.ide.impl.idea.openapi.vfs.impl.ZipHandler;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.FSRecords;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.FlushingDaemon;
-import consulo.application.util.function.CommonProcessors;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.util.collection.MultiMap;
-import consulo.container.boot.ContainerPathManager;
-import consulo.logging.Logger;
-import consulo.virtualFileSystem.archive.ArchiveFile;
 import consulo.ide.impl.virtualFileSystem.archive.ArchiveFileSystemBase;
-
+import consulo.index.io.EnumeratorStringDescriptor;
+import consulo.index.io.PersistentHashMap;
+import consulo.index.io.PersistentHashMapValueStorage;
+import consulo.index.io.data.DataExternalizer;
+import consulo.index.io.data.DataInputOutputUtil;
+import consulo.index.io.data.IOUtil;
+import consulo.logging.Logger;
+import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationType;
+import consulo.util.collection.MultiMap;
+import consulo.util.io.FileAttributes;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.ShutDownTracker;
+import consulo.virtualFileSystem.archive.ArchiveFile;
+import consulo.virtualFileSystem.impl.internal.mediator.FileSystemUtil;
+import consulo.virtualFileSystem.localize.VirtualFileSystemLocalize;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import java.io.DataOutputStream;
+
 import java.io.*;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
@@ -134,13 +132,11 @@ public class JarHandler extends ZipHandler {
       try {
         tempJarFile = FileUtil.createTempFile(new File(jarDir), originalFile.getName(), "", true, false);
 
-        DataOutputStream os = new DataOutputStream(new FileOutputStream(tempJarFile));
-        try {
-          FileInputStream is = new FileInputStream(originalFile);
-          try {
+        try (DataOutputStream os = new DataOutputStream(new FileOutputStream(tempJarFile))) {
+          try (FileInputStream is = new FileInputStream(originalFile)) {
             sha1 = MessageDigest.getInstance("SHA1");
             sha1.update(String.valueOf(originalAttributes.length).getBytes(Charset.defaultCharset()));
-            sha1.update((byte)0);
+            sha1.update((byte) 0);
 
             byte[] buffer = new byte[8192];
             long totalBytes = 0;
@@ -153,12 +149,6 @@ public class JarHandler extends ZipHandler {
               if (totalBytes == originalAttributes.length) break;
             }
           }
-          finally {
-            is.close();
-          }
-        }
-        finally {
-          os.close();
         }
       }
       catch (IOException ex) {
@@ -177,8 +167,8 @@ public class JarHandler extends ZipHandler {
       FileAttributes mirrorFileAttributes = FileSystemUtil.getAttributes(mirrorFile);
       if (mirrorFileAttributes == null) {
         try {
-          FileUtil.rename(tempJarFile, mirrorFile);
-          FileUtil.setLastModified(mirrorFile, originalAttributes.lastModified);
+          consulo.ide.impl.idea.openapi.util.io.FileUtil.rename(tempJarFile, mirrorFile);
+          consulo.ide.impl.idea.openapi.util.io.FileUtil.setLastModified(mirrorFile, originalAttributes.lastModified);
         }
         catch (IOException ex) {
           reportIOErrorWithJars(originalFile, mirrorFile, ex);
@@ -227,12 +217,12 @@ public class JarHandler extends ZipHandler {
     ProgressIndicator progress = ProgressManager.getInstance().getProgressIndicator();
     if (progress != null) {
       progress.pushState();
-      progress.setText(VfsBundle.message("jar.copy.progress", original.getPath()));
+      progress.setTextValue(VirtualFileSystemLocalize.jarCopyProgress(original.getPath()));
       progress.setFraction(0);
     }
 
     try {
-      FileUtil.copy(original, mirror);
+      consulo.ide.impl.idea.openapi.util.io.FileUtil.copy(original, mirror);
     }
     catch (final IOException e) {
       reportIOErrorWithJars(original, mirror, e);
@@ -291,22 +281,25 @@ public class JarHandler extends ZipHandler {
       PersistentHashMap<String, CacheLibraryInfo> info = null;
       for (int i = 0; i < 2; ++i) {
         try {
-          info = new PersistentHashMap<String, CacheLibraryInfo>(snapshotInfoFile, EnumeratorStringDescriptor.INSTANCE,
-                                                                 new DataExternalizer<CacheLibraryInfo>() {
+          info = new PersistentHashMap<>(
+            snapshotInfoFile,
+            EnumeratorStringDescriptor.INSTANCE,
+            new DataExternalizer<CacheLibraryInfo>() {
 
-                                                                   @Override
-                                                                   public void save(@Nonnull DataOutput out, CacheLibraryInfo value) throws IOException {
-                                                                     IOUtil.writeUTF(out, value.mySnapshotPath);
-                                                                     DataInputOutputUtil.writeTIME(out, value.myModificationTime);
-                                                                     DataInputOutputUtil.writeLONG(out, value.myFileLength);
-                                                                   }
+              @Override
+              public void save(@Nonnull DataOutput out, CacheLibraryInfo value) throws IOException {
+                IOUtil.writeUTF(out, value.mySnapshotPath);
+                DataInputOutputUtil.writeTIME(out, value.myModificationTime);
+                DataInputOutputUtil.writeLONG(out, value.myFileLength);
+              }
 
-                                                                   @Override
-                                                                   public CacheLibraryInfo read(@Nonnull DataInput in) throws IOException {
-                                                                     return new CacheLibraryInfo(IOUtil.readUTF(in), DataInputOutputUtil.readTIME(in),
-                                                                                                 DataInputOutputUtil.readLONG(in));
-                                                                   }
-                                                                 });
+              @Override
+              public CacheLibraryInfo read(@Nonnull DataInput in) throws IOException {
+                return new CacheLibraryInfo(IOUtil.readUTF(in), DataInputOutputUtil.readTIME(in),
+                  DataInputOutputUtil.readLONG(in));
+              }
+            }
+          );
 
           if (i == 0) removeStaleJarFilesIfNeeded(snapshotInfoFile, info);
           break;
@@ -342,14 +335,13 @@ public class JarHandler extends ZipHandler {
       // - Collect librarySnapshot -> projectLibraryPaths and existing projectLibraryPath -> librarySnapshot
       // - Remove all projectLibraryPaths that doesn't exist from persistent mapping
       // - Remove jar library snapshots that have no projectLibraryPath
-      Set<String> availableLibrarySnapshots = new HashSet<String>(Arrays.<String>asList(snapshotInfoFile.getParentFile().list(new FilenameFilter() {
+      Set<String> availableLibrarySnapshots = new HashSet<>(Arrays.<String>asList(snapshotInfoFile.getParentFile().list(new FilenameFilter() {
         @Override
         public boolean accept(File dir, String name) {
           int lastDotPosition = name.lastIndexOf('.');
           if (lastDotPosition == -1) return false;
           String extension = name.substring(lastDotPosition + 1);
-          if (extension.length() != 40 || !consistsOfHexLetters(extension)) return false;
-          return true;
+          return extension.length() == 40 && consistsOfHexLetters(extension);
         }
 
         private boolean consistsOfHexLetters(String extension) {
@@ -360,12 +352,12 @@ public class JarHandler extends ZipHandler {
         }
       })));
 
-      final List<String> invalidLibraryFilePaths = ContainerUtil.newArrayList();
-      final List<String> allLibraryFilePaths = ContainerUtil.newArrayList();
-      MultiMap<String, String> jarSnapshotFileToLibraryFilePaths = new MultiMap<String, String>();
-      Set<String> validLibraryFilePathToJarSnapshotFilePaths = ContainerUtil.newTroveSet();
+      final List<String> invalidLibraryFilePaths = new ArrayList<>();
+      final List<String> allLibraryFilePaths = new ArrayList<>();
+      MultiMap<String, String> jarSnapshotFileToLibraryFilePaths = new MultiMap<>();
+      Set<String> validLibraryFilePathToJarSnapshotFilePaths = new HashSet<>();
 
-      info.processKeys(new CommonProcessors.CollectProcessor<String>(allLibraryFilePaths));
+      info.processKeys(new CommonProcessors.CollectProcessor<>(allLibraryFilePaths));
       for (String filePath : allLibraryFilePaths) {
         CacheLibraryInfo libraryInfo = info.get(filePath);
         if (libraryInfo == null) continue;
@@ -402,13 +394,9 @@ public class JarHandler extends ZipHandler {
 
     private static void saveVersion(File versionFile) {
       try {
-        DataOutputStream versionOutputStream = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(versionFile)));
-        try {
+        try (DataOutputStream versionOutputStream = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(versionFile)))) {
           DataInputOutputUtil.writeINT(versionOutputStream, VERSION);
           DataInputOutputUtil.writeTIME(versionOutputStream, FSRecords.getCreationTimestamp());
-        }
-        finally {
-          versionOutputStream.close();
         }
       }
       catch (IOException ignore) {
@@ -432,11 +420,9 @@ public class JarHandler extends ZipHandler {
 
       CacheLibraryInfo info = (CacheLibraryInfo)o;
 
-      if (myFileLength != info.myFileLength) return false;
-      if (myModificationTime != info.myModificationTime) return false;
-      if (!mySnapshotPath.equals(info.mySnapshotPath)) return false;
-
-      return true;
+      return myFileLength == info.myFileLength
+        && myModificationTime == info.myModificationTime
+        && mySnapshotPath.equals(info.mySnapshotPath);
     }
 
     @Override
@@ -448,11 +434,11 @@ public class JarHandler extends ZipHandler {
     }
   }
 
-  private static final NotNullLazyValue<NotificationGroup> ERROR_COPY_NOTIFICATION = new NotNullLazyValue<NotificationGroup>() {
+  private static final NotNullLazyValue<NotificationGroup> ERROR_COPY_NOTIFICATION = new NotNullLazyValue<>() {
     @Nonnull
     @Override
     protected NotificationGroup compute() {
-      return NotificationGroup.balloonGroup(VfsBundle.message("jar.copy.error.title"));
+      return NotificationGroup.balloonGroup(VirtualFileSystemLocalize.jarCopyErrorTitle().get());
     }
   };
 
@@ -462,7 +448,7 @@ public class JarHandler extends ZipHandler {
     String path = original.getPath();
     myFileSystem.setNoCopyJarForPath(path);
 
-    String message = VfsBundle.message("jar.copy.error.message", path, target.getPath(), e.getMessage());
+    String message = VirtualFileSystemLocalize.jarCopyErrorMessage(path, target.getPath(), e.getMessage()).get();
     ERROR_COPY_NOTIFICATION.getValue().createNotification(message, NotificationType.ERROR).notify(null);
   }
 }

@@ -19,8 +19,8 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
 import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.CompositeSelectInTarget;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ui.view.SelectInContext;
 import consulo.project.ui.view.SelectInManager;
@@ -33,8 +33,8 @@ import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.popup.PopupStep;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -69,7 +69,13 @@ public class SelectInAction extends AnAction implements DumbAware {
     if (targetVector.isEmpty()) {
       DefaultActionGroup group = new DefaultActionGroup();
       group.add(new NoTargetsAction());
-      popup = JBPopupFactory.getInstance().createActionGroupPopup(IdeBundle.message("title.popup.select.target"), group, dataContext, JBPopupFactory.ActionSelectionAid.MNEMONICS, true);
+      popup = JBPopupFactory.getInstance().createActionGroupPopup(
+        IdeLocalize.titlePopupSelectTarget().get(),
+        group,
+        dataContext,
+        JBPopupFactory.ActionSelectionAid.MNEMONICS,
+        true
+      );
     }
     else {
       popup = JBPopupFactory.getInstance().createListPopup(new SelectInActionsStep(targetVector, context));
@@ -84,11 +90,11 @@ public class SelectInAction extends AnAction implements DumbAware {
 
     public SelectInActionsStep(@Nonnull final Collection<SelectInTarget> targetVector, SelectInContext selectInContext) {
       mySelectInContext = selectInContext;
-      myVisibleTargets = new ArrayList<SelectInTarget>();
+      myVisibleTargets = new ArrayList<>();
       for (SelectInTarget target : targetVector) {
         myVisibleTargets.add(target);
       }
-      init(IdeBundle.message("title.popup.select.target"), myVisibleTargets, null);
+      init(IdeLocalize.titlePopupSelectTarget().get(), myVisibleTargets, null);
     }
 
     @Override
@@ -105,8 +111,8 @@ public class SelectInAction extends AnAction implements DumbAware {
         target.selectIn(mySelectInContext, true);
         return FINAL_CHOICE;
       }
-      if (target instanceof CompositeSelectInTarget) {
-        final ArrayList<SelectInTarget> subTargets = new ArrayList<SelectInTarget>(((CompositeSelectInTarget)target).getSubTargets(mySelectInContext));
+      if (target instanceof CompositeSelectInTarget compositeSelectInTarget) {
+        final ArrayList<SelectInTarget> subTargets = new ArrayList<>(compositeSelectInTarget.getSubTargets(mySelectInContext));
         if (subTargets.size() > 0) {
           Collections.sort(subTargets, new SelectInManager.SelectInTargetComparator());
           return new SelectInActionsStep(subTargets, mySelectInContext);
@@ -150,7 +156,7 @@ public class SelectInAction extends AnAction implements DumbAware {
 
   private static class NoTargetsAction extends AnAction {
     public NoTargetsAction() {
-      super(IdeBundle.message("message.no.targets.available"));
+      super(IdeLocalize.messageNoTargetsAvailable());
     }
 
     @Override

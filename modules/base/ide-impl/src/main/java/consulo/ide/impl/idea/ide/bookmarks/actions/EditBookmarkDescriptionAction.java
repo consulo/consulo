@@ -16,10 +16,10 @@
 package consulo.ide.impl.idea.ide.bookmarks.actions;
 
 import consulo.application.AllIcons;
-import consulo.application.util.SystemInfo;
-import consulo.ide.IdeBundle;
 import consulo.bookmark.Bookmark;
 import consulo.bookmark.BookmarkManager;
+import consulo.platform.Platform;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
@@ -34,11 +34,14 @@ class EditBookmarkDescriptionAction extends DumbAwareAction {
   private JBPopup myPopup;
 
   EditBookmarkDescriptionAction(Project project, JList list) {
-    super(IdeBundle.message("action.bookmark.edit.description"),
-          IdeBundle.message("action.bookmark.edit.description.description"), AllIcons.Actions.Edit);
+    super(
+      IdeLocalize.actionBookmarkEditDescription(),
+      IdeLocalize.actionBookmarkEditDescriptionDescription(),
+      AllIcons.Actions.Edit
+    );
     myProject = project;
     myList = list;
-    registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(SystemInfo.isMac ? "meta ENTER" : "control ENTER")), list);
+    registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(Platform.current().os().isMac() ? "meta ENTER" : "control ENTER")), list);
   }
 
   @Override

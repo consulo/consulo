@@ -5,12 +5,11 @@ import consulo.application.AllIcons;
 import consulo.dataContext.DataContext;
 import consulo.execution.executor.Executor;
 import consulo.execution.runner.ExecutionEnvironmentBuilder;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingAction;
 import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingCache;
 import consulo.ide.impl.idea.ide.actions.runAnything.commands.RunAnythingCommandCustomizer;
 import consulo.ide.impl.idea.ide.actions.runAnything.execution.RunAnythingRunProfile;
-import consulo.language.editor.CommonDataKeys;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.cmd.ParametersListUtil;
@@ -18,9 +17,9 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collection;
 
 import static consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingUtil.*;
@@ -28,7 +27,7 @@ import static consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingUtil.*;
 public abstract class RunAnythingCommandProvider extends RunAnythingProviderBase<String> {
   @Override
   public void execute(@Nonnull DataContext dataContext, @Nonnull String value) {
-    VirtualFile workDirectory = dataContext.getData(CommonDataKeys.VIRTUAL_FILE);
+    VirtualFile workDirectory = dataContext.getData(VirtualFile.KEY);
     Executor executor = dataContext.getData(RunAnythingAction.EXECUTOR_KEY);
     LOG.assertTrue(workDirectory != null);
     LOG.assertTrue(executor != null);
@@ -36,7 +35,12 @@ public abstract class RunAnythingCommandProvider extends RunAnythingProviderBase
     runCommand(workDirectory, value, executor, dataContext);
   }
 
-  public static void runCommand(@Nonnull VirtualFile workDirectory, @Nonnull String commandString, @Nonnull Executor executor, @Nonnull DataContext dataContext) {
+  public static void runCommand(
+    @Nonnull VirtualFile workDirectory,
+    @Nonnull String commandString,
+    @Nonnull Executor executor,
+    @Nonnull DataContext dataContext
+  ) {
     final Project project = dataContext.getData(Project.KEY);
     LOG.assertTrue(project != null);
 
@@ -57,14 +61,16 @@ public abstract class RunAnythingCommandProvider extends RunAnythingProviderBase
     }
     catch (ExecutionException e) {
       LOG.warn(e);
-      Messages.showInfoMessage(project, e.getMessage(), IdeBundle.message("run.anything.console.error.title"));
+      Messages.showInfoMessage(project, e.getMessage(), IdeLocalize.runAnythingConsoleErrorTitle().get());
     }
   }
 
   @Nullable
   @Override
   public String getAdText() {
-    return AD_CONTEXT_TEXT + ", " + AD_DEBUG_TEXT + ", " + AD_DELETE_COMMAND_TEXT;
+    return IdeLocalize.runAnythingAdRunInContext(PRESSED_ALT) + ", " +
+      IdeLocalize.runAnythingAdRunWithDebug(SHIFT_SHORTCUT_TEXT) + ", " +
+      IdeLocalize.runAnythingAdCommandDelete(SHIFT_BACK_SPACE);
   }
 
   @Nonnull

@@ -8,9 +8,8 @@ import consulo.application.ApplicationManager;
 import consulo.disposer.Disposer;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.ide.actions.BigPopupUI;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.project.ui.ProjectWindowStateService;
 import consulo.ui.Coordinate2D;
@@ -55,7 +54,7 @@ public class RunAnythingManager {
   public void show(@Nullable String searchText, boolean selectSearchText, @Nonnull AnActionEvent initEvent) {
     IdeEventQueueProxy.getInstance().closeAllPopups(false);
 
-    Project project = initEvent.getData(CommonDataKeys.PROJECT);
+    Project project = initEvent.getData(Project.KEY);
 
     myRunAnythingUI = createView(initEvent);
 
