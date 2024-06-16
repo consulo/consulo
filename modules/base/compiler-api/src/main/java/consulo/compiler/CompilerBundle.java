@@ -15,6 +15,9 @@
  */
 package consulo.compiler;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.internal.MigratedExtensionsTo;
+import consulo.compiler.localize.CompilerLocalize;
 import consulo.component.util.localize.AbstractBundle;
 import consulo.content.bundle.Sdk;
 import org.jetbrains.annotations.PropertyKey;
@@ -23,6 +26,9 @@ import org.jetbrains.annotations.PropertyKey;
  * @author Eugene Zhuravlev
  *         Date: Sep 9, 2005
  */
+@Deprecated(forRemoval = true)
+@DeprecationInfo("Use CompilerLocalize")
+@MigratedExtensionsTo(CompilerLocalize.class)
 public class CompilerBundle extends AbstractBundle {
   private static final CompilerBundle ourInstance = new CompilerBundle();
 

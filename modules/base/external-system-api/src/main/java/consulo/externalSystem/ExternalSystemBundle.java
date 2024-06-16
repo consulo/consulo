@@ -15,7 +15,10 @@
  */
 package consulo.externalSystem;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.component.util.localize.AbstractBundle;
+import consulo.externalSystem.localize.ExternalSystemLocalize;
 import org.jetbrains.annotations.PropertyKey;
 
 import jakarta.annotation.Nonnull;
@@ -24,6 +27,9 @@ import jakarta.annotation.Nonnull;
  * @author Denis Zhdanov
  * @since 8/1/11 2:44 PM
  */
+@Deprecated(forRemoval = true)
+@DeprecationInfo("Use ExternalSystemLocalize")
+@MigratedExtensionsTo(ExternalSystemLocalize.class)
 public class ExternalSystemBundle extends AbstractBundle {
 
   public static String message(@Nonnull @PropertyKey(resourceBundle = PATH_TO_BUNDLE) String key, @Nonnull Object... params) {

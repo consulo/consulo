@@ -15,12 +15,18 @@
  */
 package consulo.execution;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.component.util.localize.AbstractBundle;
+import consulo.execution.localize.ExecutionLocalize;
 import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author lesya
  */
+@Deprecated(forRemoval = true)
+@DeprecationInfo("Use ExecutionLocalize")
+@MigratedExtensionsTo(ExecutionLocalize.class)
 public class ExecutionBundle extends AbstractBundle {
   private static final ExecutionBundle ourInstance = new ExecutionBundle();
 

@@ -15,12 +15,18 @@
  */
 package consulo.language.editor.inspection;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.component.util.localize.AbstractBundle;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
 import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author max
  */
+@Deprecated(forRemoval = true)
+@DeprecationInfo("Use InspectionLocalize")
+@MigratedExtensionsTo(InspectionLocalize.class)
 public class InspectionsBundle extends AbstractBundle {
   private static final InspectionsBundle ourInstance = new InspectionsBundle();
 
