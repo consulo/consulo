@@ -15,13 +15,19 @@
  */
 package consulo.ui.ex.action;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.component.util.localize.AbstractBundle;
+import consulo.platform.base.localize.ActionLocalize;
 import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author Eugene Zhuravlev
  *         Date: Aug 29, 2005
  */
+@Deprecated(forRemoval = true)
+@DeprecationInfo("Use ActionLocalize")
+@MigratedExtensionsTo(ActionLocalize.class)
 public class ActionsBundle extends AbstractBundle{
   private static final ActionsBundle ourInstance = new ActionsBundle();
 

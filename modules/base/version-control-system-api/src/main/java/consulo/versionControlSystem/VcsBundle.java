@@ -15,8 +15,10 @@
  */
 package consulo.versionControlSystem;
 
+import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.component.util.localize.AbstractBundle;
 import consulo.annotation.DeprecationInfo;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import org.jetbrains.annotations.PropertyKey;
 
 /**
@@ -24,6 +26,7 @@ import org.jetbrains.annotations.PropertyKey;
  */
 @Deprecated(forRemoval = true)
 @DeprecationInfo("Use VcsLocalize")
+@MigratedExtensionsTo(VcsLocalize.class)
 public class VcsBundle extends AbstractBundle {
   private static final VcsBundle ourInstance = new VcsBundle();
 

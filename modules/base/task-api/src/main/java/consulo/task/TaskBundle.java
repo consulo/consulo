@@ -1,7 +1,9 @@
 package consulo.task;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.application.CommonBundle;
+import consulo.task.localize.TaskLocalize;
 import consulo.util.lang.ref.SoftReference;
 import jakarta.annotation.Nonnull;
 import org.apache.http.HttpStatus;
@@ -18,6 +20,7 @@ import java.util.ResourceBundle;
  */
 @Deprecated
 @DeprecationInfo("Use TaskLocalize")
+@MigratedExtensionsTo(TaskLocalize.class)
 public class TaskBundle {
 
   private static Reference<ResourceBundle> ourBundle;
@@ -47,7 +50,7 @@ public class TaskBundle {
     ResourceBundle bundle = SoftReference.dereference(ourBundle);
     if (bundle == null) {
       bundle = ResourceBundle.getBundle(BUNDLE);
-      ourBundle = new SoftReference<ResourceBundle>(bundle);
+      ourBundle = new SoftReference<>(bundle);
     }
     return bundle;
   }

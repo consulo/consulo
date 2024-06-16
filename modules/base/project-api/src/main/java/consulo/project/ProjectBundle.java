@@ -15,9 +15,15 @@
  */
 package consulo.project;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.component.util.localize.AbstractBundle;
+import consulo.project.localize.ProjectLocalize;
 import org.jetbrains.annotations.PropertyKey;
 
+@Deprecated(forRemoval = true)
+@DeprecationInfo("Use ProjectLocalize")
+@MigratedExtensionsTo(ProjectLocalize.class)
 public class ProjectBundle extends AbstractBundle {
   private static final ProjectBundle ourInstance = new ProjectBundle();
 

@@ -16,13 +16,19 @@
 
 package consulo.ide;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.component.util.localize.AbstractBundle;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.IdeLocalize;
 import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author yole
  */
+@Deprecated(forRemoval = true)
+@DeprecationInfo("Use IdeLocalize")
+@MigratedExtensionsTo(IdeLocalize.class)
 public class IdeBundle extends AbstractBundle {
   private static final IdeBundle ourInstance = new IdeBundle();
 

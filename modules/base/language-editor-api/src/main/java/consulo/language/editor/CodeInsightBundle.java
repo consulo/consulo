@@ -15,12 +15,18 @@
  */
 package consulo.language.editor;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.component.util.localize.AbstractBundle;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author max
  */
+@Deprecated(forRemoval = true)
+@DeprecationInfo("Use CodeInsightLocalize")
+@MigratedExtensionsTo(CodeInsightLocalize.class)
 public class CodeInsightBundle extends AbstractBundle {
   private static final CodeInsightBundle ourInstance = new CodeInsightBundle();
 
