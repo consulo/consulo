@@ -94,9 +94,9 @@ public class CreateLauncherScriptAction extends DumbAwareAction {
     assert name != null;
     File target = new File(path, name);
     if (target.exists()) {
-      String message = ApplicationLocalize.launcherScriptOverwrite(target).get();
+      LocalizeValue message = ApplicationLocalize.launcherScriptOverwrite(target);
       String title = ApplicationBundle.message("launcher.script.title");
-      if (Messages.showOkCancelDialog(project, message, title, Messages.getQuestionIcon()) != Messages.OK) {
+      if (Messages.showOkCancelDialog(project, message.get(), title, Messages.getQuestionIcon()) != Messages.OK) {
         return;
       }
     }
@@ -121,8 +121,8 @@ public class CreateLauncherScriptAction extends DumbAwareAction {
                 "mkdir -p \"" + scriptTargetDirPath + "\"\n" +
                 "install -g 0 -o 0 \"" + scriptFile.getCanonicalPath() + "\" \"" + pathName + "\"";
         File installationScript = ExecUtil.createTempExecutableScript("launcher_installer", ".sh", installationScriptSrc);
-        LocalizeValue prompt = ApplicationLocalize.launcherScriptSudoPrompt(scriptTargetDirPath);
-        CapturingProcessUtil.execAndGetOutput(new GeneralCommandLine(installationScript.getPath()).withSudo(prompt.get()));
+        String prompt = ApplicationLocalize.launcherScriptSudoPrompt(scriptTargetDirPath).get();
+        CapturingProcessUtil.execAndGetOutput(new GeneralCommandLine(installationScript.getPath()).withSudo(prompt));
       }
     }
     catch (Exception e) {
@@ -153,7 +153,8 @@ public class CreateLauncherScriptAction extends DumbAwareAction {
 
     ClassLoader loader = CreateLauncherScriptAction.class.getClassLoader();
     assert loader != null;
-    Map<String, String> variables = newHashMap(pair("$CONFIG_PATH$", ContainerPathManager.get().getConfigPath()), pair("$RUN_PATH$", runPath));
+    Map<String, String> variables =
+      newHashMap(pair("$CONFIG_PATH$", ContainerPathManager.get().getConfigPath()), pair("$RUN_PATH$", runPath));
     String launcherContents = StringUtil.convertLineSeparators(ExecUtil.loadTemplate(loader, "launcher.py", variables));
 
     return ExecUtil.createTempExecutableScript("launcher", "", launcherContents);
@@ -173,8 +174,8 @@ public class CreateLauncherScriptAction extends DumbAwareAction {
       super(project);
       init();
       setTitle(ApplicationBundle.message("launcher.script.title"));
-      String productName = Application.get().getName().get();
-      myTitle.setText(myTitle.getText().replace("$APP_NAME$", productName));
+      LocalizeValue productName = Application.get().getName();
+      myTitle.setText(myTitle.getText().replace("$APP_NAME$", productName.get()));
       myNameField.setText(defaultScriptName());
     }
 

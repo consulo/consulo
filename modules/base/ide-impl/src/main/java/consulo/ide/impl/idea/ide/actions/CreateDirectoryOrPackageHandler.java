@@ -43,6 +43,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
 
 import java.awt.*;
 import java.io.File;
@@ -86,6 +87,7 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
     myDialogParent = dialogParent;
   }
 
+  @NonNls
   @Override
   @RequiredUIAccess
   public boolean checkInput(String inputString) {
@@ -132,17 +134,13 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
 
       boolean isDirectory = myType == CreateDirectoryOrPackageType.Directory;
       if (FileTypeManager.getInstance().isFileIgnored(token)) {
-        myErrorText = LocalizeValue.localizeTODO(
-          "Trying to create a " + (isDirectory ? "directory" : "package") +
-            " with an ignored name, the result will not be visible"
-        ).get();
+        myErrorText = "Trying to create a " + (isDirectory ? "directory" : "package") +
+          " with an ignored name, the result will not be visible";
         return true;
       }
       if (!isDirectory && token.length() > 0
         && !PsiPackageManager.getInstance(myDirectory.getProject()).isValidPackageName(myDirectory, token)) {
-        myErrorText = LocalizeValue.localizeTODO(
-          "Not a valid package name, it will not be possible to create a class inside"
-        ).get();
+        myErrorText = "Not a valid package name, it will not be possible to create a class inside";
         return true;
       }
       firstToken = false;
@@ -185,6 +183,7 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
     return myCreatedElement != null;
   }
 
+  @NonNls
   @Nullable
   private Boolean suggestCreatingFileInstead(String subDirName) {
     boolean isDirectory = myType == CreateDirectoryOrPackageType.Directory;
@@ -193,9 +192,7 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
     if (StringUtil.countChars(subDirName, '.') == 1 && Registry.is("ide.suggest.file.when.creating.filename.like.directory")) {
       FileType fileType = findFileTypeBoundToName(subDirName);
       if (fileType != null) {
-        String message = LocalizeValue.localizeTODO(
-          "The name you entered looks like a file name. Do you want to create a file named " + subDirName + " instead?"
-        ).get();
+        String message = "The name you entered looks like a file name. Do you want to create a file named " + subDirName + " instead?";
         int ec = Messages.showYesNoCancelDialog(
           myProject,
           message,
@@ -228,8 +225,8 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
     Runnable command = () -> {
       final Runnable run = () -> {
         String dirPath = myDirectory.getVirtualFile().getPresentableUrl();
-        String actionName = IdeLocalize.progressCreatingDirectory(dirPath, File.separator, subDirName).get();
-        LocalHistoryAction action = LocalHistory.getInstance().startAction(actionName);
+        LocalizeValue actionName = IdeLocalize.progressCreatingDirectory(dirPath, File.separator, subDirName);
+        LocalHistoryAction action = LocalHistory.getInstance().startAction(actionName.get());
         try {
           if (createFile) {
             CreateFileAction.MkDirs mkdirs = new CreateFileAction.MkDirs(subDirName, myDirectory);
@@ -261,13 +258,13 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
   }
 
   private void showErrorDialog(String message) {
-    String title = CommonLocalize.titleError().get();
+    LocalizeValue title = CommonLocalize.titleError();
     Image icon = Messages.getErrorIcon();
     if (myDialogParent != null) {
-      Messages.showMessageDialog(myDialogParent, message, title, icon);
+      Messages.showMessageDialog(myDialogParent, message, title.get(), icon);
     }
     else {
-      Messages.showMessageDialog(myProject, message, title, icon);
+      Messages.showMessageDialog(myProject, message, title.get(), icon);
     }
   }
 
