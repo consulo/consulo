@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ui;
+package consulo.language.editor.ui;
 
-import consulo.colorScheme.EditorColorsManager;
 import consulo.codeEditor.EditorEx;
-import consulo.language.editor.ui.SimpleEditorCustomization;
-
+import consulo.colorScheme.EditorColorsManager;
 import jakarta.annotation.Nonnull;
 
 public class RightMarginEditorCustomization extends SimpleEditorCustomization {

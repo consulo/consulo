@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,29 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ui;
+package consulo.language.editor.ui;
 
 import consulo.codeEditor.EditorEx;
-import consulo.language.editor.ui.SimpleEditorCustomization;
 
 import jakarta.annotation.Nonnull;
 
 /**
- * @author irengrig
- *         Date: 12/6/10
- *         Time: 10:18 AM
+ * @author Kirill Likhodedov
  */
-public class HorizontalScrollBarEditorCustomization extends SimpleEditorCustomization {
+public class WrapWhenTypingReachesRightMarginCustomization extends SimpleEditorCustomization {
 
-  public static final HorizontalScrollBarEditorCustomization ENABLED = new HorizontalScrollBarEditorCustomization(true);
-  public static final HorizontalScrollBarEditorCustomization DISABLED = new HorizontalScrollBarEditorCustomization(false);
+  public static final WrapWhenTypingReachesRightMarginCustomization ENABLED = new WrapWhenTypingReachesRightMarginCustomization(true);
+  public static final WrapWhenTypingReachesRightMarginCustomization DISABLED = new WrapWhenTypingReachesRightMarginCustomization(false);
 
-  private HorizontalScrollBarEditorCustomization(boolean enabled) {
+  public static EditorCustomization getInstance(boolean value) {
+    return value ? ENABLED : DISABLED;
+  }
+
+  private WrapWhenTypingReachesRightMarginCustomization(boolean enabled) {
     super(enabled);
   }
 
   @Override
   public void customize(@Nonnull EditorEx editor) {
-    editor.setHorizontalScrollbarVisible(isEnabled());
+    editor.getSettings().setWrapWhenTypingReachesRightMargin(isEnabled());
   }
+
 }

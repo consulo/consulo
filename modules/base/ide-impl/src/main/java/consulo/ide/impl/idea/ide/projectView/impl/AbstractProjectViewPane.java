@@ -13,7 +13,6 @@ import consulo.component.util.BusyObject;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.ide.dnd.DnDEventImpl;
 import consulo.ide.impl.idea.ide.dnd.TransferableWrapper;
 import consulo.ide.impl.idea.ide.projectView.BaseProjectTreeBuilder;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.AbstractModuleNode;
@@ -74,7 +73,6 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import java.awt.*;
-import java.awt.datatransfer.Transferable;
 import java.awt.dnd.DnDConstants;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -707,34 +705,6 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
 
   // Drag'n'Drop stuff
 
-  @Nullable
-  public static PsiElement[] getTransferedPsiElements(@Nonnull Transferable transferable) {
-    try {
-      final Object transferData = transferable.getTransferData(DnDEventImpl.ourDataFlavor);
-      if (transferData instanceof TransferableWrapper wrapper) {
-        return wrapper.getPsiElements();
-      }
-      return null;
-    }
-    catch (Exception e) {
-      return null;
-    }
-  }
-
-  @Nullable
-  public static TreeNode[] getTransferedTreeNodes(@Nonnull Transferable transferable) {
-    try {
-      final Object transferData = transferable.getTransferData(DnDEventImpl.ourDataFlavor);
-      if (transferData instanceof TransferableWrapper wrapper) {
-        return wrapper.getTreeNodes();
-      }
-      return null;
-    }
-    catch (Exception e) {
-      return null;
-    }
-  }
-
   protected void enableDnD() {
     if (!ApplicationManager.getApplication().isHeadlessEnvironment()) {
       myDropTarget = new ProjectViewDropTarget(myTree, myProject) {
@@ -852,7 +822,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
       label.paint(g2);
       g2.dispose();
 
-      return new consulo.util.lang.Pair<>(image, new Point(-image.getWidth(null), -image.getHeight(null)));
+      return new Pair<>(image, new Point(-image.getWidth(null), -image.getHeight(null)));
     }
 
     @Override

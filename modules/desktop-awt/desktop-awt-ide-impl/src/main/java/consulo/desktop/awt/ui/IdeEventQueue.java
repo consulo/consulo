@@ -40,7 +40,7 @@ import consulo.disposer.util.DisposerUtil;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.ide.AWTIdleHolder;
 import consulo.ide.impl.idea.ide.ApplicationActivationStateManager;
-import consulo.ide.impl.idea.ide.dnd.DnDManagerImpl;
+import consulo.desktop.awt.ui.dnd.DnDManagerImpl;
 import consulo.ide.impl.idea.openapi.keymap.KeyboardSettingsExternalizable;
 import consulo.ide.impl.idea.openapi.keymap.impl.KeyState;
 import consulo.ide.impl.idea.util.ReflectionUtil;

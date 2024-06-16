@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.dnd;
+package consulo.desktop.awt.ui.dnd;
 
 import consulo.ui.ex.awt.dnd.DnDEvent;
 
-/**
- * @author Konstantin Bulenkov
- */
-public interface DnDObjectProvider {
-  Object getDnDObject();
+import javax.swing.*;
+import java.awt.*;
 
-  boolean isAvailable(DnDEvent event);
+interface DropTargetHighlighter {
+
+  void show(JLayeredPane aPane, Rectangle aRectangle, DnDEvent aEvent);
+
+  void vanish();
+
+  int getMask();
 }

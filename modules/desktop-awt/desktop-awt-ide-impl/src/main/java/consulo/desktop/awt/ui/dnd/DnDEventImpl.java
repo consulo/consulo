@@ -13,8 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.dnd;
+package consulo.desktop.awt.ui.dnd;
 
+import consulo.ide.impl.idea.ide.dnd.FileCopyPasteUtil;
+import consulo.ide.impl.idea.ide.dnd.FileFlavorProvider;
+import consulo.ide.impl.idea.ide.dnd.LinuxDragAndDropSupport;
 import consulo.logging.Logger;
 import consulo.ui.ex.awt.dnd.*;
 import consulo.util.dataholder.UserDataHolderBase;
@@ -61,18 +64,22 @@ public class DnDEventImpl extends UserDataHolderBase implements Transferable, Dn
     myPoint = point;
   }
 
+  @Override
   public DnDAction getAction() {
     return myAction;
   }
 
+  @Override
   public void updateAction(DnDAction action) {
     myAction = action;
   }
 
+  @Override
   public Object getAttachedObject() {
     return myAttachedObject;
   }
 
+  @Override
   public void setDropPossible(boolean possible, @Nullable String aExpectedResult) {
     myDropPossible = possible;
     myExpectedDropResult = aExpectedResult;
@@ -84,16 +91,19 @@ public class DnDEventImpl extends UserDataHolderBase implements Transferable, Dn
     setDropPossible(possible, null);
   }
 
+  @Override
   public void setDropPossible(String aExpectedResult, DropActionHandler aHandler) {
     myDropPossible = true;
     myExpectedDropResult = aExpectedResult;
     myDropHandler = aHandler;
   }
 
+  @Override
   public String getExpectedDropResult() {
     return myExpectedDropResult;
   }
 
+  @Override
   public DataFlavor[] getTransferDataFlavors() {
     if (myAttachedObject instanceof Transferable) {
       return ((Transferable)myAttachedObject).getTransferDataFlavors();
@@ -107,6 +117,7 @@ public class DnDEventImpl extends UserDataHolderBase implements Transferable, Dn
     return new DataFlavor[]{ourDataFlavor};
   }
 
+  @Override
   public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
     if (myAttachedObject instanceof Transferable) {
       return ((Transferable)myAttachedObject).getTransferData(flavor);
@@ -127,19 +138,23 @@ public class DnDEventImpl extends UserDataHolderBase implements Transferable, Dn
     return getAttachedObject();
   }
 
+  @Override
   public boolean isDataFlavorSupported(DataFlavor flavor) {
     DataFlavor[] flavors = getTransferDataFlavors();
     return ArrayUtil.find(flavors, flavor) != -1;
   }
 
+  @Override
   public boolean isDropPossible() {
     return myDropPossible;
   }
 
+  @Override
   public Point getOrgPoint() {
     return myOrgPoint;
   }
 
+  @Override
   public void setOrgPoint(Point orgPoint) {
     myOrgPoint = orgPoint;
   }
@@ -148,11 +163,13 @@ public class DnDEventImpl extends UserDataHolderBase implements Transferable, Dn
     myPoint = aPoint;
   }
 
+  @Override
   public Point getPoint() {
     // TODO: it is better to return a new point every time
     return myPoint;
   }
 
+  @Override
   public Point getPointOn(Component aComponent) {
     return SwingUtilities.convertPoint(myHandlerComponent, getPoint(), aComponent);
   }
@@ -161,6 +178,7 @@ public class DnDEventImpl extends UserDataHolderBase implements Transferable, Dn
     myDropHandler = null;
   }
 
+  @Override
   public boolean canHandleDrop() {
     LOG.debug("canHandleDrop:" + myDropHandler);
     return myDropHandler != null;
@@ -174,25 +192,30 @@ public class DnDEventImpl extends UserDataHolderBase implements Transferable, Dn
     myHandlerComponent = aOverComponent;
   }
 
+  @Override
   public Component getHandlerComponent() {
     return myHandlerComponent;
   }
 
+  @Override
   public Component getCurrentOverComponent() {
     return getHandlerComponent().getComponentAt(getPoint());
   }
 
+  @Override
   public void setHighlighting(Component aComponent, int aType) {
     myManager.showHighlighter(aComponent, aType, this);
     myHighlighting = aType;
   }
 
+  @Override
   public void setHighlighting(RelativeRectangle rectangle, int aType) {
     getHandlerComponent();
     myManager.showHighlighter(rectangle, aType, this);
     myHighlighting = aType;
   }
 
+  @Override
   public void setHighlighting(JLayeredPane layeredPane, RelativeRectangle rectangle, int aType) {
     myManager.showHighlighter(layeredPane, rectangle, aType, this);
   }
@@ -201,15 +224,18 @@ public class DnDEventImpl extends UserDataHolderBase implements Transferable, Dn
     return myShouldRemoveHighlighter;
   }
 
+  @Override
   public void setAutoHideHighlighterInDrop(boolean aValue) {
     myShouldRemoveHighlighter = aValue;
   }
 
+  @Override
   public void hideHighlighter() {
     myManager.hideCurrentHighlighter();
     myHighlighting = 0;
   }
 
+  @Override
   public void setLocalPoint(Point localPoint) {
     myLocalPoint = localPoint;
   }
@@ -217,36 +243,44 @@ public class DnDEventImpl extends UserDataHolderBase implements Transferable, Dn
   /**
    * Returns point relative to dnd target's origin
    */
+  @Override
   public Point getLocalPoint() {
     return myLocalPoint;
   }
 
+  @Override
   public RelativePoint getRelativePoint() {
     return new RelativePoint(getCurrentOverComponent(), getPoint());
   }
 
+  @Override
   public void clearDelegatedTarget() {
     myDelegatedTarget = null;
   }
 
+  @Override
   public boolean wasDelegated() {
     return myDelegatedTarget != null;
   }
 
+  @Override
   public DnDTarget getDelegatedTarget() {
     return myDelegatedTarget;
   }
 
+  @Override
   public boolean delegateUpdateTo(DnDTarget target) {
     myDelegatedTarget = target;
     return myDelegatedTarget.update(this);
   }
 
+  @Override
   public void delegateDropTo(DnDTarget target) {
     myDelegatedTarget = target;
     target.drop(this);
   }
 
+  @Override
   protected Object clone() {
     final DnDEventImpl result = new DnDEventImpl(myManager, myAction, myAttachedObject, myPoint);
     result.myDropHandler = myDropHandler;
@@ -291,6 +325,7 @@ public class DnDEventImpl extends UserDataHolderBase implements Transferable, Dn
     return result;
   }
 
+  @Override
   public Cursor getCursor() {
     return myCursor;
   }
@@ -299,10 +334,12 @@ public class DnDEventImpl extends UserDataHolderBase implements Transferable, Dn
     return "DnDEvent[attachedObject: " + myAttachedObject + ", delegatedTarget: " + myDelegatedTarget + ", dropHandler: " + myDropHandler + "]";
   }
 
+  @Override
   public void setCursor(Cursor cursor) {
     myCursor = cursor;
   }
 
+  @Override
   public void cleanUp() {
     myAttachedObject = null;
     myDelegatedTarget = null;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2010 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,28 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ui;
+package consulo.language.editor.ui;
 
 import consulo.codeEditor.EditorEx;
-import consulo.language.editor.ui.SimpleEditorCustomization;
 
 import jakarta.annotation.Nonnull;
 
 /**
- * @author Denis Zhdanov
- * @since 1/21/11 4:06 PM
+ * @author irengrig
+ *         Date: 12/6/10
+ *         Time: 10:18 AM
  */
-public class AdditionalPageAtBottomEditorCustomization extends SimpleEditorCustomization {
+public class HorizontalScrollBarEditorCustomization extends SimpleEditorCustomization {
 
-  public static final AdditionalPageAtBottomEditorCustomization ENABLED = new AdditionalPageAtBottomEditorCustomization(true);
-  public static final AdditionalPageAtBottomEditorCustomization DISABLED = new AdditionalPageAtBottomEditorCustomization(false);
+  public static final HorizontalScrollBarEditorCustomization ENABLED = new HorizontalScrollBarEditorCustomization(true);
+  public static final HorizontalScrollBarEditorCustomization DISABLED = new HorizontalScrollBarEditorCustomization(false);
 
-  private AdditionalPageAtBottomEditorCustomization(boolean enabled) {
+  private HorizontalScrollBarEditorCustomization(boolean enabled) {
     super(enabled);
   }
 
   @Override
   public void customize(@Nonnull EditorEx editor) {
-    editor.getSettings().setAdditionalPageAtBottom(isEnabled());
+    editor.setHorizontalScrollbarVisible(isEnabled());
   }
 }

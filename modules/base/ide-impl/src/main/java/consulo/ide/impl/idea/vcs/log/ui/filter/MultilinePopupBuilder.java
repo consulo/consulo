@@ -28,7 +28,7 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.lang.StringUtil;
 import consulo.language.editor.ui.awt.EditorTextField;
-import consulo.ide.impl.idea.ui.SoftWrapsEditorCustomization;
+import consulo.language.editor.ui.SoftWrapsEditorCustomization;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.textCompletion.DefaultTextCompletionValueDescriptor;
 import consulo.ide.impl.idea.util.textCompletion.TextFieldWithCompletion;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2000-2011 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,32 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ui;
+package consulo.language.editor.ui;
 
 import consulo.codeEditor.EditorEx;
-import consulo.language.editor.ui.SimpleEditorCustomization;
 
 import jakarta.annotation.Nonnull;
 
 /**
- * Editor customization that can make target editor soft wraps-aware.
- * <p/>
- * Thread-safe.
- *
  * @author Denis Zhdanov
- * @since Aug 20, 2010 4:54:48 PM
+ * @since 1/21/11 4:06 PM
  */
-public class SoftWrapsEditorCustomization extends SimpleEditorCustomization {
+public class AdditionalPageAtBottomEditorCustomization extends SimpleEditorCustomization {
 
-  public static final SoftWrapsEditorCustomization ENABLED = new SoftWrapsEditorCustomization(true);
-  public static final SoftWrapsEditorCustomization DISABLED = new SoftWrapsEditorCustomization(false);
+  public static final AdditionalPageAtBottomEditorCustomization ENABLED = new AdditionalPageAtBottomEditorCustomization(true);
+  public static final AdditionalPageAtBottomEditorCustomization DISABLED = new AdditionalPageAtBottomEditorCustomization(false);
 
-  private SoftWrapsEditorCustomization(boolean enabled) {
+  private AdditionalPageAtBottomEditorCustomization(boolean enabled) {
     super(enabled);
   }
 
   @Override
   public void customize(@Nonnull EditorEx editor) {
-    editor.getSettings().setUseSoftWraps(isEnabled());
+    editor.getSettings().setAdditionalPageAtBottom(isEnabled());
   }
 }
