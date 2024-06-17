@@ -36,6 +36,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 public class VcsRootIterator {
   // folder path to files to be excluded
@@ -44,8 +45,8 @@ public class VcsRootIterator {
 
   public VcsRootIterator(final Project project, final AbstractVcs vcs) {
     final ProjectLevelVcsManager plVcsManager = ProjectLevelVcsManager.getInstance(project);
-    myOtherVcsFolders = new HashMap<String, MyRootFilter>();
-    myExcludedFileIndex = ServiceManager.getService(project, FileIndexFacade.class);
+    myOtherVcsFolders = new HashMap<>();
+    myExcludedFileIndex = FileIndexFacade.getInstance(project);
 
     final VcsRoot[] allRoots = plVcsManager.getAllVcsRoots();
     final VirtualFile[] roots = plVcsManager.getRootsUnderVcs(vcs);
@@ -87,7 +88,7 @@ public class VcsRootIterator {
       myRoot = root;
       myVcsName = vcsName;
 
-      myExcludedByOthers = new LinkedList<String>();
+      myExcludedByOthers = new LinkedList<>();
     }
 
     private void init(final VcsRoot[] allRoots) {
@@ -128,23 +129,23 @@ public class VcsRootIterator {
 
   public static void iterateVcsRoot(final Project project,
                                     final VirtualFile root,
-                                    final Processor<FilePath> processor) {
+                                    final Predicate<? super FilePath> processor) {
     iterateVcsRoot(project, root, processor, null);
   }
 
   public static void iterateVcsRoot(final Project project,
                                        final VirtualFile root,
-                                       final Processor<FilePath> processor,
-                                       @jakarta.annotation.Nullable VirtualFileFilter directoryFilter) {
+                                       final Predicate<? super FilePath> processor,
+                                       @Nullable VirtualFileFilter directoryFilter) {
     final MyRootIterator rootIterator = new MyRootIterator(project, root, processor, null, directoryFilter);
     rootIterator.iterate();
   }
 
   private static class MyRootIterator {
     private final Project myProject;
-    private final Processor<FilePath> myPathProcessor;
-    private final Processor<VirtualFile> myFileProcessor;
-    @jakarta.annotation.Nullable
+    private final Predicate<? super FilePath> myPathProcessor;
+    private final Predicate<? super VirtualFile> myFileProcessor;
+    @Nullable
     private final VirtualFileFilter myDirectoryFilter;
     private final VirtualFile myRoot;
     private final MyRootFilter myRootPresentFilter;
@@ -152,8 +153,8 @@ public class VcsRootIterator {
 
     private MyRootIterator(final Project project,
                            final VirtualFile root,
-                           @Nullable final Processor<FilePath> pathProcessor,
-                           @jakarta.annotation.Nullable final Processor<VirtualFile> fileProcessor,
+                           @Nullable final Predicate<? super FilePath> pathProcessor,
+                           @Nullable final Predicate<? super VirtualFile> fileProcessor,
                            @Nullable VirtualFileFilter directoryFilter) {
       myProject = project;
       myPathProcessor = pathProcessor;
@@ -193,10 +194,10 @@ public class VcsRootIterator {
 
     private boolean process(VirtualFile current) {
       if (myPathProcessor != null) {
-        return myPathProcessor.process(new FilePathImpl(current));
+        return myPathProcessor.test(new FilePathImpl(current));
       }
       else if (myFileProcessor != null) {
-        return myFileProcessor.process(current);
+        return myFileProcessor.test(current);
       }
       return false;
     }

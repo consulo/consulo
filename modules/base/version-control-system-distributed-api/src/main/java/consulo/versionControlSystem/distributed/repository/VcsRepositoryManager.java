@@ -138,6 +138,15 @@ public class VcsRepositoryManager implements Disposable {
   }
 
   @Nullable
+  public Repository getRepositoryForFile(@Nullable FilePath file, boolean quick) {
+    final VcsRoot vcsRoot = myVcsManager.getVcsRootObjectFor(file);
+    if (vcsRoot == null) {
+      return getExternalRepositoryForFile(file);
+    }
+    return quick ? getRepositoryForRootQuick(vcsRoot.getPath()) : getRepositoryForRoot(vcsRoot.getPath());
+  }
+
+  @Nullable
   public Repository getRepositoryForFile(@Nonnull VirtualFile file, boolean quick) {
     final VcsRoot vcsRoot = myVcsManager.getVcsRootObjectFor(file);
     if (vcsRoot == null) {

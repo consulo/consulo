@@ -21,6 +21,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.LoggerFactory;
 
 import java.nio.charset.Charset;
@@ -102,8 +103,32 @@ public class PathUtil {
     return Math.max(path.lastIndexOf('/', end - 1), path.lastIndexOf('\\', end - 1));
   }
 
-  private static boolean isWindowsUNCRoot(@Nonnull String path, int lastPathSeparatorPosition) {
-    return Target.CURRENT == Target.WINDOWS && (path.startsWith("//") || path.startsWith("\\\\")) && getLastIndexOfPathSeparator(path, lastPathSeparatorPosition) == 1;
+  public static boolean startsWithSeparatorSeparator(@NotNull CharSequence path) {
+    return path.length() > 1 && isSeparator(path.charAt(0)) && path.charAt(1) == path.charAt(0);
+  }
+
+  public static boolean isWindowsUNCRoot(@NotNull CharSequence path, int lastPathSeparatorPosition) {
+    return Target.CURRENT == Target.WINDOWS &&
+      startsWithSeparatorSeparator(path) && lastPathSeparatorPosition >= 1
+      && !hasFileSeparatorsOrNavigatableDots(path, 2, lastPathSeparatorPosition);
+  }
+
+  public static boolean isSeparator(char c) {
+    return c == '/' || c == '\\';
+  }
+
+  private static boolean hasFileSeparatorsOrNavigatableDots(@NotNull CharSequence path, int start, int end) {
+    for (int i = end - 1; i >= start; i--) {
+      char c = path.charAt(i);
+      if (isSeparator(c)) {
+        return true;
+      }
+      // contains '.' or '..' surrounded by slashes
+      if (c == '.' && (i == 2 || i == 3 && path.charAt(2) == '.')) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @Nonnull
@@ -178,6 +203,44 @@ public class PathUtil {
     }
 
     return true;
+  }
+
+  @NotNull
+  public static CharSequence getParentPathSequence(@NotNull CharSequence path) {
+    int end = getParentPathEndOffset(path);
+    return end == 0 ? "" : path.subSequence(0, end);
+  }
+
+  private static int getParentPathEndOffset(@NotNull CharSequence path) {
+    if (path.length() == 0) {
+      return 0;
+    }
+
+    int end = lastSeparatorIndex(path, path.length() - 1);
+    if (end == path.length() - 1 && end >= 1) {
+      end = lastSeparatorIndex(path, end - 1);
+    }
+    if (end == -1 || end == 0) {
+      return 0;
+    }
+    if (isWindowsUNCRoot(path, end)) {
+      return 0;
+    }
+    // parent of '//host' is root
+    char prev = path.charAt(end - 1);
+    if (isSeparator(prev)) {
+      end--;
+    }
+    return end;
+  }
+
+  public static int lastSeparatorIndex(@NotNull CharSequence s, int endInclusive) {
+    for (int i = endInclusive; i >= 0; i--) {
+      if (isSeparator(s.charAt(i))) {
+        return i;
+      }
+    }
+    return -1;
   }
 
   private static boolean isValidFileNameChar(char c, Target os, boolean strict) {

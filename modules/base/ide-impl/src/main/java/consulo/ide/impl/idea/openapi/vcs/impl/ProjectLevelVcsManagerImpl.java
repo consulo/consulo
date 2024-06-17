@@ -19,8 +19,10 @@ import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AccessRule;
 import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.progress.ProgressManager;
+import consulo.application.util.DateFormatUtil;
 import consulo.application.util.function.Processor;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.application.util.registry.Registry;
@@ -35,30 +37,24 @@ import consulo.disposer.Disposer;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.TextConsoleBuilderFactory;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.util.lang.StringUtil;
-import consulo.ide.impl.idea.openapi.vcs.*;
-import consulo.versionControlSystem.change.ChangesUtil;
-import consulo.versionControlSystem.change.VcsAnnotationLocalChangesListener;
+import consulo.ide.impl.idea.openapi.vcs.CalledInAwt;
+import consulo.ide.impl.idea.openapi.vcs.VcsShowConfirmationOptionImpl;
+import consulo.ide.impl.idea.openapi.vcs.VcsShowOptionsSettingImpl;
 import consulo.ide.impl.idea.openapi.vcs.changes.VcsAnnotationLocalChangesListenerImpl;
 import consulo.ide.impl.idea.openapi.vcs.checkout.CompositeCheckoutListener;
 import consulo.ide.impl.idea.openapi.vcs.ex.ProjectLevelVcsManagerEx;
-import consulo.versionControlSystem.checkout.CheckoutProvider;
-import consulo.versionControlSystem.history.VcsHistoryCache;
-import consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman.*;
-import consulo.versionControlSystem.update.ActionInfo;
+import consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman.MappingsToRoots;
+import consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman.NewMappings;
+import consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman.OptionsAndConfirmations;
+import consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman.ProjectLevelVcsManagerSerialization;
 import consulo.ide.impl.idea.openapi.vcs.update.UpdateInfoTree;
-import consulo.versionControlSystem.change.ContentRevisionCache;
-import consulo.versionControlSystem.internal.VcsFileListenerContextHelper;
-import consulo.versionControlSystem.root.VcsRoot;
-import consulo.versionControlSystem.root.VcsRootSettings;
-import consulo.versionControlSystem.update.UpdatedFiles;
 import consulo.ide.impl.idea.openapi.vcs.update.UpdatedFilesListener;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.util.ContentUtilEx;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.application.util.DateFormatUtil;
 import consulo.ide.impl.idea.vcs.ViewUpdateInfoNotification;
 import consulo.language.content.FileIndexFacade;
+import consulo.language.file.FileTypeManager;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -71,13 +67,25 @@ import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.versionControlSystem.*;
+import consulo.versionControlSystem.change.ContentRevisionCache;
+import consulo.versionControlSystem.change.VcsAnnotationLocalChangesListener;
+import consulo.versionControlSystem.checkout.CheckoutProvider;
+import consulo.versionControlSystem.history.VcsHistoryCache;
+import consulo.versionControlSystem.internal.VcsFileListenerContextHelper;
 import consulo.versionControlSystem.localize.VcsLocalize;
+import consulo.versionControlSystem.root.VcsRoot;
+import consulo.versionControlSystem.root.VcsRootSettings;
+import consulo.versionControlSystem.update.ActionInfo;
+import consulo.versionControlSystem.update.UpdatedFiles;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusManager;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Attribute;
@@ -86,12 +94,11 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
+import java.util.function.Predicate;
 
 @State(name = "ProjectLevelVcsManager", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 @Singleton
@@ -269,7 +276,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
   @Override
   @Nullable
   public AbstractVcs getVcsFor(final FilePath file) {
-    final VirtualFile vFile = ChangesUtil.findValidParentAccurately(file);
+    final VirtualFile vFile = VcsImplUtil.findValidParentAccurately(file);
     ThrowableComputable<AbstractVcs, RuntimeException> action = () -> {
       if (!ApplicationManager.getApplication().isUnitTestMode() && !myProject.isInitialized()) return null;
       if (myProject.isDisposed()) throw new ProcessCanceledException();
@@ -315,7 +322,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
   @Nullable
   public VirtualFile getVcsRootFor(final FilePath file) {
     if (myProject.isDisposed()) return null;
-    VirtualFile vFile = ChangesUtil.findValidParentAccurately(file);
+    VirtualFile vFile = VcsImplUtil.findValidParentAccurately(file);
     if (vFile != null) {
       return getVcsRootFor(vFile);
     }
@@ -327,7 +334,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
     if (myProject.isDisposed()) {
       return null;
     }
-    VirtualFile vFile = ChangesUtil.findValidParentAccurately(file);
+    VirtualFile vFile = VcsImplUtil.findValidParentAccurately(file);
     if (vFile != null) {
       return getVcsRootObjectFor(vFile);
     }
@@ -494,7 +501,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
   @Override
   @Nullable
   public VcsDirectoryMapping getDirectoryMappingFor(final FilePath path) {
-    VirtualFile vFile = ChangesUtil.findValidParentAccurately(path);
+    VirtualFile vFile = VcsImplUtil.findValidParentAccurately(path);
     if (vFile != null) {
       return myMappings.getMappingFor(vFile);
     }
@@ -532,12 +539,12 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
   }
 
   @Override
-  public void iterateVcsRoot(final VirtualFile root, final Processor<FilePath> iterator) {
+  public void iterateVcsRoot(final VirtualFile root, final Predicate<? super FilePath> iterator) {
     VcsRootIterator.iterateVcsRoot(myProject, root, iterator);
   }
 
   @Override
-  public void iterateVcsRoot(VirtualFile root, Processor<FilePath> iterator, @Nullable VirtualFileFilter directoryFilter) {
+  public void iterateVcsRoot(VirtualFile root, Predicate<? super FilePath> iterator, @Nullable VirtualFileFilter directoryFilter) {
     VcsRootIterator.iterateVcsRoot(myProject, root, iterator, directoryFilter);
   }
 
@@ -827,13 +834,39 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
   }
 
   @Override
-  public boolean isIgnored(VirtualFile vf) {
-    if (Registry.is("ide.hide.excluded.files")) {
-      return myExcludedIndex.isExcludedFile(vf);
-    }
-    else {
-      return myExcludedIndex.isUnderIgnored(vf);
-    }
+  public boolean isIgnored(@Nonnull VirtualFile vf) {
+    return ReadAction.compute(() -> {
+      if (myProject.isDisposed() || myProject.isDefault()) return false;
+
+      if (Registry.is("ide.hide.excluded.files")) {
+        return myExcludedIndex.isExcludedFile(vf);
+      }
+      else {
+        return myExcludedIndex.isUnderIgnored(vf);
+      }
+    });
+  }
+
+  @Override
+  public boolean isIgnored(@Nonnull FilePath filePath) {
+    return ReadAction.compute(() -> {
+      if (myProject.isDisposed() || myProject.isDefault()) return false;
+
+      if (Registry.is("ide.hide.excluded.files")) {
+        VirtualFile vf = VcsImplUtil.findValidParentAccurately(filePath);
+        return vf != null && myExcludedIndex.isExcludedFile(vf);
+      }
+      else {
+        // WARN: might differ from 'myExcludedIndex.isUnderIgnored' if whole content root is under folder with 'ignored' name.
+        FileTypeManager fileTypeManager = FileTypeManager.getInstance();
+        for (String name : StringUtil.tokenize(filePath.getPath(), "/")) {
+          if (fileTypeManager.isFileIgnored(name)) {
+            return true;
+          }
+        }
+        return false;
+      }
+    });
   }
 
   private boolean isInDirectoryBasedRoot(final VirtualFile file) {

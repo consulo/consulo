@@ -15,28 +15,28 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
-import consulo.localHistory.LocalHistory;
-import consulo.localHistory.LocalHistoryAction;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.progress.*;
+import consulo.application.progress.PerformInBackgroundOption;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.application.progress.Task;
 import consulo.component.ProcessCanceledException;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
+import consulo.ide.impl.idea.openapi.vcs.rollback.DefaultRollbackEnvironment;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.util.lang.Comparing;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.project.util.WaitForProgressToShow;
 import consulo.util.lang.StringUtil;
-import consulo.ide.impl.idea.openapi.vcs.changes.*;
-import consulo.ide.impl.idea.openapi.vcs.rollback.DefaultRollbackEnvironment;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.rollback.RollbackEnvironment;
 import consulo.versionControlSystem.update.RefreshVFsSynchronously;
-import consulo.project.util.WaitForProgressToShow;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -194,51 +194,33 @@ public class RollbackWorker {
     }
 
     private void doRefresh(final Project project, final List<Change> changesToRefresh) {
-      final LocalHistoryAction action = LocalHistory.getInstance().startAction(myOperationName);
+      VcsDirtyScopeManager dirtyScopeManager = VcsDirtyScopeManager.getInstance(myProject);
+      ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(myProject);
 
-      final Runnable forAwtThread = () -> {
-        action.finish();
-        LocalHistory.getInstance().putSystemLabel(
-          myProject,
-          (myLocalHistoryActionName == null) ? myOperationName : myLocalHistoryActionName, -1
-        );
-        final VcsDirtyScopeManager manager = project.getComponent(VcsDirtyScopeManager.class);
-        VcsGuess vcsGuess = new VcsGuess(myProject);
-
-        for (Change change : changesToRefresh) {
-          final ContentRevision beforeRevision = change.getBeforeRevision();
-          final ContentRevision afterRevision = change.getAfterRevision();
-          if ((!change.isIsReplaced()) && beforeRevision != null && Comparing.equal(beforeRevision, afterRevision)) {
-            manager.fileDirty(beforeRevision.getFile());
-          }
-          else {
-            markDirty(manager, vcsGuess, beforeRevision);
-            markDirty(manager, vcsGuess, afterRevision);
-          }
-        }
-
-        myAfterRefresh.run();
-      };
+      for (FilePath filePath : ChangesUtil.iteratePaths(changesToRefresh)) {
+        markDirty(filePath, vcsManager, dirtyScopeManager);
+      }
 
       RefreshVFsSynchronously.updateChangesForRollback(changesToRefresh);
 
-      WaitForProgressToShow.runOrInvokeLaterAboveProgress(forAwtThread, null, project);
+      WaitForProgressToShow.runOrInvokeLaterAboveProgress(myAfterRefresh, null, project);
     }
 
-    private void markDirty(@Nonnull VcsDirtyScopeManager manager, @Nonnull VcsGuess vcsGuess, @Nullable ContentRevision revision) {
-      if (revision != null) {
-        FilePath parent = revision.getFile().getParentPath();
-        if (parent != null && couldBeMarkedDirty(vcsGuess, parent)) {
-          manager.dirDirtyRecursively(parent);
-        }
-        else {
-          manager.fileDirty(revision.getFile());
+    private static void markDirty(@NotNull FilePath filePath,
+                                  @NotNull ProjectLevelVcsManager vcsManager,
+                                  @NotNull VcsDirtyScopeManager dirtyScopeManager) {
+      AbstractVcs vcs = vcsManager.getVcsFor(filePath);
+      if (vcs == null) return;
+
+      if (vcs.areDirectoriesVersionedItems()) {
+        FilePath parentPath = filePath.getParentPath();
+        if (parentPath != null && vcsManager.getVcsFor(parentPath) == vcs) {
+          dirtyScopeManager.dirDirtyRecursively(parentPath);
+          return;
         }
       }
-    }
 
-    private boolean couldBeMarkedDirty(@Nonnull VcsGuess vcsGuess, @Nonnull FilePath path) {
-      return vcsGuess.getVcsForDirty(path) != null;
+      dirtyScopeManager.fileDirty(filePath);
     }
 
     private void deleteAddedFilesLocally(final List<Change> changes) {

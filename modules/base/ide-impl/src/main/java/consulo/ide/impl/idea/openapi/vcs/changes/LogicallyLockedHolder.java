@@ -1,24 +1,11 @@
-/*
- * Copyright 2000-2009 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.project.Project;
-import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.change.LogicalLock;
+import consulo.versionControlSystem.change.VcsDirtyScope;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -30,9 +17,10 @@ public class LogicallyLockedHolder implements FileHolder {
 
   public LogicallyLockedHolder(final Project project) {
     myProject = project;
-    myMap = new HashMap<VirtualFile, LogicalLock>();
+    myMap = new HashMap<>();
   }
 
+  @Override
   public void cleanAll() {
     myMap.clear();
   }
@@ -41,22 +29,16 @@ public class LogicallyLockedHolder implements FileHolder {
     myMap.put(file, lock);
   }
 
-  public void cleanAndAdjustScope(VcsModifiableDirtyScope scope) {
-    VirtualFileHolder.cleanScope(myProject, myMap.keySet(), scope);
-  }
-
-  public FileHolder copy() {
-    final LogicallyLockedHolder result = new LogicallyLockedHolder(myProject);
-    result.myMap.putAll(myMap);
-    return result;
-  }
-
-  public HolderType getType() {
-    return HolderType.LOGICALLY_LOCKED;
+  @Override
+  public void cleanUnderScope(@Nonnull VcsDirtyScope scope) {
+    VirtualFileHolder.cleanScope(myMap.keySet(), scope);
   }
 
   @Override
-  public void notifyVcsStarted(AbstractVcs vcs) {
+  public LogicallyLockedHolder copy() {
+    final LogicallyLockedHolder result = new LogicallyLockedHolder(myProject);
+    result.myMap.putAll(myMap);
+    return result;
   }
 
   public boolean containsKey(final VirtualFile vf) {

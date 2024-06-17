@@ -20,9 +20,12 @@ import consulo.application.ApplicationManager;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.progress.ProgressManager;
 import consulo.document.FileDocumentManager;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
+import consulo.project.util.WaitForProgressToShow;
+import consulo.ui.Alerts;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
@@ -715,6 +718,38 @@ public class VcsUtil {
       return trimCommitMessageAt(message, MAX_COMMIT_MESSAGE_LENGTH);
     }
     return message;
+  }
+
+  @Nonnull
+  public static String getShortVcsRootName(@Nonnull Project project, @Nonnull VirtualFile root) {
+    VirtualFile projectDir = project.getBaseDir();
+
+    String repositoryPath = root.getPresentableUrl();
+    if (projectDir != null) {
+      String relativePath = VirtualFileUtil.getRelativePath(root, projectDir, File.separatorChar);
+      if (relativePath != null) {
+        repositoryPath = relativePath;
+      }
+    }
+
+    return repositoryPath.isEmpty() ? root.getName() : repositoryPath;
+  }
+
+  /**
+   * Shows error message with specified message text and title.
+   * The parent component is the root frame.
+   *
+   * @param project Current project component
+   * @param message information message
+   * @param title   Dialog title
+   */
+  public static void showErrorMessage(final Project project, final String message, final String title) {
+    Runnable task = new Runnable() {
+      public void run() {
+        Alerts.okError(LocalizeValue.localizeTODO(message)).title(title).showAsync();
+      }
+    };
+    WaitForProgressToShow.runOrInvokeLaterAboveProgress(task, null, project);
   }
 
   private static String trimCommitMessageAt(@Nonnull String message, int index) {

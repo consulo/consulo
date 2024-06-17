@@ -20,15 +20,16 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 import consulo.ui.ModalityState;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ThreeState;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
-import org.jetbrains.annotations.TestOnly;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.TestOnly;
+
 import java.io.File;
 import java.util.Collection;
 import java.util.List;
@@ -146,7 +147,10 @@ public abstract class ChangeListManager {
   public abstract boolean isUnversioned(VirtualFile file);
 
   @Nonnull
-  public abstract FileStatus getStatus(VirtualFile file);
+  public abstract FileStatus getStatus(@Nonnull FilePath file);
+
+  @Nonnull
+  public abstract FileStatus getStatus(@Nonnull VirtualFile file);
 
   @Nonnull
   public abstract Collection<Change> getChangesIn(VirtualFile dir);
@@ -202,6 +206,17 @@ public abstract class ChangeListManager {
 
   public abstract boolean isFreezedWithNotification(@Nullable String modalTitle);
 
+  @Nonnull
+  public abstract List<FilePath> getUnversionedFilesPaths();
+
+  /**
+   * @deprecated use {@link #getUnversionedFilesPaths}
+   */
+  @Deprecated
+  @Nonnull
+  public List<VirtualFile> getUnversionedFiles() {
+    return ContainerUtil.mapNotNull(getUnversionedFilesPaths(), FilePath::getVirtualFile);
+  }
 
   public abstract List<VirtualFile> getModifiedWithoutEditing();
 

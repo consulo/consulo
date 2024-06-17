@@ -23,6 +23,7 @@ import consulo.util.lang.function.Predicates;
 import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.function.*;
@@ -411,6 +412,11 @@ public abstract class JBIterable<E> implements Iterable<E> {
   @Nonnull
   public final <T> JBIterable<T> filter(@Nonnull Class<T> type) {
     return (JBIterable<T>)filter(Predicates.instanceOf(type));
+  }
+
+  @Nonnull
+  public final JBIterable<E> filterNotNull() {
+    return filter(Objects::nonNull);
   }
 
   @Nonnull

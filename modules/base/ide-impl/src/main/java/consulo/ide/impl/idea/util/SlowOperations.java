@@ -1,6 +1,7 @@
 // Copyright 2000-2021 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.util;
 
+import consulo.application.AccessToken;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.util.lang.function.ThrowableRunnable;
 
@@ -13,5 +14,9 @@ public final class SlowOperations {
 
   public static <E extends Throwable> void allowSlowOperations(@Nonnull ThrowableRunnable<E> runnable) throws E {
     runnable.run();
+  }
+
+  public static AccessToken knownIssue(String issues) {
+    return AccessToken.EMPTY_ACCESS_TOKEN;
   }
 }

@@ -38,6 +38,7 @@ import org.jetbrains.annotations.NonNls;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
@@ -286,9 +287,9 @@ public abstract class ProjectLevelVcsManager {
 
   public abstract void setDirectoryMappings(final List<VcsDirectoryMapping> items);
 
-  public abstract void iterateVcsRoot(final VirtualFile root, final Processor<FilePath> iterator);
+  public abstract void iterateVcsRoot(final VirtualFile root, final Predicate<? super FilePath> iterator);
 
-  public abstract void iterateVcsRoot(final VirtualFile root, final Processor<FilePath> iterator, @Nullable VirtualFileFilter directoryFilter);
+  public abstract void iterateVcsRoot(final VirtualFile root, final Predicate<? super FilePath> iterator, @Nullable VirtualFileFilter directoryFilter);
 
   @Nullable
   public abstract AbstractVcs findVersioningVcs(VirtualFile file);
@@ -301,7 +302,9 @@ public abstract class ProjectLevelVcsManager {
 
   public abstract boolean isFileInContent(final VirtualFile vf);
 
-  public abstract boolean isIgnored(VirtualFile vf);
+  public abstract boolean isIgnored(@Nonnull VirtualFile vf);
+
+  public abstract boolean isIgnored(@Nonnull FilePath filePath);
 
   @Nonnull
   public abstract VcsAnnotationLocalChangesListener getAnnotationLocalChangesListener();

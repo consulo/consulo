@@ -16,7 +16,9 @@
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.AccessToken;
 import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
 import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.application.dumb.DumbAwareRunnable;
 import consulo.application.impl.internal.IdeaModalityState;
@@ -38,7 +40,6 @@ import consulo.disposer.Disposable;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.EditorNotifications;
 import consulo.ide.impl.idea.openapi.util.Getter;
-import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.CalledInAwt;
 import consulo.ide.impl.idea.openapi.vcs.VcsConnectionProblem;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.ChangeListRemoveConfirmation;
@@ -49,13 +50,11 @@ import consulo.ide.impl.idea.openapi.vcs.impl.AbstractVcsHelperImpl;
 import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
 import consulo.ide.impl.idea.openapi.vcs.impl.VcsRootIterator;
 import consulo.ide.impl.idea.openapi.vcs.readOnlyHandler.ReadonlyStatusHandlerImpl;
-import consulo.versionControlSystem.internal.ChangeListManagerEx;
-import consulo.versionControlSystem.localize.VcsLocalize;
-import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ide.impl.idea.util.ExceptionUtil;
 import consulo.ide.impl.idea.util.FunctionUtil;
+import consulo.ide.impl.idea.util.SlowOperations;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.module.Module;
@@ -70,8 +69,9 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.MultiMap;
-import consulo.util.lang.Couple;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.ThreeState;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.ref.Ref;
@@ -79,7 +79,10 @@ import consulo.util.xml.serializer.JDOMExternalizerUtil;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.checkin.CheckinEnvironment;
-import consulo.versionControlSystem.change.ContentRevisionCache;
+import consulo.versionControlSystem.internal.ChangeListManagerEx;
+import consulo.versionControlSystem.localize.VcsLocalize;
+import consulo.versionControlSystem.root.VcsRoot;
+import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
@@ -87,14 +90,15 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.io.File;
 import java.util.*;
@@ -438,7 +442,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     final Set<VirtualFile> refreshFiles = new HashSet<>();
     try {
       synchronized (myDataLock) {
-        final IgnoredFilesCompositeHolder fileHolder = myComposite.getIgnoredFileHolder();
+        final CompositeFilePathHolder.IgnoredFilesCompositeHolder fileHolder = myComposite.getIgnoredFileHolder();
 
         for (Iterator<VcsDirtyScope> iterator = scopes.iterator(); iterator.hasNext(); ) {
           final VcsModifiableDirtyScope scope = (VcsModifiableDirtyScope)iterator.next();
@@ -578,10 +582,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     catch (ProcessCanceledException e) {
       // OK, we're finishing all the stuff now.
     }
-    catch (Exception ex) {
-      LOG.error(ex);
-    }
-    catch (AssertionError ex) {
+    catch (Exception | AssertionError ex) {
       LOG.error(ex);
     }
     finally {
@@ -677,7 +678,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
 
     private void notifyStartProcessingChanges(@Nonnull final VcsModifiableDirtyScope scope) {
       if (!myWasEverythingDirty) {
-        myComposite.cleanAndAdjustScope(scope);
+        myComposite.cleanUnderScope(scope);
         myChangeListWorker.notifyStartProcessingChanges(scope);
       }
 
@@ -831,25 +832,22 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
   }
 
   @Nonnull
-  public List<VirtualFile> getUnversionedFiles() {
-    synchronized (myDataLock) {
-      return myComposite.getVFHolder(FileHolder.HolderType.UNVERSIONED).getFiles();
-    }
-  }
-
-  @Nonnull
-  public Couple<Integer> getUnversionedFilesSize() {
-    synchronized (myDataLock) {
-      final VirtualFileHolder holder = myComposite.getVFHolder(FileHolder.HolderType.UNVERSIONED);
-      return Couple.of(holder.getSize(), holder.getNumDirs());
-    }
+  @Override
+  public List<FilePath> getUnversionedFilesPaths() {
+    return ReadAction.compute(() -> {
+      synchronized (myDataLock) {
+        return new ArrayList<>(myComposite.getUnversionedFileHolder().getFiles());
+      }
+    });
   }
 
   @Override
   public List<VirtualFile> getModifiedWithoutEditing() {
-    synchronized (myDataLock) {
-      return myComposite.getVFHolder(FileHolder.HolderType.MODIFIED_WITHOUT_EDITING).getFiles();
-    }
+    return ReadAction.compute(() -> {
+      synchronized (myDataLock) {
+        return myComposite.getModifiedWithoutEditingFileHolder().getFiles();
+      }
+    });
   }
 
   /**
@@ -867,21 +865,27 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
   }
 
   public List<VirtualFile> getLockedFolders() {
-    synchronized (myDataLock) {
-      return myComposite.getVFHolder(FileHolder.HolderType.LOCKED).getFiles();
-    }
+    return ReadAction.compute(() -> {
+      synchronized (myDataLock) {
+        return myComposite.getLockedFileHolder().getFiles();
+      }
+    });
   }
 
   Map<VirtualFile, LogicalLock> getLogicallyLockedFolders() {
-    synchronized (myDataLock) {
-      return new HashMap<>(((LogicallyLockedHolder)myComposite.get(FileHolder.HolderType.LOGICALLY_LOCKED)).getMap());
-    }
+    return ReadAction.compute(() -> {
+      synchronized (myDataLock) {
+        return new HashMap<>(myComposite.getLogicallyLockedFileHolder().getMap());
+      }
+    });
   }
 
   public boolean isLogicallyLocked(final VirtualFile file) {
-    synchronized (myDataLock) {
-      return ((LogicallyLockedHolder)myComposite.get(FileHolder.HolderType.LOGICALLY_LOCKED)).containsKey(file);
-    }
+    return ReadAction.compute(() -> {
+      synchronized (myDataLock) {
+        return myComposite.getLogicallyLockedFileHolder().containsKey(file);
+      }
+    });
   }
 
   public boolean isContainedInLocallyDeleted(final FilePath filePath) {
@@ -904,9 +908,11 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
 
   @Nullable
   Map<VirtualFile, String> getSwitchedRoots() {
-    synchronized (myDataLock) {
-      return ((SwitchedFileHolder)myComposite.get(FileHolder.HolderType.ROOT_SWITCH)).getFilesMapCopy();
-    }
+    return ReadAction.compute(() -> {
+      synchronized (myDataLock) {
+        return myComposite.getRootSwitchFileHolder().getFilesMapCopy();
+      }
+    });
   }
 
   public VcsException getUpdateException() {
@@ -1107,28 +1113,55 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
 
   @Override
   public boolean isUnversioned(VirtualFile file) {
-    synchronized (myDataLock) {
-      return myComposite.getVFHolder(FileHolder.HolderType.UNVERSIONED).containsFile(file);
+    VcsRoot vcsRoot;
+    try (AccessToken ignore = SlowOperations.knownIssue("IDEA-322445, EA-857508")) {
+      vcsRoot = ProjectLevelVcsManager.getInstance(myProject).getVcsRootObjectFor(file);
+      if (vcsRoot == null) return false;
     }
+
+    return ReadAction.compute(() -> {
+      synchronized (myDataLock) {
+        return myComposite.getUnversionedFileHolder().containsFile(VcsUtil.getFilePath(file), vcsRoot);
+      }
+    });
+  }
+
+  @Nonnull
+  @Override
+  public FileStatus getStatus(@Nonnull FilePath path) {
+    return getStatus(path, path.getVirtualFile());
   }
 
   @Override
   @Nonnull
-  public FileStatus getStatus(VirtualFile file) {
-    synchronized (myDataLock) {
-      if (myComposite.getVFHolder(FileHolder.HolderType.UNVERSIONED).containsFile(file)) return FileStatus.UNKNOWN;
-      if (myComposite.getVFHolder(FileHolder.HolderType.MODIFIED_WITHOUT_EDITING).containsFile(file)) return FileStatus.HIJACKED;
-      if (myComposite.getIgnoredFileHolder().containsFile(file)) return FileStatus.IGNORED;
-
-      final boolean switched = myWorker.isSwitched(file);
-      final FileStatus status = myWorker.getStatus(file);
-      if (status != null) {
-        return FileStatus.NOT_CHANGED.equals(status) && switched ? FileStatus.SWITCHED : status;
-      }
-      if (switched) return FileStatus.SWITCHED;
-      return FileStatus.NOT_CHANGED;
-    }
+  public FileStatus getStatus(@Nonnull VirtualFile file) {
+    return getStatus(VcsUtil.getFilePath(file), file);
   }
+
+  @NotNull
+  private FileStatus getStatus(@Nonnull FilePath path, @Nullable VirtualFile file) {
+    VcsRoot vcsRoot = file != null ? ProjectLevelVcsManager.getInstance(myProject).getVcsRootObjectFor(file)
+      : ProjectLevelVcsManager.getInstance(myProject).getVcsRootObjectFor(path);
+    if (vcsRoot == null) return FileStatus.NOT_CHANGED;
+
+    return ReadAction.compute(() -> {
+      synchronized (myDataLock) {
+        if (myComposite.getUnversionedFileHolder().containsFile(path, vcsRoot)) return FileStatus.UNKNOWN;
+        if (file != null && myComposite.getModifiedWithoutEditingFileHolder().containsFile(file)) return FileStatus.HIJACKED;
+        if (myComposite.getIgnoredFileHolder().containsFile(path, vcsRoot)) return FileStatus.IGNORED;
+
+        FileStatus status = ObjectUtil.notNull(myWorker.getStatus(path), FileStatus.NOT_CHANGED);
+
+        if (file != null && FileStatus.NOT_CHANGED.equals(status)) {
+          boolean switched = myComposite.getSwitchedFileHolder().containsFile(file);
+          if (switched) return FileStatus.SWITCHED;
+        }
+
+        return status;
+      }
+    });
+  }
+
 
   @Override
   @Nonnull
@@ -1482,7 +1515,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     final MyDirtyFilesScheduler scheduler = new MyDirtyFilesScheduler(myProject);
 
     synchronized (myDataLock) {
-      final VirtualFileHolder unversionedHolder = myComposite.getVFHolder(FileHolder.HolderType.UNVERSIONED);
+      final CompositeFilePathHolder.UnversionedFilesCompositeHolder unversionedHolder = myComposite.getUnversionedFileHolder();
       final IgnoredFilesHolder ignoredHolder = (IgnoredFilesHolder)myComposite.get(FileHolder.HolderType.IGNORED);
 
       scheduler.accept(unversionedHolder.getFiles());
@@ -1499,11 +1532,11 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
   }
 
   private void updateIgnoredFiles(final FileHolderComposite composite) {
-    final VirtualFileHolder vfHolder = composite.getVFHolder(FileHolder.HolderType.UNVERSIONED);
-    final List<VirtualFile> unversionedFiles = vfHolder.getFiles();
+    final CompositeFilePathHolder.UnversionedFilesCompositeHolder vfHolder = composite.getUnversionedFileHolder();
+    final Collection<FilePath> unversionedFiles = vfHolder.getFiles();
     exchangeWithIgnored(composite, vfHolder, unversionedFiles);
 
-    final VirtualFileHolder vfModifiedHolder = composite.getVFHolder(FileHolder.HolderType.MODIFIED_WITHOUT_EDITING);
+    final VirtualFileHolder vfModifiedHolder = composite.getModifiedWithoutEditingFileHolder();
     final List<VirtualFile> modifiedFiles = vfModifiedHolder.getFiles();
     exchangeWithIgnored(composite, vfModifiedHolder, modifiedFiles);
   }

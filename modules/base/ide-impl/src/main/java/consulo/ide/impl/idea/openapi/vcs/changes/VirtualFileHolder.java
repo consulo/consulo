@@ -15,125 +15,93 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
-import consulo.application.ApplicationManager;
+import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
-import consulo.application.util.function.Computable;
-import consulo.versionControlSystem.AbstractVcs;
-import consulo.versionControlSystem.FilePath;
-import consulo.versionControlSystem.base.FilePathImpl;
+import consulo.versionControlSystem.change.VcsDirtyScope;
+import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author max
  */
 public class VirtualFileHolder implements FileHolder {
-  private final Set<VirtualFile> myFiles = new HashSet<VirtualFile>();
+  private final Set<VirtualFile> myFiles = new HashSet<>();
   private final Project myProject;
-  private final HolderType myType;
-  private int myNumDirs;
 
-  public VirtualFileHolder(Project project, final HolderType type) {
+  public VirtualFileHolder(Project project) {
     myProject = project;
-    myType = type;
-  }
-
-  public HolderType getType() {
-    return myType;
   }
 
   @Override
-  public void notifyVcsStarted(AbstractVcs vcs) {
-  }
-
   public void cleanAll() {
     myFiles.clear();
-    myNumDirs = 0;
   }
 
-  // returns number of removed directories
-  static int cleanScope(final Project project, final Collection<VirtualFile> files, final VcsModifiableDirtyScope scope) {
-    return ApplicationManager.getApplication().runReadAction(new Computable<Integer>() {
-      public Integer compute() {
-        int result = 0;
-        // to avoid deadlocks caused by incorrect lock ordering, need to lock on this after taking read action
-        if (project.isDisposed() || files.isEmpty()) return 0;
+  static void cleanScope(final Set<VirtualFile> files, final VcsDirtyScope scope) {
+    ProgressManager.checkCanceled();
+    if (files.isEmpty()) return;
 
-        if (scope.getRecursivelyDirtyDirectories().size() == 0) {
-          final Set<FilePath> dirtyFiles = scope.getDirtyFiles();
-          boolean cleanDroppedFiles = false;
+    if (scope.getRecursivelyDirtyDirectories().size() == 0) {
+      var dirtyFiles = scope.getDirtyFiles();
+      var cleanDroppedFiles = false;
 
-          for(FilePath dirtyFile: dirtyFiles) {
-            VirtualFile f = dirtyFile.getVirtualFile();
-            if (f != null) {
-              if (files.remove(f)) {
-                if (f.isDirectory()) ++ result;
-              }
-            }
-            else {
-              cleanDroppedFiles = true;
-            }
-          }
-          if (cleanDroppedFiles) {
-            for (Iterator<VirtualFile> iterator = files.iterator(); iterator.hasNext();) {
-              final VirtualFile file = iterator.next();
-              if (fileDropped(file)) {
-                iterator.remove();
-                scope.addDirtyFile(new FilePathImpl(file));
-                if (file.isDirectory()) ++ result;
-              }
-            }
-          }
+      for (var dirtyFile : dirtyFiles) {
+        var f = dirtyFile.getVirtualFile();
+        if (f != null) {
+          files.remove(f);
         }
         else {
-          for (Iterator<VirtualFile> iterator = files.iterator(); iterator.hasNext();) {
-            final VirtualFile file = iterator.next();
-            final boolean fileDropped = fileDropped(file);
-            if (fileDropped) {
-              scope.addDirtyFile(new FilePathImpl(file));
-            }
-            if (fileDropped || scope.belongsTo(new FilePathImpl(file))) {
-              iterator.remove();
-              if (file.isDirectory()) ++ result;
-            }
+          cleanDroppedFiles = true;
+        }
+      }
+      if (cleanDroppedFiles) {
+        var iterator = files.iterator();
+        while (iterator.hasNext()) {
+          var file = iterator.next();
+          if (!file.isValid()) {
+            iterator.remove();
           }
         }
-        return result;
       }
-    });
-  }
-
-  public void cleanAndAdjustScope(final VcsModifiableDirtyScope scope) {
-    myNumDirs -= cleanScope(myProject, myFiles, scope);
-  }
-
-  private static boolean fileDropped(final VirtualFile file) {
-    return ! file.isValid();
-  }
-
-  public void addFile(VirtualFile file) {
-    myFiles.add(file);
-    if (file.isDirectory()) ++ myNumDirs;
-  }
-
-  public void removeFile(VirtualFile file) {
-    if (myFiles.remove(file)) {
-      if (file.isDirectory()) {
-        -- myNumDirs;
+    }
+    else {
+      var iterator = files.iterator();
+      while (iterator.hasNext()) {
+        var file = iterator.next();
+        if (!file.isValid() || scope.belongsTo(VcsUtil.getFilePath(file))) {
+          iterator.remove();
+        }
       }
     }
   }
 
-  // todo track number of copies made
-  public List<VirtualFile> getFiles() {
-    return new ArrayList<VirtualFile>(myFiles);
+  @Override
+  public void cleanUnderScope(@Nonnull final VcsDirtyScope scope) {
+    cleanScope(myFiles, scope);
   }
 
+  public void addFile(VirtualFile file) {
+    myFiles.add(file);
+  }
+
+  public void removeFile(VirtualFile file) {
+    myFiles.remove(file);
+  }
+
+  public List<VirtualFile> getFiles() {
+    return new ArrayList<>(myFiles);
+  }
+
+  @Override
   public VirtualFileHolder copy() {
-    final VirtualFileHolder copyHolder = new VirtualFileHolder(myProject, myType);
+    final VirtualFileHolder copyHolder = new VirtualFileHolder(myProject);
     copyHolder.myFiles.addAll(myFiles);
-    copyHolder.myNumDirs = myNumDirs;
     return copyHolder;
   }
 
@@ -141,6 +109,7 @@ public class VirtualFileHolder implements FileHolder {
     return myFiles.contains(file);
   }
 
+  @Override
   public boolean equals(final Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
@@ -152,16 +121,8 @@ public class VirtualFileHolder implements FileHolder {
     return true;
   }
 
+  @Override
   public int hashCode() {
     return myFiles.hashCode();
-  }
-
-  public int getSize() {
-    return myFiles.size();
-  }
-
-  public int getNumDirs() {
-    assert myNumDirs >= 0;
-    return myNumDirs;
   }
 }

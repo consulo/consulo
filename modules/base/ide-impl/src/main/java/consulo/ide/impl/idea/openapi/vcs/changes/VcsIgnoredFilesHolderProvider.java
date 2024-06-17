@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 JetBrains s.r.o.
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,20 +17,14 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.versionControlSystem.AbstractVcs;
-
 import jakarta.annotation.Nonnull;
 
-@ExtensionAPI(ComponentScope.PROJECT)
-@Deprecated
-public interface VcsIgnoredFilesHolder extends IgnoredFilesHolder {
-  ExtensionPointName<VcsIgnoredFilesHolder> VCS_IGNORED_FILES_HOLDER_EP = ExtensionPointName.create(VcsIgnoredFilesHolder.class);
-
-  default boolean isInUpdatingMode() {
-    return false;
-  }
-
+@ExtensionAPI(ComponentScope.APPLICATION)
+public interface VcsIgnoredFilesHolderProvider {
   @Nonnull
   AbstractVcs getVcs();
+
+  @Nonnull
+  VcsManagedFilesHolder createHolder();
 }

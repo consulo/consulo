@@ -1,59 +1,42 @@
-/*
- * Copyright 2000-2009 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 
 package consulo.versionControlSystem.change;
 
-import consulo.application.progress.ProgressIndicator;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsKey;
+import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.util.function.Supplier;
 
 /**
- * Builder for the changes list in the file system. The instances of
+ * Builder for the list of changes in the file system. The instances of
  * this class are used to collect changes that happened in the file system.
  *
- * @see ChangeProvider#getChanges(VcsDirtyScope, ChangelistBuilder, ProgressIndicator, ChangeListManagerGate)
- * @author max
+ * @see ChangeProvider#getChanges(VcsDirtyScope, ChangelistBuilder, com.intellij.openapi.progress.ProgressIndicator, ChangeListManagerGate)
  */
 public interface ChangelistBuilder {
   /**
-   * Process a change to the file. This method is used to report changes that
-   * version control system knows about.
-   *
-   * @param change a change to process.
-   * @param vcsKey
+   * Process a change to the file.
+   * This method is used to report changes that the version control system knows about.
    */
-  void processChange(Change change, VcsKey vcsKey);
+  void processChange(@NotNull Change change, VcsKey vcsKey);
 
-  void processChangeInList(Change change, @Nullable ChangeList changeList, VcsKey vcsKey);
+  /**
+   * Put the given change into the given change list.
+   * If there is no such change list, an error is logged and change goes to the default list.
+   */
+  void processChangeInList(@NotNull Change change, @Nullable ChangeList changeList, VcsKey vcsKey);
 
   /**
    * Put the given change into the change list with the given name.
-   * If there is no such change list it is created.
-   * This method allows not to refer to ChangeListManager for the LocalChangeList object.
-   *
-   * @param change         Submitted change
-   * @param changeListName A name for a change list.
-   * @param vcsKey
+   * If there is no such change list, it is created.
+   * This method allows not referring to ChangeListManager for the LocalChangeList object.
    */
-  void processChangeInList(Change change, String changeListName, VcsKey vcsKey);
+  void processChangeInList(@NotNull Change change, @Nullable String changeListName, VcsKey vcsKey);
 
   void removeRegisteredChangeFor(final FilePath path);
 
@@ -61,8 +44,16 @@ public interface ChangelistBuilder {
    * Process a file that is not under version control.
    *
    * @param file a file to process
+   * @deprecated use {@link #processUnversionedFile(FilePath)} instead
    */
-  void processUnversionedFile(VirtualFile file);
+  @Deprecated
+  default void processUnversionedFile(VirtualFile file) {
+    if (file != null) {
+      processUnversionedFile(VcsUtil.getFilePath(file));
+    }
+  }
+
+  void processUnversionedFile(FilePath filePath);
 
   /**
    * Process a file that was deleted locally, but version
@@ -71,7 +62,7 @@ public interface ChangelistBuilder {
    * @param file a file to process
    */
   void processLocallyDeletedFile(FilePath file);
-  
+
   void processLocallyDeletedFile(final LocallyDeletedChange locallyDeletedChange);
 
   /**
@@ -86,8 +77,16 @@ public interface ChangelistBuilder {
    * Process the file that is ignored by the version control.
    *
    * @param file an ignored file
+   * @deprecated use {@link #processIgnoredFile(FilePath)} instead
    */
-  void processIgnoredFile(VirtualFile file);
+  @Deprecated(forRemoval = true)
+  default void processIgnoredFile(VirtualFile file) {
+    if (file != null) {
+      processIgnoredFile(VcsUtil.getFilePath(file));
+    }
+  }
+
+  void processIgnoredFile(FilePath filePath);
 
   /**
    * technically locked folder (for Subversion: locked in working copy to keep WC's state consistent)
@@ -105,15 +104,15 @@ public interface ChangelistBuilder {
    *
    * @param file      the switched file
    * @param branch    the name of the branch to which the file is switched.
-   * @param recursive if true, all subdirectories of file are also marked as switched to that branch
+   * @param recursive if true, all subdirectories of the file are also marked as switched to that branch
    */
   void processSwitchedFile(VirtualFile file, String branch, final boolean recursive);
 
   void processRootSwitch(VirtualFile file, String branch);
 
   boolean reportChangesOutsideProject();
-  
+
   void reportAdditionalInfo(final String text);
 
-  void reportAdditionalInfo(final Supplier<JComponent> infoComponent);
+  void reportAdditionalInfo(@NotNull Supplier<JComponent> infoComponent);
 }

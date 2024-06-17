@@ -1,47 +1,57 @@
-/*
- * Copyright 2000-2009 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
-import consulo.project.Project;
-import consulo.util.lang.Pair;
+import com.google.common.collect.Iterables;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.versionControlSystem.change.VcsDirtyScope;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.project.Project;
 import consulo.util.collection.MultiMap;
+import consulo.util.lang.Pair;
+import consulo.versionControlSystem.FilePathComparator;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.change.VcsDirtyScope;
 import consulo.versionControlSystem.util.VcsUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.SortedMap;
+import java.util.*;
 
-// true = recursively, branch name
-public class SwitchedFileHolder extends RecursiveFileHolder<Pair<Boolean, String>> {
-  public SwitchedFileHolder(final Project project, final HolderType holderType) {
-    super(project, holderType);
+public class SwitchedFileHolder implements FileHolder {
+  private final Project myProject;
+  private final ProjectLevelVcsManager myVcsManager;
+  private final TreeMap<VirtualFile, Pair<Boolean, String>> myMap; // true = recursively, branch name
+
+  public SwitchedFileHolder(final Project project) {
+    myProject = project;
+    myVcsManager = ProjectLevelVcsManager.getInstance(project);
+    myMap = new TreeMap<>(FilePathComparator.getInstance());
+  }
+
+  @Override
+  public void cleanAll() {
+    myMap.clear();
   }
 
   @Override
   public synchronized SwitchedFileHolder copy() {
-    final SwitchedFileHolder copyHolder = new SwitchedFileHolder(myProject, myHolderType);
+    final SwitchedFileHolder copyHolder = new SwitchedFileHolder(myProject);
     copyHolder.myMap.putAll(myMap);
     return copyHolder;
   }
 
   @Override
-  protected boolean isFileDirty(final VcsDirtyScope scope, final VirtualFile file) {
+  public void cleanUnderScope(@Nonnull final VcsDirtyScope scope) {
+    if (myProject.isDisposed()) return;
+    final Iterator<VirtualFile> iterator = myMap.keySet().iterator();
+    while (iterator.hasNext()) {
+      final VirtualFile file = iterator.next();
+      if (isFileDirty(scope, file)) {
+        iterator.remove();
+      }
+    }
+  }
+
+  private boolean isFileDirty(final VcsDirtyScope scope, final VirtualFile file) {
     if (scope == null) return true;
     if (fileDropped(file)) return true;
     return scope.belongsTo(VcsUtil.getFilePath(file));
@@ -59,9 +69,22 @@ public class SwitchedFileHolder extends RecursiveFileHolder<Pair<Boolean, String
     return result;
   }
 
+  public boolean isEmpty() {
+    return myMap.isEmpty();
+  }
+
+  @Nonnull
+  public Collection<VirtualFile> values() {
+    return myMap.keySet();
+  }
+
   public void addFile(final VirtualFile file, final String branch, final boolean recursive) {
     // without optimization here
     myMap.put(file, new Pair<>(recursive, branch));
+  }
+
+  public void removeFile(@Nonnull final VirtualFile file) {
+    myMap.remove(file);
   }
 
   public synchronized MultiMap<String, VirtualFile> getBranchToFileMap() {
@@ -72,8 +95,7 @@ public class SwitchedFileHolder extends RecursiveFileHolder<Pair<Boolean, String
     return result;
   }
 
-  @Override
-  public synchronized boolean containsFile(final VirtualFile file) {
+  public synchronized boolean containsFile(@Nonnull final VirtualFile file) {
     final VirtualFile floor = myMap.floorKey(file);
     if (floor == null) return false;
     final SortedMap<VirtualFile, Pair<Boolean, String>> floorMap = myMap.headMap(floor, true);
@@ -86,7 +108,7 @@ public class SwitchedFileHolder extends RecursiveFileHolder<Pair<Boolean, String
     return false;
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   public String getBranchForFile(final VirtualFile file) {
     final VirtualFile floor = myMap.floorKey(file);
     if (floor == null) return null;
@@ -97,5 +119,17 @@ public class SwitchedFileHolder extends RecursiveFileHolder<Pair<Boolean, String
       }
     }
     return null;
+  }
+
+  public boolean equals(final Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    final SwitchedFileHolder that = (SwitchedFileHolder)o;
+    return Iterables.elementsEqual(myMap.entrySet(), that.myMap.entrySet());
+  }
+
+  public int hashCode() {
+    return myMap.hashCode();
   }
 }

@@ -20,10 +20,8 @@ import consulo.application.progress.ProgressManager;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.textCompletion.DefaultTextCompletionValueDescriptor;
 import consulo.ide.impl.idea.util.textCompletion.ValuesCompletionProvider;
-import consulo.versionControlSystem.log.VcsLogRefs;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogColorManager;
 import consulo.ide.impl.idea.vcs.log.ui.frame.VcsLogGraphTable;
-import consulo.versionControlSystem.util.VcsImplUtil;
 import consulo.language.editor.completion.CompletionParameters;
 import consulo.language.editor.completion.CompletionResultSet;
 import consulo.language.editor.completion.lookup.InsertHandler;
@@ -39,11 +37,13 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.ImageEffects;
+import consulo.versionControlSystem.log.VcsLogRefs;
 import consulo.versionControlSystem.log.VcsRef;
+import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -220,7 +220,7 @@ public class GoToHashOrRefPopup {
       myReferenceComparator = comparator;
 
       for (VirtualFile root : roots) {
-        String text = VcsImplUtil.getShortVcsRootName(myProject, root);
+        String text = VcsUtil.getShortVcsRootName(myProject, root);
         myCachedRootNames.put(root, text);
       }
     }
@@ -254,7 +254,7 @@ public class GoToHashOrRefPopup {
       if (!myColorManager.isMultipleRoots()) return null;
       String text = myCachedRootNames.get(item.getRoot());
       if (text == null) {
-        return VcsImplUtil.getShortVcsRootName(myProject, item.getRoot());
+        return VcsUtil.getShortVcsRootName(myProject, item.getRoot());
       }
       return text;
     }

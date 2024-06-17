@@ -74,8 +74,7 @@ public abstract class AbstractRepositoryManager<T extends Repository>
   @Override
   @Nullable
   public T getRepositoryForFile(@Nonnull FilePath file) {
-    VirtualFile vFile = ChangesUtil.findValidParentAccurately(file);
-    return vFile != null ? getRepositoryForFile(vFile) : null;
+    return validateAndGetRepository(myGlobalRepositoryManager.getRepositoryForFile(file, false));
   }
 
   @Nonnull

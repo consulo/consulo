@@ -17,62 +17,134 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.project.Project;
 import consulo.versionControlSystem.AbstractVcs;
+import consulo.versionControlSystem.change.VcsDirtyScope;
 import jakarta.annotation.Nonnull;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+import java.util.Objects;
 
 public class FileHolderComposite implements FileHolder {
-  private final Map<HolderType, FileHolder> myHolders;
+  public static FileHolderComposite create(Project project) {
+    return new FileHolderComposite(project);
+  }
+
+  private final Project project;
+  private final CompositeFilePathHolder.UnversionedFilesCompositeHolder unversionedFileHolder;
+  private final CompositeFilePathHolder.IgnoredFilesCompositeHolder ignoredFileHolder;
+  private final VirtualFileHolder modifiedWithoutEditingFileHolder;
+  private final VirtualFileHolder lockedFileHolder;
+  private final LogicallyLockedHolder logicallyLockedFileHolder;
+  private final SwitchedFileHolder rootSwitchFileHolder;
+  private final SwitchedFileHolder switchedFileHolder;
+  private final DeletedFilesHolder deletedFileHolder;
+
+  private final List<FileHolder> fileHolders;
 
   public FileHolderComposite(final Project project) {
-    myHolders = new HashMap<>();
-    myHolders.put(FileHolder.HolderType.UNVERSIONED, new VirtualFileHolder(project, FileHolder.HolderType.UNVERSIONED));
-    myHolders.put(FileHolder.HolderType.ROOT_SWITCH, new SwitchedFileHolder(project, HolderType.ROOT_SWITCH));
-    myHolders.put(FileHolder.HolderType.MODIFIED_WITHOUT_EDITING, new VirtualFileHolder(project, FileHolder.HolderType.MODIFIED_WITHOUT_EDITING));
-    myHolders.put(FileHolder.HolderType.IGNORED, new IgnoredFilesCompositeHolder(project));
-    myHolders.put(FileHolder.HolderType.LOCKED, new VirtualFileHolder(project, FileHolder.HolderType.LOCKED));
-    myHolders.put(FileHolder.HolderType.LOGICALLY_LOCKED, new LogicallyLockedHolder(project));
+    this.project = project;
+    unversionedFileHolder = new CompositeFilePathHolder.UnversionedFilesCompositeHolder(project);
+    ignoredFileHolder = new CompositeFilePathHolder.IgnoredFilesCompositeHolder(project);
+    modifiedWithoutEditingFileHolder = new VirtualFileHolder(project);
+    lockedFileHolder = new VirtualFileHolder(project);
+    logicallyLockedFileHolder = new LogicallyLockedHolder(project);
+    rootSwitchFileHolder = new SwitchedFileHolder(project);
+    switchedFileHolder = new SwitchedFileHolder(project);
+    deletedFileHolder = new DeletedFilesHolder();
+
+    this.fileHolders =
+      List.of(unversionedFileHolder, ignoredFileHolder, modifiedWithoutEditingFileHolder, lockedFileHolder, logicallyLockedFileHolder,
+              rootSwitchFileHolder, switchedFileHolder, deletedFileHolder);
   }
 
-  public FileHolderComposite(final FileHolderComposite holder) {
-    myHolders = new HashMap<>();
-    for (FileHolder fileHolder : holder.myHolders.values()) {
-      myHolders.put(fileHolder.getType(), fileHolder.copy());
-    }
+  public FileHolderComposite(Project project,
+                             CompositeFilePathHolder.UnversionedFilesCompositeHolder unversionedFileHolder,
+                             CompositeFilePathHolder.IgnoredFilesCompositeHolder ignoredFileHolder,
+                             VirtualFileHolder modifiedWithoutEditingFileHolder,
+                             VirtualFileHolder lockedFileHolder,
+                             LogicallyLockedHolder logicallyLockedFileHolder,
+                             SwitchedFileHolder rootSwitchFileHolder,
+                             SwitchedFileHolder switchedFileHolder,
+                             DeletedFilesHolder deletedFileHolder) {
+    this.project = project;
+    this.unversionedFileHolder = unversionedFileHolder;
+    this.ignoredFileHolder = ignoredFileHolder;
+    this.modifiedWithoutEditingFileHolder = modifiedWithoutEditingFileHolder;
+    this.lockedFileHolder = lockedFileHolder;
+    this.logicallyLockedFileHolder = logicallyLockedFileHolder;
+    this.rootSwitchFileHolder = rootSwitchFileHolder;
+    this.switchedFileHolder = switchedFileHolder;
+    this.deletedFileHolder = deletedFileHolder;
+
+    this.fileHolders =
+      List.of(unversionedFileHolder, ignoredFileHolder, modifiedWithoutEditingFileHolder, lockedFileHolder, logicallyLockedFileHolder,
+              rootSwitchFileHolder, switchedFileHolder, deletedFileHolder);
   }
 
-  public FileHolder add(@Nonnull final FileHolder fileHolder, final boolean copy) {
-    final FileHolder added = copy ? fileHolder.copy() : fileHolder;
-    myHolders.put(fileHolder.getType(), added);
-    return added;
+  public Project getProject() {
+    return project;
+  }
+
+  public CompositeFilePathHolder.UnversionedFilesCompositeHolder getUnversionedFileHolder() {
+    return unversionedFileHolder;
+  }
+
+  public CompositeFilePathHolder.IgnoredFilesCompositeHolder getIgnoredFileHolder() {
+    return ignoredFileHolder;
+  }
+
+  public VirtualFileHolder getModifiedWithoutEditingFileHolder() {
+    return modifiedWithoutEditingFileHolder;
+  }
+
+  public VirtualFileHolder getLockedFileHolder() {
+    return lockedFileHolder;
+  }
+
+  public LogicallyLockedHolder getLogicallyLockedFileHolder() {
+    return logicallyLockedFileHolder;
+  }
+
+  public SwitchedFileHolder getRootSwitchFileHolder() {
+    return rootSwitchFileHolder;
+  }
+
+  public SwitchedFileHolder getSwitchedFileHolder() {
+    return switchedFileHolder;
+  }
+
+  public DeletedFilesHolder getDeletedFileHolder() {
+    return deletedFileHolder;
+  }
+
+  public List<FileHolder> getFileHolders() {
+    return fileHolders;
   }
 
   @Override
   public void cleanAll() {
-    for (FileHolder holder : myHolders.values()) {
+    for (FileHolder holder : getFileHolders()) {
       holder.cleanAll();
     }
   }
 
   @Override
-  public void cleanAndAdjustScope(final VcsModifiableDirtyScope scope) {
-    for (FileHolder holder : myHolders.values()) {
-      holder.cleanAndAdjustScope(scope);
+  public void cleanUnderScope(@Nonnull final VcsDirtyScope scope) {
+    for (FileHolder fileHolder : getFileHolders()) {
+      fileHolder.cleanUnderScope(scope);
     }
   }
 
   @Override
-  public FileHolder copy() {
-    return new FileHolderComposite(this);
-  }
-
-  public FileHolder get(final HolderType type) {
-    return myHolders.get(type);
-  }
-
-  public VirtualFileHolder getVFHolder(final HolderType type) {
-    return (VirtualFileHolder) myHolders.get(type);
+  public FileHolderComposite copy() {
+    return new FileHolderComposite(project,
+                                   unversionedFileHolder.copy(),
+                                   ignoredFileHolder.copy(),
+                                   modifiedWithoutEditingFileHolder.copy(),
+                                   lockedFileHolder.copy(),
+                                   logicallyLockedFileHolder.copy(),
+                                   rootSwitchFileHolder.copy(),
+                                   switchedFileHolder.copy(),
+                                   deletedFileHolder.copy());
   }
 
   @Override
@@ -80,37 +152,18 @@ public class FileHolderComposite implements FileHolder {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    final FileHolderComposite another = (FileHolderComposite) o;
-    if (another.myHolders.size() != myHolders.size()) {
-      return false;
-    }
-
-    for (Map.Entry<HolderType, FileHolder> entry : myHolders.entrySet()) {
-      if (! entry.getValue().equals(another.myHolders.get(entry.getKey()))) {
-        return false;
-      }
-    }
-
-    return true;
+    final FileHolderComposite another = (FileHolderComposite)o;
+    return Objects.equals(getFileHolders(), another.getFileHolders());
   }
 
   @Override
   public int hashCode() {
-    return myHolders != null ? myHolders.hashCode() : 0;
-  }
-
-  @Override
-  public HolderType getType() {
-    throw new UnsupportedOperationException();
-  }
-
-  public IgnoredFilesCompositeHolder getIgnoredFileHolder() {
-    return (IgnoredFilesCompositeHolder) myHolders.get(HolderType.IGNORED);
+    return getFileHolders().hashCode();
   }
 
   @Override
   public void notifyVcsStarted(AbstractVcs vcs) {
-    for (FileHolder fileHolder : myHolders.values()) {
+    for (FileHolder fileHolder : fileHolders) {
       fileHolder.notifyVcsStarted(vcs);
     }
   }

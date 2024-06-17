@@ -635,6 +635,13 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
     return true;
   }
 
+  /**
+   * @return whether {@link consulo.versionControlSystem.change.VcsDirtyScopeManager} should preserve file path cases on case-insensitive systems.
+   */
+  public boolean needsCaseSensitiveDirtyScope() {
+    return false;
+  }
+
   @Override
   public String toString() {
     return getName();
