@@ -63,8 +63,6 @@ public class RecentLocationsAction extends DumbAwareAction {
     SHORTCUT_FOREGROUND_COLOR.getBlue()
   );
 
-  static final String EMPTY_FILE_TEXT = IdeLocalize.recentLocationsPopupEmptyFileText().get();
-
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     FeatureUsageTracker.getInstance().triggerFeatureUsed(RECENT_LOCATIONS_ACTION_ID);
