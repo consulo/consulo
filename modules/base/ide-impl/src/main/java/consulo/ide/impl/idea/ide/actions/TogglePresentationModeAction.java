@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.ide.impl.idea.ide.ui.LafManager;
-import consulo.language.editor.CommonDataKeys;
 import consulo.application.ui.UISettings;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ui.ex.action.AnAction;
@@ -64,16 +63,10 @@ public class TogglePresentationModeAction extends AnAction implements DumbAware 
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e){
     UISettings settings = UISettings.getInstance();
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
 
     setPresentationMode(project, !settings.PRESENTATION_MODE);
   }
-
-  //public static void restorePresentationMode() {
-  //  UISettings instance = UISettings.getInstance();
-  //  tweakUIDefaults(instance, true);
-  //  tweakEditorAndFireUpdateUI(instance, true);
-  //}
 
   public static void setPresentationMode(final Project project, final boolean inPresentation) {
     final UISettings settings = UISettings.getInstance();

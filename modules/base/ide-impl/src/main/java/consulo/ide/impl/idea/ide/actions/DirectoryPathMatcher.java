@@ -22,7 +22,7 @@ import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.base.SourcesOrderRootType;
@@ -164,7 +164,7 @@ class DirectoryPathMatcher {
         @Nullable
         @Override
         public Iterable<VirtualFile> getChildrenIterable(@Nonnull VirtualFile file) {
-          return file instanceof NewVirtualFile ? ((NewVirtualFile)file).getCachedChildren() : null;
+          return file instanceof NewVirtualFile newVirtualFile ? newVirtualFile.getCachedChildren() : null;
         }
       });
     }

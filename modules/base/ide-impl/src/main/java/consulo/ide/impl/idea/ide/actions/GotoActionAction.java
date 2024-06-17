@@ -23,9 +23,8 @@ import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.ActionShortcutRestrictions;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapPanel;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindowListener;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.setting.ShowSettingsUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ModalityState;
@@ -56,7 +55,7 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
 
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    if (e.getData(CommonDataKeys.PROJECT) != null) {
+    if (e.getData(Project.KEY) != null) {
       showInSearchEverywherePopup(ActionSearchEverywhereContributor.class.getSimpleName(), e, false, true);
     }
     else {
@@ -66,13 +65,13 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
 
   @Override
   public void gotoActionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-    Editor editor = e.getData(CommonDataKeys.EDITOR);
+    Editor editor = e.getData(Editor.KEY);
 
     FeatureUsageTracker.getInstance().triggerFeatureUsed("navigation.popup.action");
     GotoActionModel model = new GotoActionModel(project, component, editor);
-    GotoActionCallback<Object> callback = new GotoActionCallback<Object>() {
+    GotoActionCallback<Object> callback = new GotoActionCallback<>() {
       @Override
       public void elementChosen(@Nonnull ChooseByNamePopup popup, @Nonnull Object element) {
         if (project != null) {
@@ -199,14 +198,17 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
       }
     };
 
-    ApplicationManager.getApplication().getMessageBus().connect(disposable).subscribe(ProgressWindowListener.class, pw -> Disposer.register(pw, new Disposable() {
-      @Override
-      public void dispose() {
-        if (!popup.checkDisposed()) {
-          popup.repaintList();
+    ApplicationManager.getApplication().getMessageBus().connect(disposable).subscribe(
+      ProgressWindowListener.class,
+      pw -> Disposer.register(
+        pw,
+        (Disposable) () -> {
+          if (!popup.checkDisposed()) {
+            popup.repaintList();
+          }
         }
-      }
-    }));
+      )
+    );
 
     if (project != null) {
       project.putUserData(ChooseByNamePopup.CHOOSE_BY_NAME_POPUP_IN_PROJECT_KEY, popup);
@@ -224,10 +226,9 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
 
     DumbAwareAction.create(e -> {
       Object o = popup.getChosenElement();
-      if (o instanceof GotoActionModel.MatchedValue && activeKeymap != null) {
-        Object value = ((GotoActionModel.MatchedValue)o).value;
-        if (value instanceof GotoActionModel.ActionWrapper) {
-          GotoActionModel.ActionWrapper aw = (GotoActionModel.ActionWrapper)value;
+      if (o instanceof GotoActionModel.MatchedValue matchedValue && activeKeymap != null) {
+        Object value = matchedValue.value;
+        if (value instanceof GotoActionModel.ActionWrapper aw) {
           if (aw.isAvailable()) {
             String id = ActionManager.getInstance().getId(aw.getAction());
             KeymapPanel.addKeyboardShortcut(id, ActionShortcutRestrictions.getInstance().getForActionId(id), activeKeymap, component);

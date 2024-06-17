@@ -15,23 +15,22 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.application.dumb.DumbAware;
+import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
+import consulo.language.editor.CommonDataKeys;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.Presentation;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.versionControlSystem.VcsBundle;
-import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
-import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nullable;
 
 public class StartUseVcsAction extends AnAction implements DumbAware {
   public StartUseVcsAction() {
-    super(VcsBundle.message("action.enable.version.control.integration.text"));
+    super(VcsLocalize.actionEnableVersionControlIntegrationText());
   }
 
   @Override

@@ -8,18 +8,16 @@ import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorFactory;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.IdeDocumentHistoryImpl;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.CaptionPanel;
 import consulo.ide.impl.idea.ui.WindowMoveListener;
 import consulo.ide.impl.idea.ui.speedSearch.ListWithFilter;
 import consulo.ide.impl.idea.ui.speedSearch.NameFilteringListModel;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
-import consulo.language.editor.CommonDataKeys;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ui.Coordinate2D;
@@ -34,12 +32,16 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -54,17 +56,17 @@ public class RecentLocationsAction extends DumbAwareAction {
   private static final int MINIMUM_WIDTH = JBUIScale.scale(600);
   private static final int MINIMUM_HEIGHT = JBUIScale.scale(450);
   private static final Color SHORTCUT_FOREGROUND_COLOR = UIUtil.getContextHelpForeground();
-  public static final String SHORTCUT_HEX_COLOR = String.format("#%02x%02x%02x",
-                                                                SHORTCUT_FOREGROUND_COLOR.getRed(),
-                                                                SHORTCUT_FOREGROUND_COLOR.getGreen(),
-                                                                SHORTCUT_FOREGROUND_COLOR.getBlue());
-
-  static final String EMPTY_FILE_TEXT = IdeBundle.message("recent.locations.popup.empty.file.text");
+  public static final String SHORTCUT_HEX_COLOR = String.format(
+    "#%02x%02x%02x",
+    SHORTCUT_FOREGROUND_COLOR.getRed(),
+    SHORTCUT_FOREGROUND_COLOR.getGreen(),
+    SHORTCUT_FOREGROUND_COLOR.getBlue()
+  );
 
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     FeatureUsageTracker.getInstance().triggerFeatureUsed(RECENT_LOCATIONS_ACTION_ID);
-    Project project = e == null ? null : e.getData(CommonDataKeys.PROJECT);
+    Project project = e == null ? null : e.getData(Project.KEY);
     if (project == null) {
       return;
     }
@@ -75,9 +77,11 @@ public class RecentLocationsAction extends DumbAwareAction {
   public static void showPopup(@Nonnull Project project, boolean showChanged) {
     RecentLocationsDataModel model = new RecentLocationsDataModel(project, new ArrayList<>());
     JBList<RecentLocationItem> list = new JBList<>(JBList.createDefaultListModel(model.getPlaces(showChanged)));
-    final JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(list,
-                                                                      ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-                                                                      ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+    final JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(
+      list,
+      ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+      ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
+    );
 
     scrollPane.setBorder(BorderFactory.createEmptyBorder());
 
@@ -99,7 +103,7 @@ public class RecentLocationsAction extends DumbAwareAction {
     });
 
     list.setCellRenderer(new RecentLocationsRenderer(project, speedSearch, model, checkBox));
-    list.setEmptyText(IdeBundle.message("recent.locations.popup.empty.text"));
+    list.setEmptyText(IdeLocalize.recentLocationsPopupEmptyText().get());
     list.setBackground(TargetAWT.to(EditorColorsManager.getInstance().getGlobalScheme().getDefaultBackground()));
     ScrollingUtil.installActions(list);
     ScrollingUtil.ensureSelectionExists(list);
@@ -115,36 +119,31 @@ public class RecentLocationsAction extends DumbAwareAction {
 
     Ref<Boolean> navigationRef = Ref.create(false);
     JBPopup popup = JBPopupFactory.getInstance()
-                                  .createComponentPopupBuilder(mainPanel, list)
-                                  .setProject(project)
-                                  .setCancelOnClickOutside(true)
-                                  .setRequestFocus(true)
-                                  .setCancelCallback(() -> {
-                                    if (speedSearch.isHoldingFilter() && !navigationRef.get()) {
-                                      speedSearch.reset();
-                                      return false;
-                                    }
-                                    return true;
-                                  })
-                                  .setResizable(true)
-                                  .setMovable(true)
-                                  .setBorderColor(borderColor)
-                                  .setDimensionServiceKey(project, LOCATION_SETTINGS_KEY, true)
-                                  .setMinSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT))
-                                  .setLocateWithinScreenBounds(false)
-                                  .createPopup();
+      .createComponentPopupBuilder(mainPanel, list)
+      .setProject(project)
+      .setCancelOnClickOutside(true)
+      .setRequestFocus(true)
+      .setCancelCallback(() -> {
+        if (speedSearch.isHoldingFilter() && !navigationRef.get()) {
+          speedSearch.reset();
+          return false;
+        }
+        return true;
+      })
+      .setResizable(true)
+      .setMovable(true)
+      .setBorderColor(borderColor)
+      .setDimensionServiceKey(project, LOCATION_SETTINGS_KEY, true)
+      .setMinSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT))
+      .setLocateWithinScreenBounds(false)
+      .createPopup();
 
     DumbAwareAction.create(event -> {
       checkBox.setSelected(!checkBox.isSelected());
       updateItems(model, listWithFilter, title, checkBox, popup);
     }).registerCustomShortcutSet(showChangedOnlyShortcutSet, list, popup);
 
-    checkBox.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        updateItems(model, listWithFilter, title, checkBox, popup);
-      }
-    });
+    checkBox.addActionListener(e -> updateItems(model, listWithFilter, title, checkBox, popup));
 
     if (DimensionService.getInstance().getSize(LOCATION_SETTINGS_KEY, project) == null) {
       popup.setSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
@@ -189,11 +188,13 @@ public class RecentLocationsAction extends DumbAwareAction {
     showPopup(project, popup);
   }
 
-  private static void updateItems(@Nonnull RecentLocationsDataModel data,
-                                  @Nonnull ListWithFilter<RecentLocationItem> listWithFilter,
-                                  @Nonnull JLabel title,
-                                  @Nonnull JBCheckBox checkBox,
-                                  @Nonnull JBPopup popup) {
+  private static void updateItems(
+    @Nonnull RecentLocationsDataModel data,
+    @Nonnull ListWithFilter<RecentLocationItem> listWithFilter,
+    @Nonnull JLabel title,
+    @Nonnull JBCheckBox checkBox,
+    @Nonnull JBPopup popup
+  ) {
     boolean state = checkBox.isSelected();
     updateModel(listWithFilter, data, state);
     updateTitleText(title, state);
@@ -206,7 +207,7 @@ public class RecentLocationsAction extends DumbAwareAction {
   @Nonnull
   public static JBCheckBox createCheckbox(@Nonnull ShortcutSet checkboxShortcutSet, boolean showChanged) {
     String text = "<html>" +
-      IdeBundle.message("recent.locations.title.text") +
+      IdeLocalize.recentLocationsTitleText().get() +
       " <font color=\"" +
       SHORTCUT_HEX_COLOR +
       "\">" +
@@ -223,7 +224,7 @@ public class RecentLocationsAction extends DumbAwareAction {
 
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setEnabled((e == null ? null : e.getData(CommonDataKeys.PROJECT)) != null);
+    e.getPresentation().setEnabled((e == null ? null : e.getData(Project.KEY)) != null);
   }
 
   static void clearSelectionInEditor(@Nonnull Editor editor) {
@@ -241,11 +242,15 @@ public class RecentLocationsAction extends DumbAwareAction {
     }
   }
 
-  private static void updateModel(@Nonnull ListWithFilter<RecentLocationItem> listWithFilter,
-                                  @Nonnull RecentLocationsDataModel data,
-                                  boolean changed) {
-    NameFilteringListModel<RecentLocationItem> model = (NameFilteringListModel<RecentLocationItem>)listWithFilter.getList().getModel();
-    DefaultListModel<RecentLocationItem> originalModel = (DefaultListModel<RecentLocationItem>)model.getOriginalModel();
+  private static void updateModel(
+    @Nonnull ListWithFilter<RecentLocationItem> listWithFilter,
+    @Nonnull RecentLocationsDataModel data,
+    boolean changed
+  ) {
+    NameFilteringListModel<RecentLocationItem> model =
+      (NameFilteringListModel<RecentLocationItem>)listWithFilter.getList().getModel();
+    DefaultListModel<RecentLocationItem> originalModel =
+      (DefaultListModel<RecentLocationItem>)model.getOriginalModel();
 
     originalModel.removeAllElements();
     data.getPlaces(changed).forEach(item -> originalModel.addElement(item));
@@ -288,11 +293,18 @@ public class RecentLocationsAction extends DumbAwareAction {
   }
 
   private static void updateTitleText(@Nonnull JLabel title, boolean showChanged) {
-    title.setText(showChanged ? IdeBundle.message("recent.locations.changed.locations") : IdeBundle.message("recent.locations.popup.title"));
+    title.setText(
+      showChanged
+        ? IdeLocalize.recentLocationsChangedLocations().get()
+        : IdeLocalize.recentLocationsPopupTitle().get()
+    );
   }
 
   @Nonnull
-  private static Function<RecentLocationItem, String> getNamer(@Nonnull RecentLocationsDataModel data, @Nonnull JBCheckBox checkBox) {
+  private static Function<RecentLocationItem, String> getNamer(
+    @Nonnull RecentLocationsDataModel data,
+    @Nonnull JBCheckBox checkBox
+  ) {
     return value -> {
       String breadcrumb = data.getBreadcrumbsMap(checkBox.isSelected()).get(value.getInfo());
       EditorEx editor = value.getEditor();
@@ -301,13 +313,15 @@ public class RecentLocationsAction extends DumbAwareAction {
     };
   }
 
-  private static void initSearchActions(@Nonnull Project project,
-                                        @Nonnull RecentLocationsDataModel data,
-                                        @Nonnull ListWithFilter<RecentLocationItem> listWithFilter,
-                                        @Nonnull JBList<RecentLocationItem> list,
-                                        @Nonnull JBCheckBox checkBox,
-                                        @Nonnull JBPopup popup,
-                                        @Nonnull Ref<? super Boolean> navigationRef) {
+  private static void initSearchActions(
+    @Nonnull Project project,
+    @Nonnull RecentLocationsDataModel data,
+    @Nonnull ListWithFilter<RecentLocationItem> listWithFilter,
+    @Nonnull JBList<RecentLocationItem> list,
+    @Nonnull JBCheckBox checkBox,
+    @Nonnull JBPopup popup,
+    @Nonnull Ref<? super Boolean> navigationRef
+  ) {
     listWithFilter.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent event) {
@@ -320,17 +334,19 @@ public class RecentLocationsAction extends DumbAwareAction {
     });
 
     DumbAwareAction.create(e -> navigateToSelected(project, list, popup, navigationRef))
-                   .registerCustomShortcutSet(CustomShortcutSet.fromString("ENTER"), listWithFilter, popup);
+      .registerCustomShortcutSet(CustomShortcutSet.fromString("ENTER"), listWithFilter, popup);
 
     DumbAwareAction.create(e -> removePlaces(project, listWithFilter, list, data, checkBox.isSelected()))
-                   .registerCustomShortcutSet(CustomShortcutSet.fromString("DELETE", "BACK_SPACE"), listWithFilter, popup);
+      .registerCustomShortcutSet(CustomShortcutSet.fromString("DELETE", "BACK_SPACE"), listWithFilter, popup);
   }
 
-  private static void removePlaces(@Nonnull Project project,
-                                   @Nonnull ListWithFilter<RecentLocationItem> listWithFilter,
-                                   @Nonnull JBList<RecentLocationItem> list,
-                                   @Nonnull RecentLocationsDataModel data,
-                                   boolean showChanged) {
+  private static void removePlaces(
+    @Nonnull Project project,
+    @Nonnull ListWithFilter<RecentLocationItem> listWithFilter,
+    @Nonnull JBList<RecentLocationItem> list,
+    @Nonnull RecentLocationsDataModel data,
+    boolean showChanged
+  ) {
     List<RecentLocationItem> selectedValue = list.getSelectedValuesList();
     if (selectedValue.isEmpty()) {
       return;
@@ -341,26 +357,32 @@ public class RecentLocationsAction extends DumbAwareAction {
     IdeDocumentHistory ideDocumentHistory = IdeDocumentHistory.getInstance(project);
     for (RecentLocationItem item : selectedValue) {
       if (showChanged) {
-        ContainerUtil.filter(ideDocumentHistory.getChangePlaces(), info -> IdeDocumentHistoryImpl.isSame(info, item.getInfo()))
-                     .forEach(info -> ideDocumentHistory.removeChangePlace(info));
+        ContainerUtil
+          .filter(ideDocumentHistory.getChangePlaces(), info -> IdeDocumentHistoryImpl.isSame(info, item.getInfo()))
+          .forEach(info -> ideDocumentHistory.removeChangePlace(info));
       }
       else {
-        ContainerUtil.filter(ideDocumentHistory.getBackPlaces(), info -> IdeDocumentHistoryImpl.isSame(info, item.getInfo()))
-                     .forEach(info -> ideDocumentHistory.removeBackPlace(info));
+        ContainerUtil
+          .filter(ideDocumentHistory.getBackPlaces(), info -> IdeDocumentHistoryImpl.isSame(info, item.getInfo()))
+          .forEach(info -> ideDocumentHistory.removeBackPlace(info));
       }
     }
 
     updateModel(listWithFilter, data, showChanged);
 
-    if (list.getModel().getSize() > 0) ScrollingUtil.selectItem(list, index < list.getModel().getSize() ? index : index - 1);
+    if (list.getModel().getSize() > 0) {
+      ScrollingUtil.selectItem(list, index < list.getModel().getSize() ? index : index - 1);
+    }
   }
 
-  private static void navigateToSelected(@Nonnull Project project,
-                                         @Nonnull JBList<RecentLocationItem> list,
-                                         @Nonnull JBPopup popup,
-                                         @Nonnull Ref<? super Boolean> navigationRef) {
+  private static void navigateToSelected(
+    @Nonnull Project project,
+    @Nonnull JBList<RecentLocationItem> list,
+    @Nonnull JBPopup popup,
+    @Nonnull Ref<? super Boolean> navigationRef
+  ) {
     ContainerUtil.reverse(list.getSelectedValuesList())
-                 .forEach(item -> IdeDocumentHistory.getInstance(project).gotoPlaceInfo(item.getInfo()));
+      .forEach(item -> IdeDocumentHistory.getInstance(project).gotoPlaceInfo(item.getInfo()));
 
     navigationRef.set(true);
     popup.closeOk(null);

@@ -16,22 +16,22 @@
 
 package consulo.ide.impl.idea.history.integration.ui.views;
 
+import consulo.application.util.DateFormatUtil;
 import consulo.ide.impl.idea.history.core.revisions.Revision;
 import consulo.ide.impl.idea.history.integration.LocalHistoryBundle;
 import consulo.ide.impl.idea.history.integration.ui.models.HistoryDialogModel;
 import consulo.ide.impl.idea.history.integration.ui.models.RevisionItem;
-import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.ui.ex.ExpandableItemsHandler;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.awt.SeparatorWithText;
 import consulo.ui.ex.TableCell;
-import consulo.ui.ex.awt.JBLabel;
-import consulo.ui.ex.awt.table.JBTable;
-import consulo.application.util.DateFormatUtil;
 import consulo.ui.ex.awt.AbstractLayoutManager;
+import consulo.ui.ex.awt.JBLabel;
+import consulo.ui.ex.awt.SeparatorWithText;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.table.JBTable;
+import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
+import consulo.versionControlSystem.localize.VcsLocalize;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -61,7 +61,7 @@ public class RevisionsList {
 
     table.setDefaultRenderer(Object.class, new MyCellRenderer(table));
 
-    table.getEmptyText().setText(VcsBundle.message("history.empty"));
+    table.getEmptyText().setText(VcsLocalize.historyEmpty().get());
 
     addSelectionListener(l);
   }

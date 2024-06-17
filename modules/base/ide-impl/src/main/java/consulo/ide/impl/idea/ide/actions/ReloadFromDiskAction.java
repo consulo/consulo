@@ -16,23 +16,23 @@
 
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.IdeBundle;
 import consulo.application.ApplicationManager;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.undoRedo.CommandProcessor;
+import consulo.application.dumb.DumbAware;
+import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
+import consulo.platform.base.localize.IdeLocalize;
+import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.awt.Messages;
+import consulo.undoRedo.CommandProcessor;
 
 public class ReloadFromDiskAction extends AnAction implements DumbAware {
   @Override
@@ -46,28 +46,19 @@ public class ReloadFromDiskAction extends AnAction implements DumbAware {
 
     int res = Messages.showOkCancelDialog(
       project,
-      IdeBundle.message("prompt.reload.file.from.disk", psiFile.getVirtualFile().getPresentableUrl()),
-      IdeBundle.message("title.reload.file"),
+      IdeLocalize.promptReloadFileFromDisk(psiFile.getVirtualFile().getPresentableUrl()).get(),
+      IdeLocalize.titleReloadFile().get(),
       Messages.getWarningIcon()
     );
     if (res != 0) return;
 
     CommandProcessor.getInstance().executeCommand(
-        project, new Runnable() {
-        @Override
-        public void run() {
-          ApplicationManager.getApplication().runWriteAction(
-            new Runnable() {
-              @Override
-              public void run() {
-                PsiManager.getInstance(project).reloadFromDisk(psiFile);
-              }
-            }
-          );
-        }
-      },
-        IdeBundle.message("command.reload.from.disk"),
-        null
+      project,
+      () -> ApplicationManager.getApplication().runWriteAction(
+        () -> PsiManager.getInstance(project).reloadFromDisk(psiFile)
+      ),
+      IdeLocalize.commandReloadFromDisk().get(),
+      null
     );
   }
 

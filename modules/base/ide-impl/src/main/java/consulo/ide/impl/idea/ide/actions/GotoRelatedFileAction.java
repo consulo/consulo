@@ -19,11 +19,9 @@ import consulo.application.ApplicationManager;
 import consulo.application.util.function.Processor;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ide.impl.idea.ui.popup.list.PopupListElementRenderer;
-import consulo.language.editor.LangDataKeys;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.ui.DefaultPsiElementCellRenderer;
 import consulo.language.navigation.GotoRelatedItem;
 import consulo.language.navigation.GotoRelatedProvider;
@@ -59,8 +57,8 @@ public class GotoRelatedFileAction extends AnAction {
   public void actionPerformed(AnActionEvent e) {
 
     DataContext context = e.getDataContext();
-    Editor editor = context.getData(PlatformDataKeys.EDITOR);
-    PsiFile psiFile = context.getData(LangDataKeys.PSI_FILE);
+    Editor editor = context.getData(Editor.KEY);
+    PsiFile psiFile = context.getData(PsiFile.KEY);
     if (psiFile == null) return;
 
     List<GotoRelatedItem> items = getItems(psiFile, editor, context);
@@ -86,18 +84,15 @@ public class GotoRelatedFileAction extends AnAction {
       itemsMap.put(item.getElement(), item);
     }
 
-    return getPsiElementPopup(elements, itemsMap, title, new Processor<>() {
-      @Override
-      public boolean process(Object element) {
-        if (element instanceof PsiElement) {
-          //noinspection SuspiciousMethodCalls
-          itemsMap.get(element).navigate();
-        }
-        else {
-          ((GotoRelatedItem)element).navigate();
-        }
-        return true;
+    return getPsiElementPopup(elements, itemsMap, title, element -> {
+      if (element instanceof PsiElement) {
+        //noinspection SuspiciousMethodCalls
+        itemsMap.get(element).navigate();
       }
+      else {
+        ((GotoRelatedItem)element).navigate();
+      }
+      return true;
     }
     );
   }
@@ -297,12 +292,7 @@ public class GotoRelatedFileAction extends AnAction {
       map.get(key).add(item);
     }
     final List<String> keys = new ArrayList<>(map.keySet());
-    Collections.sort(keys, new Comparator<>() {
-      @Override
-      public int compare(String o1, String o2) {
-        return StringUtil.isEmpty(o1) ? 1 : StringUtil.isEmpty(o2) ? -1 : o1.compareTo(o2);
-      }
-    });
+    Collections.sort(keys, (o1, o2) -> StringUtil.isEmpty(o1) ? 1 : StringUtil.isEmpty(o2) ? -1 : o1.compareTo(o2));
     items.clear();
     for (String key : keys) {
       items.addAll(map.get(key));
@@ -311,24 +301,21 @@ public class GotoRelatedFileAction extends AnAction {
 
   @Override
   public void update(AnActionEvent e) {
-    e.getPresentation().setEnabled(e.getDataContext().getData(LangDataKeys.PSI_FILE) != null);
+    e.getPresentation().setEnabled(e.getDataContext().getData(PsiFile.KEY) != null);
   }
 
-  private static Action createNumberAction(final int mnemonic,
-                                           final ListPopupImpl listPopup,
-                                           final Map<PsiElement, GotoRelatedItem> itemsMap,
-                                           final Processor<Object> processor) {
+  private static Action createNumberAction(
+    final int mnemonic,
+    final ListPopupImpl listPopup,
+    final Map<PsiElement, GotoRelatedItem> itemsMap,
+    final Processor<Object> processor
+  ) {
     return new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
         for (final Object item : listPopup.getListStep().getValues()) {
           if (getMnemonic(item, itemsMap) == mnemonic) {
-            listPopup.setFinalRunnable(new Runnable() {
-              @Override
-              public void run() {
-                processor.process(item);
-              }
-            });
+            listPopup.setFinalRunnable(() -> processor.process(item));
             listPopup.closeOk(null);
           }
         }
@@ -337,6 +324,6 @@ public class GotoRelatedFileAction extends AnAction {
   }
 
   private static int getMnemonic(Object item, Map<PsiElement, GotoRelatedItem> itemsMap) {
-    return (item instanceof GotoRelatedItem ? (GotoRelatedItem)item : itemsMap.get((PsiElement)item)).getMnemonic();
+    return (item instanceof GotoRelatedItem gotoRelatedItem ? gotoRelatedItem : itemsMap.get(item)).getMnemonic();
   }
 }

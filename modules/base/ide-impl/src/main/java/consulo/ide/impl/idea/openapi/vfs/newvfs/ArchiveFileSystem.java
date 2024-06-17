@@ -15,22 +15,23 @@
  */
 package consulo.ide.impl.idea.openapi.vfs.newvfs;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.ide.impl.idea.openapi.vfs.impl.ArchiveHandler;
 import consulo.ide.impl.virtualFileSystem.archive.ArchiveFileSystemBase;
-import consulo.virtualFileSystem.*;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.virtualFileSystem.fileType.FileTypeRegistry;
+import consulo.util.dataholder.Key;
 import consulo.util.io.BufferExposingByteArrayInputStream;
 import consulo.util.io.FileAttributes;
-import consulo.util.lang.StringUtil;
-import consulo.ide.impl.idea.openapi.vfs.*;
-import consulo.ide.impl.idea.openapi.vfs.impl.ArchiveHandler;
 import consulo.util.io.URLUtil;
-import consulo.annotation.DeprecationInfo;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
-import consulo.util.dataholder.Key;
-
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
+import consulo.virtualFileSystem.localize.VirtualFileSystemLocalize;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -51,8 +52,10 @@ public abstract class ArchiveFileSystem extends NewVirtualFileSystem {
 
   private static final Key<VirtualFile> LOCAL_FILE = Key.create("vfs.archive.local.file");
 
-  private final Function<VirtualFile, FileAttributes> myAttrGetter = ManagingFS.getInstance().accessDiskWithCheckCanceled(file -> getHandler(file).getAttributes(getRelativePath(file)));
-  private final Function<VirtualFile, String[]> myChildrenGetter = ManagingFS.getInstance().accessDiskWithCheckCanceled(file -> getHandler(file).list(getRelativePath(file)));
+  private final Function<VirtualFile, FileAttributes> myAttrGetter =
+    ManagingFS.getInstance().accessDiskWithCheckCanceled(file -> getHandler(file).getAttributes(getRelativePath(file)));
+  private final Function<VirtualFile, String[]> myChildrenGetter =
+    ManagingFS.getInstance().accessDiskWithCheckCanceled(file -> getHandler(file).list(getRelativePath(file)));
 
   /**
    * Returns a root entry of an archive hosted by a given local file
@@ -124,35 +127,40 @@ public abstract class ArchiveFileSystem extends NewVirtualFileSystem {
 
   @Nonnull
   @Override
-  public VirtualFile copyFile(Object requestor, @Nonnull VirtualFile file, @Nonnull VirtualFile newParent, @Nonnull String copyName) throws IOException {
-    throw new IOException(VfsBundle.message("jar.modification.not.supported.error", file.getUrl()));
+  public VirtualFile copyFile(
+    Object requestor,
+    @Nonnull VirtualFile file,
+    @Nonnull VirtualFile newParent,
+    @Nonnull String copyName
+  ) throws IOException {
+    throw new IOException(VirtualFileSystemLocalize.jarModificationNotSupportedError(file.getUrl()).get());
   }
 
   @Nonnull
   @Override
   public VirtualFile createChildDirectory(Object requestor, @Nonnull VirtualFile parent, @Nonnull String dir) throws IOException {
-    throw new IOException(VfsBundle.message("jar.modification.not.supported.error", parent.getUrl()));
+    throw new IOException(VirtualFileSystemLocalize.jarModificationNotSupportedError(parent.getUrl()).get());
   }
 
   @Nonnull
   @Override
   public VirtualFile createChildFile(Object requestor, @Nonnull VirtualFile parent, @Nonnull String file) throws IOException {
-    throw new IOException(VfsBundle.message("jar.modification.not.supported.error", parent.getUrl()));
+    throw new IOException(VirtualFileSystemLocalize.jarModificationNotSupportedError(parent.getUrl()).get());
   }
 
   @Override
   public void deleteFile(Object requestor, @Nonnull VirtualFile file) throws IOException {
-    throw new IOException(VfsBundle.message("jar.modification.not.supported.error", file.getUrl()));
+    throw new IOException(VirtualFileSystemLocalize.jarModificationNotSupportedError(file.getUrl()).get());
   }
 
   @Override
   public void moveFile(Object requestor, @Nonnull VirtualFile file, @Nonnull VirtualFile newParent) throws IOException {
-    throw new IOException(VfsBundle.message("jar.modification.not.supported.error", file.getUrl()));
+    throw new IOException(VirtualFileSystemLocalize.jarModificationNotSupportedError(file.getUrl()).get());
   }
 
   @Override
   public void renameFile(Object requestor, @Nonnull VirtualFile file, @Nonnull String newName) throws IOException {
-    throw new IOException(VfsBundle.message("jar.modification.not.supported.error", file.getUrl()));
+    throw new IOException(VirtualFileSystemLocalize.jarModificationNotSupportedError(file.getUrl()).get());
   }
 
   @Nonnull
@@ -236,18 +244,18 @@ public abstract class ArchiveFileSystem extends NewVirtualFileSystem {
 
   @Override
   public void setTimeStamp(@Nonnull VirtualFile file, long timeStamp) throws IOException {
-    throw new IOException(VfsBundle.message("jar.modification.not.supported.error", file.getUrl()));
+    throw new IOException(VirtualFileSystemLocalize.jarModificationNotSupportedError(file.getUrl()).get());
   }
 
   @Override
   public void setWritable(@Nonnull VirtualFile file, boolean writableFlag) throws IOException {
-    throw new IOException(VfsBundle.message("jar.modification.not.supported.error", file.getUrl()));
+    throw new IOException(VirtualFileSystemLocalize.jarModificationNotSupportedError(file.getUrl()).get());
   }
 
   @Nonnull
   @Override
   public OutputStream getOutputStream(@Nonnull VirtualFile file, Object requestor, long modStamp, long timeStamp) throws IOException {
-    throw new IOException(VfsBundle.message("jar.modification.not.supported.error", file.getUrl()));
+    throw new IOException(VirtualFileSystemLocalize.jarModificationNotSupportedError(file.getUrl()).get());
   }
 
   /**

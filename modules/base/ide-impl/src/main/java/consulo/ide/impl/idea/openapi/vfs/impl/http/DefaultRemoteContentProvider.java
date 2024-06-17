@@ -21,10 +21,10 @@ import consulo.application.util.UrlConnectionUtil;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.IdeLocalize;
 import consulo.util.lang.StringUtil;
-import consulo.virtualFileSystem.VfsBundle;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.http.RemoteContentProvider;
+import consulo.virtualFileSystem.localize.VirtualFileSystemLocalize;
 import jakarta.annotation.Nonnull;
 
 import java.io.*;
@@ -46,12 +46,7 @@ public class DefaultRemoteContentProvider extends RemoteContentProvider {
 
   @Override
   public void saveContent(final String url, @Nonnull final File file, @Nonnull final DownloadingCallback callback) {
-    ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
-      @Override
-      public void run() {
-        downloadContent(url, file, callback);
-      }
-    });
+    ApplicationManager.getApplication().executeOnPooledThread((Runnable) () -> downloadContent(url, file, callback));
   }
 
   private static void downloadContent(final String url, final File file, final DownloadingCallback callback) {
@@ -60,7 +55,7 @@ public class DefaultRemoteContentProvider extends RemoteContentProvider {
     OutputStream output = null;
     try {
       String presentableUrl = StringUtil.first(url, 40, true);
-      callback.setProgressText(VfsBundle.message("download.progress.connecting", presentableUrl), true);
+      callback.setProgressText(VirtualFileSystemLocalize.downloadProgressConnecting(presentableUrl).get(), true);
       HttpURLConnection connection = (HttpURLConnection)new URL(url).openConnection();
       connection.setConnectTimeout(CONNECT_TIMEOUT);
       connection.setReadTimeout(READ_TIMEOUT);
@@ -73,7 +68,7 @@ public class DefaultRemoteContentProvider extends RemoteContentProvider {
 
       final int size = connection.getContentLength();
       output = new BufferedOutputStream(new FileOutputStream(file));
-      callback.setProgressText(VfsBundle.message("download.progress.downloading", presentableUrl), size == -1);
+      callback.setProgressText(VirtualFileSystemLocalize.downloadProgressDownloading(presentableUrl).get(), size == -1);
       if (size != -1) {
         callback.setProgressFraction(0);
       }
@@ -100,7 +95,7 @@ public class DefaultRemoteContentProvider extends RemoteContentProvider {
     }
     catch (IOException e) {
       LOG.info(e);
-      callback.errorOccurred(VfsBundle.message("cannot.load.remote.file", url, e.getMessage()), false);
+      callback.errorOccurred(VirtualFileSystemLocalize.cannotLoadRemoteFile(url, e.getMessage()).get(), false);
     }
     finally {
       if (input != null) {

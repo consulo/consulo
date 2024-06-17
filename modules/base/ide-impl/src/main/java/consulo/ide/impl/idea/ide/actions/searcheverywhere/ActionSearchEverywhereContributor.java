@@ -6,7 +6,6 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.ui.UISettings;
 import consulo.application.util.function.Processor;
 import consulo.codeEditor.Editor;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.actions.GotoActionAction;
 import consulo.ide.impl.idea.ide.actions.SetShortcutAction;
 import consulo.ide.impl.idea.ide.ui.search.BooleanOptionDescription;
@@ -14,8 +13,8 @@ import consulo.ide.impl.idea.ide.util.gotoByName.GotoActionItemProvider;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoActionModel;
 import consulo.ide.impl.idea.openapi.keymap.impl.ActionShortcutRestrictions;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapPanel;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.logging.Logger;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.action.*;
@@ -23,9 +22,10 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.util.dataholder.Key;
-
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -68,7 +68,7 @@ public class ActionSearchEverywhereContributor implements SearchEverywhereContri
   }
 
   public String includeNonProjectItemsText() {
-    return IdeBundle.message("checkbox.disabled.included");
+    return IdeLocalize.checkboxDisabledIncluded().get();
   }
 
   @Override
@@ -82,7 +82,11 @@ public class ActionSearchEverywhereContributor implements SearchEverywhereContri
   }
 
   @Override
-  public void fetchElements(@Nonnull String pattern, @Nonnull ProgressIndicator progressIndicator, @Nonnull Processor<? super GotoActionModel.MatchedValue> consumer) {
+  public void fetchElements(
+    @Nonnull String pattern,
+    @Nonnull ProgressIndicator progressIndicator,
+    @Nonnull Processor<? super GotoActionModel.MatchedValue> consumer
+  ) {
     if (StringUtil.isEmptyOrSpaces(pattern)) {
       return;
     }
@@ -90,7 +94,9 @@ public class ActionSearchEverywhereContributor implements SearchEverywhereContri
     myProvider.filterElements(pattern, element -> {
       if (progressIndicator.isCanceled()) return false;
 
-      if (!myDisabledActions && element.value instanceof GotoActionModel.ActionWrapper && !((GotoActionModel.ActionWrapper)element.value).isAvailable()) {
+      if (!myDisabledActions
+        && element.value instanceof GotoActionModel.ActionWrapper actionWrapper
+        && !actionWrapper.isAvailable()) {
         return true;
       }
 
@@ -148,7 +154,8 @@ public class ActionSearchEverywhereContributor implements SearchEverywhereContri
       if (action != null) {
         String description = action.getTemplatePresentation().getDescription();
         if (UISettings.getInstance().getShowInplaceCommentsInternal()) {
-          String presentableId = StringUtil.notNullize(ActionManager.getInstance().getId(action), "class: " + action.getClass().getName());
+          String presentableId =
+            StringUtil.notNullize(ActionManager.getInstance().getId(action), "class: " + action.getClass().getName());
           return String.format("[%s] %s", presentableId, StringUtil.notNullize(description));
         }
         return description;
@@ -167,24 +174,24 @@ public class ActionSearchEverywhereContributor implements SearchEverywhereContri
 
     Object selected = item.value;
 
-    if (selected instanceof BooleanOptionDescription) {
-      final BooleanOptionDescription option = (BooleanOptionDescription)selected;
+    if (selected instanceof BooleanOptionDescription option) {
       option.setOptionState(!option.isOptionEnabled());
       return false;
     }
 
     GotoActionAction.openOptionOrPerformAction(selected, text, myProject, myContextComponent);
-    boolean inplaceChange = selected instanceof GotoActionModel.ActionWrapper && ((GotoActionModel.ActionWrapper)selected).getAction() instanceof ToggleAction;
+    boolean inplaceChange = selected instanceof GotoActionModel.ActionWrapper actionWrapper
+      && actionWrapper.getAction() instanceof ToggleAction;
     return !inplaceChange;
   }
 
   @Nullable
   private static AnAction getAction(@Nonnull GotoActionModel.MatchedValue element) {
     Object value = element.value;
-    if (value instanceof GotoActionModel.ActionWrapper) {
-      value = ((GotoActionModel.ActionWrapper)value).getAction();
+    if (value instanceof GotoActionModel.ActionWrapper actionWrapper) {
+      value = actionWrapper.getAction();
     }
-    return value instanceof AnAction ? (AnAction)value : null;
+    return value instanceof AnAction action ? action : null;
   }
 
   private void showAssignShortcutDialog(@Nonnull GotoActionModel.MatchedValue value) {
@@ -197,7 +204,9 @@ public class ActionSearchEverywhereContributor implements SearchEverywhereContri
     if (activeKeymap == null) return;
 
     ApplicationManager.getApplication().invokeLater(() -> {
-      Window window = myProject != null ? TargetAWT.to(WindowManager.getInstance().suggestParentWindow(myProject)) : KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
+      Window window = myProject != null
+        ? TargetAWT.to(WindowManager.getInstance().suggestParentWindow(myProject))
+        : KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
       if (window == null) return;
 
       KeymapPanel.addKeyboardShortcut(id, ActionShortcutRestrictions.getInstance().getForActionId(id), activeKeymap, window);

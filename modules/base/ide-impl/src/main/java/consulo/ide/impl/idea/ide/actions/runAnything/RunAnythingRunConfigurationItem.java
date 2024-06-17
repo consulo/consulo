@@ -9,7 +9,6 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class RunAnythingRunConfigurationItem extends RunAnythingItemBase {
-  public static final String RUN_CONFIGURATION_AD_TEXT = RunAnythingUtil.AD_CONTEXT_TEXT + ", " + RunAnythingUtil.AD_DEBUG_TEXT;
   private final ChooseRunConfigurationPopup.ItemWrapper myWrapper;
 
   public RunAnythingRunConfigurationItem(@Nonnull ChooseRunConfigurationPopup.ItemWrapper wrapper, @Nullable Image icon) {

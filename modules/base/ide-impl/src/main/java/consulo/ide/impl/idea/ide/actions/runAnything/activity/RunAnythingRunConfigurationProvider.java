@@ -6,8 +6,10 @@ import consulo.execution.RunManager;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.ide.impl.idea.execution.actions.ChooseRunConfigurationPopup;
 import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingRunConfigurationItem;
+import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingUtil;
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItem;
 import consulo.dataContext.DataContext;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.ui.image.Image;
 
 import jakarta.annotation.Nonnull;
@@ -29,8 +31,9 @@ public abstract class RunAnythingRunConfigurationProvider extends RunAnythingPro
     assert executor != null;
 
     Object value = wrapper.getValue();
-    if (value instanceof RunnerAndConfigurationSettings && !RunManager.getInstance(fetchProject(dataContext)).hasSettings((RunnerAndConfigurationSettings)value)) {
-      RunManager.getInstance(fetchProject(dataContext)).addConfiguration((RunnerAndConfigurationSettings)value);
+    if (value instanceof RunnerAndConfigurationSettings configurationSettings
+      && !RunManager.getInstance(fetchProject(dataContext)).hasSettings(configurationSettings)) {
+      RunManager.getInstance(fetchProject(dataContext)).addConfiguration(configurationSettings);
     }
 
     wrapper.perform(fetchProject(dataContext), executor, dataContext);
@@ -45,7 +48,8 @@ public abstract class RunAnythingRunConfigurationProvider extends RunAnythingPro
   @Nullable
   @Override
   public String getAdText() {
-    return RunAnythingRunConfigurationItem.RUN_CONFIGURATION_AD_TEXT;
+    return IdeLocalize.runAnythingAdRunInContext(RunAnythingUtil.PRESSED_ALT) + ", " +
+      IdeLocalize.runAnythingAdRunWithDebug(RunAnythingUtil.SHIFT_SHORTCUT_TEXT);
   }
 
   @Nonnull

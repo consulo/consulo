@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.openapi.vfs.ex.dummy;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.virtualFileSystem.*;
+import consulo.virtualFileSystem.localize.VirtualFileSystemLocalize;
 import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -93,7 +94,7 @@ public class DummyFileSystem extends BaseVirtualFileSystem implements NonPhysica
     fireBeforeFileDeletion(requestor, vFile);
     final VirtualFileDirectoryImpl parent = (VirtualFileDirectoryImpl)vFile.getParent();
     if (parent == null) {
-      throw new IOException(VfsBundle.message("file.delete.root.error", vFile.getPresentableUrl()));
+      throw new IOException(VirtualFileSystemLocalize.fileDeleteRootError(vFile.getPresentableUrl()).get());
     }
 
     parent.removeChild((VirtualFileImpl)vFile);
@@ -106,7 +107,12 @@ public class DummyFileSystem extends BaseVirtualFileSystem implements NonPhysica
   }
 
   @Override
-  public VirtualFile copyFile(Object requestor, @Nonnull VirtualFile vFile, @Nonnull VirtualFile newParent, @Nonnull final String copyName) throws IOException {
+  public VirtualFile copyFile(
+    Object requestor,
+    @Nonnull VirtualFile vFile,
+    @Nonnull VirtualFile newParent,
+    @Nonnull final String copyName
+  ) throws IOException {
     throw new UnsupportedOperationException();
   }
 

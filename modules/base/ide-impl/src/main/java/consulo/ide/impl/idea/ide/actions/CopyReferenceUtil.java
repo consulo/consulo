@@ -7,10 +7,6 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributes;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.IdentifierUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.QualifiedNameProviderUtil;
 import consulo.language.editor.TargetElementUtil;
 import consulo.language.editor.highlight.HighlightManager;
@@ -18,10 +14,12 @@ import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.project.ui.internal.StatusBarEx;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -60,19 +58,19 @@ public final class CopyReferenceUtil {
     }
 
     if (elements.isEmpty()) {
-      PsiElement[] psiElements = dataContext.getData(LangDataKeys.PSI_ELEMENT_ARRAY);
+      PsiElement[] psiElements = dataContext.getData(PsiElement.KEY_OF_ARRAY);
       if (psiElements != null) {
         Collections.addAll(elements, psiElements);
       }
     }
 
     if (elements.isEmpty()) {
-      ContainerUtil.addIfNotNull(elements, dataContext.getData(CommonDataKeys.PSI_ELEMENT));
+      ContainerUtil.addIfNotNull(elements, dataContext.getData(PsiElement.KEY));
     }
 
     if (elements.isEmpty() && editor == null) {
-      final Project project = dataContext.getData(CommonDataKeys.PROJECT);
-      VirtualFile[] files = dataContext.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
+      final Project project = dataContext.getData(Project.KEY);
+      VirtualFile[] files = dataContext.getData(VirtualFile.KEY_OF_ARRAY);
       if (project != null && files != null) {
         for (VirtualFile file : files) {
           ContainerUtil.addIfNotNull(elements, PsiManager.getInstance(project).findFile(file));
@@ -80,7 +78,10 @@ public final class CopyReferenceUtil {
       }
     }
 
-    return ContainerUtil.mapNotNull(elements, element -> element instanceof PsiFile && !((PsiFile)element).getViewProvider().isPhysical() ? null : adjustElement(element));
+    return ContainerUtil.mapNotNull(
+      elements,
+      element -> element instanceof PsiFile psiFile && !psiFile.getViewProvider().isPhysical() ? null : adjustElement(element)
+    );
   }
 
   static PsiElement adjustElement(PsiElement element) {

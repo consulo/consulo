@@ -16,8 +16,8 @@
  */
 package consulo.ide.impl.idea.openapi.vfs.ex.dummy;
 
-import consulo.virtualFileSystem.VfsBundle;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.localize.VirtualFileSystemLocalize;
 import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
@@ -26,7 +26,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 
 class VirtualFileDirectoryImpl extends VirtualFileImpl {
-  private final ArrayList<VirtualFileImpl> myChildren = new ArrayList<VirtualFileImpl>();
+  private final ArrayList<VirtualFileImpl> myChildren = new ArrayList<>();
 
   public VirtualFileDirectoryImpl(DummyFileSystem fileSystem, VirtualFileDirectoryImpl parent, String name) {
     super(fileSystem, parent, name);
@@ -49,19 +49,19 @@ class VirtualFileDirectoryImpl extends VirtualFileImpl {
 
   @Override
   public InputStream getInputStream() throws IOException {
-    throw new IOException(VfsBundle.message("file.read.error", getUrl()));
+    throw new IOException(VirtualFileSystemLocalize.fileReadError(getUrl()).get());
   }
 
   @Override
   @Nonnull
   public OutputStream getOutputStream(Object requestor, long newModificationStamp, long newTimeStamp) throws IOException {
-    throw new IOException(VfsBundle.message("file.write.error", getUrl()));
+    throw new IOException(VirtualFileSystemLocalize.fileWriteError(getUrl()).get());
   }
 
   @Override
   @Nonnull
   public byte[] contentsToByteArray() throws IOException {
-    throw new IOException(VfsBundle.message("file.read.error", getUrl()));
+    throw new IOException(VirtualFileSystemLocalize.fileReadError(getUrl()).get());
   }
 
   @Override

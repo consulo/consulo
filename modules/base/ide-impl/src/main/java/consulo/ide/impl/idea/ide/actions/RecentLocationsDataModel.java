@@ -36,13 +36,14 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.EditorSettings;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.application.util.NotNullLazyValue;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
 import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.ui.components.breadcrumbs.Crumb;
 import consulo.document.util.DocumentUtil;
 import consulo.ide.impl.idea.util.concurrency.SynchronizedClearableLazy;
@@ -140,7 +141,7 @@ public class RecentLocationsDataModel {
     TextRange actualTextRange = getTrimmedRange(fileDocument, lineNumber);
     CharSequence documentText = fileDocument.getText(actualTextRange);
     if (actualTextRange.isEmpty()) {
-      documentText = RecentLocationsAction.EMPTY_FILE_TEXT;
+      documentText = IdeLocalize.recentLocationsPopupEmptyFileText().get();
     }
 
     EditorFactory editorFactory = EditorFactory.getInstance();
@@ -161,30 +162,56 @@ public class RecentLocationsDataModel {
     setHighlighting(project, editor, fileDocument, placeInfo, actualTextRange);
 
     return editor;
-
   }
 
-  private void setHighlighting(Project project, EditorEx editor, Document document, IdeDocumentHistoryImpl.PlaceInfo placeInfo, TextRange textRange) {
+  private void setHighlighting(
+    Project project,
+    EditorEx editor,
+    Document document,
+    IdeDocumentHistoryImpl.PlaceInfo placeInfo,
+    TextRange textRange
+  ) {
     EditorColorsScheme colorsScheme = EditorColorsManager.getInstance().getGlobalScheme();
 
     applySyntaxHighlighting(project, editor, document, colorsScheme, textRange, placeInfo);
     applyHighlightingPasses(project, editor, document, colorsScheme, textRange);
   }
 
-  private void applySyntaxHighlighting(Project project, EditorEx editor, Document document, EditorColorsScheme colorsScheme, TextRange textRange, IdeDocumentHistoryImpl.PlaceInfo placeInfo) {
-    EditorHighlighter editorHighlighter = EditorHighlighterFactory.getInstance().createEditorHighlighter(placeInfo.getFile(), colorsScheme, project);
+  private void applySyntaxHighlighting(
+    Project project,
+    EditorEx editor,
+    Document document,
+    EditorColorsScheme colorsScheme,
+    TextRange textRange,
+    IdeDocumentHistoryImpl.PlaceInfo placeInfo
+  ) {
+    EditorHighlighter editorHighlighter =
+      EditorHighlighterFactory.getInstance().createEditorHighlighter(placeInfo.getFile(), colorsScheme, project);
     editorHighlighter.setEditor(new LightHighlighterClient(document, project));
     editorHighlighter.setText(document.getText(TextRange.create(0, textRange.getEndOffset())));
     int startOffset = textRange.getStartOffset();
 
-    for (HighlighterIterator iterator = editorHighlighter.createIterator(startOffset); !iterator.atEnd() && iterator.getEnd() <= textRange.getEndOffset(); iterator.advance()) {
+    for (HighlighterIterator iterator = editorHighlighter.createIterator(startOffset);
+         !iterator.atEnd() && iterator.getEnd() <= textRange.getEndOffset(); iterator.advance()) {
       if (iterator.getStart() >= startOffset) {
-        editor.getMarkupModel().addRangeHighlighter(iterator.getStart() - startOffset, iterator.getEnd() - startOffset, 999, iterator.getTextAttributes(), HighlighterTargetArea.EXACT_RANGE);
+        editor.getMarkupModel().addRangeHighlighter(
+          iterator.getStart() - startOffset,
+          iterator.getEnd() - startOffset,
+          999,
+          iterator.getTextAttributes(),
+          HighlighterTargetArea.EXACT_RANGE
+        );
       }
     }
   }
 
-  private void applyHighlightingPasses(Project project, final EditorEx editor, Document document, final EditorColorsScheme colorsScheme, final TextRange rangeMarker) {
+  private void applyHighlightingPasses(
+    Project project,
+    final EditorEx editor,
+    Document document,
+    final EditorColorsScheme colorsScheme,
+    final TextRange rangeMarker
+  ) {
     final int startOffset = rangeMarker.getStartOffset();
     final int endOffset = rangeMarker.getEndOffset();
     DaemonCodeAnalyzerEx.processHighlights(document, project, null, startOffset, endOffset, i -> {
@@ -199,9 +226,15 @@ public class RecentLocationsDataModel {
           return true;
         }
 
-        TextAttributes textAttributes = info.forcedTextAttributes != null ? info.forcedTextAttributes : colorsScheme.getAttributes(info.forcedTextAttributesKey);
-        editor.getMarkupModel().addRangeHighlighter(info.getActualStartOffset() - rangeMarker.getStartOffset(), info.getActualEndOffset() - rangeMarker.getStartOffset(), 1000, textAttributes,
-                                                    HighlighterTargetArea.EXACT_RANGE);
+        TextAttributes textAttributes =
+          info.forcedTextAttributes != null ? info.forcedTextAttributes : colorsScheme.getAttributes(info.forcedTextAttributesKey);
+        editor.getMarkupModel().addRangeHighlighter(
+          info.getActualStartOffset() - rangeMarker.getStartOffset(),
+          info.getActualEndOffset() - rangeMarker.getStartOffset(),
+          1000,
+          textAttributes,
+          HighlighterTargetArea.EXACT_RANGE
+        );
         return true;
       }
       else {
@@ -273,7 +306,8 @@ public class RecentLocationsDataModel {
   @Nonnull
   private List<IdeDocumentHistoryImpl.PlaceInfo> getPlaces(Project project, boolean changed) {
     IdeDocumentHistory ideDocumentHistory = IdeDocumentHistory.getInstance(project);
-    List<IdeDocumentHistoryImpl.PlaceInfo> infos = ContainerUtil.reverse(changed ? ideDocumentHistory.getChangePlaces() : ideDocumentHistory.getBackPlaces());
+    List<IdeDocumentHistoryImpl.PlaceInfo> infos =
+      ContainerUtil.reverse(changed ? ideDocumentHistory.getChangePlaces() : ideDocumentHistory.getBackPlaces());
 
     List<IdeDocumentHistoryImpl.PlaceInfo> infosCopy = new ArrayList<>();
     for (IdeDocumentHistoryImpl.PlaceInfo info : infos) {
@@ -313,7 +347,8 @@ public class RecentLocationsDataModel {
       return fileName;
     }
 
-    Iterable<? extends Crumb> crumbs = collector.computeCrumbs(placeInfo.getFile(), rangeMarker.getDocument(), rangeMarker.getStartOffset(), true);
+    Iterable<? extends Crumb> crumbs =
+      collector.computeCrumbs(placeInfo.getFile(), rangeMarker.getDocument(), rangeMarker.getStartOffset(), true);
 
     if (!crumbs.iterator().hasNext()) {
       return fileName;

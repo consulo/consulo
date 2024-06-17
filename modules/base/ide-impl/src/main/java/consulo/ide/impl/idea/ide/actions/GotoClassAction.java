@@ -15,14 +15,11 @@ import consulo.fileEditor.structureView.StructureView;
 import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.fileEditor.structureView.StructureViewTreeElement;
 import consulo.fileEditor.structureView.tree.TreeElement;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.actions.searcheverywhere.ClassSearchEverywhereContributor;
 import consulo.ide.impl.idea.ide.util.gotoByName.*;
 import consulo.ide.impl.idea.openapi.ui.playback.commands.ActionCommand;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.navigation.GotoClassOrTypeContributor;
 import consulo.language.Language;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.structureView.PsiStructureViewFactory;
 import consulo.language.editor.ui.PopupNavigationUtil;
 import consulo.language.navigation.AnonymousElementProvider;
@@ -30,8 +27,10 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.psi.util.EditSourceUtil;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
 import consulo.navigation.NavigationItem;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionManager;
@@ -40,6 +39,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -54,12 +54,12 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
     //we need to change the template presentation to show the proper text for the action in Settings | Keymap
     Presentation presentation = getTemplatePresentation();
     presentation.setText(GotoClassPresentationUpdater.getActionTitle() + "...");
-    presentation.setDescription(IdeBundle.message("go.to.class.action.description", StringUtil.join(GotoClassPresentationUpdater.getElementKinds(), "/")));
+    presentation.setDescriptionValue(IdeLocalize.goToClassActionDescription(StringUtil.join(GotoClassPresentationUpdater.getElementKinds(), "/")));
   }
 
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) return;
 
     boolean dumb = DumbService.isDumb(project);
@@ -72,9 +72,10 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
   }
 
   static void invokeGoToFile(@Nonnull Project project, @Nonnull AnActionEvent e) {
-    String actionTitle = StringUtil.trimEnd(ObjectUtil.notNull(e.getPresentation().getText(), GotoClassPresentationUpdater.getActionTitle()), "...");
-    String message = IdeBundle.message("go.to.class.dumb.mode.message", actionTitle);
-    DumbService.getInstance(project).showDumbModeNotification(message);
+    String actionTitle =
+      StringUtil.trimEnd(ObjectUtil.notNull(e.getPresentation().getText(), GotoClassPresentationUpdater.getActionTitle()), "...");
+    LocalizeValue message = IdeLocalize.goToClassDumbModeMessage(actionTitle);
+    DumbService.getInstance(project).showDumbModeNotification(message.get());
     AnAction action = ActionManager.getInstance().getAction(GotoFileAction.ID);
     InputEvent event = ActionCommand.getInputEvent(GotoFileAction.ID);
     Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
@@ -83,7 +84,7 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
 
   @Override
   public void gotoActionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     if (project == null) return;
 
     FeatureUsageTracker.getInstance().triggerFeatureUsed("navigation.popup.class");
@@ -91,19 +92,25 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
     PsiDocumentManager.getInstance(project).commitAllDocuments();
 
     final GotoClassModel2 model = new GotoClassModel2(project);
-    String pluralKinds = StringUtil.capitalize(StringUtil.join(GotoClassPresentationUpdater.getElementKinds(), s -> StringUtil.pluralize(s), "/"));
-    String title = IdeBundle.message("go.to.class.toolwindow.title", pluralKinds);
-    showNavigationPopup(e, model, new GotoActionCallback<Language>() {
-      @Override
-      protected ChooseByNameFilter<Language> createFilter(@Nonnull ChooseByNamePopup popup) {
-        return new ChooseByNameLanguageFilter(popup, model, GotoClassSymbolConfiguration.getInstance(project), project);
-      }
+    String pluralKinds = StringUtil.capitalize(StringUtil.join(GotoClassPresentationUpdater.getElementKinds(), StringUtil::pluralize, "/"));
+    LocalizeValue title = IdeLocalize.goToClassToolwindowTitle(pluralKinds);
+    showNavigationPopup(
+      e,
+      model,
+      new GotoActionCallback<Language>() {
+        @Override
+        protected ChooseByNameFilter<Language> createFilter(@Nonnull ChooseByNamePopup popup) {
+          return new ChooseByNameLanguageFilter(popup, model, GotoClassSymbolConfiguration.getInstance(project), project);
+        }
 
-      @Override
-      public void elementChosen(ChooseByNamePopup popup, Object element) {
-        handleSubMemberNavigation(popup, element);
-      }
-    }, title, true);
+        @Override
+        public void elementChosen(ChooseByNamePopup popup, Object element) {
+          handleSubMemberNavigation(popup, element);
+        }
+      },
+      title.get(),
+      true
+    );
   }
 
   static void handleSubMemberNavigation(ChooseByNamePopup popup, Object element) {

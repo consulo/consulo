@@ -31,10 +31,11 @@ import consulo.virtualFileSystem.event.VirtualFileListener;
 import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
+import consulo.virtualFileSystem.localize.VirtualFileSystemLocalize;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -231,7 +232,7 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
   public void rename(Object requestor, @Nonnull String newName) throws IOException {
     if (getName().equals(newName)) return;
     if (!getFileSystem().isValidName(newName)) {
-      throw new IOException(VfsBundle.message("file.invalid.name.error", newName));
+      throw new IOException(VirtualFileSystemLocalize.fileInvalidNameError(newName).get());
     }
 
     getFileSystem().renameFile(requestor, this, newName);
@@ -413,19 +414,19 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
   @Nonnull
   public VirtualFile createChildDirectory(Object requestor, @Nonnull String name) throws IOException {
     if (!isDirectory()) {
-      throw new IOException(VfsBundle.message("directory.create.wrong.parent.error"));
+      throw new IOException(VirtualFileSystemLocalize.directoryCreateWrongParentError().get());
     }
 
     if (!isValid()) {
-      throw new IOException(VfsBundle.message("invalid.directory.create.files"));
+      throw new IOException(VirtualFileSystemLocalize.invalidDirectoryCreateFiles().get());
     }
 
     if (!getFileSystem().isValidName(name)) {
-      throw new IOException(VfsBundle.message("directory.invalid.name.error", name));
+      throw new IOException(VirtualFileSystemLocalize.directoryInvalidNameError(name).get());
     }
 
     if (findChild(name) != null) {
-      throw new IOException(VfsBundle.message("file.create.already.exists.error", getUrl(), name));
+      throw new IOException(VirtualFileSystemLocalize.fileCreateAlreadyExistsError(getUrl(), name).get());
     }
 
     return getFileSystem().createChildDirectory(requestor, this, name);
@@ -444,19 +445,19 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
   @Nonnull
   public VirtualFile createChildData(Object requestor, @Nonnull String name) throws IOException {
     if (!isDirectory()) {
-      throw new IOException(VfsBundle.message("file.create.wrong.parent.error"));
+      throw new IOException(VirtualFileSystemLocalize.fileCreateWrongParentError().get());
     }
 
     if (!isValid()) {
-      throw new IOException(VfsBundle.message("invalid.directory.create.files"));
+      throw new IOException(VirtualFileSystemLocalize.invalidDirectoryCreateFiles().get());
     }
 
     if (!getFileSystem().isValidName(name)) {
-      throw new IOException(VfsBundle.message("file.invalid.name.error", name));
+      throw new IOException(VirtualFileSystemLocalize.fileInvalidNameError(name).get());
     }
 
     if (findChild(name) != null) {
-      throw new IOException(VfsBundle.message("file.create.already.exists.error", getUrl(), name));
+      throw new IOException(VirtualFileSystemLocalize.fileCreateAlreadyExistsError(getUrl(), name).get());
     }
 
     return getFileSystem().createChildFile(requestor, this, name);
@@ -488,7 +489,7 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
    */
   public void move(final Object requestor, @Nonnull final VirtualFile newParent) throws IOException {
     if (getFileSystem() != newParent.getFileSystem()) {
-      throw new IOException(VfsBundle.message("file.move.error", newParent.getPresentableUrl()));
+      throw new IOException(VirtualFileSystemLocalize.fileMoveError(newParent.getPresentableUrl()).get());
     }
 
     EncodingRegistry.doActionAndRestoreEncoding(this, () -> {
@@ -499,16 +500,17 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
 
   public VirtualFile copy(final Object requestor, @Nonnull final VirtualFile newParent, @Nonnull final String copyName) throws IOException {
     if (getFileSystem() != newParent.getFileSystem()) {
-      throw new IOException(VfsBundle.message("file.copy.error", newParent.getPresentableUrl()));
+      throw new IOException(VirtualFileSystemLocalize.fileCopyError(newParent.getPresentableUrl()).get());
     }
 
     if (!newParent.isDirectory()) {
-      throw new IOException(VfsBundle.message("file.copy.target.must.be.directory"));
+      throw new IOException(VirtualFileSystemLocalize.fileCopyTargetMustBeDirectory().get());
     }
 
-    return EncodingRegistry.doActionAndRestoreEncoding(this, () -> {
-      return getFileSystem().copyFile(requestor, VirtualFile.this, newParent, copyName);
-    });
+    return EncodingRegistry.doActionAndRestoreEncoding(
+      this,
+      () -> getFileSystem().copyFile(requestor, VirtualFile.this, newParent, copyName)
+    );
   }
 
   /**
@@ -574,13 +576,9 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
 
   public void setBinaryContent(@Nonnull byte[] content, long newModificationStamp, long newTimeStamp, Object requestor) throws IOException {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
-    final OutputStream outputStream = getOutputStream(requestor, newModificationStamp, newTimeStamp);
-    try {
+    try (OutputStream outputStream = getOutputStream(requestor, newModificationStamp, newTimeStamp)) {
       outputStream.write(content);
       outputStream.flush();
-    }
-    finally {
-      outputStream.close();
     }
   }
 

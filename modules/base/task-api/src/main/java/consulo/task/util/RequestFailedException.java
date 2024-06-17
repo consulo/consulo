@@ -1,5 +1,6 @@
 package consulo.task.util;
 
+import consulo.task.localize.TaskLocalize;
 import jakarta.annotation.Nonnull;
 
 import consulo.task.TaskBundle;
@@ -18,13 +19,13 @@ public class RequestFailedException extends RuntimeException
 	@Nonnull
 	public static RequestFailedException forStatusCode(int code, @Nonnull String message)
 	{
-		return new RequestFailedException(TaskBundle.message("failure.http.error", code, message));
+		return new RequestFailedException(TaskLocalize.failureHttpError(code, message).get());
 	}
 
 	@Nonnull
 	public static RequestFailedException forServerMessage(@Nonnull String message)
 	{
-		return new RequestFailedException(TaskBundle.message("failure.server.message", message));
+		return new RequestFailedException(TaskLocalize.failureServerMessage(message).get());
 	}
 
 	public RequestFailedException(String message)

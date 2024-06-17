@@ -21,11 +21,11 @@ import consulo.ui.ModalityState;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.RefreshQueue;
 import consulo.virtualFileSystem.RefreshSession;
-import consulo.virtualFileSystem.VfsBundle;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.AsyncFileListener;
 import consulo.virtualFileSystem.event.VFileCreateEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
+import consulo.virtualFileSystem.localize.VirtualFileSystemLocalize;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
@@ -47,14 +47,20 @@ import java.util.concurrent.atomic.AtomicLong;
 public class RefreshQueueImpl extends RefreshQueue implements Disposable {
   private static final Logger LOG = Logger.getInstance(RefreshQueueImpl.class);
 
-  private final Executor myQueue = AppExecutorUtil.createBoundedApplicationPoolExecutor("RefreshQueue Pool",
-                                                                                        PooledThreadExecutor.getInstance(), 1, this);
-  private final Executor myEventProcessingQueue = AppExecutorUtil.createBoundedApplicationPoolExecutor("Async Refresh Event Processing",
-                                                                                                       PooledThreadExecutor.getInstance(),
-                                                                                                       1,
-                                                                                                       this);
+  private final Executor myQueue = AppExecutorUtil.createBoundedApplicationPoolExecutor(
+    "RefreshQueue Pool",
+    PooledThreadExecutor.getInstance(),
+    1,
+    this
+  );
+  private final Executor myEventProcessingQueue = AppExecutorUtil.createBoundedApplicationPoolExecutor(
+    "Async Refresh Event Processing",
+    PooledThreadExecutor.getInstance(),
+    1,
+    this
+  );
 
-  private final ProgressIndicator myRefreshIndicator = RefreshProgress.create(VfsBundle.message("file.synchronize.progress"));
+  private final ProgressIndicator myRefreshIndicator = RefreshProgress.create(VirtualFileSystemLocalize.fileSynchronizeProgress().get());
 
   private int myBusyThreads;
   private final Map<Long, RefreshSession> mySessions = new HashMap<>();
@@ -99,9 +105,11 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
     myQueue.execute(() -> {
       startRefreshActivity();
       try {
-        HeavyProcessLatch.INSTANCE.performOperation(HeavyProcessLatch.Type.Syncing,
-                                                    "Doing file refresh. " + session,
-                                                    () -> doScan(session));
+        HeavyProcessLatch.INSTANCE.performOperation(
+          HeavyProcessLatch.Type.Syncing,
+          "Doing file refresh. " + session,
+          () -> doScan(session)
+        );
       }
       finally {
         finishRefreshActivity();
@@ -121,9 +129,11 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
       myEventProcessingQueue.execute(() -> {
         startRefreshActivity();
         try {
-          HeavyProcessLatch.INSTANCE.performOperation(HeavyProcessLatch.Type.Syncing,
-                                                      "Processing VFS events. " + session,
-                                                      () -> processAndFireEvents(session, modality));
+          HeavyProcessLatch.INSTANCE.performOperation(
+            HeavyProcessLatch.Type.Syncing,
+            "Processing VFS events. " + session,
+            () -> processAndFireEvents(session, modality)
+          );
         }
         finally {
           finishRefreshActivity();
@@ -161,7 +171,7 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
 
   protected void tryProcessingEvents(@Nonnull RefreshSessionImpl session, @Nonnull ModalityState modality) {
     List<? extends VFileEvent> events = ContainerUtil.filter(session.getEvents(), e -> {
-      VirtualFile file = e instanceof VFileCreateEvent ? ((VFileCreateEvent)e).getParent() : e.getFile();
+      VirtualFile file = e instanceof VFileCreateEvent vFileCreateEvent ? vFileCreateEvent.getParent() : e.getFile();
       return file == null || file.isValid();
     });
 
@@ -208,8 +218,8 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
     synchronized (mySessions) {
       session = mySessions.get(id);
     }
-    if (session instanceof RefreshSessionImpl) {
-      ((RefreshSessionImpl)session).cancel();
+    if (session instanceof RefreshSessionImpl refreshSession) {
+      refreshSession.cancel();
     }
   }
 

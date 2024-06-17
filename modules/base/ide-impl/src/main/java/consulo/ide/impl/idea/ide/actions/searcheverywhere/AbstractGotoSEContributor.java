@@ -17,11 +17,10 @@ import consulo.ide.impl.idea.ide.actions.SearchEverywherePsiRenderer;
 import consulo.ide.impl.idea.ide.util.gotoByName.*;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.QualifiedNameProviderUtil;
 import consulo.language.editor.ui.PopupNavigationUtil;
 import consulo.language.psi.PsiElement;
@@ -112,7 +111,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
   }
 
   private static void processScopes(@Nonnull DataContext dataContext, @Nonnull Processor<? super ScopeDescriptor> processor) {
-    Project project = ObjectUtil.notNull(dataContext.getData(CommonDataKeys.PROJECT));
+    Project project = ObjectUtil.notNull(dataContext.getData(Project.KEY));
     ScopeChooserCombo.processScopes(project, dataContext, ScopeChooserCombo.OPT_LIBRARIES | ScopeChooserCombo.OPT_EMPTY_SCOPES, processor);
   }
 
@@ -225,17 +224,32 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
         GlobalSearchScope scope = Registry.is("search.everywhere.show.scopes") ? (GlobalSearchScope)ObjectUtil.notNull(myScopeDescriptor.getScope()) : null;
 
         boolean everywhere = scope == null ? myEverywhere : scope.isSearchInLibraries();
-        if (scope != null && provider instanceof ChooseByNameInScopeItemProvider) {
+        if (scope != null && provider instanceof ChooseByNameInScopeItemProvider chooseByNameInScopeItemProvider) {
           FindSymbolParameters parameters = FindSymbolParameters.wrap(pattern, scope);
-          ((ChooseByNameInScopeItemProvider)provider)
-                  .filterElementsWithWeights(popup, parameters, progressIndicator, item -> processElement(progressIndicator, consumer, model, item.getItem(), item.getWeight()));
+          chooseByNameInScopeItemProvider.filterElementsWithWeights(
+            popup,
+            parameters,
+            progressIndicator,
+            item -> processElement(progressIndicator, consumer, model, item.getItem(), item.getWeight())
+          );
         }
-        else if (provider instanceof ChooseByNameWeightedItemProvider) {
-          ((ChooseByNameWeightedItemProvider)provider)
-                  .filterElementsWithWeights(popup, pattern, everywhere, progressIndicator, item -> processElement(progressIndicator, consumer, model, item.getItem(), item.getWeight()));
+        else if (provider instanceof ChooseByNameWeightedItemProvider chooseByNameWeightedItemProvider) {
+          chooseByNameWeightedItemProvider.filterElementsWithWeights(
+            popup,
+            pattern,
+            everywhere,
+            progressIndicator,
+            item -> processElement(progressIndicator, consumer, model, item.getItem(), item.getWeight())
+          );
         }
         else {
-          provider.filterElements(popup, pattern, everywhere, progressIndicator, element -> processElement(progressIndicator, consumer, model, element, getElementPriority(element, pattern)));
+          provider.filterElements(
+            popup,
+            pattern,
+            everywhere,
+            progressIndicator,
+            element -> processElement(progressIndicator, consumer, model, element, getElementPriority(element, pattern))
+          );
         }
       }
       finally {
@@ -288,13 +302,13 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
 
   @Override
   public boolean processSelectedItem(@Nonnull Object selected, int modifiers, @Nonnull String searchText) {
-    if (selected instanceof PsiElement) {
-      if (!((PsiElement)selected).isValid()) {
+    if (selected instanceof PsiElement element) {
+      if (!element.isValid()) {
         LOG.warn("Cannot navigate to invalid PsiElement");
         return true;
       }
 
-      PsiElement psiElement = preparePsi((PsiElement)selected, modifiers, searchText);
+      PsiElement psiElement = preparePsi(element, modifiers, searchText);
       Navigatable extNavigatable = createExtendedNavigatable(psiElement, searchText, modifiers);
       if (extNavigatable != null && extNavigatable.canNavigate()) {
         extNavigatable.navigate(true);
@@ -312,17 +326,17 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
 
   @Override
   public Object getDataForItem(@Nonnull Object element, @Nonnull Key dataId) {
-    if (CommonDataKeys.PSI_ELEMENT == dataId) {
+    if (PsiElement.KEY == dataId) {
       if (element instanceof PsiElement) {
         return element;
       }
-      if (element instanceof DataProvider) {
-        return ((DataProvider)element).getData(dataId);
+      if (element instanceof DataProvider dataProvider) {
+        return dataProvider.getData(dataId);
       }
     }
 
-    if (SearchEverywhereDataKeys.ITEM_STRING_DESCRIPTION == dataId && element instanceof PsiElement) {
-      return QualifiedNameProviderUtil.getQualifiedName((PsiElement)element);
+    if (SearchEverywhereDataKeys.ITEM_STRING_DESCRIPTION == dataId && element instanceof PsiElement psiElement) {
+      return QualifiedNameProviderUtil.getQualifiedName(psiElement);
     }
 
     return null;
@@ -401,8 +415,11 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
   protected static class SERenderer extends SearchEverywherePsiRenderer {
     @Override
     public String getElementText(PsiElement element) {
-      if (element instanceof NavigationItem) {
-        return Optional.ofNullable(((NavigationItem)element).getPresentation()).map(presentation -> presentation.getPresentableText()).orElse(super.getElementText(element));
+      if (element instanceof NavigationItem navigationItem) {
+        return Optional.ofNullable(
+          navigationItem.getPresentation())
+          .map(presentation -> presentation.getPresentableText())
+          .orElse(super.getElementText(element));
       }
       return super.getElementText(element);
     }
@@ -492,8 +509,9 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
         public Component getListCellRendererComponent(JList<? extends ScopeDescriptor> list, ScopeDescriptor value, int index, boolean isSelected, boolean cellHasFocus) {
           // copied from DarculaJBPopupComboPopup.customizeListRendererComponent()
           Component component = delegate.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-          if (component instanceof JComponent && !(component instanceof JSeparator || component instanceof TitledSeparator)) {
-            ((JComponent)component).setBorder(JBUI.Borders.empty(2, 8));
+          if (component instanceof JComponent jComponent
+            && !(component instanceof JSeparator || component instanceof TitledSeparator)) {
+            jComponent.setBorder(JBUI.Borders.empty(2, 8));
           }
           return component;
         }
@@ -501,7 +519,9 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
       List<ScopeDescriptor> items = new ArrayList<>();
       processScopes(e.getDataContext(), o -> {
         Component c = renderer.getListCellRendererComponent(fakeList, o, -1, false, false);
-        if (c instanceof JSeparator || c instanceof TitledSeparator || !o.scopeEquals(null) && o.getScope() instanceof GlobalSearchScope) {
+        if (c instanceof JSeparator
+          || c instanceof TitledSeparator
+          || !o.scopeEquals(null) && o.getScope() instanceof GlobalSearchScope) {
           items.add(o);
         }
         return true;
@@ -534,7 +554,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
       };
       ScopeDescriptor selection = getSelectedScope();
       step.setDefaultOptionIndex(ContainerUtil.indexOf(items, o -> Comparing.equal(o.getDisplayName(), selection.getDisplayName())));
-      ListPopupImpl popup = new ListPopupImpl(e.getData(CommonDataKeys.PROJECT), step);
+      ListPopupImpl popup = new ListPopupImpl(e.getData(Project.KEY), step);
       popup.setMaxRowCount(10);
       //noinspection unchecked
       popup.getList().setCellRenderer(renderer);

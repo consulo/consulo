@@ -9,7 +9,7 @@ import consulo.ui.ex.action.ShortcutSet;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.GraphicsConfig;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchBase;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.awt.JBUI;

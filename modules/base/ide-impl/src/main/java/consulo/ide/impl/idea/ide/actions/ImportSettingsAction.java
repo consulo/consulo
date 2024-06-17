@@ -22,23 +22,23 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
-import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.application.impl.internal.store.IApplicationStore;
 import consulo.container.boot.ContainerPathManager;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.startup.StartupActionScriptManager;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
 import consulo.ide.impl.idea.util.io.ZipUtil;
 import consulo.ide.impl.updateSettings.UpdateSettingsImpl;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.util.collection.MultiMap;
-
 import jakarta.annotation.Nonnull;
+
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -61,15 +61,22 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     final Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-    ChooseComponentsToExportDialog.chooseSettingsFile(ContainerPathManager.get().getConfigPath(), component, IdeBundle.message("title.import.file.location"),
-                                                      IdeBundle.message("prompt.choose.import.file.path")).doWhenDone(this::doImport);
+    ChooseComponentsToExportDialog.chooseSettingsFile(
+      ContainerPathManager.get().getConfigPath(),
+      component,
+      IdeLocalize.titleImportFileLocation().get(),
+      IdeLocalize.promptChooseImportFilePath().get()
+    ).doWhenDone(this::doImport);
   }
 
   private void doImport(String path) {
     final File saveFile = new File(path);
     try {
       if (!saveFile.exists()) {
-        Messages.showErrorDialog(IdeBundle.message("error.cannot.find.file", presentableFileName(saveFile)), IdeBundle.message("title.file.not.found"));
+        Messages.showErrorDialog(
+          IdeLocalize.errorCannotFindFile(presentableFileName(saveFile)).get(),
+          IdeLocalize.titleFileNotFound().get()
+        );
         return;
       }
 
@@ -79,17 +86,24 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
       }
 
       if (magicEntry == null) {
-        Messages.showErrorDialog(IdeBundle.message("error.file.contains.no.settings.to.import", presentableFileName(saveFile), promptLocationMessage()),
-                                 IdeBundle.message("title.invalid.file"));
+        String fileName = presentableFileName(saveFile);
+        Messages.showErrorDialog(
+          IdeLocalize.errorFileContainsNoSettingsToImport(fileName, promptLocationMessage()).get(),
+          IdeLocalize.titleInvalidFile().get()
+        );
         return;
       }
 
-      MultiMap<File, ExportSettingsAction.ExportableItem> fileToComponents = ExportSettingsAction.getExportableComponentsMap(myApplication, myApplicationStore, false);
+      MultiMap<File, ExportSettingsAction.ExportableItem> fileToComponents =
+        ExportSettingsAction.getExportableComponentsMap(myApplication, myApplicationStore, false);
       List<ExportSettingsAction.ExportableItem> components = getComponentsStored(saveFile, fileToComponents.values());
       fileToComponents.values().retainAll(components);
-      final ChooseComponentsToExportDialog dialog =
-              new ChooseComponentsToExportDialog(fileToComponents, false, IdeBundle.message("title.select.components.to.import"),
-                                                 IdeBundle.message("prompt.check.components.to.import"));
+      final ChooseComponentsToExportDialog dialog = new ChooseComponentsToExportDialog(
+        fileToComponents,
+        false,
+        IdeLocalize.titleSelectComponentsToImport().get(),
+        IdeLocalize.promptCheckComponentsToImport().get()
+      );
       if (!dialog.showAndGet()) {
         return;
       }
@@ -122,23 +136,31 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
 
       UpdateSettingsImpl.getInstance().setLastTimeCheck(0);
 
-      String key = ApplicationManager.getApplication().isRestartCapable()
-                   ? "message.settings.imported.successfully.restart"
-                   : "message.settings.imported.successfully";
+      LocalizeValue applicationName = Application.get().getName();
+      LocalizeValue message = ApplicationManager.getApplication().isRestartCapable()
+        ? IdeLocalize.messageSettingsImportedSuccessfullyRestart(applicationName, applicationName)
+        : IdeLocalize.messageSettingsImportedSuccessfully(applicationName, applicationName);
       final int ret = Messages.showOkCancelDialog(
-              IdeBundle.message(key, ApplicationNamesInfo.getInstance().getProductName(), ApplicationNamesInfo.getInstance().getFullProductName()),
-              IdeBundle.message("title.restart.needed"), Messages.getQuestionIcon());
+        message.get(),
+        IdeLocalize.titleRestartNeeded().get(),
+        Messages.getQuestionIcon()
+      );
       if (ret == Messages.OK) {
         ApplicationManager.getApplication().restart(true);
       }
     }
     catch (ZipException e1) {
-      Messages.showErrorDialog(IdeBundle.message("error.reading.settings.file", presentableFileName(saveFile), e1.getMessage(), promptLocationMessage()),
-                               IdeBundle.message("title.invalid.file"));
+      String fileName = presentableFileName(saveFile);
+      Messages.showErrorDialog(
+        IdeLocalize.errorReadingSettingsFile(fileName, e1.getMessage(), promptLocationMessage()).get(),
+        IdeLocalize.titleInvalidFile().get()
+      );
     }
     catch (IOException e1) {
-      Messages.showErrorDialog(IdeBundle.message("error.reading.settings.file.2", presentableFileName(saveFile), e1.getMessage()),
-                               IdeBundle.message("title.error.reading.file"));
+      Messages.showErrorDialog(
+        IdeLocalize.errorReadingSettingsFile2(presentableFileName(saveFile), e1.getMessage()).get(),
+        IdeLocalize.titleErrorReadingFile().get()
+      );
     }
   }
 
@@ -147,13 +169,14 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
   }
 
   private static String promptLocationMessage() {
-    return IdeBundle.message("message.please.ensure.correct.settings");
+    return IdeLocalize.messagePleaseEnsureCorrectSettings().get();
   }
 
   @Nonnull
-  private static List<ExportSettingsAction.ExportableItem> getComponentsStored(@Nonnull File zipFile,
-                                                                               @Nonnull Collection<? extends ExportSettingsAction.ExportableItem> registeredComponents)
-          throws IOException {
+  private static List<ExportSettingsAction.ExportableItem> getComponentsStored(
+    @Nonnull File zipFile,
+    @Nonnull Collection<? extends ExportSettingsAction.ExportableItem> registeredComponents
+  ) throws IOException {
     File configPath = new File(ContainerPathManager.get().getConfigPath());
     List<ExportSettingsAction.ExportableItem> components = new ArrayList<>();
     for (ExportSettingsAction.ExportableItem component : registeredComponents) {

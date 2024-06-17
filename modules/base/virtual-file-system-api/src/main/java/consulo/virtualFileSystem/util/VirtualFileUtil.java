@@ -31,6 +31,7 @@ import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
+import consulo.virtualFileSystem.localize.VirtualFileSystemLocalize;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -99,11 +100,11 @@ public final class VirtualFileUtil {
           path = subURL.getPath();
         }
         catch (MalformedURLException e) {
-          throw new RuntimeException(VfsBundle.message("url.parse.unhandled.exception"), e);
+          throw new RuntimeException(VirtualFileSystemLocalize.urlParseUnhandledException().get(), e);
         }
       }
       else {
-        throw new RuntimeException(new IOException(VfsBundle.message("url.parse.error", url.toExternalForm())));
+        throw new RuntimeException(new IOException(VirtualFileSystemLocalize.urlParseError(url.toExternalForm()).get()));
       }
     }
     if (Platform.current().os().isWindows()) {

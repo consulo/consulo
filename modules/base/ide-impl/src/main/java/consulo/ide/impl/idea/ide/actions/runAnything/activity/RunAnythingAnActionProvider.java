@@ -1,19 +1,18 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.runAnything.activity;
 
-import consulo.ide.IdeBundle;
+import consulo.application.ApplicationManager;
+import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingUtil;
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingActionItem;
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItem;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.application.ApplicationManager;
-import consulo.dataContext.DataContext;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -37,7 +36,9 @@ public abstract class RunAnythingAnActionProvider<V extends AnAction> extends Ru
 
   private static void performRunAnythingAction(@Nonnull AnAction action, @Nonnull DataContext dataContext) {
     ApplicationManager.getApplication().invokeLater(
-            () -> ProjectIdeFocusManager.getInstance(RunAnythingUtil.fetchProject(dataContext)).doWhenFocusSettlesDown(() -> performAction(action, dataContext)));
+      () -> ProjectIdeFocusManager.getInstance(RunAnythingUtil.fetchProject(dataContext))
+        .doWhenFocusSettlesDown(() -> performAction(action, dataContext))
+    );
   }
 
   private static void performAction(@Nonnull AnAction action, @Nonnull DataContext dataContext) {
@@ -49,6 +50,6 @@ public abstract class RunAnythingAnActionProvider<V extends AnAction> extends Ru
   @Nullable
   @Override
   public String getAdText() {
-    return IdeBundle.message("run.anything.ad.run.action.with.default.settings", RunAnythingUtil.SHIFT_SHORTCUT_TEXT);
+    return IdeLocalize.runAnythingAdRunActionWithDefaultSettings(RunAnythingUtil.SHIFT_SHORTCUT_TEXT).get();
   }
 }

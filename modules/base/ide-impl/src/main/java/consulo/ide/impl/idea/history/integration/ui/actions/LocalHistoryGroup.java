@@ -16,21 +16,20 @@
 
 package consulo.ide.impl.idea.history.integration.ui.actions;
 
-import consulo.ui.ex.action.NonTrivialActionGroup;
+import consulo.application.dumb.DumbAware;
+import consulo.language.psi.PsiElement;
+import consulo.project.Project;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
+import consulo.ui.ex.action.NonTrivialActionGroup;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiElement;
 
 public class LocalHistoryGroup extends NonTrivialActionGroup implements DumbAware {
   @Override
   public void update(AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
-    VirtualFile file = e.getData(CommonDataKeys.VIRTUAL_FILE);
-    PsiElement element = e.getData(CommonDataKeys.PSI_ELEMENT);
+    Project project = e.getData(Project.KEY);
+    VirtualFile file = e.getData(VirtualFile.KEY);
+    PsiElement element = e.getData(PsiElement.KEY);
     if (project == null || ActionPlaces.isPopupPlace(e.getPlace()) && (file != null && !file.isInLocalFileSystem() || file == null && element != null)) {
       e.getPresentation().setEnabledAndVisible(false);
     }

@@ -1,48 +1,41 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.language.editor.ui.awt.HintUtil;
-import consulo.application.util.matcher.MatcherTextRange;
-import consulo.codeEditor.action.EditorActionUtil;
-import consulo.codeEditor.EditorEx;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.IdeDocumentHistoryImpl;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.ColoredListCellRenderer;
-import consulo.ui.ex.awt.*;
-import consulo.ui.ex.awt.JBCheckBox;
-import consulo.ui.ex.awt.speedSearch.SpeedSearch;
-import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
-import consulo.application.util.DateFormatUtil;
 import consulo.application.ui.UISettings;
-import consulo.application.util.SystemInfo;
+import consulo.application.util.DateFormatUtil;
+import consulo.application.util.matcher.MatcherTextRange;
 import consulo.application.util.registry.Registry;
-import consulo.component.util.Iconable;
-import consulo.codeEditor.CaretState;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.HighlighterColors;
-import consulo.codeEditor.CodeInsightColors;
-import consulo.colorScheme.EditorColorsScheme;
+import consulo.codeEditor.*;
+import consulo.codeEditor.action.EditorActionUtil;
 import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.codeEditor.markup.HighlighterTargetArea;
+import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
-import consulo.ui.ex.util.TextAttributesUtil;
+import consulo.component.util.Iconable;
 import consulo.ide.impl.VfsIconUtil;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.IdeDocumentHistoryImpl;
+import consulo.language.editor.ui.awt.HintUtil;
+import consulo.platform.Platform;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.speedSearch.SpeedSearch;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.util.TextAttributesUtil;
 import consulo.ui.image.Image;
-
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
-
-import static consulo.ide.impl.idea.ide.actions.RecentLocationsAction.EMPTY_FILE_TEXT;
 
 class RecentLocationsRenderer extends ColoredListCellRenderer<RecentLocationItem> {
   @Nonnull
@@ -54,7 +47,12 @@ class RecentLocationsRenderer extends ColoredListCellRenderer<RecentLocationItem
   @Nonnull
   private final JBCheckBox myCheckBox;
 
-  RecentLocationsRenderer(@Nonnull Project project, @Nonnull SpeedSearch speedSearch, @Nonnull RecentLocationsDataModel data, @Nonnull JBCheckBox checkBox) {
+  RecentLocationsRenderer(
+    @Nonnull Project project,
+    @Nonnull SpeedSearch speedSearch,
+    @Nonnull RecentLocationsDataModel data,
+    @Nonnull JBCheckBox checkBox
+  ) {
     myProject = project;
     mySpeedSearch = speedSearch;
     myData = data;
@@ -62,7 +60,13 @@ class RecentLocationsRenderer extends ColoredListCellRenderer<RecentLocationItem
   }
 
   @Override
-  public Component getListCellRendererComponent(JList<? extends RecentLocationItem> list, RecentLocationItem value, int index, boolean selected, boolean hasFocus) {
+  public Component getListCellRendererComponent(
+    JList<? extends RecentLocationItem> list,
+    RecentLocationItem value,
+    int index,
+    boolean selected,
+    boolean hasFocus
+  ) {
     EditorEx editor = value.getEditor();
     if (myProject.isDisposed() || editor.isDisposed()) {
       return super.getListCellRendererComponent(list, value, index, selected, hasFocus);
@@ -86,14 +90,18 @@ class RecentLocationsRenderer extends ColoredListCellRenderer<RecentLocationItem
   }
 
   @Nonnull
-  private static JComponent createTitleComponent(@Nonnull Project project,
-                                                 @Nonnull JList<? extends RecentLocationItem> list,
-                                                 @Nonnull SpeedSearch speedSearch,
-                                                 @Nullable String breadcrumb,
-                                                 @Nonnull IdeDocumentHistoryImpl.PlaceInfo placeInfo,
-                                                 @Nonnull EditorColorsScheme colorsScheme,
-                                                 boolean selected) {
-    JComponent title = JBUI.Panels.simplePanel().withBorder(JBUI.Borders.empty()).addToLeft(createTitleTextComponent(project, list, speedSearch, placeInfo, colorsScheme, breadcrumb, selected));
+  private static JComponent createTitleComponent(
+    @Nonnull Project project,
+    @Nonnull JList<? extends RecentLocationItem> list,
+    @Nonnull SpeedSearch speedSearch,
+    @Nullable String breadcrumb,
+    @Nonnull IdeDocumentHistoryImpl.PlaceInfo placeInfo,
+    @Nonnull EditorColorsScheme colorsScheme,
+    boolean selected
+  ) {
+    JComponent title = JBUI.Panels.simplePanel()
+      .withBorder(JBUI.Borders.empty())
+      .addToLeft(createTitleTextComponent(project, list, speedSearch, placeInfo, colorsScheme, breadcrumb, selected));
 
     title.setBorder(JBUI.Borders.empty(8, 6, 5, 0));
     title.setBackground(TargetAWT.to(getBackgroundColor(colorsScheme, selected)));
@@ -112,7 +120,13 @@ class RecentLocationsRenderer extends ColoredListCellRenderer<RecentLocationItem
   }
 
   @Nonnull
-  private static JComponent setupEditorComponent(@Nonnull EditorEx editor, @Nonnull String text, @Nonnull SpeedSearch speedSearch, @Nonnull EditorColorsScheme colorsScheme, boolean selected) {
+  private static JComponent setupEditorComponent(
+    @Nonnull EditorEx editor,
+    @Nonnull String text,
+    @Nonnull SpeedSearch speedSearch,
+    @Nonnull EditorColorsScheme colorsScheme,
+    boolean selected
+  ) {
     Iterable<MatcherTextRange> ranges = speedSearch.matchingFragments(text);
     if (ranges != null) {
       selectSearchResultsInEditor(editor, ranges.iterator());
@@ -124,21 +138,30 @@ class RecentLocationsRenderer extends ColoredListCellRenderer<RecentLocationItem
     editor.setBackgroundColor(getBackgroundColor(colorsScheme, selected));
     editor.setBorder(JBUI.Borders.empty(0, 4, 6, 0));
 
-    if (EMPTY_FILE_TEXT.equals(editor.getDocument().getText())) {
-      editor.getMarkupModel().addRangeHighlighter(0, EMPTY_FILE_TEXT.length(), HighlighterLayer.SYNTAX, createEmptyTextForegroundTextAttributes(colorsScheme), HighlighterTargetArea.EXACT_RANGE);
+    String emptyFileText = IdeLocalize.recentLocationsPopupEmptyFileText().get();
+    if (emptyFileText.equals(editor.getDocument().getText())) {
+      editor.getMarkupModel().addRangeHighlighter(
+        0,
+        emptyFileText.length(),
+        HighlighterLayer.SYNTAX,
+        createEmptyTextForegroundTextAttributes(colorsScheme),
+        HighlighterTargetArea.EXACT_RANGE
+      );
     }
 
     return editor.getComponent();
   }
 
   @Nonnull
-  private static SimpleColoredComponent createTitleTextComponent(@Nonnull Project project,
-                                                                 @Nonnull JList<? extends RecentLocationItem> list,
-                                                                 @Nonnull SpeedSearch speedSearch,
-                                                                 @Nonnull IdeDocumentHistoryImpl.PlaceInfo placeInfo,
-                                                                 @Nonnull EditorColorsScheme colorsScheme,
-                                                                 @Nullable String breadcrumbText,
-                                                                 boolean selected) {
+  private static SimpleColoredComponent createTitleTextComponent(
+    @Nonnull Project project,
+    @Nonnull JList<? extends RecentLocationItem> list,
+    @Nonnull SpeedSearch speedSearch,
+    @Nonnull IdeDocumentHistoryImpl.PlaceInfo placeInfo,
+    @Nonnull EditorColorsScheme colorsScheme,
+    @Nullable String breadcrumbText,
+    boolean selected
+  ) {
     SimpleColoredComponent titleTextComponent = new SimpleColoredComponent();
 
     String fileName = placeInfo.getFile().getName();
@@ -160,7 +183,7 @@ class RecentLocationsRenderer extends ColoredListCellRenderer<RecentLocationItem
 
     titleTextComponent.setBorder(JBUI.Borders.empty());
 
-    if (!SystemInfo.isWindows) {
+    if (!Platform.current().os().isWindows()) {
       titleTextComponent.setFont(FontUtil.minusOne(UIUtil.getLabelFont()));
     }
 
@@ -196,7 +219,9 @@ class RecentLocationsRenderer extends ColoredListCellRenderer<RecentLocationItem
     if (attributes != null) {
       ColorValue unusedForeground = attributes.getForegroundColor();
       if (unusedForeground != null) {
-        return TextAttributesUtil.fromTextAttributes(new TextAttributes(unusedForeground, backgroundColor, null, null, Font.PLAIN));
+        return TextAttributesUtil.fromTextAttributes(
+          new TextAttributes(unusedForeground, backgroundColor, null, null, Font.PLAIN)
+        );
       }
     }
 
@@ -222,7 +247,13 @@ class RecentLocationsRenderer extends ColoredListCellRenderer<RecentLocationItem
   }
 
   @Override
-  protected void customizeCellRenderer(@Nonnull JList<? extends RecentLocationItem> list, RecentLocationItem value, int index, boolean selected, boolean hasFocus) {
+  protected void customizeCellRenderer(
+    @Nonnull JList<? extends RecentLocationItem> list,
+    RecentLocationItem value,
+    int index,
+    boolean selected,
+    boolean hasFocus
+  ) {
   }
 
   private static void selectSearchResultsInEditor(@Nonnull Editor editor, @Nonnull Iterator<? extends MatcherTextRange> resultIterator) {
@@ -240,7 +271,10 @@ class RecentLocationsRenderer extends ColoredListCellRenderer<RecentLocationItem
       EditorActionUtil.makePositionVisible(editor, caretOffset);
       EditorActionUtil.makePositionVisible(editor, selectionStartOffset);
       EditorActionUtil.makePositionVisible(editor, selectionEndOffset);
-      caretStates.add(new CaretState(editor.offsetToLogicalPosition(caretOffset), editor.offsetToLogicalPosition(selectionStartOffset), editor.offsetToLogicalPosition(selectionEndOffset)));
+      caretStates.add(new CaretState(
+        editor.offsetToLogicalPosition(caretOffset),
+        editor.offsetToLogicalPosition(selectionStartOffset), editor.offsetToLogicalPosition(selectionEndOffset)
+      ));
     }
     if (caretStates.isEmpty()) {
       return;

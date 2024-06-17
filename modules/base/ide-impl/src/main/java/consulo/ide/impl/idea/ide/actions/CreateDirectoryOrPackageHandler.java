@@ -15,34 +15,36 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.application.CommonBundle;
+import consulo.application.ApplicationManager;
+import consulo.application.util.registry.Registry;
 import consulo.ide.action.CreateElementActionBase;
 import consulo.ide.action.CreateFileAction;
-import consulo.localHistory.LocalHistory;
-import consulo.localHistory.LocalHistoryAction;
-import consulo.ide.IdeBundle;
-import consulo.application.ApplicationManager;
-import consulo.undoRedo.CommandProcessor;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.language.file.FileTypeManager;
-import consulo.virtualFileSystem.fileType.UnknownFileType;
-import consulo.project.Project;
-import consulo.ui.ex.InputValidatorEx;
-import consulo.ui.ex.awt.Messages;
-import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.actions.CreateDirectoryOrPackageType;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.file.FileTypeManager;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFileSystemItem;
-import consulo.language.util.IncorrectOperationException;
-import consulo.ide.impl.actions.CreateDirectoryOrPackageType;
 import consulo.language.psi.PsiPackageManager;
+import consulo.language.util.IncorrectOperationException;
+import consulo.localHistory.LocalHistory;
+import consulo.localHistory.LocalHistoryAction;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.CommonLocalize;
+import consulo.platform.base.localize.IdeLocalize;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.InputValidatorEx;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.image.Image;
-
+import consulo.undoRedo.CommandProcessor;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.fileType.UnknownFileType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import java.awt.*;
 import java.io.File;
 import java.util.StringTokenizer;
@@ -62,15 +64,22 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
   private final Component myDialogParent;
   private String myErrorText;
 
-  public CreateDirectoryOrPackageHandler(@Nullable Project project, @Nonnull PsiDirectory directory, CreateDirectoryOrPackageType type, @Nonnull final String delimiters) {
+  public CreateDirectoryOrPackageHandler(
+    @Nullable Project project,
+    @Nonnull PsiDirectory directory,
+    CreateDirectoryOrPackageType type,
+    @Nonnull final String delimiters
+  ) {
     this(project, directory, type, delimiters, null);
   }
 
-  public CreateDirectoryOrPackageHandler(@Nullable Project project,
-                                         @Nonnull PsiDirectory directory,
-                                         CreateDirectoryOrPackageType type,
-                                         @Nonnull final String delimiters,
-                                         @Nullable Component dialogParent) {
+  public CreateDirectoryOrPackageHandler(
+    @Nullable Project project,
+    @Nonnull PsiDirectory directory,
+    CreateDirectoryOrPackageType type,
+    @Nonnull final String delimiters,
+    @Nullable Component dialogParent
+  ) {
     myProject = project;
     myDirectory = directory;
     myType = type;
@@ -78,6 +87,7 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
     myDialogParent = dialogParent;
   }
 
+  @NonNls
   @Override
   @RequiredUIAccess
   public boolean checkInput(String inputString) {
@@ -124,10 +134,12 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
 
       boolean isDirectory = myType == CreateDirectoryOrPackageType.Directory;
       if (FileTypeManager.getInstance().isFileIgnored(token)) {
-        myErrorText = "Trying to create a " + (isDirectory ? "directory" : "package") + " with an ignored name, the result will not be visible";
+        myErrorText = "Trying to create a " + (isDirectory ? "directory" : "package") +
+          " with an ignored name, the result will not be visible";
         return true;
       }
-      if (!isDirectory && token.length() > 0 && !PsiPackageManager.getInstance(myDirectory.getProject()).isValidPackageName(myDirectory, token)) {
+      if (!isDirectory && token.length() > 0
+        && !PsiPackageManager.getInstance(myDirectory.getProject()).isValidPackageName(myDirectory, token)) {
         myErrorText = "Not a valid package name, it will not be possible to create a class inside";
         return true;
       }
@@ -146,7 +158,7 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
   public boolean canClose(final String subDirName) {
 
     if (subDirName.length() == 0) {
-      showErrorDialog(IdeBundle.message("error.name.should.be.specified"));
+      showErrorDialog(IdeLocalize.errorNameShouldBeSpecified().get());
       return false;
     }
 
@@ -171,6 +183,7 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
     return myCreatedElement != null;
   }
 
+  @NonNls
   @Nullable
   private Boolean suggestCreatingFileInstead(String subDirName) {
     boolean isDirectory = myType == CreateDirectoryOrPackageType.Directory;
@@ -180,8 +193,15 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
       FileType fileType = findFileTypeBoundToName(subDirName);
       if (fileType != null) {
         String message = "The name you entered looks like a file name. Do you want to create a file named " + subDirName + " instead?";
-        int ec = Messages.showYesNoCancelDialog(myProject, message, "File Name Detected", "&Yes, create file", "&No, create " + (isDirectory ? "directory" : "packages"),
-                                                CommonBundle.getCancelButtonText(), fileType.getIcon());
+        int ec = Messages.showYesNoCancelDialog(
+          myProject,
+          message,
+          "File Name Detected",
+          "&Yes, create file",
+          "&No, create " + (isDirectory ? "directory" : "packages"),
+          CommonLocalize.buttonCancel().get(),
+          fileType.getIcon()
+        );
         if (ec == Messages.CANCEL) {
           createFile = null;
         }
@@ -205,8 +225,8 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
     Runnable command = () -> {
       final Runnable run = () -> {
         String dirPath = myDirectory.getVirtualFile().getPresentableUrl();
-        String actionName = IdeBundle.message("progress.creating.directory", dirPath, File.separator, subDirName);
-        LocalHistoryAction action = LocalHistory.getInstance().startAction(actionName);
+        LocalizeValue actionName = IdeLocalize.progressCreatingDirectory(dirPath, File.separator, subDirName);
+        LocalHistoryAction action = LocalHistory.getInstance().startAction(actionName.get());
         try {
           if (createFile) {
             CreateFileAction.MkDirs mkdirs = new CreateFileAction.MkDirs(subDirName, myDirectory);
@@ -217,7 +237,8 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
           }
         }
         catch (final IncorrectOperationException ex) {
-          ApplicationManager.getApplication().invokeLater(() -> showErrorDialog(CreateElementActionBase.filterMessage(ex.getMessage())));
+          ApplicationManager.getApplication()
+            .invokeLater(() -> showErrorDialog(CreateElementActionBase.filterMessage(ex.getMessage())));
         }
         finally {
           action.finish();
@@ -225,19 +246,25 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
       };
       ApplicationManager.getApplication().runWriteAction(run);
     };
-    CommandProcessor.getInstance().executeCommand(myProject, command, createFile
-                                                                      ? IdeBundle.message("command.create.file")
-                                                                      : isDirectory ? IdeBundle.message("command.create.directory") : IdeBundle.message("command.create.package"), null);
+    CommandProcessor.getInstance().executeCommand(
+      myProject,
+      command,
+      createFile
+        ? IdeLocalize.commandCreateFile().get()
+        : isDirectory
+        ? IdeLocalize.commandCreateDirectory().get()
+        : IdeLocalize.commandCreatePackage().get(),
+      null);
   }
 
   private void showErrorDialog(String message) {
-    String title = CommonBundle.getErrorTitle();
+    LocalizeValue title = CommonLocalize.titleError();
     Image icon = Messages.getErrorIcon();
     if (myDialogParent != null) {
-      Messages.showMessageDialog(myDialogParent, message, title, icon);
+      Messages.showMessageDialog(myDialogParent, message, title.get(), icon);
     }
     else {
-      Messages.showMessageDialog(myProject, message, title, icon);
+      Messages.showMessageDialog(myProject, message, title.get(), icon);
     }
   }
 

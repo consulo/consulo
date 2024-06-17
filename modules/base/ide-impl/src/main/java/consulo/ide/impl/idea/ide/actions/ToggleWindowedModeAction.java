@@ -15,23 +15,22 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.application.dumb.DumbAware;
+import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
+import consulo.platform.Platform;
+import consulo.project.Project;
+import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.ToggleAction;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
-import consulo.application.util.SystemInfo;
-import consulo.project.ui.wm.ToolWindowManager;
-import consulo.ui.ex.toolWindow.ToolWindowType;
 import consulo.ui.ex.internal.ToolWindowEx;
-import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
+import consulo.ui.ex.toolWindow.ToolWindowType;
 
 public class ToggleWindowedModeAction extends ToggleAction implements DumbAware {
 
   @Override
   public boolean isSelected(AnActionEvent event) {
-    Project project = event.getData(CommonDataKeys.PROJECT);
+    Project project = event.getData(Project.KEY);
     if (project == null) {
       return false;
     }
@@ -45,7 +44,7 @@ public class ToggleWindowedModeAction extends ToggleAction implements DumbAware 
 
   @Override
   public void setSelected(AnActionEvent event, boolean flag) {
-    Project project = event.getData(CommonDataKeys.PROJECT);
+    Project project = event.getData(Project.KEY);
     if (project == null) {
       return;
     }
@@ -68,11 +67,11 @@ public class ToggleWindowedModeAction extends ToggleAction implements DumbAware 
   public void update(AnActionEvent event) {
     super.update(event);
     Presentation presentation = event.getPresentation();
-    if (SystemInfo.isMac) {
+    if (Platform.current().os().isMac()) {
       presentation.setEnabledAndVisible(false);
       return;
     }
-    Project project = event.getData(CommonDataKeys.PROJECT);
+    Project project = event.getData(Project.KEY);
     if (project == null) {
       presentation.setEnabled(false);
       return;

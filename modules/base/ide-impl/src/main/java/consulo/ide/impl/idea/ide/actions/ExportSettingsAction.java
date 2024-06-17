@@ -23,6 +23,7 @@ import consulo.application.Application;
 import consulo.application.CommonBundle;
 import consulo.application.dumb.DumbAware;
 import consulo.application.impl.internal.store.IApplicationStore;
+import consulo.component.internal.inject.InjectingKey;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -34,14 +35,13 @@ import consulo.container.boot.ContainerPathManager;
 import consulo.container.classloader.PluginClassLoader;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.plugins.PluginManager;
 import consulo.ide.impl.idea.ide.plugins.PluginManagerCore;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.io.ZipUtil;
-import consulo.component.internal.inject.InjectingKey;
-import consulo.language.editor.CommonDataKeys;
+import consulo.platform.base.localize.IdeLocalize;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -49,10 +49,10 @@ import consulo.ui.ex.awt.Messages;
 import consulo.util.collection.MultiMap;
 import consulo.util.collection.Sets;
 import consulo.util.lang.StringUtil;
-import jakarta.inject.Inject;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -82,9 +82,12 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
   public void actionPerformed(@Nullable AnActionEvent e) {
     myApplication.saveSettings();
 
-    ChooseComponentsToExportDialog dialog =
-            new ChooseComponentsToExportDialog(getExportableComponentsMap(myApplication, myApplicationStore, true), true, IdeBundle.message("title.select.components.to.export"),
-                                               IdeBundle.message("prompt.please.check.all.components.to.export"));
+    ChooseComponentsToExportDialog dialog = new ChooseComponentsToExportDialog(
+      getExportableComponentsMap(myApplication, myApplicationStore, true),
+      true,
+      IdeLocalize.titleSelectComponentsToExport().get(),
+      IdeLocalize.promptPleaseCheckAllComponentsToExport().get()
+    );
     if (!dialog.showAndGet()) {
       return;
     }
@@ -102,8 +105,11 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
     final File saveFile = dialog.getExportFile();
     try {
       if (saveFile.exists()) {
-        final int ret = Messages.showOkCancelDialog(IdeBundle.message("prompt.overwrite.settings.file", FileUtil.toSystemDependentName(saveFile.getPath())),
-                                                    IdeBundle.message("title.file.already.exists"), Messages.getWarningIcon());
+        final int ret = Messages.showOkCancelDialog(
+          IdeLocalize.promptOverwriteSettingsFile(FileUtil.toSystemDependentName(saveFile.getPath())).get(),
+          IdeLocalize.titleFileAlreadyExists().get(),
+          Messages.getWarningIcon()
+        );
         if (ret != Messages.OK) return;
       }
       try (ZipOutputStream output = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(saveFile)))) {
@@ -125,12 +131,19 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
         magicFile.deleteOnExit();
         ZipUtil.addFileToZip(output, magicFile, ImportSettingsFilenameFilter.SETTINGS_ZIP_MARKER, writtenItemRelativePaths, null);
       }
-      ShowFilePathAction
-              .showDialog(e == null ? null : e.getData(CommonDataKeys.PROJECT), IdeBundle.message("message.settings.exported.successfully"), IdeBundle.message("title.export.successful"),
-                          saveFile, null);
+      ShowFilePathAction.showDialog(
+        e == null ? null : e.getData(Project.KEY),
+        IdeLocalize.messageSettingsExportedSuccessfully().get(),
+        IdeLocalize.titleExportSuccessful().get(),
+        saveFile,
+        null
+      );
     }
     catch (IOException e1) {
-      Messages.showErrorDialog(IdeBundle.message("error.writing.settings", e1.toString()), IdeBundle.message("title.error.writing.file"));
+      Messages.showErrorDialog(
+        IdeLocalize.errorWritingSettings(e1.toString()).get(),
+        IdeLocalize.titleErrorWritingFile().get()
+      );
     }
   }
 
@@ -145,12 +158,23 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
       final File tempFile = File.createTempFile("installed", "plugins");
       tempFile.deleteOnExit();
       Files.write(tempFile.toPath(), oldPlugins, StandardCharsets.UTF_8);
-      ZipUtil.addDirToZipRecursively(output, saveFile, tempFile, "/" + INSTALLED_TXT, null, writtenItemRelativePaths);
+      ZipUtil.addDirToZipRecursively(
+        output,
+        saveFile,
+        tempFile,
+        "/" + INSTALLED_TXT,
+        null,
+        writtenItemRelativePaths
+      );
     }
   }
 
   @Nonnull
-  public static MultiMap<File, ExportableItem> getExportableComponentsMap(Application application, IApplicationStore applicationStore, final boolean onlyExisting) {
+  public static MultiMap<File, ExportableItem> getExportableComponentsMap(
+    Application application,
+    IApplicationStore applicationStore,
+    final boolean onlyExisting
+  ) {
     final MultiMap<File, ExportableItem> result = MultiMap.createLinkedSet();
 
     final StateStorageManager storageManager = applicationStore.getStateStorageManager();

@@ -45,12 +45,12 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.NonPhysicalFileSystem;
-import consulo.virtualFileSystem.VfsBundle;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.localize.VirtualFileSystemLocalize;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
@@ -160,11 +160,11 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
     CheckUtil.checkWritable(this);
     VirtualFile parentFile = myFile.getParent();
     if (parentFile == null) {
-      throw new IncorrectOperationException(VfsBundle.message("cannot.rename.root.directory"));
+      throw new IncorrectOperationException(VirtualFileSystemLocalize.cannotRenameRootDirectory(myFile.getPath()).get());
     }
     VirtualFile child = parentFile.findChild(name);
     if (child != null && !child.equals(myFile)) {
-      throw new IncorrectOperationException(VfsBundle.message("file.already.exists.error", child.getPresentableUrl()));
+      throw new IncorrectOperationException(VirtualFileSystemLocalize.fileAlreadyExistsError(child.getPresentableUrl()).get());
     }
   }
 
@@ -179,7 +179,7 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
   @Nonnull
   public PsiDirectory[] getSubdirectories() {
     VirtualFile[] files = myFile.getChildren();
-    ArrayList<PsiDirectory> dirs = new ArrayList<PsiDirectory>();
+    ArrayList<PsiDirectory> dirs = new ArrayList<>();
     for (VirtualFile file : files) {
       PsiDirectory dir = myManager.findDirectory(file);
       if (dir != null) {
@@ -195,7 +195,7 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
   public PsiFile[] getFiles() {
     LOG.assertTrue(myFile.isValid());
     VirtualFile[] files = myFile.getChildren();
-    ArrayList<PsiFile> psiFiles = new ArrayList<PsiFile>();
+    ArrayList<PsiFile> psiFiles = new ArrayList<>();
     for (VirtualFile file : files) {
       PsiFile psiFile = myManager.findFile(file);
       if (psiFile != null) {
@@ -252,13 +252,10 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
     checkValid();
 
     VirtualFile[] files = myFile.getChildren();
-    final ArrayList<PsiElement> children = new ArrayList<PsiElement>(files.length);
-    processChildren(new PsiElementProcessor<PsiFileSystemItem>() {
-      @Override
-      public boolean execute(@Nonnull final PsiFileSystemItem element) {
-        children.add(element);
-        return true;
-      }
+    final ArrayList<PsiElement> children = new ArrayList<>(files.length);
+    processChildren(element -> {
+      children.add(element);
+      return true;
     });
 
     return PsiUtilCore.toPsiElementArray(children);
@@ -375,7 +372,7 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
     //CheckUtil.checkIsIdentifier(name);
     VirtualFile existingFile = getVirtualFile().findChild(name);
     if (existingFile != null) {
-      throw new IncorrectOperationException(VfsBundle.message("file.already.exists.error", existingFile.getPresentableUrl()));
+      throw new IncorrectOperationException(VirtualFileSystemLocalize.fileAlreadyExistsError(existingFile.getPresentableUrl()).get());
     }
     CheckUtil.checkWritable(this);
   }
@@ -451,7 +448,7 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
   public void checkCreateFile(@Nonnull String name) throws IncorrectOperationException {
     VirtualFile existingFile = getVirtualFile().findChild(name);
     if (existingFile != null) {
-      throw new IncorrectOperationException(VfsBundle.message("file.already.exists.error", existingFile.getPresentableUrl()));
+      throw new IncorrectOperationException(VirtualFileSystemLocalize.fileAlreadyExistsError(existingFile.getPresentableUrl()).get());
     }
 
     for (PsiDirectoryMethodProxy proxy : PsiDirectoryMethodProxy.EP_NAME.getExtensionList()) {
@@ -538,16 +535,16 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
       PsiDirectory[] subpackages = getSubdirectories();
       for (PsiDirectory dir : subpackages) {
         if (Comparing.strEqual(dir.getName(), name)) {
-          throw new IncorrectOperationException(VfsBundle.message("dir.already.exists.error", dir.getVirtualFile().getPresentableUrl()));
+          throw new IncorrectOperationException(VirtualFileSystemLocalize.dirAlreadyExistsError(dir.getVirtualFile().getPresentableUrl()).get());
         }
       }
     }
-    else if (element instanceof PsiFile) {
-      String name = ((PsiFile)element).getName();
+    else if (element instanceof PsiFile psiFile) {
+      String name = psiFile.getName();
       PsiFile[] files = getFiles();
       for (PsiFile file : files) {
         if (Comparing.strEqual(file.getName(), name, SystemInfo.isFileSystemCaseSensitive)) {
-          throw new IncorrectOperationException(VfsBundle.message("file.already.exists.error", file.getVirtualFile().getPresentableUrl()));
+          throw new IncorrectOperationException(VirtualFileSystemLocalize.fileAlreadyExistsError(file.getVirtualFile().getPresentableUrl()).get());
         }
       }
     }
@@ -655,10 +652,7 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
 
     PsiDirectoryImpl directory = (PsiDirectoryImpl)o;
 
-    if (!myManager.equals(directory.myManager)) return false;
-    if (!myFile.equals(directory.myFile)) return false;
-
-    return true;
+    return myManager.equals(directory.myManager) && myFile.equals(directory.myFile);
   }
 
   @Override

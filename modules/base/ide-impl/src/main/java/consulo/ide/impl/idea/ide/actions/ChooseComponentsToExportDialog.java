@@ -15,29 +15,29 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.IdeBundle;
-import consulo.ui.ex.awt.ElementsChooser;
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
+import consulo.container.boot.ContainerPathManager;
+import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.VerticalFlowLayout;
+import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.logging.Logger;
+import consulo.platform.base.localize.IdeLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.ElementsChooser;
+import consulo.ui.ex.awt.FieldPanel;
+import consulo.ui.ex.awt.VerticalFlowLayout;
+import consulo.ui.image.Image;
+import consulo.util.collection.MultiMap;
+import consulo.util.concurrent.AsyncResult;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.awt.FieldPanel;
-import consulo.util.collection.MultiMap;
-import consulo.container.boot.ContainerPathManager;
-import consulo.logging.Logger;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.fileChooser.FileChooser;
-import consulo.ui.image.Image;
-import consulo.util.concurrent.AsyncResult;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -81,12 +81,21 @@ public class ChooseComponentsToExportDialog extends DialogWrapper {
     final ActionListener browseAction = new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        chooseSettingsFile(myPathPanel.getText(), getWindow(), IdeBundle.message("title.export.file.location"), IdeBundle.message("prompt.choose.export.settings.file.path"))
-                .doWhenDone(path -> myPathPanel.setText(FileUtil.toSystemDependentName(path)));
+        chooseSettingsFile(
+          myPathPanel.getText(),
+          getWindow(),
+          IdeLocalize.titleExportFileLocation().get(),
+          IdeLocalize.promptChooseExportSettingsFilePath().get()
+        ).doWhenDone(path -> myPathPanel.setText(FileUtil.toSystemDependentName(path)));
       }
     };
 
-    myPathPanel = new FieldPanel(IdeBundle.message("editbox.export.settings.to"), null, browseAction, null);
+    myPathPanel = new FieldPanel(
+      IdeLocalize.editboxExportSettingsTo().get(),
+      null,
+      browseAction,
+      null
+    );
 
     String exportPath = PropertiesComponent.getInstance().getValue("export.settings.path", DEFAULT_PATH);
     myPathPanel.setText(exportPath);

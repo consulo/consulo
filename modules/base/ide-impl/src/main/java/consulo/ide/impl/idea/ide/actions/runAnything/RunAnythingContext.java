@@ -17,16 +17,16 @@ package consulo.ide.impl.idea.ide.actions.runAnything;
 
 import consulo.application.AllIcons;
 import consulo.application.util.UserHomeFileUtil;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.image.Image;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.Objects;
 
 /**
@@ -37,7 +37,10 @@ public class RunAnythingContext {
     private Project myProject;
 
     public ProjectContext(Project project) {
-      super(IdeBundle.message("run.anything.context.project"), StringUtil.notNullize(project.getBasePath()));
+      super(
+        IdeLocalize.runAnythingContextProject().get(),
+        StringUtil.notNullize(project.getBasePath())
+      );
       myProject = project;
     }
 
@@ -64,7 +67,7 @@ public class RunAnythingContext {
     public static final BrowseRecentDirectoryContext INSTANCE = new BrowseRecentDirectoryContext();
 
     public BrowseRecentDirectoryContext() {
-      super(IdeBundle.message("run.anything.context.browse.directory"), "", AllIcons.Nodes.Folder);
+      super(IdeLocalize.runAnythingContextBrowseDirectory().get(), "", AllIcons.Nodes.Folder);
     }
   }
 

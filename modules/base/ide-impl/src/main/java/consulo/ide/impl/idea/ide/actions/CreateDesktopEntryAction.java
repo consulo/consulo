@@ -16,17 +16,18 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.application.Application;
-import consulo.application.ApplicationBundle;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.start.ApplicationStarter;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.application.util.SystemInfo;
 import consulo.container.boot.ContainerPathManager;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.CommonDataKeys;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.local.ExecUtil;
@@ -55,7 +56,7 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
   private static final Logger LOG = Logger.getInstance(CreateDesktopEntryAction.class);
 
   public static boolean isAvailable() {
-    return SystemInfo.isUnix && SystemInfo.hasXdgOpen();
+    return Platform.current().os().isUnix() && SystemInfo.hasXdgOpen();
   }
 
   @RequiredUIAccess
@@ -72,7 +73,7 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
   public void actionPerformed(@Nonnull final AnActionEvent event) {
     if (!isAvailable()) return;
 
-    final Project project = event.getData(CommonDataKeys.PROJECT);
+    final Project project = event.getData(Project.KEY);
     final CreateDesktopEntryDialog dialog = new CreateDesktopEntryDialog(project);
     if (!dialog.showAndGet()) {
       return;
@@ -87,31 +88,35 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
     });
   }
 
-  public static void createDesktopEntry(@Nullable final Project project,
-                                        @Nonnull final ProgressIndicator indicator,
-                                        final boolean globalEntry) {
+  public static void createDesktopEntry(
+    @Nullable final Project project,
+    @Nonnull final ProgressIndicator indicator,
+    final boolean globalEntry
+  ) {
     if (!isAvailable()) return;
     final double step = (1.0 - indicator.getFraction()) / 3.0;
 
     try {
-      indicator.setText(ApplicationBundle.message("desktop.entry.checking"));
+      indicator.setTextValue(ApplicationLocalize.desktopEntryChecking());
       check();
       indicator.setFraction(indicator.getFraction() + step);
 
-      indicator.setText(ApplicationBundle.message("desktop.entry.preparing"));
+      indicator.setTextValue(ApplicationLocalize.desktopEntryPreparing());
       final File entry = prepare();
       indicator.setFraction(indicator.getFraction() + step);
 
-      indicator.setText(ApplicationBundle.message("desktop.entry.installing"));
+      indicator.setTextValue(ApplicationLocalize.desktopEntryInstalling());
       install(entry, globalEntry);
       indicator.setFraction(indicator.getFraction() + step);
 
-      final String message = ApplicationBundle.message("desktop.entry.success", Application.get().getName());
+      final String message = ApplicationLocalize.desktopEntrySuccess(Application.get().getName()).get();
       if (ApplicationManager.getApplication() != null) {
-        Notifications.Bus.notify(new Notification(Notifications.SYSTEM_MESSAGES_GROUP,
-                                                  "Desktop entry created",
-                                                  message,
-                                                  NotificationType.INFORMATION));
+        Notifications.Bus.notify(new Notification(
+          Notifications.SYSTEM_MESSAGES_GROUP,
+          "Desktop entry created",
+          message,
+          NotificationType.INFORMATION
+        ));
       }
     }
     catch (Exception e) {
@@ -122,8 +127,15 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
       if (!StringUtil.isEmptyOrSpaces(message)) {
         LOG.warn(e);
         Notifications.Bus
-          .notify(new Notification(Notifications.SYSTEM_MESSAGES_GROUP, "Failed to create desktop entry", message, NotificationType.ERROR),
-                  project);
+          .notify(
+            new Notification(
+              Notifications.SYSTEM_MESSAGES_GROUP,
+              "Failed to create desktop entry",
+              message,
+              NotificationType.ERROR
+            ),
+            project
+          );
       }
       else {
         LOG.error(e);
@@ -133,7 +145,7 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
 
   private static void check() throws ExecutionException, InterruptedException {
     int result = new GeneralCommandLine("which", "xdg-desktop-menu").createProcess().waitFor();
-    if (result != 0) throw new RuntimeException(ApplicationBundle.message("desktop.entry.xdg.missing"));
+    if (result != 0) throw new RuntimeException(ApplicationLocalize.desktopEntryXdgMissing().get());
   }
 
   private static File prepare() throws IOException {
@@ -142,19 +154,24 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
 
     final Path iconPath = ContainerPathManager.get().findIconInAppHomeDirectory();
     if (iconPath == null) {
-      throw new RuntimeException(ApplicationBundle.message("desktop.entry.icon.missing", distributionDirectory.getPath()));
+      throw new RuntimeException(ApplicationLocalize.desktopEntryIconMissing(distributionDirectory.getPath()).get());
     }
 
     final File execPath = new File(distributionDirectory, "consulo.sh");
     if (!execPath.exists()) {
-      throw new RuntimeException(ApplicationBundle.message("desktop.entry.script.missing", distributionDirectory.getPath()));
+      throw new RuntimeException(ApplicationLocalize.desktopEntryScriptMissing(distributionDirectory.getPath()).get());
     }
 
     final String wmClass = ApplicationStarter.getFrameClass();
 
-    final String content = ExecUtil.loadTemplate(CreateDesktopEntryAction.class.getClassLoader(), "entry.desktop", ContainerUtil
-      .newHashMap(Arrays.asList("$NAME$", "$SCRIPT$", "$ICON$", "$WM_CLASS$"),
-                  Arrays.asList(name, execPath.getPath(), iconPath.toAbsolutePath().toString(), wmClass)));
+    final String content = ExecUtil.loadTemplate(
+      CreateDesktopEntryAction.class.getClassLoader(),
+      "entry.desktop",
+      ContainerUtil.newHashMap(
+        Arrays.asList("$NAME$", "$SCRIPT$", "$ICON$", "$WM_CLASS$"),
+        Arrays.asList(name, execPath.getPath(), iconPath.toAbsolutePath().toString(), wmClass)
+      )
+    );
 
     final String entryName = wmClass + ".desktop";
     final File entryFile = new File(FileUtil.getTempDirectory(), entryName);
@@ -163,24 +180,35 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
     return entryFile;
   }
 
-  private static void install(File entryFile, boolean globalEntry) throws IOException, ExecutionException, InterruptedException {
+  private static void install(File entryFile, boolean globalEntry)
+    throws IOException, ExecutionException, InterruptedException {
     if (globalEntry) {
-      File script = ExecUtil.createTempExecutableScript("sudo", ".sh", "#!/bin/sh\n" +
-        "xdg-desktop-menu install --mode system --novendor \"" +
-        entryFile.getAbsolutePath() +
-        "\"\n" +
-        "RV=$?\n" +
-        "xdg-desktop-menu forceupdate --mode system\n" +
-        "exit $RV\n");
+      File script = ExecUtil.createTempExecutableScript(
+        "sudo",
+        ".sh",
+        "#!/bin/sh\n" +
+          "xdg-desktop-menu install --mode system --novendor \"" +
+          entryFile.getAbsolutePath() +
+          "\"\n" +
+          "RV=$?\n" +
+          "xdg-desktop-menu forceupdate --mode system\n" +
+          "exit $RV\n"
+      );
       script.deleteOnExit();
-      String prompt = ApplicationBundle.message("desktop.entry.sudo.prompt");
-      int result = CapturingProcessUtil.execAndGetOutput(new GeneralCommandLine(script.getPath()).withSudo(prompt)).getExitCode();
+      LocalizeValue prompt = ApplicationLocalize.desktopEntrySudoPrompt();
+      int result = CapturingProcessUtil.execAndGetOutput(new GeneralCommandLine(script.getPath()).withSudo(prompt.get())).getExitCode();
       if (result != 0) throw new RuntimeException("'" + script.getAbsolutePath() + "' : " + result);
     }
     else {
       int result =
-        new GeneralCommandLine("xdg-desktop-menu", "install", "--mode", "user", "--novendor", entryFile.getAbsolutePath()).createProcess()
-                                                                                                                          .waitFor();
+        new GeneralCommandLine(
+          "xdg-desktop-menu",
+          "install",
+          "--mode",
+          "user",
+          "--novendor",
+          entryFile.getAbsolutePath()
+        ).createProcess().waitFor();
       if (result != 0) throw new RuntimeException("'" + entryFile.getAbsolutePath() + "' : " + result);
       new GeneralCommandLine("xdg-desktop-menu", "forceupdate", "--mode", "user").createProcess().waitFor();
     }
