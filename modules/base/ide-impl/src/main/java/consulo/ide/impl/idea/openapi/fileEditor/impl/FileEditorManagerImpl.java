@@ -411,7 +411,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
 
       Set<FileEditorsSplitters> all = getAllSplitters();
       for (FileEditorsSplitters each : all) {
-        each.updateFileName(file);
+        each.updateFileNameAsync(file);
       }
     });
   }

@@ -335,8 +335,8 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
     TabInfo tab = myTabs.findInfo(file);
     if (tab != null) return;
 
-    tab = new TabInfo(comp).setText(EditorTabPresentationUtil.getEditorTabTitle(myProject, file, window)).setIcon(icon).setTooltipText(tooltip).setObject(file)
-            .setTabColor(EditorTabPresentationUtil.getEditorTabBackgroundColor(myProject, file, window)).setDragOutDelegate(myDragOutDelegate);
+    tab = new TabInfo(comp).setText(EditorTabPresentationUtil.getEditorTabTitle(myProject, file)).setIcon(icon).setTooltipText(tooltip).setObject(file)
+                           .setTabColor(EditorTabPresentationUtil.getEditorTabBackgroundColor(myProject, file, window)).setDragOutDelegate(myDragOutDelegate);
     tab.setTestableUi(new MyQueryable(tab));
 
     final ActionGroup.Builder tabActions = ActionGroup.newImmutableBuilder();
@@ -379,21 +379,21 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
   }
 
   /**
-   * @deprecated Use {@link EditorTabPresentationUtil#getEditorTabTitle(Project, VirtualFile, FileEditorWindow)}
+   * @deprecated Use {@link EditorTabPresentationUtil#getEditorTabTitle(Project, VirtualFile)}
    */
   @Deprecated
   @Nonnull
   public static String calcTabTitle(@Nonnull Project project, @Nonnull VirtualFile file) {
-    return EditorTabPresentationUtil.getEditorTabTitle(project, file, null);
+    return EditorTabPresentationUtil.getEditorTabTitle(project, file);
   }
 
   /**
-   * @deprecated Use {@link EditorTabPresentationUtil#getUniqueEditorTabTitle(Project, VirtualFile, FileEditorWindow)}
+   * @deprecated Use {@link EditorTabPresentationUtil#getUniqueEditorTabTitle(Project, VirtualFile)}
    */
   @Deprecated
   @Nonnull
   public static String calcFileName(@Nonnull Project project, @Nonnull VirtualFile file) {
-    return EditorTabPresentationUtil.getUniqueEditorTabTitle(project, file, null);
+    return EditorTabPresentationUtil.getUniqueEditorTabTitle(project, file);
   }
 
   /**

@@ -277,14 +277,12 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
           return true;
         });
       }
-    }).doWhenDone(() -> {
-      Application.get().invokeLater(() -> {
-        for (TodoPanel panel : myPanels) {
-          panel.rebuildCache(ObjectUtil.notNull(files.get(panel), new HashSet<>()));
-          panel.updateTree();
-        }
-      }, IdeaModalityState.nonModal());
-    });
+    }).whenCompleteAsync((unused, throwable) -> {
+      for (TodoPanel panel : myPanels) {
+        panel.rebuildCache(ObjectUtil.notNull(files.get(panel), new HashSet<>()));
+        panel.updateTree();
+      }
+    }, myProject.getUIAccess());
   }
 
   public void addCustomTodoView(final TodoTreeBuilderFactory factory, final String title, final TodoPanelSettings settings) {

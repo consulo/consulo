@@ -72,7 +72,7 @@ public interface FileEditorsSplitters extends AWTComponentProvider {
 
   void updateFileIconAsync(@Nonnull VirtualFile virtualFile);
 
-  void updateFileName(VirtualFile virtualFile);
+  void updateFileNameAsync(VirtualFile virtualFile);
 
   void updateFileColor(VirtualFile virtualFile);
 

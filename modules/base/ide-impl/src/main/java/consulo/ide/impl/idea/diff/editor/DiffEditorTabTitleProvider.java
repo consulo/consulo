@@ -16,16 +16,15 @@
 package consulo.ide.impl.idea.diff.editor;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.diff.impl.DiffSettingsHolder;
+import consulo.application.dumb.DumbAware;
 import consulo.diff.request.DiffRequest;
+import consulo.fileEditor.EditorTabTitleProvider;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
-import consulo.fileEditor.EditorTabTitleProvider;
-import consulo.application.dumb.DumbAware;
+import consulo.ide.impl.idea.diff.impl.DiffSettingsHolder;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 
 // from kotlin

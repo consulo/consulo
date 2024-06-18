@@ -59,11 +59,11 @@ public abstract class FileEditorWindowBase implements FileEditorWindow {
 
   protected abstract void trimToSize(final int limit, @Nullable final VirtualFile fileToIgnore, final boolean transferFocus);
 
-  protected void updateFileName(VirtualFile file) {
+  protected void updateFileName(VirtualFile file, String tabText, String tabTooltip) {
     final int index = findEditorIndex(findFileComposite(file));
     if (index != -1) {
-      setTitleAt(index, EditorTabPresentationUtil.getEditorTabTitle(getManager().getProject(), file, this));
-      setToolTipTextAt(index, UISettings.getInstance().getShowTabsTooltips() ? getManager().getFileTooltipText(file) : null);
+      setTitleAt(index, tabText);
+      setToolTipTextAt(index, tabTooltip);
     }
   }
 

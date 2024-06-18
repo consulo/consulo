@@ -12,9 +12,9 @@ import java.awt.*;
 
 public class EditorTabPresentationUtil {
   @Nonnull
-  public static String getEditorTabTitle(@Nonnull Project project, @Nonnull VirtualFile file, @Nullable FileEditorWindow editorWindow) {
+  public static String getEditorTabTitle(@Nonnull Project project, @Nonnull VirtualFile file) {
     for (EditorTabTitleProvider provider : DumbService.getDumbAwareExtensions(project, EditorTabTitleProvider.EP_NAME)) {
-      String result = provider.getEditorTabTitle(project, file, editorWindow);
+      String result = provider.getEditorTabTitle(project, file);
       if (StringUtil.isNotEmpty(result)) {
         return result;
       }
@@ -24,8 +24,8 @@ public class EditorTabPresentationUtil {
   }
 
   @Nonnull
-  public static String getUniqueEditorTabTitle(@Nonnull Project project, @Nonnull VirtualFile file, @Nullable FileEditorWindow editorWindow) {
-    String name = getEditorTabTitle(project, file, editorWindow);
+  public static String getUniqueEditorTabTitle(@Nonnull Project project, @Nonnull VirtualFile file) {
+    String name = getEditorTabTitle(project, file);
     if (name.equals(file.getPresentableName())) {
       return UniqueVFilePathBuilder.getInstance().getUniqueVirtualFilePath(project, file);
     }

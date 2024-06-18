@@ -15,15 +15,14 @@
  */
 package consulo.ide.impl.fileEditor;
 
+import consulo.application.AccessRule;
 import consulo.application.AccessToken;
 import consulo.application.ApplicationManager;
 import consulo.application.concurrent.ApplicationConcurrency;
+import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.disposer.Disposable;
-import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.FileEditorWindow;
-import consulo.fileEditor.FileEditorWithProviderComposite;
-import consulo.fileEditor.FileEditorsSplitters;
+import consulo.fileEditor.*;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.logging.Logger;
@@ -56,6 +55,9 @@ import java.util.function.Supplier;
  * @since 2018-05-11
  */
 public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> implements FileEditorsSplitters, Disposable {
+  private record EditorTablInfo(String tabTitle, String tabTooltip) {
+  }
+
   private static final Logger LOG = Logger.getInstance(FileEditorsSplittersBase.class);
 
   @Nonnull
@@ -68,6 +70,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
   protected Element mySplittersElement;  // temporarily used during initialization
 
   private final MergingProcessingQueue<VirtualFile, Pair<W, Image>> myIconUpdater;
+  private final MergingProcessingQueue<VirtualFile, EditorTablInfo> myFileNameUpdater;
 
   protected FileEditorsSplittersBase(@Nonnull ApplicationConcurrency applicationConcurrency,
                                      @Nonnull Project project,
@@ -88,6 +91,27 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
                                          @Nonnull VirtualFile key,
                                          @Nonnull Pair<W, Image> value) {
         value.getFirst().updateFileIcon(key, value.getSecond());
+      }
+    };
+
+    myFileNameUpdater = new MergingProcessingQueue<>(applicationConcurrency, project, 200) {
+      @Override
+      protected void calculateValue(@Nonnull Project project, @Nonnull VirtualFile key, @Nonnull Consumer<EditorTablInfo> consumer) {
+        String title = EditorTabPresentationUtil.getEditorTabTitle(myProject, key);
+        String tooltip = UISettings.getInstance().getShowTabsTooltips() ? getManager().getFileTooltipText(key) : null;
+        consumer.accept(new EditorTablInfo(title, tooltip));
+      }
+
+      @Override
+      protected void updateValueInsideUI(@Nonnull Project project, @Nonnull VirtualFile key, @Nonnull EditorTablInfo value) {
+        final W[] windows = getWindows();
+        for (int i = 0; i != windows.length; ++i) {
+          for (VirtualFile file : windows[i].getFiles()) {
+            if (file.getName().equals(key.getName())) {
+              windows[i].updateFileName(file, value.tabTitle(), value.tabTooltip());
+            }
+          }
+        }
       }
     };
 
@@ -324,29 +348,40 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
   }
 
   @Override
-  public final void updateFileName(@Nullable final VirtualFile updatedFile) {
-    final W[] windows = getWindows();
-    for (int i = 0; i != windows.length; ++i) {
-      for (VirtualFile file : windows[i].getFiles()) {
-        if (updatedFile == null || file.getName().equals(updatedFile.getName())) {
-          windows[i].updateFileName(file);
+  public final void updateFileNameAsync(@Nullable final VirtualFile updatedFile) {
+    if (updatedFile == null) {
+      final W[] windows = getWindows();
+      for (int i = 0; i != windows.length; ++i) {
+        for (VirtualFile file : windows[i].getFiles()) {
+          myFileNameUpdater.queueAdd(file);
         }
       }
     }
+    else {
+      myFileNameUpdater.queueAdd(updatedFile);
+    }
 
-    Project project = myProject;
-
-    final IdeFrame frame = getFrame(project);
+    final IdeFrame frame = getFrame(myProject);
     if (frame != null) {
       VirtualFile file = getCurrentFile();
+      AccessRule.readAsync(() -> {
+        File ioFile = file == null ? null : new File(file.getPresentableUrl());
+        String fileTitle = null;
+        if (file != null) {
+          fileTitle = DumbService.isDumb(myProject) ? file.getName() : FrameTitleBuilder.getInstance().getFileTitle(myProject, file);
+        }
 
-      File ioFile = file == null ? null : new File(file.getPresentableUrl());
-      String fileTitle = null;
-      if (file != null) {
-        fileTitle = DumbService.isDumb(project) ? file.getName() : FrameTitleBuilder.getInstance().getFileTitle(project, file);
-      }
+        return Pair.create(fileTitle, ioFile);
+      }).whenCompleteAsync((pair, throwable) -> {
+        if (pair == null) {
+          return;
+        }
 
-      frame.setFileTitle(fileTitle, ioFile);
+        final IdeFrame otherFrame = getFrame(myProject);
+        if (otherFrame != null) {
+          frame.setFileTitle(pair.getFirst(), pair.getSecond());
+        }
+      }, myProject.getUIAccess());
     }
   }
 

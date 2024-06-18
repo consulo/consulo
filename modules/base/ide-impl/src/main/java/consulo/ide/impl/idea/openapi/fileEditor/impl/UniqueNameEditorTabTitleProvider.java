@@ -3,11 +3,11 @@ package consulo.ide.impl.idea.openapi.fileEditor.impl;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ui.UISettings;
-import consulo.fileEditor.UniqueVFilePathBuilder;
 import consulo.fileEditor.EditorTabTitleProvider;
+import consulo.fileEditor.UniqueVFilePathBuilder;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -36,7 +36,7 @@ public class UniqueNameEditorTabTitleProvider implements EditorTabTitleProvider 
 
   public static String getEditorTabText(String result, String separator, boolean hideKnownExtensionInTabs) {
     if (hideKnownExtensionInTabs) {
-      String withoutExtension = FileUtilRt.getNameWithoutExtension(result);
+      String withoutExtension = FileUtil.getNameWithoutExtension(result);
       if (StringUtil.isNotEmpty(withoutExtension) && !withoutExtension.endsWith(separator)) {
         return withoutExtension;
       }

@@ -21,12 +21,12 @@ public class VfsPresentationUtil {
 
   @Nonnull
   public static String getPresentableNameForUI(@Nonnull Project project, @Nonnull VirtualFile file) {
-    return EditorTabPresentationUtil.getEditorTabTitle(project, file, null);
+    return EditorTabPresentationUtil.getEditorTabTitle(project, file);
   }
 
   @Nonnull
   public static String getUniquePresentableNameForUI(@Nonnull Project project, @Nonnull VirtualFile file) {
-    return EditorTabPresentationUtil.getUniqueEditorTabTitle(project, file, null);
+    return EditorTabPresentationUtil.getUniqueEditorTabTitle(project, file);
   }
 
   @Nullable
