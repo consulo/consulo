@@ -19,8 +19,9 @@ import consulo.util.lang.lazy.impl.AtomicLazyValueImpl;
 import consulo.util.lang.lazy.impl.DefaultLazyValueImpl;
 import consulo.util.lang.lazy.impl.NonNullLazyValueWithModCountImpl;
 import consulo.util.lang.lazy.impl.NullableLazyValueImpl;
-
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+
 import java.util.function.LongSupplier;
 import java.util.function.Supplier;
 
@@ -47,5 +48,13 @@ public interface LazyValue<T> extends Supplier<T> {
   @Nonnull
   static <K> LazyValue<K> nullable(@Nonnull Supplier<K> factory) {
     return new NullableLazyValueImpl<>(factory);
+  }
+
+  /**
+   * @return value which was already stored, and do not try init it
+   */
+  @Nullable
+  default T getStoredValue() {
+    return get();
   }
 }

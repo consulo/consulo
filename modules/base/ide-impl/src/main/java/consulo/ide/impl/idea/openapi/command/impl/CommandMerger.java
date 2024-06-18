@@ -15,18 +15,18 @@
  */
 package consulo.ide.impl.idea.openapi.command.impl;
 
-import consulo.undoRedo.UndoConfirmationPolicy;
-import consulo.undoRedo.BasicUndoableAction;
 import consulo.document.DocumentReference;
-import consulo.undoRedo.UndoableAction;
 import consulo.fileEditor.FileEditor;
+import consulo.language.file.light.LightVirtualFile;
+import consulo.undoRedo.BasicUndoableAction;
+import consulo.undoRedo.UndoConfirmationPolicy;
+import consulo.undoRedo.UndoableAction;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.file.light.LightVirtualFile;
-import consulo.ide.impl.idea.util.ArrayUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.*;
 
 public class CommandMerger {
