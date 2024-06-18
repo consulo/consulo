@@ -22,6 +22,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.internal.ProgressIndicatorEx;
 import consulo.language.content.FileIndexFacade;
 import consulo.language.impl.internal.psi.PsiManagerImpl;
+import consulo.language.parser.PsiBuilderFactory;
 import consulo.language.psi.PsiModificationTracker;
 import consulo.project.Project;
 import jakarta.inject.Inject;
@@ -39,8 +40,11 @@ import java.util.concurrent.atomic.AtomicLong;
 @ServiceImpl
 public class IdePsiManagerImpl extends PsiManagerImpl {
   @Inject
-  public IdePsiManagerImpl(@Nonnull Project project, @Nonnull Provider<FileIndexFacade> fileIndexFacadeProvider, @Nonnull PsiModificationTracker modificationTracker) {
-    super(project, fileIndexFacadeProvider, modificationTracker);
+  public IdePsiManagerImpl(@Nonnull Project project,
+                           @Nonnull Provider<FileIndexFacade> fileIndexFacadeProvider,
+                           @Nonnull PsiModificationTracker modificationTracker,
+                           @Nonnull PsiBuilderFactory psiBuilderFactory) {
+    super(project, fileIndexFacadeProvider, modificationTracker, psiBuilderFactory);
   }
 
   public void dropResolveCacheRegularly(@Nonnull ProgressIndicator indicator) {

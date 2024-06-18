@@ -12,7 +12,6 @@ import consulo.language.Language;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.*;
 import consulo.language.psi.event.PsiTreeChangeEvent;
-import consulo.language.psi.event.PsiTreeChangePreprocessor;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
@@ -27,10 +26,9 @@ import java.util.function.Predicate;
 /**
  * @author mike
  */
-@SuppressWarnings("ExtensionImplIsNotAnnotated") // registered in PsiManagerImpl
 @Singleton
 @ServiceImpl
-public class PsiModificationTrackerImpl implements PsiModificationTracker, PsiTreeChangePreprocessor {
+public class PsiModificationTrackerImpl implements PsiModificationTracker {
   private static final Logger LOG = Logger.getInstance(PsiModificationTrackerImpl.class);
 
   private final SimpleModificationTracker myModificationCount = new SimpleModificationTracker();
@@ -79,7 +77,6 @@ public class PsiModificationTrackerImpl implements PsiModificationTracker, PsiTr
     fireEvent();
   }
 
-  @Override
   public void treeChanged(@Nonnull PsiTreeChangeEvent event) {
     if (!canAffectPsi((PsiTreeChangeEventImpl)event)) {
       return;

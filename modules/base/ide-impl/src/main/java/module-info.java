@@ -674,7 +674,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.peer.impl;
   exports consulo.ide.impl.idea.platform;
   exports consulo.ide.impl.idea.platform.templates.github;
-  exports consulo.ide.impl.idea.pom.core.impl;
   exports consulo.ide.impl.idea.profile.codeInspection;
   exports consulo.ide.impl.idea.profile.codeInspection.ui;
   exports consulo.ide.impl.idea.profile.codeInspection.ui.filter;
@@ -878,7 +877,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.psi.impl.source;
   exports consulo.ide.impl.psi.impl.source.codeStyle;
   exports consulo.ide.impl.psi.impl.source.codeStyle.lineIndent;
-  exports consulo.ide.impl.psi.impl.source.parsing;
   exports consulo.ide.impl.psi.impl.source.resolve.reference;
   exports consulo.ide.impl.psi.impl.source.resolve.reference.impl.manipulators;
   exports consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers;

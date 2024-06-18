@@ -22,22 +22,11 @@ import consulo.language.pom.event.PomModelListener;
 import consulo.language.util.IncorrectOperationException;
 import consulo.util.dataholder.UserDataHolder;
 
-import java.util.Set;
-
 @ServiceAPI(ComponentScope.PROJECT)
 public interface PomModel extends UserDataHolder {
   <T extends PomModelAspect> T getModelAspect(Class<T> aClass);
 
-  /**
-   * TODO [VISTALL] replace it by extensions, and don't initialize all aspects while project opening
-   */
-  void registerAspect(Class<? extends PomModelAspect> aClass, PomModelAspect aspect, Set<PomModelAspect> dependencies);
-
-  void addModelListener(PomModelListener listener);
-
   void addModelListener(PomModelListener listener, Disposable parentDisposable);
-
-  void removeModelListener(PomModelListener listener);
 
   void runTransaction(PomTransaction transaction) throws IncorrectOperationException;
 }
