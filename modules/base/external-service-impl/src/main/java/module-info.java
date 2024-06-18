@@ -9,6 +9,8 @@ module consulo.external.service.impl {
 
   exports consulo.externalService.impl.internal.statistic to consulo.ide.impl;
   exports consulo.externalService.impl.internal to consulo.ide.impl;
+  exports consulo.externalService.impl.internal.update to consulo.ide.impl;
 
   opens consulo.externalService.impl.internal.statistic to consulo.util.xml.serializer;
+  opens consulo.externalService.impl.internal.update to consulo.util.xml.serializer;
 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.updateSettings.impl;
+package consulo.externalService.impl.internal.update;
 
 import jakarta.annotation.Nonnull;
 import java.util.Collections;

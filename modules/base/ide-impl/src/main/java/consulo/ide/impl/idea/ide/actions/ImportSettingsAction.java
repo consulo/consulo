@@ -28,7 +28,7 @@ import consulo.ide.impl.idea.ide.startup.StartupActionScriptManager;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
 import consulo.ide.impl.idea.util.io.ZipUtil;
-import consulo.ide.impl.updateSettings.UpdateSettingsImpl;
+import consulo.externalService.impl.internal.update.UpdateSettingsImpl;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.IdeLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
