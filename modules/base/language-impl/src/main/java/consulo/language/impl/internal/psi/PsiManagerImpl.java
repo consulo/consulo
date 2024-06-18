@@ -11,7 +11,6 @@ import consulo.language.content.FileIndexFacade;
 import consulo.language.file.FileViewProvider;
 import consulo.language.impl.internal.file.FileManager;
 import consulo.language.impl.internal.file.FileManagerImpl;
-import consulo.language.parser.PsiBuilderFactory;
 import consulo.language.psi.*;
 import consulo.language.psi.event.PsiTreeChangeListener;
 import consulo.language.psi.event.PsiTreeChangePreprocessor;
@@ -54,9 +53,7 @@ public class PsiManagerImpl extends PsiManagerEx implements Disposable {
   @Inject
   public PsiManagerImpl(@Nonnull Project project,
                         @Nonnull Provider<FileIndexFacade> fileIndexFacadeProvider,
-                        @Nonnull PsiModificationTracker modificationTracker,
-                        // we need to initialize PsiBuilderFactory service so it won't initialize under PsiLock from ChameleonTransform
-                        @Nonnull PsiBuilderFactory psiBuilderFactory) {
+                        @Nonnull PsiModificationTracker modificationTracker) {
     myProject = project;
     myFileIndex = fileIndexFacadeProvider;
     myModificationTracker = modificationTracker;
