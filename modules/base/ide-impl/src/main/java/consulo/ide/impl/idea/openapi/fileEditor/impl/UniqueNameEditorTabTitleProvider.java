@@ -2,6 +2,7 @@
 package consulo.ide.impl.idea.openapi.fileEditor.impl;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.ReadAction;
 import consulo.application.ui.UISettings;
 import consulo.fileEditor.EditorTabTitleProvider;
 import consulo.fileEditor.UniqueVFilePathBuilder;
@@ -27,11 +28,13 @@ public class UniqueNameEditorTabTitleProvider implements EditorTabTitleProvider 
     }
 
     // Even though this is a 'tab title provider' it is used also when tabs are not shown, namely for building IDE frame title.
-    String uniqueName = uiSettings.getEditorTabPlacement() == UISettings.PLACEMENT_EDITOR_TAB_NONE
-                        ? UniqueVFilePathBuilder.getInstance().getUniqueVirtualFilePath(project, file)
-                        : UniqueVFilePathBuilder.getInstance().getUniqueVirtualFilePathWithinOpenedFileEditors(project, file);
-    uniqueName = getEditorTabText(uniqueName, File.separator, uiSettings.getHideKnownExtensionInTabs());
-    return uniqueName.equals(file.getName()) ? null : uniqueName;
+    return ReadAction.compute(() -> {
+      String uniqueName = uiSettings.getEditorTabPlacement() == UISettings.PLACEMENT_EDITOR_TAB_NONE
+        ? UniqueVFilePathBuilder.getInstance().getUniqueVirtualFilePath(project, file)
+        : UniqueVFilePathBuilder.getInstance().getUniqueVirtualFilePathWithinOpenedFileEditors(project, file);
+      uniqueName = getEditorTabText(uniqueName, File.separator, uiSettings.getHideKnownExtensionInTabs());
+      return uniqueName.equals(file.getName()) ? null : uniqueName;
+    });
   }
 
   public static String getEditorTabText(String result, String separator, boolean hideKnownExtensionInTabs) {
