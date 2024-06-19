@@ -18,45 +18,34 @@ package consulo.language.editor;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
 
 /**
  * Allows to disable highlighting of certain elements as unused when such elements are not referenced
- * from the code but are referenced in some other way. For example,
- * <ul>
- * <li>from generated code</li>
- * <li>from outside containers: {@code @javax.servlet.annotation.WebServlet public class MyServlet {}}</li>
- * <li>from some frameworks: {@code @javax.ejb.EJB private DataStore myInjectedDataStore;}</li> etc
- * </ul>
+ * from the code but are referenced in some other way
  *
  * @author yole
- * @since 6.0
  */
-@ExtensionAPI(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.PROJECT)
 public interface ImplicitUsageProvider {
-  ExtensionPointName<ImplicitUsageProvider> EP_NAME = ExtensionPointName.create(ImplicitUsageProvider.class);
-
   /**
    * @return true if element should not be reported as unused
    */
-  boolean isImplicitUsage(PsiElement element);
+  default boolean isImplicitUsage(PsiElement element) {
+    return false;
+  }
 
   /**
    * @return true if element should not be reported as "assigned but not used"
    */
-  boolean isImplicitRead(PsiElement element);
+  default boolean isImplicitRead(PsiElement element) {
+    return false;
+  }
 
   /**
    * @return true if element should not be reported as "referenced but never assigned"
    */
-  boolean isImplicitWrite(PsiElement element);
-
-  /**
-   * @return true if the given element is implicitly initialized to a non-null value
-   */
-  default boolean isImplicitlyNotNullInitialized(@Nonnull PsiElement element) {
+  default boolean isImplicitWrite(PsiElement element) {
     return false;
   }
 }
