@@ -16,8 +16,6 @@ import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.editor.impl.event.EditorEventMulticasterImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileDocumentManagerImpl;
-import consulo.util.lang.StringUtil;
-import consulo.language.impl.internal.pom.PomModelImpl;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.FileContentUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -26,6 +24,7 @@ import consulo.language.ast.ASTNode;
 import consulo.language.codeStyle.PostprocessReformattingAspect;
 import consulo.language.file.FileViewProvider;
 import consulo.language.file.inject.DocumentWindow;
+import consulo.language.impl.internal.pom.PomAspectGuard;
 import consulo.language.impl.internal.psi.BooleanRunnable;
 import consulo.language.impl.internal.psi.DocumentCommitProcessor;
 import consulo.language.impl.internal.psi.PsiDocumentManagerBase;
@@ -37,6 +36,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
 import consulo.project.impl.internal.ProjectImpl;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -109,7 +109,7 @@ public final class PsiDocumentManagerImpl extends PsiDocumentManagerBase {
         }
       }
       // must not commit during document save
-      if (PomModelImpl.isAllowPsiModification()
+      if (PomAspectGuard.isAllowPsiModification()
           // it can happen that document(forUseInNonAWTThread=true) outside write action caused this
           && ApplicationManager.getApplication().isWriteAccessAllowed()) {
         // commit one document to avoid OOME

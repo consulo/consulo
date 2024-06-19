@@ -24,6 +24,8 @@ import consulo.util.dataholder.UserDataHolder;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public interface PomModel extends UserDataHolder {
+  boolean isAllowPsiModification();
+
   <T extends PomModelAspect> T getModelAspect(Class<T> aClass);
 
   void addModelListener(PomModelListener listener, Disposable parentDisposable);

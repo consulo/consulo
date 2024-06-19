@@ -1,8 +1,11 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.fileEditor.impl;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.*;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.WriteAction;
 import consulo.codeEditor.EditorFactory;
 import consulo.component.ComponentManager;
 import consulo.component.messagebus.MessageBus;
@@ -25,12 +28,12 @@ import consulo.ide.impl.idea.openapi.editor.impl.TrailingSpacesStripper;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.text.TextEditorImpl;
 import consulo.ide.impl.idea.openapi.project.ProjectUtil;
 import consulo.ide.impl.idea.openapi.vfs.SafeWriteRequestor;
-import consulo.language.impl.internal.pom.PomModelImpl;
 import consulo.ide.impl.idea.util.ExceptionUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.codeStyle.CodeStyle;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.impl.file.AbstractFileViewProvider;
+import consulo.language.impl.internal.pom.PomAspectGuard;
 import consulo.language.impl.internal.psi.LoadTextUtil;
 import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.psi.PsiDocumentManager;
@@ -407,6 +410,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
     return !myConflictResolver.hasConflict(file) && FileDocumentSynchronizationVetoer.EP_NAME.getExtensionList().stream().allMatch(vetoer -> vetoer.maySaveDocument(document, isExplicit));
   }
 
+  @RequiredWriteAction
   private void doSaveDocumentInWriteAction(@Nonnull final Document document, @Nonnull final VirtualFile file) throws IOException {
     if (!file.isValid()) {
       removeFromUnsaved(document);
@@ -436,7 +440,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
       return;
     }
 
-    PomModelImpl.guardPsiModificationsIn(() -> {
+    PomAspectGuard.guardPsiModificationsIn(Application.get(), () -> {
       myMultiCaster.beforeDocumentSaving(document);
       LOG.assertTrue(file.isValid());
 

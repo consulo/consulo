@@ -16,7 +16,6 @@
 package consulo.language.impl.internal.pom;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ApplicationManager;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.component.ProcessCanceledException;
@@ -48,7 +47,6 @@ import consulo.util.collection.Stack;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.CompoundRuntimeException;
 import consulo.util.lang.Pair;
-import consulo.util.lang.function.ThrowableRunnable;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
@@ -79,6 +77,11 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
   }
 
   @Override
+  public boolean isAllowPsiModification() {
+    return PomAspectGuard.isAllowPsiModification();
+  }
+
+  @Override
   public <T extends PomModelAspect> T getModelAspect(@Nonnull Class<T> aClass) {
     return getCache().getModelAspect(aClass);
   }
@@ -90,7 +93,7 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
 
   @Override
   public void runTransaction(@Nonnull PomTransaction transaction) throws IncorrectOperationException {
-    if (!isAllowPsiModification()) {
+    if (!PomAspectGuard.isAllowPsiModification()) {
       throw new IncorrectOperationException("Must not modify PSI inside save listener");
     }
     final PomModelAspect aspect = transaction.getTransactionAspect();
@@ -333,23 +336,5 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
       psiFile = (PsiFile)fileElement.getPsi();
     }
     return psiFile.getNode() != null ? psiFile : null;
-  }
-
-  private static volatile boolean allowPsiModification = true;
-
-  public static <T extends Throwable> void guardPsiModificationsIn(@Nonnull ThrowableRunnable<T> runnable) throws T {
-    ApplicationManager.getApplication().assertWriteAccessAllowed();
-    boolean old = allowPsiModification;
-    try {
-      allowPsiModification = false;
-      runnable.run();
-    }
-    finally {
-      allowPsiModification = old;
-    }
-  }
-
-  public static boolean isAllowPsiModification() {
-    return allowPsiModification;
   }
 }
