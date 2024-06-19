@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.fileTypes;
+package consulo.language.editor.impl.internal.highlight;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.highlight.SyntaxHighlighter;

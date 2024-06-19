@@ -17,7 +17,7 @@
 /*
  * @author max
  */
-package consulo.ide.impl.idea.openapi.fileTypes;
+package consulo.language.editor.impl.internal.plain;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.internal.custom.*;
