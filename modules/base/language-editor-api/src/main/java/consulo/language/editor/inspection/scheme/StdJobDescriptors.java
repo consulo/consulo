@@ -15,12 +15,12 @@
  */
 package consulo.language.editor.inspection.scheme;
 
-import consulo.language.editor.inspection.InspectionsBundle;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
 
 public class StdJobDescriptors {
-  public final JobDescriptor BUILD_GRAPH = new JobDescriptor(InspectionsBundle.message("inspection.processing.job.descriptor"));
+  public final JobDescriptor BUILD_GRAPH = new JobDescriptor(InspectionLocalize.inspectionProcessingJobDescriptor().get());
   public final JobDescriptor[] BUILD_GRAPH_ONLY = {BUILD_GRAPH};
-  public final JobDescriptor FIND_EXTERNAL_USAGES = new JobDescriptor(InspectionsBundle.message("inspection.processing.job.descriptor1"));
-  public final JobDescriptor LOCAL_ANALYSIS = new JobDescriptor(InspectionsBundle.message("inspection.processing.job.descriptor2"));
+  public final JobDescriptor FIND_EXTERNAL_USAGES = new JobDescriptor(InspectionLocalize.inspectionProcessingJobDescriptor1().get());
+  public final JobDescriptor LOCAL_ANALYSIS = new JobDescriptor(InspectionLocalize.inspectionProcessingJobDescriptor2().get());
   public final JobDescriptor[] LOCAL_ANALYSIS_ARRAY = {LOCAL_ANALYSIS};
 }

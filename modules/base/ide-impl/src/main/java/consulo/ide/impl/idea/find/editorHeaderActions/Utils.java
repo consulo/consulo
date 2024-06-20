@@ -1,14 +1,14 @@
 package consulo.ide.impl.idea.find.editorHeaderActions;
 
+import consulo.ide.impl.ui.impl.PopupChooserBuilder;
+import consulo.platform.Platform;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.action.Shortcut;
-import consulo.ui.ex.popup.JBPopup;
-import consulo.ide.impl.ui.impl.PopupChooserBuilder;
-import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -56,7 +56,7 @@ public class Utils {
   }
 
   public static void setSmallerFont(final JComponent component) {
-    if (SystemInfo.isMac) {
+    if (Platform.current().os().isMac()) {
       component.setFont(JBUI.Fonts.smallFont());
     }
   }

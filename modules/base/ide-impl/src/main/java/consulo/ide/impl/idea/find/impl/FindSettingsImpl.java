@@ -20,7 +20,7 @@ import consulo.component.persist.*;
 import consulo.find.FindBundle;
 import consulo.find.FindModel;
 import consulo.find.FindSettings;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.util.xml.serializer.annotation.AbstractCollection;
@@ -50,7 +50,6 @@ public class FindSettingsImpl extends FindSettings implements PersistentStateCom
   private static final String FIND_SCOPE_GLOBAL = "global";
   @NonNls
   private static final String FIND_SCOPE_SELECTED = "selected";
-  private static final String DEFAULT_SEARCH_SCOPE = FindBundle.message("find.scope.all.project.classes");
 
   public FindSettingsImpl() {
     recentFileMasks.add("*.properties");
@@ -123,7 +122,7 @@ public class FindSettingsImpl extends FindSettings implements PersistentStateCom
   public boolean SHOW_RESULTS_IN_SEPARATE_VIEW = false;
 
   @SuppressWarnings({"WeakerAccess"})
-  public String SEARCH_SCOPE = DEFAULT_SEARCH_SCOPE;
+  public String SEARCH_SCOPE = FindBundle.message("find.scope.all.project.classes");
   @SuppressWarnings({"WeakerAccess"})
   public String FILE_MASK;
 

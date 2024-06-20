@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.formatting.alignment;
 
 import consulo.language.ast.ASTNode;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.language.impl.ast.TreeUtil;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;

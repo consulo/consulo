@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.execution.util;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.PathMappingSettings;
 import consulo.execution.ui.awt.ListTableWithButtons;
 import consulo.ui.ex.awt.ColumnInfo;

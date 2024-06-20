@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.find.impl.livePreview;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.JBLabel;

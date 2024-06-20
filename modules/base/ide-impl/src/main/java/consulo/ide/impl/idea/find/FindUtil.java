@@ -16,61 +16,59 @@
 
 package consulo.ide.impl.idea.find;
 
-import consulo.language.editor.hint.HintManager;
-import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
-import consulo.language.editor.ui.awt.HintUtil;
-import consulo.find.*;
-import consulo.ide.impl.find.PsiElement2UsageTargetAdapter;
-import consulo.ide.impl.idea.find.impl.FindInProjectUtil;
-import consulo.ide.impl.idea.find.replaceInProject.ReplaceInProjectManager;
-import consulo.usage.UsageViewManager;
-import consulo.document.ReadOnlyFragmentModificationException;
-import consulo.codeEditor.*;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.AnAction;
-import consulo.dataContext.DataContext;
-import consulo.ui.ex.action.IdeActions;
-import consulo.application.ApplicationManager;
-import consulo.undoRedo.CommandProcessor;
-import consulo.codeEditor.action.EditorActionManager;
-import consulo.codeEditor.action.EditorActionUtil;
-import consulo.ide.impl.idea.openapi.editor.actions.IncrementalFindAction;
-import consulo.codeEditor.EditorColors;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.codeEditor.event.CaretAdapter;
-import consulo.codeEditor.event.CaretEvent;
-import consulo.codeEditor.event.CaretListener;
-import consulo.codeEditor.markup.RangeHighlighterEx;
-import consulo.codeEditor.markup.HighlighterLayer;
-import consulo.codeEditor.markup.HighlighterTargetArea;
-import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.colorScheme.TextAttributes;
-import consulo.document.FileDocumentManager;
-import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.TextEditor;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.document.Document;
-import consulo.language.psi.*;
+import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.JDOMUtil;
-import consulo.util.lang.Pair;
+import consulo.codeEditor.*;
+import consulo.codeEditor.action.EditorActionManager;
+import consulo.codeEditor.action.EditorActionUtil;
+import consulo.codeEditor.event.CaretAdapter;
+import consulo.codeEditor.event.CaretEvent;
+import consulo.codeEditor.event.CaretListener;
+import consulo.codeEditor.markup.HighlighterLayer;
+import consulo.codeEditor.markup.HighlighterTargetArea;
+import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.codeEditor.markup.RangeHighlighterEx;
+import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.TextAttributes;
+import consulo.dataContext.DataContext;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.document.ReadOnlyFragmentModificationException;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.usage.*;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.TextEditor;
+import consulo.find.*;
+import consulo.ide.impl.find.PsiElement2UsageTargetAdapter;
+import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
+import consulo.ide.impl.idea.find.impl.FindInProjectUtil;
+import consulo.ide.impl.idea.find.replaceInProject.ReplaceInProjectManager;
+import consulo.ide.impl.idea.openapi.editor.actions.IncrementalFindAction;
+import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ide.impl.idea.ui.LightweightHint;
 import consulo.ide.impl.idea.usages.impl.UsageViewImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.editor.hint.HintManager;
+import consulo.language.editor.ui.awt.HintUtil;
+import consulo.language.psi.*;
+import consulo.project.Project;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.undoRedo.CommandProcessor;
+import consulo.usage.*;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
@@ -233,7 +231,7 @@ public class FindUtil {
   }
 
   public static void find(@Nonnull final Project project, @Nonnull final Editor editor) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    Application.get().assertIsDispatchThread();
     final FindManager findManager = FindManager.getInstance(project);
     String s = editor.getSelectionModel().getSelectedText();
 
@@ -574,7 +572,7 @@ public class FindUtil {
         toReplace = findManager.getStringToReplace(foundString, model, startOffset, document.getCharsSequence());
       }
       catch (FindManager.MalformedReplacementStringException e) {
-        if (!ApplicationManager.getApplication().isUnitTestMode()) {
+        if (!Application.get().isUnitTestMode()) {
           Messages.showErrorDialog(project, e.getMessage(), FindBundle.message("find.replace.invalid.replacement.string.title"));
         }
         break;
@@ -644,7 +642,7 @@ public class FindUtil {
           caretOffset = newText.length();
         }
         final int finalCaretOffset = caretOffset;
-        CommandProcessor.getInstance().executeCommand(project, () -> ApplicationManager.getApplication().runWriteAction(() -> {
+        CommandProcessor.getInstance().executeCommand(project, () -> Application.get().runWriteAction(() -> {
           document.setText(newText);
           editor.getCaretModel().moveToOffset(finalCaretOffset);
           if (model.isGlobal()) {
@@ -908,13 +906,15 @@ public class FindUtil {
     return new TextRange(start, end);
   }
 
-  private static int doReplace(Project project,
-                               final Document document,
-                               final int startOffset,
-                               final int endOffset,
-                               final String stringToReplace) {
+  private static int doReplace(
+    Project project,
+    final Document document,
+    final int startOffset,
+    final int endOffset,
+    final String stringToReplace
+  ) {
     final String converted = StringUtil.convertLineSeparators(stringToReplace);
-    CommandProcessor.getInstance().executeCommand(project, () -> ApplicationManager.getApplication().runWriteAction(() -> {
+    CommandProcessor.getInstance().executeCommand(project, () -> Application.get().runWriteAction(() -> {
       //[ven] I doubt converting is a good solution to SCR 21224
       document.replaceString(startOffset, endOffset, converted);
     }), null, null);
@@ -959,7 +959,7 @@ public class FindUtil {
       public void run(@Nonnull ProgressIndicator indicator) {
         for (final SmartPsiElementPointer pointer : pointers) {
           if (view.isDisposed()) break;
-          ApplicationManager.getApplication().runReadAction(() -> {
+          Application.get().runReadAction(() -> {
             final PsiElement target = pointer.getElement();
             if (target != null) {
               view.appendUsage(UsageInfoToUsageConverter.convert(primary, new UsageInfo(target)));

@@ -16,9 +16,12 @@
 
 package consulo.language.editor.inspection.scheme;
 
+import org.jetbrains.annotations.NonNls;
+
 /**
  * @author max
  */
+@NonNls
 public class JobDescriptor {
   private final String myDisplayName;
   private int myTotalAmount;

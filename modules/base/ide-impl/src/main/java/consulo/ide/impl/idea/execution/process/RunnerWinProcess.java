@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.idea.execution.process;
 
+import consulo.platform.Platform;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
-import consulo.application.util.SystemInfo;
 import jakarta.annotation.Nonnull;
 
 public class RunnerWinProcess extends ProcessWrapper {
@@ -36,12 +36,11 @@ public class RunnerWinProcess extends ProcessWrapper {
 
   @Nonnull
   public static RunnerWinProcess create(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
-    if (!SystemInfo.isWindows) {
+    if (!Platform.current().os().isWindows()) {
       throw new RuntimeException(RunnerWinProcess.class.getSimpleName() + " works on Windows only!");
     }
     RunnerMediator.injectRunnerCommand(commandLine);
     Process process = commandLine.createProcess();
     return new RunnerWinProcess(process);
   }
-
 }

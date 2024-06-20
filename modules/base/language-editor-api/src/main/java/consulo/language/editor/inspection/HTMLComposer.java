@@ -20,7 +20,9 @@
  */
 package consulo.language.editor.inspection;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.language.editor.inspection.reference.RefElement;
+import consulo.localize.LocalizeValue;
 import consulo.ui.style.StyleManager;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
@@ -38,7 +40,13 @@ public abstract class HTMLComposer {
 
   public abstract void appendListItem(StringBuffer buf, RefElement refElement);
 
+  @Deprecated
+  @DeprecationInfo("Use appendHeading(..., LocalizeValue)")
   public static void appendHeading(@NonNls StringBuffer buf, String name) {
+    buf.append("&nbsp;&nbsp;<font style=\"font-weight:bold; color:").append(StyleManager.get().getCurrentStyle().isDark() ? "#A5C25C" : "#005555").append(";\">").append(name).append("</font>");
+  }
+
+  public static void appendHeading(@NonNls StringBuffer buf, LocalizeValue name) {
     buf.append("&nbsp;&nbsp;<font style=\"font-weight:bold; color:").append(StyleManager.get().getCurrentStyle().isDark() ? "#A5C25C" : "#005555").append(";\">").append(name).append("</font>");
   }
 

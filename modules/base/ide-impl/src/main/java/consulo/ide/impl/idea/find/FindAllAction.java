@@ -2,14 +2,14 @@
 package consulo.ide.impl.idea.find;
 
 import consulo.application.AllIcons;
-import consulo.ide.IdeBundle;
+import consulo.codeEditor.EditorKeys;
 import consulo.codeEditor.Editor;
 import consulo.application.dumb.DumbAware;
 import consulo.find.FindManager;
 import consulo.find.FindModel;
-import consulo.language.editor.CommonDataKeys;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.language.psi.PsiDocumentManager;
@@ -21,13 +21,13 @@ import jakarta.annotation.Nullable;
 
 public final class FindAllAction extends AnAction implements ShortcutProvider, DumbAware {
   public FindAllAction() {
-    super(IdeBundle.message("show.in.find.window.button.name"), IdeBundle.message("show.in.find.window.button.description"), null);
+    super(IdeLocalize.showInFindWindowButtonName(), IdeLocalize.showInFindWindowButtonDescription(), null);
   }
 
   @Override
   public void update(final @Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
-    Editor editor = e.getData(CommonDataKeys.EDITOR_EVEN_IF_INACTIVE);
+    Project project = e.getData(Project.KEY);
+    Editor editor = e.getData(EditorKeys.EDITOR_EVEN_IF_INACTIVE);
     EditorSearchSession search = e.getData(EditorSearchSession.SESSION_KEY);
 
     e.getPresentation().setIcon(getIcon(project));
@@ -37,8 +37,8 @@ public final class FindAllAction extends AnAction implements ShortcutProvider, D
 
   @Override
   public void actionPerformed(final @Nonnull AnActionEvent e) {
-    Editor editor = e.getRequiredData(CommonDataKeys.EDITOR_EVEN_IF_INACTIVE);
-    Project project = e.getRequiredData(CommonDataKeys.PROJECT);
+    Editor editor = e.getRequiredData(EditorKeys.EDITOR_EVEN_IF_INACTIVE);
+    Project project = e.getRequiredData(Project.KEY);
     EditorSearchSession search = e.getRequiredData(EditorSearchSession.SESSION_KEY);
     if (project.isDisposed()) return;
     PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());

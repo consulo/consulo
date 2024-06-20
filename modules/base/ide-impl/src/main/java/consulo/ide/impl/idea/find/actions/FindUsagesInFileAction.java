@@ -16,13 +16,11 @@
 
 package consulo.ide.impl.idea.find.actions;
 
-import consulo.application.CommonBundle;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.fileEditor.FileEditor;
 import consulo.find.FindBundle;
 import consulo.language.Language;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.util.PsiUtilBase;
@@ -30,12 +28,14 @@ import consulo.language.findUsage.EmptyFindUsagesProvider;
 import consulo.language.findUsage.FindUsagesProvider;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.usage.UsageTarget;
 import consulo.usage.UsageView;
 
@@ -48,14 +48,14 @@ public class FindUsagesInFileAction extends AnAction {
   @Override
   public void actionPerformed(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Project project = dataContext.getData(Project.KEY);
     if (project == null) return;
     PsiDocumentManager.getInstance(project).commitAllDocuments();
     Editor editor = dataContext.getData(PlatformDataKeys.EDITOR);
 
     UsageTarget[] usageTargets = dataContext.getData(UsageView.USAGE_TARGETS_KEY);
     if (usageTargets != null) {
-      FileEditor fileEditor = dataContext.getData(PlatformDataKeys.FILE_EDITOR);
+      FileEditor fileEditor = dataContext.getData(FileEditor.KEY);
       if (fileEditor != null) {
         usageTargets[0].findUsagesInEditor(fileEditor);
       }
@@ -64,8 +64,8 @@ public class FindUsagesInFileAction extends AnAction {
       Messages.showMessageDialog(
         project,
         FindBundle.message("find.no.usages.at.cursor.error"),
-        CommonBundle.getErrorTitle(),
-        Messages.getErrorIcon()
+        CommonLocalize.titleError().get(),
+        UIUtil.getErrorIcon()
       );
     }
     else {
@@ -79,7 +79,7 @@ public class FindUsagesInFileAction extends AnAction {
   }
 
   private static boolean isEnabled(DataContext dataContext) {
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Project project = dataContext.getData(Project.KEY);
     if (project == null) {
       return false;
     }
