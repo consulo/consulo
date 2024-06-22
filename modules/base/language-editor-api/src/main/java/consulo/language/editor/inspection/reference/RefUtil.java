@@ -17,9 +17,10 @@ package consulo.language.editor.inspection.reference;
 
 import consulo.language.editor.ImplicitUsageProvider;
 import consulo.language.psi.PsiElement;
+import consulo.project.Project;
 import consulo.util.lang.Comparing;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.Collection;
 
 /**
@@ -30,16 +31,15 @@ import java.util.Collection;
  * @since 6.0
  */
 public class RefUtil {
-  private RefUtil() {}
-
-  public static boolean isImplicitUsage(PsiElement element) {
-    for (ImplicitUsageProvider provider : ImplicitUsageProvider.EP_NAME.getExtensionList()) {
-      if (provider.isImplicitUsage(element)) return true;
-    }
-    return false;
+  private RefUtil() {
   }
 
-  public static boolean contains(RefEntity element, @Nonnull Collection<RefEntity> entities){
+  public static boolean isImplicitUsage(PsiElement element) {
+    Project project = element.getProject();
+    return project.getExtensionPoint(ImplicitUsageProvider.class).findFirstSafe(it -> it.isImplicitUsage(element)) != null;
+  }
+
+  public static boolean contains(RefEntity element, @Nonnull Collection<RefEntity> entities) {
     for (RefEntity refEntity : entities) {
       if (Comparing.equal(refEntity, element)) {
         return true;

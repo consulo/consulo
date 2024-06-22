@@ -15,23 +15,23 @@
  */
 package consulo.language.codeStyle;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ServiceAPI;
+import consulo.component.extension.ExtensionPoint;
 import consulo.language.file.FileViewProvider;
 import consulo.language.pom.PomModelAspect;
 import consulo.project.Project;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.function.Supplier;
 
 /**
  * @author VISTALL
  * @since 23-Mar-22
  */
-@ServiceAPI(value = ComponentScope.PROJECT, lazy = false)
 public interface PostprocessReformattingAspect extends PomModelAspect {
-  public static PostprocessReformattingAspect getInstance(Project project) {
-    return project.getInstance(PostprocessReformattingAspect.class);
+  @Nonnull
+  static PostprocessReformattingAspect getInstance(Project project) {
+    ExtensionPoint<PomModelAspect> point = project.getExtensionPoint(PomModelAspect.class);
+    return point.findExtensionOrFail(PostprocessReformattingAspect.class);
   }
 
   void doPostponedFormatting();

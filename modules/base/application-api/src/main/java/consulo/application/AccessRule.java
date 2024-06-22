@@ -18,10 +18,8 @@ package consulo.application;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.logging.Logger;
-import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.function.ThrowableSupplier;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -47,7 +45,7 @@ public final class AccessRule {
   }
 
   @Nonnull
-  public static AsyncResult<Void> readAsync(@RequiredReadAction @Nonnull ThrowableRunnable<Throwable> action) {
+  public static CompletableFuture<Void> readAsync(@RequiredReadAction @Nonnull ThrowableRunnable<Throwable> action) {
     return readAsync(() -> {
       action.run();
       return null;
@@ -55,17 +53,16 @@ public final class AccessRule {
   }
 
   @Nonnull
-  public static <T> AsyncResult<T> readAsync(@RequiredReadAction @Nonnull ThrowableSupplier<T, Throwable> action) {
-    AsyncResult<T> result = AsyncResult.undefined();
+  public static <T> CompletableFuture<T> readAsync(@RequiredReadAction @Nonnull ThrowableSupplier<T, Throwable> action) {
+    CompletableFuture<T> result = new CompletableFuture<>();
     Application application = Application.get();
     application.executeOnPooledThread(() -> {
       try {
-        result.setDone(application.runReadAction(action));
+        result.complete(application.runReadAction(action));
       }
       catch (Throwable throwable) {
         LOG.error(throwable);
-
-        result.rejectWithThrowable(throwable);
+        result.completeExceptionally(throwable);
       }
     });
     return result;

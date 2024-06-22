@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi.impl.source.codeStyle;
+package consulo.language.codeStyle;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.document.util.TextRange;
-import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 

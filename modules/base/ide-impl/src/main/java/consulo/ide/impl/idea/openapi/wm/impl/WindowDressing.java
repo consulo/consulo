@@ -16,41 +16,38 @@
 package consulo.ide.impl.idea.openapi.wm.impl;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ServiceAPI;
-import consulo.annotation.component.ServiceImpl;
-import consulo.ui.ex.action.ActionManager;
-import consulo.application.Application;
+import consulo.annotation.component.TopicImpl;
 import consulo.project.Project;
 import consulo.project.event.ProjectManagerListener;
 import consulo.ui.UIAccess;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-
+import consulo.ui.ex.action.ActionManager;
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 
 /**
  * @author Bas Leijdekkers
  */
-@Singleton
-@ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
-@ServiceImpl
-public class WindowDressing {
-  @Inject
-  public WindowDressing(@Nonnull Application application, @Nonnull ActionManager actionManager) {
-    application.getMessageBus().connect().subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
-      @Override
-      public void projectOpened(Project project, UIAccess uiAccess) {
-        getWindowActionGroup(actionManager).addProject(project);
-      }
+@TopicImpl(ComponentScope.APPLICATION)
+public class WindowDressing implements ProjectManagerListener {
+  @Nonnull
+  private final ActionManager myActionManager;
 
-      @Override
-      public void projectClosed(Project project, UIAccess uiAccess) {
-        getWindowActionGroup(actionManager).removeProject(project);
-      }
-    });
+  @Inject
+  public WindowDressing(@Nonnull ActionManager actionManager) {
+    myActionManager = actionManager;
   }
 
   public static ProjectWindowActionGroup getWindowActionGroup(ActionManager actionManager1) {
     return (ProjectWindowActionGroup)actionManager1.getAction("OpenProjectWindows");
+  }
+
+  @Override
+  public void projectOpened(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+    getWindowActionGroup(myActionManager).addProject(project);
+  }
+
+  @Override
+  public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+    getWindowActionGroup(myActionManager).removeProject(project);
   }
 }

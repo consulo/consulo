@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.updateSettings;
+package consulo.externalService.impl.internal.update;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
@@ -22,7 +22,6 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.externalService.update.UpdateChannel;
 import consulo.externalService.update.UpdateSettings;
-import consulo.ide.impl.updateSettings.impl.PlatformOrPluginUpdateResult;
 import consulo.util.lang.ObjectUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;

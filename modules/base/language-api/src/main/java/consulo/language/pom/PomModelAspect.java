@@ -15,8 +15,14 @@
  */
 package consulo.language.pom;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.language.pom.event.PomModelEvent;
+import jakarta.annotation.Nonnull;
 
+@ExtensionAPI(ComponentScope.PROJECT)
 public interface PomModelAspect {
   void update(PomModelEvent event);
+
+  void register(@Nonnull PomModelAspectRegistrator registrator);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,20 +15,16 @@
  */
 package consulo.language.pom;
 
-import consulo.annotation.component.ExtensionImpl;
-import consulo.language.pom.event.PomModelEvent;
 import jakarta.annotation.Nonnull;
 
 import java.util.Set;
 
-@ExtensionImpl(id = "treeAspect", order = "first")
-public class TreeAspect implements PomModelAspect {
-  @Override
-  public void update(PomModelEvent event) {
-  }
+/**
+ * @author VISTALL
+ * @since 18-Jun-24
+ */
+public interface PomModelAspectRegistrator {
+  <P extends PomModelAspect> P getModelAspect(@Nonnull Class<P> clazz);
 
-  @Override
-  public void register(@Nonnull PomModelAspectRegistrator registrator) {
-    registrator.register(TreeAspect.class, this, Set.of());
-  }
+  void register(Class<? extends PomModelAspect> aClass, PomModelAspect aspect, Set<PomModelAspect> dependencies);
 }

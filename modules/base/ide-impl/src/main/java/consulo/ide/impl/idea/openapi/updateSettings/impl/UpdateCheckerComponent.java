@@ -23,9 +23,9 @@ import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.disposer.Disposable;
 import consulo.externalService.update.UpdateSettings;
 import consulo.ide.impl.idea.ide.actions.SettingsEntryPointAction;
-import consulo.ide.impl.updateSettings.UpdateSettingsImpl;
+import consulo.externalService.impl.internal.update.UpdateSettingsImpl;
 import consulo.ide.impl.updateSettings.impl.PlatformOrPluginUpdateChecker;
-import consulo.ide.impl.updateSettings.impl.PlatformOrPluginUpdateResult;
+import consulo.externalService.impl.internal.update.PlatformOrPluginUpdateResult;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 

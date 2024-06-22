@@ -418,11 +418,9 @@ public abstract class BaseRefactoringProcessor implements Runnable {
     Runnable refactoringRunnable = () -> {
       Set<UsageInfo> usagesToRefactor = UsageViewUtil.getNotExcludedUsageInfos(usageView);
       final UsageInfo[] infos = usagesToRefactor.toArray(UsageInfo.EMPTY_ARRAY);
-      myProject.getUIAccess().giveAndWait(() -> {
-        if (ensureElementsWritable(infos, viewDescriptor)) {
-          execute(infos);
-        }
-      });
+      if (ensureElementsWritable(infos, viewDescriptor)) {
+        execute(infos);
+      }
     };
 
     String canNotMakeString = RefactoringBundle.message("usageView.need.reRun");

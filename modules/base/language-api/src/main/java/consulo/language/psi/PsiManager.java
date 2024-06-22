@@ -32,7 +32,7 @@ import jakarta.annotation.Nullable;
 /**
  * The main entry point for accessing the PSI services for a project.
  */
-@ServiceAPI(value = ComponentScope.PROJECT, lazy = false)
+@ServiceAPI(value = ComponentScope.PROJECT)
 public abstract class PsiManager extends UserDataHolderBase {
 
   /**

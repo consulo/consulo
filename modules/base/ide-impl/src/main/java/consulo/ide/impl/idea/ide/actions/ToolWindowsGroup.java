@@ -18,15 +18,14 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -71,7 +70,7 @@ public final class ToolWindowsGroup extends ActionGroup implements DumbAware {
   public static List<ActivateToolWindowAction> getToolWindowActions(@Nonnull Project project, boolean shouldSkipHidden) {
     ActionManager actionManager = ActionManager.getInstance();
     ToolWindowManager manager = ToolWindowManager.getInstance(project);
-    List<ActivateToolWindowAction> result = ContainerUtil.newArrayList();
+    List<ActivateToolWindowAction> result = new ArrayList<>();
     for (String id : manager.getToolWindowIds()) {
       if (shouldSkipHidden && !manager.getToolWindow(id).isShowStripeButton()) continue;
       String actionId = ActivateToolWindowAction.getActionIdForToolWindow(id);

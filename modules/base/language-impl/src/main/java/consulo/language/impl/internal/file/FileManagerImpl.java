@@ -70,7 +70,7 @@ public final class FileManagerImpl implements FileManager {
     myFileIndex = fileIndex;
     myConnection = manager.getProject().getMessageBus().connect();
 
-    Disposer.register(manager.getProject(), this);
+    Disposer.register(manager, this);
     LowMemoryWatcher.register(this::processQueue, this);
 
     myConnection.subscribe(DumbModeListener.class, new DumbModeListener() {

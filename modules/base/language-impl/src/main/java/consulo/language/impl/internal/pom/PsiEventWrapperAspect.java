@@ -16,9 +16,7 @@
 
 package consulo.language.impl.internal.pom;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ServiceAPI;
-import consulo.annotation.component.ServiceImpl;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.language.ast.ASTNode;
@@ -30,33 +28,43 @@ import consulo.language.impl.internal.psi.PsiToDocumentSynchronizer;
 import consulo.language.impl.psi.DummyHolder;
 import consulo.language.pom.PomModel;
 import consulo.language.pom.PomModelAspect;
+import consulo.language.pom.PomModelAspectRegistrator;
 import consulo.language.pom.TreeAspect;
 import consulo.language.pom.event.PomModelEvent;
 import consulo.language.pom.event.TreeChangeEvent;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 
-import java.util.Collections;
+import java.util.Set;
 
-@Singleton
-@ServiceAPI(value = ComponentScope.PROJECT, lazy = false)
-@ServiceImpl
+@ExtensionImpl(id = "psiEventWrapperAspect")
 public class PsiEventWrapperAspect implements PomModelAspect {
-  private final TreeAspect myTreeAspect;
+  private final PomModel myModel;
 
   @Inject
-  public PsiEventWrapperAspect(PomModel model, TreeAspect aspect) {
-    myTreeAspect = aspect;
-    model.registerAspect(PsiEventWrapperAspect.class, this, Collections.singleton(aspect));
+  public PsiEventWrapperAspect(PomModel model) {
+    myModel = model;
+  }
+
+  @Override
+  public void register(@Nonnull PomModelAspectRegistrator registrator) {
+    TreeAspect aspect = registrator.getModelAspect(TreeAspect.class);
+
+    registrator.register(PsiEventWrapperAspect.class, this, Set.of(aspect));
   }
 
   @Override
   public void update(PomModelEvent event) {
-    final TreeChangeEvent changeSet = (TreeChangeEvent)event.getChangeSet(myTreeAspect);
-    if (changeSet == null) return;
+    TreeAspect treeAspect = myModel.getModelAspect(TreeAspect.class);
+
+    TreeChangeEvent changeSet = (TreeChangeEvent)event.getChangeSet(treeAspect);
+    if (changeSet == null) {
+      return;
+    }
+
     sendAfterEvents(changeSet);
   }
 

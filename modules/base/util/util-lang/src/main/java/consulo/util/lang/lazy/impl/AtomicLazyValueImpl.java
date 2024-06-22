@@ -16,8 +16,9 @@
 package consulo.util.lang.lazy.impl;
 
 import consulo.util.lang.lazy.LazyValue;
-
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+
 import java.util.function.Supplier;
 
 /**
@@ -31,6 +32,12 @@ import java.util.function.Supplier;
 
   public AtomicLazyValueImpl(Supplier<T> factory) {
     myFactory = factory;
+  }
+
+  @Nullable
+  @Override
+  public T getStoredValue() {
+    return myValue;
   }
 
   @Nonnull

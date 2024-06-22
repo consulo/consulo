@@ -1403,7 +1403,7 @@ public class Switcher extends AnAction implements DumbAware {
     String getNameForRendering() {
       if (myNameForRendering == null) {
         // Recently changed files would also be taken into account (not only open 'visible' files)
-        myNameForRendering = EditorTabPresentationUtil.getUniqueEditorTabTitle(myProject, first, second);
+        myNameForRendering = EditorTabPresentationUtil.getUniqueEditorTabTitle(myProject, first);
       }
       return myNameForRendering;
     }

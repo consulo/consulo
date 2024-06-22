@@ -2,12 +2,13 @@
 package consulo.ide.impl.idea.openapi.fileEditor.impl;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.ReadAction;
 import consulo.application.ui.UISettings;
-import consulo.fileEditor.UniqueVFilePathBuilder;
 import consulo.fileEditor.EditorTabTitleProvider;
+import consulo.fileEditor.UniqueVFilePathBuilder;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -27,16 +28,18 @@ public class UniqueNameEditorTabTitleProvider implements EditorTabTitleProvider 
     }
 
     // Even though this is a 'tab title provider' it is used also when tabs are not shown, namely for building IDE frame title.
-    String uniqueName = uiSettings.getEditorTabPlacement() == UISettings.PLACEMENT_EDITOR_TAB_NONE
-                        ? UniqueVFilePathBuilder.getInstance().getUniqueVirtualFilePath(project, file)
-                        : UniqueVFilePathBuilder.getInstance().getUniqueVirtualFilePathWithinOpenedFileEditors(project, file);
-    uniqueName = getEditorTabText(uniqueName, File.separator, uiSettings.getHideKnownExtensionInTabs());
-    return uniqueName.equals(file.getName()) ? null : uniqueName;
+    return ReadAction.compute(() -> {
+      String uniqueName = uiSettings.getEditorTabPlacement() == UISettings.PLACEMENT_EDITOR_TAB_NONE
+        ? UniqueVFilePathBuilder.getInstance().getUniqueVirtualFilePath(project, file)
+        : UniqueVFilePathBuilder.getInstance().getUniqueVirtualFilePathWithinOpenedFileEditors(project, file);
+      uniqueName = getEditorTabText(uniqueName, File.separator, uiSettings.getHideKnownExtensionInTabs());
+      return uniqueName.equals(file.getName()) ? null : uniqueName;
+    });
   }
 
   public static String getEditorTabText(String result, String separator, boolean hideKnownExtensionInTabs) {
     if (hideKnownExtensionInTabs) {
-      String withoutExtension = FileUtilRt.getNameWithoutExtension(result);
+      String withoutExtension = FileUtil.getNameWithoutExtension(result);
       if (StringUtil.isNotEmpty(withoutExtension) && !withoutExtension.endsWith(separator)) {
         return withoutExtension;
       }

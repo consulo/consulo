@@ -14,7 +14,7 @@ import java.util.List;
 @ServiceAPI(value = ComponentScope.PROJECT, lazy = false)
 public abstract class IdeDocumentHistory {
   public static IdeDocumentHistory getInstance(Project project) {
-    return project.getComponent(IdeDocumentHistory.class);
+    return project.getInstance(IdeDocumentHistory.class);
   }
 
   public abstract void includeCurrentCommandAsNavigation();

@@ -1,4 +1,4 @@
-package consulo.ide.impl.updateSettings.impl;
+package consulo.externalService.impl.internal.update;
 
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginDescriptor;

@@ -38,6 +38,12 @@ public class NullableLazyValueImpl<T> implements LazyValue<T> {
 
   @Nullable
   @Override
+  public T getStoredValue() {
+    return myValue;
+  }
+
+  @Nullable
+  @Override
   public T get() {
     if (!myComputed) {
       myValue = myFactory.get();
