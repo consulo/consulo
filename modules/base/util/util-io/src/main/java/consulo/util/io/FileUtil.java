@@ -22,13 +22,13 @@ import consulo.util.collection.HashingStrategy;
 import consulo.util.io.internal.OSInfo;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ThreeState;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.intellij.lang.annotations.RegExp;
 import org.jetbrains.annotations.Contract;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.io.*;
 import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
@@ -689,6 +689,11 @@ public class FileUtil {
 
   public static boolean startsWith(@Nonnull String path, @Nonnull String start, boolean caseSensitive) {
     return !ThreeState.NO.equals(startsWith(path, start, false, caseSensitive, false));
+  }
+
+  @Contract(pure = true)
+  public static boolean startsWith(@Nonnull String path, @Nonnull String prefix, boolean isCaseSensitive, boolean strict) {
+    return !ThreeState.NO.equals(startsWith(path, prefix, strict, isCaseSensitive, false));
   }
 
   @Nonnull

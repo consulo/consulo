@@ -34,7 +34,7 @@ import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
 import consulo.ide.impl.idea.vcs.log.ui.actions.IntelliSortChooserPopupAction;
 import consulo.ide.impl.idea.vcs.log.ui.filter.VcsLogClassicFilterUi;
 import consulo.ide.impl.idea.vcs.log.util.BekUtil;
-import consulo.versionControlSystem.log.util.VcsUserUtil;
+import consulo.versionControlSystem.util.VcsUserUtil;
 import net.miginfocom.swing.MigLayout;
 import jakarta.annotation.Nonnull;
 

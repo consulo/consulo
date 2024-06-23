@@ -36,7 +36,6 @@ import consulo.versionControlSystem.rollback.RollbackEnvironment;
 import consulo.versionControlSystem.update.RefreshVFsSynchronously;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -206,9 +205,9 @@ public class RollbackWorker {
       WaitForProgressToShow.runOrInvokeLaterAboveProgress(myAfterRefresh, null, project);
     }
 
-    private static void markDirty(@NotNull FilePath filePath,
-                                  @NotNull ProjectLevelVcsManager vcsManager,
-                                  @NotNull VcsDirtyScopeManager dirtyScopeManager) {
+    private static void markDirty(@Nonnull FilePath filePath,
+                                  @Nonnull ProjectLevelVcsManager vcsManager,
+                                  @Nonnull VcsDirtyScopeManager dirtyScopeManager) {
       AbstractVcs vcs = vcsManager.getVcsFor(filePath);
       if (vcs == null) return;
 

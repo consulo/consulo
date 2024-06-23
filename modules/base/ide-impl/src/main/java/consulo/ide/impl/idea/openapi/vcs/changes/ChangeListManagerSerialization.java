@@ -19,6 +19,7 @@ import consulo.project.Project;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.change.*;
+import consulo.versionControlSystem.impl.internal.change.ChangeListWorker;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nonnull;

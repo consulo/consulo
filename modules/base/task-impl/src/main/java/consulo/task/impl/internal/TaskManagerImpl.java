@@ -641,7 +641,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
 
     // make sure the task is associated with default changelist
     LocalTask defaultTask = findTask(LocalTaskImpl.DEFAULT_TASK_ID);
-    LocalChangeList defaultList = myChangeListManager.findChangeList(LocalChangeList.DEFAULT_NAME);
+    LocalChangeList defaultList = myChangeListManager.findChangeList(LocalChangeList.getDefaultName());
     if (defaultList != null && defaultTask != null) {
       ChangeListInfo listInfo = new ChangeListInfo(defaultList);
       if (!defaultTask.getChangeLists().contains(listInfo)) {

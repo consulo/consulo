@@ -1,5 +1,6 @@
 package consulo.versionControlSystem.log;
 
+import consulo.versionControlSystem.VcsUser;
 import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nonnull;

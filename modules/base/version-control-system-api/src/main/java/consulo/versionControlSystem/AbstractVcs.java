@@ -30,6 +30,7 @@ import consulo.versionControlSystem.annotate.AnnotationProvider;
 import consulo.versionControlSystem.change.ChangeProvider;
 import consulo.versionControlSystem.change.CommitExecutor;
 import consulo.versionControlSystem.change.LocalChangeList;
+import consulo.versionControlSystem.change.VcsDirtyScopeBuilder;
 import consulo.versionControlSystem.checkin.CheckinEnvironment;
 import consulo.versionControlSystem.diff.DiffProvider;
 import consulo.versionControlSystem.diff.RevisionSelector;
@@ -54,7 +55,7 @@ import java.util.List;
 import java.util.function.Function;
 
 /**
- * The base class for a version control system integrated with IDEA.
+ * The base class for a version control system integration
  *
  * @see ProjectLevelVcsManager
  */
@@ -554,6 +555,18 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
     return false;
   }
 
+  /**
+   * @return whether VCS supports committing only some changes for a particular file.
+   * NB: This mode is incompatible with custom {@link com.intellij.openapi.vcs.impl.LocalLineStatusTrackerProvider}.
+   * @see ChangeListChange
+   * @see com.intellij.openapi.vcs.impl.PartialChangesUtil
+   * @see com.intellij.openapi.vcs.ex.PartialLocalLineStatusTracker#handlePartialCommit
+   * @see com.intellij.openapi.vcs.impl.LineStatusTrackerManagerI#arePartialChangelistsEnabled()
+   */
+  public boolean arePartialChangelistsSupported() {
+    return false;
+  }
+
   @Nullable
   protected TreeDiffProvider getTreeDiffProviderImpl() {
     return null;
@@ -640,6 +653,14 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
    */
   public boolean needsCaseSensitiveDirtyScope() {
     return false;
+  }
+
+  /**
+   * If not specified, the {@link VcsDirtyScopeImpl} will be used.
+   */
+  @Nullable
+  public VcsDirtyScopeBuilder createDirtyScope() {
+    return null;
   }
 
   @Override

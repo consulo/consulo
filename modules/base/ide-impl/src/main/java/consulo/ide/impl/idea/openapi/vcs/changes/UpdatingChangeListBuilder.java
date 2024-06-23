@@ -10,10 +10,13 @@ import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsKey;
 import consulo.versionControlSystem.change.*;
+import consulo.versionControlSystem.impl.internal.change.ChangeListWorker;
+import consulo.versionControlSystem.impl.internal.change.FileHolderComposite;
+import consulo.versionControlSystem.impl.internal.change.SwitchedFileHolder;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -23,20 +26,20 @@ import java.util.function.Supplier;
 final class UpdatingChangeListBuilder implements ChangelistBuilder {
   private static final Logger LOG = Logger.getInstance(UpdatingChangeListBuilder.class);
 
-  private final @NotNull VcsDirtyScope myScope;
-  private final @NotNull ChangeListUpdater myChangeListUpdater;
-  private final @NotNull FileHolderComposite myComposite;
-  private final @NotNull Supplier<Boolean> myDisposedGetter;
+  private final @Nonnull VcsDirtyScope myScope;
+  private final @Nonnull ChangeListWorker.ChangeListUpdater myChangeListUpdater;
+  private final @Nonnull FileHolderComposite myComposite;
+  private final @Nonnull Supplier<Boolean> myDisposedGetter;
 
-  private final @NotNull ProjectLevelVcsManager myVcsManager;
-  private final @NotNull FoldersCutDownWorker myFoldersCutDownWorker;
+  private final @Nonnull ProjectLevelVcsManager myVcsManager;
+  private final @Nonnull FoldersCutDownWorker myFoldersCutDownWorker;
 
   private final List<Supplier<JComponent>> myAdditionalInfo = new ArrayList<>();
 
-  UpdatingChangeListBuilder(@NotNull VcsDirtyScope scope,
-                            @NotNull ChangeListUpdater changeListUpdater,
-                            @NotNull FileHolderComposite composite,
-                            @NotNull Supplier<Boolean> disposedGetter) {
+  UpdatingChangeListBuilder(@Nonnull VcsDirtyScope scope,
+                            @Nonnull ChangeListWorker.ChangeListUpdater changeListUpdater,
+                            @Nonnull FileHolderComposite composite,
+                            @Nonnull Supplier<Boolean> disposedGetter) {
     myScope = scope;
     myChangeListUpdater = changeListUpdater;
     myComposite = composite;
@@ -50,12 +53,12 @@ final class UpdatingChangeListBuilder implements ChangelistBuilder {
   }
 
   @Override
-  public void processChange(@NotNull Change change, VcsKey vcsKey) {
+  public void processChange(@Nonnull Change change, VcsKey vcsKey) {
     processChangeInList(change, (ChangeList)null, vcsKey);
   }
 
   @Override
-  public void processChangeInList(@NotNull Change change, @Nullable ChangeList changeList, VcsKey vcsKey) {
+  public void processChangeInList(@Nonnull Change change, @Nullable ChangeList changeList, VcsKey vcsKey) {
     checkIfDisposed();
 
     LOG.debug("[processChangeInList-1] entering, cl name: " + ((changeList == null) ? null : changeList.getName()) +
@@ -84,7 +87,7 @@ final class UpdatingChangeListBuilder implements ChangelistBuilder {
   }
 
   @Override
-  public void processChangeInList(@NotNull Change change, String changeListName, VcsKey vcsKey) {
+  public void processChangeInList(@Nonnull Change change, String changeListName, VcsKey vcsKey) {
     checkIfDisposed();
 
     LocalChangeList list = null;
@@ -189,11 +192,11 @@ final class UpdatingChangeListBuilder implements ChangelistBuilder {
   }
 
   @Override
-  public void reportAdditionalInfo(@NotNull Supplier<JComponent> infoComponent) {
+  public void reportAdditionalInfo(@Nonnull Supplier<JComponent> infoComponent) {
     myAdditionalInfo.add(infoComponent);
   }
 
-  @NotNull
+  @Nonnull
   public List<Supplier<JComponent>> getAdditionalInfo() {
     return myAdditionalInfo;
   }

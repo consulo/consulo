@@ -17,9 +17,7 @@ package consulo.ide.impl.idea.dvcs;
 
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.function.ThrowableComputable;
-import consulo.versionControlSystem.distributed.DvcsBundle;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.versionControlSystem.base.FilePathImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -28,13 +26,15 @@ import consulo.ui.ex.awt.NonFocusableCheckBox;
 import consulo.util.lang.ref.Ref;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsException;
+import consulo.versionControlSystem.action.VcsContextFactory;
 import consulo.versionControlSystem.checkin.CheckinProjectPanel;
+import consulo.versionControlSystem.distributed.DvcsBundle;
 import consulo.versionControlSystem.distributed.DvcsUtil;
 import consulo.versionControlSystem.ui.RefreshableOnComponent;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -57,7 +57,7 @@ public abstract class DvcsCommitAdditionalComponent implements RefreshableOnComp
   @Nonnull
   protected final CheckinProjectPanel myCheckinPanel;
   @Nullable
-  private  Map<VirtualFile, String> myMessagesForRoots;
+  private Map<VirtualFile, String> myMessagesForRoots;
 
   public DvcsCommitAdditionalComponent(@Nonnull final Project project, @Nonnull CheckinProjectPanel panel) {
     myCheckinPanel = panel;
@@ -83,16 +83,16 @@ public abstract class DvcsCommitAdditionalComponent implements RefreshableOnComp
       @Override
       public void actionPerformed(ActionEvent e) {
         if (myAmend.isSelected()) {
-            if (myPreviousMessage.equals(myCheckinPanel.getCommitMessage())) { // if user has already typed something, don't revert it
-              if (myMessagesForRoots == null) {
-                loadMessagesInModalTask(project);      //load all commit messages for all repositories
-              }
-              String message = constructAmendedMessage();
-              if (!StringUtil.isEmptyOrSpaces(message)) {
-                myAmendedMessage = message;
-                substituteCommitMessage(myAmendedMessage);
-              }
+          if (myPreviousMessage.equals(myCheckinPanel.getCommitMessage())) { // if user has already typed something, don't revert it
+            if (myMessagesForRoots == null) {
+              loadMessagesInModalTask(project);      //load all commit messages for all repositories
             }
+            String message = constructAmendedMessage();
+            if (!StringUtil.isEmptyOrSpaces(message)) {
+              myAmendedMessage = message;
+              substituteCommitMessage(myAmendedMessage);
+            }
+          }
         }
         else {
           // there was the amended message, but user has changed it => not reverting
@@ -130,12 +130,13 @@ public abstract class DvcsCommitAdditionalComponent implements RefreshableOnComp
   private void loadMessagesInModalTask(@Nonnull Project project) {
     try {
       myMessagesForRoots =
-        ProgressManager.getInstance().runProcessWithProgressSynchronously(new ThrowableComputable<Map<VirtualFile,String>, VcsException>() {
-          @Override
-          public Map<VirtualFile, String> compute() throws VcsException {
-            return getLastCommitMessages();
-          }
-        }, "Reading commit message...", false, project);
+        ProgressManager.getInstance()
+                       .runProcessWithProgressSynchronously(new ThrowableComputable<Map<VirtualFile, String>, VcsException>() {
+                         @Override
+                         public Map<VirtualFile, String> compute() throws VcsException {
+                           return getLastCommitMessages();
+                         }
+                       }, "Reading commit message...", false, project);
     }
     catch (VcsException e) {
       Messages.showErrorDialog(getComponent(), "Couldn't load commit message of the commit to amend.\n" + e.getMessage(),
@@ -168,7 +169,9 @@ public abstract class DvcsCommitAdditionalComponent implements RefreshableOnComp
 
   @Nonnull
   private List<FilePath> getSelectedFilePaths() {
-    return ContainerUtil.map(myCheckinPanel.getFiles(), (Function<File, FilePath>)file -> new FilePathImpl(file, file.isDirectory()));
+    return ContainerUtil.map(myCheckinPanel.getFiles(), (Function<File, FilePath>)file -> VcsContextFactory.getInstance()
+                                                                                                           .createFilePathOn(file,
+                                                                                                                             file.isDirectory()));
   }
 
   @Nonnull

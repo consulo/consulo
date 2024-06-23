@@ -23,7 +23,6 @@ import consulo.application.ReadAction;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.DateFormatUtil;
-import consulo.application.util.function.Processor;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.application.util.registry.Registry;
 import consulo.component.ProcessCanceledException;
@@ -51,7 +50,6 @@ import consulo.ide.impl.idea.openapi.vcs.update.UpdateInfoTree;
 import consulo.ide.impl.idea.openapi.vcs.update.UpdatedFilesListener;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.util.ContentUtilEx;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.ViewUpdateInfoNotification;
 import consulo.language.content.FileIndexFacade;
 import consulo.language.file.FileTypeManager;
@@ -75,7 +73,7 @@ import consulo.versionControlSystem.change.ContentRevisionCache;
 import consulo.versionControlSystem.change.VcsAnnotationLocalChangesListener;
 import consulo.versionControlSystem.checkout.CheckoutProvider;
 import consulo.versionControlSystem.history.VcsHistoryCache;
-import consulo.versionControlSystem.internal.VcsFileListenerContextHelper;
+import consulo.versionControlSystem.impl.internal.VcsRootIterator;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.root.VcsRoot;
 import consulo.versionControlSystem.root.VcsRootSettings;
@@ -91,7 +89,6 @@ import jakarta.inject.Singleton;
 import org.jdom.Attribute;
 import org.jdom.DataConversionException;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -106,7 +103,6 @@ import java.util.function.Predicate;
 public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx implements PersistentStateComponent<Element>, Disposable {
 
   private static final Logger LOG = Logger.getInstance(ProjectLevelVcsManagerImpl.class);
-  @NonNls
   private static final String SETTINGS_EDITED_MANUALLY = "settingsEditedManually";
 
   private final ProjectLevelVcsManagerSerialization mySerialization;
@@ -128,17 +124,11 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
     }
   };
 
-  @NonNls
   private static final String ELEMENT_MAPPING = "mapping";
-  @NonNls
   private static final String ATTRIBUTE_DIRECTORY = "directory";
-  @NonNls
   private static final String ATTRIBUTE_VCS = "vcs";
-  @NonNls
   private static final String ATTRIBUTE_DEFAULT_PROJECT = "defaultProject";
-  @NonNls
   private static final String ELEMENT_ROOT_SETTINGS = "rootSettings";
-  @NonNls
   private static final String ATTRIBUTE_CLASS = "class";
 
   private boolean myMappingsLoaded;
@@ -147,22 +137,20 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
 
   private volatile int myBackgroundOperationCounter;
 
-  private final Set<ActionKey> myBackgroundRunningTasks = ContainerUtil.newHashSet();
+  private final Set<ActionKey> myBackgroundRunningTasks = new HashSet<>();
 
   private final List<VcsConsoleLine> myPendingOutput = new ArrayList<>();
 
   private final VcsHistoryCache myVcsHistoryCache;
   private final ContentRevisionCache myContentRevisionCache;
   private final FileIndexFacade myExcludedIndex;
-  private final VcsFileListenerContextHelper myVcsFileListenerContextHelper;
   private final VcsAnnotationLocalChangesListenerImpl myAnnotationLocalChangesListener;
 
   @Inject
   public ProjectLevelVcsManagerImpl(Project project,
-                                    final FileStatusManager manager,
-                                    final FileIndexFacade excludedFileIndex,
-                                    DefaultVcsRootPolicy defaultVcsRootPolicy,
-                                    VcsFileListenerContextHelper vcsFileListenerContextHelper) {
+                                    FileStatusManager manager,
+                                    FileIndexFacade excludedFileIndex,
+                                    DefaultVcsRootPolicy defaultVcsRootPolicy) {
     myProject = project;
     mySerialization = new ProjectLevelVcsManagerSerialization();
     myOptionsAndConfirmations = new OptionsAndConfirmations();
@@ -173,10 +161,8 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
 
     myVcsHistoryCache = new VcsHistoryCache();
     myContentRevisionCache = new ContentRevisionCache();
-    myVcsFileListenerContextHelper = vcsFileListenerContextHelper;
     VcsListener vcsListener = () -> {
       myVcsHistoryCache.clear();
-      myVcsFileListenerContextHelper.possiblySwitchActivation(hasActiveVcss());
     };
     myExcludedIndex = excludedFileIndex;
     MessageBusConnection connection = myProject.getMessageBus().connect();
@@ -225,7 +211,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
   }
 
   @Override
-  public void iterateVfUnderVcsRoot(VirtualFile file, Processor<VirtualFile> processor) {
+  public void iterateVfUnderVcsRoot(VirtualFile file, Predicate<? super VirtualFile> processor) {
     VcsRootIterator.iterateVfUnderVcsRoot(myProject, file, processor);
   }
 
@@ -418,7 +404,8 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
       JPanel panel = new JPanel(new BorderLayout());
       panel.add(myConsole.getComponent(), BorderLayout.CENTER);
 
-      ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar("VcsManager", new DefaultActionGroup(myConsole.createConsoleActions()), false);
+      ActionToolbar toolbar =
+        ActionManager.getInstance().createActionToolbar("VcsManager", new DefaultActionGroup(myConsole.createConsoleActions()), false);
       panel.add(toolbar.getComponent(), BorderLayout.WEST);
 
       content = ContentFactory.getInstance().createContent(panel, displayName, true);
@@ -426,7 +413,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
       contentManager.addContent(content);
 
       for (VcsConsoleLine pair : myPendingOutput) {
-       pair.print(myConsole);
+        pair.print(myConsole);
       }
       myPendingOutput.clear();
     }
@@ -472,14 +459,22 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
   @CalledInAwt
   @Nullable
   @Override
-  public UpdateInfoTree showUpdateProjectInfo(UpdatedFiles updatedFiles, String displayActionName, ActionInfo actionInfo, boolean canceled) {
+  public UpdateInfoTree showUpdateProjectInfo(UpdatedFiles updatedFiles,
+                                              String displayActionName,
+                                              ActionInfo actionInfo,
+                                              boolean canceled) {
     if (!myProject.isOpen() || myProject.isDisposed()) return null;
     ContentManager contentManager = getContentManager();
     if (contentManager == null) {
       return null;  // content manager is made null during dispose; flag is set later
     }
     final UpdateInfoTree updateInfoTree = new UpdateInfoTree(contentManager, myProject, updatedFiles, displayActionName, actionInfo);
-    ContentUtilEx.addTabbedContent(contentManager, updateInfoTree, "Update Info", DateFormatUtil.formatDateTime(System.currentTimeMillis()), false, updateInfoTree);
+    ContentUtilEx.addTabbedContent(contentManager,
+                                   updateInfoTree,
+                                   "Update Info",
+                                   DateFormatUtil.formatDateTime(System.currentTimeMillis()),
+                                   false,
+                                   updateInfoTree);
     updateInfoTree.expandRootChildren();
     return updateInfoTree;
   }
@@ -823,13 +818,13 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
   @Override
   public boolean isFileInContent(@Nullable final VirtualFile vf) {
     ThrowableComputable<Boolean, RuntimeException> action = () -> vf != null &&
-                                                                  (myExcludedIndex.isInContent(vf) ||
-                                                                   isFileInBaseDir(vf) ||
-                                                                   vf.equals(myProject.getBaseDir()) ||
-                                                                   hasExplicitMapping(vf) ||
-                                                                   isInDirectoryBasedRoot(vf) ||
-                                                                   !Registry.is("ide.hide.excluded.files") && myExcludedIndex.isExcludedFile(vf)) &&
-                                                                  !isIgnored(vf);
+      (myExcludedIndex.isInContent(vf) ||
+        isFileInBaseDir(vf) ||
+        vf.equals(myProject.getBaseDir()) ||
+        hasExplicitMapping(vf) ||
+        isInDirectoryBasedRoot(vf) ||
+        !Registry.is("ide.hide.excluded.files") && myExcludedIndex.isExcludedFile(vf)) &&
+      !isIgnored(vf);
     return AccessRule.read(action);
   }
 

@@ -20,7 +20,6 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.util.SystemInfo;
 import consulo.platform.Platform;
 import consulo.project.Project;
-import consulo.util.collection.ContainerUtil;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.function.ThrowableConsumer;
 import consulo.util.lang.function.ThrowableFunction;
@@ -29,9 +28,10 @@ import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.SystemIndependent;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -78,7 +78,7 @@ public class VcsFileUtil {
                                          int groupSize,
                                          @Nonnull ThrowableFunction<List<String>, List<? extends T>, VcsException> processor)
           throws VcsException {
-    List<T> result = ContainerUtil.newArrayList();
+    List<T> result = new ArrayList<T>();
 
     foreachChunk(arguments, groupSize, chunk -> {
       result.addAll(processor.apply(chunk));
@@ -379,5 +379,20 @@ public class VcsFileUtil {
     }
 
     return null;
+  }
+
+  /**
+   * @see FileUtil#toCanonicalPath
+   */
+  public static boolean isAncestor(@Nonnull @SystemIndependent String ancestor, @Nonnull @SystemIndependent String path, boolean strict) {
+    return FileUtil.startsWith(path, ancestor, SystemInfo.isFileSystemCaseSensitive, strict);
+  }
+
+  public static boolean isAncestor(@Nonnull FilePath ancestor, @Nonnull FilePath path, boolean strict) {
+    return isAncestor(ancestor.getPath(), path.getPath(), strict);
+  }
+
+  public static boolean isAncestor(@Nonnull VirtualFile root, @Nonnull FilePath path) {
+    return isAncestor(root.getPath(), path.getPath(), false);
   }
 }

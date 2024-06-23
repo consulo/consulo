@@ -27,7 +27,7 @@ import consulo.versionControlSystem.log.VcsLogUserFilter;
 import consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogDataImpl;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogUserFilterImpl;
-import consulo.versionControlSystem.log.util.VcsUserUtil;
+import consulo.versionControlSystem.util.VcsUserUtil;
 import consulo.dataContext.DataContext;
 import consulo.util.lang.Couple;
 

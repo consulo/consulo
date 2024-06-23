@@ -7,6 +7,7 @@ import consulo.disposer.Disposable;
 import consulo.util.collection.ContainerUtil;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.VcsKey;
+import consulo.versionControlSystem.VcsUser;
 import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nonnull;

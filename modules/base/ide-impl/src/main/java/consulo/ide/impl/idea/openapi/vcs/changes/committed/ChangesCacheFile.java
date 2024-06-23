@@ -15,19 +15,19 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
-import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.versionControlSystem.base.FilePathImpl;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
-import consulo.versionControlSystem.diff.DiffProviderEx;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 import consulo.util.lang.function.Condition;
 import consulo.versionControlSystem.*;
+import consulo.versionControlSystem.action.VcsContextFactory;
 import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.diff.DiffProvider;
+import consulo.versionControlSystem.diff.DiffProviderEx;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.versionControlSystem.update.FileGroup;
 import consulo.versionControlSystem.update.UpdatedFiles;
@@ -35,9 +35,9 @@ import consulo.versionControlSystem.versionBrowser.ChangeBrowserSettings;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nullable;
 import java.io.*;
 import java.util.*;
 import java.util.function.Function;
@@ -82,7 +82,7 @@ public class ChangesCacheFile {
     myVcs = vcs;
     myChangesProvider = (CachingCommittedChangesProvider) vcs.getCommittedChangesProvider();
     myVcsManager = ProjectLevelVcsManager.getInstance(project);
-    myRootPath = new FilePathImpl(root);
+    myRootPath = VcsContextFactory.getInstance().createFilePathOn(root);
     myLocation = location;
   }
 
@@ -604,7 +604,7 @@ public class ChangesCacheFile {
     final List<Pair<String,VcsRevisionNumber>> list = group.getFilesAndRevisions(myVcsManager);
     for(Pair<String, VcsRevisionNumber> pair: list) {
       final String file = pair.first;
-      FilePath path = new FilePathImpl(new File(file), false);
+      FilePath path = VcsContextFactory.getInstance().createFilePathOn(new File(file), false);
       if (!path.isUnder(myRootPath, false) || pair.second == null) {
         continue;
       }

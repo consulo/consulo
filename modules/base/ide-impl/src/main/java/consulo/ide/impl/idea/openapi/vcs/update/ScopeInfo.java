@@ -16,12 +16,12 @@
 package consulo.ide.impl.idea.openapi.vcs.update;
 
 import consulo.project.Project;
-import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.versionControlSystem.action.VcsContext;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsBundle;
-import consulo.versionControlSystem.base.FilePathImpl;
+import consulo.versionControlSystem.action.VcsContext;
+import consulo.versionControlSystem.action.VcsContextFactory;
 import consulo.versionControlSystem.update.ActionInfo;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -50,7 +50,7 @@ public interface ScopeInfo {
         if (actionInfo.getEnvironment(vcs) != null) {
           final VirtualFile[] files = vcsManager.getRootsUnderVcs(vcs);
           for(VirtualFile file: files) {
-            result.add(new FilePathImpl(file));
+            result.add(VcsContextFactory.getInstance().createFilePathOn(file));
           }
         }
       }

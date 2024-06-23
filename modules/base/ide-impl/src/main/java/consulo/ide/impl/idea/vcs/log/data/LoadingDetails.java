@@ -8,13 +8,14 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.versionControlSystem.log.CommitId;
 import consulo.versionControlSystem.log.Hash;
 import consulo.versionControlSystem.log.VcsFullCommitDetails;
-import consulo.versionControlSystem.log.VcsUser;
-import consulo.ide.impl.idea.vcs.log.impl.VcsUserImpl;
+import consulo.versionControlSystem.VcsUser;
+import consulo.versionControlSystem.impl.internal.VcsUserImpl;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Fake {@link VcsCommitMetadataImpl} implementation that is used to indicate that details are not ready for the moment,
@@ -27,19 +28,18 @@ public class LoadingDetails implements VcsFullCommitDetails {
   private static final String LOADING = "Loading...";
 
   @Nonnull
-  private final Computable<CommitId> myCommitIdComputable;
+  private final Supplier<CommitId> myCommitIdComputable;
   private final long myLoadingTaskIndex;
   @Nullable private volatile CommitId myCommitId;
 
-  public LoadingDetails(@Nonnull Computable<CommitId> commitIdComputable, long loadingTaskIndex) {
+  public LoadingDetails(@Nonnull Supplier<CommitId> commitIdComputable, long loadingTaskIndex) {
     myCommitIdComputable = commitIdComputable;
     myLoadingTaskIndex = loadingTaskIndex;
   }
 
-
   protected CommitId getCommitId() {
     if (myCommitId == null) {
-      myCommitId = myCommitIdComputable.compute();
+      myCommitId = myCommitIdComputable.get();
     }
     return myCommitId;
   }
@@ -51,7 +51,7 @@ public class LoadingDetails implements VcsFullCommitDetails {
   @Nonnull
   @Override
   public Collection<Change> getChanges() {
-    return ContainerUtil.emptyList();
+    return List.of();
   }
 
   @Nonnull
@@ -103,7 +103,7 @@ public class LoadingDetails implements VcsFullCommitDetails {
   @Nonnull
   @Override
   public List<Hash> getParents() {
-    return ContainerUtil.emptyList();
+    return List.of();
   }
 
   @Override

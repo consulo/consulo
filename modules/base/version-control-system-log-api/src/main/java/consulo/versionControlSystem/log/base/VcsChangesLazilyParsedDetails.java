@@ -21,7 +21,7 @@ import consulo.util.lang.Couple;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.log.Hash;
 import consulo.versionControlSystem.log.VcsFullCommitDetails;
-import consulo.versionControlSystem.log.VcsUser;
+import consulo.versionControlSystem.VcsUser;
 import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nonnull;

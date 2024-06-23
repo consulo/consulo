@@ -17,6 +17,7 @@ package consulo.versionControlSystem.log;
 
 import consulo.disposer.Disposable;
 import consulo.project.Project;
+import consulo.versionControlSystem.VcsUser;
 import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nonnull;

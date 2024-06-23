@@ -19,8 +19,8 @@ package consulo.ide.impl.idea.history.core.revisions;
 import consulo.ide.impl.idea.history.core.tree.Entry;
 import consulo.ide.impl.idea.history.integration.IdeaGateway;
 import consulo.versionControlSystem.FilePath;
-import consulo.versionControlSystem.base.FilePathImpl;
 import consulo.versionControlSystem.VcsException;
+import consulo.versionControlSystem.action.VcsContextFactory;
 import consulo.versionControlSystem.change.ContentRevision;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import jakarta.annotation.Nonnull;
@@ -71,7 +71,7 @@ public class Difference {
 
       @Nonnull
       public FilePath getFile() {
-        return new FilePathImpl(new File(e.getPath()), e.isDirectory());
+        return VcsContextFactory.getInstance().createFilePathOn(new File(e.getPath()), e.isDirectory());
       }
 
       @Nonnull

@@ -20,6 +20,7 @@ import consulo.project.Project;
 import consulo.versionControlSystem.VcsInitObject;
 import consulo.versionControlSystem.VcsStartupActivity;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
+import consulo.versionControlSystem.impl.internal.change.VcsDirtyScopeManagerImpl;
 import jakarta.inject.Inject;
 
 /**

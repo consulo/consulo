@@ -31,12 +31,12 @@ import consulo.application.util.DateFormatUtil;
 import consulo.ide.impl.idea.util.ui.*;
 import consulo.versionControlSystem.log.VcsFullCommitDetails;
 import consulo.versionControlSystem.log.VcsRef;
-import consulo.versionControlSystem.log.VcsUser;
+import consulo.versionControlSystem.VcsUser;
 import consulo.ide.impl.idea.vcs.log.data.LoadingDetails;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogDataImpl;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogColorManager;
 import consulo.ide.impl.idea.vcs.log.ui.render.RectanglePainter;
-import consulo.versionControlSystem.log.util.VcsUserUtil;
+import consulo.versionControlSystem.util.VcsUserUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

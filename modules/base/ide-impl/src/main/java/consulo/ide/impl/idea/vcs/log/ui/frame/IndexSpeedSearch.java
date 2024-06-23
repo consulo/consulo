@@ -21,13 +21,13 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.versionControlSystem.log.VcsCommitMetadata;
 import consulo.versionControlSystem.log.VcsLogUserFilter;
-import consulo.versionControlSystem.log.VcsUser;
-import consulo.versionControlSystem.log.VcsUserRegistry;
+import consulo.versionControlSystem.VcsUser;
+import consulo.versionControlSystem.VcsUserRegistry;
 import consulo.ide.impl.idea.vcs.log.data.VisiblePack;
 import consulo.ide.impl.idea.vcs.log.data.index.IndexedDetails;
 import consulo.ide.impl.idea.vcs.log.data.index.VcsLogIndex;
 import consulo.versionControlSystem.log.util.VcsLogUtil;
-import consulo.versionControlSystem.log.util.VcsUserUtil;
+import consulo.versionControlSystem.util.VcsUserUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

@@ -18,8 +18,9 @@ package consulo.ide.impl.idea.vcs.log.ui;
 import consulo.ide.impl.idea.util.NotNullFunction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogUserFilterImpl;
+import consulo.versionControlSystem.VcsUser;
 import consulo.versionControlSystem.log.*;
-import consulo.versionControlSystem.log.util.VcsUserUtil;
+import consulo.versionControlSystem.util.VcsUserUtil;
 
 import jakarta.annotation.Nonnull;
 import java.util.Collection;

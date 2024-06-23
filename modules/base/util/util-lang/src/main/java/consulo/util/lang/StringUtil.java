@@ -1292,6 +1292,15 @@ public final class StringUtil {
   }
 
   @Contract(pure = true)
+  public static int stringHashCode(@Nonnull CharSequence chars, int from, int to, int prefixHash) {
+    int h = prefixHash;
+    for (int off = from; off < to; off++) {
+      h = 31 * h + chars.charAt(off);
+    }
+    return h;
+  }
+
+  @Contract(pure = true)
   public static int stringHashCode(@Nonnull CharSequence chars, int from, int to) {
     int h = 0;
     for (int off = from; off < to; off++) {
@@ -1322,6 +1331,15 @@ public final class StringUtil {
   @Contract(pure = true)
   public static int stringHashCodeInsensitive(@Nonnull CharSequence chars, int from, int to) {
     int h = 0;
+    for (int off = from; off < to; off++) {
+      h = 31 * h + toLowerCase(chars.charAt(off));
+    }
+    return h;
+  }
+
+  @Contract(pure = true)
+  public static int stringHashCodeInsensitive(@Nonnull CharSequence chars, int from, int to, int prefixHash) {
+    int h = prefixHash;
     for (int off = from; off < to; off++) {
       h = 31 * h + toLowerCase(chars.charAt(off));
     }

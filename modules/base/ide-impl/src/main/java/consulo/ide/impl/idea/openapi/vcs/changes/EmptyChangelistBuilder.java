@@ -6,23 +6,23 @@ import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsKey;
 import consulo.versionControlSystem.change.*;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.function.Supplier;
 
 public class EmptyChangelistBuilder implements ChangelistBuilder {
   @Override
-  public void processChange(@NotNull Change change, VcsKey vcsKey) {
+  public void processChange(@Nonnull Change change, VcsKey vcsKey) {
   }
 
   @Override
-  public void processChangeInList(@NotNull Change change, @Nullable ChangeList changeList, VcsKey vcsKey) {
+  public void processChangeInList(@Nonnull Change change, @Nullable ChangeList changeList, VcsKey vcsKey) {
   }
 
   @Override
-  public void processChangeInList(@NotNull Change change, String changeListName, VcsKey vcsKey) {
+  public void processChangeInList(@Nonnull Change change, String changeListName, VcsKey vcsKey) {
   }
 
   @Override

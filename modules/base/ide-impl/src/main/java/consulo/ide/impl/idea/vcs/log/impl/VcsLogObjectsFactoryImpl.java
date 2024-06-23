@@ -2,6 +2,8 @@ package consulo.ide.impl.idea.vcs.log.impl;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.util.function.ThrowableComputable;
+import consulo.versionControlSystem.VcsUser;
+import consulo.versionControlSystem.VcsUserRegistry;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.log.VcsFullCommitDetails;
 import consulo.versionControlSystem.log.*;

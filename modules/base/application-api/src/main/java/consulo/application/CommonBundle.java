@@ -70,6 +70,11 @@ public class CommonBundle extends BundleBase {
   }
 
   @Nonnull
+  public static String getAddButtonText() {
+    return message("button.add");
+  }
+
+  @Nonnull
   public static String getCancelButtonText() {
     return message("button.cancel");
   }

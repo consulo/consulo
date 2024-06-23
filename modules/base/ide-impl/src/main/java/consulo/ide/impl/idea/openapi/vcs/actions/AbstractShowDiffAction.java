@@ -15,18 +15,18 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
-import consulo.project.Project;
-import consulo.versionControlSystem.AbstractVcs;
-import consulo.versionControlSystem.base.FilePathImpl;
-import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.versionControlSystem.change.ChangeListManager;
-import consulo.versionControlSystem.diff.DiffProvider;
 import consulo.ide.impl.idea.openapi.vcs.impl.BackgroundableActionEnabledHandler;
 import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
 import consulo.ide.impl.idea.openapi.vcs.impl.VcsBackgroundableActions;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
+import consulo.versionControlSystem.AbstractVcs;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.action.VcsContext;
+import consulo.versionControlSystem.action.VcsContextFactory;
+import consulo.versionControlSystem.change.ChangeListManager;
+import consulo.versionControlSystem.diff.DiffProvider;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nullable;
 
@@ -86,7 +86,7 @@ public abstract class AbstractShowDiffAction extends AbstractVcsAction{
 
     if (diffProvider == null) return null;
 
-    if (AbstractVcs.fileInVcsByFileStatus(project, new FilePathImpl(selectedFile))) {
+    if (AbstractVcs.fileInVcsByFileStatus(project, VcsContextFactory.getInstance().createFilePathOn(selectedFile))) {
       return vcs;
     }
     return null;

@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.patch;
 
 import consulo.ide.impl.idea.diff.util.LineRange;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.GenericPatchApplier;
-import consulo.ide.impl.idea.util.BeforeAfter;
+import consulo.util.lang.BeforeAfter;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import jakarta.annotation.Nonnull;
 

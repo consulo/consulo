@@ -24,7 +24,7 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 /**
  * <p>{@link VcsUtil} extension that needs access to the <code>vcs-impl</code> module.</p>
@@ -33,7 +33,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class VcsImplUtil {
   @Nullable
-  public static VirtualFile findValidParentAccurately(@NotNull FilePath filePath) {
+  public static VirtualFile findValidParentAccurately(@Nonnull FilePath filePath) {
     VirtualFile result = filePath.getVirtualFile();
     if (result != null) return result;
 

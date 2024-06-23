@@ -15,20 +15,27 @@
  */
 package consulo.versionControlSystem.change;
 
+import consulo.util.concurrent.ActionCallback;
 import consulo.versionControlSystem.FilePath;
 
 import java.util.List;
 
 public class VcsInvalidated {
-  private final List<VcsDirtyScope> myScopes;
+  private final List<VcsModifiableDirtyScope> myScopes;
   private final boolean myEverythingDirty;
+  private final ActionCallback myCallback;
 
-  public VcsInvalidated(final List<VcsDirtyScope> scopes, final boolean everythingDirty) {
+  public VcsInvalidated(final List<VcsModifiableDirtyScope> scopes, final boolean everythingDirty, ActionCallback callback) {
     myScopes = scopes;
     myEverythingDirty = everythingDirty;
+    myCallback = callback;
   }
 
-  public List<VcsDirtyScope> getScopes() {
+  public void doWhenCanceled(Runnable task) {
+    myCallback.doWhenRejected(task);
+  }
+
+  public List<VcsModifiableDirtyScope> getScopes() {
     return myScopes;
   }
 

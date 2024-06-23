@@ -21,7 +21,7 @@ import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.SortByVcsRoots;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.checkin.CheckinEnvironment;
-import consulo.versionControlSystem.internal.VcsFileListenerContextHelper;
+import consulo.versionControlSystem.VcsFileListenerContextHelper;
 import consulo.versionControlSystem.root.VcsRoot;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;

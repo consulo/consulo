@@ -23,7 +23,6 @@ import consulo.util.lang.function.Predicates;
 import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.function.*;

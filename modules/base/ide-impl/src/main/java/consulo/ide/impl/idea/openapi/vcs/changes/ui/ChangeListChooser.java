@@ -15,14 +15,13 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListEditHandler;
-import consulo.ide.impl.idea.openapi.vcs.changes.LocalChangeListImpl;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.change.LocalChangeList;
-
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.util.Collection;
 import java.util.function.Consumer;
@@ -37,22 +36,14 @@ public class ChangeListChooser extends DialogWrapper {
 
   public ChangeListChooser(@Nonnull Project project,
                            @Nonnull Collection<? extends ChangeList> changelists,
-                           @jakarta.annotation.Nullable ChangeList defaultSelection,
+                           @Nullable ChangeList defaultSelection,
                            final String title,
-                           @jakarta.annotation.Nullable final String suggestedName) {
+                           @Nullable final String suggestedName) {
     super(project, false);
     myProject = project;
 
-    ChangeListEditHandler handler;
-    for (ChangeList changelist : changelists) {
-      handler = ((LocalChangeListImpl)changelist).getEditHandler();
-      if (handler != null) {
-        break;
-      }
-    }
-
     myPanel = new ChangeListChooserPanel(myProject, new Consumer<String>() {
-      public void accept(final @jakarta.annotation.Nullable String errorMessage) {
+      public void accept(final @Nullable String errorMessage) {
         setOKActionEnabled(errorMessage == null);
         setErrorText(errorMessage);
       }
@@ -85,7 +76,7 @@ public class ChangeListChooser extends DialogWrapper {
     }
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   public LocalChangeList getSelectedList() {
     return mySelectedList;
   }

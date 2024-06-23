@@ -17,11 +17,17 @@ package consulo.util.collection;
 
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author max
  */
 public final class CharSequenceHashingStrategy implements HashingStrategy<CharSequence> {
+  @Nonnull
+  public static CharSequenceHashingStrategy of(boolean caseSensitive) {
+    return caseSensitive ? CASE_SENSITIVE : CASE_INSENSITIVE;
+  }
+
   public static final CharSequenceHashingStrategy CASE_SENSITIVE = new CharSequenceHashingStrategy(true);
   public static final CharSequenceHashingStrategy CASE_INSENSITIVE = new CharSequenceHashingStrategy(false);
 

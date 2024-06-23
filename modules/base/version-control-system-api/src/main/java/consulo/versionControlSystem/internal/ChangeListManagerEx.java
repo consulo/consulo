@@ -53,4 +53,8 @@ public abstract class ChangeListManagerEx extends ChangeListManager {
   public abstract void freeze(@Nonnull String reason);
 
   public abstract void unfreeze();
+
+  public void scheduleUpdateImpl() {
+    scheduleUpdate();
+  }
 }

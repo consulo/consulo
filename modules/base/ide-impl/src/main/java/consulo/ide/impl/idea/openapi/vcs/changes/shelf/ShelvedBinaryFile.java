@@ -22,7 +22,8 @@ import consulo.util.xml.serializer.DefaultJDOMExternalizer;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;
-import consulo.versionControlSystem.base.FilePathImpl;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.action.VcsContextFactory;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ContentRevision;
 import consulo.versionControlSystem.change.CurrentBinaryContentRevision;
@@ -76,7 +77,7 @@ public class ShelvedBinaryFile implements JDOMExternalizable {
     ContentRevision after = null;
     final File baseDir = new File(project.getBaseDir().getPath());
     if (BEFORE_PATH != null) {
-      final FilePathImpl file = new FilePathImpl(new File(baseDir, BEFORE_PATH), false);
+      final FilePath file = VcsContextFactory.getInstance().createFilePathOn(new File(baseDir, BEFORE_PATH), false);
       file.refresh();
       before = new CurrentBinaryContentRevision(file) {
         @Nonnull
@@ -87,7 +88,7 @@ public class ShelvedBinaryFile implements JDOMExternalizable {
       };
     }
     if (AFTER_PATH != null) {
-      final FilePathImpl file = new FilePathImpl(new File(baseDir, AFTER_PATH), false);
+      final FilePath file = VcsContextFactory.getInstance().createFilePathOn(new File(baseDir, AFTER_PATH), false);
       file.refresh();
       after = new ShelvedBinaryContentRevision(file, SHELVED_PATH);
     }

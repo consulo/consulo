@@ -19,7 +19,6 @@ import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.ApplicationManager;
-import consulo.application.util.function.Processor;
 import consulo.colorScheme.TextAttributes;
 import consulo.component.ProcessCanceledException;
 import consulo.execution.ui.console.ConsoleViewContentType;
@@ -53,7 +52,7 @@ public abstract class ProjectLevelVcsManager {
   @DeprecationInfo("Use class as is - inline value")
   public static final Class<PluginVcsMappingListener> VCS_CONFIGURATION_CHANGED_IN_PLUGIN = PluginVcsMappingListener.class;
 
-  public abstract void iterateVfUnderVcsRoot(VirtualFile file, Processor<VirtualFile> processor);
+  public abstract void iterateVfUnderVcsRoot(VirtualFile file, Predicate<? super VirtualFile> processor);
 
   /**
    * Returns the <code>ProjectLevelVcsManager<code> instance for the specified project.
@@ -74,11 +73,9 @@ public abstract class ProjectLevelVcsManager {
    * @return component instance
    */
   public static ProjectLevelVcsManager getInstanceChecked(final Project project) {
-    return ApplicationManager.getApplication().runReadAction(new Supplier<ProjectLevelVcsManager>() {
-      public ProjectLevelVcsManager get() {
-        if (project.isDisposed()) throw new ProcessCanceledException();
-        return getInstance(project);
-      }
+    return ApplicationManager.getApplication().runReadAction((Supplier<ProjectLevelVcsManager>)() -> {
+      if (project.isDisposed()) throw new ProcessCanceledException();
+      return getInstance(project);
     });
   }
 

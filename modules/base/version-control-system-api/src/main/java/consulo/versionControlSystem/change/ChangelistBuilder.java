@@ -6,8 +6,8 @@ import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsKey;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.function.Supplier;
@@ -23,20 +23,20 @@ public interface ChangelistBuilder {
    * Process a change to the file.
    * This method is used to report changes that the version control system knows about.
    */
-  void processChange(@NotNull Change change, VcsKey vcsKey);
+  void processChange(@Nonnull Change change, VcsKey vcsKey);
 
   /**
    * Put the given change into the given change list.
    * If there is no such change list, an error is logged and change goes to the default list.
    */
-  void processChangeInList(@NotNull Change change, @Nullable ChangeList changeList, VcsKey vcsKey);
+  void processChangeInList(@Nonnull Change change, @Nullable ChangeList changeList, VcsKey vcsKey);
 
   /**
    * Put the given change into the change list with the given name.
    * If there is no such change list, it is created.
    * This method allows not referring to ChangeListManager for the LocalChangeList object.
    */
-  void processChangeInList(@NotNull Change change, @Nullable String changeListName, VcsKey vcsKey);
+  void processChangeInList(@Nonnull Change change, @Nullable String changeListName, VcsKey vcsKey);
 
   void removeRegisteredChangeFor(final FilePath path);
 
@@ -114,5 +114,5 @@ public interface ChangelistBuilder {
 
   void reportAdditionalInfo(final String text);
 
-  void reportAdditionalInfo(@NotNull Supplier<JComponent> infoComponent);
+  void reportAdditionalInfo(@Nonnull Supplier<JComponent> infoComponent);
 }

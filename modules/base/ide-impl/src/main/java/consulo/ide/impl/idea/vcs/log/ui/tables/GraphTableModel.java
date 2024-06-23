@@ -11,7 +11,7 @@ import consulo.ide.impl.idea.vcs.log.data.*;
 import consulo.versionControlSystem.log.util.VcsLogUtil;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
 import consulo.ide.impl.idea.vcs.log.ui.render.GraphCommitCell;
-import consulo.versionControlSystem.log.util.VcsUserUtil;
+import consulo.versionControlSystem.util.VcsUserUtil;
 import jakarta.annotation.Nonnull;
 
 import jakarta.annotation.Nullable;

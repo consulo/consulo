@@ -5,7 +5,6 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.NonBlockingReadAction;
 import consulo.application.event.ApplicationListener;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.internal.ApplicationManagerEx;
 import consulo.application.progress.ProgressIndicator;
@@ -19,6 +18,7 @@ import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import consulo.ui.ModalityState;
 import consulo.util.collection.Lists;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.ref.SimpleReference;
@@ -248,7 +248,7 @@ public class ProgressIndicatorUtils {
         future.completeExceptionally(e);
         throw e;
       }
-    }, IdeaModalityState.any()); // 'any' to tolerate immediate modality changes (e.g. https://youtrack.jetbrains.com/issue/IDEA-135180)
+    }, ModalityState.any()); // 'any' to tolerate immediate modality changes (e.g. https://youtrack.jetbrains.com/issue/IDEA-135180)
     return future;
   }
 
@@ -276,7 +276,7 @@ public class ProgressIndicatorUtils {
       throw new IllegalStateException("Mustn't be called from EDT");
     }
     Semaphore semaphore = new Semaphore(1);
-    application.invokeLater(semaphore::up, IdeaModalityState.any());
+    application.invokeLater(semaphore::up, ModalityState.any());
     awaitWithCheckCanceled(semaphore, ProgressIndicatorProvider.getGlobalProgressIndicator());
   }
 

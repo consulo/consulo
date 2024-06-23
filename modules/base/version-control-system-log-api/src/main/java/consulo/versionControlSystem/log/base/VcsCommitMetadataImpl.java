@@ -17,7 +17,7 @@ package consulo.versionControlSystem.log.base;
 
 import consulo.versionControlSystem.log.Hash;
 import consulo.versionControlSystem.log.VcsCommitMetadata;
-import consulo.versionControlSystem.log.VcsUser;
+import consulo.versionControlSystem.VcsUser;
 import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nonnull;

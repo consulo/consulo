@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman.RecursiveFilePathSet;
+import consulo.versionControlSystem.util.path.RecursiveFilePathSet;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -12,6 +12,8 @@ import consulo.util.collection.Sets;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.change.VcsModifiableDirtyScope;
+import consulo.versionControlSystem.impl.internal.change.VcsDirtyScopeManagerImpl;
 import consulo.versionControlSystem.root.VcsRoot;
 import consulo.versionControlSystem.util.VcsFileUtil;
 import consulo.versionControlSystem.util.VcsUtil;

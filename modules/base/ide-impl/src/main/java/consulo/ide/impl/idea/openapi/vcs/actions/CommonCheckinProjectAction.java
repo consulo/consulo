@@ -21,7 +21,7 @@ import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.action.VcsContext;
-import consulo.versionControlSystem.base.FilePathImpl;
+import consulo.versionControlSystem.action.VcsContextFactory;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -38,7 +38,7 @@ public class CommonCheckinProjectAction extends AbstractCommonCheckinAction {
       if (vcs.getCheckinEnvironment() != null) {
         VirtualFile[] roots = vcsManager.getRootsUnderVcs(vcs);
         for (VirtualFile root : roots) {
-          virtualFiles.add(new FilePathImpl(root));
+          virtualFiles.add(VcsContextFactory.getInstance().createFilePathOn(root));
         }
       }
     }

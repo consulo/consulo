@@ -21,7 +21,6 @@ module consulo.version.control.system.api {
   exports consulo.versionControlSystem.checkout;
   exports consulo.versionControlSystem.localize;
   exports consulo.versionControlSystem.change;
-  exports consulo.versionControlSystem.base;
   exports consulo.versionControlSystem.history;
   exports consulo.versionControlSystem.ui;
   exports consulo.versionControlSystem.action;
@@ -34,5 +33,6 @@ module consulo.version.control.system.api {
   exports consulo.versionControlSystem.update;
   exports consulo.versionControlSystem.root;
   exports consulo.versionControlSystem.util;
-  exports consulo.versionControlSystem.internal to consulo.ide.impl;
+  exports consulo.versionControlSystem.util.path;
+  exports consulo.versionControlSystem.internal to consulo.version.control.system.impl, consulo.ide.impl;
 }

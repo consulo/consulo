@@ -16,14 +16,17 @@
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.project.Project;
+import consulo.util.collection.MultiMap;
 import consulo.util.lang.Pair;
-import consulo.versionControlSystem.*;
-import consulo.versionControlSystem.base.FilePathImpl;
+import consulo.versionControlSystem.AbstractVcs;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.TreeDiffProvider;
+import consulo.versionControlSystem.VcsConfiguration;
+import consulo.versionControlSystem.action.VcsContextFactory;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.versionControlSystem.root.VcsRoot;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.util.collection.MultiMap;
 import jakarta.annotation.Nullable;
 
 import java.io.File;
@@ -59,7 +62,7 @@ public class RemoteRevisionsStateCache implements ChangesOnServerTracker {
 
   @Nullable
   private VirtualFile getRootForPath(final String s) {
-    return myVcsManager.getVcsRootFor(new FilePathImpl(new File(s), false));
+    return myVcsManager.getVcsRootFor(VcsContextFactory.getInstance().createFilePathOn(new File(s), false));
   }
   
   public boolean isUpToDate(final Change change) {

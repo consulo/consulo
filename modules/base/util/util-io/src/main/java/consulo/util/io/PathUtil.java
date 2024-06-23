@@ -21,7 +21,6 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.LoggerFactory;
 
 import java.nio.charset.Charset;
@@ -103,11 +102,11 @@ public class PathUtil {
     return Math.max(path.lastIndexOf('/', end - 1), path.lastIndexOf('\\', end - 1));
   }
 
-  public static boolean startsWithSeparatorSeparator(@NotNull CharSequence path) {
+  public static boolean startsWithSeparatorSeparator(@Nonnull CharSequence path) {
     return path.length() > 1 && isSeparator(path.charAt(0)) && path.charAt(1) == path.charAt(0);
   }
 
-  public static boolean isWindowsUNCRoot(@NotNull CharSequence path, int lastPathSeparatorPosition) {
+  public static boolean isWindowsUNCRoot(@Nonnull CharSequence path, int lastPathSeparatorPosition) {
     return Target.CURRENT == Target.WINDOWS &&
       startsWithSeparatorSeparator(path) && lastPathSeparatorPosition >= 1
       && !hasFileSeparatorsOrNavigatableDots(path, 2, lastPathSeparatorPosition);
@@ -117,7 +116,7 @@ public class PathUtil {
     return c == '/' || c == '\\';
   }
 
-  private static boolean hasFileSeparatorsOrNavigatableDots(@NotNull CharSequence path, int start, int end) {
+  private static boolean hasFileSeparatorsOrNavigatableDots(@Nonnull CharSequence path, int start, int end) {
     for (int i = end - 1; i >= start; i--) {
       char c = path.charAt(i);
       if (isSeparator(c)) {
@@ -205,13 +204,13 @@ public class PathUtil {
     return true;
   }
 
-  @NotNull
-  public static CharSequence getParentPathSequence(@NotNull CharSequence path) {
+  @Nonnull
+  public static CharSequence getParentPathSequence(@Nonnull CharSequence path) {
     int end = getParentPathEndOffset(path);
     return end == 0 ? "" : path.subSequence(0, end);
   }
 
-  private static int getParentPathEndOffset(@NotNull CharSequence path) {
+  private static int getParentPathEndOffset(@Nonnull CharSequence path) {
     if (path.length() == 0) {
       return 0;
     }
@@ -234,7 +233,7 @@ public class PathUtil {
     return end;
   }
 
-  public static int lastSeparatorIndex(@NotNull CharSequence s, int endInclusive) {
+  public static int lastSeparatorIndex(@Nonnull CharSequence s, int endInclusive) {
     for (int i = endInclusive; i >= 0; i--) {
       if (isSeparator(s.charAt(i))) {
         return i;

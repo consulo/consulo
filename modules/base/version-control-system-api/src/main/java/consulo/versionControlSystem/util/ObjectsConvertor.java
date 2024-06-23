@@ -16,11 +16,11 @@
 package consulo.versionControlSystem.util;
 
 import consulo.versionControlSystem.FilePath;
-import consulo.versionControlSystem.base.FilePathImpl;
+import consulo.versionControlSystem.action.VcsContextFactory;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,11 +44,11 @@ public class ObjectsConvertor {
 
   public static final Function<FilePath, VirtualFile> FILEPATH_TO_VIRTUAL = FilePath::getVirtualFile;
 
-  public static final Function<VirtualFile, FilePath> VIRTUAL_FILEPATH = FilePathImpl::new;
+  public static final Function<VirtualFile, FilePath> VIRTUAL_FILEPATH = file -> VcsContextFactory.getInstance().createFilePathOn(file);
 
   public static final Function<FilePath, File> FILEPATH_FILE = FilePath::getIOFile;
 
-  public static final Function<File, FilePath> FILE_FILEPATH = FilePathImpl::create;
+  public static final Function<File, FilePath> FILE_FILEPATH = file -> VcsContextFactory.getInstance().createFilePathOn(file);
 
   public static final Function<Object, Boolean> NOT_NULL = Objects::nonNull;
 

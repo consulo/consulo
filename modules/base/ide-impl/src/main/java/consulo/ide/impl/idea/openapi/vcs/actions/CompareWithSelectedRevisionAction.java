@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
 import consulo.application.util.DateFormatUtil;
-import consulo.versionControlSystem.base.FilePathImpl;
 import consulo.ide.impl.idea.openapi.vcs.history.VcsHistoryProviderBackgroundableProxy;
 import consulo.ide.impl.idea.openapi.vcs.impl.VcsBackgroundableActions;
 import consulo.ide.impl.idea.ui.dualView.TreeTableView;
@@ -38,6 +37,7 @@ import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.action.VcsContext;
+import consulo.versionControlSystem.action.VcsContextFactory;
 import consulo.versionControlSystem.diff.DiffProvider;
 import consulo.versionControlSystem.history.HistoryAsTreeProvider;
 import consulo.versionControlSystem.history.VcsFileRevision;
@@ -120,7 +120,7 @@ public class CompareWithSelectedRevisionAction extends AbstractVcsAction {
     final VcsHistoryProvider vcsHistoryProvider = vcs.getVcsHistoryProvider();
 
     new VcsHistoryProviderBackgroundableProxy(vcs, vcsHistoryProvider, vcs.getDiffProvider()).
-            createSessionFor(vcs.getKeyInstanceMethod(), new FilePathImpl(file), session -> {
+            createSessionFor(vcs.getKeyInstanceMethod(), VcsContextFactory.getInstance().createFilePathOn(file), session -> {
               if (session == null) return;
               final List<VcsFileRevision> revisions = session.getRevisionList();
               final HistoryAsTreeProvider treeHistoryProvider = session.getHistoryAsTreeProvider();

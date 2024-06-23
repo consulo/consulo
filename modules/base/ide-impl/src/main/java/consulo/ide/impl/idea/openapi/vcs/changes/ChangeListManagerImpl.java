@@ -48,7 +48,7 @@ import consulo.ide.impl.idea.openapi.vcs.changes.ui.CommitHelper;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.PlusMinusModify;
 import consulo.ide.impl.idea.openapi.vcs.impl.AbstractVcsHelperImpl;
 import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
-import consulo.ide.impl.idea.openapi.vcs.impl.VcsRootIterator;
+import consulo.versionControlSystem.impl.internal.VcsRootIterator;
 import consulo.ide.impl.idea.openapi.vcs.readOnlyHandler.ReadonlyStatusHandlerImpl;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.util.EventDispatcher;
@@ -79,6 +79,7 @@ import consulo.util.xml.serializer.JDOMExternalizerUtil;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.checkin.CheckinEnvironment;
+import consulo.versionControlSystem.impl.internal.change.*;
 import consulo.versionControlSystem.internal.ChangeListManagerEx;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.root.VcsRoot;
@@ -96,7 +97,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -1138,7 +1138,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     return getStatus(VcsUtil.getFilePath(file), file);
   }
 
-  @NotNull
+  @Nonnull
   private FileStatus getStatus(@Nonnull FilePath path, @Nullable VirtualFile file) {
     VcsRoot vcsRoot = file != null ? ProjectLevelVcsManager.getInstance(myProject).getVcsRootObjectFor(file)
       : ProjectLevelVcsManager.getInstance(myProject).getVcsRootObjectFor(path);

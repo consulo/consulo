@@ -810,4 +810,14 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
 
     throw new UnsupportedOperationException("Impossible convert " + this + " to " + Path.class);
   }
+
+  /**
+   * @return if this directory (or, if this is a file, its parent directory) supports case-sensitive children file names
+   * (i.e. treats "README.TXT" and "readme.txt" as different files).
+   * Examples of these directories include regular directories on Linux, directories in case-sensitive volumes on Mac and
+   * NTFS directories configured with "fsutil.exe file setCaseSensitiveInfo" on Windows 10+.
+   */
+  public boolean isCaseSensitive() {
+    return getFileSystem().isCaseSensitive();
+  }
 }

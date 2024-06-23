@@ -15,40 +15,40 @@
  */
 package consulo.versionControlSystem.change;
 
+import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
-import consulo.versionControlSystem.VcsKey;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 11/19/12
- * Time: 4:39 PM
- */
 public class BaseRevision {
   private final FilePath myPath;
-  private VcsRevisionNumber myRevision;
-  private final VcsKey myVcs;
+  private final VcsRevisionNumber myRevision;
+  private final AbstractVcs myVcs;
 
-  public BaseRevision(VcsKey vcs, VcsRevisionNumber revision, FilePath path) {
+  public BaseRevision(@Nullable AbstractVcs vcs, @Nonnull VcsRevisionNumber revision, @Nonnull FilePath path) {
     myVcs = vcs;
     myRevision = revision;
     myPath = path;
   }
 
-  public FilePath getPath() {
+  @Nonnull
+  public String getPath() {
+    return myPath.getPath();
+  }
+
+  @Nonnull
+  public FilePath getFilePath() {
     return myPath;
   }
 
+  @Nonnull
   public VcsRevisionNumber getRevision() {
     return myRevision;
   }
 
-  public VcsKey getVcs() {
+  @Nullable
+  public AbstractVcs getVcs() {
     return myVcs;
-  }
-
-  public void setRevision(VcsRevisionNumber revision) {
-    myRevision = revision;
   }
 }

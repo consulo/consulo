@@ -34,7 +34,7 @@ import consulo.project.Project;
 import consulo.util.lang.Comparing;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsException;
-import consulo.versionControlSystem.base.FilePathImpl;
+import consulo.versionControlSystem.action.VcsContextFactory;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.CommitContext;
 import consulo.versionControlSystem.change.ContentRevision;
@@ -135,7 +135,7 @@ public class ShelvedChange {
       File baseDir = new File(project.getBaseDir().getPath());
 
       File file = getAbsolutePath(baseDir, myBeforePath);
-      final FilePathImpl beforePath = new FilePathImpl(file, false);
+      final FilePath beforePath = VcsContextFactory.getInstance().createFilePathOn(file, false);
       beforePath.refresh();
       ContentRevision beforeRevision = null;
       if (myFileStatus != FileStatus.ADDED) {
@@ -149,7 +149,7 @@ public class ShelvedChange {
       }
       ContentRevision afterRevision = null;
       if (myFileStatus != FileStatus.DELETED) {
-        final FilePathImpl afterPath = new FilePathImpl(getAbsolutePath(baseDir, myAfterPath), false);
+        final FilePath afterPath =VcsContextFactory.getInstance().createFilePathOn(getAbsolutePath(baseDir, myAfterPath), false);
         afterRevision = new PatchedContentRevision(project, beforePath, afterPath);
       }
       myChange = new Change(beforeRevision, afterRevision, myFileStatus);

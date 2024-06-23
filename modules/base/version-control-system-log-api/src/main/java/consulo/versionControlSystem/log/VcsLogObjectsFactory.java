@@ -3,6 +3,7 @@ package consulo.versionControlSystem.log;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.util.function.ThrowableComputable;
+import consulo.versionControlSystem.VcsUser;
 import consulo.versionControlSystem.change.Change;
 import consulo.virtualFileSystem.VirtualFile;
 
