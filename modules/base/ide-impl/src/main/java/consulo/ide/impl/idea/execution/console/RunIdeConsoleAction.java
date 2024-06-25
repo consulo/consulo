@@ -31,10 +31,9 @@ import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.language.impl.psi.LeafPsiElement;
 import consulo.ide.impl.idea.util.ExceptionUtil;
@@ -75,7 +74,7 @@ public class RunIdeConsoleAction extends DumbAwareAction {
   @Override
   public void update(AnActionEvent e) {
     IdeScriptEngineManager manager = IdeScriptEngineManager.getInstance();
-    e.getPresentation().setVisible(e.getData(CommonDataKeys.PROJECT) != null);
+    e.getPresentation().setVisible(e.getData(Project.KEY) != null);
     e.getPresentation().setEnabled(manager.isInitialized() && !manager.getLanguages().isEmpty());
   }
 
@@ -99,7 +98,7 @@ public class RunIdeConsoleAction extends DumbAwareAction {
   }
 
   protected void runConsole(@Nonnull AnActionEvent e, @Nonnull String language) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) return;
 
     List<String> extensions = IdeScriptEngineManager.getInstance().getFileExtensions(language);
@@ -248,17 +247,17 @@ public class RunIdeConsoleAction extends DumbAwareAction {
 
     @Override
     public void update(AnActionEvent e) {
-      Project project = e.getData(CommonDataKeys.PROJECT);
-      Editor editor = e.getDataContext().getData(CommonDataKeys.EDITOR);
-      VirtualFile virtualFile = e.getDataContext().getData(CommonDataKeys.VIRTUAL_FILE);
+      Project project = e.getData(Project.KEY);
+      Editor editor = e.getDataContext().getData(Editor.KEY);
+      VirtualFile virtualFile = e.getDataContext().getData(VirtualFile.KEY);
       e.getPresentation().setEnabledAndVisible(project != null && editor != null && virtualFile != null);
     }
 
     @Override
     public void actionPerformed(AnActionEvent e) {
-      Project project = e.getData(CommonDataKeys.PROJECT);
-      Editor editor = e.getDataContext().getData(CommonDataKeys.EDITOR);
-      VirtualFile virtualFile = e.getDataContext().getData(CommonDataKeys.VIRTUAL_FILE);
+      Project project = e.getData(Project.KEY);
+      Editor editor = e.getDataContext().getData(Editor.KEY);
+      VirtualFile virtualFile = e.getDataContext().getData(VirtualFile.KEY);
       if (project == null || editor == null || virtualFile == null) return;
       PsiDocumentManager.getInstance(project).commitAllDocuments();
 

@@ -8,6 +8,8 @@ inspection.action.noun:
   text: Inspection
 inspection.action.profile.label:
   text: Inspection profile
+inspection.action.group.by.directory:
+  text: Group by Directory
 inspection.disabled.title:
   text: Inspection disabled
 inspection.disabled.wrong.id:

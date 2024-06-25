@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.execution.impl;
 
 import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.execution.ui.console.ConsoleViewContentType;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.Queue;
 import jakarta.annotation.Nonnull;

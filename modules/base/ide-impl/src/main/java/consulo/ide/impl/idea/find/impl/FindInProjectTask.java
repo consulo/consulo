@@ -1,19 +1,11 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.find.impl;
 
-import consulo.ide.impl.idea.find.FindInProjectSearchEngine;
-import consulo.ide.impl.idea.find.findInProject.FindInProjectManager;
-import consulo.application.internal.TooManyUsagesStatus;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.internal.CompactVirtualFileSet;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ide.impl.idea.usages.UsageLimitUtil;
-import consulo.ide.impl.idea.usages.impl.UsageViewManagerImpl;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
-import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.application.impl.internal.progress.CoreProgressManager;
+import consulo.application.internal.TooManyUsagesStatus;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
@@ -25,14 +17,20 @@ import consulo.content.FileIndex;
 import consulo.content.scope.SearchScope;
 import consulo.find.FindBundle;
 import consulo.find.FindModel;
-import consulo.language.internal.PsiSearchHelperEx;
-import consulo.language.psi.scope.GlobalSearchScopeUtil;
+import consulo.ide.impl.idea.find.FindInProjectSearchEngine;
+import consulo.ide.impl.idea.find.findInProject.FindInProjectManager;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.ide.impl.idea.usages.UsageLimitUtil;
+import consulo.ide.impl.idea.usages.impl.UsageViewManagerImpl;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.file.FileTypeManager;
+import consulo.language.internal.PsiSearchHelperEx;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.scope.GlobalSearchScopeUtil;
 import consulo.language.psi.scope.LocalSearchScope;
 import consulo.language.psi.search.PsiSearchHelper;
 import consulo.logging.Logger;
@@ -48,15 +46,17 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.usage.FindUsagesProcessPresentation;
 import consulo.usage.UsageInfo;
 import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileFilter;
 import consulo.virtualFileSystem.VirtualFileWithId;
+import consulo.virtualFileSystem.internal.CompactVirtualFileSet;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -198,8 +198,7 @@ class FindInProjectTask {
         double fraction = (double)processedFileCount.incrementAndGet() / virtualFiles.size();
         myProgress.setFraction(fraction);
       }
-      String text = FindBundle.message("find.searching.for.string.in.file.progress", myFindModel.getStringToFind(), virtualFile.getPresentableUrl());
-      myProgress.setText(text);
+      myProgress.setText(FindBundle.message("find.searching.for.string.in.file.progress", myFindModel.getStringToFind(), virtualFile.getPresentableUrl()));
       myProgress.setText2(FindBundle.message("find.searching.for.string.in.file.occurrences.progress", occurrenceCount));
 
       Pair.NonNull<PsiFile, VirtualFile> pair = ReadAction.compute(() -> findFile(virtualFile));
@@ -245,7 +244,7 @@ class FindInProjectTask {
         TooManyUsagesStatus tooManyUsagesStatus = TooManyUsagesStatus.getFrom(myProgress);
         if (tooManyUsagesStatus.switchTooManyUsagesStatus()) {
           UIUtil.invokeLaterIfNeeded(() -> {
-            String message = FindBundle.message("find.excessive.total.size.prompt", UsageViewManagerImpl.presentableSize(myTotalFilesSize.longValue()), ApplicationNamesInfo.getInstance().getProductName());
+            String message = FindBundle.message("find.excessive.total.size.prompt", UsageViewManagerImpl.presentableSize(myTotalFilesSize.longValue()), Application.get().getName());
             UsageLimitUtil.Result ret = UsageLimitUtil.showTooManyUsagesWarning(myProject, message, processPresentation.getUsageViewPresentation());
             if (ret == UsageLimitUtil.Result.ABORT) {
               myProgress.cancel();

@@ -25,7 +25,7 @@ import consulo.colorScheme.EditorColorKey;
 import consulo.colorScheme.EditorFontType;
 import consulo.codeEditor.EditorEx;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.color.ColorValue;

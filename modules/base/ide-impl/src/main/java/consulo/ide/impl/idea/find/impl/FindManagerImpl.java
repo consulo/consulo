@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.find.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.util.StringSearcher;
 import consulo.application.util.function.Computable;
 import consulo.codeEditor.*;
@@ -38,8 +38,6 @@ import consulo.ide.impl.idea.find.impl.livePreview.SearchResults;
 import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.AbstractFileType;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.LightweightHint;
 import consulo.ide.impl.idea.ui.ReplacePromptDialog;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -74,7 +72,9 @@ import consulo.usage.SyntaxHighlighterOverEditorHighlighter;
 import consulo.usage.UsageViewManager;
 import consulo.usage.util.ChunkExtractor;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.ImmutableCharSequence;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
@@ -534,11 +534,13 @@ public class FindManagerImpl extends FindManager {
   private static final Key<CommentsLiteralsSearchData> ourCommentsLiteralsSearchDataKey = Key.create("comments.literals.search.data");
 
   @Nonnull
-  private FindResult findInCommentsAndLiterals(@Nonnull CharSequence text,
-                                               char[] textArray,
-                                               int offset,
-                                               @Nonnull FindModel model,
-                                               @Nonnull final VirtualFile file) {
+  private FindResult findInCommentsAndLiterals(
+    @Nonnull CharSequence text,
+    char[] textArray,
+    int offset,
+    @Nonnull FindModel model,
+    @Nonnull final VirtualFile file
+  ) {
     synchronized (model) {
       FileType ftype = file.getFileType();
       Language lang = null;
@@ -559,9 +561,7 @@ public class FindManagerImpl extends FindManager {
         Set<Language> relevantLanguages;
         if (lang != null) {
           final Language finalLang = lang;
-          relevantLanguages = ApplicationManager.getApplication().runReadAction(new Computable<Set<Language>>() {
-            @Override
-            public Set<Language> compute() {
+          relevantLanguages = Application.get().runReadAction((Computable<Set<Language>>)()-> {
               Set<Language> result = new HashSet<>();
 
               FileViewProvider viewProvider = PsiManager.getInstance(myProject).findViewProvider(file);
@@ -573,8 +573,7 @@ public class FindManagerImpl extends FindManager {
                 result.add(finalLang);
               }
               return result;
-            }
-          });
+            });
 
           for (Language relevantLanguage : relevantLanguages) {
             tokensOfInterest = addTokenTypesForLanguage(model, relevantLanguage, tokensOfInterest);
@@ -1035,9 +1034,14 @@ public class FindManagerImpl extends FindManager {
       }
       JComponent component = HintUtil.createInformationLabel(message);
       final LightweightHint hint = new LightweightHint(component);
-      HintManagerImpl.getInstanceImpl()
-              .showEditorHint(hint, editor, HintManager.UNDER, HintManager.HIDE_BY_ANY_KEY | HintManager.HIDE_BY_TEXT_CHANGE | HintManager.HIDE_BY_SCROLLING, 0,
-                              false);
+      HintManagerImpl.getInstanceImpl().showEditorHint(
+        hint,
+        editor,
+        HintManager.UNDER,
+        HintManager.HIDE_BY_ANY_KEY | HintManager.HIDE_BY_TEXT_CHANGE | HintManager.HIDE_BY_SCROLLING,
+        0,
+        false
+      );
       return true;
     }
     if (!secondPass) {
@@ -1052,7 +1056,7 @@ public class FindManagerImpl extends FindManager {
     final FoldingModel foldingModel = editor.getFoldingModel();
     final FoldRegion[] regions;
     if (foldingModel instanceof FoldingModelEx) {
-      regions = ((FoldingModelEx)foldingModel).fetchTopLevel();
+      regions = foldingModel.fetchTopLevel();
     }
     else {
       regions = foldingModel.getAllFoldRegions();

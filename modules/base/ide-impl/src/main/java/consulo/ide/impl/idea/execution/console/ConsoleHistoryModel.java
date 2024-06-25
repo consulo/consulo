@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.execution.console;
 
 import consulo.application.ui.UISettings;
 import consulo.component.util.SimpleModificationTracker;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;

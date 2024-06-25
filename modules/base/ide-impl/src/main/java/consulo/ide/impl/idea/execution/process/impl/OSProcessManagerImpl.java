@@ -16,15 +16,14 @@
 package consulo.ide.impl.idea.execution.process.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.process.internal.OSProcessManager;
 import consulo.ide.impl.idea.execution.process.RunnerWinProcess;
-import consulo.process.internal.UnixProcessManager;
-import consulo.application.util.SystemInfo;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
+import consulo.process.internal.OSProcessManager;
+import consulo.process.internal.UnixProcessManager;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 import org.jvnet.winp.WinProcess;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -36,7 +35,7 @@ public class OSProcessManagerImpl extends OSProcessManager {
 
   @Override
   public boolean killProcessTree(@Nonnull Process process) {
-    if (SystemInfo.isWindows) {
+    if (Platform.current().os().isWindows()) {
       try {
         WinProcess winProcess = createWinProcess(process);
         winProcess.killRecursively();
@@ -46,7 +45,7 @@ public class OSProcessManagerImpl extends OSProcessManager {
         LOG.info("Cannot kill process tree", e);
       }
     }
-    else if (SystemInfo.isUnix) {
+    else if (Platform.current().os().isUnix()) {
       return UnixProcessManager.sendSigKillToProcessTree(process);
     }
     return false;

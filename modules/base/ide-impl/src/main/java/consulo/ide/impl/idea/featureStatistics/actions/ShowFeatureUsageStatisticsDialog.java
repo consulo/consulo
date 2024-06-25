@@ -16,26 +16,27 @@
 package consulo.ide.impl.idea.featureStatistics.actions;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.application.CommonBundle;
 import consulo.application.HelpManager;
-import consulo.application.impl.internal.ApplicationNamesInfo;
-import consulo.externalService.impl.internal.statistic.*;
-import consulo.externalService.statistic.*;
+import consulo.application.util.DateFormatUtil;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
+import consulo.externalService.impl.internal.statistic.CompletionStatistics;
+import consulo.externalService.impl.internal.statistic.CumulativeStatistics;
+import consulo.externalService.impl.internal.statistic.FeatureUsageTrackerImpl;
+import consulo.externalService.statistic.*;
 import consulo.ide.impl.idea.ide.util.TipUIUtil;
-import consulo.ui.ex.awt.speedSearch.TableViewSpeedSearch;
-import consulo.application.util.DateFormatUtil;
 import consulo.ide.impl.tipOfDay.DefaultTipOfDayProvider;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.speedSearch.TableViewSpeedSearch;
 import consulo.ui.ex.awt.table.ListTableModel;
 import consulo.ui.ex.awt.table.TableView;
 import consulo.util.lang.Pair;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
@@ -48,28 +49,13 @@ import java.util.Date;
 
 public class ShowFeatureUsageStatisticsDialog extends DialogWrapper {
   private static final Logger LOG = Logger.getInstance(ShowFeatureUsageStatisticsDialog.class);
-  private static final Comparator<FeatureDescriptor> DISPLAY_NAME_COMPARATOR = new Comparator<FeatureDescriptor>() {
-    public int compare(FeatureDescriptor fd1, FeatureDescriptor fd2) {
-      return fd1.getDisplayName().compareTo(fd2.getDisplayName());
-    }
-  };
-  private static final Comparator<FeatureDescriptor> GROUP_NAME_COMPARATOR = new Comparator<FeatureDescriptor>() {
-    public int compare(FeatureDescriptor fd1, FeatureDescriptor fd2) {
-      return getGroupName(fd1).compareTo(getGroupName(fd2));
-    }
-  };
-  private static final Comparator<FeatureDescriptor> USAGE_COUNT_COMPARATOR = new Comparator<FeatureDescriptor>() {
-    public int compare(FeatureDescriptor fd1, FeatureDescriptor fd2) {
-      return fd1.getUsageCount() - fd2.getUsageCount();
-    }
-  };
-  private static final Comparator<FeatureDescriptor> LAST_USED_COMPARATOR = new Comparator<FeatureDescriptor>() {
-    public int compare(FeatureDescriptor fd1, FeatureDescriptor fd2) {
-      return new Date(fd2.getLastTimeUsed()).compareTo(new Date(fd1.getLastTimeUsed()));
-    }
-  };
+  private static final Comparator<FeatureDescriptor>
+    DISPLAY_NAME_COMPARATOR = (fd1, fd2) -> fd1.getDisplayName().compareTo(fd2.getDisplayName()),
+    GROUP_NAME_COMPARATOR = (fd1, fd2) -> getGroupName(fd1).compareTo(getGroupName(fd2)),
+    USAGE_COUNT_COMPARATOR = (fd1, fd2) -> fd1.getUsageCount() - fd2.getUsageCount(),
+    LAST_USED_COMPARATOR = (fd1, fd2) -> new Date(fd2.getLastTimeUsed()).compareTo(new Date(fd1.getLastTimeUsed()));
 
-  private static final ColumnInfo<FeatureDescriptor, String> DISPLAY_NAME = new ColumnInfo<FeatureDescriptor, String>(FeatureStatisticsBundle.message("feature.statistics.column.feature")) {
+  private static final ColumnInfo<FeatureDescriptor, String> DISPLAY_NAME = new ColumnInfo<>(FeatureStatisticsBundle.message("feature.statistics.column.feature")) {
     public String valueOf(FeatureDescriptor featureDescriptor) {
       return featureDescriptor.getDisplayName();
     }
@@ -78,7 +64,7 @@ public class ShowFeatureUsageStatisticsDialog extends DialogWrapper {
       return DISPLAY_NAME_COMPARATOR;
     }
   };
-  private static final ColumnInfo<FeatureDescriptor, String> GROUP_NAME = new ColumnInfo<FeatureDescriptor, String>(FeatureStatisticsBundle.message("feature.statistics.column.group")) {
+  private static final ColumnInfo<FeatureDescriptor, String> GROUP_NAME = new ColumnInfo<>(FeatureStatisticsBundle.message("feature.statistics.column.group")) {
     public String valueOf(FeatureDescriptor featureDescriptor) {
       return getGroupName(featureDescriptor);
     }
@@ -87,7 +73,7 @@ public class ShowFeatureUsageStatisticsDialog extends DialogWrapper {
       return GROUP_NAME_COMPARATOR;
     }
   };
-  private static final ColumnInfo<FeatureDescriptor, String> USED_TOTAL = new ColumnInfo<FeatureDescriptor, String>(FeatureStatisticsBundle.message("feature.statistics.column.usage.count")) {
+  private static final ColumnInfo<FeatureDescriptor, String> USED_TOTAL = new ColumnInfo<>(FeatureStatisticsBundle.message("feature.statistics.column.usage.count")) {
     public String valueOf(FeatureDescriptor featureDescriptor) {
       int count = featureDescriptor.getUsageCount();
       return FeatureStatisticsBundle.message("feature.statistics.usage.count", count);
@@ -97,7 +83,7 @@ public class ShowFeatureUsageStatisticsDialog extends DialogWrapper {
       return USAGE_COUNT_COMPARATOR;
     }
   };
-  private static final ColumnInfo<FeatureDescriptor, String> LAST_USED = new ColumnInfo<FeatureDescriptor, String>(FeatureStatisticsBundle.message("feature.statistics.column.last.used")) {
+  private static final ColumnInfo<FeatureDescriptor, String> LAST_USED = new ColumnInfo<>(FeatureStatisticsBundle.message("feature.statistics.column.last.used")) {
     public String valueOf(FeatureDescriptor featureDescriptor) {
       long tm = featureDescriptor.getLastTimeUsed();
       if (tm <= 0) return FeatureStatisticsBundle.message("feature.statistics.not.applicable");
@@ -114,7 +100,7 @@ public class ShowFeatureUsageStatisticsDialog extends DialogWrapper {
   public ShowFeatureUsageStatisticsDialog(Project project) {
     super(project, true);
     setTitle(FeatureStatisticsBundle.message("feature.statistics.dialog.title"));
-    setCancelButtonText(CommonBundle.getCloseButtonText());
+    setCancelButtonText(CommonLocalize.buttonClose().get());
     setModal(false);
     init();
   }
@@ -137,22 +123,21 @@ public class ShowFeatureUsageStatisticsDialog extends DialogWrapper {
     splitter.setShowDividerControls(true);
 
     ProductivityFeaturesRegistry registry = ProductivityFeaturesRegistry.getInstance();
-    ArrayList<FeatureDescriptor> features = new ArrayList<FeatureDescriptor>();
+    ArrayList<FeatureDescriptor> features = new ArrayList<>();
     for (String id : registry.getFeatureIds()) {
       features.add(registry.getFeatureDescriptor(id));
     }
-    final TableView<FeatureDescriptor> table = new TableView<FeatureDescriptor>(new ListTableModel<FeatureDescriptor>(COLUMNS, features, 0));
+    final TableView<FeatureDescriptor> table = new TableView<>(new ListTableModel<>(COLUMNS, features, 0));
 
     TableViewSpeedSearch.register(table, FeatureDescriptor::getDisplayName);
 
     JPanel controlsPanel = new JPanel(new VerticalFlowLayout());
 
-
-    Application app = ApplicationManager.getApplication();
+    Application app = Application.get();
     long uptime = System.currentTimeMillis() - app.getStartTime();
     long idleTime = app.getIdleTime();
 
-    final String uptimeS = FeatureStatisticsBundle.message("feature.statistics.application.uptime", ApplicationNamesInfo.getInstance().getFullProductName(), DateFormatUtil.formatDuration(uptime));
+    final String uptimeS = FeatureStatisticsBundle.message("feature.statistics.application.uptime", Application.get().getName(), DateFormatUtil.formatDuration(uptime));
 
     final String idleTimeS = FeatureStatisticsBundle.message("feature.statistics.application.idle.time", DateFormatUtil.formatDuration(idleTime));
 
@@ -161,18 +146,16 @@ public class ShowFeatureUsageStatisticsDialog extends DialogWrapper {
     if (stats.dayCount > 0 && stats.sparedCharacters > 0) {
       String total = formatCharacterCount(stats.sparedCharacters, true);
       String perDay = formatCharacterCount(stats.sparedCharacters / stats.dayCount, false);
-      labelText += "<br>Code completion has saved you from typing at least " + total + " since " + DateFormatUtil.formatDate(stats.startDate) + " (~" + perDay + " per working day)";
+      labelText += "<br>Code completion has saved you from typing at least " + total +
+          " since " + DateFormatUtil.formatDate(stats.startDate) +
+          " (~" + perDay + " per working day)";
     }
 
     CumulativeStatistics fstats = ((FeatureUsageTrackerImpl)FeatureUsageTracker.getInstance()).getFixesStats();
     if (fstats.dayCount > 0 && fstats.invocations > 0) {
-      labelText += "<br>Quick fixes have saved you from " +
-                   fstats.invocations +
-                   " possible bugs since " +
-                   DateFormatUtil.formatDate(fstats.startDate) +
-                   " (~" +
-                   fstats.invocations / fstats.dayCount +
-                   " per working day)";
+      labelText += "<br>Quick fixes have saved you from " + fstats.invocations +
+          " possible bugs since " + DateFormatUtil.formatDate(fstats.startDate) +
+          " (~" + fstats.invocations / fstats.dayCount + " per working day)";
     }
 
     controlsPanel.add(new JLabel("<html><body>" + labelText + "</body></html>"), BorderLayout.NORTH);

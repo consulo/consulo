@@ -15,31 +15,30 @@
  */
 package consulo.ide.impl.idea.execution.filters.impl;
 
-import consulo.execution.ExecutionBundle;
+import consulo.application.Application;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorEx;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.ui.console.FileHyperlinkInfo;
 import consulo.execution.ui.console.HyperlinkInfoBase;
 import consulo.execution.ui.console.HyperlinkInfoFactory;
-import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.ide.util.gotoByName.GotoFileCellRenderer;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
-import consulo.application.ApplicationManager;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorEx;
-import consulo.document.FileDocumentManager;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
-import consulo.project.Project;
-import consulo.ui.ex.popup.JBPopup;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.wm.WindowManager;
+import consulo.ide.impl.idea.ide.util.gotoByName.GotoFileCellRenderer;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
+import consulo.project.Project;
+import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.RelativePoint;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -71,13 +70,13 @@ class MultipleFilesHyperlinkInfo extends HyperlinkInfoBase implements FileHyperl
     if (hyperlinkLocationPoint != null) {
       DataManager dataManager = DataManager.getInstance();
       DataContext dataContext = dataManager.getDataContext(hyperlinkLocationPoint.getOriginalComponent());
-      originalEditor = dataContext.getData(CommonDataKeys.EDITOR);
+      originalEditor = dataContext.getData(Editor.KEY);
     }
     else {
       originalEditor = null;
     }
 
-    ApplicationManager.getApplication().runReadAction(() -> {
+    Application.get().runReadAction(() -> {
       for (VirtualFile file : myVirtualFiles) {
         if (!file.isValid()) continue;
 
@@ -101,9 +100,12 @@ class MultipleFilesHyperlinkInfo extends HyperlinkInfoBase implements FileHyperl
     else {
       JFrame frame = WindowManager.getInstance().getFrame(project);
       int width = frame != null ? frame.getSize().width : 200;
-      JBPopup popup =
-              JBPopupFactory.getInstance().createPopupChooserBuilder(currentFiles).setRenderer(new GotoFileCellRenderer(width)).setTitle(ExecutionBundle.message("popup.title.choose.target.file"))
-                      .setItemChosenCallback(file -> open(file.getVirtualFile(), originalEditor)).createPopup();
+      JBPopup popup = JBPopupFactory.getInstance()
+        .createPopupChooserBuilder(currentFiles)
+        .setRenderer(new GotoFileCellRenderer(width))
+        .setTitle(ExecutionLocalize.popupTitleChooseTargetFile().get())
+        .setItemChosenCallback(file -> open(file.getVirtualFile(), originalEditor))
+        .createPopup();
       if (hyperlinkLocationPoint != null) {
         popup.show(hyperlinkLocationPoint);
       }

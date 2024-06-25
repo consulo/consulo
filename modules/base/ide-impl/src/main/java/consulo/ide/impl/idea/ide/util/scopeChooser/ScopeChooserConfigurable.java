@@ -25,7 +25,7 @@ import consulo.content.scope.NamedScopesHolder;
 import consulo.content.scope.PackageSet;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.ide.impl.idea.util.IconUtil;
-import consulo.language.editor.inspection.InspectionsBundle;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.language.editor.scope.NamedScopeManager;
 import consulo.localize.LocalizeValue;
@@ -36,10 +36,7 @@ import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.InputValidator;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.MasterDetailsComponent;
-import consulo.ui.ex.awt.MasterDetailsState;
-import consulo.ui.ex.awt.MasterDetailsStateService;
-import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.image.Image;
@@ -307,7 +304,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
   }
 
   private String createUniqueName() {
-    String str = InspectionsBundle.message("inspection.profile.unnamed");
+    String str = InspectionLocalize.inspectionProfileUnnamed().get();
     final HashSet<String> treeScopes = new HashSet<>();
     obtainCurrentScopes(treeScopes);
     if (!treeScopes.contains(str)) return str;
@@ -333,12 +330,12 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
     selectNodeInTree(nodeToAdd);
   }
 
-  private void createScope(final boolean isLocal, String title, final PackageSet set) {
+  private void createScope(final boolean isLocal, @Nonnull LocalizeValue title, final PackageSet set) {
     final String newName = Messages.showInputDialog(
       myTree,
       IdeLocalize.addScopeNameLabel().get(),
-      title,
-      Messages.getInformationIcon(),
+      title.get(),
+      UIUtil.getInformationIcon(),
       createUniqueName(),
       new InputValidator() {
         @RequiredUIAccess
@@ -390,17 +387,16 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
     private final boolean myFromPopup;
 
     public MyAddAction(boolean fromPopup) {
-      super(IdeLocalize.addScopePopupTitle().get(), true);
+      super(IdeLocalize.addScopePopupTitle(), true);
       myFromPopup = fromPopup;
       final Presentation presentation = getTemplatePresentation();
       presentation.setIcon(IconUtil.getAddIcon());
       setShortcutSet(CommonShortcuts.INSERT);
     }
 
-
     @RequiredUIAccess
     @Override
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       super.update(e);
       if (myFromPopup) {
         setPopup(false);
@@ -419,8 +415,8 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
         ) {
           @RequiredUIAccess
           @Override
-          public void actionPerformed(AnActionEvent e) {
-            createScope(true, IdeLocalize.addScopeDialogTitle().get(), null);
+          public void actionPerformed(@Nonnull AnActionEvent e) {
+            createScope(true, IdeLocalize.addScopeDialogTitle(), null);
           }
         };
         myChildren[1] = new AnAction(
@@ -430,8 +426,8 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
         ) {
           @RequiredUIAccess
           @Override
-          public void actionPerformed(AnActionEvent e) {
-            createScope(false, IdeLocalize.addScopeDialogTitle().get(), null);
+          public void actionPerformed(@Nonnull AnActionEvent e) {
+            createScope(false, IdeLocalize.addScopeDialogTitle(), null);
           }
         };
       }
@@ -479,7 +475,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
 
     @RequiredUIAccess
     @Override
-    public void actionPerformed(final AnActionEvent e) {
+    public void actionPerformed(@Nonnull final AnActionEvent e) {
       TreeUtil.moveSelectedRow(myTree, myDirection);
     }
 
@@ -515,7 +511,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
 
     @RequiredUIAccess
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       NamedScope scope = (NamedScope)getSelectedObject();
       if (scope != null) {
         final NamedScope newScope = scope.createCopy();
@@ -542,7 +538,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
 
     @RequiredUIAccess
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       final TreePath selectionPath = myTree.getSelectionPath();
       if (selectionPath != null) {
         final MyNode node = (MyNode)selectionPath.getLastPathComponent();
@@ -552,10 +548,10 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
           PackageSet set = scopeConfigurable.getEditableObject().getValue();
           if (set != null) {
             if (scopeConfigurable.getHolder() == mySharedScopesManager) {
-              createScope(false, IdeLocalize.scopesSaveDialogTitleShared().get(), set.createCopy());
+              createScope(false, IdeLocalize.scopesSaveDialogTitleShared(), set.createCopy());
             }
             else {
-              createScope(true, IdeLocalize.scopesSaveDialogTitleLocal().get(), set.createCopy());
+              createScope(true, IdeLocalize.scopesSaveDialogTitleLocal(), set.createCopy());
             }
           }
         }

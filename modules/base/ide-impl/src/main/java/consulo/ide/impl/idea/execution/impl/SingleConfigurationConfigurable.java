@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.execution.impl;
 
 import consulo.application.AllIcons;
 import consulo.configurable.ConfigurationException;
-import consulo.execution.ExecutionBundle;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.RunnerRegistry;
 import consulo.execution.RuntimeConfigurationException;
@@ -28,15 +27,16 @@ import consulo.execution.configuration.ui.SettingsEditorConfigurable;
 import consulo.execution.executor.Executor;
 import consulo.execution.executor.ExecutorRegistry;
 import consulo.execution.impl.internal.configuration.RunManagerImpl;
-import consulo.execution.runner.ProgramRunner;
 import consulo.execution.impl.internal.configuration.UnknownRunConfiguration;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.execution.localize.ExecutionLocalize;
+import consulo.execution.runner.ProgramRunner;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBCheckBox;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.util.lang.Comparing;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -171,7 +171,11 @@ public final class SingleConfigurationConfigurable<Config extends RunConfigurati
           exception != null ? new ValidationResult(exception.getLocalizedMessage(), exception.getTitle(), exception.getQuickFix()) : null;
       }
       catch (ConfigurationException e) {
-        myLastValidationResult = new ValidationResult(e.getLocalizedMessage(), ExecutionBundle.message("invalid.data.dialog.title"), null);
+        myLastValidationResult = new ValidationResult(
+          e.getLocalizedMessage(),
+          ExecutionLocalize.invalidDataDialogTitle().get(),
+          null
+        );
       }
 
       myValidationResultValid = true;

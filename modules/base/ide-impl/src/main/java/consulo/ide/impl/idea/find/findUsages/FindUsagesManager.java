@@ -39,8 +39,9 @@ import consulo.ide.impl.find.PsiElement2UsageTargetAdapter;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.progress.impl.ProgressManagerImpl;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.ui.LightweightHint;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -141,8 +142,12 @@ public class FindUsagesManager {
     PsiElement[] primaryElements = myLastSearchInFileData.getPrimaryElements();
     PsiElement[] secondaryElements = myLastSearchInFileData.getSecondaryElements();
     if (primaryElements.length == 0) {//all elements have been invalidated
-      Messages.showMessageDialog(myProject, FindBundle.message("find.searched.elements.have.been.changed.error"),
-                                 FindBundle.message("cannot.search.for.usages.title"), Messages.getInformationIcon());
+      Messages.showMessageDialog(
+        myProject,
+        FindBundle.message("find.searched.elements.have.been.changed.error"),
+        FindBundle.message("cannot.search.for.usages.title"),
+        UIUtil.getInformationIcon()
+      );
       // SCR #10022
       //clearFindingNextUsageInFile();
       return false;

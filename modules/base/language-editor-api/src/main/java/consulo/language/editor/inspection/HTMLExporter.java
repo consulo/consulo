@@ -27,6 +27,7 @@ package consulo.language.editor.inspection;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.inspection.reference.RefElement;
 import consulo.language.editor.inspection.reference.RefEntity;
 import org.jetbrains.annotations.NonNls;
@@ -49,11 +50,11 @@ public class HTMLExporter {
 
   public HTMLExporter(String rootFolder, HTMLComposerBase composer) {
     myRootFolder = rootFolder;
-    myElementToFilenameMap = new HashMap<RefEntity, String>();
+    myElementToFilenameMap = new HashMap<>();
     myFileCounter = 0;
     myComposer = composer;
-    myGeneratedPages = new HashSet<RefEntity>();
-    myGeneratedReferences = new HashSet<RefEntity>();
+    myGeneratedPages = new HashSet<>();
+    myGeneratedReferences = new HashSet<>();
   }
 
   @RequiredReadAction
@@ -68,10 +69,10 @@ public class HTMLExporter {
 
   private void appendNavBar(@NonNls final StringBuffer buf, RefEntity element) {
     buf.append("<a href=\"../index.html\" target=\"_top\">");
-    buf.append(InspectionsBundle.message("inspection.export.inspections.link.text"));
+    buf.append(InspectionLocalize.inspectionExportInspectionsLinkText());
     buf.append("</a>  ");
     if (element instanceof RefElement) {
-      myComposer.appendElementReference(buf, getURL(element), InspectionsBundle.message("inspection.export.open.source.link.text"), "_blank");
+      myComposer.appendElementReference(buf, getURL(element), InspectionLocalize.inspectionExportOpenSourceLinkText().get(), "_blank");
     }
     buf.append("<hr>");
   }
@@ -82,7 +83,7 @@ public class HTMLExporter {
 
     if (indicator != null) {
       ProgressManager.checkCanceled();
-      indicator.setText(InspectionsBundle.message("inspection.export.generating.html.for", fullPath));
+      indicator.setTextValue(InspectionLocalize.inspectionExportGeneratingHtmlFor(fullPath));
     }
 
     FileWriter writer = null;
@@ -122,7 +123,7 @@ public class HTMLExporter {
   }
 
   private Set<RefEntity> getReferencesWithoutPages() {
-    HashSet<RefEntity> result = new HashSet<RefEntity>();
+    HashSet<RefEntity> result = new HashSet<>();
     for (RefEntity refElement : myGeneratedReferences) {
       if (!myGeneratedPages.contains(refElement)) {
         result.add(refElement);
