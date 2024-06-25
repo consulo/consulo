@@ -19,7 +19,7 @@ import consulo.project.Project;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsBundle;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListOwner;
+import consulo.versionControlSystem.change.ChangeListOwner;
 import consulo.versionControlSystem.change.ChangeProvider;
 import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.TreeLinkMouseListener;
 import consulo.virtualFileSystem.VirtualFile;

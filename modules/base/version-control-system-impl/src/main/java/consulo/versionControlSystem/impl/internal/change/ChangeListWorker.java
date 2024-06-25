@@ -244,7 +244,7 @@ public final class ChangeListWorker {
   }
 
   @Nonnull
-  List<LocalChangeListImpl> getChangeListsImpl() {
+  public List<LocalChangeListImpl> getChangeListsImpl() {
     List<LocalChangeListImpl> lists = ContainerUtil.map(myLists, this::toChangeList);
     return ContainerUtil.sorted(lists, ChangesUtil.CHANGELIST_COMPARATOR);
   }
@@ -758,7 +758,7 @@ public final class ChangeListWorker {
     }
   }
 
-  void setChangeLists(@Nonnull Collection<LocalChangeListImpl> lists) {
+  public void setChangeLists(@Nonnull Collection<LocalChangeListImpl> lists) {
     assert myMainWorker;
     if (!myChangeListsEnabled) return;
 

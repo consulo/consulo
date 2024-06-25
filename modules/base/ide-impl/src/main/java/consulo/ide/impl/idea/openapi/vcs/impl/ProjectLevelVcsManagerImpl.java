@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.impl;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AccessRule;
 import consulo.application.ApplicationManager;
@@ -177,20 +176,6 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
   @Override
   public void afterLoadState() {
     myOptionsAndConfirmations.init(mySerialization::getInitOptionValue);
-  }
-
-  @Deprecated
-  @DeprecationInfo("Use own AllVcses impl, or use extension extender")
-  public void registerVcs(AbstractVcs vcs) {
-    // FIXME [VISTALL] nothing since this impl used only for tests
-    throw new UnsupportedOperationException();
-  }
-
-  @Deprecated
-  @DeprecationInfo("Use own AllVcses impl, or use extension extender")
-  public void unregisterVcs(@Nonnull AbstractVcs vcs) {
-    // FIXME [VISTALL] nothing since this impl used only for tests
-    throw new UnsupportedOperationException();
   }
 
   @Override
@@ -885,6 +870,11 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
   @Override
   public ContentRevisionCache getContentRevisionCache() {
     return myContentRevisionCache;
+  }
+
+  @Override
+  public void runAfterInitialization(@Nonnull Runnable runnable) {
+    addInitializationRequest(VcsInitObject.AFTER_COMMON, runnable);
   }
 
   @TestOnly

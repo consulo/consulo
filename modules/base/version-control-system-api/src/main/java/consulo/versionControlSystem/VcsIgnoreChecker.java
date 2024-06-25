@@ -4,18 +4,18 @@ package consulo.versionControlSystem;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 import java.nio.file.Path;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface VcsIgnoreChecker {
-  @NotNull
+  @Nonnull
   VcsKey getSupportedVcs();
 
-  @NotNull
-  IgnoredCheckResult isIgnored(@NotNull VirtualFile vcsRoot, @NotNull Path file);
+  @Nonnull
+  IgnoredCheckResult isIgnored(@Nonnull VirtualFile vcsRoot, @Nonnull Path file);
 
-  @NotNull
-  IgnoredCheckResult isFilePatternIgnored(@NotNull VirtualFile vcsRoot, @NotNull String filePattern);
+  @Nonnull
+  IgnoredCheckResult isFilePatternIgnored(@Nonnull VirtualFile vcsRoot, @Nonnull String filePattern);
 }

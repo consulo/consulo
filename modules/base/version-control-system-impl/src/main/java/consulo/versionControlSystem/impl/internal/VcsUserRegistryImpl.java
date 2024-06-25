@@ -28,6 +28,7 @@ import consulo.project.Project;
 import consulo.util.interner.Interner;
 import consulo.versionControlSystem.VcsUser;
 import consulo.versionControlSystem.VcsUserRegistry;
+import consulo.versionControlSystem.internal.VcsUserImpl;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;

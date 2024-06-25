@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.versionControlSystem.impl.internal;
+package consulo.versionControlSystem.internal;
 
 import consulo.versionControlSystem.VcsUser;
 import consulo.versionControlSystem.util.VcsUserUtil;

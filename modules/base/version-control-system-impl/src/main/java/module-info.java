@@ -8,9 +8,11 @@ module consulo.version.control.system.impl {
   requires consulo.index.io;
   requires consulo.application.impl;
   requires consulo.ui.ex.api;
+  requires consulo.ui.ex.awt.api;
   requires consulo.code.editor.api;
 
   exports consulo.versionControlSystem.impl.internal.change.local to consulo.ide.impl;
   exports consulo.versionControlSystem.impl.internal.change to consulo.ide.impl;
   exports consulo.versionControlSystem.impl.internal to consulo.ide.impl;
+  exports consulo.versionControlSystem.impl.internal.change.ui to consulo.ide.impl;
 }

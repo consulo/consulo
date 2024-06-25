@@ -15,26 +15,25 @@
  */
 package consulo.ide.impl.idea.openapi.vfs.newvfs;
 
-import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.util.lang.StringUtil;
-import consulo.ide.impl.idea.openapi.vfs.impl.ArchiveHandler;
-import consulo.util.lang.function.PairFunction;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.ide.impl.idea.openapi.vfs.impl.ArchiveHandler;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.virtualFileSystem.archive.ArchiveFileSystemBase;
 import consulo.logging.Logger;
 import consulo.util.collection.Maps;
-import consulo.ide.impl.virtualFileSystem.archive.ArchiveFileSystemBase;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.*;
-import consulo.virtualFileSystem.NewVirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 import static consulo.util.lang.Pair.pair;
@@ -177,13 +176,13 @@ public class VfsImplUtil {
   private static final Map<String, Set<String>> ourDominatorsMap = Maps.newHashMap(FileUtil.PATH_HASHING_STRATEGY);
 
   @Nonnull
-  public static <T extends ArchiveHandler> T getHandler(@Nonnull ArchiveFileSystem vfs, @Nonnull VirtualFile entryFile, @Nonnull PairFunction<String, ArchiveFileSystemBase, T> producer) {
+  public static <T extends ArchiveHandler> T getHandler(@Nonnull ArchiveFileSystem vfs, @Nonnull VirtualFile entryFile, @Nonnull BiFunction<String, ArchiveFileSystemBase, T> producer) {
     String localPath = vfs.extractLocalPath(vfs.extractRootPath(entryFile.getPath()));
     return getHandler(vfs, localPath, producer);
   }
 
   @Nonnull
-  public static <T extends ArchiveHandler> T getHandler(@Nonnull ArchiveFileSystem vfs, @Nonnull String localPath, @Nonnull PairFunction<String, ArchiveFileSystemBase, T> producer) {
+  public static <T extends ArchiveHandler> T getHandler(@Nonnull ArchiveFileSystem vfs, @Nonnull String localPath, @Nonnull BiFunction<String, ArchiveFileSystemBase, T> producer) {
     checkSubscription();
 
     ArchiveHandler handler;
@@ -191,7 +190,7 @@ public class VfsImplUtil {
     synchronized (ourLock) {
       Pair<ArchiveFileSystem, ArchiveHandler> record = ourHandlers.get(localPath);
       if (record == null) {
-        handler = producer.fun(localPath, (ArchiveFileSystemBase)vfs);
+        handler = producer.apply(localPath, (ArchiveFileSystemBase)vfs);
         record = Pair.create(vfs, handler);
         ourHandlers.put(localPath, record);
 

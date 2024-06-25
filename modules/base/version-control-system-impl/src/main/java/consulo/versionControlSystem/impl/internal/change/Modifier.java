@@ -17,6 +17,7 @@ package consulo.versionControlSystem.impl.internal.change;
 
 import consulo.logging.Logger;
 import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.change.ChangeListData;
 import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.versionControlSystem.impl.internal.change.local.*;
 import jakarta.annotation.Nonnull;

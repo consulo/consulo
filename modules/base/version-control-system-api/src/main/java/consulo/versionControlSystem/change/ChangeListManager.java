@@ -22,13 +22,11 @@ import consulo.project.Project;
 import consulo.ui.ModalityState;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ThreeState;
-import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.TestOnly;
 
 import java.io.File;
 import java.util.Collection;
@@ -39,7 +37,7 @@ import java.util.function.Consumer;
  * @author max
  */
 @ServiceAPI(value = ComponentScope.PROJECT, lazy = false)
-public abstract class ChangeListManager {
+public abstract class ChangeListManager implements ChangeListModification {
   @Nonnull
   public static ChangeListManager getInstance(Project project) {
     return project.getInstance(ChangeListManager.class);
@@ -48,6 +46,17 @@ public abstract class ChangeListManager {
   public abstract void scheduleUpdate();
 
   public abstract void scheduleUpdate(boolean updateUnversionedFiles);
+
+  /**
+   * Invoke callback when current CLM refresh is completed, without any visible progress.
+   * <p/>
+   * WARNING: This callback WILL NOT wait for async unchanged files update if VCS is using a custom {@link VcsManagedFilesHolder}.
+   * These can be listened via {@link ChangeListListener#unchangedFileStatusChanged(boolean)} or on a per-VCS basis.
+   */
+  public void invokeAfterUpdate(boolean callbackOnAwt, @Nonnull Runnable afterUpdate) {
+    InvokeAfterUpdateMode mode = callbackOnAwt ? InvokeAfterUpdateMode.SILENT : InvokeAfterUpdateMode.SILENT_CALLBACK_POOLED;
+    invokeAfterUpdate(afterUpdate, mode, null, null);
+  }
 
   public abstract void invokeAfterUpdate(final Runnable afterUpdate,
                                          final InvokeAfterUpdateMode mode,
@@ -62,17 +71,29 @@ public abstract class ChangeListManager {
 
 
   @Nonnull
-  public abstract LocalChangeList addChangeList(@Nonnull String name, @Nullable String comment, @Nullable Object data);
+  public abstract LocalChangeList addChangeList(@Nonnull String name, @Nullable String comment, @Nullable ChangeListData data);
 
-  public abstract LocalChangeList addChangeList(@Nonnull String name, @Nullable final String comment);
+  public LocalChangeList addChangeList(@Nonnull final String name, @Nullable final String comment) {
+    return addChangeList(name, comment, null);
+  }
+
+  public abstract void setDefaultChangeList(@Nonnull String name);
 
   public abstract void setDefaultChangeList(@Nonnull LocalChangeList list);
+
+  /**
+   * @param automatic true is changelist switch operation was not triggered by user (and, for example, will be reverted soon)
+   *                  4ex: This flag disables automatic empty changelist deletion.
+   */
+  public abstract void setDefaultChangeList(@Nonnull LocalChangeList list, boolean automatic);
 
   public abstract void removeChangeList(final String name);
 
   public abstract void removeChangeList(final LocalChangeList list);
 
-  public abstract void moveChangesTo(final LocalChangeList list, final Change... changes);
+  public abstract void moveChangesTo(@Nonnull LocalChangeList list, Change... changes);
+
+  public abstract void moveChangesTo(@Nonnull LocalChangeList list, @Nonnull List<Change> changes);
 
   // added - since ChangeListManager wouldn't pass internal lists, only copies
   public abstract boolean setReadOnly(final String name, final boolean value);
@@ -82,12 +103,16 @@ public abstract class ChangeListManager {
   @Nullable
   public abstract String editComment(@Nonnull String fromName, final String newComment);
 
-  @TestOnly
-  public abstract boolean ensureUpToDate(boolean canBeCanceled);
-
   public abstract int getChangeListsNumber();
 
-  public abstract List<LocalChangeList> getChangeListsCopy();
+  /**
+   * @deprecated Use {@link #getChangeLists()} instead.
+   */
+  @Nonnull
+  @Deprecated
+  public List<LocalChangeList> getChangeListsCopy() {
+    return getChangeLists();
+  }
 
   @Nonnull
   public abstract List<LocalChangeList> getChangeLists();
@@ -124,8 +149,6 @@ public abstract class ChangeListManager {
    */
   public abstract LocalChangeList getDefaultChangeList();
 
-  public abstract boolean isDefaultChangeList(ChangeList list);
-
   @Nullable
   public abstract LocalChangeList getChangeList(@Nonnull Change change);
 
@@ -158,13 +181,6 @@ public abstract class ChangeListManager {
   @Nonnull
   public abstract Collection<Change> getChangesIn(FilePath path);
 
-  @Nullable
-  public abstract AbstractVcs getVcsFor(@Nonnull Change change);
-
-//  public abstract void removeChangeList(final LocalChangeList list);
-
-//  public abstract void moveChangesTo(final LocalChangeList list, final Change[] changes);
-
   public abstract void addChangeListListener(ChangeListListener listener);
 
   public abstract void removeChangeListListener(ChangeListListener listener);
@@ -184,15 +200,26 @@ public abstract class ChangeListManager {
 
   public abstract List<CommitExecutor> getRegisteredExecutors();
 
-  public abstract void addFilesToIgnore(final IgnoredFileBean... ignoredFiles);
+  @Deprecated
+  public void addFilesToIgnore(final IgnoredFileBean... ignoredFiles) {
+  }
 
-  public abstract void addDirectoryToIgnoreImplicitly(@Nonnull String path);
+  @Deprecated
+  public void addDirectoryToIgnoreImplicitly(@Nonnull String path) {
+  }
 
-  public abstract void setFilesToIgnore(final IgnoredFileBean... ignoredFiles);
+  @Deprecated
+  public void setFilesToIgnore(final IgnoredFileBean... ignoredFiles) {
+  }
 
-  public abstract IgnoredFileBean[] getFilesToIgnore();
+  @Deprecated
+  public IgnoredFileBean[] getFilesToIgnore() {
+    return new IgnoredFileBean[0];
+  }
 
   public abstract boolean isIgnoredFile(@Nonnull VirtualFile file);
+
+  public abstract boolean isIgnoredFile(@Nonnull FilePath file);
 
   @Nullable
   public abstract String getSwitchedBranch(VirtualFile file);

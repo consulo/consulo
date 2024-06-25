@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListOwner;
+import consulo.versionControlSystem.change.ChangeListOwner;
 import consulo.ide.impl.idea.openapi.vcs.changes.IgnoredViewDialog;
 import jakarta.annotation.Nonnull;
 

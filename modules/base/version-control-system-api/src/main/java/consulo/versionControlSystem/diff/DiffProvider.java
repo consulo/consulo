@@ -42,6 +42,13 @@ public interface DiffProvider extends VcsProviderMarker {
   VcsRevisionNumber getLatestCommittedRevision(VirtualFile vcsRoot);
 
   @Nullable
+  default ContentRevision createCurrentFileContent(VirtualFile file) {
+    VcsRevisionNumber revisionNumber = getCurrentRevision(file);
+    if (revisionNumber == null) return null;
+    return createFileContent(revisionNumber, file);
+  }
+
+  @Nullable
   default VcsRevisionDescription getCurrentRevisionDescription(final VirtualFile file) {
     return null;
   }

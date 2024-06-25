@@ -3,10 +3,10 @@ package consulo.versionControlSystem.internal;
 
 import consulo.disposer.Disposable;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 
 public interface FilesProcessor extends Disposable {
-  void processFiles(@NotNull Collection<VirtualFile> files);
+  void processFiles(@Nonnull Collection<VirtualFile> files);
 }

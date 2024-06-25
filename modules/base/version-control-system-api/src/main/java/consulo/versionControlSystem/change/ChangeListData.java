@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.versionControlSystem.impl.internal.change;
+package consulo.versionControlSystem.change;
 
 import consulo.versionControlSystem.VcsUser;
-import consulo.versionControlSystem.impl.internal.VcsUserImpl;
+import consulo.versionControlSystem.internal.VcsUserImpl;
 import jakarta.annotation.Nullable;
 
 import java.util.Date;

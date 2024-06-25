@@ -29,6 +29,7 @@ import consulo.versionControlSystem.change.ContentRevision;
 import consulo.versionControlSystem.diff.DiffProvider;
 import consulo.versionControlSystem.diff.ItemLatestState;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
+import consulo.versionControlSystem.impl.internal.change.ChangesOnServerTracker;
 import consulo.versionControlSystem.root.VcsRoot;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.LocalFileSystem;

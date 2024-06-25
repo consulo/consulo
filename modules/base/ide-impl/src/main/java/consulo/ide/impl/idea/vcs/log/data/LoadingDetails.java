@@ -1,15 +1,13 @@
 package consulo.ide.impl.idea.vcs.log.data;
 
-import consulo.application.util.function.Computable;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.log.base.VcsCommitMetadataImpl;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.versionControlSystem.log.CommitId;
 import consulo.versionControlSystem.log.Hash;
 import consulo.versionControlSystem.log.VcsFullCommitDetails;
 import consulo.versionControlSystem.VcsUser;
-import consulo.versionControlSystem.impl.internal.VcsUserImpl;
+import consulo.versionControlSystem.internal.VcsUserImpl;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

@@ -308,4 +308,9 @@ public abstract class ProjectLevelVcsManager {
 
   @Nonnull
   public abstract VcsShowSettingOption getOptions(VcsConfiguration.StandardOption option);
+
+  /**
+   * Execute the task on pooled thread, delayed until core vcs services are initialized.
+   */
+  public abstract void runAfterInitialization(@Nonnull Runnable runnable);
 }

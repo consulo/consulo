@@ -5,16 +5,16 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public interface VcsIgnoreManager {
 
-  boolean isDirectoryVcsIgnored(@NotNull String dirPath);
+  boolean isDirectoryVcsIgnored(@Nonnull String dirPath);
 
-  boolean isRunConfigurationVcsIgnored(@NotNull String configurationName);
+  boolean isRunConfigurationVcsIgnored(@Nonnull String configurationName);
 
-  void removeRunConfigurationFromVcsIgnore(@NotNull String configurationName);
+  void removeRunConfigurationFromVcsIgnore(@Nonnull String configurationName);
 
   /**
    * Check if the file could be potentially ignored. However, this doesn't mean that the file is ignored in VCS.
@@ -23,11 +23,11 @@ public interface VcsIgnoreManager {
    * @param file to check
    * @return true if the file is potentially ignored
    */
-  boolean isPotentiallyIgnoredFile(@NotNull VirtualFile file);
+  boolean isPotentiallyIgnoredFile(@Nonnull VirtualFile file);
 
-  boolean isPotentiallyIgnoredFile(@NotNull FilePath filePath);
+  boolean isPotentiallyIgnoredFile(@Nonnull FilePath filePath);
 
-  static VcsIgnoreManager getInstance(@NotNull Project project) {
+  static VcsIgnoreManager getInstance(@Nonnull Project project) {
     return project.getInstance(VcsIgnoreManager.class);
   }
 }

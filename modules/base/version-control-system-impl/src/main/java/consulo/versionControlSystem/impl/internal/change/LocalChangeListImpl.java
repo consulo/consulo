@@ -3,6 +3,7 @@ package consulo.versionControlSystem.impl.internal.change;
 
 import consulo.project.Project;
 import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.change.ChangeListData;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.LocalChangeList;
 import jakarta.annotation.Nonnull;

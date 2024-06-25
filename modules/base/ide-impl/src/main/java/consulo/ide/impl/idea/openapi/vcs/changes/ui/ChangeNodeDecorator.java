@@ -15,43 +15,11 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
-import consulo.util.lang.Pair;
-import consulo.versionControlSystem.change.Change;
 import consulo.ui.ex.awt.SimpleColoredComponent;
-import consulo.ui.ex.SimpleTextAttributes;
-import jakarta.annotation.Nullable;
-
-import java.util.List;
+import consulo.versionControlSystem.change.Change;
 
 public interface ChangeNodeDecorator {
   void decorate(final Change change, final SimpleColoredComponent component, boolean isShowFlatten);
 
   void preDecorate(Change change, ChangesBrowserNodeRenderer renderer, boolean isShowFlatten);
-
-  @Nullable
-  @Deprecated
-  default List<Pair<String, Stress>> stressPartsOfFileName(final Change change, final String parentPath) { return null; }
-
-  @Deprecated
-  enum Stress {
-    BOLD(SimpleTextAttributes.STYLE_BOLD),
-    ITALIC(SimpleTextAttributes.STYLE_ITALIC),
-    BOLD_ITALIC(SimpleTextAttributes.STYLE_BOLD | SimpleTextAttributes.STYLE_ITALIC),
-    PLAIN(SimpleTextAttributes.STYLE_PLAIN);
-
-    @SimpleTextAttributes.StyleAttributeConstant
-    private final int myFontStyle;
-
-    private Stress(@SimpleTextAttributes.StyleAttributeConstant int fontStyle) {
-      myFontStyle = fontStyle;
-    }
-
-    public int getFontStyle() {
-      return myFontStyle;
-    }
-
-    public SimpleTextAttributes derive(final SimpleTextAttributes attributes) {
-      return attributes.derive(myFontStyle, attributes.getFgColor(), attributes.getBgColor(), attributes.getWaveColor());
-    }
-  }
 }

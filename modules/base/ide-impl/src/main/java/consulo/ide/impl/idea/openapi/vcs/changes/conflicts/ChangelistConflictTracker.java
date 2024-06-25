@@ -1,36 +1,25 @@
-/*
- * Copyright 2000-2016 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
+// Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.vcs.changes.conflicts;
 
-import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.codeEditor.EditorFactory;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.document.event.DocumentAdapter;
-import consulo.document.event.DocumentEvent;
+import consulo.document.event.BulkAwareDocumentListener;
 import consulo.fileEditor.EditorNotifications;
+import consulo.ide.impl.idea.openapi.util.ZipperUpdater;
+import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
+import consulo.ide.impl.idea.openapi.vcs.impl.LineStatusTrackerManager;
 import consulo.project.Project;
-import consulo.project.ProjectLocator;
-import consulo.project.ui.wm.MergingQueue;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.util.Alarm;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.xml.serializer.XmlSerializer;
+import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.change.*;
+import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusManager;
@@ -39,114 +28,57 @@ import org.jdom.Element;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-/**
- * @author Dmitry Avdeev
- */
-public class ChangelistConflictTracker {
-
-  private final Map<String, Conflict> myConflicts = Collections.synchronizedMap(new LinkedHashMap<String, Conflict>());
+public final class ChangelistConflictTracker {
+  private final Map<String, Conflict> myConflicts = Collections.synchronizedMap(new LinkedHashMap<>());
 
   private final Options myOptions = new Options();
   private final Project myProject;
-
   private final ChangeListManager myChangeListManager;
-  private final EditorNotifications myEditorNotifications;
-  private final ChangeListListener myChangeListListener;
 
-  private final FileDocumentManager myDocumentManager;
-  private final DocumentAdapter myDocumentListener;
+  private final ZipperUpdater myZipperUpdater;
 
-  private final FileStatusManager myFileStatusManager;
-  private final Set<VirtualFile> myCheckSet;
-  private final Object myCheckSetLock;
+  private final Set<VirtualFile> myCheckSet = new HashSet<>();
+  private final AtomicBoolean myShouldIgnoreModifications = new AtomicBoolean(false);
 
-  public ChangelistConflictTracker(@Nonnull Project project,
-                                   @Nonnull ChangeListManager changeListManager,
-                                   @Nonnull FileStatusManager fileStatusManager,
-                                   @Nonnull EditorNotifications editorNotifications,
-                                   @Nonnull ApplicationConcurrency applicationConcurrency) {
+  @Nonnull
+  public static ChangelistConflictTracker getInstance(@Nonnull Project project) {
+    return ChangeListManagerImpl.getInstanceImpl(project).getConflictTracker();
+  }
+
+  public ChangelistConflictTracker(@Nonnull Project project, @Nonnull ChangeListManager changeListManager) {
     myProject = project;
-
     myChangeListManager = changeListManager;
-    myEditorNotifications = editorNotifications;
-    myDocumentManager = FileDocumentManager.getInstance();
-    myFileStatusManager = fileStatusManager;
-    myCheckSetLock = new Object();
-    myCheckSet = new HashSet<>();
 
-    final MergingQueue<Runnable> zipperUpdater = new MergingQueue<>(applicationConcurrency, project, 300, project, Runnable::run);
-    final Runnable runnable = () -> {
-      if (project.getApplication().isDisposed() || myProject.isDisposed() || !myProject.isOpen()) {
-        return;
-      }
-      final Set<VirtualFile> localSet;
-      synchronized (myCheckSetLock) {
-        localSet = new HashSet<>();
-        localSet.addAll(myCheckSet);
-        myCheckSet.clear();
-      }
-      checkFiles(localSet);
-    };
-    myDocumentListener = new DocumentAdapter() {
-      @Override
-      public void documentChanged(DocumentEvent e) {
-        if (!myOptions.TRACKING_ENABLED) {
-          return;
-        }
-        Document document = e.getDocument();
-        VirtualFile file = myDocumentManager.getFile(document);
-        if (ProjectLocator.getInstance().guessProjectForFile(file) == myProject) {
-          synchronized (myCheckSetLock) {
-            myCheckSet.add(file);
-          }
-          zipperUpdater.queue(runnable);
-        }
-      }
-    };
-
-    myChangeListListener = new ChangeListListener() {
-      @Override
-      public void changeListChanged(ChangeList list) {
-        if (myChangeListManager.isDefaultChangeList(list)) {
-          clearChanges(list.getChanges());
-        }
-      }
-
-      @Override
-      public void changesMoved(Collection<Change> changes, ChangeList fromList, ChangeList toList) {
-        if (myChangeListManager.isDefaultChangeList(toList)) {
-          clearChanges(changes);
-        }
-      }
-
-      @Override
-      public void changesRemoved(Collection<Change> changes, ChangeList fromList) {
-        clearChanges(changes);
-      }
-
-      @Override
-      public void defaultListChanged(ChangeList oldDefaultList, ChangeList newDefaultList) {
-        clearChanges(newDefaultList.getChanges());
-      }
-    };
+    myZipperUpdater = new ZipperUpdater(300, Alarm.ThreadToUse.SWING_THREAD, project);
   }
 
-  private void checkFiles(final Collection<VirtualFile> files) {
-    myChangeListManager.invokeAfterUpdate(() -> {
-      final LocalChangeList list = myChangeListManager.getDefaultChangeList();
+  public void setIgnoreModifications(boolean value) {
+    myShouldIgnoreModifications.set(value);
+  }
+
+  @RequiredUIAccess
+  private void checkFiles() {
+    if (myProject.isDisposed() || !myProject.isOpen()) return;
+    if (myCheckSet.isEmpty()) return;
+
+    List<VirtualFile> files = new ArrayList<>(myCheckSet);
+    myCheckSet.clear();
+
+    myChangeListManager.invokeAfterUpdate(false, () -> {
+      LocalChangeList defaultList = myChangeListManager.getDefaultChangeList();
       for (VirtualFile file : files) {
-        checkOneFile(file, list);
+        checkOneFile(file, defaultList);
       }
-    }, InvokeAfterUpdateMode.SILENT, null, null);
+    });
   }
 
-  private void checkOneFile(VirtualFile file, LocalChangeList defaultList) {
-    if (file == null) {
-      return;
-    }
+  private void checkOneFile(@Nonnull VirtualFile file, @Nonnull LocalChangeList defaultList) {
+    if (!shouldDetectConflictsFor(file)) return;
+
     LocalChangeList changeList = myChangeListManager.getChangeList(file);
-    if (changeList == null || Comparing.equal(changeList, defaultList) || ChangesUtil.isInternalOperation(file)) {
+    if (changeList == null || Comparing.equal(changeList, defaultList)) {
       return;
     }
 
@@ -162,8 +94,8 @@ public class ChangelistConflictTracker {
     }
 
     if (newConflict && myOptions.HIGHLIGHT_CONFLICTS) {
-      myFileStatusManager.fileStatusChanged(file);
-      myEditorNotifications.updateNotifications(file);
+      FileStatusManager.getInstance(myProject).fileStatusChanged(file);
+      EditorNotifications.getInstance(myProject).updateNotifications(file);
     }
   }
 
@@ -174,51 +106,76 @@ public class ChangelistConflictTracker {
   }
 
   public boolean isFromActiveChangelist(VirtualFile file) {
-    LocalChangeList changeList = myChangeListManager.getChangeList(file);
-    return changeList == null || myChangeListManager.isDefaultChangeList(changeList);
+    List<LocalChangeList> changeLists = myChangeListManager.getChangeLists(file);
+    return changeLists.isEmpty() || ContainerUtil.exists(changeLists, list -> list.isDefault());
   }
 
-  private void clearChanges(Collection<Change> changes) {
+  private boolean shouldDetectConflicts() {
+    if (!myOptions.SHOW_DIALOG && !myOptions.HIGHLIGHT_CONFLICTS) return false;
+    if (!myChangeListManager.areChangeListsEnabled()) return false;
+
+    AbstractVcs[] activeVcss = ProjectLevelVcsManager.getInstance(myProject).getAllActiveVcss();
+    if (activeVcss.length == 0) return false;
+
+    boolean onlyPartialChangelists = LineStatusTrackerManager.getInstance(myProject).arePartialChangelistsEnabled() &&
+      ContainerUtil.all(activeVcss, vcs -> vcs.arePartialChangelistsSupported());
+    return !onlyPartialChangelists;
+  }
+
+  private boolean shouldDetectConflictsFor(@Nonnull VirtualFile file) {
+    AbstractVcs vcs = VcsUtil.getVcsFor(myProject, file);
+    if (vcs == null) return false;
+    return !LineStatusTrackerManager.getInstance(myProject).arePartialChangelistsEnabled(file);
+  }
+
+  private void clearChanges(Collection<? extends Change> changes) {
+    if (!shouldDetectConflicts() && !myOptions.HIGHLIGHT_NON_ACTIVE_CHANGELIST) return;
+
     for (Change change : changes) {
       ContentRevision revision = change.getAfterRevision();
-      if (revision != null) {
-        FilePath filePath = revision.getFile();
-        String path = filePath.getPath();
-        final Conflict wasRemoved = myConflicts.remove(path);
-        final VirtualFile file = filePath.getVirtualFile();
-        if (wasRemoved != null && file != null) {
-          myEditorNotifications.updateNotifications(file);
-          // we need to update status
-          myFileStatusManager.fileStatusChanged(file);
+      if (revision == null) continue;
+
+      FilePath filePath = revision.getFile();
+      String path = filePath.getPath();
+
+      Conflict conflict = myConflicts.remove(path);
+      boolean conflictRemoved = conflict != null && !conflict.ignored;
+
+      if (conflictRemoved || myOptions.HIGHLIGHT_NON_ACTIVE_CHANGELIST) {
+        VirtualFile file = filePath.getVirtualFile();
+        if (file != null) {
+          FileStatusManager.getInstance(myProject).fileStatusChanged(file);
+          if (conflictRemoved) {
+            EditorNotifications.getInstance(myProject).updateNotifications(file);
+          }
         }
       }
     }
   }
 
   public void startTracking() {
-    myChangeListManager.addChangeListListener(myChangeListListener);
-    EditorFactory.getInstance().getEventMulticaster().addDocumentListener(myDocumentListener, myProject);
-  }
-
-  public void stopTracking() {
-    myChangeListManager.removeChangeListListener(myChangeListListener);
+    myProject.getMessageBus().connect().subscribe(ChangeListListener.TOPIC, new MyChangeListListener());
+    EditorFactory.getInstance().getEventMulticaster().addDocumentListener(new MyDocumentListener(), myProject);
   }
 
   public void saveState(Element to) {
-    for (Map.Entry<String,Conflict> entry : myConflicts.entrySet()) {
-      Element fileElement = new Element("file");
-      fileElement.setAttribute("path", entry.getKey());
-      fileElement.setAttribute("ignored", Boolean.toString(entry.getValue().ignored));
-      to.addContent(fileElement);
+    synchronized (myConflicts) {
+      myConflicts.forEach((path, conflict) -> {
+        if (conflict.ignored) {
+          Element fileElement = new Element("file");
+          fileElement.setAttribute("path", path);
+          fileElement.setAttribute("ignored", Boolean.toString(conflict.ignored));
+          to.addContent(fileElement);
+        }
+      });
     }
     XmlSerializer.serializeInto(myOptions, to);
   }
 
-  public void loadState(Element from) {
+  public void loadState(@Nonnull Element from) {
     myConflicts.clear();
-    List files = from.getChildren("file");
-    for (Object file : files) {
-      Element element = (Element)file;
+    List<Element> files = from.getChildren("file");
+    for (Element element : files) {
       String path = element.getAttributeValue("path");
       if (path == null) {
         continue;
@@ -235,21 +192,20 @@ public class ChangelistConflictTracker {
   }
 
   public void optionsChanged() {
-    for (Map.Entry<String, Conflict> entry : myConflicts.entrySet()) {
-      VirtualFile file = LocalFileSystem.getInstance().findFileByPath(entry.getKey());
-      if (file != null) {
-        myFileStatusManager.fileStatusChanged(file);
-        myEditorNotifications.updateNotifications(file);
-      }
+    FileStatusManager.getInstance(myProject).fileStatusesChanged();
+    EditorNotifications.getInstance(myProject).updateAllNotifications();
+  }
+
+  public void clearAllIgnored() {
+    for (Conflict conflict : myConflicts.values()) {
+      conflict.ignored = false;
     }
   }
 
-  public Map<String, Conflict> getConflicts() {
-    return myConflicts;
-  }
-
   public Collection<String> getIgnoredConflicts() {
-    return ContainerUtil.mapNotNull(myConflicts.entrySet(), entry -> entry.getValue().ignored ? entry.getKey() : null);
+    synchronized (myConflicts) {
+      return ContainerUtil.mapNotNull(myConflicts.entrySet(), entry -> entry.getValue().ignored ? entry.getKey() : null);
+    }
   }
 
   public static class Conflict {
@@ -257,21 +213,23 @@ public class ChangelistConflictTracker {
   }
 
   public boolean hasConflict(@Nonnull VirtualFile file) {
-    if (!myOptions.TRACKING_ENABLED) {
+    if (!shouldDetectConflicts()) {
       return false;
     }
+
     String path = file.getPath();
     Conflict conflict = myConflicts.get(path);
-    if (conflict != null && !conflict.ignored) {
-      if (isFromActiveChangelist(file)) {
-        myConflicts.remove(path);
-        return false;
-      }
-      return true;
-    }
-    else {
+    if (conflict == null || conflict.ignored) {
       return false;
     }
+
+    if (!shouldDetectConflictsFor(file) ||
+      isFromActiveChangelist(file)) {
+      myConflicts.remove(path);
+      return false;
+    }
+
+    return true;
   }
 
   public void ignoreConflict(@Nonnull VirtualFile file, boolean ignore) {
@@ -282,28 +240,67 @@ public class ChangelistConflictTracker {
       myConflicts.put(path, conflict);
     }
     conflict.ignored = ignore;
-    myEditorNotifications.updateNotifications(file);
-    myFileStatusManager.fileStatusChanged(file);
-  }
 
-  public Project getProject() {
-    return myProject;
-  }
-
-  public ChangeListManager getChangeListManager() {
-    return myChangeListManager;
+    FileStatusManager.getInstance(myProject).fileStatusChanged(file);
+    EditorNotifications.getInstance(myProject).updateNotifications(file);
   }
 
   public Options getOptions() {
     return myOptions;
   }
 
-  public static class Options {
-    public boolean TRACKING_ENABLED = true;
+  private class MyDocumentListener implements BulkAwareDocumentListener.Simple {
+    @Override
+    public void afterDocumentChange(@Nonnull Document document) {
+      if (myShouldIgnoreModifications.get() || !shouldDetectConflicts()) {
+        return;
+      }
+
+      VirtualFile file = FileDocumentManager.getInstance().getFile(document);
+      if (file == null || !file.isInLocalFileSystem() || ChangesUtil.isInternalOperation(file)) {
+        return;
+      }
+
+      myCheckSet.add(file);
+      myZipperUpdater.queue(() -> checkFiles());
+    }
+  }
+
+  private class MyChangeListListener implements ChangeListListener {
+    @Override
+    public void changeListChanged(ChangeList list) {
+      if (((LocalChangeList)list).isDefault()) {
+        clearChanges(list.getChanges());
+      }
+    }
+
+    @Override
+    public void changesMoved(Collection<? extends Change> changes, ChangeList fromList, ChangeList toList) {
+      if (((LocalChangeList)toList).isDefault() || ((LocalChangeList)fromList).isDefault()) {
+        clearChanges(changes);
+      }
+    }
+
+    @Override
+    public void changesRemoved(Collection<? extends Change> changes, ChangeList fromList) {
+      clearChanges(changes);
+    }
+
+    @Override
+    public void defaultListChanged(ChangeList oldDefaultList, ChangeList newDefaultList) {
+      clearChanges(newDefaultList.getChanges());
+    }
+
+    @Override
+    public void changeListAvailabilityChanged() {
+      optionsChanged();
+    }
+  }
+
+  public static final class Options {
     public boolean SHOW_DIALOG = false;
     public boolean HIGHLIGHT_CONFLICTS = true;
     public boolean HIGHLIGHT_NON_ACTIVE_CHANGELIST = false;
     public ChangelistConflictResolution LAST_RESOLUTION = ChangelistConflictResolution.IGNORE;
   }
-
 }

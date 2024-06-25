@@ -16,23 +16,33 @@
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import consulo.project.startup.PostStartupActivity;
-import consulo.ui.UIAccess;
-
-import jakarta.annotation.Nonnull;
+import consulo.versionControlSystem.VcsInitObject;
+import consulo.versionControlSystem.VcsStartupActivity;
+import jakarta.inject.Inject;
 
 /**
  * @author VISTALL
  * @since 10-Jul-22
  */
-@ExtensionImpl(order = "first", id = "changelist-manager")
-public class ChangeListManagerPostStartActivity implements PostStartupActivity, DumbAware {
-  @Override
-  public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
-    ChangeListManagerImpl manager = ChangeListManagerImpl.getInstanceImpl(project);
+@ExtensionImpl
+public class ChangeListManagerPostStartActivity implements VcsStartupActivity {
+  private final Project myProject;
 
-    manager.projectOpened();
+  @Inject
+  public ChangeListManagerPostStartActivity(Project project) {
+    myProject = project;
+  }
+
+  @Override
+  public void runActivity() {
+    ChangeListManagerImpl manager = ChangeListManagerImpl.getInstanceImpl(myProject);
+
+    manager.startUpdater();
+  }
+
+  @Override
+  public int getOrder() {
+    return VcsInitObject.CHANGE_LIST_MANAGER.getOrder();
   }
 }

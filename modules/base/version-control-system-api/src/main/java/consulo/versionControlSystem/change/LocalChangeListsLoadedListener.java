@@ -13,21 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.changes;
+package consulo.versionControlSystem.change;
 
-import consulo.versionControlSystem.change.Change;
-import consulo.versionControlSystem.change.LocalChangeList;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.Project;
-import jakarta.annotation.Nonnull;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.TopicAPI;
 
 import java.util.List;
 
-/**
- * @author max
- */
-public interface ChangeListOwner {
-  void moveChangesTo(LocalChangeList list, Change... changes);
-  void addUnversionedFiles(final LocalChangeList list, @Nonnull final List<VirtualFile> unversionedFiles);
-  Project getProject();
+@TopicAPI(ComponentScope.PROJECT)
+public interface LocalChangeListsLoadedListener {
+  void processLoadedLists(final List<LocalChangeList> lists);
 }

@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.project.Project;
 import consulo.versionControlSystem.VcsBundle;
-import consulo.ide.impl.idea.openapi.vcs.changes.*;
 import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.internal.ChangeListManagerEx;
 import consulo.virtualFileSystem.VirtualFile;

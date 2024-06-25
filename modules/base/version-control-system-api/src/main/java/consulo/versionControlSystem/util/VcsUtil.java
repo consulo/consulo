@@ -756,6 +756,17 @@ public class VcsUtil {
     return String.format("%s\n\n... Commit message is too long and was truncated by %s ...", message.substring(0, index), Application.get().getName().get());
   }
 
+  /**
+   * Helper that allows to avoid potential O(N*M) in {@link AbstractSet#removeAll(Collection)} due to {@code list.contains(c)} calls.
+   */
+  public static <T> boolean removeAllFromSet(@Nonnull Set<T> set, @Nonnull Collection<? extends T> toRemove) {
+    boolean modified = false;
+    for (T value : toRemove) {
+      modified |= set.remove(value);
+    }
+    return modified;
+  }
+
   private static int nthIndexOf(@Nonnull String text, char c, int n) {
     assert n > 0;
     int length = text.length();

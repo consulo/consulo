@@ -1,33 +1,96 @@
-/*
- * Copyright 2013-2024 consulo.io
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package consulo.versionControlSystem.internal;
 
 import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.project.Project;
+import consulo.versionControlSystem.util.VcsUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 
-/**
- * @author VISTALL
- * @since 23-Jun-24
- */
+import java.util.*;
+
 public abstract class FilesProcessorImpl implements FilesProcessor {
-  private final Project myProject;
-  private final Disposable myParentDisposable;
+  private Project project;
 
-  protected FilesProcessorImpl(Project project, Disposable parentDisposable) {
-    myProject = project;
-    myParentDisposable = parentDisposable;
+  private final Set<VirtualFile> files = new HashSet<VirtualFile>();
+
+  public FilesProcessorImpl(@Nonnull Project project, @Nonnull Disposable parentDisposable) {
+    this.project = project;
+    Disposer.register(parentDisposable, this);
+  }
+
+  public abstract void doActionOnChosenFiles(@Nonnull Collection<? extends VirtualFile> files);
+
+  @Nonnull
+  public abstract Collection<VirtualFile> doFilterFiles(
+    @Nonnull Collection<? extends VirtualFile> files);
+
+  public void processFiles(@Nonnull Collection<VirtualFile> files) {
+    Collection<VirtualFile> filteredFiles = doFilterFiles(files);
+    if (filteredFiles.isEmpty()) {
+      return;
+    }
+    addNewFiles(filteredFiles);
+    if (needDoForCurrentProject()) {
+      doActionOnChosenFiles(acquireValidFiles());
+    }
+    else {
+      handleProcessingForCurrentProject();
+    }
+  }
+
+  protected void handleProcessingForCurrentProject() {
+  }
+
+  protected final boolean removeFiles(@Nonnull Collection<? extends VirtualFile> filesToRemove) {
+    synchronized (files) {
+      return VcsUtil.removeAllFromSet(files, filesToRemove);
+    }
+  }
+
+  protected final boolean isFilesEmpty() {
+    synchronized (files) {
+      return files.isEmpty();
+    }
+  }
+
+  private void addNewFiles(Collection<? extends VirtualFile> filesToAdd) {
+    synchronized (files) {
+      files.addAll(filesToAdd);
+    }
+  }
+
+  @Nonnull
+  protected final List<VirtualFile> selectValidFiles() {
+    synchronized (files) {
+      files.removeIf(it -> !it.isValid());
+      return new ArrayList(files);
+    }
+  }
+
+  @Nonnull
+  protected final List<VirtualFile> acquireValidFiles() {
+    synchronized (files) {
+      List<VirtualFile> result = files.stream().filter(it -> it.isValid()).toList();
+      files.clear();
+      return result;
+    }
+  }
+
+  protected final void clearFiles() {
+    synchronized (files) {
+      files.clear();
+    }
+  }
+
+  public void dispose() {
+    clearFiles();
+  }
+
+  protected abstract boolean needDoForCurrentProject();
+
+  @Nonnull
+  protected final Project getProject() {
+    return project;
   }
 }

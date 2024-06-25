@@ -991,20 +991,6 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
       }
     }
 
-    public List<consulo.util.lang.Pair<String, Stress>> stressPartsOfFileName(final Change change, final String parentPath) {
-      if (change instanceof AbstractFilePatchInProgress.PatchChange patchChange) {
-        final String basePath = patchChange.getPatchInProgress().getBase().getPath();
-        final String basePathCorrected = basePath.trim().replace('/', File.separatorChar);
-        if (parentPath.startsWith(basePathCorrected)) {
-          return Arrays.asList(
-            consulo.util.lang.Pair.create(basePathCorrected, Stress.BOLD),
-            consulo.util.lang.Pair.create(StringUtil.tail(parentPath, basePathCorrected.length()), Stress.PLAIN)
-          );
-        }
-      }
-      return null;
-    }
-
     public void preDecorate(Change change, ChangesBrowserNodeRenderer renderer, boolean showFlatten) {
     }
   }
