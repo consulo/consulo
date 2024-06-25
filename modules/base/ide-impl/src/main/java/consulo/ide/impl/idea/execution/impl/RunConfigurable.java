@@ -579,7 +579,7 @@ public class RunConfigurable extends BaseConfigurable {
     );
     myToolbarDecorator = ToolbarDecorator.createDecorator(myTree)
       .setAddAction(myAddAction)
-      .setAddActionName(ExecutionLocalize.addNewRunConfigurationAcrtionName().get())
+      .setAddActionName(ExecutionLocalize.addNewRunConfigurationAction2Name().get())
       .setRemoveAction(removeAction)
       .setRemoveActionUpdater(removeAction)
       .setRemoveActionName(ExecutionLocalize.removeRunConfigurationActionName().get())
@@ -598,7 +598,7 @@ public class RunConfigurable extends BaseConfigurable {
       .addExtraAction(new MyEditDefaultsAction())
       .addExtraAction(new MyCreateFolderAction())
       .setButtonComparator(
-        ExecutionLocalize.addNewRunConfigurationAcrtionName().get(),
+        ExecutionLocalize.addNewRunConfigurationAction2Name().get(),
         ExecutionLocalize.removeRunConfigurationActionName().get(),
         ExecutionLocalize.copyConfigurationActionName().get(),
         ExecutionLocalize.actionNameSaveConfiguration().get(),
@@ -1163,8 +1163,8 @@ public class RunConfigurable extends BaseConfigurable {
   private class MyToolbarAddAction extends AnAction implements AnActionButtonRunnable {
     public MyToolbarAddAction() {
       super(
-        ExecutionLocalize.addNewRunConfigurationAcrtionName(),
-        ExecutionLocalize.addNewRunConfigurationAcrtionName(),
+        ExecutionLocalize.addNewRunConfigurationAction2Name(),
+        ExecutionLocalize.addNewRunConfigurationAction2Name(),
         ADD_ICON
       );
       registerCustomShortcutSet(CommonShortcuts.INSERT, myTree);
@@ -1172,7 +1172,7 @@ public class RunConfigurable extends BaseConfigurable {
 
     @RequiredUIAccess
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       showAddPopup(true);
     }
 
@@ -1190,89 +1190,89 @@ public class RunConfigurable extends BaseConfigurable {
         configurationTypes.add(HIDDEN_ITEMS_STUB);
       }
 
-      final ListPopup popup = JBPopupFactory.getInstance().createListPopup(new BaseListPopupStep<ConfigurationType>(
-              ExecutionBundle.message("add.new.run.configuration.acrtion.name"), configurationTypes) {
-
-        @Override
-        @Nonnull
-        public String getTextFor(final ConfigurationType type) {
-          if(type == HIDDEN_ITEMS_STUB) {
-            return hiddenCount + " items more (irrelevant)...";
-          }
-          return type.getDisplayName().get();
-        }
-
-        @Override
-        public boolean isSpeedSearchEnabled() {
-          return true;
-        }
-
-        @Override
-        public boolean canBeHidden(ConfigurationType value) {
-          return true;
-        }
-
-        @Override
-        public Image getIconFor(final ConfigurationType type) {
-          return type.getIcon();
-        }
-
-        @Override
-        public PopupStep onChosen(final ConfigurationType type, final boolean finalChoice) {
-          if (hasSubstep(type)) {
-            return getSupStep(type);
-          }
-          if (type == HIDDEN_ITEMS_STUB) {
-            return doFinalStep(() -> showAddPopup(false));
+      final ListPopup popup = JBPopupFactory.getInstance().createListPopup(
+        new BaseListPopupStep<ConfigurationType>(ExecutionLocalize.addNewRunConfigurationAction2Name().get(), configurationTypes) {
+          @Override
+          @Nonnull
+          public String getTextFor(final ConfigurationType type) {
+            if(type == HIDDEN_ITEMS_STUB) {
+              return hiddenCount + " items more (irrelevant)...";
+            }
+            return type.getDisplayName().get();
           }
 
-          final ConfigurationFactory[] factories = type.getConfigurationFactories();
-          if (factories.length > 0) {
-            createNewConfiguration(factories[0]);
+          @Override
+          public boolean isSpeedSearchEnabled() {
+            return true;
           }
-          return FINAL_CHOICE;
-        }
 
-        @Override
-        public int getDefaultOptionIndex() {
-          ConfigurationType type = getSelectedConfigurationType();
-          return type != null ? configurationTypes.indexOf(type) : super.getDefaultOptionIndex();
-        }
+          @Override
+          public boolean canBeHidden(ConfigurationType value) {
+            return true;
+          }
 
-        private ListPopupStep getSupStep(final ConfigurationType type) {
-          final ConfigurationFactory[] factories = type.getConfigurationFactories();
-          Arrays.sort(factories, (factory1, factory2) -> factory1.getDisplayName().compareIgnoreCase(factory2.getDisplayName()));
-          return new BaseListPopupStep<ConfigurationFactory>(ExecutionBundle.message("add.new.run.configuration.action.name", type.getDisplayName()), factories) {
+          @Override
+          public Image getIconFor(final ConfigurationType type) {
+            return type.getIcon();
+          }
 
-            @Override
-            @Nonnull
-            public String getTextFor(final ConfigurationFactory value) {
-              return value.getDisplayName().get();
+          @Override
+          public PopupStep onChosen(final ConfigurationType type, final boolean finalChoice) {
+            if (hasSubstep(type)) {
+              return getSupStep(type);
+            }
+            if (type == HIDDEN_ITEMS_STUB) {
+              return doFinalStep(() -> showAddPopup(false));
             }
 
-            @Override
-            public Image getIconFor(final ConfigurationFactory factory) {
-              return factory.getIcon();
+            final ConfigurationFactory[] factories = type.getConfigurationFactories();
+            if (factories.length > 0) {
+              createNewConfiguration(factories[0]);
             }
+            return FINAL_CHOICE;
+          }
 
-            @Override
-            public PopupStep onChosen(final ConfigurationFactory factory, final boolean finalChoice) {
-              createNewConfiguration(factory);
-              return FINAL_CHOICE;
-            }
-          };
-        }
+          @Override
+          public int getDefaultOptionIndex() {
+            ConfigurationType type = getSelectedConfigurationType();
+            return type != null ? configurationTypes.indexOf(type) : super.getDefaultOptionIndex();
+          }
 
-        @Override
-        public boolean hasSubstep(final ConfigurationType type) {
-          return type.getConfigurationFactories().length > 1;
-        }
-      });
+          private ListPopupStep getSupStep(final ConfigurationType type) {
+            final ConfigurationFactory[] factories = type.getConfigurationFactories();
+            Arrays.sort(factories, (factory1, factory2) -> factory1.getDisplayName().compareIgnoreCase(factory2.getDisplayName()));
+            return new BaseListPopupStep<ConfigurationFactory>(
+              ExecutionLocalize.addNewRunConfigurationActionName(type.getDisplayName()).get(),
+              factories
+            ) {
+              @Override
+              @Nonnull
+              public String getTextFor(final ConfigurationFactory value) {
+                return value.getDisplayName().get();
+              }
+
+              @Override
+              public Image getIconFor(final ConfigurationFactory factory) {
+                return factory.getIcon();
+              }
+
+              @Override
+              public PopupStep onChosen(final ConfigurationFactory factory, final boolean finalChoice) {
+                createNewConfiguration(factory);
+                return FINAL_CHOICE;
+              }
+            };
+          }
+
+          @Override
+          public boolean hasSubstep(final ConfigurationType type) {
+            return type.getConfigurationFactories().length > 1;
+          }
+        });
       //new TreeSpeedSearch(myTree);
       popup.showUnderneathOf(myToolbarDecorator.getActionsPanel());
     }
   }
-
 
   private class MyRemoveAction extends AnAction implements AnActionButtonRunnable, AnActionButtonUpdater{
 
