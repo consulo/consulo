@@ -15,51 +15,54 @@
  */
 package consulo.ide.impl.idea.diff.tools.simple;
 
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.application.AccessRule;
+import consulo.application.dumb.DumbAware;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.util.function.ThrowableComputable;
+import consulo.codeEditor.Caret;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorEx;
+import consulo.component.ProcessCanceledException;
+import consulo.diff.comparison.DiffTooBigException;
+import consulo.diff.fragment.LineFragment;
+import consulo.diff.localize.DiffLocalize;
+import consulo.diff.request.ContentDiffRequest;
+import consulo.diff.request.DiffRequest;
+import consulo.diff.util.Side;
+import consulo.disposer.Disposable;
+import consulo.document.Document;
+import consulo.document.event.DocumentEvent;
 import consulo.ide.impl.idea.diff.DiffContext;
 import consulo.ide.impl.idea.diff.actions.AllLinesIterator;
 import consulo.ide.impl.idea.diff.actions.BufferedLineIterator;
-import consulo.diff.comparison.DiffTooBigException;
-import consulo.diff.fragment.LineFragment;
-import consulo.diff.request.ContentDiffRequest;
-import consulo.diff.request.DiffRequest;
 import consulo.ide.impl.idea.diff.tools.util.*;
 import consulo.ide.impl.idea.diff.tools.util.base.HighlightPolicy;
 import consulo.ide.impl.idea.diff.tools.util.base.TextDiffViewerUtil;
 import consulo.ide.impl.idea.diff.tools.util.side.TwosideTextDiffViewer;
-import consulo.ide.impl.idea.diff.util.*;
+import consulo.ide.impl.idea.diff.util.DiffDividerDrawUtil;
+import consulo.ide.impl.idea.diff.util.DiffDrawUtil;
 import consulo.ide.impl.idea.diff.util.DiffUserDataKeysEx.ScrollToPolicy;
-import consulo.ide.impl.idea.openapi.diff.DiffBundle;
+import consulo.ide.impl.idea.diff.util.DiffUtil;
+import consulo.ide.impl.idea.diff.util.LineRange;
 import consulo.ide.impl.idea.openapi.diff.DiffNavigationContext;
-import consulo.codeEditor.Caret;
-import consulo.diff.util.Side;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.document.event.DocumentEvent;
-import consulo.codeEditor.EditorEx;
-import consulo.component.ProcessCanceledException;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.dumb.DumbAware;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnSeparator;
-import consulo.util.dataholder.Key;
-import consulo.application.util.function.ThrowableComputable;
-import consulo.util.dataholder.UserDataHolder;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.annotation.access.RequiredWriteAction;
-import consulo.application.AccessRule;
-import consulo.logging.Logger;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.NonNls;
-
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolder;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -535,7 +538,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
         return;
       }
 
-      Editor editor = e.getData(CommonDataKeys.EDITOR);
+      Editor editor = e.getData(Editor.KEY);
       Side side = Side.fromValue(getEditors(), editor);
       if (side == null || !isVisible(side)) {
         e.getPresentation().setEnabledAndVisible(false);
@@ -556,7 +559,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
 
     @Override
     public void actionPerformed(@Nonnull final AnActionEvent e) {
-      Editor editor = e.getData(CommonDataKeys.EDITOR);
+      Editor editor = e.getData(Editor.KEY);
       final Side side = assertNotNull(Side.fromValue(getEditors(), editor));
       final List<SimpleDiffChange> selectedChanges = getSelectedChanges(side);
       if (selectedChanges.isEmpty()) return;
@@ -564,7 +567,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
       if (!isEditable(myModifiedSide)) return;
 
       String title = e.getPresentation().getText() + " selected changes";
-      DiffUtil.executeWriteCommand(getEditor(myModifiedSide).getDocument(), e.getData(CommonDataKeys.PROJECT), title, () -> {
+      DiffUtil.executeWriteCommand(getEditor(myModifiedSide).getDocument(), e.getData(Project.KEY), title, () -> {
         apply(selectedChanges);
       });
     }
@@ -834,12 +837,14 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
     @Nullable
     @Override
     protected String getMessage() {
-      if (getHighlightPolicy() == HighlightPolicy.DO_NOT_HIGHLIGHT) return DiffBundle.message("diff.highlighting.disabled.text");
+      if (getHighlightPolicy() == HighlightPolicy.DO_NOT_HIGHLIGHT) {
+        return DiffLocalize.diffHighlightingDisabledText().get();
+      }
       int changesCount = myDiffChanges.size() + myInvalidDiffChanges.size();
       if (changesCount == 0 && !myIsContentsEqual) {
-        return DiffBundle.message("diff.all.differences.ignored.text");
+        return DiffLocalize.diffAllDifferencesIgnoredText().get();
       }
-      return DiffBundle.message("diff.count.differences.status.text", changesCount);
+      return DiffLocalize.diffCountDifferencesStatusText(changesCount).get();
     }
   }
 

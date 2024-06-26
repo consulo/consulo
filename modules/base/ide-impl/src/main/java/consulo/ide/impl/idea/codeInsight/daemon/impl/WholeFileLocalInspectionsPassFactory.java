@@ -21,26 +21,26 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.codeEditor.Editor;
 import consulo.disposer.Disposer;
 import consulo.document.util.ProperTextRange;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.editor.Pass;
 import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
 import consulo.language.editor.impl.highlight.TextEditorHighlightingPassFactory;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.DaemonBundle;
-import consulo.language.editor.Pass;
 import consulo.language.editor.impl.highlight.VisibleHighlightingPassFactory;
+import consulo.language.editor.impl.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.language.editor.impl.internal.highlight.DefaultHighlightInfoProcessor;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.scheme.InspectionProfileWrapper;
-import consulo.language.editor.impl.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.language.editor.inspection.scheme.Profile;
 import consulo.language.editor.inspection.scheme.event.ProfileChangeAdapter;
+import consulo.language.editor.localize.DaemonLocalize;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.project.Project;
-import jakarta.inject.Inject;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -76,7 +76,13 @@ public class WholeFileLocalInspectionsPassFactory implements TextEditorHighlight
 
   @Override
   public void register(@Nonnull Registrar registrar) {
-    registrar.registerTextEditorHighlightingPass(this, null, new int[]{Pass.LOCAL_INSPECTIONS}, true, Pass.WHOLE_FILE_LOCAL_INSPECTIONS);
+    registrar.registerTextEditorHighlightingPass(
+      this,
+      null,
+      new int[]{Pass.LOCAL_INSPECTIONS},
+      true,
+      Pass.WHOLE_FILE_LOCAL_INSPECTIONS
+    );
   }
 
   @Override
@@ -91,28 +97,40 @@ public class WholeFileLocalInspectionsPassFactory implements TextEditorHighlight
       return null;
     }
     ProperTextRange visibleRange = VisibleHighlightingPassFactory.calculateVisibleRange(editor);
-    return new LocalInspectionsPass(file, editor.getDocument(), 0, file.getTextLength(), visibleRange, true, new DefaultHighlightInfoProcessor()) {
+    return new LocalInspectionsPass(
+      file,
+      editor.getDocument(),
+      0,
+      file.getTextLength(),
+      visibleRange,
+      true,
+      new DefaultHighlightInfoProcessor()
+    ) {
       @Nonnull
       @Override
       List<LocalInspectionToolWrapper> getInspectionTools(@Nonnull InspectionProfileWrapper profile) {
         List<LocalInspectionToolWrapper> tools = super.getInspectionTools(profile);
-        List<LocalInspectionToolWrapper> result = tools.stream().filter(LocalInspectionToolWrapper::runForWholeFile).collect(Collectors.toList());
+        List<LocalInspectionToolWrapper> result = tools.stream()
+          .filter(LocalInspectionToolWrapper::runForWholeFile)
+          .collect(Collectors.toList());
         myFileToolsCache.put(file, !result.isEmpty());
         return result;
       }
 
       @Override
       public String getPresentableName() {
-        return DaemonBundle.message("pass.whole.inspections");
+        return DaemonLocalize.passWholeInspections().get();
       }
 
       @Override
-      void inspectInjectedPsi(@Nonnull List<PsiElement> elements,
-                              boolean onTheFly,
-                              @Nonnull ProgressIndicator indicator,
-                              @Nonnull InspectionManager iManager,
-                              boolean inVisibleRange,
-                              @Nonnull List<LocalInspectionToolWrapper> wrappers) {
+      void inspectInjectedPsi(
+        @Nonnull List<PsiElement> elements,
+        boolean onTheFly,
+        @Nonnull ProgressIndicator indicator,
+        @Nonnull InspectionManager iManager,
+        boolean inVisibleRange,
+        @Nonnull List<LocalInspectionToolWrapper> wrappers
+      ) {
         // already inspected in LIP
       }
 
@@ -123,5 +141,4 @@ public class WholeFileLocalInspectionsPassFactory implements TextEditorHighlight
       }
     };
   }
-
 }

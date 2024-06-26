@@ -16,7 +16,8 @@
 package consulo.ide.impl.idea.codeStyle;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
+import consulo.util.lang.StringUtil;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.impl.internal.psi.LoadTextUtil;
@@ -47,13 +48,13 @@ public class InconsistentLineSeparatorsInspection extends LocalInspectionTool {
   @Nonnull
   @Override
   public String getGroupDisplayName() {
-    return InspectionsBundle.message("group.names.portability.issues");
+    return InspectionLocalize.groupNamesPortabilityIssues().get();
   }
 
   @Nonnull
   @Override
   public String getDisplayName() {
-    return InspectionsBundle.message("inconsistent.line.separators");
+    return InspectionLocalize.inconsistentLineSeparators().get();
   }
 
   @Nonnull

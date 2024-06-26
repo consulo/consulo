@@ -29,7 +29,7 @@ import consulo.diff.content.DiffContent;
 import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.request.DiffRequest;
 import consulo.ide.impl.idea.diff.DiffManagerEx;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.logging.Logger;
 import consulo.process.ExecutionException;
 import consulo.project.Project;

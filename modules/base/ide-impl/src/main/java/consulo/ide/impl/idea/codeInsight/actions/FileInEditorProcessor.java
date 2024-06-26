@@ -15,27 +15,26 @@
  */
 package consulo.ide.impl.idea.codeInsight.actions;
 
-import consulo.language.editor.hint.HintManager;
-import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
-import consulo.language.editor.ui.awt.HintUtil;
+import consulo.application.Application;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.impl.EditorSettingsExternalizable;
+import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
+import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.language.editor.hint.HintManager;
+import consulo.language.editor.ui.awt.HintUtil;
+import consulo.language.psi.PsiFile;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.dataContext.DataContext;
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.logging.Logger;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.impl.EditorSettingsExternalizable;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.language.psi.PsiFile;
-import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.HyperlinkAdapter;
-import consulo.ui.ex.JBColor;
-import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -93,9 +92,7 @@ class FileInEditorProcessor {
 
     if (shouldNotify()) {
       myProcessor.setCollectInfo(true);
-      myProcessor.setPostRunnable(new Runnable() {
-        @Override
-        public void run() {
+      myProcessor.setPostRunnable(()-> {
           String message = prepareMessage();
           if (!myEditor.isDisposed() && myEditor.getComponent().isShowing()) {
             HyperlinkListener hyperlinkListener = new HyperlinkAdapter() {
@@ -111,8 +108,7 @@ class FileInEditorProcessor {
             };
             showHint(myEditor, message, hyperlinkListener);
           }
-        }
-      });
+        });
     }
 
     myProcessor.run();
@@ -217,7 +213,7 @@ class FileInEditorProcessor {
   }
 
   private boolean shouldNotify() {
-    Application application = ApplicationManager.getApplication();
+    Application application = Application.get();
     if (application.isUnitTestMode() || application.isHeadlessEnvironment()) {
       return false;
     }

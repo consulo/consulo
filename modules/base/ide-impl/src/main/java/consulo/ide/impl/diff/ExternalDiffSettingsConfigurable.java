@@ -22,7 +22,6 @@ import consulo.diff.localize.DiffLocalize;
 import consulo.disposer.Disposable;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.ide.impl.idea.diff.tools.external.ExternalDiffSettings;
-import consulo.ide.impl.idea.openapi.diff.DiffBundle;
 import consulo.localize.LocalizeValue;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
@@ -65,7 +64,7 @@ public class ExternalDiffSettingsConfigurable extends SimpleConfigurableByProper
     FormBuilder diffPanel = FormBuilder.create();
 
     FileChooserTextBoxBuilder diffBoxBuilder = FileChooserTextBoxBuilder.create(null);
-    diffBoxBuilder.dialogTitle(DiffBundle.message("select.external.diff.program.dialog.title"));
+    diffBoxBuilder.dialogTitle(DiffLocalize.selectExternalDiffProgramDialogTitle());
     diffBoxBuilder.fileChooserDescriptor(FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor());
     diffBoxBuilder.uiDisposable(uiDisposable);
 
@@ -91,7 +90,7 @@ public class ExternalDiffSettingsConfigurable extends SimpleConfigurableByProper
     FormBuilder mergePanel = FormBuilder.create();
 
     FileChooserTextBoxBuilder mergeBoxBuilder = FileChooserTextBoxBuilder.create(null);
-    mergeBoxBuilder.dialogTitle(DiffBundle.message("select.external.merge.program.dialog.title"));
+    mergeBoxBuilder.dialogTitle(DiffLocalize.selectExternalMergeProgramDialogTitle());
     mergeBoxBuilder.fileChooserDescriptor(FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor());
     mergeBoxBuilder.uiDisposable(uiDisposable);
 

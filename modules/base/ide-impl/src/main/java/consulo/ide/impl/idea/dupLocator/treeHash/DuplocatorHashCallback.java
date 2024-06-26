@@ -5,7 +5,7 @@ import consulo.document.Document;
 import consulo.ide.impl.idea.dupLocator.*;
 import consulo.ide.impl.idea.dupLocator.util.DuplocatorUtil;
 import consulo.ide.impl.idea.dupLocator.util.PsiFragment;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

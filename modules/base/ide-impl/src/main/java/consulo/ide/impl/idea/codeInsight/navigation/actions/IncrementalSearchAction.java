@@ -20,7 +20,6 @@ import consulo.ide.impl.idea.codeInsight.navigation.IncrementalSearchHandler;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -38,8 +37,8 @@ public class IncrementalSearchAction extends AnAction implements DumbAware {
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
-    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
+    Project project = dataContext.getData(Project.KEY);
+    Editor editor = dataContext.getData(Editor.KEY);
     if (editor == null) return;
 
     new IncrementalSearchHandler().invoke(project, editor);
@@ -50,13 +49,13 @@ public class IncrementalSearchAction extends AnAction implements DumbAware {
   public void update(@Nonnull AnActionEvent event){
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Project project = dataContext.getData(Project.KEY);
     if (project == null) {
       presentation.setEnabled(false);
       return;
     }
 
-    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
+    Editor editor = dataContext.getData(Editor.KEY);
     if (editor == null){
       presentation.setEnabled(false);
       return;

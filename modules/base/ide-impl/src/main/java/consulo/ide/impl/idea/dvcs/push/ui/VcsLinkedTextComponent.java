@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.dvcs.push.ui;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.SimpleTextAttributes;
 import jakarta.annotation.Nonnull;

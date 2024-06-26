@@ -16,16 +16,15 @@
 package consulo.ide.impl.debugger;
 
 import consulo.configurable.Configurable;
-import consulo.execution.debug.XDebuggerBundle;
+import consulo.configurable.SimpleConfigurableByProperties;
+import consulo.disposer.Disposable;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.ide.impl.idea.xdebugger.impl.settings.XDebuggerGeneralSettings;
 import consulo.ide.impl.idea.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
-import consulo.disposer.Disposable;
-import consulo.configurable.SimpleConfigurableByProperties;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.VerticalLayout;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -40,19 +39,23 @@ public class XDebuggerGeneralConfigurable extends SimpleConfigurableByProperties
     XDebuggerGeneralSettings settings = XDebuggerSettingManagerImpl.getInstanceImpl().getGeneralSettings();
 
     VerticalLayout layout = VerticalLayout.create();
-    CheckBox focusAppOnBreakpointCheckbox = CheckBox.create(XDebuggerBundle.message("setting.focus.app.on.breakpoint.label"));
+    CheckBox focusAppOnBreakpointCheckbox = CheckBox.create(XDebuggerLocalize.settingFocusAppOnBreakpointLabel());
     layout.add(focusAppOnBreakpointCheckbox);
-    propertyBuilder.add(focusAppOnBreakpointCheckbox, settings::isMayBringFrameToFrontOnBreakpoint, settings::setMayBringFrameToFrontOnBreakpoint);
+    propertyBuilder.add(
+      focusAppOnBreakpointCheckbox,
+      settings::isMayBringFrameToFrontOnBreakpoint,
+      settings::setMayBringFrameToFrontOnBreakpoint
+    );
 
-    CheckBox showDebugWindowOnBreakpointCheckbox = CheckBox.create(XDebuggerBundle.message("settings.show.window.label"));
+    CheckBox showDebugWindowOnBreakpointCheckbox = CheckBox.create(XDebuggerLocalize.settingsShowWindowLabel());
     layout.add(showDebugWindowOnBreakpointCheckbox);
     propertyBuilder.add(showDebugWindowOnBreakpointCheckbox, settings::isShowDebuggerOnBreakpoint, settings::setShowDebuggerOnBreakpoint);
 
-    CheckBox hideWindowCheckBox = CheckBox.create(XDebuggerBundle.message("setting.hide.window.label"));
+    CheckBox hideWindowCheckBox = CheckBox.create(XDebuggerLocalize.settingHideWindowLabel());
     layout.add(hideWindowCheckBox);
     propertyBuilder.add(hideWindowCheckBox, settings::isHideDebuggerOnProcessTermination, settings::setHideDebuggerOnProcessTermination);
 
-    CheckBox scrollToCenterCheckbox = CheckBox.create(XDebuggerBundle.message("settings.scroll.to.center"));
+    CheckBox scrollToCenterCheckbox = CheckBox.create(XDebuggerLocalize.settingsScrollToCenter());
     layout.add(scrollToCenterCheckbox);
     propertyBuilder.add(scrollToCenterCheckbox, settings::isScrollToCenter, settings::setScrollToCenter);
     return layout;

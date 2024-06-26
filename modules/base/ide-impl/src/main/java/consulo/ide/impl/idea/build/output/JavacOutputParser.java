@@ -1,16 +1,16 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.build.output;
 
-import consulo.build.ui.BuildBundle;
 import consulo.build.ui.FilePosition;
 import consulo.build.ui.event.BuildEvent;
 import consulo.build.ui.event.MessageEvent;
 import consulo.build.ui.impl.internal.event.FileMessageEventImpl;
 import consulo.build.ui.impl.internal.event.MessageEventImpl;
+import consulo.build.ui.localize.BuildLocalize;
 import consulo.compiler.CompilerManager;
 import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.Contract;
@@ -154,7 +154,13 @@ public class JavacOutputParser implements BuildOutputParser {
     }
 
     if (line.endsWith("java.lang.OutOfMemoryError")) {
-      messageConsumer.accept(new MessageEventImpl(reader.getParentEventId(), MessageEvent.Kind.ERROR, CompilerManager.NOTIFICATION_GROUP, BuildBundle.message("build.event.message.out.memory"), line));
+      messageConsumer.accept(new MessageEventImpl(
+        reader.getParentEventId(),
+        MessageEvent.Kind.ERROR,
+        CompilerManager.NOTIFICATION_GROUP,
+        BuildLocalize.buildEventMessageOutMemory().get(),
+        line
+      ));
       return true;
     }
 

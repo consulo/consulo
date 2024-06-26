@@ -1,12 +1,12 @@
 package consulo.ide.impl.idea.diagnostic.errordialog;
 
-import consulo.ide.impl.idea.diagnostic.DiagnosticBundle;
-import consulo.application.impl.internal.ApplicationNamesInfo;
+import consulo.application.Application;
+import consulo.platform.Platform;
+import consulo.platform.base.localize.DiagnosticLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.application.util.SystemInfo;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
@@ -26,13 +26,16 @@ public class DisablePluginWarningDialog extends DialogWrapper {
     super(project, false);
     myRestartCapable = restartCapable;
     myPromptLabel.setText(
-      DiagnosticBundle.message(hasDependants ? "error.dialog.disable.plugin.prompt.dependants" : "error.dialog.disable.plugin.prompt",
-                               pluginName));
-    myRestartLabel
-      .setText(DiagnosticBundle.message(restartCapable ? "error.dialog.disable.plugin.restart" : "error.dialog.disable.plugin.norestart",
-                                        ApplicationNamesInfo.getInstance().getFullProductName()));
+      hasDependants
+        ? DiagnosticLocalize.errorDialogDisablePluginPromptDependants(pluginName).get()
+        : DiagnosticLocalize.errorDialogDisablePluginPrompt(pluginName).get());
+    myRestartLabel.setText(
+      restartCapable
+        ? DiagnosticLocalize.errorDialogDisablePluginRestart(Application.get().getName()).get()
+        : DiagnosticLocalize.errorDialogDisablePluginNorestart(Application.get().getName()).get()
+    );
 
-    setTitle(DiagnosticBundle.message("error.dialog.disable.plugin.title"));
+    setTitle(DiagnosticLocalize.errorDialogDisablePluginTitle());
     init();
   }
 
@@ -44,7 +47,7 @@ public class DisablePluginWarningDialog extends DialogWrapper {
   @Nonnull
   @Override
   protected Action[] createActions() {
-    if (SystemInfo.isMac) {
+    if (Platform.current().os().isMac()) {
       if (myRestartCapable) {
         return new Action[]{getCancelAction(), new DisableAction(), new DisableAndRestartAction()};
       }
@@ -64,7 +67,7 @@ public class DisablePluginWarningDialog extends DialogWrapper {
 
   private class DisableAction extends DialogWrapperAction {
     protected DisableAction() {
-      super(DiagnosticBundle.message("error.dialog.disable.plugin.action.disable"));
+      super(DiagnosticLocalize.errorDialogDisablePluginActionDisable());
     }
 
     @Override
@@ -75,7 +78,7 @@ public class DisablePluginWarningDialog extends DialogWrapper {
 
   private class DisableAndRestartAction extends DialogWrapperAction {
     protected DisableAndRestartAction() {
-      super(DiagnosticBundle.message("error.dialog.disable.plugin.action.disableAndRestart"));
+      super(DiagnosticLocalize.errorDialogDisablePluginActionDisableandrestart());
     }
 
     @Override

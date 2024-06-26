@@ -15,8 +15,9 @@
  */
 package consulo.ide.impl.idea.codeInsight.hint.actions;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AccessRule;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.function.Computable;
@@ -37,19 +38,20 @@ import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupPositionManager;
 import consulo.ide.impl.idea.ui.popup.PopupUpdateProcessor;
-import consulo.language.editor.CodeInsightBundle;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.TargetElementUtil;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.documentation.DocumentationManager;
 import consulo.language.editor.internal.DocumentationManagerHelper;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.ui.navigation.BackgroundUpdaterTaskBase;
 import consulo.language.pom.PomTargetPsiElement;
 import consulo.language.psi.*;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.psi.util.SymbolPresentationUtil;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.popup.GenericListComponentUpdater;
@@ -61,11 +63,11 @@ import consulo.usage.UsageInfo2UsageAdapter;
 import consulo.usage.UsageView;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.util.*;
@@ -87,18 +89,20 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
   }
 
   @Override
+  @RequiredReadAction
   public void actionPerformed(AnActionEvent e) {
     performForContext(e.getDataContext(), true);
   }
 
   @TestOnly
+  @RequiredReadAction
   public void performForContext(DataContext dataContext) {
     performForContext(dataContext, true);
   }
 
   @Override
   public void update(final AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) {
       e.getPresentation().setEnabled(false);
       return;
@@ -107,8 +111,8 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
     DataContext dataContext = e.getDataContext();
     Editor editor = getEditor(dataContext);
 
-    PsiFile file = dataContext.getData(CommonDataKeys.PSI_FILE);
-    PsiElement element = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
+    PsiFile file = dataContext.getData(PsiFile.KEY);
+    PsiElement element = dataContext.getData(PsiElement.KEY);
     element = getElement(project, file, editor, element);
 
     PsiFile containingFile = element != null ? element.getContainingFile() : file;
@@ -118,16 +122,16 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
 
 
   protected static Editor getEditor(@Nonnull DataContext dataContext) {
-    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
+    Editor editor = dataContext.getData(Editor.KEY);
 
     if (editor == null) {
-      final PsiFile file = dataContext.getData(CommonDataKeys.PSI_FILE);
+      final PsiFile file = dataContext.getData(PsiFile.KEY);
       if (file != null) {
         final VirtualFile virtualFile = file.getVirtualFile();
         if (virtualFile != null) {
           final FileEditor fileEditor = FileEditorManager.getInstance(file.getProject()).getSelectedEditor(virtualFile);
-          if (fileEditor instanceof TextEditor) {
-            editor = ((TextEditor)fileEditor).getEditor();
+          if (fileEditor instanceof TextEditor textEditor) {
+            editor = textEditor.getEditor();
           }
         }
       }
@@ -135,16 +139,17 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
     return editor;
   }
 
+  @RequiredUIAccess
   public void performForContext(@Nonnull DataContext dataContext, boolean invokedByShortcut) {
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Project project = dataContext.getData(Project.KEY);
     if (project == null) return;
     PsiDocumentManager.getInstance(project).commitAllDocuments();
 
-    PsiFile file = dataContext.getData(CommonDataKeys.PSI_FILE);
+    PsiFile file = dataContext.getData(PsiFile.KEY);
     Editor editor = getEditor(dataContext);
 
-    PsiElement element = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
-    boolean isInvokedFromEditor = dataContext.getData(CommonDataKeys.EDITOR) != null;
+    PsiElement element = dataContext.getData(PsiElement.KEY);
+    boolean isInvokedFromEditor = dataContext.getData(Editor.KEY) != null;
     element = getElement(project, file, editor, element);
 
     if (element == null && file == null) return;
@@ -177,7 +182,10 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
       PsiElement refElement = polyReference.getElement();
       TextRange rangeInElement = polyReference.getRangeInElement();
       String refElementText = refElement.getText();
-      LOG.assertTrue(rangeInElement.getEndOffset() <= refElementText.length(), "Ref:" + polyReference + "; refElement: " + refElement + "; refText:" + refElementText);
+      LOG.assertTrue(
+        rangeInElement.getEndOffset() <= refElementText.length(),
+        "Ref: " + polyReference + "; refElement: " + refElement + "; refText: " + refElementText
+      );
       text = rangeInElement.substring(refElementText);
       final ResolveResult[] results = polyReference.multiResolve(false);
       final List<PsiElement> implsList = new ArrayList<>(results.length);
@@ -199,6 +207,7 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
     showImplementations(impls, project, text, editor, file, element, isInvokedFromEditor, invokedByShortcut);
   }
 
+  @RequiredUIAccess
   protected static PsiElement getElement(@Nonnull Project project, PsiFile file, Editor editor, PsiElement element) {
     if (element == null && editor != null) {
       element = TargetElementUtil.findTargetElement(editor, TargetElementUtil.getAllAccepted());
@@ -215,7 +224,7 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
 
   @Nonnull
   ImplementationSearcher createImplementationsSearcher() {
-    if (ApplicationManager.getApplication().isUnitTestMode()) {
+    if (Application.get().isUnitTestMode()) {
       return new ImplementationSearcher() {
         @Override
         protected PsiElement[] filterElements(PsiElement element, PsiElement[] targetElements) {
@@ -251,14 +260,16 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
     showImplementations(impls, project, text, editor, file, element, false, false);
   }
 
-  protected void showImplementations(@Nonnull PsiElement[] impls,
-                                     @Nonnull final Project project,
-                                     final String text,
-                                     final Editor editor,
-                                     final PsiFile file,
-                                     final PsiElement element,
-                                     boolean invokedFromEditor,
-                                     boolean invokedByShortcut) {
+  protected void showImplementations(
+    @Nonnull PsiElement[] impls,
+    @Nonnull final Project project,
+    final String text,
+    final Editor editor,
+    final PsiFile file,
+    final PsiElement element,
+    boolean invokedFromEditor,
+    boolean invokedByShortcut
+  ) {
     if (impls.length == 0) return;
 
     FeatureUsageTracker.getInstance().triggerFeatureUsed(CODEASSISTS_QUICKDEFINITION_FEATURE);
@@ -279,13 +290,13 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
     }
 
     final Ref<UsageView> usageView = new Ref<>();
-    final String title = CodeInsightBundle.message("implementation.view.title", text);
+    final LocalizeValue title = CodeInsightLocalize.implementationViewTitle(text);
     JBPopup popup = SoftReference.dereference(myPopupRef);
     if (popup != null && popup.isVisible() && popup instanceof AbstractPopup) {
       final ImplementationViewComponent component = (ImplementationViewComponent)((AbstractPopup)popup).getComponent();
-      ((AbstractPopup)popup).setCaption(title);
+      popup.setCaption(title.get());
       component.update(impls, index);
-      updateInBackground(editor, element, component, title, (AbstractPopup)popup, usageView);
+      updateInBackground(editor, element, component, title.get(), (AbstractPopup)popup, usageView);
       if (invokedByShortcut) {
         ((AbstractPopup)popup).focusPreferredComponent();
       }
@@ -302,36 +313,47 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
         }
       };
 
-      popup = JBPopupFactory.getInstance().createComponentPopupBuilder(component, component.getPreferredFocusableComponent()).setProject(project).addListener(updateProcessor)
-              .addUserData(updateProcessor).setDimensionServiceKey(project, DocumentationManagerHelper.JAVADOC_LOCATION_AND_SIZE, false).setResizable(true).setMovable(true)
-              .setRequestFocus(invokedFromEditor && LookupManager.getActiveLookup(editor) == null).setTitle(title).setCouldPin(popup1 -> {
-                usageView.set(component.showInUsageView());
-                popup1.cancel();
-                myTaskRef = null;
-                return false;
-              }).setCancelCallback(() -> {
-                ImplementationsUpdaterTask task = SoftReference.dereference(myTaskRef);
-                if (task != null) {
-                  task.cancelTask();
-                }
-                return Boolean.TRUE;
-              }).createPopup();
+      popup = JBPopupFactory.getInstance().createComponentPopupBuilder(component, component.getPreferredFocusableComponent())
+        .setProject(project)
+        .addListener(updateProcessor)
+        .addUserData(updateProcessor)
+        .setDimensionServiceKey(project, DocumentationManagerHelper.JAVADOC_LOCATION_AND_SIZE, false)
+        .setResizable(true)
+        .setMovable(true)
+        .setRequestFocus(invokedFromEditor && LookupManager.getActiveLookup(editor) == null)
+        .setTitle(title.get())
+        .setCouldPin(popup1 -> {
+          usageView.set(component.showInUsageView());
+          popup1.cancel();
+          myTaskRef = null;
+          return false;
+        })
+        .setCancelCallback(() -> {
+          ImplementationsUpdaterTask task = SoftReference.dereference(myTaskRef);
+          if (task != null) {
+            task.cancelTask();
+          }
+          return Boolean.TRUE;
+        })
+        .createPopup();
 
-      updateInBackground(editor, element, component, title, (AbstractPopup)popup, usageView);
+      updateInBackground(editor, element, component, title.get(), (AbstractPopup)popup, usageView);
 
       PopupPositionManager.positionPopupInBestPosition(popup, editor, DataManager.getInstance().getDataContext());
-      component.setHint(popup, title);
+      component.setHint(popup, title.get());
 
       myPopupRef = new WeakReference<>(popup);
     }
   }
 
-  private void updateInBackground(Editor editor,
-                                  @Nullable PsiElement element,
-                                  @Nonnull ImplementationViewComponent component,
-                                  String title,
-                                  @Nonnull AbstractPopup popup,
-                                  @Nonnull Ref<UsageView> usageView) {
+  private void updateInBackground(
+    Editor editor,
+    @Nullable PsiElement element,
+    @Nonnull ImplementationViewComponent component,
+    String title,
+    @Nonnull AbstractPopup popup,
+    @Nonnull Ref<UsageView> usageView
+  ) {
     final ImplementationsUpdaterTask updaterTask = SoftReference.dereference(myTaskRef);
     if (updaterTask != null) {
       updaterTask.cancelTask();
@@ -355,7 +377,13 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
   }
 
   @Nonnull
-  static PsiElement[] getSelfAndImplementations(Editor editor, @Nonnull PsiElement element, @Nonnull ImplementationSearcher handler, final boolean includeSelfAlways) {
+  @RequiredReadAction
+  static PsiElement[] getSelfAndImplementations(
+    Editor editor,
+    @Nonnull PsiElement element,
+    @Nonnull ImplementationSearcher handler,
+    final boolean includeSelfAlways
+  ) {
     final PsiElement[] handlerImplementations = handler.searchImplementations(element, editor, includeSelfAlways, true);
     if (handlerImplementations.length > 0) return handlerImplementations;
 
@@ -382,7 +410,7 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
   private static PsiElement[] filterElements(@Nonnull final PsiElement[] targetElements) {
     final Set<PsiElement> unique = new LinkedHashSet<>(Arrays.asList(targetElements));
     for (final PsiElement elt : targetElements) {
-      ApplicationManager.getApplication().runReadAction(() -> {
+      Application.get().runReadAction(() -> {
         final PsiFile containingFile = elt.getContainingFile();
         LOG.assertTrue(containingFile != null, elt);
         PsiFile psiFile = containingFile.getOriginalFile();
@@ -393,12 +421,9 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
     // if the definition is the tree parent of the target element, filter out the target element
     for (int i = 1; i < targetElements.length; i++) {
       final PsiElement targetElement = targetElements[i];
-      if (ApplicationManager.getApplication().runReadAction(new Computable<Boolean>() {
-        @Override
-        public Boolean compute() {
-          return PsiTreeUtil.isAncestor(targetElement, targetElements[0], true);
-        }
-      })) {
+      if (Application.get().runReadAction(
+        (Computable<Boolean>) () -> PsiTreeUtil.isAncestor(targetElement, targetElements[0], true))
+      ) {
         unique.remove(targetElements[0]);
         break;
       }

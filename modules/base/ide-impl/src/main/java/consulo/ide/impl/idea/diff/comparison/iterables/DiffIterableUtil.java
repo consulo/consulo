@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.diff.comparison.TrimUtil;
 import consulo.diff.fragment.DiffFragment;
 import consulo.ide.impl.idea.diff.util.Range;
 import consulo.application.progress.ProgressIndicator;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 import consulo.application.util.registry.Registry;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

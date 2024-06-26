@@ -17,16 +17,14 @@ package consulo.ide.impl.idea.application.options.editor;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
-import consulo.application.ApplicationBundle;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.configurable.*;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ui.ex.awt.speedSearch.ListSpeedSearch;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.configurable.EditorGeneralConfigurable;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.gutter.GutterIconDescriptor;
 import consulo.language.editor.gutter.LineMarkerProvider;
@@ -36,16 +34,18 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.speedSearch.ListSpeedSearch;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.ui.ex.awt.util.DialogUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.MultiMap;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -80,7 +80,7 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
   @Nullable
   @Override
   public JComponent createComponent(@Nonnull Disposable uiDisposable) {
-    myShowGutterIconsJBCheckBox = new JBCheckBox(ApplicationBundle.message("checkbox.show.gutter.icons"));
+    myShowGutterIconsJBCheckBox = new JBCheckBox(ApplicationLocalize.checkboxShowGutterIcons().get());
     DialogUtil.registerMnemonic(myShowGutterIconsJBCheckBox, '&');
 
     JPanel panel = new JPanel(new BorderLayout());
@@ -89,9 +89,15 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
 
     Map<GutterIconDescriptor, PluginDescriptor> firstDescriptors = new HashMap<>();
 
-    myList = new CheckBoxList<GutterIconDescriptor>() {
+    myList = new CheckBoxList<>() {
       @Override
-      protected JComponent adjustRendering(JComponent rootComponent, JCheckBox checkBox, int index, boolean selected, boolean hasFocus) {
+      protected JComponent adjustRendering(
+        JComponent rootComponent,
+        JCheckBox checkBox,
+        int index,
+        boolean selected,
+        boolean hasFocus
+      ) {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(BorderFactory.createEmptyBorder());
         GutterIconDescriptor descriptor = myList.getItemAt(index);
@@ -134,7 +140,8 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
     List<LineMarkerProvider> providers = Application.get().getExtensionList(LineMarkerProvider.class);
     Function<LineMarkerProvider, PluginDescriptor> function = provider -> {
       PluginDescriptor plugin = PluginManager.getPlugin(provider.getClass());
-      return provider instanceof LineMarkerProviderDescriptor && ((LineMarkerProviderDescriptor)provider).getName() != null ? plugin : null;
+      return provider instanceof LineMarkerProviderDescriptor && ((LineMarkerProviderDescriptor)provider).getName() != null
+        ? plugin : null;
     };
 
     MultiMap<PluginDescriptor, LineMarkerProvider> map = ContainerUtil.groupBy(providers, function);
@@ -161,17 +168,7 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
         }
       }
     }
-    /*
-    List<GutterIconDescriptor> options = new ArrayList<GutterIconDescriptor>();
-    for (Iterator<GutterIconDescriptor> iterator = myDescriptors.iterator(); iterator.hasNext(); ) {
-      GutterIconDescriptor descriptor = iterator.next();
-      if (descriptor.getOptions().length > 0) {
-        options.addAll(Arrays.asList(descriptor.getOptions()));
-        iterator.remove();
-      }
-    }
-    myDescriptors.addAll(options);
-    */
+
     myDescriptors.sort((o1, o2) -> {
       if (pluginDescriptorMap.get(o1) != pluginDescriptorMap.get(o2)) return 0;
       return Comparing.compare(o1.getName(), o2.getName());
@@ -237,7 +234,8 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
   @Nullable
   @Override
   public Runnable enableSearch(String option) {
-    return () -> ObjectUtil.assertNotNull(SpeedSearchSupply.getSupply(myList, true)).findAndSelectElement(option);
+    return () -> ObjectUtil.assertNotNull(SpeedSearchSupply.getSupply(myList, true))
+      .findAndSelectElement(option);
   }
 
   @TestOnly

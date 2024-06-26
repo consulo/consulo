@@ -21,7 +21,9 @@ import consulo.language.editor.highlight.HighlightManager;
 import consulo.language.editor.highlight.HighlightUsagesDescriptionLocation;
 import consulo.language.editor.hint.HintManager;
 import consulo.ide.impl.idea.find.EditorSearchSession;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.language.editor.localize.CodeInsightLocalize;
+import consulo.localize.LocalizeValue;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.codeEditor.Editor;
@@ -112,8 +114,20 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
     EditorColorsManager manager = EditorColorsManager.getInstance();
     TextAttributes attributes = manager.getGlobalScheme().getAttributes(EditorColors.SEARCH_RESULT_ATTRIBUTES);
     TextAttributes writeAttributes = manager.getGlobalScheme().getAttributes(EditorColors.WRITE_SEARCH_RESULT_ATTRIBUTES);
-    HighlightUsagesHandler.highlightRanges(HighlightManager.getInstance(editor.getProject()), editor, attributes, clearHighlights, readUsages);
-    HighlightUsagesHandler.highlightRanges(HighlightManager.getInstance(editor.getProject()), editor, writeAttributes, clearHighlights, writeUsages);
+    HighlightUsagesHandler.highlightRanges(
+      HighlightManager.getInstance(editor.getProject()),
+      editor,
+      attributes,
+      clearHighlights,
+      readUsages
+    );
+    HighlightUsagesHandler.highlightRanges(
+      HighlightManager.getInstance(editor.getProject()),
+      editor,
+      writeAttributes,
+      clearHighlights,
+      writeUsages
+    );
     if (!clearHighlights) {
       WindowManager.getInstance().getStatusBar(editor.getProject()).setInfo(statusText);
 
@@ -143,8 +157,8 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
     if (usageTargets == null) {
       PsiReference ref = TargetElementUtil.findReference(editor);
 
-      if (ref instanceof PsiPolyVariantReference) {
-        ResolveResult[] results = ((PsiPolyVariantReference)ref).multiResolve(false);
+      if (ref instanceof PsiPolyVariantReference psiPolyVariantReference) {
+        ResolveResult[] results = psiPolyVariantReference.multiResolve(false);
 
         if (results.length > 0) {
           usageTargets = ContainerUtil.mapNotNull(results, result -> {
@@ -258,7 +272,14 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
     doHighlightElements(editor, elements, attributes, clearHighlights);
   }
 
-  public static void highlightReferences(@Nonnull Project project, @Nonnull PsiElement element, @Nonnull List<PsiReference> refs, Editor editor, PsiFile file, boolean clearHighlights) {
+  public static void highlightReferences(
+    @Nonnull Project project,
+    @Nonnull PsiElement element,
+    @Nonnull List<PsiReference> refs,
+    Editor editor,
+    PsiFile file,
+    boolean clearHighlights
+  ) {
 
     HighlightManager highlightManager = HighlightManager.getInstance(project);
     EditorColorsManager manager = EditorColorsManager.getInstance();
@@ -432,17 +453,21 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
   }
 
   public static void setStatusText(Project project, final String elementName, int refCount, boolean clearHighlights) {
-    String message;
+    LocalizeValue message;
     if (clearHighlights) {
-      message = "";
+      message = LocalizeValue.empty();
     }
     else if (refCount > 0) {
-      message = CodeInsightBundle.message(elementName != null ? "status.bar.highlighted.usages.message" : "status.bar.highlighted.usages.no.target.message", refCount, elementName, getShortcutText());
+      message = elementName != null
+        ? CodeInsightLocalize.statusBarHighlightedUsagesMessage(refCount, elementName, getShortcutText())
+        : CodeInsightLocalize.statusBarHighlightedUsagesNoTargetMessage(refCount, elementName, getShortcutText());
     }
     else {
-      message = CodeInsightBundle.message(elementName != null ? "status.bar.highlighted.usages.not.found.message" : "status.bar.highlighted.usages.not.found.no.target.message", elementName);
+      message = elementName != null
+        ? CodeInsightLocalize.statusBarHighlightedUsagesNotFoundMessage(elementName)
+        : LocalizeValue.localizeTODO(CodeInsightBundle.message("status.bar.highlighted.usages.not.found.no.target.message", elementName));
     }
-    WindowManager.getInstance().getStatusBar(project).setInfo(message);
+    WindowManager.getInstance().getStatusBar(project).setInfo(message.get());
   }
 
   private static String getElementName(final PsiElement element) {

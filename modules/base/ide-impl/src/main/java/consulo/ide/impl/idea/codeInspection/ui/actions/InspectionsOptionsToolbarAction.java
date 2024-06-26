@@ -1,28 +1,30 @@
 package consulo.ide.impl.idea.codeInspection.ui.actions;
 
-import consulo.application.CommonBundle;
-import consulo.language.editor.DaemonCodeAnalyzer;
-import consulo.language.editor.rawHighlight.HighlightDisplayKey;
-import consulo.language.editor.inspection.InspectionsBundle;
-import consulo.language.editor.inspection.scheme.ModifiableModel;
+import consulo.application.AllIcons;
+import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.codeInspection.actions.RunInspectionIntention;
-import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
-import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
-import consulo.language.editor.inspection.reference.RefElement;
-import consulo.language.editor.inspection.reference.RefEntity;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionResultsView;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionTree;
-import consulo.application.AllIcons;
+import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
+import consulo.language.editor.DaemonCodeAnalyzer;
+import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
+import consulo.language.editor.inspection.reference.RefElement;
+import consulo.language.editor.inspection.reference.RefEntity;
+import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
+import consulo.language.editor.inspection.scheme.ModifiableModel;
+import consulo.language.editor.rawHighlight.HighlightDisplayKey;
+import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.CommonLocalize;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
-import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
-import consulo.language.psi.PsiElement;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -45,6 +47,7 @@ public class InspectionsOptionsToolbarAction extends AnAction {
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
     final DefaultActionGroup options = new DefaultActionGroup();
     final List<AnAction> actions = createActions();
@@ -52,9 +55,13 @@ public class InspectionsOptionsToolbarAction extends AnAction {
       options.add(action);
     }
     final DataContext dataContext = e.getDataContext();
-    final ListPopup popup = JBPopupFactory.getInstance()
-      .createActionGroupPopup(getSelectedToolWrapper().getDisplayName(), options, dataContext,
-                              JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false);
+    final ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(
+      getSelectedToolWrapper().getDisplayName(),
+      options,
+      dataContext,
+      JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
+      false
+    );
     InspectionResultsView.showPopup(e, popup);
   }
 
@@ -64,6 +71,7 @@ public class InspectionsOptionsToolbarAction extends AnAction {
   }
 
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
     if (!myView.isSingleToolInSelection()) {
       e.getPresentation().setEnabled(false);
@@ -76,18 +84,18 @@ public class InspectionsOptionsToolbarAction extends AnAction {
       e.getPresentation().setEnabled(false);
     }
     e.getPresentation().setEnabled(true);
-    final String text = getToolOptions(toolWrapper);
-    e.getPresentation().setText(text);
-    e.getPresentation().setDescription(text);
+    final LocalizeValue text = getToolOptions(toolWrapper);
+    e.getPresentation().setTextValue(text);
+    e.getPresentation().setDescriptionValue(text);
   }
 
   @Nonnull
-  private static String getToolOptions(@Nullable final InspectionToolWrapper toolWrapper) {
-    return InspectionsBundle.message("inspections.view.options.title", toolWrapper != null ? toolWrapper.getDisplayName() : "");
+  private static LocalizeValue getToolOptions(@Nullable final InspectionToolWrapper toolWrapper) {
+    return InspectionLocalize.inspectionsViewOptionsTitle(toolWrapper != null ? toolWrapper.getDisplayName() : "");
   }
 
   public List<AnAction> createActions() {
-    final List<AnAction> result = new ArrayList<AnAction>();
+    final List<AnAction> result = new ArrayList<>();
     final InspectionTree tree = myView.getTree();
     final InspectionToolWrapper toolWrapper = tree.getSelectedToolWrapper();
     if (toolWrapper == null) return result;
@@ -96,8 +104,9 @@ public class InspectionsOptionsToolbarAction extends AnAction {
 
     result.add(new DisableInspectionAction(key));
 
-    result.add(new AnAction(InspectionsBundle.message("run.inspection.on.file.intention.text")) {
+    result.add(new AnAction(InspectionLocalize.runInspectionOnFileIntentionText()) {
       @Override
+      @RequiredUIAccess
       public void actionPerformed(final AnActionEvent e) {
         final PsiElement psiElement = getPsiElement(tree);
         assert psiElement != null;
@@ -105,6 +114,7 @@ public class InspectionsOptionsToolbarAction extends AnAction {
       }
 
       @Override
+      @RequiredUIAccess
       public void update(AnActionEvent e) {
         e.getPresentation().setEnabled(getPsiElement(tree) != null);
       }
@@ -134,11 +144,12 @@ public class InspectionsOptionsToolbarAction extends AnAction {
     private final HighlightDisplayKey myKey;
 
     public DisableInspectionAction(final HighlightDisplayKey key) {
-      super(InspectionsBundle.message("disable.inspection.action.name"));
+      super(InspectionLocalize.disableInspectionActionName());
       myKey = key;
     }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(final AnActionEvent e) {
       try {
         if (myView.isProfileDefined()) {
@@ -148,7 +159,7 @@ public class InspectionsOptionsToolbarAction extends AnAction {
           myView.updateCurrentProfile();
         } else {
           final RefEntity[] selectedElements = myView.getTree().getSelectedElements();
-          final Set<PsiElement> files = new HashSet<PsiElement>();
+          final Set<PsiElement> files = new HashSet<>();
           final Project project = myView.getProject();
           final InspectionProjectProfileManager profileManager = InspectionProjectProfileManager.getInstance(project);
           for (RefEntity selectedElement : selectedElements) {
@@ -166,7 +177,7 @@ public class InspectionsOptionsToolbarAction extends AnAction {
         }
       }
       catch (IOException e1) {
-        Messages.showErrorDialog(myView.getProject(), e1.getMessage(), CommonBundle.getErrorTitle());
+        Messages.showErrorDialog(myView.getProject(), e1.getMessage(), CommonLocalize.titleError().get());
       }
     }
   }

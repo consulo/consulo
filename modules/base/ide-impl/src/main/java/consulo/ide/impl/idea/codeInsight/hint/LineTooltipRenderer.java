@@ -1,41 +1,38 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.hint;
 
+import consulo.codeEditor.Editor;
+import consulo.component.util.ComparableObject;
 import consulo.ide.impl.idea.ide.BrowserUtil;
 import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
 import consulo.ide.impl.idea.ide.TooltipEvent;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.ide.impl.idea.ui.ComponentWithMnemonics;
+import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.ide.impl.idea.ui.ListenerUtil;
+import consulo.ide.impl.idea.ui.WidthBasedLayout;
+import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.impl.internal.hint.TooltipGroup;
 import consulo.language.editor.impl.internal.hint.TooltipRenderer;
 import consulo.language.editor.inspection.TooltipLinkHandlers;
-import consulo.ui.ex.awt.HintHint;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.logging.Logger;
+import consulo.ui.ex.Html;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
-import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.ui.*;
-import consulo.ui.ex.awt.GridBag;
-import consulo.ui.ex.Html;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.accessibility.AccessibleContextDelegate;
 import consulo.ui.ex.awt.accessibility.ScreenReader;
-import consulo.component.util.ComparableObject;
-import consulo.ide.impl.idea.xml.util.XmlStringUtil;
-import consulo.logging.Logger;
+import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
 
 import javax.accessibility.AccessibleContext;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -255,11 +252,7 @@ public class LineTooltipRenderer extends ComparableObject.Impl implements Toolti
 
       @Override
       protected boolean canAutoHideOn(TooltipEvent event) {
-        if (!LineTooltipRenderer.this.canAutoHideOn(event)) {
-          return false;
-        }
-
-        return super.canAutoHideOn(event);
+        return LineTooltipRenderer.this.canAutoHideOn(event) && super.canAutoHideOn(event);
       }
     };
 
@@ -281,31 +274,28 @@ public class LineTooltipRenderer extends ComparableObject.Impl implements Toolti
       }
     });
 
-    editorPane.addHyperlinkListener(new HyperlinkListener() {
-      @Override
-      public void hyperlinkUpdate(final HyperlinkEvent e) {
-        myActiveLink = true;
-        if (e.getEventType() == HyperlinkEvent.EventType.EXITED) {
-          myActiveLink = false;
+    editorPane.addHyperlinkListener(e -> {
+      myActiveLink = true;
+      if (e.getEventType() == HyperlinkEvent.EventType.EXITED) {
+        myActiveLink = false;
+        return;
+      }
+      if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+        final URL url = e.getURL();
+        if (url != null) {
+          BrowserUtil.browse(url);
+          hint.hide();
           return;
         }
-        if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-          final URL url = e.getURL();
-          if (url != null) {
-            BrowserUtil.browse(url);
-            hint.hide();
-            return;
-          }
 
-          final String description = e.getDescription();
-          if (description != null && handle(description, editor)) {
-            hint.hide();
-            return;
-          }
-
-          //TooltipActionsLogger.INSTANCE.logShowDescription(editor.getProject(), "more.link", e.getInputEvent(), null);
-          reloader.reload(!expanded);
+        final String description = e.getDescription();
+        if (description != null && handle(description, editor)) {
+          hint.hide();
+          return;
         }
+
+        //TooltipActionsLogger.INSTANCE.logShowDescription(editor.getProject(), "more.link", e.getInputEvent(), null);
+        reloader.reload(!expanded);
       }
     });
 

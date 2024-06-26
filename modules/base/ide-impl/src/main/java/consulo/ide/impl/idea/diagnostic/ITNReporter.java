@@ -39,6 +39,8 @@ import consulo.ide.impl.idea.openapi.diagnostic.SubmittedReportInfo;
 import consulo.ide.impl.idea.openapi.updateSettings.impl.CheckForUpdateAction;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.logging.Logger;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.platform.base.localize.DiagnosticLocalize;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationAction;
@@ -46,7 +48,6 @@ import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionsBundle;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.image.Image;
@@ -150,33 +151,41 @@ public class ITNReporter extends ErrorReportSubmitter {
         text.append(".");
 
         if (reportInfo.getStatus() != SubmittedReportInfo.SubmissionStatus.FAILED) {
-          text.append("<br/>").append(DiagnosticBundle.message("error.report.gratitude"));
+          text.append("<br/>").append(DiagnosticLocalize.errorReportGratitude().get());
         }
 
         NotificationType type = reportInfo.getStatus() == SubmittedReportInfo.SubmissionStatus.FAILED ? NotificationType.ERROR : NotificationType.INFORMATION;
         NotificationListener listener = url != null ? new NotificationListener.UrlOpeningListener(true) : null;
-        ReportMessages.GROUP.createNotification(ReportMessages.ERROR_REPORT, XmlStringUtil.wrapInHtml(text), type, listener).setImportant(false)
-                .notify(project);
+        ReportMessages.GROUP.createNotification(
+          DiagnosticLocalize.errorReportTitle().get(),
+            XmlStringUtil.wrapInHtml(text),
+            type,
+            listener
+          )
+          .setImportant(false)
+          .notify(project);
       });
     }, e -> application.invokeLater(() -> {
       String msg;
       if (e instanceof AuthorizationFailedException) {
-        msg = DiagnosticBundle.message("error.report.authentication.failed");
+        msg = DiagnosticLocalize.errorReportAuthenticationFailed().get();
       }
       else if (e instanceof WebServiceException) {
-        msg = DiagnosticBundle.message("error.report.posting.failed", e.getMessage());
+        msg = DiagnosticLocalize.errorReportPostingFailed(e.getMessage()).get();
       }
       else {
-        msg = DiagnosticBundle.message("error.report.sending.failure");
+        msg = DiagnosticLocalize.errorReportSendingFailure().get();
       }
       if (e instanceof UpdateAvailableException) {
         callback.accept(new SubmittedReportInfo(null, "0", SubmittedReportInfo.SubmissionStatus.FAILED));
 
-        Notification notification =
-                ReportMessages.GROUP.createNotification(DiagnosticBundle.message("error.report.update.required.message"), NotificationType.INFORMATION);
-        notification.setTitle(ReportMessages.ERROR_REPORT);
+        Notification notification = ReportMessages.GROUP.createNotification(
+          DiagnosticBundle.message("error.report.update.required.message"),
+          NotificationType.INFORMATION
+        );
+        notification.setTitle(DiagnosticLocalize.errorReportTitle().get());
         notification.setImportant(false);
-        notification.addAction(new NotificationAction(ActionsBundle.actionText("CheckForUpdate")) {
+        notification.addAction(new NotificationAction(ActionLocalize.actionCheckforupdateText().get()) {
           @RequiredUIAccess
           @Override
           public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
@@ -185,7 +194,7 @@ public class ITNReporter extends ErrorReportSubmitter {
         });
         notification.notify(project);
       }
-      else if (showYesNoDialog(parentComponent, project, msg, ReportMessages.ERROR_REPORT, Messages.getErrorIcon()) != 0) {
+      else if (showYesNoDialog(parentComponent, project, msg, DiagnosticLocalize.errorReportTitle().get(), Messages.getErrorIcon()) != 0) {
         callback.accept(new SubmittedReportInfo(null, "0", SubmittedReportInfo.SubmissionStatus.FAILED));
       }
       else {

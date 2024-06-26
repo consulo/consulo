@@ -15,27 +15,26 @@
  */
 package consulo.ide.impl.idea.diff.util;
 
-import consulo.ide.impl.idea.openapi.diff.DiffBundle;
-import consulo.ide.impl.idea.openapi.diff.DiffColors;
 import consulo.codeEditor.Editor;
+import consulo.diff.localize.DiffLocalize;
+import consulo.ide.impl.idea.openapi.diff.DiffColors;
 import consulo.ui.color.ColorValue;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public interface TextDiffType {
   @Nonnull
   TextDiffType INSERTED = TextDiffTypeFactory.getInstance()
-          .createTextDiffType(DiffColors.DIFF_INSERTED, DiffBundle.message("diff.type.inserted.name"));
+    .createTextDiffType(DiffColors.DIFF_INSERTED, DiffLocalize.diffTypeInsertedName().get());
   @Nonnull
   TextDiffType DELETED = TextDiffTypeFactory.getInstance()
-          .createTextDiffType(DiffColors.DIFF_DELETED, DiffBundle.message("diff.type.deleted.name"));
+    .createTextDiffType(DiffColors.DIFF_DELETED, DiffLocalize.diffTypeDeletedName().get());
   @Nonnull
   TextDiffType MODIFIED = TextDiffTypeFactory.getInstance()
-          .createTextDiffType(DiffColors.DIFF_MODIFIED, DiffBundle.message("diff.type.changed.name"));
+    .createTextDiffType(DiffColors.DIFF_MODIFIED, DiffLocalize.diffTypeChangedName().get());
   @Nonnull
   TextDiffType CONFLICT = TextDiffTypeFactory.getInstance()
-          .createTextDiffType(DiffColors.DIFF_CONFLICT, DiffBundle.message("diff.type.conflict.name"));
+    .createTextDiffType(DiffColors.DIFF_CONFLICT, DiffLocalize.diffTypeConflictName().get());
 
   @Nonnull
   String getName();

@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.codeInspection.ui;
 
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.image.Image;
 
 

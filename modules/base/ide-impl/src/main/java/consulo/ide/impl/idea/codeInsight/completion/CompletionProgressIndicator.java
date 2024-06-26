@@ -2,66 +2,68 @@
 
 package consulo.ide.impl.idea.codeInsight.completion;
 
-import consulo.language.editor.CodeInsightSettings;
+import consulo.application.AllIcons;
+import consulo.application.Application;
+import consulo.application.dumb.IndexNotReadyException;
+import consulo.application.impl.internal.JobScheduler;
+import consulo.application.impl.internal.progress.ProgressIndicatorBase;
+import consulo.application.impl.internal.progress.ProgressWrapper;
+import consulo.application.progress.ProgressManager;
+import consulo.application.util.Semaphore;
+import consulo.application.util.registry.Registry;
+import consulo.codeEditor.Caret;
+import consulo.codeEditor.Editor;
+import consulo.component.ProcessCanceledException;
+import consulo.component.messagebus.MessageBusConnection;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
+import consulo.externalService.statistic.FeatureUsageTracker;
+import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionSorterImpl;
 import consulo.ide.impl.idea.codeInsight.hint.EditorHintListener;
-import consulo.language.editor.completion.lookup.*;
-import consulo.language.editor.hint.HintManager;
-import consulo.application.impl.internal.JobScheduler;
-import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.application.AllIcons;
+import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.LangBundle;
+import consulo.language.editor.CodeInsightSettings;
+import consulo.language.editor.TargetElementUtil;
+import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.completion.*;
+import consulo.language.editor.completion.lookup.*;
 import consulo.language.editor.completion.lookup.event.LookupEvent;
 import consulo.language.editor.completion.lookup.event.LookupListener;
+import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.impl.internal.completion.CompletionUtil;
 import consulo.language.editor.impl.internal.completion.OffsetsInFile;
-import consulo.language.file.inject.DocumentWindow;
 import consulo.language.editor.inject.EditorWindow;
-import consulo.language.LangBundle;
-import consulo.ui.ex.action.IdeActions;
-import consulo.application.ApplicationManager;
-import consulo.undoRedo.CommandProcessor;
-import consulo.language.editor.WriteCommandAction;
-import consulo.ide.ServiceManager;
-import consulo.codeEditor.Caret;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.component.ProcessCanceledException;
-import consulo.application.progress.ProgressManager;
-import consulo.application.impl.internal.progress.ProgressIndicatorBase;
-import consulo.application.impl.internal.progress.ProgressWrapper;
-import consulo.project.DumbService;
-import consulo.application.dumb.IndexNotReadyException;
-import consulo.project.Project;
-import consulo.util.lang.Pair;
-import consulo.document.util.TextRange;
-import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.language.file.inject.DocumentWindow;
 import consulo.language.pattern.ElementPattern;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.ReferenceRange;
+import consulo.logging.Logger;
+import consulo.project.DumbService;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.internal.GuiUtils;
-import consulo.ide.impl.idea.ui.LightweightHint;
 import consulo.ui.ex.awt.util.Alarm;
-import consulo.util.lang.ObjectUtil;
-import consulo.application.util.Semaphore;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.component.messagebus.MessageBusConnection;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
-import consulo.language.editor.TargetElementUtil;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.logging.Logger;
 import consulo.ui.image.Image;
-import kava.beans.PropertyChangeListener;
-import org.jetbrains.annotations.TestOnly;
-
+import consulo.undoRedo.CommandProcessor;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import kava.beans.PropertyChangeListener;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.TestOnly;
+
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -124,9 +126,17 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
   private final CompletionThreadingBase myThreading;
   private final Object myLock = ObjectUtil.sentinel("CompletionProgressIndicator");
 
-  CompletionProgressIndicator(Editor editor, @Nonnull Caret caret, int invocationCount,
-                              CodeCompletionHandlerBase handler, @Nonnull OffsetMap offsetMap, @Nonnull OffsetsInFile hostOffsets,
-                              boolean hasModifiers, @Nonnull LookupEx lookup) {
+  @RequiredUIAccess
+  CompletionProgressIndicator(
+    Editor editor,
+    @Nonnull Caret caret,
+    int invocationCount,
+    CodeCompletionHandlerBase handler,
+    @Nonnull OffsetMap offsetMap,
+    @Nonnull OffsetsInFile hostOffsets,
+    boolean hasModifiers,
+    @Nonnull LookupEx lookup
+  ) {
     myEditor = editor;
     myCaret = caret;
     myHandler = handler;
@@ -136,7 +146,8 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
     myHostOffsets = hostOffsets;
     myLookup = lookup;
     myStartCaret = myEditor.getCaretModel().getOffset();
-    myThreading = ApplicationManager.getApplication().isWriteAccessAllowed() || myHandler.isTestingCompletionQualityMode() ? new SyncCompletion() : new AsyncCompletion();
+    myThreading = Application.get().isWriteAccessAllowed() || myHandler.isTestingCompletionQualityMode()
+      ? new SyncCompletion() : new AsyncCompletion();
 
     myAdvertiserChanges.offer(() -> myLookup.getAdvertiser().clearAdvertisements());
 
@@ -153,12 +164,17 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
     };
     LookupManager.getInstance(getProject()).addPropertyChangeListener(myLookupManagerListener);
 
-    myQueue = new MergingUpdateQueue("completion lookup progress", ourShowPopupAfterFirstItemGroupingTime, true, myEditor.getContentComponent());
+    myQueue = new MergingUpdateQueue(
+      "completion lookup progress",
+      ourShowPopupAfterFirstItemGroupingTime,
+      true,
+      myEditor.getContentComponent()
+    );
     myQueue.setPassThrough(false);
 
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    Application.get().assertIsDispatchThread();
 
-    if (hasModifiers && !ApplicationManager.getApplication().isUnitTestMode()) {
+    if (hasModifiers && !Application.get().isUnitTestMode()) {
       trackModifiers();
     }
   }
@@ -189,7 +205,9 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
 
   void duringCompletion(CompletionInitializationContext initContext, CompletionParameters parameters) {
     if (isAutopopupCompletion() && shouldPreselectFirstSuggestion(parameters)) {
-      myLookup.setFocusDegree(CodeInsightSettings.getInstance().isSelectAutopopupSuggestionsByChars() ? LookupFocusDegree.FOCUSED : LookupFocusDegree.SEMI_FOCUSED);
+      myLookup.setFocusDegree(
+        CodeInsightSettings.getInstance().isSelectAutopopupSuggestionsByChars() ? LookupFocusDegree.FOCUSED : LookupFocusDegree.SEMI_FOCUSED
+      );
     }
     addDefaultAdvertisements(parameters);
 
@@ -203,10 +221,13 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
         if (reference != null) {
           final int replacementOffset = findReplacementOffset(selectionEndOffset, reference);
           if (replacementOffset > document.getTextLength()) {
-            LOG.error("Invalid replacementOffset: " + replacementOffset + " returned by reference " + reference + " of " + reference.getClass() +
-                      "; doc=" + document +
-                      "; doc actual=" + (document == initContext.getFile().getViewProvider().getDocument()) +
-                      "; doc committed=" + PsiDocumentManager.getInstance(getProject()).isCommitted(document));
+            LOG.error(
+              "Invalid replacementOffset: " + replacementOffset + " returned by reference " + reference +
+                " of " + reference.getClass() +
+                "; doc=" + document +
+                "; doc actual=" + (document == initContext.getFile().getViewProvider().getDocument()) +
+                "; doc committed=" + PsiDocumentManager.getInstance(getProject()).isCommitted(document)
+            );
           }
           else {
             initContext.setReplacementOffset(replacementOffset);
@@ -358,7 +379,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
   }
 
   private void updateLookup(boolean isUpdateSuppressed) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    Application.get().assertIsDispatchThread();
     if (isOutdated() || !shouldShowLookup() || isUpdateSuppressed) return;
 
     while (true) {
@@ -410,7 +431,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
     ProgressManager.checkCanceled();
 
     if (!myHandler.isTestingMode()) {
-      LOG.assertTrue(!ApplicationManager.getApplication().isDispatchThread());
+      LOG.assertTrue(!Application.get().isDispatchThread());
     }
 
     LookupElement lookupElement = item.getLookupElement();
@@ -487,7 +508,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
   private void finishCompletionProcess(boolean disposeOffsetMap) {
     cancel();
 
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    Application.get().assertIsDispatchThread();
     Disposer.dispose(myQueue);
     LookupManager.getInstance(getProject()).removePropertyChangeListener(myLookupManagerListener);
 
@@ -497,9 +518,9 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
     LOG.assertTrue(currentCompletion == this, currentCompletion + "!=" + this);
 
     CompletionPhase oldPhase = CompletionServiceImpl.getCompletionPhase();
-    if (oldPhase instanceof CompletionPhase.CommittingDocuments) {
-      LOG.assertTrue(((CompletionPhase.CommittingDocuments)oldPhase).indicator != null, oldPhase);
-      ((CompletionPhase.CommittingDocuments)oldPhase).replaced = true;
+    if (oldPhase instanceof CompletionPhase.CommittingDocuments committingDocuments) {
+      LOG.assertTrue(committingDocuments.indicator != null, oldPhase);
+      committingDocuments.replaced = true;
     }
     CompletionServiceImpl.setCompletionPhase(CompletionPhase.NoCompletion);
     if (disposeOffsetMap) {
@@ -713,7 +734,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
 
   @Override
   public void scheduleRestart() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    Application.get().assertIsDispatchThread();
     /*if (myHandler.isTestingMode() && !TestModeFlags.is(CompletionAutoPopupHandler.ourTestingAutopopup)) {
       closeAndFinish(false);
       PsiDocumentManager.getInstance(getProject()).commitAllDocuments();
@@ -744,7 +765,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
   }
 
   void handleEmptyLookup(boolean awaitSecondInvocation) {
-    if (isAutopopupCompletion() && ApplicationManager.getApplication().isUnitTestMode()) {
+    if (isAutopopupCompletion() && Application.get().isUnitTestMode()) {
       return;
     }
 
@@ -761,9 +782,13 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
     CompletionServiceImpl.setCompletionPhase(CompletionPhase.NoCompletion);
   }
 
+  @NonNls
   private String getNoSuggestionsMessage(CompletionParameters parameters) {
-    String text = CompletionContributor.forParameters(parameters).stream().map(c -> c.handleEmptyLookup(parameters, getEditor())).filter(StringUtil::isNotEmpty).findFirst()
-            .orElse(LangBundle.message("completion.no.suggestions"));
+    String text = CompletionContributor.forParameters(parameters).stream()
+      .map(c -> c.handleEmptyLookup(parameters, getEditor()))
+      .filter(StringUtil::isNotEmpty)
+      .findFirst()
+      .orElse(LangBundle.message("completion.no.suggestions"));
     return DumbService.isDumb(getProject()) ? text + "; results might be incomplete while indexing is in progress" : text;
   }
 
@@ -846,8 +871,9 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
     mySuppressTimeoutAlarm.addRequest(this::showIfSuppressed, timeout);
   }
 
+  @RequiredUIAccess
   private void showIfSuppressed() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    Application.get().assertIsDispatchThread();
 
     if (myLookup.isShown()) return;
 
@@ -876,8 +902,8 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
       if (code == KeyEvent.VK_CONTROL || code == KeyEvent.VK_META || code == KeyEvent.VK_ALT || code == KeyEvent.VK_SHIFT) {
         myContentComponent.removeKeyListener(this);
         final CompletionPhase phase = CompletionServiceImpl.getCompletionPhase();
-        if (phase instanceof CompletionPhase.BgCalculation) {
-          ((CompletionPhase.BgCalculation)phase).modifiersChanged = true;
+        if (phase instanceof CompletionPhase.BgCalculation bgCalculation) {
+          bgCalculation.modifiersChanged = true;
         }
         else if (phase instanceof CompletionPhase.InsertedSingleItem) {
           CompletionServiceImpl.setCompletionPhase(CompletionPhase.NoCompletion);

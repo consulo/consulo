@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.diff.tools.simple;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.diff.fragment.MergeLineFragment;
+import consulo.diff.localize.DiffLocalize;
 import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.util.Side;
 import consulo.diff.util.ThreeSide;
@@ -33,22 +34,20 @@ import consulo.ide.impl.idea.diff.util.DiffDrawUtil;
 import consulo.ide.impl.idea.diff.util.DiffUserDataKeysEx.ScrollToPolicy;
 import consulo.ide.impl.idea.diff.util.DiffUtil;
 import consulo.ide.impl.idea.diff.util.LineRange;
-import consulo.ide.impl.idea.openapi.diff.DiffBundle;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
-import org.jetbrains.annotations.NonNls;
-
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.Function;
 
 public abstract class ThreesideTextDiffViewerEx extends ThreesideTextDiffViewer {
   public static final Logger LOG = Logger.getInstance(ThreesideTextDiffViewerEx.class);
@@ -395,7 +394,7 @@ public abstract class ThreesideTextDiffViewerEx extends ThreesideTextDiffViewer 
     protected String getMessage() {
       if (myChangesCount < 0 || myConflictsCount < 0) return null;
       if (myChangesCount == 0 && myConflictsCount == 0) {
-        return DiffBundle.message("merge.dialog.all.conflicts.resolved.message.text");
+        return DiffLocalize.mergeDialogAllConflictsResolvedMessageText().get();
       }
       return makeCounterWord(myChangesCount, "change") + ". " + makeCounterWord(myConflictsCount, "conflict");
     }
@@ -421,18 +420,13 @@ public abstract class ThreesideTextDiffViewerEx extends ThreesideTextDiffViewer 
     public void install(@Nullable List<MergeLineFragment> fragments,
                         @Nonnull UserDataHolder context,
                         @Nonnull FoldingModelSupport.Settings settings) {
-      Iterator<int[]> it = map(fragments, new Function<MergeLineFragment, int[]>() {
-        @Override
-        public int[] apply(MergeLineFragment fragment) {
-          return new int[]{
-                  fragment.getStartLine(ThreeSide.LEFT),
-                  fragment.getEndLine(ThreeSide.LEFT),
-                  fragment.getStartLine(ThreeSide.BASE),
-                  fragment.getEndLine(ThreeSide.BASE),
-                  fragment.getStartLine(ThreeSide.RIGHT),
-                  fragment.getEndLine(ThreeSide.RIGHT)};
-        }
-      });
+      Iterator<int[]> it = map(fragments, fragment -> new int[]{
+              fragment.getStartLine(ThreeSide.LEFT),
+              fragment.getEndLine(ThreeSide.LEFT),
+              fragment.getStartLine(ThreeSide.BASE),
+              fragment.getEndLine(ThreeSide.BASE),
+              fragment.getStartLine(ThreeSide.RIGHT),
+              fragment.getEndLine(ThreeSide.RIGHT)});
       install(it, context, settings);
     }
 

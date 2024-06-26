@@ -2,31 +2,31 @@
 
 package consulo.ide.impl.idea.codeInsight.hint;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.codeEditor.Editor;
-import consulo.language.editor.parameterInfo.ParameterInfoHandler;
 import consulo.ide.impl.idea.openapi.editor.EditorActivityManager;
 import consulo.ide.impl.idea.ui.LightweightHint;
-import consulo.util.lang.ObjectUtil;
 import consulo.language.Language;
-import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.hint.HintManager;
+import consulo.language.editor.localize.CodeInsightLocalize;
+import consulo.language.editor.parameterInfo.ParameterInfoHandler;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -66,8 +66,18 @@ public class ShowParameterInfoHandler implements CodeInsightActionHandler {
   }
 
   public static void invoke(final Project project, final Editor editor, PsiFile file, int lbraceOffset, PsiElement highlightedElement, boolean requestFocus) {
-    invoke(project, editor, file, lbraceOffset, highlightedElement, requestFocus, false, CodeInsightBundle.message("parameter.info.progress.title"),
-           e -> DumbService.getInstance(project).showDumbModeNotification(CodeInsightBundle.message("parameter.info.indexing.mode.not.supported")));
+    invoke(
+      project,
+      editor,
+      file,
+      lbraceOffset,
+      highlightedElement,
+      requestFocus,
+      false,
+      CodeInsightLocalize.parameterInfoProgressTitle().get(),
+      e -> DumbService.getInstance(project)
+        .showDumbModeNotification(CodeInsightLocalize.parameterInfoIndexingModeNotSupported().get())
+    );
   }
 
   /**
@@ -156,9 +166,17 @@ public class ShowParameterInfoHandler implements CodeInsightActionHandler {
     hint.setSelectingHint(true);
     final HintManagerImpl hintManager = HintManagerImpl.getInstanceImpl();
     final Pair<Point, Short> pos = ParameterInfoController.chooseBestHintPosition(editor, null, hint, HintManager.DEFAULT, true);
-    ApplicationManager.getApplication().invokeLater(() -> {
+    Application.get().invokeLater(() -> {
       if (!EditorActivityManager.getInstance().isVisible(editor)) return;
-      hintManager.showEditorHint(hint, editor, pos.getFirst(), HintManager.HIDE_BY_ANY_KEY | HintManager.HIDE_BY_LOOKUP_ITEM_CHANGE | HintManager.UPDATE_BY_SCROLLING, 0, false, pos.getSecond());
+      hintManager.showEditorHint(
+        hint,
+        editor,
+        pos.getFirst(),
+        HintManager.HIDE_BY_ANY_KEY | HintManager.HIDE_BY_LOOKUP_ITEM_CHANGE | HintManager.UPDATE_BY_SCROLLING,
+        0,
+        false,
+        pos.getSecond()
+      );
     });
   }
 

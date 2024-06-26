@@ -1,16 +1,14 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.CaretModel;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorAction;
+import consulo.codeEditor.action.EditorActionHandler;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
-import consulo.language.editor.documentation.DocCommentFixer;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;
@@ -20,20 +18,16 @@ import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.DocCommentSettings;
 import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.FileModificationService;
-import consulo.language.editor.documentation.CodeDocumentationProvider;
-import consulo.language.editor.documentation.CompositeDocumentationProvider;
-import consulo.language.editor.documentation.DocumentationProvider;
-import consulo.language.editor.documentation.LanguageDocumentationProvider;
+import consulo.language.editor.documentation.*;
 import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.Pair;
-import org.jetbrains.annotations.NonNls;
-
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
 
 /**
  * Creates documentation comment for the current context if it's not created yet (e.g. the caret is inside a method which
@@ -59,12 +53,12 @@ public class FixDocCommentAction extends EditorAction {
 
     @Override
     public void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
-      Project project = dataContext.getData(CommonDataKeys.PROJECT);
+      Project project = dataContext.getData(Project.KEY);
       if (project == null) {
         return;
       }
 
-      PsiFile psiFile = dataContext.getData(CommonDataKeys.PSI_FILE);
+      PsiFile psiFile = dataContext.getData(PsiFile.KEY);
       if (psiFile == null) {
         return;
       }
@@ -128,7 +122,7 @@ public class FixDocCommentAction extends EditorAction {
         task = () -> fixer.fixComment(project, editor, pair.second);
       }
     }
-    final Runnable command = () -> ApplicationManager.getApplication().runWriteAction(task);
+    final Runnable command = () -> Application.get().runWriteAction(task);
     CommandProcessor.getInstance().executeCommand(project, command, "Fix documentation", null);
 
   }
@@ -144,11 +138,13 @@ public class FixDocCommentAction extends EditorAction {
    * @param commenter commenter to use
    * @param project   current project
    */
-  private static void generateComment(@Nonnull PsiElement anchor,
-                                      @Nonnull Editor editor,
-                                      @Nonnull CodeDocumentationProvider documentationProvider,
-                                      @Nonnull CodeDocumentationAwareCommenter commenter,
-                                      @Nonnull Project project) {
+  private static void generateComment(
+    @Nonnull PsiElement anchor,
+    @Nonnull Editor editor,
+    @Nonnull CodeDocumentationProvider documentationProvider,
+    @Nonnull CodeDocumentationAwareCommenter commenter,
+    @Nonnull Project project
+  ) {
     Document document = editor.getDocument();
     int commentStartOffset = anchor.getTextRange().getStartOffset();
     int lineStartOffset = document.getLineStartOffset(document.getLineNumber(commentStartOffset));

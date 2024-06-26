@@ -15,11 +15,12 @@
  */
 package consulo.ide.impl.idea.diff.tools.util;
 
-import consulo.ide.impl.idea.openapi.diff.DiffBundle;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.IdeBorderFactory;
+import consulo.diff.localize.DiffLocalize;
 import consulo.ui.ex.awt.AnimatedIconComponent;
 import consulo.ui.ex.awt.AsyncProcessIcon;
+import consulo.ui.ex.awt.IdeBorderFactory;
+import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -57,11 +58,11 @@ public class StatusPanel extends JPanel {
     }
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   protected String getMessage() {
     int count = getChangesCount();
     if (count == -1) return null;
-    return DiffBundle.message("diff.count.differences.status.text", count);
+    return DiffLocalize.diffCountDifferencesStatusText(count).get();
   }
 
   protected int getChangesCount() {

@@ -19,33 +19,33 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.diff.content.DiffContent;
 import consulo.diff.content.DocumentContent;
 import consulo.diff.content.FileContent;
+import consulo.diff.localize.DiffLocalize;
 import consulo.diff.merge.MergeRequest;
 import consulo.diff.merge.MergeResult;
-import consulo.ide.impl.idea.diff.merge.TextMergeRequest;
-import consulo.ide.impl.idea.diff.requests.BinaryMergeRequestImpl;
 import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.request.SimpleDiffRequest;
-import consulo.ide.impl.idea.diff.requests.TextMergeRequestImpl;
-import consulo.ide.impl.idea.diff.util.DiffUtil;
-import consulo.ide.impl.idea.openapi.diff.DiffBundle;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.versionControlSystem.FilePath;
-import consulo.virtualFileSystem.VirtualFile;
-import java.util.function.Consumer;
+import consulo.ide.impl.idea.diff.merge.TextMergeRequest;
+import consulo.ide.impl.idea.diff.requests.BinaryMergeRequestImpl;
+import consulo.ide.impl.idea.diff.requests.TextMergeRequestImpl;
+import consulo.ide.impl.idea.diff.util.DiffUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.project.Project;
+import consulo.util.lang.Comparing;
+import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.util.VcsUtil;
-import jakarta.inject.Singleton;
-
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Singleton;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 @Singleton
 @ServiceImpl
@@ -93,10 +93,10 @@ public class DiffRequestFactoryImpl extends DiffRequestFactory {
     DiffContent content1 = myContentFactory.createClipboardContent();
     DiffContent content2 = myContentFactory.create(value);
 
-    String title1 = DiffBundle.message("diff.content.clipboard.content.title");
-    String title2 = DiffBundle.message("diff.content.selected.value");
+    String title1 = DiffLocalize.diffContentClipboardContentTitle().get();
+    String title2 = DiffLocalize.diffContentSelectedValue().get();
 
-    String title = DiffBundle.message("diff.clipboard.vs.value.dialog.title");
+    String title = DiffLocalize.diffClipboardVsValueDialogTitle().get();
 
     return new SimpleDiffRequest(title, content1, content2, title1, title2);
   }

@@ -29,7 +29,6 @@ import consulo.dataContext.DataProvider;
 import consulo.diff.merge.MergeRequest;
 import consulo.diff.merge.MergeResult;
 import consulo.disposer.Disposable;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -60,7 +59,7 @@ public abstract class MergeRequestProcessor implements Disposable {
 
   private boolean myDisposed;
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private final Project myProject;
   @Nonnull
   private final MergeContext myContext;
@@ -84,13 +83,13 @@ public abstract class MergeRequestProcessor implements Disposable {
 
   @Nonnull
   private MergeTool.MergeViewer myViewer;
-  @jakarta.annotation.Nullable
+  @Nullable
   private BooleanGetter myCloseHandler;
-  @jakarta.annotation.Nullable
+  @Nullable
   private BottomActions myBottomActions;
   private boolean myConflictResolved = false;
 
-  public MergeRequestProcessor(@jakarta.annotation.Nullable Project project, @Nonnull MergeRequest request) {
+  public MergeRequestProcessor(@Nullable Project project, @Nonnull MergeRequest request) {
     myProject = project;
     myRequest = request;
 
@@ -216,7 +215,7 @@ public abstract class MergeRequestProcessor implements Disposable {
     return ErrorMergeTool.INSTANCE;
   }
 
-  private void setTitle(@jakarta.annotation.Nullable String title) {
+  private void setTitle(@Nullable String title) {
     if (title == null) title = "Merge";
     setWindowTitle(title);
   }
@@ -297,12 +296,12 @@ public abstract class MergeRequestProcessor implements Disposable {
 
   public abstract void closeDialog();
 
-  @jakarta.annotation.Nullable
+  @Nullable
   public <T> T getContextUserData(@Nonnull Key<T> key) {
     return myContext.getUserData(key);
   }
 
-  public <T> void putContextUserData(@Nonnull Key<T> key, @jakarta.annotation.Nullable T value) {
+  public <T> void putContextUserData(@Nonnull Key<T> key, @Nullable T value) {
     myContext.putUserData(key, value);
   }
 
@@ -315,13 +314,13 @@ public abstract class MergeRequestProcessor implements Disposable {
     return myPanel;
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   public JComponent getPreferredFocusedComponent() {
     JComponent component = myViewer.getPreferredFocusedComponent();
     return component != null ? component : myToolbarPanel.getTargetComponent();
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   public Project getProject() {
     return myProject;
   }
@@ -341,7 +340,7 @@ public abstract class MergeRequestProcessor implements Disposable {
     return myBottomActions != null ? myBottomActions : new BottomActions();
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   public String getHelpId() {
     return (String)myMainPanel.getData(PlatformDataKeys.HELP_ID);
   }
@@ -428,7 +427,7 @@ public abstract class MergeRequestProcessor implements Disposable {
       super(new BorderLayout());
     }
 
-    @jakarta.annotation.Nullable
+    @Nullable
     @Override
     public Object getData(@Nonnull Key<?> dataId) {
       Object data;
@@ -439,7 +438,7 @@ public abstract class MergeRequestProcessor implements Disposable {
         if (data != null) return data;
       }
 
-      if (CommonDataKeys.PROJECT == dataId) {
+      if (Project.KEY == dataId) {
         return myProject;
       }
       else if (PlatformDataKeys.HELP_ID == dataId) {
@@ -476,7 +475,7 @@ public abstract class MergeRequestProcessor implements Disposable {
   }
 
   private class MyDiffContext extends MergeContextEx {
-    @jakarta.annotation.Nullable
+    @Nullable
     @Override
     public Project getProject() {
       return MergeRequestProcessor.this.getProject();
@@ -506,13 +505,13 @@ public abstract class MergeRequestProcessor implements Disposable {
   }
 
   public static class BottomActions {
-    @jakarta.annotation.Nullable
+    @Nullable
     public Action applyLeft;
-    @jakarta.annotation.Nullable
+    @Nullable
     public Action applyRight;
-    @jakarta.annotation.Nullable
+    @Nullable
     public Action resolveAction;
-    @jakarta.annotation.Nullable
+    @Nullable
     public Action cancelAction;
   }
 }

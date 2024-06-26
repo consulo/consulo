@@ -15,35 +15,34 @@
  */
 package consulo.ide.impl.idea.diff.tools.util.base;
 
+import consulo.application.Application;
+import consulo.application.progress.ProgressIndicator;
+import consulo.dataContext.DataProvider;
+import consulo.diff.request.ContentDiffRequest;
+import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.diff.DiffContext;
 import consulo.ide.impl.idea.diff.FrameDiffTool;
 import consulo.ide.impl.idea.diff.FrameDiffTool.DiffViewer;
-import consulo.diff.request.ContentDiffRequest;
 import consulo.ide.impl.idea.diff.tools.util.DiffDataKeys;
 import consulo.ide.impl.idea.diff.util.DiffTaskQueue;
-import consulo.application.ApplicationManager;
-import consulo.application.progress.ProgressIndicator;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
-import consulo.dataContext.DataProvider;
-import consulo.language.editor.CommonDataKeys;
+import consulo.ide.impl.idea.openapi.vcs.CalledInBackground;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.logging.Logger;
+import consulo.navigation.Navigatable;
 import consulo.project.Project;
-import consulo.disposer.Disposer;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.IdeActions;
-import consulo.util.dataholder.Key;
-import consulo.ide.impl.idea.openapi.vcs.CalledInBackground;
-import consulo.navigation.Navigatable;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.util.collection.SmartList;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.logging.Logger;
-import consulo.ui.annotation.RequiredUIAccess;
-import org.jetbrains.annotations.NonNls;
+import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -55,7 +54,7 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
   @Nonnull
   private final List<DiffViewerListener> myListeners = new SmartList<>();
 
-  @jakarta.annotation.Nullable
+  @Nullable
   protected final Project myProject;
   @Nonnull
   protected final DiffContext myContext;
@@ -95,7 +94,7 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
   @RequiredUIAccess
   public final void dispose() {
     if (myDisposed) return;
-    if (!ApplicationManager.getApplication().isDispatchThread()) LOG.warn(new Throwable("dispose() not from EDT"));
+    if (!Application.get().isDispatchThread()) LOG.warn(new Throwable("dispose() not from EDT"));
 
     UIUtil.invokeLaterIfNeeded(() -> {
       if (myDisposed) return;
@@ -150,15 +149,17 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
     int waitMillis = trySync || tryRediffSynchronously() ? ProgressWindow.DEFAULT_PROGRESS_DIALOG_POSTPONE_TIME_MILLIS : 0;
 
     myTaskExecutor.executeAndTryWait(
-            indicator -> {
-              final Runnable callback = performRediff(indicator);
-              return () -> {
-                callback.run();
-                onAfterRediff();
-                fireEvent(EventType.AFTER_REDIFF);
-              };
-            },
-            this::onSlowRediff, waitMillis, forceEDT
+      indicator -> {
+        final Runnable callback = performRediff(indicator);
+        return () -> {
+          callback.run();
+          onAfterRediff();
+          fireEvent(EventType.AFTER_REDIFF);
+        };
+      },
+      this::onSlowRediff,
+      waitMillis,
+      forceEDT
     );
   }
 
@@ -166,7 +167,7 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
   // Getters
   //
 
-  @jakarta.annotation.Nullable
+  @Nullable
   public Project getProject() {
     return myProject;
   }
@@ -198,7 +199,7 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
   protected boolean forceRediffSynchronously() {
     // most of performRediff implementations take ReadLock inside. If EDT is holding write lock - this will never happen,
     // and diff will not be calculated. This could happen for diff from FileDocumentManager.
-    return ApplicationManager.getApplication().isWriteAccessAllowed();
+    return Application.get().isWriteAccessAllowed();
   }
 
   protected List<AnAction> createToolbarActions() {
@@ -213,7 +214,7 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
     return group;
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   protected JComponent getStatusPanel() {
     return null;
   }
@@ -295,13 +296,13 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
   // Helpers
   //
 
-  @jakarta.annotation.Nullable
+  @Nullable
   @Override
   public Object getData(@Nonnull @NonNls Key<?> dataId) {
     if (DiffDataKeys.NAVIGATABLE == dataId) {
       return getNavigatable();
     }
-    else if (CommonDataKeys.PROJECT == dataId) {
+    else if (Project.KEY == dataId) {
       return myProject;
     }
     else {

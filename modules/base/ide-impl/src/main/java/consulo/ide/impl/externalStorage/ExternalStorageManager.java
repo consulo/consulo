@@ -48,6 +48,7 @@ import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.util.io.StreamUtil;
 import consulo.util.io.UnsyncByteArrayInputStream;
 import consulo.util.lang.Pair;
@@ -75,7 +76,12 @@ import java.util.zip.ZipInputStream;
  * @since 11/09/2021
  */
 public class ExternalStorageManager {
-  public static final NotificationGroup GROUP = new NotificationGroup("externalStorage", LocalizeValue.localizeTODO("External Storage"), NotificationDisplayType.BALLOON, true);
+  public static final NotificationGroup GROUP = new NotificationGroup(
+    "externalStorage",
+    LocalizeValue.localizeTODO("External Storage"),
+    NotificationDisplayType.BALLOON,
+    true
+  );
 
   private static final Logger LOG = Logger.getInstance(ExternalStorageManager.class);
 
@@ -305,7 +311,11 @@ public class ExternalStorageManager {
   }
 
   private void showRestartDialog() {
-    if (Messages.showYesNoDialog("Restart required for apply External Storage settings change. Restart now?", "Consulo", Messages.getInformationIcon()) == Messages.YES) {
+    if (Messages.showYesNoDialog(
+      "Restart required for apply External Storage settings change. Restart now?",
+      Application.get().getName().get(),
+      UIUtil.getInformationIcon()
+    ) == Messages.YES) {
       myApplication.restart(true);
     }
   }

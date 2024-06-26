@@ -20,7 +20,7 @@ import consulo.find.FindManager;
 import consulo.find.FindModel;
 import consulo.document.Document;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 
 /**
  * @author msk

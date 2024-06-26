@@ -2,41 +2,41 @@
 package consulo.ide.impl.idea.build;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.build.ui.BuildBundle;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.build.ui.BuildContentManager;
 import consulo.build.ui.BuildDescriptor;
+import consulo.build.ui.localize.BuildLocalize;
 import consulo.build.ui.process.BuildProcessHandler;
+import consulo.dataContext.DataManager;
+import consulo.dataContext.DataProvider;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.execution.ExecutionUtil;
 import consulo.execution.impl.internal.ui.BaseContentCloseListener;
 import consulo.execution.impl.internal.ui.RunContentManagerImpl;
-import consulo.dataContext.DataManager;
-import consulo.ui.ex.toolWindow.ContentManagerWatcher;
-import consulo.project.internal.StartupManagerEx;
+import consulo.ide.impl.idea.util.ContentUtilEx;
 import consulo.language.LangBundle;
-import consulo.dataContext.DataProvider;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.ui.ex.toolWindow.ToolWindowAnchor;
+import consulo.project.internal.StartupManagerEx;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.TabbedContent;
-import consulo.ide.impl.idea.util.ContentUtilEx;
-import consulo.util.collection.MultiMap;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.ex.toolWindow.ContentManagerWatcher;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.image.Image;
+import consulo.util.collection.MultiMap;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -59,12 +59,17 @@ public final class BuildContentManagerImpl implements BuildContentManager {
   @SuppressWarnings("SSBasedInspection")
   // @ApiStatus.ScheduledForRemoval(inVersion = "2021.1")
   @Deprecated
-  public static final String Build = BuildBundle.message("tab.title.build");
+  public static final String Build = BuildLocalize.tabTitleBuild().get();
 
-  public static final Supplier<String> Build_Tab_Title_Supplier = () -> BuildBundle.message("tab.title.build");
+  public static final Supplier<String> Build_Tab_Title_Supplier = () -> BuildLocalize.tabTitleBuild().get();
 
-  private static final List<Supplier<String>> ourPresetOrder =
-          Arrays.asList(LangBundle.messagePointer("tab.title.sync"), Build_Tab_Title_Supplier, LangBundle.messagePointer("tab.title.run"), LangBundle.messagePointer("tab.title.debug"));
+  private static final List<Supplier<String>> ourPresetOrder = Arrays.asList(
+    LangBundle.messagePointer("tab.title.sync"),
+    Build_Tab_Title_Supplier,
+    LangBundle.messagePointer("tab.title.run"),
+    LangBundle.messagePointer("tab.title.debug")
+  );
+
   private static final Key<Map<Object, CloseListener>> CONTENT_CLOSE_LISTENERS = Key.create("CONTENT_CLOSE_LISTENERS");
 
   private final Project myProject;
@@ -84,7 +89,12 @@ public final class BuildContentManagerImpl implements BuildContentManager {
       return toolWindow;
     }
 
-    toolWindow = toolWindowManager.registerToolWindow(TOOL_WINDOW_ID, true, ToolWindowAnchor.BOTTOM, false);
+    toolWindow = toolWindowManager.registerToolWindow(
+      TOOL_WINDOW_ID,
+      true,
+      ToolWindowAnchor.BOTTOM,
+      false
+    );
     toolWindow.setIcon(PlatformIconGroup.toolwindowsToolwindowbuild());
     ContentManager contentManager = toolWindow.getContentManager();
     contentManager.addDataProvider(new DataProvider() {
@@ -94,7 +104,8 @@ public final class BuildContentManagerImpl implements BuildContentManager {
       public Object getData(@Nonnull Key dataId) {
         myInsideGetData++;
         try {
-          return myInsideGetData == 1 ? DataManager.getInstance().getDataContext(contentManager.getComponent()).getData(dataId) : null;
+          return myInsideGetData == 1
+            ? DataManager.getInstance().getDataContext(contentManager.getComponent()).getData(dataId) : null;
         }
         finally {
           myInsideGetData--;
@@ -134,7 +145,10 @@ public final class BuildContentManagerImpl implements BuildContentManager {
         MultiMap<String, String> existingCategoriesNames = new MultiMap<>();
         for (Content existingContent : existingContents) {
           String tabName = existingContent.getTabName();
-          existingCategoriesNames.putValue(StringUtil.trimEnd(StringUtil.split(tabName, " ").get(0), ':'), tabName);
+          existingCategoriesNames.putValue(
+            StringUtil.trimEnd(StringUtil.split(tabName, " ").get(0), ':'),
+            tabName
+          );
         }
 
         int place = 0;
@@ -193,7 +207,13 @@ public final class BuildContentManagerImpl implements BuildContentManager {
   }
 
   @Override
-  public Content addTabbedContent(@Nonnull JComponent contentComponent, @Nonnull String groupPrefix, @Nonnull String tabName, @Nullable Image icon, @Nullable Disposable childDisposable) {
+  public Content addTabbedContent(
+    @Nonnull JComponent contentComponent,
+    @Nonnull String groupPrefix,
+    @Nonnull String tabName,
+    @Nullable Image icon,
+    @Nullable Disposable childDisposable
+  ) {
     ContentManager contentManager = getOrCreateToolWindow().getContentManager();
     ContentUtilEx.addTabbedContent(contentManager, contentComponent, groupPrefix, tabName, false, childDisposable);
     Content content = contentManager.findContent(getFullName(groupPrefix, tabName));
@@ -207,7 +227,11 @@ public final class BuildContentManagerImpl implements BuildContentManager {
     return content;
   }
 
-  public void startBuildNotified(@Nonnull BuildDescriptor buildDescriptor, @Nonnull Content content, @Nullable BuildProcessHandler processHandler) {
+  public void startBuildNotified(
+    @Nonnull BuildDescriptor buildDescriptor,
+    @Nonnull Content content,
+    @Nullable BuildProcessHandler processHandler
+  ) {
     if (processHandler != null) {
       Map<Object, CloseListener> closeListenerMap = content.getUserData(CONTENT_CLOSE_LISTENERS);
       if (closeListenerMap == null) {
@@ -222,12 +246,16 @@ public final class BuildContentManagerImpl implements BuildContentManager {
     if (pair.first == null) {
       content.putUserData(Content.TAB_LABEL_ORIENTATION_KEY, ComponentOrientation.RIGHT_TO_LEFT);
     }
-    content.setIcon(ExecutionUtil.getIconWithLiveIndicator(pair.first == null ? PlatformIconGroup.toolwindowsToolwindowbuild() : pair.first));
+    content.setIcon(ExecutionUtil.getIconWithLiveIndicator(
+      pair.first == null ? PlatformIconGroup.toolwindowsToolwindowbuild() : pair.first
+    ));
     invokeLaterIfNeeded(() -> {
       JComponent component = content.getComponent();
       component.invalidate();
       if (!liveContentsMap.isEmpty()) {
-        getOrCreateToolWindow().setIcon(ExecutionUtil.getIconWithLiveIndicator(PlatformIconGroup.toolwindowsToolwindowbuild()));
+        getOrCreateToolWindow().setIcon(ExecutionUtil.getIconWithLiveIndicator(
+          PlatformIconGroup.toolwindowsToolwindowbuild()
+        ));
       }
     });
   }

@@ -15,14 +15,13 @@
  */
 package consulo.ide.impl.idea.application.options.pathMacros;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.macro.PathMacros;
 import consulo.configurable.ConfigurationException;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.AnActionButton;
-import consulo.ui.ex.awt.AnActionButtonRunnable;
-import consulo.ui.ex.awt.ToolbarDecorator;
 import consulo.ide.impl.idea.util.text.StringTokenizer;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.ToolbarDecorator;
+import consulo.util.lang.StringUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,22 +46,13 @@ public class PathMacroListEditor {
     myPathMacroTable = undefinedMacroNames != null ? new PathMacroTable(undefinedMacroNames) : new PathMacroTable();
     myPathVariablesPanel.add(
       ToolbarDecorator.createDecorator(myPathMacroTable)
-        .setAddAction(new AnActionButtonRunnable() {
-          @Override
-          public void run(AnActionButton button) {
-            myPathMacroTable.addMacro();
-          }
-        }).setRemoveAction(new AnActionButtonRunnable() {
-        @Override
-        public void run(AnActionButton button) {
-          myPathMacroTable.removeSelectedMacros();
-        }
-      }).setEditAction(new AnActionButtonRunnable() {
-        @Override
-        public void run(AnActionButton button) {
-          myPathMacroTable.editMacro();
-        }
-      }).disableUpDownActions().createPanel(), BorderLayout.CENTER);
+        .setAddAction(button -> myPathMacroTable.addMacro())
+        .setRemoveAction(button -> myPathMacroTable.removeSelectedMacros())
+        .setEditAction(button -> myPathMacroTable.editMacro())
+        .disableUpDownActions()
+        .createPanel(),
+      BorderLayout.CENTER
+    );
 
     fillIgnoredVariables();
   }
@@ -79,7 +69,7 @@ public class PathMacroListEditor {
 
   private Collection<String> parseIgnoredVariables() {
     final String s = myIgnoredVariables.getText();
-    final List<String> ignored = new ArrayList<String>();
+    final List<String> ignored = new ArrayList<>();
     final StringTokenizer st = new StringTokenizer(s, ";");
     while (st.hasMoreElements()) {
       ignored.add(st.nextElement().trim());
@@ -88,15 +78,14 @@ public class PathMacroListEditor {
     return ignored;
   }
 
+  @RequiredUIAccess
   public void commit() throws ConfigurationException {
-    ApplicationManager.getApplication().runWriteAction(new Runnable() {
-      public void run() {
-        myPathMacroTable.commit();
+    Application.get().runWriteAction(()-> {
+      myPathMacroTable.commit();
 
-        final Collection<String> ignored = parseIgnoredVariables();
-        final PathMacros instance = PathMacros.getInstance();
-        instance.setIgnoredMacroNames(ignored);
-      }
+      final Collection<String> ignored = parseIgnoredVariables();
+      final PathMacros instance = PathMacros.getInstance();
+      instance.setIgnoredMacroNames(ignored);
     });
   }
 

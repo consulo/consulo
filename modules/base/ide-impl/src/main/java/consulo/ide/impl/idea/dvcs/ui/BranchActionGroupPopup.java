@@ -2,11 +2,10 @@
 package consulo.ide.impl.idea.dvcs.ui;
 
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ui.Size;
 import consulo.ui.ex.action.EmptyAction;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.ui.FlatSpeedSearchPopup;
 import consulo.ide.impl.idea.openapi.vcs.ui.PopupListElementRendererWithIcon;
 import consulo.ui.ex.awt.ErrorLabel;
@@ -69,13 +68,23 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
   private final List<AnAction> mySettingsActions = new ArrayList<>();
   private final List<AnAction> myToolbarActions = new ArrayList<>();
 
-  public BranchActionGroupPopup(@Nonnull String title, @Nonnull Project project, @Nonnull Condition<AnAction> preselectActionCondition, @Nonnull ActionGroup actions, @Nullable String dimensionKey) {
-    super(title, createBranchSpeedSearchActionGroup(actions),
-          SimpleDataContext.builder()
-                  .add(CommonDataKeys.PROJECT, project)
-                  .add(UIExAWTDataKey.CONTEXT_COMPONENT, ProjectIdeFocusManager.getInstance(project).getFocusOwner())
-                  .build(),
-          preselectActionCondition, true);
+  public BranchActionGroupPopup(
+    @Nonnull String title,
+    @Nonnull Project project,
+    @Nonnull Condition<AnAction> preselectActionCondition,
+    @Nonnull ActionGroup actions,
+    @Nullable String dimensionKey
+  ) {
+    super(
+      title,
+      createBranchSpeedSearchActionGroup(actions),
+      SimpleDataContext.builder()
+        .add(Project.KEY, project)
+        .add(UIExAWTDataKey.CONTEXT_COMPONENT, ProjectIdeFocusManager.getInstance(project).getFocusOwner())
+        .build(),
+      preselectActionCondition,
+      true
+    );
     myProject = project;
     DataManager.registerDataProvider(getList(), dataId -> POPUP_MODEL == dataId ? getListModel() : null);
     myKey = dimensionKey;
@@ -167,7 +176,8 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
       public void onClosed(@Nonnull LightweightWindowEvent event) {
         popupWindow.removeComponentListener(windowListener);
         if (dimensionKey != null && myUserSizeChanged) {
-          ProjectWindowStateService.getInstance(myProject).putSizeFor(myProject, dimensionKey, new Size(myPrevSize.width, myPrevSize.height));
+          ProjectWindowStateService.getInstance(myProject)
+            .putSizeFor(myProject, dimensionKey, new Size(myPrevSize.width, myPrevSize.height));
         }
       }
     });
@@ -459,7 +469,13 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
     @Nonnull
     private final String myToExpandText;
 
-    MoreAction(@Nonnull Project project, int numberOfHiddenNodes, @Nullable String settingName, boolean defaultExpandValue, boolean hasFavorites) {
+    MoreAction(
+      @Nonnull Project project,
+      int numberOfHiddenNodes,
+      @Nullable String settingName,
+      boolean defaultExpandValue,
+      boolean hasFavorites
+    ) {
       super();
       myProject = project;
       mySettingName = settingName;
@@ -467,7 +483,11 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
       assert numberOfHiddenNodes > 0;
       myToExpandText = "Show " + numberOfHiddenNodes + " More...";
       myToCollapseText = "Show " + (hasFavorites ? "Only Favorites" : "Less");
-      setExpanded(settingName != null ? PropertiesComponent.getInstance(project).getBoolean(settingName, defaultExpandValue) : defaultExpandValue);
+      setExpanded(
+        settingName != null
+          ? PropertiesComponent.getInstance(project).getBoolean(settingName, defaultExpandValue)
+          : defaultExpandValue
+      );
     }
 
     @Override
@@ -522,23 +542,29 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
     }
   }
 
-  public static void wrapWithMoreActionIfNeeded(@Nonnull Project project,
-                                                @Nonnull LightActionGroup parentGroup,
-                                                @Nonnull List<? extends ActionGroup> actionList,
-                                                int maxIndex,
-                                                @Nullable String settingName) {
+  public static void wrapWithMoreActionIfNeeded(
+    @Nonnull Project project,
+    @Nonnull LightActionGroup parentGroup,
+    @Nonnull List<? extends ActionGroup> actionList,
+    int maxIndex,
+    @Nullable String settingName
+  ) {
     wrapWithMoreActionIfNeeded(project, parentGroup, actionList, maxIndex, settingName, false);
   }
 
-  public static void wrapWithMoreActionIfNeeded(@Nonnull Project project,
-                                                @Nonnull LightActionGroup parentGroup,
-                                                @Nonnull List<? extends ActionGroup> actionList,
-                                                int maxIndex,
-                                                @Nullable String settingName,
-                                                boolean defaultExpandValue) {
+  public static void wrapWithMoreActionIfNeeded(
+    @Nonnull Project project,
+    @Nonnull LightActionGroup parentGroup,
+    @Nonnull List<? extends ActionGroup> actionList,
+    int maxIndex,
+    @Nullable String settingName,
+    boolean defaultExpandValue
+  ) {
     if (actionList.size() > maxIndex) {
-      boolean hasFavorites = actionList.stream().anyMatch(action -> action instanceof BranchActionGroup && ((BranchActionGroup)action).isFavorite());
-      MoreAction moreAction = new MoreAction(project, actionList.size() - maxIndex, settingName, defaultExpandValue, hasFavorites);
+      boolean hasFavorites = actionList.stream()
+        .anyMatch(action -> action instanceof BranchActionGroup && ((BranchActionGroup)action).isFavorite());
+      MoreAction moreAction =
+        new MoreAction(project, actionList.size() - maxIndex, settingName, defaultExpandValue, hasFavorites);
       for (int i = 0; i < actionList.size(); i++) {
         parentGroup.add(i < maxIndex ? actionList.get(i) : new HideableActionGroup(actionList.get(i), moreAction));
       }
