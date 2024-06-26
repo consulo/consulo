@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.execution.process;
 
-import consulo.application.util.SystemInfo;
 import consulo.component.util.NativeFileLoader;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
@@ -23,9 +22,9 @@ import consulo.process.ExecutionException;
 import consulo.process.ProcessHandler;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.internal.UnixProcessManager;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -128,11 +127,11 @@ public class RunnerMediator {
    */
   static boolean destroyProcess(@Nonnull final Process process, final boolean softKill) {
     try {
-      if (SystemInfo.isWindows) {
+      if (Platform.current().os().isWindows()) {
         sendCtrlEventThroughStream(process, softKill ? C : BRK);
         return true;
       }
-      else if (SystemInfo.isUnix) {
+      else if (Platform.current().os().isUnix()) {
         if (softKill) {
           return UnixProcessManager.sendSigIntToProcessTree(process);
         }

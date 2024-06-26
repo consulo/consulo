@@ -15,16 +15,16 @@
  */
 package consulo.ide.impl.idea.execution.process;
 
-import consulo.application.util.SystemInfo;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.process.ExecutionException;
 import consulo.process.KillableProcessHandler;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.internal.OSProcessHandler;
 import consulo.process.internal.UnixProcessManager;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
+
 import java.io.IOException;
 import java.nio.charset.Charset;
 
@@ -72,7 +72,7 @@ public class KillableProcessHandlerImpl extends OSProcessHandler implements Kill
 
   @Nonnull
   protected static GeneralCommandLine mediate(@Nonnull GeneralCommandLine commandLine, boolean withMediator) {
-    if (withMediator && SystemInfo.isWindows && MEDIATOR_KEY.get(commandLine) == null) {
+    if (withMediator && Platform.current().os().isWindows() && MEDIATOR_KEY.get(commandLine) == null) {
       boolean mediatorInjected = RunnerMediator.injectRunnerCommand(commandLine);
       MEDIATOR_KEY.set(commandLine, mediatorInjected);
     }
@@ -100,11 +100,11 @@ public class KillableProcessHandlerImpl extends OSProcessHandler implements Kill
    */
   private boolean  canKillProcessSoftly() {
     if (processCanBeKilledByOS(myProcess)) {
-      if (SystemInfo.isWindows) {
+      if (Platform.current().os().isWindows()) {
         // runnerw.exe can send Ctrl+C events to a wrapped process
         return myMediatedProcess;
       }
-      else if (SystemInfo.isUnix) {
+      else if (Platform.current().os().isUnix()) {
         // 'kill -SIGINT <pid>' will be executed
         return true;
       }
@@ -147,10 +147,10 @@ public class KillableProcessHandlerImpl extends OSProcessHandler implements Kill
   }
 
   protected boolean destroyProcessGracefully() {
-    if (SystemInfo.isWindows && myMediatedProcess) {
+    if (Platform.current().os().isWindows() && myMediatedProcess) {
       return RunnerMediator.destroyProcess(myProcess, true);
     }
-    else if (SystemInfo.isUnix) {
+    else if (Platform.current().os().isUnix()) {
       return UnixProcessManager.sendSigIntToProcessTree(myProcess);
     }
     return false;

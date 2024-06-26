@@ -16,21 +16,21 @@
 
 package consulo.ide.impl.idea.find.actions;
 
-import consulo.application.CommonBundle;
-import consulo.language.editor.hint.HintManager;
-import consulo.ide.impl.idea.codeInsight.navigation.actions.GotoDeclarationAction;
+import consulo.application.Application;
+import consulo.codeEditor.Editor;
 import consulo.find.FindBundle;
 import consulo.find.FindManager;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.application.ApplicationManager;
-import consulo.codeEditor.Editor;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
+import consulo.ide.impl.idea.codeInsight.navigation.actions.GotoDeclarationAction;
+import consulo.language.editor.hint.HintManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.resolve.PsiElementProcessor;
+import consulo.platform.base.localize.CommonLocalize;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.usage.PsiElementUsageTarget;
 import consulo.usage.UsageTarget;
 import consulo.usage.UsageView;
@@ -43,7 +43,7 @@ public class FindUsagesAction extends AnAction {
 
   @Override
   public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     if (project == null) {
       return;
     }
@@ -51,13 +51,10 @@ public class FindUsagesAction extends AnAction {
 
     UsageTarget[] usageTargets = e.getData(UsageView.USAGE_TARGETS_KEY);
     if (usageTargets == null) {
-      final Editor editor = e.getData(CommonDataKeys.EDITOR);
-      chooseAmbiguousTargetAndPerform(project, editor, new PsiElementProcessor<PsiElement>() {
-        @Override
-        public boolean execute(@Nonnull final PsiElement element) {
-          startFindUsages(element);
-          return false;
-        }
+      final Editor editor = e.getData(Editor.KEY);
+      chooseAmbiguousTargetAndPerform(project, editor, element -> {
+        startFindUsages(element);
+        return false;
       });
     }
     else {
@@ -80,21 +77,30 @@ public class FindUsagesAction extends AnAction {
     FindUsagesInFileAction.updateFindUsagesAction(event);
   }
 
-  static void chooseAmbiguousTargetAndPerform(@Nonnull final Project project, final Editor editor, @Nonnull PsiElementProcessor<PsiElement> processor) {
+  static void chooseAmbiguousTargetAndPerform(
+    @Nonnull final Project project,
+    final Editor editor,
+    @Nonnull PsiElementProcessor<PsiElement> processor
+  ) {
     if (editor == null) {
-      Messages.showMessageDialog(project, FindBundle.message("find.no.usages.at.cursor.error"), CommonBundle.getErrorTitle(), Messages.getErrorIcon());
+      Messages.showMessageDialog(
+        project,
+        FindBundle.message("find.no.usages.at.cursor.error"),
+        CommonLocalize.titleError().get(),
+        UIUtil.getErrorIcon()
+      );
     }
     else {
       int offset = editor.getCaretModel().getOffset();
       boolean chosen = GotoDeclarationAction.chooseAmbiguousTarget(editor, offset, processor, FindBundle.message("find.usages.ambiguous.title"), null);
       if (!chosen) {
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-          @Override
-          public void run() {
+        Application.get().invokeLater(
+          () -> {
             if (editor.isDisposed() || !editor.getComponent().isShowing()) return;
             HintManager.getInstance().showErrorHint(editor, FindBundle.message("find.no.usages.at.cursor.error"));
-          }
-        }, project.getDisposed());
+          },
+          project.getDisposed()
+        );
       }
     }
   }

@@ -86,7 +86,7 @@ run.configuration.configuration.tab.title:
   text: Configuration
 run.configuration.startup.connection.rab.title:
   text: Startup/Connection
-add.new.run.configuration.acrtion.name:
+add.new.run.configuration.action2.name:
   text: Add New Configuration
 add.new.run.configuration.action.name:
   text: Add New ''{0}'' Configuration

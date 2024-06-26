@@ -24,7 +24,7 @@ import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.executor.Executor;
 import consulo.execution.runner.DefaultProgramRunner;
 import consulo.execution.runner.ProgramRunner;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.ExceptionUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
@@ -58,7 +58,7 @@ public abstract class RemoteProcessSupport<Target, EntryPoint, Parameters> {
   public static final Logger LOG = Logger.getInstance(RemoteProcessSupport.class);
 
   private final Class<EntryPoint> myValueClass;
-  private final HashMap<Pair<Target, Parameters>, Info> myProcMap = new HashMap<Pair<Target, Parameters>, Info>();
+  private final HashMap<Pair<Target, Parameters>, Info> myProcMap = new HashMap<>();
 
   static {
     RemoteServer.setupRMI();
@@ -80,7 +80,7 @@ public abstract class RemoteProcessSupport<Target, EntryPoint, Parameters> {
   }
 
   public void stopAll(boolean wait) {
-    ArrayList<ProcessHandler> allHandlers = new ArrayList<ProcessHandler>();
+    ArrayList<ProcessHandler> allHandlers = new ArrayList<>();
     synchronized (myProcMap) {
       for (Info o : myProcMap.values()) {
         ContainerUtil.addIfNotNull(o.handler, allHandlers);
@@ -97,7 +97,7 @@ public abstract class RemoteProcessSupport<Target, EntryPoint, Parameters> {
   }
 
   public List<Parameters> getActiveConfigurations(@Nonnull Target target) {
-    ArrayList<Parameters> result = new ArrayList<Parameters>();
+    ArrayList<Parameters> result = new ArrayList<>();
     synchronized (myProcMap) {
       for (Pair<Target, Parameters> pair : myProcMap.keySet()) {
         if (pair.first == target) {
@@ -143,7 +143,7 @@ public abstract class RemoteProcessSupport<Target, EntryPoint, Parameters> {
   }
 
   public void release(@Nonnull Target target, @Nullable Parameters configuration) {
-    ArrayList<ProcessHandler> handlers = new ArrayList<ProcessHandler>();
+    ArrayList<ProcessHandler> handlers = new ArrayList<>();
     synchronized (myProcMap) {
       for (Pair<Target, Parameters> pair : myProcMap.keySet()) {
         if (pair.first == target && (configuration == null || pair.second == configuration)) {
@@ -220,17 +220,14 @@ public abstract class RemoteProcessSupport<Target, EntryPoint, Parameters> {
   }
 
   private EntryPoint acquire(final RunningInfo port) throws Exception {
-    EntryPoint result = RemoteUtil.executeWithClassLoader(new Callable<EntryPoint>() {
-      @Override
-      public EntryPoint call() throws Exception {
-        Registry registry = LocateRegistry.getRegistry("localhost", port.port);
-        Remote remote = registry.lookup(port.name);
-        if (Remote.class.isAssignableFrom(myValueClass)) {
-          return RemoteUtil.substituteClassLoader(narrowImpl(remote, myValueClass), myValueClass.getClassLoader());
-        }
-        else {
-          return RemoteUtil.castToLocal(remote, myValueClass);
-        }
+    EntryPoint result = RemoteUtil.executeWithClassLoader(() -> {
+      Registry registry = LocateRegistry.getRegistry("localhost", port.port);
+      Remote remote = registry.lookup(port.name);
+      if (Remote.class.isAssignableFrom(myValueClass)) {
+        return RemoteUtil.substituteClassLoader(narrowImpl(remote, myValueClass), myValueClass.getClassLoader());
+      }
+      else {
+        return RemoteUtil.castToLocal(remote, myValueClass);
       }
     }, getClass().getClassLoader()); // should be the loader of client plugin
     // init hard ref that will keep it from DGC and thus preventing from System.exit

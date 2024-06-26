@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.formatting;
 
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.language.codeStyle.*;
 
 import java.io.PrintStream;

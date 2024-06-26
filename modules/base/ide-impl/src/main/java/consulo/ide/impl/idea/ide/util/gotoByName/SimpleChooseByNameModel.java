@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
-import consulo.language.editor.inspection.InspectionsBundle;
-import consulo.project.Project;
 import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
+import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -51,12 +51,12 @@ public abstract class SimpleChooseByNameModel implements ChooseByNameModel {
 
   @Override
   public String getNotInMessage() {
-    return InspectionsBundle.message("nothing.found");
+    return InspectionLocalize.nothingFound().get();
   }
 
   @Override
   public String getNotFoundMessage() {
-    return InspectionsBundle.message("nothing.found");
+    return InspectionLocalize.nothingFound().get();
   }
 
   @Override

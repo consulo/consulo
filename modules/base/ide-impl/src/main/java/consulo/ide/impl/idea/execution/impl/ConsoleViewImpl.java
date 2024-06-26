@@ -3,6 +3,7 @@
 package consulo.ide.impl.idea.execution.impl;
 
 import com.google.common.base.CharMatcher;
+import consulo.application.Application;
 import consulo.application.HelpManager;
 import consulo.application.ReadAction;
 import consulo.application.dumb.DumbAware;
@@ -43,6 +44,7 @@ import consulo.ide.impl.idea.openapi.editor.actions.ScrollToTheEndToolbarAction;
 import consulo.ide.impl.idea.openapi.editor.actions.ToggleUseSoftWrapsToolbarAction;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.util.collection.ArrayUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.logging.Logger;
@@ -54,7 +56,6 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
 import consulo.project.internal.StartupManagerEx;
-import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.OccurenceNavigator;
 import consulo.ui.ex.RelativePoint;
@@ -67,7 +68,6 @@ import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.undoRedo.util.UndoUtil;
-import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
@@ -172,13 +172,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     }, usePredefinedMessageFilter);
   }
 
-  public ConsoleViewImpl(
-    @Nonnull final Project project,
-    @Nonnull SearchScope searchScope,
-    boolean viewer,
-    @Nonnull final ConsoleState initialState,
-    boolean usePredefinedMessageFilter
-  ) {
+  public ConsoleViewImpl(@Nonnull final Project project, @Nonnull SearchScope searchScope, boolean viewer, @Nonnull final ConsoleState initialState, boolean usePredefinedMessageFilter) {
     super(new BorderLayout());
     initTypedHandler();
     myIsViewer = viewer;
@@ -186,10 +180,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     myPsiDisposedCheck = new DisposedPsiManagerCheck(project);
     myProject = project;
 
-    myFilters = new CompositeFilter(
-      project,
-      usePredefinedMessageFilter ? ConsoleViewUtil.computeConsoleFilters(project, this, searchScope) : Collections.emptyList()
-    );
+    myFilters = new CompositeFilter(project, usePredefinedMessageFilter ? ConsoleViewUtil.computeConsoleFilters(project, this, searchScope) : Collections.emptyList());
     myFilters.setForceUseAllFilters(true);
 
     List<ConsoleInputFilterProvider> inputFilters = ConsoleInputFilterProvider.INPUT_FILTER_PROVIDERS.getExtensionList();
@@ -219,7 +210,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
 
       @Override
       public void exitDumbMode() {
-        myProject.getApplication().invokeLater(() -> {
+        Application.get().invokeLater(() -> {
           if (myEditor == null || project.isDisposed() || DumbService.getInstance(project).isDumb()) return;
 
           Document document = myEditor.getDocument();
@@ -229,8 +220,8 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
         });
       }
     });
-    myProject.getApplication().getMessageBus().connect(this).subscribe(EditorColorsListener.class, scheme -> {
-      UIAccess.assertIsUIThread();
+    Application.get().getMessageBus().connect(this).subscribe(EditorColorsListener.class, scheme -> {
+      Application.get().assertIsDispatchThread();
       if (isDisposed() || myEditor == null) return;
       MarkupModel model = DocumentMarkupModel.forDocument(myEditor.getDocument(), project, false);
       for (RangeHighlighter tokenMarker : model.getAllHighlighters()) {
@@ -264,7 +255,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
 
   @RequiredUIAccess
   public void foldImmediately() {
-    UIAccess.assertIsUIThread();
+    Application.get().assertIsDispatchThread();
     if (!myFlushAlarm.isEmpty()) {
       cancelAllFlushRequests();
       flushDeferredText();
@@ -318,7 +309,6 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
         super(true); // each request must be executed
       }
 
-      @RequiredUIAccess
       @Override
       public void doRun() {
         flushDeferredText();
@@ -341,7 +331,6 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     }
 
     addFlushRequest(0, new FlushRunnable(true) {
-      @RequiredUIAccess
       @Override
       public void doRun() {
         flushDeferredText();
@@ -513,10 +502,10 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
   }
 
   @TestOnly
-  @RequiredUIAccess
   public void waitAllRequests() {
-    UIAccess.assertIsUIThread();
-    Future<?> future = myProject.getApplication().executeOnPooledThread(() -> {
+    Application application = Application.get();
+    application.assertIsDispatchThread();
+    Future<?> future = application.executeOnPooledThread(() -> {
       while (true) {
         try {
           myFlushAlarm.waitForAllExecuted(10, TimeUnit.SECONDS);
@@ -588,15 +577,13 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
   }
 
   // send text which was typed in the console to the running process
-  @RequiredUIAccess
   private void sendUserInput(@Nonnull CharSequence typedText) {
-    UIAccess.assertIsUIThread();
+    Application.get().assertIsDispatchThread();
     if (myState.isRunning() && NEW_LINE_MATCHER.indexIn(typedText) >= 0) {
       StringBuilder textToSend = new StringBuilder();
       // compute text input from the console contents:
       // all range markers beginning from the caret offset backwards, marked as user input and not marked as already sent
-      for (RangeMarker marker = findTokenMarker(myEditor.getCaretModel().getOffset() - 1); marker != null;
-           marker = ((RangeMarkerImpl)marker).findRangeMarkerBefore()) {
+      for (RangeMarker marker = findTokenMarker(myEditor.getCaretModel().getOffset() - 1); marker != null; marker = ((RangeMarkerImpl)marker).findRangeMarkerBefore()) {
         ConsoleViewContentType tokenType = getTokenType(marker);
         if (tokenType != null) {
           if (tokenType != ConsoleViewContentType.USER_INPUT || marker.getUserData(USER_INPUT_SENT) == Boolean.TRUE) {
@@ -649,9 +636,8 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     return true;
   }
 
-  @RequiredUIAccess
   public void flushDeferredText() {
-    UIAccess.assertIsUIThread();
+    Application.get().assertIsDispatchThread();
     if (isDisposed()) return;
     final boolean shouldStickToEnd = !myCancelStickToEnd && isStickingToEnd();
     myCancelStickToEnd = false; // Cancel only needs to last for one update. Next time, isStickingToEnd() will be false.
@@ -816,9 +802,8 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     text.setLength(newLength);
   }
 
-  @RequiredUIAccess
   private void createTokenRangeHighlighter(@Nonnull ConsoleViewContentType contentType, int startOffset, int endOffset) {
-    UIAccess.assertIsUIThread();
+    Application.get().assertIsDispatchThread();
     TextAttributes attributes = contentType.getAttributes();
     MarkupModel model = DocumentMarkupModel.forDocument(myEditor.getDocument(), getProject(), true);
     int layer = HighlighterLayer.SYNTAX + 1; // make custom filters able to draw their text attributes over the default ones
@@ -830,9 +815,8 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     return myProject.isDisposed() || myEditor == null;
   }
 
-  @RequiredUIAccess
   protected void doClear() {
-    UIAccess.assertIsUIThread();
+    Application.get().assertIsDispatchThread();
 
     if (isDisposed()) return;
     final Document document = myEditor.getDocument();
@@ -996,9 +980,8 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     return new DefaultActionGroup(result);
   }
 
-  @RequiredUIAccess
   private void highlightHyperlinksAndFoldings(int startLine) {
-    UIAccess.assertIsUIThread();
+    Application.get().assertIsDispatchThread();
     boolean canHighlightHyperlinks = !myFilters.isEmpty();
 
     if (!canHighlightHyperlinks && !myUpdateFoldingsEnabled) {
@@ -1021,7 +1004,6 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     }
   }
 
-  @RequiredUIAccess
   @SuppressWarnings("WeakerAccess") // Used in Rider
   public void rehighlightHyperlinksAndFoldings() {
     if (myEditor == null || myProject.isDisposed()) return;
@@ -1045,7 +1027,6 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
       if (!myFilters.shouldRunHeavy()) return;
       try {
         myFilters.applyHeavyFilter(documentCopy, startOffset, startLine, additionalHighlight -> addFlushRequest(0, new FlushRunnable(true) {
-          @RequiredUIAccess
           @Override
           public void doRun() {
             if (myHeavyUpdateTicket != currentValue) return;
@@ -1070,14 +1051,12 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     }, 0);
   }
 
-  @RequiredUIAccess
   private void updateFoldings(final int startLine, final int endLine) {
-    UIAccess.assertIsUIThread();
+    Application.get().assertIsDispatchThread();
     myEditor.getFoldingModel().runBatchFoldingOperation(() -> {
       Document document = myEditor.getDocument();
 
-      FoldRegion existingRegion = startLine > 0
-        ? myEditor.getFoldingModel().getCollapsedRegionAtOffset(document.getLineStartOffset(startLine - 1)) : null;
+      FoldRegion existingRegion = startLine > 0 ? myEditor.getFoldingModel().getCollapsedRegionAtOffset(document.getLineStartOffset(startLine - 1)) : null;
       ConsoleFolding lastFolding = USED_FOLDING_KEY.get(existingRegion);
       int lastStartLine = lastFolding == null ? Integer.MAX_VALUE
         : existingRegion.getStartOffset() == 0 ? 0 : document.getLineNumber(existingRegion.getStartOffset()) + 1;
@@ -1196,7 +1175,6 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     }
 
     @Override
-    @RequiredUIAccess
     public void execute(@Nonnull final Editor editor, final char charTyped, @Nonnull final DataContext dataContext) {
       final ConsoleViewImpl consoleView = editor.getUserData(CONSOLE_VIEW_IN_EDITOR_VIEW);
       if (consoleView == null || !consoleView.myState.isRunning() || consoleView.myIsViewer) {
@@ -1210,7 +1188,6 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     }
   }
 
-  @RequiredUIAccess
   private void type(@Nonnull Editor editor, @Nonnull String text) {
     flushDeferredText();
     SelectionModel selectionModel = editor.getSelectionModel();
@@ -1241,9 +1218,8 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
 
   private abstract static class ConsoleAction extends AnAction implements DumbAware {
     @Override
-    @RequiredUIAccess
     public void actionPerformed(@Nonnull final AnActionEvent e) {
-      UIAccess.assertIsUIThread();
+      Application.get().assertIsDispatchThread();
       DataContext context = e.getDataContext();
       ConsoleViewImpl console = getRunningConsole(context);
       if (console != null) {
@@ -1254,7 +1230,6 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     protected abstract void execute(@Nonnull ConsoleViewImpl console, @Nonnull DataContext context);
 
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull final AnActionEvent e) {
       final ConsoleViewImpl console = getRunningConsole(e.getDataContext());
       e.getPresentation().setEnabled(console != null);
@@ -1275,7 +1250,6 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
 
   private static class EnterHandler extends ConsoleAction {
     @Override
-    @RequiredUIAccess
     public void execute(@Nonnull final ConsoleViewImpl consoleView, @Nonnull final DataContext context) {
       consoleView.print("\n", ConsoleViewContentType.USER_INPUT);
       consoleView.flushDeferredText();
@@ -1286,7 +1260,6 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
 
   private static class PasteHandler extends ConsoleAction {
     @Override
-    @RequiredUIAccess
     public void execute(@Nonnull final ConsoleViewImpl consoleView, @Nonnull final DataContext context) {
       String text = CopyPasteManager.getInstance().getContents(DataFlavor.stringFlavor);
       if (text == null) return;
@@ -1327,7 +1300,6 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
 
   private static class DeleteHandler extends ConsoleAction {
     @Override
-    @RequiredUIAccess
     public void execute(@Nonnull final ConsoleViewImpl consoleView, @Nonnull final DataContext context) {
       final Editor editor = consoleView.myEditor;
 
@@ -1359,7 +1331,6 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
 
   private static class TabHandler extends ConsoleAction {
     @Override
-    @RequiredUIAccess
     protected void execute(@Nonnull ConsoleViewImpl console, @Nonnull DataContext context) {
       console.type(console.myEditor, "\t");
     }
@@ -1375,25 +1346,21 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
 
   // navigate up/down in stack trace
   @Override
-  @RequiredUIAccess
   public boolean hasNextOccurence() {
     return calcNextOccurrence(1) != null;
   }
 
   @Override
-  @RequiredUIAccess
   public boolean hasPreviousOccurence() {
     return calcNextOccurrence(-1) != null;
   }
 
   @Override
-  @RequiredUIAccess
   public OccurenceInfo goNextOccurence() {
     return calcNextOccurrence(1);
   }
 
   @Nullable
-  @RequiredUIAccess
   protected OccurenceInfo calcNextOccurrence(final int delta) {
     if (myHyperlinks == null) {
       return null;
@@ -1418,7 +1385,6 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
   }
 
   @Override
-  @RequiredUIAccess
   public OccurenceInfo goPreviousOccurence() {
     return calcNextOccurrence(-1);
   }
@@ -1484,7 +1450,6 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     Disposer.register(parent, () -> myListeners.remove(listener));
   }
 
-  @RequiredUIAccess
   private void insertUserText(int offset, @Nonnull String text) {
     List<Pair<String, ConsoleViewContentType>> result = myInputMessageFilter.applyFilter(text, ConsoleViewContentType.USER_INPUT);
     if (result == null) {
@@ -1505,9 +1470,8 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     }
   }
 
-  @RequiredUIAccess
   private void doInsertUserInput(int offset, @Nonnull String text) {
-    UIAccess.assertIsUIThread();
+    Application.get().assertIsDispatchThread();
     final Editor editor = myEditor;
     final Document document = editor.getDocument();
 
@@ -1608,7 +1572,6 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     }
 
     @Override
-    @RequiredUIAccess
     public final void run() {
       if (isDisposed()) return;
       // flush requires UndoManger/CommandProcessor properly initialized
@@ -1620,7 +1583,6 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
       doRun();
     }
 
-    @RequiredUIAccess
     protected void doRun() {
       flushDeferredText();
     }
@@ -1634,7 +1596,6 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     }
 
     @Override
-    @RequiredUIAccess
     public void doRun() {
       doClear();
     }
@@ -1649,7 +1610,6 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
 
   private class HyperlinkNavigationAction extends DumbAwareAction {
     @Override
-    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
       Runnable runnable = myHyperlinks.getLinkNavigationRunnable(myEditor.getCaretModel().getLogicalPosition());
       assert runnable != null;
@@ -1657,7 +1617,6 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     }
 
     @Override
-    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
       e.getPresentation().setEnabled(myHyperlinks.getLinkNavigationRunnable(myEditor.getCaretModel().getLogicalPosition()) != null);
     }

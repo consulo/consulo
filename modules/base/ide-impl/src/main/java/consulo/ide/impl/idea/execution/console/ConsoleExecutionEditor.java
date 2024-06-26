@@ -1,7 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.execution.console;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorFactory;
@@ -18,13 +18,13 @@ import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.ide.impl.idea.ide.GeneralSettings;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.editor.highlight.EditorHighlighterFactory;
 import consulo.project.Project;
 import consulo.ui.ex.action.EmptyAction;
 import consulo.ui.ex.action.IdeActions;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -57,7 +57,7 @@ public class ConsoleExecutionEditor implements Disposable {
 
     myBusConnection = getProject().getMessageBus().connect();
     // action shortcuts are not yet registered
-    ApplicationManager.getApplication().invokeLater(() -> installEditorFactoryListener(), getProject().getDisposed());
+    Application.get().invokeLater(this::installEditorFactoryListener, getProject().getDisposed());
   }
 
   private final FocusChangeListener myFocusListener = new FocusChangeListener() {
@@ -76,7 +76,9 @@ public class ConsoleExecutionEditor implements Disposable {
 
   public void initComponent() {
     myConsoleEditor.setContextMenuGroupId(IdeActions.GROUP_CONSOLE_EDITOR_POPUP);
-    myConsoleEditor.setHighlighter(EditorHighlighterFactory.getInstance().createEditorHighlighter(getVirtualFile(), myConsoleEditor.getColorsScheme(), getProject()));
+    myConsoleEditor.setHighlighter(
+      EditorHighlighterFactory.getInstance().createEditorHighlighter(getVirtualFile(), myConsoleEditor.getColorsScheme(), getProject())
+    );
     myConsolePromptDecorator.update();
   }
 

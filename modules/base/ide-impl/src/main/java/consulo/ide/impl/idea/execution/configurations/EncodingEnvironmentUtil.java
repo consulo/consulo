@@ -15,15 +15,14 @@
  */
 package consulo.ide.impl.idea.execution.configurations;
 
-import consulo.process.cmd.GeneralCommandLine;
-import consulo.project.Project;
-import consulo.application.util.SystemInfo;
-import consulo.virtualFileSystem.encoding.EncodingManager;
-import consulo.virtualFileSystem.encoding.EncodingProjectManager;
-import consulo.process.local.EnvironmentUtil;
 import consulo.annotation.UsedInPlugin;
 import consulo.logging.Logger;
-
+import consulo.platform.Platform;
+import consulo.process.cmd.GeneralCommandLine;
+import consulo.process.local.EnvironmentUtil;
+import consulo.project.Project;
+import consulo.virtualFileSystem.encoding.EncodingManager;
+import consulo.virtualFileSystem.encoding.EncodingProjectManager;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -58,7 +57,7 @@ public class EncodingEnvironmentUtil {
    * LC_CTYPE value is taken from "Settings | File Encodings".
    */
   public static void setLocaleEnvironmentIfMac(@Nonnull GeneralCommandLine commandLine) {
-    if (SystemInfo.isMac && !isLocaleDefined(commandLine)) {
+    if (Platform.current().os().isMac() && !isLocaleDefined(commandLine)) {
       setLocaleEnvironment(commandLine.getEnvironment(), commandLine.getCharset());
     }
   }
@@ -69,7 +68,7 @@ public class EncodingEnvironmentUtil {
    * Sets default encoding on Mac if it's undefined. <br/>
    */
   public static void setLocaleEnvironmentIfMac(@Nonnull Map<String, String> env, @Nonnull Charset charset) {
-    if (SystemInfo.isMac && !isLocaleDefined(env)) {
+    if (Platform.current().os().isMac() && !isLocaleDefined(env)) {
       setLocaleEnvironment(env, charset);
     }
   }
@@ -101,7 +100,7 @@ public class EncodingEnvironmentUtil {
    * @deprecated use {@link #setLocaleEnvironmentIfMac(GeneralCommandLine)} instead (to be removed in IDEA 16)
    */
   public static void fixDefaultEncodingIfMac(@Nonnull GeneralCommandLine commandLine, @Nullable Project project) {
-    if (SystemInfo.isMac && !isLocaleDefined(commandLine)) {
+    if (Platform.current().os().isMac() && !isLocaleDefined(commandLine)) {
       setLocaleEnvironment(commandLine.getEnvironment(), getCharset(project));
     }
   }
@@ -110,7 +109,7 @@ public class EncodingEnvironmentUtil {
    * @deprecated use {@link #setLocaleEnvironmentIfMac(Map, Charset)} instead (to be removed in IDEA 16)
    */
   public static void fixDefaultEncodingIfMac(@Nonnull Map<String, String> env, @Nullable Project project) {
-    if (SystemInfo.isMac && !isLocaleDefined(env)) {
+    if (Platform.current().os().isMac() && !isLocaleDefined(env)) {
       setLocaleEnvironment(env, getCharset(project));
     }
   }

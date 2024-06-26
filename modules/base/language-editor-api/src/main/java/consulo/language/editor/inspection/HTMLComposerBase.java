@@ -26,6 +26,7 @@ package consulo.language.editor.inspection;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.Language;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.inspection.reference.*;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -57,8 +58,8 @@ public abstract class HTMLComposerBase extends HTMLComposer {
   public HTMLExporter myExporter;
   private final int[] myListStack;
   private int myListStackTop;
-  private final Map<Key, HTMLComposerExtension> myExtensions = new HashMap<Key, HTMLComposerExtension>();
-  private final Map<Language, HTMLComposerExtension> myLanguageExtensions = new HashMap<Language, HTMLComposerExtension>();
+  private final Map<Key, HTMLComposerExtension> myExtensions = new HashMap<>();
+  private final Map<Language, HTMLComposerExtension> myLanguageExtensions = new HashMap<>();
 
   protected HTMLComposerBase() {
     myListStack = new int[5];
@@ -84,18 +85,19 @@ public abstract class HTMLComposerBase extends HTMLComposer {
     myExporter = null;
   }
 
+  @RequiredReadAction
   protected void genPageHeader(final StringBuffer buf, RefEntity refEntity) {
     if (refEntity instanceof RefElement) {
       RefElement refElement = (RefElement)refEntity;
 
-      appendHeading(buf, InspectionsBundle.message("inspection.offline.view.tool.display.name.title"));
+      appendHeading(buf, InspectionLocalize.inspectionOfflineViewToolDisplayNameTitle());
       buf.append(BR);
       appendAfterHeaderIndention(buf);
 
       appendShortName(buf, refElement);
       buf.append(BR).append(BR);
 
-      appendHeading(buf, InspectionsBundle.message("inspection.export.results.capitalized.location"));
+      appendHeading(buf, InspectionLocalize.inspectionExportResultsCapitalizedLocation());
       buf.append(BR);
       appendAfterHeaderIndention(buf);
       appendLocation(buf, refElement);
@@ -103,13 +105,14 @@ public abstract class HTMLComposerBase extends HTMLComposer {
     }
   }
 
+  @RequiredReadAction
   private void appendLocation(final StringBuffer buf, final RefElement refElement) {
     final HTMLComposerExtension extension = getLanguageExtension(refElement);
     if (extension != null) {
       extension.appendLocation(refElement, buf);
     }
     if (refElement instanceof RefFile){
-      buf.append(InspectionsBundle.message("inspection.export.results.file"));
+      buf.append(InspectionLocalize.inspectionExportResultsFile().get());
       buf.append(NBSP);
       appendElementReference(buf, refElement, false);
     }
@@ -122,12 +125,14 @@ public abstract class HTMLComposerBase extends HTMLComposer {
     return element != null ? myLanguageExtensions.get(element.getLanguage()) : null;
   }
 
+  @RequiredReadAction
   private void appendShortName(final StringBuffer buf, RefElement refElement) {
     final HTMLComposerExtension extension = getLanguageExtension(refElement);
     if (extension != null) {
       extension.appendShortName(refElement, buf);
     } else {
       refElement.accept(new RefVisitor() {
+        @RequiredReadAction
         @Override public void visitFile(@Nonnull RefFile file) {
           final PsiFile psiFile = file.getPsiElement();
           if (psiFile != null) {
@@ -140,6 +145,7 @@ public abstract class HTMLComposerBase extends HTMLComposer {
     }
   }
 
+  @RequiredReadAction
   public void appendQualifiedName(StringBuffer buf, RefEntity refEntity) {
     if (refEntity == null) return;
     String qName = "";
@@ -163,6 +169,7 @@ public abstract class HTMLComposerBase extends HTMLComposer {
   }
 
   @Override
+  @RequiredReadAction
   public void appendElementReference(final StringBuffer buf, RefElement refElement) {
     appendElementReference(buf, refElement, true);
   }
@@ -200,6 +207,7 @@ public abstract class HTMLComposerBase extends HTMLComposer {
   }
 
   @Override
+  @RequiredReadAction
   public void appendElementReference(final StringBuffer buf, RefElement refElement, boolean isPackageIncluded) {
     final HTMLComposerExtension extension = getLanguageExtension(refElement);
 
@@ -217,7 +225,8 @@ public abstract class HTMLComposerBase extends HTMLComposer {
       if (element != null) {
         VirtualFile file = PsiUtilCore.getVirtualFile(element);
         if (file != null) {
-          refElementName = ProjectUtilCore.displayUrlRelativeToProject(file, file.getPresentableUrl(), element.getProject(), true, false);
+          refElementName =
+            ProjectUtilCore.displayUrlRelativeToProject(file, file.getPresentableUrl(), element.getProject(), true, false);
         }
       }
       buf.append(refElementName);
@@ -242,9 +251,10 @@ public abstract class HTMLComposerBase extends HTMLComposer {
   }
 
   @Override
+  @RequiredReadAction
   public void appendElementInReferences(StringBuffer buf, RefElement refElement) {
     if (refElement.getInReferences().size() > 0) {
-      appendHeading(buf, InspectionsBundle.message("inspection.export.results.used.from"));
+      appendHeading(buf, InspectionLocalize.inspectionExportResultsUsedFrom());
       startList(buf);
       for (RefElement refCaller : refElement.getInReferences()) {
         appendListItem(buf, refCaller);
@@ -254,10 +264,11 @@ public abstract class HTMLComposerBase extends HTMLComposer {
   }
 
   @Override
+  @RequiredReadAction
   public void appendElementOutReferences(StringBuffer buf, RefElement refElement) {
     if (refElement.getOutReferences().size() > 0) {
       buf.append(BR);
-      appendHeading(buf, InspectionsBundle.message("inspection.export.results.uses"));
+      appendHeading(buf, InspectionLocalize.inspectionExportResultsUses());
       startList(buf);
       for (RefElement refCallee : refElement.getOutReferences()) {
         appendListItem(buf, refCallee);
@@ -267,6 +278,7 @@ public abstract class HTMLComposerBase extends HTMLComposer {
   }
 
   @Override
+  @RequiredReadAction
   public void appendListItem(StringBuffer buf, RefElement refElement) {
     startListItem(buf);
     buf.append(CLOSE_TAG);
@@ -288,7 +300,7 @@ public abstract class HTMLComposerBase extends HTMLComposer {
         final String text = quickFixes[i];
         if (text == null) continue;
         if (!listStarted) {
-          appendHeading(buf, InspectionsBundle.message("inspection.problem.resolution"));
+          appendHeading(buf, InspectionLocalize.inspectionProblemResolution());
           startList(buf);
           listStarted = true;
         }
@@ -335,11 +347,12 @@ public abstract class HTMLComposerBase extends HTMLComposer {
     buf.append(BR);
     appendAfterHeaderIndention(buf);
     buf.append(B_OPENING);
-    buf.append(InspectionsBundle.message("inspection.export.results.no.problems.found"));
+    buf.append(InspectionLocalize.inspectionExportResultsNoProblemsFound());
     buf.append(B_CLOSING).append(BR);
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public <T> T getExtension(final Key<T> key) {
     return (T)myExtensions.get(key);
   }

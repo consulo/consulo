@@ -35,7 +35,7 @@ import consulo.execution.impl.internal.RunConfigurationSelector;
 import consulo.execution.impl.internal.configuration.*;
 import consulo.execution.internal.RunManagerConfig;
 import consulo.execution.internal.RunManagerEx;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.ide.impl.idea.util.ArrayUtilRt;
 import consulo.ide.impl.idea.util.IconUtil;
 import consulo.ide.impl.idea.util.config.StorageAccessors;
@@ -61,6 +61,7 @@ import consulo.ui.ex.popup.*;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 import consulo.util.lang.Trinity;
 import jakarta.annotation.Nonnull;
@@ -72,8 +73,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.*;
 import javax.swing.tree.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.*;
@@ -130,9 +129,9 @@ public class RunConfigurable extends BaseConfigurable {
   private Configurable mySelectedConfigurable = null;
   private static final Logger LOG = Logger.getInstance(RunConfigurable.class);
   private final JTextField myRecentsLimit = new JTextField("5", 2);
-  private final JCheckBox myConfirmation = new JCheckBox(ExecutionBundle.message("rerun.confirmation.checkbox"), true);
-  private final List<Pair<UnnamedConfigurable, JComponent>> myAdditionalSettings = new ArrayList<Pair<UnnamedConfigurable, JComponent>>();
-  private Map<ConfigurationFactory, Configurable> myStoredComponents = new HashMap<ConfigurationFactory, Configurable>();
+  private final JCheckBox myConfirmation = new JCheckBox(ExecutionLocalize.rerunConfirmationCheckbox().get(), true);
+  private final List<Pair<UnnamedConfigurable, JComponent>> myAdditionalSettings = new ArrayList<>();
+  private Map<ConfigurationFactory, Configurable> myStoredComponents = new HashMap<>();
   private ToolbarDecorator myToolbarDecorator;
   private boolean isFolderCreating;
   private RunConfigurable.MyToolbarAddAction myAddAction = new MyToolbarAddAction();
@@ -154,7 +153,7 @@ public class RunConfigurable extends BaseConfigurable {
 
   @Override
   public String getDisplayName() {
-    return ExecutionBundle.message("run.configurable.display.name");
+    return ExecutionLocalize.runConfigurableDisplayName().get();
   }
 
   private void initTree() {
@@ -337,42 +336,38 @@ public class RunConfigurable extends BaseConfigurable {
         updateDialog();
       }
     });
-    myTree.registerKeyboardAction(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        clickDefaultButton();
-      }
-    }, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), JComponent.WHEN_FOCUSED);
-    SwingUtilities.invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        if (isDisposed) return;
+    myTree.registerKeyboardAction(
+      e -> clickDefaultButton(),
+      KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),
+      JComponent.WHEN_FOCUSED
+    );
+    SwingUtilities.invokeLater(() -> {
+      if (isDisposed) return;
 
-        myTree.requestFocusInWindow();
-        final RunnerAndConfigurationSettings settings = manager.getSelectedConfiguration();
-        if (settings != null) {
-          final Enumeration enumeration = myRoot.breadthFirstEnumeration();
-          while (enumeration.hasMoreElements()) {
-            final DefaultMutableTreeNode node = (DefaultMutableTreeNode)enumeration.nextElement();
-            final Object userObject = node.getUserObject();
-            if (userObject instanceof RunnerAndConfigurationSettingsImpl) {
-              final RunnerAndConfigurationSettings runnerAndConfigurationSettings = (RunnerAndConfigurationSettings)userObject;
-              final ConfigurationType configurationType = settings.getType();
-              if (configurationType != null &&
-                  Comparing.strEqual(runnerAndConfigurationSettings.getConfiguration().getType().getId(), configurationType.getId()) &&
-                  Comparing.strEqual(runnerAndConfigurationSettings.getConfiguration().getName(), settings.getName())) {
-                TreeUtil.selectInTree(node, true, myTree);
-                return;
-              }
+      myTree.requestFocusInWindow();
+      final RunnerAndConfigurationSettings settings = manager.getSelectedConfiguration();
+      if (settings != null) {
+        final Enumeration enumeration = myRoot.breadthFirstEnumeration();
+        while (enumeration.hasMoreElements()) {
+          final DefaultMutableTreeNode node = (DefaultMutableTreeNode)enumeration.nextElement();
+          final Object userObject = node.getUserObject();
+          if (userObject instanceof RunnerAndConfigurationSettingsImpl) {
+            final RunnerAndConfigurationSettings runnerAndConfigurationSettings = (RunnerAndConfigurationSettings)userObject;
+            final ConfigurationType configurationType = settings.getType();
+            if (configurationType != null &&
+              Comparing.strEqual(runnerAndConfigurationSettings.getConfiguration().getType().getId(), configurationType.getId()) &&
+              Comparing.strEqual(runnerAndConfigurationSettings.getConfiguration().getName(), settings.getName())) {
+              TreeUtil.selectInTree(node, true, myTree);
+              return;
             }
           }
         }
-        else {
-          mySelectedConfigurable = null;
-        }
-        //TreeUtil.selectInTree(defaults, true, myTree);
-        drawPressAddButtonMessage(null);
       }
+      else {
+        mySelectedConfigurable = null;
+      }
+      //TreeUtil.selectInTree(defaults, true, myTree);
+      drawPressAddButtonMessage(null);
     });
     sortTopLevelBranches();
     ((DefaultTreeModel)myTree.getModel()).reload();
@@ -390,7 +385,7 @@ public class RunConfigurable extends BaseConfigurable {
         final RunnerAndConfigurationSettings runnerAndConfigurationSettings = (RunnerAndConfigurationSettings)userObject;
         final ConfigurationType configurationType = configuration.getType();
         if (Comparing.strEqual(runnerAndConfigurationSettings.getConfiguration().getType().getId(), configurationType.getId()) &&
-            Comparing.strEqual(runnerAndConfigurationSettings.getConfiguration().getName(), configuration.getName())) {
+          Comparing.strEqual(runnerAndConfigurationSettings.getConfiguration().getName(), configuration.getName())) {
           TreeUtil.selectInTree(node, true, myTree);
           return true;
         }
@@ -421,7 +416,7 @@ public class RunConfigurable extends BaseConfigurable {
       }
     });
     panel.add(LabeledComponent.left(textField, "Folder name"));
-    panel.add(new JLabel(ExecutionBundle.message("run.configuration.rename.folder.disclaimer")));
+    panel.add(new JLabel(ExecutionLocalize.runConfigurationRenameFolderDisclaimer().get()));
 
     myRightPanel.add(panel);
     myRightPanel.revalidate();
@@ -436,7 +431,7 @@ public class RunConfigurable extends BaseConfigurable {
     Object userObject = node.getUserObject();
     if (userObject instanceof RunnerAndConfigurationSettingsImpl) {
       final SingleConfigurationConfigurable<RunConfiguration> configurationConfigurable =
-              SingleConfigurationConfigurable.editSettings((RunnerAndConfigurationSettings)userObject, null);
+        SingleConfigurationConfigurable.editSettings((RunnerAndConfigurationSettings)userObject, null);
       installUpdateListeners(configurationConfigurable);
       node.setUserObject(configurationConfigurable);
       return configurationConfigurable;
@@ -524,12 +519,9 @@ public class RunConfigurable extends BaseConfigurable {
       }
     });
 
-    info.addSharedListener(new ChangeListener() {
-      @Override
-      public void stateChanged(ChangeEvent e) {
-        changed[0] = true;
-        update();
-      }
+    info.addSharedListener(e -> {
+      changed[0] = true;
+      update();
     });
   }
 
@@ -542,10 +534,10 @@ public class RunConfigurable extends BaseConfigurable {
     addIcon.setBorder(new EmptyBorder(0, 5, 0, 5));
     panel.add(addIcon);
 
-    final String configurationTypeDescription = configurationType != null
-                                                ? configurationType.getConfigurationTypeDescription().get()
-                                                : ExecutionBundle.message("run.configuration.default.type.description");
-    panel.add(new JLabel(ExecutionBundle.message("empty.run.configuration.panel.text.label3", configurationTypeDescription)));
+    final LocalizeValue configurationTypeDescription = configurationType != null
+      ? configurationType.getConfigurationTypeDescription()
+      : ExecutionLocalize.runConfigurationDefaultTypeDescription();
+    panel.add(new JLabel(ExecutionLocalize.emptyRunConfigurationPanelTextLabel3(configurationTypeDescription).get()));
     JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(panel, true);
 
     myRightPanel.removeAll();
@@ -573,29 +565,49 @@ public class RunConfigurable extends BaseConfigurable {
   private JPanel createLeftPanel() {
     initTree();
     MyRemoveAction removeAction = new MyRemoveAction();
-    MyMoveAction moveUpAction = new MyMoveAction(ExecutionBundle.message("move.up.action.name"), null, IconUtil.getMoveUpIcon(), -1);
-    MyMoveAction moveDownAction = new MyMoveAction(ExecutionBundle.message("move.down.action.name"), null, IconUtil.getMoveDownIcon(), 1);
+    MyMoveAction moveUpAction = new MyMoveAction(
+      ExecutionLocalize.moveUpActionName().get(),
+      null,
+      IconUtil.getMoveUpIcon(),
+      -1
+    );
+    MyMoveAction moveDownAction = new MyMoveAction(
+      ExecutionLocalize.moveDownActionName().get(),
+      null,
+      IconUtil.getMoveDownIcon(),
+      1
+    );
     myToolbarDecorator = ToolbarDecorator.createDecorator(myTree)
-            .setAddAction(myAddAction).setAddActionName(ExecutionBundle.message("add.new.run.configuration.acrtion.name"))
-            .setRemoveAction(removeAction).setRemoveActionUpdater(removeAction)
-            .setRemoveActionName(ExecutionBundle.message("remove.run.configuration.action.name"))
-            .setPanelBorder(JBUI.Borders.empty())
-            .setToolbarBackgroundColor(myEditorMode ? UIUtil.getPanelBackground() : SwingUIDecorator.get(SwingUIDecorator::getSidebarColor))
-            .setMoveUpAction(moveUpAction).setMoveUpActionName(ExecutionBundle.message("move.up.action.name")).setMoveUpActionUpdater(moveUpAction)
-            .setMoveDownAction(moveDownAction).setMoveDownActionName(ExecutionBundle.message("move.down.action.name")).setMoveDownActionUpdater(moveDownAction)
-            .addExtraAction(new MyCopyAction())
-            .addExtraAction(new MySaveAction())
-            .addExtraAction(new MyEditDefaultsAction())
-            .addExtraAction(new MyCreateFolderAction())
-            .setButtonComparator(ExecutionBundle.message("add.new.run.configuration.acrtion.name"),
-                                 ExecutionBundle.message("remove.run.configuration.action.name"),
-                                 ExecutionBundle.message("copy.configuration.action.name"),
-                                 ExecutionBundle.message("action.name.save.configuration"),
-                                 ExecutionBundle.message("run.configuration.edit.default.configuration.settings.text"),
-                                 ExecutionBundle.message("move.up.action.name"),
-                                 ExecutionBundle.message("move.down.action.name"),
-                                 ExecutionBundle.message("run.configuration.create.folder.text")
-            ).setForcedDnD();
+      .setAddAction(myAddAction)
+      .setAddActionName(ExecutionLocalize.addNewRunConfigurationAction2Name().get())
+      .setRemoveAction(removeAction)
+      .setRemoveActionUpdater(removeAction)
+      .setRemoveActionName(ExecutionLocalize.removeRunConfigurationActionName().get())
+      .setPanelBorder(JBUI.Borders.empty())
+      .setToolbarBackgroundColor(
+        myEditorMode ? UIUtil.getPanelBackground() : SwingUIDecorator.get(SwingUIDecorator::getSidebarColor)
+      )
+      .setMoveUpAction(moveUpAction)
+      .setMoveUpActionName(ExecutionLocalize.moveUpActionName().get())
+      .setMoveUpActionUpdater(moveUpAction)
+      .setMoveDownAction(moveDownAction)
+      .setMoveDownActionName(ExecutionLocalize.moveDownActionName().get())
+      .setMoveDownActionUpdater(moveDownAction)
+      .addExtraAction(new MyCopyAction())
+      .addExtraAction(new MySaveAction())
+      .addExtraAction(new MyEditDefaultsAction())
+      .addExtraAction(new MyCreateFolderAction())
+      .setButtonComparator(
+        ExecutionLocalize.addNewRunConfigurationAction2Name().get(),
+        ExecutionLocalize.removeRunConfigurationActionName().get(),
+        ExecutionLocalize.copyConfigurationActionName().get(),
+        ExecutionLocalize.actionNameSaveConfiguration().get(),
+        ExecutionLocalize.runConfigurationEditDefaultConfigurationSettingsText().get(),
+        ExecutionLocalize.moveUpActionName().get(),
+        ExecutionLocalize.moveDownActionName().get(),
+        ExecutionLocalize.runConfigurationCreateFolderText().get()
+      )
+      .setForcedDnD();
     return myToolbarDecorator.createPanel();
   }
 
@@ -613,12 +625,7 @@ public class RunConfigurable extends BaseConfigurable {
         setModified(true);
       }
     });
-    myConfirmation.addChangeListener(new ChangeListener() {
-      @Override
-      public void stateChanged(ChangeEvent e) {
-        setModified(true);
-      }
-    });
+    myConfirmation.addChangeListener(e -> setModified(true));
     return bottomPanel;
   }
 
@@ -641,7 +648,8 @@ public class RunConfigurable extends BaseConfigurable {
       @Nullable
       @Override
       public Object getData(@Nonnull Key dataId) {
-        return RunConfigurationSelector.KEY == dataId ? (RunConfigurationSelector)configuration -> selectConfiguration(configuration) : null;
+        return RunConfigurationSelector.KEY == dataId
+          ? (RunConfigurationSelector)configuration -> selectConfiguration(configuration) : null;
       }
     });
 
@@ -1154,14 +1162,17 @@ public class RunConfigurable extends BaseConfigurable {
 
   private class MyToolbarAddAction extends AnAction implements AnActionButtonRunnable {
     public MyToolbarAddAction() {
-      super(ExecutionBundle.message("add.new.run.configuration.acrtion.name"),
-            ExecutionBundle.message("add.new.run.configuration.acrtion.name"), ADD_ICON);
+      super(
+        ExecutionLocalize.addNewRunConfigurationAction2Name(),
+        ExecutionLocalize.addNewRunConfigurationAction2Name(),
+        ADD_ICON
+      );
       registerCustomShortcutSet(CommonShortcuts.INSERT, myTree);
     }
 
     @RequiredUIAccess
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       showAddPopup(true);
     }
 
@@ -1179,95 +1190,98 @@ public class RunConfigurable extends BaseConfigurable {
         configurationTypes.add(HIDDEN_ITEMS_STUB);
       }
 
-      final ListPopup popup = JBPopupFactory.getInstance().createListPopup(new BaseListPopupStep<ConfigurationType>(
-              ExecutionBundle.message("add.new.run.configuration.acrtion.name"), configurationTypes) {
-
-        @Override
-        @Nonnull
-        public String getTextFor(final ConfigurationType type) {
-          if(type == HIDDEN_ITEMS_STUB) {
-            return hiddenCount + " items more (irrelevant)...";
-          }
-          return type.getDisplayName().get();
-        }
-
-        @Override
-        public boolean isSpeedSearchEnabled() {
-          return true;
-        }
-
-        @Override
-        public boolean canBeHidden(ConfigurationType value) {
-          return true;
-        }
-
-        @Override
-        public Image getIconFor(final ConfigurationType type) {
-          return type.getIcon();
-        }
-
-        @Override
-        public PopupStep onChosen(final ConfigurationType type, final boolean finalChoice) {
-          if (hasSubstep(type)) {
-            return getSupStep(type);
-          }
-          if (type == HIDDEN_ITEMS_STUB) {
-            return doFinalStep(() -> showAddPopup(false));
+      final ListPopup popup = JBPopupFactory.getInstance().createListPopup(
+        new BaseListPopupStep<ConfigurationType>(ExecutionLocalize.addNewRunConfigurationAction2Name().get(), configurationTypes) {
+          @Override
+          @Nonnull
+          public String getTextFor(final ConfigurationType type) {
+            if(type == HIDDEN_ITEMS_STUB) {
+              return hiddenCount + " items more (irrelevant)...";
+            }
+            return type.getDisplayName().get();
           }
 
-          final ConfigurationFactory[] factories = type.getConfigurationFactories();
-          if (factories.length > 0) {
-            createNewConfiguration(factories[0]);
+          @Override
+          public boolean isSpeedSearchEnabled() {
+            return true;
           }
-          return FINAL_CHOICE;
-        }
 
-        @Override
-        public int getDefaultOptionIndex() {
-          ConfigurationType type = getSelectedConfigurationType();
-          return type != null ? configurationTypes.indexOf(type) : super.getDefaultOptionIndex();
-        }
+          @Override
+          public boolean canBeHidden(ConfigurationType value) {
+            return true;
+          }
 
-        private ListPopupStep getSupStep(final ConfigurationType type) {
-          final ConfigurationFactory[] factories = type.getConfigurationFactories();
-          Arrays.sort(factories, (factory1, factory2) -> factory1.getDisplayName().compareIgnoreCase(factory2.getDisplayName()));
-          return new BaseListPopupStep<ConfigurationFactory>(ExecutionBundle.message("add.new.run.configuration.action.name", type.getDisplayName()), factories) {
+          @Override
+          public Image getIconFor(final ConfigurationType type) {
+            return type.getIcon();
+          }
 
-            @Override
-            @Nonnull
-            public String getTextFor(final ConfigurationFactory value) {
-              return value.getDisplayName().get();
+          @Override
+          public PopupStep onChosen(final ConfigurationType type, final boolean finalChoice) {
+            if (hasSubstep(type)) {
+              return getSupStep(type);
+            }
+            if (type == HIDDEN_ITEMS_STUB) {
+              return doFinalStep(() -> showAddPopup(false));
             }
 
-            @Override
-            public Image getIconFor(final ConfigurationFactory factory) {
-              return factory.getIcon();
+            final ConfigurationFactory[] factories = type.getConfigurationFactories();
+            if (factories.length > 0) {
+              createNewConfiguration(factories[0]);
             }
+            return FINAL_CHOICE;
+          }
 
-            @Override
-            public PopupStep onChosen(final ConfigurationFactory factory, final boolean finalChoice) {
-              createNewConfiguration(factory);
-              return FINAL_CHOICE;
-            }
-          };
-        }
+          @Override
+          public int getDefaultOptionIndex() {
+            ConfigurationType type = getSelectedConfigurationType();
+            return type != null ? configurationTypes.indexOf(type) : super.getDefaultOptionIndex();
+          }
 
-        @Override
-        public boolean hasSubstep(final ConfigurationType type) {
-          return type.getConfigurationFactories().length > 1;
-        }
-      });
+          private ListPopupStep getSupStep(final ConfigurationType type) {
+            final ConfigurationFactory[] factories = type.getConfigurationFactories();
+            Arrays.sort(factories, (factory1, factory2) -> factory1.getDisplayName().compareIgnoreCase(factory2.getDisplayName()));
+            return new BaseListPopupStep<ConfigurationFactory>(
+              ExecutionLocalize.addNewRunConfigurationActionName(type.getDisplayName()).get(),
+              factories
+            ) {
+              @Override
+              @Nonnull
+              public String getTextFor(final ConfigurationFactory value) {
+                return value.getDisplayName().get();
+              }
+
+              @Override
+              public Image getIconFor(final ConfigurationFactory factory) {
+                return factory.getIcon();
+              }
+
+              @Override
+              public PopupStep onChosen(final ConfigurationFactory factory, final boolean finalChoice) {
+                createNewConfiguration(factory);
+                return FINAL_CHOICE;
+              }
+            };
+          }
+
+          @Override
+          public boolean hasSubstep(final ConfigurationType type) {
+            return type.getConfigurationFactories().length > 1;
+          }
+        });
       //new TreeSpeedSearch(myTree);
       popup.showUnderneathOf(myToolbarDecorator.getActionsPanel());
     }
   }
 
-
   private class MyRemoveAction extends AnAction implements AnActionButtonRunnable, AnActionButtonUpdater{
 
     public MyRemoveAction() {
-      super(ExecutionBundle.message("remove.run.configuration.action.name"),
-            ExecutionBundle.message("remove.run.configuration.action.name"), REMOVE_ICON);
+      super(
+        ExecutionLocalize.removeRunConfigurationActionName(),
+        ExecutionLocalize.removeRunConfigurationActionName(),
+        REMOVE_ICON
+      );
       registerCustomShortcutSet(CommonShortcuts.getDelete(), myTree);
     }
 
@@ -1403,7 +1417,11 @@ public class RunConfigurable extends BaseConfigurable {
 
   private class MyCopyAction extends AnAction {
     public MyCopyAction() {
-      super(ExecutionBundle.message("copy.configuration.action.name"), ExecutionBundle.message("copy.configuration.action.name"), PlatformIconGroup.actionsCopy());
+      super(
+        ExecutionLocalize.copyConfigurationActionName(),
+        ExecutionLocalize.copyConfigurationActionName(),
+        PlatformIconGroup.actionsCopy()
+      );
 
       final AnAction action = ActionManager.getInstance().getAction(IdeActions.ACTION_EDITOR_DUPLICATE);
       registerCustomShortcutSet(action.getShortcutSet(), myTree);
@@ -1443,7 +1461,11 @@ public class RunConfigurable extends BaseConfigurable {
   private class MySaveAction extends AnAction {
 
     public MySaveAction() {
-      super(ExecutionBundle.message("action.name.save.configuration"), null, AllIcons.Actions.Menu_saveall);
+      super(
+        ExecutionLocalize.actionNameSaveConfiguration(),
+        LocalizeValue.empty(),
+        AllIcons.Actions.Menu_saveall
+      );
     }
 
     @RequiredUIAccess
@@ -1555,8 +1577,11 @@ public class RunConfigurable extends BaseConfigurable {
 
   private class MyEditDefaultsAction extends AnAction {
     public MyEditDefaultsAction() {
-      super(ExecutionBundle.message("run.configuration.edit.default.configuration.settings.text"),
-            ExecutionBundle.message("run.configuration.edit.default.configuration.settings.description"), AllIcons.General.Settings);
+      super(
+        ExecutionLocalize.runConfigurationEditDefaultConfigurationSettingsText(),
+        ExecutionLocalize.runConfigurationEditDefaultConfigurationSettingsDescription(),
+        AllIcons.General.Settings
+      );
     }
 
     @RequiredUIAccess
@@ -1600,8 +1625,11 @@ public class RunConfigurable extends BaseConfigurable {
 
   private class MyCreateFolderAction extends AnAction {
     private MyCreateFolderAction() {
-      super(ExecutionBundle.message("run.configuration.create.folder.text"),
-            ExecutionBundle.message("run.configuration.create.folder.description"), AllIcons.Nodes.Folder);
+      super(
+        ExecutionLocalize.runConfigurationCreateFolderText(),
+        ExecutionLocalize.runConfigurationCreateFolderDescription(),
+        AllIcons.Nodes.Folder
+      );
     }
 
     @RequiredUIAccess

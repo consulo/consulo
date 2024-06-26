@@ -2,13 +2,9 @@
 
 package consulo.ide.impl.idea.find;
 
-import consulo.application.ApplicationBundle;
-import consulo.application.ApplicationManager;
-import consulo.application.ui.UISettings;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorFactory;
-import consulo.codeEditor.ScrollType;
-import consulo.codeEditor.SelectionModel;
+import consulo.application.Application;
+import consulo.application.localize.ApplicationLocalize;import consulo.application.ui.UISettings;
+import consulo.codeEditor.*;
 import consulo.codeEditor.event.EditorFactoryEvent;
 import consulo.codeEditor.event.EditorFactoryListener;
 import consulo.codeEditor.event.SelectionEvent;
@@ -29,10 +25,9 @@ import consulo.ide.impl.idea.find.impl.livePreview.LivePreviewController;
 import consulo.ide.impl.idea.find.impl.livePreview.SearchResults;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.DefaultCustomComponentAction;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -45,6 +40,7 @@ import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.update.Activatable;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -73,10 +69,14 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
   private String myStartSelectedText;
   private boolean mySelectionUpdatedFromSearchResults;
 
-  private final LinkLabel<Object> myClickToHighlightLabel = new LinkLabel<>(FindBundle.message("link.click.to.highlight"), null, (__, ___) -> {
-    setMatchesLimit(Integer.MAX_VALUE);
-    updateResults(true);
-  });
+  private final LinkLabel<Object> myClickToHighlightLabel = new LinkLabel<>(
+    FindBundle.message("link.click.to.highlight"),
+    null,
+    (__, ___) -> {
+      setMatchesLimit(Integer.MAX_VALUE);
+      updateResults(true);
+    }
+  );
   private final Disposable myDisposable = Disposable.newDisposable(EditorSearchSession.class.getName());
 
   public EditorSearchSession(@Nonnull Editor editor, Project project) {
@@ -164,7 +164,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
 
     updateUIWithFindModel();
 
-    if (ApplicationManager.getApplication().isUnitTestMode()) {
+    if (Application.get().isUnitTestMode()) {
       initLivePreview();
     }
     updateMultiLineStateIfNeeded();
@@ -266,7 +266,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
     if (SESSION_KEY == dataId) {
       return this;
     }
-    if (CommonDataKeys.EDITOR_EVEN_IF_INACTIVE == dataId) {
+    if (EditorKeys.EDITOR_EVEN_IF_INACTIVE == dataId) {
       return myEditor;
     }
     if (PlatformDataKeys.HELP_ID == dataId) {
@@ -284,16 +284,18 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
     else {
       int matches = sr.getMatchesCount();
       boolean tooManyMatches = matches > mySearchResults.getMatchesLimit();
-      String status;
+      LocalizeValue status;
       if (matches == 0 && !sr.getFindModel().isGlobal() && !myEditor.getSelectionModel().hasSelection()) {
-        status = ApplicationBundle.message("editorsearch.noselection");
+        status = ApplicationLocalize.editorsearchNoselection();
         myComponent.setRegularBackground();
       }
       else {
         int cursorIndex = sr.getCursorVisualIndex();
         status = tooManyMatches
-                 ? ApplicationBundle.message("editorsearch.toomuch", mySearchResults.getMatchesLimit())
-                 : cursorIndex != -1 ? ApplicationBundle.message("editorsearch.current.cursor.position", cursorIndex, matches) : ApplicationBundle.message("editorsearch.matches", matches);
+          ? ApplicationLocalize.editorsearchToomuch(mySearchResults.getMatchesLimit())
+          : cursorIndex != -1
+          ? ApplicationLocalize.editorsearchCurrentCursorPosition(cursorIndex, matches)
+          : ApplicationLocalize.editorsearchMatches(matches);
         if (!tooManyMatches && matches <= 0) {
           myComponent.setNotFoundBackground();
         }
@@ -301,7 +303,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
           myComponent.setRegularBackground();
         }
       }
-      myComponent.setStatusText(status);
+      myComponent.setStatusText(status.get());
       myClickToHighlightLabel.setVisible(tooManyMatches);
     }
     myComponent.updateActions();
@@ -385,10 +387,10 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
       AnAction action = ActionManager.getInstance().getAction(replaceState ? IdeActions.ACTION_REPLACE : IdeActions.ACTION_TOGGLE_FIND_IN_SELECTION_ONLY);
       Shortcut shortcut = ArrayUtil.getFirstElement(action.getShortcutSet().getShortcuts());
       if (shortcut != null) {
-        return ApplicationBundle.message("editorsearch.in.selection.with.hint", KeymapUtil.getShortcutText(shortcut));
+        return ApplicationLocalize.editorsearchInSelectionWithHint(KeymapUtil.getShortcutText(shortcut)).get();
       }
     }
-    return ApplicationBundle.message("editorsearch.in.selection");
+    return ApplicationLocalize.editorsearchInSelection().get();
   }
 
   private static boolean wholeWordsApplicable(String stringToFind) {
@@ -405,7 +407,11 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
         myLivePreviewController.performReplace();
       }
       catch (FindManager.MalformedReplacementStringException e) {
-        Messages.showErrorDialog(myComponent.getComponent(), e.getMessage(), FindBundle.message("find.replace.invalid.replacement.string.title"));
+        Messages.showErrorDialog(
+          myComponent.getComponent(),
+          e.getMessage(),
+          FindBundle.message("find.replace.invalid.replacement.string.title")
+        );
       }
     }
   }
@@ -474,7 +480,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
         }
         if (text.matches("\\|+")) {
           nothingToSearchFor(allowedToChangedEditorSelection);
-          myComponent.setStatusText(ApplicationBundle.message("editorsearch.empty.string.matches"));
+          myComponent.setStatusText(ApplicationLocalize.editorsearchEmptyStringMatches().get());
           return;
         }
       }
@@ -513,7 +519,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
 
   private void updateUIWithEmptyResults() {
     myComponent.setRegularBackground();
-    myComponent.setStatusText(ApplicationBundle.message("editorsearch.matches", 0));
+    myComponent.setStatusText(ApplicationLocalize.editorsearchMatches(0).get());
     myClickToHighlightLabel.setVisible(false);
   }
 
@@ -635,7 +641,11 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
     protected void update(@Nonnull JButton button) {
       FindResult cursor = mySearchResults.getCursor();
       button.setEnabled(cursor != null);
-      button.setText(cursor != null && mySearchResults.isExcluded(cursor) ? FindBundle.message("button.include") : FindBundle.message("button.exclude"));
+      button.setText(
+        cursor != null && mySearchResults.isExcluded(cursor)
+          ? FindBundle.message("button.include")
+          : FindBundle.message("button.exclude")
+      );
     }
 
     @Override
