@@ -36,7 +36,7 @@ import consulo.project.Project;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
 import consulo.versionControlSystem.change.BinaryContentRevision;
-import consulo.ide.impl.idea.openapi.vcs.changes.ByteBackedContentRevision;
+import consulo.versionControlSystem.change.ByteBackedContentRevision;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.ContentRevision;
 import consulo.versionControlSystem.diff.DiffProvider;

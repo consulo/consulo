@@ -15,14 +15,12 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListEditHandler;
-import consulo.ide.impl.idea.openapi.vcs.changes.LocalChangeListImpl;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.change.LocalChangeList;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.util.Collection;
 import java.util.function.Consumer;
@@ -42,14 +40,6 @@ public class ChangeListChooser extends DialogWrapper {
                            @jakarta.annotation.Nullable final String suggestedName) {
     super(project, false);
     myProject = project;
-
-    ChangeListEditHandler handler;
-    for (ChangeList changelist : changelists) {
-      handler = ((LocalChangeListImpl)changelist).getEditHandler();
-      if (handler != null) {
-        break;
-      }
-    }
 
     myPanel = new ChangeListChooserPanel(myProject, new Consumer<String>() {
       public void accept(final @jakarta.annotation.Nullable String errorMessage) {

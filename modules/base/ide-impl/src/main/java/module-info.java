@@ -86,6 +86,7 @@ open module consulo.ide.impl {
   requires consulo.execution.test.impl;
   requires consulo.builtin.web.server.impl;
   requires consulo.credential.storage.impl;
+  requires consulo.version.control.system.impl;
 
   requires consulo.ui.impl;
   requires consulo.localize.impl;
@@ -622,7 +623,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.vcs.changes.committed;
   exports consulo.ide.impl.idea.openapi.vcs.changes.conflicts;
   exports consulo.ide.impl.idea.openapi.vcs.changes.issueLinks;
-  exports consulo.ide.impl.idea.openapi.vcs.changes.local;
   exports consulo.ide.impl.idea.openapi.vcs.changes.patch;
   exports consulo.ide.impl.idea.openapi.vcs.changes.patch.tool;
   exports consulo.ide.impl.idea.openapi.vcs.changes.shelf;
@@ -671,7 +671,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.packaging.impl.ui;
   exports consulo.ide.impl.idea.packaging.impl.ui.actions;
   exports consulo.ide.impl.idea.packaging.ui;
-  exports consulo.ide.impl.idea.peer.impl;
   exports consulo.ide.impl.idea.platform;
   exports consulo.ide.impl.idea.platform.templates.github;
   exports consulo.ide.impl.idea.profile.codeInspection;

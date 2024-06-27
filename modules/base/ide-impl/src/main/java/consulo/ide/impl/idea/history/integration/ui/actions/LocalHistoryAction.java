@@ -16,22 +16,22 @@
 
 package consulo.ide.impl.idea.history.integration.ui.actions;
 
+import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.history.core.LocalHistoryFacade;
 import consulo.ide.impl.idea.history.integration.IdeaGateway;
 import consulo.ide.impl.idea.history.integration.LocalHistoryImpl;
+import consulo.language.editor.CommonDataKeys;
+import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.Presentation;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
+import consulo.util.collection.Streams;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import static consulo.util.lang.ObjectUtil.notNull;
-import static consulo.ide.impl.idea.util.containers.UtilKt.getIfSingle;
 
 public abstract class LocalHistoryAction extends AnAction implements DumbAware {
   @Override
@@ -68,7 +68,10 @@ public abstract class LocalHistoryAction extends AnAction implements DumbAware {
     actionPerformed(p, gw, notNull(getFile(e)), e);
   }
 
-  protected boolean isEnabled(@Nonnull LocalHistoryFacade vcs, @Nonnull IdeaGateway gw, @jakarta.annotation.Nullable VirtualFile f, @Nonnull AnActionEvent e) {
+  protected boolean isEnabled(@Nonnull LocalHistoryFacade vcs,
+                              @Nonnull IdeaGateway gw,
+                              @jakarta.annotation.Nullable VirtualFile f,
+                              @Nonnull AnActionEvent e) {
     return true;
   }
 
@@ -87,6 +90,6 @@ public abstract class LocalHistoryAction extends AnAction implements DumbAware {
 
   @Nullable
   protected VirtualFile getFile(@Nonnull AnActionEvent e) {
-    return getIfSingle(e.getData(VcsDataKeys.VIRTUAL_FILE_STREAM));
+    return Streams.getIfSingle(e.getData(VcsDataKeys.VIRTUAL_FILE_STREAM));
   }
 }

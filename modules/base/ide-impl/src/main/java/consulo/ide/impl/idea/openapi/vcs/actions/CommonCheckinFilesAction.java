@@ -16,23 +16,23 @@
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
 import consulo.project.Project;
+import consulo.util.collection.Streams;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.action.VcsContext;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.versionControlSystem.checkin.CheckinEnvironment;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.localize.VcsLocalize;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.util.lang.ObjectUtil;
 import consulo.versionControlSystem.util.VcsUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -43,16 +43,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static consulo.ide.impl.idea.util.containers.UtilKt.getIfSingle;
-
 public class CommonCheckinFilesAction extends AbstractCommonCheckinAction {
   @Override
   protected String getActionName(@Nonnull VcsContext dataContext) {
     String actionName = Optional.ofNullable(dataContext.getProject())
-      .map(project -> getCommonVcs(getRootsStream(dataContext), project))
-      .map(AbstractVcs::getCheckinEnvironment)
-      .map(CheckinEnvironment::getCheckinOperationName)
-      .orElse(VcsLocalize.vcsCommandNameCheckin().get());
+                                .map(project -> getCommonVcs(getRootsStream(dataContext), project))
+                                .map(AbstractVcs::getCheckinEnvironment)
+                                .map(CheckinEnvironment::getCheckinOperationName)
+                                .orElse(VcsLocalize.vcsCommandNameCheckin().get());
 
     return modifyCheckinActionName(dataContext, actionName);
   }
@@ -125,11 +123,11 @@ public class CommonCheckinFilesAction extends AbstractCommonCheckinAction {
 
   @Nullable
   private static AbstractVcs getCommonVcs(@Nonnull Stream<FilePath> roots, @Nonnull Project project) {
-    return getIfSingle(
+    return Streams.getIfSingle(
       roots.map(root -> VcsUtil.getVcsFor(project, root))
-        .filter(Objects::nonNull)
-        .distinct()
-        .limit(Math.min(2, ProjectLevelVcsManager.getInstance(project).getAllActiveVcss().length))
+           .filter(Objects::nonNull)
+           .distinct()
+           .limit(Math.min(2, ProjectLevelVcsManager.getInstance(project).getAllActiveVcss().length))
     );
   }
 }

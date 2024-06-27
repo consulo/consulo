@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
+import consulo.versionControlSystem.change.ByteBackedContentRevision;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.project.Project;
 import consulo.util.lang.Pair;

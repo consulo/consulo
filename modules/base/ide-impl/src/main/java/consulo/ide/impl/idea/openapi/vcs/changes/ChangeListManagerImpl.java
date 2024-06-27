@@ -25,7 +25,6 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.application.util.Semaphore;
-import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.function.Computable;
 import consulo.application.util.function.Processor;
 import consulo.application.util.registry.Registry;
@@ -38,22 +37,16 @@ import consulo.disposer.Disposable;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.EditorNotifications;
 import consulo.ide.impl.idea.openapi.util.Getter;
-import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.CalledInAwt;
 import consulo.ide.impl.idea.openapi.vcs.VcsConnectionProblem;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.ChangeListRemoveConfirmation;
 import consulo.ide.impl.idea.openapi.vcs.changes.conflicts.ChangelistConflictTracker;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.CommitHelper;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.PlusMinusModify;
 import consulo.ide.impl.idea.openapi.vcs.impl.AbstractVcsHelperImpl;
 import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
 import consulo.ide.impl.idea.openapi.vcs.impl.VcsRootIterator;
 import consulo.ide.impl.idea.openapi.vcs.readOnlyHandler.ReadonlyStatusHandlerImpl;
-import consulo.versionControlSystem.internal.ChangeListManagerEx;
-import consulo.versionControlSystem.localize.VcsLocalize;
-import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ide.impl.idea.util.ExceptionUtil;
 import consulo.ide.impl.idea.util.FunctionUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -65,13 +58,14 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.layer.DirectoryIndexExcludePolicy;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
+import consulo.proxy.EventDispatcher;
 import consulo.ui.ModalityState;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.Couple;
 import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.ThreeState;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.ref.Ref;
@@ -79,7 +73,10 @@ import consulo.util.xml.serializer.JDOMExternalizerUtil;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.checkin.CheckinEnvironment;
-import consulo.versionControlSystem.change.ContentRevisionCache;
+import consulo.versionControlSystem.impl.internal.change.*;
+import consulo.versionControlSystem.internal.ChangeListManagerEx;
+import consulo.versionControlSystem.localize.VcsLocalize;
+import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
@@ -87,18 +84,17 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.io.File;
 import java.util.*;
-import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -108,18 +104,6 @@ import java.util.function.Supplier;
 @Singleton
 @ServiceImpl
 public class ChangeListManagerImpl extends ChangeListManagerEx implements ChangeListOwner, Disposable, PersistentStateComponent<Element> {
-  static class Scheduler {
-    private final AtomicReference<Future> myLastTask = new AtomicReference<>();
-    private final ScheduledExecutorService myExecutor = AppExecutorUtil.createBoundedScheduledExecutorService("ChangeListManagerImpl pool", 1);
-
-    public void schedule(@Nonnull Runnable command, long delay, @Nonnull TimeUnit unit) {
-      myLastTask.set(myExecutor.schedule(command, delay, unit));
-    }
-
-    public void submit(@Nonnull Runnable command) {
-      myLastTask.set(myExecutor.submit(command));
-    }
-  }
 
   public static final Logger LOG = Logger.getInstance(ChangeListManagerImpl.class);
   private static final String EXCLUDED_CONVERTED_TO_IGNORED_OPTION = "EXCLUDED_CONVERTED_TO_IGNORED";
@@ -163,7 +147,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
   };
   private final ChangelistConflictTracker myConflictTracker;
 
-  private final Scheduler myScheduler = new Scheduler(); // update thread
+  private final ChangeListScheduler myScheduler = new ChangeListScheduler(); // update thread
 
   private boolean myModalNotificationsBlocked;
   @Nonnull
@@ -233,7 +217,9 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     ChangeListRemoveConfirmation.processLists(myProject, false, lists, new ChangeListRemoveConfirmation() {
       @Override
       public boolean askIfShouldRemoveChangeLists(@Nonnull List<? extends LocalChangeList> toAsk) {
-        return myConfig.REMOVE_EMPTY_INACTIVE_CHANGELISTS != VcsShowConfirmationOption.Value.SHOW_CONFIRMATION || showRemoveEmptyChangeListsProposal(myConfig, toAsk);
+        return myConfig.REMOVE_EMPTY_INACTIVE_CHANGELISTS != VcsShowConfirmationOption.Value.SHOW_CONFIRMATION || showRemoveEmptyChangeListsProposal(
+          myConfig,
+          toAsk);
       }
     });
   }
@@ -244,36 +230,41 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
    * @return true if the changelists have to be deleted, false if not.
    */
   @NonNls
-  private boolean showRemoveEmptyChangeListsProposal(@Nonnull final VcsConfiguration config, @Nonnull Collection<? extends LocalChangeList> lists) {
+  private boolean showRemoveEmptyChangeListsProposal(@Nonnull final VcsConfiguration config,
+                                                     @Nonnull Collection<? extends LocalChangeList> lists) {
     if (lists.isEmpty()) {
       return false;
     }
 
     final String question;
     if (lists.size() == 1) {
-      question = String.format("<html>The empty changelist '%s' is no longer active.<br>Do you want to remove it?</html>", StringUtil.first(lists.iterator().next().getName(), 30, true));
+      question = String.format("<html>The empty changelist '%s' is no longer active.<br>Do you want to remove it?</html>",
+                               StringUtil.first(lists.iterator().next().getName(), 30, true));
     }
     else {
       question = String.format("<html>Empty changelists<br/>%s are no longer active.<br>Do you want to remove them?</html>",
-                               StringUtil.join(lists, (Function<LocalChangeList, String>)list -> StringUtil.first(list.getName(), 30, true), "<br/>"));
+                               StringUtil.join(lists,
+                                               (Function<LocalChangeList, String>)list -> StringUtil.first(list.getName(), 30, true),
+                                               "<br/>"));
     }
 
-    VcsConfirmationDialog dialog = new VcsConfirmationDialog(myProject, "Remove Empty Changelist", "Remove", "Cancel", new VcsShowConfirmationOption() {
-      @Override
-      public Value getValue() {
-        return config.REMOVE_EMPTY_INACTIVE_CHANGELISTS;
-      }
+    VcsConfirmationDialog dialog =
+      new VcsConfirmationDialog(myProject, "Remove Empty Changelist", "Remove", "Cancel", new VcsShowConfirmationOption() {
+        @Override
+        public Value getValue() {
+          return config.REMOVE_EMPTY_INACTIVE_CHANGELISTS;
+        }
 
-      @Override
-      public void setValue(Value value) {
-        config.REMOVE_EMPTY_INACTIVE_CHANGELISTS = value;
-      }
+        @Override
+        public void setValue(Value value) {
+          config.REMOVE_EMPTY_INACTIVE_CHANGELISTS = value;
+        }
 
-      @Override
-      public boolean isPersistent() {
-        return true;
-      }
-    }, question, "&Remember my choice");
+        @Override
+        public boolean isPersistent() {
+          return true;
+        }
+      }, question, "&Remember my choice");
     return dialog.showAndGet();
   }
 
@@ -366,7 +357,10 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
    * so waiting for its completion on AWT thread is not good runnable is invoked on AWT thread
    */
   @Override
-  public void invokeAfterUpdate(final Runnable afterUpdate, final InvokeAfterUpdateMode mode, @Nullable final String title, @Nullable final ModalityState state) {
+  public void invokeAfterUpdate(final Runnable afterUpdate,
+                                final InvokeAfterUpdateMode mode,
+                                @Nullable final String title,
+                                @Nullable final ModalityState state) {
     myUpdater.invokeAfterUpdate(afterUpdate, mode, title, null, state);
   }
 
@@ -550,7 +544,9 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
             myWorker.onAfterWorkerSwitch(oldWorker);
             myModifier.setWorker(myWorker);
             if (LOG.isDebugEnabled()) {
-              LOG.debug("refresh procedure finished, unversioned size: " + dataHolder.getComposite().getVFHolder(FileHolder.HolderType.UNVERSIONED).getSize() + "\nchanges: " + myWorker);
+              LOG.debug("refresh procedure finished, unversioned size: " + dataHolder.getComposite()
+                                                                                     .getVFHolder(FileHolder.HolderType.UNVERSIONED)
+                                                                                     .getSize() + "\nchanges: " + myWorker);
             }
             final boolean statusChanged = !myComposite.equals(dataHolder.getComposite());
             myComposite = dataHolder.getComposite();
@@ -619,7 +615,8 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     final ChangeListManagerGate gate = dataHolder.getChangeListWorker().createSelfGate();
     // do actual requests about file statuses
     Getter<Boolean> disposedGetter = () -> myProject.isDisposed() || myUpdater.getIsStoppedGetter().get();
-    final UpdatingChangeListBuilder builder = new UpdatingChangeListBuilder(dataHolder.getChangeListWorker(), dataHolder.getComposite(), disposedGetter, this, gate);
+    final UpdatingChangeListBuilder builder =
+      new UpdatingChangeListBuilder(dataHolder.getChangeListWorker(), dataHolder.getComposite(), disposedGetter, this, gate);
 
     for (final VcsDirtyScope scope : scopes) {
       myUpdateChangesProgressIndicator.checkCanceled();
@@ -706,7 +703,11 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     }
   }
 
-  private void actualUpdate(@Nonnull UpdatingChangeListBuilder builder, @Nonnull VcsDirtyScope scope, @Nonnull AbstractVcs vcs, @Nonnull DataHolder dataHolder, @Nonnull ChangeListManagerGate gate) {
+  private void actualUpdate(@Nonnull UpdatingChangeListBuilder builder,
+                            @Nonnull VcsDirtyScope scope,
+                            @Nonnull AbstractVcs vcs,
+                            @Nonnull DataHolder dataHolder,
+                            @Nonnull ChangeListManagerGate gate) {
     try {
       final ChangeProvider changeProvider = vcs.getChangeProvider();
       if (changeProvider != null) {
@@ -788,7 +789,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
   public List<LocalChangeList> getChangeLists(@Nonnull Change change) {
     return getAffectedLists(Collections.singletonList(change));
   }
-  
+
   @Nonnull
   @Override
   public List<LocalChangeList> getChangeLists(@Nonnull VirtualFile file) {
@@ -1192,7 +1193,8 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
       final CheckinEnvironment environment = vcs.getCheckinEnvironment();
       if (environment != null) {
         final Set<VirtualFile> descendants = getUnversionedDescendantsRecursively(items, statusChecker);
-        Set<VirtualFile> parents = vcs.areDirectoriesVersionedItems() ? getUnversionedParents(items, statusChecker) : Collections.<VirtualFile>emptySet();
+        Set<VirtualFile> parents =
+          vcs.areDirectoriesVersionedItems() ? getUnversionedParents(items, statusChecker) : Collections.<VirtualFile>emptySet();
 
         // it is assumed that not-added parents of files passed to scheduleUnversionedFilesForAddition() will also be added to vcs
         // (inside the method) - so common add logic just needs to refresh statuses of parents
@@ -1290,7 +1292,8 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
   }
 
   @Nonnull
-  private Set<VirtualFile> getUnversionedDescendantsRecursively(@Nonnull List<VirtualFile> items, @Nonnull final Condition<FileStatus> condition) {
+  private Set<VirtualFile> getUnversionedDescendantsRecursively(@Nonnull List<VirtualFile> items,
+                                                                @Nonnull final Condition<FileStatus> condition) {
     final Set<VirtualFile> result = ContainerUtil.newHashSet();
     Processor<VirtualFile> addToResultProcessor = file -> {
       if (condition.value(getStatus(file))) {
@@ -1350,8 +1353,16 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
 
   private boolean doCommit(final LocalChangeList changeList, final List<Change> changes, final boolean synchronously) {
     FileDocumentManager.getInstance().saveAllDocuments();
-    return new CommitHelper(myProject, changeList, changes, changeList.getName(), StringUtil.isEmpty(changeList.getComment()) ? changeList.getName() : changeList.getComment(), new ArrayList<>(),
-                            false, synchronously, FunctionUtil.nullConstant(), null).doCommit();
+    return new CommitHelper(myProject,
+                            changeList,
+                            changes,
+                            changeList.getName(),
+                            StringUtil.isEmpty(changeList.getComment()) ? changeList.getName() : changeList.getComment(),
+                            new ArrayList<>(),
+                            false,
+                            synchronously,
+                            FunctionUtil.nullConstant(),
+                            null).doCommit();
   }
 
   @Override
@@ -1602,46 +1613,8 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     semaphore.waitFor();
   }
 
-  @TestOnly
-  public void stopEveryThingIfInTestMode() {
-    assert ApplicationManager.getApplication().isUnitTestMode();
-    Future future = myScheduler.myLastTask.get();
-    if (future != null) {
-      future.cancel(true);
-      myScheduler.myLastTask.compareAndSet(future, null);
-    }
-  }
-
-  @TestOnly
-  public void waitEverythingDoneInTestMode() {
-    assert ApplicationManager.getApplication().isUnitTestMode();
-    while (true) {
-      Future future = myScheduler.myLastTask.get();
-      if (future == null) break;
-
-      if (ApplicationManager.getApplication().isDispatchThread()) {
-        UIUtil.dispatchAllInvocationEvents();
-      }
-      try {
-        future.get(10, TimeUnit.MILLISECONDS);
-        break;
-      }
-      catch (InterruptedException | ExecutionException e) {
-        LOG.error(e);
-      }
-      catch (TimeoutException | CancellationException ignore) {
-      }
-    }
-  }
-
-  @TestOnly
-  public void forceGoInTestMode() {
-    assert ApplicationManager.getApplication().isUnitTestMode();
-    myUpdater.forceGo();
-  }
-
-  public void executeOnUpdaterThread(Runnable r) {
-    myScheduler.submit(r);
+  public void executeOnUpdaterThread(Runnable runnable) {
+    myScheduler.submit(runnable);
   }
 
   @Override
@@ -1681,9 +1654,9 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     private final RemoteRevisionsCache myRevisionsCache;
     private final ProjectLevelVcsManager myVcsManager;
     private final Project myProject;
-    private final Scheduler myScheduler;
+    private final ChangeListScheduler myScheduler;
 
-    public MyChangesDeltaForwarder(final Project project, Scheduler scheduler) {
+    public MyChangesDeltaForwarder(final Project project, ChangeListScheduler scheduler) {
       myProject = project;
       myScheduler = scheduler;
       myRevisionsCache = RemoteRevisionsCache.getInstance(project);

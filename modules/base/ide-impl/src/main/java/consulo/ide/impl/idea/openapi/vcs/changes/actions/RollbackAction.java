@@ -22,33 +22,34 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
-import consulo.localize.LocalizeValue;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.document.FileDocumentManager;
-import consulo.component.ProcessCanceledException;
+import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
-import consulo.util.lang.ThreeState;
-import consulo.util.lang.StringUtil;
+import consulo.component.ProcessCanceledException;
+import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesListView;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.RollbackChangesDialog;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.RollbackProgressModifier;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.vcsUtil.RollbackUtil;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.util.collection.Streams;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.ThreeState;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.rollback.RollbackEnvironment;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ide.impl.idea.vcsUtil.RollbackUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
@@ -57,14 +58,13 @@ import java.util.*;
 
 import static consulo.ui.ex.awt.Messages.getQuestionIcon;
 import static consulo.ui.ex.awt.Messages.showYesNoDialog;
-import static consulo.ide.impl.idea.util.containers.UtilKt.notNullize;
 
 public class RollbackAction extends AnAction implements DumbAware {
   public void update(AnActionEvent e) {
     Project project = e.getData(Project.KEY);
     final boolean visible = project != null && ProjectLevelVcsManager.getInstance(project).hasActiveVcss();
     e.getPresentation().setEnabledAndVisible(visible);
-    if (! visible) return;
+    if (!visible) return;
 
     final Change[] leadSelection = e.getData(VcsDataKeys.CHANGE_LEAD_SELECTION);
     boolean isEnabled = (leadSelection != null && leadSelection.length > 0)
@@ -85,7 +85,7 @@ public class RollbackAction extends AnAction implements DumbAware {
     ChangeListManager manager = ChangeListManager.getInstance(e.getRequiredData(Project.KEY));
     Set<VirtualFile> modifiedWithoutEditing = ContainerUtil.newHashSet(manager.getModifiedWithoutEditing());
 
-    return notNullize(e.getData(VcsDataKeys.VIRTUAL_FILE_STREAM)).anyMatch(
+    return Streams.notNullize(e.getData(VcsDataKeys.VIRTUAL_FILE_STREAM)).anyMatch(
       file -> manager.haveChangesUnder(file) != ThreeState.NO || manager.isFileAffected(file) || modifiedWithoutEditing.contains(file)
     );
   }
@@ -181,13 +181,13 @@ public class RollbackAction extends AnAction implements DumbAware {
     final String operationName = StringUtil.decapitalize(UIUtil.removeMnemonic(RollbackUtil.getRollbackOperationName(project)));
     LocalizeValue message = (modifiedWithoutEditing.size() == 1)
       ? VcsLocalize.rollbackModifiedWithoutEditingConfirmSingle(
-        operationName,
-        modifiedWithoutEditing.iterator().next().getPresentableUrl()
-      )
+      operationName,
+      modifiedWithoutEditing.iterator().next().getPresentableUrl()
+    )
       : VcsLocalize.rollbackModifiedWithoutEditingConfirmMultiple(
-        operationName,
-        modifiedWithoutEditing.size()
-      );
+      operationName,
+      modifiedWithoutEditing.size()
+    );
     int rc = showYesNoDialog(project, message.get(), VcsLocalize.changesActionRollbackTitle(operationName).get(), getQuestionIcon());
     if (rc != Messages.YES) {
       return;

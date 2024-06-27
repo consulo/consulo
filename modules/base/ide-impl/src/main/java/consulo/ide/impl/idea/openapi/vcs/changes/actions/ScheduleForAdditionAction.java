@@ -22,43 +22,41 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
+import consulo.application.dumb.DumbAware;
+import consulo.document.FileDocumentManager;
+import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
+import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowserBase;
+import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesListView;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.language.editor.CommonDataKeys;
+import consulo.project.Project;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.document.FileDocumentManager;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
+import consulo.util.collection.Streams;
 import consulo.util.lang.function.Condition;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsDataKeys;
-import consulo.versionControlSystem.change.Change;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
-import consulo.versionControlSystem.change.LocalChangeList;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowserBase;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesListView;
 import consulo.versionControlSystem.VcsException;
+import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import java.util.function.Consumer;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static consulo.ide.impl.idea.util.containers.UtilKt.isEmpty;
-import static consulo.ide.impl.idea.util.containers.UtilKt.notNullize;
 
 public class ScheduleForAdditionAction extends AnAction implements DumbAware {
 
   public void update(@Nonnull AnActionEvent e) {
-    boolean enabled = e.getData(CommonDataKeys.PROJECT) != null && !isEmpty(getUnversionedFiles(e, e.getData(CommonDataKeys.PROJECT)));
+    boolean enabled =
+      e.getData(CommonDataKeys.PROJECT) != null && !Streams.isEmpty(getUnversionedFiles(e, e.getData(CommonDataKeys.PROJECT)));
 
     e.getPresentation().setEnabled(enabled);
     if (ActionPlaces.ACTION_PLACE_VCS_QUICK_LIST_POPUP_ACTION.equals(e.getPlace()) || ActionPlaces.CHANGES_VIEW_POPUP.equals(e.getPlace())) {
@@ -88,7 +86,8 @@ public class ScheduleForAdditionAction extends AnAction implements DumbAware {
         browser.getViewer().includeChanges((List)changes);
       };
       ChangeListManagerImpl manager = ChangeListManagerImpl.getInstanceImpl(project);
-      LocalChangeList targetChangeList = browser == null ? manager.getDefaultChangeList() : (LocalChangeList)browser.getSelectedChangeList();
+      LocalChangeList targetChangeList =
+        browser == null ? manager.getDefaultChangeList() : (LocalChangeList)browser.getSelectedChangeList();
       List<VcsException> exceptions = manager.addUnversionedFiles(targetChangeList, files, unversionedFileCondition, consumer);
 
       result = exceptions.isEmpty();
@@ -101,15 +100,17 @@ public class ScheduleForAdditionAction extends AnAction implements DumbAware {
   private Stream<VirtualFile> getUnversionedFiles(@Nonnull AnActionEvent e, @Nonnull Project project) {
     ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(project);
     FileStatusManager fileStatusManager = FileStatusManager.getInstance(project);
-    boolean hasExplicitUnversioned = !isEmpty(e.getData(ChangesListView.UNVERSIONED_FILES_DATA_KEY));
+    boolean hasExplicitUnversioned = !Streams.isEmpty(e.getData(ChangesListView.UNVERSIONED_FILES_DATA_KEY));
 
     return hasExplicitUnversioned
-           ? e.getRequiredData(ChangesListView.UNVERSIONED_FILES_DATA_KEY)
-           : checkVirtualFiles(e) ? notNullize(e.getData(VcsDataKeys.VIRTUAL_FILE_STREAM))
-                   .filter(file -> isFileUnversioned(file, vcsManager, fileStatusManager)) : Stream.empty();
+      ? e.getRequiredData(ChangesListView.UNVERSIONED_FILES_DATA_KEY)
+      : checkVirtualFiles(e) ? Streams.notNullize(e.getData(VcsDataKeys.VIRTUAL_FILE_STREAM))
+                                      .filter(file -> isFileUnversioned(file, vcsManager, fileStatusManager)) : Stream.empty();
   }
 
-  private boolean isFileUnversioned(@Nonnull VirtualFile file, @Nonnull ProjectLevelVcsManager vcsManager, @Nonnull FileStatusManager fileStatusManager) {
+  private boolean isFileUnversioned(@Nonnull VirtualFile file,
+                                    @Nonnull ProjectLevelVcsManager vcsManager,
+                                    @Nonnull FileStatusManager fileStatusManager) {
     AbstractVcs vcs = vcsManager.getVcsFor(file);
     return vcs != null && !vcs.areDirectoriesVersionedItems() && file.isDirectory() || isStatusForAddition(fileStatusManager.getStatus(file));
   }

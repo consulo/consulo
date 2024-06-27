@@ -27,6 +27,7 @@ import consulo.ui.ModalityState;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.change.InvokeAfterUpdateMode;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
+import consulo.versionControlSystem.impl.internal.change.ChangeListScheduler;
 import org.jetbrains.annotations.TestOnly;
 
 import jakarta.annotation.Nonnull;
@@ -46,7 +47,7 @@ public class UpdateRequestsQueue {
   private final Logger LOG = Logger.getInstance(UpdateRequestsQueue.class);
   private static final String ourHeavyLatchOptimization = "vcs.local.changes.track.heavy.latch";
   private final Project myProject;
-  private ChangeListManagerImpl.Scheduler myScheduler;
+  private ChangeListScheduler myScheduler;
   private final Runnable myDelegate;
   private final Object myLock;
   private volatile boolean myStarted;
@@ -63,7 +64,7 @@ public class UpdateRequestsQueue {
   private final boolean myTrackHeavyLatch;
   private final Getter<Boolean> myIsStoppedGetter;
 
-  public UpdateRequestsQueue(final Project project, @Nonnull ChangeListManagerImpl.Scheduler scheduler, final Runnable delegate) {
+  public UpdateRequestsQueue(final Project project, @Nonnull ChangeListScheduler scheduler, final Runnable delegate) {
     myProject = project;
     myScheduler = scheduler;
 

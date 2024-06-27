@@ -24,7 +24,7 @@ import consulo.ide.impl.idea.openapi.diff.impl.patch.PatchHunk;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.PatchLine;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.AppliedTextPatch;
-import consulo.ide.impl.idea.util.BeforeAfter;
+import consulo.util.lang.BeforeAfter;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.util.lang.Pair;

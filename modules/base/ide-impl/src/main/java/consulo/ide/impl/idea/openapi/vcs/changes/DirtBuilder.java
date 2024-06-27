@@ -21,7 +21,7 @@ import consulo.versionControlSystem.FilePath;
 import consulo.util.collection.MultiMap;
 import jakarta.annotation.Nonnull;
 
-public class DirtBuilder implements DirtBuilderReader {
+public class DirtBuilder {
   private final VcsGuess myGuess;
   private final FileTypeManager myFileTypeManager;
 
