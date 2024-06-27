@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.ide.hierarchy;
 
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.project.Project;
@@ -138,13 +139,13 @@ public abstract class HierarchyTreeStructure extends AbstractTreeStructure {
 
   protected SearchScope getSearchScope(final String scopeType, final PsiElement thisClass) {
     SearchScope searchScope = GlobalSearchScope.allScope(myProject);
-    if (HierarchyBrowserBaseEx.SCOPE_CLASS.equals(scopeType)) {
+    if (IdeLocalize.hierarchyScopeThisClass().get().equals(scopeType)) {
       searchScope = new LocalSearchScope(thisClass);
     }
-    else if (HierarchyBrowserBaseEx.SCOPE_PROJECT.equals(scopeType)) {
+    else if (IdeLocalize.hierarchyScopeProject().get().equals(scopeType)) {
       searchScope = GlobalSearchScopes.projectProductionScope(myProject);
     }
-    else if (HierarchyBrowserBaseEx.SCOPE_TEST.equals(scopeType)) {
+    else if (IdeLocalize.hierarchyScopeTest().get().equals(scopeType)) {
       searchScope = GlobalSearchScopes.projectTestScope(myProject);
     } else {
       final NamedScope namedScope = NamedScopesHolder.getScope(myProject, scopeType);
@@ -156,24 +157,24 @@ public abstract class HierarchyTreeStructure extends AbstractTreeStructure {
   }
 
   protected boolean isInScope(final PsiElement baseClass, final PsiElement srcElement, final String scopeType) {
-    if (HierarchyBrowserBaseEx.SCOPE_CLASS.equals(scopeType)) {
+    if (IdeLocalize.hierarchyScopeThisClass().get().equals(scopeType)) {
       if (!PsiTreeUtil.isAncestor(baseClass, srcElement, true)) {
         return false;
       }
     }
-    else if (HierarchyBrowserBaseEx.SCOPE_PROJECT.equals(scopeType)) {
+    else if (IdeLocalize.hierarchyScopeProject().get().equals(scopeType)) {
       final VirtualFile virtualFile = srcElement.getContainingFile().getVirtualFile();
       if (virtualFile != null && TestSourcesFilter.isTestSources(virtualFile, myProject)) {
         return false;
       }
     }
-    else if (HierarchyBrowserBaseEx.SCOPE_TEST.equals(scopeType)) {
+    else if (IdeLocalize.hierarchyScopeTest().get().equals(scopeType)) {
 
       final VirtualFile virtualFile = srcElement.getContainingFile().getVirtualFile();
       if (virtualFile != null && !TestSourcesFilter.isTestSources(virtualFile, myProject)) {
         return false;
       }
-    } else if (!HierarchyBrowserBaseEx.SCOPE_ALL.equals(scopeType)) {
+    } else if (!IdeLocalize.hierarchyScopeAll().get().equals(scopeType)) {
       final NamedScope namedScope = NamedScopesHolder.getScope(myProject, scopeType);
       if (namedScope == null) {
         return false;
