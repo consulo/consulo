@@ -426,7 +426,11 @@ public class CommitHelper {
 
     @Override
     public void afterFailedCheckIn() {
-      moveToFailedList(myChangeList, myCommitMessage, getChangesFailedToCommit(), VcsLocalize.commitDialogFailedCommitTemplate(myChangeList.getName()).get(), myProject);
+      moveToFailedList(myChangeList,
+                       myCommitMessage,
+                       getChangesFailedToCommit(),
+                       VcsLocalize.commitDialogFailedCommitTemplate(myChangeList.getName()).get(),
+                       myProject);
     }
 
     @Override
@@ -434,7 +438,9 @@ public class CommitHelper {
       final ChangeListManagerImpl clManager = (ChangeListManagerImpl)ChangeListManager.getInstance(myProject);
       clManager.showLocalChangesInvalidated();
 
-      myAction = ApplicationManager.getApplication().runReadAction((Computable<LocalHistoryAction>)() -> LocalHistory.getInstance().startAction(myActionName));
+      myAction = ApplicationManager.getApplication()
+                                   .runReadAction((Computable<LocalHistoryAction>)() -> LocalHistory.getInstance()
+                                                                                                    .startAction(myActionName));
     }
 
     @Override

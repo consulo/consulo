@@ -24,6 +24,7 @@ import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.action.StandardVcsGroup;
 import consulo.versionControlSystem.action.VcsContext;
+import consulo.versionControlSystem.impl.internal.action.VcsContextWrapper;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 

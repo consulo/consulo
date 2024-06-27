@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.VcsListener;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.PlusMinus;
+import consulo.versionControlSystem.impl.internal.change.PlusMinus;
 import consulo.util.lang.Pair;
 import consulo.versionControlSystem.change.Change;
 

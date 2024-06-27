@@ -24,6 +24,8 @@ import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.change.VcsDirtyScopeModifier;
+import consulo.versionControlSystem.change.VcsModifiableDirtyScope;
 import consulo.versionControlSystem.root.VcsRoot;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;

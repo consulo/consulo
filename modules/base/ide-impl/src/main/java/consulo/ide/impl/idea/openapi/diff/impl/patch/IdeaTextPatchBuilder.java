@@ -25,7 +25,7 @@ import consulo.versionControlSystem.change.BinaryContentRevision;
 import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.versionControlSystem.root.VcsRoot;
 import consulo.ide.impl.idea.openapi.vcs.changes.*;
-import consulo.ide.impl.idea.util.BeforeAfter;
+import consulo.util.lang.BeforeAfter;
 import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.util.collection.MultiMap;
 import consulo.versionControlSystem.change.Change;

@@ -43,7 +43,6 @@ import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.VcsException;
-import consulo.ide.impl.idea.openapi.vcs.changes.*;
 import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.merge.MergeData;
 import consulo.virtualFileSystem.LocalFileSystem;

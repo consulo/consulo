@@ -41,6 +41,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.util.lang.Pair;
 import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.impl.internal.change.FakeRevision;
 import org.jetbrains.annotations.Contract;
 
 import jakarta.annotation.Nonnull;

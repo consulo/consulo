@@ -30,7 +30,7 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.application.util.function.Computable;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.ChangeListManager;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.PlusMinus;
+import consulo.versionControlSystem.impl.internal.change.PlusMinus;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.VirtualFileListCellRenderer;
 import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.ex.SimpleTextAttributes;
