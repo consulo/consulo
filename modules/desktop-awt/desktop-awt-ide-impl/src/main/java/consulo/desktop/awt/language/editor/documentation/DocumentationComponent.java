@@ -2,9 +2,10 @@
 
 package consulo.desktop.awt.language.editor.documentation;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
-import consulo.application.ApplicationBundle;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.application.ui.DimensionService;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.registry.Registry;
@@ -36,13 +37,14 @@ import consulo.ide.impl.idea.ui.WidthBasedLayout;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupPositionManager;
 import consulo.ide.impl.idea.util.ArrayUtilRt;
-import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.documentation.*;
 import consulo.language.editor.internal.DocumentationManagerHelper;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.psi.*;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
@@ -56,6 +58,7 @@ import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.Size;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.RGBColor;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
@@ -84,8 +87,6 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.plaf.TextUI;
@@ -144,7 +145,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
   private DocumentationProvider myProvider;
   private Reference<Component> myReferenceComponent;
 
-  private final MyDictionary<String, Image> myImageProvider = new MyDictionary<String, Image>() {
+  private final MyDictionary<String, Image> myImageProvider = new MyDictionary<>() {
     @Override
     public Image get(Object key) {
       return getImageByKeyImpl(key);
@@ -297,12 +298,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     };
     myEditorPane.addFocusListener(focusAdapter);
 
-    Disposer.register(this, new Disposable() {
-      @Override
-      public void dispose() {
-        myEditorPane.removeFocusListener(focusAdapter);
-      }
-    });
+    Disposer.register(this, () -> myEditorPane.removeFocusListener(focusAdapter));
 
     setLayout(new BorderLayout());
 
@@ -440,22 +436,14 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     myControlPanel.setBorder(IdeBorderFactory.createBorder(newLayout ? UIUtil.getTooltipSeparatorColor() : JBColor.border(), SideBorder.BOTTOM));
     myControlPanelVisible = false;
 
-    HyperlinkListener hyperlinkListener = new HyperlinkListener() {
-      @Override
-      public void hyperlinkUpdate(HyperlinkEvent e) {
-        HyperlinkEvent.EventType type = e.getEventType();
-        if (type == HyperlinkEvent.EventType.ACTIVATED) {
-          manager.navigateByLink(DocumentationComponent.this, e.getDescription());
-        }
+    HyperlinkListener hyperlinkListener = e -> {
+      HyperlinkEvent.EventType type = e.getEventType();
+      if (type == HyperlinkEvent.EventType.ACTIVATED) {
+        manager.navigateByLink(DocumentationComponent.this, e.getDescription());
       }
     };
     myEditorPane.addHyperlinkListener(hyperlinkListener);
-    Disposer.register(this, new Disposable() {
-      @Override
-      public void dispose() {
-        myEditorPane.removeHyperlinkListener(hyperlinkListener);
-      }
-    });
+    Disposer.register(this, () -> myEditorPane.removeHyperlinkListener(hyperlinkListener));
 
     if (myHint != null) {
       Disposer.register(myHint, this);
@@ -492,6 +480,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     myToolwindowCallback = callback;
   }
 
+  @RequiredUIAccess
   public void showExternalDoc() {
     DataContext dataContext = DataManager.getInstance().getDataContext(this);
     myExternalDocAction.actionPerformed(AnActionEvent.createFromDataContext(ActionPlaces.UNKNOWN, null, dataContext));
@@ -584,7 +573,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
   private JComponent createSettingsPanel() {
     JPanel result = new JPanel(new FlowLayout(FlowLayout.RIGHT, 3, 0));
-    result.add(new JLabel(ApplicationBundle.message("label.font.size")));
+    result.add(new JLabel(ApplicationLocalize.labelFontSize().get()));
     myFontSizeSlider = new JSlider(SwingConstants.HORIZONTAL, 0, FontSize.values().length - 1, 3);
     myFontSizeSlider.setMinorTickSpacing(1);
     myFontSizeSlider.setPaintTicks(true);
@@ -594,20 +583,17 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     result.add(myFontSizeSlider);
     result.setBorder(BorderFactory.createLineBorder(JBColor.border(), 1));
 
-    myFontSizeSlider.addChangeListener(new ChangeListener() {
-      @Override
-      public void stateChanged(ChangeEvent e) {
-        if (myIgnoreFontSizeSliderChange) {
-          return;
-        }
-        setQuickDocFontSize(FontSize.values()[myFontSizeSlider.getValue()]);
-        applyFontProps();
-        // resize popup according to new font size, if user didn't set popup size manually
-        if (!myManuallyResized && myHint != null && myHint.getDimensionServiceKey() == null) showHint();
+    myFontSizeSlider.addChangeListener(e -> {
+      if (myIgnoreFontSizeSliderChange) {
+        return;
       }
+      setQuickDocFontSize(FontSize.values()[myFontSizeSlider.getValue()]);
+      applyFontProps();
+      // resize popup according to new font size, if user didn't set popup size manually
+      if (!myManuallyResized && myHint != null && myHint.getDimensionServiceKey() == null) showHint();
     });
 
-    String tooltipText = ApplicationBundle.message("quickdoc.tooltip.font.size.by.wheel");
+    String tooltipText = ApplicationLocalize.quickdocTooltipFontSizeByWheel().get();
     result.setToolTipText(tooltipText);
     myFontSizeSlider.setToolTipText(tooltipText);
     result.setVisible(false);
@@ -677,6 +663,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
   }
 
   @Nullable
+  @RequiredReadAction
   public PsiElement getElement() {
     return myElement != null ? myElement.getElement() : null;
   }
@@ -686,6 +673,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     myModificationCount = getCurrentModificationCount();
   }
 
+  @RequiredReadAction
   public boolean isUpToDate() {
     return getElement() != null && myModificationCount == getCurrentModificationCount();
   }
@@ -698,6 +686,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     setData(element, text, null, null, provider);
   }
 
+  @RequiredReadAction
   public void replaceText(@Nonnull String text, @Nullable PsiElement element) {
     PsiElement current = getElement();
     if (current == null || !current.getManager().areElementsEquivalent(current, element)) return;
@@ -878,12 +867,15 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     if (hint == null || mySizeTrackerRegistered) return;
     mySizeTrackerRegistered = true;
     hint.addResizeListener(this::onManualResizing, this);
-    ApplicationManager.getApplication().getMessageBus().connect(this).subscribe(AnActionListener.class, new AnActionListener() {
-      @Override
-      public void afterActionPerformed(@Nonnull AnAction action, @Nonnull DataContext dataContext, @Nonnull AnActionEvent event) {
-        if (action instanceof WindowAction) onManualResizing();
+    Application.get().getMessageBus().connect(this).subscribe(
+      AnActionListener.class,
+      new AnActionListener() {
+        @Override
+        public void afterActionPerformed(@Nonnull AnAction action, @Nonnull DataContext dataContext, @Nonnull AnActionEvent event) {
+          if (action instanceof WindowAction) onManualResizing();
+        }
       }
-    });
+    );
   }
 
   private void onManualResizing() {
@@ -912,6 +904,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     return null;
   }
 
+  @RequiredReadAction
   private String decorate(String text) {
     text = StringUtil.replaceIgnoreCase(text, "</html>", "");
     text = StringUtil.replaceIgnoreCase(text, "</body>", "");
@@ -922,7 +915,8 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
       if (!text.contains(DocumentationMarkup.DEFINITION_START)) {
         int bodyStart = findContentStart(text);
         if (bodyStart > 0) {
-          text = text.substring(0, bodyStart) + DocumentationMarkup.CONTENT_START + text.substring(bodyStart) + DocumentationMarkup.CONTENT_END;
+          text = text.substring(0, bodyStart) + DocumentationMarkup.CONTENT_START + text.substring(bodyStart) +
+            DocumentationMarkup.CONTENT_END;
         }
         else {
           text = DocumentationMarkup.CONTENT_START + text + DocumentationMarkup.CONTENT_END;
@@ -1055,6 +1049,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     return text.replaceAll("(<a\\s*href=[\"']http[^>]*>)([^>]*)(</a>)", "$1$2<icon src='consulo.platform.base.PlatformIconGroup@ide.external_link_arrow'>$3");
   }
 
+  @RequiredReadAction
   private String getLocationText() {
     PsiElement element = getElement();
     if (element != null) {
@@ -1068,13 +1063,15 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
       if (module != null) {
         if (ModuleManager.getInstance(element.getProject()).getModules().length == 1) return null;
-        return "<icon src='consulo.platform.base.PlatformIconGroup@actions.module'>&nbsp;" + module.getName().replace("<", "&lt;");
+        return "<icon src='consulo.platform.base.PlatformIconGroup@actions.module'>&nbsp;" +
+          module.getName().replace("<", "&lt;");
       }
       else {
         List<OrderEntry> entries = fileIndex.getOrderEntriesForFile(vfile);
         for (OrderEntry order : entries) {
           if (order instanceof OrderEntryWithTracking) {
-            return "<icon src='consulo.platform.base.PlatformIconGroup@nodes.pplib" + "'>&nbsp;" + order.getPresentableName().replace("<", "&lt;");
+            return "<icon src='consulo.platform.base.PlatformIconGroup@nodes.pplib" + "'>&nbsp;" +
+              order.getPresentableName().replace("<", "&lt;");
           }
         }
       }
@@ -1095,6 +1092,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
   }
 
   @Nullable
+  @RequiredReadAction
   private Image getImageByKeyImpl(Object key) {
     if (myManager == null || key == null) return null;
     PsiElement element = getElement();
@@ -1205,6 +1203,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     return new Context(myElement, myText, myExternalUrl, myProvider, rect, myHighlightedLink);
   }
 
+  @RequiredReadAction
   private void restoreContext(@Nonnull Context context) {
     myExternalUrl = context.externalUrl;
     myProvider = context.provider;
@@ -1219,6 +1218,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     }
   }
 
+  @RequiredUIAccess
   private void updateControlState() {
     if (needsToolbar()) {
       myToolBar.updateActionsImmediately(); // update faster
@@ -1246,15 +1246,17 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
   private class BackAction extends AnAction implements HintManagerImpl.ActionToIgnore {
     BackAction() {
-      super(CodeInsightBundle.message("javadoc.action.back"), null, AllIcons.Actions.Back);
+      super(CodeInsightLocalize.javadocActionBack(), LocalizeValue.empty(), AllIcons.Actions.Back);
     }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
       goBack();
     }
 
     @Override
+    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
       Presentation presentation = e.getPresentation();
       presentation.setEnabled(!myBackStack.isEmpty());
@@ -1266,15 +1268,17 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
   private class ForwardAction extends AnAction implements HintManagerImpl.ActionToIgnore {
     ForwardAction() {
-      super(CodeInsightBundle.message("javadoc.action.forward"), null, AllIcons.Actions.Forward);
+      super(CodeInsightLocalize.javadocActionForward(), LocalizeValue.empty(), AllIcons.Actions.Forward);
     }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
       goForward();
     }
 
     @Override
+    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
       Presentation presentation = e.getPresentation();
       presentation.setEnabled(!myForwardStack.isEmpty());
@@ -1293,6 +1297,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
       super.actionPerformed(e);
       JBPopup hint = myHint;
@@ -1303,6 +1308,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
     @Nullable
     @Override
+    @RequiredReadAction
     protected Navigatable[] getNavigatables(DataContext dataContext) {
       SmartPsiElementPointer<PsiElement> element = myElement;
       if (element != null) {
@@ -1320,11 +1326,12 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
   private class ExternalDocAction extends AnAction implements HintManagerImpl.ActionToIgnore {
     private ExternalDocAction() {
-      super(CodeInsightBundle.message("javadoc.action.view.external"), null, AllIcons.Actions.PreviousOccurence);
+      super(CodeInsightLocalize.javadocActionViewExternal(), LocalizeValue.empty(), AllIcons.Actions.PreviousOccurence);
       registerCustomShortcutSet(ActionManager.getInstance().getAction(IdeActions.ACTION_EXTERNAL_JAVADOC).getShortcutSet(), null);
     }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
       if (myElement == null) {
         return;
@@ -1337,12 +1344,14 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     }
 
     @Override
+    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
       Presentation presentation = e.getPresentation();
       presentation.setEnabled(hasExternalDoc());
     }
   }
 
+  @RequiredReadAction
   private boolean hasExternalDoc() {
     boolean enabled = false;
     if (myElement != null && myProvider != null) {
@@ -1357,96 +1366,66 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     // With screen readers, we want the default keyboard behavior inside
     // the document text editor, i.e. the caret moves with cursor keys, etc.
     if (!ScreenReader.isActive()) {
-      myKeyboardActions.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          JScrollBar scrollBar = myScrollPane.getVerticalScrollBar();
-          int value = scrollBar.getValue() - scrollBar.getUnitIncrement(-1);
-          value = Math.max(value, 0);
-          scrollBar.setValue(value);
-        }
+      myKeyboardActions.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), e -> {
+        JScrollBar scrollBar = myScrollPane.getVerticalScrollBar();
+        int value = scrollBar.getValue() - scrollBar.getUnitIncrement(-1);
+        value = Math.max(value, 0);
+        scrollBar.setValue(value);
       });
 
-      myKeyboardActions.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          JScrollBar scrollBar = myScrollPane.getVerticalScrollBar();
-          int value = scrollBar.getValue() + scrollBar.getUnitIncrement(+1);
-          value = Math.min(value, scrollBar.getMaximum());
-          scrollBar.setValue(value);
-        }
+      myKeyboardActions.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), e -> {
+        JScrollBar scrollBar = myScrollPane.getVerticalScrollBar();
+        int value = scrollBar.getValue() + scrollBar.getUnitIncrement(+1);
+        value = Math.min(value, scrollBar.getMaximum());
+        scrollBar.setValue(value);
       });
 
-      myKeyboardActions.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          JScrollBar scrollBar = myScrollPane.getHorizontalScrollBar();
-          int value = scrollBar.getValue() - scrollBar.getUnitIncrement(-1);
-          value = Math.max(value, 0);
-          scrollBar.setValue(value);
-        }
+      myKeyboardActions.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), e -> {
+        JScrollBar scrollBar = myScrollPane.getHorizontalScrollBar();
+        int value = scrollBar.getValue() - scrollBar.getUnitIncrement(-1);
+        value = Math.max(value, 0);
+        scrollBar.setValue(value);
       });
 
-      myKeyboardActions.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          JScrollBar scrollBar = myScrollPane.getHorizontalScrollBar();
-          int value = scrollBar.getValue() + scrollBar.getUnitIncrement(+1);
-          value = Math.min(value, scrollBar.getMaximum());
-          scrollBar.setValue(value);
-        }
+      myKeyboardActions.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), e -> {
+        JScrollBar scrollBar = myScrollPane.getHorizontalScrollBar();
+        int value = scrollBar.getValue() + scrollBar.getUnitIncrement(+1);
+        value = Math.min(value, scrollBar.getMaximum());
+        scrollBar.setValue(value);
       });
 
-      myKeyboardActions.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, 0), new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          JScrollBar scrollBar = myScrollPane.getVerticalScrollBar();
-          int value = scrollBar.getValue() - scrollBar.getBlockIncrement(-1);
-          value = Math.max(value, 0);
-          scrollBar.setValue(value);
-        }
+      myKeyboardActions.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, 0), e -> {
+        JScrollBar scrollBar = myScrollPane.getVerticalScrollBar();
+        int value = scrollBar.getValue() - scrollBar.getBlockIncrement(-1);
+        value = Math.max(value, 0);
+        scrollBar.setValue(value);
       });
 
-      myKeyboardActions.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, 0), new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          JScrollBar scrollBar = myScrollPane.getVerticalScrollBar();
-          int value = scrollBar.getValue() + scrollBar.getBlockIncrement(+1);
-          value = Math.min(value, scrollBar.getMaximum());
-          scrollBar.setValue(value);
-        }
+      myKeyboardActions.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, 0), e -> {
+        JScrollBar scrollBar = myScrollPane.getVerticalScrollBar();
+        int value = scrollBar.getValue() + scrollBar.getBlockIncrement(+1);
+        value = Math.min(value, scrollBar.getMaximum());
+        scrollBar.setValue(value);
       });
 
-      myKeyboardActions.put(KeyStroke.getKeyStroke(KeyEvent.VK_HOME, 0), new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          JScrollBar scrollBar = myScrollPane.getHorizontalScrollBar();
-          scrollBar.setValue(0);
-        }
+      myKeyboardActions.put(KeyStroke.getKeyStroke(KeyEvent.VK_HOME, 0), e -> {
+        JScrollBar scrollBar = myScrollPane.getHorizontalScrollBar();
+        scrollBar.setValue(0);
       });
 
-      myKeyboardActions.put(KeyStroke.getKeyStroke(KeyEvent.VK_END, 0), new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          JScrollBar scrollBar = myScrollPane.getHorizontalScrollBar();
-          scrollBar.setValue(scrollBar.getMaximum());
-        }
+      myKeyboardActions.put(KeyStroke.getKeyStroke(KeyEvent.VK_END, 0), e -> {
+        JScrollBar scrollBar = myScrollPane.getHorizontalScrollBar();
+        scrollBar.setValue(scrollBar.getMaximum());
       });
 
-      myKeyboardActions.put(KeyStroke.getKeyStroke(KeyEvent.VK_HOME, InputEvent.CTRL_MASK), new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          JScrollBar scrollBar = myScrollPane.getVerticalScrollBar();
-          scrollBar.setValue(0);
-        }
+      myKeyboardActions.put(KeyStroke.getKeyStroke(KeyEvent.VK_HOME, InputEvent.CTRL_MASK), e -> {
+        JScrollBar scrollBar = myScrollPane.getVerticalScrollBar();
+        scrollBar.setValue(0);
       });
 
-      myKeyboardActions.put(KeyStroke.getKeyStroke(KeyEvent.VK_END, InputEvent.CTRL_MASK), new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          JScrollBar scrollBar = myScrollPane.getVerticalScrollBar();
-          scrollBar.setValue(scrollBar.getMaximum());
-        }
+      myKeyboardActions.put(KeyStroke.getKeyStroke(KeyEvent.VK_END, InputEvent.CTRL_MASK), e -> {
+        JScrollBar scrollBar = myScrollPane.getVerticalScrollBar();
+        scrollBar.setValue(scrollBar.getMaximum());
       });
     }
   }
@@ -1561,6 +1540,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     }
 
     @Override
+    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
       if (myManager == null || myOnToolbar && myManager.getToolWindow() != null) {
         e.getPresentation().setEnabledAndVisible(false);
@@ -1568,12 +1548,16 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
       JBPopup popup = JBPopupFactory.getInstance().createComponentPopupBuilder(mySettingsPanel, myFontSizeSlider).createPopup();
       setFontSizeSliderSize(getQuickDocFontSize());
       mySettingsPanel.setVisible(true);
       Point location = MouseInfo.getPointerInfo().getLocation();
-      popup.show(new RelativePoint(new Point(location.x - mySettingsPanel.getPreferredSize().width / 2, location.y - mySettingsPanel.getPreferredSize().height / 2)));
+      popup.show(new RelativePoint(new Point(
+        location.x - mySettingsPanel.getPreferredSize().width / 2,
+        location.y - mySettingsPanel.getPreferredSize().height / 2
+      )));
     }
   }
 
@@ -1611,6 +1595,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
   private class PreviousLinkAction extends AnAction implements HintManagerImpl.ActionToIgnore {
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
       int linkCount = getLinkCount();
       if (linkCount <= 0) return;
@@ -1620,6 +1605,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
   private class NextLinkAction extends AnAction implements HintManagerImpl.ActionToIgnore {
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
       int linkCount = getLinkCount();
       if (linkCount <= 0) return;
@@ -1629,6 +1615,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
   private class ActivateLinkAction extends AnAction implements HintManagerImpl.ActionToIgnore {
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
       activateLink(myHighlightedLink);
     }
@@ -1746,18 +1733,21 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     }
 
     @Override
+    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
       Presentation presentation = e.getPresentation();
       if (myManager == null) {
         presentation.setEnabledAndVisible(false);
       }
       else {
-        presentation.setIcon(ToolWindowManagerEx.getInstanceEx(myManager.getProject()).getLocationIcon(ToolWindowId.DOCUMENTATION, consulo.ui.image.Image.empty(16)));
+        presentation.setIcon(ToolWindowManagerEx.getInstanceEx(myManager.getProject())
+          .getLocationIcon(ToolWindowId.DOCUMENTATION, consulo.ui.image.Image.empty(16)));
         presentation.setEnabledAndVisible(myToolwindowCallback != null);
       }
     }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
       myToolwindowCallback.run();
     }
@@ -1769,11 +1759,13 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     }
 
     @Override
+    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
       e.getPresentation().setEnabledAndVisible(myHint != null && (myManuallyResized || myHint.getDimensionServiceKey() != null));
     }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
       myManuallyResized = false;
       if (myStoreSize) {

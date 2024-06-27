@@ -15,14 +15,13 @@
  */
 package consulo.language.editor.action;
 
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.codeEditor.Editor;
-import consulo.project.Project;
+import consulo.codeEditor.EditorKeys;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-
+import consulo.project.Project;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -36,8 +35,8 @@ public class CodeInsightEditorAction {
    * if the action's {@code update} method should work with up-to-date PSI, and the action is invoked in editor.
    */
   public static void beforeActionPerformedUpdate(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
-    Editor hostEditor = e.getData(CommonDataKeys.HOST_EDITOR);
+    Project project = e.getData(Project.KEY);
+    Editor hostEditor = e.getData(EditorKeys.HOST_EDITOR);
     if (project != null && hostEditor != null) {
       PsiFile file = PsiDocumentManager.getInstance(project).getCachedPsiFile(hostEditor.getDocument());
       if (file != null) {

@@ -27,8 +27,9 @@ import consulo.ide.impl.idea.ide.actions.ToggleToolbarAction;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ide.impl.wm.impl.ToolWindowAnchorUtil;
 import consulo.ide.impl.wm.impl.ToolWindowManagerBase;
-import consulo.language.editor.PlatformDataKeys;
+import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
@@ -40,7 +41,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.IdeGlassPane;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.JBUIScale;
@@ -50,6 +50,7 @@ import consulo.ui.ex.awt.event.HoverStateListener;
 import consulo.ui.ex.awt.paint.LinePainter2D;
 import consulo.ui.ex.awt.util.IdeGlassPaneUtil;
 import consulo.ui.ex.content.Content;
+import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.ex.toolWindow.*;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
@@ -71,6 +72,7 @@ import java.util.Map;
 public final class DesktopInternalDecorator extends JPanel implements Queryable, DataProvider, ToolWindowInternalDecorator {
   private static final HoverStateListener HOVER_STATE_LISTENER = new HoverStateListener() {
     @Override
+    @RequiredUIAccess
     protected void hoverChanged(Component component, boolean hovered) {
       if (component instanceof DesktopInternalDecorator internalDecorator) {
         internalDecorator.isWindowHovered = hovered;
@@ -147,12 +149,11 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     }
 
     // Add listeners
-    registerKeyboardAction(new ActionListener() {
-      @Override
-      public void actionPerformed(final ActionEvent e) {
-        ToolWindowManager.getInstance(myProject).activateEditorComponent();
-      }
-    }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+    registerKeyboardAction(
+      e -> ToolWindowManager.getInstance(myProject).activateEditorComponent(),
+      KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+      JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT
+    );
 
     apply(info);
 
@@ -219,10 +220,10 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     myToolWindow.getContentUI().setType(myInfo.getContentUiType());
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   @Override
   public Object getData(@Nonnull @NonNls Key<?> dataId) {
-    if (PlatformDataKeys.TOOL_WINDOW == dataId) {
+    if (ToolWindow.KEY == dataId) {
       return myToolWindow;
     }
     return null;
@@ -365,18 +366,22 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
           Splitter splitter = (Splitter)parent;
           boolean isFirst = splitter.getFirstComponent() == component;
           boolean isVertical = splitter.isVertical();
-          return new Insets(0,
-                            anchor == ToolWindowAnchor.RIGHT || (!isVertical && !isFirst) ? 1 : 0,
-                            (isVertical && isFirst) ? 1 : 0,
-                            anchor == ToolWindowAnchor.LEFT || (!isVertical && isFirst) ? 1 : 0);
+          return JBUI.insets(
+            0,
+            anchor == ToolWindowAnchor.RIGHT || (!isVertical && !isFirst) ? 1 : 0,
+            (isVertical && isFirst) ? 1 : 0,
+            anchor == ToolWindowAnchor.LEFT || (!isVertical && isFirst) ? 1 : 0
+          );
         }
         component = parent;
         parent = component.getParent();
       }
-      return new Insets(0,
-                        anchor == ToolWindowAnchor.RIGHT ? 1 : 0,
-                        anchor == ToolWindowAnchor.TOP ? 1 : 0,
-                        anchor == ToolWindowAnchor.LEFT ? 1 : 0);
+      return JBUI.insets(
+        0,
+        anchor == ToolWindowAnchor.RIGHT ? 1 : 0,
+        anchor == ToolWindowAnchor.TOP ? 1 : 0,
+        anchor == ToolWindowAnchor.LEFT ? 1 : 0
+      );
     }
 
     @Override
@@ -396,24 +401,24 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
       group.add(myToggleContentUiTypeAction);
     }
 
-    final DefaultActionGroup moveGroup = new DefaultActionGroup(UIBundle.message("tool.window.move.to.action.group.name"), true);
+    final DefaultActionGroup moveGroup = new DefaultActionGroup(UILocalize.toolWindowMoveToActionGroupName(), true);
     final ToolWindowAnchor anchor = myInfo.getAnchor();
     if (anchor != ToolWindowAnchor.TOP) {
-      final AnAction topAction = new ChangeAnchorAction(UIBundle.message("tool.window.move.to.top.action.name"), ToolWindowAnchor.TOP);
+      final AnAction topAction = new ChangeAnchorAction(UILocalize.toolWindowMoveToTopActionName(), ToolWindowAnchor.TOP);
       moveGroup.add(topAction);
     }
     if (anchor != ToolWindowAnchor.LEFT) {
-      final AnAction leftAction = new ChangeAnchorAction(UIBundle.message("tool.window.move.to.left.action.name"), ToolWindowAnchor.LEFT);
+      final AnAction leftAction = new ChangeAnchorAction(UILocalize.toolWindowMoveToLeftActionName(), ToolWindowAnchor.LEFT);
       moveGroup.add(leftAction);
     }
     if (anchor != ToolWindowAnchor.BOTTOM) {
       final AnAction bottomAction =
-        new ChangeAnchorAction(UIBundle.message("tool.window.move.to.bottom.action.name"), ToolWindowAnchor.BOTTOM);
+        new ChangeAnchorAction(UILocalize.toolWindowMoveToBottomActionName(), ToolWindowAnchor.BOTTOM);
       moveGroup.add(bottomAction);
     }
     if (anchor != ToolWindowAnchor.RIGHT) {
       final AnAction rightAction =
-        new ChangeAnchorAction(UIBundle.message("tool.window.move.to.right.action.name"), ToolWindowAnchor.RIGHT);
+        new ChangeAnchorAction(UILocalize.toolWindowMoveToRightActionName(), ToolWindowAnchor.RIGHT);
       moveGroup.add(rightAction);
     }
     group.add(moveGroup);
@@ -536,12 +541,13 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     @Nonnull
     private final ToolWindowAnchor myAnchor;
 
-    public ChangeAnchorAction(@Nonnull String title, @Nonnull ToolWindowAnchor anchor) {
+    public ChangeAnchorAction(@Nonnull LocalizeValue title, @Nonnull ToolWindowAnchor anchor) {
       super(title);
       myAnchor = anchor;
     }
 
     @Override
+    @RequiredUIAccess
     public final void actionPerformed(@Nonnull final AnActionEvent e) {
       fireAnchorChanged(myAnchor);
     }
@@ -553,12 +559,12 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     }
 
     @Override
-    public final boolean isSelected(final AnActionEvent event) {
+    public final boolean isSelected(@Nonnull final AnActionEvent event) {
       return !myInfo.isAutoHide();
     }
 
     @Override
-    public final void setSelected(final AnActionEvent event, final boolean flag) {
+    public final void setSelected(@Nonnull final AnActionEvent event, final boolean flag) {
       fireAutoHideChanged(!myInfo.isAutoHide());
     }
 
@@ -575,12 +581,12 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     }
 
     @Override
-    public final boolean isSelected(final AnActionEvent event) {
+    public final boolean isSelected(@Nonnull final AnActionEvent event) {
       return myInfo.isDocked();
     }
 
     @Override
-    public final void setSelected(final AnActionEvent event, final boolean flag) {
+    public final void setSelected(@Nonnull final AnActionEvent event, final boolean flag) {
       if (myInfo.isDocked()) {
         fireTypeChanged(ToolWindowType.SLIDING);
       }
@@ -596,12 +602,12 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     }
 
     @Override
-    public final boolean isSelected(final AnActionEvent event) {
+    public final boolean isSelected(@Nonnull final AnActionEvent event) {
       return myInfo.isFloating();
     }
 
     @Override
-    public final void setSelected(final AnActionEvent event, final boolean flag) {
+    public final void setSelected(@Nonnull final AnActionEvent event, final boolean flag) {
       if (myInfo.isFloating()) {
         fireTypeChanged(myInfo.getInternalType());
       }
@@ -617,12 +623,12 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     }
 
     @Override
-    public final boolean isSelected(final AnActionEvent event) {
+    public final boolean isSelected(@Nonnull final AnActionEvent event) {
       return myInfo.isWindowed();
     }
 
     @Override
-    public final void setSelected(final AnActionEvent event, final boolean flag) {
+    public final void setSelected(@Nonnull final AnActionEvent event, final boolean flag) {
       if (myInfo.isWindowed()) {
         fireTypeChanged(myInfo.getInternalType());
       }
@@ -646,12 +652,12 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     }
 
     @Override
-    public final boolean isSelected(final AnActionEvent event) {
+    public final boolean isSelected(@Nonnull final AnActionEvent event) {
       return myInfo.isSplit();
     }
 
     @Override
-    public final void setSelected(final AnActionEvent event, final boolean flag) {
+    public final void setSelected(@Nonnull final AnActionEvent event, final boolean flag) {
       fireSideStatusChanged(flag);
     }
 
@@ -664,16 +670,18 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
   private final class RemoveStripeButtonAction extends AnAction implements DumbAware {
     public RemoveStripeButtonAction() {
       Presentation presentation = getTemplatePresentation();
-      presentation.setText(ActionsBundle.message("action.RemoveStripeButton.text"));
-      presentation.setDescription(ActionsBundle.message("action.RemoveStripeButton.description"));
+      presentation.setTextValue(ActionLocalize.actionRemovestripebuttonText());
+      presentation.setDescriptionValue(ActionLocalize.actionRemovestripebuttonDescription());
     }
 
     @Override
+    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
       e.getPresentation().setEnabledAndVisible(myInfo.isShowStripeButton());
     }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
       fireVisibleOnPanelChanged(false);
       if (getToolWindow().isActive()) {
@@ -688,15 +696,17 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
 
     public HideAction() {
       copyFrom(ActionManager.getInstance().getAction(HIDE_ACTIVE_WINDOW_ACTION_ID));
-      getTemplatePresentation().setText(UIBundle.message("tool.window.hide.action.name"));
+      getTemplatePresentation().setTextValue(UILocalize.toolWindowHideActionName());
     }
 
     @Override
+    @RequiredUIAccess
     public final void actionPerformed(@Nonnull final AnActionEvent e) {
       fireHidden();
     }
 
     @Override
+    @RequiredUIAccess
     public final void update(@Nonnull final AnActionEvent event) {
       final Presentation presentation = event.getPresentation();
       presentation.setEnabled(myInfo.isVisible());
@@ -719,17 +729,18 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     }
 
     @Override
-    public boolean isSelected(AnActionEvent e) {
+    public boolean isSelected(@Nonnull AnActionEvent e) {
       return myInfo.getContentUiType() == ToolWindowContentUiType.COMBO;
     }
 
     @Override
-    public void setSelected(AnActionEvent e, boolean state) {
+    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
       fireContentUiTypeChanges(state ? ToolWindowContentUiType.COMBO : ToolWindowContentUiType.TABBED);
     }
   }
 
   @Override
+  @RequiredUIAccess
   public void addNotify() {
     super.addNotify();
 
@@ -848,6 +859,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
   }
 
   @Override
+  @RequiredUIAccess
   public void putInfo(@Nonnull Map<String, String> info) {
     info.put("toolWindowTitle", myToolWindow.getTitle());
 

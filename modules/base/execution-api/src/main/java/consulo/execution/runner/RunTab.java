@@ -19,7 +19,6 @@ import consulo.application.AllIcons;
 import consulo.content.scope.SearchScope;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
-import consulo.execution.ExecutionDataKeys;
 import consulo.execution.configuration.ExecutionSearchScopeProvider;
 import consulo.execution.configuration.RunConfigurationBase;
 import consulo.execution.configuration.RunProfile;
@@ -34,7 +33,6 @@ import consulo.process.ProcessHandler;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -51,11 +49,13 @@ public abstract class RunTab implements DataProvider, Disposable {
   private LogConsoleManagerBase logConsoleManager;
 
   protected RunTab(@Nonnull ExecutionEnvironment environment, @Nonnull String runnerType) {
-    this(environment.getProject(),
-         ExecutionSearchScopeProvider.createSearchScope(environment.getProject(), environment.getRunProfile()),
-         runnerType,
-         environment.getExecutor().getId(),
-         environment.getRunProfile().getName());
+    this(
+      environment.getProject(),
+      ExecutionSearchScopeProvider.createSearchScope(environment.getProject(), environment.getRunProfile()),
+      runnerType,
+      environment.getExecutor().getId(),
+      environment.getRunProfile().getName()
+    );
 
     myEnvironment = environment;
   }
@@ -67,7 +67,13 @@ public abstract class RunTab implements DataProvider, Disposable {
     logConsoleManager = null;
   }
 
-  protected RunTab(@Nonnull Project project, @Nonnull SearchScope searchScope, @Nonnull String runnerType, @Nonnull String runnerTitle, @Nonnull String sessionName) {
+  protected RunTab(
+    @Nonnull Project project,
+    @Nonnull SearchScope searchScope,
+    @Nonnull String runnerType,
+    @Nonnull String runnerTitle,
+    @Nonnull String sessionName
+  ) {
     myProject = project;
     mySearchScope = searchScope;
 
@@ -78,13 +84,13 @@ public abstract class RunTab implements DataProvider, Disposable {
   @Nullable
   @Override
   public Object getData(@Nonnull Key<?> dataId) {
-    if (ExecutionDataKeys.RUN_PROFILE == dataId) {
+    if (RunProfile.KEY == dataId) {
       return myEnvironment == null ? null : myEnvironment.getRunProfile();
     }
-    else if (ExecutionDataKeys.EXECUTION_ENVIRONMENT == dataId) {
+    else if (ExecutionEnvironment.KEY == dataId) {
       return myEnvironment;
     }
-    else if (ExecutionDataKeys.RUN_CONTENT_DESCRIPTOR == dataId) {
+    else if (RunContentDescriptor.KEY == dataId) {
       return myRunContentDescriptor;
     }
     return null;
@@ -113,7 +119,11 @@ public abstract class RunTab implements DataProvider, Disposable {
     return logConsoleManager;
   }
 
-  protected final void initLogConsoles(@Nonnull RunProfile runConfiguration, @Nonnull RunContentDescriptor contentDescriptor, @Nullable ExecutionConsole console) {
+  protected final void initLogConsoles(
+    @Nonnull RunProfile runConfiguration,
+    @Nonnull RunContentDescriptor contentDescriptor,
+    @Nullable ExecutionConsole console
+  ) {
     ProcessHandler processHandler = contentDescriptor.getProcessHandler();
     if (runConfiguration instanceof RunConfigurationBase) {
       RunConfigurationBase configuration = (RunConfigurationBase)runConfiguration;

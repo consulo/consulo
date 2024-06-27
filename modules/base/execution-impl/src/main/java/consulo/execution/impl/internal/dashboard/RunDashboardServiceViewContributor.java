@@ -31,6 +31,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.process.ProcessHandler;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.dnd.DnDEvent;
 import consulo.ui.ex.content.Content;
@@ -647,7 +648,7 @@ public final class RunDashboardServiceViewContributor
 
     @Override
     public DataProvider getDataProvider() {
-      return id -> PlatformDataKeys.DELETE_ELEMENT_PROVIDER == id ? new RunDashboardServiceViewDeleteProvider() : null;
+      return id -> DeleteProvider.KEY == id ? new RunDashboardServiceViewDeleteProvider() : null;
     }
 
     @Override

@@ -18,15 +18,13 @@ package consulo.execution.impl.internal.action;
 import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataManager;
-import consulo.execution.ExecutionBundle;
-import consulo.execution.ExecutionDataKeys;
 import consulo.execution.ExecutionManager;
 import consulo.execution.ExecutionUtil;
 import consulo.execution.executor.ExecutorRegistry;
 import consulo.execution.impl.internal.ExecutionManagerImpl;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.ui.RunContentDescriptor;
-import consulo.language.editor.CommonDataKeys;
 import consulo.process.ProcessHandler;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -45,8 +43,10 @@ public class FakeRerunAction extends AnAction implements DumbAware {
     Presentation presentation = event.getPresentation();
     ExecutionEnvironment environment = getEnvironment(event);
     if (environment != null) {
-      presentation.setText(ExecutionBundle.message("rerun.configuration.action.name", environment.getRunProfile().getName()));
-      presentation.setIcon(ExecutionManagerImpl.isProcessRunning(getDescriptor(event)) ? AllIcons.Actions.Restart : environment.getExecutor().getIcon());
+      presentation.setTextValue(ExecutionLocalize.rerunConfigurationActionName(environment.getRunProfile().getName()));
+      presentation.setIcon(
+        ExecutionManagerImpl.isProcessRunning(getDescriptor(event)) ? AllIcons.Actions.Restart : environment.getExecutor().getIcon()
+      );
       presentation.setEnabled(isEnabled(event));
       return;
     }
@@ -65,19 +65,20 @@ public class FakeRerunAction extends AnAction implements DumbAware {
 
   @Nullable
   protected RunContentDescriptor getDescriptor(AnActionEvent event) {
-    return event.getData(ExecutionDataKeys.RUN_CONTENT_DESCRIPTOR);
+    return event.getData(RunContentDescriptor.KEY);
   }
 
   @Nullable
   protected ExecutionEnvironment getEnvironment(@Nonnull AnActionEvent event) {
-    ExecutionEnvironment environment = event.getData(ExecutionDataKeys.EXECUTION_ENVIRONMENT);
+    ExecutionEnvironment environment = event.getData(ExecutionEnvironment.KEY);
     if (environment == null) {
-      Project project = event.getData(CommonDataKeys.PROJECT);
-      RunContentDescriptor contentDescriptor = project == null ? null : ExecutionManager.getInstance(project).getContentManager().getSelectedContent();
+      Project project = event.getData(Project.KEY);
+      RunContentDescriptor contentDescriptor = project == null ? null
+        : ExecutionManager.getInstance(project).getContentManager().getSelectedContent();
       if (contentDescriptor != null) {
         JComponent component = contentDescriptor.getComponent();
         if (component != null) {
-          environment = DataManager.getInstance().getDataContext(component).getData(ExecutionDataKeys.EXECUTION_ENVIRONMENT);
+          environment = DataManager.getInstance().getDataContext(component).getData(ExecutionEnvironment.KEY);
         }
       }
     }

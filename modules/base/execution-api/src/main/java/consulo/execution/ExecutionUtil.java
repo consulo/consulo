@@ -16,22 +16,22 @@
 
 package consulo.execution;
 
-import consulo.application.ApplicationManager;
 import consulo.dataContext.DataManager;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.executor.Executor;
 import consulo.execution.executor.ExecutorRegistry;
 import consulo.execution.internal.ExecutionNotificationGroupHolder;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ExecutionEnvironmentBuilder;
 import consulo.execution.ui.RunContentDescriptor;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.process.ExecutionException;
 import consulo.process.ProcessHandler;
 import consulo.process.ProcessNotCreatedException;
 import consulo.project.Project;
 import consulo.project.ProjectPropertiesComponent;
-import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.project.ui.wm.ToolWindowManager;
@@ -41,11 +41,10 @@ import consulo.ui.ex.content.Content;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.style.StandardColors;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
-import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
 public class ExecutionUtil {
@@ -62,7 +61,12 @@ public class ExecutionUtil {
     handleExecutionError(environment.getProject(), environment.getExecutor().getToolWindowId(), environment.getRunProfile().getName(), e);
   }
 
-  public static void handleExecutionError(@Nonnull final Project project, @Nonnull final String toolWindowId, @Nonnull String taskName, @Nonnull ExecutionException e) {
+  public static void handleExecutionError(
+    @Nonnull final Project project,
+    @Nonnull final String toolWindowId,
+    @Nonnull String taskName,
+    @Nonnull ExecutionException e
+  ) {
     if (e instanceof RunCanceledByUserException) {
       return;
     }
@@ -76,65 +80,55 @@ public class ExecutionUtil {
     }
 
     HyperlinkListener listener = null;
-    if ((description.contains("87") || description.contains("111") || description.contains("206")) &&
-        e instanceof ProcessNotCreatedException &&
+    if ((description.contains("87") || description.contains("111") || description.contains("206"))
+      && e instanceof ProcessNotCreatedException processNotCreatedException &&
         !ProjectPropertiesComponent.getInstance(project).isTrueValue("dynamic.classpath")) {
-      final String commandLineString = ((ProcessNotCreatedException)e).getCommandLine().getCommandLineString();
+      final String commandLineString = processNotCreatedException.getCommandLine().getCommandLineString();
       if (commandLineString.length() > 1024 * 32) {
         description = "Command line is too long. In order to reduce its length classpath file can be used.<br>" +
                       "Would you like to enable classpath file mode for all run configurations of your project?<br>" +
                       "<a href=\"\">Enable</a>";
 
-        listener = new HyperlinkListener() {
-          @Override
-          public void hyperlinkUpdate(HyperlinkEvent event) {
-            ProjectPropertiesComponent.getInstance(project).setValue("dynamic.classpath", "true");
-          }
-        };
+        listener = event -> ProjectPropertiesComponent.getInstance(project).setValue("dynamic.classpath", "true");
       }
     }
-    final String title = ExecutionBundle.message("error.running.configuration.message", taskName);
+    final LocalizeValue title = ExecutionLocalize.errorRunningConfigurationMessage(taskName);
     final String fullMessage = title + ":<br>" + description;
 
-    if (ApplicationManager.getApplication().isUnitTestMode()) {
+    if (project.getApplication().isUnitTestMode()) {
       LOG.error(fullMessage, e);
     }
 
-    if (listener == null && e instanceof HyperlinkListener) {
-      listener = (HyperlinkListener)e;
+    if (listener == null && e instanceof HyperlinkListener hyperlinkListener) {
+      listener = hyperlinkListener;
     }
 
     final HyperlinkListener finalListener = listener;
     final String finalDescription = description;
-    UIUtil.invokeLaterIfNeeded(new Runnable() {
-      @Override
-      public void run() {
-        if (project.isDisposed()) {
-          return;
-        }
-
-        ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-        if (toolWindowManager.canShowNotification(toolWindowId)) {
-          //noinspection SSBasedInspection
-          toolWindowManager.notifyByBalloon(toolWindowId, consulo.ui.NotificationType.ERROR, fullMessage, null, finalListener);
-        }
-        else {
-          Messages.showErrorDialog(project, UIUtil.toHtml(fullMessage), "");
-        }
-        NotificationListener notificationListener = finalListener == null ? null : new NotificationListener() {
-          @Override
-          public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
-            finalListener.hyperlinkUpdate(event);
-          }
-        };
-        ExecutionNotificationGroupHolder.BASE.createNotification(title, finalDescription, NotificationType.ERROR, notificationListener).notify(project);
+    UIUtil.invokeLaterIfNeeded(() -> {
+      if (project.isDisposed()) {
+        return;
       }
+
+      ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
+      if (toolWindowManager.canShowNotification(toolWindowId)) {
+        //noinspection SSBasedInspection
+        toolWindowManager.notifyByBalloon(toolWindowId, consulo.ui.NotificationType.ERROR, fullMessage, null, finalListener);
+      }
+      else {
+        Messages.showErrorDialog(project, UIUtil.toHtml(fullMessage), "");
+      }
+      NotificationListener notificationListener =
+        finalListener == null ? null : (notification, event) -> finalListener.hyperlinkUpdate(event);
+      ExecutionNotificationGroupHolder.BASE
+        .createNotification(title.get(), finalDescription, NotificationType.ERROR, notificationListener).notify(project);
     });
   }
 
   public static void restartIfActive(@Nonnull RunContentDescriptor descriptor) {
     ProcessHandler processHandler = descriptor.getProcessHandler();
-    if (processHandler != null && processHandler.isStartNotified() && !processHandler.isProcessTerminating() && !processHandler.isProcessTerminated()) {
+    if (processHandler != null && processHandler.isStartNotified() && !processHandler.isProcessTerminating()
+      && !processHandler.isProcessTerminated()) {
       restart(descriptor);
     }
   }
@@ -149,7 +143,7 @@ public class ExecutionUtil {
 
   private static void restart(@Nullable JComponent component) {
     if (component != null) {
-      ExecutionEnvironment environment = DataManager.getInstance().getDataContext(component).getData(ExecutionDataKeys.EXECUTION_ENVIRONMENT);
+      ExecutionEnvironment environment = DataManager.getInstance().getDataContext(component).getData(ExecutionEnvironment.KEY);
       if (environment != null) {
         restart(environment);
       }

@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.editor.impl;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.util.Queryable;
 import consulo.application.util.function.Computable;
 import consulo.codeEditor.Caret;
@@ -40,12 +40,10 @@ import consulo.document.internal.DocumentEx;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUIUtil;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.platform.Platform;
 import consulo.project.Project;
-import consulo.ui.ex.CutProvider;
-import consulo.ui.ex.PasteProvider;
-import consulo.ui.ex.TypingTarget;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.*;
 import consulo.ui.ex.awt.Grayer;
 import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
 import consulo.ui.ex.awt.Magnificator;
@@ -79,7 +77,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class EditorComponentImpl extends JTextComponent implements EditorHolder, Scrollable, DataProvider, Queryable, TypingTarget, Accessible, IdeFocusTraversalPolicy.PassThroughComponent {
+public class EditorComponentImpl extends JTextComponent
+  implements EditorHolder, Scrollable, DataProvider, Queryable, TypingTarget, Accessible, IdeFocusTraversalPolicy.PassThroughComponent {
   private final DesktopEditorImpl myEditor;
 
   public EditorComponentImpl(@Nonnull DesktopEditorImpl editor) {
@@ -140,16 +139,16 @@ public class EditorComponentImpl extends JTextComponent implements EditorHolder,
     if (Caret.KEY == dataId) {
       return myEditor.getCaretModel().getCurrentCaret();
     }
-    if (PlatformDataKeys.DELETE_ELEMENT_PROVIDER == dataId) {
+    if (DeleteProvider.KEY == dataId) {
       return myEditor.getDeleteProvider();
     }
-    if (PlatformDataKeys.CUT_PROVIDER == dataId) {
+    if (CutProvider.KEY == dataId) {
       return myEditor.getCutProvider();
     }
-    if (PlatformDataKeys.COPY_PROVIDER == dataId) {
+    if (CopyProvider.KEY == dataId) {
       return myEditor.getCopyProvider();
     }
-    if (PlatformDataKeys.PASTE_PROVIDER == dataId) {
+    if (PasteProvider.KEY == dataId) {
       return myEditor.getPasteProvider();
     }
     if (EditorKeys.EDITOR_VIRTUAL_SPACE == dataId) {
@@ -512,18 +511,22 @@ public class EditorComponentImpl extends JTextComponent implements EditorHolder,
     }
 
     @Override
+    @RequiredUIAccess
     public void remove(final int offset, final int length) throws BadLocationException {
       editDocumentSafely(offset, length, null);
     }
 
     @Override
+    @RequiredUIAccess
     public void insertString(final int offset, final String text, AttributeSet attributeSet) throws BadLocationException {
       editDocumentSafely(offset, 0, text);
     }
 
     @Override
     public String getText(final int offset, final int length) throws BadLocationException {
-      return ApplicationManager.getApplication().runReadAction((Computable<String>) () -> myEditor.getDocument().getText(new TextRange(offset, offset + length)));
+      return Application.get().runReadAction(
+        (Computable<String>) () -> myEditor.getDocument().getText(new TextRange(offset, offset + length))
+      );
     }
 
     @Override
@@ -567,7 +570,7 @@ public class EditorComponentImpl extends JTextComponent implements EditorHolder,
 
     @Override
     public void render(Runnable runnable) {
-      ApplicationManager.getApplication().runReadAction(runnable);
+      Application.get().runReadAction(runnable);
     }
 
     // ---- Implements Element for the root element ----
@@ -692,6 +695,7 @@ public class EditorComponentImpl extends JTextComponent implements EditorHolder,
   }
 
   @Override
+  @RequiredUIAccess
   public void setText(String text) {
     editDocumentSafely(0, myEditor.getDocument().getTextLength(), text);
   }
@@ -699,37 +703,44 @@ public class EditorComponentImpl extends JTextComponent implements EditorHolder,
   /**
    * Inserts, removes or replaces the given text at the given offset
    */
+  @RequiredUIAccess
   private void editDocumentSafely(final int offset, final int length, @Nullable final String text) {
     final Project project = myEditor.getProject();
     final Document document = myEditor.getDocument();
     if (!FileDocumentManager.getInstance().requestWriting(document, project)) {
       return;
     }
-    CommandProcessor.getInstance().executeCommand(project, () -> ApplicationManager.getApplication().runWriteAction(new DocumentRunnable(document, project) {
-      @Override
-      public void run() {
-        document.startGuardedBlockChecking();
-        try {
-          if (text == null) {
-            // remove
-            document.deleteString(offset, offset + length);
+    CommandProcessor.getInstance().executeCommand(project, () -> Application.get().runWriteAction(
+      new DocumentRunnable(document, project) {
+        @Override
+        public void run() {
+          document.startGuardedBlockChecking();
+          try {
+            if (text == null) {
+              // remove
+              document.deleteString(offset, offset + length);
+            }
+            else if (length == 0) {
+              // insert
+              document.insertString(offset, text);
+            }
+            else {
+              document.replaceString(offset, offset + length, text);
+            }
           }
-          else if (length == 0) {
-            // insert
-            document.insertString(offset, text);
+          catch (ReadOnlyFragmentModificationException e) {
+            EditorActionManager.getInstance().getReadonlyFragmentModificationHandler(document).handle(e);
           }
-          else {
-            document.replaceString(offset, offset + length, text);
+          finally {
+            document.stopGuardedBlockChecking();
           }
         }
-        catch (ReadOnlyFragmentModificationException e) {
-          EditorActionManager.getInstance().getReadonlyFragmentModificationHandler(document).handle(e);
-        }
-        finally {
-          document.stopGuardedBlockChecking();
-        }
-      }
-    }), "", document, UndoConfirmationPolicy.DEFAULT, document);
+      }),
+      "",
+      document,
+      UndoConfirmationPolicy.DEFAULT,
+      document
+    );
   }
 
   /**
@@ -915,6 +926,7 @@ public class EditorComponentImpl extends JTextComponent implements EditorHolder,
     private int myCaretPos;
 
     @Override
+    @RequiredUIAccess
     public void caretPositionChanged(CaretEvent e) {
       Caret caret = e.getCaret();
       if (caret == null) {
@@ -923,7 +935,7 @@ public class EditorComponentImpl extends JTextComponent implements EditorHolder,
       int dot = caret.getOffset();
       int mark = caret.getLeadSelectionOffset();
       if (myCaretPos != dot) {
-        ApplicationManager.getApplication().assertIsDispatchThread();
+        Application.get().assertIsDispatchThread();
         firePropertyChange(ACCESSIBLE_CARET_PROPERTY, myCaretPos, dot);
 
         if (Platform.current().os().isMac()) {
@@ -938,7 +950,7 @@ public class EditorComponentImpl extends JTextComponent implements EditorHolder,
       }
 
       if (mark != dot) {
-        ApplicationManager.getApplication().assertIsDispatchThread();
+        Application.get().assertIsDispatchThread();
         firePropertyChange(ACCESSIBLE_SELECTION_PROPERTY, null, getSelectedText());
       }
     }
@@ -960,7 +972,7 @@ public class EditorComponentImpl extends JTextComponent implements EditorHolder,
     @Override
     public void documentChanged(final DocumentEvent event) {
       final Integer pos = event.getOffset();
-      if (ApplicationManager.getApplication().isDispatchThread()) {
+      if (Application.get().isDispatchThread()) {
         firePropertyChange(ACCESSIBLE_TEXT_PROPERTY, null, pos);
         if (Platform.current().os().isMac()) {
           // For MacOSX we also need to fire a JTextComponent event to anyone listening
@@ -970,7 +982,7 @@ public class EditorComponentImpl extends JTextComponent implements EditorHolder,
         }
       }
       else {
-        ApplicationManager.getApplication().invokeLater(() -> {
+        Application.get().invokeLater(() -> {
           firePropertyChange(ACCESSIBLE_TEXT_PROPERTY, null, pos);
           fireJTextComponentDocumentChange(event);
         });
@@ -1098,11 +1110,13 @@ public class EditorComponentImpl extends JTextComponent implements EditorHolder,
     // ---- Implements AccessibleEditableText ----
 
     @Override
+    @RequiredUIAccess
     public void setTextContents(String s) {
       setText(s);
     }
 
     @Override
+    @RequiredUIAccess
     public void insertTextAtIndex(int index, String s) {
       editDocumentSafely(index, 0, s);
     }
@@ -1113,6 +1127,7 @@ public class EditorComponentImpl extends JTextComponent implements EditorHolder,
     }
 
     @Override
+    @RequiredUIAccess
     public void delete(int startIndex, int endIndex) {
       editDocumentSafely(startIndex, endIndex - startIndex, null);
     }
@@ -1138,6 +1153,7 @@ public class EditorComponentImpl extends JTextComponent implements EditorHolder,
     }
 
     @Override
+    @RequiredUIAccess
     public void replaceText(int startIndex, int endIndex, String s) {
       editDocumentSafely(startIndex, endIndex, s);
     }

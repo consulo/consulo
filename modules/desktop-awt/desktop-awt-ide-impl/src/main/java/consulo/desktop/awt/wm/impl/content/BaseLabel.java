@@ -16,8 +16,8 @@
 package consulo.desktop.awt.wm.impl.content;
 
 import consulo.dataContext.DataManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.project.ui.wm.ToolWindowDataKeys;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.awt.UIUtil;
@@ -41,7 +41,7 @@ public class BaseLabel extends JLabel {
     myBold = bold;
 
     DataManager.registerDataProvider(this, dataId -> {
-      if (dataId == ToolWindowDataKeys.CONTENT) {
+      if (dataId == Content.KEY) {
         return getContent();
       }
 
@@ -75,6 +75,7 @@ public class BaseLabel extends JLabel {
   }
 
   @Override
+  @RequiredUIAccess
   protected void paintComponent(final Graphics g) {
     final Color fore = myUi.myWindow.isActive() ? myActiveFg : myPassiveFg;
     setForeground(fore);
