@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.refactoring.rename.inplace;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
@@ -40,6 +41,7 @@ import java.util.function.Consumer;
  */
 @ExtensionImpl(id = "member", order = "after variable")
 public class MemberInplaceRenameHandler extends VariableInplaceRenameHandler {
+  @RequiredReadAction
   @Override
   protected boolean isAvailable(PsiElement element, Editor editor, PsiFile file) {
     final PsiElement nameSuggestionContext = file.findElementAt(editor.getCaretModel().getOffset());

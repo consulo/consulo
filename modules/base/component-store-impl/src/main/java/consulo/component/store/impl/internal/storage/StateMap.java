@@ -19,11 +19,12 @@ import consulo.component.store.impl.internal.StateStorageException;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.io.BufferExposingByteArrayOutputStream;
-import consulo.util.io.CharsetToolkit;
 import consulo.util.io.UnsyncByteArrayInputStream;
 import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.SystemProperties;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import net.jpountz.lz4.LZ4BlockInputStream;
 import net.jpountz.lz4.LZ4BlockOutputStream;
 import org.jdom.Element;
@@ -31,11 +32,10 @@ import org.jdom.JDOMException;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.BiConsumer;
 
@@ -164,7 +164,7 @@ final class StateMap {
   private static byte[] archiveState(@Nonnull Element state) {
     BufferExposingByteArrayOutputStream byteOut = new BufferExposingByteArrayOutputStream();
     try {
-      try (OutputStreamWriter writer = new OutputStreamWriter(new LZ4BlockOutputStream(byteOut), CharsetToolkit.UTF8_CHARSET)) {
+      try (OutputStreamWriter writer = new OutputStreamWriter(new LZ4BlockOutputStream(byteOut), StandardCharsets.UTF_8)) {
         XMLOutputter xmlOutputter = JDOMUtil.newXmlOutputter();
         xmlOutputter.setFormat(XML_FORMAT);
         xmlOutputter.output(state, writer);

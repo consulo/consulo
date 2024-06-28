@@ -15,32 +15,32 @@
  */
 package consulo.ide.impl.idea.diff.merge;
 
-import consulo.ide.impl.idea.diff.DiffContext;
 import consulo.diff.content.DiffContent;
-import consulo.ide.impl.idea.diff.merge.MergeTool.MergeViewer;
-import consulo.diff.request.ContentDiffRequest;
+import consulo.diff.localize.DiffLocalize;
 import consulo.diff.merge.MergeRequest;
 import consulo.diff.merge.MergeResult;
+import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.request.DiffRequest;
+import consulo.diff.util.ThreeSide;
+import consulo.ide.impl.idea.diff.DiffContext;
+import consulo.ide.impl.idea.diff.merge.MergeTool.MergeViewer;
 import consulo.ide.impl.idea.diff.util.DiffUserDataKeysEx;
 import consulo.ide.impl.idea.diff.util.DiffUtil;
-import consulo.diff.util.ThreeSide;
-import consulo.ide.impl.idea.openapi.diff.DiffBundle;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
-import consulo.util.lang.Pair;
-import consulo.util.lang.function.Condition;
+import consulo.util.dataholder.Key;
 import consulo.util.lang.Couple;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.function.Condition;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.versionControlSystem.merge.MergeData;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.List;
@@ -150,18 +150,25 @@ public class MergeUtil {
     return showExitWithoutApplyingChangesDialog(viewer.getComponent(), request, context);
   }
 
-  public static boolean showExitWithoutApplyingChangesDialog(@Nonnull JComponent component,
-                                                             @Nonnull MergeRequest request,
-                                                             @Nonnull MergeContext context) {
-    String message = DiffBundle.message("merge.dialog.exit.without.applying.changes.confirmation.message");
-    String title = DiffBundle.message("cancel.visual.merge.dialog.title");
+  public static boolean showExitWithoutApplyingChangesDialog(
+    @Nonnull JComponent component,
+    @Nonnull MergeRequest request,
+    @Nonnull MergeContext context
+  ) {
+    String message = DiffLocalize.mergeDialogExitWithoutApplyingChangesConfirmationMessage().get();
+    String title = DiffLocalize.cancelVisualMergeDialogTitle().get();
     Couple<String> customMessage = DiffUtil.getUserData(request, context, DiffUserDataKeysEx.MERGE_CANCEL_MESSAGE);
     if (customMessage != null) {
       title = customMessage.first;
       message = customMessage.second;
     }
 
-    return Messages.showYesNoDialog(component.getRootPane(), message, title, Messages.getQuestionIcon()) == Messages.YES;
+    return Messages.showYesNoDialog(
+      component.getRootPane(),
+      message,
+      title,
+      Messages.getQuestionIcon()
+    ) == Messages.YES;
   }
 
   public static void putRevisionInfos(@Nonnull MergeRequest request, @Nonnull MergeData data) {

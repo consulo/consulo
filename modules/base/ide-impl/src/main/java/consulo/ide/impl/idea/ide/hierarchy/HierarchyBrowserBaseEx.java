@@ -16,23 +16,21 @@
 
 package consulo.ide.impl.idea.ide.hierarchy;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
 import consulo.dataContext.DataContext;
-import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.OccurenceNavigatorSupport;
 import consulo.ide.impl.idea.ide.dnd.TransferableWrapper;
 import consulo.ide.impl.idea.ide.hierarchy.actions.BrowseHierarchyActionBase;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewTree;
 import consulo.ide.impl.idea.ide.util.scopeChooser.EditScopesDialog;
 import consulo.ide.impl.idea.util.NullableFunction;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.PsiCopyPasteManager;
 import consulo.language.editor.hierarchy.HierarchyBrowser;
@@ -40,11 +38,13 @@ import consulo.language.editor.hierarchy.HierarchyProvider;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
 import consulo.navigation.Navigatable;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.OccurenceNavigator;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.EditSourceOnDoubleClickHandler;
+import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.action.ComboBoxAction;
 import consulo.ui.ex.awt.dnd.*;
@@ -53,6 +53,7 @@ import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Couple;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
@@ -76,8 +77,8 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
   @NonNls
   private static final String HELP_ID = "reference.toolWindows.hierarchy";
 
-  protected final Hashtable<String, HierarchyTreeBuilder> myBuilders = new Hashtable<String, HierarchyTreeBuilder>();
-  private final Hashtable<String, JTree> myType2TreeMap = new Hashtable<String, JTree>();
+  protected final Hashtable<String, HierarchyTreeBuilder> myBuilders = new Hashtable<>();
+  private final Hashtable<String, JTree> myType2TreeMap = new Hashtable<>();
 
   private final RefreshAction myRefreshAction = new RefreshAction();
   private final Alarm myAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, this);
@@ -88,7 +89,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
   private boolean myCachedIsValidBase;
 
-  private final Map<String, OccurenceNavigator> myOccurrenceNavigators = new HashMap<String, OccurenceNavigator>();
+  private final Map<String, OccurenceNavigator> myOccurrenceNavigators = new HashMap<>();
 
   private static final OccurenceNavigator EMPTY_NAVIGATOR = new OccurenceNavigator() {
     @Override
@@ -121,11 +122,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
       return "";
     }
   };
-  public static final String SCOPE_PROJECT = IdeBundle.message("hierarchy.scope.project");
-  public static final String SCOPE_ALL = IdeBundle.message("hierarchy.scope.all");
-  public static final String SCOPE_TEST = IdeBundle.message("hierarchy.scope.test");
-  public static final String SCOPE_CLASS = IdeBundle.message("hierarchy.scope.this.class");
-  private final Map<String, String> myType2ScopeMap = new HashMap<String, String>();
+  private final Map<String, String> myType2ScopeMap = new HashMap<>();
 
   public HierarchyBrowserBaseEx(@Nonnull Project project, @Nonnull PsiElement element) {
     super(project);
@@ -139,7 +136,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
     final HierarchyBrowserManager.State state = HierarchyBrowserManager.getInstance(project).getState();
     for (String type : myType2TreeMap.keySet()) {
-      myType2ScopeMap.put(type, state.SCOPE != null ? state.SCOPE : SCOPE_ALL);
+      myType2ScopeMap.put(type, state.SCOPE != null ? state.SCOPE : IdeLocalize.hierarchyScopeAll().get());
     }
 
     final Enumeration<String> keys = myType2TreeMap.keys();
@@ -221,14 +218,11 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
   protected final JTree createTree(boolean dndAware) {
     final Tree tree;
-    final NullableFunction<Object, PsiElement> toPsiConverter = new NullableFunction<Object, PsiElement>() {
-      @Override
-      public PsiElement apply(Object o) {
-        if (o instanceof HierarchyNodeDescriptor) {
-          return ((HierarchyNodeDescriptor)o).getContainingFile();
-        }
-        return null;
+    final NullableFunction<Object, PsiElement> toPsiConverter = o -> {
+      if (o instanceof HierarchyNodeDescriptor) {
+        return ((HierarchyNodeDescriptor)o).getContainingFile();
       }
+      return null;
     };
 
     if (dndAware) {
@@ -250,7 +244,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
         }
       };
 
-      if (!ApplicationManager.getApplication().isHeadlessEnvironment()) {
+      if (!myProject.getApplication().isHeadlessEnvironment()) {
         DnDManager.getInstance().registerSource(new DnDSource() {
           @Override
           public boolean canStartDragging(final DnDAction action, final Point dragOrigin) {
@@ -278,8 +272,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
           }
 
           @Override
-          public consulo.util.lang.Pair<Image, Point> createDraggedImage(final DnDAction action, final Point dragOrigin,
-                                                                         @Nonnull DnDDragStartBean bean) {
+          public Pair<Image, Point> createDraggedImage(final DnDAction action, final Point dragOrigin, @Nonnull DnDDragStartBean bean) {
             return null;
           }
 
@@ -329,18 +322,15 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
   }
 
   private void setWaitCursor() {
-    myAlarm.addRequest(new Runnable() {
-      @Override
-      public void run() {
-        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-      }
-    }, 100);
+    myAlarm.addRequest(() -> setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)), 100);
   }
 
+  @RequiredReadAction
   public void changeView(@Nonnull final String typeName) {
     changeView(typeName, true);
   }
 
+  @RequiredReadAction
   public final void changeView(@Nonnull final String typeName, boolean requestFocus) {
     myCurrentViewType = typeName;
 
@@ -376,20 +366,10 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
         myBuilders.put(typeName, builder);
         Disposer.register(this, builder);
-        Disposer.register(builder, new Disposable() {
-          @Override
-          public void dispose() {
-            myBuilders.remove(typeName);
-          }
-        });
+        Disposer.register(builder, () -> myBuilders.remove(typeName));
 
         final HierarchyNodeDescriptor descriptor = structure.getBaseDescriptor();
-        builder.select(descriptor, new Runnable() {
-          @Override
-          public void run() {
-            builder.expand(descriptor, null);
-          }
-        });
+        builder.select(descriptor, () -> builder.expand(descriptor, null));
       }
       finally {
         restoreCursor();
@@ -402,10 +382,11 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
     }
   }
 
+  @RequiredReadAction
   @Nullable
   protected String getContentDisplayName(@Nonnull String typeName, @Nonnull PsiElement element) {
-    if (element instanceof PsiNamedElement) {
-      return MessageFormat.format(typeName, ((PsiNamedElement)element).getName());
+    if (element instanceof PsiNamedElement namedElement) {
+      return MessageFormat.format(typeName, namedElement.getName());
     }
     return null;
   }
@@ -463,6 +444,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
     return myBuilders.get(myCurrentViewType);
   }
 
+  @RequiredReadAction
   final boolean isValidBase() {
     if (PsiDocumentManager.getInstance(myProject).getUncommittedDocuments().length > 0) {
       return myCachedIsValidBase;
@@ -495,13 +477,14 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
   }
 
   private void disposeBuilders() {
-    final Collection<HierarchyTreeBuilder> builders = new ArrayList<HierarchyTreeBuilder>(myBuilders.values());
+    final Collection<HierarchyTreeBuilder> builders = new ArrayList<>(myBuilders.values());
     for (final HierarchyTreeBuilder builder : builders) {
       Disposer.dispose(builder);
     }
     myBuilders.clear();
   }
 
+  @RequiredReadAction
   void doRefresh(boolean currentBuilderOnly) {
     if (currentBuilderOnly) LOG.assertTrue(myCurrentViewType != null);
 
@@ -509,7 +492,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
     if (getCurrentBuilder() == null) return; // seems like we are in the middle of refresh already
 
-    final Ref<Pair<List<Object>, List<Object>>> storedInfo = new Ref<Pair<List<Object>, List<Object>>>();
+    final Ref<Couple<List<Object>>> storedInfo = new Ref<>();
     if (myCurrentViewType != null) {
       final HierarchyTreeBuilder builder = getCurrentBuilder();
       storedInfo.set(builder.storeExpandedAndSelectedInfo());
@@ -529,13 +512,10 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
     }
     setHierarchyBase(element);
     validate();
-    ApplicationManager.getApplication().invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        changeView(currentViewType);
-        final HierarchyTreeBuilder builder = getCurrentBuilder();
-        builder.restoreExpandedAndSelectedInfo(storedInfo.get());
-      }
+    myProject.getApplication().invokeLater(() -> {
+      changeView(currentViewType);
+      final HierarchyTreeBuilder builder = getCurrentBuilder();
+      builder.restoreExpandedAndSelectedInfo(storedInfo.get());
     });
   }
 
@@ -546,18 +526,16 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
   protected class AlphaSortAction extends ToggleAction {
     public AlphaSortAction() {
-      super(IdeBundle.message("action.sort.alphabetically"),
-            IdeBundle.message("action.sort.alphabetically"),
-            AllIcons.ObjectBrowser.Sorted);
+      super(IdeLocalize.actionSortAlphabetically(), IdeLocalize.actionSortAlphabetically(), AllIcons.ObjectBrowser.Sorted);
     }
 
     @Override
-    public final boolean isSelected(final AnActionEvent event) {
+    public final boolean isSelected(@Nonnull final AnActionEvent event) {
       return HierarchyBrowserManager.getInstance(myProject).getState().SORT_ALPHABETICALLY;
     }
 
     @Override
-    public final void setSelected(final AnActionEvent event, final boolean flag) {
+    public final void setSelected(@Nonnull final AnActionEvent event, final boolean flag) {
       final HierarchyBrowserManager hierarchyBrowserManager = HierarchyBrowserManager.getInstance(myProject);
       hierarchyBrowserManager.getState().SORT_ALPHABETICALLY = flag;
       final Comparator<NodeDescriptor> comparator = getComparator();
@@ -582,10 +560,12 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
     @Nonnull
     private final Class<H> myHierarchyProviderClass;
 
-    BaseOnThisElementAction(@Nonnull String text,
-                            @Nonnull String actionId,
-                            @Nonnull Key<?> browserDataKey,
-                            @Nonnull Class<H> hierarchyProviderClass) {
+    BaseOnThisElementAction(
+      @Nonnull String text,
+      @Nonnull String actionId,
+      @Nonnull Key<?> browserDataKey,
+      @Nonnull Class<H> hierarchyProviderClass
+    ) {
       super(text);
       myActionId = actionId;
       myBrowserDataKey = browserDataKey;
@@ -604,14 +584,15 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
       final String currentViewType = browser.myCurrentViewType;
       Disposer.dispose(browser);
-      final H provider = BrowseHierarchyActionBase.findProvider(myHierarchyProviderClass,
-                                                                selectedElement,
-                                                                selectedElement.getContainingFile(),
-                                                                event.getDataContext());
+      final H provider = BrowseHierarchyActionBase.findProvider(
+        myHierarchyProviderClass,
+        selectedElement,
+        selectedElement.getContainingFile(),
+        event.getDataContext()
+      );
       final HierarchyBrowser newBrowser =
         BrowseHierarchyActionBase.createAndAddToPanel(selectedElement.getProject(), provider, selectedElement);
-      ApplicationManager.getApplication()
-                        .invokeLater(() -> ((HierarchyBrowserBaseEx)newBrowser).changeView(correctViewType(browser, currentViewType)));
+      Application.get().invokeLater(() -> ((HierarchyBrowserBaseEx)newBrowser).changeView(correctViewType(browser, currentViewType)));
     }
 
     protected String correctViewType(HierarchyBrowserBaseEx browser, String viewType) {
@@ -661,14 +642,16 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
   private class RefreshAction extends consulo.ui.ex.action.RefreshAction {
     public RefreshAction() {
-      super(IdeBundle.message("action.refresh"), IdeBundle.message("action.refresh"), AllIcons.Actions.Refresh);
+      super(IdeLocalize.actionRefresh(), IdeLocalize.actionRefresh(), AllIcons.Actions.Refresh);
     }
 
+    @RequiredUIAccess
     @Override
     public final void actionPerformed(final AnActionEvent e) {
       doRefresh(false);
     }
 
+    @RequiredUIAccess
     @Override
     public final void update(final AnActionEvent event) {
       final Presentation presentation = event.getPresentation();
@@ -681,7 +664,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
     @Override
     public final void update(@Nonnull final AnActionEvent e) {
       final Presentation presentation = e.getPresentation();
-      final Project project = e.getData(CommonDataKeys.PROJECT);
+      final Project project = e.getData(Project.KEY);
       if (project == null) return;
       presentation.setEnabled(isEnabled());
       presentation.setText(getCurrentScopeType());
@@ -706,11 +689,11 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
     }
 
     private Collection<String> getValidScopeNames() {
-      List<String> result = new ArrayList<String>();
-      result.add(SCOPE_PROJECT);
-      result.add(SCOPE_TEST);
-      result.add(SCOPE_ALL);
-      result.add(SCOPE_CLASS);
+      List<String> result = new ArrayList<>();
+      result.add(IdeLocalize.hierarchyScopeProject().get());
+      result.add(IdeLocalize.hierarchyScopeTest().get());
+      result.add(IdeLocalize.hierarchyScopeAll().get());
+      result.add(IdeLocalize.hierarchyScopeThisClass().get());
 
       final NamedScopesHolder[] holders = NamedScopesHolder.getAllNamedScopeHolders(myProject);
       for (NamedScopesHolder holder : holders) {
@@ -727,11 +710,8 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
       HierarchyBrowserManager.getInstance(myProject).getState().SCOPE = scopeType;
 
       // invokeLater is called to update state of button before long tree building operation
-      ApplicationManager.getApplication().invokeLater(new Runnable() {
-        @Override
-        public void run() {
-          doRefresh(true); // scope is kept per type so other builders doesn't need to be refreshed
-        }
+      myProject.getApplication().invokeLater(() -> {
+        doRefresh(true); // scope is kept per type so other builders doesn't need to be refreshed
       });
     }
 
@@ -739,10 +719,20 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
     @Override
     public final JComponent createCustomComponent(final Presentation presentation, String place) {
       final JPanel panel = new JPanel(new GridBagLayout());
-      panel.add(new JLabel(IdeBundle.message("label.scope")),
-                new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(0, 5, 0, 0), 0, 0));
-      panel.add(super.createCustomComponent(presentation, place),
-                new GridBagConstraints(1, 0, 1, 1, 1, 1, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+      panel.add(
+        new JLabel(IdeLocalize.labelScope().get()),
+        new GridBagConstraints(
+          0, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.BOTH,
+          JBUI.insetsLeft(5), 0, 0
+        )
+      );
+      panel.add(
+        super.createCustomComponent(presentation, place),
+        new GridBagConstraints(
+          1, 0, 1, 1, 1, 1, GridBagConstraints.WEST, GridBagConstraints.BOTH,
+          JBUI.emptyInsets(), 0, 0
+        )
+      );
       return panel;
     }
 
@@ -771,7 +761,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
       public void actionPerformed(@Nonnull AnActionEvent e) {
         EditScopesDialog.showDialog(myProject, null);
         if (!getValidScopeNames().contains(myType2ScopeMap.get(myCurrentViewType))) {
-          selectScope(SCOPE_ALL);
+          selectScope(IdeLocalize.hierarchyScopeAll().get());
         }
       }
     }

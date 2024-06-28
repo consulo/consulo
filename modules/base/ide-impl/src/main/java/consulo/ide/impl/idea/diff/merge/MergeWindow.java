@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.diff.util.DiffUtil;
 import consulo.diff.merge.MergeRequest;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.awt.Wrapper;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.disposer.Disposer;

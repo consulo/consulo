@@ -32,7 +32,6 @@ import consulo.ide.impl.idea.ui.content.tabs.TabbedContentAction;
 import consulo.ide.impl.idea.ui.popup.PopupState;
 import consulo.ide.impl.idea.util.ContentUtilEx;
 import consulo.ide.impl.wm.impl.ToolWindowContentUI;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -186,6 +185,7 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
     }
   }
 
+  @RequiredUIAccess
   private boolean isResizeable() {
     if (myWindow.getType() == ToolWindowType.FLOATING || myWindow.getType() == ToolWindowType.WINDOWED) return false;
     if (myWindow.getAnchor() == ToolWindowAnchor.BOTTOM) return true;
@@ -237,6 +237,7 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
 
     myManager.addContentManagerListener(new ContentManagerListener() {
       @Override
+      @RequiredUIAccess
       public void contentAdded(final ContentManagerEvent event) {
         getCurrentLayout().contentAdded(event);
         event.getContent().addPropertyChangeListener(DesktopToolWindowContentUi.this);
@@ -244,6 +245,7 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
       }
 
       @Override
+      @RequiredUIAccess
       public void contentRemoved(final ContentManagerEvent event) {
         event.getContent().removePropertyChangeListener(DesktopToolWindowContentUi.this);
         getCurrentLayout().contentRemoved(event);
@@ -252,10 +254,12 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
       }
 
       @Override
+      @RequiredUIAccess
       public void contentRemoveQuery(final ContentManagerEvent event) {
       }
 
       @Override
+      @RequiredUIAccess
       public void selectionChanged(final ContentManagerEvent event) {
         ensureSelectedContentVisible();
 
@@ -294,7 +298,7 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
     myContent.repaint();
   }
 
-
+  @RequiredUIAccess
   private void rebuild() {
     getCurrentLayout().rebuild();
     getCurrentLayout().update();
@@ -394,7 +398,7 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
       final Ref<Integer> myInitialHeight = Ref.create(0);
       final Ref<Boolean> myIsLastComponent = Ref.create();
 
-
+      @RequiredUIAccess
       private Component getActualSplitter() {
         if (!allowResize || !ui.isResizeable()) return null;
 
@@ -402,12 +406,13 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
         Component parent = component.getParent();
         while (parent != null) {
 
-          if (parent instanceof ThreeComponentsSplitter && ((ThreeComponentsSplitter)parent).getOrientation()) {
-            if (component != ((ThreeComponentsSplitter)parent).getFirstComponent()) {
+          if (parent instanceof ThreeComponentsSplitter threeComponentsSplitter && threeComponentsSplitter.getOrientation()) {
+            if (component != threeComponentsSplitter.getFirstComponent()) {
               return parent;
             }
           }
-          if (parent instanceof Splitter && ((Splitter)parent).isVertical() && ((Splitter)parent).getSecondComponent() == component && ((Splitter)parent).getFirstComponent() != null) {
+          if (parent instanceof Splitter splitter && splitter.isVertical()
+            && splitter.getSecondComponent() == component && splitter.getFirstComponent() != null) {
             return parent;
           }
           component = parent;
@@ -416,16 +421,15 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
         return null;
       }
 
+      @RequiredUIAccess
       private void arm(Component c) {
         Component component = c != null ? getActualSplitter() : null;
-        if (component instanceof ThreeComponentsSplitter) {
-          ThreeComponentsSplitter splitter = (ThreeComponentsSplitter)component;
+        if (component instanceof ThreeComponentsSplitter splitter) {
           myIsLastComponent.set(SwingUtilities.isDescendingFrom(c, splitter.getLastComponent()));
           myInitialHeight.set(myIsLastComponent.get() ? splitter.getLastSize() : splitter.getFirstSize());
           return;
         }
-        if (component instanceof Splitter) {
-          Splitter splitter = (Splitter)component;
+        if (component instanceof Splitter splitter) {
           myIsLastComponent.set(true);
           myInitialHeight.set(splitter.getSecondComponent().getHeight());
           return;
@@ -436,6 +440,7 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
       }
 
       @Override
+      @RequiredUIAccess
       public void mousePressed(MouseEvent e) {
         PointerInfo info = MouseInfo.getPointerInfo();
         if (!e.isPopupTrigger()) {
@@ -451,6 +456,7 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
       }
 
       @Override
+      @RequiredUIAccess
       public void mouseReleased(MouseEvent e) {
         if (!e.isPopupTrigger()) {
           if (UIUtil.isCloseClick(e, MouseEvent.MOUSE_RELEASED)) {
@@ -461,9 +467,11 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
       }
 
       @Override
+      @RequiredUIAccess
       public void mouseMoved(MouseEvent e) {
-        c.setCursor(allowResize && ui.isResizeable() && getActualSplitter() != null && c.getComponentAt(e.getPoint()) == c && ui.isResizeable(e.getPoint()) ? Cursor
-                .getPredefinedCursor(Cursor.N_RESIZE_CURSOR) : Cursor.getDefaultCursor());
+        boolean resize = allowResize && ui.isResizeable() && getActualSplitter() != null
+          && c.getComponentAt(e.getPoint()) == c && ui.isResizeable(e.getPoint());
+        c.setCursor(resize ? Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR) : Cursor.getDefaultCursor());
       }
 
       @Override
@@ -472,6 +480,7 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
       }
 
       @Override
+      @RequiredUIAccess
       public void mouseDragged(MouseEvent e) {
         if (myLastPoint.isNull() || myPressPoint.isNull()) return;
 
@@ -501,9 +510,9 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
             splitter.setFirstSize(myInitialHeight.get() + myLastPoint.get().y - myPressPoint.get().y);
           }
         }
-        if (component instanceof Splitter) {
-          Splitter splitter = (Splitter)component;
-          splitter.setProportion(Math.max(0, Math.min(1, 1f - (float)(myInitialHeight.get() + myPressPoint.get().y - myLastPoint.get().y) / splitter.getHeight())));
+        if (component instanceof Splitter splitter) {
+          float proportion = 1f - (float)(myInitialHeight.get() + myPressPoint.get().y - myLastPoint.get().y) / splitter.getHeight();
+          splitter.setProportion(Math.max(0, Math.min(1, proportion)));
         }
       }
     };
@@ -588,7 +597,7 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
         final Content selectedContent = manager.getSelectedContent();
-        final List<Pair<String, JComponent>> tabs = new ArrayList<Pair<String, JComponent>>();
+        final List<Pair<String, JComponent>> tabs = new ArrayList<>();
         int selectedTab = -1;
         for (Content content : manager.getContents()) {
           if (tabPrefix.equals(content.getUserData(Content.TAB_GROUP_NAME_KEY))) {
@@ -648,7 +657,7 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
   @Override
   @Nullable
   public Object getData(@Nonnull @NonNls Key<?> dataId) {
-    if (PlatformDataKeys.TOOL_WINDOW == dataId) return myWindow;
+    if (ToolWindow.KEY == dataId) return myWindow;
 
     if (CloseAction.CloseTarget.KEY == dataId) {
       return computeCloseTarget();

@@ -15,16 +15,17 @@
  */
 package consulo.ide.impl.idea.diagnostic;
 
-import consulo.application.impl.internal.ApplicationNamesInfo;
+import consulo.application.Application;
 import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.util.lang.SystemProperties;
 import consulo.container.boot.ContainerPathManager;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.logging.Logger;
-
+import consulo.platform.Platform;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.SystemProperties;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
@@ -181,9 +182,9 @@ public class VMOptions {
 
     File appHomeDirectory = ContainerPathManager.get().getAppHomeDirectory();
 
-    String fileName = ApplicationNamesInfo.getInstance().getProductName().toLowerCase(Locale.US);
-    if (SystemInfo.is64Bit && !SystemInfo.isMac) fileName += "64";
-    if (SystemInfo.isWindows) fileName += ".exe";
+    String fileName = Application.get().getName().get().toLowerCase(Locale.US);
+    if (SystemInfo.is64Bit && !Platform.current().os().isMac()) fileName += "64";
+    if (Platform.current().os().isWindows()) fileName += ".exe";
     fileName += ".vmoptions";
     return new File(appHomeDirectory, fileName);
   }

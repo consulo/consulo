@@ -15,37 +15,37 @@
  */
 package consulo.ide.impl.idea.diff.actions;
 
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.SelectionModel;
 import consulo.diff.DiffContentFactory;
-import consulo.ide.impl.idea.diff.DiffRequestFactory;
+import consulo.diff.DiffUserDataKeys;
 import consulo.diff.content.DiffContent;
 import consulo.diff.content.DocumentContent;
+import consulo.diff.localize.DiffLocalize;
 import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.request.DiffRequest;
 import consulo.diff.request.SimpleDiffRequest;
-import consulo.ide.impl.idea.diff.tools.util.DiffDataKeys;
-import consulo.diff.DiffUserDataKeys;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ide.impl.idea.openapi.diff.DiffBundle;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.SelectionModel;
 import consulo.document.FileDocumentManager;
+import consulo.document.util.TextRange;
 import consulo.fileEditor.FileEditorManager;
+import consulo.ide.impl.idea.diff.DiffRequestFactory;
+import consulo.ide.impl.idea.diff.tools.util.DiffDataKeys;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
-import consulo.project.Project;
-import consulo.document.util.TextRange;
-import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class CompareClipboardWithSelectionAction extends BaseShowDiffAction {
   @Nullable
   private static Editor getEditor(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) return null;
 
-    Editor editor = e.getData(CommonDataKeys.EDITOR);
+    Editor editor = e.getData(Editor.KEY);
     if (editor != null) return editor;
 
     editor = FileEditorManager.getInstance(project).getSelectedTextEditor();
@@ -60,8 +60,8 @@ public class CompareClipboardWithSelectionAction extends BaseShowDiffAction {
     if (content != null && content.getContentType() != null) return content.getContentType();
 
     DiffRequest request = e.getData(DiffDataKeys.DIFF_REQUEST);
-    if (request instanceof ContentDiffRequest) {
-      for (DiffContent diffContent : ((ContentDiffRequest)request).getContents()) {
+    if (request instanceof ContentDiffRequest contentDiffRequest) {
+      for (DiffContent diffContent : contentDiffRequest.getContents()) {
         FileType type = diffContent.getContentType();
         if (type != null && type != UnknownFileType.INSTANCE) return type;
       }
@@ -76,10 +76,10 @@ public class CompareClipboardWithSelectionAction extends BaseShowDiffAction {
     return editor != null;
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   @Override
   protected DiffRequest getDiffRequest(@Nonnull AnActionEvent e) {
-    Project project = e.getRequiredData(CommonDataKeys.PROJECT);
+    Project project = e.getRequiredData(Project.KEY);
     Editor editor = getEditor(e);
     FileType editorFileType = getEditorFileType(e);
     assert editor != null;
@@ -87,12 +87,12 @@ public class CompareClipboardWithSelectionAction extends BaseShowDiffAction {
     DocumentContent content2 = createContent(project, editor, editorFileType);
     DocumentContent content1 = DiffContentFactory.getInstance().createClipboardContent(project, content2);
 
-    String title1 = DiffBundle.message("diff.content.clipboard.content.title");
+    LocalizeValue title1 = DiffLocalize.diffContentClipboardContentTitle();
     String title2 = createContentTitle(editor);
 
-    String title = DiffBundle.message("diff.clipboard.vs.editor.dialog.title");
+    LocalizeValue title = DiffLocalize.diffClipboardVsEditorDialogTitle();
 
-    SimpleDiffRequest request = new SimpleDiffRequest(title, content1, content2, title1, title2);
+    SimpleDiffRequest request = new SimpleDiffRequest(title.get(), content1, content2, title1.get(), title2);
     if (editor.isViewer()) {
       request.putUserData(DiffUserDataKeys.FORCE_READ_ONLY_CONTENTS, new boolean[]{false, true});
     }
@@ -118,7 +118,7 @@ public class CompareClipboardWithSelectionAction extends BaseShowDiffAction {
     String title = file != null ? DiffRequestFactory.getInstance().getContentTitle(file) : "Editor";
 
     if (editor.getSelectionModel().hasSelection()) {
-      title = DiffBundle.message("diff.content.selection.from.file.content.title", title);
+      title = DiffLocalize.diffContentSelectionFromFileContentTitle(title).get();
     }
 
     return title;

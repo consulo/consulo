@@ -15,16 +15,17 @@
  */
 package consulo.ide.impl.idea.codeInspection.export;
 
-import consulo.language.editor.inspection.HTMLExporter;
-import consulo.language.editor.inspection.InspectionsBundle;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.component.ProcessCanceledException;
+import consulo.language.editor.inspection.HTMLExporter;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.util.lang.function.ThrowableRunnable;
-import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.NonNls;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,19 +36,16 @@ public class HTMLExportUtil {
       HTMLExporter.writeFileImpl(folder, fileName, buf);
     }
     catch (IOException e) {
-      Runnable showError = new Runnable() {
-        @Override
-        public void run() {
-          final String fullPath = folder + File.separator + fileName;
-          Messages.showMessageDialog(
-            project,
-            InspectionsBundle.message("inspection.export.error.writing.to", fullPath),
-            InspectionsBundle.message("inspection.export.results.error.title"),
-            Messages.getErrorIcon()
-          );
-        }
+      Runnable showError = () -> {
+        final String fullPath = folder + File.separator + fileName;
+        Messages.showMessageDialog(
+          project,
+          InspectionLocalize.inspectionExportErrorWritingTo(fullPath).get(),
+          InspectionLocalize.inspectionExportResultsErrorTitle().get(),
+          UIUtil.getErrorIcon()
+        );
       };
-      ApplicationManager.getApplication().invokeLater(showError, IdeaModalityState.nonModal());
+      Application.get().invokeLater(showError, IdeaModalityState.nonModal());
       throw new ProcessCanceledException();
     }
   }
@@ -57,18 +55,13 @@ public class HTMLExportUtil {
       runnable.run();
     }
     catch (IOException e) {
-      Runnable showError = new Runnable() {
-        @Override
-        public void run() {
-          Messages.showMessageDialog(
-            project,
-            InspectionsBundle.message("inspection.export.error.writing.to", "export file"),
-            InspectionsBundle.message("inspection.export.results.error.title"),
-            Messages.getErrorIcon()
-          );
-        }
-      };
-      ApplicationManager.getApplication().invokeLater(showError, IdeaModalityState.nonModal());
+      Runnable showError = () -> Messages.showMessageDialog(
+        project,
+        InspectionLocalize.inspectionExportErrorWritingTo("export file").get(),
+        InspectionLocalize.inspectionExportResultsErrorTitle().get(),
+        UIUtil.getErrorIcon()
+      );
+      Application.get().invokeLater(showError, IdeaModalityState.nonModal());
       throw new ProcessCanceledException();
     }
   }

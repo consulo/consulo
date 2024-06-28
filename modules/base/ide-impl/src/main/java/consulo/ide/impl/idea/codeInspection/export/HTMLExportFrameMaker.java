@@ -24,12 +24,12 @@
  */
 package consulo.ide.impl.idea.codeInspection.export;
 
-import consulo.language.editor.inspection.InspectionsBundle;
+import consulo.application.Application;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
-import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.project.Project;
-import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.NonNls;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +37,7 @@ import java.util.List;
 public class HTMLExportFrameMaker {
   private final String myRootFolder;
   private final Project myProject;
-  private final List<InspectionToolWrapper> myInspectionToolWrappers = new ArrayList<InspectionToolWrapper>();
+  private final List<InspectionToolWrapper> myInspectionToolWrappers = new ArrayList<>();
 
   public HTMLExportFrameMaker(String rootFolder, Project project) {
     myRootFolder = rootFolder;
@@ -70,8 +70,8 @@ public class HTMLExportFrameMaker {
     myInspectionToolWrappers.add(toolWrapper);
     @NonNls StringBuffer buf = new StringBuffer();
     buf.append("<HTML><HEAD><TITLE>");
-    buf.append(ApplicationNamesInfo.getInstance().getFullProductName());
-    buf.append(InspectionsBundle.message("inspection.export.title"));
+    buf.append(Application.get().getName());
+    buf.append(InspectionLocalize.inspectionExportTitle());
     buf.append("</TITLE></HEAD>");
     buf.append("<FRAMESET cols=\"30%,70%\"><FRAMESET rows=\"30%,70%\">");
     buf.append("<FRAME src=\"");

@@ -20,9 +20,8 @@ import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.file.FileTypeManager;
 import consulo.logging.Logger;
 import consulo.project.ProjectManager;
-import consulo.util.io.CharsetToolkit;
 import consulo.util.io.FileUtil;
-import consulo.util.lang.Pair;
+import consulo.util.lang.Couple;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.RawFileLoader;
 import org.jetbrains.annotations.NonNls;
@@ -30,6 +29,7 @@ import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
@@ -243,14 +243,14 @@ public class FTManager {
   }
 
   private void addTemplateFromFile(String fileName, File file) {
-    Pair<String,String> nameExt = decodeFileName(fileName);
+    Couple<String> nameExt = decodeFileName(fileName);
     final String extension = nameExt.second;
     final String templateQName = nameExt.first;
     if (templateQName.length() == 0) {
       return;
     }
     try {
-      final String text = RawFileLoader.getInstance().loadFileText(file, CharsetToolkit.UTF8_CHARSET);
+      final String text = RawFileLoader.getInstance().loadFileText(file, StandardCharsets.UTF_8);
       addTemplate(templateQName, extension).setText(text);
     }
     catch (IOException e) {
@@ -313,7 +313,9 @@ public class FTManager {
         else {
           // both customized content on disk and corresponding template are present
           try {
-            final String diskText = StringUtil.convertLineSeparators(RawFileLoader.getInstance().loadFileText(customizedTemplateFile, CharsetToolkit.UTF8_CHARSET));
+            final String diskText = StringUtil.convertLineSeparators(
+              RawFileLoader.getInstance().loadFileText(customizedTemplateFile, StandardCharsets.UTF_8)
+            );
             final String templateText = templateToSave.getText();
             if (!diskText.equals(templateText)) {
               // save only if texts differ to avoid unnecessary file touching
@@ -344,7 +346,7 @@ public class FTManager {
       FileUtil.delete(templateFile);
       fileOutputStream = new FileOutputStream(templateFile);
     }
-    OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, CharsetToolkit.UTF8_CHARSET);
+    OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
     String content = template.getText();
 
     if (!lineSeparator.equals("\n")){
@@ -374,7 +376,7 @@ public class FTManager {
     return templateName + nameExtDelimiter + extension;
   }
 
-  public static Pair<String,String> decodeFileName(String fileName) {
+  public static Couple<String> decodeFileName(String fileName) {
     String name = fileName;
     String ext = "";
     String nameExtDelimiter = fileName.contains(ENCODED_NAME_EXT_DELIMITER) ? ENCODED_NAME_EXT_DELIMITER : ".";
@@ -383,7 +385,7 @@ public class FTManager {
       name = fileName.substring(0, extIndex);
       ext = fileName.substring(extIndex + nameExtDelimiter.length());
     }
-    return Pair.create(name, ext);
+    return Couple.of(name, ext);
   }
 
   public Map<String, FileTemplateBase> getTemplates() {

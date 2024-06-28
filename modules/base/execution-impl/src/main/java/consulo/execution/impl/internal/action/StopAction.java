@@ -3,13 +3,12 @@ package consulo.execution.impl.internal.action;
 
 import consulo.application.AllIcons;
 import consulo.dataContext.DataContext;
-import consulo.execution.ExecutionBundle;
-import consulo.execution.ExecutionDataKeys;
 import consulo.execution.ExecutionManager;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.impl.internal.ExecutionManagerImpl;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.ui.RunContentDescriptor;
-import consulo.language.editor.CommonDataKeys;
+import consulo.localize.LocalizeValue;
 import consulo.process.KillableProcessHandler;
 import consulo.process.ProcessHandler;
 import consulo.project.Project;
@@ -54,7 +53,7 @@ public class StopAction extends DumbAwareAction implements AnAction.TransparentU
   public void update(@Nonnull final AnActionEvent e) {
     boolean enable = false;
     Image icon = getTemplatePresentation().getIcon();
-    String description = getTemplatePresentation().getDescription();
+    LocalizeValue description = getTemplatePresentation().getDescriptionValue();
     Presentation presentation = e.getPresentation();
     if (isPlaceGlobal(e)) {
       List<RunContentDescriptor> stoppableDescriptors = getActiveStoppableDescriptors(e.getDataContext());
@@ -65,13 +64,13 @@ public class StopAction extends DumbAwareAction implements AnAction.TransparentU
         icon = ImageEffects.withText(icon, String.valueOf(stopCount));
       }
       else if (stopCount == 1) {
-        presentation.setText(ExecutionBundle.message("stop.configuration.action.name",
-                                                     StringUtil.escapeMnemonics(StringUtil.notNullize(stoppableDescriptors.get(0)
-                                                                                                                          .getDisplayName()))));
+        presentation.setTextValue(ExecutionLocalize.stopConfigurationActionName(
+          StringUtil.escapeMnemonics(StringUtil.notNullize(stoppableDescriptors.get(0).getDisplayName()))
+        ));
       }
     }
     else {
-      RunContentDescriptor contentDescriptor = e.getData(ExecutionDataKeys.RUN_CONTENT_DESCRIPTOR);
+      RunContentDescriptor contentDescriptor = e.getData(RunContentDescriptor.KEY);
       ProcessHandler processHandler = contentDescriptor == null ? null : contentDescriptor.getProcessHandler();
       if (processHandler != null && !processHandler.isProcessTerminated()) {
         if (!processHandler.isProcessTerminating()) {
@@ -80,30 +79,31 @@ public class StopAction extends DumbAwareAction implements AnAction.TransparentU
         else if (processHandler instanceof KillableProcessHandler && ((KillableProcessHandler)processHandler).canKillProcess()) {
           enable = true;
           icon = AllIcons.Debugger.KillProcess;
-          description = ExecutionBundle.message("action.terminating.process.progress.kill.description");
+          description = ExecutionLocalize.actionTerminatingProcessProgressKillDescription();
         }
       }
 
-      RunProfile runProfile = e.getData(ExecutionDataKeys.RUN_PROFILE);
+      RunProfile runProfile = e.getData(RunProfile.KEY);
       if (runProfile == null && contentDescriptor == null) {
         presentation.setTextValue(getTemplatePresentation().getTextValue());
       }
       else {
-        presentation.setText(ExecutionBundle.message("stop.configuration.action.name",
-                                                     StringUtil.escapeMnemonics(runProfile == null ? StringUtil.notNullize(contentDescriptor.getDisplayName()) : runProfile.getName())));
+        presentation.setTextValue(ExecutionLocalize.stopConfigurationActionName(
+          StringUtil.escapeMnemonics(runProfile == null ? StringUtil.notNullize(contentDescriptor.getDisplayName()) : runProfile.getName())
+        ));
       }
     }
 
     presentation.setEnabled(enable);
     presentation.setIcon(icon);
-    presentation.setDescription(description);
+    presentation.setDescriptionValue(description);
   }
 
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull final AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     List<RunContentDescriptor> stoppableDescriptors = getActiveStoppableDescriptors(dataContext);
     int stopCount = stoppableDescriptors.size();
     if (isPlaceGlobal(e)) {
@@ -118,9 +118,11 @@ public class StopAction extends DumbAwareAction implements AnAction.TransparentU
         return;
       }
 
-      HandlerItem stopAllItem = new HandlerItem(ExecutionBundle.message("stop.all", KeymapUtil.getFirstKeyboardShortcutText("Stop")),
-                                                AllIcons.Actions.Suspend,
-                                                true) {
+      HandlerItem stopAllItem = new HandlerItem(
+        ExecutionLocalize.stopAll(KeymapUtil.getFirstKeyboardShortcutText("Stop")).get(),
+        AllIcons.Actions.Suspend,
+        true
+      ) {
         @Override
         void stop() {
           for (HandlerItem item : handlerItems.first) {
@@ -163,7 +165,7 @@ public class StopAction extends DumbAwareAction implements AnAction.TransparentU
                         }
                       }))
                       .setMovable(true)
-                      .setTitle(items.size() == 1 ? ExecutionBundle.message("confirm.process.stop") : ExecutionBundle.message("stop.process"))
+                      .setTitle(items.size() == 1 ? ExecutionLocalize.confirmProcessStop().get() : ExecutionLocalize.stopProcess().get())
                       .setNamerForFiltering(o -> o.displayName)
                       .setItemsChosenCallback((valuesList) -> {
                         for (HandlerItem item : valuesList) {
@@ -230,21 +232,21 @@ public class StopAction extends DumbAwareAction implements AnAction.TransparentU
 
   @Nullable
   public static RunContentDescriptor getRecentlyStartedContentDescriptor(@Nonnull DataContext dataContext) {
-    final RunContentDescriptor contentDescriptor = dataContext.getData(ExecutionDataKeys.RUN_CONTENT_DESCRIPTOR);
+    final RunContentDescriptor contentDescriptor = dataContext.getData(RunContentDescriptor.KEY);
     if (contentDescriptor != null) {
       // toolwindow case
       return contentDescriptor;
     }
     else {
       // main menu toolbar
-      final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+      final Project project = dataContext.getData(Project.KEY);
       return project == null ? null : ExecutionManager.getInstance(project).getContentManager().getSelectedContent();
     }
   }
 
   @Nonnull
   private static List<RunContentDescriptor> getActiveStoppableDescriptors(@Nonnull DataContext dataContext) {
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Project project = dataContext.getData(Project.KEY);
     List<RunContentDescriptor> runningProcesses =
       project == null ? Collections.emptyList() : ExecutionManager.getInstance(project).getContentManager().getAllDescriptors();
     if (runningProcesses.isEmpty()) {

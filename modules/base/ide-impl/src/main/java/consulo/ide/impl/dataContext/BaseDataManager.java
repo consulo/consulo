@@ -16,7 +16,6 @@
 package consulo.ide.impl.dataContext;
 
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.impl.internal.ModalityStateImpl;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorKeys;
@@ -156,7 +155,7 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
         return (T)component;
       }
       if (ModalityState.KEY == dataId) {
-        return (T)ModalityStateImpl.NON_MODAL; //FIXME [VISTALL] stub
+        return (T)IdeaModalityState.nonModal(); //FIXME [VISTALL] stub
       }
       if (Editor.KEY == dataId || EditorKeys.HOST_EDITOR == dataId) {
         Editor editor = (Editor)getDataManager().getData(dataId, component);

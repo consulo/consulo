@@ -17,19 +17,17 @@ package consulo.execution.test.action;
 
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.execution.ExecutionDataKeys;
 import consulo.execution.test.autotest.AutoTestManager;
 import consulo.execution.ui.RunContentDescriptor;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 
 /**
@@ -47,7 +45,7 @@ public class AdjustAutotestDelayActionGroup extends ActionGroup {
   @RequiredUIAccess
   @Override
   public void update(AnActionEvent e) {
-    RunContentDescriptor descriptor = myDataContext.getData(ExecutionDataKeys.RUN_CONTENT_DESCRIPTOR);
+    RunContentDescriptor descriptor = myDataContext.getData(RunContentDescriptor.KEY);
     boolean visible = false;
     if (descriptor != null) {
       for (AnAction action : descriptor.getRestartActions()) {
@@ -86,7 +84,7 @@ public class AdjustAutotestDelayActionGroup extends ActionGroup {
 
     @Override
     public void setSelected(AnActionEvent e, boolean state) {
-      Project project = e.getData(CommonDataKeys.PROJECT);
+      Project project = e.getData(Project.KEY);
       if (project != null) {
         AutoTestManager.getInstance(project).setDelay(myDelay);
       }

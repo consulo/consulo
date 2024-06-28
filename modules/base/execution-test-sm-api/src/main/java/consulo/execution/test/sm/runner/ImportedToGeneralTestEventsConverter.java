@@ -15,21 +15,21 @@
  */
 package consulo.execution.test.sm.runner;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.execution.test.TestConsoleProperties;
 import consulo.execution.test.sm.runner.history.ImportTestOutputExtension;
 import consulo.process.ProcessHandler;
 import consulo.ui.ex.awt.Messages;
-import consulo.util.io.CharsetToolkit;
+import jakarta.annotation.Nonnull;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import jakarta.annotation.Nonnull;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.function.Supplier;
 
 public class ImportedToGeneralTestEventsConverter extends OutputToGeneralTestEventsConverter {
@@ -53,12 +53,9 @@ public class ImportedToGeneralTestEventsConverter extends OutputToGeneralTestEve
 
   @Override
   public void onStartTesting() {
-    ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
-      @Override
-      public void run() {
-        parseTestResults();
-        myHandler.detachProcess();
-      }
+    Application.get().executeOnPooledThread((Runnable)() -> {
+      parseTestResults();
+      myHandler.detachProcess();
     });
   }
 
@@ -66,7 +63,7 @@ public class ImportedToGeneralTestEventsConverter extends OutputToGeneralTestEve
     try {
       parseTestResults(() -> {
         try {
-          return new InputStreamReader(new FileInputStream(myFile), CharsetToolkit.UTF8_CHARSET);
+          return new InputStreamReader(new FileInputStream(myFile), StandardCharsets.UTF_8);
         }
         catch (FileNotFoundException e) {
           return null;
@@ -75,8 +72,9 @@ public class ImportedToGeneralTestEventsConverter extends OutputToGeneralTestEve
     }
     catch (IOException e) {
       final String message = e.getMessage();
-      ApplicationManager.getApplication()
-              .invokeLater(() -> Messages.showErrorDialog(myConsoleProperties.getProject(), message, "Failed to Parse " + myFile.getName()));
+      Application.get().invokeLater(
+        () -> Messages.showErrorDialog(myConsoleProperties.getProject(), message, "Failed to Parse " + myFile.getName())
+      );
     }
   }
 

@@ -16,25 +16,25 @@
 package consulo.ide.impl.idea.dvcs;
 
 import consulo.application.progress.ProgressManager;
-import consulo.application.util.function.ThrowableComputable;
-import consulo.versionControlSystem.distributed.DvcsBundle;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.versionControlSystem.base.FilePathImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.NonFocusableCheckBox;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsException;
+import consulo.versionControlSystem.base.FilePathImpl;
 import consulo.versionControlSystem.checkin.CheckinProjectPanel;
+import consulo.versionControlSystem.distributed.DvcsBundle;
 import consulo.versionControlSystem.distributed.DvcsUtil;
 import consulo.versionControlSystem.ui.RefreshableOnComponent;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -127,19 +127,22 @@ public abstract class DvcsCommitAdditionalComponent implements RefreshableOnComp
     myAmend.setSelected(false);
   }
 
+  @NonNls
   private void loadMessagesInModalTask(@Nonnull Project project) {
     try {
-      myMessagesForRoots =
-        ProgressManager.getInstance().runProcessWithProgressSynchronously(new ThrowableComputable<Map<VirtualFile,String>, VcsException>() {
-          @Override
-          public Map<VirtualFile, String> compute() throws VcsException {
-            return getLastCommitMessages();
-          }
-        }, "Reading commit message...", false, project);
+      myMessagesForRoots = ProgressManager.getInstance().runProcessWithProgressSynchronously(
+        () -> getLastCommitMessages(),
+        "Reading commit message...",
+        false,
+        project
+      );
     }
     catch (VcsException e) {
-      Messages.showErrorDialog(getComponent(), "Couldn't load commit message of the commit to amend.\n" + e.getMessage(),
-                               "Commit ReflectionMessage not Loaded");
+      Messages.showErrorDialog(
+        getComponent(),
+        "Couldn't load commit message of the commit to amend.\n" + e.getMessage(),
+        "Commit ReflectionMessage not Loaded"
+      );
       log.info(e);
     }
   }
@@ -153,7 +156,7 @@ public abstract class DvcsCommitAdditionalComponent implements RefreshableOnComp
 
   @Nullable
   private Map<VirtualFile, String> getLastCommitMessages() throws VcsException {
-    Map<VirtualFile, String> messagesForRoots = new HashMap<VirtualFile, String>();
+    Map<VirtualFile, String> messagesForRoots = new HashMap<>();
     Collection<VirtualFile> roots = myCheckinPanel.getRoots(); //all committed vcs roots, not only selected
     final Ref<VcsException> exception = Ref.create();
     for (VirtualFile root : roots) {

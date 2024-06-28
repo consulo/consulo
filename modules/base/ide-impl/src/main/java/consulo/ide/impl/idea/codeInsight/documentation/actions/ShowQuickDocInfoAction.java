@@ -22,7 +22,6 @@ import consulo.codeEditor.EditorGutter;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.PopupAction;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;
@@ -73,14 +72,14 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
   public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
 
-    Project project = event.getData(CommonDataKeys.PROJECT);
+    Project project = event.getData(Project.KEY);
     if (project == null) {
       presentation.setEnabled(false);
       return;
     }
 
-    Editor editor = event.getData(CommonDataKeys.EDITOR);
-    PsiElement element = event.getData(CommonDataKeys.PSI_ELEMENT);
+    Editor editor = event.getData(Editor.KEY);
+    PsiElement element = event.getData(PsiElement.KEY);
     if (editor == null && element == null) {
       presentation.setEnabled(false);
       return;
@@ -127,9 +126,9 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
-    final Editor editor = e.getData(CommonDataKeys.EDITOR);
-    final PsiElement element = e.getData(CommonDataKeys.PSI_ELEMENT);
+    final Project project = e.getData(Project.KEY);
+    final Editor editor = e.getData(Editor.KEY);
+    final PsiElement element = e.getData(PsiElement.KEY);
 
     if (project != null && editor != null) {
       FeatureUsageTracker.getInstance().triggerFeatureUsed(CODEASSISTS_QUICKJAVADOC_FEATURE);
@@ -142,12 +141,12 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
     }
     else if (project != null && element != null) {
       FeatureUsageTracker.getInstance().triggerFeatureUsed(CODEASSISTS_QUICKJAVADOC_CTRLN_FEATURE);
-      CommandProcessor.getInstance().executeCommand(project, new Runnable() {
-        @Override
-        public void run() {
-          DocumentationManager.getInstance(project).showJavaDocInfo(element, null);
-        }
-      }, getCommandName(), null);
+      CommandProcessor.getInstance().executeCommand(
+        project,
+        () -> DocumentationManager.getInstance(project)
+          .showJavaDocInfo(element, null), getCommandName(),
+        null
+      );
     }
   }
 }

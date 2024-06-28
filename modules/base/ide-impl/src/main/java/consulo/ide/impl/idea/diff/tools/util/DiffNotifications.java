@@ -16,13 +16,12 @@
 package consulo.ide.impl.idea.diff.tools.util;
 
 import consulo.diff.comparison.DiffTooBigException;
+import consulo.diff.localize.DiffLocalize;
 import consulo.ide.impl.idea.diff.util.TextDiffType;
-import consulo.ide.impl.idea.openapi.diff.DiffBundle;
 import consulo.ide.impl.idea.ui.EditorNotificationPanel;
+import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.HyperlinkLabel;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.color.ColorValue;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -47,15 +46,15 @@ public class DiffNotifications {
   @Nonnull
   public static JPanel createEqualContents(boolean equalCharsets, boolean equalSeparators) {
     if (!equalCharsets && !equalSeparators) {
-      return createNotification(DiffBundle.message("diff.contents.have.differences.only.in.charset.and.line.separators.message.text"));
+      return createNotification(DiffLocalize.diffContentsHaveDifferencesOnlyInCharsetAndLineSeparatorsMessageText().get());
     }
     if (!equalSeparators) {
-      return createNotification(DiffBundle.message("diff.contents.have.differences.only.in.line.separators.message.text"));
+      return createNotification(DiffLocalize.diffContentsHaveDifferencesOnlyInLineSeparatorsMessageText().get());
     }
     if (!equalCharsets) {
-      return createNotification(DiffBundle.message("diff.contents.have.differences.only.in.charset.message.text"));
+      return createNotification(DiffLocalize.diffContentsHaveDifferencesOnlyInCharsetMessageText().get());
     }
-    return createNotification(DiffBundle.message("diff.contents.are.identical.message.text"));
+    return createNotification(DiffLocalize.diffContentsAreIdenticalMessageText().get());
   }
 
   @Nonnull

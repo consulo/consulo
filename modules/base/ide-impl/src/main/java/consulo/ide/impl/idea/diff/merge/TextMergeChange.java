@@ -15,30 +15,32 @@
  */
 package consulo.ide.impl.idea.diff.merge;
 
-import consulo.diff.fragment.MergeLineFragment;
-import consulo.ide.impl.idea.diff.tools.simple.MergeInnerDifferences;
-import consulo.ide.impl.idea.diff.tools.simple.ThreesideDiffChangeBase;
-import consulo.ide.impl.idea.diff.util.*;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.AllIcons;
-import consulo.diff.util.Side;
-import consulo.diff.util.ThreeSide;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ide.impl.idea.openapi.diff.DiffBundle;
-import consulo.document.Document;
+import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.application.util.registry.Registry;
+import consulo.diff.fragment.MergeLineFragment;
+import consulo.diff.localize.DiffLocalize;
+import consulo.diff.util.Side;
+import consulo.diff.util.ThreeSide;
+import consulo.document.Document;
+import consulo.ide.impl.idea.diff.tools.simple.MergeInnerDifferences;
+import consulo.ide.impl.idea.diff.tools.simple.ThreesideDiffChangeBase;
+import consulo.ide.impl.idea.diff.util.DiffGutterRenderer;
+import consulo.ide.impl.idea.diff.util.DiffUtil;
+import consulo.ide.impl.idea.diff.util.MergeConflictType;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.annotation.access.RequiredWriteAction;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -305,43 +307,60 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
     }
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private GutterIconRenderer createApplyRenderer(@Nonnull final Side side, final boolean modifier) {
     if (isResolved(side)) return null;
     Image icon = isOnesideAppliedConflict() ? DiffUtil.getArrowDownIcon(side) : DiffUtil.getArrowIcon(side);
-    return createIconRenderer(DiffBundle.message("merge.dialog.apply.change.action.name"), icon, isConflict(), () -> {
-      myViewer.executeMergeCommand("Accept change", Collections.singletonList(this), () -> {
-        myViewer.replaceChange(this, side, modifier);
-      });
-    });
+    return createIconRenderer(
+      DiffLocalize.mergeDialogApplyChangeActionName().get(),
+      icon,
+      isConflict(),
+      () -> myViewer.executeMergeCommand(
+        "Accept change",
+        Collections.singletonList(this),
+        () -> myViewer.replaceChange(this, side, modifier)
+      )
+    );
   }
 
   @Nullable
   private GutterIconRenderer createIgnoreRenderer(@Nonnull final Side side, final boolean modifier) {
     if (isResolved(side)) return null;
-    return createIconRenderer(DiffBundle.message("merge.dialog.ignore.change.action.name"), AllIcons.Diff.Remove, isConflict(), () -> {
-      myViewer.executeMergeCommand("Ignore change", Collections.singletonList(this), () -> {
-        myViewer.ignoreChange(this, side, modifier);
-      });
-    });
+    return createIconRenderer(
+      DiffLocalize.mergeDialogIgnoreChangeActionName().get(),
+      AllIcons.Diff.Remove,
+      isConflict(),
+      () -> myViewer.executeMergeCommand(
+        "Ignore change",
+        Collections.singletonList(this),
+        () -> myViewer.ignoreChange(this, side, modifier)
+      )
+    );
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private GutterIconRenderer createResolveRenderer() {
     if (myViewer.resolveConflictUsingInnerDifferences(this) == null) return null;
 
-    return createIconRenderer(DiffBundle.message("merge.dialog.resolve.change.action.name"), AllIcons.Actions.Checked, false, () -> {
-      myViewer.executeMergeCommand("Resolve conflict", Collections.singletonList(this), () -> {
-        myViewer.resolveConflictedChange(this);
-      });
-    });
+    return createIconRenderer(
+      DiffLocalize.mergeDialogResolveChangeActionName().get(),
+      AllIcons.Actions.Checked,
+      false,
+      () -> myViewer.executeMergeCommand(
+        "Resolve conflict",
+        Collections.singletonList(this),
+        () -> myViewer.resolveConflictedChange(this)
+      )
+    );
   }
 
   @Nonnull
-  private GutterIconRenderer createIconRenderer(@Nonnull final String text,
-                                                @Nonnull final Image icon,
-                                                boolean ctrlClickVisible,
-                                                @Nonnull final Runnable perform) {
+  private GutterIconRenderer createIconRenderer(
+    @Nonnull final String text,
+    @Nonnull final Image icon,
+    boolean ctrlClickVisible,
+    @Nonnull final Runnable perform
+  ) {
     final String tooltipText = DiffUtil.createTooltipText(text, ctrlClickVisible ? CTRL_CLICK_TO_RESOLVE : null);
     return new DiffGutterRenderer(icon, tooltipText) {
       @Override
@@ -361,11 +380,13 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
 
   @Nonnull
   State storeState() {
-    return new State(myIndex, getStartLine(), getEndLine(),
-
-                     myResolved[0], myResolved[1],
-
-                     myOnesideAppliedConflict);
+    return new State(
+      myIndex,
+      getStartLine(),
+      getEndLine(),
+      myResolved[0],
+      myResolved[1],
+      myOnesideAppliedConflict);
   }
 
   void restoreState(@Nonnull State state) {

@@ -8,7 +8,7 @@ import consulo.ide.impl.idea.dupLocator.equivalence.SingleChildDescriptor;
 import consulo.ide.impl.idea.dupLocator.iterators.FilteringNodeIterator;
 import consulo.ide.impl.idea.dupLocator.iterators.SiblingNodeIterator;
 import consulo.language.Language;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiErrorElement;

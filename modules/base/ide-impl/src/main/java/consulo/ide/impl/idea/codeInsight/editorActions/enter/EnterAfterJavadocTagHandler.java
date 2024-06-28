@@ -25,7 +25,7 @@ import consulo.codeEditor.action.EditorActionHandler;
 import consulo.language.editor.action.EnterHandlerDelegateAdapter;
 import consulo.project.Project;
 import consulo.util.lang.ref.Ref;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.language.psi.PsiFile;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;

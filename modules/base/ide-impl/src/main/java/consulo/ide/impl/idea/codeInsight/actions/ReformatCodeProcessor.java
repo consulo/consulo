@@ -16,24 +16,24 @@
 
 package consulo.ide.impl.idea.codeInsight.actions;
 
-import consulo.language.codeStyle.FormatterUtil;
-import consulo.language.editor.CodeInsightBundle;
-import consulo.ide.impl.idea.formatting.FormattingProgressTask;
-import consulo.logging.Logger;
-import consulo.document.Document;
+import consulo.application.util.diff.FilesTooBigForDiffException;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.SelectionModel;
-import consulo.module.Module;
-import consulo.project.Project;
+import consulo.document.Document;
 import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.formatting.FormattingProgressTask;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.codeStyle.CodeStyleManager;
+import consulo.language.codeStyle.FormatterUtil;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.util.IncorrectOperationException;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.application.util.diff.FilesTooBigForDiffException;
+import consulo.logging.Logger;
+import consulo.module.Module;
+import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -42,7 +42,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 
 public class ReformatCodeProcessor extends AbstractLayoutCodeProcessor {
@@ -51,8 +50,8 @@ public class ReformatCodeProcessor extends AbstractLayoutCodeProcessor {
 
   private static final Logger LOG = Logger.getInstance(ReformatCodeProcessor.class);
 
-  private static final String PROGRESS_TEXT = CodeInsightBundle.message("reformat.progress.common.text");
-  private final Collection<TextRange> myRanges = new ArrayList<TextRange>();
+  private static final String PROGRESS_TEXT = CodeInsightLocalize.reformatProgressCommonText().get();
+  private final Collection<TextRange> myRanges = new ArrayList<>();
   private SelectionModel mySelectionModel;
 
   public ReformatCodeProcessor(Project project, boolean processChangedTextOnly) {
@@ -111,48 +110,45 @@ public class ReformatCodeProcessor extends AbstractLayoutCodeProcessor {
   protected FutureTask<Boolean> prepareTask(@Nonnull final PsiFile file, final boolean processChangedTextOnly)
           throws IncorrectOperationException
   {
-    return new FutureTask<Boolean>(new Callable<Boolean>() {
-      @Override
-      public Boolean call() throws Exception {
-        FormattingProgressTask.FORMATTING_CANCELLED_FLAG.set(false);
-        try {
-          Collection<TextRange> ranges = getRangesToFormat(processChangedTextOnly, file);
+    return new FutureTask<>(() -> {
+      FormattingProgressTask.FORMATTING_CANCELLED_FLAG.set(false);
+      try {
+        Collection<TextRange> ranges = getRangesToFormat(processChangedTextOnly, file);
 
-          CharSequence before = null;
-          Document document = PsiDocumentManager.getInstance(myProject).getDocument(file);
-          if (getInfoCollector() != null) {
-            LOG.assertTrue(document != null);
-            before = document.getImmutableCharSequence();
-          }
-
-          CaretVisualPositionKeeper caretPositionKeeper = new CaretVisualPositionKeeper(document);
-
-          if (processChangedTextOnly) {
-            CodeStyleManager.getInstance(myProject).reformatTextWithContext(file, ranges);
-          }
-          else {
-            CodeStyleManager.getInstance(myProject).reformatText(file, ranges);
-          }
-
-          caretPositionKeeper.restoreOriginalLocation();
-
-          if (before != null) {
-            prepareUserNotificationMessage(document, before);
-          }
-
-          return !FormattingProgressTask.FORMATTING_CANCELLED_FLAG.get();
+        CharSequence before = null;
+        Document document = PsiDocumentManager.getInstance(myProject).getDocument(file);
+        if (getInfoCollector() != null) {
+          LOG.assertTrue(document != null);
+          before = document.getImmutableCharSequence();
         }
-        catch (FilesTooBigForDiffException e) {
-          handleFileTooBigException(LOG, e, file);
-          return false;
+
+        CaretVisualPositionKeeper caretPositionKeeper = new CaretVisualPositionKeeper(document);
+
+        if (processChangedTextOnly) {
+          CodeStyleManager.getInstance(myProject).reformatTextWithContext(file, ranges);
         }
-        catch (IncorrectOperationException e) {
-          LOG.error(e);
-          return false;
+        else {
+          CodeStyleManager.getInstance(myProject).reformatText(file, ranges);
         }
-        finally {
-          myRanges.clear();
+
+        caretPositionKeeper.restoreOriginalLocation();
+
+        if (before != null) {
+          prepareUserNotificationMessage(document, before);
         }
+
+        return !FormattingProgressTask.FORMATTING_CANCELLED_FLAG.get();
+      }
+      catch (FilesTooBigForDiffException e) {
+        handleFileTooBigException(LOG, e, file);
+        return false;
+      }
+      catch (IncorrectOperationException e) {
+        LOG.error(e);
+        return false;
+      }
+      finally {
+        myRanges.clear();
       }
     });
   }
@@ -180,7 +176,7 @@ public class ReformatCodeProcessor extends AbstractLayoutCodeProcessor {
   }
 
   private static class CaretVisualPositionKeeper {
-    private final Map<Editor, Integer> myCaretRelativeVerticalPositions = new HashMap<Editor, Integer>();
+    private final Map<Editor, Integer> myCaretRelativeVerticalPositions = new HashMap<>();
 
     private CaretVisualPositionKeeper(@Nullable Document document) {
       if (document == null) return;

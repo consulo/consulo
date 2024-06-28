@@ -16,10 +16,10 @@
 
 package consulo.ide.impl.idea.ide.hierarchy;
 
-import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.hierarchy.TypeHierarchyProvider;
 import consulo.localHistory.LocalHistory;
 import consulo.localHistory.LocalHistoryAction;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.ui.ex.DeleteProvider;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.util.DeleteHandler;
@@ -122,7 +122,7 @@ public abstract class TypeHierarchyBrowserBase extends HierarchyBrowserBaseEx {
 
   @Override
   public final Object getData(@Nonnull Key<?> dataId) {
-    if (PlatformDataKeys.DELETE_ELEMENT_PROVIDER == dataId) {
+    if (DeleteProvider.KEY == dataId) {
       return myDeleteElementProvider;
     }
     return super.getData(dataId);
@@ -131,13 +131,13 @@ public abstract class TypeHierarchyBrowserBase extends HierarchyBrowserBaseEx {
   @Override
   @Nonnull
   protected String getPrevOccurenceActionNameImpl() {
-    return IdeBundle.message("hierarchy.type.prev.occurence.name");
+    return IdeLocalize.hierarchyTypePrevOccurenceName().get();
   }
 
   @Override
   @Nonnull
   protected String getNextOccurenceActionNameImpl() {
-    return IdeBundle.message("hierarchy.type.next.occurence.name");
+    return IdeLocalize.hierarchyTypeNextOccurenceName().get();
   }
 
   private final class MyDeleteProvider implements DeleteProvider {
@@ -145,7 +145,7 @@ public abstract class TypeHierarchyBrowserBase extends HierarchyBrowserBaseEx {
     public final void deleteElement(@Nonnull final DataContext dataContext) {
       final PsiElement aClass = getSelectedElement();
       if (!canBeDeleted(aClass)) return;
-      LocalHistoryAction a = LocalHistory.getInstance().startAction(IdeBundle.message("progress.deleting.class", getQualifiedName(aClass)));
+      LocalHistoryAction a = LocalHistory.getInstance().startAction(IdeLocalize.progressDeletingClass(getQualifiedName(aClass)).get());
       try {
         final PsiElement[] elements = {aClass};
         DeleteHandler.deletePsiElement(elements, myProject);
@@ -182,8 +182,8 @@ public abstract class TypeHierarchyBrowserBase extends HierarchyBrowserBaseEx {
     @Override
     protected String getNonDefaultText(@Nonnull HierarchyBrowserBaseEx browser, @Nonnull PsiElement element) {
       return ((TypeHierarchyBrowserBase)browser).isInterface(element)
-             ? IdeBundle.message("action.base.on.this.interface")
-             : IdeBundle.message("action.base.on.this.class");
+        ? IdeLocalize.actionBaseOnThisInterface().get()
+        : IdeLocalize.actionBaseOnThisClass().get();
     }
   }
 

@@ -17,6 +17,7 @@ package consulo.desktop.awt.internal.notification;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
+import consulo.application.HelpManager;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.SoftWrapAppliancePlaces;
@@ -26,7 +27,6 @@ import consulo.ide.impl.idea.openapi.editor.actions.ScrollToTheEndToolbarAction;
 import consulo.ide.impl.idea.openapi.editor.actions.ToggleUseSoftWrapsToolbarAction;
 import consulo.ide.impl.idea.ui.AncestorListenerAdapter;
 import consulo.ide.setting.ShowSettingsUtil;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
@@ -96,7 +96,7 @@ public class NotificationsToolWindowFactory implements ToolWindowFactory, DumbAw
     SimpleToolWindowPanel panel = new SimpleToolWindowPanel(false, true) {
       @Override
       public Object getData(@Nonnull Key dataId) {
-        return PlatformDataKeys.HELP_ID == dataId ? EventLog.HELP_ID : super.getData(dataId);
+        return (HelpManager.HELP_ID == dataId) ? EventLog.HELP_ID : super.getData(dataId);
       }
     };
     panel.setContent(editor.getComponent());
@@ -123,12 +123,12 @@ public class NotificationsToolWindowFactory implements ToolWindowFactory, DumbAw
     }
 
     @Override
-    public boolean isSelected(AnActionEvent e) {
+    public boolean isSelected(@Nonnull AnActionEvent e) {
       return NotificationsConfigurationImpl.getInstanceImpl().SHOW_BALLOONS;
     }
 
     @Override
-    public void setSelected(AnActionEvent e, boolean state) {
+    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
       NotificationsConfigurationImpl.getInstanceImpl().SHOW_BALLOONS = state;
     }
   }

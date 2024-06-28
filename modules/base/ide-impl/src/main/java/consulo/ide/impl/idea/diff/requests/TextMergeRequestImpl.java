@@ -20,7 +20,7 @@ import consulo.diff.merge.MergeResult;
 import consulo.diff.util.ThreeSide;
 import consulo.ide.impl.idea.diff.merge.TextMergeRequest;
 import consulo.ide.impl.idea.diff.util.DiffUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.project.Project;
 
 import jakarta.annotation.Nonnull;

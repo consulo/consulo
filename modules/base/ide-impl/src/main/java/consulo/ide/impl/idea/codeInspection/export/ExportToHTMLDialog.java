@@ -17,11 +17,11 @@
 package consulo.ide.impl.idea.codeInspection.export;
 
 import consulo.ide.impl.idea.codeEditor.printing.ExportToHTMLSettings;
-import consulo.language.editor.inspection.InspectionsBundle;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.TextFieldWithBrowseButton;
 import consulo.ui.ex.awt.OptionGroup;
+import consulo.ui.ex.awt.TextFieldWithBrowseButton;
 
 import javax.swing.*;
 
@@ -35,8 +35,8 @@ public class ExportToHTMLDialog extends DialogWrapper{
     super(project, true);
     myProject = project;
     myCanBeOpenInBrowser = canBeOpenInBrowser;
-    setOKButtonText(InspectionsBundle.message("inspection.export.save.button"));
-    setTitle(InspectionsBundle.message("inspection.export.dialog.title"));
+    setOKButtonText(InspectionLocalize.inspectionExportSaveButton().get());
+    setTitle(InspectionLocalize.inspectionExportDialogTitle());
     init();
   }
 
@@ -62,7 +62,7 @@ public class ExportToHTMLDialog extends DialogWrapper{
 
   protected void addOptions(OptionGroup optionGroup) {
     myCbOpenInBrowser = new JCheckBox();
-    myCbOpenInBrowser.setText(InspectionsBundle.message("inspection.export.open.option"));
+    myCbOpenInBrowser.setText(InspectionLocalize.inspectionExportOpenOption().get());
     optionGroup.add(myCbOpenInBrowser);
   }
 

@@ -16,19 +16,19 @@
 
 package consulo.ide.impl.idea.ide.hierarchy;
 
-import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
-import consulo.ui.ex.tree.NodeDescriptor;
-import consulo.ui.ex.awt.tree.TreeBuilderUtil;
 import consulo.application.progress.ProgressIndicator;
 import consulo.ide.impl.idea.openapi.progress.util.StatusBarProgress;
-import consulo.project.Project;
-import consulo.util.lang.Pair;
-import consulo.virtualFileSystem.status.FileStatusListener;
-import consulo.virtualFileSystem.status.FileStatusManager;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.event.PsiTreeChangeAdapter;
 import consulo.language.psi.event.PsiTreeChangeEvent;
+import consulo.project.Project;
+import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
+import consulo.ui.ex.awt.tree.TreeBuilderUtil;
+import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.util.lang.Couple;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.status.FileStatusListener;
+import consulo.virtualFileSystem.status.FileStatusManager;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -51,14 +51,14 @@ public class HierarchyTreeBuilder extends AbstractTreeBuilder {
   }
 
   @Nonnull
-  public Pair<List<Object>, List<Object>> storeExpandedAndSelectedInfo() {
-    List<Object> pathsToExpand = new ArrayList<Object>();
-    List<Object> selectionPaths = new ArrayList<Object>();
+  public Couple<List<Object>> storeExpandedAndSelectedInfo() {
+    List<Object> pathsToExpand = new ArrayList<>();
+    List<Object> selectionPaths = new ArrayList<>();
     TreeBuilderUtil.storePaths(this, getRootNode(), pathsToExpand, selectionPaths, true);
-    return Pair.create(pathsToExpand, selectionPaths);
+    return Couple.of(pathsToExpand, selectionPaths);
   }
 
-  public final void restoreExpandedAndSelectedInfo(@Nonnull Pair<List<Object>, List<Object>> pair) {
+  public final void restoreExpandedAndSelectedInfo(@Nonnull Couple<List<Object>> pair) {
     TreeBuilderUtil.restorePaths(this, pair.first, pair.second, true);
   }
 

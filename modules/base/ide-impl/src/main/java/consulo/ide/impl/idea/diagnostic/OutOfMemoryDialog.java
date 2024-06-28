@@ -15,21 +15,22 @@
  */
 package consulo.ide.impl.idea.diagnostic;
 
-import consulo.ide.impl.idea.diagnostic.VMOptions.MemoryKind;
-import consulo.ide.IdeBundle;
-import consulo.application.impl.internal.ApplicationNamesInfo;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.JBColor;
-import consulo.ui.ex.awt.JBLabel;
-import consulo.ide.impl.idea.util.MemoryDumpHelper;
-import consulo.util.lang.SystemProperties;
-import consulo.util.lang.TimeoutUtil;
-import consulo.ui.ex.awt.JBUI;
+import consulo.application.Application;
 import consulo.container.ExitCodes;
+import consulo.ide.impl.idea.diagnostic.VMOptions.MemoryKind;
+import consulo.ide.impl.idea.util.MemoryDumpHelper;
+import consulo.platform.Platform;
+import consulo.platform.base.localize.DiagnosticLocalize;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.JBLabel;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.Messages;
+import consulo.util.lang.TimeoutUtil;
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -62,15 +63,15 @@ public class OutOfMemoryDialog extends DialogWrapper {
   public OutOfMemoryDialog(@Nonnull MemoryKind memoryKind) {
     super(false);
     myMemoryKind = memoryKind;
-    setTitle(DiagnosticBundle.message("diagnostic.out.of.memory.title"));
+    setTitle(DiagnosticLocalize.diagnosticOutOfMemoryTitle());
 
     myIconLabel.setIcon(Messages.getErrorIcon());
-    myMessageLabel.setText(DiagnosticBundle.message("diagnostic.out.of.memory.error", memoryKind.optionName));
+    myMessageLabel.setText(DiagnosticLocalize.diagnosticOutOfMemoryError(memoryKind.optionName).get());
     myMessageLabel.setBorder(JBUI.Borders.emptyBottom(10));
 
     File file = VMOptions.getWriteFile();
     if (file != null) {
-      mySettingsFileHintLabel.setText(DiagnosticBundle.message("diagnostic.out.of.memory.willBeSavedTo", file.getPath()));
+      mySettingsFileHintLabel.setText(DiagnosticLocalize.diagnosticOutOfMemoryWillbesavedto(file.getPath()).get());
       mySettingsFileHintLabel.setBorder(JBUI.Borders.emptyTop(10));
     }
     else {
@@ -80,7 +81,7 @@ public class OutOfMemoryDialog extends DialogWrapper {
       myCodeCacheSizeField.setEnabled(false);
     }
 
-    myContinueAction = new DialogWrapperAction(DiagnosticBundle.message("diagnostic.out.of.memory.continue")) {
+    myContinueAction = new DialogWrapperAction(DiagnosticLocalize.diagnosticOutOfMemoryContinue()) {
       @Override
       protected void doAction(ActionEvent e) {
         save();
@@ -88,7 +89,7 @@ public class OutOfMemoryDialog extends DialogWrapper {
       }
     };
 
-    myShutdownAction = new DialogWrapperAction(IdeBundle.message("ide.shutdown.action")) {
+    myShutdownAction = new DialogWrapperAction(IdeLocalize.ideShutdownAction()) {
       @Override
       protected void doAction(ActionEvent e) {
         save();
@@ -98,28 +99,52 @@ public class OutOfMemoryDialog extends DialogWrapper {
     myShutdownAction.putValue(DialogWrapper.DEFAULT_ACTION, true);
 
     boolean heapDump = memoryKind == MemoryKind.HEAP && MemoryDumpHelper.memoryDumpAvailable();
-    myHeapDumpAction = !heapDump ? null : new DialogWrapperAction(DiagnosticBundle.message("diagnostic.out.of.memory.dump")) {
+    myHeapDumpAction = !heapDump ? null : new DialogWrapperAction(DiagnosticLocalize.diagnosticOutOfMemoryDump()) {
       @Override
       protected void doAction(ActionEvent e) {
         snapshot();
       }
     };
 
-    configControls(MemoryKind.HEAP, myHeapSizeLabel, myHeapSizeField, myHeapUnitsLabel, myHeapCurrentValueLabel);
-    configControls(MemoryKind.METASPACE, myMetaspaceSizeLabel, myMetaspaceSizeField, myMetaspaceUnitsLabel, myMetaspaceCurrentValueLabel);
-    configControls(MemoryKind.CODE_CACHE, myCodeCacheSizeLabel, myCodeCacheSizeField, myCodeCacheUnitsLabel, myCodeCacheCurrentValueLabel);
+    configControls(
+      MemoryKind.HEAP,
+      myHeapSizeLabel,
+      myHeapSizeField,
+      myHeapUnitsLabel,
+      myHeapCurrentValueLabel
+    );
+    configControls(
+      MemoryKind.METASPACE,
+      myMetaspaceSizeLabel,
+      myMetaspaceSizeField,
+      myMetaspaceUnitsLabel,
+      myMetaspaceCurrentValueLabel
+    );
+    configControls(
+      MemoryKind.CODE_CACHE,
+      myCodeCacheSizeLabel,
+      myCodeCacheSizeField,
+      myCodeCacheUnitsLabel,
+      myCodeCacheCurrentValueLabel
+    );
 
     init();
   }
 
-  private void configControls(MemoryKind option, JLabel sizeLabel, JTextField sizeField, JLabel unitsLabel, JLabel currentLabel) {
+  private void configControls(
+    MemoryKind option,
+    JLabel sizeLabel,
+    JTextField sizeField,
+    JLabel unitsLabel,
+    JLabel currentLabel
+  ) {
     sizeLabel.setText('-' + option.optionName);
 
     int effective = VMOptions.readOption(option, true);
     int stored = VMOptions.readOption(option, false);
     if (stored == -1) stored = effective;
     sizeField.setText(format(stored));
-    currentLabel.setText(DiagnosticBundle.message("diagnostic.out.of.memory.currentValue", format(effective)));
+    currentLabel.setText(DiagnosticLocalize.diagnosticOutOfMemoryCurrentvalue(format(effective)).get());
 
     if (option == myMemoryKind) {
       sizeLabel.setForeground(JBColor.RED);
@@ -130,7 +155,7 @@ public class OutOfMemoryDialog extends DialogWrapper {
   }
 
   private static String format(int value) {
-    return value == -1 ? DiagnosticBundle.message("diagnostic.out.of.memory.currentValue.unknown") : String.valueOf(value);
+    return value == -1 ? DiagnosticLocalize.diagnosticOutOfMemoryCurrentvalueUnknown().get() : String.valueOf(value);
   }
 
   private void save() {
@@ -163,8 +188,11 @@ public class OutOfMemoryDialog extends DialogWrapper {
       TimeoutUtil.sleep(250);  // to give UI chance to update
       String message = "";
       try {
-        String name = ApplicationNamesInfo.getInstance().getFullProductName().replace(' ', '-').toLowerCase(Locale.US);
-        String path = SystemProperties.getUserHome() + File.separator + "heapDump-" + name + '-' + System.currentTimeMillis() + ".hprof.zip";
+        String name = Application.get().getName().get()
+          .replace(' ', '-')
+          .toLowerCase(Locale.US);
+        String path = Platform.current().user().homePath() + File.separator +
+          "heapDump-" + name + '-' + System.currentTimeMillis() + ".hprof.zip";
         MemoryDumpHelper.captureMemoryDumpZipped(path);
         message = "Dumped to " + path;
       }
@@ -200,15 +228,18 @@ public class OutOfMemoryDialog extends DialogWrapper {
   @Nonnull
   @Override
   protected Action[] createActions() {
-    return myHeapDumpAction != null ? new Action[]{myShutdownAction, myContinueAction, myHeapDumpAction}
-                                    : new Action[]{myShutdownAction, myContinueAction};
+    return myHeapDumpAction != null
+      ? new Action[]{myShutdownAction, myContinueAction, myHeapDumpAction}
+      : new Action[]{myShutdownAction, myContinueAction};
   }
 
   @RequiredUIAccess
   @Override
   public JComponent getPreferredFocusedComponent() {
-    return myMemoryKind == MemoryKind.METASPACE ? myMetaspaceSizeField :
-           myMemoryKind == MemoryKind.CODE_CACHE ? myCodeCacheSizeField :
-           myHeapSizeField;
+    return myMemoryKind == MemoryKind.METASPACE
+      ? myMetaspaceSizeField
+      : myMemoryKind == MemoryKind.CODE_CACHE
+      ? myCodeCacheSizeField
+      : myHeapSizeField;
   }
 }

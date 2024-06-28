@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.profile.codeInspection;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.component.persist.*;
@@ -25,14 +24,14 @@ import consulo.component.persist.scheme.BaseSchemeProcessor;
 import consulo.component.persist.scheme.SchemeManager;
 import consulo.component.persist.scheme.SchemeManagerFactory;
 import consulo.ide.ServiceManager;
-import consulo.util.lang.Comparing;
-import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.util.collection.ArrayUtil;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileConvertor;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionToolRegistrar;
 import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
 import consulo.language.editor.inspection.InspectionsBundle;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.inspection.scheme.InspectionProfile;
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import consulo.language.editor.inspection.scheme.Profile;
@@ -45,22 +44,29 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.image.Image;
+import consulo.util.lang.Comparing;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 
 @Singleton
-@State(name = "InspectionProfileManager", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/editor.xml"),
-  @Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml", deprecated = true)}, additionalExportFile = InspectionProfileManager.FILE_SPEC)
+@State(
+  name = "InspectionProfileManager",
+  storages = {
+    @Storage(file = StoragePathMacros.APP_CONFIG + "/editor.xml"),
+    @Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml", deprecated = true)
+  },
+  additionalExportFile = InspectionProfileManager.FILE_SPEC
+)
 @ServiceImpl
 public class InspectionProfileManagerImpl extends InspectionProfileManager implements SeverityProvider, PersistentStateComponent<Element> {
   private final InspectionToolRegistrar myRegistrar;
@@ -74,9 +80,11 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
   }
 
   @Inject
-  public InspectionProfileManagerImpl(@Nonnull Application application,
-                                      @Nonnull InspectionToolRegistrar registrar,
-                                      @Nonnull SchemeManagerFactory schemeManagerFactory) {
+  public InspectionProfileManagerImpl(
+    @Nonnull Application application,
+    @Nonnull InspectionToolRegistrar registrar,
+    @Nonnull SchemeManagerFactory schemeManagerFactory
+  ) {
     myRegistrar = registrar;
     registerProvidedSeverities();
 
@@ -85,20 +93,23 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
         @Nonnull
         @Override
         public InspectionProfileImpl readScheme(@Nonnull Element element) {
-          final InspectionProfileImpl profile =
-            new InspectionProfileImpl(InspectionProfileLoadUtil.getProfileName(element), myRegistrar, InspectionProfileManagerImpl.this);
+          final InspectionProfileImpl profile = new InspectionProfileImpl(
+            InspectionProfileLoadUtil.getProfileName(element),
+            myRegistrar,
+            InspectionProfileManagerImpl.this
+          );
           try {
             profile.readExternal(element);
           }
           catch (Exception e) {
             LOG.error(e);
-            ApplicationManager.getApplication().invokeLater(new Runnable() {
-              @Override
-              public void run() {
-                Messages.showErrorDialog(InspectionsBundle.message("inspection.error.loading.message", 0, profile.getName()),
-                                         InspectionsBundle.message("inspection.errors.occurred.dialog.title"));
-              }
-            }, IdeaModalityState.nonModal());
+            Application.get().invokeLater(
+              ()-> Messages.showErrorDialog(
+                InspectionsBundle.message("inspection.error.loading.message", 0, profile.getName()),
+                InspectionLocalize.inspectionErrorsOccurredDialogTitle().get()
+              ),
+              IdeaModalityState.nonModal()
+            );
           }
           return profile;
         }
@@ -155,7 +166,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
         HighlightSeverity highlightSeverity = t.getSeverity(null);
         SeverityRegistrarImpl.registerStandard(t, highlightSeverity);
         TextAttributesKey attributesKey = t.getAttributesKey();
-        Image icon = t instanceof HighlightInfoType.Iconable ? ((HighlightInfoType.Iconable)t).getIcon() : null;
+        Image icon = t instanceof HighlightInfoType.Iconable iconable ? iconable.getIcon() : null;
         HighlightDisplayLevel.registerSeverity(highlightSeverity, attributesKey, icon);
       }
     });
@@ -198,13 +209,13 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
         throw e;
       }
       catch (Exception ignored) {
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            Messages.showErrorDialog(InspectionsBundle.message("inspection.error.loading.message", 0, file),
-                                     InspectionsBundle.message("inspection.errors.occurred.dialog.title"));
-          }
-        }, IdeaModalityState.nonModal());
+        Application.get().invokeLater(
+          ()-> Messages.showErrorDialog(
+            InspectionsBundle.message("inspection.error.loading.message", 0, file),
+            InspectionLocalize.inspectionErrorsOccurredDialogTitle().get()
+          ),
+          IdeaModalityState.nonModal()
+        );
       }
     }
     return getProfile(path, false);

@@ -21,11 +21,11 @@
  */
 package consulo.ide.impl.idea.diagnostic;
 
+import consulo.platform.base.localize.DiagnosticLocalize;
 import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationGroup;
 
 public class ReportMessages {
 
-  public static final String ERROR_REPORT = DiagnosticBundle.message("error.report.title");
-  public static final NotificationGroup GROUP = new NotificationGroup(ERROR_REPORT, NotificationDisplayType.BALLOON, true);
+  public static final NotificationGroup GROUP = new NotificationGroup(DiagnosticLocalize.errorReportTitle().get(), NotificationDisplayType.BALLOON, true);
 }

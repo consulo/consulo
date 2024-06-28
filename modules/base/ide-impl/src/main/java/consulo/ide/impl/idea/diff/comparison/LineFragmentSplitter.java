@@ -46,7 +46,7 @@ class LineFragmentSplitter {
   private final ProgressIndicator myIndicator;
 
   @Nonnull
-  private final List<WordBlock> myResult = new ArrayList<WordBlock>();
+  private final List<WordBlock> myResult = new ArrayList<>();
 
   public LineFragmentSplitter(@Nonnull CharSequence text1,
                               @Nonnull CharSequence text2,

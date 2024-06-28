@@ -15,8 +15,8 @@
  */
 package consulo.usage;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dataContext.DataSink;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.util.NavigationItemFileStatus;
 import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.psi.PsiElement;
@@ -47,6 +47,7 @@ public class PsiElementUsageGroupBase<T extends PsiElement & NavigationItem> imp
     myIcon = icon;
   }
 
+  @RequiredReadAction
   public PsiElementUsageGroupBase(@Nonnull T element) {
     this(element, IconDescriptorUpdaters.getIcon(element, 0));
   }
@@ -56,6 +57,8 @@ public class PsiElementUsageGroupBase<T extends PsiElement & NavigationItem> imp
     return myIcon;
   }
 
+  @RequiredReadAction
+  @SuppressWarnings("unchecked")
   public T getElement() {
     return (T)myElementPointer.getElement();
   }
@@ -67,17 +70,20 @@ public class PsiElementUsageGroupBase<T extends PsiElement & NavigationItem> imp
   }
 
   @Override
+  @RequiredReadAction
   public FileStatus getFileStatus() {
     return isValid() ? NavigationItemFileStatus.get(getElement()) : null;
   }
 
   @Override
+  @RequiredReadAction
   public boolean isValid() {
     final T element = getElement();
     return element != null && element.isValid();
   }
 
   @Override
+  @RequiredReadAction
   public void navigate(boolean focus) throws UnsupportedOperationException {
     if (canNavigate()) {
       getElement().navigate(focus);
@@ -85,11 +91,13 @@ public class PsiElementUsageGroupBase<T extends PsiElement & NavigationItem> imp
   }
 
   @Override
+  @RequiredReadAction
   public boolean canNavigate() {
     return isValid();
   }
 
   @Override
+  @RequiredReadAction
   public boolean canNavigateToSource() {
     return canNavigate();
   }
@@ -109,6 +117,7 @@ public class PsiElementUsageGroupBase<T extends PsiElement & NavigationItem> imp
     return myName.compareToIgnoreCase(name);
   }
 
+  @RequiredReadAction
   public boolean equals(final Object obj) {
     if (!(obj instanceof PsiElementUsageGroupBase)) return false;
     PsiElementUsageGroupBase group = (PsiElementUsageGroupBase)obj;
@@ -122,10 +131,11 @@ public class PsiElementUsageGroupBase<T extends PsiElement & NavigationItem> imp
     return myName.hashCode();
   }
 
+  @RequiredReadAction
   public void calcData(final Key<?> key, final DataSink sink) {
     if (!isValid()) return;
-    if (CommonDataKeys.PSI_ELEMENT == key) {
-      sink.put(CommonDataKeys.PSI_ELEMENT, getElement());
+    if (PsiElement.KEY == key) {
+      sink.put(PsiElement.KEY, getElement());
     }
     if (UsageView.USAGE_INFO_KEY == key) {
       T element = getElement();

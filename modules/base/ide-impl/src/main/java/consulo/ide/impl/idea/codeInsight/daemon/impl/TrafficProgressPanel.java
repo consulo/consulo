@@ -1,28 +1,23 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.language.editor.CodeInsightBundle;
-import consulo.language.editor.DaemonBundle;
-import consulo.codeEditor.Editor;
 import consulo.application.progress.ProgressIndicator;
+import consulo.codeEditor.Editor;
+import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.ui.components.panels.VerticalBox;
+import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
 import consulo.language.editor.impl.internal.highlight.ProgressableTextEditorHighlightingPass;
-import consulo.project.Project;
-import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.language.editor.localize.DaemonLocalize;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.ui.ex.awt.HintHint;
-import consulo.ui.ex.awt.NonOpaquePanel;
-import consulo.ide.impl.idea.ui.components.panels.VerticalBox;
-import consulo.ui.ex.awt.Wrapper;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.project.Project;
+import consulo.ui.ex.awt.*;
 import consulo.util.lang.Pair;
-
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -68,16 +63,26 @@ class TrafficProgressPanel extends JPanel {
     PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
     fakeStatusLargeEnough.passes = new ArrayList<>();
     for (int i = 0; i < 3; i++) {
-      fakeStatusLargeEnough.passes.add(new ProgressableTextEditorHighlightingPass(project, editor.getDocument(), DaemonBundle.message("pass.wolf"), psiFile, editor, TextRange.EMPTY_RANGE, false,
-                                                                                  HighlightInfoProcessor.getEmpty()) {
-        @Override
-        protected void collectInformationWithProgress(@Nonnull ProgressIndicator progress) {
-        }
+      fakeStatusLargeEnough.passes.add(
+        new ProgressableTextEditorHighlightingPass(
+          project,
+          editor.getDocument(),
+          DaemonLocalize.passWolf().get(),
+          psiFile,
+          editor,
+          TextRange.EMPTY_RANGE,
+          false,
+          HighlightInfoProcessor.getEmpty()
+        ) {
+          @Override
+          protected void collectInformationWithProgress(@Nonnull ProgressIndicator progress) {
+          }
 
-        @Override
-        protected void applyInformationWithProgress() {
+          @Override
+          protected void applyInformationWithProgress() {
+          }
         }
-      });
+      );
     }
     center.add(myPassStatusesContainer);
 

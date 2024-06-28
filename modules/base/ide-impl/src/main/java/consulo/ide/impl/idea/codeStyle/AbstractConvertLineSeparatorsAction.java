@@ -16,27 +16,24 @@
 package consulo.ide.impl.idea.codeStyle;
 
 import consulo.application.Result;
-import consulo.language.editor.WriteCommandAction;
-import consulo.language.editor.CommonDataKeys;
-import consulo.logging.Logger;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.ide.impl.idea.util.LineSeparator;
+import consulo.language.editor.WriteCommandAction;
 import consulo.language.impl.internal.psi.LoadTextUtil;
+import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.LineSeparator;
-import consulo.application.util.function.Processor;
-import consulo.ide.impl.idea.util.containers.Convertor;
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-
-import consulo.ui.annotation.RequiredUIAccess;
 
 import java.io.IOException;
 
@@ -50,10 +47,10 @@ public abstract class AbstractConvertLineSeparatorsAction extends AnAction {
   private final String mySeparator;
 
   protected AbstractConvertLineSeparatorsAction(@Nullable String text, @Nonnull LineSeparator separator) {
-    this(separator + " - " + text, separator.getSeparatorString());
+    this(LocalizeValue.localizeTODO(separator + " - " + text), separator.getSeparatorString());
   }
 
-  protected AbstractConvertLineSeparatorsAction(@Nullable String text, @Nonnull String separator) {
+  protected AbstractConvertLineSeparatorsAction(@Nonnull LocalizeValue text, @Nonnull String separator) {
     super(text);
     mySeparator = separator;
   }
@@ -61,9 +58,9 @@ public abstract class AbstractConvertLineSeparatorsAction extends AnAction {
   @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     if (project != null) {
-      final VirtualFile[] virtualFiles = e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
+      final VirtualFile[] virtualFiles = e.getData(VirtualFile.KEY_OF_ARRAY);
       final Presentation presentation = e.getPresentation();
       if (virtualFiles != null) {
         if (virtualFiles.length == 1) {
@@ -82,12 +79,12 @@ public abstract class AbstractConvertLineSeparatorsAction extends AnAction {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent event) {
-    final Project project = event.getData(CommonDataKeys.PROJECT);
+    final Project project = event.getData(Project.KEY);
     if (project == null) {
       return;
     }
 
-    final VirtualFile[] virtualFiles = event.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
+    final VirtualFile[] virtualFiles = event.getData(VirtualFile.KEY_OF_ARRAY);
     if (virtualFiles == null) {
       return;
     }
@@ -103,21 +100,18 @@ public abstract class AbstractConvertLineSeparatorsAction extends AnAction {
 
     final FileTypeRegistry fileTypeManager = FileTypeRegistry.getInstance();
     for (VirtualFile file : virtualFiles) {
-      VfsUtilCore.processFilesRecursively(file, new Processor<VirtualFile>() {
-                                            @Override
-                                            public boolean process(VirtualFile file) {
-                                              if (shouldProcess(file, project)) {
-                                                changeLineSeparators(project, file, mySeparator);
-                                              }
-                                              return true;
-                                            }
-                                          }, new Convertor<VirtualFile, Boolean>() {
-                                            @Override
-                                            public Boolean convert(VirtualFile dir) {
-                                              return !dir.equals(projectVirtualDirectory) &&
-                                                     !fileTypeManager.isFileIgnored(dir); // Exclude files like '.git'
-                                            }
-                                          }
+      VfsUtilCore.processFilesRecursively(
+        file,
+        file1 -> {
+          if (shouldProcess(file1, project)) {
+            changeLineSeparators(project, file1, mySeparator);
+          }
+          return true;
+        },
+        dir -> {
+          return !dir.equals(projectVirtualDirectory) &&
+            !fileTypeManager.isFileIgnored(dir); // Exclude files like '.git'
+        }
       );
     }
   }

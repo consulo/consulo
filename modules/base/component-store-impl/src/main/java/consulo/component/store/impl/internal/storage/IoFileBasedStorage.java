@@ -15,7 +15,7 @@
  */
 package consulo.component.store.impl.internal.storage;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.StoragePathMacros;
 import consulo.component.store.impl.internal.PathMacrosService;
@@ -26,19 +26,19 @@ import consulo.disposer.Disposable;
 import consulo.platform.LineSeparator;
 import consulo.platform.Platform;
 import consulo.ui.NotificationType;
-import consulo.util.io.CharsetToolkit;
 import consulo.util.io.FileUtil;
 import consulo.util.jdom.JDOMUtil;
 import consulo.virtualFileSystem.RawFileLoader;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author VISTALL
@@ -50,16 +50,18 @@ public final class IoFileBasedStorage extends XmlElementStorage {
   private final File myFile;
   private LineSeparator myLineSeparator;
 
-  public IoFileBasedStorage(@Nonnull String filePath,
-                            @Nonnull String fileSpec,
-                            @Nullable RoamingType roamingType,
-                            @Nullable TrackingPathMacroSubstitutor pathMacroManager,
-                            @Nonnull String rootElementName,
-                            @Nonnull Disposable parentDisposable,
-                            @Nullable final StateStorageListener listener,
-                            @Nullable StreamProvider streamProvider,
-                            boolean useXmlProlog,
-                            @Nonnull PathMacrosService pathMacrosService) {
+  public IoFileBasedStorage(
+    @Nonnull String filePath,
+    @Nonnull String fileSpec,
+    @Nullable RoamingType roamingType,
+    @Nullable TrackingPathMacroSubstitutor pathMacroManager,
+    @Nonnull String rootElementName,
+    @Nonnull Disposable parentDisposable,
+    @Nullable final StateStorageListener listener,
+    @Nullable StreamProvider streamProvider,
+    boolean useXmlProlog,
+    @Nonnull PathMacrosService pathMacrosService
+  ) {
     super(fileSpec, roamingType, pathMacroManager, rootElementName, streamProvider, pathMacrosService);
 
     myFilePath = filePath;
@@ -143,7 +145,7 @@ public final class IoFileBasedStorage extends XmlElementStorage {
         return processReadException(null);
       }
 
-      CharBuffer charBuffer = CharsetToolkit.UTF8_CHARSET.decode(ByteBuffer.wrap(RawFileLoader.getInstance().loadFileBytes(myFile)));
+      CharBuffer charBuffer = StandardCharsets.UTF_8.decode(ByteBuffer.wrap(RawFileLoader.getInstance().loadFileBytes(myFile)));
       myLineSeparator = StorageUtil.detectLineSeparators(charBuffer, isUseLfLineSeparatorByDefault() ? null : LineSeparator.LF);
       return JDOMUtil.loadDocument(charBuffer).getRootElement();
     }
@@ -158,19 +160,22 @@ public final class IoFileBasedStorage extends XmlElementStorage {
   @Nullable
   private Element processReadException(@Nullable Exception e) {
     boolean contentTruncated = e == null;
-    myBlockSavingTheContent = !contentTruncated && (StorageUtil.isProjectOrModuleFile(myFileSpec) || myFileSpec.equals(StoragePathMacros.WORKSPACE_FILE));
-    if (!ApplicationManager.getApplication().isUnitTestMode() && !ApplicationManager.getApplication().isHeadlessEnvironment()) {
+    myBlockSavingTheContent = !contentTruncated
+      && (StorageUtil.isProjectOrModuleFile(myFileSpec) || myFileSpec.equals(StoragePathMacros.WORKSPACE_FILE));
+    Application application = Application.get();
+    if (!application.isUnitTestMode() && !application.isHeadlessEnvironment()) {
       if (e != null) {
         LOG.info(e);
       }
 
-      StorageNotificationService.getInstance().notify(NotificationType.WARNING, "Load Settings", "Cannot load settings from file '" +
-                                                                                                 myFile.getPath() +
-                                                                                                 "': " +
-                                                                                                 (e == null ? "content truncated" : e.getMessage()) +
-                                                                                                 "\n" +
-                                                                                                 (myBlockSavingTheContent ? "Please correct the file content" : "File content will be recreated"),
-                                                      null);
+      StorageNotificationService.getInstance().notify(
+        NotificationType.WARNING,
+        "Load Settings",
+        "Cannot load settings from file '" + myFile.getPath() + "': " +
+          (e == null ? "content truncated" : e.getMessage()) + "\n" +
+          (myBlockSavingTheContent ? "Please correct the file content" : "File content will be recreated"),
+        null
+      );
     }
     return null;
   }

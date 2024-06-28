@@ -20,31 +20,31 @@ import consulo.builtinWebServer.impl.http.BuiltInServer;
 import consulo.builtinWebServer.impl.http.ImportantFolderLockerViaBuiltInServer;
 import consulo.builtinWebServer.impl.http.MessageDecoder;
 import consulo.disposer.Disposer;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.application.JetBrainsProtocolHandler;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.util.NotNullProducer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.MultiMap;
-import consulo.util.io.CharsetToolkit;
 import consulo.util.lang.StringUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.*;
 import java.lang.management.ManagementFactory;
 import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.attribute.PosixFileAttributeView;
 import java.nio.file.attribute.PosixFilePermission;
@@ -149,12 +149,12 @@ public final class DesktopImportantFolderLocker implements ImportantFolderLocker
       NotNullProducer<ChannelHandler> handler = () -> new MyChannelInboundHandler(lockedPaths, myActivateListener, myToken);
       myServer = BuiltInServer.startNioOrOio(workerCount, 6942, 50, false, handler);
 
-      byte[] portBytes = Integer.toString(myServer.getPort()).getBytes(CharsetToolkit.UTF8_CHARSET);
+      byte[] portBytes = Integer.toString(myServer.getPort()).getBytes(StandardCharsets.UTF_8);
       FileUtil.writeToFile(portMarkerC, portBytes);
       FileUtil.writeToFile(portMarkerS, portBytes);
 
       File tokenFile = new File(mySystemPath, TOKEN_FILE);
-      FileUtil.writeToFile(tokenFile, myToken.getBytes(CharsetToolkit.UTF8_CHARSET));
+      FileUtil.writeToFile(tokenFile, myToken.getBytes(StandardCharsets.UTF_8));
       PosixFileAttributeView view = Files.getFileAttributeView(tokenFile.toPath(), PosixFileAttributeView.class);
       if (view != null) {
         try {
@@ -367,8 +367,12 @@ public final class DesktopImportantFolderLocker implements ImportantFolderLocker
               boolean tokenOK = !args.isEmpty() && myToken.equals(args.get(0));
               if (!tokenOK) {
                 log(new UnsupportedOperationException("unauthorized request: " + command));
-                Notifications.Bus.notify(new Notification(Notifications.SYSTEM_MESSAGES_GROUP, IdeBundle.message("activation.auth.title"), IdeBundle.message("activation.auth.message"),
-                                                          NotificationType.WARNING));
+                Notifications.Bus.notify(new Notification(
+                  Notifications.SYSTEM_MESSAGES_GROUP,
+                  IdeLocalize.activationAuthTitle().get(),
+                  IdeLocalize.activationAuthMessage().get(),
+                  NotificationType.WARNING
+                ));
               }
               else {
                 Consumer<CommandLineArgs> listener = myActivateListener.get();

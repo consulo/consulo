@@ -29,22 +29,22 @@ import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextImpl;
 import consulo.ide.impl.idea.codeInspection.export.ExportToHTMLDialog;
 import consulo.ide.impl.idea.codeInspection.export.HTMLExportFrameMaker;
 import consulo.ide.impl.idea.codeInspection.export.HTMLExportUtil;
-import consulo.language.editor.inspection.HTMLExporter;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionNode;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionResultsView;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionToolPresentation;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionTreeNode;
 import consulo.ide.impl.idea.codeInspection.util.RefEntityAlphabeticalComparator;
 import consulo.ide.impl.idea.ide.BrowserUtil;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
-import consulo.language.editor.inspection.InspectionsBundle;
+import consulo.language.editor.inspection.HTMLExporter;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.inspection.reference.RefEntity;
 import consulo.language.editor.inspection.reference.RefModule;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
-import consulo.language.editor.internal.inspection.ScopeToolState;
 import consulo.language.editor.inspection.scheme.Tools;
+import consulo.language.editor.internal.inspection.ScopeToolState;
+import consulo.localize.LocalizeValue;
 import consulo.project.macro.ProjectPathMacroManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -55,12 +55,13 @@ import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.popup.PopupStep;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.function.ThrowableRunnable;
+import jakarta.annotation.Nonnull;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
@@ -77,7 +78,11 @@ public class ExportHTMLAction extends AnAction implements DumbAware {
   @NonNls private static final String XML = "XML";
 
   public ExportHTMLAction(final InspectionResultsView view) {
-    super(InspectionsBundle.message("inspection.action.export.html"), null, AllIcons.Actions.Export);
+    super(
+      InspectionLocalize.inspectionActionExportHtml(),
+      LocalizeValue.empty(),
+      AllIcons.Actions.Export
+    );
     myView = view;
   }
 
@@ -85,7 +90,7 @@ public class ExportHTMLAction extends AnAction implements DumbAware {
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     final ListPopup popup = JBPopupFactory.getInstance().createListPopup(
-      new BaseListPopupStep<String>(InspectionsBundle.message("inspection.action.export.popup.title"), new String[]{HTML, XML}) {
+      new BaseListPopupStep<String>(InspectionLocalize.inspectionActionExportPopupTitle().get(), new String[]{HTML, XML}) {
         @Override
         public PopupStep onChosen(final String selectedValue, final boolean finalChoice) {
           return doFinalStep(() -> exportHTML(Comparing.strEqual(selectedValue, HTML)));
@@ -108,52 +113,43 @@ public class ExportHTMLAction extends AnAction implements DumbAware {
     exportToHTMLDialog.apply();
 
     final String outputDirectoryName = exportToHTMLSettings.OUTPUT_DIRECTORY;
-    ApplicationManager.getApplication().invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        final Runnable exportRunnable = new Runnable() {
-          @Override
-          public void run() {
-            if (!exportToHTML) {
-              dupm2XML(outputDirectoryName);
-            } else {
-              final HTMLExportFrameMaker maker = new HTMLExportFrameMaker(outputDirectoryName, myView.getProject());
-              maker.start();
-              try {
-                final InspectionTreeNode root = myView.getTree().getRoot();
-                TreeUtil.traverse(root, new TreeUtil.Traverse() {
-                  @Override
-                  public boolean accept(final Object node) {
-                    if (node instanceof InspectionNode) {
-                      ApplicationManager.getApplication().runReadAction(new Runnable() {
-                        @Override
-                        public void run() {
-                          exportHTML(maker, (InspectionNode)node);
-                        }
-                      });
-                    }
-                    return true;
-                  }
-                });
+    ApplicationManager.getApplication().invokeLater(() -> {
+      final Runnable exportRunnable = () -> {
+        if (!exportToHTML) {
+          dupm2XML(outputDirectoryName);
+        } else {
+          final HTMLExportFrameMaker maker = new HTMLExportFrameMaker(outputDirectoryName, myView.getProject());
+          maker.start();
+          try {
+            final InspectionTreeNode root = myView.getTree().getRoot();
+            TreeUtil.traverse(root, node -> {
+              if (node instanceof InspectionNode) {
+                ApplicationManager.getApplication().runReadAction(() -> exportHTML(maker, (InspectionNode)node));
               }
-              catch (ProcessCanceledException e) {
-                // Do nothing here.
-              }
-
-              maker.done();
-            }
+              return true;
+            });
           }
-        };
+          catch (ProcessCanceledException e) {
+            // Do nothing here.
+          }
 
-        if (!ProgressManager.getInstance().runProcessWithProgressSynchronously(exportRunnable,
-                                                                               exportToHTML ? InspectionsBundle.message("inspection.generating.html.progress.title")
-                                                                                            : InspectionsBundle.message("inspection.generating.xml.progress.title"), true, myView.getProject())) {
-          return;
+          maker.done();
         }
+      };
 
-        if (exportToHTML && exportToHTMLSettings.OPEN_IN_BROWSER) {
-          BrowserUtil.browse(new File(exportToHTMLSettings.OUTPUT_DIRECTORY, "index.html"));
-        }
+      if (!ProgressManager.getInstance().runProcessWithProgressSynchronously(
+        exportRunnable,
+        exportToHTML
+          ? InspectionLocalize.inspectionGeneratingHtmlProgressTitle().get()
+          : InspectionLocalize.inspectionGeneratingXmlProgressTitle().get(),
+        true,
+        myView.getProject()
+      )) {
+        return;
+      }
+
+      if (exportToHTML && exportToHTMLSettings.OPEN_IN_BROWSER) {
+        BrowserUtil.browse(new File(exportToHTMLSettings.OUTPUT_DIRECTORY, "index.html"));
       }
     });
   }
@@ -163,31 +159,29 @@ public class ExportHTMLAction extends AnAction implements DumbAware {
       new File(outputDirectoryName).mkdirs();
       final InspectionTreeNode root = myView.getTree().getRoot();
       final IOException[] ex = new IOException[1];
-      TreeUtil.traverse(root, new TreeUtil.Traverse() {
-        @Override
-        public boolean accept(final Object node) {
-          if (node instanceof InspectionNode) {
-            InspectionNode toolNode = (InspectionNode)node;
-            Element problems = new Element(PROBLEMS);
-            InspectionToolWrapper toolWrapper = toolNode.getToolWrapper();
+      TreeUtil.traverse(root, node -> {
+        if (node instanceof InspectionNode toolNode) {
+          Element problems = new Element(PROBLEMS);
+          InspectionToolWrapper toolWrapper = toolNode.getToolWrapper();
 
-            final Set<InspectionToolWrapper> toolWrappers = getWorkedTools(toolNode);
-            for (InspectionToolWrapper wrapper : toolWrappers) {
-              InspectionToolPresentation presentation = myView.getGlobalInspectionContext().getPresentation(wrapper);
-              presentation.exportResults(problems);
-            }
-            ProjectPathMacroManager.getInstance(myView.getProject()).collapsePaths(problems);
-            try {
-              JDOMUtil.writeDocument(new Document(problems),
-                                     outputDirectoryName + File.separator + toolWrapper.getShortName() + InspectionApplication.XML_EXTENSION,
-                                     CodeStyleSettingsManager.getSettings(null).getLineSeparator());
-            }
-            catch (IOException e) {
-              ex[0] = e;
-            }
+          final Set<InspectionToolWrapper> toolWrappers = getWorkedTools(toolNode);
+          for (InspectionToolWrapper wrapper : toolWrappers) {
+            InspectionToolPresentation presentation = myView.getGlobalInspectionContext().getPresentation(wrapper);
+            presentation.exportResults(problems);
           }
-          return true;
+          ProjectPathMacroManager.getInstance(myView.getProject()).collapsePaths(problems);
+          try {
+            JDOMUtil.writeDocument(
+              new Document(problems),
+              outputDirectoryName + File.separator + toolWrapper.getShortName() + InspectionApplication.XML_EXTENSION,
+              CodeStyleSettingsManager.getSettings(null).getLineSeparator()
+            );
+          }
+          catch (IOException e) {
+            ex[0] = e;
+          }
         }
+        return true;
       });
       if (ex[0] != null) {
         throw ex[0];
@@ -197,23 +191,20 @@ public class ExportHTMLAction extends AnAction implements DumbAware {
       if (profileName != null) {
         element.setAttribute(InspectionApplication.PROFILE, profileName);
       }
-      JDOMUtil.writeDocument(new Document(element),
-                             outputDirectoryName + File.separator + InspectionApplication.DESCRIPTIONS + InspectionApplication.XML_EXTENSION,
-                             CodeStyleSettingsManager.getSettings(null).getLineSeparator());
+      JDOMUtil.writeDocument(
+        new Document(element),
+        outputDirectoryName + File.separator + InspectionApplication.DESCRIPTIONS + InspectionApplication.XML_EXTENSION,
+        CodeStyleSettingsManager.getSettings(null).getLineSeparator()
+      );
     }
     catch (final IOException e) {
-      SwingUtilities.invokeLater(new Runnable() {
-        @Override
-        public void run() {
-          Messages.showErrorDialog(myView, e.getMessage());
-        }
-      });
+      SwingUtilities.invokeLater(() -> Messages.showErrorDialog(myView, e.getMessage()));
     }
   }
 
   @Nonnull
   private Set<InspectionToolWrapper> getWorkedTools(@Nonnull InspectionNode node) {
-    final Set<InspectionToolWrapper> result = new HashSet<InspectionToolWrapper>();
+    final Set<InspectionToolWrapper> result = new HashSet<>();
     final InspectionToolWrapper wrapper = node.getToolWrapper();
     if (myView.getCurrentProfileName() != null){
       result.add(wrapper);
@@ -239,7 +230,7 @@ public class ExportHTMLAction extends AnAction implements DumbAware {
     final HTMLExporter exporter =
       new HTMLExporter(frameMaker.getRootFolder() + "/" + toolWrapper.getShortName(), myView.getGlobalInspectionContext().getPresentation(toolWrapper).getComposer());
     frameMaker.startInspection(toolWrapper);
-    HTMLExportUtil.runExport(myView.getProject(), new ThrowableRunnable<IOException>() {
+    HTMLExportUtil.runExport(myView.getProject(), new ThrowableRunnable<>() {
       @Override
       @RequiredReadAction
       public void run() throws IOException {
@@ -255,7 +246,7 @@ public class ExportHTMLAction extends AnAction implements DumbAware {
     StringBuffer packageIndex = new StringBuffer();
     packageIndex.append("<html><body>");
 
-    final Map<String, Set<RefEntity>> content = new HashMap<String, Set<RefEntity>>();
+    final Map<String, Set<RefEntity>> content = new HashMap<>();
 
     for (InspectionToolWrapper toolWrapper : toolWrappers) {
       InspectionToolPresentation presentation = myView.getGlobalInspectionContext().getPresentation(toolWrapper);
@@ -270,12 +261,12 @@ public class ExportHTMLAction extends AnAction implements DumbAware {
       content.put("default package" , defaultPackageEntities);
     }
 
-    List<String> packageNames = new ArrayList<String>(content.keySet());
+    List<String> packageNames = new ArrayList<>(content.keySet());
 
     Collections.sort(packageNames);
     for (String packageName : packageNames) {
       appendPackageReference(packageIndex, packageName);
-      List<RefEntity> packageContent = new ArrayList<RefEntity>(content.get(packageName));
+      List<RefEntity> packageContent = new ArrayList<>(content.get(packageName));
       Collections.sort(packageContent, RefEntityAlphabeticalComparator.getInstance());
       StringBuffer contentIndex = new StringBuffer();
       contentIndex.append("<html><body>");
@@ -294,7 +285,7 @@ public class ExportHTMLAction extends AnAction implements DumbAware {
       HTMLExportUtil.writeFile(exporter.getRootFolder(), packageName + "-index.html", contentIndex, myView.getProject());
     }
 
-    final Set<RefModule> modules = new HashSet<RefModule>();
+    final Set<RefModule> modules = new HashSet<>();
     for (InspectionToolWrapper toolWrapper : toolWrappers) {
       InspectionToolPresentation presentation = myView.getGlobalInspectionContext().getPresentation(toolWrapper);
       final Set<RefModule> problems = presentation.getModuleProblems();
@@ -303,7 +294,7 @@ public class ExportHTMLAction extends AnAction implements DumbAware {
       }
     }
 
-    final List<RefModule> sortedModules = new ArrayList<RefModule>(modules);
+    final List<RefModule> sortedModules = new ArrayList<>(modules);
     Collections.sort(sortedModules, RefEntityAlphabeticalComparator.getInstance());
     for (RefModule module : sortedModules) {
       appendPackageReference(packageIndex, module.getName());

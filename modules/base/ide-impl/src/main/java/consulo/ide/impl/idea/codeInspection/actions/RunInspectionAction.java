@@ -15,34 +15,33 @@
  */
 package consulo.ide.impl.idea.codeInspection.actions;
 
-import consulo.language.editor.scope.AnalysisScope;
-import consulo.language.editor.scope.AnalysisScopeBundle;
+import consulo.application.Application;
+import consulo.content.scope.SearchScope;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.analysis.AnalysisUIOptions;
 import consulo.ide.impl.idea.analysis.BaseAnalysisActionDialog;
-import consulo.language.editor.inspection.scheme.InspectionManager;
-import consulo.language.editor.inspection.scheme.InspectionProfile;
-import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.ide.impl.idea.codeInspection.ex.InspectionManagerEx;
-import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
-import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.actions.GotoActionBase;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNameFilter;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNamePopup;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.application.ApplicationManager;
+import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
+import consulo.language.editor.inspection.scheme.InspectionManager;
+import consulo.language.editor.inspection.scheme.InspectionProfile;
+import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
+import consulo.language.editor.scope.AnalysisScope;
+import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
 import consulo.language.psi.*;
+import consulo.language.util.ModuleUtilCore;
 import consulo.logging.Logger;
 import consulo.module.Module;
-import consulo.language.util.ModuleUtilCore;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
-import consulo.content.scope.SearchScope;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.util.Arrays;
 
@@ -53,24 +52,24 @@ public class RunInspectionAction extends GotoActionBase {
   private static final Logger LOGGER = Logger.getInstance(RunInspectionAction.class);
 
   public RunInspectionAction() {
-    getTemplatePresentation().setText(IdeBundle.message("goto.inspection.action.text"));
+    getTemplatePresentation().setTextValue(IdeLocalize.gotoInspectionActionText());
   }
 
   @Override
   protected void gotoActionPerformed(final AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     if (project == null) return;
 
     PsiDocumentManager.getInstance(project).commitAllDocuments();
 
-    final PsiElement psiElement = e.getDataContext().getData(CommonDataKeys.PSI_ELEMENT);
-    final PsiFile psiFile = e.getDataContext().getData(CommonDataKeys.PSI_FILE);
-    final VirtualFile virtualFile = e.getDataContext().getData(CommonDataKeys.VIRTUAL_FILE);
+    final PsiElement psiElement = e.getDataContext().getData(PsiElement.KEY);
+    final PsiFile psiFile = e.getDataContext().getData(PsiFile.KEY);
+    final VirtualFile virtualFile = e.getDataContext().getData(VirtualFile.KEY);
 
     FeatureUsageTracker.getInstance().triggerFeatureUsed("navigation.goto.inspection");
 
     final GotoInspectionModel model = new GotoInspectionModel(project);
-    showNavigationPopup(e, model, new GotoActionCallback<Object>() {
+    showNavigationPopup(e, model, new GotoActionCallback<>() {
       @Override
       protected ChooseByNameFilter<Object> createFilter(@Nonnull ChooseByNamePopup popup) {
         popup.setSearchInAnyPlace(true);
@@ -79,21 +78,20 @@ public class RunInspectionAction extends GotoActionBase {
 
       @Override
       public void elementChosen(ChooseByNamePopup popup, final Object element) {
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            runInspection(project, ((InspectionToolWrapper)element).getShortName(), virtualFile, psiElement, psiFile);
-          }
-        });
+        Application.get().invokeLater(
+          () -> runInspection(project, ((InspectionToolWrapper)element).getShortName(), virtualFile, psiElement, psiFile)
+        );
       }
     }, false);
   }
 
-  private static void runInspection(@Nonnull Project project,
-                                    @Nonnull String shortName,
-                                    @Nullable VirtualFile virtualFile,
-                                    PsiElement psiElement,
-                                    PsiFile psiFile) {
+  private static void runInspection(
+    @Nonnull Project project,
+    @Nonnull String shortName,
+    @Nullable VirtualFile virtualFile,
+    PsiElement psiElement,
+    PsiFile psiFile
+  ) {
     final InspectionManagerEx managerEx = (InspectionManagerEx)InspectionManager.getInstance(project);
     final Module module = virtualFile != null ? ModuleUtilCore.findModuleForFile(virtualFile, project) : null;
 
@@ -120,10 +118,14 @@ public class RunInspectionAction extends GotoActionBase {
     fileFilterPanel.init();
 
     final BaseAnalysisActionDialog dialog = new BaseAnalysisActionDialog(
-            AnalysisScopeBundle.message("specify.analysis.scope", InspectionsBundle.message("inspection.action.title")),
-            AnalysisScopeBundle.message("analysis.scope.title", InspectionsBundle.message("inspection.action.noun")),
-            project, analysisScope, module != null ? module.getName() : null,
-            true, AnalysisUIOptions.getInstance(project), psiElement) {
+      AnalysisScopeLocalize.specifyAnalysisScope(InspectionLocalize.inspectionActionTitle()).get(),
+      AnalysisScopeLocalize.analysisScopeTitle(InspectionLocalize.inspectionActionNoun()).get(),
+      project,
+      analysisScope,
+      module != null ? module.getName() : null,
+      true,
+      AnalysisUIOptions.getInstance(project), psiElement
+    ) {
 
       @Override
       protected JComponent getAdditionalActionSettings(Project project) {
@@ -132,10 +134,12 @@ public class RunInspectionAction extends GotoActionBase {
 
       @Nonnull
       @Override
-      public AnalysisScope getScope(@Nonnull AnalysisUIOptions uiOptions,
-                                    @Nonnull AnalysisScope defaultScope,
-                                    @Nonnull Project project,
-                                    Module module) {
+      public AnalysisScope getScope(
+        @Nonnull AnalysisUIOptions uiOptions,
+        @Nonnull AnalysisScope defaultScope,
+        @Nonnull Project project,
+        Module module
+      ) {
         final AnalysisScope scope = super.getScope(uiOptions, defaultScope, project, module);
         final SearchScope filterScope = fileFilterPanel.getSearchScope();
         if (filterScope == null) {

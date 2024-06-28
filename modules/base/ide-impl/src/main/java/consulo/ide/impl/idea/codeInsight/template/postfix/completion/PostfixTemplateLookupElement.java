@@ -20,7 +20,7 @@ import consulo.language.editor.template.CustomLiveTemplateLookupElement;
 import consulo.ide.impl.idea.codeInsight.template.postfix.templates.PostfixLiveTemplate;
 import consulo.language.editor.postfixTemplate.PostfixTemplate;
 import consulo.language.editor.postfixTemplate.PostfixTemplateProvider;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.awt.UIUtil;
 import jakarta.annotation.Nonnull;
 

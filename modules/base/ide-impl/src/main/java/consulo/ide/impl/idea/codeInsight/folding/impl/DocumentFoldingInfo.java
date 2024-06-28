@@ -14,7 +14,7 @@ import consulo.document.RangeMarker;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.text.CodeFoldingState;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.util.dataholder.Key;
 import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;

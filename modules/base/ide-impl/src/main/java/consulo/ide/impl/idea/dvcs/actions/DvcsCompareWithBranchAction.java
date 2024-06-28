@@ -18,13 +18,12 @@ package consulo.ide.impl.idea.dvcs.actions;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.versionControlSystem.distributed.DvcsUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.VcsNotifier;
 import consulo.ide.impl.idea.openapi.vcs.history.VcsDiffUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
-import consulo.language.editor.CommonDataKeys;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -40,6 +39,8 @@ import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.Collection;
@@ -55,7 +56,7 @@ public abstract class DvcsCompareWithBranchAction<T extends Repository> extends 
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent event) {
-    Project project = event.getRequiredData(CommonDataKeys.PROJECT);
+    Project project = event.getRequiredData(Project.KEY);
     VirtualFile file = getAffectedFile(event);
     T repository = ObjectUtil.assertNotNull(getRepositoryManager(project).getRepositoryForFile(file));
     assert !repository.isFresh();
@@ -77,7 +78,7 @@ public abstract class DvcsCompareWithBranchAction<T extends Repository> extends 
   protected abstract List<String> getBranchNamesExceptCurrent(@Nonnull T repository);
 
   private static VirtualFile getAffectedFile(@Nonnull AnActionEvent event) {
-    final VirtualFile[] vFiles = event.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
+    final VirtualFile[] vFiles = event.getData(VirtualFile.KEY_OF_ARRAY);
     assert vFiles != null && vFiles.length == 1 && vFiles[0] != null : "Illegal virtual files selected: " + Arrays.toString(vFiles);
     return vFiles[0];
   }
@@ -86,14 +87,14 @@ public abstract class DvcsCompareWithBranchAction<T extends Repository> extends 
   @Override
   public void update(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     VirtualFile file = VcsUtil.getIfSingle(e.getData(VcsDataKeys.VIRTUAL_FILE_STREAM));
 
     presentation.setVisible(project != null);
     presentation.setEnabled(project != null && file != null && isEnabled(getRepositoryManager(project).getRepositoryForFile(file)));
   }
 
-  private boolean isEnabled(@jakarta.annotation.Nullable T repository) {
+  private boolean isEnabled(@Nullable T repository) {
     return repository != null && !repository.isFresh() && !noBranchesToCompare(repository);
   }
 

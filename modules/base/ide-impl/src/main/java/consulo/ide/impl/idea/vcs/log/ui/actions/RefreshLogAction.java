@@ -16,9 +16,10 @@
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
 import consulo.application.AllIcons;
+import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.RefreshAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.versionControlSystem.log.VcsLogDataKeys;
 import consulo.versionControlSystem.log.VcsLogUi;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogFilterer;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogManager;
@@ -31,9 +32,14 @@ public class RefreshLogAction extends RefreshAction {
   private static final Logger LOG = Logger.getInstance(RefreshLogAction.class);
 
   public RefreshLogAction() {
-    super("Refresh", "Check for new commits and refresh Log if necessary", AllIcons.Actions.Refresh);
+    super(
+      LocalizeValue.localizeTODO("Refresh"),
+      LocalizeValue.localizeTODO("Check for new commits and refresh Log if necessary"),
+      AllIcons.Actions.Refresh
+    );
   }
 
+  @RequiredUIAccess
   @Override
   public void actionPerformed(AnActionEvent e) {
     VcsLogUtil.triggerUsage(e);
@@ -41,7 +47,7 @@ public class RefreshLogAction extends RefreshAction {
     VcsLogManager logManager = e.getRequiredData(VcsLogInternalDataKeys.LOG_MANAGER);
 
     // diagnostic for possible refresh problems
-    VcsLogUi ui = e.getRequiredData(VcsLogDataKeys.VCS_LOG_UI);
+    VcsLogUi ui = e.getRequiredData(VcsLogUi.KEY);
     if (ui instanceof VcsLogUiImpl) {
       VcsLogFilterer filterer = ((VcsLogUiImpl)ui).getFilterer();
       if (!filterer.isValid()) {
@@ -58,9 +64,10 @@ public class RefreshLogAction extends RefreshAction {
     logManager.getDataManager().refreshSoftly();
   }
 
+  @RequiredUIAccess
   @Override
   public void update(AnActionEvent e) {
     VcsLogManager logManager = e.getData(VcsLogInternalDataKeys.LOG_MANAGER);
-    e.getPresentation().setEnabledAndVisible(logManager != null && e.getData(VcsLogDataKeys.VCS_LOG_UI) != null);
+    e.getPresentation().setEnabledAndVisible(logManager != null && e.getData(VcsLogUi.KEY) != null);
   }
 }

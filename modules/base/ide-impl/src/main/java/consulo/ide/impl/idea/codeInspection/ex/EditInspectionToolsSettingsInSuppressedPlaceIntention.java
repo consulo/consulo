@@ -18,11 +18,10 @@ package consulo.ide.impl.idea.codeInspection.ex;
 
 import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
 import consulo.language.editor.inspection.InspectionExtensionsFactory;
-import consulo.language.editor.inspection.InspectionsBundle;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.IntentionMetaData;
@@ -30,9 +29,10 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
-
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 
 /**
@@ -46,10 +46,9 @@ public class EditInspectionToolsSettingsInSuppressedPlaceIntention implements In
   @Override
   @Nonnull
   public String getText() {
-    if (myDisplayName == null) {
-      return InspectionsBundle.message("edit.options.of.reporter.inspection.family");
-    }
-    return InspectionsBundle.message("edit.inspection.options", myDisplayName);
+    return myDisplayName == null
+      ? InspectionLocalize.editOptionsOfReporterInspectionFamily().get()
+      : InspectionLocalize.editInspectionOptions(myDisplayName).get();
   }
 
   @Nullable

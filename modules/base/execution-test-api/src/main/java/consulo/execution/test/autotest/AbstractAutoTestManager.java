@@ -16,7 +16,6 @@
 package consulo.execution.test.autotest;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.dataContext.DataManager;
 import consulo.execution.*;
@@ -32,17 +31,17 @@ import consulo.process.event.ProcessListener;
 import consulo.project.Project;
 import consulo.project.ProjectPropertiesComponent;
 import consulo.ui.ex.content.Content;
-import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.xml.serializer.annotation.AbstractCollection;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.Tag;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -68,7 +67,7 @@ public abstract class AbstractAutoTestManager implements PersistentStateComponen
     if (component == null) {
       return null;
     }
-    return DataManager.getInstance().getDataContext(component).getData(ExecutionDataKeys.EXECUTION_ENVIRONMENT);
+    return DataManager.getInstance().getDataContext(component).getData(ExecutionEnvironment.KEY);
   }
 
   private static void clearRestarterListener(@Nonnull ProcessHandler processHandler) {
@@ -96,7 +95,7 @@ public abstract class AbstractAutoTestManager implements PersistentStateComponen
   }
 
   public static List<RunConfiguration> loadConfigurations(State state, Project project) {
-    List<RunConfiguration> configurations = ContainerUtil.newArrayList();
+    List<RunConfiguration> configurations = new ArrayList<>();
     RunManager runManager = RunManager.getInstance(project);
     List<RunConfigurationDescriptor> descriptors = Lists.notNullize(state.myEnabledRunConfigurations);
     for (RunConfigurationDescriptor descriptor : descriptors) {
@@ -172,9 +171,11 @@ public abstract class AbstractAutoTestManager implements PersistentStateComponen
     }
   }
 
-  private void restartAutoTest(@Nonnull RunContentDescriptor descriptor,
-                               int modificationStamp,
-                               @Nonnull AutoTestWatcher documentWatcher) {
+  private void restartAutoTest(
+    @Nonnull RunContentDescriptor descriptor,
+    int modificationStamp,
+    @Nonnull AutoTestWatcher documentWatcher
+  ) {
     ProcessHandler processHandler = descriptor.getProcessHandler();
     if (processHandler != null && !processHandler.isProcessTerminated()) {
       scheduleRestartOnTermination(descriptor, processHandler, modificationStamp, documentWatcher);
@@ -184,10 +185,12 @@ public abstract class AbstractAutoTestManager implements PersistentStateComponen
     }
   }
 
-  private void scheduleRestartOnTermination(@Nonnull final RunContentDescriptor descriptor,
-                                            @Nonnull final ProcessHandler processHandler,
-                                            final int modificationStamp,
-                                            @Nonnull final AutoTestWatcher watcher) {
+  private void scheduleRestartOnTermination(
+    @Nonnull final RunContentDescriptor descriptor,
+    @Nonnull final ProcessHandler processHandler,
+    final int modificationStamp,
+    @Nonnull final AutoTestWatcher watcher
+  ) {
     ProcessListener restarterListener = ON_TERMINATION_RESTARTER_KEY.get(processHandler);
     if (restarterListener != null) {
       clearRestarterListener(processHandler);
@@ -196,11 +199,15 @@ public abstract class AbstractAutoTestManager implements PersistentStateComponen
       @Override
       public void processTerminated(ProcessEvent event) {
         clearRestarterListener(processHandler);
-        ApplicationManager.getApplication().invokeLater(() -> {
-          if (isAutoTestEnabledForDescriptor(descriptor) && watcher.isUpToDate(modificationStamp)) {
-            restart(descriptor);
-          }
-        }, Application.get().getAnyModalityState());
+        Application application = myProject.getApplication();
+        application.invokeLater(
+          () -> {
+            if (isAutoTestEnabledForDescriptor(descriptor) && watcher.isUpToDate(modificationStamp)) {
+              restart(descriptor);
+            }
+          },
+          application.getAnyModalityState()
+        );
       }
     };
     ON_TERMINATION_RESTARTER_KEY.set(processHandler, restarterListener);
@@ -244,7 +251,7 @@ public abstract class AbstractAutoTestManager implements PersistentStateComponen
   public static class State {
     @Tag("enabled-run-configurations")
     @AbstractCollection(surroundWithTag = false)
-    List<AutoTestManager.RunConfigurationDescriptor> myEnabledRunConfigurations = ContainerUtil.newArrayList();
+    List<AutoTestManager.RunConfigurationDescriptor> myEnabledRunConfigurations = new ArrayList<>();
   }
 
   @Tag("run-configuration")

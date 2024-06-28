@@ -33,7 +33,7 @@ import static consulo.ide.impl.idea.diff.comparison.TrimUtil.expandBackward;
 import static consulo.ide.impl.idea.diff.comparison.TrimUtil.expandForward;
 import static consulo.ide.impl.idea.diff.comparison.iterables.DiffIterableUtil.createUnchanged;
 import static consulo.ide.impl.idea.diff.comparison.iterables.DiffIterableUtil.fair;
-import static consulo.ide.impl.idea.openapi.util.text.StringUtil.isWhiteSpace;
+import static consulo.util.lang.StringUtil.isWhiteSpace;
 
 abstract class ChunkOptimizer<T> {
   @Nonnull

@@ -21,18 +21,18 @@ import consulo.ide.impl.idea.analysis.AnalysisUIOptions;
 import consulo.ide.impl.idea.analysis.BaseAnalysisActionDialog;
 import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextImpl;
 import consulo.ide.impl.idea.codeInspection.ex.InspectionManagerEx;
+import consulo.language.editor.impl.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
-import consulo.language.editor.inspection.InspectionsBundle;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
-import consulo.language.editor.impl.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.language.editor.intention.HighPriorityAction;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.SyntheticIntentionAction;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.scope.AnalysisScope;
-import consulo.language.editor.scope.AnalysisScopeBundle;
+import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
@@ -42,9 +42,9 @@ import consulo.project.Project;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
 import java.util.LinkedHashSet;
 
 /**
@@ -65,7 +65,7 @@ public class RunInspectionIntention implements IntentionAction, HighPriorityActi
   @Override
   @Nonnull
   public String getText() {
-    return InspectionsBundle.message("run.inspection.on.file.intention.text");
+    return InspectionLocalize.runInspectionOnFileIntentionText().get();
   }
 
   @Override
@@ -82,42 +82,58 @@ public class RunInspectionIntention implements IntentionAction, HighPriorityActi
     if (file.isPhysical() || virtualFile == null || !virtualFile.isInLocalFileSystem()) {
       analysisScope = new AnalysisScope(project);
     }
-    final BaseAnalysisActionDialog dlg = new BaseAnalysisActionDialog(AnalysisScopeBundle.message("specify.analysis.scope", InspectionsBundle.message("inspection.action.title")),
-                                                                      AnalysisScopeBundle.message("analysis.scope.title", InspectionsBundle.message("inspection.action.noun")),
-                                                                      project,
-                                                                      analysisScope,
-                                                                      module != null ? module.getName() : null,
-                                                                      true, AnalysisUIOptions.getInstance(project), file);
+    final BaseAnalysisActionDialog dlg = new BaseAnalysisActionDialog(
+      AnalysisScopeLocalize.specifyAnalysisScope(InspectionLocalize.inspectionActionTitle()).get(),
+      AnalysisScopeLocalize.analysisScopeTitle(InspectionLocalize.inspectionActionNoun()).get(),
+      project,
+      analysisScope,
+      module != null ? module.getName() : null,
+      true,
+      AnalysisUIOptions.getInstance(project),
+      file
+    );
     dlg.show();
     if (!dlg.isOK()) return;
     final AnalysisUIOptions uiOptions = AnalysisUIOptions.getInstance(project);
     analysisScope = dlg.getScope(uiOptions, analysisScope, project, module);
-    rerunInspection(LocalInspectionToolWrapper.findTool2RunInBatch(project, file, myShortName), managerEx, analysisScope, file);
+    rerunInspection(
+      LocalInspectionToolWrapper.findTool2RunInBatch(project, file, myShortName),
+      managerEx,
+      analysisScope,
+      file
+    );
   }
 
-  public static void rerunInspection(@Nonnull InspectionToolWrapper toolWrapper,
-                                     @Nonnull InspectionManagerEx managerEx,
-                                     @Nonnull AnalysisScope scope,
-                                     PsiElement psiElement) {
+  public static void rerunInspection(
+    @Nonnull InspectionToolWrapper toolWrapper,
+    @Nonnull InspectionManagerEx managerEx,
+    @Nonnull AnalysisScope scope,
+    PsiElement psiElement
+  ) {
     GlobalInspectionContextImpl inspectionContext = createContext(toolWrapper, managerEx, psiElement);
     inspectionContext.doInspections(scope);
   }
 
-  public static GlobalInspectionContextImpl createContext(@Nonnull InspectionToolWrapper toolWrapper,
-                                                          @Nonnull InspectionManagerEx managerEx,
-                                                          PsiElement psiElement) {
-    final InspectionProfileImpl rootProfile = (InspectionProfileImpl)InspectionProfileManager.getInstance().getRootProfile();
-    LinkedHashSet<InspectionToolWrapper> allWrappers = new LinkedHashSet<InspectionToolWrapper>();
+  public static GlobalInspectionContextImpl createContext(
+    @Nonnull InspectionToolWrapper toolWrapper,
+    @Nonnull InspectionManagerEx managerEx,
+    PsiElement psiElement
+  ) {
+    final InspectionProfileImpl rootProfile =
+      (InspectionProfileImpl)InspectionProfileManager.getInstance().getRootProfile();
+    LinkedHashSet<InspectionToolWrapper> allWrappers = new LinkedHashSet<>();
     allWrappers.add(toolWrapper);
     rootProfile.collectDependentInspections(toolWrapper, allWrappers, managerEx.getProject());
     InspectionToolWrapper[] toolWrappers = allWrappers.toArray(new InspectionToolWrapper[allWrappers.size()]);
-    final InspectionProfileImpl model = InspectionProfileImpl.createSimple(toolWrapper.getDisplayName(), managerEx.getProject(), toolWrappers);
+    final InspectionProfileImpl model =
+      InspectionProfileImpl.createSimple(toolWrapper.getDisplayName(), managerEx.getProject(), toolWrappers);
     try {
       Element element = new Element("toCopy");
       for (InspectionToolWrapper wrapper : toolWrappers) {
         wrapper.writeExternal(element);
-        InspectionToolWrapper tw = psiElement == null ? model.getInspectionTool(wrapper.getShortName(), managerEx.getProject())
-                                                      : model.getInspectionTool(wrapper.getShortName(), psiElement);
+        InspectionToolWrapper tw = psiElement == null
+          ? model.getInspectionTool(wrapper.getShortName(), managerEx.getProject())
+          : model.getInspectionTool(wrapper.getShortName(), psiElement);
         tw.readExternal(element);
       }
     }

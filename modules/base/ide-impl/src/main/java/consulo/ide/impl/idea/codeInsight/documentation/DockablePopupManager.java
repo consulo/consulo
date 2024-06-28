@@ -8,10 +8,8 @@ import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiDocumentManager;
@@ -141,7 +139,7 @@ public abstract class DockablePopupManager<T extends JComponent & Disposable> {
   }
 
   protected void installComponentActions(ToolWindow toolWindow, T component) {
-    ((ToolWindowEx)myToolWindow).setAdditionalGearActions(new DefaultActionGroup(createActions()));
+    myToolWindow.setAdditionalGearActions(new DefaultActionGroup(createActions()));
   }
 
   protected void setToolwindowDefaultState() {
@@ -206,13 +204,13 @@ public abstract class DockablePopupManager<T extends JComponent & Disposable> {
   }
 
   private void updateComponentInner(@Nonnull DataContext dataContext, boolean requestFocus) {
-    if (dataContext.getData(CommonDataKeys.PROJECT) != myProject) {
+    if (dataContext.getData(Project.KEY) != myProject) {
       return;
     }
 
-    final Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
+    final Editor editor = dataContext.getData(Editor.KEY);
     if (editor == null) {
-      PsiElement element = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
+      PsiElement element = dataContext.getData(PsiElement.KEY);
       if (element != null) {
         doUpdateComponent(element);
       }
