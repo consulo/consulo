@@ -15,17 +15,16 @@
  */
 package consulo.ide.impl.intelliLang.inject.config.ui;
 
+import consulo.document.event.DocumentAdapter;
+import consulo.document.event.DocumentEvent;
+import consulo.ide.impl.intelliLang.inject.config.BaseInjection;
+import consulo.project.Project;
+import consulo.ui.ex.awt.UIUtil;
+import jakarta.annotation.Nonnull;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-
-import jakarta.annotation.Nonnull;
-
-import consulo.ide.impl.intelliLang.inject.config.BaseInjection;
-import consulo.document.event.DocumentAdapter;
-import consulo.document.event.DocumentEvent;
-import consulo.project.Project;
-import consulo.ui.ex.awt.UIUtil;
 
 /**
  * Abstract base class for the different configuration panels that tries to simplify the use of
@@ -33,8 +32,8 @@ import consulo.ui.ex.awt.UIUtil;
  */
 public abstract class AbstractInjectionPanel<T extends BaseInjection> implements InjectionPanel<T>
 {
-	private final List<Field> myOtherPanels = new ArrayList<Field>(3);
-	private final List<Runnable> myUpdaters = new ArrayList<Runnable>(1);
+	private final List<Field> myOtherPanels = new ArrayList<>(3);
+	private final List<Runnable> myUpdaters = new ArrayList<>(1);
 
 	@Nonnull
 	private final Project myProject;
@@ -56,9 +55,9 @@ public abstract class AbstractInjectionPanel<T extends BaseInjection> implements
 		myProject = project;
 
 		final Field[] declaredFields = getClass().getDeclaredFields();
-		for(Field field : declaredFields)
+		for (Field field : declaredFields)
 		{
-			if(InjectionPanel.class.isAssignableFrom(field.getType()))
+			if (InjectionPanel.class.isAssignableFrom(field.getType()))
 			{
 				field.setAccessible(true);
 				myOtherPanels.add(field);
@@ -91,7 +90,7 @@ public abstract class AbstractInjectionPanel<T extends BaseInjection> implements
 	{
 		myEditCopy = copy;
 
-		for(Field panel : myOtherPanels)
+		for (Field panel : myOtherPanels)
 		{
 			final InjectionPanel p = getField(panel);
 			p.init(copy);
@@ -104,7 +103,7 @@ public abstract class AbstractInjectionPanel<T extends BaseInjection> implements
 	{
 		apply(myEditCopy);
 
-		for(Field panel : myOtherPanels)
+		for (Field panel : myOtherPanels)
 		{
 			final InjectionPanel p = getField(panel);
 			p.isModified();
@@ -119,7 +118,7 @@ public abstract class AbstractInjectionPanel<T extends BaseInjection> implements
 	{
 		apply(myOrigInjection);
 
-		for(Field panel : myOtherPanels)
+		for (Field panel : myOtherPanels)
 		{
 			getField(panel).apply();
 		}
@@ -133,19 +132,12 @@ public abstract class AbstractInjectionPanel<T extends BaseInjection> implements
 	@SuppressWarnings({"unchecked"})
 	public final void reset()
 	{
-		for(Field panel : myOtherPanels)
+		for (Field panel : myOtherPanels)
 		{
 			getField(panel).reset();
 		}
 		myEditCopy.copyFrom(myOrigInjection);
-		UIUtil.invokeAndWaitIfNeeded(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				resetImpl();
-			}
-		});
+		UIUtil.invokeAndWaitIfNeeded((Runnable)() -> resetImpl());
 	}
 
 	protected abstract void resetImpl();
@@ -154,7 +146,7 @@ public abstract class AbstractInjectionPanel<T extends BaseInjection> implements
 	public void addUpdater(Runnable updater)
 	{
 		myUpdaters.add(updater);
-		for(Field panel : myOtherPanels)
+		for (Field panel : myOtherPanels)
 		{
 			final InjectionPanel field = getField(panel);
 			field.addUpdater(updater);
@@ -167,7 +159,7 @@ public abstract class AbstractInjectionPanel<T extends BaseInjection> implements
 		{
 			return ((InjectionPanel) field.get(this));
 		}
-		catch(IllegalAccessException e)
+		catch (IllegalAccessException e)
 		{
 			throw new Error(e);
 		}
@@ -176,7 +168,7 @@ public abstract class AbstractInjectionPanel<T extends BaseInjection> implements
 	protected void updateTree()
 	{
 		apply(myEditCopy);
-		for(Runnable updater : myUpdaters)
+		for (Runnable updater : myUpdaters)
 		{
 			updater.run();
 		}

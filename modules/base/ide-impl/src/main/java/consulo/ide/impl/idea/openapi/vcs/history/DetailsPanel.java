@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.openapi.vcs.history;
 import consulo.ui.ex.CopyProvider;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
@@ -125,9 +124,6 @@ class DetailsPanel extends HtmlPanel implements DataProvider, CopyProvider {
   @Nullable
   @Override
   public Object getData(@Nonnull Key dataId) {
-    if (PlatformDataKeys.COPY_PROVIDER == dataId) {
-      return this;
-    }
-    return null;
+    return KEY == dataId ? this : null;
   }
 }

@@ -5,7 +5,6 @@ import consulo.ide.IdeBundle;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.application.WriteAction;
 import consulo.logging.Logger;
 import consulo.application.dumb.DumbAware;
@@ -30,7 +29,7 @@ public class AddBomAction extends AnAction implements DumbAware {
 
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    VirtualFile file = e.getData(CommonDataKeys.VIRTUAL_FILE);
+    VirtualFile file = e.getData(VirtualFile.KEY);
     boolean enabled = file != null && file.getBOM() == null && CharsetToolkit.getPossibleBom(file.getCharset()) != null; // support adding BOM to a single file only for the time being
 
     e.getPresentation().setEnabled(enabled);
@@ -40,7 +39,7 @@ public class AddBomAction extends AnAction implements DumbAware {
 
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    VirtualFile file = e.getData(CommonDataKeys.VIRTUAL_FILE);
+    VirtualFile file = e.getData(VirtualFile.KEY);
     if (file == null) return;
     doAddBOM(file);
   }

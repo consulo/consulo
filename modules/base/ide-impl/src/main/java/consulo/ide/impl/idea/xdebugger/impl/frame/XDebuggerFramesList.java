@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.frame;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dataContext.DataProvider;
 import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.XSourcePosition;
@@ -24,8 +25,8 @@ import consulo.ide.impl.idea.util.ui.TextTransferable;
 import consulo.ide.impl.psi.search.scope.NonProjectFilesScope;
 import consulo.ide.setting.module.OrderEntryTypeEditor;
 import consulo.language.content.ContentFoldersSupportUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.FileColorManager;
+import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.layer.ContentFolder;
@@ -117,12 +118,13 @@ public class XDebuggerFramesList extends DebuggerFramesList {
     setDataProvider(new DataProvider() {
       @Nullable
       @Override
+      @RequiredReadAction
       public Object getData(@Nonnull @NonNls Key dataId) {
         if (mySelectedFrame != null) {
-          if (CommonDataKeys.VIRTUAL_FILE == dataId) {
+          if (VirtualFile.KEY == dataId) {
             return getFile(mySelectedFrame);
           }
-          else if (CommonDataKeys.PSI_FILE == dataId) {
+          else if (PsiFile.KEY == dataId) {
             VirtualFile file = getFile(mySelectedFrame);
             if (file != null && file.isValid()) {
               return PsiManager.getInstance(myProject).findFile(file);
@@ -177,10 +179,7 @@ public class XDebuggerFramesList extends DebuggerFramesList {
 
         @Override
         public boolean hasSeparatorAboveOf(Object value) {
-          if (value instanceof XStackFrameWithSeparatorAbove) {
-            return ((XStackFrameWithSeparatorAbove)value).hasSeparatorAbove();
-          }
-          return false;
+          return value instanceof XStackFrameWithSeparatorAbove frameWithSeparatorAbove && frameWithSeparatorAbove.hasSeparatorAbove();
         }
       });
     }

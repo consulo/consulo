@@ -16,10 +16,9 @@
 package consulo.ide.impl.idea.ui;
 
 import consulo.dataContext.DataManager;
-import consulo.ui.ex.awt.dnd.DnDAwareTree;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.psi.PsiElement;
 import consulo.ide.ui.popup.HintUpdateSupply;
+import consulo.language.psi.PsiElement;
+import consulo.ui.ex.awt.dnd.DnDAwareTree;
 import jakarta.annotation.Nullable;
 
 import javax.swing.tree.TreeModel;
@@ -53,6 +52,6 @@ public class JBTreeWithHintProvider extends DnDAwareTree {
 
   @Nullable
   protected PsiElement getPsiElementForHint(final Object selectedValue) {
-    return DataManager.getInstance().getDataContext(this).getData(CommonDataKeys.PSI_ELEMENT);
+    return DataManager.getInstance().getDataContext(this).getData(PsiElement.KEY);
   }
 }

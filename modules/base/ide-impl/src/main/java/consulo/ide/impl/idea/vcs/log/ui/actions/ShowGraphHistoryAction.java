@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
@@ -33,12 +33,12 @@ import consulo.versionControlSystem.util.VcsUtil;
 import java.util.Collections;
 
 public class ShowGraphHistoryAction extends DumbAwareAction {
-
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     assert project != null;
-    VirtualFile file = e.getRequiredData(CommonDataKeys.VIRTUAL_FILE);
+    VirtualFile file = e.getRequiredData(VirtualFile.KEY);
     VcsLogManager logManager = VcsProjectLog.getInstance(project).getLogManager();
     assert logManager != null;
     VcsLogStructureFilterImpl fileFilter = new VcsLogStructureFilterImpl(Collections.singleton(VcsUtil.getFilePath(file)));
@@ -46,14 +46,15 @@ public class ShowGraphHistoryAction extends DumbAwareAction {
   }
 
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
     Presentation presentation = e.getPresentation();
     if (!Registry.is("vcs.log.graph.history")) {
       presentation.setEnabledAndVisible(false);
     }
     else {
-      VirtualFile file = e.getData(CommonDataKeys.VIRTUAL_FILE);
-      Project project = e.getData(CommonDataKeys.PROJECT);
+      VirtualFile file = e.getData(VirtualFile.KEY);
+      Project project = e.getData(Project.KEY);
       if (file == null || project == null) {
         presentation.setEnabledAndVisible(false);
       }

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
+import consulo.application.HelpManager;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.TypeSafeDataProvider;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
@@ -23,10 +24,10 @@ import consulo.ide.impl.idea.openapi.vcs.changes.VcsCurrentRevisionProxy;
 import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.TreeLinkMouseListener;
 import consulo.ide.impl.idea.ui.SmartExpander;
 import consulo.ide.impl.idea.util.EditSourceOnEnterKeyHandler;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
+import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.ui.ex.CopyProvider;
+import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
@@ -156,28 +157,28 @@ public class ChangesListView extends Tree implements TypeSafeDataProvider, DnDAw
     else if (key == VcsDataKeys.CHANGE_LISTS) {
       sink.put(VcsDataKeys.CHANGE_LISTS, getSelectedChangeLists().toArray(ChangeList[]::new));
     }
-    else if (key == CommonDataKeys.VIRTUAL_FILE_ARRAY) {
-      sink.put(CommonDataKeys.VIRTUAL_FILE_ARRAY, getSelectedFiles().toArray(VirtualFile[]::new));
+    else if (key == VirtualFile.KEY_OF_ARRAY) {
+      sink.put(VirtualFile.KEY_OF_ARRAY, getSelectedFiles().toArray(VirtualFile[]::new));
     }
     else if (key == VcsDataKeys.VIRTUAL_FILE_STREAM) {
       sink.put(VcsDataKeys.VIRTUAL_FILE_STREAM, getSelectedFiles());
     }
-    else if (key == CommonDataKeys.NAVIGATABLE) {
+    else if (key == Navigatable.KEY) {
       VirtualFile file = Streams.getIfSingle(getSelectedFiles());
       if (file != null && !file.isDirectory()) {
-        sink.put(CommonDataKeys.NAVIGATABLE, new OpenFileDescriptorImpl(myProject, file, 0));
+        sink.put(Navigatable.KEY, new OpenFileDescriptorImpl(myProject, file, 0));
       }
     }
-    else if (key == CommonDataKeys.NAVIGATABLE_ARRAY) {
-      sink.put(CommonDataKeys.NAVIGATABLE_ARRAY, ChangesUtil.getNavigatableArray(myProject, getSelectedFiles()));
+    else if (key == Navigatable.KEY_OF_ARRAY) {
+      sink.put(Navigatable.KEY_OF_ARRAY, ChangesUtil.getNavigatableArray(myProject, getSelectedFiles()));
     }
-    else if (key == PlatformDataKeys.DELETE_ELEMENT_PROVIDER) {
+    else if (key == DeleteProvider.KEY) {
       if (getSelectionObjectsStream().anyMatch(userObject -> !(userObject instanceof ChangeList))) {
-        sink.put(PlatformDataKeys.DELETE_ELEMENT_PROVIDER, new VirtualFileDeleteProvider());
+        sink.put(DeleteProvider.KEY, new VirtualFileDeleteProvider());
       }
     }
-    else if (key == PlatformDataKeys.COPY_PROVIDER) {
-      sink.put(PlatformDataKeys.COPY_PROVIDER, myCopyProvider);
+    else if (key == CopyProvider.KEY) {
+      sink.put(CopyProvider.KEY, myCopyProvider);
     }
     else if (key == UNVERSIONED_FILES_DATA_KEY) {
       sink.put(UNVERSIONED_FILES_DATA_KEY, getSelectedUnversionedFiles());
@@ -203,8 +204,8 @@ public class ChangesListView extends Tree implements TypeSafeDataProvider, DnDAw
     else if (VcsDataKeys.HAVE_SELECTED_CHANGES == key) {
       sink.put(VcsDataKeys.HAVE_SELECTED_CHANGES, haveSelectedChanges());
     }
-    else if (key == PlatformDataKeys.HELP_ID) {
-      sink.put(PlatformDataKeys.HELP_ID, HELP_ID);
+    else if (key == HelpManager.HELP_ID) {
+      sink.put(HelpManager.HELP_ID, HELP_ID);
     }
     else if (key == VcsDataKeys.CHANGES_IN_LIST_KEY) {
       final TreePath selectionPath = getSelectionPath();
@@ -233,7 +234,7 @@ public class ChangesListView extends Tree implements TypeSafeDataProvider, DnDAw
   }
 
   @Nonnull
-  private Stream<VirtualFile> getSelectedVirtualFiles(@jakarta.annotation.Nullable Object tag) {
+  private Stream<VirtualFile> getSelectedVirtualFiles(@Nullable Object tag) {
     return getSelectionNodesStream(tag)
       .flatMap(ChangesBrowserNode::getFilesUnderStream)
       .distinct();
@@ -245,11 +246,11 @@ public class ChangesListView extends Tree implements TypeSafeDataProvider, DnDAw
   }
 
   @Nonnull
-  private Stream<ChangesBrowserNode<?>> getSelectionNodesStream(@jakarta.annotation.Nullable Object tag) {
+  private Stream<ChangesBrowserNode<?>> getSelectionNodesStream(@Nullable Object tag) {
     return Streams.stream(getSelectionPaths())
-                  .filter(path -> isUnderTag(path, tag))
-                  .map(TreePath::getLastPathComponent)
-                  .map(node -> ((ChangesBrowserNode<?>)node));
+      .filter(path -> isUnderTag(path, tag))
+      .map(TreePath::getLastPathComponent)
+      .map(node -> ((ChangesBrowserNode<?>)node));
   }
 
   @Nonnull
@@ -258,16 +259,16 @@ public class ChangesListView extends Tree implements TypeSafeDataProvider, DnDAw
   }
 
   @Nonnull
-  static Stream<VirtualFile> getVirtualFiles(@jakarta.annotation.Nullable TreePath[] paths, @Nullable Object tag) {
+  static Stream<VirtualFile> getVirtualFiles(@Nullable TreePath[] paths, @Nullable Object tag) {
     return Streams.stream(paths)
-                  .filter(path -> isUnderTag(path, tag))
-                  .map(TreePath::getLastPathComponent)
-                  .map(node -> ((ChangesBrowserNode<?>)node))
-                  .flatMap(ChangesBrowserNode::getFilesUnderStream)
-                  .distinct();
+      .filter(path -> isUnderTag(path, tag))
+      .map(TreePath::getLastPathComponent)
+      .map(node -> ((ChangesBrowserNode<?>)node))
+      .flatMap(ChangesBrowserNode::getFilesUnderStream)
+      .distinct();
   }
 
-  static boolean isUnderTag(@Nonnull TreePath path, @jakarta.annotation.Nullable Object tag) {
+  static boolean isUnderTag(@Nonnull TreePath path, @Nullable Object tag) {
     boolean result = true;
 
     if (tag != null) {
@@ -280,10 +281,10 @@ public class ChangesListView extends Tree implements TypeSafeDataProvider, DnDAw
   @Nonnull
   static Stream<Change> getChanges(@Nonnull Project project, @Nullable TreePath[] paths) {
     Stream<Change> changes = Streams.stream(paths)
-                                    .map(TreePath::getLastPathComponent)
-                                    .map(node -> ((ChangesBrowserNode<?>)node))
-                                    .flatMap(node -> node.getObjectsUnderStream(Change.class))
-                                    .map(Change.class::cast);
+      .map(TreePath::getLastPathComponent)
+      .map(node -> ((ChangesBrowserNode<?>)node))
+      .flatMap(node -> node.getObjectsUnderStream(Change.class))
+      .map(Change.class::cast);
     Stream<Change> hijackedChanges = getVirtualFiles(paths, MODIFIED_WITHOUT_EDITING_TAG)
       .map(file -> toHijackedChange(project, file))
       .filter(Objects::nonNull);
@@ -291,7 +292,7 @@ public class ChangesListView extends Tree implements TypeSafeDataProvider, DnDAw
     return Stream.concat(changes, hijackedChanges).distinct();
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private static Change toHijackedChange(@Nonnull Project project, @Nonnull VirtualFile file) {
     VcsCurrentRevisionProxy before = VcsCurrentRevisionProxy.create(file, project);
     if (before != null) {

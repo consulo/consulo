@@ -16,11 +16,10 @@
 package consulo.ide.impl.idea.openapi.wm.impl;
 
 import consulo.application.dumb.DumbAware;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.toolWindow.ToolWindow;
@@ -32,24 +31,26 @@ public class MaximizeToolWindowAction extends AnAction implements DumbAware {
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null || project.isDisposed()) return;
-    ToolWindow toolWindow = e.getData(PlatformDataKeys.TOOL_WINDOW);
+    ToolWindow toolWindow = e.getData(ToolWindow.KEY);
     if (toolWindow == null) return;
     ToolWindowManager manager = ToolWindowManager.getInstance(project);
     manager.setMaximized(toolWindow, !manager.isMaximized(toolWindow));
   }
 
   @Override
+  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
     e.getPresentation().setEnabled(true);
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null || project.isDisposed()) {
       e.getPresentation().setEnabled(false);
       return;
     }
-    ToolWindow toolWindow = e.getData(PlatformDataKeys.TOOL_WINDOW);
+    ToolWindow toolWindow = e.getData(ToolWindow.KEY);
     if (toolWindow == null) {
       e.getPresentation().setEnabled(false);
       return;

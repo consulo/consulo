@@ -16,17 +16,18 @@
 
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
-import consulo.application.CommonBundle;
+import consulo.platform.base.localize.CommonLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.action.VcsContextFactory;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesFilterDialog;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.versionBrowser.ChangeBrowserSettings;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -35,8 +36,8 @@ import consulo.virtualFileSystem.VirtualFile;
  */
 public class BrowseChangesAction extends AnAction implements DumbAware {
   public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
-    VirtualFile vFile = e.getData(PlatformDataKeys.VIRTUAL_FILE);
+    final Project project = e.getData(Project.KEY);
+    VirtualFile vFile = e.getData(VirtualFile.KEY);
     assert vFile != null;
     AbstractVcs vcs = ProjectLevelVcsManager.getInstance(project).getVcsFor(vFile);
     assert vcs != null;
@@ -49,11 +50,15 @@ public class BrowseChangesAction extends AnAction implements DumbAware {
 
     int maxCount = 0;
     if (!settings.isAnyFilterSpecified()) {
-      int rc = Messages.showYesNoCancelDialog(project, VcsBundle.message("browse.changes.no.filter.prompt"), VcsBundle.message("browse.changes.title"),
-                                              VcsBundle.message("browse.changes.show.recent.button"),
-                                              VcsBundle.message("browse.changes.show.all.button"),
-                                              CommonBundle.getCancelButtonText(),
-                                              Messages.getQuestionIcon());
+      int rc = Messages.showYesNoCancelDialog(
+        project,
+        VcsLocalize.browseChangesNoFilterPrompt().get(),
+        VcsLocalize.browseChangesTitle().get(),
+        VcsLocalize.browseChangesShowRecentButton().get(),
+        VcsLocalize.browseChangesShowAllButton().get(),
+        CommonLocalize.buttonCancel().get(),
+        UIUtil.getQuestionIcon()
+      );
       if (rc == 2) {
         return;
       }
@@ -65,14 +70,16 @@ public class BrowseChangesAction extends AnAction implements DumbAware {
     AbstractVcsHelper.getInstance(project).openCommittedChangesTab(vcs, vFile, settings, maxCount, null);
   }
 
+  @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
     e.getPresentation().setEnabled(isActionEnabled(e));
   }
 
   private static boolean isActionEnabled(final AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) return false;
-    VirtualFile vFile = e.getData(PlatformDataKeys.VIRTUAL_FILE);
+    VirtualFile vFile = e.getData(VirtualFile.KEY);
     if (vFile == null) return false;
     AbstractVcs vcs = ProjectLevelVcsManager.getInstance(project).getVcsFor(vFile);
     if (vcs == null || vcs.getCommittedChangesProvider() == null || !vcs.allowsRemoteCalls(vFile)) {

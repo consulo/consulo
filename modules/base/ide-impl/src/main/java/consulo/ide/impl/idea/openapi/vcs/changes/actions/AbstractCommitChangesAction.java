@@ -63,7 +63,7 @@ public abstract class AbstractCommitChangesAction extends AbstractCommonCheckinA
       }
       if (presentation.isEnabled() && selectedChanges != null) {
         final ChangeListManager changeListManager = ChangeListManager.getInstance(vcsContext.getProject());
-        for(Change c: selectedChanges) {
+        for (Change c: selectedChanges) {
           if (c.getFileStatus() == FileStatus.HIJACKED && changeListManager.getChangeList(c) == null) {
             presentation.setEnabled(false);
             break;

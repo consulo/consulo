@@ -19,10 +19,9 @@ import consulo.application.dumb.DumbAware;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.FileEditorWithProviderComposite;
 import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -35,10 +34,11 @@ import consulo.virtualFileSystem.VirtualFile;
  */
 public class MoveEditorToOppositeTabGroupAction extends AnAction implements DumbAware {
 
+  @RequiredUIAccess
   @Override
   public void actionPerformed(final AnActionEvent event) {
-    final VirtualFile vFile = event.getData(PlatformDataKeys.VIRTUAL_FILE);
-    final Project project = event.getData(CommonDataKeys.PROJECT);
+    final VirtualFile vFile = event.getData(VirtualFile.KEY);
+    final Project project = event.getData(Project.KEY);
     if (vFile == null || project == null) {
       return;
     }
@@ -48,16 +48,18 @@ public class MoveEditorToOppositeTabGroupAction extends AnAction implements Dumb
       if (siblings.length == 1) {
         final FileEditorWithProviderComposite editorComposite = window.getSelectedEditor();
         final HistoryEntry entry = FileEditorHistoryUtil.currentStateAsHistoryEntry(editorComposite);
-        ((FileEditorManagerImpl)FileEditorManagerEx.getInstanceEx(project)).openFileImpl3(UIAccess.current(), siblings[0], vFile, true, entry, true);
+        ((FileEditorManagerImpl)FileEditorManagerEx.getInstanceEx(project))
+          .openFileImpl3(UIAccess.current(), siblings[0], vFile, true, entry, true);
         window.closeFile(vFile);
       }
     }
   }
 
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
     final Presentation presentation = e.getPresentation();
-    final VirtualFile vFile = e.getData(PlatformDataKeys.VIRTUAL_FILE);
+    final VirtualFile vFile = e.getData(VirtualFile.KEY);
     final FileEditorWindow window = e.getData(FileEditorWindow.DATA_KEY);
     if (ActionPlaces.isPopupPlace(e.getPlace())) {
       presentation.setVisible(isEnabled(vFile, window));

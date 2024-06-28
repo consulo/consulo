@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.TypeSafeDataProvider;
@@ -28,9 +27,9 @@ import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.TreeLinkMouseListene
 import consulo.ide.impl.idea.ui.SmartExpander;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.FileColorManager;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.platform.Platform;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.NonOpaquePanel;
@@ -66,7 +65,10 @@ import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicTreeUI;
 import javax.swing.tree.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.*;
 
@@ -97,19 +99,21 @@ public abstract class ChangesTreeList<T> extends Tree implements TypeSafeDataPro
   @NonNls private final static String FLATTEN_OPTION_KEY = "ChangesBrowser.SHOW_FLATTEN";
 
   @Nullable private final Runnable myInclusionListener;
-  @jakarta.annotation.Nullable
+  @Nullable
   private ChangeNodeDecorator myChangeDecorator;
   private Runnable myGenericSelectionListener;
   @Nonnull
   private final CopyProvider myTreeCopyProvider;
   private TreeState myNonFlatTreeState;
 
-  public ChangesTreeList(@Nonnull Project project,
-                         @Nonnull Collection<T> initiallyIncluded,
-                         final boolean showCheckboxes,
-                         final boolean highlightProblems,
-                         @Nullable final Runnable inclusionListener,
-                         @jakarta.annotation.Nullable final ChangeNodeDecorator decorator) {
+  public ChangesTreeList(
+    @Nonnull Project project,
+    @Nonnull Collection<T> initiallyIncluded,
+    final boolean showCheckboxes,
+    final boolean highlightProblems,
+    @Nullable final Runnable inclusionListener,
+    @Nullable final ChangeNodeDecorator decorator
+  ) {
     super(ChangesBrowserNode.create(project, ROOT));
     myProject = project;
     myShowCheckboxes = showCheckboxes;
@@ -129,13 +133,9 @@ public abstract class ChangesTreeList<T> extends Tree implements TypeSafeDataPro
     new TreeSpeedSearch(this, ChangesBrowserNode.TO_TEXT_CONVERTER);
     setCellRenderer(myNodeRenderer);
 
-    new MyToggleSelectionAction().registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0)), this);
-    registerKeyboardAction(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        myDoubleClickHandler.run();
-      }
-    }, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+    new MyToggleSelectionAction()
+      .registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0)), this);
+    registerKeyboardAction(e -> myDoubleClickHandler.run(), KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
     addKeyListener(new KeyAdapter() {
       @Override
@@ -161,7 +161,7 @@ public abstract class ChangesTreeList<T> extends Tree implements TypeSafeDataPro
       @Override
       protected boolean onDoubleClick(MouseEvent e) {
         TreePath clickPath =
-                getUI() instanceof WideSelectionTreeUI ? getClosestPathForLocation(e.getX(), e.getY()) : getPathForLocation(e.getX(), e.getY());
+          getUI() instanceof WideSelectionTreeUI ? getClosestPathForLocation(e.getX(), e.getY()) : getPathForLocation(e.getX(), e.getY());
         if (clickPath == null) return false;
 
         final int row = getRowForLocation(e.getPoint().x, e.getPoint().y);
@@ -330,7 +330,7 @@ public abstract class ChangesTreeList<T> extends Tree implements TypeSafeDataPro
       }
       TreeUtil.showRowCentered(ChangesTreeList.this, selectedTreeRow, false);
     };
-    if (ApplicationManager.getApplication().isDispatchThread()) {
+    if (myProject.getApplication().isDispatchThread()) {
       runnable.run();
     } else {
       SwingUtilities.invokeLater(runnable);
@@ -390,7 +390,7 @@ public abstract class ChangesTreeList<T> extends Tree implements TypeSafeDataPro
       return Collections.emptyList();
     }
     else {
-      LinkedHashSet<T> changes = ContainerUtil.newLinkedHashSet();
+      LinkedHashSet<T> changes = new LinkedHashSet<>();
       for (TreePath path : paths) {
         //noinspection unchecked
         changes.addAll(getSelectedObjects((ChangesBrowserNode)path.getLastPathComponent()));
@@ -500,26 +500,33 @@ public abstract class ChangesTreeList<T> extends Tree implements TypeSafeDataPro
     final ToggleShowDirectoriesAction directoriesAction = new ToggleShowDirectoriesAction();
     final ExpandAllAction expandAllAction = new ExpandAllAction(this) {
       @Override
+      @RequiredUIAccess
       public void update(AnActionEvent e) {
         e.getPresentation().setEnabledAndVisible(!myShowFlatten || !myIsModelFlat);
       }
     };
     final CollapseAllAction collapseAllAction = new CollapseAllAction(this) {
       @Override
+      @RequiredUIAccess
       public void update(AnActionEvent e) {
         e.getPresentation().setEnabledAndVisible(!myShowFlatten || !myIsModelFlat);
       }
     };
     final AnAction[] actions = new AnAction[]{directoriesAction, expandAllAction, collapseAllAction};
     directoriesAction.registerCustomShortcutSet(
-            new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_P, Platform.current().os().isMac() ? InputEvent.META_DOWN_MASK : InputEvent.CTRL_DOWN_MASK)),
-            this);
+      new CustomShortcutSet(
+        KeyStroke.getKeyStroke(KeyEvent.VK_P, Platform.current().os().isMac() ? InputEvent.META_DOWN_MASK : InputEvent.CTRL_DOWN_MASK)
+      ),
+      this
+    );
     expandAllAction.registerCustomShortcutSet(
-            new CustomShortcutSet(KeymapManager.getInstance().getActiveKeymap().getShortcuts(IdeActions.ACTION_EXPAND_ALL)),
-            this);
+      new CustomShortcutSet(KeymapManager.getInstance().getActiveKeymap().getShortcuts(IdeActions.ACTION_EXPAND_ALL)),
+      this
+    );
     collapseAllAction.registerCustomShortcutSet(
-            new CustomShortcutSet(KeymapManager.getInstance().getActiveKeymap().getShortcuts(IdeActions.ACTION_COLLAPSE_ALL)),
-            this);
+      new CustomShortcutSet(KeymapManager.getInstance().getActiveKeymap().getShortcuts(IdeActions.ACTION_COLLAPSE_ALL)),
+      this
+    );
     return actions;
   }
 
@@ -530,7 +537,6 @@ public abstract class ChangesTreeList<T> extends Tree implements TypeSafeDataPro
   private class MyTreeCellRenderer extends JPanel implements TreeCellRenderer {
     private final ChangesBrowserNodeRenderer myTextRenderer;
     private final JCheckBox myCheckBox;
-
 
     public MyTreeCellRenderer(@Nonnull ChangesBrowserNodeRenderer textRenderer) {
       super(new BorderLayout());
@@ -555,7 +561,6 @@ public abstract class ChangesTreeList<T> extends Tree implements TypeSafeDataPro
       int row,
       boolean hasFocus
     ) {
-
       if (UIUtil.isUnderGTKLookAndFeel() || UIUtil.isUnderNimbusLookAndFeel()) {
         NonOpaquePanel.setTransparent(this);
         NonOpaquePanel.setTransparent(myCheckBox);
@@ -590,7 +595,6 @@ public abstract class ChangesTreeList<T> extends Tree implements TypeSafeDataPro
     }
   }
 
-
   private CheckboxTree.NodeState getNodeStatus(ChangesBrowserNode<T> node) {
     boolean hasIncluded = false;
     boolean hasExcluded = false;
@@ -615,7 +619,8 @@ public abstract class ChangesTreeList<T> extends Tree implements TypeSafeDataPro
 
   private class MyToggleSelectionAction extends AnAction implements DumbAware {
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       toggleChanges(getSelectedChangesOrAllIfNone());
     }
   }
@@ -630,12 +635,12 @@ public abstract class ChangesTreeList<T> extends Tree implements TypeSafeDataPro
     }
 
     @Override
-    public boolean isSelected(AnActionEvent e) {
+    public boolean isSelected(@Nonnull AnActionEvent e) {
       return (! myProject.isDisposed()) && !PropertiesComponent.getInstance(myProject).isTrueValue(FLATTEN_OPTION_KEY);
     }
 
     @Override
-    public void setSelected(AnActionEvent e, boolean state) {
+    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
       PropertiesComponent.getInstance(myProject).setValue(FLATTEN_OPTION_KEY, String.valueOf(!state));
       setShowFlatten(!state);
     }
@@ -661,8 +666,8 @@ public abstract class ChangesTreeList<T> extends Tree implements TypeSafeDataPro
 
   @Override
   public void calcData(Key<?> key, DataSink sink) {
-    if (PlatformDataKeys.COPY_PROVIDER == key) {
-      sink.put(PlatformDataKeys.COPY_PROVIDER, myTreeCopyProvider);
+    if (CopyProvider.KEY == key) {
+      sink.put(CopyProvider.KEY, myTreeCopyProvider);
     }
   }
 

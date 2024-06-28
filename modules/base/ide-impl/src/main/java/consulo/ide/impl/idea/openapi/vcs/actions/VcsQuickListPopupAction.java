@@ -3,7 +3,6 @@ package consulo.ide.impl.idea.openapi.vcs.actions;
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.actions.QuickSwitchSchemeAction;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
 import consulo.ui.ex.action.*;
 import consulo.util.lang.Pair;
@@ -13,6 +12,7 @@ import consulo.versionControlSystem.action.VcsQuickListContentProvider;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,10 +29,12 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
     myActionPlace = ActionPlaces.ACTION_PLACE_VCS_QUICK_LIST_POPUP_ACTION;
   }
 
-  protected void fillActions(@jakarta.annotation.Nullable final Project project,
-                             @Nonnull final DefaultActionGroup group,
-                             @Nonnull final DataContext dataContext) {
-
+  @Override
+  protected void fillActions(
+    @Nullable final Project project,
+    @Nonnull final DefaultActionGroup group,
+    @Nonnull final DataContext dataContext
+  ) {
     if (project == null) {
       return;
     }
@@ -52,15 +54,17 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
     }
   }
 
+  @Override
   protected boolean isEnabled() {
     return true;
   }
 
-  private void fillVcsPopup(@Nonnull final Project project,
-                                    @Nonnull final DefaultActionGroup group,
-                                    @jakarta.annotation.Nullable final DataContext dataContext,
-                                    @jakarta.annotation.Nullable final AbstractVcs vcs) {
-
+  private void fillVcsPopup(
+    @Nonnull final Project project,
+    @Nonnull final DefaultActionGroup group,
+    @Nullable final DataContext dataContext,
+    @Nullable final AbstractVcs vcs
+  ) {
     if (vcs != null) {
       // replace general vcs actions if necessary
 
@@ -82,13 +86,14 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
     fillGeneralVcsPopup(project, group, dataContext, vcs);
   }
 
-  private void fillGeneralVcsPopup(@Nonnull final Project project,
-                                   @Nonnull final DefaultActionGroup group,
-                                   @jakarta.annotation.Nullable final DataContext dataContext,
-                                   @jakarta.annotation.Nullable final AbstractVcs vcs) {
-
+  private void fillGeneralVcsPopup(
+    @Nonnull final Project project,
+    @Nonnull final DefaultActionGroup group,
+    @Nullable final DataContext dataContext,
+    @Nullable final AbstractVcs vcs
+  ) {
     // include all custom actions in general popup
-    final List<AnAction> actions = new ArrayList<AnAction>();
+    final List<AnAction> actions = new ArrayList<>();
     for (VcsQuickListContentProvider provider : VcsQuickListContentProvider.EP_NAME.getExtensionList()) {
       final List<AnAction> providerActions = provider.getVcsActions(project, vcs, dataContext);
       if (providerActions != null) {
@@ -121,9 +126,11 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
     addLocalHistoryActions(group);
   }
 
-  private void fillNonInVcsActions(@Nonnull final Project project,
-                                   @Nonnull final DefaultActionGroup group,
-                                   @jakarta.annotation.Nullable final DataContext dataContext) {
+  private void fillNonInVcsActions(
+    @Nonnull final Project project,
+    @Nonnull final DefaultActionGroup group,
+    @Nullable final DataContext dataContext
+  ) {
     // add custom vcs actions
     for (VcsQuickListContentProvider provider : VcsQuickListContentProvider.EP_NAME.getExtensionList()) {
       final List<AnAction> actions = provider.getNotInVcsActions(project, dataContext);
@@ -153,26 +160,26 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
     }
   }
 
-  private Pair<SupportedVCS, AbstractVcs> getActiveVCS(@Nonnull final Project project, @jakarta.annotation.Nullable final DataContext dataContext) {
+  private Pair<SupportedVCS, AbstractVcs> getActiveVCS(@Nonnull final Project project, @Nullable final DataContext dataContext) {
     final AbstractVcs[] activeVcss = getActiveVCSs(project);
     if (activeVcss.length == 0) {
       // no vcs
-      return new Pair<SupportedVCS, AbstractVcs>(SupportedVCS.NOT_IN_VCS, null);
+      return new Pair<>(SupportedVCS.NOT_IN_VCS, null);
     } else if (activeVcss.length == 1) {
       // get by name
-      return new Pair<SupportedVCS, AbstractVcs>(SupportedVCS.VCS, activeVcss[0]);
+      return Pair.create(SupportedVCS.VCS, activeVcss[0]);
     }
 
     // by current file
-    final VirtualFile file =  dataContext != null ? dataContext.getData(PlatformDataKeys.VIRTUAL_FILE) : null;
+    final VirtualFile file =  dataContext != null ? dataContext.getData(VirtualFile.KEY) : null;
     if (file != null) {
       final AbstractVcs vscForFile = ProjectLevelVcsManager.getInstance(project).getVcsFor(file);
       if (vscForFile != null) {
-        return new Pair<SupportedVCS, AbstractVcs>(SupportedVCS.VCS, vscForFile);
+        return Pair.create(SupportedVCS.VCS, vscForFile);
       }
     }
 
-    return new Pair<SupportedVCS, AbstractVcs>(SupportedVCS.VCS, null);
+    return new Pair<>(SupportedVCS.VCS, null);
   }
 
   private AbstractVcs[] getActiveVCSs(final Project project) {
@@ -193,11 +200,12 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
     addSeparator(toGroup, null);
   }
 
-  private void addSeparator(final DefaultActionGroup toGroup, @jakarta.annotation.Nullable final String title) {
+  private void addSeparator(final DefaultActionGroup toGroup, @Nullable final String title) {
     final AnSeparator separator = title == null ? new AnSeparator() : new AnSeparator(title);
     toGroup.add(separator);
   }
 
+  @Override
   protected String getPopupTitle(AnActionEvent e) {
     return VcsLocalize.vcsQuicklistPopupTitle().get();
   }

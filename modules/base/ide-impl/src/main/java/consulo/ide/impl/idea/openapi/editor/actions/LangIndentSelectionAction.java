@@ -15,11 +15,10 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
+import consulo.codeEditor.Editor;
+import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.codeInsight.completion.NextPrevParameterAction;
 import consulo.language.editor.completion.lookup.LookupManager;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
-import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
 
 /**
@@ -32,10 +31,8 @@ public class LangIndentSelectionAction extends IndentSelectionAction {
     if (!originalIsEnabled(editor, wantSelection())) return false;
     if (LookupManager.getActiveLookup(editor) != null) return false;
 
-    PsiFile psiFile = dataContext.getData(CommonDataKeys.PSI_FILE);
-    if (psiFile != null && NextPrevParameterAction.hasSutablePolicy(editor, psiFile)) return false;
-
-    return true;
+    PsiFile psiFile = dataContext.getData(PsiFile.KEY);
+    return psiFile == null || !NextPrevParameterAction.hasSutablePolicy(editor, psiFile);
   }
 
   protected boolean wantSelection() {

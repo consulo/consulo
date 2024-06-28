@@ -22,10 +22,10 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.ide.impl.idea.util.IconUtil;
 
 public class DeleteUnversionedFilesAction extends AnAction {
@@ -33,15 +33,18 @@ public class DeleteUnversionedFilesAction extends AnAction {
     super("Delete", "Delete", IconUtil.getRemoveIcon());
   }
 
+  @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    DeleteProvider deleteProvider = e.getData(PlatformDataKeys.DELETE_ELEMENT_PROVIDER);
+    DeleteProvider deleteProvider = e.getData(DeleteProvider.KEY);
     if (deleteProvider == null) return;
     deleteProvider.deleteElement(e.getDataContext());
   }
 
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
-    DeleteProvider deleteProvider = e.getData(PlatformDataKeys.DELETE_ELEMENT_PROVIDER);
+    DeleteProvider deleteProvider = e.getData(DeleteProvider.KEY);
     e.getPresentation().setVisible(deleteProvider != null && deleteProvider.canDeleteElement(e.getDataContext()));
   }
 }

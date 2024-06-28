@@ -16,23 +16,22 @@
 
 package consulo.ide.impl.idea.packageDependencies.ui;
 
-import consulo.usage.UsageViewManager;
-import consulo.language.editor.scope.AnalysisScopeBundle;
-import consulo.disposer.Disposable;
-import consulo.dataContext.DataProvider;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.logging.Logger;
-import consulo.component.ProcessCanceledException;
+import consulo.application.HelpManager;
 import consulo.application.progress.ProgressIndicator;
-import consulo.project.Project;
+import consulo.component.ProcessCanceledException;
+import consulo.dataContext.DataProvider;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
+import consulo.language.psi.PsiElement;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.ex.awt.util.Alarm;
 import consulo.usage.*;
 import consulo.util.dataholder.Key;
-import consulo.language.psi.PsiElement;
-import consulo.ui.ex.awt.util.Alarm;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -83,7 +82,7 @@ public abstract class UsagesPanel extends JPanel implements Disposable, DataProv
   }
 
   private void setToCanceled() {
-    setToComponent(createLabel(AnalysisScopeBundle.message("usage.view.canceled")));
+    setToComponent(createLabel(AnalysisScopeLocalize.usageViewCanceled().get()));
   }
 
   void setToComponent(final JComponent cmp) {
@@ -119,9 +118,6 @@ public abstract class UsagesPanel extends JPanel implements Disposable, DataProv
   @Override
   @Nullable
   public Object getData(@Nonnull Key dataId) {
-    if (PlatformDataKeys.HELP_ID == dataId) {
-      return "ideaInterface.find";
-    }
-    return null;
+    return HelpManager.HELP_ID == dataId ? "ideaInterface.find" : null;
   }
 }

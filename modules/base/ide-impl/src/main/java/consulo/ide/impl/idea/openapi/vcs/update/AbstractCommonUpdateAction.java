@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.update;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
@@ -39,6 +39,7 @@ import consulo.project.StoreReloadManager;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.util.WaitForProgressToShow;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.UpdateInBackground;
 import consulo.ui.ex.awt.OptionsDialog;
@@ -56,6 +57,7 @@ import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
 
 import java.io.File;
@@ -84,6 +86,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction imple
   }
 
   @Override
+  @RequiredUIAccess
   protected void actionPerformed(@Nonnull final VcsContext context) {
     final Project project = context.getProject();
 
@@ -115,11 +118,12 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction imple
           showOptionsDialog(vcsToVirtualFiles, project, context);
         }
 
-        if (ApplicationManager.getApplication().isDispatchThread()) {
-          ApplicationManager.getApplication().saveAll();
+        Application application = project.getApplication();
+        if (application.isDispatchThread()) {
+          application.saveAll();
         }
         Task.Backgroundable task = new Updater(project, roots, vcsToVirtualFiles);
-        if (ApplicationManager.getApplication().isUnitTestMode()) {
+        if (application.isUnitTestMode()) {
           task.run(new EmptyProgressIndicator());
         }
         else {
@@ -133,7 +137,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction imple
 
   private boolean canGroupByChangelist(final Set<AbstractVcs> abstractVcses) {
     if (myActionInfo.canGroupByChangelist()) {
-      for(AbstractVcs vcs: abstractVcses) {
+      for (AbstractVcs vcs: abstractVcses) {
         if (vcs.getCachingCommittedChangesProvider() != null) {
           return true;
         }
@@ -165,9 +169,11 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction imple
     LinkedHashMap<Configurable, AbstractVcs> envToConfMap = createConfigurableToEnvMap(updateEnvToVirtualFiles);
     LOG.debug("configurables map: " + envToConfMap);
     if (!envToConfMap.isEmpty()) {
-      UpdateOrStatusOptionsDialog dialogOrStatus = myActionInfo.createOptionsDialog(project, envToConfMap,
-                                                                                    myScopeInfo.getScopeName(dataContext,
-                                                                                                             myActionInfo));
+      UpdateOrStatusOptionsDialog dialogOrStatus = myActionInfo.createOptionsDialog(
+        project,
+        envToConfMap,
+        myScopeInfo.getScopeName(dataContext, myActionInfo)
+      );
       if (!dialogOrStatus.showAndGet()) {
         throw new ProcessCanceledException();
       }
@@ -223,7 +229,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction imple
           final VirtualFile virtualFile = file.getVirtualFile();
           if (virtualFile != null && virtualFile.isDirectory()) {
             final VirtualFile[] vcsRoots = ProjectLevelVcsManager.getInstance(vcsContext.getProject()).getAllVersionedRoots();
-            for(VirtualFile vcsRoot: vcsRoots) {
+            for (VirtualFile vcsRoot: vcsRoots) {
               if (VfsUtilCore.isAncestor(virtualFile, vcsRoot, false)) {
                 result.add(file);
               }
@@ -418,12 +424,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction imple
 
     private void notifyAnnotations() {
       final VcsAnnotationRefresher refresher = myProject.getMessageBus().syncPublisher(VcsAnnotationRefresher.class);
-      UpdateFilesHelper.iterateFileGroupFilesDeletedOnServerFirst(myUpdatedFiles, new UpdateFilesHelper.Callback() {
-        @Override
-        public void onFile(String filePath, String groupId) {
-          refresher.dirty(filePath);
-        }
-      });
+      UpdateFilesHelper.iterateFileGroupFilesDeletedOnServerFirst(myUpdatedFiles, (filePath, groupId) -> refresher.dirty(filePath));
     }
 
     @Nonnull
@@ -455,7 +456,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction imple
       return group.getFiles().size() + group.getChildren().stream().mapToInt(g -> getFilesCount(g)).sum();
     }
 
-    @jakarta.annotation.Nullable
+    @Nullable
     private String prepareScopeUpdatedText(@Nonnull UpdateInfoTree tree) {
       String scopeText = null;
       NamedScope scopeFilter = tree.getFilterScope();
@@ -473,6 +474,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction imple
     }
 
     @Override
+    @RequiredUIAccess
     public void onSuccess() {
       onSuccessImpl(false);
     }
@@ -505,14 +507,11 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction imple
         final List<VirtualFile> files = new ArrayList<>();
         final RemoteRevisionsCache revisionsCache = RemoteRevisionsCache.getInstance(myProject);
         revisionsCache.invalidate(myUpdatedFiles);
-        UpdateFilesHelper.iterateFileGroupFiles(myUpdatedFiles, new UpdateFilesHelper.Callback() {
-          @Override
-          public void onFile(final String filePath, final String groupId) {
-            @NonNls final String path = VfsUtilCore.pathToUrl(filePath.replace(File.separatorChar, '/'));
-            final VirtualFile file = VirtualFileManager.getInstance().findFileByUrl(path);
-            if (file != null) {
-              files.add(file);
-            }
+        UpdateFilesHelper.iterateFileGroupFiles(myUpdatedFiles, (filePath, groupId) -> {
+          @NonNls final String path = VfsUtilCore.pathToUrl(filePath.replace(File.separatorChar, '/'));
+          final VirtualFile file = VirtualFileManager.getInstance().findFileByUrl(path);
+          if (file != null) {
+            files.add(file);
           }
         });
         myDirtyScopeManager.filesDirty(files, null);
@@ -559,7 +558,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction imple
         else if (!myUpdatedFiles.isEmpty()) {
           final UpdateInfoTree tree = showUpdateTree(continueChainFinal && updateSuccess && noMerged, someSessionWasCancelled);
           final CommittedChangesCache cache = CommittedChangesCache.getInstance(myProject);
-          cache.processUpdatedFiles(myUpdatedFiles, incomingChangeLists -> tree.setChangeLists(incomingChangeLists));
+          cache.processUpdatedFiles(myUpdatedFiles, tree::setChangeLists);
 
           Notification notification = prepareNotification(tree, someSessionWasCancelled);
           notification.addAction(new ViewUpdateInfoNotification(myProject, tree, "View", notification));

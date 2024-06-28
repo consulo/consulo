@@ -17,20 +17,22 @@ package consulo.ide.impl.projectView;
 
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ApplicationManager;
+import consulo.application.HelpManager;
 import consulo.disposer.Disposable;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.projectView.HelpID;
-import consulo.ide.impl.idea.ide.projectView.impl.*;
-import consulo.ide.impl.idea.ide.projectView.impl.nodes.*;
+import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPane;
+import consulo.ide.impl.idea.ide.projectView.impl.ProjectAbstractTreeStructureBase;
+import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPaneImpl;
+import consulo.ide.impl.idea.ide.projectView.impl.nodes.LibraryGroupNode;
+import consulo.ide.impl.idea.ide.projectView.impl.nodes.NamedLibraryElementNode;
 import consulo.ide.impl.ui.tree.impl.TreeStructureWrappenModel;
 import consulo.language.content.ProjectRootsUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.ModuleUtilCore;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.content.ModuleFileIndex;
 import consulo.module.content.ModuleRootManager;
@@ -38,16 +40,21 @@ import consulo.module.content.ProjectRootManager;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ui.view.ProjectViewPane;
 import consulo.project.ui.view.SelectInTarget;
 import consulo.project.ui.view.internal.node.LibraryGroupElement;
 import consulo.project.ui.view.internal.node.NamedLibraryElement;
-import consulo.project.ui.view.tree.*;
+import consulo.project.ui.view.tree.AbstractPsiBasedNode;
+import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.project.ui.view.tree.ModuleGroup;
+import consulo.project.ui.view.tree.PsiDirectoryNode;
 import consulo.ui.Tree;
 import consulo.ui.TreeNode;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.toolWindow.ToolWindow;
@@ -57,11 +64,11 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.*;
 import java.util.function.Function;
@@ -85,13 +92,8 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
         return null;
       }
       Object userObject = node.getUserObject();
-      if (userObject instanceof AbstractTreeNode) {
-        return ((AbstractTreeNode)userObject).getValue();
-      }
-      if (!(userObject instanceof NodeDescriptor)) {
-        return null;
-      }
-      return ((NodeDescriptor)userObject).getElement();
+      return userObject instanceof AbstractTreeNode treeNode ? treeNode.getValue()
+        : userObject instanceof NodeDescriptor nodeDescriptor ? nodeDescriptor.getElement() : null;
     }
 
     @Override
@@ -102,27 +104,27 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
         if (paneSpecificData != null) return paneSpecificData;
       }
 
-      if (CommonDataKeys.PSI_ELEMENT == dataId) {
+      if (PsiElement.KEY == dataId) {
         if (currentProjectViewPane == null) return null;
 
         TreeNode<AbstractTreeNode> selectedNode = myTree.getSelectedNode();
-        if(selectedNode != null) {
+        if (selectedNode != null) {
           AbstractTreeNode value = selectedNode.getValue();
-          if(value instanceof AbstractPsiBasedNode) {
+          if (value instanceof AbstractPsiBasedNode) {
            return value.getValue();
           }
         }
         return null;
       }
-      if (LangDataKeys.PSI_ELEMENT_ARRAY == dataId) {
+      if (PsiElement.KEY_OF_ARRAY == dataId) {
         if (currentProjectViewPane == null) {
           return null;
         }
         PsiElement[] elements = currentProjectViewPane.getSelectedPSIElements();
         return elements.length == 0 ? null : elements;
       }
-      if (LangDataKeys.MODULE == dataId) {
-        VirtualFile[] virtualFiles = (VirtualFile[])apply(CommonDataKeys.VIRTUAL_FILE_ARRAY);
+      if (Module.KEY == dataId) {
+        VirtualFile[] virtualFiles = (VirtualFile[])apply(VirtualFile.KEY_OF_ARRAY);
         if (virtualFiles == null || virtualFiles.length <= 1) return null;
         final Set<Module> modules = new HashSet<>();
         for (VirtualFile virtualFile : virtualFiles) {
@@ -166,7 +168,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
       //  }
       //  return myDeletePSIElementProvider;
       //}
-      if (PlatformDataKeys.HELP_ID == dataId) {
+      if (HelpManager.HELP_ID == dataId) {
         return HelpID.PROJECT_VIEWS;
       }
       //if (ProjectViewImpl.DATA_KEY == dataId) {
@@ -178,14 +180,14 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
       }
       if (LangDataKeys.MODULE_CONTEXT == dataId) {
         Object selected = getSelectedNodeElement();
-        if (selected instanceof Module) {
-          return !((Module)selected).isDisposed() ? selected : null;
+        if (selected instanceof Module module) {
+          return !module.isDisposed() ? selected : null;
         }
-        else if (selected instanceof PsiDirectory) {
-          return moduleBySingleContentRoot(((PsiDirectory)selected).getVirtualFile());
+        else if (selected instanceof PsiDirectory directory) {
+          return moduleBySingleContentRoot(directory.getVirtualFile());
         }
-        else if (selected instanceof VirtualFile) {
-          return moduleBySingleContentRoot((VirtualFile)selected);
+        else if (selected instanceof VirtualFile virtualFile) {
+          return moduleBySingleContentRoot(virtualFile);
         }
         else {
           return null;
@@ -225,10 +227,10 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
       Object userObject = parent.getUserObject();
       if (userObject instanceof LibraryGroupNode) {
         userObject = node.getUserObject();
-        if (userObject instanceof NamedLibraryElementNode) {
-          NamedLibraryElement element = ((NamedLibraryElementNode)userObject).getValue();
+        if (userObject instanceof NamedLibraryElementNode namedLibraryElementNode) {
+          NamedLibraryElement element = namedLibraryElementNode.getValue();
           OrderEntry orderEntry = element.getOrderEntry();
-          return orderEntry instanceof LibraryOrderEntry ? (LibraryOrderEntry)orderEntry : null;
+          return orderEntry instanceof LibraryOrderEntry libraryOrderEntry ? libraryOrderEntry : null;
         }
         PsiDirectory directory = ((PsiDirectoryNode)userObject).getValue();
         VirtualFile virtualFile = directory.getVirtualFile();
@@ -237,8 +239,8 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
         if (module == null) return null;
         ModuleFileIndex index = ModuleRootManager.getInstance(module).getFileIndex();
         OrderEntry entry = index.getOrderEntryForFile(virtualFile);
-        if (entry instanceof LibraryOrderEntry) {
-          return (LibraryOrderEntry)entry;
+        if (entry instanceof LibraryOrderEntry libraryOrderEntry) {
+          return libraryOrderEntry;
         }
       }
 
@@ -247,26 +249,31 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
 
     private void detachLibrary(@Nonnull final LibraryOrderEntry orderEntry, @Nonnull Project project) {
       final Module module = orderEntry.getOwnerModule();
-      String message = IdeBundle.message("detach.library.from.module", orderEntry.getPresentableName(), module.getName());
-      String title = IdeBundle.message("detach.library");
-      int ret = Messages.showOkCancelDialog(project, message, title, Messages.getQuestionIcon());
+      LocalizeValue message = IdeLocalize.detachLibraryFromModule(orderEntry.getPresentableName(), module.getName());
+      LocalizeValue title = IdeLocalize.detachLibrary();
+      int ret = Messages.showOkCancelDialog(project, message.get(), title.get(), UIUtil.getQuestionIcon());
       if (ret != Messages.OK) return;
-      CommandProcessor.getInstance().executeCommand(module.getProject(), () -> {
-        final Runnable action = () -> {
-          ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
-          OrderEntry[] orderEntries = rootManager.getOrderEntries();
-          ModifiableRootModel model = rootManager.getModifiableModel();
-          OrderEntry[] modifiableEntries = model.getOrderEntries();
-          for (int i = 0; i < orderEntries.length; i++) {
-            OrderEntry entry = orderEntries[i];
-            if (entry instanceof LibraryOrderEntry && ((LibraryOrderEntry)entry).getLibrary() == orderEntry.getLibrary()) {
-              model.removeOrderEntry(modifiableEntries[i]);
+      CommandProcessor.getInstance().executeCommand(
+        module.getProject(),
+        () -> {
+          final Runnable action = () -> {
+            ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
+            OrderEntry[] orderEntries = rootManager.getOrderEntries();
+            ModifiableRootModel model = rootManager.getModifiableModel();
+            OrderEntry[] modifiableEntries = model.getOrderEntries();
+            for (int i = 0; i < orderEntries.length; i++) {
+              OrderEntry entry = orderEntries[i];
+              if (entry instanceof LibraryOrderEntry && ((LibraryOrderEntry)entry).getLibrary() == orderEntry.getLibrary()) {
+                model.removeOrderEntry(modifiableEntries[i]);
+              }
             }
-          }
-          model.commit();
-        };
-        ApplicationManager.getApplication().runWriteAction(action);
-      }, title, null);
+            model.commit();
+          };
+          myProject.getApplication().runWriteAction(action);
+        },
+        title.get(),
+        null
+      );
     }
 
     @Nullable
@@ -282,16 +289,16 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
             result.add(module);
           }
         }
-        else if (element instanceof ModuleGroup) {
-          Collection<Module> modules = ((ModuleGroup)element).modulesInGroup(myProject, true);
+        else if (element instanceof ModuleGroup moduleGroup) {
+          Collection<Module> modules = moduleGroup.modulesInGroup(myProject, true);
           result.addAll(modules);
         }
-        else if (element instanceof PsiDirectory) {
-          Module module = moduleBySingleContentRoot(((PsiDirectory)element).getVirtualFile());
+        else if (element instanceof PsiDirectory directory) {
+          Module module = moduleBySingleContentRoot(directory.getVirtualFile());
           if (module != null) result.add(module);
         }
-        else if (element instanceof VirtualFile) {
-          Module module = moduleBySingleContentRoot((VirtualFile)element);
+        else if (element instanceof VirtualFile virtualFile) {
+          Module module = moduleBySingleContentRoot(virtualFile);
           if (module != null) result.add(module);
         }
       }
@@ -364,7 +371,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
 
     ProjectAbstractTreeStructureBase structure = projectViewPane.createStructure();
 
-    TreeStructureWrappenModel<AbstractTreeNode> model = new TreeStructureWrappenModel<AbstractTreeNode>(structure) {
+    TreeStructureWrappenModel<AbstractTreeNode> model = new TreeStructureWrappenModel<>(structure) {
       @Override
       public boolean onDoubleClick(@Nonnull Tree tree, @Nonnull TreeNode node) {
         if (node.isLeaf()) {
