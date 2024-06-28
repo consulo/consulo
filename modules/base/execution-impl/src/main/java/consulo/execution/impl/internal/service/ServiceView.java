@@ -1,6 +1,7 @@
 // Copyright 2000-2022 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.execution.impl.internal.service;
 
+import consulo.application.HelpManager;
 import consulo.application.util.RecursionManager;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
@@ -122,7 +123,7 @@ public abstract class ServiceView extends JPanel implements Disposable {
       }
     };
     DataManager.registerDataProvider(serviceView, dataId -> {
-      if (PlatformDataKeys.HELP_ID.is(dataId)) {
+      if (HelpManager.HELP_ID.is(dataId)) {
         return ServiceViewManagerImpl.getToolWindowContextHelpId();
       }
       if (PlatformDataKeys.SELECTED_ITEMS.is(dataId)) {

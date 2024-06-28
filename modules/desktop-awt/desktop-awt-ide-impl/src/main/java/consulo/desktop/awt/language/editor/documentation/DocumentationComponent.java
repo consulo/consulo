@@ -5,6 +5,7 @@ package consulo.desktop.awt.language.editor.documentation;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
 import consulo.application.Application;
+import consulo.application.HelpManager;
 import consulo.application.localize.ApplicationLocalize;
 import consulo.application.ui.DimensionService;
 import consulo.application.ui.wm.IdeFocusManager;
@@ -37,7 +38,6 @@ import consulo.ide.impl.idea.ui.WidthBasedLayout;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupPositionManager;
 import consulo.ide.impl.idea.util.ArrayUtilRt;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.documentation.*;
@@ -263,7 +263,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
       }
     };
     boolean newLayout = true;
-    DataProvider helpDataProvider = dataId -> PlatformDataKeys.HELP_ID == dataId ? DOCUMENTATION_TOPIC_ID : null;
+    DataProvider helpDataProvider = dataId -> HelpManager.HELP_ID == dataId ? DOCUMENTATION_TOPIC_ID : null;
     myEditorPane.putClientProperty(DataManager.CLIENT_PROPERTY_DATA_PROVIDER, helpDataProvider);
     myText = "";
     myDecoratedText = "";
