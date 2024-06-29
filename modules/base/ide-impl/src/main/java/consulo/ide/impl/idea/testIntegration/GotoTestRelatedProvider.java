@@ -20,7 +20,6 @@ import consulo.language.editor.testIntegration.TestFinderHelper;
 import consulo.language.navigation.GotoRelatedItem;
 import consulo.language.navigation.GotoRelatedProvider;
 import consulo.dataContext.DataContext;
-import consulo.language.editor.LangDataKeys;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import jakarta.annotation.Nonnull;
@@ -36,7 +35,7 @@ public class GotoTestRelatedProvider extends GotoRelatedProvider {
   @Nonnull
   @Override
   public List<? extends GotoRelatedItem> getItems(@Nonnull DataContext context) {
-    final PsiFile file = context.getData(LangDataKeys.PSI_FILE);
+    final PsiFile file = context.getData(PsiFile.KEY);
     List<PsiElement> result;
     final boolean isTest = TestFinderHelper.isTest(file);
     if (isTest) {
@@ -46,7 +45,7 @@ public class GotoTestRelatedProvider extends GotoRelatedProvider {
     }
 
     if (!result.isEmpty()) {
-      final List<GotoRelatedItem> items = new ArrayList<GotoRelatedItem>();
+      final List<GotoRelatedItem> items = new ArrayList<>();
       for (PsiElement element : result) {
         items.add(new GotoRelatedItem(element, isTest ? "Tests" : "Testee classes"));
       }

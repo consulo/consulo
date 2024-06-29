@@ -3,6 +3,7 @@ package consulo.ide.impl.idea.usages.impl;
 
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
+import consulo.application.HelpManager;
 import consulo.application.ReadAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.impl.internal.concurent.BoundedTaskExecutor;
@@ -1937,11 +1938,11 @@ public class UsageViewImpl implements UsageViewEx {
         VirtualFile[] data = UsageDataUtil.provideVirtualFileArray(ua, usageTargets);
         sink.put(VirtualFile.KEY_OF_ARRAY, data);
       }
-      else if (key == PlatformDataKeys.HELP_ID) {
-        sink.put(PlatformDataKeys.HELP_ID, HELP_ID);
+      else if (key == HelpManager.HELP_ID) {
+        sink.put(HelpManager.HELP_ID, HELP_ID);
       }
-      else if (key == PlatformDataKeys.COPY_PROVIDER) {
-        sink.put(PlatformDataKeys.COPY_PROVIDER, myCopyProvider);
+      else if (key == CopyProvider.KEY) {
+        sink.put(CopyProvider.KEY, myCopyProvider);
       }
       else if (key == PsiElement.KEY_OF_ARRAY) {
         if (ApplicationManager.getApplication().isDispatchThread()) {

@@ -47,7 +47,7 @@ public class AlienChangeListBrowser extends ChangesBrowser {
     myViewer.setChangesToDisplay(myChanges ==  null ? Collections.<Change>emptyList() : myChanges);
   }
 
-  protected void setInitialSelection(final List<? extends ChangeList> changeLists, final List<Change> changes, final ChangeList initialListSelection) {
+  protected void setInitialSelection(final List<? extends ChangeList> changeLists, @Nonnull final List<Change> changes, final ChangeList initialListSelection) {
     if (! changeLists.isEmpty()) {
       mySelectedChangeList = changeLists.get(0);
     }

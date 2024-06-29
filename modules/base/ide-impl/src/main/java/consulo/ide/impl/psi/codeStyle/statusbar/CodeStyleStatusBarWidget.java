@@ -13,7 +13,6 @@ import consulo.ide.impl.psi.codeStyle.modifier.TransientCodeStyleSettings;
 import consulo.language.codeStyle.*;
 import consulo.language.codeStyle.event.CodeStyleSettingsChangeEvent;
 import consulo.language.codeStyle.event.CodeStyleSettingsListener;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
@@ -114,7 +113,7 @@ public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implemen
   @Nullable
   @Override
   protected ListPopup createPopup(DataContext context) {
-    WidgetState state = getWidgetState(context.getData(CommonDataKeys.VIRTUAL_FILE));
+    WidgetState state = getWidgetState(context.getData(VirtualFile.KEY));
     Editor editor = getEditor();
     PsiFile psiFile = getPsiFile();
     if (state instanceof MyWidgetState && editor != null && psiFile != null) {
@@ -166,11 +165,9 @@ public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implemen
   protected void registerCustomListeners() {
     Project project = getProject();
     ReadAction.nonBlocking(() -> CodeStyleSettingsManager.getInstance(project))
-              .expireWith(project)
-              .finishOnUiThread(Application::getAnyModalityState, manager -> {
-                manager.addListener(this, this);
-              })
-              .submit(NonUrgentExecutor.getInstance());
+      .expireWith(project)
+      .finishOnUiThread(Application::getAnyModalityState, manager -> manager.addListener(this, this))
+      .submit(NonUrgentExecutor.getInstance());
   }
 
   @Override

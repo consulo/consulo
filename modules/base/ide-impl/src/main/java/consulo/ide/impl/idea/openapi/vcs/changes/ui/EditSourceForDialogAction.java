@@ -16,16 +16,15 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.application.AllIcons;
+import consulo.application.Application;
 import consulo.ide.impl.idea.ide.actions.EditSourceAction;
-import consulo.ui.ex.action.ActionsBundle;
-import consulo.application.ApplicationManager;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.awt.DialogWrapper;
 import consulo.navigation.Navigatable;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.OpenSourceUtil;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-
+import consulo.ui.ex.awt.DialogWrapper;
 import jakarta.annotation.Nonnull;
 
 import java.awt.*;
@@ -37,22 +36,18 @@ public class EditSourceForDialogAction extends EditSourceAction {
   public EditSourceForDialogAction(@Nonnull Component component) {
     super();
     Presentation presentation = getTemplatePresentation();
-    presentation.setText(ActionsBundle.actionText("EditSource"));
+    presentation.setTextValue(ActionLocalize.actionEditsourceText());
     presentation.setIcon(AllIcons.Actions.EditSource);
-    presentation.setDescription(ActionsBundle.actionDescription("EditSource"));
+    presentation.setDescriptionValue(ActionLocalize.actionEditsourceDescription());
     mySourceComponent = component;
   }
 
+  @RequiredUIAccess
   @Override
   public void actionPerformed(AnActionEvent e) {
-    final Navigatable[] navigatableArray = e.getData(CommonDataKeys.NAVIGATABLE_ARRAY);
+    final Navigatable[] navigatableArray = e.getData(Navigatable.KEY_OF_ARRAY);
     if (navigatableArray != null && navigatableArray.length > 0) {
-      ApplicationManager.getApplication().invokeLater(new Runnable() {
-        @Override
-        public void run() {
-          OpenSourceUtil.navigate(navigatableArray);
-        }
-      });
+      Application.get().invokeLater(() -> OpenSourceUtil.navigate(navigatableArray));
       DialogWrapper dialog = DialogWrapper.findInstance(mySourceComponent);
       if (dialog != null && dialog.isModal()) {
         dialog.doCancelAction();

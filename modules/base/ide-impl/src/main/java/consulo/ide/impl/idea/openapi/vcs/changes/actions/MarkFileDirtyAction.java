@@ -16,10 +16,9 @@
 
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
 import consulo.application.dumb.DumbAware;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
@@ -29,9 +28,11 @@ import consulo.virtualFileSystem.VirtualFile;
  * @author yole
  */
 public class MarkFileDirtyAction extends AnAction implements DumbAware {
+  @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
-    final VirtualFile file = e.getData(PlatformDataKeys.VIRTUAL_FILE);
+    final Project project = e.getData(Project.KEY);
+    final VirtualFile file = e.getData(VirtualFile.KEY);
     if (file != null) {
       VcsDirtyScopeManager.getInstance(project).fileDirty(file);
     }

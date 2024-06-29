@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.xdebugger.impl.frame;
 
 import consulo.dataContext.DataManager;
-import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataProvider;
 import consulo.application.ApplicationManager;
 import consulo.util.lang.Comparing;
@@ -130,10 +129,7 @@ public class XVariablesView extends XVariablesViewBase implements DataProvider {
   @Nullable
   @Override
   public Object getData(@Nonnull Key<?> dataId) {
-    if (CommonDataKeys.VIRTUAL_FILE == dataId) {
-      return getCurrentFile(getTree());
-    }
-    return null;
+    return VirtualFile.KEY == dataId ? getCurrentFile(getTree()) : null;
   }
 
   public static class InlineVariablesInfo {
@@ -182,10 +178,7 @@ public class XVariablesView extends XVariablesViewBase implements DataProvider {
         if (o == null || getClass() != o.getClass()) return false;
 
         Entry entry = (Entry)o;
-
-        if (!myNode.equals(entry.myNode)) return false;
-
-        return true;
+        return myNode.equals(entry.myNode);
       }
 
       @Override

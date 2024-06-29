@@ -16,14 +16,12 @@
 
 package consulo.ide.impl.idea.openapi.editor.actions;
 
-import consulo.language.editor.DaemonCodeAnalyzer;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.action.ToggleAction;
 import consulo.codeEditor.Editor;
+import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.psi.PsiFile;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.ToggleAction;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -32,13 +30,13 @@ import jakarta.annotation.Nullable;
  */
 public class ToggleShowImportPopupsAction extends ToggleAction {
   @Override
-  public boolean isSelected(AnActionEvent e) {
+  public boolean isSelected(@Nonnull AnActionEvent e) {
     PsiFile file = getFile(e);
     return file != null && DaemonCodeAnalyzer.getInstance(file.getProject()).isImportHintsEnabled(file);
   }
 
   @Override
-  public void setSelected(AnActionEvent e, boolean state) {
+  public void setSelected(@Nonnull AnActionEvent e, boolean state) {
     PsiFile file = getFile(e);
     if (file != null) {
       DaemonCodeAnalyzer.getInstance(file.getProject()).setImportHintsEnabled(file, state);
@@ -56,7 +54,7 @@ public class ToggleShowImportPopupsAction extends ToggleAction {
 
   @Nullable
   private static PsiFile getFile(AnActionEvent e) {
-    Editor editor = e.getData(CommonDataKeys.EDITOR);
-    return editor == null ? null : e.getData(CommonDataKeys.PSI_FILE);
+    Editor editor = e.getData(Editor.KEY);
+    return editor == null ? null : e.getData(PsiFile.KEY);
   }
 }

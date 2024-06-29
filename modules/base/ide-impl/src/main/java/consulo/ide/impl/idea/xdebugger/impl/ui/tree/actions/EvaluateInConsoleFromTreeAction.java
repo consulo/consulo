@@ -1,9 +1,10 @@
 package consulo.ide.impl.idea.xdebugger.impl.ui.tree.actions;
 
 import consulo.execution.ui.console.ConsoleExecuteAction;
+import consulo.execution.ui.console.ConsoleView;
 import consulo.ide.impl.idea.xdebugger.impl.actions.handlers.XEvaluateInConsoleFromEditorActionHandler;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
-import consulo.execution.ExecutionDataKeys;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 
 import jakarta.annotation.Nonnull;
@@ -16,6 +17,7 @@ public class EvaluateInConsoleFromTreeAction extends XAddToWatchesTreeAction {
   }
 
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
     if (getConsoleExecuteAction(e) != null) {
       e.getPresentation().setVisible(true);
@@ -28,7 +30,7 @@ public class EvaluateInConsoleFromTreeAction extends XAddToWatchesTreeAction {
 
   @Nullable
   private static ConsoleExecuteAction getConsoleExecuteAction(@Nonnull AnActionEvent e) {
-    return XEvaluateInConsoleFromEditorActionHandler.getConsoleExecuteAction(e.getData(ExecutionDataKeys.CONSOLE_VIEW));
+    return XEvaluateInConsoleFromEditorActionHandler.getConsoleExecuteAction(e.getData(ConsoleView.KEY));
   }
 
   @Override

@@ -16,15 +16,14 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.actions;
 
 import consulo.ide.newModule.NewOrImportModuleUtil;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import consulo.project.ProjectBundle;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.newProject.ui.NewProjectDialog;
 import consulo.ide.impl.newProject.ui.NewProjectPanel;
@@ -40,17 +39,17 @@ import jakarta.annotation.Nonnull;
  */
 public class NewModuleAction extends AnAction implements DumbAware {
   public NewModuleAction() {
-    super(ProjectBundle.message("module.new.action"), ProjectBundle.message("module.new.action.description"), null);
+    super(ProjectLocalize.moduleNewAction(), ProjectLocalize.moduleNewActionDescription(), null);
   }
 
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e == null ? null : e.getData(CommonDataKeys.PROJECT);
+    final Project project = e == null ? null : e.getData(Project.KEY);
     if (project == null) {
       return;
     }
-    final VirtualFile virtualFile = e.getData(CommonDataKeys.VIRTUAL_FILE);
+    final VirtualFile virtualFile = e.getData(VirtualFile.KEY);
 
     final ModuleManager moduleManager = ModuleManager.getInstance(project);
     FileChooserDescriptor fileChooserDescriptor = new FileChooserDescriptor(false, true, false, false, false, false) {
@@ -69,7 +68,7 @@ public class NewModuleAction extends AnAction implements DumbAware {
         return true;
       }
     };
-    fileChooserDescriptor.setTitle(ProjectBundle.message("choose.module.home"));
+    fileChooserDescriptor.withTitleValue(ProjectLocalize.chooseModuleHome());
 
 
     AsyncResult<VirtualFile> chooseAsync = FileChooser.chooseFile(fileChooserDescriptor, project, virtualFile != null && virtualFile.isDirectory() ? virtualFile : null);
@@ -87,6 +86,6 @@ public class NewModuleAction extends AnAction implements DumbAware {
   @Override
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);
-    e.getPresentation().setEnabled(e.getData(CommonDataKeys.PROJECT) != null);
+    e.getPresentation().setEnabled(e.getData(Project.KEY) != null);
   }
 }

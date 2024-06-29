@@ -20,11 +20,11 @@
  */
 package consulo.ide.impl.idea.refactoring.inline;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.language.editor.refactoring.RefactoringBundle;
@@ -46,13 +46,14 @@ public class InlineRefactoringActionHandler implements RefactoringActionHandler 
   private static final String REFACTORING_NAME = RefactoringBundle.message("inline.title");
 
   @Override
+  @RequiredReadAction
   public void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, DataContext dataContext) {
     LOG.assertTrue(elements.length == 1);
     if (dataContext == null) {
       dataContext = DataManager.getInstance().getDataContext();
     }
     final Editor editor = dataContext.getData(PlatformDataKeys.EDITOR);
-    for(InlineActionHandler handler: InlineActionHandler.EP_NAME.getExtensionList()) {
+    for (InlineActionHandler handler: InlineActionHandler.EP_NAME.getExtensionList()) {
       if (handler.canInlineElement(elements[0])) {
         handler.inlineElement(project, editor, elements [0]);
         return;
@@ -63,15 +64,16 @@ public class InlineRefactoringActionHandler implements RefactoringActionHandler 
   }
 
   @Override
+  @RequiredReadAction
   public void invoke(@Nonnull final Project project, Editor editor, PsiFile file, DataContext dataContext) {
     editor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
 
-    PsiElement element = dataContext.getData(LangDataKeys.PSI_ELEMENT);
+    PsiElement element = dataContext.getData(PsiElement.KEY);
     if (element == null) {
       element = BaseRefactoringAction.getElementAtCaret(editor, file);
     }
     if (element != null) {
-      for(InlineActionHandler handler: InlineActionHandler.EP_NAME.getExtensionList()) {
+      for (InlineActionHandler handler: InlineActionHandler.EP_NAME.getExtensionList()) {
         if (handler.canInlineElementInEditor(element, editor)) {
           handler.inlineElement(project, editor, element);
           return;
@@ -85,6 +87,7 @@ public class InlineRefactoringActionHandler implements RefactoringActionHandler 
     }
   }
 
+  @RequiredReadAction
   public static boolean invokeInliner(@Nullable Editor editor, PsiElement element) {
     final List<InlineHandler> handlers = InlineHandler.forLanguage(element.getLanguage());
     for (InlineHandler handler : handlers) {

@@ -15,66 +15,63 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.update;
 
-import consulo.language.editor.PlatformDataKeys;
-import consulo.localHistory.Label;
 import consulo.application.AllIcons;
-import consulo.ui.ex.awt.tree.DefaultTreeExpander;
-import consulo.ui.ex.TreeExpander;
-import consulo.application.ApplicationManager;
-import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.application.dumb.DumbAware;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.awt.*;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.ui.PanelWithActionsAndCloseButton;
-import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesBrowserUseCase;
-import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesCache;
-import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesTreeBrowser;
-import consulo.ide.impl.idea.openapi.vcs.changes.committed.RefreshIncomingChangesAction;
-import consulo.versionControlSystem.VcsConfiguration;
-import consulo.versionControlSystem.VcsDataKeys;
-import consulo.versionControlSystem.update.ActionInfo;
-import consulo.versionControlSystem.update.FileGroup;
-import consulo.versionControlSystem.update.UpdatedFiles;
-import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.ui.ex.action.*;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
-import consulo.versionControlSystem.FilePath;
-import consulo.versionControlSystem.VcsBundle;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
 import consulo.content.scope.PackageSet;
 import consulo.content.scope.PackageSetBase;
-import consulo.ide.impl.idea.ui.*;
-import consulo.ui.ex.content.ContentManager;
-import consulo.ui.ex.awt.tree.Tree;
-import consulo.ui.ex.awt.EditSourceOnDoubleClickHandler;
-import consulo.ide.impl.idea.util.EditSourceOnEnterKeyHandler;
-import consulo.ui.ex.awt.tree.TreeUtil;
-import consulo.versionControlSystem.util.VcsUtil;
 import consulo.disposer.Disposer;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
+import consulo.ide.impl.idea.openapi.ui.PanelWithActionsAndCloseButton;
+import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesBrowserUseCase;
+import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesCache;
+import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesTreeBrowser;
+import consulo.ide.impl.idea.openapi.vcs.changes.committed.RefreshIncomingChangesAction;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.ide.impl.idea.ui.SelectionSaver;
+import consulo.ide.impl.idea.ui.SmartExpander;
+import consulo.ide.impl.idea.util.EditSourceOnEnterKeyHandler;
+import consulo.language.editor.PlatformDataKeys;
+import consulo.localHistory.Label;
+import consulo.localize.LocalizeValue;
+import consulo.navigation.Navigatable;
+import consulo.project.Project;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.TreeExpander;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
+import consulo.ui.ex.awt.tree.DefaultTreeExpander;
+import consulo.ui.ex.awt.tree.Tree;
+import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.content.ContentManager;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Pair;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.VcsConfiguration;
+import consulo.versionControlSystem.VcsDataKeys;
+import consulo.versionControlSystem.localize.VcsLocalize;
+import consulo.versionControlSystem.update.ActionInfo;
+import consulo.versionControlSystem.update.FileGroup;
+import consulo.versionControlSystem.update.UpdatedFiles;
+import consulo.versionControlSystem.util.VcsUtil;
+import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusListener;
 import consulo.virtualFileSystem.status.FileStatusManager;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.List;
 import java.util.*;
@@ -183,22 +180,20 @@ public class UpdateInfoTree extends PanelWithActionsAndCloseButton {
     SelectionSaver.installOn(myTree);
     createTreeModel();
 
-    myTree.addTreeSelectionListener(new TreeSelectionListener() {
-      public void valueChanged(TreeSelectionEvent e) {
-        AbstractTreeNode treeNode = (AbstractTreeNode)e.getPath().getLastPathComponent();
-        VirtualFilePointer pointer = null;
-        if (treeNode instanceof FileTreeNode) {
-          pointer = ((FileTreeNode)treeNode).getFilePointer();
-          if (!pointer.isValid()) pointer = null;
-        }
-        if (pointer != null) {
-          mySelectedUrl = getFilePath(pointer);
-          mySelectedFile = pointer.getFile();
-        }
-        else {
-          mySelectedUrl = null;
-          mySelectedFile = null;
-        }
+    myTree.addTreeSelectionListener(e -> {
+      AbstractTreeNode treeNode = (AbstractTreeNode)e.getPath().getLastPathComponent();
+      VirtualFilePointer pointer = null;
+      if (treeNode instanceof FileTreeNode) {
+        pointer = ((FileTreeNode)treeNode).getFilePointer();
+        if (!pointer.isValid()) pointer = null;
+      }
+      if (pointer != null) {
+        mySelectedUrl = getFilePath(pointer);
+        mySelectedFile = pointer.getFile();
+      }
+      else {
+        mySelectedUrl = null;
+        mySelectedFile = null;
       }
     });
     myTree.setCellRenderer(new UpdateTreeCellRenderer());
@@ -212,6 +207,7 @@ public class UpdateInfoTree extends PanelWithActionsAndCloseButton {
     }, true);
 
     myTree.addMouseListener(new PopupHandler() {
+      @Override
       public void invokePopup(Component comp, int x, int y) {
         final DefaultActionGroup group = (DefaultActionGroup)ActionManager.getInstance().getAction("UpdateActionGroup");
         if (group != null) { //if no UpdateActionGroup was configured
@@ -247,11 +243,11 @@ public class UpdateInfoTree extends PanelWithActionsAndCloseButton {
     if (myTreeBrowser != null && myTreeBrowser.isVisible()) {
       return null;
     }
-    if (CommonDataKeys.NAVIGATABLE == dataId) {
+    if (Navigatable.KEY == dataId) {
       if (mySelectedFile == null || !mySelectedFile.isValid()) return null;
       return new OpenFileDescriptorImpl(myProject, mySelectedFile);
     }
-    else if (CommonDataKeys.VIRTUAL_FILE_ARRAY == dataId) {
+    else if (VirtualFile.KEY_OF_ARRAY == dataId) {
       return getVirtualFileArray();
     }
     else if (VcsDataKeys.IO_FILE_ARRAY == dataId) {
@@ -329,7 +325,7 @@ public class UpdateInfoTree extends PanelWithActionsAndCloseButton {
       }
     }
 
-    @jakarta.annotation.Nullable
+    @Nullable
     private GroupTreeNode findParentGroupTreeNode(@Nonnull TreeNode treeNode) {
       TreeNode currentNode = treeNode;
       while (currentNode != null && !(currentNode instanceof GroupTreeNode)) {
@@ -338,12 +334,14 @@ public class UpdateInfoTree extends PanelWithActionsAndCloseButton {
       return (GroupTreeNode)currentNode;
     }
 
+    @Override
     public void remove() {
       throw new UnsupportedOperationException();
     }
   }
 
   private class MyTreeIterable implements Iterable<Pair<FilePath, FileStatus>> {
+    @Override
     public Iterator<Pair<FilePath, FileStatus>> iterator() {
       return new MyTreeIterator();
     }
@@ -361,7 +359,7 @@ public class UpdateInfoTree extends PanelWithActionsAndCloseButton {
     return VfsUtil.toVirtualFileArray(result);
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private File[] getFileArray() {
     ArrayList<File> result = new ArrayList<>();
     TreePath[] selectionPaths = myTree.getSelectionPaths();
@@ -400,7 +398,7 @@ public class UpdateInfoTree extends PanelWithActionsAndCloseButton {
   public void setChangeLists(final List<CommittedChangeList> receivedChanges) {
     final boolean hasEmptyCaches = CommittedChangesCache.getInstance(myProject).hasEmptyCaches();
 
-    ApplicationManager.getApplication().invokeLater(() -> {
+    myProject.getApplication().invokeLater(() -> {
       if (myLoadingChangeListsLabel != null) {
         remove(myLoadingChangeListsLabel);
         myLoadingChangeListsLabel = null;
@@ -410,32 +408,35 @@ public class UpdateInfoTree extends PanelWithActionsAndCloseButton {
       if (hasEmptyCaches) {
         final StatusText statusText = myTreeBrowser.getEmptyText();
         statusText.clear();
-        statusText.appendText("Click ").appendText("Refresh", SimpleTextAttributes.LINK_ATTRIBUTES, new ActionListener() {
-          public void actionPerformed(final ActionEvent e) {
-            RefreshIncomingChangesAction.doRefresh(myProject);
-          }
-        }).appendText(" to initialize repository changes cache");
+        statusText.appendText("Click ").appendText(
+          "Refresh",
+          SimpleTextAttributes.LINK_ATTRIBUTES,
+          e -> RefreshIncomingChangesAction.doRefresh(myProject)
+        ).appendText(" to initialize repository changes cache");
       }
     }, myProject.getDisposed());
   }
 
   private class MyGroupByPackagesAction extends ToggleAction implements DumbAware {
     public MyGroupByPackagesAction() {
-      super(VcsBundle.message("action.name.group.by.packages"), null, AllIcons.Actions.GroupByPackage);
+      super(VcsLocalize.actionNameGroupByPackages(), LocalizeValue.empty(), AllIcons.Actions.GroupByPackage);
     }
 
-    public boolean isSelected(AnActionEvent e) {
+    @Override
+    public boolean isSelected(@Nonnull AnActionEvent e) {
       return !myProject.isDisposed() && VcsConfiguration.getInstance(myProject).UPDATE_GROUP_BY_PACKAGES;
     }
 
-    public void setSelected(AnActionEvent e, boolean state) {
+    @Override
+    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
       if (!myProject.isDisposed()) {
         VcsConfiguration.getInstance(myProject).UPDATE_GROUP_BY_PACKAGES = state;
         updateTreeModel();
       }
     }
 
-    public void update(final AnActionEvent e) {
+    @Override
+    public void update(@Nonnull final AnActionEvent e) {
       super.update(e);
       e.getPresentation().setEnabled(!myGroupByChangeList);
     }
@@ -443,14 +444,16 @@ public class UpdateInfoTree extends PanelWithActionsAndCloseButton {
 
   private class GroupByChangeListAction extends ToggleAction implements DumbAware {
     public GroupByChangeListAction() {
-      super(VcsBundle.message("update.info.group.by.changelist"), null, AllIcons.Actions.ShowAsTree);
+      super(VcsLocalize.updateInfoGroupByChangelist(), LocalizeValue.empty(), AllIcons.Actions.ShowAsTree);
     }
 
-    public boolean isSelected(AnActionEvent e) {
+    @Override
+    public boolean isSelected(@Nonnull AnActionEvent e) {
       return myGroupByChangeList;
     }
 
-    public void setSelected(AnActionEvent e, boolean state) {
+    @Override
+    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
       myGroupByChangeList = state;
       VcsConfiguration.getInstance(myProject).UPDATE_GROUP_BY_CHANGELIST = myGroupByChangeList;
       final CardLayout cardLayout = (CardLayout)myCenterPanel.getLayout();
@@ -462,7 +465,8 @@ public class UpdateInfoTree extends PanelWithActionsAndCloseButton {
       }
     }
 
-    public void update(final AnActionEvent e) {
+    @Override
+    public void update(@Nonnull final AnActionEvent e) {
       super.update(e);
       e.getPresentation().setVisible(myCanGroupByChangeList);
     }
@@ -493,7 +497,7 @@ public class UpdateInfoTree extends PanelWithActionsAndCloseButton {
     return null;
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private String getFilterScopeName() {
     return VcsConfiguration.getInstance(myProject).UPDATE_FILTER_SCOPE_NAME;
   }
@@ -506,22 +510,23 @@ public class UpdateInfoTree extends PanelWithActionsAndCloseButton {
 
   private class FilterAction extends ToggleAction implements DumbAware {
     public FilterAction() {
-      super("Scope Filter", VcsBundle.message("settings.filter.update.project.info.by.scope"), AllIcons.General.Filter);
+      super(LocalizeValue.localizeTODO("Scope Filter"), VcsLocalize.settingsFilterUpdateProjectInfoByScope(), AllIcons.General.Filter);
     }
 
     @Override
-    public boolean isSelected(AnActionEvent e) {
+    public boolean isSelected(@Nonnull AnActionEvent e) {
       return myShowOnlyFilteredItems;
     }
 
     @Override
-    public void setSelected(AnActionEvent e, boolean state) {
+    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
       myShowOnlyFilteredItems = state;
       VcsConfiguration.getInstance(myProject).UPDATE_FILTER_BY_SCOPE = myShowOnlyFilteredItems;
       updateTreeModel();
     }
 
-    public void update(AnActionEvent e) {
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
       super.update(e);
       e.getPresentation().setEnabled(!myGroupByChangeList && getFilterScopeName() != null);
     }

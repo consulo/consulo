@@ -15,12 +15,13 @@
  */
 package consulo.ide.impl.idea.usages.impl.rules;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.file.inject.VirtualFileWindow;
-import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.TypeSafeDataProvider;
 import consulo.fileEditor.FileEditorManager;
 import consulo.application.dumb.DumbAware;
+import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import consulo.component.util.Iconable;
 import consulo.usage.*;
@@ -143,17 +144,19 @@ public class FileGroupingRule extends SingleParentUsageGroupingRule implements D
     }
 
     @Override
+    @RequiredReadAction
     public void calcData(final Key<?> key, final DataSink sink) {
       if (!isValid()) return;
-      if (key == CommonDataKeys.VIRTUAL_FILE) {
-        sink.put(CommonDataKeys.VIRTUAL_FILE, myFile);
+      if (key == VirtualFile.KEY) {
+        sink.put(VirtualFile.KEY, myFile);
       }
-      if (key == CommonDataKeys.PSI_ELEMENT) {
-        sink.put(CommonDataKeys.PSI_ELEMENT, getPsiFile());
+      if (key == PsiElement.KEY) {
+        sink.put(PsiElement.KEY, getPsiFile());
       }
     }
 
     @Nullable
+    @RequiredReadAction
     public PsiFile getPsiFile() {
       return myFile.isValid() ? PsiManager.getInstance(myProject).findFile(myFile) : null;
     }

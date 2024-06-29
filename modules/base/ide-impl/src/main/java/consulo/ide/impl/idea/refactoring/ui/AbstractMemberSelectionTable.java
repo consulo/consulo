@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.refactoring.ui;
 
-import consulo.language.editor.CommonDataKeys;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.TypeSafeDataProvider;
 import consulo.language.editor.refactoring.ui.EnableDisableAction;
@@ -166,10 +166,10 @@ public abstract class AbstractMemberSelectionTable<T extends PsiElement, M exten
 
   @Override
   public void calcData(final Key key, final DataSink sink) {
-    if (key == CommonDataKeys.PSI_ELEMENT) {
+    if (key == PsiElement.KEY) {
       final Collection<M> memberInfos = getSelectedMemberInfos();
       if (memberInfos.size() > 0) {
-        sink.put(CommonDataKeys.PSI_ELEMENT, memberInfos.iterator().next().getMember());
+        sink.put(PsiElement.KEY, memberInfos.iterator().next().getMember());
       }
     }
   }
@@ -319,10 +319,10 @@ public abstract class AbstractMemberSelectionTable<T extends PsiElement, M exten
     @Override
     public void setValueAt(final Object aValue, final int rowIndex, final int columnIndex) {
       if (columnIndex == CHECKED_COLUMN) {
-        myTable.myMemberInfos.get(rowIndex).setChecked(((Boolean)aValue).booleanValue());
+        myTable.myMemberInfos.get(rowIndex).setChecked((Boolean)aValue);
       }
       else if (columnIndex == ABSTRACT_COLUMN) {
-        myTable.myMemberInfos.get(rowIndex).setToAbstract(((Boolean)aValue).booleanValue());
+        myTable.myMemberInfos.get(rowIndex).setToAbstract((Boolean)aValue);
       }
 
       Collection<M> changed = Collections.singletonList(myTable.myMemberInfos.get(rowIndex));
@@ -374,8 +374,8 @@ public abstract class AbstractMemberSelectionTable<T extends PsiElement, M exten
     }
 
     @Override
+    @RequiredReadAction
     public void customizeCellRenderer(JTable table, final Object value, boolean isSelected, boolean hasFocus, final int row, final int column) {
-
       final int modelColumn = myTable.convertColumnIndexToModel(column);
       final M memberInfo = myTable.myMemberInfos.get(row);
       setToolTipText(myTable.myMemberInfoModel.getTooltipText(memberInfo));
@@ -410,6 +410,7 @@ public abstract class AbstractMemberSelectionTable<T extends PsiElement, M exten
 
   }
 
+  @RequiredReadAction
   protected Image getMemberIcon(M memberInfo, @Iconable.IconFlags int flags) {
     return IconDescriptorUpdaters.getIcon(memberInfo.getMember(), flags);
   }

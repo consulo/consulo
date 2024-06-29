@@ -15,13 +15,12 @@
  */
 package consulo.ide.impl.idea.openapi.fileChooser.actions;
 
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.ui.ex.action.Presentation;
 import consulo.application.Application;
 import consulo.ide.impl.idea.openapi.fileChooser.FileSystemTree;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nullable;
 
 public final class GotoProjectDirectory extends FileChooserAction {
@@ -29,12 +28,7 @@ public final class GotoProjectDirectory extends FileChooserAction {
   protected void actionPerformed(final FileSystemTree fileSystemTree, final AnActionEvent e) {
     final VirtualFile projectPath = getProjectDir(e);
     if (projectPath != null) {
-      fileSystemTree.select(projectPath, new Runnable() {
-        @Override
-        public void run() {
-          fileSystemTree.expand(projectPath, null);
-        }
-      });
+      fileSystemTree.select(projectPath, () -> fileSystemTree.expand(projectPath, null));
     }
   }
 
@@ -48,7 +42,7 @@ public final class GotoProjectDirectory extends FileChooserAction {
 
   @Nullable
   private static VirtualFile getProjectDir(final AnActionEvent e) {
-    final VirtualFile projectFileDir = e.getData(PlatformDataKeys.PROJECT_FILE_DIRECTORY);
+    final VirtualFile projectFileDir = e.getData(Project.PROJECT_FILE_DIRECTORY);
     return projectFileDir != null && projectFileDir.isValid() ? projectFileDir : null;
   }
 }

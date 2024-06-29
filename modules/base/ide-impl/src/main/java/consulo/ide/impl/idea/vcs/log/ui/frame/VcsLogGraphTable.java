@@ -16,36 +16,15 @@
 package consulo.ide.impl.idea.vcs.log.ui.frame;
 
 import com.google.common.primitives.Ints;
-import consulo.ui.ex.CopyProvider;
-import consulo.ui.ex.JBColor;
+import consulo.application.util.DateFormatUtil;
+import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.ui.ex.awt.CopyPasteManager;
-import consulo.ui.ex.awt.LoadingDecorator;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.*;
-import consulo.util.dataholder.Key;
-import consulo.util.lang.Pair;
-import consulo.application.util.registry.Registry;
-import consulo.util.lang.Couple;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
-import consulo.ui.ex.awt.table.JBTable;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.application.util.DateFormatUtil;
-import consulo.versionControlSystem.log.VcsCommitStyleFactory;
-import consulo.versionControlSystem.log.VcsLogHighlighter;
-import consulo.versionControlSystem.log.VcsShortCommitDetails;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogDataImpl;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogProgress;
 import consulo.ide.impl.idea.vcs.log.data.VisiblePack;
 import consulo.ide.impl.idea.vcs.log.graph.DefaultColorGenerator;
-import consulo.versionControlSystem.log.graph.RowInfo;
-import consulo.versionControlSystem.log.graph.RowType;
-import consulo.versionControlSystem.log.graph.VisibleGraph;
-import consulo.versionControlSystem.log.graph.action.GraphAnswer;
-import consulo.versionControlSystem.log.util.VcsLogUtil;
 import consulo.ide.impl.idea.vcs.log.paint.GraphCellPainter;
 import consulo.ide.impl.idea.vcs.log.paint.SimpleGraphCellPainter;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogActionPlaces;
@@ -56,10 +35,28 @@ import consulo.ide.impl.idea.vcs.log.ui.render.GraphCommitCell;
 import consulo.ide.impl.idea.vcs.log.ui.render.GraphCommitCellRenderer;
 import consulo.ide.impl.idea.vcs.log.ui.tables.GraphTableModel;
 import consulo.logging.Logger;
+import consulo.ui.ex.CopyProvider;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
+import consulo.ui.ex.awt.table.JBTable;
+import consulo.util.dataholder.Key;
+import consulo.util.lang.Couple;
+import consulo.util.lang.Pair;
+import consulo.versionControlSystem.log.VcsCommitStyleFactory;
+import consulo.versionControlSystem.log.VcsLogHighlighter;
+import consulo.versionControlSystem.log.VcsShortCommitDetails;
+import consulo.versionControlSystem.log.graph.RowInfo;
+import consulo.versionControlSystem.log.graph.RowType;
+import consulo.versionControlSystem.log.graph.VisibleGraph;
+import consulo.versionControlSystem.log.graph.action.GraphAnswer;
+import consulo.versionControlSystem.log.util.VcsLogUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import gnu.trove.TIntHashSet;
-import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -70,10 +67,8 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
-import java.util.Collection;
-import java.util.Date;
-import java.util.EventObject;
 import java.util.List;
+import java.util.*;
 
 import static consulo.versionControlSystem.log.VcsLogHighlighter.TextStyle.BOLD;
 import static consulo.versionControlSystem.log.VcsLogHighlighter.TextStyle.ITALIC;
@@ -106,7 +101,7 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
   @Nullable private Selection mySelection = null;
 
   @Nonnull
-  private final Collection<VcsLogHighlighter> myHighlighters = ContainerUtil.newArrayList();
+  private final Collection<VcsLogHighlighter> myHighlighters = new ArrayList<>();
 
   public VcsLogGraphTable(@Nonnull VcsLogUiImpl ui, @Nonnull VcsLogDataImpl logData, @Nonnull VisiblePack initialDataPack) {
     super(new GraphTableModel(initialDataPack, logData, ui));
@@ -299,10 +294,7 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
   @Nullable
   @Override
   public Object getData(@Nonnull @NonNls Key dataId) {
-    if (PlatformDataKeys.COPY_PROVIDER == dataId) {
-      return this;
-    }
-    return null;
+    return KEY == dataId ? this : null;
   }
 
   @Override
@@ -344,11 +336,13 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
   }
 
   @Nonnull
-  public SimpleTextAttributes applyHighlighters(@Nonnull Component rendererComponent,
-                                                int row,
-                                                int column,
-                                                boolean hasFocus,
-                                                final boolean selected) {
+  public SimpleTextAttributes applyHighlighters(
+    @Nonnull Component rendererComponent,
+    int row,
+    int column,
+    boolean hasFocus,
+    final boolean selected
+  ) {
     VcsLogHighlighter.VcsCommitStyle style = getStyle(row, column, hasFocus, selected);
 
     assert style.getBackground() != null && style.getForeground() != null && style.getTextStyle() != null;
@@ -369,7 +363,7 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
   public VcsLogHighlighter.VcsCommitStyle getBaseStyle(int row, int column, boolean hasFocus, boolean selected) {
     Component dummyRendererComponent = myDummyRenderer.getTableCellRendererComponent(this, "", selected, hasFocus, row, column);
     return VcsCommitStyleFactory
-            .createStyle(dummyRendererComponent.getForeground(), dummyRendererComponent.getBackground(), VcsLogHighlighter.TextStyle.NORMAL);
+      .createStyle(dummyRendererComponent.getForeground(), dummyRendererComponent.getBackground(), VcsLogHighlighter.TextStyle.NORMAL);
   }
 
   private VcsLogHighlighter.VcsCommitStyle getStyle(int row, int column, boolean hasFocus, boolean selected) {
@@ -391,14 +385,14 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
     if (details == null) return defaultStyle;
 
     List<VcsLogHighlighter.VcsCommitStyle> styles =
-            ContainerUtil.map(myHighlighters, highlighter -> highlighter.getStyle(details, selected));
+      ContainerUtil.map(myHighlighters, highlighter -> highlighter.getStyle(details, selected));
     return VcsCommitStyleFactory.combine(ContainerUtil.append(styles, defaultStyle));
   }
 
   public void viewportSet(JViewport viewport) {
     viewport.addChangeListener(e -> {
       AbstractTableModel model = getModel();
-      consulo.util.lang.Couple<Integer> visibleRows = ScrollingUtil.getVisibleRows(this);
+      Couple<Integer> visibleRows = ScrollingUtil.getVisibleRows(this);
       model.fireTableChanged(new TableModelEvent(model, visibleRows.first - 1, visibleRows.second, GraphTableModel.ROOT_COLUMN));
     });
   }
@@ -711,9 +705,7 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
 
     @Override
     public boolean shouldSelectCell(EventObject anEvent) {
-      if (!(anEvent instanceof MouseEvent)) return true;
-
-      return myController.findPrintElement((MouseEvent)anEvent) == null;
+      return !(anEvent instanceof MouseEvent mouseEvent && myController.findPrintElement(mouseEvent) != null);
     }
 
     @Override
@@ -820,8 +812,19 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
     @Nonnull
     private MouseEvent convertMouseEvent(@Nonnull MouseEvent e) {
       // create a new event, almost exactly the same, but in the header
-      return new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), e.getX(), 0, e.getXOnScreen(), header.getY(),
-                            e.getClickCount(), e.isPopupTrigger(), e.getButton());
+      return new MouseEvent(
+        e.getComponent(),
+        e.getID(),
+        e.getWhen(),
+        e.getModifiers(),
+        e.getX(),
+        0,
+        e.getXOnScreen(),
+        header.getY(),
+        e.getClickCount(),
+        e.isPopupTrigger(),
+        e.getButton()
+      );
     }
 
     @Override

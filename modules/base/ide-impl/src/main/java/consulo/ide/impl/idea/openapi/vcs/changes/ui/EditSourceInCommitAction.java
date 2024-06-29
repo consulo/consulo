@@ -16,13 +16,12 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.application.AllIcons;
-import consulo.ui.ex.action.ActionsBundle;
+import consulo.navigation.Navigatable;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.ex.OpenSourceUtil;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.navigation.Navigatable;
-import consulo.ui.ex.OpenSourceUtil;
 
 import javax.swing.*;
 
@@ -30,20 +29,19 @@ public class EditSourceInCommitAction extends AnAction {
   private final DialogWrapper myDialogWrapper;
 
   public EditSourceInCommitAction(final DialogWrapper dialogWrapper) {
-    super(ActionsBundle.actionText("EditSource"),
-          ActionsBundle.actionDescription("EditSource"),
-          AllIcons.Actions.EditSource);
+    super(
+      ActionLocalize.actionEditsourceText(),
+      ActionLocalize.actionEditsourceDescription(),
+      AllIcons.Actions.EditSource
+    );
     myDialogWrapper = dialogWrapper;
   }
 
+  @Override
   public void actionPerformed(AnActionEvent e) {
-    final Navigatable[] navigatableArray = e.getData(PlatformDataKeys.NAVIGATABLE_ARRAY);
+    final Navigatable[] navigatableArray = e.getData(Navigatable.KEY_OF_ARRAY);
     if (navigatableArray != null && navigatableArray.length > 0) {
-      SwingUtilities.invokeLater(new Runnable() {
-        public void run() {
-          OpenSourceUtil.navigate(navigatableArray);
-        }
-      });
+      SwingUtilities.invokeLater(() -> OpenSourceUtil.navigate(navigatableArray));
       myDialogWrapper.doCancelAction();
     }
   }

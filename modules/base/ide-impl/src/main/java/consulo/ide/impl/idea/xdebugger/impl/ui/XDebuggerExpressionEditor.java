@@ -23,10 +23,10 @@ import consulo.execution.debug.evaluation.EvaluationMode;
 import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.language.Language;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.dataholder.Key;
@@ -44,37 +44,39 @@ public class XDebuggerExpressionEditor extends XDebuggerEditorBase {
   private final EditorTextField myEditorTextField;
   private XExpression myExpression;
 
-  public XDebuggerExpressionEditor(Project project,
-                                   @Nonnull XDebuggerEditorsProvider debuggerEditorsProvider,
-                                   @Nullable @NonNls String historyId,
-                                   @Nullable XSourcePosition sourcePosition,
-                                   @Nonnull XExpression text,
-                                   final boolean multiline,
-                                   boolean editorFont,
-                                   boolean showEditor) {
+  public XDebuggerExpressionEditor(
+    Project project,
+    @Nonnull XDebuggerEditorsProvider debuggerEditorsProvider,
+    @Nullable @NonNls String historyId,
+    @Nullable XSourcePosition sourcePosition,
+    @Nonnull XExpression text,
+    final boolean multiline,
+    boolean editorFont,
+    boolean showEditor
+  ) {
     super(project, debuggerEditorsProvider, multiline ? EvaluationMode.CODE_FRAGMENT : EvaluationMode.EXPRESSION, historyId, sourcePosition);
     myExpression = XExpression.changeMode(text, getMode());
-    myEditorTextField =
-            new EditorTextField(createDocument(myExpression), project, debuggerEditorsProvider.getFileType(), false, !multiline) {
-              @Override
-              protected EditorEx createEditor() {
-                final EditorEx editor = super.createEditor();
-                editor.setVerticalScrollbarVisible(multiline);
-                editor.getColorsScheme().setEditorFontName(getFont().getFontName());
-                editor.getColorsScheme().setEditorFontSize(getFont().getSize());
-                return editor;
-              }
+    myEditorTextField = new EditorTextField(createDocument(myExpression), project, debuggerEditorsProvider.getFileType(), false, !multiline) {
+      @Override
+      protected EditorEx createEditor() {
+        final EditorEx editor = super.createEditor();
+        editor.setVerticalScrollbarVisible(multiline);
+        editor.getColorsScheme().setEditorFontName(getFont().getFontName());
+        editor.getColorsScheme().setEditorFontSize(getFont().getSize());
+        return editor;
+      }
 
-              @Override
-              public Object getData(@Nonnull Key dataId) {
-                if (LangDataKeys.CONTEXT_LANGUAGES == dataId) {
-                  return new Language[]{myExpression.getLanguage()};
-                } else if (CommonDataKeys.PSI_FILE == dataId) {
-                  return PsiDocumentManager.getInstance(getProject()).getPsiFile(getDocument());
-                }
-                return super.getData(dataId);
-              }
-            };
+      @Override
+      public Object getData(@Nonnull Key dataId) {
+        if (LangDataKeys.CONTEXT_LANGUAGES == dataId) {
+          return new Language[]{myExpression.getLanguage()};
+        } else if (PsiFile.KEY == dataId) {
+          return PsiDocumentManager.getInstance(getProject()).getPsiFile(getDocument());
+        }
+        return super.getData(dataId);
+      }
+    };
+
     if (editorFont) {
       myEditorTextField.setFontInheritedFromLAF(false);
       myEditorTextField.setFont(EditorUtil.getEditorFont());

@@ -16,44 +16,41 @@
 package consulo.ide.impl.wm.impl;
 
 import consulo.dataContext.DataManager;
+import consulo.dataContext.DataProvider;
+import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.actions.CloseAction;
 import consulo.ide.impl.idea.ide.actions.ShowContentAction;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionManagerImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ui.ex.content.TabbedContent;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.content.Content;
-import consulo.ui.ex.content.ContentManager;
-import consulo.ui.ex.content.event.ContentManagerEvent;
-import consulo.ui.ex.content.event.ContentManagerListener;
-import consulo.ui.ex.action.*;
-import consulo.ui.ex.popup.ListPopup;
-import consulo.ui.ex.toolWindow.ToolWindowContentUiType;
 import consulo.ide.impl.idea.ui.content.tabs.PinToolwindowTabAction;
 import consulo.ide.impl.idea.ui.content.tabs.TabbedContentAction;
-import consulo.ui.ex.awt.util.Alarm;
 import consulo.ide.impl.idea.util.ContentUtilEx;
-import consulo.util.lang.Pair;
-import consulo.util.lang.function.Condition;
-import consulo.dataContext.DataProvider;
-import consulo.disposer.Disposer;
-import consulo.ui.layout.DockLayout;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.dataholder.Key;
-import consulo.util.lang.ref.Ref;
 import consulo.ide.impl.wm.impl.layout.UnifiedComboContentLayout;
 import consulo.ide.impl.wm.impl.layout.UnifiedContentLayout;
 import consulo.ide.impl.wm.impl.layout.UnifiedTabContentLayout;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ex.content.Content;
+import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.content.TabbedContent;
+import consulo.ui.ex.content.event.ContentManagerEvent;
+import consulo.ui.ex.content.event.ContentManagerListener;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.ex.popup.ListPopup;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindowContentUiType;
+import consulo.ui.layout.DockLayout;
+import consulo.util.dataholder.Key;
+import consulo.util.lang.Pair;
+import consulo.util.lang.ref.Ref;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -195,12 +192,10 @@ public class UnifiedToolWindowContentUI implements ToolWindowContentUI, Property
     getCurrentLayout().rebuild();
     getCurrentLayout().update();
 
-
     if (myManager.getContentCount() == 0 && myWindow.isToHideOnEmptyContent()) {
       myWindow.hide(null);
     }
   }
-
 
   /*@Override
   public void doLayout() {
@@ -294,7 +289,6 @@ public class UnifiedToolWindowContentUI implements ToolWindowContentUI, Property
     return getCurrentLayout().getNextContentActionName();
   }
 
-
   private void initActionGroup(DefaultActionGroup group, final Content content) {
     if (content == null) {
       return;
@@ -340,7 +334,8 @@ public class UnifiedToolWindowContentUI implements ToolWindowContentUI, Property
       group.addAll(toolWindowGroup);
     }
 
-    final ActionPopupMenu popupMenu = ((ActionManagerImpl)ActionManager.getInstance()).createActionPopupMenu(POPUP_PLACE, group, new MenuItemPresentationFactory(true));
+    final ActionPopupMenu popupMenu =
+      ((ActionManagerImpl)ActionManager.getInstance()).createActionPopupMenu(POPUP_PLACE, group, new MenuItemPresentationFactory(true));
     popupMenu.getComponent().show(comp, x, y);
   }
 
@@ -360,7 +355,7 @@ public class UnifiedToolWindowContentUI implements ToolWindowContentUI, Property
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
         final Content selectedContent = manager.getSelectedContent();
-        final List<Pair<String, JComponent>> tabs = new ArrayList<Pair<String, JComponent>>();
+        final List<Pair<String, JComponent>> tabs = new ArrayList<>();
         int selectedTab = -1;
         for (Content content : manager.getContents()) {
           if (tabPrefix.equals(content.getUserData(Content.TAB_GROUP_NAME_KEY))) {
@@ -396,7 +391,7 @@ public class UnifiedToolWindowContentUI implements ToolWindowContentUI, Property
   @Override
   @Nullable
   public Object getData(@Nonnull @NonNls Key<?> dataId) {
-    if (PlatformDataKeys.TOOL_WINDOW == dataId) return myWindow;
+    if (ToolWindow.KEY == dataId) return myWindow;
 
     if (CloseAction.CloseTarget.KEY == dataId) {
       return computeCloseTarget();
@@ -501,23 +496,16 @@ public class UnifiedToolWindowContentUI implements ToolWindowContentUI, Property
       }
     }
 
-    final ListPopup popup = JBPopupFactory.getInstance()
-            .createActionGroupPopup(null, new DefaultActionGroup(actions), DataManager.getInstance().getDataContext(myManager.getComponent()), false, true, true, null, -1, new Condition<AnAction>() {
-              @Override
-              public boolean value(AnAction action) {
-                return action == selected.get() || action == selectedTab.get();
-              }
-            });
+    final ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(
+      null, new DefaultActionGroup(actions), DataManager.getInstance().getDataContext(myManager.getComponent()),
+      false, true, true, null, -1,
+      action -> action == selected.get() || action == selectedTab.get()
+    );
 
     getCurrentLayout().showContentPopup(popup);
 
     if (selectedContent instanceof TabbedContent) {
-      new Alarm(Alarm.ThreadToUse.SWING_THREAD, popup).addRequest(new Runnable() {
-        @Override
-        public void run() {
-          popup.handleSelect(true);
-        }
-      }, 30);
+      new Alarm(Alarm.ThreadToUse.SWING_THREAD, popup).addRequest(() -> popup.handleSelect(true), 30);
     }
   }
 }

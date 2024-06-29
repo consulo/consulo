@@ -15,18 +15,14 @@
  */
 package consulo.ide.impl.idea.openapi.diff.impl.dir;
 
+import consulo.application.HelpManager;
+import consulo.application.ui.WindowState;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
-import consulo.language.editor.PlatformDataKeys;
+import consulo.disposer.Disposer;
 import consulo.project.Project;
 import consulo.ui.ex.awt.FrameWrapper;
-import consulo.disposer.Disposer;
-import consulo.util.dataholder.Key;
-import consulo.application.ui.WindowState;
-import org.jetbrains.annotations.NonNls;
-
-import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 
 /**
@@ -46,15 +42,7 @@ public class DirDiffFrame extends FrameWrapper {
       setProject(project);
     }
     closeOnEsc();
-    DataManager.registerDataProvider(myPanel.getPanel(), new DataProvider() {
-      @Override
-      public Object getData(@Nonnull @NonNls Key dataId) {
-        if (PlatformDataKeys.HELP_ID == dataId) {
-          return "reference.dialogs.diff.folder";
-        }
-        return null;
-      }
-    });
+    DataManager.registerDataProvider(myPanel.getPanel(), dataId -> HelpManager.HELP_ID == dataId ? "reference.dialogs.diff.folder" : null);
   }
 
 

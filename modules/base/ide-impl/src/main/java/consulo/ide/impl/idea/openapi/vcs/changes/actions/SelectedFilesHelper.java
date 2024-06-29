@@ -15,12 +15,11 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
-import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -33,8 +32,8 @@ public class SelectedFilesHelper implements Runnable {
 
   private SelectedFilesHelper(final Project project, final AnActionEvent e) {
     myStatusManager = FileStatusManager.getInstance(project);
-    myData = e.getData(PlatformDataKeys.VIRTUAL_FILE_ARRAY);
-    myCheckers = new LinkedList<MyChecker>();
+    myData = e.getData(VirtualFile.KEY_OF_ARRAY);
+    myCheckers = new LinkedList<>();
   }
 
   private void add(final MyChecker checker) {

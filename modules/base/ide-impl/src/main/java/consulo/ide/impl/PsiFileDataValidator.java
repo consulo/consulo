@@ -17,7 +17,6 @@ package consulo.ide.impl;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataValidator;
-import consulo.language.editor.CommonDataKeys;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiFile;
 import jakarta.annotation.Nonnull;
@@ -32,7 +31,7 @@ public class PsiFileDataValidator implements DataValidator<PsiFile> {
   @Nonnull
   @Override
   public Key<PsiFile> getKey() {
-    return CommonDataKeys.PSI_FILE;
+    return PsiFile.KEY;
   }
 
   @Nullable

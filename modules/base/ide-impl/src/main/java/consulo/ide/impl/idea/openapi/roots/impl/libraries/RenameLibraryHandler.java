@@ -16,26 +16,22 @@
 package consulo.ide.impl.idea.openapi.roots.impl.libraries;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.TitledHandler;
-import consulo.undoRedo.ProjectUndoManager;
-import consulo.dataContext.DataContext;
-import consulo.language.editor.LangDataKeys;
-import consulo.application.ApplicationManager;
-import consulo.undoRedo.CommandProcessor;
-import consulo.undoRedo.BasicUndoableAction;
-import consulo.undoRedo.UndoableAction;
-import consulo.undoRedo.UnexpectedUndoException;
-import consulo.logging.Logger;
 import consulo.codeEditor.Editor;
-import consulo.project.Project;
 import consulo.content.library.Library;
-import consulo.ui.ex.InputValidator;
-import consulo.ui.ex.awt.Messages;
-import consulo.util.lang.ref.Ref;
+import consulo.dataContext.DataContext;
+import consulo.ide.impl.idea.ide.TitledHandler;
+import consulo.language.editor.refactoring.rename.RenameHandler;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.editor.refactoring.rename.RenameHandler;
+import consulo.logging.Logger;
+import consulo.platform.base.localize.IdeLocalize;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.InputValidator;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.undoRedo.*;
+import consulo.util.lang.ref.Ref;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -48,7 +44,7 @@ public class RenameLibraryHandler implements RenameHandler, TitledHandler {
 
   @Override
   public boolean isAvailableOnDataContext(DataContext dataContext) {
-    Library library = dataContext.getData(LangDataKeys.LIBRARY);
+    Library library = dataContext.getData(Library.KEY);
     return library != null;
   }
 
@@ -64,19 +60,21 @@ public class RenameLibraryHandler implements RenameHandler, TitledHandler {
 
   @Override
   public void invoke(@Nonnull final Project project, @Nonnull PsiElement[] elements, @Nonnull DataContext dataContext) {
-    final Library library = dataContext.getData(LangDataKeys.LIBRARY);
+    final Library library = dataContext.getData(Library.KEY);
     LOG.assertTrue(library != null);
     Messages.showInputDialog(project,
-                             IdeBundle.message("prompt.enter.new.library.name"),
-                             IdeBundle.message("title.rename.library"),
-                             Messages.getQuestionIcon(),
-                             library.getName(),
-                             new MyInputValidator(project, library));
+      IdeLocalize.promptEnterNewLibraryName().get(),
+      IdeLocalize.titleRenameLibrary().get(),
+      UIUtil.getQuestionIcon(),
+      library.getName(),
+      new MyInputValidator(project, library)
+    );
   }
 
+  @Nonnull
   @Override
   public String getActionTitle() {
-    return IdeBundle.message("title.rename.library");
+    return IdeLocalize.titleRenameLibrary().get();
   }
 
   private static class MyInputValidator implements InputValidator {
@@ -88,46 +86,49 @@ public class RenameLibraryHandler implements RenameHandler, TitledHandler {
     }
 
     @Override
+    @RequiredUIAccess
     public boolean checkInput(String inputString) {
       return inputString != null && !inputString.isEmpty() && myLibrary.getTable().getLibraryByName(inputString) == null;
     }
 
     @Override
+    @RequiredUIAccess
     public boolean canClose(final String inputString) {
       final String oldName = myLibrary.getName();
       final Library.ModifiableModel modifiableModel = renameLibrary(inputString);
       if (modifiableModel == null) return false;
       final Ref<Boolean> success = Ref.create(Boolean.TRUE);
-      CommandProcessor.getInstance().executeCommand(myProject, new Runnable() {
-        @Override
-        public void run() {
-          UndoableAction action = new BasicUndoableAction() {
-            @Override
-            public void undo() throws UnexpectedUndoException {
-              final Library.ModifiableModel modifiableModel = renameLibrary(oldName);
-              if (modifiableModel != null) {
-                modifiableModel.commit();
+      CommandProcessor.getInstance().executeCommand(
+        myProject,
+        new Runnable() {
+          @RequiredUIAccess
+          @Override
+          public void run() {
+            UndoableAction action = new BasicUndoableAction() {
+              @Override
+              public void undo() throws UnexpectedUndoException {
+                final Library.ModifiableModel modifiableModel = renameLibrary(oldName);
+                if (modifiableModel != null) {
+                  modifiableModel.commit();
+                }
               }
-            }
 
-            @Override
-            public void redo() throws UnexpectedUndoException {
-              final Library.ModifiableModel modifiableModel = renameLibrary(inputString);
-              if (modifiableModel != null) {
-                modifiableModel.commit();
+              @Override
+              public void redo() throws UnexpectedUndoException {
+                final Library.ModifiableModel modifiableModel = renameLibrary(inputString);
+                if (modifiableModel != null) {
+                  modifiableModel.commit();
+                }
               }
-            }
-          };
-          ProjectUndoManager.getInstance(myProject).undoableActionPerformed(action);
-          ApplicationManager.getApplication().runWriteAction(new Runnable() {
-            @Override
-            public void run() {
-              modifiableModel.commit();
-            }
-          });
-        }
-      }, IdeBundle.message("command.renaming.module", oldName), null);
-      return success.get().booleanValue();
+            };
+            ProjectUndoManager.getInstance(myProject).undoableActionPerformed(action);
+            myProject.getApplication().runWriteAction(() -> modifiableModel.commit());
+          }
+        },
+        IdeLocalize.commandRenamingModule(oldName).get(),
+        null
+      );
+      return success.get();
     }
 
     @Nullable

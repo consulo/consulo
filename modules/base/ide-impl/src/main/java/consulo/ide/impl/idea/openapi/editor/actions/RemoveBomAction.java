@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
@@ -46,8 +46,9 @@ public class RemoveBomAction extends AnAction implements DumbAware {
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    VirtualFile[] files = e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
+    VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
     if (files == null) {
       return;
     }
@@ -71,15 +72,16 @@ public class RemoveBomAction extends AnAction implements DumbAware {
   }
 
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
-    VirtualFile[] files = e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
+    VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
     if (files == null) {
       e.getPresentation().setEnabled(false);
       return;
     }
 
     boolean enabled = false;
-    for(VirtualFile file:files) {
+    for (VirtualFile file:files) {
       if (file.isDirectory()) {  // Accurate calculation is very costly especially in presence of excluded directories!
         enabled = true;
         break;
@@ -102,7 +104,7 @@ public class RemoveBomAction extends AnAction implements DumbAware {
    */
   @Nonnull
   private static List<VirtualFile> getFilesWithBom(@Nonnull VirtualFile[] roots, boolean all) {
-    List<VirtualFile> result = new ArrayList<VirtualFile>();
+    List<VirtualFile> result = new ArrayList<>();
     for (VirtualFile root : roots) {
       if (!all && !result.isEmpty()) {
         break;
