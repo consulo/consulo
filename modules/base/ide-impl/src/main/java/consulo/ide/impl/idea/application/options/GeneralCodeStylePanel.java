@@ -17,15 +17,13 @@
 package consulo.ide.impl.idea.application.options;
 
 import consulo.application.Application;
-import consulo.application.ApplicationBundle;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.codeEditor.EditorHighlighter;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.internal.ConfigurableUIMigrationUtil;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.application.options.codeStyle.excludedFiles.ExcludedFilesList;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.Language;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.ui.setting.CodeStyleAbstractPanel;
@@ -43,16 +41,14 @@ import consulo.ui.ex.awt.valueEditor.ValueValidationException;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.BalloonBuilder;
 import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.fileType.FileType;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -63,10 +59,10 @@ public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
   @SuppressWarnings("UnusedDeclaration")
   private static final Logger LOG = Logger.getInstance(GeneralCodeStylePanel.class);
 
-  private static final String SYSTEM_DEPENDANT_STRING = ApplicationBundle.message("combobox.crlf.system.dependent");
-  private static final String UNIX_STRING = ApplicationBundle.message("combobox.crlf.unix");
-  private static final String WINDOWS_STRING = ApplicationBundle.message("combobox.crlf.windows");
-  private static final String MACINTOSH_STRING = ApplicationBundle.message("combobox.crlf.mac");
+  private static final String SYSTEM_DEPENDANT_STRING = ApplicationLocalize.comboboxCrlfSystemDependent().get();
+  private static final String UNIX_STRING = ApplicationLocalize.comboboxCrlfUnix().get();
+  private static final String WINDOWS_STRING = ApplicationLocalize.comboboxCrlfWindows().get();
+  private static final String MACINTOSH_STRING = ApplicationLocalize.comboboxCrlfMac().get();
   private final List<GeneralCodeStyleOptionsProvider> myAdditionalOptions;
 
   private IntegerField myRightMarginField;
@@ -100,7 +96,7 @@ public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
     myLineSeparatorCombo.setRenderer(new ColoredListCellRenderer<String>() {
       @Override
       protected void customizeCellRenderer(@Nonnull JList list, String value, int index, boolean selected, boolean hasFocus) {
-        append(consulo.util.lang.StringUtil.notNullize(value));
+        append(StringUtil.notNullize(value));
       }
     });
     //noinspection unchecked
@@ -115,15 +111,14 @@ public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
 
     myRightMarginField.setDefaultValue(settings.getDefaultRightMargin());
 
-    myEnableFormatterTags.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        boolean tagsEnabled = myEnableFormatterTags.isSelected();
-        setFormatterTagControlsEnabled(tagsEnabled);
-      }
+    myEnableFormatterTags.addActionListener(e -> {
+      boolean tagsEnabled = myEnableFormatterTags.isSelected();
+      setFormatterTagControlsEnabled(tagsEnabled);
     });
 
-    myIndentsDetectionPanel.setBorder(IdeBorderFactory.createTitledBorder(ApplicationBundle.message("settings.code.style.general.indents.detection")));
+    myIndentsDetectionPanel.setBorder(IdeBorderFactory.createTitledBorder(
+      ApplicationLocalize.settingsCodeStyleGeneralIndentsDetection().get()
+    ));
 
     myPanel.setBorder(JBUI.Borders.empty(0, 10));
 
@@ -137,7 +132,7 @@ public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
       }
     }
 
-    myVisualGuidesLabel.setText(ApplicationBundle.message("settings.code.style.visual.guides") + ":");
+    myVisualGuidesLabel.setText(ApplicationLocalize.settingsCodeStyleVisualGuides().get() + ":");
     myVisualGuidesHint.setForeground(JBColor.GRAY);
     myVisualGuidesHint.setFont(UIUtil.getLabelFont(UIUtil.FontSize.SMALL));
     myLineSeparatorHint.setForeground(JBColor.GRAY);
@@ -145,16 +140,15 @@ public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
 
     myExcludedFilesList.initModel();
     myToolbarPanel.add(myExcludedFilesList.getDecorator().createPanel());
-    myExcludedFilesPanel.setBorder(IdeBorderFactory.createTitledBorder(ApplicationBundle.message("settings.code.style.general.excluded.files")));
+    myExcludedFilesPanel.setBorder(IdeBorderFactory.createTitledBorder(
+      ApplicationLocalize.settingsCodeStyleGeneralExcludedFiles().get()
+    ));
     if (ourSelectedTabIndex >= 0) {
       myTabbedPane.setSelectedIndex(ourSelectedTabIndex);
     }
-    myTabbedPane.addChangeListener(new ChangeListener() {
-      @Override
-      public void stateChanged(ChangeEvent e) {
-        //noinspection AssignmentToStaticFieldFromInstanceMethod
-        ourSelectedTabIndex = myTabbedPane.getSelectedIndex();
-      }
+    myTabbedPane.addChangeListener(e -> {
+      //noinspection AssignmentToStaticFieldFromInstanceMethod
+      ourSelectedTabIndex = myTabbedPane.getSelectedIndex();
     });
   }
 
@@ -210,8 +204,14 @@ public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
   }
 
   private void createUIComponents() {
-    myRightMarginField = new IntegerField(ApplicationBundle.message("editbox.right.margin.columns"), 0, MAX_RIGHT_MARGIN);
-    myVisualGuides = new CommaSeparatedIntegersField(ApplicationBundle.message("settings.code.style.visual.guides"), 0, MAX_RIGHT_MARGIN, "Optional");
+    myRightMarginField =
+      new IntegerField(ApplicationLocalize.editboxRightMarginColumns().get(), 0, MAX_RIGHT_MARGIN);
+    myVisualGuides = new CommaSeparatedIntegersField(
+      ApplicationLocalize.settingsCodeStyleVisualGuides().get(),
+      0,
+      MAX_RIGHT_MARGIN,
+      "Optional"
+    );
     myExcludedFilesList = new ExcludedFilesList();
   }
 
@@ -222,7 +222,7 @@ public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
     }
     catch (PatternSyntaxException pse) {
       settings.FORMATTER_TAGS_ACCEPT_REGEXP = false;
-      showError(field, ApplicationBundle.message("settings.code.style.general.formatter.marker.invalid.regexp"));
+      showError(field, ApplicationLocalize.settingsCodeStyleGeneralFormatterMarkerInvalidRegexp().get());
       return null;
     }
   }

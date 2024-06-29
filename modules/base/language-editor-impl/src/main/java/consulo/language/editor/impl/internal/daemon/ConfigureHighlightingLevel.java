@@ -17,7 +17,6 @@ package consulo.language.editor.impl.internal.daemon;
 
 import consulo.dataContext.DataContext;
 import consulo.language.Language;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.FileHighlightingSetting;
 import consulo.language.editor.highlight.HighlightLevelUtil;
@@ -112,7 +111,7 @@ public class ConfigureHighlightingLevel {
 
   @Nullable
   public static JBPopup getConfigureHighlightingLevelPopup(DataContext context) {
-    PsiFile psi = context.getData(CommonDataKeys.PSI_FILE);
+    PsiFile psi = context.getData(PsiFile.KEY);
     if (psi == null) {
       return null;
     }

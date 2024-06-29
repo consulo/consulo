@@ -74,9 +74,8 @@ class ActionTracker {
   }
 
   boolean hasAnythingHappened() {
-    return myActionsHappened ||DumbService.getInstance(myProject).isDumb() ||
-           myEditor.isDisposed() ||
-           (myEditor instanceof EditorWindow && !((EditorWindow)myEditor).isValid());
+    return myActionsHappened || DumbService.getInstance(myProject).isDumb() ||
+      myEditor.isDisposed() || (myEditor instanceof EditorWindow editorWindow && !editorWindow.isValid());
   }
 
 }

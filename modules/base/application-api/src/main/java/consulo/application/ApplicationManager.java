@@ -15,6 +15,7 @@
  */
 package consulo.application;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.component.internal.RootComponentHolder;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -34,6 +35,8 @@ public class ApplicationManager {
    * @return <code>Application</code>
    */
   @Nullable
+  @Deprecated
+  @DeprecationInfo("Use Application.get()")
   public static Application getApplication() {
     return ourApplication;
   }

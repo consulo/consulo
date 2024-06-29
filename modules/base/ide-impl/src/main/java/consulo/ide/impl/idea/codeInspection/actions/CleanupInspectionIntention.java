@@ -16,31 +16,31 @@
 
 package consulo.ide.impl.idea.codeInspection.actions;
 
-import consulo.language.editor.FileModificationService;
-import consulo.language.editor.hint.HintManager;
-import consulo.language.editor.intention.BatchQuickFix;
-import consulo.language.editor.intention.SyntheticIntentionAction;
-import consulo.language.editor.intention.EmptyIntentionAction;
-import consulo.language.editor.intention.HighPriorityAction;
-import consulo.language.editor.inspection.*;
-import consulo.language.editor.inspection.scheme.InspectionManager;
-import consulo.language.editor.intention.IntentionAction;
-import consulo.ide.impl.idea.codeInspection.*;
-import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
-import consulo.language.editor.impl.inspection.scheme.LocalInspectionToolWrapper;
-import consulo.ide.impl.idea.codeInspection.ex.PerformFixesModalTask;
-import consulo.undoRedo.CommandProcessor;
-import consulo.logging.Logger;
-import consulo.codeEditor.Editor;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.codeEditor.Editor;
+import consulo.ide.impl.idea.codeInspection.InspectionEngine;
+import consulo.ide.impl.idea.codeInspection.ex.PerformFixesModalTask;
+import consulo.ide.impl.idea.util.SequentialModalProgressTask;
+import consulo.language.editor.FileModificationService;
+import consulo.language.editor.hint.HintManager;
+import consulo.language.editor.impl.inspection.scheme.LocalInspectionToolWrapper;
+import consulo.language.editor.inspection.CommonProblemDescriptor;
+import consulo.language.editor.inspection.ProblemDescriptor;
+import consulo.language.editor.inspection.ProblemDescriptorBase;
+import consulo.language.editor.inspection.QuickFix;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
+import consulo.language.editor.inspection.scheme.InspectionManager;
+import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
+import consulo.language.editor.intention.*;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.util.IncorrectOperationException;
-import consulo.ide.impl.idea.util.SequentialModalProgressTask;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.undoRedo.CommandProcessor;
+import consulo.util.lang.Comparing;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -68,7 +68,7 @@ public class CleanupInspectionIntention implements IntentionAction, HighPriority
   @Override
   @Nonnull
   public String getText() {
-    return InspectionsBundle.message("fix.all.inspection.problems.in.file", myToolWrapper.getDisplayName());
+    return InspectionLocalize.fixAllInspectionProblemsInFile(myToolWrapper.getDisplayName()).get();
   }
 
   @Override
@@ -85,28 +85,35 @@ public class CleanupInspectionIntention implements IntentionAction, HighPriority
     final AbstractPerformFixesTask fixesTask = applyFixes(project, "Apply Fixes", descriptions, myQuickfixClass);
 
     if (!fixesTask.isApplicableFixFound()) {
-      HintManager.getInstance().showErrorHint(editor, "Unfortunately '" + myText + "' is currently not available for batch mode\n User interaction is required for each problem found");
+      HintManager.getInstance().showErrorHint(
+        editor,
+        "Unfortunately '" + myText + "' is currently not available for batch mode\n" +
+          " User interaction is required for each problem found"
+      );
     }
   }
 
-  public static AbstractPerformFixesTask applyFixes(@Nonnull Project project,
-                                                    @Nonnull String presentationText,
-                                                    @Nonnull List<ProblemDescriptor> descriptions,
-                                                    @Nullable Class quickfixClass) {
+  public static AbstractPerformFixesTask applyFixes(
+    @Nonnull Project project,
+    @Nonnull String presentationText,
+    @Nonnull List<ProblemDescriptor> descriptions,
+    @Nullable Class quickfixClass
+  ) {
     sortDescriptions(descriptions);
     return applyFixesNoSort(project, presentationText, descriptions, quickfixClass);
   }
 
-  public static AbstractPerformFixesTask applyFixesNoSort(@Nonnull Project project,
-                                                          @Nonnull String presentationText,
-                                                          @Nonnull List<ProblemDescriptor> descriptions,
-                                                          @Nullable Class quickfixClass) {
-    final SequentialModalProgressTask progressTask =
-            new SequentialModalProgressTask(project, presentationText, true);
+  public static AbstractPerformFixesTask applyFixesNoSort(
+    @Nonnull Project project,
+    @Nonnull String presentationText,
+    @Nonnull List<ProblemDescriptor> descriptions,
+    @Nullable Class quickfixClass
+  ) {
+    final SequentialModalProgressTask progressTask = new SequentialModalProgressTask(project, presentationText, true);
     final boolean isBatch = quickfixClass != null && BatchQuickFix.class.isAssignableFrom(quickfixClass);
-    final AbstractPerformFixesTask fixesTask = isBatch ?
-                                               new PerformBatchFixesTask(project, descriptions.toArray(ProblemDescriptor.EMPTY_ARRAY), progressTask, quickfixClass) :
-                                               new PerformFixesTask(project, descriptions.toArray(ProblemDescriptor.EMPTY_ARRAY), progressTask, quickfixClass);
+    final AbstractPerformFixesTask fixesTask = isBatch
+      ? new PerformBatchFixesTask(project, descriptions.toArray(ProblemDescriptor.EMPTY_ARRAY), progressTask, quickfixClass)
+      : new PerformFixesTask(project, descriptions.toArray(ProblemDescriptor.EMPTY_ARRAY), progressTask, quickfixClass);
     CommandProcessor.getInstance().executeCommand(project, () -> {
       CommandProcessor.getInstance().markCurrentCommandAsGlobal(project);
       progressTask.setMinIterationTime(200);
@@ -130,9 +137,8 @@ public class CleanupInspectionIntention implements IntentionAction, HighPriority
 
   @Override
   public boolean isAvailable(@Nonnull final Project project, final Editor editor, final PsiFile file) {
-    return myQuickfixClass != EmptyIntentionAction.class &&
-           editor != null &&
-           !(myToolWrapper instanceof LocalInspectionToolWrapper && ((LocalInspectionToolWrapper)myToolWrapper).isUnfair());
+    return myQuickfixClass != EmptyIntentionAction.class && editor != null
+      && !(myToolWrapper instanceof LocalInspectionToolWrapper localInspectionToolWrapper && localInspectionToolWrapper.isUnfair());
   }
 
   @Override
@@ -144,10 +150,12 @@ public class CleanupInspectionIntention implements IntentionAction, HighPriority
     private boolean myApplicableFixFound = false;
     protected final Class myQuickfixClass;
 
-    public AbstractPerformFixesTask(@Nonnull Project project,
-                                    @Nonnull CommonProblemDescriptor[] descriptors,
-                                    @Nonnull SequentialModalProgressTask task,
-                                    @Nullable Class quickfixClass) {
+    public AbstractPerformFixesTask(
+      @Nonnull Project project,
+      @Nonnull CommonProblemDescriptor[] descriptors,
+      @Nonnull SequentialModalProgressTask task,
+      @Nullable Class quickfixClass
+    ) {
       super(project, descriptors, task);
       myQuickfixClass = quickfixClass;
     }
@@ -181,10 +189,12 @@ public class CleanupInspectionIntention implements IntentionAction, HighPriority
     private final List<ProblemDescriptor> myBatchModeDescriptors = new ArrayList<>();
     private boolean myApplied = false;
 
-    public PerformBatchFixesTask(@Nonnull Project project,
-                                 @Nonnull CommonProblemDescriptor[] descriptors,
-                                 @Nonnull SequentialModalProgressTask task,
-                                 @Nonnull Class quickfixClass) {
+    public PerformBatchFixesTask(
+      @Nonnull Project project,
+      @Nonnull CommonProblemDescriptor[] descriptors,
+      @Nonnull SequentialModalProgressTask task,
+      @Nonnull Class quickfixClass
+    ) {
       super(project, descriptors, task, quickfixClass);
     }
 
@@ -201,10 +211,12 @@ public class CleanupInspectionIntention implements IntentionAction, HighPriority
           LOG.assertTrue(representative.getFixes() != null);
           for (QuickFix fix : representative.getFixes()) {
             if (fix != null && fix.getClass().isAssignableFrom(myQuickfixClass)) {
-              ((BatchQuickFix)fix).applyFix(myProject,
-                                            myBatchModeDescriptors.toArray(new ProblemDescriptor[myBatchModeDescriptors.size()]),
-                                            new ArrayList<>(),
-                                            null);
+              ((BatchQuickFix)fix).applyFix(
+                myProject,
+                myBatchModeDescriptors.toArray(new ProblemDescriptor[myBatchModeDescriptors.size()]),
+                new ArrayList<>(),
+                null
+              );
               break;
             }
           }
@@ -219,10 +231,12 @@ public class CleanupInspectionIntention implements IntentionAction, HighPriority
   }
 
   private static class PerformFixesTask extends AbstractPerformFixesTask {
-    public PerformFixesTask(@Nonnull Project project,
-                            @Nonnull CommonProblemDescriptor[] descriptors,
-                            @Nonnull SequentialModalProgressTask task,
-                            @Nullable Class quickFixClass) {
+    public PerformFixesTask(
+      @Nonnull Project project,
+      @Nonnull CommonProblemDescriptor[] descriptors,
+      @Nonnull SequentialModalProgressTask task,
+      @Nullable Class quickFixClass
+    ) {
       super(project, descriptors, task, quickFixClass);
     }
 

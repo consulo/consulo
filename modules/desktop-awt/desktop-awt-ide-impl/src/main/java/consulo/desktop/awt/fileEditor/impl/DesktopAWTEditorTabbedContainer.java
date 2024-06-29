@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.fileEditor.impl;
 
+import consulo.application.HelpManager;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.application.util.Queryable;
@@ -41,7 +42,6 @@ import consulo.ide.impl.idea.ui.InplaceButton;
 import consulo.ide.impl.idea.ui.tabs.TabsUtil;
 import consulo.ide.impl.idea.ui.tabs.impl.JBEditorTabs;
 import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
@@ -428,7 +428,7 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
       if (DesktopFileEditorWindow.DATA_KEY == dataId) {
         return myWindow;
       }
-      if (PlatformDataKeys.HELP_ID == dataId) {
+      if (HelpManager.HELP_ID == dataId) {
         return HELP_ID;
       }
 

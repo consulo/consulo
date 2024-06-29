@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.usageView.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -24,7 +25,6 @@ import consulo.ide.impl.idea.ide.hierarchy.HierarchyBrowserBaseEx;
 import consulo.ide.impl.idea.ide.hierarchy.actions.BrowseHierarchyActionBase;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.usages.impl.UsageContextPanelBase;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.hierarchy.CallHierarchyProvider;
 import consulo.language.editor.hierarchy.HierarchyBrowser;
 import consulo.language.psi.PsiElement;
@@ -68,7 +68,10 @@ public class UsageContextCallHierarchyPanel extends UsageContextPanelBase {
 
     removeAll();
     if (element == null) {
-      JComponent titleComp = new JLabel(UsageViewBundle.message("select.the.usage.to.preview", myPresentation.getUsagesWord()), SwingConstants.CENTER);
+      JComponent titleComp = new JLabel(
+        UsageViewBundle.message("select.the.usage.to.preview", myPresentation.getUsagesWord()),
+        SwingConstants.CENTER
+      );
       add(titleComp, BorderLayout.CENTER);
     }
     else {
@@ -82,16 +85,17 @@ public class UsageContextCallHierarchyPanel extends UsageContextPanelBase {
   }
 
   @Nullable
+  @RequiredReadAction
   private static HierarchyBrowser createCallHierarchyPanel(@Nonnull PsiElement element) {
-    DataContext context = SimpleDataContext.getSimpleContext(CommonDataKeys.PSI_ELEMENT, element, SimpleDataContext.getProjectContext(element.getProject()));
+    DataContext context =
+      SimpleDataContext.getSimpleContext(PsiElement.KEY, element, SimpleDataContext.getProjectContext(element.getProject()));
     CallHierarchyProvider provider = BrowseHierarchyActionBase.findBestHierarchyProvider(CallHierarchyProvider.class, element, context);
     if (provider == null) return null;
     PsiElement providerTarget = provider.getTarget(context);
     if (providerTarget == null) return null;
 
     HierarchyBrowser browser = provider.createHierarchyBrowser(providerTarget);
-    if (browser instanceof HierarchyBrowserBaseEx) {
-      HierarchyBrowserBaseEx browserEx = (HierarchyBrowserBaseEx)browser;
+    if (browser instanceof HierarchyBrowserBaseEx browserEx) {
       // do not steal focus when scrolling through nodes
       browserEx.changeView(CallHierarchyBrowserBase.CALLER_TYPE, false);
     }

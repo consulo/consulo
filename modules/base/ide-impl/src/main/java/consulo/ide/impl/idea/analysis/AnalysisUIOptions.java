@@ -19,22 +19,22 @@ package consulo.ide.impl.idea.analysis;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.ServiceManager;
-import consulo.language.editor.inspection.InspectionsBundle;
-import consulo.ide.impl.idea.codeInspection.ui.InspectionResultsView;
 import consulo.application.AllIcons;
+import consulo.component.persist.PersistentStateComponent;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
+import consulo.ide.ServiceManager;
+import consulo.ide.impl.idea.codeInspection.ui.InspectionResultsView;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.scope.AnalysisScope;
+import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
-import consulo.component.persist.State;
-import consulo.component.persist.Storage;
-import consulo.project.Project;
 import consulo.ui.ex.awt.AutoScrollToSourceHandler;
 import consulo.util.xml.serializer.XmlSerializerUtil;
-
-import consulo.component.persist.PersistentStateComponent;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 /**
@@ -94,17 +94,18 @@ public class AnalysisUIOptions implements PersistentStateComponent<AnalysisUIOpt
   }
 
   public AnAction createGroupBySeverityAction(final InspectionResultsView view) {
-    return new ToggleAction(InspectionsBundle.message("inspection.action.group.by.severity"), InspectionsBundle.message("inspection.action.group.by.severity.description"),
-                            AllIcons.Nodes.SortBySeverity) {
-
-
+    return new ToggleAction(
+      InspectionLocalize.inspectionActionGroupBySeverity(),
+      InspectionLocalize.inspectionActionGroupBySeverityDescription(),
+      AllIcons.Nodes.SortBySeverity
+    ) {
       @Override
-      public boolean isSelected(AnActionEvent e) {
+      public boolean isSelected(@Nonnull AnActionEvent e) {
         return GROUP_BY_SEVERITY;
       }
 
       @Override
-      public void setSelected(AnActionEvent e, boolean state) {
+      public void setSelected(@Nonnull AnActionEvent e, boolean state) {
         GROUP_BY_SEVERITY = state;
         view.update();
       }
@@ -112,16 +113,18 @@ public class AnalysisUIOptions implements PersistentStateComponent<AnalysisUIOpt
   }
 
   public AnAction createFilterResolvedItemsAction(final InspectionResultsView view) {
-    return new ToggleAction(InspectionsBundle.message("inspection.filter.resolved.action.text"), InspectionsBundle.message("inspection.filter.resolved.action.text"), AllIcons.General.Filter) {
-
-
+    return new ToggleAction(
+      InspectionLocalize.inspectionFilterResolvedActionText(),
+      InspectionLocalize.inspectionFilterResolvedActionText(),
+      AllIcons.General.Filter
+    ) {
       @Override
-      public boolean isSelected(AnActionEvent e) {
+      public boolean isSelected(@Nonnull AnActionEvent e) {
         return FILTER_RESOLVED_ITEMS;
       }
 
       @Override
-      public void setSelected(AnActionEvent e, boolean state) {
+      public void setSelected(@Nonnull AnActionEvent e, boolean state) {
         FILTER_RESOLVED_ITEMS = state;
         view.update();
       }
@@ -129,16 +132,18 @@ public class AnalysisUIOptions implements PersistentStateComponent<AnalysisUIOpt
   }
 
   public AnAction createShowOutdatedProblemsAction(final InspectionResultsView view) {
-    return new ToggleAction(InspectionsBundle.message("inspection.filter.show.diff.action.text"), InspectionsBundle.message("inspection.filter.show.diff.action.text"), AllIcons.Actions.Diff) {
-
-
+    return new ToggleAction(
+      InspectionLocalize.inspectionFilterShowDiffActionText(),
+      InspectionLocalize.inspectionFilterShowDiffActionText(),
+      AllIcons.Actions.Diff
+    ) {
       @Override
-      public boolean isSelected(AnActionEvent e) {
+      public boolean isSelected(@Nonnull AnActionEvent e) {
         return SHOW_DIFF_WITH_PREVIOUS_RUN;
       }
 
       @Override
-      public void setSelected(AnActionEvent e, boolean state) {
+      public void setSelected(@Nonnull AnActionEvent e, boolean state) {
         SHOW_DIFF_WITH_PREVIOUS_RUN = state;
         if (!SHOW_DIFF_WITH_PREVIOUS_RUN) {
           SHOW_ONLY_DIFF = false;
@@ -149,15 +154,18 @@ public class AnalysisUIOptions implements PersistentStateComponent<AnalysisUIOpt
   }
 
   public AnAction createGroupByDirectoryAction(final InspectionResultsView view) {
-    return new ToggleAction("Group by directory", "Group by directory", AllIcons.Actions.GroupByPackage) {
-
+    return new ToggleAction(
+      InspectionLocalize.inspectionActionGroupByDirectory(),
+      InspectionLocalize.inspectionActionGroupByDirectory(),
+      AllIcons.Actions.GroupByPackage
+    ) {
       @Override
-      public boolean isSelected(AnActionEvent e) {
+      public boolean isSelected(@Nonnull AnActionEvent e) {
         return SHOW_STRUCTURE;
       }
 
       @Override
-      public void setSelected(AnActionEvent e, boolean state) {
+      public void setSelected(@Nonnull AnActionEvent e, boolean state) {
         SHOW_STRUCTURE = state;
         view.update();
       }
@@ -165,23 +173,24 @@ public class AnalysisUIOptions implements PersistentStateComponent<AnalysisUIOpt
   }
 
   public AnAction createShowDiffOnlyAction(final InspectionResultsView view) {
-    return new ToggleAction(InspectionsBundle.message("inspection.filter.show.diff.only.action.text"), InspectionsBundle.message("inspection.filter.show.diff.only.action.text"),
-                            AllIcons.Actions.ShowChangesOnly) {
-
-
+    return new ToggleAction(
+      InspectionLocalize.inspectionFilterShowDiffOnlyActionText(),
+      InspectionLocalize.inspectionFilterShowDiffOnlyActionText(),
+      AllIcons.Actions.ShowChangesOnly
+    ) {
       @Override
-      public boolean isSelected(AnActionEvent e) {
+      public boolean isSelected(@Nonnull AnActionEvent e) {
         return SHOW_ONLY_DIFF;
       }
 
       @Override
-      public void setSelected(AnActionEvent e, boolean state) {
+      public void setSelected(@Nonnull AnActionEvent e, boolean state) {
         SHOW_ONLY_DIFF = state;
         view.update();
       }
 
       @Override
-      public void update(final AnActionEvent e) {
+      public void update(@Nonnull final AnActionEvent e) {
         super.update(e);
         e.getPresentation().setEnabled(SHOW_DIFF_WITH_PREVIOUS_RUN);
       }

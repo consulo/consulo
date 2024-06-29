@@ -27,10 +27,10 @@ import consulo.ide.impl.idea.openapi.vcs.changes.RemoteRevisionsCache;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ShowDiffAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ShowDiffContext;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.logging.Logger;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.ScrollPaneFactory;
@@ -118,14 +118,17 @@ public abstract class ChangesBrowserBase<T> extends JPanel implements TypeSafeDa
             ChangesBrowser.MyUseCase.LOCAL_CHANGES.equals(useCase) ? RemoteRevisionsCache.getInstance(myProject).getChangesNodeDecorator() : null;
 
     myViewer = new ChangesTreeList<>(myProject, changes, capableOfExcludingChanges, highlightProblems, inclusionListener, decorator) {
+      @Override
       protected DefaultTreeModel buildTreeModel(final List<T> changes, ChangeNodeDecorator changeNodeDecorator) {
         return ChangesBrowserBase.this.buildTreeModel(changes, changeNodeDecorator, isShowFlatten());
       }
 
+      @Override
       protected List<T> getSelectedObjects(final ChangesBrowserNode<T> node) {
         return ChangesBrowserBase.this.getSelectedObjects(node);
       }
 
+      @Override
       @Nullable
       protected T getLeadSelectedObject(final ChangesBrowserNode node) {
         return ChangesBrowserBase.this.getLeadSelectedObject(node);
@@ -164,19 +167,18 @@ public abstract class ChangesBrowserBase<T> extends JPanel implements TypeSafeDa
 
   @Nonnull
   protected Runnable getDoubleClickHandler() {
-    return new Runnable() {
-      public void run() {
-        showDiff();
-      }
-    };
+    return this::showDiff;
   }
 
-  protected void setInitialSelection(final List<? extends ChangeList> changeLists,
-                                     @Nonnull List<T> changes,
-                                     final ChangeList initialListSelection) {
+  protected void setInitialSelection(
+    final List<? extends ChangeList> changeLists,
+    @Nonnull List<T> changes,
+    final ChangeList initialListSelection
+  ) {
     mySelectedChangeList = initialListSelection;
   }
 
+  @Override
   public void dispose() {
   }
 
@@ -240,8 +242,8 @@ public abstract class ChangesBrowserBase<T> extends JPanel implements TypeSafeDa
     else if (UNVERSIONED_FILES_DATA_KEY.equals(key)) {
       sink.put(UNVERSIONED_FILES_DATA_KEY, getVirtualFiles(myViewer.getSelectionPaths(), UNVERSIONED_FILES_TAG));
     }
-    else if (PlatformDataKeys.DELETE_ELEMENT_PROVIDER.equals(key)) {
-      sink.put(PlatformDataKeys.DELETE_ELEMENT_PROVIDER, myDeleteProvider);
+    else if (DeleteProvider.KEY.equals(key)) {
+      sink.put(DeleteProvider.KEY, myDeleteProvider);
     }
   }
 
@@ -258,13 +260,13 @@ public abstract class ChangesBrowserBase<T> extends JPanel implements TypeSafeDa
       super(myToggleActionTitle);
     }
 
+    @Override
     public boolean isSelected(AnActionEvent e) {
       T change = ObjectUtil.tryCast(e.getData(VcsDataKeys.CURRENT_CHANGE), myClass);
-      if (change == null) return false;
-
-      return myViewer.isIncluded(change);
+      return change != null && myViewer.isIncluded(change);
     }
 
+    @Override
     public void setSelected(AnActionEvent e, boolean state) {
       T change = ObjectUtil.tryCast(e.getData(VcsDataKeys.CURRENT_CHANGE), myClass);
       if (change == null) return;
@@ -378,11 +380,15 @@ public abstract class ChangesBrowserBase<T> extends JPanel implements TypeSafeDa
 
   protected void buildToolBar(final DefaultActionGroup toolBarGroup) {
     myDiffAction = new DumbAwareAction() {
-      public void update(AnActionEvent e) {
+      @Override
+      @RequiredUIAccess
+      public void update(@Nonnull AnActionEvent e) {
         e.getPresentation().setEnabled(canShowDiff());
       }
 
-      public void actionPerformed(AnActionEvent e) {
+      @Override
+      @RequiredUIAccess
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         showDiff();
       }
     };

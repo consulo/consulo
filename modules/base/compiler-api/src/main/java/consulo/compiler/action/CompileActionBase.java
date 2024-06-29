@@ -20,8 +20,6 @@ import consulo.codeEditor.Editor;
 import consulo.compiler.CompilerManager;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.DaemonCodeAnalyzer;
-import consulo.language.editor.LangDataKeys;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.language.psi.PsiFile;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -29,7 +27,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.UpdateInBackground;
-
 import jakarta.annotation.Nonnull;
 
 public abstract class CompileActionBase extends AnAction implements DumbAware, UpdateInBackground {
@@ -41,8 +38,8 @@ public abstract class CompileActionBase extends AnAction implements DumbAware, U
     if (project == null) {
       return;
     }
-    Editor editor = e.getData(PlatformDataKeys.EDITOR);
-    PsiFile file = e.getData(LangDataKeys.PSI_FILE);
+    Editor editor = e.getData(Editor.KEY);
+    PsiFile file = e.getData(PsiFile.KEY);
     if (file != null && editor != null && !DumbService.getInstance(project).isDumb()) {
       DaemonCodeAnalyzer.getInstance(project).autoImportReferenceAtCursor(editor, file); //let autoimport complete
     }

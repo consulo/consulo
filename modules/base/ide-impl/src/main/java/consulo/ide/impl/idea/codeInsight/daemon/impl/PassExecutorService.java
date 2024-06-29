@@ -3,7 +3,6 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.internal.ApplicationManagerEx;
 import consulo.application.progress.ProgressIndicator;
@@ -22,7 +21,6 @@ import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.highlight.HighlightingPass;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.impl.idea.openapi.application.impl.ApplicationInfoImpl;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.Functions;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.impl.highlight.EditorBoundHighlightingPass;
@@ -41,12 +39,13 @@ import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.collection.primitive.ints.IntObjectMap;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -58,7 +57,7 @@ import java.util.regex.Pattern;
  */
 final class PassExecutorService implements Disposable {
   private static final Logger LOG = Logger.getInstance(PassExecutorService.class);
-  private static final boolean CHECK_CONSISTENCY = ApplicationManager.getApplication().isUnitTestMode();
+  private static final boolean CHECK_CONSISTENCY = Application.get().isUnitTestMode();
 
   private final Map<ScheduledPass, Job<Void>> mySubmittedPasses = new ConcurrentHashMap<>();
   private final Project myProject;
@@ -120,7 +119,7 @@ final class PassExecutorService implements Disposable {
         document = editor.getDocument();
       }
       else {
-        VirtualFile virtualFile = ((FileEditorManagerEx)FileEditorManager.getInstance(myProject)).getFile(fileEditor);
+        VirtualFile virtualFile = FileEditorManager.getInstance(myProject).getFile(fileEditor);
         document = virtualFile == null ? null : FileDocumentManager.getInstance().getDocument(virtualFile);
       }
       if (document != null) {
@@ -393,7 +392,7 @@ final class PassExecutorService implements Disposable {
 
     @Override
     public void run() {
-      ((ApplicationEx)ApplicationManager.getApplication()).executeByImpatientReader(() -> {
+      ((ApplicationEx)Application.get()).executeByImpatientReader(() -> {
         try {
           doRun();
         }
@@ -485,7 +484,7 @@ final class PassExecutorService implements Disposable {
                                               @Nonnull final DaemonProgressIndicator updateProgress,
                                               @Nonnull final AtomicInteger threadsToStartCountdown,
                                               @Nonnull Runnable callbackOnApplied) {
-    ApplicationManager.getApplication().invokeLater(() -> {
+    Application.get().invokeLater(() -> {
       if (isDisposed() || !fileEditor.isValid()) {
         updateProgress.cancel();
       }
@@ -495,7 +494,7 @@ final class PassExecutorService implements Disposable {
       }
       Document document = pass.getDocument();
       try {
-        if (Application.get().isUnifiedApplication() || fileEditor.getComponent().isDisplayable() || ApplicationManager.getApplication().isHeadlessEnvironment()) {
+        if (Application.get().isUnifiedApplication() || fileEditor.getComponent().isDisplayable() || Application.get().isHeadlessEnvironment()) {
           pass.applyInformationToEditor();
           repaintErrorStripeAndIcon(fileEditor);
           FileStatusMapImpl fileStatusMap = DaemonCodeAnalyzerEx.getInstanceEx(myProject).getFileStatusMap();

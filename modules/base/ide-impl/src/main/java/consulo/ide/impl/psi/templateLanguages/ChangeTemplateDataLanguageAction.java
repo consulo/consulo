@@ -16,10 +16,9 @@
 package consulo.ide.impl.psi.templateLanguages;
 
 import consulo.language.template.TemplateDataLanguageMappings;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.language.template.ConfigurableTemplateLanguageFileViewProvider;
 import consulo.language.template.TemplateLanguageFileViewProvider;
 import consulo.project.Project;
@@ -34,17 +33,18 @@ import consulo.language.LangBundle;
  */
 public class ChangeTemplateDataLanguageAction extends AnAction {
   @Override
+  @RequiredUIAccess
   public void update(final AnActionEvent e) {
     e.getPresentation().setVisible(false);
 
-    VirtualFile virtualFile = e.getData(PlatformDataKeys.VIRTUAL_FILE);
-    VirtualFile[] files = e.getData(PlatformDataKeys.VIRTUAL_FILE_ARRAY);
+    VirtualFile virtualFile = e.getData(VirtualFile.KEY);
+    VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
     if (files != null && files.length > 1) {
       virtualFile = null;
     }
     if (virtualFile == null || virtualFile.isDirectory()) return;
 
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) return;
 
     final FileViewProvider provider = PsiManager.getInstance(project).findViewProvider(virtualFile);
@@ -59,21 +59,17 @@ public class ChangeTemplateDataLanguageAction extends AnAction {
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(final AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) return;
 
-    final VirtualFile virtualFile = e.getData(PlatformDataKeys.VIRTUAL_FILE);
+    final VirtualFile virtualFile = e.getData(VirtualFile.KEY);
     final TemplateDataLanguageConfigurable configurable = new TemplateDataLanguageConfigurable(project, TemplateDataLanguageMappings.getInstance(project));
-    ShowSettingsUtil.getInstance().editConfigurable(project, configurable, new Runnable() {
-      @Override
-      public void run() {
-        if (virtualFile != null) {
-          configurable.selectFile(virtualFile);
-        }
+    ShowSettingsUtil.getInstance().editConfigurable(project, configurable, () -> {
+      if (virtualFile != null) {
+        configurable.selectFile(virtualFile);
       }
     });
   }
-
-
 }

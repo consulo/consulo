@@ -15,18 +15,18 @@
  */
 package consulo.ide.impl.idea.execution.impl;
 
-import consulo.execution.impl.internal.RunConfigurationBeforeRunProvider;
-import consulo.execution.impl.internal.configuration.RunManagerImpl;
-import consulo.execution.impl.internal.configuration.UnknownRunConfiguration;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.dataContext.DataContext;
 import consulo.execution.BeforeRunTask;
 import consulo.execution.BeforeRunTaskProvider;
-import consulo.execution.ExecutionBundle;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.configuration.RunConfiguration;
-import consulo.language.editor.CommonDataKeys;
+import consulo.execution.impl.internal.RunConfigurationBeforeRunProvider;
+import consulo.execution.impl.internal.configuration.RunManagerImpl;
+import consulo.execution.impl.internal.configuration.UnknownRunConfiguration;
+import consulo.execution.localize.ExecutionLocalize;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.localize.LocalizeValue;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionToolbarPosition;
@@ -38,9 +38,9 @@ import consulo.ui.ex.popup.ListPopup;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.util.lang.function.Conditions;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
@@ -67,7 +67,7 @@ class BeforeRunStepsPanel {
     myModel = new CollectionListModel<>();
     myPanel = new JPanel(new BorderLayout());
     myList = new JBList<>(myModel);
-    myList.getEmptyText().setText(ExecutionBundle.message("before.launch.panel.empty"));
+    myList.getEmptyText().setText(ExecutionLocalize.beforeLaunchPanelEmpty().get());
     myList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     myList.setCellRenderer(new MyListCellRenderer());
 
@@ -114,7 +114,7 @@ class BeforeRunStepsPanel {
     decorator.setAddAction(button -> doAddAction(button));
     decorator.setAddActionUpdater(e -> checkBeforeRunTasksAbility(true));
 
-    myShowSettingsBeforeRunCheckBox = new JCheckBox(ExecutionBundle.message("configuration.edit.before.run"));
+    myShowSettingsBeforeRunCheckBox = new JCheckBox(ExecutionLocalize.configurationEditBeforeRun().get());
     myShowSettingsBeforeRunCheckBox.addActionListener(e -> updateText());
 
     myListContainer = decorator.createPanel();
@@ -150,14 +150,15 @@ class BeforeRunStepsPanel {
     StringBuilder sb = new StringBuilder();
 
     if (myShowSettingsBeforeRunCheckBox.isSelected()) {
-      sb.append(ExecutionBundle.message("configuration.edit.before.run"));
+      sb.append(ExecutionLocalize.configurationEditBeforeRun());
     }
 
     List<BeforeRunTask> tasks = myModel.getItems();
     if (!tasks.isEmpty()) {
       LinkedHashMap<BeforeRunTaskProvider, Integer> counter = new LinkedHashMap<>();
       for (BeforeRunTask task : tasks) {
-        BeforeRunTaskProvider<BeforeRunTask> provider = BeforeRunTaskProvider.getProvider(myRunConfiguration.getProject(), task.getProviderId());
+        BeforeRunTaskProvider<BeforeRunTask> provider =
+          BeforeRunTaskProvider.getProvider(myRunConfiguration.getProject(), task.getProviderId());
         if (provider != null) {
           Integer count = counter.get(provider);
           if (count == null) {
@@ -169,8 +170,7 @@ class BeforeRunStepsPanel {
           counter.put(provider, count);
         }
       }
-      for (Iterator<Map.Entry<BeforeRunTaskProvider, Integer>> iterator = counter.entrySet().iterator(); iterator.hasNext(); ) {
-        Map.Entry<BeforeRunTaskProvider, Integer> entry = iterator.next();
+      for (Map.Entry<BeforeRunTaskProvider, Integer> entry : counter.entrySet()) {
         BeforeRunTaskProvider provider = entry.getKey();
         String name = provider.getName();
         if (name.startsWith("Run ")) {
@@ -188,7 +188,7 @@ class BeforeRunStepsPanel {
     if (sb.length() > 0) {
       sb.insert(0, ": ");
     }
-    sb.insert(0, ExecutionBundle.message("before.launch.panel.title"));
+    sb.insert(0, ExecutionLocalize.beforeLaunchPanelTitle());
     myListener.titleChanged(sb.toString());
   }
 
@@ -256,9 +256,15 @@ class BeforeRunStepsPanel {
             Set<RunConfiguration> configurationSet = new HashSet<>();
             getAllRunBeforeRuns(task, configurationSet);
             if (configurationSet.contains(myRunConfiguration)) {
-              JOptionPane.showMessageDialog(myPanel,
-                                            ExecutionBundle.message("before.launch.panel.cyclic_dependency_warning", myRunConfiguration.getName(), provider.getDescription(task)),
-                                            ExecutionBundle.message("warning.common.title"), JOptionPane.WARNING_MESSAGE);
+              JOptionPane.showMessageDialog(
+                myPanel,
+                ExecutionLocalize.beforeLaunchPanelCyclic_dependency_warning(
+                  myRunConfiguration.getName(),
+                  provider.getDescription(task)
+                ).get(),
+                ExecutionLocalize.warningCommonTitle().get(),
+                JOptionPane.WARNING_MESSAGE
+              );
               return;
             }
             addTask(task);
@@ -270,11 +276,21 @@ class BeforeRunStepsPanel {
     }
 
     DataContext dataContext = SimpleDataContext.builder()
-            .add(CommonDataKeys.PROJECT, myRunConfiguration.getProject())
-            .add(UIExAWTDataKey.CONTEXT_COMPONENT, myPanel)
-            .build();
+      .add(Project.KEY, myRunConfiguration.getProject())
+      .add(UIExAWTDataKey.CONTEXT_COMPONENT, myPanel)
+      .build();
 
-    final ListPopup popup = popupFactory .createActionGroupPopup(ExecutionBundle.message("add.new.run.configuration.acrtion.name"), actionGroup.build(), dataContext, false, false, false, null, -1, Conditions.alwaysTrue());
+    final ListPopup popup = popupFactory.createActionGroupPopup(
+      ExecutionLocalize.addNewRunConfigurationAction2Name().get(),
+      actionGroup.build(),
+      dataContext,
+      false,
+      false,
+      false,
+      null,
+      -1,
+      Conditions.alwaysTrue()
+    );
     popup.show(button.getPreferredPopupPoint());
   }
 
@@ -318,8 +334,15 @@ class BeforeRunStepsPanel {
 
   private class MyListCellRenderer extends ColoredListCellRenderer<BeforeRunTask> {
     @Override
-    protected void customizeCellRenderer(@Nonnull JList<? extends BeforeRunTask> list, BeforeRunTask value, int index, boolean selected, boolean hasFocus) {
-      BeforeRunTaskProvider<BeforeRunTask> provider = BeforeRunTaskProvider.getProvider(myRunConfiguration.getProject(), value.getProviderId());
+    protected void customizeCellRenderer(
+      @Nonnull JList<? extends BeforeRunTask> list,
+      BeforeRunTask value,
+      int index,
+      boolean selected,
+      boolean hasFocus
+    ) {
+      BeforeRunTaskProvider<BeforeRunTask> provider =
+        BeforeRunTaskProvider.getProvider(myRunConfiguration.getProject(), value.getProviderId());
       if (provider != null) {
         setIcon(provider.getTaskIcon(value));
         append(provider.getDescription(value));

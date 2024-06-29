@@ -15,13 +15,13 @@
  */
 package consulo.execution.impl.internal;
 
+import consulo.application.HelpManager;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.executor.Executor;
 import consulo.execution.ui.event.RunContentWithExecutorListener;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
@@ -69,6 +69,7 @@ public class RunToolWindowManager {
     myToolWindowManager = toolWindowManager;
     myParentDisposable = parentDisposable;
     project.getMessageBus().connect().subscribe(ToolWindowManagerListener.class, new ToolWindowManagerListener() {
+      @RequiredUIAccess
       @Override
       public void stateChanged(ToolWindowManager tw) {
         if (project.isDisposed()) {
@@ -138,7 +139,7 @@ public class RunToolWindowManager {
       public Object getData(@Nonnull Key<?> dataId) {
         myInsideGetData++;
         try {
-          if (PlatformDataKeys.HELP_ID == dataId) {
+          if (HelpManager.HELP_ID == dataId) {
             return executor != null ? executor.getHelpId() : null;
           }
           else {
@@ -174,8 +175,8 @@ public class RunToolWindowManager {
             LOG.assertTrue(contentExecutor != null);
           }
           myProject.getMessageBus()
-                   .syncPublisher(RunContentWithExecutorListener.class)
-                   .contentSelected(getRunContentDescriptorByContent(content), contentExecutor);
+            .syncPublisher(RunContentWithExecutorListener.class)
+            .contentSelected(getRunContentDescriptorByContent(content), contentExecutor);
         }
       }
     });

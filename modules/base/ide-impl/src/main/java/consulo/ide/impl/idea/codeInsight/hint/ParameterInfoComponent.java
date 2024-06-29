@@ -2,21 +2,19 @@
 
 package consulo.ide.impl.idea.codeInsight.hint;
 
-import consulo.application.ApplicationManager;
-import consulo.application.util.SystemInfo;
+import consulo.application.Application;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
 import consulo.colorScheme.EditorFontType;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.lang.parameterInfo.ParameterInfoUIContextEx;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
-import consulo.language.editor.CodeInsightBundle;
-import consulo.language.editor.inject.EditorWindow;
+import consulo.language.editor.hint.HintColorUtil;import consulo.language.editor.inject.EditorWindow;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.parameterInfo.ParameterInfoHandler;
-import consulo.language.editor.ui.awt.HintUtil;
 import consulo.language.psi.PsiElement;
+import consulo.platform.Platform;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.JBUI;
@@ -25,10 +23,11 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import org.jetbrains.annotations.TestOnly;
-
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.TestOnly;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
@@ -56,12 +55,12 @@ public class ParameterInfoComponent extends JPanel {
   private final Font NORMAL_FONT;
   private final Font BOLD_FONT;
 
-  private static final Color BACKGROUND = JBColor.namedColor("ParameterInfo.background", TargetAWT.to(HintUtil.getInformationColor()));
-  private static final Color FOREGROUND = JBColor.namedColor("ParameterInfo.foreground", new JBColor(0x1D1D1D, 0xBBBBBB));
+  private static final Color BACKGROUND = JBColor.namedColor("ParameterInfo.background", TargetAWT.to(HintColorUtil.getInformationColor()));
+private static final Color FOREGROUND = JBColor.namedColor("ParameterInfo.foreground", new JBColor(0x1D1D1D, 0xBBBBBB));
   private static final Color HIGHLIGHTED_COLOR = JBColor.namedColor("ParameterInfo.currentParameterForeground", new JBColor(0x1D1D1D, 0xE8E8E8));
   private static final Color DISABLED_COLOR = JBColor.namedColor("ParameterInfo.disabledForeground", new JBColor(0xA8A8A8, 0x777777));
   private static final Color CONTEXT_HELP_FOREGROUND = JBColor.namedColor("ParameterInfo.infoForeground", new JBColor(0x787878, 0x878787));
-  static final Color BORDER_COLOR = JBColor.namedColor("ParameterInfo.borderColor", HintUtil.INFORMATION_BORDER_COLOR);
+  static final Color BORDER_COLOR = JBColor.namedColor("ParameterInfo.borderColor", HintColorUtil.INFORMATION_BORDER_COLOR);
   private static final Color HIGHLIGHTED_BACKGROUND = JBColor.namedColor("ParameterInfo.currentOverloadBackground", BORDER_COLOR);
   private static final Color SEPARATOR_COLOR = JBColor.namedColor("ParameterInfo.lineSeparatorColor", BORDER_COLOR);
   private static final Border EMPTY_BORDER = JBUI.Borders.empty(2, 10);
@@ -97,7 +96,7 @@ public class ParameterInfoComponent extends JPanel {
     super(new BorderLayout());
     myRequestFocus = requestFocus;
 
-    if (!ApplicationManager.getApplication().isUnitTestMode() && !ApplicationManager.getApplication().isHeadlessEnvironment()) {
+    if (!Application.get().isUnitTestMode() && !Application.get().isHeadlessEnvironment()) {
       JComponent editorComponent = editor.getComponent();
       JLayeredPane layeredPane = editorComponent.getRootPane().getLayeredPane();
       myWidthLimit = layeredPane.getWidth();
@@ -144,12 +143,13 @@ public class ParameterInfoComponent extends JPanel {
       myShortcutLabel = null;
     }
     else {
-      myShortcutLabel = new JLabel(upShortcut.isEmpty() || downShortcut.isEmpty()
-                                   ? CodeInsightBundle.message("parameter.info.switch.overload.shortcuts.single", upShortcut.isEmpty() ? downShortcut : upShortcut)
-                                   : CodeInsightBundle.message("parameter.info.switch.overload.shortcuts", upShortcut, downShortcut));
+      myShortcutLabel = new JLabel(
+        upShortcut.isEmpty() || downShortcut.isEmpty()
+          ? CodeInsightLocalize.parameterInfoSwitchOverloadShortcutsSingle(upShortcut.isEmpty() ? downShortcut : upShortcut).get()
+          : CodeInsightLocalize.parameterInfoSwitchOverloadShortcuts(upShortcut, downShortcut).get());
       myShortcutLabel.setForeground(CONTEXT_HELP_FOREGROUND);
       Font labelFont = UIUtil.getLabelFont();
-      myShortcutLabel.setFont(labelFont.deriveFont(labelFont.getSize2D() - (SystemInfo.isWindows ? 1 : 2)));
+      myShortcutLabel.setFont(labelFont.deriveFont(labelFont.getSize2D() - (Platform.current().os().isWindows() ? 1 : 2)));
       myShortcutLabel.setBorder(JBUI.Borders.empty(6, 10, 0, 10));
       add(myShortcutLabel, BorderLayout.SOUTH);
     }
@@ -413,9 +413,13 @@ public class ParameterInfoComponent extends JPanel {
       StringBuilder buf = new StringBuilder(text.length());
       setBackground(background);
 
-      String[] lines = UIUtil.splitText(text, getFontMetrics(BOLD_FONT),
-                                        // disable splitting by width, to avoid depending on platform's font in tests
-                                        ApplicationManager.getApplication().isUnitTestMode() ? Integer.MAX_VALUE : myWidthLimit, ',');
+      String[] lines = UIUtil.splitText(
+        text,
+        getFontMetrics(BOLD_FONT),
+        // disable splitting by width, to avoid depending on platform's font in tests
+        Application.get().isUnitTestMode() ? Integer.MAX_VALUE : myWidthLimit,
+        ','
+      );
 
       int lineOffset = 0;
 

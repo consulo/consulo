@@ -321,7 +321,7 @@ public final class LoadTextUtil {
     else {
       switch (info.guessed) {
         case SEVEN_BIT:
-          charset = CharsetToolkit.US_ASCII_CHARSET;
+          charset = StandardCharsets.US_ASCII;
           break;
         case VALID_UTF8:
           charset = StandardCharsets.UTF_8;
@@ -605,7 +605,7 @@ public final class LoadTextUtil {
   @Nonnull
   private static ConvertResult convertBytes(@Nonnull byte[] bytes, final int startOffset, int endOffset, @Nonnull Charset internalCharset) {
     assert startOffset >= 0 && startOffset <= endOffset && endOffset <= bytes.length : startOffset + "," + endOffset + ": " + bytes.length;
-    if (internalCharset instanceof SevenBitCharset || internalCharset == CharsetToolkit.US_ASCII_CHARSET) {
+    if (internalCharset instanceof SevenBitCharset || internalCharset == StandardCharsets.US_ASCII) {
       // optimisation: skip byte-to-char conversion for ascii chars
       return convertLineSeparatorsToSlashN(bytes, startOffset, endOffset);
     }

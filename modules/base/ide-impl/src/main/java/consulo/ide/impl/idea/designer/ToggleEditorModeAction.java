@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.designer;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 
 /**

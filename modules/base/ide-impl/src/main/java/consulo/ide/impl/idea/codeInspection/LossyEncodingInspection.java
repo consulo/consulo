@@ -22,6 +22,7 @@
  */
 package consulo.ide.impl.idea.codeInspection;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.bootstrap.charset.Native2AsciiCharset;
 import consulo.codeEditor.Editor;
@@ -35,8 +36,8 @@ import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.encoding.ChangeFileEncodingAction;
 import consulo.ide.impl.idea.openapi.vfs.encoding.EncodingUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.inspection.*;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
@@ -44,6 +45,7 @@ import consulo.language.file.FileViewProvider;
 import consulo.language.impl.internal.psi.LoadTextUtil;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.awt.UIExAWTDataKey;
@@ -74,7 +76,7 @@ public class LossyEncodingInspection extends LocalInspectionTool {
   @Nls
   @Nonnull
   public String getGroupDisplayName() {
-    return InspectionsBundle.message("group.names.internationalization.issues");
+    return InspectionLocalize.groupNamesInternationalizationIssues().get();
   }
 
   @Nonnull
@@ -87,7 +89,7 @@ public class LossyEncodingInspection extends LocalInspectionTool {
   @Nls
   @Nonnull
   public String getDisplayName() {
-    return InspectionsBundle.message("lossy.encoding");
+    return InspectionLocalize.lossyEncoding().get();
   }
 
   @Override
@@ -98,6 +100,7 @@ public class LossyEncodingInspection extends LocalInspectionTool {
 
   @Override
   @Nullable
+  @RequiredReadAction
   public ProblemDescriptor[] checkFile(@Nonnull PsiFile file, @Nonnull InspectionManager manager, boolean isOnTheFly) {
     if (InjectedLanguageManager.getInstance(file.getProject()).isInjectedFragment(file)) return null;
     if (!file.isPhysical()) return null;
@@ -112,7 +115,7 @@ public class LossyEncodingInspection extends LocalInspectionTool {
     // no sense in checking transparently decoded file: all characters there are already safely encoded
     if (charset instanceof Native2AsciiCharset) return null;
 
-    List<ProblemDescriptor> descriptors = new SmartList<ProblemDescriptor>();
+    List<ProblemDescriptor> descriptors = new SmartList<>();
     boolean ok = checkFileLoadedInWrongEncoding(file, manager, isOnTheFly, virtualFile, charset, descriptors);
     if (ok) {
       checkIfCharactersWillBeLostAfterSave(file, manager, isOnTheFly, text, charset, descriptors);
@@ -173,12 +176,14 @@ public class LossyEncodingInspection extends LocalInspectionTool {
     return equals;
   }
 
-  private static void checkIfCharactersWillBeLostAfterSave(@Nonnull PsiFile file,
-                                                           @Nonnull InspectionManager manager,
-                                                           boolean isOnTheFly,
-                                                           @Nonnull CharSequence text,
-                                                           @Nonnull Charset charset,
-                                                           @Nonnull List<ProblemDescriptor> descriptors) {
+  private static void checkIfCharactersWillBeLostAfterSave(
+    @Nonnull PsiFile file,
+    @Nonnull InspectionManager manager,
+    boolean isOnTheFly,
+    @Nonnull CharSequence text,
+    @Nonnull Charset charset,
+    @Nonnull List<ProblemDescriptor> descriptors
+  ) {
     int errorCount = 0;
     int start = -1;
     for (int i = 0; i <= text.length(); i++) {
@@ -186,9 +191,15 @@ public class LossyEncodingInspection extends LocalInspectionTool {
       if (i == text.length() || isRepresentable(c, charset)) {
         if (start != -1) {
           TextRange range = new TextRange(start, i);
-          String message = InspectionsBundle.message("unsupported.character.for.the.charset", charset);
-          ProblemDescriptor descriptor =
-                  manager.createProblemDescriptor(file, range, message, ProblemHighlightType.GENERIC_ERROR_OR_WARNING, isOnTheFly, CHANGE_ENCODING_FIX);
+          LocalizeValue message = InspectionLocalize.unsupportedCharacterForTheCharset(charset);
+          ProblemDescriptor descriptor = manager.createProblemDescriptor(
+            file,
+            range,
+            message.get(),
+            ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
+            isOnTheFly,
+            CHANGE_ENCODING_FIX
+          );
           descriptors.add(descriptor);
           start = -1;
           //do not report too many errors
@@ -216,8 +227,11 @@ public class LossyEncodingInspection extends LocalInspectionTool {
     }
 
     @Override
+    @RequiredReadAction
     public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
-      if (FileDocumentManager.getInstance().isFileModified(descriptor.getPsiElement().getContainingFile().getVirtualFile())) return;
+      if (FileDocumentManager.getInstance().isFileModified(descriptor.getPsiElement().getContainingFile().getVirtualFile())) {
+        return;
+      }
       super.applyFix(project, descriptor);
     }
   }
@@ -236,6 +250,7 @@ public class LossyEncodingInspection extends LocalInspectionTool {
     }
 
     @Override
+    @RequiredReadAction
     public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
       PsiFile psiFile = descriptor.getPsiElement().getContainingFile();
       VirtualFile virtualFile = psiFile.getVirtualFile();
@@ -252,9 +267,9 @@ public class LossyEncodingInspection extends LocalInspectionTool {
     public static DataContext createDataContext(Editor editor, Component component, VirtualFile selectedFile, Project project) {
       DataContext parent = DataManager.getInstance().getDataContext(component);
       DataContext context =
-              SimpleDataContext.getSimpleContext(UIExAWTDataKey.CONTEXT_COMPONENT, editor == null ? null : editor.getComponent(), parent);
-      DataContext projectContext = SimpleDataContext.getSimpleContext(CommonDataKeys.PROJECT, project, context);
-      return SimpleDataContext.getSimpleContext(CommonDataKeys.VIRTUAL_FILE, selectedFile, projectContext);
+        SimpleDataContext.getSimpleContext(UIExAWTDataKey.CONTEXT_COMPONENT, editor == null ? null : editor.getComponent(), parent);
+      DataContext projectContext = SimpleDataContext.getSimpleContext(Project.KEY, project, context);
+      return SimpleDataContext.getSimpleContext(VirtualFile.KEY, selectedFile, projectContext);
     }
   }
 }

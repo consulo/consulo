@@ -39,9 +39,7 @@ import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.TreeLinkMouseListene
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.PatchFileType;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.RelativePathCalculator;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentI;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentManager;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.language.file.FileTypeManager;
 import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
@@ -58,6 +56,7 @@ import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.awt.ScrollPaneFactory;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
@@ -69,10 +68,11 @@ import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.dataholder.Key;
-import consulo.util.lang.Pair;
+import consulo.util.lang.Couple;
 import consulo.versionControlSystem.AbstractVcsHelper;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.VcsException;
+import consulo.versionControlSystem.VcsToolWindow;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.CommitContext;
 import consulo.versionControlSystem.localize.VcsLocalize;
@@ -112,7 +112,7 @@ public class ShelvedChangesViewManager {
   public static Key<List<ShelvedBinaryFile>> SHELVED_BINARY_FILE_KEY = Key.create("ShelveChangesManager.ShelvedBinaryFile");
   private static final Object ROOT_NODE_VALUE = new Object();
   private DefaultMutableTreeNode myRoot;
-  private final Map<Pair<String, String>, String> myMoveRenameInfo;
+  private final Map<Couple<String>, String> myMoveRenameInfo;
 
   public static ShelvedChangesViewManager getInstance(Project project) {
     return project.getComponent(ShelvedChangesViewManager.class);
@@ -125,12 +125,7 @@ public class ShelvedChangesViewManager {
     myShelveChangesManager = shelveChangesManager;
     myProject.getMessageBus().connect().subscribe(ShelveChangesListener.class, manager -> {
       myUpdatePending = true;
-      myProject.getApplication().invokeLater(new Runnable() {
-        @Override
-        public void run() {
-          updateChangesContent();
-        }
-      }, IdeaModalityState.nonModal());
+      myProject.getApplication().invokeLater(() -> updateChangesContent(), IdeaModalityState.nonModal());
     });
     myMoveRenameInfo = new HashMap<>();
 
@@ -158,15 +153,13 @@ public class ShelvedChangesViewManager {
     new TreeSpeedSearch(myTree, o -> {
       final Object lc = o.getLastPathComponent();
       final Object lastComponent = lc == null ? null : ((DefaultMutableTreeNode)lc).getUserObject();
-      if (lastComponent instanceof ShelvedChangeList) {
-        return ((ShelvedChangeList)lastComponent).DESCRIPTION;
+      if (lastComponent instanceof ShelvedChangeList shelvedChangeList) {
+        return shelvedChangeList.DESCRIPTION;
       }
-      else if (lastComponent instanceof ShelvedChange) {
-        final ShelvedChange shelvedChange = (ShelvedChange)lastComponent;
+      else if (lastComponent instanceof ShelvedChange shelvedChange) {
         return shelvedChange.getBeforeFileName() == null ? shelvedChange.getAfterFileName() : shelvedChange.getBeforeFileName();
       }
-      else if (lastComponent instanceof ShelvedBinaryFile) {
-        final ShelvedBinaryFile sbf = (ShelvedBinaryFile)lastComponent;
+      else if (lastComponent instanceof ShelvedBinaryFile sbf) {
         final String value = sbf.BEFORE_PATH == null ? sbf.AFTER_PATH : sbf.BEFORE_PATH;
         int idx = value.lastIndexOf("/");
         idx = (idx == -1) ? value.lastIndexOf("\\") : idx;
@@ -258,7 +251,7 @@ public class ShelvedChangesViewManager {
   private void putMovedMessage(final String beforeName, final String afterName) {
     final String movedMessage = RelativePathCalculator.getMovedString(beforeName, afterName);
     if (movedMessage != null) {
-      myMoveRenameInfo.put(new Pair<>(beforeName, afterName), movedMessage);
+      myMoveRenameInfo.put(Couple.of(beforeName, afterName), movedMessage);
     }
   }
 
@@ -268,7 +261,7 @@ public class ShelvedChangesViewManager {
         TreeUtil.selectNode(myTree, TreeUtil.findNodeWithObject(myRoot, list));
       }
       myContentManager.setSelectedContent(myContent);
-      ToolWindow window = ToolWindowManager.getInstance(myProject).getToolWindow(ChangesViewContentManager.TOOLWINDOW_ID);
+      ToolWindow window = ToolWindowManager.getInstance(myProject).getToolWindow(VcsToolWindow.ID);
       if (!window.isVisible()) {
         window.activate(null);
       }
@@ -338,8 +331,8 @@ public class ShelvedChangesViewManager {
           sink.put(VcsDataKeys.CHANGES, changes.toArray(new Change[changes.size()]));
         }
       }
-      else if (key == PlatformDataKeys.DELETE_ELEMENT_PROVIDER) {
-        sink.put(PlatformDataKeys.DELETE_ELEMENT_PROVIDER, myDeleteProvider);
+      else if (key == DeleteProvider.KEY) {
+        sink.put(DeleteProvider.KEY, myDeleteProvider);
       }
       else if (Navigatable.KEY_OF_ARRAY.equals(key)) {
         List<ShelvedChange> shelvedChanges = new ArrayList<>(TreeUtil.collectSelectedObjectsOfType(this, ShelvedChange.class));
@@ -360,7 +353,7 @@ public class ShelvedChangesViewManager {
           }
         }
 
-        sink.put(PlatformDataKeys.NAVIGATABLE_ARRAY, navigatables.toArray(new Navigatable[navigatables.size()]));
+        sink.put(Navigatable.KEY_OF_ARRAY, navigatables.toArray(new Navigatable[navigatables.size()]));
       }
     }
 
@@ -422,15 +415,23 @@ public class ShelvedChangesViewManager {
 
   private static class ShelfTreeCellRenderer extends ColoredTreeCellRenderer {
     private final IssueLinkRenderer myIssueLinkRenderer;
-    private final Map<Pair<String, String>, String> myMoveRenameInfo;
+    private final Map<Couple<String>, String> myMoveRenameInfo;
 
-    public ShelfTreeCellRenderer(Project project, final Map<Pair<String, String>, String> moveRenameInfo) {
+    public ShelfTreeCellRenderer(Project project, final Map<Couple<String>, String> moveRenameInfo) {
       myMoveRenameInfo = moveRenameInfo;
       myIssueLinkRenderer = new IssueLinkRenderer(project, this);
     }
 
     @Override
-    public void customizeCellRenderer(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+    public void customizeCellRenderer(
+      @Nonnull JTree tree,
+      Object value,
+      boolean selected,
+      boolean expanded,
+      boolean leaf,
+      int row,
+      boolean hasFocus
+    ) {
       DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;
       Object nodeValue = node.getUserObject();
       if (nodeValue instanceof ShelvedChangeList) {
@@ -451,7 +452,7 @@ public class ShelvedChangesViewManager {
       }
       else if (nodeValue instanceof ShelvedChange) {
         ShelvedChange change = (ShelvedChange)nodeValue;
-        final String movedMessage = myMoveRenameInfo.get(new Pair<>(change.getBeforePath(), change.getAfterPath()));
+        final String movedMessage = myMoveRenameInfo.get(Couple.of(change.getBeforePath(), change.getAfterPath()));
         renderFileName(change.getBeforePath(), change.getFileStatus(), movedMessage);
       }
       else if (nodeValue instanceof ShelvedBinaryFile) {
@@ -460,7 +461,7 @@ public class ShelvedChangesViewManager {
         if (path == null) {
           path = binaryFile.AFTER_PATH;
         }
-        final String movedMessage = myMoveRenameInfo.get(new Pair<>(binaryFile.BEFORE_PATH, binaryFile.AFTER_PATH));
+        final String movedMessage = myMoveRenameInfo.get(Couple.of(binaryFile.BEFORE_PATH, binaryFile.AFTER_PATH));
         renderFileName(path, binaryFile.getFileStatus(), movedMessage);
       }
     }
@@ -502,7 +503,7 @@ public class ShelvedChangesViewManager {
         VcsLocalize.shelvedchangesDeleteTitle().get(),
         CommonLocalize.buttonDelete().get(),
         CommonLocalize.buttonCancel().get(),
-        Messages.getWarningIcon()
+        UIUtil.getWarningIcon()
       );
       if (rc != 0) return;
       for (ShelvedChangeList changeList : shelvedChangeLists) {
@@ -543,8 +544,13 @@ public class ShelvedChangesViewManager {
 
       final ShelvedChangeList list = shelved[0];
 
-      final String message = VcsLocalize.shelveChangesDeleteFilesFromList((changes == null ? 0 : changes.size()) + (binaryFiles == null ? 0 : binaryFiles.size())).get();
-      int rc = Messages.showOkCancelDialog(myProject, message, VcsLocalize.shelveChangesDeleteFilesFromListTitle().get(), Messages.getWarningIcon());
+      final LocalizeValue message = VcsLocalize.shelveChangesDeleteFilesFromList((changes == null ? 0 : changes.size()) + (binaryFiles == null ? 0 : binaryFiles.size()));
+      int rc = Messages.showOkCancelDialog(
+        myProject,
+        message.get(),
+        VcsLocalize.shelveChangesDeleteFilesFromListTitle().get(),
+        UIUtil.getWarningIcon()
+      );
       if (rc != 0) return;
 
       final ArrayList<ShelvedBinaryFile> oldBinaries = new ArrayList<>(list.getBinaryFiles());
@@ -560,11 +566,7 @@ public class ShelvedChangesViewManager {
         try {
           patches.add(change.loadFilePatch(myProject, commitContext));
         }
-        catch (IOException e) {
-          //noinspection ThrowableInstanceNeverThrown
-          exceptions.add(new VcsException(e));
-        }
-        catch (PatchSyntaxException e) {
+        catch (IOException | PatchSyntaxException e) {
           //noinspection ThrowableInstanceNeverThrown
           exceptions.add(new VcsException(e));
         }

@@ -15,7 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.ui;
 
-import consulo.language.editor.PlatformDataKeys;
+import consulo.application.HelpManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.CloseTabToolbarAction;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
@@ -55,6 +56,7 @@ public abstract class PanelWithActionsAndCloseButton extends JPanel implements D
 
     if (myContentManager != null) {
       myContentManager.addContentManagerListener(new ContentManagerAdapter(){
+        @Override
         public void contentRemoved(ContentManagerEvent event) {
           if (event.getContent().getComponent() == PanelWithActionsAndCloseButton.this) {
             Disposer.dispose(PanelWithActionsAndCloseButton.this);
@@ -79,8 +81,8 @@ public abstract class PanelWithActionsAndCloseButton extends JPanel implements D
     myToolbarGroup.add(new MyCloseAction());
     myToolbarGroup.add(ActionManager.getInstance().getAction(IdeActions.ACTION_CONTEXT_HELP));
 
-
-    ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.FILEHISTORY_VIEW_TOOLBAR, myToolbarGroup, ! myVerticalToolbar);
+    ActionToolbar toolbar = ActionManager.getInstance()
+      .createActionToolbar(ActionPlaces.FILEHISTORY_VIEW_TOOLBAR, myToolbarGroup, ! myVerticalToolbar);
     JComponent centerPanel = createCenterPanel();
     toolbar.setTargetComponent(centerPanel);
     for (AnAction action : myToolbarGroup.getChildren(null)) {
@@ -95,11 +97,9 @@ public abstract class PanelWithActionsAndCloseButton extends JPanel implements D
     }
   }
 
+  @Override
   public Object getData(@Nonnull Key<?> dataId) {
-    if (PlatformDataKeys.HELP_ID == dataId){
-      return myHelpId;
-    }
-    return null;
+    return HelpManager.HELP_ID == dataId ? myHelpId : null;
   }
 
   protected abstract JComponent createCenterPanel();
@@ -108,12 +108,15 @@ public abstract class PanelWithActionsAndCloseButton extends JPanel implements D
 
   private class MyCloseAction extends CloseTabToolbarAction {
     @Override
-    public void update(AnActionEvent e) {
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent e) {
       super.update(e);
       e.getPresentation().setVisible(myCloseEnabled);
     }
 
-    public void actionPerformed(AnActionEvent e) {
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       if (myContentManager != null) {
         Content content = myContentManager.getContent(PanelWithActionsAndCloseButton.this);
         if (content != null) {

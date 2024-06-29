@@ -22,7 +22,7 @@ import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
-import static consulo.ide.impl.idea.openapi.util.text.StringUtil.isWhiteSpace;
+import static consulo.util.lang.StringUtil.isWhiteSpace;
 
 @SuppressWarnings({"Duplicates", "unused", "TypeParameterExplicitlyExtendsObject"})
 public class TrimUtil {

@@ -16,35 +16,39 @@
 
 package consulo.ide.impl.idea.codeInspection.ui;
 
-import consulo.language.editor.FileModificationService;
-import consulo.language.editor.inspection.scheme.InspectionProfileWrapper;
-import consulo.language.editor.rawHighlight.HighlightDisplayKey;
-import consulo.ide.impl.idea.codeInspection.ex.*;
-import consulo.language.editor.inspection.*;
-import consulo.language.editor.inspection.reference.RefElement;
-import consulo.language.editor.inspection.reference.RefEntity;
-import consulo.ide.impl.idea.codeInspection.ui.actions.SuppressActionWrapper;
-import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
-import consulo.ui.ex.action.AnAction;
-import consulo.application.ApplicationManager;
-import consulo.undoRedo.CommandProcessor;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextImpl;
+import consulo.ide.impl.idea.codeInspection.ex.QuickFixAction;
+import consulo.ide.impl.idea.codeInspection.ui.actions.SuppressActionWrapper;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManagerImpl;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.xml.util.XmlStringUtil;
+import consulo.language.editor.FileModificationService;
+import consulo.language.editor.inspection.*;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
+import consulo.language.editor.inspection.reference.RefElement;
+import consulo.language.editor.inspection.reference.RefEntity;
+import consulo.language.editor.inspection.scheme.InspectionProfileWrapper;
+import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
+import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiModificationTracker;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ide.impl.idea.xml.util.XmlStringUtil;
-import org.jetbrains.annotations.NonNls;
+import consulo.undoRedo.CommandProcessor;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -63,7 +67,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 class Browser extends JPanel {
-  private static final String UNDER_CONSTRUCTION = InspectionsBundle.message("inspection.tool.description.under.construction.text");
   private final List<ClickListener> myClickListeners = ContainerUtil.createLockFreeCopyOnWriteList();
   private RefEntity myCurrentEntity;
   private JEditorPane myHTMLViewer;
@@ -172,14 +175,9 @@ class Browser extends JPanel {
     myCurrentEntity = null;
     myCurrentDescriptor = null;
 
-    myHTMLViewer = new JEditorPane(UIUtil.HTML_MIME, InspectionsBundle.message("inspection.offline.view.empty.browser.text"));
+    myHTMLViewer = new JEditorPane(UIUtil.HTML_MIME, InspectionLocalize.inspectionOfflineViewEmptyBrowserText().get());
     myHTMLViewer.setEditable(false);
-    myHyperLinkListener = new HyperlinkListener() {
-      @Override
-      public void hyperlinkUpdate(HyperlinkEvent e) {
-        Browser.this.hyperlinkUpdate(e);
-      }
-    };
+    myHyperLinkListener = Browser.this::hyperlinkUpdate;
     myHTMLViewer.addHyperlinkListener(myHyperLinkListener);
 
     final JScrollPane pane = ScrollPaneFactory.createScrollPane(myHTMLViewer);
@@ -188,6 +186,7 @@ class Browser extends JPanel {
     setupStyle();
   }
 
+  @RequiredUIAccess
   private void hyperlinkUpdate(HyperlinkEvent e) {
     if (e.getEventType() != HyperlinkEvent.EventType.ACTIVATED) {
       return;
@@ -206,13 +205,13 @@ class Browser extends JPanel {
         int delimeterPos = ref.indexOf(':', "pos:".length() + 1);
         String startPosition = ref.substring("pos:".length(), delimeterPos);
         String endPosition = ref.substring(delimeterPos + 1);
-        Integer textStartOffset = new Integer(startPosition);
-        Integer textEndOffset = new Integer(endPosition);
+        int textStartOffset = Integer.parseInt(startPosition);
+        int textEndOffset = Integer.parseInt(endPosition);
         String fileURL = url.toExternalForm();
         fileURL = fileURL.substring(0, fileURL.indexOf('#'));
         VirtualFile vFile = VirtualFileManager.getInstance().findFileByUrl(fileURL);
         if (vFile != null) {
-          fireClickEvent(vFile, textStartOffset.intValue(), textEndOffset.intValue());
+          fireClickEvent(vFile, textStartOffset, textEndOffset);
         }
       }
       else if (ref.startsWith("descr:")) {
@@ -241,7 +240,7 @@ class Browser extends JPanel {
       } else if (ref.startsWith("suppress:")){
         final SuppressActionWrapper.SuppressTreeAction[] suppressTreeActions =
           new SuppressActionWrapper(myView.getProject(), getToolWrapper(), myView.getTree().getSelectionPaths()).getChildren(null);
-        final List<AnAction> activeActions = new ArrayList<AnAction>();
+        final List<AnAction> activeActions = new ArrayList<>();
         for (SuppressActionWrapper.SuppressTreeAction suppressTreeAction : suppressTreeActions) {
           if (suppressTreeAction.isAvailable()) activeActions.add(suppressTreeAction);
         }
@@ -299,16 +298,12 @@ class Browser extends JPanel {
     }
   }
 
+  @RequiredReadAction
   private String generateHTML(final RefEntity refEntity, @Nonnull final InspectionToolWrapper toolWrapper) {
     final StringBuffer buf = new StringBuffer();
     final HTMLComposerBase htmlComposer = getPresentation(toolWrapper).getComposer();
     if (refEntity instanceof RefElement) {
-      ApplicationManager.getApplication().runReadAction(new Runnable() {
-        @Override
-        public void run() {
-          htmlComposer.compose(buf, refEntity);
-        }
-      });
+      Application.get().runReadAction(() -> htmlComposer.compose(buf, refEntity));
     }
     else {
       htmlComposer.compose(buf, refEntity);
@@ -337,14 +332,11 @@ class Browser extends JPanel {
 
   private String generateHTML(final RefEntity refEntity, final CommonProblemDescriptor descriptor) {
     final StringBuffer buf = new StringBuffer();
-    final Runnable action = new Runnable() {
-      @Override
-      public void run() {
-        InspectionToolWrapper toolWrapper = getToolWrapper(refEntity);
-        getPresentation(toolWrapper).getComposer().compose(buf, refEntity, descriptor);
-      }
+    final Runnable action = () -> {
+      InspectionToolWrapper toolWrapper = getToolWrapper(refEntity);
+      getPresentation(toolWrapper).getComposer().compose(buf, refEntity, descriptor);
     };
-    ApplicationManager.getApplication().runReadAction(action);
+    Application.get().runReadAction(action);
 
     uppercaseFirstLetter(buf);
 
@@ -374,9 +366,10 @@ class Browser extends JPanel {
     if (toolWrapper != null) {
       final HighlightDisplayKey key = HighlightDisplayKey.find(toolWrapper.getShortName());
       if (key != null){//dummy entry points
-        final SuppressActionWrapper.SuppressTreeAction[] suppressActions = new SuppressActionWrapper(myView.getProject(), toolWrapper, myView.getTree().getSelectionPaths()).getChildren(null);
+        final SuppressActionWrapper.SuppressTreeAction[] suppressActions =
+          new SuppressActionWrapper(myView.getProject(), toolWrapper, myView.getTree().getSelectionPaths()).getChildren(null);
         if (suppressActions.length > 0) {
-          final List<AnAction> activeSuppressActions = new ArrayList<AnAction>();
+          final List<AnAction> activeSuppressActions = new ArrayList<>();
           for (SuppressActionWrapper.SuppressTreeAction suppressAction : suppressActions) {
             if (suppressAction.isAvailable()) {
               activeSuppressActions.add(suppressAction);
@@ -386,14 +379,15 @@ class Browser extends JPanel {
             int idx = 0;
             @NonNls final String br = "<br>";
             buf.append(br);
-            HTMLComposerBase.appendHeading(buf, InspectionsBundle.message("inspection.export.results.suppress"));
+            HTMLComposerBase.appendHeading(buf, InspectionLocalize.inspectionExportResultsSuppress());
             for (AnAction suppressAction : activeSuppressActions) {
               buf.append(br);
               if (idx == activeSuppressActions.size() - 1) {
                 buf.append(br);
               }
               HTMLComposer.appendAfterHeaderIndention(buf);
-              @NonNls final String href = "<a HREF=\"file://bred.txt#suppress:" + idx + "\">" + suppressAction.getTemplatePresentation().getText() + "</a>";
+              @NonNls final String href =
+                "<a HREF=\"file://bred.txt#suppress:" + idx + "\">" + suppressAction.getTemplatePresentation().getText() + "</a>";
               buf.append(href);
               idx++;
             }
@@ -430,7 +424,7 @@ class Browser extends JPanel {
     @NonNls StringBuffer page = new StringBuffer();
     page.append("<table border='0' cellspacing='0' cellpadding='0' width='100%'>");
     page.append("<tr><td colspan='2'>");
-    HTMLComposer.appendHeading(page, InspectionsBundle.message("inspection.tool.in.browser.id.title"));
+    HTMLComposer.appendHeading(page, InspectionLocalize.inspectionToolInBrowserIdTitle());
     page.append("</td></tr>");
     page.append("<tr><td width='37'></td>" +
                 "<td>");
@@ -438,11 +432,11 @@ class Browser extends JPanel {
     page.append("</td></tr>");
     page.append("<tr height='10'></tr>");
     page.append("<tr><td colspan='2'>");
-    HTMLComposer.appendHeading(page, InspectionsBundle.message("inspection.tool.in.browser.description.title"));
+    HTMLComposer.appendHeading(page, InspectionLocalize.inspectionToolInBrowserDescriptionTitle());
     page.append("</td></tr>");
     page.append("<tr><td width='37'></td>" +
                 "<td>");
-    @NonNls final String underConstruction = "<b>" + UNDER_CONSTRUCTION + "</b></html>";
+    @NonNls final String underConstruction = "<b>" + InspectionLocalize.inspectionToolDescriptionUnderConstructionText() + "</b></html>";
     try {
       @NonNls String description = toolWrapper.loadDescription();
       if (description == null) {
@@ -500,30 +494,22 @@ class Browser extends JPanel {
   }
 
   private void performFix(final RefEntity element, final CommonProblemDescriptor descriptor, final int idx, final QuickFix fix) {
-    final Runnable command = new Runnable() {
-      @Override
-      public void run() {
-        ApplicationManager.getApplication().runWriteAction(new Runnable() {
-          @Override
-          public void run() {
-            final PsiModificationTracker tracker = PsiManager.getInstance(myView.getProject()).getModificationTracker();
-            final long startCount = tracker.getModificationCount();
-            CommandProcessor.getInstance().markCurrentCommandAsGlobal(myView.getProject());
-            //CCE here means QuickFix was incorrectly inherited
-            fix.applyFix(myView.getProject(), descriptor);
-            if (startCount != tracker.getModificationCount()) {
-              InspectionToolWrapper toolWrapper = myView.getTree().getSelectedToolWrapper();
-              if (toolWrapper != null) {
-                InspectionToolPresentation presentation =
-                  myView.getGlobalInspectionContext().getPresentation(toolWrapper);
-                presentation.ignoreProblem(element, descriptor, idx);
-              }
-              myView.updateView(false);
-            }
-          }
-        });
+    final Runnable command = () -> Application.get().runWriteAction(() -> {
+      final PsiModificationTracker tracker = PsiManager.getInstance(myView.getProject()).getModificationTracker();
+      final long startCount = tracker.getModificationCount();
+      CommandProcessor.getInstance().markCurrentCommandAsGlobal(myView.getProject());
+      //CCE here means QuickFix was incorrectly inherited
+      fix.applyFix(myView.getProject(), descriptor);
+      if (startCount != tracker.getModificationCount()) {
+        InspectionToolWrapper toolWrapper = myView.getTree().getSelectedToolWrapper();
+        if (toolWrapper != null) {
+          InspectionToolPresentation presentation =
+            myView.getGlobalInspectionContext().getPresentation(toolWrapper);
+          presentation.ignoreProblem(element, descriptor, idx);
+        }
+        myView.updateView(false);
       }
-    };
+    });
     CommandProcessor.getInstance().executeCommand(myView.getProject(), command, fix.getName(), null);
   }
 }

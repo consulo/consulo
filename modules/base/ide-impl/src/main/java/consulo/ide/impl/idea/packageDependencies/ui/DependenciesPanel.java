@@ -17,6 +17,7 @@
 package consulo.ide.impl.idea.packageDependencies.ui;
 
 import consulo.application.AllIcons;
+import consulo.application.HelpManager;
 import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.function.Processor;
@@ -33,7 +34,6 @@ import consulo.ide.impl.idea.packageDependencies.actions.BackwardDependenciesHan
 import consulo.ide.impl.idea.ui.SmartExpander;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.ide.setting.ShowSettingsUtil;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.packageDependency.DependencyRule;
 import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.language.editor.scope.AnalysisScope;
@@ -460,7 +460,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
         return element != null && element.isValid() ? element : null;
       }
     }
-    if (PlatformDataKeys.HELP_ID == dataId) {
+    if (HelpManager.HELP_ID == dataId) {
       return "dependency.viewer.tool.window";
     }
     return null;

@@ -16,10 +16,10 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.shelf;
 
 import consulo.versionControlSystem.change.CommitContext;
-import consulo.util.io.CharsetToolkit;
 import jakarta.annotation.Nonnull;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 public class CompoundShelfFileProcessor {
   private final File shelfDir;
@@ -32,16 +32,13 @@ public class CompoundShelfFileProcessor {
     void writeContentTo(@Nonnull Writer writer, @Nonnull CommitContext commitContext) throws IOException;
   }
 
-  public void savePathFile(@Nonnull ContentProvider contentProvider,
-                           @Nonnull final File patchPath,
-                           @Nonnull CommitContext commitContext)
-          throws IOException {
-    OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(patchPath), CharsetToolkit.UTF8_CHARSET);
-    try {
+  public void savePathFile(
+    @Nonnull ContentProvider contentProvider,
+    @Nonnull final File patchPath,
+    @Nonnull CommitContext commitContext
+  ) throws IOException {
+    try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(patchPath), StandardCharsets.UTF_8)) {
       contentProvider.writeContentTo(writer, commitContext);
-    }
-    finally {
-      writer.close();
     }
   }
 

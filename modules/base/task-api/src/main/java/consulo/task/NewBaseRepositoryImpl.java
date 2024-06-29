@@ -26,6 +26,7 @@ import org.apache.http.protocol.HttpContext;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * This alternative base implementation of {@link BaseRepository} should be used
@@ -34,7 +35,8 @@ import java.io.IOException;
  * @author Mikhail Golubev
  */
 public abstract class NewBaseRepositoryImpl extends BaseRepository {
-  private static final AuthScope BASIC_AUTH_SCOPE = new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT, AuthScope.ANY_REALM, AuthSchemes.BASIC);
+  private static final AuthScope BASIC_AUTH_SCOPE =
+    new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT, AuthScope.ANY_REALM, AuthSchemes.BASIC);
   // Provides preemptive authentication in HttpClient 4.x
   // see http://stackoverflow.com/questions/2014700/preemptive-basic-authentication-with-apache-httpclient-4
   private static final HttpRequestInterceptor PREEMPTIVE_BASIC_AUTH = new PreemptiveBasicAuthInterceptor();
@@ -57,11 +59,15 @@ public abstract class NewBaseRepositoryImpl extends BaseRepository {
   @Nonnull
   protected HttpClient getHttpClient() {
     CertificateManager certificateManager = CertificateManager.getInstance();
-    HttpClientBuilder builder = HttpClients.custom().setDefaultRequestConfig(createRequestConfig()).setSslcontext(certificateManager.getSslContext())
-            // TODO: use custom one for additional certificate check
-            //.setHostnameVerifier(SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER)
-            .setHostnameVerifier((X509HostnameVerifier)certificateManager.getHostnameVerifier()).setDefaultCredentialsProvider(createCredentialsProvider()).addInterceptorFirst(PREEMPTIVE_BASIC_AUTH)
-            .addInterceptorLast(createRequestInterceptor());
+    HttpClientBuilder builder = HttpClients.custom()
+      .setDefaultRequestConfig(createRequestConfig())
+      .setSslcontext(certificateManager.getSslContext())
+      // TODO: use custom one for additional certificate check
+      //.setHostnameVerifier(SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER)
+      .setHostnameVerifier((X509HostnameVerifier)certificateManager.getHostnameVerifier())
+      .setDefaultCredentialsProvider(createCredentialsProvider())
+      .addInterceptorFirst(PREEMPTIVE_BASIC_AUTH)
+      .addInterceptorLast(createRequestInterceptor());
     return builder.build();
   }
 
@@ -144,7 +150,7 @@ public abstract class NewBaseRepositoryImpl extends BaseRepository {
       final CredentialsProvider provider = (CredentialsProvider)context.getAttribute(HttpClientContext.CREDS_PROVIDER);
       final Credentials credentials = provider.getCredentials(BASIC_AUTH_SCOPE);
       if (credentials != null) {
-        request.addHeader(new BasicScheme(CharsetToolkit.UTF8_CHARSET).authenticate(credentials, request, context));
+        request.addHeader(new BasicScheme(StandardCharsets.UTF_8).authenticate(credentials, request, context));
       }
       final HttpHost proxyHost = ((HttpRoute)context.getAttribute(HttpClientContext.HTTP_ROUTE)).getProxyHost();
       if (proxyHost != null) {

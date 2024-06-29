@@ -15,59 +15,58 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.history.impl;
 
-import consulo.ide.impl.idea.diff.Block;
+import consulo.application.AllIcons;
+import consulo.application.HelpManager;
+import consulo.application.internal.BackgroundTaskUtil;
+import consulo.application.progress.ProgressManager;
+import consulo.dataContext.DataProvider;
 import consulo.diff.DiffContentFactory;
 import consulo.diff.DiffManager;
 import consulo.diff.DiffRequestPanel;
 import consulo.diff.content.DiffContent;
-import consulo.ide.impl.idea.diff.requests.LoadingDiffRequest;
 import consulo.diff.request.MessageDiffRequest;
 import consulo.diff.request.NoDiffRequest;
 import consulo.diff.request.SimpleDiffRequest;
+import consulo.disposer.Disposable;
+import consulo.document.Document;
+import consulo.ide.impl.idea.diff.Block;
+import consulo.ide.impl.idea.diff.requests.LoadingDiffRequest;
 import consulo.ide.impl.idea.diff.util.IntPair;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.application.internal.BackgroundTaskUtil;
-import consulo.ui.ex.awt.FrameWrapper;
-import consulo.ui.ex.awt.util.PopupUtil;
-import consulo.ide.impl.idea.openapi.vcs.*;
+import consulo.ide.impl.idea.openapi.vcs.CalledInBackground;
+import consulo.ide.impl.idea.openapi.vcs.VcsActions;
 import consulo.ide.impl.idea.openapi.vcs.annotate.ShowAllAffectedGenericAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.IssueLinkHtmlRenderer;
 import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.TableLinkMouseListener;
-import consulo.ide.impl.idea.openapi.vcs.history.*;
-import consulo.ui.ex.awt.BrowserHyperlinkListener;
-import consulo.ui.ex.awt.table.TableView;
+import consulo.ide.impl.idea.openapi.vcs.history.CurrentRevision;
+import consulo.ide.impl.idea.openapi.vcs.history.FileHistoryPanelImpl;
+import consulo.ide.impl.idea.openapi.vcs.history.StandardDiffFromHistoryHandler;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.table.ListTableModel;
-import consulo.versionControlSystem.localize.VcsLocalize;
-import consulo.versionControlSystem.util.VcsUtil;
-import consulo.application.AllIcons;
-import consulo.application.progress.ProgressManager;
-import consulo.dataContext.DataProvider;
-import consulo.disposer.Disposable;
-import consulo.document.Document;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.NotificationType;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.table.ListTableModel;
+import consulo.ui.ex.awt.table.TableView;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
+import consulo.ui.ex.awt.util.PopupUtil;
 import consulo.ui.ex.awt.util.Update;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.function.Conditions;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.history.*;
+import consulo.versionControlSystem.localize.VcsLocalize;
+import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -180,36 +179,30 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
     mySplitter.setFirstComponent(myDiffPanel.getComponent());
     mySplitter.setSecondComponent(createBottomPanel(components.getDetailsComponent()));
 
-    final ListSelectionListener selectionListener = new ListSelectionListener() {
-      @Override
-      public void valueChanged(ListSelectionEvent e) {
-        final VcsFileRevision revision;
-        if (myList.getSelectedRowCount() == 1 && !myList.isEmpty()) {
-          revision = myList.getItems().get(myList.getSelectedRow());
-          String message = IssueLinkHtmlRenderer.formatTextIntoHtml(myProject, revision.getCommitMessage());
-          myComments.setText(message);
-          myComments.setCaretPosition(0);
-        }
-        else {
-          revision = null;
-          myComments.setText("");
-        }
-        if (components.getRevisionListener() != null) {
-          components.getRevisionListener().accept(revision);
-        }
-        updateDiff();
+    final ListSelectionListener selectionListener = e -> {
+      final VcsFileRevision revision;
+      if (myList.getSelectedRowCount() == 1 && !myList.isEmpty()) {
+        revision = myList.getItems().get(myList.getSelectedRow());
+        String message = IssueLinkHtmlRenderer.formatTextIntoHtml(myProject, revision.getCommitMessage());
+        myComments.setText(message);
+        myComments.setCaretPosition(0);
       }
+      else {
+        revision = null;
+        myComments.setText("");
+      }
+      if (components.getRevisionListener() != null) {
+        components.getRevisionListener().accept(revision);
+      }
+      updateDiff();
     };
     myList.getSelectionModel().addListSelectionListener(selectionListener);
 
     final VcsConfiguration configuration = VcsConfiguration.getInstance(myProject);
     myChangesOnlyCheckBox.setSelected(configuration.SHOW_ONLY_CHANGED_IN_SELECTION_DIFF);
-    myChangesOnlyCheckBox.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        configuration.SHOW_ONLY_CHANGED_IN_SELECTION_DIFF = myChangesOnlyCheckBox.isSelected();
-        updateRevisionsList();
-      }
+    myChangesOnlyCheckBox.addActionListener(e -> {
+      configuration.SHOW_ONLY_CHANGED_IN_SELECTION_DIFF = myChangesOnlyCheckBox.isSelected();
+      updateRevisionsList();
     });
 
     final DefaultActionGroup popupActions = new DefaultActionGroup();
@@ -472,7 +465,7 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
     else if (VcsDataKeys.VCS == dataId) {
       return myActiveVcs.getKeyInstanceMethod();
     }
-    else if (PlatformDataKeys.HELP_ID == dataId) {
+    else if (HelpManager.HELP_ID == dataId) {
       return myHelpId;
     }
     return null;
@@ -484,12 +477,17 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
       setShortcutSet(CommonShortcuts.getDiff());
     }
 
+    @Override
+    @RequiredUIAccess
     public void update(final AnActionEvent e) {
-      e.getPresentation().setEnabled(myList.getSelectedRowCount() > 1 ||
-                                     myList.getSelectedRowCount() == 1 && myList.getSelectedObject() != myLocalRevision);
+      e.getPresentation().setEnabled(
+        myList.getSelectedRowCount() > 1 || myList.getSelectedRowCount() == 1 && myList.getSelectedObject() != myLocalRevision
+      );
     }
 
-    public void actionPerformed(AnActionEvent e) {
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       IntPair range = getSelectedRevisionsRange();
 
       VcsFileRevision beforeRevision = range.val2 < myRevisions.size() ? myRevisions.get(range.val2) : VcsFileRevision.NULL;
@@ -516,11 +514,15 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
       setShortcutSet(ActionManager.getInstance().getAction("Vcs.ShowDiffWithLocal").getShortcutSet());
     }
 
+    @Override
+    @RequiredUIAccess
     public void update(final AnActionEvent e) {
       e.getPresentation().setEnabled(myList.getSelectedRowCount() == 1 && myList.getSelectedObject() != myLocalRevision);
     }
 
-    public void actionPerformed(AnActionEvent e) {
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       VcsFileRevision revision = myList.getSelectedObject();
       if (revision == null) return;
 

@@ -2,7 +2,6 @@
 package consulo.ide.impl.idea.build;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.build.ui.BuildDescriptor;
 import consulo.build.ui.BuildViewSettingsProvider;
 import consulo.build.ui.DefaultBuildDescriptor;
@@ -10,22 +9,21 @@ import consulo.build.ui.ViewManager;
 import consulo.build.ui.event.BuildEvent;
 import consulo.build.ui.event.OutputBuildEvent;
 import consulo.build.ui.event.StartBuildEvent;
+import consulo.build.ui.impl.internal.event.StartBuildEventImpl;
 import consulo.build.ui.process.BuildProcessHandler;
 import consulo.build.ui.progress.BuildProgressListener;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.execution.ExecutionDataKeys;
+import consulo.execution.configuration.RunProfile;
+import consulo.execution.impl.internal.action.StopAction;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.ui.ExecutionConsole;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.execution.ui.console.*;
-import consulo.ide.IdeBundle;
-import consulo.build.ui.impl.internal.event.StartBuildEventImpl;
-import consulo.execution.impl.internal.action.StopAction;
 import consulo.ide.impl.idea.execution.actions.StopProcessAction;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessEvent;
 import consulo.project.Project;
@@ -33,6 +31,7 @@ import consulo.ui.ex.OccurenceNavigator;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.IdeActions;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -57,7 +56,7 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
   @Nonnull
   ViewManager myViewManager;
   private final AtomicBoolean isBuildStartEventProcessed = new AtomicBoolean();
-  private final List<BuildEvent> myAfterStartEvents = ContainerUtil.createConcurrentList();
+  private final List<BuildEvent> myAfterStartEvents = consulo.ide.impl.idea.util.containers.ContainerUtil.createConcurrentList();
   private final
   @Nonnull
   DefaultBuildDescriptor myBuildDescriptor;
@@ -66,27 +65,35 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
   ExecutionConsole myExecutionConsole;
   private volatile BuildViewSettingsProvider myViewSettingsProvider;
 
-  public BuildView(@Nonnull Project project, @Nonnull BuildDescriptor buildDescriptor, @NonNls @Nullable String selectionStateKey, @Nonnull ViewManager viewManager) {
+  public BuildView(
+    @Nonnull Project project,
+    @Nonnull BuildDescriptor buildDescriptor,
+    @NonNls @Nullable String selectionStateKey,
+    @Nonnull ViewManager viewManager
+  ) {
     this(project, null, buildDescriptor, selectionStateKey, viewManager);
   }
 
-  public BuildView(@Nonnull Project project,
-                   @Nullable ExecutionConsole executionConsole,
-                   @Nonnull BuildDescriptor buildDescriptor,
-                   @NonNls @Nullable String selectionStateKey,
-                   @Nonnull ViewManager viewManager) {
+  public BuildView(
+    @Nonnull Project project,
+    @Nullable ExecutionConsole executionConsole,
+    @Nonnull BuildDescriptor buildDescriptor,
+    @NonNls @Nullable String selectionStateKey,
+    @Nonnull ViewManager viewManager
+  ) {
     super(selectionStateKey);
     myProject = project;
     myViewManager = viewManager;
     myExecutionConsole = executionConsole;
-    myBuildDescriptor = buildDescriptor instanceof DefaultBuildDescriptor ? (DefaultBuildDescriptor)buildDescriptor : new DefaultBuildDescriptor(buildDescriptor);
+    myBuildDescriptor = buildDescriptor instanceof DefaultBuildDescriptor defaultBuildDescriptor
+      ? defaultBuildDescriptor : new DefaultBuildDescriptor(buildDescriptor);
     Disposer.register(project, this);
   }
 
   @Override
   public void onEvent(@Nonnull Object buildId, @Nonnull BuildEvent event) {
     if (event instanceof StartBuildEvent) {
-      ApplicationManager.getApplication().invokeAndWait(() -> {
+      Application.get().invokeAndWait(() -> {
         onStartBuild(buildId, (StartBuildEvent)event);
         for (BuildEvent buildEvent : myAfterStartEvents) {
           processEvent(buildId, buildEvent);
@@ -108,8 +115,8 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
   private void processEvent(@Nonnull Object buildId, @Nonnull BuildEvent event) {
     if (event instanceof OutputBuildEvent && (event.getParentId() == null || event.getParentId() == myBuildDescriptor.getId())) {
       ExecutionConsole consoleView = getConsoleView();
-      if (consoleView instanceof BuildProgressListener) {
-        ((BuildProgressListener)consoleView).onEvent(buildId, event);
+      if (consoleView instanceof BuildProgressListener progressListener) {
+        progressListener.onEvent(buildId, event);
       }
     }
     else {
@@ -121,11 +128,11 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
   }
 
   private void onStartBuild(@Nonnull Object buildId, @Nonnull StartBuildEvent startBuildEvent) {
-    Application application = ApplicationManager.getApplication();
+    Application application = Application.get();
     if (application.isHeadlessEnvironment() && !application.isUnitTestMode()) return;
 
-    if (startBuildEvent instanceof StartBuildEventImpl) {
-      myViewSettingsProvider = ((StartBuildEventImpl)startBuildEvent).getBuildViewSettingsProvider();
+    if (startBuildEvent instanceof StartBuildEventImpl startBuildEventImpl) {
+      myViewSettingsProvider = startBuildEventImpl.getBuildViewSettingsProvider();
     }
     if (myViewSettingsProvider == null) {
       myViewSettingsProvider = () -> false;
@@ -133,9 +140,11 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
     if (myExecutionConsole == null) {
       Supplier<? extends RunContentDescriptor> descriptorSupplier = myBuildDescriptor.getContentDescriptorSupplier();
       RunContentDescriptor runContentDescriptor = descriptorSupplier != null ? descriptorSupplier.get() : null;
-      myExecutionConsole = runContentDescriptor != null && runContentDescriptor.getExecutionConsole() != null && runContentDescriptor.getExecutionConsole() != this
-                           ? runContentDescriptor.getExecutionConsole()
-                           : new BuildTextConsoleView(myProject, false, myBuildDescriptor.getExecutionFilters());
+      myExecutionConsole = runContentDescriptor != null
+        && runContentDescriptor.getExecutionConsole() != null
+        && runContentDescriptor.getExecutionConsole() != this
+        ? runContentDescriptor.getExecutionConsole()
+        : new BuildTextConsoleView(myProject, false, myBuildDescriptor.getExecutionFilters());
       if (runContentDescriptor != null && Disposer.findRegisteredObject(runContentDescriptor, this) == null) {
         Disposer.register(this, runContentDescriptor);
       }
@@ -199,8 +208,8 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
   @Override
   public void addChangeListener(@Nonnull ChangeListener listener, @Nonnull Disposable parent) {
     ExecutionConsole console = getConsoleView();
-    if (console instanceof ObservableConsoleView) {
-      ((ObservableConsoleView)console).addChangeListener(listener, parent);
+    if (console instanceof ObservableConsoleView observableConsoleView) {
+      observableConsoleView.addChangeListener(listener, parent);
     }
   }
 
@@ -310,8 +319,11 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
     final DefaultActionGroup rerunActionGroup = new DefaultActionGroup();
     AnAction stopAction = null;
     if (myBuildDescriptor.getProcessHandler() != null) {
-      stopAction = new StopProcessAction(IdeBundle.message("action.DumbAware.BuildView.text.stop"), IdeBundle.message("action.DumbAware.CopyrightProfilesPanel.description.stop"),
-                                         myBuildDescriptor.getProcessHandler());
+      stopAction = new StopProcessAction(
+        IdeLocalize.actionDumbawareBuildviewTextStop().get(),
+        IdeLocalize.actionDumbawareCopyrightprofilespanelDescriptionStop().get(),
+        myBuildDescriptor.getProcessHandler()
+      );
       ActionUtil.copyFrom(stopAction, IdeActions.ACTION_STOP_PROGRAM);
       stopAction.registerCustomShortcutSet(stopAction.getShortcutSet(), this);
     }
@@ -354,16 +366,16 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
   @Nullable
   @Override
   public Object getData(@Nonnull Key dataId) {
-    if (ExecutionDataKeys.CONSOLE_VIEW == dataId) {
+    if (KEY == dataId) {
       return getConsoleView();
     }
     Object data = super.getData(dataId);
     if (data != null) return data;
-    if (ExecutionDataKeys.RUN_PROFILE == dataId) {
+    if (RunProfile.KEY == dataId) {
       ExecutionEnvironment environment = myBuildDescriptor.getExecutionEnvironment();
       return environment == null ? null : environment.getRunProfile();
     }
-    if (ExecutionDataKeys.EXECUTION_ENVIRONMENT == dataId) {
+    if (ExecutionEnvironment.KEY == dataId) {
       return myBuildDescriptor.getExecutionEnvironment();
     }
     if (RESTART_ACTIONS == dataId) {
@@ -411,8 +423,8 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
     BuildTreeConsoleView eventView = getEventView();
     if (eventView != null) return eventView;
     ExecutionConsole executionConsole = getConsoleView();
-    if (executionConsole instanceof OccurenceNavigator) {
-      return (OccurenceNavigator)executionConsole;
+    if (executionConsole instanceof OccurenceNavigator occurenceNavigator) {
+      return occurenceNavigator;
     }
     return EMPTY;
   }

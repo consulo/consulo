@@ -15,70 +15,64 @@
  */
 package consulo.ide.impl.idea.diff.tools.fragmented;
 
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.application.AccessRule;
+import consulo.application.AllIcons;
+import consulo.application.Application;
+import consulo.application.dumb.DumbAware;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.util.function.ThrowableComputable;
+import consulo.codeEditor.*;
+import consulo.codeEditor.action.EditorActionManager;
+import consulo.component.ProcessCanceledException;
+import consulo.diff.DiffUserDataKeys;
+import consulo.diff.comparison.DiffTooBigException;
+import consulo.diff.content.DocumentContent;
+import consulo.diff.fragment.LineFragment;
+import consulo.diff.localize.DiffLocalize;
+import consulo.diff.request.ContentDiffRequest;
+import consulo.diff.request.DiffRequest;
+import consulo.diff.util.LineCol;
+import consulo.diff.util.Side;
+import consulo.disposer.Disposable;
+import consulo.document.Document;
+import consulo.document.RangeMarker;
+import consulo.document.ReadOnlyFragmentModificationException;
+import consulo.document.ReadonlyFragmentModificationHandler;
+import consulo.document.event.DocumentAdapter;
+import consulo.document.event.DocumentEvent;
+import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.diff.DiffContext;
 import consulo.ide.impl.idea.diff.actions.AllLinesIterator;
 import consulo.ide.impl.idea.diff.actions.BufferedLineIterator;
 import consulo.ide.impl.idea.diff.actions.impl.OpenInEditorWithMouseAction;
 import consulo.ide.impl.idea.diff.actions.impl.SetEditorSettingsAction;
-import consulo.diff.comparison.DiffTooBigException;
-import consulo.diff.DiffUserDataKeys;
-import consulo.diff.content.DocumentContent;
-import consulo.diff.fragment.LineFragment;
-import consulo.diff.request.ContentDiffRequest;
-import consulo.diff.request.DiffRequest;
 import consulo.ide.impl.idea.diff.tools.util.*;
 import consulo.ide.impl.idea.diff.tools.util.base.*;
 import consulo.ide.impl.idea.diff.tools.util.side.TwosideTextDiffViewer;
-import consulo.ide.impl.idea.diff.util.*;
 import consulo.ide.impl.idea.diff.util.DiffUserDataKeysEx.ScrollToPolicy;
-import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
-import consulo.diff.util.LineCol;
-import consulo.diff.util.Side;
-import consulo.undoRedo.UndoManager;
-import consulo.application.util.function.ThrowableComputable;
-import consulo.disposer.Disposable;
-import consulo.document.Document;
-import consulo.document.RangeMarker;
-import consulo.document.ReadOnlyFragmentModificationException;
-import consulo.document.util.TextRange;
-import consulo.codeEditor.Caret;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorFactory;
-import consulo.codeEditor.LogicalPosition;
-import consulo.language.editor.CommonDataKeys;
-import consulo.logging.Logger;
-import consulo.ide.impl.idea.openapi.diff.DiffBundle;
+import consulo.ide.impl.idea.diff.util.DiffUtil;
+import consulo.ide.impl.idea.diff.util.LineRange;
 import consulo.ide.impl.idea.openapi.diff.LineTokenizer;
-import consulo.codeEditor.action.EditorActionManager;
-import consulo.document.ReadonlyFragmentModificationHandler;
-import consulo.codeEditor.EditorColors;
-import consulo.document.event.DocumentAdapter;
-import consulo.document.event.DocumentEvent;
-import consulo.codeEditor.EditorEx;
-import consulo.codeEditor.EditorHighlighter;
+import consulo.util.collection.ContainerUtil;
+import consulo.logging.Logger;
+import consulo.navigation.Navigatable;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnSeparator;
-import consulo.util.lang.Pair;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.component.ProcessCanceledException;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
-import consulo.navigation.Navigatable;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.application.AccessRule;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.undoRedo.UndoManager;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NonNls;
+import consulo.util.lang.Pair;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-
-import consulo.annotation.access.RequiredWriteAction;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.util.*;
@@ -123,6 +117,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
   private boolean myStateIsOutOfDate; // whether something was changed since last rediff
   private boolean mySuppressEditorTyping; // our state is inconsistent. No typing can be handled correctly
 
+  @RequiredUIAccess
   public UnifiedDiffViewer(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
     super(context, (ContentDiffRequest)request);
 
@@ -200,6 +195,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     myEditor.setViewer(mySuppressEditorTyping || !isEditable(myMasterSide, true));
   }
 
+  @RequiredUIAccess
   private void installTypingSupport() {
     if (!isEditable(myMasterSide, false)) return;
 
@@ -250,6 +246,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
   }
 
   @Nonnull
+  @RequiredUIAccess
   protected List<AnAction> createEditorPopupActions() {
     List<AnAction> group = new ArrayList<>();
 
@@ -289,9 +286,8 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
       final Document document1 = getContent1().getDocument();
       final Document document2 = getContent2().getDocument();
 
-      ThrowableComputable<CharSequence[], RuntimeException> action1 = () -> {
-        return new CharSequence[]{document1.getImmutableCharSequence(), document2.getImmutableCharSequence()};
-      };
+      ThrowableComputable<CharSequence[], RuntimeException> action1 =
+        () -> new CharSequence[]{document1.getImmutableCharSequence(), document2.getImmutableCharSequence()};
       final CharSequence[] texts = AccessRule.read(action1);
 
       final List<LineFragment> fragments = DiffUtil.compare(myRequest, texts[0], texts[1], getDiffConfig(), indicator);
@@ -332,6 +328,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     }
     catch (DiffTooBigException e) {
       return () -> {
+        //noinspection RequiredXAction
         clearDiffPresentation();
         myPanel.setTooBigContent();
       };
@@ -342,12 +339,14 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     catch (Throwable e) {
       LOG.error(e);
       return () -> {
+        //noinspection RequiredXAction
         clearDiffPresentation();
         myPanel.setErrorContent();
       };
     }
   }
 
+  @RequiredUIAccess
   private void clearDiffPresentation() {
     myPanel.resetNotifications();
     myStatusPanel.setBusy(false);
@@ -393,20 +392,22 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
   }
 
   @Nonnull
-  private Runnable apply(@Nonnull final CombinedEditorData data,
-                         @Nonnull final List<ChangedBlock> blocks,
-                         @Nonnull final LineNumberConvertor convertor,
-                         @Nonnull final List<LineRange> changedLines,
-                         final boolean isContentsEqual) {
+  private Runnable apply(
+    @Nonnull final CombinedEditorData data,
+    @Nonnull final List<ChangedBlock> blocks,
+    @Nonnull final LineNumberConvertor convertor,
+    @Nonnull final List<LineRange> changedLines,
+    final boolean isContentsEqual
+  ) {
     return () -> {
       myFoldingModel.updateContext(myRequest, getFoldingModelSettings());
 
       LineCol oldCaretPosition = LineCol.fromOffset(myDocument, myEditor.getCaretModel().getPrimaryCaret().getOffset());
+      @SuppressWarnings("RequiredXAction")
       Pair<int[], Side> oldCaretLineTwoside = transferLineFromOneside(oldCaretPosition.line);
 
-
+      //noinspection RequiredXAction
       clearDiffPresentation();
-
 
       if (isContentsEqual) {
         boolean equalCharsets = TextDiffViewerUtil.areEqualCharsets(getContents());
@@ -415,10 +416,13 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
       }
 
       IntUnaryOperator separatorLines = myFoldingModel.getLineNumberConvertor();
-      myEditor.getGutterComponentEx().setLineNumberConvertor(mergeConverters(data.getLineConvertor1(), separatorLines),
-                                                             mergeConverters(data.getLineConvertor2(), separatorLines));
+      myEditor.getGutterComponentEx().setLineNumberConvertor(
+        mergeConverters(data.getLineConvertor1(), separatorLines),
+        mergeConverters(data.getLineConvertor2(), separatorLines)
+      );
 
-      ApplicationManager.getApplication().runWriteAction(() -> {
+      //noinspection RequiredXAction
+      Application.get().runWriteAction(() -> {
         myDuringOnesideDocumentModification = true;
         try {
           myDocument.setText(data.getText());
@@ -455,12 +459,14 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
       myChangedBlockData = new ChangedBlockData(diffChanges, guarderRangeBlocks, convertor, isContentsEqual);
 
 
-      int newCaretLine = transferLineToOneside(oldCaretLineTwoside.second,
-                                               oldCaretLineTwoside.second.select(oldCaretLineTwoside.first));
+      @SuppressWarnings("RequiredXAction")
+      int newCaretLine =
+        transferLineToOneside(oldCaretLineTwoside.second, oldCaretLineTwoside.second.select(oldCaretLineTwoside.first));
       myEditor.getCaretModel().moveToOffset(LineCol.toOffset(myDocument, newCaretLine, oldCaretPosition.column));
 
       myFoldingModel.install(changedLines, myRequest, getFoldingModelSettings());
 
+      //noinspection RequiredXAction
       myInitialScrollHelper.onRediff();
 
       myStatusPanel.update();
@@ -576,6 +582,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
   //
 
   private class MyOnesideDocumentListener extends DocumentAdapter {
+    @RequiredUIAccess
     @Override
     public void beforeDocumentChange(DocumentEvent e) {
       if (myDuringOnesideDocumentModification) return;
@@ -628,6 +635,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
       }
     }
 
+    @RequiredUIAccess
     private void logDebugInfo(DocumentEvent e,
                               LineCol onesideStartPosition, LineCol onesideEndPosition,
                               int twosideStartLine, int twosideEndLine) {
@@ -658,6 +666,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     }
   }
 
+  @RequiredUIAccess
   @Override
   protected void onDocumentChange(@Nonnull DocumentEvent e) {
     if (myDuringTwosideDocumentModification) return;
@@ -683,6 +692,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     }
 
     @Override
+    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
       if (myShortcut) {
         // consume shortcut even if there are nothing to do - avoid calling some other action
@@ -690,7 +700,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
         return;
       }
 
-      Editor editor = e.getData(CommonDataKeys.EDITOR);
+      Editor editor = e.getData(Editor.KEY);
       if (editor != getEditor()) {
         e.getPresentation().setEnabledAndVisible(false);
         return;
@@ -706,6 +716,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull final AnActionEvent e) {
       final List<UnifiedDiffChange> selectedChanges = getSelectedChanges();
       if (selectedChanges.isEmpty()) return;
@@ -714,9 +725,10 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
       if (isStateIsOutOfDate()) return;
 
       String title = e.getPresentation().getText() + " selected changes";
-      DiffUtil.executeWriteCommand(getDocument(myModifiedSide), e.getData(CommonDataKeys.PROJECT), title, () -> {
+      DiffUtil.executeWriteCommand(getDocument(myModifiedSide), e.getData(Project.KEY), title, () -> {
         // state is invalidated during apply(), but changes are in reverse order, so they should not conflict with each other
         apply(selectedChanges);
+        //noinspection RequiredXAction
         scheduleRediff();
       });
     }
@@ -751,6 +763,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
       getTemplatePresentation().setIcon(focusedSide.select(AllIcons.Diff.Remove, AllIcons.Actions.Checked));
     }
 
+    @RequiredWriteAction
     @Override
     protected void apply(@Nonnull List<UnifiedDiffChange> changes) {
       for (UnifiedDiffChange change : changes) {
@@ -768,6 +781,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
       getTemplatePresentation().setIcon(DiffUtil.getArrowDownIcon(focusedSide));
     }
 
+    @RequiredWriteAction
     @Override
     protected void apply(@Nonnull List<UnifiedDiffChange> changes) {
       for (UnifiedDiffChange change : changes) {
@@ -912,9 +926,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
 
   @RequiredUIAccess
   public boolean isEditable(@Nonnull Side side, boolean respectReadOnlyLock) {
-    if (myReadOnlyLockSet && respectReadOnlyLock) return false;
-    if (side.select(myForceReadOnlyFlags)) return false;
-    return DiffUtil.canMakeWritable(getDocument(side));
+    return !(myReadOnlyLockSet && respectReadOnlyLock) && !side.select(myForceReadOnlyFlags) && DiffUtil.canMakeWritable(getDocument(side));
   }
 
   @Nonnull
@@ -932,12 +944,13 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
 
   @Nullable
   @Override
+  @RequiredUIAccess
   protected Navigatable getNavigatable() {
     return getNavigatable(myEditor.getCaretModel().getOffset());
   }
 
-  @RequiredUIAccess
   @Nullable
+  @RequiredUIAccess
   protected UnifiedDiffChange getCurrentChange() {
     if (myChangedBlockData == null) return null;
     int caretLine = myEditor.getCaretModel().getLogicalPosition().line;
@@ -994,8 +1007,9 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
   private class MyPrevNextDifferenceIterable extends PrevNextDifferenceIterableBase<UnifiedDiffChange> {
     @Nonnull
     @Override
+    @RequiredUIAccess
     protected List<UnifiedDiffChange> getChanges() {
-      return ContainerUtil.notNullize(getDiffChanges());
+      return consulo.ide.impl.idea.util.containers.ContainerUtil.notNullize(getDiffChanges());
     }
 
     @Nonnull
@@ -1060,6 +1074,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     }
 
     @Override
+    @RequiredUIAccess
     protected void onSettingsChanged() {
       rediff();
     }
@@ -1085,6 +1100,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     }
 
     @Override
+    @RequiredUIAccess
     protected void onSettingsChanged() {
       rediff();
     }
@@ -1097,6 +1113,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     }
 
     @Override
+    @RequiredUIAccess
     protected void doApply(boolean readOnly) {
       myReadOnlyLockSet = readOnly;
       if (myChangedBlockData != null) {
@@ -1162,11 +1179,12 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
 
   @Nullable
   @Override
+  @RequiredUIAccess
   public Object getData(@Nonnull @NonNls Key<?> dataId) {
     if (DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE == dataId) {
       return myPrevNextDifferenceIterable;
     }
-    else if (CommonDataKeys.VIRTUAL_FILE == dataId) {
+    else if (VirtualFile.KEY == dataId) {
       return DiffUtil.getVirtualFile(myRequest, myMasterSide);
     }
     else if (DiffDataKeys.CURRENT_EDITOR == dataId) {
@@ -1188,9 +1206,9 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
       if (myChangedBlockData == null) return null;
       int changesCount = myChangedBlockData.getDiffChanges().size();
       if (changesCount == 0 && !myChangedBlockData.isContentsEqual()) {
-        return DiffBundle.message("diff.all.differences.ignored.text");
+        return DiffLocalize.diffAllDifferencesIgnoredText().get();
       }
-      return DiffBundle.message("diff.count.differences.status.text", changesCount);
+      return DiffLocalize.diffCountDifferencesStatusText(changesCount).get();
     }
   }
 
@@ -1336,12 +1354,14 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     }
 
     @Override
+    @RequiredUIAccess
     public void onSlowRediff() {
       // Will not happen for initial rediff
     }
 
     @Nullable
     @Override
+    @RequiredUIAccess
     protected LogicalPosition[] getCaretPositions() {
       LogicalPosition position = myEditor.getCaretModel().getLogicalPosition();
       Pair<int[], Side> pair = transferLineFromOneside(position.line);
@@ -1352,6 +1372,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     }
 
     @Override
+    @RequiredUIAccess
     protected boolean doScrollToPosition() {
       if (myCaretPosition == null) return false;
 
@@ -1376,12 +1397,14 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
       return new LogicalPosition(line, column);
     }
 
+    @RequiredUIAccess
     private void doScrollToLine(@Nonnull Side side, @Nonnull LogicalPosition position) {
       int onesideLine = transferLineToOneside(side, position.line);
       DiffUtil.scrollEditor(myEditor, onesideLine, position.column, false);
     }
 
     @Override
+    @RequiredUIAccess
     protected boolean doScrollToLine() {
       if (myScrollToLine == null) return false;
       doScrollToLine(myScrollToLine.first, new LogicalPosition(myScrollToLine.second, 0));
@@ -1400,17 +1423,19 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     }
 
     @Override
+    @RequiredUIAccess
     protected boolean doScrollToChange() {
-      if (myScrollToChange == null) return false;
-      return doScrollToChange(myScrollToChange);
+      return myScrollToChange != null && doScrollToChange(myScrollToChange);
     }
 
     @Override
+    @RequiredUIAccess
     protected boolean doScrollToFirstChange() {
       return doScrollToChange(ScrollToPolicy.FIRST_CHANGE);
     }
 
     @Override
+    @RequiredUIAccess
     protected boolean doScrollToContext() {
       if (myNavigationContext == null) return false;
       if (myChangedBlockData == null) return false;

@@ -1,14 +1,15 @@
 package consulo.ide.impl.idea.openapi.externalSystem.service;
 
 import consulo.externalSystem.model.task.*;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.rmi.RemoteServer;
 import consulo.externalSystem.model.setting.ExternalSystemExecutionSettings;
 import consulo.externalSystem.service.project.ExternalSystemProjectResolver;
 import consulo.ide.impl.idea.openapi.externalSystem.service.remote.*;
 import consulo.externalSystem.task.ExternalSystemTaskManager;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.rmi.RemoteException;
 import java.util.*;
@@ -25,28 +26,28 @@ public abstract class AbstractExternalSystemFacadeImpl<S extends ExternalSystemE
 
   private final ConcurrentMap<Class<?>, RemoteExternalSystemService<S>> myRemotes = ContainerUtil.newConcurrentMap();
 
-  private final AtomicReference<S> mySettings              = new AtomicReference<S>();
+  private final AtomicReference<S> mySettings = new AtomicReference<>();
   private final AtomicReference<ExternalSystemTaskNotificationListener> myNotificationListener =
-    new AtomicReference<ExternalSystemTaskNotificationListener>(new ExternalSystemTaskNotificationListenerAdapter() {});
+    new AtomicReference<>(new ExternalSystemTaskNotificationListenerAdapter() {});
 
   @Nonnull
   private final RemoteExternalSystemProjectResolverImpl<S> myProjectResolver;
   @Nonnull
   private final RemoteExternalSystemTaskManagerImpl<S>     myTaskManager;
 
-  public AbstractExternalSystemFacadeImpl(@Nonnull Class<ExternalSystemProjectResolver<S>> projectResolverClass,
-                                          @Nonnull Class<ExternalSystemTaskManager<S>> buildManagerClass)
-    throws IllegalAccessException, InstantiationException
-  {
-    myProjectResolver = new RemoteExternalSystemProjectResolverImpl<S>(projectResolverClass.newInstance());
-    myTaskManager = new RemoteExternalSystemTaskManagerImpl<S>(buildManagerClass.newInstance());
+  public AbstractExternalSystemFacadeImpl(
+    @Nonnull Class<ExternalSystemProjectResolver<S>> projectResolverClass,
+    @Nonnull Class<ExternalSystemTaskManager<S>> buildManagerClass
+  ) throws IllegalAccessException, InstantiationException {
+    myProjectResolver = new RemoteExternalSystemProjectResolverImpl<>(projectResolverClass.newInstance());
+    myTaskManager = new RemoteExternalSystemTaskManagerImpl<>(buildManagerClass.newInstance());
   }
 
   protected void init() throws RemoteException {
     applyProgressManager(RemoteExternalSystemProgressNotificationManager.NULL_OBJECT);
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   protected S getSettings() {
     return mySettings.get();
   }
@@ -156,12 +157,12 @@ public abstract class AbstractExternalSystemFacadeImpl<S extends ExternalSystemE
         continue;
       }
       if (result == null) {
-        result = new HashMap<ExternalSystemTaskType, Set<ExternalSystemTaskId>>();
+        result = new HashMap<>();
       }
       for (Map.Entry<ExternalSystemTaskType, Set<ExternalSystemTaskId>> entry : tasks.entrySet()) {
         Set<ExternalSystemTaskId> ids = result.get(entry.getKey());
         if (ids == null) {
-          result.put(entry.getKey(), ids = new HashSet<ExternalSystemTaskId>());
+          result.put(entry.getKey(), ids = new HashSet<>());
         }
         ids.addAll(entry.getValue());
       }
@@ -191,15 +192,14 @@ public abstract class AbstractExternalSystemFacadeImpl<S extends ExternalSystemE
 
   @Override
   public boolean cancelTask(@Nonnull ExternalSystemTaskId id) throws RemoteException {
-    if(id.getType() == ExternalSystemTaskType.RESOLVE_PROJECT) {
+    if (id.getType() == ExternalSystemTaskType.RESOLVE_PROJECT) {
       return myProjectResolver.cancelTask(id);
-    } else{
+    } else {
       return myTaskManager.cancelTask(id);
     }
   }
 
   private static class SwallowingNotificationListener implements ExternalSystemTaskNotificationListener {
-
     @Nonnull
     private final RemoteExternalSystemProgressNotificationManager myManager;
 

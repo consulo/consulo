@@ -37,7 +37,6 @@ import consulo.ide.impl.idea.codeInsight.template.impl.*;
 import consulo.language.Language;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.WriteCommandAction;
 import consulo.document.Document;
@@ -48,7 +47,6 @@ import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
-import consulo.language.psi.util.PsiElementFilter;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.LanguagePointerUtil;
 import consulo.logging.Logger;
@@ -65,8 +63,8 @@ public class SaveAsTemplateAction extends AnAction {
   @Override
   public void actionPerformed(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    Editor editor = Objects.requireNonNull(dataContext.getData(CommonDataKeys.EDITOR));
-    PsiFile file = Objects.requireNonNull(dataContext.getData(CommonDataKeys.PSI_FILE));
+    Editor editor = Objects.requireNonNull(dataContext.getData(Editor.KEY));
+    PsiFile file = Objects.requireNonNull(dataContext.getData(PsiFile.KEY));
 
     final Project project = file.getProject();
     PsiDocumentManager.getInstance(project).commitAllDocuments();
@@ -82,12 +80,8 @@ public class SaveAsTemplateAction extends AnAction {
 
     if (startOffset >= selection.getEndOffset()) startOffset = selection.getStartOffset();
 
-    final PsiElement[] psiElements = PsiTreeUtil.collectElements(file, new PsiElementFilter() {
-      @Override
-      public boolean isAccepted(PsiElement element) {
-        return selection.contains(element.getTextRange()) && element.getReferences().length > 0;
-      }
-    });
+    final PsiElement[] psiElements =
+      PsiTreeUtil.collectElements(file, element -> selection.contains(element.getTextRange()) && element.getReferences().length > 0);
 
     final Document document = EditorFactory.getInstance().createDocument(editor.getDocument().getText().
             substring(startOffset, selection.getEndOffset()));
@@ -100,7 +94,7 @@ public class SaveAsTemplateAction extends AnAction {
 
         for (PsiElement element : psiElements) {
           for (PsiReference reference : element.getReferences()) {
-            if (!(reference instanceof PsiQualifiedReference) || ((PsiQualifiedReference)reference).getQualifier() == null) {
+            if (!(reference instanceof PsiQualifiedReference qualifiedReference) || qualifiedReference.getQualifier() == null) {
               String canonicalText = reference.getCanonicalText();
               TextRange referenceRange = reference.getRangeInElement();
               final TextRange elementTextRange = element.getTextRange();
@@ -148,7 +142,8 @@ public class SaveAsTemplateAction extends AnAction {
       }
     }.execute();
 
-    final TemplateImpl template = new TemplateImpl(TemplateListPanel.ABBREVIATION, document.getText(), TemplateSettingsImpl.USER_GROUP_NAME);
+    final TemplateImpl template =
+      new TemplateImpl(TemplateListPanel.ABBREVIATION, document.getText(), TemplateSettingsImpl.USER_GROUP_NAME);
     template.setToReformat(true);
 
     OffsetKey startKey = OffsetKey.create("pivot");
@@ -157,7 +152,8 @@ public class SaveAsTemplateAction extends AnAction {
     OffsetsInFile copy =
             TemplateManagerImpl.copyWithDummyIdentifier(offsets, editor.getSelectionModel().getSelectionStart(), editor.getSelectionModel().getSelectionEnd(), CompletionUtil.DUMMY_IDENTIFIER_TRIMMED);
 
-    Set<TemplateContextType> applicable = TemplateManager.getInstance(project).getApplicableContextTypes(TemplateActionContext.expanding(copy.getFile(), copy.getOffsets().getOffset(startKey)));
+    Set<TemplateContextType> applicable = TemplateManager.getInstance(project)
+      .getApplicableContextTypes(TemplateActionContext.expanding(copy.getFile(), copy.getOffsets().getOffset(startKey)));
 
     for (TemplateContextType contextType : TemplateContextType.EP_NAME.getExtensionList()) {
       template.getTemplateContext().setEnabled(contextType, applicable.contains(contextType));
@@ -170,8 +166,8 @@ public class SaveAsTemplateAction extends AnAction {
   @Override
   public void update(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
-    PsiFile file = dataContext.getData(CommonDataKeys.PSI_FILE);
+    Editor editor = dataContext.getData(Editor.KEY);
+    PsiFile file = dataContext.getData(PsiFile.KEY);
 
     if (file == null || editor == null) {
       e.getPresentation().setEnabled(false);

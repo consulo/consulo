@@ -1,8 +1,8 @@
 package consulo.ide.impl.idea.vcs.log.ui.frame;
 
 import com.google.common.primitives.Ints;
+import consulo.application.HelpManager;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.ui.ex.awt.*;
 import consulo.dataContext.DataProvider;
 import consulo.project.Project;
@@ -265,13 +265,13 @@ public class MainFrame extends JPanel implements DataProvider, Disposable {
   @Nullable
   @Override
   public Object getData(@Nonnull Key<?> dataId) {
-    if (VcsLogDataKeys.VCS_LOG == dataId) {
+    if (VcsLog.KEY == dataId) {
       return myLog;
     }
-    else if (VcsLogDataKeys.VCS_LOG_UI == dataId) {
+    else if (VcsLogUi.KEY == dataId) {
       return myUi;
     }
-    else if (VcsLogDataKeys.VCS_LOG_DATA_PROVIDER == dataId) {
+    else if (VcsLogDataProvider.KEY == dataId) {
       return myLogData;
     }
     else if (VcsDataKeys.CHANGES == dataId || VcsDataKeys.SELECTED_CHANGES == dataId) {
@@ -280,18 +280,24 @@ public class MainFrame extends JPanel implements DataProvider, Disposable {
     else if (VcsDataKeys.CHANGE_LISTS == dataId) {
       List<VcsFullCommitDetails> details = myLog.getSelectedDetails();
       if (details.size() > VcsLogUtil.MAX_SELECTED_COMMITS) return null;
-      return ContainerUtil.map2Array(details, CommittedChangeListForRevision.class,
-                                     detail -> new CommittedChangeListForRevision(detail.getSubject(), detail.getFullMessage(),
-                                                                                  VcsUserUtil.getShortPresentation(detail.getCommitter()),
-                                                                                  new Date(detail.getCommitTime()),
-                                                                                  detail.getChanges(),
-                                                                                  convertToRevisionNumber(detail.getId())));
+      return ContainerUtil.map2Array(
+        details,
+        CommittedChangeListForRevision.class,
+        detail -> new CommittedChangeListForRevision(
+          detail.getSubject(),
+          detail.getFullMessage(),
+          VcsUserUtil.getShortPresentation(detail.getCommitter()),
+          new Date(detail.getCommitTime()),
+          detail.getChanges(),
+          convertToRevisionNumber(detail.getId())
+        )
+      );
     }
     else if (VcsDataKeys.VCS_REVISION_NUMBERS == dataId) {
       List<CommitId> hashes = myLog.getSelectedCommits();
       if (hashes.size() > VcsLogUtil.MAX_SELECTED_COMMITS) return null;
       return ArrayUtil
-              .toObjectArray(ContainerUtil.map(hashes, commitId -> convertToRevisionNumber(commitId.getHash())), VcsRevisionNumber.class);
+        .toObjectArray(ContainerUtil.map(hashes, commitId -> convertToRevisionNumber(commitId.getHash())), VcsRevisionNumber.class);
     }
     else if (VcsDataKeys.VCS == dataId) {
       int[] selectedRows = myGraphTable.getSelectedRows();
@@ -306,7 +312,7 @@ public class MainFrame extends JPanel implements DataProvider, Disposable {
       if (selectedRows.length != 1) return null;
       return myGraphTable.getModel().getBranchesAtRow(selectedRows[0]);
     }
-    else if (PlatformDataKeys.HELP_ID == dataId) {
+    else if (HelpManager.HELP_ID == dataId) {
       return HELP_ID;
     }
     else if (VcsLogInternalDataKeys.LOG_UI_PROPERTIES == dataId) {

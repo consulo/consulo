@@ -1,6 +1,6 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
-import consulo.application.ApplicationManager;
+import consulo.application.HelpManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.dataContext.DataSink;
@@ -116,9 +116,11 @@ public class CommittedChangesTreeBrowser extends JPanel implements TypeSafeDataP
 
     myConnection = myProject.getMessageBus().connect();
     myConnection.subscribe(CommittedChangesReloadListener.class, new CommittedChangesReloadListener() {
+      @Override
       public void itemsReloaded() {
       }
 
+      @Override
       public void emptyRefresh() {
         updateGrouping();
       }
@@ -153,7 +155,7 @@ public class CommittedChangesTreeBrowser extends JPanel implements TypeSafeDataP
 
   private void updateGrouping() {
     if (myGroupingStrategy.changedSinceApply()) {
-      ApplicationManager.getApplication().invokeLater(() -> updateModel(), IdeaModalityState.nonModal());
+      myProject.getApplication().invokeLater(() -> updateModel(), IdeaModalityState.nonModal());
     }
   }
 
@@ -301,6 +303,7 @@ public class CommittedChangesTreeBrowser extends JPanel implements TypeSafeDataP
     PopupHandler.installPopupHandler(myChangesTree, menuGroup, ActionPlaces.UNKNOWN, ActionManager.getInstance());
   }
 
+  @Override
   public void removeFilteringStrategy(final CommittedChangesFilterKey key) {
     final ChangeListFilteringStrategy strategy = myFilteringStrategy.removeStrategy(key);
     if (strategy != null) {
@@ -309,6 +312,7 @@ public class CommittedChangesTreeBrowser extends JPanel implements TypeSafeDataP
     myInnerSplitter.remove(key);
   }
 
+  @Override
   public boolean setFilteringStrategy(final ChangeListFilteringStrategy filteringStrategy) {
     if (myInnerSplitter.canAdd()) {
       filteringStrategy.addChangeListener(myFilterChangeListener);
@@ -385,8 +389,8 @@ public class CommittedChangesTreeBrowser extends JPanel implements TypeSafeDataP
       Navigatable[] result = ChangesUtil.getNavigatableArray(myProject, ChangesUtil.getFilesFromChanges(changes));
       sink.put(Navigatable.KEY_OF_ARRAY, result);
     }
-    else if (PlatformDataKeys.HELP_ID == dataId) {
-      sink.put(PlatformDataKeys.HELP_ID, myHelpId);
+    else if (HelpManager.HELP_ID == dataId) {
+      sink.put(HelpManager.HELP_ID, myHelpId);
     }
     else if (VcsDataKeys.SELECTED_CHANGES_IN_DETAILS == dataId) {
       final List<Change> selectedChanges = myDetailsView.getSelectedChanges();
@@ -398,23 +402,27 @@ public class CommittedChangesTreeBrowser extends JPanel implements TypeSafeDataP
     return myTreeExpander;
   }
 
+  @Override
   public void repaintTree() {
     myChangesTree.revalidate();
     myChangesTree.repaint();
   }
 
+  @Override
   public void install(final CommittedChangeListDecorator decorator) {
     myDecorators.add(decorator);
     repaintTree();
   }
 
+  @Override
   public void remove(final CommittedChangeListDecorator decorator) {
     myDecorators.remove(decorator);
     repaintTree();
   }
 
+  @Override
   public void reportLoadedLists(final CommittedChangeListsListener listener) {
-    ApplicationManager.getApplication().executeOnPooledThread((Runnable) () -> {
+    myProject.getApplication().executeOnPooledThread((Runnable) () -> {
       listener.onBeforeStartReport();
       for (CommittedChangeList list : myChangeLists) {
         listener.report(list);
@@ -456,18 +464,20 @@ public class CommittedChangesTreeBrowser extends JPanel implements TypeSafeDataP
       myList = list;
     }
 
+    @Override
     public void run() {
       ChangeListDetailsAction.showDetailsPopup(myProject, myList);
     }
   }
 
   private class FilterChangeListener implements ChangeListener {
+    @Override
     public void stateChanged(ChangeEvent e) {
-      if (ApplicationManager.getApplication().isDispatchThread()) {
+      if (myProject.getApplication().isDispatchThread()) {
         updateModel();
       }
       else {
-        ApplicationManager.getApplication().invokeLater(() -> updateModel());
+        myProject.getApplication().invokeLater(() -> updateModel());
       }
     }
   }
@@ -482,9 +492,10 @@ public class CommittedChangesTreeBrowser extends JPanel implements TypeSafeDataP
       return true;
     }
 
+    @Override
     public void calcData(final Key key, final DataSink sink) {
-      if (PlatformDataKeys.COPY_PROVIDER == key) {
-        sink.put(PlatformDataKeys.COPY_PROVIDER, myCopyProvider);
+      if (CopyProvider.KEY == key) {
+        sink.put(CopyProvider.KEY, myCopyProvider);
       }
       else if (PlatformDataKeys.TREE_EXPANDER == key) {
         sink.put(PlatformDataKeys.TREE_EXPANDER, myTreeExpander);
@@ -503,6 +514,7 @@ public class CommittedChangesTreeBrowser extends JPanel implements TypeSafeDataP
 
   public void setLoading(final boolean value) {
     new AbstractCalledLater(myProject, IdeaModalityState.nonModal()) {
+      @Override
       public void run() {
         myChangesTree.setPaintBusy(value);
       }

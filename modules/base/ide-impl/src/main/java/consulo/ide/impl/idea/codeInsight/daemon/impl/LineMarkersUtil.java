@@ -1,14 +1,13 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.util.function.Processor;
 import consulo.codeEditor.DocumentMarkupModel;
 import consulo.codeEditor.markup.*;
 import consulo.document.Document;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.language.editor.gutter.LineMarkerInfo;
 import consulo.language.editor.impl.internal.highlight.HighlightersRecycler;
 import consulo.language.inject.InjectedLanguageManager;
@@ -17,18 +16,24 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.dataholder.Key;
-
+import consulo.util.lang.Comparing;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collection;
 import java.util.List;
 
 class LineMarkersUtil {
   private static final Logger LOG = Logger.getInstance(LineMarkersUtil.class);
 
-  static boolean processLineMarkers(@Nonnull Project project, @Nonnull Document document, @Nonnull Segment bounds, int group, // -1 for all
-                                    @Nonnull Processor<? super LineMarkerInfo<?>> processor) {
-    MarkupModelEx markupModel = (MarkupModelEx)DocumentMarkupModel.forDocument(document, project, true);
+  static boolean processLineMarkers(
+    @Nonnull Project project,
+    @Nonnull Document document,
+    @Nonnull Segment bounds,
+    int group, // -1 for all
+    @Nonnull Processor<? super LineMarkerInfo<?>> processor
+  ) {
+    MarkupModelEx markupModel = DocumentMarkupModel.forDocument(document, project, true);
     return markupModel.processRangeHighlightersOverlappingWith(bounds.getStartOffset(), bounds.getEndOffset(), highlighter -> {
       LineMarkerInfo<?> info = getLineMarkerInfo(highlighter);
       return info == null || group != -1 && info.updatePass != group || processor.process(info);
@@ -36,9 +41,9 @@ class LineMarkersUtil {
   }
 
   static void setLineMarkersToEditor(@Nonnull Project project, @Nonnull Document document, @Nonnull Segment bounds, @Nonnull Collection<? extends LineMarkerInfo<PsiElement>> markers, int group) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    Application.get().assertIsDispatchThread();
 
-    MarkupModelEx markupModel = (MarkupModelEx)DocumentMarkupModel.forDocument(document, project, true);
+    MarkupModelEx markupModel = DocumentMarkupModel.forDocument(document, project, true);
     HighlightersRecycler toReuse = new HighlightersRecycler();
     processLineMarkers(project, document, bounds, group, info -> {
       toReuse.recycleHighlighter(info.highlighter);
@@ -120,9 +125,9 @@ class LineMarkersUtil {
   }
 
   static void addLineMarkerToEditorIncrementally(@Nonnull Project project, @Nonnull Document document, @Nonnull LineMarkerInfo<?> marker) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    Application.get().assertIsDispatchThread();
 
-    MarkupModelEx markupModel = (MarkupModelEx)DocumentMarkupModel.forDocument(document, project, true);
+    MarkupModelEx markupModel = DocumentMarkupModel.forDocument(document, project, true);
     LineMarkerInfo<?>[] markerInTheWay = {null};
     boolean allIsClear = markupModel.processRangeHighlightersOverlappingWith(marker.startOffset, marker.endOffset, highlighter -> (markerInTheWay[0] = getLineMarkerInfo(highlighter)) == null);
     if (allIsClear) {

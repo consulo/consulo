@@ -1,22 +1,22 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.build;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposer;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.ui.ex.ComponentContainer;
 import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
-import org.jetbrains.annotations.NonNls;
-
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -156,7 +156,11 @@ public class CompositeView<T extends ComponentContainer> extends JPanel implemen
 
   private final class SwitchViewAction extends ToggleAction implements DumbAware {
     SwitchViewAction() {
-      super(IdeBundle.message("action.ToggleAction.text.toggle.view"), null, PlatformIconGroup.actionsChangeview());
+      super(
+        IdeLocalize.actionToggleactionTextToggleView().get(),
+        null,
+        PlatformIconGroup.actionsChangeview()
+      );
     }
 
     @Override
@@ -185,7 +189,7 @@ public class CompositeView<T extends ComponentContainer> extends JPanel implemen
         List<String> names = new ArrayList<>(myViewMap.keySet());
         String viewName = flag ? names.get(0) : names.get(1);
         showView(viewName);
-        ApplicationManager.getApplication().invokeLater(() -> update(event));
+        Application.get().invokeLater(() -> update(event));
       }
     }
   }

@@ -2,11 +2,11 @@
 
 package consulo.ide.impl.idea.codeInsight.actions;
 
-import consulo.application.ApplicationBundle;
-import consulo.application.ApplicationManager;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.application.dumb.IndexNotReadyException;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.progress.ProgressManager;
@@ -18,21 +18,18 @@ import consulo.document.FileDocumentManager;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
 import consulo.ide.impl.idea.openapi.project.ProjectUtil;
-import consulo.ui.ex.awt.MessagesEx;
-import consulo.ide.impl.idea.util.ExceptionUtil;
 import consulo.ide.impl.idea.util.SequentialTask;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.codeStyle.FormattingModelBuilder;
-import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.WriteCommandAction;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.psi.PsiBundle;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
-import consulo.application.localize.ApplicationLocalize;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ProjectCoreUtil;
@@ -40,15 +37,21 @@ import consulo.project.content.GeneratedSourcesFilter;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
+import consulo.ui.ModalityState;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.MessagesEx;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.undoRedo.CommandProcessor;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
+import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileFilter;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -57,8 +60,10 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
 public abstract class AbstractLayoutCodeProcessor {
-  public static final NotificationGroup ReformatChangedTextTooBigNotificationGroup =
-          NotificationGroup.balloonGroup("reformat.changed.text.file.too.big.notification.groupId", ApplicationLocalize.reformatChangedTextFileTooBigNotificationGroupid());
+  public static final NotificationGroup ReformatChangedTextTooBigNotificationGroup = NotificationGroup.balloonGroup(
+    "reformat.changed.text.file.too.big.notification.groupId",
+    ApplicationLocalize.reformatChangedTextFileTooBigNotificationGroupid()
+  );
 
   private static final Logger LOG = Logger.getInstance(AbstractLayoutCodeProcessor.class);
 
@@ -85,7 +90,11 @@ public abstract class AbstractLayoutCodeProcessor {
     this(project, (Module)null, commandName, progressText, processChangedTextOnly);
   }
 
-  protected AbstractLayoutCodeProcessor(@Nonnull AbstractLayoutCodeProcessor previous, @Nonnull String commandName, @Nonnull String progressText) {
+  protected AbstractLayoutCodeProcessor(
+    @Nonnull AbstractLayoutCodeProcessor previous,
+    @Nonnull String commandName,
+    @Nonnull String progressText
+  ) {
     myProject = previous.myProject;
     myModule = previous.myModule;
     myDirectory = previous.myDirectory;
@@ -102,7 +111,13 @@ public abstract class AbstractLayoutCodeProcessor {
     myInfoCollector = previous.myInfoCollector;
   }
 
-  protected AbstractLayoutCodeProcessor(@Nonnull Project project, @Nullable Module module, String commandName, String progressText, boolean processChangedTextOnly) {
+  protected AbstractLayoutCodeProcessor(
+    @Nonnull Project project,
+    @Nullable Module module,
+    String commandName,
+    String progressText,
+    boolean processChangedTextOnly
+  ) {
     myProject = project;
     myModule = module;
     myDirectory = null;
@@ -134,9 +149,17 @@ public abstract class AbstractLayoutCodeProcessor {
     myProcessChangedTextOnly = processChangedTextOnly;
   }
 
-  protected AbstractLayoutCodeProcessor(@Nonnull Project project, PsiFile[] files, String progressText, String commandName, @Nullable Runnable postRunnable, boolean processChangedTextOnly) {
+  @RequiredReadAction
+  protected AbstractLayoutCodeProcessor(
+    @Nonnull Project project,
+    PsiFile[] files,
+    String progressText,
+    String commandName,
+    @Nullable Runnable postRunnable,
+    boolean processChangedTextOnly) {
     myProject = project;
     myModule = null;
+    //noinspection RequiredXAction
     myFiles = ContainerUtil.filter(files, AbstractLayoutCodeProcessor::canBeFormatted);
     myProgressText = progressText;
     myCommandName = commandName;
@@ -194,7 +217,8 @@ public abstract class AbstractLayoutCodeProcessor {
           if (!previousTask.get() || previousTask.isCancelled()) return false;
         }
 
-        ApplicationManager.getApplication().runWriteAction(currentTask);
+        //noinspection RequiredXAction
+        Application.get().runWriteAction(currentTask);
 
         return currentTask.get() && !currentTask.isCancelled();
       }
@@ -205,6 +229,7 @@ public abstract class AbstractLayoutCodeProcessor {
     });
   }
 
+  @RequiredReadAction
   public void run() {
     if (myFile != null) {
       runProcessFile(myFile);
@@ -259,6 +284,8 @@ public abstract class AbstractLayoutCodeProcessor {
     return dirs;
   }
 
+  @NonNls
+  @RequiredReadAction
   private void runProcessFile(@Nonnull final PsiFile file) {
     assert file.isValid() : "Invalid " + file.getLanguage() + " PSI file " + file.getName();
 
@@ -269,8 +296,12 @@ public abstract class AbstractLayoutCodeProcessor {
     }
 
     if (!FileDocumentManager.getInstance().requestWriting(document, myProject)) {
-      Messages.showMessageDialog(myProject, PsiBundle.message("cannot.modify.a.read.only.file", file.getName()), CodeInsightBundle.message("error.dialog.readonly.file.title"),
-                                 Messages.getErrorIcon());
+      Messages.showMessageDialog(
+        myProject,
+        PsiBundle.message("cannot.modify.a.read.only.file", file.getName()),
+        CodeInsightLocalize.errorDialogReadonlyFileTitle().get(),
+        UIUtil.getErrorIcon()
+      );
       return;
     }
 
@@ -297,8 +328,8 @@ public abstract class AbstractLayoutCodeProcessor {
       catch (Exception e) {
         Throwable cause = e.getCause();
         if (cause != null) {
-          if (cause instanceof IndexNotReadyException) {
-            throw (IndexNotReadyException)e.getCause();
+          if (cause instanceof IndexNotReadyException indexNotReadyException) {
+            throw indexNotReadyException;
           }
           LOG.error(getClass().getSimpleName() + " failure, see the stack trace", cause);
         }
@@ -312,7 +343,9 @@ public abstract class AbstractLayoutCodeProcessor {
 
   private boolean checkFileWritable(final PsiFile file) {
     if (!file.isWritable()) {
-      MessagesEx.fileIsReadOnly(myProject, file.getVirtualFile()).setTitle(CodeInsightBundle.message("error.dialog.readonly.file.title")).showLater();
+      MessagesEx.fileIsReadOnly(myProject, file.getVirtualFile())
+        .setTitle(CodeInsightLocalize.errorDialogReadonlyFileTitle().get())
+        .showLater();
       return false;
     }
     else {
@@ -333,6 +366,7 @@ public abstract class AbstractLayoutCodeProcessor {
     }
   }
 
+  @RequiredReadAction
   private static boolean canBeFormatted(PsiFile file) {
     if (!file.isValid()) return false;
     if (FormattingModelBuilder.forContext(file) == null) {
@@ -341,9 +375,8 @@ public abstract class AbstractLayoutCodeProcessor {
     VirtualFile virtualFile = file.getVirtualFile();
     if (virtualFile == null) return true;
 
-    if (ProjectCoreUtil.isProjectOrWorkspaceFile(virtualFile)) return false;
-
-    return !GeneratedSourcesFilter.isGenerated(file.getProject(), virtualFile);
+    return !ProjectCoreUtil.isProjectOrWorkspaceFile(virtualFile)
+      && !GeneratedSourcesFilter.isGenerated(file.getProject(), virtualFile);
   }
 
   private void runLayoutCodeProcess(final Runnable readAction, final Runnable writeAction) {
@@ -351,9 +384,9 @@ public abstract class AbstractLayoutCodeProcessor {
     progressWindow.setTitle(myCommandName);
     progressWindow.setText(myProgressText);
 
-    final IdeaModalityState modalityState = IdeaModalityState.current();
+    final ModalityState modalityState = Application.get().getCurrentModalityState();
 
-    final Runnable process = () -> ApplicationManager.getApplication().runReadAction(readAction);
+    final Runnable process = () -> Application.get().runReadAction(readAction);
 
     Runnable runnable = () -> {
       try {
@@ -372,7 +405,7 @@ public abstract class AbstractLayoutCodeProcessor {
           writeAction.run();
 
           if (myPostRunnable != null) {
-            ApplicationManager.getApplication().invokeLater(myPostRunnable);
+            Application.get().invokeLater(myPostRunnable);
           }
         }
         catch (IndexNotReadyException e) {
@@ -380,19 +413,19 @@ public abstract class AbstractLayoutCodeProcessor {
         }
       }, myCommandName, null);
 
-      if (ApplicationManager.getApplication().isUnitTestMode()) {
+      if (Application.get().isUnitTestMode()) {
         writeRunnable.run();
       }
       else {
-        ApplicationManager.getApplication().invokeLater(writeRunnable, modalityState, myProject.getDisposed());
+        Application.get().invokeLater(writeRunnable, modalityState, myProject.getDisposed());
       }
     };
 
-    if (ApplicationManager.getApplication().isUnitTestMode()) {
+    if (Application.get().isUnitTestMode()) {
       runnable.run();
     }
     else {
-      ApplicationManager.getApplication().executeOnPooledThread(runnable);
+      Application.get().executeOnPooledThread(runnable);
     }
   }
 
@@ -426,8 +459,8 @@ public abstract class AbstractLayoutCodeProcessor {
     private PsiFile next;
 
     ReformatFilesTask(@Nonnull ProgressIndicator indicator) {
-      myFileTreeIterator = ReadAction.compute(() -> build());
-      myCountingIterator = ReadAction.compute(() -> build());
+      myFileTreeIterator = ReadAction.compute(AbstractLayoutCodeProcessor.this::build);
+      myCountingIterator = ReadAction.compute(AbstractLayoutCodeProcessor.this::build);
       myProcessors = getAllProcessors();
       myProgressIndicator = indicator;
     }
@@ -442,6 +475,7 @@ public abstract class AbstractLayoutCodeProcessor {
     }
 
     @Override
+    @RequiredReadAction
     public boolean iteration() {
       if (myStopFormatting) {
         return true;
@@ -454,7 +488,7 @@ public abstract class AbstractLayoutCodeProcessor {
         myFilesProcessed++;
 
         if (shouldProcessFile(file)) {
-          updateIndicatorText(ApplicationBundle.message("bulk.reformat.process.progress.text"), getPresentablePath(file));
+          updateIndicatorText(ApplicationLocalize.bulkReformatProcessProgressText(), getPresentablePath(file));
           DumbService.getInstance(myProject).withAlternativeResolveEnabled(() -> performFileProcessing(file));
         }
       }
@@ -472,7 +506,9 @@ public abstract class AbstractLayoutCodeProcessor {
 
         ProgressIndicatorProvider.checkCanceled();
 
-        ApplicationManager.getApplication().invokeAndWait(() -> WriteCommandAction.runWriteCommandAction(myProject, myCommandName, null, writeTask));
+        Application.get().invokeAndWait(
+          () -> WriteCommandAction.runWriteCommandAction(myProject, myCommandName, null, writeTask)
+        );
 
         checkStop(writeTask, file);
       }
@@ -494,14 +530,15 @@ public abstract class AbstractLayoutCodeProcessor {
       }
     }
 
-    private void updateIndicatorText(@Nonnull String upperLabel, @Nonnull String downLabel) {
-      myProgressIndicator.setText(upperLabel);
-      myProgressIndicator.setText2(downLabel);
+    private void updateIndicatorText(@Nonnull LocalizeValue upperLabel, @Nonnull LocalizeValue downLabel) {
+      myProgressIndicator.setTextValue(upperLabel);
+      myProgressIndicator.setText2Value(downLabel);
     }
 
-    private String getPresentablePath(@Nonnull PsiFile file) {
+    @RequiredReadAction
+    private LocalizeValue getPresentablePath(@Nonnull PsiFile file) {
       VirtualFile vFile = file.getVirtualFile();
-      return vFile != null ? ProjectUtil.calcRelativeToProjectPath(vFile, myProject) : file.getName();
+      return LocalizeValue.of(vFile != null ? ProjectUtil.calcRelativeToProjectPath(vFile, myProject) : file.getName());
     }
 
     private void updateIndicatorFraction(int processed) {
@@ -515,13 +552,14 @@ public abstract class AbstractLayoutCodeProcessor {
 
     public boolean process() {
       myCountingIterator.processAll(file -> {
-        updateIndicatorText(ApplicationBundle.message("bulk.reformat.prepare.progress.text"), "");
+        updateIndicatorText(ApplicationLocalize.bulkReformatPrepareProgressText(), LocalizeValue.empty());
         countingIteration();
         return !isDone();
       });
 
       return myFileTreeIterator.processAll(file -> {
         next = file;
+        //noinspection RequiredXAction
         iteration();
         return !isDone();
       });
@@ -552,11 +590,17 @@ public abstract class AbstractLayoutCodeProcessor {
     return ranges;
   }
 
+  @RequiredReadAction
   void handleFileTooBigException(Logger logger, FilesTooBigForDiffException e, @Nonnull PsiFile file) {
     logger.info("Error while calculating changed ranges for: " + file.getVirtualFile(), e);
-    if (!ApplicationManager.getApplication().isUnitTestMode()) {
-      Notification notification = new Notification(ReformatChangedTextTooBigNotificationGroup, ApplicationBundle.message("reformat.changed.text.file.too.big.notification.title"),
-                                                   ApplicationBundle.message("reformat.changed.text.file.too.big.notification.text", file.getName()), NotificationType.INFORMATION);
+    if (!Application.get().isUnitTestMode()) {
+      Notification notification = new Notification(
+        ReformatChangedTextTooBigNotificationGroup,
+        ApplicationLocalize
+        .reformatChangedTextFileTooBigNotificationTitle().get(),
+        ApplicationLocalize.reformatChangedTextFileTooBigNotificationText(file.getName()).get(),
+        NotificationType.INFORMATION
+      );
       notification.notify(file.getProject());
     }
   }

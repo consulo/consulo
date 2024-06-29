@@ -15,29 +15,25 @@
  */
 package consulo.ide.impl.idea.usages.impl.rules;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
-import consulo.language.file.inject.VirtualFileWindow;
 import consulo.dataContext.DataSink;
-import consulo.language.editor.LangDataKeys;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.dataContext.TypeSafeDataProvider;
+import consulo.language.file.inject.VirtualFileWindow;
+import consulo.language.psi.*;
 import consulo.project.Project;
-import consulo.util.dataholder.Key;
-import consulo.virtualFileSystem.status.FileStatus;
-import consulo.virtualFileSystem.status.FileStatusManager;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiDirectory;
-import consulo.language.psi.PsiManager;
+import consulo.ui.image.Image;
 import consulo.usage.Usage;
 import consulo.usage.UsageGroup;
 import consulo.usage.UsageView;
 import consulo.usage.rule.UsageGroupingRule;
 import consulo.usage.rule.UsageInFile;
-import consulo.language.psi.PsiPackage;
-import consulo.language.psi.PsiPackageManager;
-import consulo.ui.image.Image;
-
+import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.status.FileStatus;
+import consulo.virtualFileSystem.status.FileStatusManager;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author yole
@@ -50,7 +46,7 @@ public class DirectoryGroupingRule implements UsageGroupingRule {
   }
 
   @Override
-  @jakarta.annotation.Nullable
+  @Nullable
   public UsageGroup groupUsage(@Nonnull Usage usage) {
     if (usage instanceof UsageInFile) {
       UsageInFile usageInFile = (UsageInFile)usage;
@@ -67,6 +63,7 @@ public class DirectoryGroupingRule implements UsageGroupingRule {
     return null;
   }
 
+  @RequiredReadAction
   protected UsageGroup getGroupForFile(final VirtualFile dir) {
     PsiDirectory psiDirectory = PsiManager.getInstance(myProject).findDirectory(dir);
     if (psiDirectory != null) {
@@ -119,11 +116,13 @@ public class DirectoryGroupingRule implements UsageGroupingRule {
       }
     }
 
+    @RequiredReadAction
     private PsiDirectory getDirectory() {
       return myDir.isValid() ? PsiManager.getInstance(myProject).findDirectory(myDir) : null;
     }
 
     @Override
+    @RequiredReadAction
     public boolean canNavigate() {
       final PsiDirectory directory = getDirectory();
       return directory != null && directory.canNavigate();
@@ -142,8 +141,7 @@ public class DirectoryGroupingRule implements UsageGroupingRule {
     @Override
     public boolean equals(Object o) {
       if (this == o) return true;
-      if (!(o instanceof DirectoryGroup)) return false;
-      return myDir.equals(((DirectoryGroup)o).myDir);
+      return o instanceof DirectoryGroup directoryGroup && myDir.equals(directoryGroup.myDir);
     }
 
     @Override
@@ -154,11 +152,11 @@ public class DirectoryGroupingRule implements UsageGroupingRule {
     @Override
     public void calcData(final Key<?> key, final DataSink sink) {
       if (!isValid()) return;
-      if (PlatformDataKeys.VIRTUAL_FILE == key) {
-        sink.put(PlatformDataKeys.VIRTUAL_FILE, myDir);
+      if (VirtualFile.KEY == key) {
+        sink.put(VirtualFile.KEY, myDir);
       }
-      if (LangDataKeys.PSI_ELEMENT == key) {
-        sink.put(LangDataKeys.PSI_ELEMENT, getDirectory());
+      if (PsiElement.KEY == key) {
+        sink.put(PsiElement.KEY, getDirectory());
       }
     }
   }
@@ -222,9 +220,7 @@ public class DirectoryGroupingRule implements UsageGroupingRule {
     @Override
     public boolean equals(Object o) {
       if (this == o) return true;
-      if (!(o instanceof PackageGroup)) return false;
-
-      return myPackage.equals(((PackageGroup)o).myPackage);
+      return o instanceof PackageGroup packageGroup && myPackage.equals(packageGroup.myPackage);
     }
 
     @Override
@@ -235,8 +231,8 @@ public class DirectoryGroupingRule implements UsageGroupingRule {
     @Override
     public void calcData(final Key<?> key, final DataSink sink) {
       if (!isValid()) return;
-      if (LangDataKeys.PSI_ELEMENT == key) {
-        sink.put(LangDataKeys.PSI_ELEMENT, myPackage);
+      if (PsiElement.KEY == key) {
+        sink.put(PsiElement.KEY, myPackage);
       }
     }
   }

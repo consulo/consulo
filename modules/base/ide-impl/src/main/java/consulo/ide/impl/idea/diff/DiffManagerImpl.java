@@ -16,18 +16,24 @@
 package consulo.ide.impl.idea.diff;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.diff.DiffDialogHints;
+import consulo.diff.DiffRequestPanel;
 import consulo.diff.chain.DiffRequestChain;
 import consulo.diff.chain.SimpleDiffRequestChain;
+import consulo.diff.localize.DiffLocalize;
+import consulo.diff.merge.MergeRequest;
+import consulo.diff.request.DiffRequest;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.diff.editor.ChainDiffVirtualFile;
 import consulo.ide.impl.idea.diff.editor.DiffEditorTabFilesManager;
 import consulo.ide.impl.idea.diff.impl.DiffRequestPanelImpl;
 import consulo.ide.impl.idea.diff.impl.DiffSettingsHolder;
 import consulo.ide.impl.idea.diff.impl.DiffWindow;
-import consulo.ide.impl.idea.diff.merge.*;
-import consulo.diff.DiffDialogHints;
-import consulo.diff.DiffRequestPanel;
-import consulo.diff.merge.MergeRequest;
-import consulo.diff.request.DiffRequest;
+import consulo.ide.impl.idea.diff.merge.BinaryMergeTool;
+import consulo.ide.impl.idea.diff.merge.MergeTool;
+import consulo.ide.impl.idea.diff.merge.MergeWindow;
+import consulo.ide.impl.idea.diff.merge.TextMergeTool;
 import consulo.ide.impl.idea.diff.tools.binary.BinaryDiffTool;
 import consulo.ide.impl.idea.diff.tools.dir.DirDiffTool;
 import consulo.ide.impl.idea.diff.tools.external.ExternalDiffTool;
@@ -35,18 +41,15 @@ import consulo.ide.impl.idea.diff.tools.external.ExternalMergeTool;
 import consulo.ide.impl.idea.diff.tools.fragmented.UnifiedDiffTool;
 import consulo.ide.impl.idea.diff.tools.simple.SimpleDiffTool;
 import consulo.ide.impl.idea.diff.util.DiffUtil;
-import consulo.ide.impl.idea.openapi.diff.DiffBundle;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.WindowWrapper;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.inject.Singleton;
-
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.WindowWrapper;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Singleton;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -100,7 +103,7 @@ public class DiffManagerImpl extends DiffManagerEx {
         DiffUtil.getWindowMode(hints) == WindowWrapper.Mode.FRAME &&
         !isFromDialog(project) &&
         hints.getWindowConsumer() == null) {
-      ChainDiffVirtualFile diffFile = new ChainDiffVirtualFile(requests, DiffBundle.message("label.default.diff.editor.tab.name"));
+      ChainDiffVirtualFile diffFile = new ChainDiffVirtualFile(requests, DiffLocalize.labelDefaultDiffEditorTabName().get());
       diffEditorTabFilesManager.showDiffFile(diffFile, true);
       return;
     }
@@ -123,7 +126,7 @@ public class DiffManagerImpl extends DiffManagerEx {
   @Nonnull
   @Override
   public List<DiffTool> getDiffTools() {
-    List<DiffTool> result = new ArrayList<DiffTool>();
+    List<DiffTool> result = new ArrayList<>();
     result.addAll(DiffTool.EP_NAME.getExtensionList());
     result.add(SimpleDiffTool.INSTANCE);
     result.add(UnifiedDiffTool.INSTANCE);
@@ -135,7 +138,7 @@ public class DiffManagerImpl extends DiffManagerEx {
   @Nonnull
   @Override
   public List<MergeTool> getMergeTools() {
-    List<MergeTool> result = new ArrayList<MergeTool>();
+    List<MergeTool> result = new ArrayList<>();
     result.addAll(MergeTool.EP_NAME.getExtensionList());
     result.add(TextMergeTool.INSTANCE);
     result.add(BinaryMergeTool.INSTANCE);

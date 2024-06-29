@@ -16,18 +16,20 @@
 
 package consulo.ide.impl.idea.openapi.vcs.vfs;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.component.ProcessCanceledException;
-import consulo.ui.ex.awt.Messages;
-import consulo.versionControlSystem.VcsBundle;
-import consulo.versionControlSystem.VcsException;
-import consulo.versionControlSystem.change.ContentRevision;
-import consulo.util.io.CharsetToolkit;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.versionControlSystem.VcsException;
+import consulo.versionControlSystem.change.ContentRevision;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nonnull;
+
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 /**
@@ -55,7 +57,7 @@ public class ContentRevisionVirtualFile extends AbstractVcsVirtualFile {
   private ContentRevisionVirtualFile(@Nonnull ContentRevision contentRevision) {
     super(contentRevision.getFile().getPath(), VcsFileSystem.getInstance());
     myContentRevision = contentRevision;
-    setCharset(CharsetToolkit.UTF8_CHARSET);
+    setCharset(StandardCharsets.UTF_8);
   }
 
   @Override
@@ -65,6 +67,7 @@ public class ContentRevisionVirtualFile extends AbstractVcsVirtualFile {
 
   @Override
   @Nonnull
+  @RequiredUIAccess
   public byte[] contentsToByteArray() throws IOException {
     if (myContentLoadFailed || myProcessingBeforeContentsChange) {
       return ArrayUtil.EMPTY_BYTE_ARRAY;
@@ -75,6 +78,7 @@ public class ContentRevisionVirtualFile extends AbstractVcsVirtualFile {
     return myContent;
   }
 
+  @RequiredUIAccess
   private void loadContent() {
     final VcsFileSystem vcsFileSystem = ((VcsFileSystem)getFileSystem());
 
@@ -88,7 +92,7 @@ public class ContentRevisionVirtualFile extends AbstractVcsVirtualFile {
       myModificationStamp++;
       setRevision(myContentRevision.getRevisionNumber().asString());
       myContent = content.getBytes(getCharset());
-      ApplicationManager.getApplication().runWriteAction(new Runnable() {
+      Application.get().runWriteAction(new Runnable() {
         @Override
         public void run() {
           vcsFileSystem.fireContentsChanged(this, ContentRevisionVirtualFile.this, 0);
@@ -98,7 +102,7 @@ public class ContentRevisionVirtualFile extends AbstractVcsVirtualFile {
     }
     catch (VcsException e) {
       myContentLoadFailed = true;
-      ApplicationManager.getApplication().runWriteAction(new Runnable() {
+      Application.get().runWriteAction(new Runnable() {
         @Override
         public void run() {
           vcsFileSystem.fireBeforeFileDeletion(this, ContentRevisionVirtualFile.this);
@@ -108,17 +112,17 @@ public class ContentRevisionVirtualFile extends AbstractVcsVirtualFile {
       setRevision("0");
 
       Messages.showMessageDialog(
-              VcsBundle.message("message.text.could.not.load.virtual.file.content", getPresentableUrl(), e.getLocalizedMessage()),
-              VcsBundle.message("message.title.could.not.load.content"),
-              Messages.getInformationIcon());
+        VcsLocalize.messageTextCouldNotLoadVirtualFileContent(getPresentableUrl(), e.getLocalizedMessage()).get(),
+        VcsLocalize.messageTitleCouldNotLoadContent().get(),
+        UIUtil.getInformationIcon()
+      );
 
-      ApplicationManager.getApplication().runWriteAction(new Runnable() {
+      Application.get().runWriteAction(new Runnable() {
         @Override
         public void run() {
           vcsFileSystem.fireFileDeleted(this, ContentRevisionVirtualFile.this, getName(), getParent());
         }
       });
-
     }
     catch (ProcessCanceledException ex) {
       myContent = ArrayUtil.EMPTY_BYTE_ARRAY;

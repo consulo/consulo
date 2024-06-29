@@ -21,6 +21,7 @@ import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.wm.FocusableFrame;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorKeys;
 import consulo.dataContext.*;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.facade.FromSwingWindowWrapper;
@@ -30,11 +31,11 @@ import consulo.desktop.awt.ui.ProhibitAWTEvents;
 import consulo.ide.impl.idea.ide.impl.TypeSafeDataProviderAdapter;
 import consulo.desktop.awt.ui.keymap.IdeKeyEventDispatcher;
 import consulo.project.ui.internal.WindowManagerEx;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.ModalityState;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.toolWindow.ToolWindowFloatingDecorator;
@@ -94,12 +95,12 @@ public class DesktopDataManagerImpl extends BaseDataManager {
       if (UIExAWTDataKey.CONTEXT_COMPONENT == dataId) {
         return (T)component;
       }
-      if (PlatformDataKeys.MODALITY_STATE == dataId) {
+      if (ModalityState.KEY == dataId) {
         return (T)(component != null ? IdeaModalityState.stateForComponent(component) : IdeaModalityState.nonModal());
       }
 
       Object data = calcData(dataId, component);
-      if (CommonDataKeys.EDITOR == dataId || CommonDataKeys.HOST_EDITOR == dataId) {
+      if (Editor.KEY == dataId || EditorKeys.HOST_EDITOR == dataId) {
         return (T)validateEditor((Editor)data);
       }
       return (T)data;
@@ -135,7 +136,7 @@ public class DesktopDataManagerImpl extends BaseDataManager {
   @Override
   @Nullable
   @SuppressWarnings("deprecation")
-  public DataProvider getDataProviderEx(java.awt.Component component) {
+  public DataProvider getDataProviderEx(Component component) {
     DataProvider dataProvider = null;
     if (component instanceof DataProvider) {
       dataProvider = (DataProvider)component;
@@ -193,7 +194,7 @@ public class DesktopDataManagerImpl extends BaseDataManager {
   public DataContext getDataContextTest(Component component) {
     DataContext dataContext = getDataContext(component);
 
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Project project = dataContext.getData(Project.KEY);
     Component focusedComponent = windowManager().getFocusedComponent(project);
     if (focusedComponent != null) {
       dataContext = getDataContext(focusedComponent);

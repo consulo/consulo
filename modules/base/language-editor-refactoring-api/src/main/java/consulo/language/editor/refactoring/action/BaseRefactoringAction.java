@@ -16,13 +16,13 @@
 
 package consulo.language.editor.refactoring.action;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.component.ProcessCanceledException;
 import consulo.dataContext.DataContext;
 import consulo.document.DocCommandGroupId;
 import consulo.document.Document;
 import consulo.language.Language;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.completion.lookup.Lookup;
@@ -52,26 +52,28 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public abstract class BaseRefactoringAction extends AnAction implements UpdateInBackground {
-  private final Predicate<Language> myLanguageCondition = language -> isAvailableForLanguage(language);
+  private final Predicate<Language> myLanguageCondition = this::isAvailableForLanguage;
 
   protected abstract boolean isAvailableInEditorOnly();
 
   protected abstract boolean isEnabledOnElements(@Nonnull PsiElement[] elements);
 
-  protected boolean isAvailableOnElementInEditorAndFile(@Nonnull PsiElement element,
-                                                        @Nonnull Editor editor,
-                                                        @Nonnull PsiFile file,
-                                                        @Nonnull DataContext context) {
+  protected boolean isAvailableOnElementInEditorAndFile(
+    @Nonnull PsiElement element,
+    @Nonnull Editor editor,
+    @Nonnull PsiFile file,
+    @Nonnull DataContext context
+  ) {
     return true;
   }
 
   public boolean hasAvailableHandler(@Nonnull DataContext dataContext) {
     final RefactoringActionHandler handler = getHandler(dataContext);
     if (handler != null) {
-      if (handler instanceof ContextAwareActionHandler) {
-        final Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
-        final PsiFile file = dataContext.getData(CommonDataKeys.PSI_FILE);
-        if (editor != null && file != null && !((ContextAwareActionHandler)handler).isAvailableForQuickList(editor, file, dataContext)) {
+      if (handler instanceof ContextAwareActionHandler contextAwareActionHandler) {
+        final Editor editor = dataContext.getData(Editor.KEY);
+        final PsiFile file = dataContext.getData(PsiFile.KEY);
+        if (editor != null && file != null && !contextAwareActionHandler.isAvailableForQuickList(editor, file, dataContext)) {
           return false;
         }
       }
@@ -87,10 +89,10 @@ public abstract class BaseRefactoringAction extends AnAction implements UpdateIn
   @Override
   public final void actionPerformed(@Nonnull AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     if (project == null) return;
     PsiDocumentManager.getInstance(project).commitAllDocuments();
-    final Editor editor = e.getData(CommonDataKeys.EDITOR);
+    final Editor editor = e.getData(Editor.KEY);
     final PsiElement[] elements = getPsiElementArray(dataContext);
 
     Runnable markEventCount = UIAccess.current().markEventCount();
@@ -116,12 +118,7 @@ public abstract class BaseRefactoringAction extends AnAction implements UpdateIn
     if (InplaceRefactoring.getActiveInplaceRenamer(editor) == null) {
       final LookupEx lookup = LookupManager.getActiveLookup(editor);
       if (lookup != null) {
-        Runnable command = new Runnable() {
-          @Override
-          public void run() {
-            lookup.finishLookup(Lookup.NORMAL_SELECT_CHAR);
-          }
-        };
+        Runnable command = () -> lookup.finishLookup(Lookup.NORMAL_SELECT_CHAR);
         assert editor != null;
         Document doc = editor.getDocument();
         DocCommandGroupId group = DocCommandGroupId.noneGroupId(doc);
@@ -153,14 +150,14 @@ public abstract class BaseRefactoringAction extends AnAction implements UpdateIn
     presentation.setVisible(true);
     presentation.setEnabled(true);
     DataContext dataContext = e.getDataContext();
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null || isHidden()) {
       hideAction(e);
       return;
     }
 
-    Editor editor = e.getData(CommonDataKeys.EDITOR);
-    PsiFile file = e.getData(CommonDataKeys.PSI_FILE);
+    Editor editor = e.getData(Editor.KEY);
+    PsiFile file = e.getData(PsiFile.KEY);
     if (file != null) {
       if (file instanceof PsiCompiledElement || !isAvailableForFile(file)) {
         hideAction(e);
@@ -180,7 +177,7 @@ public abstract class BaseRefactoringAction extends AnAction implements UpdateIn
       }
     }
     else {
-      PsiElement element = e.getData(CommonDataKeys.PSI_ELEMENT);
+      PsiElement element = e.getData(PsiElement.KEY);
       Language[] languages = e.getData(LangDataKeys.CONTEXT_LANGUAGES);
       if (element == null || !isAvailableForLanguage(element.getLanguage())) {
         if (file == null) {
@@ -217,6 +214,7 @@ public abstract class BaseRefactoringAction extends AnAction implements UpdateIn
     return false;
   }
 
+  @RequiredReadAction
   public static PsiElement getElementAtCaret(final Editor editor, final PsiFile file) {
     final int offset = fixCaretOffset(editor);
     PsiElement element = file.findElementAt(offset);
@@ -255,9 +253,9 @@ public abstract class BaseRefactoringAction extends AnAction implements UpdateIn
 
   @Nonnull
   public static PsiElement[] getPsiElementArray(DataContext dataContext) {
-    PsiElement[] psiElements = dataContext.getData(LangDataKeys.PSI_ELEMENT_ARRAY);
+    PsiElement[] psiElements = dataContext.getData(PsiElement.KEY_OF_ARRAY);
     if (psiElements == null || psiElements.length == 0) {
-      PsiElement element = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
+      PsiElement element = dataContext.getData(PsiElement.KEY);
       if (element != null) {
         psiElements = new PsiElement[]{element};
       }
@@ -268,11 +266,10 @@ public abstract class BaseRefactoringAction extends AnAction implements UpdateIn
     List<PsiElement> filtered = null;
     for (PsiElement element : psiElements) {
       if (element instanceof SyntheticElement) {
-        if (filtered == null) filtered = new ArrayList<PsiElement>(Arrays.asList(element));
+        if (filtered == null) filtered = new ArrayList<>(Arrays.asList(element));
         filtered.remove(element);
       }
     }
     return filtered == null ? psiElements : PsiUtilCore.toPsiElementArray(filtered);
   }
-
 }

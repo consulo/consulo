@@ -1,22 +1,22 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.language.editor.DaemonBundle;
+import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.actions.ShowErrorDescriptionAction;
 import consulo.ide.impl.idea.codeInsight.hint.LineTooltipRenderer;
-import consulo.language.editor.inspection.TooltipLinkHandlers;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionNodeInfo;
-import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.util.ColorUtil;
-import consulo.ui.ex.JBColor;
-import consulo.ui.ex.Html;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
-import org.jetbrains.annotations.NonNls;
+import consulo.language.editor.inspection.TooltipLinkHandlers;
+import consulo.language.editor.localize.DaemonLocalize;
+import consulo.ui.ex.Html;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -76,7 +76,10 @@ class DaemonTooltipRenderer extends LineTooltipRenderer {
   @Nonnull
   protected String getHtmlForProblemWithLink(@Nonnull String problem) {
     Html html = new Html(problem).setKeepFont(true);
-    return UIUtil.getHtmlBody(html).replace(DaemonBundle.message("inspection.extended.description"), DaemonBundle.message("inspection.collapse.description"));
+    return UIUtil.getHtmlBody(html).replace(
+      DaemonLocalize.inspectionExtendedDescription().get(),
+      DaemonLocalize.inspectionCollapseDescription().get()
+    );
   }
 
   @Nullable

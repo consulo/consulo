@@ -15,35 +15,29 @@
  */
 package consulo.ide.impl.idea.openapi.vfs.encoding;
 
-import consulo.ide.impl.idea.openapi.command.undo.GlobalUndoableAction;
-import consulo.undoRedo.UndoManager;
-import consulo.undoRedo.UndoableAction;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.codeEditor.Editor;
-import consulo.undoRedo.ApplicationUndoManager;
-import consulo.undoRedo.ProjectUndoManager;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.language.editor.CommonDataKeys;
-import consulo.virtualFileSystem.encoding.EncodingManager;
+import consulo.ide.impl.idea.openapi.command.undo.GlobalUndoableAction;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
-import consulo.undoRedo.CommandProcessor;
-import consulo.undoRedo.UndoConfirmationPolicy;
+import consulo.undoRedo.*;
 import consulo.virtualFileSystem.VirtualFile;
-
+import consulo.virtualFileSystem.encoding.EncodingManager;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -66,20 +60,21 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
     if (allowDirectories && virtualFile.isDirectory()) return true;
     FileDocumentManager documentManager = FileDocumentManager.getInstance();
     Document document = documentManager.getDocument(virtualFile);
-    if (document == null) return false;
-
-    return EncodingUtil.checkCanConvert(virtualFile) == null || EncodingUtil.checkCanReload(virtualFile, null) == null;
+    return document != null
+      && (EncodingUtil.checkCanConvert(virtualFile) == null || EncodingUtil.checkCanReload(virtualFile, null) == null);
   }
 
   @Override
+  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
-    VirtualFile myFile = e.getData(CommonDataKeys.VIRTUAL_FILE);
+    VirtualFile myFile = e.getData(VirtualFile.KEY);
     boolean enabled = myFile != null && checkEnabled(myFile);
     e.getPresentation().setEnabled(enabled);
     e.getPresentation().setVisible(myFile != null);
   }
 
   @Override
+  @RequiredUIAccess
   public final void actionPerformed(@Nonnull final AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
 
@@ -143,11 +138,15 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
     return changeTo(project, document, editor, virtualFile, charset, isSafeToConvert, isSafeToReload);
   }
 
-  public static boolean changeTo(Project project, @Nonnull Document document,
-                                 Editor editor,
-                                 @Nonnull VirtualFile virtualFile,
-                                 @Nonnull Charset charset,
-                                 @Nonnull EncodingUtil.Magic8 isSafeToConvert, @Nonnull EncodingUtil.Magic8 isSafeToReload) {
+  public static boolean changeTo(
+    Project project,
+    @Nonnull Document document,
+    Editor editor,
+    @Nonnull VirtualFile virtualFile,
+    @Nonnull Charset charset,
+    @Nonnull EncodingUtil.Magic8 isSafeToConvert,
+    @Nonnull EncodingUtil.Magic8 isSafeToReload
+  ) {
     final Charset oldCharset = virtualFile.getCharset();
     final Runnable undo;
     final Runnable redo;
@@ -177,14 +176,14 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
       @Override
       public void undo() {
         // invoke later because changing document inside undo/redo is not allowed
-        Application application = ApplicationManager.getApplication();
+        Application application = Application.get();
         application.invokeLater(undo, IdeaModalityState.nonModal(), (project == null ? application : project).getDisposed());
       }
 
       @Override
       public void redo() {
         // invoke later because changing document inside undo/redo is not allowed
-        Application application = ApplicationManager.getApplication();
+        Application application = Application.get();
         application.invokeLater(redo, IdeaModalityState.nonModal(), (project == null ? application : project).getDisposed());
       }
     };

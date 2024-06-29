@@ -15,7 +15,6 @@
  */
 package consulo.execution.test.action;
 
-import consulo.execution.ExecutionDataKeys;
 import consulo.execution.RunnerRegistry;
 import consulo.execution.RuntimeConfigurationException;
 import consulo.execution.configuration.*;
@@ -32,15 +31,14 @@ import consulo.execution.test.AbstractTestProxy;
 import consulo.execution.test.Filter;
 import consulo.execution.test.TestConsoleProperties;
 import consulo.execution.test.TestFrameworkRunningModel;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.logging.Logger;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.process.ExecutionException;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ComponentContainer;
 import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.ActionsBundle;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
@@ -49,11 +47,11 @@ import consulo.ui.ex.popup.IPopupChooserBuilder;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jdom.Element;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
@@ -98,7 +96,7 @@ public class AbstractRerunFailedTestsAction extends AnAction implements AnAction
   }
 
   private boolean isActive(AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) {
       return false;
     }
@@ -145,7 +143,7 @@ public class AbstractRerunFailedTestsAction extends AnAction implements AnAction
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    ExecutionEnvironment environment = e.getData(ExecutionDataKeys.EXECUTION_ENVIRONMENT);
+    ExecutionEnvironment environment = e.getData(ExecutionEnvironment.KEY);
     if (environment == null) {
       return;
     }
@@ -167,7 +165,7 @@ public class AbstractRerunFailedTestsAction extends AnAction implements AnAction
       return;
     }
 
-    final LinkedHashMap<Executor, ProgramRunner> availableRunners = new LinkedHashMap<Executor, ProgramRunner>();
+    final LinkedHashMap<Executor, ProgramRunner> availableRunners = new LinkedHashMap<>();
     for (Executor ex : new Executor[]{DefaultRunExecutor.getRunExecutorInstance(), DefaultDebugExecutor.getDebugExecutorInstance()}) {
       final ProgramRunner runner = RunnerRegistry.getInstance().getRunner(ex.getId(), profile);
       if (runner != null) {
@@ -230,7 +228,7 @@ public class AbstractRerunFailedTestsAction extends AnAction implements AnAction
     return getRunProfile();
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   public TestFrameworkRunningModel getModel() {
     if (myModel != null) {
       return myModel;
@@ -255,7 +253,7 @@ public class AbstractRerunFailedTestsAction extends AnAction implements AnAction
     private final RunConfigurationBase myConfiguration;
 
     public MyRunProfile(RunConfigurationBase configuration) {
-      super(configuration.getProject(), configuration.getFactory(), ActionsBundle.message("action.RerunFailedTests.text"));
+      super(configuration.getProject(), configuration.getFactory(), ActionLocalize.actionRerunfailedtestsText().get());
       myConfiguration = configuration;
     }
 

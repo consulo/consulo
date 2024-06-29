@@ -23,7 +23,6 @@ import consulo.ide.impl.idea.diff.util.DiffUtil;
 import consulo.ide.impl.idea.ide.actions.EditSourceAction;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.ui.ex.action.util.ActionUtil;
@@ -59,7 +58,7 @@ public class OpenInEditorAction extends EditSourceAction implements DumbAware {
       e.getPresentation().setEnabled(false);
     }
 
-    if (e.getData(CommonDataKeys.PROJECT) == null) {
+    if (e.getData(Project.KEY) == null) {
       e.getPresentation().setVisible(true);
       e.getPresentation().setEnabled(false);
       return;
@@ -78,7 +77,7 @@ public class OpenInEditorAction extends EditSourceAction implements DumbAware {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) return;
 
     Navigatable[] navigatables = e.getData(DiffDataKeys.NAVIGATABLE_ARRAY);

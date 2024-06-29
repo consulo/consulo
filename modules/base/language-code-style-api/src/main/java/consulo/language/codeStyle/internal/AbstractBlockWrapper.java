@@ -109,7 +109,7 @@ public abstract class AbstractBlockWrapper {
   public ArrayList<WrapImpl> getWraps() {
     final ArrayList<WrapImpl> result = new ArrayList<>(3);
     AbstractBlockWrapper current = this;
-    while(current != null && current.getStartOffset() == getStartOffset()) {
+    while (current != null && current.getStartOffset() == getStartOffset()) {
       final WrapImpl wrap = current.getOwnWrap();
       if (wrap != null && !result.contains(wrap)) result.add(0, wrap);
       if (wrap != null && wrap.getIgnoreParentWraps()) break;

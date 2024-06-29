@@ -17,27 +17,25 @@
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.codeEditor.action.ExtensionEditorActionHandler;
-import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.dataContext.DataManager;
-import consulo.language.editor.action.SelectWordUtil;
-import consulo.language.editor.inject.EditorWindow;
-import consulo.language.CompositeLanguage;
-import consulo.language.Language;
-import consulo.language.inject.InjectedLanguageManager;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
-import consulo.language.psi.*;
-import consulo.logging.Logger;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.action.ExtensionEditorActionHandler;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
+import consulo.externalService.statistic.FeatureUsageTracker;
+import consulo.language.CompositeLanguage;
+import consulo.language.Language;
+import consulo.language.editor.action.SelectWordUtil;
+import consulo.language.editor.inject.EditorWindow;
+import consulo.language.inject.InjectedLanguageManager;
+import consulo.language.psi.*;
+import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.action.IdeActions;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
-import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.application.util.function.Processor;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -58,7 +56,7 @@ public class SelectWordHandler extends EditorActionHandler implements ExtensionE
     if (LOG.isDebugEnabled()) {
       LOG.debug("enter: execute(editor='" + editor + "')");
     }
-    Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(CommonDataKeys.PROJECT);
+    Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(Project.KEY);
     if (project == null) {
       if (myOriginalHandler != null) {
         myOriginalHandler.execute(editor, dataContext);
@@ -160,19 +158,16 @@ public class SelectWordHandler extends EditorActionHandler implements ExtensionE
 
     final TextRange selectionRange = new TextRange(editor.getSelectionModel().getSelectionStart(), editor.getSelectionModel().getSelectionEnd());
 
-    final Ref<TextRange> minimumRange = new Ref<TextRange>(new TextRange(0, editor.getDocument().getTextLength()));
+    final Ref<TextRange> minimumRange = new Ref<>(new TextRange(0, editor.getDocument().getTextLength()));
 
-    SelectWordUtil.processRanges(element, editor.getDocument().getCharsSequence(), caretOffset, editor, new Processor<TextRange>() {
-      @Override
-      public boolean process(@Nonnull TextRange range) {
-        if (range.contains(selectionRange) && !range.equals(selectionRange)) {
-          if (minimumRange.get().contains(range)) {
-            minimumRange.set(range);
-            return true;
-          }
+    SelectWordUtil.processRanges(element, editor.getDocument().getCharsSequence(), caretOffset, editor, range -> {
+      if (range.contains(selectionRange) && !range.equals(selectionRange)) {
+        if (minimumRange.get().contains(range)) {
+          minimumRange.set(range);
+          return true;
         }
-        return false;
       }
+      return false;
     });
 
     return minimumRange.get();

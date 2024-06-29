@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.fileChooser.actions;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.DeleteProvider;
 import consulo.ide.impl.idea.ide.actions.DeleteAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -32,6 +33,7 @@ public class FileDeleteAction extends DeleteAction {
   }
 
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     final Boolean available = event.getData(FileChooserKeys.DELETE_ACTION_AVAILABLE);

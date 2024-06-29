@@ -1,15 +1,16 @@
 // Copyright 2000-2022 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.execution.impl.internal.service;
 
+import consulo.application.HelpManager;
 import consulo.application.util.RecursionManager;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.execution.service.*;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
+import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.awt.AutoScrollToSourceHandler;
 import consulo.util.collection.ContainerUtil;
@@ -122,7 +123,7 @@ public abstract class ServiceView extends JPanel implements Disposable {
       }
     };
     DataManager.registerDataProvider(serviceView, dataId -> {
-      if (PlatformDataKeys.HELP_ID.is(dataId)) {
+      if (HelpManager.HELP_ID.is(dataId)) {
         return ServiceViewManagerImpl.getToolWindowContextHelpId();
       }
       if (PlatformDataKeys.SELECTED_ITEMS.is(dataId)) {
@@ -135,11 +136,11 @@ public abstract class ServiceView extends JPanel implements Disposable {
       if (ServiceViewActionProvider.SERVICES_SELECTED_ITEMS.is(dataId)) {
         return serviceView.getSelectedItems();
       }
-      if (PlatformDataKeys.DELETE_ELEMENT_PROVIDER.is(dataId)) {
+      if (DeleteProvider.KEY.is(dataId)) {
         List<ServiceViewItem> selection = serviceView.getSelectedItems();
         ServiceViewContributor<?> contributor = ServiceViewDragHelper.getTheOnlyRootContributor(selection);
         DataProvider delegate = contributor == null ? null : contributor.getViewDescriptor(serviceView.getProject()).getDataProvider();
-        DeleteProvider deleteProvider = delegate == null ? null : delegate.getDataUnchecked(PlatformDataKeys.DELETE_ELEMENT_PROVIDER);
+        DeleteProvider deleteProvider = delegate == null ? null : delegate.getDataUnchecked(DeleteProvider.KEY);
         if (deleteProvider == null) return new ServiceViewDeleteProvider(serviceView);
 
         if (deleteProvider instanceof ServiceViewContributorDeleteProvider) {
@@ -147,17 +148,17 @@ public abstract class ServiceView extends JPanel implements Disposable {
         }
         return deleteProvider;
       }
-      if (PlatformDataKeys.COPY_PROVIDER.is(dataId)) {
+      if (CopyProvider.KEY.is(dataId)) {
         return new ServiceViewCopyProvider(serviceView);
       }
       if (ServiceViewActionUtils.CONTRIBUTORS_KEY.is(dataId)) {
-        return serviceView.getModel().getRoots().stream().map(item -> item.getRootContributor()).collect(Collectors.toSet());
+        return serviceView.getModel().getRoots().stream().map(ServiceViewItem::getRootContributor).collect(Collectors.toSet());
       }
       if (ServiceViewActionUtils.OPTIONS_KEY.is(dataId)) {
         return viewOptions;
       }
       List<ServiceViewItem> selectedItems = serviceView.getSelectedItems();
-      if (CommonDataKeys.NAVIGATABLE_ARRAY.is(dataId)) {
+      if (Navigatable.KEY_OF_ARRAY.is(dataId)) {
         List<Navigatable> navigatables = ContainerUtil.mapNotNull(selectedItems, item -> item.getViewDescriptor().getNavigatable());
         return navigatables.toArray(Navigatable.EMPTY_ARRAY);
       }

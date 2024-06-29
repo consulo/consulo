@@ -18,11 +18,10 @@ package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.dataContext.DataSink;
 import consulo.ide.impl.idea.openapi.fileChooser.actions.VirtualFileDeleteProvider;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.VcsShowConfirmationOption;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.DeleteUnversionedFilesAction;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
 import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.action.AnAction;
@@ -89,6 +88,7 @@ public class SelectFilesDialog extends AbstractSelectFilesDialog<VirtualFile> {
     if (myDeletableFiles) {
       AnAction deleteAction = new DeleteUnversionedFilesAction() {
         @Override
+        @RequiredUIAccess
         public void actionPerformed(AnActionEvent e) {
           super.actionPerformed(e);
           myFileList.refresh();
@@ -109,14 +109,17 @@ public class SelectFilesDialog extends AbstractSelectFilesDialog<VirtualFile> {
       myDeleteProvider = (deletableFiles ?  new VirtualFileDeleteProvider() : null);
     }
 
+    @Override
     protected DefaultTreeModel buildTreeModel(final List<VirtualFile> changes, ChangeNodeDecorator changeNodeDecorator) {
       return TreeModelBuilder.buildFromVirtualFiles(myProject, isShowFlatten(), changes);
     }
 
+    @Override
     protected List<VirtualFile> getSelectedObjects(final ChangesBrowserNode node) {
       return node.getAllFilesUnder();
     }
 
+    @Override
     protected VirtualFile getLeadSelectedObject(final ChangesBrowserNode node) {
       final Object o = node.getUserObject();
       if (o instanceof VirtualFile) {
@@ -128,11 +131,11 @@ public class SelectFilesDialog extends AbstractSelectFilesDialog<VirtualFile> {
     @Override
     public void calcData(Key<?> key, DataSink sink) {
       super.calcData(key, sink);
-      if (PlatformDataKeys.DELETE_ELEMENT_PROVIDER == key && myDeleteProvider != null) {
-        sink.put(PlatformDataKeys.DELETE_ELEMENT_PROVIDER, myDeleteProvider);
+      if (DeleteProvider.KEY == key && myDeleteProvider != null) {
+        sink.put(DeleteProvider.KEY, myDeleteProvider);
       }
-      else if (CommonDataKeys.VIRTUAL_FILE_ARRAY == key) {
-        sink.put(CommonDataKeys.VIRTUAL_FILE_ARRAY, ArrayUtil.toObjectArray(getSelectedChanges(), VirtualFile.class));
+      else if (VirtualFile.KEY_OF_ARRAY == key) {
+        sink.put(VirtualFile.KEY_OF_ARRAY, ArrayUtil.toObjectArray(getSelectedChanges(), VirtualFile.class));
       }
     }
 

@@ -22,6 +22,7 @@ import consulo.application.impl.internal.IdeaModalityState;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.VcsDataKeys;
@@ -110,8 +111,9 @@ public class RepositoryChangesBrowser extends ChangesBrowser implements DataProv
   }
 
   private class MyEditSourceAction extends EditSourceAction {
+    @RequiredUIAccess
     @Override
-    public void update(final AnActionEvent event) {
+    public void update(@Nonnull final AnActionEvent event) {
       super.update(event);
       event.getPresentation().setIcon(AllIcons.Actions.EditSource);
       event.getPresentation().setText("Edit Source");

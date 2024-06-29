@@ -2,22 +2,21 @@
 
 package consulo.ide.impl.idea.codeInsight.completion;
 
+import consulo.application.Application;
+import consulo.application.ui.UISettings;
+import consulo.application.util.matcher.PrefixMatcher;
+import consulo.application.util.registry.Registry;
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionSorterImpl;
 import consulo.ide.impl.idea.codeInsight.lookup.impl.EmptyLookupItem;
-import consulo.language.editor.template.LiveTemplateLookupElement;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.language.editor.completion.CompletionPreselectSkipper;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.application.ApplicationManager;
-import consulo.application.ui.UISettings;
-import consulo.application.util.registry.Registry;
 import consulo.language.editor.completion.CompletionLocation;
+import consulo.language.editor.completion.CompletionPreselectSkipper;
 import consulo.language.editor.completion.CompletionResult;
 import consulo.language.editor.completion.CompletionSorter;
-import consulo.application.util.matcher.PrefixMatcher;
 import consulo.language.editor.completion.lookup.*;
+import consulo.language.editor.template.LiveTemplateLookupElement;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.pattern.StandardPatterns;
 import consulo.language.util.ProcessingContext;
 import consulo.logging.Logger;
@@ -26,11 +25,12 @@ import consulo.util.collection.Maps;
 import consulo.util.collection.MultiMap;
 import consulo.util.collection.SmartList;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 import consulo.util.lang.function.Condition;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.*;
 
 public class CompletionLookupArrangerImpl extends LookupArranger implements CompletionLookupArranger {
@@ -202,7 +202,7 @@ public class CompletionLookupArrangerImpl extends LookupArranger implements Comp
       // restart completion on any prefix change
       myProcess.addWatchedPrefix(0, StandardPatterns.string());
 
-      if (ApplicationManager.getApplication().isUnitTestMode()) printTestWarning();
+      if (Application.get().isUnitTestMode()) printTestWarning();
     }
   }
 
@@ -293,7 +293,8 @@ public class CompletionLookupArrangerImpl extends LookupArranger implements Comp
     Iterable<LookupElement> sortedByRelevance = sortByRelevance(groupItemsBySorter(items));
 
     LookupElement relevantSelection = findMostRelevantItem(sortedByRelevance);
-    List<LookupElement> listModel = isAlphaSorted() ? sortByPresentation(items) : fillModelByRelevance(lookup, ContainerUtil.newIdentityTroveSet(items), sortedByRelevance, relevantSelection);
+    List<LookupElement> listModel = isAlphaSorted() ? sortByPresentation(items)
+      : fillModelByRelevance(lookup, ContainerUtil.newIdentityTroveSet(items), sortedByRelevance, relevantSelection);
 
     int toSelect = getItemToSelect(lookup, listModel, onExplicitAction, relevantSelection);
     LOG.assertTrue(toSelect >= 0);
@@ -360,7 +361,11 @@ public class CompletionLookupArrangerImpl extends LookupArranger implements Comp
     ContainerUtil.addAll(model, sortByRelevance(groupItemsBySorter(getPrefixItems(false))));
   }
 
-  private static void addCurrentlySelectedItemToTop(LookupElementListPresenter lookup, Set<? extends LookupElement> items, LinkedHashSet<? super LookupElement> model) {
+  private static void addCurrentlySelectedItemToTop(
+    LookupElementListPresenter lookup,
+    Set<? extends LookupElement> items,
+    LinkedHashSet<? super LookupElement> model
+  ) {
     if (!lookup.isSelectionTouched()) {
       LookupElement lastSelection = lookup.getCurrentItem();
       if (items.contains(lastSelection)) {
@@ -369,7 +374,11 @@ public class CompletionLookupArrangerImpl extends LookupArranger implements Comp
     }
   }
 
-  private static void addSomeItems(LinkedHashSet<? super LookupElement> model, Iterator<? extends LookupElement> iterator, Condition<? super LookupElement> stopWhen) {
+  private static void addSomeItems(
+    LinkedHashSet<? super LookupElement> model,
+    Iterator<? extends LookupElement> iterator,
+    Condition<? super LookupElement> stopWhen
+  ) {
     while (iterator.hasNext()) {
       LookupElement item = iterator.next();
       model.add(item);
@@ -424,7 +433,7 @@ public class CompletionLookupArrangerImpl extends LookupArranger implements Comp
       }
 
       LookupElement selectedValue = lookup.getCurrentItemOrEmpty();
-      if (selectedValue instanceof EmptyLookupItem && ((EmptyLookupItem)selectedValue).isLoading()) {
+      if (selectedValue instanceof EmptyLookupItem emptyLookupItem && emptyLookupItem.isLoading()) {
         int index = lookup.getSelectedIndex();
         if (index >= 0 && index < items.size()) {
           return index;
@@ -444,7 +453,8 @@ public class CompletionLookupArrangerImpl extends LookupArranger implements Comp
   }
 
   private List<LookupElement> getExactMatches(List<? extends LookupElement> items) {
-    String selectedText = InjectedLanguageUtil.getTopLevelEditor(myProcess.getParameters().getEditor()).getSelectionModel().getSelectedText();
+    String selectedText =
+      InjectedLanguageUtil.getTopLevelEditor(myProcess.getParameters().getEditor()).getSelectionModel().getSelectedText();
     List<LookupElement> exactMatches = new SmartList<>();
     for (int i = 0; i < items.size(); i++) {
       LookupElement item = items.get(i);

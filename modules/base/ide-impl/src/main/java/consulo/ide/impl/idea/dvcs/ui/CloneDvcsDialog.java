@@ -23,7 +23,7 @@ import consulo.versionControlSystem.distributed.DvcsRememberedInputs;
 import consulo.application.ui.event.FrameStateListener;
 import consulo.application.ui.FrameStateManager;
 import consulo.ide.impl.idea.ide.impl.ProjectUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.language.editor.ui.awt.EditorComboBox;
 import consulo.project.Project;
@@ -183,13 +183,21 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
     myTestButton.setEnabled(false);
   }
 
+  @NonNls
   private void test() {
     myTestURL = getCurrentUrlText();
     TestResult testResult = ProgressManager.getInstance().runProcessWithProgressSynchronously(
-            () -> test(myTestURL), DvcsBundle.message("clone.testing", myTestURL), true, myProject);
+      () -> test(myTestURL),
+      DvcsBundle.message("clone.testing", myTestURL),
+      true,
+      myProject
+    );
     if (testResult.isSuccess()) {
-      Messages.showInfoMessage(myTestButton, DvcsBundle.message("clone.test.success.message", myTestURL),
-                               DvcsBundle.message("clone.test.connection.title"));
+      Messages.showInfoMessage(
+        myTestButton,
+        DvcsBundle.message("clone.test.success.message", myTestURL),
+        DvcsBundle.message("clone.test.connection.title")
+      );
       myTestResult = Boolean.TRUE;
     }
     else {

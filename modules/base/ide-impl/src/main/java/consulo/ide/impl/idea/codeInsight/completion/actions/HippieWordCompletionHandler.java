@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.codeInsight.completion.actions;
 
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.highlight.HighlightManager;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorColors;
 import consulo.codeEditor.EditorEx;
@@ -210,8 +210,8 @@ public class HippieWordCompletionHandler implements CodeInsightActionHandler {
     addWordsForEditor((EditorEx)editor, matcher, chars, words, afterWords, caretOffset);
 
     for(FileEditor fileEditor: FileEditorManager.getInstance(file.getProject()).getAllEditors()) {
-      if (fileEditor instanceof TextEditor) {
-        Editor anotherEditor = ((TextEditor)fileEditor).getEditor();
+      if (fileEditor instanceof TextEditor textEditor) {
+        Editor anotherEditor = textEditor.getEditor();
         if (anotherEditor != editor) {
           addWordsForEditor((EditorEx)anotherEditor, matcher, anotherEditor.getDocument().getCharsSequence(), words, afterWords, 0);
         }

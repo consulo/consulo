@@ -15,16 +15,8 @@
  */
 package consulo.ide.impl.idea.diff.tools.external;
 
-import consulo.ide.impl.idea.diff.contents.DirectoryContent;
-import consulo.ide.impl.idea.diff.merge.ThreesideMergeRequest;
-import consulo.ide.impl.idea.diff.util.DiffUserDataKeysEx;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.PathUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.AccessRule;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
@@ -38,6 +30,13 @@ import consulo.diff.util.Side;
 import consulo.diff.util.ThreeSide;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
+import consulo.ide.impl.idea.diff.contents.DirectoryContent;
+import consulo.ide.impl.idea.diff.merge.ThreesideMergeRequest;
+import consulo.ide.impl.idea.diff.util.DiffUserDataKeysEx;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.io.FileUtil;
+import consulo.util.collection.ArrayUtil;
+import consulo.ide.impl.idea.util.PathUtil;
 import consulo.platform.LineSeparator;
 import consulo.platform.Platform;
 import consulo.process.ExecutionException;
@@ -46,15 +45,16 @@ import consulo.process.cmd.ParametersListUtil;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.util.io.CharsetToolkit;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.TimeoutUtil;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWithoutContent;
 import consulo.virtualFileSystem.fileType.FileType;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -69,12 +69,12 @@ public class ExternalDiffToolUtil {
   public static boolean canCreateFile(@Nonnull DiffContent content) {
     if (content instanceof EmptyContent) return true;
     if (content instanceof DocumentContent) return true;
-    if (content instanceof FileContent) {
-      VirtualFile file = ((FileContent)content).getFile();
-      if (file instanceof VirtualFileWithoutContent) return false;
-      return true;
+    if (content instanceof FileContent fileContent) {
+      return !(fileContent.getFile() instanceof VirtualFileWithoutContent);
     }
-    if (content instanceof DirectoryContent) return ((DirectoryContent)content).getFile().isInLocalFileSystem();
+    if (content instanceof DirectoryContent directoryContent) {
+      return directoryContent.getFile().isInLocalFileSystem();
+    }
     return false;
   }
 
@@ -127,9 +127,7 @@ public class ExternalDiffToolUtil {
     Boolean hasBom = content.hasBom();
     if (hasBom == null) hasBom = CharsetToolkit.getMandatoryBom(charset) != null;
 
-    ThrowableComputable<String,RuntimeException> action = () -> {
-      return content.getDocument().getText();
-    };
+    ThrowableComputable<String,RuntimeException> action = () -> content.getDocument().getText();
     String contentData = AccessRule.read(action);
     if (separator != LineSeparator.LF) {
       contentData = StringUtil.convertLineSeparators(contentData, separator.getSeparatorString());
@@ -197,7 +195,7 @@ public class ExternalDiffToolUtil {
       files.add(createFile(content, fileName));
     }
 
-    Map<String, String> patterns = ContainerUtil.newHashMap();
+    Map<String, String> patterns = new HashMap<>();
     if (files.size() == 2) {
       patterns.put("%1", files.get(0).getPath());
       patterns.put("%2", files.get(1).getPath());
@@ -213,10 +211,12 @@ public class ExternalDiffToolUtil {
     execute(settings.getDiffExePath(), settings.getDiffParameters(), patterns);
   }
 
-  public static void executeMerge(@Nullable Project project,
-                                  @Nonnull ExternalDiffSettings settings,
-                                  @Nonnull ThreesideMergeRequest request)
-          throws IOException, ExecutionException {
+  @RequiredUIAccess
+  public static void executeMerge(
+    @Nullable Project project,
+    @Nonnull ExternalDiffSettings settings,
+    @Nonnull ThreesideMergeRequest request
+  ) throws IOException, ExecutionException {
     boolean success = false;
     OutputFile outputFile = null;
     List<InputFile> inputFiles = new ArrayList<>();
@@ -293,9 +293,11 @@ public class ExternalDiffToolUtil {
           }
         });
 
-        success = Messages.showYesNoDialog(project,
-                                           "Press \"Mark as Resolved\" when you finish resolving conflicts in the external tool",
-                                           "Merge In External Tool", "Mark as Resolved", "Revert", null) == Messages.YES;
+        success = Messages.showYesNoDialog(
+          project,
+          "Press \"Mark as Resolved\" when you finish resolving conflicts in the external tool",
+          "Merge In External Tool", "Mark as Resolved", "Revert", null
+        ) == Messages.YES;
       }
 
       if (success) outputFile.apply();
@@ -390,11 +392,11 @@ public class ExternalDiffToolUtil {
     }
 
     @Override
+    @RequiredUIAccess
     public void apply() throws IOException {
-      final String content = StringUtil.convertLineSeparators(FileUtil.loadFile(myLocalFile, myCharset));
-      ApplicationManager.getApplication().runWriteAction(() -> {
-        myDocument.setText(content);
-      });
+      final String content =
+        StringUtil.convertLineSeparators(consulo.ide.impl.idea.openapi.util.io.FileUtil.loadFile(myLocalFile, myCharset));
+      Application.get().runWriteAction(() -> myDocument.setText(content));
     }
   }
 

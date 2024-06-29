@@ -17,14 +17,13 @@ package consulo.ide.impl.configurable;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
-import consulo.application.ApplicationBundle;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.setting.AdditionalEditorGeneralSettingProvider;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorFactory;
-import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.codeEditor.SoftWrapAppliancePlaces;
+import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.configurable.ApplicationConfigurable;
@@ -57,9 +56,9 @@ import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.LabeledBuilder;
 import consulo.ui.util.LabeledComponents;
 import consulo.util.collection.ContainerUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,13 +82,20 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
 
     VerticalLayout mouseLayout = VerticalLayout.create();
 
-    CheckBox cbHonorCamelHumpsWhenSelectingByClicking = CheckBox.create(ApplicationLocalize.checkboxHonorCamelhumpsWordsSettingsOnDoubleClick());
+    CheckBox cbHonorCamelHumpsWhenSelectingByClicking =
+      CheckBox.create(ApplicationLocalize.checkboxHonorCamelhumpsWordsSettingsOnDoubleClick());
     mouseLayout.add(cbHonorCamelHumpsWhenSelectingByClicking);
-    propertyBuilder.add(cbHonorCamelHumpsWhenSelectingByClicking, editorSettings::isMouseClickSelectionHonorsCamelWords, editorSettings::setMouseClickSelectionHonorsCamelWords);
+    propertyBuilder.add(
+      cbHonorCamelHumpsWhenSelectingByClicking,
+      editorSettings::isMouseClickSelectionHonorsCamelWords,
+      editorSettings::setMouseClickSelectionHonorsCamelWords
+    );
 
-    CheckBox cbEnableWheelFontChange = CheckBox.create(Platform.current().os().isMac()
-                                                       ? ApplicationLocalize.checkboxEnableCtrlMousewheelChangesFontSizeMacos()
-                                                       : ApplicationLocalize.checkboxEnableCtrlMousewheelChangesFontSize());
+    CheckBox cbEnableWheelFontChange = CheckBox.create(
+      Platform.current().os().isMac()
+        ? ApplicationLocalize.checkboxEnableCtrlMousewheelChangesFontSizeMacos()
+        : ApplicationLocalize.checkboxEnableCtrlMousewheelChangesFontSize()
+    );
     mouseLayout.add(cbEnableWheelFontChange);
     propertyBuilder.add(cbEnableWheelFontChange, editorSettings::isWheelFontChangeEnabled, editorSettings::setWheelFontChangeEnabled);
 
@@ -132,16 +138,27 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
     VerticalLayout limitsLayout = VerticalLayout.create();
 
     IntBox clipboardLimit = IntBox.create();
-    limitsLayout.add(LabeledComponents.leftWithRight(ApplicationBundle.message("editbox.maximum.number.of.contents.to.keep.in.clipboard"), clipboardLimit));
-    propertyBuilder.add(clipboardLimit, () -> uiSettings.MAX_CLIPBOARD_CONTENTS, v -> uiSettings.MAX_CLIPBOARD_CONTENTS = v);
+    limitsLayout.add(LabeledComponents.leftWithRight(
+      ApplicationLocalize.editboxMaximumNumberOfContentsToKeepInClipboard().get(),
+      clipboardLimit
+    ));
+    propertyBuilder.add(
+      clipboardLimit,
+      () -> uiSettings.MAX_CLIPBOARD_CONTENTS,
+      v -> uiSettings.MAX_CLIPBOARD_CONTENTS = v
+    );
 
     IntBox recentLimit = IntBox.create();
-    limitsLayout.add(LabeledComponents.leftWithRight(ApplicationBundle.message("editbox.recent.files.limit"), recentLimit));
+    limitsLayout.add(LabeledComponents.leftWithRight(ApplicationLocalize.editboxRecentFilesLimit().get(), recentLimit));
     propertyBuilder.add(recentLimit, uiSettings::getRecentFilesLimit, uiSettings::setRecentFilesLimit);
 
     IntBox consoleHistoryLimit = IntBox.create();
-    limitsLayout.add(LabeledComponents.leftWithRight(ApplicationBundle.message("editbox.console.history.limit"), consoleHistoryLimit));
-    propertyBuilder.add(consoleHistoryLimit, () -> uiSettings.CONSOLE_COMMAND_HISTORY_LIMIT, v -> uiSettings.CONSOLE_COMMAND_HISTORY_LIMIT = v);
+    limitsLayout.add(LabeledComponents.leftWithRight(ApplicationLocalize.editboxConsoleHistoryLimit().get(), consoleHistoryLimit));
+    propertyBuilder.add(
+      consoleHistoryLimit,
+      () -> uiSettings.CONSOLE_COMMAND_HISTORY_LIMIT,
+      v -> uiSettings.CONSOLE_COMMAND_HISTORY_LIMIT = v
+    );
 
     layout.add(LabeledLayout.create(ApplicationLocalize.groupLimits(), limitsLayout));
 
@@ -149,11 +166,19 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
 
     CheckBox useSoftWrapsInEditor = CheckBox.create(ApplicationLocalize.checkboxUseSoftWrapsAtEditor());
     virtualSpaceLayout.add(useSoftWrapsInEditor);
-    propertyBuilder.add(useSoftWrapsInEditor, () -> editorSettings.isUseSoftWraps(SoftWrapAppliancePlaces.MAIN_EDITOR), v -> editorSettings.setUseSoftWraps(v, SoftWrapAppliancePlaces.MAIN_EDITOR));
+    propertyBuilder.add(
+      useSoftWrapsInEditor,
+      () -> editorSettings.isUseSoftWraps(SoftWrapAppliancePlaces.MAIN_EDITOR),
+      v -> editorSettings.setUseSoftWraps(v, SoftWrapAppliancePlaces.MAIN_EDITOR)
+    );
 
     CheckBox useSoftWrapsInConsole = CheckBox.create(ApplicationLocalize.checkboxUseSoftWrapsAtConsole());
     virtualSpaceLayout.add(useSoftWrapsInConsole);
-    propertyBuilder.add(useSoftWrapsInConsole, () -> editorSettings.isUseSoftWraps(SoftWrapAppliancePlaces.CONSOLE), v -> editorSettings.setUseSoftWraps(v, SoftWrapAppliancePlaces.CONSOLE));
+    propertyBuilder.add(
+      useSoftWrapsInConsole,
+      () -> editorSettings.isUseSoftWraps(SoftWrapAppliancePlaces.CONSOLE),
+      v -> editorSettings.setUseSoftWraps(v, SoftWrapAppliancePlaces.CONSOLE)
+    );
 
     CheckBox useCustomSoftWrapIndent = CheckBox.create(ApplicationLocalize.checkboxUseCustomSoftWrapsIndent());
     useCustomSoftWrapIndent.setEnabled(false);
@@ -191,15 +216,27 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
     VerticalLayout highlightCaretMovementLayout = VerticalLayout.create();
 
     CheckBox highlightMatchedBrace = CheckBox.create(ApplicationLocalize.checkboxHighlightMatchedBrace());
-    propertyBuilder.add(highlightMatchedBrace, () -> codeInsightSettings.HIGHLIGHT_BRACES, v -> codeInsightSettings.HIGHLIGHT_BRACES = v);
+    propertyBuilder.add(
+      highlightMatchedBrace,
+      () -> codeInsightSettings.HIGHLIGHT_BRACES,
+      v -> codeInsightSettings.HIGHLIGHT_BRACES = v
+    );
     highlightCaretMovementLayout.add(highlightMatchedBrace);
 
     CheckBox highlightCurrentScope = CheckBox.create(ApplicationLocalize.checkboxHighlightCurrentScope());
-    propertyBuilder.add(highlightCurrentScope, () -> codeInsightSettings.HIGHLIGHT_SCOPE, v -> codeInsightSettings.HIGHLIGHT_SCOPE = v);
+    propertyBuilder.add(
+      highlightCurrentScope,
+      () -> codeInsightSettings.HIGHLIGHT_SCOPE,
+      v -> codeInsightSettings.HIGHLIGHT_SCOPE = v
+    );
     highlightCaretMovementLayout.add(highlightCurrentScope);
 
     CheckBox highlightUsageAtCaret = CheckBox.create(LocalizeValue.localizeTODO("Highlight usages of element at caret"));
-    propertyBuilder.add(highlightUsageAtCaret, () -> codeInsightSettings.HIGHLIGHT_IDENTIFIER_UNDER_CARET, v -> codeInsightSettings.HIGHLIGHT_IDENTIFIER_UNDER_CARET = v);
+    propertyBuilder.add(
+      highlightUsageAtCaret,
+      () -> codeInsightSettings.HIGHLIGHT_IDENTIFIER_UNDER_CARET,
+      v -> codeInsightSettings.HIGHLIGHT_IDENTIFIER_UNDER_CARET = v
+    );
     highlightCaretMovementLayout.add(highlightUsageAtCaret);
 
     layout.add(LabeledLayout.create(ApplicationLocalize.groupBraceHighlighting(), highlightCaretMovementLayout));
@@ -207,13 +244,20 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
     VerticalLayout formattingLayout = VerticalLayout.create();
 
     CheckBox showNotificationAfterReformat = CheckBox.create(LocalizeValue.localizeTODO("Show notification after reformat code action"));
-    propertyBuilder.add(showNotificationAfterReformat, () -> editorSettings.getOptions().SHOW_NOTIFICATION_AFTER_REFORMAT_CODE_ACTION,
-                        v -> editorSettings.getOptions().SHOW_NOTIFICATION_AFTER_REFORMAT_CODE_ACTION = v);
+    propertyBuilder.add(
+      showNotificationAfterReformat,
+      () -> editorSettings.getOptions().SHOW_NOTIFICATION_AFTER_REFORMAT_CODE_ACTION,
+      v -> editorSettings.getOptions().SHOW_NOTIFICATION_AFTER_REFORMAT_CODE_ACTION = v
+    );
     formattingLayout.add(showNotificationAfterReformat);
 
-    CheckBox showNotificationAfterOptimizeImport = CheckBox.create(LocalizeValue.localizeTODO("Show notification after optimize imports action"));
-    propertyBuilder.add(showNotificationAfterOptimizeImport, () -> editorSettings.getOptions().SHOW_NOTIFICATION_AFTER_OPTIMIZE_IMPORTS_ACTION,
-                        v -> editorSettings.getOptions().SHOW_NOTIFICATION_AFTER_OPTIMIZE_IMPORTS_ACTION = v);
+    CheckBox showNotificationAfterOptimizeImport =
+      CheckBox.create(LocalizeValue.localizeTODO("Show notification after optimize imports action"));
+    propertyBuilder.add(
+      showNotificationAfterOptimizeImport,
+      () -> editorSettings.getOptions().SHOW_NOTIFICATION_AFTER_OPTIMIZE_IMPORTS_ACTION,
+      v -> editorSettings.getOptions().SHOW_NOTIFICATION_AFTER_OPTIMIZE_IMPORTS_ACTION = v
+    );
     formattingLayout.add(showNotificationAfterOptimizeImport);
 
     layout.add(LabeledLayout.create(LocalizeValue.localizeTODO("Formatting"), formattingLayout));
@@ -221,7 +265,11 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
     VerticalLayout refactoringLayout = VerticalLayout.create();
 
     CheckBox enableInplaceMode = CheckBox.create(ApplicationLocalize.checkboxRenameLocalVariablesInplace());
-    propertyBuilder.add(enableInplaceMode, editorSettings::isVariableInplaceRenameEnabled, editorSettings::setVariableInplaceRenameEnabled);
+    propertyBuilder.add(
+      enableInplaceMode,
+      editorSettings::isVariableInplaceRenameEnabled,
+      editorSettings::setVariableInplaceRenameEnabled
+    );
     refactoringLayout.add(enableInplaceMode);
 
     CheckBox presectOldName = CheckBox.create(ApplicationLocalize.checkboxRenameLocalVariablesPreselect());
@@ -240,10 +288,10 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
     ComboBox<Object> colorSchemeBox = ComboBox.create(colorSchemeList);
     colorSchemeBox.setRender((render, index, item) -> {
       if (RichCopySettings.ACTIVE_GLOBAL_SCHEME_MARKER.equals(item)) {
-        render.append(ApplicationBundle.message("combobox.richcopy.color.scheme.active"));
+        render.append(ApplicationLocalize.comboboxRichcopyColorSchemeActive());
       }
-      else if (item instanceof EditorColorsScheme) {
-        render.append(((EditorColorsScheme)item).getName());
+      else if (item instanceof EditorColorsScheme scheme) {
+        render.append(scheme.getName());
       }
       else {
         render.append(String.valueOf(item));
@@ -251,11 +299,11 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
     });
     propertyBuilder.add(() -> {
       Object value = colorSchemeBox.getValueOrError();
-      if (value instanceof String) {
-        return (String)value;
+      if (value instanceof String stringValue) {
+        return stringValue;
       }
-      else if (value instanceof EditorColorsScheme) {
-        return ((EditorColorsScheme)value).getName();
+      else if (value instanceof EditorColorsScheme scheme) {
+        return scheme.getName();
       }
       return null;
     }, schemeName -> {
@@ -278,39 +326,68 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
     VerticalLayout errorHighlightingLayout = VerticalLayout.create();
 
     IntBox errorStripeHeight = IntBox.create();
-    propertyBuilder.add(errorStripeHeight, () -> daemonCodeAnalyzerSettings.ERROR_STRIPE_MARK_MIN_HEIGHT, v -> daemonCodeAnalyzerSettings.ERROR_STRIPE_MARK_MIN_HEIGHT = v);
-    errorHighlightingLayout.add(LabeledComponents.leftWithRight(ApplicationBundle.message("editbox.error.stripe.mark.min.height.pixels"), errorStripeHeight));
+    propertyBuilder.add(
+      errorStripeHeight,
+      () -> daemonCodeAnalyzerSettings.ERROR_STRIPE_MARK_MIN_HEIGHT,
+      v -> daemonCodeAnalyzerSettings.ERROR_STRIPE_MARK_MIN_HEIGHT = v
+    );
+    errorHighlightingLayout.add(LabeledComponents.leftWithRight(
+      ApplicationLocalize.editboxErrorStripeMarkMinHeightPixels().get(),
+      errorStripeHeight
+    ));
 
     IntBox autoReparseDelay = IntBox.create();
-    propertyBuilder.add(autoReparseDelay, () -> daemonCodeAnalyzerSettings.AUTOREPARSE_DELAY, v -> daemonCodeAnalyzerSettings.AUTOREPARSE_DELAY = v);
-    errorHighlightingLayout.add(LabeledComponents.leftWithRight(ApplicationBundle.message("editbox.autoreparse.delay.ms"), autoReparseDelay));
+    propertyBuilder.add(
+      autoReparseDelay,
+      () -> daemonCodeAnalyzerSettings.AUTOREPARSE_DELAY,
+      v -> daemonCodeAnalyzerSettings.AUTOREPARSE_DELAY = v
+    );
+    errorHighlightingLayout.add(LabeledComponents.leftWithRight(
+      ApplicationLocalize.editboxAutoreparseDelayMs().get(),
+      autoReparseDelay
+    ));
 
-    CheckBox nextErrorGoPriorityProblem = CheckBox.create(ApplicationBundle.message("checkbox.next.error.action.goes.to.errors.first"));
-    propertyBuilder
-            .add(nextErrorGoPriorityProblem, () -> daemonCodeAnalyzerSettings.NEXT_ERROR_ACTION_GOES_TO_ERRORS_FIRST, v -> daemonCodeAnalyzerSettings.NEXT_ERROR_ACTION_GOES_TO_ERRORS_FIRST = v);
+    CheckBox nextErrorGoPriorityProblem =
+      CheckBox.create(ApplicationLocalize.checkboxNextErrorActionGoesToErrorsFirst());
+    propertyBuilder.add(
+      nextErrorGoPriorityProblem,
+      () -> daemonCodeAnalyzerSettings.NEXT_ERROR_ACTION_GOES_TO_ERRORS_FIRST,
+      v -> daemonCodeAnalyzerSettings.NEXT_ERROR_ACTION_GOES_TO_ERRORS_FIRST = v
+    );
     errorHighlightingLayout.add(nextErrorGoPriorityProblem);
 
-    Application.get().getExtensionPoint(AdditionalEditorGeneralSettingProvider.class).forEachExtensionSafe(provider -> provider.fillProperties(propertyBuilder, errorHighlightingLayout::add));
+    Application.get().getExtensionPoint(AdditionalEditorGeneralSettingProvider.class)
+      .forEachExtensionSafe(provider -> provider.fillProperties(propertyBuilder, errorHighlightingLayout::add));
 
     layout.add(LabeledLayout.create(ApplicationLocalize.groupErrorHighlighting(), errorHighlightingLayout));
 
     VerticalLayout otherLayout = VerticalLayout.create();
 
     ComboBox.Builder<String> stripSpacesConfig = ComboBox.builder();
-    stripSpacesConfig.add(EditorSettingsExternalizable.STRIP_TRAILING_SPACES_CHANGED, ApplicationBundle.message("combobox.strip.modified.lines"));
-    stripSpacesConfig.add(EditorSettingsExternalizable.STRIP_TRAILING_SPACES_WHOLE, ApplicationBundle.message("combobox.strip.all"));
-    stripSpacesConfig.add(EditorSettingsExternalizable.STRIP_TRAILING_SPACES_NONE, ApplicationBundle.message("combobox.strip.none"));
+    stripSpacesConfig.add(
+      EditorSettingsExternalizable.STRIP_TRAILING_SPACES_CHANGED,
+      ApplicationLocalize.comboboxStripModifiedLines().get()
+    );
+    stripSpacesConfig.add(EditorSettingsExternalizable.STRIP_TRAILING_SPACES_WHOLE, ApplicationLocalize.comboboxStripAll().get());
+    stripSpacesConfig.add(EditorSettingsExternalizable.STRIP_TRAILING_SPACES_NONE, ApplicationLocalize.comboboxStripNone().get());
 
     ComboBox<String> stripTrailingSpacesOnSave = stripSpacesConfig.build();
     propertyBuilder.add(stripTrailingSpacesOnSave, editorSettings::getStripTrailingSpaces, editorSettings::setStripTrailingSpaces);
-    otherLayout.add(LabeledComponents.leftWithRight(ApplicationBundle.message("combobox.strip.trailing.spaces.on.save"), stripTrailingSpacesOnSave));
+    otherLayout.add(LabeledComponents.leftWithRight(
+      ApplicationLocalize.comboboxStripTrailingSpacesOnSave().get(),
+      stripTrailingSpacesOnSave
+    ));
 
     CheckBox ensureLineFeedOnSave = CheckBox.create(LocalizeValue.localizeTODO("Ensure line feed at file end on Save"));
     propertyBuilder.add(ensureLineFeedOnSave, editorSettings::isEnsureNewLineAtEOF, editorSettings::setEnsureNewLineAtEOF);
     otherLayout.add(ensureLineFeedOnSave);
 
     CheckBox showQuickDocOnMouseMove = CheckBox.create(LocalizeValue.localizeTODO("Show quick doc on mouse move"));
-    propertyBuilder.add(showQuickDocOnMouseMove, editorSettings::isShowQuickDocOnMouseOverElement, editorSettings::setShowQuickDocOnMouseOverElement);
+    propertyBuilder.add(
+      showQuickDocOnMouseMove,
+      editorSettings::isShowQuickDocOnMouseOverElement,
+      editorSettings::setShowQuickDocOnMouseOverElement
+    );
 
     IntBox tooltipDelay = IntBox.create();
     tooltipDelay.setEnabled(false);
@@ -323,7 +400,11 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
       delayMs.setEnabled(showQuickDocOnMouseMove.getValue());
     });
 
-    otherLayout.add(DockLayout.create().left(showQuickDocOnMouseMove).right(HorizontalLayout.create(5).add(delayMs).add(tooltipDelay)));
+    otherLayout.add(
+      DockLayout.create()
+        .left(showQuickDocOnMouseMove)
+        .right(HorizontalLayout.create(5).add(delayMs).add(tooltipDelay))
+    );
 
     layout.add(LabeledLayout.create(LocalizeValue.localizeTODO("Other"), otherLayout));
     return layout;
@@ -369,8 +450,8 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
   private static void clearAllIdentifierHighlighters() {
     for (Project project : ProjectManager.getInstance().getOpenProjects()) {
       for (FileEditor fileEditor : FileEditorManager.getInstance(project).getAllEditors()) {
-        if (fileEditor instanceof TextEditor) {
-          Document document = ((TextEditor)fileEditor).getEditor().getDocument();
+        if (fileEditor instanceof TextEditor textEditor) {
+          Document document = textEditor.getEditor().getDocument();
           IdentifierHighlighterPass.clearMyHighlights(document, project);
         }
       }

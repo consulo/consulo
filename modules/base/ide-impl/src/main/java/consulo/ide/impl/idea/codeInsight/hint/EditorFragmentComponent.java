@@ -1,15 +1,13 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.hint;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.codeEditor.*;
-import consulo.codeEditor.RealEditor;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUIUtil;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ide.impl.idea.ui.LightweightHint;
 import consulo.language.editor.hint.HintManager;
@@ -22,9 +20,10 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.dataholder.Key;
-
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
@@ -158,15 +157,17 @@ public class EditorFragmentComponent extends JPanel {
    * @param y {@code y} coordinate in layered pane coordinate system.
    */
   @Nullable
-  static LightweightHint showEditorFragmentHintAt(Editor editor,
-                                                  TextRange range,
-                                                  int y,
-                                                  boolean showUpward,
-                                                  boolean showFolding,
-                                                  boolean hideByAnyKey,
-                                                  boolean hideByScrolling,
-                                                  boolean useCaretRowBackground) {
-    if (ApplicationManager.getApplication().isUnitTestMode()) return null;
+  static LightweightHint showEditorFragmentHintAt(
+    Editor editor,
+    TextRange range,
+    int y,
+    boolean showUpward,
+    boolean showFolding,
+    boolean hideByAnyKey,
+    boolean hideByScrolling,
+    boolean useCaretRowBackground
+  ) {
+    if (Application.get().isUnitTestMode()) return null;
     Document document = editor.getDocument();
 
     int startOffset = range.getStartOffset();
@@ -208,19 +209,40 @@ public class EditorFragmentComponent extends JPanel {
 
     Point p = new Point(x, y);
     LightweightHint hint = new MyComponentHint(fragmentComponent);
-    HintManagerImpl.getInstanceImpl().showEditorHint(hint, editor, p, (hideByAnyKey ? HintManager.HIDE_BY_ANY_KEY : 0) |
-                                                                      (hideByScrolling ? HintManager.HIDE_BY_SCROLLING : 0) |
-                                                                      HintManager.HIDE_BY_TEXT_CHANGE |
-                                                                      HintManager.HIDE_BY_MOUSEOVER, 0, false, new HintHint(editor.getContentComponent(), p));
+    HintManagerImpl.getInstanceImpl().showEditorHint(
+      hint,
+      editor,
+      p,
+      (hideByAnyKey ? HintManager.HIDE_BY_ANY_KEY : 0) |
+        (hideByScrolling ? HintManager.HIDE_BY_SCROLLING : 0) |
+        HintManager.HIDE_BY_TEXT_CHANGE |
+        HintManager.HIDE_BY_MOUSEOVER,
+      0,
+      false,
+      new HintHint(editor.getContentComponent(), p)
+    );
     editor.putUserData(CURRENT_HINT, new WeakReference<>(hint));
     return hint;
   }
 
-  public static EditorFragmentComponent createEditorFragmentComponent(Editor editor, int startLine, int endLine, boolean showFolding, boolean showGutter) {
+  public static EditorFragmentComponent createEditorFragmentComponent(
+    Editor editor,
+    int startLine,
+    int endLine,
+    boolean showFolding,
+    boolean showGutter
+  ) {
     return createEditorFragmentComponent(editor, startLine, endLine, showFolding, showGutter, true);
   }
 
-  private static EditorFragmentComponent createEditorFragmentComponent(Editor editor, int startLine, int endLine, boolean showFolding, boolean showGutter, boolean useCaretRowBackground) {
+  private static EditorFragmentComponent createEditorFragmentComponent(
+    Editor editor,
+    int startLine,
+    int endLine,
+    boolean showFolding,
+    boolean showGutter,
+    boolean useCaretRowBackground
+  ) {
     return createEditorFragmentComponent(null, editor, startLine, endLine, showFolding, showGutter, useCaretRowBackground);
   }
 
@@ -228,13 +250,15 @@ public class EditorFragmentComponent extends JPanel {
    * @param component Should be provided if editor is not currently displayable.
    *                  Makes for correct rendering on multi-monitor configurations.
    */
-  private static EditorFragmentComponent createEditorFragmentComponent(Component component,
-                                                                       Editor editor,
-                                                                       int startLine,
-                                                                       int endLine,
-                                                                       boolean showFolding,
-                                                                       boolean showGutter,
-                                                                       boolean useCaretRowBackground) {
+  private static EditorFragmentComponent createEditorFragmentComponent(
+    Component component,
+    Editor editor,
+    int startLine,
+    int endLine,
+    boolean showFolding,
+    boolean showGutter,
+    boolean useCaretRowBackground
+  ) {
     final EditorEx editorEx = (EditorEx)editor;
     final ColorValue old = editorEx.getBackgroundColor();
     ColorValue backColor = getBackgroundColor(editor, useCaretRowBackground);

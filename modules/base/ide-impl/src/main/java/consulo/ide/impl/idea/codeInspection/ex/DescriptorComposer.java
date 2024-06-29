@@ -22,6 +22,7 @@ import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionToolPresentation;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.editor.inspection.*;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.inspection.reference.RefElement;
 import consulo.language.editor.inspection.reference.RefEntity;
 import consulo.language.file.inject.VirtualFileWindow;
@@ -51,7 +52,7 @@ public class DescriptorComposer extends HTMLComposerBase {
   public void compose(StringBuffer buf, RefEntity refEntity) {
     genPageHeader(buf, refEntity);
     if (myTool.getDescriptions(refEntity) != null) {
-      appendHeading(buf, InspectionsBundle.message("inspection.problem.synopsis"));
+      appendHeading(buf, InspectionLocalize.inspectionProblemSynopsis());
 
       CommonProblemDescriptor[] descriptions = myTool.getDescriptions(refEntity);
 
@@ -80,7 +81,7 @@ public class DescriptorComposer extends HTMLComposerBase {
     if (quickFixes == null) {
       return null;
     }
-    List<String> texts = new ArrayList<String>();
+    List<String> texts = new ArrayList<>();
     for (QuickFixAction quickFix : quickFixes) {
       final String text = quickFix.getText(where);
       if (text == null) continue;
@@ -110,7 +111,7 @@ public class DescriptorComposer extends HTMLComposerBase {
     }
 
     genPageHeader(buf, refElement);
-    appendHeading(buf, InspectionsBundle.message("inspection.problem.synopsis"));
+    appendHeading(buf, InspectionLocalize.inspectionProblemSynopsis());
     //noinspection HardCodedStringLiteral
     buf.append("<br>");
     appendAfterHeaderIndention(buf);
@@ -123,7 +124,7 @@ public class DescriptorComposer extends HTMLComposerBase {
     if (fixes != null && fixes.length > 0) {
       //noinspection HardCodedStringLiteral
       buf.append("<br><br>");
-      appendHeading(buf, InspectionsBundle.message("inspection.problem.resolution"));
+      appendHeading(buf, InspectionLocalize.inspectionProblemResolution());
       //noinspection HardCodedStringLiteral
       buf.append("<br>");
       appendAfterHeaderIndention(buf);
@@ -177,7 +178,7 @@ public class DescriptorComposer extends HTMLComposerBase {
     else {
       //noinspection HardCodedStringLiteral
       anchor.append("<font style=\"font-weight:bold; color:#FF0000\";>");
-      anchor.append(InspectionsBundle.message("inspection.export.results.invalidated.item"));
+      anchor.append(InspectionLocalize.inspectionExportResultsInvalidatedItem());
       //noinspection HardCodedStringLiteral
       anchor.append("</font>");
     }
@@ -191,7 +192,7 @@ public class DescriptorComposer extends HTMLComposerBase {
     StringBuffer lineAnchor = new StringBuffer();
     if (expression != null && lineNumber > 0) {
       Document doc = FileDocumentManager.getInstance().getDocument(vFile);
-      lineAnchor.append(InspectionsBundle.message("inspection.export.results.at.line")).append(" ");
+      lineAnchor.append(InspectionLocalize.inspectionExportResultsAtLine()).append(" ");
       if (myExporter == null) {
         //noinspection HardCodedStringLiteral
         lineAnchor.append("<a HREF=\"");

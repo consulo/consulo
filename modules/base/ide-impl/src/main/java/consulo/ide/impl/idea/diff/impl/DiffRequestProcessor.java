@@ -35,7 +35,6 @@ import consulo.ide.impl.idea.diff.util.LineRange;
 import consulo.diff.request.DiffRequest;
 import consulo.diff.request.MessageDiffRequest;
 import consulo.diff.request.NoDiffRequest;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.EmptyAction;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
@@ -556,10 +555,10 @@ public abstract class DiffRequestProcessor implements Disposable {
     @Override
     public void actionPerformed(AnActionEvent e) {
       try {
-        ExternalDiffTool.showRequest(e.getData(CommonDataKeys.PROJECT), myActiveRequest);
+        ExternalDiffTool.showRequest(e.getData(Project.KEY), myActiveRequest);
       }
       catch (Throwable ex) {
-        Messages.showErrorDialog(e.getData(CommonDataKeys.PROJECT), ex.getMessage(), "Can't Show Diff In External Tool");
+        Messages.showErrorDialog(e.getData(Project.KEY), ex.getMessage(), "Can't Show Diff In External Tool");
       }
     }
   }
@@ -906,7 +905,7 @@ public abstract class DiffRequestProcessor implements Disposable {
       else if (DiffDataKeys.DIFF_REQUEST == dataId) {
         return myActiveRequest;
       }
-      else if (CommonDataKeys.PROJECT == dataId) {
+      else if (Project.KEY == dataId) {
         return myProject;
       }
       else if (PlatformDataKeys.HELP_ID == dataId) {
@@ -1239,7 +1238,7 @@ public abstract class DiffRequestProcessor implements Disposable {
       }
       buildToolbar(toolbarActions);
 
-      List<AnAction> popupActions = new ArrayList<AnAction>();
+      List<AnAction> popupActions = new ArrayList<>();
       if (toolbarComponents1.popupActions != null) popupActions.addAll(toolbarComponents1.popupActions);
       if (toolbarComponents2.popupActions != null) {
         if (!popupActions.isEmpty() && !toolbarComponents2.popupActions.isEmpty()) popupActions.add(AnSeparator.getInstance());

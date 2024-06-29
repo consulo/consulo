@@ -16,70 +16,72 @@
 
 package consulo.ide.impl.idea.codeEditor.printing;
 
-import consulo.application.CommonBundle;
-import consulo.language.editor.highlight.HighlighterFactory;
-import consulo.language.editor.CommonDataKeys;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
+import consulo.application.progress.PerformInBackgroundOption;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.application.progress.Task;
+import consulo.application.util.function.Computable;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorHighlighter;
+import consulo.codeEditor.SelectionModel;
 import consulo.component.ProcessCanceledException;
 import consulo.dataContext.DataContext;
-import consulo.language.editor.LangDataKeys;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.application.ApplicationManager;
-import consulo.application.progress.*;
-import consulo.logging.Logger;
-import consulo.codeEditor.Editor;
 import consulo.document.internal.DocumentEx;
-import consulo.codeEditor.EditorHighlighter;
+import consulo.language.editor.highlight.HighlighterFactory;
+import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.plain.PlainTextFileType;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
-import consulo.application.util.function.Computable;
-import consulo.util.lang.Pair;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.editor.util.PsiUtilBase;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-
+import consulo.logging.Logger;
+import consulo.platform.base.localize.CommonLocalize;
+import consulo.project.Project;
+import consulo.ui.ex.awt.Messages;
+import consulo.util.lang.Pair;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.print.*;
+import java.util.ArrayList;
 import java.util.List;
 
 class PrintManager {
   private static final Logger LOG = Logger.getInstance(PrintManager.class);
 
+  @RequiredReadAction
   public static void executePrint(DataContext dataContext) {
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Project project = dataContext.getData(Project.KEY);
 
     final PrinterJob printerJob = PrinterJob.getPrinterJob();
 
     final PsiDirectory[] psiDirectory = new PsiDirectory[1];
-    PsiElement psiElement = dataContext.getData(LangDataKeys.PSI_ELEMENT);
-    if(psiElement instanceof PsiDirectory) {
+    PsiElement psiElement = dataContext.getData(PsiElement.KEY);
+    if (psiElement instanceof PsiDirectory) {
       psiDirectory[0] = (PsiDirectory)psiElement;
     }
 
-    final PsiFile psiFile = dataContext.getData(LangDataKeys.PSI_FILE);
+    final PsiFile psiFile = dataContext.getData(PsiFile.KEY);
     final String[] shortFileName = new String[1];
     final String[] directoryName = new String[1];
-    if(psiFile != null || psiDirectory[0] != null) {
-      if(psiFile != null) {
+    if (psiFile != null || psiDirectory[0] != null) {
+      if (psiFile != null) {
         shortFileName[0] = psiFile.getVirtualFile().getName();
         if(psiDirectory[0] == null) {
           psiDirectory[0] = psiFile.getContainingDirectory();
         }
       }
-      if(psiDirectory[0] != null) {
+      if (psiDirectory[0] != null) {
         directoryName[0] = psiDirectory[0].getVirtualFile().getPresentableUrl();
       }
     }
 
-    Editor editor = dataContext.getData(PlatformDataKeys.EDITOR);
+    Editor editor = dataContext.getData(Editor.KEY);
     String text = null;
-    if(editor != null) {
-      if(editor.getSelectionModel().hasSelection()) {
+    if (editor != null) {
+      if (editor.getSelectionModel().hasSelection()) {
         text = CodeEditorBundle.message("print.selected.text.radio");
       } else {
         text = psiFile == null ? "Console text" : null;
@@ -88,7 +90,7 @@ class PrintManager {
     PrintDialog printDialog = new PrintDialog(shortFileName[0], directoryName[0], text, project);
     printDialog.reset();
     printDialog.show();
-    if(!printDialog.isOK()) {
+    if (!printDialog.isOK()) {
       return;
     }
     printDialog.apply();
@@ -97,19 +99,31 @@ class PrintManager {
     PrintSettings printSettings = PrintSettings.getInstance();
     Printable painter;
 
-    if(printSettings.getPrintScope() != PrintSettings.PRINT_DIRECTORY) {
-      if (psiFile == null && editor == null) return;
-      TextPainter textPainter = psiFile != null ? initTextPainter(psiFile, editor) : initTextPainter((DocumentEx)editor.getDocument(), project);
-      if (textPainter == null) return;
+    if (printSettings.getPrintScope() != PrintSettings.PRINT_DIRECTORY) {
+      if (psiFile == null && editor == null) {
+        return;
+      }
 
-      if(printSettings.getPrintScope() == PrintSettings.PRINT_SELECTED_TEXT && editor != null && editor.getSelectionModel().hasSelection()) {
-        int firstLine = editor.getDocument().getLineNumber(editor.getSelectionModel().getSelectionStart());
-        textPainter.setSegment(editor.getSelectionModel().getSelectionStart(), editor.getSelectionModel().getSelectionEnd(), firstLine+1);
+      TextPainter textPainter =
+        psiFile != null ? initTextPainter(psiFile, editor) : initTextPainter((DocumentEx)editor.getDocument(), project);
+      if (textPainter == null) {
+        return;
+      }
+
+      if (printSettings.getPrintScope() == PrintSettings.PRINT_SELECTED_TEXT
+        && editor != null && editor.getSelectionModel().hasSelection()) {
+        SelectionModel selection = editor.getSelectionModel();
+        int firstLine = editor.getDocument().getLineNumber(selection.getSelectionStart());
+        textPainter.setSegment(
+          selection.getSelectionStart(),
+          selection.getSelectionEnd(),
+          firstLine + 1
+        );
       }
       painter = textPainter;
     }
     else {
-      List<Pair<PsiFile, Editor>> filesList = ContainerUtil.newArrayList();
+      List<Pair<PsiFile, Editor>> filesList = new ArrayList<>();
       boolean isRecursive = printSettings.isIncludeSubdirectories();
       addToPsiFileList(psiDirectory[0], filesList, isRecursive);
 
@@ -149,36 +163,39 @@ class PrintManager {
 
     PsiDocumentManager.getInstance(project).commitAllDocuments();
 
-    ProgressManager.getInstance().run(new Task.Backgroundable(project, CodeEditorBundle.message("print.progress"), true, PerformInBackgroundOption.ALWAYS_BACKGROUND) {
-      @Override
-      public void run(@Nonnull ProgressIndicator indicator) {
-        try {
-          ProgressIndicator progress = ProgressManager.getInstance().getProgressIndicator();
-          if (painter0 instanceof MultiFilePainter) {
-            ((MultiFilePainter)painter0).setProgress(progress);
-          }
-          else {
-            ((TextPainter)painter0).setProgress(progress);
-          }
-
-          printerJob.print();
-        }
-        catch(final PrinterException e) {
-          SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-              Messages.showErrorDialog(project, e.getMessage(), CommonBundle.getErrorTitle());
+    ProgressManager.getInstance().run(
+      new Task.Backgroundable(
+        project,
+        CodeEditorBundle.message("print.progress"),
+        true,
+        PerformInBackgroundOption.ALWAYS_BACKGROUND
+      ) {
+        @Override
+        public void run(@Nonnull ProgressIndicator indicator) {
+          try {
+            ProgressIndicator progress = ProgressManager.getInstance().getProgressIndicator();
+            if (painter0 instanceof MultiFilePainter multiFilePainter) {
+              multiFilePainter.setProgress(progress);
             }
-          });
-          LOG.info(e);
-        }
-        catch(ProcessCanceledException e) {
-          printerJob.cancel();
+            else {
+              ((TextPainter)painter0).setProgress(progress);
+            }
+
+            printerJob.print();
+          }
+          catch(final PrinterException e) {
+            SwingUtilities.invokeLater(() -> Messages.showErrorDialog(project, e.getMessage(), CommonLocalize.titleError().get()));
+            LOG.info(e);
+          }
+          catch(ProcessCanceledException e) {
+            printerJob.cancel();
+          }
         }
       }
-    });
+    );
   }
 
+  @RequiredReadAction
   private static void addToPsiFileList(PsiDirectory psiDirectory, List<Pair<PsiFile, Editor>> filesList, boolean isRecursive) {
     PsiFile[] files = psiDirectory.getFiles();
     for (PsiFile file : files) {
@@ -224,12 +241,7 @@ class PrintManager {
   }
 
   public static TextPainter initTextPainter(final PsiFile psiFile, final Editor editor) {
-    return ApplicationManager.getApplication().runReadAction(new Computable<TextPainter>() {
-      @Override
-      public TextPainter compute() {
-        return doInitTextPainter(psiFile, editor);
-      }
-    });
+    return Application.get().runReadAction((Computable<TextPainter>) () -> doInitTextPainter(psiFile, editor));
   }
 
   private static TextPainter doInitTextPainter(final PsiFile psiFile, final Editor editor) {
@@ -243,20 +255,15 @@ class PrintManager {
 
   public static TextPainter initTextPainter(@Nonnull final DocumentEx doc, final Project project) {
     final TextPainter[] res = new TextPainter[1];
-    ApplicationManager.getApplication().runReadAction(
-      new Runnable() {
-        @Override
-        public void run() {
-          res[0] = doInitTextPainter(doc, project);
-        }
-      }
-    );
+    Application.get().runReadAction(() -> {
+      res[0] = doInitTextPainter(doc, project);
+    });
     return res[0];
   }
 
   private static TextPainter doInitTextPainter(@Nonnull final DocumentEx doc, Project project) {
-     EditorHighlighter highlighter = HighlighterFactory.createHighlighter(project, "unknown");
-     highlighter.setText(doc.getCharsSequence());
-     return new TextPainter(doc, highlighter, "unknown", project, PlainTextFileType.INSTANCE, null);
-   }
+    EditorHighlighter highlighter = HighlighterFactory.createHighlighter(project, "unknown");
+    highlighter.setText(doc.getCharsSequence());
+    return new TextPainter(doc, highlighter, "unknown", project, PlainTextFileType.INSTANCE, null);
+  }
 }

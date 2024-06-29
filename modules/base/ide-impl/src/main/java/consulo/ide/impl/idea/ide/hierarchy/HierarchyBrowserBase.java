@@ -16,11 +16,12 @@
 
 package consulo.ide.impl.idea.ide.hierarchy;
 
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.awt.tree.DefaultTreeExpander;
 import consulo.language.editor.hierarchy.HierarchyBrowser;
 import consulo.ui.ex.action.CloseTabToolbarAction;
 import consulo.ui.ex.action.ContextHelpAction;
-import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.ui.ex.awt.SimpleToolWindowPanel;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
@@ -191,7 +192,7 @@ public abstract class HierarchyBrowserBase extends SimpleToolWindowPanel impleme
     if (paths == null || paths.length == 0) {
       return EMPTY_DESCRIPTORS;
     }
-    final ArrayList<HierarchyNodeDescriptor> list = new ArrayList<HierarchyNodeDescriptor>(paths.length);
+    final ArrayList<HierarchyNodeDescriptor> list = new ArrayList<>(paths.length);
     for (final TreePath path : paths) {
       final Object lastPathComponent = path.getLastPathComponent();
       if (lastPathComponent instanceof DefaultMutableTreeNode) {
@@ -208,7 +209,7 @@ public abstract class HierarchyBrowserBase extends SimpleToolWindowPanel impleme
   @Nonnull
   protected PsiElement[] getSelectedElements() {
     HierarchyNodeDescriptor[] descriptors = getSelectedDescriptors();
-    ArrayList<PsiElement> elements = new ArrayList<PsiElement>();
+    ArrayList<PsiElement> elements = new ArrayList<>();
     for (HierarchyNodeDescriptor descriptor : descriptors) {
       PsiElement element = getElementFromDescriptor(descriptor);
       if (element != null) elements.add(element);
@@ -220,7 +221,7 @@ public abstract class HierarchyBrowserBase extends SimpleToolWindowPanel impleme
   private Navigatable[] getNavigatables() {
     final HierarchyNodeDescriptor[] selectedDescriptors = getSelectedDescriptors();
     if (selectedDescriptors == null || selectedDescriptors.length == 0) return null;
-    final ArrayList<Navigatable> result = new ArrayList<Navigatable>();
+    final ArrayList<Navigatable> result = new ArrayList<>();
     for (HierarchyNodeDescriptor descriptor : selectedDescriptors) {
       Navigatable navigatable = getNavigatable(descriptor);
       if (navigatable != null) {
@@ -231,38 +232,35 @@ public abstract class HierarchyBrowserBase extends SimpleToolWindowPanel impleme
   }
 
   private Navigatable getNavigatable(HierarchyNodeDescriptor descriptor) {
-    if (descriptor instanceof Navigatable && descriptor.isValid()) {
-      return (Navigatable)descriptor;
+    if (descriptor instanceof Navigatable navigatable && descriptor.isValid()) {
+      return navigatable;
     }
 
     PsiElement element = getElementFromDescriptor(descriptor);
-    if (element instanceof NavigatablePsiElement && element.isValid()) {
-      return (NavigatablePsiElement)element;
-    }
-    return null;
+    return element instanceof NavigatablePsiElement navigatablePsiElement && element.isValid() ? navigatablePsiElement : null;
   }
 
   @Override
   @Nullable
   public Object getData(@Nonnull Key<?> dataId) {
-    if (LangDataKeys.PSI_ELEMENT == dataId) {
+    if (PsiElement.KEY == dataId) {
       final PsiElement anElement = getSelectedElement();
       return anElement != null && anElement.isValid() ? anElement : super.getData(dataId);
     }
-    if (LangDataKeys.PSI_ELEMENT_ARRAY == dataId) {
+    if (PsiElement.KEY_OF_ARRAY == dataId) {
       return getSelectedElements();
     }
-    if (PlatformDataKeys.DELETE_ELEMENT_PROVIDER == dataId) {
+    if (DeleteProvider.KEY == dataId) {
       return null;
     }
-    if (PlatformDataKeys.NAVIGATABLE == dataId) {
+    if (Navigatable.KEY == dataId) {
       final DefaultMutableTreeNode selectedNode = getSelectedNode();
       if (selectedNode == null) return null;
       final HierarchyNodeDescriptor descriptor = getDescriptor(selectedNode);
       if (descriptor == null) return null;
       return getNavigatable(descriptor);
     }
-    if (PlatformDataKeys.NAVIGATABLE_ARRAY == dataId) {
+    if (Navigatable.KEY_OF_ARRAY == dataId) {
       return getNavigatables();
     }
     if (PlatformDataKeys.TREE_EXPANDER == dataId) {
@@ -279,7 +277,8 @@ public abstract class HierarchyBrowserBase extends SimpleToolWindowPanel impleme
     }
 
     @Override
-    public final void actionPerformed(final AnActionEvent e) {
+    @RequiredUIAccess
+    public final void actionPerformed(@Nonnull final AnActionEvent e) {
       final HierarchyTreeBuilder builder = getCurrentBuilder();
       final AbstractTreeUi treeUi = builder != null ? builder.getUi() : null;
       final ProgressIndicator progress = treeUi != null ? treeUi.getProgress() : null;
@@ -290,6 +289,7 @@ public abstract class HierarchyBrowserBase extends SimpleToolWindowPanel impleme
     }
 
     @Override
+    @RequiredUIAccess
     public void update(AnActionEvent e) {
       e.getPresentation().setVisible(myContent != null);
     }

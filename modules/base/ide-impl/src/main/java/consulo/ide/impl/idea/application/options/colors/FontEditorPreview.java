@@ -17,23 +17,19 @@
 package consulo.ide.impl.idea.application.options.colors;
 
 import consulo.application.AllIcons;
-import consulo.application.impl.internal.ApplicationNamesInfo;
+import consulo.application.Application;
+import consulo.codeEditor.*;
 import consulo.colorScheme.EditorColorsScheme;
-import consulo.codeEditor.EditorEx;
+import consulo.document.Document;
+import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
 import consulo.language.editor.impl.internal.markup.ErrorStripeRenderer;
-import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ui.ex.awt.JBUI;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorFactory;
-import consulo.codeEditor.EditorSettings;
-import consulo.codeEditor.LogicalPosition;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.document.Document;
 import consulo.ui.image.Image;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Nls;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 public class FontEditorPreview implements PreviewPanel{
@@ -54,19 +50,18 @@ public class FontEditorPreview implements PreviewPanel{
   }
 
   public static String getIDEDemoText() {
-    return
-            ApplicationNamesInfo.getInstance().getFullProductName() +
-            " is a full-featured IDE\n" +
-            "with a high level of usability and outstanding\n" +
-            "advanced code editing and refactoring support.\n" +
-            "\n" +
-            "abcdefghijklmnopqrstuvwxyz 0123456789 (){}[]\n" +
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ +-*/= .,;:!? #&$%@|^\n" +
-            // Create empty lines in order to make the gutter wide enough to display two-digits line numbers (other previews use long text
-            // and we don't want different gutter widths on color pages switching).
-            "\n" +
-            "\n" +
-            "\n";
+    return Application.get().getName() +
+      " is a full-featured IDE\n" +
+      "with a high level of usability and outstanding\n" +
+      "advanced code editing and refactoring support.\n" +
+      "\n" +
+      "abcdefghijklmnopqrstuvwxyz 0123456789 (){}[]\n" +
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZ +-*/= .,;:!? #&$%@|^\n" +
+      // Create empty lines in order to make the gutter wide enough to display two-digits line numbers (other previews use long text
+      // and we don't want different gutter widths on color pages switching).
+      "\n" +
+      "\n" +
+      "\n";
   }
 
   static void installTrafficLights(@Nonnull EditorEx editor) {
@@ -106,8 +101,10 @@ public class FontEditorPreview implements PreviewPanel{
     LogicalPosition pos = new LogicalPosition(line, column);
     editor.getCaretModel().moveToLogicalPosition(pos);
     if (selectedLine >= 0) {
-      editor.getSelectionModel().setSelection(editorDocument.getLineStartOffset(selectedLine),
-                                              editorDocument.getLineEndOffset(selectedLine));
+      editor.getSelectionModel().setSelection(
+        editorDocument.getLineStartOffset(selectedLine),
+        editorDocument.getLineEndOffset(selectedLine)
+      );
     }
     editor.setBorder(JBUI.Borders.empty());
 

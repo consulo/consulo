@@ -2,9 +2,9 @@
 package consulo.ide.impl.idea.ui.breadcrumbs;
 
 import consulo.application.ui.UISettings;
+import consulo.codeEditor.EditorKeys;
 import consulo.language.Language;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
@@ -40,7 +40,7 @@ abstract class ToggleBreadcrumbsAction extends ToggleAction implements DumbAware
   }
 
   boolean isEnabled(AnActionEvent event) {
-    PsiFile psiFile = event.getData(CommonDataKeys.PSI_FILE);
+    PsiFile psiFile = event.getData(PsiFile.KEY);
     if (psiFile == null) return true;
     FileViewProvider provider = psiFile.getViewProvider();
     return BreadcrumbsUtilEx.findProvider(false, provider) != null;
@@ -64,7 +64,7 @@ abstract class ToggleBreadcrumbsAction extends ToggleAction implements DumbAware
   @Contract("null -> null")
   @Nullable
   static Editor findEditor(@Nullable AnActionEvent event) {
-    return event == null ? null : event.getData(CommonDataKeys.EDITOR_EVEN_IF_INACTIVE);
+    return event == null ? null : event.getData(EditorKeys.EDITOR_EVEN_IF_INACTIVE);
   }
 
   @Contract("null -> null")
@@ -72,7 +72,7 @@ abstract class ToggleBreadcrumbsAction extends ToggleAction implements DumbAware
   static String findLanguageID(@Nullable AnActionEvent event) {
     if (event == null) return null;
 
-    PsiFile psiFile = event.getData(CommonDataKeys.PSI_FILE);
+    PsiFile psiFile = event.getData(PsiFile.KEY);
     if (psiFile == null) return null;
 
     Language baseLanguage = psiFile.getViewProvider().getBaseLanguage();

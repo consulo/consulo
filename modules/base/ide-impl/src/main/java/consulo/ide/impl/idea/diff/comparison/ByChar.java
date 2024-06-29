@@ -28,7 +28,7 @@ import java.util.List;
 
 import static consulo.ide.impl.idea.diff.comparison.TrimUtil.isPunctuation;
 import static consulo.ide.impl.idea.diff.comparison.iterables.DiffIterableUtil.*;
-import static consulo.ide.impl.idea.openapi.util.text.StringUtil.isWhiteSpace;
+import static consulo.util.lang.StringUtil.isWhiteSpace;
 
 public class ByChar {
   @Nonnull

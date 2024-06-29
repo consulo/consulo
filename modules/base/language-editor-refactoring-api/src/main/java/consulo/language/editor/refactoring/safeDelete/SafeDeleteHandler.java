@@ -20,8 +20,6 @@ import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.dataContext.DataContext;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.RefactoringSettings;
@@ -47,7 +45,7 @@ public class SafeDeleteHandler implements RefactoringActionHandler {
 
   @Override
   public void invoke(@Nonnull Project project, Editor editor, PsiFile file, DataContext dataContext) {
-    PsiElement element = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
+    PsiElement element = dataContext.getData(PsiElement.KEY);
     editor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
     if (element == null || !SafeDeleteProcessor.validElement(element)) {
       String message = RefactoringBundle.getCannotRefactorMessage(RefactoringBundle.message("is.not.supported.in.the.current.context", REFACTORING_NAME));
@@ -59,7 +57,7 @@ public class SafeDeleteHandler implements RefactoringActionHandler {
 
   @Override
   public void invoke(@Nonnull final Project project, @Nonnull PsiElement[] elements, DataContext dataContext) {
-    invoke(project, elements, dataContext.getData(LangDataKeys.MODULE), true, null);
+    invoke(project, elements, dataContext.getData(Module.KEY), true, null);
   }
 
   public static void invoke(final Project project, PsiElement[] elements, boolean checkDelegates) {
@@ -77,18 +75,18 @@ public class SafeDeleteHandler implements RefactoringActionHandler {
       }
     }
     final PsiElement[] temptoDelete = PsiTreeUtil.filterAncestors(elements);
-    Set<PsiElement> elementsSet = new HashSet<PsiElement>(Arrays.asList(temptoDelete));
-    Set<PsiElement> fullElementsSet = new LinkedHashSet<PsiElement>();
+    Set<PsiElement> elementsSet = new HashSet<>(Arrays.asList(temptoDelete));
+    Set<PsiElement> fullElementsSet = new LinkedHashSet<>();
 
     if (checkDelegates) {
       for (PsiElement element : temptoDelete) {
         boolean found = false;
-        for(SafeDeleteProcessorDelegate delegate: SafeDeleteProcessorDelegate.EP_NAME.getExtensionList()) {
+        for (SafeDeleteProcessorDelegate delegate: SafeDeleteProcessorDelegate.EP_NAME.getExtensionList()) {
           if (delegate.handlesElement(element)) {
             found = true;
-            Collection<? extends PsiElement> addElements = delegate instanceof SafeDeleteProcessorDelegateBase
-                                                           ? ((SafeDeleteProcessorDelegateBase)delegate).getElementsToSearch(element, module, elementsSet)
-                                                           : delegate.getElementsToSearch(element, elementsSet);
+            Collection<? extends PsiElement> addElements = delegate instanceof SafeDeleteProcessorDelegateBase safeDeleteProcessor
+              ? safeDeleteProcessor.getElementsToSearch(element, module, elementsSet)
+              : delegate.getElementsToSearch(element, elementsSet);
             if (addElements == null) return;
             fullElementsSet.addAll(addElements);
             break;

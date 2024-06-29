@@ -15,14 +15,14 @@
  */
 package consulo.ide.impl.idea.diff.editor;
 
+import consulo.diff.localize.DiffLocalize;
+import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.diff.impl.DiffRequestProcessor;
 import consulo.ide.impl.idea.diff.util.FileEditorBase;
-import consulo.ide.impl.idea.openapi.diff.DiffBundle;
-import consulo.disposer.Disposer;
 import consulo.logging.Logger;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ContainerAdapter;
@@ -109,6 +109,6 @@ public class DiffRequestProcessorEditor extends FileEditorBase {
   @Nonnull
   @Override
   public String getName() {
-    return DiffBundle.message("diff.file.editor.name");
+    return DiffLocalize.diffFileEditorName().get();
   }
 }

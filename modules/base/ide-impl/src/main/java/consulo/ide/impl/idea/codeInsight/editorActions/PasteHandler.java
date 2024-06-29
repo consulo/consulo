@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.codeInsight.editorActions;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.codeEditor.*;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionManager;
@@ -33,7 +32,6 @@ import consulo.ide.impl.idea.codeInsight.CodeInsightUtilBase;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorTextInsertHandler;
 import consulo.ide.impl.idea.openapi.editor.actions.PasteAction;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.Producer;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.codeStyle.CodeStyleManager;
@@ -47,16 +45,18 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.CustomPasteProvider;
 import consulo.ui.ex.PasteProvider;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.util.*;
@@ -85,7 +85,7 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
     execute(editor, dataContext, null);
   }
 
-  @Override
+  @RequiredUIAccess@Override
   public void execute(final Editor editor, final DataContext dataContext, @Nullable final Producer<Transferable> producer) {
     final Transferable transferable = EditorModificationUtil.getContentsToPasteToEditor(producer);
     if (transferable == null) return;
@@ -146,7 +146,13 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
     }
   }
 
-  private static void doPaste(final Editor editor, final Project project, final PsiFile file, final Document document, @Nonnull final Transferable content) {
+  @RequiredUIAccess private static void doPaste(
+    final Editor editor,
+    final Project project,
+    final PsiFile file,
+    final Document document,
+    @Nonnull final Transferable content
+  ) {
     CopyPasteManager.getInstance().stopKillRings();
 
     String text = null;
@@ -160,8 +166,8 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
 
     final CodeInsightSettings settings = CodeInsightSettings.getInstance();
 
-    final Map<CopyPastePostProcessor, List<? extends TextBlockTransferableData>> extraData = new HashMap<CopyPastePostProcessor, List<? extends TextBlockTransferableData>>();
-    final Collection<TextBlockTransferableData> allValues = new ArrayList<TextBlockTransferableData>();
+    final Map<CopyPastePostProcessor, List<? extends TextBlockTransferableData>> extraData = new HashMap<>();
+    final Collection<TextBlockTransferableData> allValues = new ArrayList<>();
 
     for (CopyPastePostProcessor<? extends TextBlockTransferableData> processor : CopyPastePostProcessor.EP_NAME.getExtensionList()) {
       List<? extends TextBlockTransferableData> data = processor.extractTransferableData(content);
@@ -204,12 +210,9 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
     }
 
     final String _text = text;
-    ApplicationManager.getApplication().runWriteAction(new Runnable() {
-      @Override
-      public void run() {
+    Application.get().runWriteAction(()-> {
         EditorModificationUtil.insertStringAtCaret(editor, _text, false, true);
-      }
-    });
+      });
 
     int length = text.length();
     int offset = caretModel.getOffset() - length;
@@ -223,7 +226,7 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
     editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
     selectionModel.removeSelection();
 
-    final Ref<Boolean> indented = new Ref<Boolean>(Boolean.FALSE);
+    final Ref<Boolean> indented = new Ref<>(Boolean.FALSE);
     for (Map.Entry<CopyPastePostProcessor, List<? extends TextBlockTransferableData>> e : extraData.entrySet()) {
       //noinspection unchecked
       e.getKey().processTransferableData(project, editor, bounds, caretOffset, indented, e.getValue());
@@ -235,9 +238,7 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
     if (!pastedTextContainsWhiteSpacesOnly && (virtualFile == null || !SingleRootFileViewProvider.isTooLargeForIntelligence(virtualFile))) {
       final int indentOptions1 = indentOptions;
 
-      ApplicationManager.getApplication().runWriteAction(new Runnable() {
-        @Override
-        public void run() {
+      Application.get().runWriteAction(()-> {
           PsiDocumentManager.getInstance(project).doPostponedOperationsAndUnblockDocument(document);
           switch (indentOptions1) {
             case CodeInsightSettings.INDENT_BLOCK:
@@ -257,8 +258,7 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
               reformatBlock(project, editor, bounds.getStartOffset(), bounds.getEndOffset());
               break;
           }
-        }
-      });
+        });
     }
 
     if (bounds.isValid()) {
@@ -326,9 +326,7 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
 
   private static void reformatBlock(final Project project, final Editor editor, final int startOffset, final int endOffset) {
     PsiDocumentManager.getInstance(project).commitAllDocuments();
-    Runnable task = new Runnable() {
-      @Override
-      public void run() {
+    Runnable task = ()-> {
         PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
         try {
           CodeStyleManager.getInstance(project).reformatRange(file, startOffset, endOffset, true);
@@ -336,8 +334,7 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
         catch (IncorrectOperationException e) {
           LOG.error(e);
         }
-      }
-    };
+      };
 
     if (endOffset - startOffset > 1000) {
       DocumentUtil.executeInBulk(editor.getDocument(), true, task);

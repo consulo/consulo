@@ -3,7 +3,7 @@
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
@@ -26,7 +26,6 @@ import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;
 import consulo.language.codeStyle.*;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.action.JoinLinesHandlerDelegate;
 import consulo.language.editor.action.JoinRawLinesHandlerDelegate;
 import consulo.language.psi.*;
@@ -35,9 +34,9 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.action.IdeActions;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -65,7 +64,7 @@ public class JoinLinesHandler extends EditorActionHandler implements ExtensionEd
       return;
     }
     final DocumentEx doc = (DocumentEx)editor.getDocument();
-    final Project project = DataManager.getInstance().getDataContext(editor.getContentComponent()).getData(CommonDataKeys.PROJECT);
+    final Project project = DataManager.getInstance().getDataContext(editor.getContentComponent()).getData(Project.KEY);
     if (project == null) return;
 
     final PsiDocumentManager docManager = PsiDocumentManager.getInstance(project);
@@ -90,7 +89,7 @@ public class JoinLinesHandler extends EditorActionHandler implements ExtensionEd
     int lineCount = endLine - startLine;
     int line = startLine;
 
-    ((ApplicationEx)ApplicationManager.getApplication()).runWriteActionWithCancellableProgressInDispatchThread("Join Lines", project, null, indicator -> {
+    ((ApplicationEx)Application.get()).runWriteActionWithCancellableProgressInDispatchThread("Join Lines", project, null, indicator -> {
       indicator.setIndeterminate(false);
       JoinLineProcessor processor = new JoinLineProcessor(doc, psiFile, line, indicator);
       processor.process(editor, caret, lineCount);

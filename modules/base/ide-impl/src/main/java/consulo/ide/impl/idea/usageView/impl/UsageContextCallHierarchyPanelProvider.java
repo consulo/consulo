@@ -15,18 +15,17 @@
  */
 package consulo.ide.impl.idea.usageView.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.hierarchy.actions.BrowseHierarchyActionBase;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.usages.impl.UsageViewImpl;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.hierarchy.CallHierarchyProvider;
 import consulo.language.editor.hierarchy.HierarchyProvider;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import consulo.usage.*;
-
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
@@ -38,6 +37,7 @@ public class UsageContextCallHierarchyPanelProvider implements UsageContextPanel
   }
 
   @Override
+  @RequiredReadAction
   public boolean isAvailableFor(@Nonnull UsageView usageView) {
     UsageTarget[] targets = ((UsageViewImpl)usageView).getTargets();
     if (targets.length == 0) return false;
@@ -47,7 +47,7 @@ public class UsageContextCallHierarchyPanelProvider implements UsageContextPanel
     if (element == null || !element.isValid()) return false;
 
     Project project = element.getProject();
-    DataContext context = SimpleDataContext.getSimpleContext(CommonDataKeys.PSI_ELEMENT, element, SimpleDataContext.getProjectContext(project));
+    DataContext context = SimpleDataContext.getSimpleContext(PsiElement.KEY, element, SimpleDataContext.getProjectContext(project));
     HierarchyProvider provider = BrowseHierarchyActionBase.findBestHierarchyProvider(CallHierarchyProvider.class, element, context);
     if (provider == null) return false;
     PsiElement providerTarget = provider.getTarget(context);

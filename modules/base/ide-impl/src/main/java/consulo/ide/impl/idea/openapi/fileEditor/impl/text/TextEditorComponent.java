@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.fileEditor.impl.text;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorFactory;
@@ -35,15 +35,15 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.text.TextEditorProvider;
 import consulo.ide.impl.fileEditor.text.TextEditorComponentContainer;
 import consulo.ide.impl.fileEditor.text.TextEditorComponentContainerFactory;
-import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.EditorHistoryManagerImpl;
-import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
 import consulo.language.file.event.FileTypeEvent;
 import consulo.language.file.event.FileTypeListener;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.internal.StatusBarEx;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.IdeActions;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
@@ -51,7 +51,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
 import consulo.virtualFileSystem.event.VirtualFileListener;
 import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -147,8 +146,9 @@ public class TextEditorComponent implements DataProvider, Disposable {
     updateStatusBar();
   }
 
+  @RequiredUIAccess
   private static void assertThread() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    Application.get().assertIsDispatchThread();
   }
 
   /**
@@ -182,6 +182,7 @@ public class TextEditorComponent implements DataProvider, Disposable {
   /**
    * @return whether the editor's document is modified or not
    */
+  @RequiredUIAccess
   boolean isModified() {
     assertThread();
     return myModified;
@@ -251,10 +252,10 @@ public class TextEditorComponent implements DataProvider, Disposable {
       if (o != null) return o;
     }
 
-    if (CommonDataKeys.EDITOR == dataId) {
+    if (Editor.KEY == dataId) {
       return e;
     }
-    if (CommonDataKeys.VIRTUAL_FILE == dataId) {
+    if (VirtualFile.KEY == dataId) {
       return myFile.isValid() ? myFile : null;  // fix for SCR 40329
     }
     return null;
@@ -281,7 +282,7 @@ public class TextEditorComponent implements DataProvider, Disposable {
     public void documentChanged(DocumentEvent e) {
       if (!myUpdateScheduled) {
         // document's timestamp is changed later on undo or PSI changes
-        ApplicationManager.getApplication().invokeLater(myUpdateRunnable);
+        myProject.getApplication().invokeLater(myUpdateRunnable);
         myUpdateScheduled = true;
       }
     }
@@ -293,6 +294,7 @@ public class TextEditorComponent implements DataProvider, Disposable {
    */
   private final class MyFileTypeListener implements FileTypeListener {
     @Override
+    @RequiredUIAccess
     public void fileTypesChanged(@Nonnull final FileTypeEvent event) {
       assertThread();
       // File can be invalid after file type changing. The editor should be removed
@@ -319,6 +321,7 @@ public class TextEditorComponent implements DataProvider, Disposable {
     }
 
     @Override
+    @RequiredUIAccess
     public void contentsChanged(@Nonnull VirtualFileEvent event) {
       if (event.isFromSave()) { // commit
         assertThread();

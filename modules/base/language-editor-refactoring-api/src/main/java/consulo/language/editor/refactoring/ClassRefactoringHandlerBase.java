@@ -1,17 +1,15 @@
 package consulo.language.editor.refactoring;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.dataContext.DataContext;
-import consulo.language.editor.LangDataKeys;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiNavigateUtil;
 import consulo.project.Project;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -28,6 +26,7 @@ public abstract class ClassRefactoringHandlerBase implements RefactoringActionHa
   }
   
   @Override
+  @RequiredReadAction
   public void invoke(@Nonnull Project project, Editor editor, PsiFile file, DataContext dataContext) {
     int offset = editor.getCaretModel().getOffset();
     editor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
@@ -54,8 +53,8 @@ public abstract class ClassRefactoringHandlerBase implements RefactoringActionHa
 
   @Override
   public void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, DataContext dataContext) {
-    final PsiFile file = dataContext.getData(LangDataKeys.PSI_FILE);
-    final Editor editor = dataContext.getData(PlatformDataKeys.EDITOR);
+    final PsiFile file = dataContext.getData(PsiFile.KEY);
+    final Editor editor = dataContext.getData(Editor.KEY);
     showDialog(project, elements[0], editor, file, dataContext);
   }
 
