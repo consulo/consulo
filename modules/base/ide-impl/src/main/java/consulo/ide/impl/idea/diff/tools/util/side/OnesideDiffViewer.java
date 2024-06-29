@@ -15,27 +15,27 @@
  */
 package consulo.ide.impl.idea.diff.tools.util.side;
 
-import consulo.ide.impl.idea.diff.DiffContext;
 import consulo.diff.content.DiffContent;
 import consulo.diff.content.EmptyContent;
 import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.request.DiffRequest;
+import consulo.diff.util.Side;
+import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.diff.DiffContext;
 import consulo.ide.impl.idea.diff.tools.holders.EditorHolder;
 import consulo.ide.impl.idea.diff.tools.holders.EditorHolderFactory;
 import consulo.ide.impl.idea.diff.tools.util.DiffDataKeys;
 import consulo.ide.impl.idea.diff.tools.util.SimpleDiffPanel;
 import consulo.ide.impl.idea.diff.tools.util.base.ListenerDiffViewerBase;
 import consulo.ide.impl.idea.diff.util.DiffUtil;
-import consulo.diff.util.Side;
-import consulo.language.editor.CommonDataKeys;
 import consulo.navigation.Navigatable;
-import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
-import org.jetbrains.annotations.NonNls;
-
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import java.util.List;
 
@@ -62,6 +62,7 @@ public abstract class OnesideDiffViewer<T extends EditorHolder> extends Listener
   }
 
   @Override
+  @RequiredUIAccess
   protected void onInit() {
     super.onInit();
     myPanel.setPersistentNotifications(DiffUtil.getCustomNotifications(myContext, myRequest));
@@ -105,7 +106,7 @@ public abstract class OnesideDiffViewer<T extends EditorHolder> extends Listener
     return myPanel;
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   @Override
   public JComponent getPreferredFocusedComponent() {
     if (!myPanel.isGoodContent()) return null;
@@ -127,10 +128,10 @@ public abstract class OnesideDiffViewer<T extends EditorHolder> extends Listener
     return myHolder;
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   @Override
   public Object getData(@Nonnull @NonNls Key<?> dataId) {
-    if (CommonDataKeys.VIRTUAL_FILE == dataId) {
+    if (VirtualFile.KEY == dataId) {
       return DiffUtil.getVirtualFile(myRequest, mySide);
     }
     else if (DiffDataKeys.CURRENT_CONTENT == dataId) {
@@ -143,15 +144,17 @@ public abstract class OnesideDiffViewer<T extends EditorHolder> extends Listener
   // Misc
   //
 
-  @jakarta.annotation.Nullable
+  @Nullable
   @Override
   protected Navigatable getNavigatable() {
     return getContent().getNavigatable();
   }
 
-  public static <T extends EditorHolder> boolean canShowRequest(@Nonnull DiffContext context,
-                                                                @Nonnull DiffRequest request,
-                                                                @Nonnull EditorHolderFactory<T> factory) {
+  public static <T extends EditorHolder> boolean canShowRequest(
+    @Nonnull DiffContext context,
+    @Nonnull DiffRequest request,
+    @Nonnull EditorHolderFactory<T> factory
+  ) {
     if (!(request instanceof ContentDiffRequest)) return false;
 
     List<DiffContent> contents = ((ContentDiffRequest)request).getContents();
@@ -163,9 +166,6 @@ public abstract class OnesideDiffViewer<T extends EditorHolder> extends Listener
     if (content1 instanceof EmptyContent) {
       return factory.canShowContent(content2, context) && factory.wantShowContent(content2, context);
     }
-    if (content2 instanceof EmptyContent) {
-      return factory.canShowContent(content1, context) && factory.wantShowContent(content1, context);
-    }
-    return false;
+    return content2 instanceof EmptyContent && factory.canShowContent(content1, context) && factory.wantShowContent(content1, context);
   }
 }

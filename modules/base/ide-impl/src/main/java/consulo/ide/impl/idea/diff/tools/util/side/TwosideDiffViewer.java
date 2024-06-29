@@ -27,11 +27,11 @@ import consulo.ide.impl.idea.diff.tools.util.SimpleDiffPanel;
 import consulo.ide.impl.idea.diff.tools.util.base.ListenerDiffViewerBase;
 import consulo.ide.impl.idea.diff.util.DiffUtil;
 import consulo.diff.util.Side;
-import consulo.language.editor.CommonDataKeys;
 import consulo.navigation.Navigatable;
 import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NonNls;
 
 import jakarta.annotation.Nonnull;
@@ -158,7 +158,7 @@ public abstract class TwosideDiffViewer<T extends EditorHolder> extends Listener
   @Nullable
   @Override
   public Object getData(@Nonnull @NonNls Key<?> dataId) {
-    if (CommonDataKeys.VIRTUAL_FILE == dataId) {
+    if (VirtualFile.KEY == dataId) {
       return DiffUtil.getVirtualFile(myRequest, getCurrentSide());
     }
     else if (DiffDataKeys.CURRENT_CONTENT == dataId) {

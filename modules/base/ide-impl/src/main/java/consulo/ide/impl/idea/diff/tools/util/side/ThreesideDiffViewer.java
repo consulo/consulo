@@ -15,13 +15,15 @@
  */
 package consulo.ide.impl.idea.diff.tools.util.side;
 
-import consulo.ide.impl.idea.diff.DiffContext;
 import consulo.diff.DiffDialogHints;
 import consulo.diff.DiffManager;
 import consulo.diff.content.DiffContent;
 import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.request.DiffRequest;
 import consulo.diff.request.SimpleDiffRequest;
+import consulo.diff.util.ThreeSide;
+import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.diff.DiffContext;
 import consulo.ide.impl.idea.diff.tools.holders.EditorHolder;
 import consulo.ide.impl.idea.diff.tools.holders.EditorHolderFactory;
 import consulo.ide.impl.idea.diff.tools.util.DiffDataKeys;
@@ -29,18 +31,16 @@ import consulo.ide.impl.idea.diff.tools.util.FocusTrackerSupport;
 import consulo.ide.impl.idea.diff.tools.util.SimpleDiffPanel;
 import consulo.ide.impl.idea.diff.tools.util.base.ListenerDiffViewerBase;
 import consulo.ide.impl.idea.diff.util.DiffUtil;
-import consulo.diff.util.ThreeSide;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.disposer.Disposer;
-import consulo.util.dataholder.Key;
 import consulo.navigation.Navigatable;
 import consulo.ui.annotation.RequiredUIAccess;
-import org.jetbrains.annotations.NonNls;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -160,7 +160,7 @@ public abstract class ThreesideDiffViewer<T extends EditorHolder> extends Listen
   @Nullable
   @Override
   public Object getData(@Nonnull @NonNls Key<?> dataId) {
-    if (CommonDataKeys.VIRTUAL_FILE == dataId) {
+    if (VirtualFile.KEY == dataId) {
       return DiffUtil.getVirtualFile(myRequest, getCurrentSide());
     }
     else if (DiffDataKeys.CURRENT_CONTENT == dataId) {
@@ -231,9 +231,9 @@ public abstract class ThreesideDiffViewer<T extends EditorHolder> extends Listen
       ActionUtil.copyFrom(this, id);
     }
 
-    @RequiredUIAccess
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       DiffRequest request = createRequest();
       DiffManager.getInstance().showDiff(myProject, request, new DiffDialogHints(null, myPanel));
     }
@@ -242,9 +242,13 @@ public abstract class ThreesideDiffViewer<T extends EditorHolder> extends Listen
     protected SimpleDiffRequest createRequest() {
       List<DiffContent> contents = myRequest.getContents();
       List<String> titles = myRequest.getContentTitles();
-      return new SimpleDiffRequest(myRequest.getTitle(),
-                                   mySide1.select(contents), mySide2.select(contents),
-                                   mySide1.select(titles), mySide2.select(titles));
+      return new SimpleDiffRequest(
+        myRequest.getTitle(),
+        mySide1.select(contents),
+        mySide2.select(contents),
+        mySide1.select(titles),
+        mySide2.select(titles)
+      );
     }
   }
 }

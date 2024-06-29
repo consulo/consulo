@@ -25,7 +25,6 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.action.BaseRefactoringAction;
@@ -52,7 +51,7 @@ public class InlineRefactoringActionHandler implements RefactoringActionHandler 
     if (dataContext == null) {
       dataContext = DataManager.getInstance().getDataContext();
     }
-    final Editor editor = dataContext.getData(PlatformDataKeys.EDITOR);
+    final Editor editor = dataContext.getData(Editor.KEY);
     for (InlineActionHandler handler: InlineActionHandler.EP_NAME.getExtensionList()) {
       if (handler.canInlineElement(elements[0])) {
         handler.inlineElement(project, editor, elements [0]);

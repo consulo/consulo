@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.ide.bookmarks.actions;
 
 import consulo.application.dumb.DumbAware;
 import consulo.bookmark.BookmarkManager;
+import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
@@ -57,7 +57,7 @@ public class ToggleBookmarkAction extends BookmarksAction implements DumbAware {
     event.getPresentation().setEnabled(
       project != null
         && (
-          ToolWindowManager.getInstance(project).isEditorComponentActive() && dataContext.getData(PlatformDataKeys.EDITOR) != null
+          ToolWindowManager.getInstance(project).isEditorComponentActive() && dataContext.getData(Editor.KEY) != null
             || dataContext.getData(VirtualFile.KEY) != null
         )
     );

@@ -12,15 +12,15 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.ex;
 
-import consulo.ide.impl.idea.diff.util.DiffUtil;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.Project;
-import consulo.versionControlSystem.VcsBundle;
+import consulo.ide.impl.idea.diff.util.DiffUtil;
 import consulo.ide.impl.idea.openapi.vcs.impl.LineStatusTrackerManager;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -29,9 +29,10 @@ import java.util.List;
 
 public class RollbackLineStatusAction extends DumbAwareAction {
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
-    Editor editor = e.getData(CommonDataKeys.EDITOR);
+    Project project = e.getData(Project.KEY);
+    Editor editor = e.getData(Editor.KEY);
     if (project == null || editor == null) {
       e.getPresentation().setEnabledAndVisible(false);
       return;
@@ -54,9 +55,10 @@ public class RollbackLineStatusAction extends DumbAwareAction {
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
-    Editor editor = e.getRequiredData(CommonDataKeys.EDITOR);
+    Project project = e.getData(Project.KEY);
+    Editor editor = e.getRequiredData(Editor.KEY);
     LineStatusTracker tracker = LineStatusTrackerManager.getInstance(project).getLineStatusTracker(editor.getDocument());
     assert tracker != null;
 
@@ -68,13 +70,14 @@ public class RollbackLineStatusAction extends DumbAwareAction {
     if (carets.size() != 1) return true;
     Caret caret = carets.get(0);
     if (caret.hasSelection()) return true;
-    if (caret.getOffset() == editor.getDocument().getTextLength() &&
-        tracker.getRangeForLine(editor.getDocument().getLineCount()) != null) {
+    if (caret.getOffset() == editor.getDocument().getTextLength()
+      && tracker.getRangeForLine(editor.getDocument().getLineCount()) != null) {
       return true;
     }
     return tracker.getRangeForLine(caret.getLogicalPosition().line) != null;
   }
 
+  @RequiredUIAccess
   protected static void rollback(@Nonnull LineStatusTracker tracker, @Nullable Editor editor, @Nullable Range range) {
     assert editor != null || range != null;
 
@@ -86,15 +89,18 @@ public class RollbackLineStatusAction extends DumbAwareAction {
     doRollback(tracker, DiffUtil.getSelectedLines(editor));
   }
 
+  @RequiredUIAccess
   private static void doRollback(@Nonnull final LineStatusTracker tracker, @Nonnull final Range range) {
     execute(tracker, () -> tracker.rollbackChanges(range));
   }
 
+  @RequiredUIAccess
   private static void doRollback(@Nonnull final LineStatusTracker tracker, @Nonnull final BitSet lines) {
     execute(tracker, () -> tracker.rollbackChanges(lines));
   }
 
+  @RequiredUIAccess
   private static void execute(@Nonnull final LineStatusTracker tracker, @Nonnull final Runnable task) {
-    DiffUtil.executeWriteCommand(tracker.getDocument(), tracker.getProject(), VcsBundle.message("command.name.rollback.change"), task);
+    DiffUtil.executeWriteCommand(tracker.getDocument(), tracker.getProject(), VcsLocalize.commandNameRollbackChange().get(), task);
   }
 }

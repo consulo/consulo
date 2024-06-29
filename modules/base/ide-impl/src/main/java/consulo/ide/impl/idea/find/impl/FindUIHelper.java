@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.find.impl;
 
+import consulo.codeEditor.Editor;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.find.FindBundle;
@@ -23,7 +24,6 @@ import consulo.find.FindModel;
 import consulo.find.FindSettings;
 import consulo.ide.impl.idea.find.FindUtil;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
@@ -83,7 +83,7 @@ public class FindUIHelper implements Disposable {
       public void actionPerformed(@Nonnull AnActionEvent e) {
         ui.saveSettings();
         myModel.copyFrom(FindManager.getInstance(myProject).getFindInProjectModel());
-        FindUtil.initStringToFindWithSelection(myModel, e.getData(CommonDataKeys.EDITOR));
+        FindUtil.initStringToFindWithSelection(myModel, e.getData(Editor.KEY));
         myModel.setReplaceState(replace);
         ui.initByModel();
       }

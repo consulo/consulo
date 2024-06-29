@@ -21,7 +21,6 @@ import consulo.dataContext.DataProvider;
 import consulo.dataContext.GetDataRule;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.text.TextEditorProvider;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 
@@ -34,7 +33,7 @@ public class FileEditorRule implements GetDataRule<FileEditor> {
 
   @Override
   public FileEditor getData(@Nonnull DataProvider dataProvider) {
-    final Editor editor = dataProvider.getDataUnchecked(PlatformDataKeys.EDITOR);
+    final Editor editor = dataProvider.getDataUnchecked(Editor.KEY);
     if (editor == null) {
       return null;
     }

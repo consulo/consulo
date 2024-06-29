@@ -19,10 +19,9 @@
  */
 package consulo.ide.impl.idea.ide.impl.dataRules;
 
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataProvider;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorKeys;
+import consulo.dataContext.DataProvider;
 import consulo.dataContext.GetDataRule;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
@@ -32,12 +31,12 @@ public class InactiveEditorRule implements GetDataRule<Editor> {
   @Nonnull
   @Override
   public Key<Editor> getKey() {
-    return CommonDataKeys.EDITOR_EVEN_IF_INACTIVE;
+    return EditorKeys.EDITOR_EVEN_IF_INACTIVE;
   }
 
   @Override
   @Nullable
   public Editor getData(@Nonnull final DataProvider dataProvider) {
-    return dataProvider.getDataUnchecked(PlatformDataKeys.EDITOR);
+    return dataProvider.getDataUnchecked(Editor.KEY);
   }
 }

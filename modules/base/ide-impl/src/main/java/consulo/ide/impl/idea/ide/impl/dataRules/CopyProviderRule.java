@@ -15,12 +15,11 @@
  */
 package consulo.ide.impl.idea.ide.impl.dataRules;
 
-import consulo.ui.ex.CopyProvider;
-import consulo.dataContext.DataProvider;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
+import consulo.dataContext.DataProvider;
 import consulo.dataContext.GetDataRule;
+import consulo.ui.ex.CopyProvider;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 
@@ -33,7 +32,7 @@ public class CopyProviderRule implements GetDataRule<CopyProvider> {
 
   @Override
   public CopyProvider getData(@Nonnull DataProvider dataProvider) {
-    final Editor editor = dataProvider.getDataUnchecked(PlatformDataKeys.EDITOR);
+    final Editor editor = dataProvider.getDataUnchecked(Editor.KEY);
     return editor instanceof EditorEx editorEx ? editorEx.getCopyProvider() : null;
   }
 }

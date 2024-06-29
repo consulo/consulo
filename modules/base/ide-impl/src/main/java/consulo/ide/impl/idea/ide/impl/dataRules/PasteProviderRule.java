@@ -19,7 +19,6 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.dataContext.DataProvider;
 import consulo.dataContext.GetDataRule;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.ui.ex.PasteProvider;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
@@ -33,7 +32,7 @@ public class PasteProviderRule implements GetDataRule<PasteProvider> {
 
   @Override
   public PasteProvider getData(@Nonnull DataProvider dataProvider) {
-    final Editor editor = dataProvider.getDataUnchecked(PlatformDataKeys.EDITOR);
+    final Editor editor = dataProvider.getDataUnchecked(Editor.KEY);
     return editor instanceof EditorEx editorEx ? editorEx.getPasteProvider() : null;
   }
 }

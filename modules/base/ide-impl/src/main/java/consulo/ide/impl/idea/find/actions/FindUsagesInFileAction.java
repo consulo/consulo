@@ -16,12 +16,12 @@
 
 package consulo.ide.impl.idea.find.actions;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.fileEditor.FileEditor;
 import consulo.find.FindBundle;
 import consulo.language.Language;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.findUsage.EmptyFindUsagesProvider;
@@ -38,6 +38,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.usage.UsageTarget;
 import consulo.usage.UsageView;
+import jakarta.annotation.Nonnull;
 
 public class FindUsagesInFileAction extends AnAction {
 
@@ -51,7 +52,7 @@ public class FindUsagesInFileAction extends AnAction {
     final Project project = dataContext.getData(Project.KEY);
     if (project == null) return;
     PsiDocumentManager.getInstance(project).commitAllDocuments();
-    Editor editor = dataContext.getData(PlatformDataKeys.EDITOR);
+    Editor editor = dataContext.getData(Editor.KEY);
 
     UsageTarget[] usageTargets = dataContext.getData(UsageView.USAGE_TARGETS_KEY);
     if (usageTargets != null) {
@@ -74,17 +75,19 @@ public class FindUsagesInFileAction extends AnAction {
   }
 
   @Override
-  public void update(AnActionEvent event){
+  @RequiredReadAction
+  public void update(@Nonnull AnActionEvent event){
     updateFindUsagesAction(event);
   }
 
+  @RequiredReadAction
   private static boolean isEnabled(DataContext dataContext) {
     Project project = dataContext.getData(Project.KEY);
     if (project == null) {
       return false;
     }
 
-    Editor editor = dataContext.getData(PlatformDataKeys.EDITOR);
+    Editor editor = dataContext.getData(Editor.KEY);
     if (editor == null) {
       UsageTarget[] target = dataContext.getData(UsageView.USAGE_TARGETS_KEY);
       return target != null && target.length > 0;
@@ -103,6 +106,7 @@ public class FindUsagesInFileAction extends AnAction {
     }
   }
 
+  @RequiredReadAction
   public static void updateFindUsagesAction(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();

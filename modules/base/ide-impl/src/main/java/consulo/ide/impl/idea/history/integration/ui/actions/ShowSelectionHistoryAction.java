@@ -16,17 +16,17 @@
 
 package consulo.ide.impl.idea.history.integration.ui.actions;
 
+import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.history.core.LocalHistoryFacade;
 import consulo.ide.impl.idea.history.integration.IdeaGateway;
 import consulo.ide.impl.idea.history.integration.ui.views.SelectionHistoryDialog;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.PlatformDataKeys;
+import consulo.ide.impl.idea.vcsUtil.VcsSelectionUtil;
 import consulo.project.Project;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.versionControlSystem.action.VcsContext;
+import consulo.versionControlSystem.history.VcsSelection;
 import consulo.versionControlSystem.impl.internal.action.VcsContextWrapper;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.versionControlSystem.history.VcsSelection;
-import consulo.ide.impl.idea.vcsUtil.VcsSelectionUtil;
 import jakarta.annotation.Nullable;
 
 public class ShowSelectionHistoryAction extends ShowHistoryAction {
@@ -48,7 +48,7 @@ public class ShowSelectionHistoryAction extends ShowHistoryAction {
 
   @Override
   public void update(AnActionEvent e) {
-    if (e.getData(PlatformDataKeys.EDITOR) == null) {
+    if (e.getData(Editor.KEY) == null) {
       e.getPresentation().setVisible(false);
     }
     else {

@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.editor.impl;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
@@ -32,9 +32,9 @@ import consulo.document.impl.DocumentImpl;
 import consulo.ide.impl.idea.openapi.project.ProjectUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ShutDownTracker;
@@ -52,6 +52,7 @@ public final class TrailingSpacesStripper implements FileDocumentManagerListener
   private final Set<Document> myDocumentsToStripLater = new HashSet<>();
 
   @Override
+  @RequiredUIAccess
   public void beforeAllDocumentsSaving() {
     Set<Document> documentsToStrip = new HashSet<>(myDocumentsToStripLater);
     myDocumentsToStripLater.clear();
@@ -61,10 +62,12 @@ public final class TrailingSpacesStripper implements FileDocumentManagerListener
   }
 
   @Override
+  @RequiredUIAccess
   public void beforeDocumentSaving(@Nonnull Document document) {
     strip(document);
   }
 
+  @RequiredUIAccess
   private void strip(@Nonnull final Document document) {
     if (!document.isWritable()) return;
     FileDocumentManager fileDocumentManager = FileDocumentManager.getInstance();
@@ -78,7 +81,7 @@ public final class TrailingSpacesStripper implements FileDocumentManagerListener
     @EditorSettingsExternalizable.StripTrailingSpaces
     String stripTrailingSpaces = overrideStripTrailingSpacesData != null ? overrideStripTrailingSpacesData : settings.getStripTrailingSpaces();
     final boolean doStrip = !stripTrailingSpaces.equals(EditorSettingsExternalizable.STRIP_TRAILING_SPACES_NONE);
-    final boolean ensureEOL = overrideEnsureNewlineData != null ? overrideEnsureNewlineData.booleanValue() : settings.isEnsureNewLineAtEOF();
+    final boolean ensureEOL = overrideEnsureNewlineData != null ? overrideEnsureNewlineData : settings.isEnsureNewLineAtEOF();
 
     if (doStrip) {
       final boolean inChangedLinesOnly = !stripTrailingSpaces.equals(EditorSettingsExternalizable.STRIP_TRAILING_SPACES_WHOLE);
@@ -94,7 +97,7 @@ public final class TrailingSpacesStripper implements FileDocumentManagerListener
       final int end = document.getLineEndOffset(lines - 1);
       if (start != end) {
         final CharSequence content = document.getCharsSequence();
-        ApplicationManager.getApplication().runWriteAction(new DocumentRunnable(document, null) {
+        Application.get().runWriteAction(new DocumentRunnable(document, null) {
           @Override
           public void run() {
             CommandProcessor.getInstance().runUndoTransparentAction(() -> {
@@ -152,8 +155,8 @@ public final class TrailingSpacesStripper implements FileDocumentManagerListener
   private static Editor getActiveEditor(@Nonnull Document document) {
     Component focusOwner = IdeFocusManager.getGlobalInstance().getFocusOwner();
     DataContext dataContext = DataManager.getInstance().getDataContext(focusOwner);
-    boolean isDisposeInProgress = ApplicationManager.getApplication().isDisposeInProgress(); // ignore caret placing when exiting
-    Editor activeEditor = isDisposeInProgress ? null : dataContext.getData(CommonDataKeys.EDITOR);
+    boolean isDisposeInProgress = Application.get().isDisposeInProgress(); // ignore caret placing when exiting
+    Editor activeEditor = isDisposeInProgress ? null : dataContext.getData(Editor.KEY);
     if (activeEditor != null && activeEditor.getDocument() != document) {
       activeEditor = null;
     }

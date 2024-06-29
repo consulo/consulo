@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.xdebugger.impl;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.WriteAction;
 import consulo.application.util.function.Computable;
 import consulo.application.util.function.Processor;
@@ -34,7 +34,10 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.util.DocumentUtil;
 import consulo.document.util.TextRange;
-import consulo.execution.debug.*;
+import consulo.execution.debug.XBreakpointManager;
+import consulo.execution.debug.XDebuggerManager;
+import consulo.execution.debug.XDebuggerUtil;
+import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.breakpoint.*;
 import consulo.execution.debug.breakpoint.ui.XBreakpointGroupingRule;
 import consulo.execution.debug.evaluation.EvaluationMode;
@@ -43,20 +46,19 @@ import consulo.execution.debug.frame.XExecutionStack;
 import consulo.execution.debug.frame.XStackFrame;
 import consulo.execution.debug.frame.XSuspendContext;
 import consulo.execution.debug.frame.XValueContainer;
+import consulo.execution.debug.internal.breakpoint.XExpressionImpl;
 import consulo.execution.debug.setting.XDebuggerSettings;
 import consulo.execution.debug.ui.DebuggerColors;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XBreakpointUtil;
-import consulo.execution.debug.internal.breakpoint.XExpressionImpl;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.grouping.XBreakpointFileGroupingRule;
 import consulo.ide.impl.idea.xdebugger.impl.evaluate.quick.common.ValueLookupManager;
 import consulo.ide.impl.idea.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
 import consulo.ide.impl.idea.xdebugger.impl.ui.DebuggerUIUtil;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.actions.XDebuggerTreeActionBase;
 import consulo.language.Language;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.internal.InternalStdFileTypes;
 import consulo.language.psi.*;
@@ -73,10 +75,10 @@ import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.inject.Singleton;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Singleton;
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -222,12 +224,9 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
               @RequiredUIAccess
               public PopupStep onChosen(final XLineBreakpointType.XLineBreakpointVariant selectedValue, boolean finalChoice) {
                 selectionListener.clearHighlighter();
-                ApplicationManager.getApplication().runWriteAction(new Runnable() {
-                  @Override
-                  public void run() {
-                    P properties = (P)selectedValue.createProperties();
-                    res.setDone(breakpointManager.addLineBreakpoint(type, file.getUrl(), line, properties, temporary));
-                  }
+                project.getApplication().runWriteAction(() -> {
+                  P properties = (P)selectedValue.createProperties();
+                  res.setDone(breakpointManager.addLineBreakpoint(type, file.getUrl(), line, properties, temporary));
                 });
                 return FINAL_CHOICE;
               }
@@ -255,12 +254,13 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
     });
   }
 
-
-  public static <P extends XBreakpointProperties> XLineBreakpoint toggleAndReturnLineBreakpoint(@Nonnull final Project project,
-                                                                                                @Nonnull final XLineBreakpointType<P> type,
-                                                                                                @Nonnull final VirtualFile file,
-                                                                                                final int line,
-                                                                                                final boolean temporary) {
+  public static <P extends XBreakpointProperties> XLineBreakpoint toggleAndReturnLineBreakpoint(
+    @Nonnull final Project project,
+    @Nonnull final XLineBreakpointType<P> type,
+    @Nonnull final VirtualFile file,
+    final int line,
+    final boolean temporary
+  ) {
     return WriteAction.compute(() -> {
       XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
       XLineBreakpoint<P> breakpoint = breakpointManager.findBreakpointAtLine(type, file, line);
@@ -277,15 +277,13 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
 
   @Override
   public void removeBreakpoint(final Project project, final XBreakpoint<?> breakpoint) {
-    WriteAction.run(() -> {
-      XDebuggerManager.getInstance(project).getBreakpointManager().removeBreakpoint(breakpoint);
-    });
+    WriteAction.run(() -> XDebuggerManager.getInstance(project).getBreakpointManager().removeBreakpoint(breakpoint));
   }
 
   @Override
   public <B extends XBreakpoint<?>> XBreakpointType<B, ?> findBreakpointType(@Nonnull Class<? extends XBreakpointType<B, ?>> typeClass) {
     if (myBreakpointTypeByClass == null) {
-      myBreakpointTypeByClass = new HashMap<Class<? extends XBreakpointType>, XBreakpointType<?, ?>>();
+      myBreakpointTypeByClass = new HashMap<>();
       for (XBreakpointType<?, ?> breakpointType : XBreakpointUtil.getBreakpointTypes()) {
         myBreakpointTypeByClass.put(breakpointType.getClass(), breakpointType);
       }
@@ -342,7 +340,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
 
       private XSourcePosition getDelegate() {
         if (myDelegate == null) {
-          myDelegate = ApplicationManager.getApplication().runReadAction((Computable<XSourcePosition>)() -> {
+          myDelegate = Application.get().runReadAction((Computable<XSourcePosition>)() -> {
             PsiElement elem = pointer.getElement();
             return XSourcePositionImpl.createByOffset(pointer.getVirtualFile(), elem != null ? elem.getTextOffset() : -1);
           });
@@ -368,6 +366,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
 
       @Nonnull
       @Override
+      @RequiredReadAction
       public Navigatable createNavigatable(@Nonnull Project project) {
         // no need to create delegate here, it may be expensive
         if (myDelegate != null) {
@@ -384,7 +383,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
 
   @Override
   public <B extends XLineBreakpoint<?>> XBreakpointGroupingRule<B, ?> getGroupingByFileRule() {
-    return new XBreakpointFileGroupingRule<B>();
+    return new XBreakpointFileGroupingRule<>();
   }
 
   @Nullable
@@ -407,7 +406,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
 
     final Document document = editor.getDocument();
     VirtualFile file = FileDocumentManager.getInstance().getFile(document);
-    Collection<XSourcePosition> res = new ArrayList<XSourcePosition>();
+    Collection<XSourcePosition> res = new ArrayList<>();
     List<Caret> carets = editor.getCaretModel().getAllCarets();
     for (Caret caret : carets) {
       int line = caret.getLogicalPosition().line;
@@ -421,7 +420,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
 
   @Nullable
   private static Editor getEditor(@Nonnull Project project, DataContext context) {
-    Editor editor = context.getData(CommonDataKeys.EDITOR);
+    Editor editor = context.getData(Editor.KEY);
     if (editor == null) {
       return FileEditorManager.getInstance(project).getSelectedTextEditor();
     }

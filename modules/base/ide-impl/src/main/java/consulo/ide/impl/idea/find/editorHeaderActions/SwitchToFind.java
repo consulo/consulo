@@ -1,20 +1,19 @@
 package consulo.ide.impl.idea.find.editorHeaderActions;
 
-import consulo.ide.impl.idea.find.EditorSearchSession;
+import consulo.application.dumb.DumbAware;
+import consulo.codeEditor.Editor;
 import consulo.find.FindModel;
+import consulo.ide.impl.idea.find.EditorSearchSession;
 import consulo.ide.impl.idea.find.FindUtil;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.application.dumb.DumbAware;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
-
-import static consulo.language.editor.CommonDataKeys.EDITOR;
 
 /**
  * Created by IntelliJ IDEA.
@@ -57,7 +56,7 @@ public class SwitchToFind extends AnAction implements DumbAware {
 
     EditorSearchSession search = e.getRequiredData(EditorSearchSession.SESSION_KEY);
     final FindModel findModel = search.getFindModel();
-    FindUtil.configureFindModel(false, e.getDataContext().getData(EDITOR), findModel, false);
+    FindUtil.configureFindModel(false, e.getDataContext().getData(Editor.KEY), findModel, false);
     search.getComponent().selectSearchAll();
   }
 }

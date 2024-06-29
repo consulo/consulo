@@ -2,29 +2,35 @@
 package consulo.ide.impl.idea.execution.actions;
 
 import consulo.application.AllIcons;
-import consulo.execution.ExecutionBundle;
-import consulo.execution.ExecutionDataKeys;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.ui.console.ConsoleView;
+import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
-
 import jakarta.annotation.Nonnull;
 
 public class ClearConsoleAction extends DumbAwareAction {
   public ClearConsoleAction() {
-    super(ExecutionBundle.message("clear.all.from.console.action.name"), "Clear the contents of the console", AllIcons.Actions.GC);
+    super(
+      ExecutionLocalize.clearAllFromConsoleActionName(),
+      LocalizeValue.localizeTODO("Clear the contents of the console"),
+      AllIcons.Actions.GC
+    );
   }
 
   @Override
+  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
-    ConsoleView data = e.getData(ExecutionDataKeys.CONSOLE_VIEW);
+    ConsoleView data = e.getData(ConsoleView.KEY);
     boolean enabled = data != null && data.getContentSize() > 0;
     e.getPresentation().setEnabled(enabled);
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull final AnActionEvent e) {
-    final ConsoleView consoleView = e.getData(ExecutionDataKeys.CONSOLE_VIEW);
+    final ConsoleView consoleView = e.getData(ConsoleView.KEY);
     if (consoleView != null) {
       consoleView.clear();
     }

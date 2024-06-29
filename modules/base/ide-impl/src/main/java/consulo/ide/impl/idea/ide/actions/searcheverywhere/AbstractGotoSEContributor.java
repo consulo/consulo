@@ -17,7 +17,9 @@ import consulo.ide.impl.idea.ide.actions.SearchEverywherePsiRenderer;
 import consulo.ide.impl.idea.ide.util.gotoByName.*;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.Comparing;
+import consulo.util.lang.Couple;
 import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -153,8 +155,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
 
         @Override
         public boolean canToggleEverywhere() {
-          if (!canToggleEverywhere) return false;
-          return myScopeDescriptor.scopeEquals(myEverywhereScope) || myScopeDescriptor.scopeEquals(myProjectScope);
+          return canToggleEverywhere && (myScopeDescriptor.scopeEquals(myEverywhereScope) || myScopeDescriptor.scopeEquals(myProjectScope));
         }
       });
     }
@@ -206,7 +207,11 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
   }
 
   @Override
-  public void fetchWeightedElements(@Nonnull String pattern, @Nonnull ProgressIndicator progressIndicator, @Nonnull Processor<? super FoundItemDescriptor<Object>> consumer) {
+  public void fetchWeightedElements(
+    @Nonnull String pattern,
+    @Nonnull ProgressIndicator progressIndicator,
+    @Nonnull Processor<? super FoundItemDescriptor<Object>> consumer
+  ) {
     if (myProject == null) return; //nowhere to search
     if (!isEmptyPatternSupported() && pattern.isEmpty()) return;
 
@@ -258,11 +263,13 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
     }, progressIndicator);
   }
 
-  private boolean processElement(@Nonnull ProgressIndicator progressIndicator,
-                                 @Nonnull Processor<? super FoundItemDescriptor<Object>> consumer,
-                                 FilteringGotoByModel<?> model,
-                                 Object element,
-                                 int degree) {
+  private boolean processElement(
+    @Nonnull ProgressIndicator progressIndicator,
+    @Nonnull Processor<? super FoundItemDescriptor<Object>> consumer,
+    FilteringGotoByModel<?> model,
+    Object element,
+    int degree
+  ) {
     if (progressIndicator.isCanceled()) return false;
 
     if (element == null) {
@@ -367,7 +374,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
   @Nullable
   protected Navigatable createExtendedNavigatable(PsiElement psi, String searchText, int modifiers) {
     VirtualFile file = PsiUtilCore.getVirtualFile(psi);
-    consulo.util.lang.Pair<Integer, Integer> position = getLineAndColumn(searchText);
+    Couple<Integer> position = getLineAndColumn(searchText);
     boolean positionSpecified = position.first >= 0 || position.second >= 0;
     if (file != null && positionSpecified) {
       OpenFileDescriptorImpl descriptor = new OpenFileDescriptorImpl(psi.getProject(), file, position.first, position.second);
@@ -381,7 +388,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
     return psiElement.getNavigationElement();
   }
 
-  protected static consulo.util.lang.Pair<Integer, Integer> getLineAndColumn(String text) {
+  protected static Couple<Integer> getLineAndColumn(String text) {
     int line = getLineAndColumnRegexpGroup(text, 2);
     int column = getLineAndColumnRegexpGroup(text, 3);
 
@@ -389,7 +396,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
       line = 0;
     }
 
-    return new consulo.util.lang.Pair<>(line, column);
+    return Couple.of(line, column);
   }
 
   private static int getLineAndColumnRegexpGroup(String text, int groupNumber) {
@@ -482,6 +489,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
     }
 
     @Override
+    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
       ScopeDescriptor selection = getSelectedScope();
       String name = StringUtil.trimMiddle(selection.getDisplayName(), 30);
@@ -498,11 +506,12 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
     }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
       JComponent button = e.getPresentation().getClientProperty(CustomComponentAction.COMPONENT_KEY);
       if (button == null || !button.isValid()) return;
       JList<ScopeDescriptor> fakeList = new JBList<>();
-      ListCellRenderer<ScopeDescriptor> renderer = new ListCellRenderer<ScopeDescriptor>() {
+      ListCellRenderer<ScopeDescriptor> renderer = new ListCellRenderer<>() {
         final ListCellRenderer<ScopeDescriptor> delegate = ScopeChooserCombo.createDefaultRenderer();
 
         @Override
@@ -529,6 +538,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
       BaseListPopupStep<ScopeDescriptor> step = new BaseListPopupStep<ScopeDescriptor>("", items) {
         @Nullable
         @Override
+        @RequiredUIAccess
         public PopupStep onChosen(ScopeDescriptor selectedValue, boolean finalChoice) {
           onScopeSelected(selectedValue);
           ActionToolbar toolbar = UIUtil.uiParents(button, true).filter(ActionToolbar.class).first();

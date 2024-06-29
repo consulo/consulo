@@ -15,17 +15,12 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.action.ToggleAction;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorFactory;
-import consulo.codeEditor.EditorSettings;
-import consulo.codeEditor.LogicalPosition;
+import consulo.application.dumb.DumbAware;
+import consulo.codeEditor.*;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.codeEditor.impl.SettingsImpl;
-import consulo.codeEditor.SoftWrapAppliancePlaces;
-import consulo.application.dumb.DumbAware;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.ToggleAction;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -70,14 +65,14 @@ public abstract class AbstractToggleUseSoftWrapsAction extends ToggleAction impl
   }
 
   @Override
-  public boolean isSelected(AnActionEvent e) {
+  public boolean isSelected(@Nonnull AnActionEvent e) {
     if (myGlobal) return EditorSettingsExternalizable.getInstance().isUseSoftWraps(myAppliancePlace);
     Editor editor = getEditor(e);
     return editor != null && editor.getSettings().isUseSoftWraps();
   }
 
   @Override
-  public void setSelected(AnActionEvent e, boolean state) {
+  public void setSelected(@Nonnull AnActionEvent e, boolean state) {
     final Editor editor = getEditor(e);
     if (editor == null) {
       return;
@@ -106,6 +101,6 @@ public abstract class AbstractToggleUseSoftWrapsAction extends ToggleAction impl
 
   @Nullable
   protected Editor getEditor(AnActionEvent e) {
-    return e.getData(CommonDataKeys.EDITOR);
+    return e.getData(Editor.KEY);
   }
 }

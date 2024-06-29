@@ -3,6 +3,7 @@
 package consulo.ide.impl.idea.find;
 
 import consulo.application.Application;
+import consulo.application.HelpManager;
 import consulo.application.localize.ApplicationLocalize;import consulo.application.ui.UISettings;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.EditorFactoryEvent;
@@ -26,7 +27,6 @@ import consulo.ide.impl.idea.find.impl.livePreview.SearchResults;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.DefaultCustomComponentAction;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
@@ -269,7 +269,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
     if (EditorKeys.EDITOR_EVEN_IF_INACTIVE == dataId) {
       return myEditor;
     }
-    if (PlatformDataKeys.HELP_ID == dataId) {
+    if (HelpManager.HELP_ID == dataId) {
       return myFindModel.isReplaceState() ? HelpID.REPLACE_IN_EDITOR : HelpID.FIND_IN_EDITOR;
     }
     return null;
@@ -384,7 +384,8 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
     String text = getEditor().getSelectionModel().getSelectedText();
     if (text != null && text.contains("\n")) {
       boolean replaceState = myFindModel.isReplaceState();
-      AnAction action = ActionManager.getInstance().getAction(replaceState ? IdeActions.ACTION_REPLACE : IdeActions.ACTION_TOGGLE_FIND_IN_SELECTION_ONLY);
+      AnAction action = ActionManager.getInstance()
+        .getAction(replaceState ? IdeActions.ACTION_REPLACE : IdeActions.ACTION_TOGGLE_FIND_IN_SELECTION_ONLY);
       Shortcut shortcut = ArrayUtil.getFirstElement(action.getShortcutSet().getShortcuts());
       if (shortcut != null) {
         return ApplicationLocalize.editorsearchInSelectionWithHint(KeymapUtil.getShortcutText(shortcut)).get();

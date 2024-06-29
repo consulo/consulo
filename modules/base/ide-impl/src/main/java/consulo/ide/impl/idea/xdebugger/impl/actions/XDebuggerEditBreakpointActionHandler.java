@@ -15,17 +15,16 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.actions;
 
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.markup.GutterIconRenderer;
-import consulo.project.Project;
-import consulo.util.lang.Pair;
+import consulo.dataContext.DataContext;
 import consulo.execution.debug.breakpoint.XBreakpoint;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XBreakpointUtil;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XLineBreakpointImpl;
 import consulo.ide.impl.idea.xdebugger.impl.ui.DebuggerUIUtil;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.util.lang.Pair;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -40,7 +39,7 @@ public class XDebuggerEditBreakpointActionHandler extends EditBreakpointActionHa
   @Override
   public boolean isEnabled(@Nonnull Project project, AnActionEvent event) {
     DataContext dataContext = event.getDataContext();
-    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
+    Editor editor = dataContext.getData(Editor.KEY);
     if (editor == null) return false;
     final Pair<GutterIconRenderer,Object> pair = XBreakpointUtil.findSelectedBreakpoint(project, editor);
     return pair.first != null && pair.second instanceof XLineBreakpointImpl;

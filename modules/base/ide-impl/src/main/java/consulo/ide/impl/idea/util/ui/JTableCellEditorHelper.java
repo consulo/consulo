@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.util.ui;
 
 import consulo.dataContext.DataManager;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.codeEditor.Editor;
 
 import javax.swing.*;
@@ -32,29 +31,25 @@ public class JTableCellEditorHelper {
 
   public static void typeAhead(final JTable table, final EventObject e, final int row, final int column) {
     if (e instanceof KeyEvent) {
-      final Runnable r = new Runnable() {
-        @Override
-        public void run() {
-          if (table.getEditingColumn() != column && table.getEditingRow() != row) return;
+      final Runnable r = () -> {
+        if (table.getEditingColumn() != column && table.getEditingRow() != row) return;
 
-          Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-          if (focusOwner == null || !SwingUtilities.isDescendingFrom(focusOwner, table)) return;
+        Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+        if (focusOwner == null || !SwingUtilities.isDescendingFrom(focusOwner, table)) return;
 
-          KeyEvent keyEvent = (KeyEvent)e;
-          if (Character.isDefined(keyEvent.getKeyChar())) {
-            try {
-              selectAll(focusOwner);
-
-              Robot r = new Robot();
-              r.keyPress(keyEvent.getKeyCode());
-              r.keyRelease(keyEvent.getKeyCode());
-            }
-            catch (AWTException e1) {
-              return;
-            }
-          } else {
+        KeyEvent keyEvent = (KeyEvent)e;
+        if (Character.isDefined(keyEvent.getKeyChar())) {
+          try {
             selectAll(focusOwner);
+
+            Robot r1 = new Robot();
+            r1.keyPress(keyEvent.getKeyCode());
+            r1.keyRelease(keyEvent.getKeyCode());
           }
+          catch (AWTException ignore) {
+          }
+        } else {
+          selectAll(focusOwner);
         }
       };
 
@@ -66,7 +61,7 @@ public class JTableCellEditorHelper {
     if (component instanceof TextComponent) {
       ((TextComponent)component).selectAll();
     } else {
-      Editor editor = DataManager.getInstance().getDataContext(component).getData(PlatformDataKeys.EDITOR);
+      Editor editor = DataManager.getInstance().getDataContext(component).getData(Editor.KEY);
       if (editor != null) {
         editor.getSelectionModel().setSelection(0, editor.getDocument().getTextLength());
       }

@@ -30,7 +30,6 @@ import consulo.ide.impl.idea.ide.bookmarks.*;
 import consulo.ide.impl.idea.ui.popup.util.DetailViewImpl;
 import consulo.ide.impl.idea.ui.popup.util.ItemWrapper;
 import consulo.ide.impl.idea.ui.popup.util.MasterDetailPopupBuilder;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.wm.ToolWindowManager;
@@ -200,7 +199,7 @@ public class BookmarksAction extends AnAction implements DumbAware, MasterDetail
 
       BookmarkManager bookmarkManager = BookmarkManager.getInstance(myProject);
       if (ToolWindowManager.getInstance(myProject).isEditorComponentActive()) {
-        Editor editor = myDataContext.getData(PlatformDataKeys.EDITOR);
+        Editor editor = myDataContext.getData(Editor.KEY);
         if (editor != null) {
           Document document = editor.getDocument();
           myLine = editor.getCaretModel().getLogicalPosition().line;
@@ -225,8 +224,8 @@ public class BookmarksAction extends AnAction implements DumbAware, MasterDetail
     List<Bookmark> answer = new ArrayList<>();
 
     for (Object value : list.getSelectedValues()) {
-      if (value instanceof BookmarkItem) {
-        answer.add(((BookmarkItem)value).getBookmark());
+      if (value instanceof BookmarkItem bookmarkItem) {
+        answer.add(bookmarkItem.getBookmark());
       }
       else {
         return Collections.emptyList();
@@ -237,9 +236,6 @@ public class BookmarksAction extends AnAction implements DumbAware, MasterDetail
   }
 
   static boolean notFiltered(JList list) {
-    if (!(list.getModel() instanceof FilteringListModel)) return true;
-    final FilteringListModel model = (FilteringListModel)list.getModel();
-    return model.getOriginalModel().getSize() == model.getSize();
+    return !(list.getModel() instanceof FilteringListModel model && model.getOriginalModel().getSize() != model.getSize());
   }
-
 }
