@@ -15,29 +15,33 @@
 */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.language.editor.PlatformDataKeys;
-import consulo.ui.ex.CopyProvider;
-import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
+import consulo.dataContext.DataContext;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 
 public class CopyAction extends AnAction implements DumbAware {
+  @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    CopyProvider provider = e.getData(PlatformDataKeys.COPY_PROVIDER);
+    CopyProvider provider = e.getData(CopyProvider.KEY);
     if (provider == null) {
       return;
     }
     provider.performCopy(dataContext);
   }
 
+  @Override
+  @RequiredUIAccess
   public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
-    CopyProvider provider = event.getData(PlatformDataKeys.COPY_PROVIDER);
+    CopyProvider provider = event.getData(CopyProvider.KEY);
     presentation.setEnabled(provider != null && provider.isCopyEnabled(dataContext));
     if (event.getPlace().equals(ActionPlaces.EDITOR_POPUP) && provider != null) {
       presentation.setVisible(provider.isCopyVisible(dataContext));

@@ -17,12 +17,11 @@
 package consulo.ide.impl.idea.ide.impl.dataRules;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataProvider;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.dataContext.GetDataRule;
-import consulo.util.dataholder.Key;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.language.psi.PsiElement;
+import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
@@ -30,19 +29,12 @@ public class PsiElementFromSelectionRule implements GetDataRule<PsiElement> {
   @Nonnull
   @Override
   public Key<PsiElement> getKey() {
-    return CommonDataKeys.PSI_ELEMENT;
+    return PsiElement.KEY;
   }
 
   @Override
   public PsiElement getData(@Nonnull DataProvider dataProvider) {
     final Object element = dataProvider.getDataUnchecked(PlatformDataKeys.SELECTED_ITEM);
-    if (element instanceof PsiElement) {
-      PsiElement psiElement = (PsiElement)element;
-      if (psiElement.isValid()) {
-        return (PsiElement)element;
-      }
-    }
-
-    return null;
+    return element instanceof PsiElement psiElement && psiElement.isValid() ? psiElement : null;
   }
 }

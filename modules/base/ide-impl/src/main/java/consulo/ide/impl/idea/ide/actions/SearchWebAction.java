@@ -3,13 +3,13 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.component.util.localize.BundleBase;
 import consulo.ide.impl.idea.ide.BrowserUtil;
-import consulo.language.editor.PlatformDataKeys;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.action.ActionsBundle;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.io.URLUtil;
 import consulo.webBrowser.WebSearchEngine;
 import consulo.webBrowser.WebSearchOptions;
@@ -35,7 +35,7 @@ public class SearchWebAction extends AnAction implements DumbAware {
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    CopyProvider provider = dataContext.getData(PlatformDataKeys.COPY_PROVIDER);
+    CopyProvider provider = dataContext.getData(CopyProvider.KEY);
     if (provider == null) {
       return;
     }
@@ -52,7 +52,7 @@ public class SearchWebAction extends AnAction implements DumbAware {
   public void update(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
     DataContext dataContext = e.getDataContext();
-    CopyProvider provider = e.getData(PlatformDataKeys.COPY_PROVIDER);
+    CopyProvider provider = e.getData(CopyProvider.KEY);
     boolean available = provider != null && provider.isCopyEnabled(dataContext) && provider.isCopyVisible(dataContext);
     presentation.setEnabled(available);
     presentation.setVisible(available);
@@ -60,6 +60,6 @@ public class SearchWebAction extends AnAction implements DumbAware {
     WebSearchEngine engine = myWebSearchOptions.getEngine();
 
     presentation.setText(BundleBase.format(ActionsBundle.message("action.$SearchWeb.0.text", engine.getPresentableName())));
-    presentation.setDescription(BundleBase.format(ActionsBundle.message("action.$SearchWeb.0.description", engine.getPresentableName())));
+    presentation.setDescription(BundleBase.format(ActionLocalize.action$searchweb0Description(engine.getPresentableName()).get()));
   }
 }

@@ -20,10 +20,9 @@ import consulo.application.dumb.DumbAware;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.ide.IdeBundle;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -32,8 +31,9 @@ import consulo.virtualFileSystem.VirtualFile;
 
 public class CloseEditorAction extends AnAction implements DumbAware {
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
 
     FileEditorManagerEx editorManager = getEditorManager(project);
     FileEditorWindow window = e.getData(FileEditorWindow.DATA_KEY);
@@ -45,7 +45,7 @@ public class CloseEditorAction extends AnAction implements DumbAware {
       }
     }
     else {
-      file = e.getData(PlatformDataKeys.VIRTUAL_FILE);
+      file = e.getData(VirtualFile.KEY);
     }
     if (file != null) {
       editorManager.closeFile(file, window);
@@ -57,15 +57,16 @@ public class CloseEditorAction extends AnAction implements DumbAware {
   }
 
   @Override
+  @RequiredUIAccess
   public void update(final AnActionEvent event){
     final Presentation presentation = event.getPresentation();
-    final Project project = event.getData(CommonDataKeys.PROJECT);
+    final Project project = event.getData(Project.KEY);
     if (project == null) {
       presentation.setEnabled(false);
       return;
     }
     if (ActionPlaces.EDITOR_POPUP.equals(event.getPlace()) || ActionPlaces.EDITOR_TAB_POPUP.equals(event.getPlace())) {
-      presentation.setText(IdeBundle.message("action.close"));
+      presentation.setTextValue(IdeLocalize.actionClose());
     }
     FileEditorWindow window = event.getData(FileEditorWindow.DATA_KEY);
     if (window == null) {

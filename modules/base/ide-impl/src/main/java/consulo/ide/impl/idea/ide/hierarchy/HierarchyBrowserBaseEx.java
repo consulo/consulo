@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.ide.hierarchy;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
 import consulo.application.Application;
-import consulo.application.ui.wm.IdeFocusManager;
+import consulo.application.HelpManager;import consulo.application.ui.wm.IdeFocusManager;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
 import consulo.dataContext.DataContext;
@@ -31,7 +31,6 @@ import consulo.ide.impl.idea.ide.hierarchy.actions.BrowseHierarchyActionBase;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewTree;
 import consulo.ide.impl.idea.ide.util.scopeChooser.EditScopesDialog;
 import consulo.ide.impl.idea.util.NullableFunction;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.PsiCopyPasteManager;
 import consulo.language.editor.hierarchy.HierarchyBrowser;
 import consulo.language.editor.hierarchy.HierarchyProvider;
@@ -470,7 +469,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
     if (getBrowserDataKey() == dataId) {
       return this;
     }
-    if (PlatformDataKeys.HELP_ID == dataId) {
+    if (HelpManager.HELP_ID == dataId) {
       return HELP_ID;
     }
     return super.getData(dataId);

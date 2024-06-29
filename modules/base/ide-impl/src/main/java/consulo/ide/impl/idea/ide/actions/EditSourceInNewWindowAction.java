@@ -15,34 +15,37 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.fileEditor.FileEditorManager;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
  */
 public class EditSourceInNewWindowAction extends DumbAwareAction {
   @Override
-  public void actionPerformed(AnActionEvent e) {
-    final FileEditorManager manager = FileEditorManager.getInstance(e == null ? null : e.getData(CommonDataKeys.PROJECT));
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
+    final FileEditorManager manager = FileEditorManager.getInstance(e == null ? null : e.getData(Project.KEY));
     ((FileEditorManagerImpl)manager).openFileInNewWindow(getVirtualFiles(e)[0]);
   }
 
   protected VirtualFile[] getVirtualFiles(AnActionEvent e) {
-    final VirtualFile[] files = e.getData(PlatformDataKeys.VIRTUAL_FILE_ARRAY);
+    final VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
     if (files != null) return files;
 
-    final VirtualFile file = e.getData(PlatformDataKeys.VIRTUAL_FILE);
+    final VirtualFile file = e.getData(VirtualFile.KEY);
     return file == null ? VirtualFile.EMPTY_ARRAY : new VirtualFile[]{file};
   }
 
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
-    e.getPresentation().setEnabledAndVisible((e == null ? null : e.getData(CommonDataKeys.PROJECT)) != null && getVirtualFiles(e).length == 1);
+    e.getPresentation().setEnabledAndVisible((e == null ? null : e.getData(Project.KEY)) != null && getVirtualFiles(e).length == 1);
   }
 }

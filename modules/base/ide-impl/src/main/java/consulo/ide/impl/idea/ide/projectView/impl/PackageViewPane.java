@@ -22,14 +22,11 @@ package consulo.ide.impl.idea.ide.projectView.impl;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.dataContext.DataContext;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.impl.PackagesPaneSelectInTarget;
 import consulo.ide.impl.idea.ide.projectView.BaseProjectTreeBuilder;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.PackageViewProjectNode;
 import consulo.ide.impl.idea.ide.util.DeleteHandler;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.LangDataKeys;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.language.psi.*;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.localHistory.LocalHistory;
@@ -38,6 +35,7 @@ import consulo.module.Module;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ui.view.ProjectView;
 import consulo.project.ui.view.SelectInTarget;
@@ -56,10 +54,10 @@ import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.inject.Inject;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import java.util.*;
@@ -77,7 +75,7 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
   @Nonnull
   @Override
   public String getTitle() {
-    return IdeBundle.message("title.packages");
+    return IdeLocalize.titlePackages().get();
   }
 
   @Nonnull
@@ -106,8 +104,8 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
   @Override
   public List<PsiElement> getElementsFromNode(@Nullable Object node) {
     Object o = getValueFromNode(node);
-    if (o instanceof PackageElement) {
-      PsiPackage aPackage = ((PackageElement)o).getPackage();
+    if (o instanceof PackageElement packageElement) {
+      PsiPackage aPackage = packageElement.getPackage();
       return ContainerUtil.createMaybeSingletonList(aPackage.isValid() ? aPackage : null);
     }
     return super.getElementsFromNode(node);
@@ -115,15 +113,12 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
 
   @Override
   protected Module getNodeModule(@Nullable Object element) {
-    if (element instanceof PackageElement) {
-      return ((PackageElement)element).getModule();
-    }
-    return super.getNodeModule(element);
+    return element instanceof PackageElement packageElement ? packageElement.getModule() : super.getNodeModule(element);
   }
 
   @Override
   public Object getData(@Nonnull final Key<?> dataId) {
-    if (PlatformDataKeys.DELETE_ELEMENT_PROVIDER == dataId) {
+    if (DeleteProvider.KEY == dataId) {
       final PackageElement selectedPackageElement = getSelectedPackageElement();
       if (selectedPackageElement != null) {
         return myDeletePSIElementProvider;
@@ -132,7 +127,7 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
     if (PackageElement.DATA_KEY == dataId) {
       return getSelectedPackageElement();
     }
-    if (LangDataKeys.MODULE == dataId) {
+    if (Module.KEY == dataId) {
       final PackageElement packageElement = getSelectedPackageElement();
       if (packageElement != null) {
         return packageElement.getModule();
@@ -171,7 +166,11 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
 
   private final class ShowLibraryContentsAction extends ToggleAction {
     private ShowLibraryContentsAction() {
-      super(IdeBundle.message("action.show.libraries.contents"), IdeBundle.message("action.show.hide.library.contents"), AllIcons.ObjectBrowser.ShowLibraryContents);
+      super(
+        IdeLocalize.actionShowLibrariesContents(),
+        IdeLocalize.actionShowHideLibraryContents(),
+        AllIcons.ObjectBrowser.ShowLibraryContents
+      );
     }
 
     @Override
@@ -303,7 +302,7 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
     private Module[] getModulesFor(PsiDirectory dir) {
       final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
       final VirtualFile vFile = dir.getVirtualFile();
-      final Set<Module> modules = new HashSet<Module>();
+      final Set<Module> modules = new HashSet<>();
       final Module module = fileIndex.getModuleForFile(vFile);
       if (module != null) {
         modules.add(module);
@@ -333,13 +332,13 @@ public final class PackageViewPane extends AbstractProjectViewPSIPane {
     @Override
     public void deleteElement(@Nonnull DataContext dataContext) {
       List<PsiDirectory> allElements = Arrays.asList(getSelectedDirectories());
-      List<PsiElement> validElements = new ArrayList<PsiElement>();
+      List<PsiElement> validElements = new ArrayList<>();
       for (PsiElement psiElement : allElements) {
         if (psiElement != null && psiElement.isValid()) validElements.add(psiElement);
       }
       final PsiElement[] elements = PsiUtilCore.toPsiElementArray(validElements);
 
-      LocalHistoryAction a = LocalHistory.getInstance().startAction(IdeBundle.message("progress.deleting"));
+      LocalHistoryAction a = LocalHistory.getInstance().startAction(IdeLocalize.progressDeleting().get());
       try {
         DeleteHandler.deletePsiElement(elements, myProject);
       }

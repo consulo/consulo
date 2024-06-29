@@ -147,6 +147,7 @@ public class WebBrowserManager extends SimpleModificationTracker
     if (defaultBrowserPolicy != DefaultBrowserPolicy.SYSTEM) {
       state.setAttribute("default", StringUtil.toLowerCase(defaultBrowserPolicy.name()));
     }
+
     if (!myShowBrowserHover) {
       state.setAttribute("showHover", "false");
     }
@@ -200,7 +201,11 @@ public class WebBrowserManager extends SimpleModificationTracker
   }
 
   @Nullable
-  private static UUID readId(String value, @Nonnull BrowserFamily family, @Nonnull List<ConfigurableWebBrowser> existingBrowsers) {
+  private static UUID readId(
+    String value,
+    @Nonnull BrowserFamily family,
+    @Nonnull List<ConfigurableWebBrowser> existingBrowsers
+  ) {
     if (StringUtil.isEmpty(value)) {
       UUID id;
       switch (family) {
@@ -355,7 +360,10 @@ public class WebBrowserManager extends SimpleModificationTracker
     return result;
   }
 
-  public void setBrowserSpecificSettings(@Nonnull WebBrowser browser, @Nonnull BrowserSpecificSettings specificSettings) {
+  public void setBrowserSpecificSettings(
+    @Nonnull WebBrowser browser,
+    @Nonnull BrowserSpecificSettings specificSettings
+  ) {
     ((ConfigurableWebBrowser)browser).setSpecificSettings(specificSettings);
   }
 
@@ -412,7 +420,8 @@ public class WebBrowserManager extends SimpleModificationTracker
     UUID id = parseUuid(idOrFamilyName);
     if (id == null) {
       for (ConfigurableWebBrowser browser : browsers) {
-        if (browser.getFamily().name().equalsIgnoreCase(idOrFamilyName) || browser.getFamily().getName().equalsIgnoreCase(idOrFamilyName)) {
+        if (browser.getFamily().name().equalsIgnoreCase(idOrFamilyName)
+          || browser.getFamily().getName().equalsIgnoreCase(idOrFamilyName)) {
           return browser;
         }
       }

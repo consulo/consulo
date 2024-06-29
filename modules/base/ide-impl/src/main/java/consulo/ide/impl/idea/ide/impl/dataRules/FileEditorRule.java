@@ -29,7 +29,7 @@ public class FileEditorRule implements GetDataRule<FileEditor> {
   @Nonnull
   @Override
   public Key<FileEditor> getKey() {
-    return PlatformDataKeys.FILE_EDITOR;
+    return FileEditor.KEY;
   }
 
   @Override
@@ -40,7 +40,7 @@ public class FileEditorRule implements GetDataRule<FileEditor> {
     }
 
     final Boolean aBoolean = editor.getUserData(InternalEditorKeys.SUPPLEMENTARY_KEY);
-    if (aBoolean != null && aBoolean.booleanValue()) {
+    if (aBoolean != null && aBoolean) {
       return null;
     }
 

@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.project.ui.view.ProjectView;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VFileProperty;
@@ -26,17 +26,19 @@ import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiManager;
 
 public class GoToLinkTargetAction extends DumbAwareAction {
+  @RequiredUIAccess
   @Override
   public void update(AnActionEvent e) {
-    Project project = e == null ? null : e.getData(CommonDataKeys.PROJECT);
-    VirtualFile file = e.getDataContext().getData(CommonDataKeys.VIRTUAL_FILE);
+    Project project = e == null ? null : e.getData(Project.KEY);
+    VirtualFile file = e.getDataContext().getData(VirtualFile.KEY);
     e.getPresentation().setEnabledAndVisible(project != null && file != null && file.is(VFileProperty.SYMLINK));
   }
 
+  @RequiredUIAccess
   @Override
   public void actionPerformed(AnActionEvent e) {
-    Project project = e == null ? null : e.getData(CommonDataKeys.PROJECT);
-    VirtualFile file = e.getDataContext().getData(CommonDataKeys.VIRTUAL_FILE);
+    Project project = e == null ? null : e.getData(Project.KEY);
+    VirtualFile file = e.getDataContext().getData(VirtualFile.KEY);
     if (project != null && file != null && file.is(VFileProperty.SYMLINK)) {
       VirtualFile target = file.getCanonicalFile();
       if (target != null) {

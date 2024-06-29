@@ -75,7 +75,7 @@ public class VirtualFileArrayRule implements GetDataRule<VirtualFile[]> {
     }
 
     // VirtualFile -> VirtualFile[]
-    VirtualFile vFile = dataProvider.getDataUnchecked(PlatformDataKeys.VIRTUAL_FILE);
+    VirtualFile vFile = dataProvider.getDataUnchecked(VirtualFile.KEY);
     if (vFile != null) {
       return new VirtualFile[]{vFile};
     }

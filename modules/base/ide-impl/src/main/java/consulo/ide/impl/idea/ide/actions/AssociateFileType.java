@@ -15,30 +15,31 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.language.file.FileTypeManager;
-import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeChooser;
+import consulo.language.file.FileTypeManager;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.UnknownFileType;
 
 public class AssociateFileType extends AnAction {
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    VirtualFile file = e.getData(PlatformDataKeys.VIRTUAL_FILE);
+    VirtualFile file = e.getData(VirtualFile.KEY);
     FileTypeChooser.associateFileType(file.getName());
   }
 
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
     Presentation presentation = e.getPresentation();
-    VirtualFile file = e.getData(PlatformDataKeys.VIRTUAL_FILE);
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    VirtualFile file = e.getData(VirtualFile.KEY);
+    Project project = e.getData(Project.KEY);
     boolean haveSmthToDo;
     if (project == null || file == null || file.isDirectory()) {
       haveSmthToDo = false;
