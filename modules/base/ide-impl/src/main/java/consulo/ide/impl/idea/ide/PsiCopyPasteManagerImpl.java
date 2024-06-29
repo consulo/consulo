@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AccessRule;
 import consulo.application.Application;
@@ -29,7 +30,6 @@ import consulo.project.Project;
 import consulo.project.event.ProjectManagerListener;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.util.collection.ArrayUtil;
-import consulo.util.io.CharsetToolkit;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import jakarta.inject.Inject;
@@ -45,6 +45,7 @@ import java.awt.dnd.InvalidDnDOperationException;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -187,6 +188,7 @@ public class PsiCopyPasteManagerImpl implements PsiCopyPasteManager {
       return myIsCopied;
     }
 
+    @RequiredReadAction
     public boolean isValid() {
       return myPointers.size() > 0 && myPointers.get(0).getElement() != null;
     }
@@ -239,11 +241,11 @@ public class PsiCopyPasteManagerImpl implements PsiCopyPasteManager {
         final List<File> files = getDataAsFileList();
         if (files != null) {
           final String string = (myDataProxy.isCopied() ? "copy\n" : "cut\n") + LinuxDragAndDropSupport.toUriList(files);
-          return new ByteArrayInputStream(string.getBytes(CharsetToolkit.UTF8_CHARSET));
+          return new ByteArrayInputStream(string.getBytes(StandardCharsets.UTF_8));
         }
       }
       else if (flavor.equals(LinuxDragAndDropSupport.kdeCutMarkFlavor) && !myDataProxy.isCopied()) {
-        return new ByteArrayInputStream("1".getBytes(CharsetToolkit.UTF8_CHARSET));
+        return new ByteArrayInputStream("1".getBytes(StandardCharsets.UTF_8));
       }
 
       return null;

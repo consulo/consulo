@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.ide.commander;
 
-import consulo.application.ApplicationManager;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.dataContext.DataContext;
@@ -26,11 +26,10 @@ import consulo.ide.impl.idea.ide.projectView.impl.ProjectAbstractTreeStructureBa
 import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
 import consulo.ide.impl.idea.ide.util.DeleteHandler;
 import consulo.ide.impl.idea.ui.RightAlignedLabelUI;
-import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.util.collection.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.util.DirectoryChooserUtil;
 import consulo.language.editor.LangDataKeys;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.refactoring.ui.CopyPasteDelegator;
 import consulo.language.editor.util.EditorHelper;
 import consulo.language.psi.PsiDirectory;
@@ -241,6 +240,7 @@ public class CommanderPanel extends JPanel {
     updateHistory(false);
   }
 
+  @RequiredReadAction
   public void drillDown() {
     if (topElementIsSelected()) {
       goUp();
@@ -394,10 +394,7 @@ public class CommanderPanel extends JPanel {
   private static Object getValueAtIndex(AbstractTreeNode node) {
     if (node == null) return null;
     Object value = node.getValue();
-    if (value instanceof StructureViewTreeElement) {
-      return ((StructureViewTreeElement)value).getValue();
-    }
-    return value;
+    return value instanceof StructureViewTreeElement treeElement ? treeElement.getValue() : value;
   }
 
   public final void setActive(final boolean active) {
@@ -405,7 +402,7 @@ public class CommanderPanel extends JPanel {
     if (active) {
       myTitlePanel.setBackground(DARK_BLUE);
       myTitlePanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED, DARK_BLUE_BRIGHTER, DARK_BLUE_DARKER));
-      myParentTitle.setForeground(Color.white);
+      myParentTitle.setForeground(JBColor.WHITE);
     }
     else {
       final Color color = UIUtil.getPanelBackground();
@@ -489,7 +486,7 @@ public class CommanderPanel extends JPanel {
     if (IdeView.KEY == dataId) {
       return myIdeView;
     }
-    if (PlatformDataKeys.DELETE_ELEMENT_PROVIDER == dataId) {
+    if (DeleteProvider.KEY == dataId) {
       return myDeleteElementProvider;
     }
     if (Module.KEY == dataId) {
@@ -596,11 +593,11 @@ public class CommanderPanel extends JPanel {
       if (!isDirectory) {
         EditorHelper.openInEditor(element);
       }
-      ApplicationManager.getApplication().invokeLater(
+      myProject.getApplication().invokeLater(
         () -> {
           myBuilder.selectElement(element, PsiUtilCore.getVirtualFile(element));
           if (!isDirectory) {
-            ApplicationManager.getApplication().invokeLater(() -> {
+            myProject.getApplication().invokeLater(() -> {
               if (myMoveFocus) {
                 ToolWindowManager.getInstance(myProject).activateEditorComponent();
               }

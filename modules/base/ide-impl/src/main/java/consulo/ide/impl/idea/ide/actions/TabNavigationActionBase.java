@@ -20,7 +20,6 @@ import consulo.dataContext.DataContext;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -30,7 +29,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.content.ContentManager;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 
 abstract class TabNavigationActionBase extends AnAction implements DumbAware {
@@ -45,7 +43,7 @@ abstract class TabNavigationActionBase extends AnAction implements DumbAware {
 
   public void actionPerformed(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) {
       return;
     }
@@ -65,7 +63,7 @@ abstract class TabNavigationActionBase extends AnAction implements DumbAware {
   @Override
   public void update(@Nonnull AnActionEvent event) {
     Presentation presentation = event.getPresentation();
-    Project project = event.getData(CommonDataKeys.PROJECT);
+    Project project = event.getData(Project.KEY);
     presentation.setEnabled(false);
     if (project == null) {
       return;
@@ -98,7 +96,7 @@ abstract class TabNavigationActionBase extends AnAction implements DumbAware {
   }
 
   private void doNavigate(DataContext dataContext, Project project) {
-    VirtualFile selectedFile = dataContext.getData(PlatformDataKeys.VIRTUAL_FILE);
+    VirtualFile selectedFile = dataContext.getData(VirtualFile.KEY);
     navigateImpl(dataContext, project, selectedFile, myDir);
   }
 
@@ -114,5 +112,4 @@ abstract class TabNavigationActionBase extends AnAction implements DumbAware {
     LOG.assertTrue(index != -1);
     editorManager.openFile(files[(index + files.length + dir) % files.length], true);
   }
-
 }

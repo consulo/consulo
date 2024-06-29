@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.ide.errorTreeView;
 
 import consulo.application.AllIcons;
+import consulo.application.HelpManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
@@ -210,14 +211,14 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
 
   @Override
   public Object getData(@Nonnull Key<?> dataId) {
-    if (PlatformDataKeys.COPY_PROVIDER == dataId) {
+    if (KEY == dataId) {
       return this;
     }
     if (Navigatable.KEY == dataId) {
       final NavigatableMessageElement selectedMessageElement = getSelectedMessageElement();
       return selectedMessageElement != null ? selectedMessageElement.getNavigatable() : null;
     }
-    else if (PlatformDataKeys.HELP_ID == dataId) {
+    else if (HelpManager.HELP_ID == dataId) {
       return myHelpId;
     }
     else if (PlatformDataKeys.TREE_EXPANDER == dataId) {
@@ -288,24 +289,34 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
     if (myIsDisposed) {
       return;
     }
-    myErrorViewStructure.addMessage(ErrorTreeElementKind.convertMessageFromCompilerErrorType(type), text, underFileGroup, file, line, column, data);
+    myErrorViewStructure.addMessage(
+      ErrorTreeElementKind.convertMessageFromCompilerErrorType(type),
+      text,
+      underFileGroup,
+      file,
+      line,
+      column,
+      data
+    );
     myBuilder.updateTree();
   }
 
   @Override
-  public void addMessage(int type,
-                         @Nonnull String[] text,
-                         @Nullable String groupName,
-                         @Nonnull Navigatable navigatable,
-                         @Nullable String exportTextPrefix,
-                         @Nullable String rendererTextPrefix,
-                         @Nullable Object data) {
+  public void addMessage(
+    int type,
+    @Nonnull String[] text,
+    @Nullable String groupName,
+    @Nonnull Navigatable navigatable,
+    @Nullable String exportTextPrefix,
+    @Nullable String rendererTextPrefix,
+    @Nullable Object data
+  ) {
     if (myIsDisposed) {
       return;
     }
     VirtualFile file = data instanceof VirtualFile ? (VirtualFile)data : null;
-    if (file == null && navigatable instanceof OpenFileDescriptorImpl) {
-      file = ((OpenFileDescriptorImpl)navigatable).getFile();
+    if (file == null && navigatable instanceof OpenFileDescriptorImpl openFileDescriptor) {
+      file = openFileDescriptor.getFile();
     }
     final String exportPrefix = exportTextPrefix == null ? "" : exportTextPrefix;
     final String renderPrefix = rendererTextPrefix == null ? "" : rendererTextPrefix;
@@ -381,7 +392,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
       return;
     }
     ActionGroup.Builder group = ActionGroup.newImmutableBuilder();
-    if (getData(PlatformDataKeys.NAVIGATABLE) != null) {
+    if (getData(Navigatable.KEY) != null) {
       group.add(ActionManager.getInstance().getAction(IdeActions.ACTION_EDIT_SOURCE));
     }
     group.add(ActionManager.getInstance().getAction(IdeActions.ACTION_COPY));
@@ -638,12 +649,12 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
     }
 
     @Override
-    public boolean isSelected(AnActionEvent event) {
+    public boolean isSelected(@Nonnull AnActionEvent event) {
       return myConfiguration.SHOW_INFOS;
     }
 
     @Override
-    public void setSelected(AnActionEvent event, boolean flag) {
+    public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
       if (myConfiguration.SHOW_INFOS != flag) {
         myConfiguration.SHOW_INFOS = flag;
         myBuilder.updateTree();
@@ -652,7 +663,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
 
     @RequiredUIAccess
     @Override
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       super.update(e);
       e.getPresentation().setTextValue(isSelected(e) ? IdeLocalize.actionHideInfos() : IdeLocalize.actionShowInfos());
     }
@@ -664,12 +675,12 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
     }
 
     @Override
-    public boolean isSelected(AnActionEvent event) {
+    public boolean isSelected(@Nonnull AnActionEvent event) {
       return myConfiguration.SHOW_WARNINGS;
     }
 
     @Override
-    public void setSelected(AnActionEvent event, boolean flag) {
+    public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
       if (myConfiguration.SHOW_WARNINGS != flag) {
         myConfiguration.SHOW_WARNINGS = flag;
         myBuilder.updateTree();
@@ -678,7 +689,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
 
     @RequiredUIAccess
     @Override
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       super.update(e);
       e.getPresentation().setTextValue(isSelected(e) ? IdeLocalize.actionHideWarnings() : IdeLocalize.actionShowWarnings());
     }

@@ -16,14 +16,13 @@
 
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.bookmark.ui.view.BookmarkNodeProvider;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeViewPanel;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.*;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -37,6 +36,7 @@ import consulo.project.ui.view.ProjectViewPane;
 import consulo.project.ui.view.internal.node.LibraryGroupElement;
 import consulo.project.ui.view.internal.node.NamedLibraryElement;
 import consulo.project.ui.view.tree.*;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -62,19 +62,21 @@ public class AddToFavoritesAction extends AnAction {
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
 
     Collection<AbstractTreeNode> nodesToAdd = getNodesToAdd(dataContext, true);
 
     if (nodesToAdd != null && !nodesToAdd.isEmpty()) {
-      Project project = e.getData(CommonDataKeys.PROJECT);
+      Project project = e.getData(Project.KEY);
       FavoritesManagerImpl.getInstance(project).addRoots(myFavoritesListName, nodesToAdd);
     }
   }
 
+  @RequiredReadAction
   public static Collection<AbstractTreeNode> getNodesToAdd(final DataContext dataContext, final boolean inProjectView) {
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Project project = dataContext.getData(Project.KEY);
 
     if (project == null) return Collections.emptyList();
 
@@ -98,13 +100,15 @@ public class AddToFavoritesAction extends AnAction {
   }
 
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
     e.getPresentation().setEnabled(canCreateNodes(e));
   }
 
+  @RequiredReadAction
   public static boolean canCreateNodes(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    if (e.getData(CommonDataKeys.PROJECT) == null) {
+    if (e.getData(Project.KEY) == null) {
       return false;
     }
     if (e.getPlace().equals(ActionPlaces.FAVORITES_VIEW_POPUP)
@@ -123,25 +127,27 @@ public class AddToFavoritesAction extends AnAction {
   }
 
   private static Object collectSelectedElements(final DataContext dataContext) {
-    Object elements = retrieveData(null, dataContext.getData(LangDataKeys.PSI_ELEMENT));
-    elements = retrieveData(elements, dataContext.getData(LangDataKeys.PSI_ELEMENT_ARRAY));
-    elements = retrieveData(elements, dataContext.getData(LangDataKeys.PSI_FILE));
+    Object elements = retrieveData(null, dataContext.getData(PsiElement.KEY));
+    elements = retrieveData(elements, dataContext.getData(PsiElement.KEY_OF_ARRAY));
+    elements = retrieveData(elements, dataContext.getData(PsiFile.KEY));
     elements = retrieveData(elements, dataContext.getData(ModuleGroup.ARRAY_DATA_KEY));
     elements = retrieveData(elements, dataContext.getData(LangDataKeys.MODULE_CONTEXT_ARRAY));
     elements = retrieveData(elements, dataContext.getData(LibraryGroupElement.ARRAY_DATA_KEY));
     elements = retrieveData(elements, dataContext.getData(NamedLibraryElement.ARRAY_DATA_KEY));
-    elements = retrieveData(elements, dataContext.getData(PlatformDataKeys.VIRTUAL_FILE));
-    elements = retrieveData(elements, dataContext.getData(PlatformDataKeys.VIRTUAL_FILE_ARRAY));
+    elements = retrieveData(elements, dataContext.getData(VirtualFile.KEY));
+    elements = retrieveData(elements, dataContext.getData(VirtualFile.KEY_OF_ARRAY));
     return elements;
   }
 
-  public static
   @Nonnull
-  Collection<AbstractTreeNode> createNodes(Project project,
-                                           Module moduleContext,
-                                           Object object,
-                                           boolean inProjectView,
-                                           ViewSettings favoritesConfig) {
+  @RequiredReadAction
+  public static Collection<AbstractTreeNode> createNodes(
+    Project project,
+    Module moduleContext,
+    Object object,
+    boolean inProjectView,
+    ViewSettings favoritesConfig
+  ) {
     if (project == null) return Collections.emptyList();
     ArrayList<AbstractTreeNode> result = new ArrayList<>();
     for (BookmarkNodeProvider provider : project.getExtensionList(BookmarkNodeProvider.class)) {
@@ -155,7 +161,6 @@ public class AddToFavoritesAction extends AnAction {
 
     final String currentViewId = ProjectView.getInstance(project).getCurrentViewId();
     ProjectViewPane pane = ProjectView.getInstance(project).getProjectViewPaneById(currentViewId);
-
 
     //on psi elements
     if (object instanceof PsiElement[]) {

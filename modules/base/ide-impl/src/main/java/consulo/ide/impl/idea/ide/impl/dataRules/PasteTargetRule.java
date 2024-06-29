@@ -34,6 +34,6 @@ public class PasteTargetRule implements GetDataRule<PsiElement> {
 
   @Override
   public PsiElement getData(@Nonnull DataProvider dataProvider) {
-    return dataProvider.getDataUnchecked(LangDataKeys.PSI_ELEMENT);
+    return dataProvider.getDataUnchecked(PsiElement.KEY);
   }
 }

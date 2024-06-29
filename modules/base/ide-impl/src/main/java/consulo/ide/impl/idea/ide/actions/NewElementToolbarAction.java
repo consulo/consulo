@@ -16,14 +16,12 @@
 
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.IdeView;
-import consulo.project.ui.view.ProjectView;
 import consulo.dataContext.DataManager;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.LangDataKeys;
+import consulo.ide.IdeView;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.project.Project;
+import consulo.project.ui.view.ProjectView;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.action.AnActionEvent;
@@ -36,14 +34,10 @@ public class NewElementToolbarAction extends NewElementAction {
   @Override
   public void actionPerformed(AnActionEvent e) {
     if (e.getData(IdeView.KEY) == null) {
-      final Project project = e.getData(CommonDataKeys.PROJECT);
-      final PsiFileSystemItem psiFile = e.getData(LangDataKeys.PSI_FILE).getParent();
-      ProjectView.getInstance(project).selectCB(psiFile, psiFile.getVirtualFile(), true).doWhenDone(new Runnable() {
-        @Override
-        public void run() {
-          showPopup(DataManager.getInstance().getDataContext());
-        }
-      });
+      final Project project = e.getData(Project.KEY);
+      final PsiFileSystemItem psiFile = e.getData(PsiFile.KEY).getParent();
+      ProjectView.getInstance(project).selectCB(psiFile, psiFile.getVirtualFile(), true)
+        .doWhenDone(() -> showPopup(DataManager.getInstance().getDataContext()));
     }
     else {
       super.actionPerformed(e);
@@ -54,8 +48,8 @@ public class NewElementToolbarAction extends NewElementAction {
   public void update(AnActionEvent event) {
     super.update(event);
     if (event.getData(IdeView.KEY) == null) {
-      Project project = event.getData(CommonDataKeys.PROJECT);
-      PsiFile psiFile = event.getData(LangDataKeys.PSI_FILE);
+      Project project = event.getData(Project.KEY);
+      PsiFile psiFile = event.getData(PsiFile.KEY);
       if (project != null && psiFile != null) {
         final ToolWindow projectViewWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.PROJECT_VIEW);
         if (projectViewWindow.isVisible()) {

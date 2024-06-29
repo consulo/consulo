@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.dataContext.DataManager;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.ui.ex.TreeExpander;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
@@ -64,27 +63,27 @@ public abstract class TreeCollapseAllActionBase extends DumbAwareAction implemen
   @Nullable
   public static TreeExpander getExpanderMaybeFromToolWindow(AnActionEvent e, Function<DataContext, TreeExpander> getExpander) {
     TreeExpander expander = getExpander.apply(e.getDataContext());
-    if(expander != null) {
+    if (expander != null) {
       return expander;
     }
 
-    ToolWindow toolWindow = e.getData(PlatformDataKeys.TOOL_WINDOW);
-    if(toolWindow == null) {
+    ToolWindow toolWindow = e.getData(ToolWindow.KEY);
+    if (toolWindow == null) {
       return null;
     }
 
     ContentManager contentManager = toolWindow.getContentManagerIfCreated();
-    if(contentManager == null) {
+    if (contentManager == null) {
       return null;
     }
 
     Content selectedContent = contentManager.getSelectedContent();
-    if(selectedContent == null) {
+    if (selectedContent == null) {
       return null;
     }
 
     JComponent component = selectedContent.getComponent();
-    if(component == null) {
+    if (component == null) {
       return null;
     }
 

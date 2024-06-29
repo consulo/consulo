@@ -7,6 +7,7 @@ import com.google.common.primitives.Ints;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
+import consulo.application.HelpManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
@@ -49,7 +50,6 @@ import consulo.language.editor.ui.awt.EditorAWTUtil;
 import consulo.language.impl.internal.psi.AstLoadingFilter;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
-import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.DumbService;
@@ -279,7 +279,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
         return myTextField.getText();
       }
 
-      if (PlatformDataKeys.HELP_ID == dataId) {
+      if (HelpManager.HELP_ID == dataId) {
         return myModel.getHelpId();
       }
 

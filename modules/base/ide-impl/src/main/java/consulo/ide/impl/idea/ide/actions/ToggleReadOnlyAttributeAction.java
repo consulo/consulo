@@ -19,31 +19,32 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.application.CommonBundle;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
+import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
 import consulo.document.FileDocumentManager;
-import consulo.application.dumb.DumbAware;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.ide.impl.idea.util.io.ReadOnlyAttributeUtil;
+import consulo.platform.base.localize.CommonLocalize;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.io.ReadOnlyAttributeUtil;
+import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class ToggleReadOnlyAttributeAction extends AnAction implements DumbAware {
   static VirtualFile[] getFiles(DataContext dataContext){
-    ArrayList<VirtualFile> filesList = new ArrayList<VirtualFile>();
-    VirtualFile[] files = dataContext.getData(PlatformDataKeys.VIRTUAL_FILE_ARRAY);
-    for(int i=0;files!=null&&i<files.length;i++){
-      VirtualFile file=files[i];
-      if(file.isInLocalFileSystem()){
+    ArrayList<VirtualFile> filesList = new ArrayList<>();
+    VirtualFile[] files = dataContext.getData(VirtualFile.KEY_OF_ARRAY);
+    for (int i = 0; files != null && i < files.length; i++){
+      VirtualFile file = files[i];
+      if (file.isInLocalFileSystem()) {
         filesList.add(file);
       }
     }
@@ -77,29 +78,28 @@ public class ToggleReadOnlyAttributeAction extends AnAction implements DumbAware
 
   }
 
-  public void actionPerformed(final AnActionEvent e){
-    ApplicationManager.getApplication().runWriteAction(
-      new Runnable(){
-        public void run(){
-          // Save all documents. We won't be able to save changes to the files that became read-only afterwards.
-          FileDocumentManager.getInstance().saveAllDocuments();
+  @Override
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull final AnActionEvent e){
+    Application.get().runWriteAction(() -> {
+      // Save all documents. We won't be able to save changes to the files that became read-only afterwards.
+      FileDocumentManager.getInstance().saveAllDocuments();
 
-          try {
-            VirtualFile[] files=getFiles(e.getDataContext());
-            for (VirtualFile file : files) {
-              ReadOnlyAttributeUtil.setReadOnlyAttribute(file, file.isWritable());
-            }
-          }
-          catch(IOException exc){
-            Project project = e.getData(CommonDataKeys.PROJECT);
-            Messages.showMessageDialog(
-              project,
-              exc.getMessage(),
-              CommonBundle.getErrorTitle(),Messages.getErrorIcon()
-            );
-          }
+      try {
+        VirtualFile[] files=getFiles(e.getDataContext());
+        for (VirtualFile file : files) {
+          ReadOnlyAttributeUtil.setReadOnlyAttribute(file, file.isWritable());
         }
       }
-    );
+      catch (IOException exc) {
+        Project project = e.getData(Project.KEY);
+        Messages.showMessageDialog(
+          project,
+          exc.getMessage(),
+          CommonLocalize.titleError().get(),
+          UIUtil.getErrorIcon()
+        );
+      }
+    });
   }
 }

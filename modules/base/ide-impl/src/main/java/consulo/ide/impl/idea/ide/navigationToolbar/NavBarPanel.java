@@ -28,7 +28,6 @@ import consulo.ide.impl.idea.ui.popup.PopupOwner;
 import consulo.ide.navigationToolbar.NavBarModelExtension;
 import consulo.language.content.ProjectRootsUtil;
 import consulo.language.editor.LangDataKeys;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.refactoring.ui.CopyPasteDelegator;
 import consulo.language.psi.PsiDirectory;
@@ -45,10 +44,7 @@ import consulo.project.ui.view.ProjectView;
 import consulo.project.ui.view.ProjectViewPane;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.WindowManager;
-import consulo.ui.ex.CopyPasteSupport;
-import consulo.ui.ex.Gray;
-import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.*;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
@@ -726,20 +722,20 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
     if (UIExAWTDataKey.CONTEXT_COMPONENT == dataId) {
       return this;
     }
-    if (PlatformDataKeys.CUT_PROVIDER == dataId) {
+    if (CutProvider.KEY == dataId) {
       return getCopyPasteDelegator(source).getCutProvider();
     }
-    if (PlatformDataKeys.COPY_PROVIDER == dataId) {
+    if (CopyProvider.KEY == dataId) {
       return getCopyPasteDelegator(source).getCopyProvider();
     }
-    if (PlatformDataKeys.PASTE_PROVIDER == dataId) {
+    if (PasteProvider.KEY == dataId) {
       return getCopyPasteDelegator(source).getPasteProvider();
     }
-    if (PlatformDataKeys.DELETE_ELEMENT_PROVIDER == dataId) {
+    if (DeleteProvider.KEY == dataId) {
       return selection.get().filter(Module.class).isNotEmpty() ? myDeleteModuleProvider : new DeleteHandler.DefaultDeleteProvider();
     }
 
-    if (IdeView.KEY== dataId) {
+    if (IdeView.KEY == dataId) {
       return myIdeView;
     }
 

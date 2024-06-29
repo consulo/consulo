@@ -4,7 +4,6 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.ide.IdeBundle;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
@@ -23,7 +22,7 @@ public class SynchronizeCurrentFileAction extends AnAction implements DumbAware 
   @Override
   public void update(@Nonnull AnActionEvent e) {
     List<VirtualFile> files = getFiles(e).take(2).toList();
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null || files.isEmpty()) {
       e.getPresentation().setEnabledAndVisible(false);
     }
@@ -35,7 +34,7 @@ public class SynchronizeCurrentFileAction extends AnAction implements DumbAware 
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e == null ? null : e.getData(CommonDataKeys.PROJECT);
+    Project project = e == null ? null : e.getData(Project.KEY);
     List<VirtualFile> files = getFiles(e).toList();
     if (project == null || files.isEmpty()) return;
 
@@ -68,6 +67,6 @@ public class SynchronizeCurrentFileAction extends AnAction implements DumbAware 
 
   @Nonnull
   private static JBIterable<VirtualFile> getFiles(@Nonnull AnActionEvent e) {
-    return JBIterable.of(e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY)).filter(o -> o.isInLocalFileSystem());
+    return JBIterable.of(e.getData(VirtualFile.KEY_OF_ARRAY)).filter(VirtualFile::isInLocalFileSystem);
   }
 }

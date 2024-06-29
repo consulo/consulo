@@ -19,29 +19,30 @@
  */
 package consulo.ide.impl.idea.ide.bookmarks.actions;
 
-import consulo.dataContext.DataContext;
-import consulo.ide.IdeBundle;
 import consulo.bookmark.Bookmark;
 import consulo.bookmark.BookmarkManager;
-import consulo.language.editor.CommonDataKeys;
+import consulo.dataContext.DataContext;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.style.StyleManager;
 
 public class ToggleBookmarkWithMnemonicAction extends ToggleBookmarkAction {
   public ToggleBookmarkWithMnemonicAction() {
-    getTemplatePresentation().setText(IdeBundle.message("action.bookmark.toggle.mnemonic"));
+    getTemplatePresentation().setTextValue(IdeLocalize.actionBookmarkToggleMnemonic());
   }
 
+  @RequiredUIAccess
   @Override
   public void actionPerformed(AnActionEvent e) {
     super.actionPerformed(e);
 
     DataContext dataContext = e.getDataContext();
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Project project = dataContext.getData(Project.KEY);
     if (project == null) return;
     final BookmarkInContextInfo info = new BookmarkInContextInfo(dataContext, project).invoke();
     final Bookmark bookmark = info.getBookmarkAtPlace();
@@ -68,24 +69,28 @@ public class ToggleBookmarkWithMnemonicAction extends ToggleBookmarkAction {
       };
 
       final ComponentPopupBuilder builder = JBPopupFactory.getInstance().createComponentPopupBuilder(mc, mc);
-      popup[0] = builder.
-        setTitle("BookmarkImpl Mnemonic").
-        setFocusable(true).
-        setRequestFocus(true).
-        setMovable(false).
-        setCancelKeyEnabled(false).
-        setAdText(bookmarks.hasBookmarksWithMnemonics() ? (UIUtil.isUnderDarcula() ? "Brown" : "Yellow") + " cells are in use" : null).
-        setResizable(false)
-          .createPopup();
+      popup[0] = builder
+        .setTitle("BookmarkImpl Mnemonic")
+        .setFocusable(true)
+        .setRequestFocus(true)
+        .setMovable(false)
+        .setCancelKeyEnabled(false)
+        .setAdText(
+          bookmarks.hasBookmarksWithMnemonics()
+            ? (StyleManager.get().getCurrentStyle().isDark() ? "Brown" : "Yellow") + " cells are in use" : null
+        )
+        .setResizable(false)
+        .createPopup();
 
       popup[0].showInBestPositionFor(dataContext);
     }
   }
 
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent event) {
     super.update(event);
 
-    event.getPresentation().setText(IdeBundle.message("action.bookmark.toggle.mnemonic"));
+    event.getPresentation().setTextValue(IdeLocalize.actionBookmarkToggleMnemonic());
   }
 }

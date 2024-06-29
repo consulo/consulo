@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.navigation.Navigatable;
 import consulo.language.pom.NavigatableWithText;
 import consulo.language.pom.PomTargetPsiElement;
@@ -58,7 +57,8 @@ public abstract class BaseNavigateToSourceAction extends AnAction implements Dum
     e.getPresentation().setVisible((enabled || !inPopup) && (myFocusEditor || !(target instanceof NavigatableWithText)));
     e.getPresentation().setEnabled(enabled);
 
-    String navigateActionText = myFocusEditor && target instanceof NavigatableWithText ? ((NavigatableWithText)target).getNavigateActionText(true) : null;
+    String navigateActionText = myFocusEditor && target instanceof NavigatableWithText navigatableWithText
+      ? navigatableWithText.getNavigateActionText(true) : null;
     e.getPresentation().setText(navigateActionText == null ? getTemplatePresentation().getText() : navigateActionText);
   }
 
@@ -77,6 +77,6 @@ public abstract class BaseNavigateToSourceAction extends AnAction implements Dum
 
   @Nullable
   protected Navigatable[] getNavigatables(final DataContext dataContext) {
-    return dataContext.getData(PlatformDataKeys.NAVIGATABLE_ARRAY);
+    return dataContext.getData(Navigatable.KEY_OF_ARRAY);
   }
 }

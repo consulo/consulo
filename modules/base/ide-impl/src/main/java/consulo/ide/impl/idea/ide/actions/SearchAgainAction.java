@@ -18,9 +18,8 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.find.FindManager;
 import consulo.ide.impl.idea.find.FindUtil;
-import consulo.ide.IdeBundle;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
+import consulo.platform.base.localize.IdeLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.TextEditor;
@@ -38,38 +37,37 @@ public class SearchAgainAction extends AnAction implements DumbAware {
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(final AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
-    final FileEditor editor = e.getData(PlatformDataKeys.FILE_EDITOR);
+    final Project project = e.getData(Project.KEY);
+    final FileEditor editor = e.getData(FileEditor.KEY);
     if (editor == null || project == null) return;
     CommandProcessor commandProcessor = CommandProcessor.getInstance();
     commandProcessor.executeCommand(
-        project, new Runnable() {
-        @Override
-        public void run() {
+        project, () -> {
           PsiDocumentManager.getInstance(project).commitAllDocuments();
           IdeDocumentHistory.getInstance(project).includeCurrentCommandAsNavigation();
-          if(FindManager.getInstance(project).findNextUsageInEditor(editor)) {
+          if (FindManager.getInstance(project).findNextUsageInEditor(editor)) {
             return;
           }
 
           FindUtil.searchAgain(project, editor, e.getDataContext());
-        }
-      },
-      IdeBundle.message("command.find.next"),
+        },
+      IdeLocalize.commandFindNext().get(),
       null
     );
   }
 
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent event){
     Presentation presentation = event.getPresentation();
-    Project project = event.getData(CommonDataKeys.PROJECT);
+    Project project = event.getData(Project.KEY);
     if (project == null) {
       presentation.setEnabled(false);
       return;
     }
-    FileEditor editor = event.getData(PlatformDataKeys.FILE_EDITOR);
+    FileEditor editor = event.getData(FileEditor.KEY);
     presentation.setEnabled(editor instanceof TextEditor);
   }
 }

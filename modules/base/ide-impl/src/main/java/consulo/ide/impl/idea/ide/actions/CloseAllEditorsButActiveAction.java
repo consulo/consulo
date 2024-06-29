@@ -19,7 +19,6 @@ import consulo.application.dumb.DumbAware;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.util.lang.Comparing;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -38,7 +37,7 @@ public class CloseAllEditorsButActiveAction extends AnAction implements DumbAwar
     VirtualFile selectedFile;
     final FileEditorWindow window = e.getData(FileEditorWindow.DATA_KEY);
     if (window != null) {
-      window.closeAllExcept(e.getData(PlatformDataKeys.VIRTUAL_FILE));
+      window.closeAllExcept(e.getData(VirtualFile.KEY));
       return;
     }
     selectedFile = fileEditorManager.getSelectedFiles()[0];

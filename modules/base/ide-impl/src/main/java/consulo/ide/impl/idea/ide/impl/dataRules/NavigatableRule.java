@@ -18,9 +18,7 @@ package consulo.ide.impl.idea.ide.impl.dataRules;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.util.EditSourceUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataProvider;
-import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.dataContext.GetDataRule;
@@ -34,32 +32,26 @@ public class NavigatableRule implements GetDataRule<Navigatable> {
   @Nonnull
   @Override
   public Key<Navigatable> getKey() {
-    return CommonDataKeys.NAVIGATABLE;
+    return Navigatable.KEY;
   }
 
   @Override
   public Navigatable getData(@Nonnull DataProvider dataProvider) {
-    final Navigatable navigatable = dataProvider.getDataUnchecked(PlatformDataKeys.NAVIGATABLE);
-    if (navigatable != null && navigatable instanceof OpenFileDescriptorImpl) {
-      final OpenFileDescriptorImpl openFileDescriptor = (OpenFileDescriptorImpl)navigatable;
-
+    final Navigatable navigatable = dataProvider.getDataUnchecked(Navigatable.KEY);
+    if (navigatable != null && navigatable instanceof OpenFileDescriptorImpl openFileDescriptor) {
       if (openFileDescriptor.getFile().isValid()) {
         return openFileDescriptor;
       }
     }
-    final PsiElement element = dataProvider.getDataUnchecked(LangDataKeys.PSI_ELEMENT);
-    if (element instanceof Navigatable) {
-      return (Navigatable)element;
+    final PsiElement element = dataProvider.getDataUnchecked(PsiElement.KEY);
+    if (element instanceof Navigatable navElem) {
+      return navElem;
     }
     if (element != null) {
       return EditSourceUtil.getDescriptor(element);
     }
 
     final Object selection = dataProvider.getDataUnchecked(PlatformDataKeys.SELECTED_ITEM);
-    if (selection instanceof Navigatable) {
-      return (Navigatable)selection;
-    }
-
-    return null;
+    return selection instanceof Navigatable navSel ? navSel : null;
   }
 }

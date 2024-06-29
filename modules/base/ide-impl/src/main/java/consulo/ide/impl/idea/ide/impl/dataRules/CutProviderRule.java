@@ -28,15 +28,12 @@ public class CutProviderRule implements GetDataRule<CutProvider> {
   @Nonnull
   @Override
   public Key<CutProvider> getKey() {
-    return PlatformDataKeys.CUT_PROVIDER;
+    return CutProvider.KEY;
   }
 
   @Override
   public CutProvider getData(@Nonnull DataProvider dataProvider) {
     final Editor editor = dataProvider.getDataUnchecked(PlatformDataKeys.EDITOR);
-    if (editor instanceof EditorEx) {
-      return ((EditorEx)editor).getCutProvider();
-    }
-    return null;
+    return editor instanceof EditorEx editorEx ? editorEx.getCutProvider() : null;
   }
 }

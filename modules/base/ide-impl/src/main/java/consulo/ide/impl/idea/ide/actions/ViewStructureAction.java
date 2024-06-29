@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.internal.InternalEditorKeys;
 import consulo.disposer.Disposer;
@@ -29,14 +30,13 @@ import consulo.fileEditor.structureView.TreeBasedStructureViewBuilder;
 import consulo.ide.impl.idea.ide.util.FileStructurePopup;
 import consulo.ide.impl.idea.ide.util.treeView.smartTree.TreeStructureUtil;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.structureView.StructureViewComposite;
 import consulo.language.editor.structureView.StructureViewCompositeModel;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.PlaceHolder;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -54,14 +54,15 @@ public class ViewStructureAction extends DumbAwareAction {
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) return;
-    FileEditor fileEditor = e.getData(PlatformDataKeys.FILE_EDITOR);
+    FileEditor fileEditor = e.getData(FileEditor.KEY);
     if (fileEditor == null) return;
 
     VirtualFile virtualFile = fileEditor.getFile();
-    Editor editor = fileEditor instanceof TextEditor ? ((TextEditor)fileEditor).getEditor() : e.getData(CommonDataKeys.EDITOR);
+    Editor editor = fileEditor instanceof TextEditor ? ((TextEditor)fileEditor).getEditor() : e.getData(Editor.KEY);
     if (editor != null) {
       PsiDocumentManager.getInstance(project).commitDocument(editor.getDocument());
     }
@@ -77,6 +78,7 @@ public class ViewStructureAction extends DumbAwareAction {
   }
 
   @Nullable
+  @RequiredReadAction
   public static FileStructurePopup createPopup(@Nonnull Project project, @Nonnull FileEditor fileEditor) {
     PsiDocumentManager.getInstance(project).commitAllDocuments();
     StructureViewBuilder builder = fileEditor.getStructureViewBuilder();
@@ -101,21 +103,23 @@ public class ViewStructureAction extends DumbAwareAction {
   }
 
   @Override
+  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) {
       e.getPresentation().setEnabled(false);
       return;
     }
 
-    FileEditor fileEditor = e.getData(PlatformDataKeys.FILE_EDITOR);
-    Editor editor = fileEditor instanceof TextEditor ? ((TextEditor)fileEditor).getEditor() : e.getData(CommonDataKeys.EDITOR);
+    FileEditor fileEditor = e.getData(FileEditor.KEY);
+    Editor editor = fileEditor instanceof TextEditor textEditor ? textEditor.getEditor() : e.getData(Editor.KEY);
 
     boolean enabled = fileEditor != null && (!Boolean.TRUE.equals(InternalEditorKeys.SUPPLEMENTARY_KEY.get(editor))) && fileEditor.getStructureViewBuilder() != null;
     e.getPresentation().setEnabled(enabled);
   }
 
   @Nonnull
+  @RequiredReadAction
   public static StructureViewModel createStructureViewModel(@Nonnull Project project, @Nonnull FileEditor fileEditor, @Nonnull StructureView structureView) {
     StructureViewModel treeModel;
     VirtualFile virtualFile = fileEditor.getFile();

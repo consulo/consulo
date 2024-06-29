@@ -15,16 +15,15 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.application.ApplicationManager;
-import consulo.undoRedo.CommandProcessor;
+import consulo.application.Application;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.undoRedo.CommandProcessor;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import jakarta.annotation.Nonnull;
@@ -34,21 +33,21 @@ import jakarta.annotation.Nonnull;
  */
 public class FixLineSeparatorsAction extends AnAction {
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
-    final VirtualFile[] vFiles = e.getData(PlatformDataKeys.VIRTUAL_FILE_ARRAY);
+    Project project = e.getData(Project.KEY);
+    final VirtualFile[] vFiles = e.getData(VirtualFile.KEY_OF_ARRAY);
     if (project == null || vFiles == null) return;
-    CommandProcessor.getInstance().executeCommand(project, new Runnable() {
-      public void run() {
-        for (VirtualFile vFile : vFiles) {
-          fixSeparators(vFile);
-        }
+    CommandProcessor.getInstance().executeCommand(project, () -> {
+      for (VirtualFile vFile : vFiles) {
+        fixSeparators(vFile);
       }
     }, "fixing line separators", null);
   }
 
   private static void fixSeparators(VirtualFile vFile) {
     VfsUtilCore.visitChildrenRecursively(vFile, new VirtualFileVisitor() {
+      @RequiredUIAccess
       @Override
       public boolean visitFile(@Nonnull VirtualFile file) {
         if (!file.isDirectory() && !file.getFileType().isBinary()) {
@@ -72,16 +71,15 @@ public class FixLineSeparatorsAction extends AnAction {
     return true;    
   }
 
+  @RequiredUIAccess
   private static void fixSeparators(final Document document) {
-    ApplicationManager.getApplication().runWriteAction(new Runnable() {
-      public void run() {
-        int i = 1;
-        while(i < document.getLineCount()) {
-          final int start = document.getLineEndOffset(i);
-          final int end = document.getLineEndOffset(i) + document.getLineSeparatorLength(i);
-          document.deleteString(start, end);
-          i++;
-        }
+    Application.get().runWriteAction(() -> {
+      int i = 1;
+      while(i < document.getLineCount()) {
+        final int start = document.getLineEndOffset(i);
+        final int end = document.getLineEndOffset(i) + document.getLineSeparatorLength(i);
+        document.deleteString(start, end);
+        i++;
       }
     });
   }

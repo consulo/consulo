@@ -28,15 +28,12 @@ public class CopyProviderRule implements GetDataRule<CopyProvider> {
   @Nonnull
   @Override
   public Key<CopyProvider> getKey() {
-    return PlatformDataKeys.COPY_PROVIDER;
+    return CopyProvider.KEY;
   }
 
   @Override
   public CopyProvider getData(@Nonnull DataProvider dataProvider) {
     final Editor editor = dataProvider.getDataUnchecked(PlatformDataKeys.EDITOR);
-    if (editor instanceof EditorEx) {
-      return ((EditorEx) editor).getCopyProvider();
-    }
-    return null;
+    return editor instanceof EditorEx editorEx ? editorEx.getCopyProvider() : null;
   }
 }

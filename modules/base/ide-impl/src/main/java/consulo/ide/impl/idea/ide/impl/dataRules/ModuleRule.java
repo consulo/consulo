@@ -20,7 +20,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.language.editor.LangDataKeys;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.dataContext.GetDataRule;
 import consulo.module.Module;
 import consulo.ide.impl.idea.openapi.module.ModuleUtil;
@@ -57,9 +56,9 @@ public class ModuleRule implements GetDataRule<Module> {
       project = element.getProject();
     }
 
-    VirtualFile virtualFile = dataProvider.getDataUnchecked(PlatformDataKeys.VIRTUAL_FILE);
+    VirtualFile virtualFile = dataProvider.getDataUnchecked(VirtualFile.KEY);
     if (virtualFile == null) {
-      GetDataRule<VirtualFile> dataRule = ((BaseDataManager)DataManager.getInstance()).getDataRule(PlatformDataKeys.VIRTUAL_FILE);
+      GetDataRule<VirtualFile> dataRule = ((BaseDataManager)DataManager.getInstance()).getDataRule(VirtualFile.KEY);
       if (dataRule != null) {
         virtualFile = dataRule.getData(dataProvider);
       }

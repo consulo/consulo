@@ -19,10 +19,10 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.TitledHandler;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
@@ -41,6 +41,8 @@ import java.awt.event.KeyEvent;
 public class DeleteAction extends AnAction implements DumbAware {
   private static final Logger LOG = Logger.getInstance(DeleteAction.class);
 
+  @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
     DeleteProvider provider = getDeleteProvider(dataContext);
@@ -58,9 +60,11 @@ public class DeleteAction extends AnAction implements DumbAware {
 
   @Nullable
   protected DeleteProvider getDeleteProvider(DataContext dataContext) {
-    return dataContext.getData(PlatformDataKeys.DELETE_ELEMENT_PROVIDER);
+    return dataContext.getData(DeleteProvider.KEY);
   }
 
+  @Override
+  @RequiredUIAccess
   public void update(AnActionEvent event){
     String place = event.getPlace();
     Presentation presentation = event.getPresentation();

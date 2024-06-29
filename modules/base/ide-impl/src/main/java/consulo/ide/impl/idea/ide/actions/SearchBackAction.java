@@ -18,9 +18,8 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.find.FindManager;
 import consulo.ide.impl.idea.find.FindUtil;
-import consulo.ide.IdeBundle;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
+import consulo.platform.base.localize.IdeLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.TextEditor;
@@ -37,35 +36,35 @@ public class SearchBackAction extends AnAction implements DumbAware {
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(final AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
-    final FileEditor editor = e.getData(PlatformDataKeys.FILE_EDITOR);
+    final Project project = e.getData(Project.KEY);
+    final FileEditor editor = e.getData(FileEditor.KEY);
     CommandProcessor commandProcessor = CommandProcessor.getInstance();
     commandProcessor.executeCommand(
-        project, new Runnable() {
-        @Override
-        public void run() {
-          PsiDocumentManager.getInstance(project).commitAllDocuments();
-          if(FindManager.getInstance(project).findPreviousUsageInEditor(editor)) {
-            return;
-          }
-          FindUtil.searchBack(project, editor, e.getDataContext());
+      project,
+      () -> {
+        PsiDocumentManager.getInstance(project).commitAllDocuments();
+        if (FindManager.getInstance(project).findPreviousUsageInEditor(editor)) {
+          return;
         }
+        FindUtil.searchBack(project, editor, e.getDataContext());
       },
-      IdeBundle.message("command.find.previous"),
+      IdeLocalize.commandFindPrevious().get(),
       null
     );
   }
 
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent event){
     Presentation presentation = event.getPresentation();
-    Project project = event.getData(CommonDataKeys.PROJECT);
+    Project project = event.getData(Project.KEY);
     if (project == null) {
       presentation.setEnabled(false);
       return;
     }
-    final FileEditor editor = event.getData(PlatformDataKeys.FILE_EDITOR);
+    final FileEditor editor = event.getData(FileEditor.KEY);
     presentation.setEnabled(editor instanceof TextEditor);
   }
 }

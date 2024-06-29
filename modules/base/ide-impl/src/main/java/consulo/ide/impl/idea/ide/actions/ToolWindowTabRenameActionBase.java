@@ -15,12 +15,11 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.impl.idea.openapi.wm.ToolWindowContextMenuActionBase;
-import consulo.ide.impl.idea.util.BooleanFunction;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.disposer.Disposer;
-import consulo.language.editor.CommonDataKeys;
-import consulo.project.ui.wm.ToolWindowDataKeys;
+import consulo.ide.impl.idea.openapi.wm.ToolWindowContextMenuActionBase;
+import consulo.ide.impl.idea.util.BooleanFunction;
+import consulo.project.Project;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.*;
@@ -28,9 +27,9 @@ import consulo.ui.ex.content.Content;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.toolWindow.ToolWindow;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
@@ -53,13 +52,13 @@ public class ToolWindowTabRenameActionBase extends ToolWindowContextMenuActionBa
   @Override
   public void update(@Nonnull AnActionEvent e, @Nonnull ToolWindow toolWindow, @Nullable Content content) {
     String id = toolWindow.getId();
-    e.getPresentation().setEnabledAndVisible(e.getData(CommonDataKeys.PROJECT) != null && myToolWindowId.equals(id) && content != null);
+    e.getPresentation().setEnabledAndVisible(e.getData(Project.KEY) != null && myToolWindowId.equals(id) && content != null);
   }
 
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull ToolWindow toolWindow, @Nullable Content content) {
     Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-    if (component == null || content == null || e.getData(ToolWindowDataKeys.CONTENT) == null) {
+    if (component == null || content == null || e.getData(Content.KEY) == null) {
       return;
     }
 
@@ -85,25 +84,24 @@ public class ToolWindowTabRenameActionBase extends ToolWindowContextMenuActionBa
     panel.add(label);
     panel.add(textField);
 
-    Balloon balloon =
-            JBPopupFactory.getInstance().createDialogBalloonBuilder(panel, null)
-                    .setShowCallout(true)
-                    .setCloseButtonEnabled(false)
-                    .setAnimationCycle(0)
-                    .setDisposable(content)
-                    .setHideOnKeyOutside(true)
-                    .setHideOnClickOutside(true)
-                    .setRequestFocus(true)
-                    .setBlockClicksThroughBalloon(true)
-                    .createBalloon();
+    Balloon balloon = JBPopupFactory.getInstance().createDialogBalloonBuilder(panel, null)
+      .setShowCallout(true)
+      .setCloseButtonEnabled(false)
+      .setAnimationCycle(0)
+      .setDisposable(content)
+      .setHideOnKeyOutside(true)
+      .setHideOnClickOutside(true)
+      .setRequestFocus(true)
+      .setBlockClicksThroughBalloon(true)
+      .createBalloon();
 
     textField.addKeyListener(new KeyAdapter() {
       @Override
       public void keyPressed(KeyEvent e) {
-        if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
           if (!Disposer.isDisposed(content)) {
             String text = textField.getText();
-            if(!text.isEmpty()) {
+            if (!text.isEmpty()) {
               content.setDisplayName(text);
             }
             balloon.hide();

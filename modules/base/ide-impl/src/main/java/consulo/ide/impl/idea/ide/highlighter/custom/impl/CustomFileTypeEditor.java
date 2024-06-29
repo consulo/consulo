@@ -46,15 +46,20 @@ public class CustomFileTypeEditor extends SettingsEditor<AbstractFileType> {
   private final JCheckBox mySupportEscapes = new JCheckBox(IdeLocalize.checkboxCustomfiletypeSupportStringEscapes().get());
 
   private final JTextField myLineComment = new JTextField(5);
-  private final JCheckBox myCommentAtLineStart = new JCheckBox(UIUtil.replaceMnemonicAmpersand("&Only at line start"));
+  private final JCheckBox myCommentAtLineStart =
+    new JCheckBox(UIUtil.replaceMnemonicAmpersand("&Only at line start"));
   private final JTextField myBlockCommentStart = new JTextField(5);
   private final JTextField myBlockCommentEnd = new JTextField(5);
   private final JTextField myHexPrefix = new JTextField(5);
 
   private final JTextField myNumPostfixes = new JTextField(5);
   private final JBList[] myKeywordsLists = new JBList[]{new JBList(), new JBList(), new JBList(), new JBList()};
-  private final DefaultListModel[] myKeywordModels =
-    new DefaultListModel[]{new DefaultListModel(), new DefaultListModel(), new DefaultListModel(), new DefaultListModel()};
+  private final DefaultListModel[] myKeywordModels = new DefaultListModel[]{
+    new DefaultListModel(),
+    new DefaultListModel(),
+    new DefaultListModel(),
+    new DefaultListModel()
+  };
 
   public CustomFileTypeEditor() {
     myLineComment.getDocument().addDocumentListener(new DocumentAdapter() {
@@ -235,7 +240,8 @@ public class CustomFileTypeEditor extends SettingsEditor<AbstractFileType> {
 
   private void edit(int index) {
     if (myKeywordsLists[index].getSelectedIndex() == -1) return;
-    ModifyKeywordDialog dialog = new ModifyKeywordDialog(myKeywordsLists[index], (String)myKeywordsLists[index].getSelectedValue());
+    ModifyKeywordDialog dialog =
+      new ModifyKeywordDialog(myKeywordsLists[index], (String)myKeywordsLists[index].getSelectedValue());
     dialog.show();
     if (dialog.isOK()) {
       myKeywordModels[index].setElementAt(dialog.getKeywordName(), myKeywordsLists[index].getSelectedIndex());
