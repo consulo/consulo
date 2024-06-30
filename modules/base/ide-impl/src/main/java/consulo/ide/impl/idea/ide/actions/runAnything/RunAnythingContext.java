@@ -20,7 +20,7 @@ import consulo.application.util.UserHomeFileUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;

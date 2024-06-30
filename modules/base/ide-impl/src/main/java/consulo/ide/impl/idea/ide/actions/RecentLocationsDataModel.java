@@ -36,7 +36,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.EditorSettings;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.application.util.NotNullLazyValue;
 import consulo.document.Document;

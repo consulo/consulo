@@ -23,7 +23,7 @@ import consulo.execution.ui.RunContentDescriptor;
 import consulo.execution.ui.console.*;
 import consulo.ide.impl.idea.execution.actions.StopProcessAction;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessEvent;
 import consulo.project.Project;

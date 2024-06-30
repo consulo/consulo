@@ -33,7 +33,7 @@ import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.language.file.FileTypeManager;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.impl.internal.ProjectStorageUtil;

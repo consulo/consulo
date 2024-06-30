@@ -20,7 +20,7 @@ import consulo.language.internal.InternalStdFileTypes;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.platform.Platform;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
 import consulo.util.collection.HashingStrategy;

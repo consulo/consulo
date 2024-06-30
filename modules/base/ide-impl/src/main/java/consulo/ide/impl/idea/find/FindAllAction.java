@@ -7,7 +7,7 @@ import consulo.codeEditor.Editor;
 import consulo.application.dumb.DumbAware;
 import consulo.find.FindManager;
 import consulo.find.FindModel;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.util.lang.StringUtil;
 import consulo.project.ui.wm.ToolWindowId;

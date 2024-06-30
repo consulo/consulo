@@ -33,7 +33,7 @@ import consulo.ide.impl.plugins.PluginActionListener;
 import consulo.externalService.impl.internal.update.UpdateSettingsImpl;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.Alerts;
 import consulo.ui.UIAccess;

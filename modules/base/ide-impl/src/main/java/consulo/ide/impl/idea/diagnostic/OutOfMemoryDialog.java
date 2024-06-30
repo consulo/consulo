@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.diagnostic.VMOptions.MemoryKind;
 import consulo.ide.impl.idea.util.MemoryDumpHelper;
 import consulo.platform.Platform;
 import consulo.platform.base.localize.DiagnosticLocalize;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.DialogWrapper;

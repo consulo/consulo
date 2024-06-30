@@ -97,7 +97,7 @@ public class EditorAppearanceConfigurable extends SimpleConfigurableByProperties
     propertyBuilder.add(showWhitespaces, editorSettings::isWhitespacesShown, editorSettings::setWhitespacesShown);
     root.add(showWhitespaces);
 
-    CheckBox showVerticalIndents = CheckBox.create(IdeLocalize.labelAppearanceShowVerticalIndentGuides());
+    CheckBox showVerticalIndents = CheckBox.create(ApplicationLocalize.labelAppearanceShowVerticalIndentGuides());
     propertyBuilder.add(showVerticalIndents, editorSettings::isIndentGuidesShown, editorSettings::setIndentGuidesShown);
     root.add(showVerticalIndents);
 

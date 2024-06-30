@@ -19,7 +19,7 @@ import consulo.application.ApplicationPropertiesComponent;
 import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.Alerts;
 import consulo.ui.ComboBox;

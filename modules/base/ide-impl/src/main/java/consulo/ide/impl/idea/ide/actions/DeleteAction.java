@@ -21,7 +21,7 @@ import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.TitledHandler;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.logging.Logger;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.action.ActionPlaces;

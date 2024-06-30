@@ -8,7 +8,7 @@ import consulo.ide.impl.idea.ui.mac.TouchbarDataKeys;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.platform.base.localize.CommonLocalize;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.update.UiNotifyConnector;

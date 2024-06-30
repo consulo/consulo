@@ -10,7 +10,7 @@ import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.actions.GotoFileItemProvider;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.util.lang.StringUtil;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ide.impl.idea.ui.IdeUICustomization;

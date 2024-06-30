@@ -1,7 +1,7 @@
 package consulo.ide.impl.idea.ide.projectView.impl;
 
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ui.view.ProjectView;
 import consulo.ui.ex.action.AnActionEvent;

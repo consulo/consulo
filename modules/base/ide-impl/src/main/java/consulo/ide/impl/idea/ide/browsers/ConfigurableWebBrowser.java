@@ -2,7 +2,7 @@ package consulo.ide.impl.idea.ide.browsers;
 
 import consulo.application.AllIcons;
 import consulo.ide.impl.idea.util.PathUtil;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.ui.image.Image;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;

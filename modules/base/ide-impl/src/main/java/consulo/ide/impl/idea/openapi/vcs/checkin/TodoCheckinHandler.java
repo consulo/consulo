@@ -26,7 +26,7 @@ import consulo.application.util.DateFormatUtil;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.ide.todo.*;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
