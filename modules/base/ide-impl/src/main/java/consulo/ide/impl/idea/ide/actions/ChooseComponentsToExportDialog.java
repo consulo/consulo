@@ -22,7 +22,7 @@ import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.logging.Logger;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.ElementsChooser;

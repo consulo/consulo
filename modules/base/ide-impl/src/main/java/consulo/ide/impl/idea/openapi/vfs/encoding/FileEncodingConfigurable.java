@@ -13,7 +13,7 @@ import consulo.document.FileDocumentManager;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.util.ui.tree.PerFileConfigurableBase;
 import consulo.language.LangBundle;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;

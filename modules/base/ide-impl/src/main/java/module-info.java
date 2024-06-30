@@ -934,6 +934,10 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.wm.impl.status;
   exports consulo.ide.impl.wm.impl.welcomeScreen;
 
+  exports consulo.ide.impl.internal.localize to
+    consulo.desktop.ide.impl,
+    consulo.desktop.awt.ide.impl;
+
   exports consulo.ide.impl.project.ui.impl to consulo.desktop.awt.ide.impl;
   exports consulo.ide.impl.configurable to consulo.sand.language.plugin, consulo.desktop.awt.ide.impl;
   exports consulo.ide.impl.desktop.awt.editor to consulo.desktop.awt.ide.impl;

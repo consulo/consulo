@@ -51,7 +51,7 @@ import consulo.language.impl.internal.psi.AstLoadingFilter;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
 import consulo.logging.Logger;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;

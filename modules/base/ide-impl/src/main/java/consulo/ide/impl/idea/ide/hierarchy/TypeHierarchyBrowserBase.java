@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.ide.hierarchy;
 import consulo.language.editor.hierarchy.TypeHierarchyProvider;
 import consulo.localHistory.LocalHistory;
 import consulo.localHistory.LocalHistoryAction;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.ui.ex.DeleteProvider;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.util.DeleteHandler;

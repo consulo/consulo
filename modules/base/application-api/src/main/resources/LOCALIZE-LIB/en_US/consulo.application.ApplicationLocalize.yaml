@@ -1370,3 +1370,17 @@ nothing.here:
   text: Nothing Here
 checkbox.show.softwraps.only.for.caret.line.action.text:
   text: "Soft Wraps: Show for current line only"
+label.appearance.show.vertical.indent.guides:
+  text: Show vertical indent guides
+error.plugins.should.not.have.cyclic.dependencies:
+  text: |-
+    Plugins should not have cyclic dependencies:
+    {0}
+error.plugin.was.not.installed:
+  text: 'Plugin {0} was not installed: {1}'
+error.required.plugin.not.installed:
+  text: 'Plugin "{0}" was not loaded: required plugin "{1}" not installed.'
+error.required.plugin.disabled:
+  text: 'Plugin "{0}" was not loaded: required plugin "{1}" is disabled.'
+message.duplicate.plugin.id:
+  text: 'Duplicate plugin id:'

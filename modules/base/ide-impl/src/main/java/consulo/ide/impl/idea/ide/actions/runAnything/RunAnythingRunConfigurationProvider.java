@@ -5,7 +5,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.execution.actions.ChooseRunConfigurationPopup;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;

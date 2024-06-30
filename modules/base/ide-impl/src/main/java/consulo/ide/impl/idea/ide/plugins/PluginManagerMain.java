@@ -33,7 +33,7 @@ import consulo.localize.LocalizeKey;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.platform.base.localize.RepositoryTagLocalize;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationDisplayType;

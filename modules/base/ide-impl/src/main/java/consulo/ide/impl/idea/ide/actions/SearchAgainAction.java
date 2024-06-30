@@ -16,20 +16,20 @@
 
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.find.FindManager;
-import consulo.ide.impl.idea.find.FindUtil;
-import consulo.platform.base.localize.IdeLocalize;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.undoRedo.CommandProcessor;
+import consulo.application.dumb.DumbAware;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.TextEditor;
+import consulo.find.FindManager;
+import consulo.ide.impl.idea.find.FindUtil;
 import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
-import consulo.project.Project;
-import consulo.application.dumb.DumbAware;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.psi.PsiDocumentManager;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.undoRedo.CommandProcessor;
 
 public class SearchAgainAction extends AnAction implements DumbAware {
   public SearchAgainAction() {
@@ -44,7 +44,7 @@ public class SearchAgainAction extends AnAction implements DumbAware {
     if (editor == null || project == null) return;
     CommandProcessor commandProcessor = CommandProcessor.getInstance();
     commandProcessor.executeCommand(
-        project, () -> {
+      project, () -> {
           PsiDocumentManager.getInstance(project).commitAllDocuments();
           IdeDocumentHistory.getInstance(project).includeCurrentCommandAsNavigation();
           if (FindManager.getInstance(project).findNextUsageInEditor(editor)) {

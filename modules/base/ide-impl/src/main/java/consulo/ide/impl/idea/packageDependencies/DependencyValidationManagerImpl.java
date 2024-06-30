@@ -29,7 +29,7 @@ import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.language.editor.scope.NamedScopeManager;
 import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;

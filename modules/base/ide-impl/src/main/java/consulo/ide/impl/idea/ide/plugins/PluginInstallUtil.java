@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.ide.startup.StartupActionScriptManager;
 import consulo.ide.impl.idea.util.containers.ArrayListSet;
 import consulo.ide.impl.plugins.InstalledPluginsState;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.ui.ex.awt.Messages;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;

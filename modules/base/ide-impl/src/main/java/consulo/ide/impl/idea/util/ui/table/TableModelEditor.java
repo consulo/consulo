@@ -35,7 +35,7 @@ import consulo.ui.ex.awt.table.ListTableModel;
 import consulo.util.xml.serializer.SkipDefaultValuesSerializationFilters;
 import consulo.util.xml.serializer.XmlSerializer;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import org.jdom.Element;
 
 import jakarta.annotation.Nonnull;

@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesViewTreeBuilder;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.project.Project;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 
 /**
  * @author Konstantin Bulenkov

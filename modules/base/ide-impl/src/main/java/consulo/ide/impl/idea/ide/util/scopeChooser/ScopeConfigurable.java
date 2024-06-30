@@ -23,7 +23,7 @@ import consulo.content.scope.PackageSet;
 import consulo.ide.impl.idea.openapi.ui.NamedConfigurable;
 import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.language.editor.scope.NamedScopeManager;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.util.lang.Comparing;
 

@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.ide.ui.search.BooleanOptionDescription;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.application.localize.ApplicationLocalize;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -78,7 +78,7 @@ public class EditorOptionsTopHitProvider extends OptionsTopHitProvider {
     editorApp(IdeLocalize.labelOptionAppearance(IdeLocalize.labelAppearanceShowLeadingWhitespaces()), "IS_LEADING_WHITESPACES_SHOWN"),
     editorApp(IdeLocalize.labelOptionAppearance(IdeLocalize.labelAppearanceShowInnerWhitespaces()), "IS_INNER_WHITESPACES_SHOWN"),
     editorApp(IdeLocalize.labelOptionAppearance(IdeLocalize.labelAppearanceShowTrailingWhitespaces()), "IS_TRAILING_WHITESPACES_SHOWN"),
-    editorApp(IdeLocalize.labelOptionAppearance(IdeLocalize.labelAppearanceShowVerticalIndentGuides()), "IS_INDENT_GUIDES_SHOWN"),
+    editorApp(IdeLocalize.labelOptionAppearance(ApplicationLocalize.labelAppearanceShowVerticalIndentGuides()), "IS_INDENT_GUIDES_SHOWN"),
     option(
       IdeLocalize.labelOptionAppearance(ApplicationLocalize.checkboxShowCodeFoldingOutline()),
       "IS_FOLDING_OUTLINE_SHOWN",

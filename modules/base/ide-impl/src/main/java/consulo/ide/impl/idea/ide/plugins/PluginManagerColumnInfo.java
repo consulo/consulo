@@ -20,7 +20,7 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.ide.impl.plugins.InstalledPluginsState;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.ui.ex.awt.ColumnInfo;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;

@@ -19,8 +19,7 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.application.dumb.DumbAware;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.FileEditorWindow;
-import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
@@ -35,7 +34,7 @@ public class CloseEditorAction extends AnAction implements DumbAware {
   public void actionPerformed(AnActionEvent e) {
     final Project project = e.getData(Project.KEY);
 
-    FileEditorManagerEx editorManager = getEditorManager(project);
+    FileEditorManager editorManager = getEditorManager(project);
     FileEditorWindow window = e.getData(FileEditorWindow.DATA_KEY);
     VirtualFile file = null;
     if (window == null) {
@@ -52,8 +51,8 @@ public class CloseEditorAction extends AnAction implements DumbAware {
     }
   }
 
-  private static FileEditorManagerEx getEditorManager(Project project) {
-    return (FileEditorManagerEx)FileEditorManager.getInstance(project);
+  private static FileEditorManager getEditorManager(Project project) {
+    return FileEditorManager.getInstance(project);
   }
 
   @Override

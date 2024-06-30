@@ -19,7 +19,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.util.UrlConnectionUtil;
 import consulo.logging.Logger;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;

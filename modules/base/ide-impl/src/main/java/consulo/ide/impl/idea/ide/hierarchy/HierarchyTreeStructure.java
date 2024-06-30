@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.ide.hierarchy;
 
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.project.Project;

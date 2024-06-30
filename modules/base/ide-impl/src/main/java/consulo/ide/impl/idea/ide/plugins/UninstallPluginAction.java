@@ -24,7 +24,7 @@ import consulo.container.plugin.PluginIds;
 import consulo.ide.impl.plugins.InstalledPluginsState;
 import consulo.ide.impl.plugins.PluginActionListener;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

@@ -10,7 +10,7 @@ import consulo.ide.impl.idea.util.ui.LocalPathCellEditor;
 import consulo.ide.impl.idea.util.ui.table.TableModelEditor;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.ui.CheckBox;
 import consulo.ui.ComboBox;
 import consulo.ui.annotation.RequiredUIAccess;

@@ -42,7 +42,7 @@ import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.navigation.Navigatable;
 import consulo.platform.Platform;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ui.view.commander.AbstractListBuilder;
 import consulo.project.ui.view.commander.TopLevelNode;

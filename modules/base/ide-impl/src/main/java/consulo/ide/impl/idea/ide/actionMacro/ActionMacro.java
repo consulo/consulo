@@ -21,7 +21,7 @@ import consulo.codeEditor.action.TypedAction;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.openapi.ui.playback.commands.KeyCodeTypeCommand;
 import consulo.ide.impl.idea.openapi.ui.playback.commands.TypeCommand;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

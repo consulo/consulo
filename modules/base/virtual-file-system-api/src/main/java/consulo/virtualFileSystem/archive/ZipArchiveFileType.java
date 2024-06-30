@@ -16,9 +16,8 @@
 package consulo.virtualFileSystem.archive;
 
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.localize.IdeLocalize;
 import consulo.virtualFileSystem.VirtualFileManager;
-
+import consulo.virtualFileSystem.fileType.localize.FileTypeLocalize;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -42,7 +41,7 @@ public final class ZipArchiveFileType extends ArchiveFileType {
   @Nonnull
   @Override
   public LocalizeValue getDescription() {
-    return IdeLocalize.filetypeDescriptionZipFiles();
+    return FileTypeLocalize.filetypeDescriptionZipFiles();
   }
 
   @Nonnull

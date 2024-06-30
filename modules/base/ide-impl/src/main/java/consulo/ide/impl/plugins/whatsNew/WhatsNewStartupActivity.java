@@ -20,7 +20,7 @@ import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.fileEditor.FileEditorManager;
 import consulo.ide.impl.updateSettings.impl.UpdateHistory;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;

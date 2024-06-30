@@ -14,7 +14,7 @@ import consulo.execution.executor.ExecutorRegistry;
 import consulo.execution.runner.ProgramRunner;
 import consulo.ide.impl.idea.execution.actions.ChooseRunConfigurationPopup;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.ex.SimpleTextAttributes;
