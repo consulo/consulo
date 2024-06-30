@@ -30,11 +30,11 @@ import consulo.ide.impl.idea.ide.bookmarks.*;
 import consulo.ide.impl.idea.ui.popup.util.DetailViewImpl;
 import consulo.ide.impl.idea.ui.popup.util.ItemWrapper;
 import consulo.ide.impl.idea.ui.popup.util.MasterDetailPopupBuilder;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;
@@ -44,6 +44,7 @@ import consulo.ui.ex.awt.speedSearch.FilteringListModel;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.virtualFileSystem.VirtualFile;
 
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.KeyEvent;
@@ -58,23 +59,25 @@ public class BookmarksAction extends AnAction implements DumbAware, MasterDetail
   private JBPopup myPopup;
 
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Project project = dataContext.getData(Project.KEY);
     e.getPresentation().setEnabled(project != null);
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Project project = dataContext.getData(Project.KEY);
     if (project == null) return;
 
     if (myPopup != null && myPopup.isVisible()) return;
 
-    final DefaultListModel model = buildModel(project);
+    final DefaultListModel<BookmarkItem> model = buildModel(project);
 
-    final JBList list = new JBList(model);
+    final JBList<BookmarkItem> list = new JBList<>(model);
     list.getEmptyText().setText("No Bookmarks");
 
     EditBookmarkDescriptionAction editDescriptionAction = new EditBookmarkDescriptionAction(project, list);
@@ -89,16 +92,12 @@ public class BookmarksAction extends AnAction implements DumbAware, MasterDetail
       .setList(list)
       .setDetailView(new DetailViewImpl(project))
       .setCloseOnEnter(false)
-      .setDoneRunnable(new Runnable() {
-        @Override
-        public void run() {
-          myPopup.cancel();
-        }
-      })
+      .setDoneRunnable(() -> myPopup.cancel())
       .setDelegate(this).createMasterDetailPopup();
     new AnAction() {
       @Override
-      public void actionPerformed(AnActionEvent e) {
+      @RequiredUIAccess
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         Object selectedValue = list.getSelectedValue();
         if (selectedValue instanceof BookmarkItem) {
           itemChosen((BookmarkItem)selectedValue, project, myPopup, true);
@@ -122,12 +121,7 @@ public class BookmarksAction extends AnAction implements DumbAware, MasterDetail
     final Bookmark bookmark = BookmarkManager.getInstance(project).findBookmarkForMnemonic(mnemonic);
     if (bookmark != null) {
       popup.cancel();
-      ProjectIdeFocusManager.getInstance(project).doWhenFocusSettlesDown(new Runnable() {
-        @Override
-        public void run() {
-          bookmark.navigate(true);
-        }
-      });
+      ProjectIdeFocusManager.getInstance(project).doWhenFocusSettlesDown(() -> bookmark.navigate(true));
     }
   }
 
@@ -164,8 +158,8 @@ public class BookmarksAction extends AnAction implements DumbAware, MasterDetail
 
   }
 
-  private static DefaultListModel buildModel(Project project) {
-    final DefaultListModel model = new DefaultListModel();
+  private static DefaultListModel<BookmarkItem> buildModel(Project project) {
+    final DefaultListModel<BookmarkItem> model = new DefaultListModel<>();
 
     for (Bookmark bookmark : BookmarkManager.getInstance(project).getValidBookmarks()) {
       model.addElement(new BookmarkItem(bookmark));
@@ -216,7 +210,7 @@ public class BookmarksAction extends AnAction implements DumbAware, MasterDetail
       }
 
       if (myFile == null) {
-        myFile = myDataContext.getData(PlatformDataKeys.VIRTUAL_FILE);
+        myFile = myDataContext.getData(VirtualFile.KEY);
         myLine = -1;
 
         if (myBookmarkAtPlace == null && myFile != null) {

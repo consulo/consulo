@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.todo;
 
+import consulo.application.HelpManager;
 import consulo.application.ui.util.TodoPanelSettings;
 import consulo.find.FindModel;
 import consulo.ide.impl.idea.find.impl.FindInProjectUtil;
@@ -11,15 +12,16 @@ import consulo.ide.impl.idea.ide.todo.nodes.TodoFileNode;
 import consulo.ide.impl.idea.ide.todo.nodes.TodoItemNode;
 import consulo.ide.impl.idea.ide.todo.nodes.TodoTreeHelper;
 import consulo.ide.IdeBundle;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
+import consulo.localize.LocalizeValue;
+import consulo.navigation.Navigatable;
+import consulo.platform.base.localize.IdeLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.OccurenceNavigator;
 import consulo.ui.ex.TreeExpander;
 import consulo.ui.ex.awt.*;
 import consulo.language.psi.PsiNavigationSupport;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.tree.NodeDescriptor;
-import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
@@ -55,8 +57,6 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.TreeModelEvent;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
@@ -131,13 +131,20 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
   public static class GroupByActionGroup extends DefaultActionGroup {
     {
       getTemplatePresentation().setIcon(AllIcons.Actions.GroupByModuleGroup);
-      getTemplatePresentation().setText(IdeBundle.message("group.group.by"));
+      getTemplatePresentation().setTextValue(IdeLocalize.groupGroupBy());
       setPopup(true);
     }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-      JBPopupFactory.getInstance().createActionGroupPopup(null, this, e.getDataContext(), JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, true).showUnderneathOf(e.getInputEvent().getComponent());
+      JBPopupFactory.getInstance().createActionGroupPopup(
+        null,
+        this,
+        e.getDataContext(),
+        JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
+        true
+      ).showUnderneathOf(e.getInputEvent().getComponent());
     }
   }
 
@@ -157,11 +164,14 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
       for (Object o : children) {
         NodeDescriptor descriptor = TreeUtil.getUserObject(NodeDescriptor.class, o);
         if (descriptor != null && myBuilder.isAutoExpandNode(descriptor)) {
-          ApplicationManager.getApplication().invokeLater(() -> {
-            if (myTree.isVisible(parentPath) && myTree.isExpanded(parentPath)) {
-              myTree.expandPath(parentPath.pathByAddingChild(o));
-            }
-          }, myBuilder.myProject.getDisposed());
+          myBuilder.myProject.getApplication().invokeLater(
+            () -> {
+              if (myTree.isVisible(parentPath) && myTree.isExpanded(parentPath)) {
+                myTree.expandPath(parentPath.pathByAddingChild(o));
+              }
+            },
+            myBuilder.myProject.getDisposed()
+          );
         }
       }
     }
@@ -210,16 +220,15 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
 
     setContent(createCenterComponent());
 
-    myTree.getSelectionModel().addTreeSelectionListener(new TreeSelectionListener() {
-      @Override
-      public void valueChanged(final TreeSelectionEvent e) {
-        ApplicationManager.getApplication().invokeLater(() -> {
-          if (myUsagePreviewPanel.isVisible()) {
-            updatePreviewPanel();
-          }
-        }, IdeaModalityState.nonModal(), myProject.getDisposed());
-      }
-    });
+    myTree.getSelectionModel().addTreeSelectionListener(e -> myProject.getApplication().invokeLater(
+      () -> {
+        if (myUsagePreviewPanel.isVisible()) {
+          updatePreviewPanel();
+        }
+      },
+      IdeaModalityState.nonModal(),
+      myProject.getDisposed()
+    ));
 
     myAutoScrollToSourceHandler = new MyAutoScrollToSourceHandler();
     myAutoScrollToSourceHandler.install(myTree);
@@ -377,7 +386,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
 
   @Override
   public Object getData(@Nonnull Key dataId) {
-    if (CommonDataKeys.NAVIGATABLE == dataId) {
+    if (Navigatable.KEY == dataId) {
       TreePath path = myTree.getSelectionPath();
       if (path == null) {
         return null;
@@ -393,20 +402,24 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
       }
       TodoItemNode pointer = myTodoTreeBuilder.getFirstPointerForElement(element);
       if (pointer != null) {
-        return PsiNavigationSupport.getInstance().createNavigatable(myProject, pointer.getValue().getTodoItem().getFile().getVirtualFile(), pointer.getValue().getRangeMarker().getStartOffset());
+        return PsiNavigationSupport.getInstance().createNavigatable(
+          myProject,
+          pointer.getValue().getTodoItem().getFile().getVirtualFile(),
+          pointer.getValue().getRangeMarker().getStartOffset()
+        );
       }
       else {
         return null;
       }
     }
-    else if (CommonDataKeys.VIRTUAL_FILE == dataId) {
+    else if (VirtualFile.KEY == dataId) {
       final PsiFile file = getSelectedFile();
       return file != null ? file.getVirtualFile() : null;
     }
-    else if (CommonDataKeys.PSI_ELEMENT == dataId) {
+    else if (PsiElement.KEY == dataId) {
       return getSelectedElement();
     }
-    else if (CommonDataKeys.VIRTUAL_FILE_ARRAY == dataId) {
+    else if (VirtualFile.KEY_OF_ARRAY == dataId) {
       PsiFile file = getSelectedFile();
       if (file != null) {
         return new VirtualFile[]{file.getVirtualFile()};
@@ -415,7 +428,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
         return VirtualFile.EMPTY_ARRAY;
       }
     }
-    else if (PlatformDataKeys.HELP_ID == dataId) {
+    else if (HelpManager.HELP_ID == dataId) {
       //noinspection HardCodedStringLiteral
       return "find.todoList";
     }
@@ -474,7 +487,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
           myTodoTreeBuilder.rebuildCache(files);
           updateTree();
         };
-        ApplicationManager.getApplication().invokeLater(runnable);
+        myProject.getApplication().invokeLater(runnable);
       });
     }, 300);
   }
@@ -577,13 +590,13 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
     @Nonnull
     @Override
     public String getNextOccurenceActionName() {
-      return IdeBundle.message("action.next.todo");
+      return IdeLocalize.actionNextTodo().get();
     }
 
     @Nonnull
     @Override
     public String getPreviousOccurenceActionName() {
-      return IdeBundle.message("action.previous.todo");
+      return IdeLocalize.actionPreviousTodo().get();
     }
 
     @Nullable
@@ -591,8 +604,14 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
       if (pointer == null) return null;
       myTodoTreeBuilder.select(pointer);
       return new OccurenceInfo(
-              PsiNavigationSupport.getInstance().createNavigatable(myProject, pointer.getValue().getTodoItem().getFile().getVirtualFile(), pointer.getValue().getRangeMarker().getStartOffset()), -1,
-              -1);
+        PsiNavigationSupport.getInstance().createNavigatable(
+          myProject,
+          pointer.getValue().getTodoItem().getFile().getVirtualFile(),
+          pointer.getValue().getRangeMarker().getStartOffset()
+        ),
+        -1,
+        -1
+      );
     }
 
     @Nullable
@@ -607,14 +626,9 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
         return null;
       }
       Object element = ((NodeDescriptor)userObject).getElement();
-      TodoItemNode pointer;
-      if (element instanceof TodoItemNode) {
-        pointer = myTodoTreeBuilder.getNextPointer((TodoItemNode)element);
-      }
-      else {
-        pointer = myTodoTreeBuilder.getFirstPointerForElement(element);
-      }
-      return pointer;
+      return element instanceof TodoItemNode todoItemNode
+        ? myTodoTreeBuilder.getNextPointer(todoItemNode)
+        : myTodoTreeBuilder.getFirstPointerForElement(element);
     }
 
     @Nullable
@@ -673,7 +687,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
 
   public static final class MyShowModulesAction extends ToggleAction {
     public MyShowModulesAction() {
-      super(IdeBundle.message("action.group.by.modules"), null, AllIcons.Actions.GroupByModule);
+      super(IdeLocalize.actionGroupByModules(), LocalizeValue.empty(), AllIcons.Actions.GroupByModule);
     }
 
     @Override
@@ -701,7 +715,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
 
   public static final class MyFlattenPackagesAction extends ToggleAction {
     public MyFlattenPackagesAction() {
-      super(IdeBundle.message("action.flatten.view"), null, AllIcons.ObjectBrowser.FlattenPackages);
+      super(IdeLocalize.actionFlattenView(), LocalizeValue.empty(), AllIcons.ObjectBrowser.FlattenPackages);
     }
 
     @Override

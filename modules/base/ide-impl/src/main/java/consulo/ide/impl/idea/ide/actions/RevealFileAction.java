@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.language.editor.CommonDataKeys;
 import consulo.platform.Platform;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -33,7 +32,7 @@ public class RevealFileAction extends DumbAwareAction {
   @RequiredUIAccess
   @Override
   public void update(AnActionEvent e) {
-    VirtualFile file = ShowFilePathAction.findLocalFile(e.getData(CommonDataKeys.VIRTUAL_FILE));
+    VirtualFile file = ShowFilePathAction.findLocalFile(e.getData(VirtualFile.KEY));
     Presentation presentation = e.getPresentation();
     presentation.setText(getActionName(e.getPlace()));
     presentation.setEnabled(file != null);
@@ -42,7 +41,7 @@ public class RevealFileAction extends DumbAwareAction {
   @RequiredUIAccess
   @Override
   public void actionPerformed(AnActionEvent e) {
-    VirtualFile file = ShowFilePathAction.findLocalFile(e.getData(CommonDataKeys.VIRTUAL_FILE));
+    VirtualFile file = ShowFilePathAction.findLocalFile(e.getData(VirtualFile.KEY));
     if (file != null) {
       ShowFilePathAction.openFile(new File(file.getPresentableUrl()));
     }

@@ -16,16 +16,13 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.language.content.ProjectRootsUtil;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.LangDataKeys;
 import consulo.module.Module;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.annotation.RequiredUIAccess;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -50,17 +47,14 @@ public class OpenModuleSettingsAction extends EditSourceAction {
   }
 
   protected static boolean isModuleInProjectViewPopup(@Nonnull AnActionEvent e) {
-    if (ActionPlaces.PROJECT_VIEW_POPUP.equals(e.getPlace())) {
-      return isModuleInContext(e);
-    }
-    return false;
+    return ActionPlaces.PROJECT_VIEW_POPUP.equals(e.getPlace()) && isModuleInContext(e);
   }
 
   public static boolean isModuleInContext(@Nonnull AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
-    final Module module = e.getData(LangDataKeys.MODULE);
+    final Project project = e.getData(Project.KEY);
+    final Module module = e.getData(Module.KEY);
     if (project != null && module != null) {
-      final VirtualFile moduleFolder = e.getData(CommonDataKeys.VIRTUAL_FILE);
+      final VirtualFile moduleFolder = e.getData(VirtualFile.KEY);
       if (moduleFolder == null) {
         return false;
       }

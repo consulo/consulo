@@ -16,7 +16,6 @@
 
 package consulo.ide.impl.idea.ide.impl.dataRules;
 
-import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataProvider;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.dataContext.GetDataRule;
@@ -40,7 +39,7 @@ public class FileTextRule implements GetDataRule<String> {
 
   @Override
   public String getData(@Nonnull DataProvider dataProvider) {
-    final VirtualFile virtualFile = dataProvider.getDataUnchecked(PlatformDataKeys.VIRTUAL_FILE);
+    final VirtualFile virtualFile = dataProvider.getDataUnchecked(VirtualFile.KEY);
     if (virtualFile == null) {
       return null;
     }
@@ -50,7 +49,7 @@ public class FileTextRule implements GetDataRule<String> {
       return null;
     }
 
-    final Project project = dataProvider.getDataUnchecked(CommonDataKeys.PROJECT);
+    final Project project = dataProvider.getDataUnchecked(Project.KEY);
     if (project == null) {
       return null;
     }

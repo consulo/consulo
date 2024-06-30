@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
-import consulo.language.editor.PlatformDataKeys;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
@@ -28,6 +28,8 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 
 public class CloseActiveTabAction extends AnAction implements DumbAware {
+  @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
     ContentManager contentManager = ContentManagerUtil.getContentManagerFromContext(e.getDataContext(), true);
     boolean processed = false;
@@ -41,13 +43,15 @@ public class CloseActiveTabAction extends AnAction implements DumbAware {
 
     if (!processed && contentManager != null) {
       final DataContext context = DataManager.getInstance().getDataContext(contentManager.getComponent());
-      final ToolWindow tw = context.getData(PlatformDataKeys.TOOL_WINDOW);
+      final ToolWindow tw = context.getData(ToolWindow.KEY);
       if (tw != null) {
         tw.hide(null);
       }
     }
   }
 
+  @Override
+  @RequiredUIAccess
   public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     ContentManager contentManager = ContentManagerUtil.getContentManagerFromContext(event.getDataContext(), true);
@@ -55,7 +59,7 @@ public class CloseActiveTabAction extends AnAction implements DumbAware {
 
     if (!presentation.isEnabled() && contentManager != null) {
       final DataContext context = DataManager.getInstance().getDataContext(contentManager.getComponent());
-      presentation.setEnabled(context.getData(PlatformDataKeys.TOOL_WINDOW) != null);
+      presentation.setEnabled(context.getData(ToolWindow.KEY) != null);
     }
   }
 }

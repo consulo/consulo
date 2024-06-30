@@ -7,6 +7,7 @@ import com.google.common.primitives.Ints;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
+import consulo.application.HelpManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
@@ -278,7 +279,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
         return myTextField.getText();
       }
 
-      if (PlatformDataKeys.HELP_ID == dataId) {
+      if (HelpManager.HELP_ID == dataId) {
         return myModel.getHelpId();
       }
 

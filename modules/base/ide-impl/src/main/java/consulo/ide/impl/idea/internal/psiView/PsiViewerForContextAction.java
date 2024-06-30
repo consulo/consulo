@@ -3,13 +3,12 @@ package consulo.ide.impl.idea.internal.psiView;
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.application.dumb.DumbAware;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.LangDataKeys;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import jakarta.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -19,22 +18,23 @@ import consulo.ui.ex.action.AnActionEvent;
  */
 public class PsiViewerForContextAction extends AnAction implements DumbAware {
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-
-    Editor editor = e.getDataContext().getData(PlatformDataKeys.EDITOR);
-    PsiFile currentFile = e.getDataContext().getData(LangDataKeys.PSI_FILE);
+    Editor editor = e.getDataContext().getData(Editor.KEY);
+    PsiFile currentFile = e.getDataContext().getData(PsiFile.KEY);
     new PsiViewerDialog(currentFile.getProject(), false, currentFile, editor).show();
   }
 
   @Override
-  public void update(AnActionEvent e) {
+  @RequiredUIAccess
+  public void update(@Nonnull AnActionEvent e) {
     if (!Application.get().isInternal()) {
       e.getPresentation().setVisible(false);
       e.getPresentation().setEnabled(false);
       return;
     }
-    final Project project = e.getDataContext().getData(CommonDataKeys.PROJECT);
-    PsiFile currentFile = e.getDataContext().getData(LangDataKeys.PSI_FILE);
+    final Project project = e.getDataContext().getData(Project.KEY);
+    PsiFile currentFile = e.getDataContext().getData(PsiFile.KEY);
     e.getPresentation().setEnabled(project != null && currentFile != null);
   }
 }

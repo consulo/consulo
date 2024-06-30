@@ -15,32 +15,35 @@
 */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.ui.ex.CutProvider;
-import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
+import consulo.dataContext.DataContext;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.CutProvider;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 
 public class CutAction extends AnAction implements DumbAware {
+  @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    CutProvider provider = e.getData(PlatformDataKeys.CUT_PROVIDER);
+    CutProvider provider = e.getData(CutProvider.KEY);
     if (provider == null) {
       return;
     }
     provider.performCut(dataContext);
   }
 
+  @Override
+  @RequiredUIAccess
   public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
-    CutProvider provider = event.getData(PlatformDataKeys.CUT_PROVIDER);
-    Project project = event.getData(CommonDataKeys.PROJECT);
+    CutProvider provider = event.getData(CutProvider.KEY);
+    Project project = event.getData(Project.KEY);
     presentation.setEnabled(project != null && project.isOpen() && provider != null && provider.isCutEnabled(dataContext));
     if (event.getPlace().equals(ActionPlaces.EDITOR_POPUP) && provider != null) {
       presentation.setVisible(provider.isCutVisible(dataContext));

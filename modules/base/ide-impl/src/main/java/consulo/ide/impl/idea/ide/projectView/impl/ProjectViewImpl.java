@@ -20,6 +20,7 @@ import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
+import consulo.application.HelpManager;
 import consulo.application.dumb.DumbAware;
 import consulo.application.ui.UISettings;
 import consulo.application.util.registry.Registry;
@@ -84,7 +85,10 @@ import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.ToolWindowManagerListener;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.CopyProvider;
+import consulo.ui.ex.CutProvider;
 import consulo.ui.ex.DeleteProvider;
+import consulo.ui.ex.PasteProvider;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.internal.GuiUtils;
@@ -1093,19 +1097,19 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
       if (LangDataKeys.TARGET_PSI_ELEMENT == dataId) {
         return null;
       }
-      if (PlatformDataKeys.CUT_PROVIDER == dataId) {
+      if (CutProvider.KEY == dataId) {
         return myCopyPasteDelegator.getCutProvider();
       }
-      if (PlatformDataKeys.COPY_PROVIDER == dataId) {
+      if (CopyProvider.KEY == dataId) {
         return myCopyPasteDelegator.getCopyProvider();
       }
-      if (PlatformDataKeys.PASTE_PROVIDER == dataId) {
+      if (PasteProvider.KEY == dataId) {
         return myCopyPasteDelegator.getPasteProvider();
       }
       if (IdeView.KEY == dataId) {
         return myIdeView;
       }
-      if (PlatformDataKeys.DELETE_ELEMENT_PROVIDER == dataId) {
+      if (DeleteProvider.KEY == dataId) {
         final Module[] modules = getSelectedModules();
         if (modules != null) {
           return myDeleteModuleProvider;
@@ -1126,7 +1130,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
         }
         return myDeletePSIElementProvider;
       }
-      if (PlatformDataKeys.HELP_ID == dataId) {
+      if (HelpManager.HELP_ID == dataId) {
         return HelpID.PROJECT_VIEWS;
       }
       if (ProjectViewImpl.DATA_KEY == dataId) {
@@ -1138,14 +1142,14 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
       }
       if (LangDataKeys.MODULE_CONTEXT == dataId) {
         Object selected = getSelectedNodeElement();
-        if (selected instanceof Module) {
-          return !((Module)selected).isDisposed() ? selected : null;
+        if (selected instanceof Module module) {
+          return !module.isDisposed() ? selected : null;
         }
-        else if (selected instanceof PsiDirectory) {
-          return moduleBySingleContentRoot(((PsiDirectory)selected).getVirtualFile());
+        else if (selected instanceof PsiDirectory directory) {
+          return moduleBySingleContentRoot(directory.getVirtualFile());
         }
-        else if (selected instanceof VirtualFile) {
-          return moduleBySingleContentRoot((VirtualFile)selected);
+        else if (selected instanceof VirtualFile virtualFile) {
+          return moduleBySingleContentRoot(virtualFile);
         }
         else {
           return null;

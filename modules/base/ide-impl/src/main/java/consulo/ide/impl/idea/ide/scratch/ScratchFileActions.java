@@ -1,7 +1,9 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.scratch;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
+import consulo.application.util.NotNullLazyValue;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
@@ -9,19 +11,23 @@ import consulo.dataContext.DataContext;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.IdeView;
 import consulo.ide.impl.idea.ide.actions.NewActionGroup;
-import consulo.application.util.NotNullLazyValue;
 import consulo.language.Language;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
-import consulo.language.scratch.RootType;
-import consulo.language.scratch.ScratchFileService;
 import consulo.language.file.LanguageFileType;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.plain.PlainTextLanguage;
 import consulo.language.psi.*;
+import consulo.language.scratch.RootType;
+import consulo.language.scratch.ScratchFileService;
 import consulo.language.util.LanguageUtil;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
-import consulo.ui.ex.action.*;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.collection.ArrayUtil;
@@ -33,14 +39,15 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.PerFileMappings;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import static consulo.util.lang.function.Conditions.not;
 import static consulo.util.lang.function.Conditions.notNull;
@@ -64,17 +71,23 @@ public class ScratchFileActions {
     @NonNls
     private static final String ACTION_ID = "NewScratchFile";
 
-    private final NotNullLazyValue<String> myActionText = NotNullLazyValue.createValue(() -> NewActionGroup.isActionInNewPopupMenu(this) ? ActionsBundle.actionText(ACTION_ID) : ActionsBundle.message("action.NewScratchFile.text.with.new"));
+    private final NotNullLazyValue<LocalizeValue> myActionText =
+      NotNullLazyValue.createValue(
+        () -> NewActionGroup.isActionInNewPopupMenu(this)
+          ? ActionLocalize.actionNewscratchfileText()
+          : ActionLocalize.actionNewscratchfileTextWithNew()
+      );
 
     public NewFileAction() {
       getTemplatePresentation().setIcon(ICON);
     }
 
     @Override
+    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
-      getTemplatePresentation().setText(myActionText.getValue());
+      getTemplatePresentation().setTextValue(myActionText.getValue());
 
-      Project project = e.getData(CommonDataKeys.PROJECT);
+      Project project = e.getData(Project.KEY);
       String place = e.getPlace();
       boolean enabled = project != null && (e.isFromActionToolbar() || ActionPlaces.isMainMenuOrActionSearch(place) || ActionPlaces.isPopupPlace(place) && e.getData(IdeView.KEY) != null);
 
@@ -83,8 +96,9 @@ public class ScratchFileActions {
     }
 
     @Override
+    @RequiredReadAction
     public void actionPerformed(@Nonnull AnActionEvent e) {
-      Project project = e.getData(CommonDataKeys.PROJECT);
+      Project project = e.getData(Project.KEY);
       if (project == null) return;
 
       ScratchFileCreationHelper.Context context = createContext(e, project);
@@ -97,12 +111,13 @@ public class ScratchFileActions {
         consumer.accept(context.language);
       }
       else {
-        LRUPopupBuilder.forFileLanguages(project, ActionsBundle.message("action.NewScratchFile.text.with.new"), null, consumer).showCenteredInCurrentWindow(project);
+        LRUPopupBuilder.forFileLanguages(project, ActionLocalize.actionNewscratchfileTextWithNew().get(), null, consumer)
+          .showCenteredInCurrentWindow(project);
       }
     }
 
     private void updatePresentationTextAndIcon(@Nonnull AnActionEvent e, @Nonnull Presentation presentation) {
-      presentation.setText(myActionText.getValue());
+      presentation.setTextValue(myActionText.getValue());
       presentation.setIcon(ICON);
       if (ActionPlaces.MAIN_MENU.equals(e.getPlace()) && !NewActionGroup.isActionInNewPopupMenu(this)) {
         presentation.setIcon(null);
@@ -113,14 +128,16 @@ public class ScratchFileActions {
   public static class NewBufferAction extends DumbAwareAction {
 
     @Override
+    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
-      boolean enabled = e.getData(CommonDataKeys.PROJECT) != null && Registry.intValue("ide.scratch.buffers") > 0;
+      boolean enabled = e.getData(Project.KEY) != null && Registry.intValue("ide.scratch.buffers") > 0;
       e.getPresentation().setEnabledAndVisible(enabled);
     }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
-      Project project = e.getData(CommonDataKeys.PROJECT);
+      Project project = e.getData(Project.KEY);
       if (project == null) return;
       ScratchFileCreationHelper.Context context = createContext(e, project);
       context.filePrefix = "buffer";
@@ -133,8 +150,8 @@ public class ScratchFileActions {
 
   @Nonnull
   static ScratchFileCreationHelper.Context createContext(@Nonnull AnActionEvent e, @Nonnull Project project) {
-    PsiFile file = e.getData(CommonDataKeys.PSI_FILE);
-    Editor editor = e.getData(CommonDataKeys.EDITOR);
+    PsiFile file = e.getData(PsiFile.KEY);
+    Editor editor = e.getData(Editor.KEY);
     if (file == null && editor != null) {
       // see data provider in consulo.ide.impl.idea.diff.tools.holders.TextEditorHolder
       file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
@@ -153,6 +170,7 @@ public class ScratchFileActions {
     return context;
   }
 
+  @RequiredReadAction
   static PsiFile doCreateNewScratch(@Nonnull Project project, @Nonnull ScratchFileCreationHelper.Context context) {
     FeatureUsageTracker.getInstance().triggerFeatureUsed("scratch");
     Language language = Objects.requireNonNull(context.language);
@@ -162,12 +180,15 @@ public class ScratchFileActions {
     }
     ScratchFileCreationHelper.forLanguage(language).beforeCreate(project, context);
 
-    VirtualFile dir = context.ideView != null ? PsiUtilCore.getVirtualFile(ArrayUtil.getFirstElement(context.ideView.getDirectories())) : null;
+    VirtualFile dir = context.ideView != null
+      ? PsiUtilCore.getVirtualFile(ArrayUtil.getFirstElement(context.ideView.getDirectories())) : null;
     RootType rootType = dir == null ? null : ScratchFileService.findRootType(dir);
-    String relativePath = rootType != ScratchRootType.getInstance() ? "" : FileUtil.getRelativePath(ScratchFileService.getInstance().getRootPath(rootType), dir.getPath(), '/');
+    String relativePath = rootType != ScratchRootType.getInstance() ? ""
+      : FileUtil.getRelativePath(ScratchFileService.getInstance().getRootPath(rootType), dir.getPath(), '/');
 
     String fileName = (StringUtil.isEmpty(relativePath) ? "" : relativePath + "/") +
-                      PathUtil.makeFileName(ObjectUtil.notNull(context.filePrefix, "scratch") + (context.fileCounter != null ? context.fileCounter.get() : ""), context.fileExtension);
+      PathUtil.makeFileName(ObjectUtil.notNull(context.filePrefix, "scratch") +
+        (context.fileCounter != null ? context.fileCounter.get() : ""), context.fileExtension);
     VirtualFile file = ScratchRootType.getInstance().createScratchFile(project, fileName, language, context.text, context.createOption);
     if (file == null) return null;
 
@@ -179,7 +200,11 @@ public class ScratchFileActions {
     return psiFile;
   }
 
-  private static void checkLanguageAndTryToFixText(@Nonnull Project project, @Nonnull ScratchFileCreationHelper.Context context, @Nonnull DataContext dataContext) {
+  private static void checkLanguageAndTryToFixText(
+    @Nonnull Project project,
+    @Nonnull ScratchFileCreationHelper.Context context,
+    @Nonnull DataContext dataContext
+  ) {
     if (context.language == null) return;
     ScratchFileCreationHelper handler = ScratchFileCreationHelper.forLanguage(context.language);
     if (handler.prepareText(project, context, dataContext)) return;
@@ -200,6 +225,7 @@ public class ScratchFileActions {
   }
 
   @Nullable
+  @RequiredReadAction
   static Language getLanguageFromCaret(@Nonnull Project project, @Nullable Editor editor, @Nullable PsiFile psiFile) {
     if (editor == null || psiFile == null) return null;
     Caret caret = editor.getCaretModel().getPrimaryCaret();
@@ -212,9 +238,10 @@ public class ScratchFileActions {
 
   public static class LanguageAction extends DumbAwareAction {
     @Override
+    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
-      Project project = e.getData(CommonDataKeys.PROJECT);
-      JBIterable<VirtualFile> files = JBIterable.of(e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY));
+      Project project = e.getData(Project.KEY);
+      JBIterable<VirtualFile> files = JBIterable.of(e.getData(VirtualFile.KEY_OF_ARRAY));
       if (project == null || files.isEmpty()) {
         e.getPresentation().setEnabledAndVisible(false);
         return;
@@ -238,9 +265,8 @@ public class ScratchFileActions {
 
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
-      Project project = e.getData(CommonDataKeys.PROJECT);
-      JBIterable<VirtualFile> files = JBIterable.of(e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY)).
-              filter(fileFilter(project));
+      Project project = e.getData(Project.KEY);
+      JBIterable<VirtualFile> files = JBIterable.of(e.getData(VirtualFile.KEY_OF_ARRAY)).filter(fileFilter(project));
       if (project == null || files.isEmpty()) return;
       actionPerformedImpl(e, project, "Change " + getLanguageTerm(), files);
     }
@@ -251,8 +277,8 @@ public class ScratchFileActions {
     }
 
     @Nonnull
-    protected java.util.function.Function<VirtualFile, Language> fileLanguage(@Nonnull Project project) {
-      return new java.util.function.Function<>() {
+    protected Function<VirtualFile, Language> fileLanguage(@Nonnull Project project) {
+      return new Function<>() {
         final ScratchFileService fileService = ScratchFileService.getInstance();
 
         @Override
@@ -263,7 +289,12 @@ public class ScratchFileActions {
       };
     }
 
-    protected void actionPerformedImpl(@Nonnull AnActionEvent e, @Nonnull Project project, @Nonnull String title, @Nonnull JBIterable<? extends VirtualFile> files) {
+    protected void actionPerformedImpl(
+      @Nonnull AnActionEvent e,
+      @Nonnull Project project,
+      @Nonnull String title,
+      @Nonnull JBIterable<? extends VirtualFile> files
+    ) {
       ScratchFileService fileService = ScratchFileService.getInstance();
       PerFileMappings<Language> mapping = fileService.getScratchesMapping();
       LRUPopupBuilder.forFileLanguages(project, title, files, mapping).showInBestPositionFor(e.getDataContext());

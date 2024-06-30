@@ -18,9 +18,9 @@ package consulo.ide.impl.idea.ide;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.util.SystemInfo;
 import consulo.ide.ServiceManager;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.util.io.StreamUtil;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
@@ -49,7 +49,7 @@ public class MacOSApplicationProvider {
   private final ColorSpace genericRgbColorSpace;
 
   public MacOSApplicationProvider() {
-    genericRgbColorSpace = SystemInfo.isMac ? initializeNativeColorSpace() : null;
+    genericRgbColorSpace = Platform.current().os().isMac() ? initializeNativeColorSpace() : null;
   }
 
   private static ColorSpace initializeNativeColorSpace() {

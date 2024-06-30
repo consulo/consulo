@@ -16,9 +16,7 @@
 package consulo.ide.impl.idea.ide.impl.dataRules;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataProvider;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.dataContext.GetDataRule;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
@@ -34,14 +32,14 @@ public class ProjectFileDirectoryRule implements GetDataRule<VirtualFile> {
   @Nonnull
   @Override
   public Key<VirtualFile> getKey() {
-    return PlatformDataKeys.PROJECT_FILE_DIRECTORY;
+    return Project.PROJECT_FILE_DIRECTORY;
   }
 
   @Override
   public VirtualFile getData(@Nonnull DataProvider dataProvider) {
-    VirtualFile dir = dataProvider.getDataUnchecked(PlatformDataKeys.PROJECT_FILE_DIRECTORY);
+    VirtualFile dir = dataProvider.getDataUnchecked(Project.PROJECT_FILE_DIRECTORY);
     if (dir == null) {
-      final Project project = dataProvider.getDataUnchecked(CommonDataKeys.PROJECT);
+      final Project project = dataProvider.getDataUnchecked(Project.KEY);
       if (project != null) {
         dir = project.getBaseDir();
       }

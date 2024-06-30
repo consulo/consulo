@@ -16,18 +16,15 @@
 
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
-import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.LangDataKeys;
-import consulo.language.editor.PlatformDataKeys;
+import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -38,10 +35,11 @@ import consulo.project.Project;
 import consulo.project.ui.view.SelectInContext;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.UIExAWTDataKey;
+import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.util.function.Supplier;
@@ -74,6 +72,7 @@ public abstract class SelectInContextImpl implements SelectInContext {
   }
 
   @Nullable
+  @RequiredReadAction
   public static SelectInContext createContext(AnActionEvent event) {
     DataContext dataContext = event.getDataContext();
 
@@ -93,19 +92,19 @@ public abstract class SelectInContextImpl implements SelectInContext {
     }
 
     if (selectInContext == null) {
-      Navigatable descriptor = dataContext.getData(PlatformDataKeys.NAVIGATABLE);
-      if (descriptor instanceof OpenFileDescriptorImpl) {
-        final VirtualFile file = ((OpenFileDescriptorImpl)descriptor).getFile();
+      Navigatable descriptor = dataContext.getData(Navigatable.KEY);
+      if (descriptor instanceof OpenFileDescriptorImpl openFileDescriptor) {
+        final VirtualFile file = openFileDescriptor.getFile();
         if (file.isValid()) {
-          Project project = dataContext.getData(CommonDataKeys.PROJECT);
+          Project project = dataContext.getData(Project.KEY);
           selectInContext = OpenFileDescriptorContext.create(project, file);
         }
       }
     }
 
     if (selectInContext == null) {
-      VirtualFile virtualFile = dataContext.getData(PlatformDataKeys.VIRTUAL_FILE);
-      Project project = dataContext.getData(CommonDataKeys.PROJECT);
+      VirtualFile virtualFile = dataContext.getData(VirtualFile.KEY);
+      Project project = dataContext.getData(Project.KEY);
       if (virtualFile != null && project != null) {
         return new VirtualFileSelectInContext(project, virtualFile);
       }
@@ -115,12 +114,14 @@ public abstract class SelectInContextImpl implements SelectInContext {
   }
 
   @Nullable
+  @RequiredReadAction
   private static SelectInContext createEditorContext(DataContext dataContext) {
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
-    final FileEditor editor = dataContext.getData(PlatformDataKeys.FILE_EDITOR);
+    final Project project = dataContext.getData(Project.KEY);
+    final FileEditor editor = dataContext.getData(FileEditor.KEY);
     return createEditorContext(project, editor);
   }
 
+  @RequiredReadAction
   public static SelectInContext createEditorContext(Project project, FileEditor editor) {
     if (project == null || editor == null) {
       return null;
@@ -144,7 +145,7 @@ public abstract class SelectInContextImpl implements SelectInContext {
   @Nullable
   private static SelectInContext createPsiContext(AnActionEvent event) {
     final DataContext dataContext = event.getDataContext();
-    PsiElement psiElement = dataContext.getData(LangDataKeys.PSI_ELEMENT);
+    PsiElement psiElement = dataContext.getData(PsiElement.KEY);
     if (psiElement == null || !psiElement.isValid()) {
       return null;
     }
@@ -188,6 +189,7 @@ public abstract class SelectInContextImpl implements SelectInContext {
     }
 
     @Override
+    @RequiredReadAction
     public Object getSelectorInFile() {
       if (myPsiFile.getViewProvider() instanceof TemplateLanguageFileViewProvider) {
         return super.getSelectorInFile();

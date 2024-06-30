@@ -15,12 +15,12 @@
  */
 package consulo.ide.impl.idea.ide.impl.dataRules;
 
-import consulo.ui.ex.PasteProvider;
-import consulo.dataContext.DataProvider;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
+import consulo.dataContext.DataProvider;
 import consulo.dataContext.GetDataRule;
+import consulo.language.editor.PlatformDataKeys;
+import consulo.ui.ex.PasteProvider;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 
@@ -28,15 +28,12 @@ public class PasteProviderRule implements GetDataRule<PasteProvider> {
   @Nonnull
   @Override
   public Key<PasteProvider> getKey() {
-    return PlatformDataKeys.PASTE_PROVIDER;
+    return PasteProvider.KEY;
   }
 
   @Override
   public PasteProvider getData(@Nonnull DataProvider dataProvider) {
     final Editor editor = dataProvider.getDataUnchecked(PlatformDataKeys.EDITOR);
-    if (editor instanceof EditorEx) {
-      return ((EditorEx) editor).getPasteProvider();
-    }
-    return null;
+    return editor instanceof EditorEx editorEx ? editorEx.getPasteProvider() : null;
   }
 }

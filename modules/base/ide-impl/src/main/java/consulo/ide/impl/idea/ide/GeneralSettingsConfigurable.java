@@ -102,7 +102,9 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
 
       VerticalLayout syncLayout = VerticalLayout.create();
       syncLayout.add(myChkSyncOnFrameActivation = CheckBox.create(IdeLocalize.checkboxSynchronizeFilesOnFrameActivation()));
-      syncLayout.add(myChkSaveOnFrameDeactivation = CheckBox.create(IdeLocalize.checkboxSaveFilesOnFrameDeactivation()));
+      syncLayout.add(
+        myChkSaveOnFrameDeactivation = CheckBox.create(IdeLocalize.checkboxSaveFilesOnFrameDeactivation())
+      );
 
       HorizontalLayout syncWithIde = HorizontalLayout.create();
       syncLayout.add(syncWithIde);
@@ -177,7 +179,10 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
   private final Provider<FileOperateDialogSettings> myFileOperateDialogSettings;
 
   @Inject
-  public GeneralSettingsConfigurable(Provider<GeneralSettings> generalSettings, Provider<FileOperateDialogSettings> fileOperateDialogSettings) {
+  public GeneralSettingsConfigurable(
+    Provider<GeneralSettings> generalSettings,
+    Provider<FileOperateDialogSettings> fileOperateDialogSettings
+  ) {
     myGeneralSettings = generalSettings;
     myFileOperateDialogSettings = fileOperateDialogSettings;
   }

@@ -21,7 +21,6 @@ import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.ui.tabs.impl.TabLabel;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.LangDataKeys;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileSystemItem;
@@ -74,7 +73,7 @@ public class CopyPathProvider extends DumbAwareAction {
     }
 
     return SimpleDataContext.builder().setParent(dataContext)
-      .add(LangDataKeys.VIRTUAL_FILE, (VirtualFile)file)
+      .add(VirtualFile.KEY, (VirtualFile)file)
       .add(VirtualFile.KEY_OF_ARRAY, new VirtualFile[]{(VirtualFile)file})
       .build();
   }

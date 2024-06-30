@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.language.editor.PlatformDataKeys;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.PasteProvider;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
@@ -25,12 +25,13 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 
 public class PasteAction extends AnAction implements DumbAware {
-
+  @Override
+  @RequiredUIAccess
   public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
 
-    PasteProvider provider = event.getData(PlatformDataKeys.PASTE_PROVIDER);
+    PasteProvider provider = event.getData(PasteProvider.KEY);
     presentation.setEnabled(provider != null && provider.isPastePossible(dataContext));
     if (event.getPlace().equals(ActionPlaces.EDITOR_POPUP) && provider != null) {
       presentation.setVisible(presentation.isEnabled());
@@ -40,9 +41,11 @@ public class PasteAction extends AnAction implements DumbAware {
     }
   }
 
+  @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    PasteProvider provider = dataContext.getData(PlatformDataKeys.PASTE_PROVIDER);
+    PasteProvider provider = dataContext.getData(PasteProvider.KEY);
     if (provider != null && provider.isPasteEnabled(dataContext)) {
       provider.performPaste(dataContext);
     }

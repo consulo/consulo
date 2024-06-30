@@ -20,16 +20,14 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.compiler.CompilerPaths;
 import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.dataContext.DataContext;
-import consulo.ide.IdeBundle;
 import consulo.language.content.ProductionContentFolderTypeProvider;
 import consulo.language.content.TestContentFolderTypeProvider;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.pathMacro.Macro;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
@@ -45,18 +43,18 @@ public final class OutputPathMacro extends Macro {
 
   @Override
   public String getDescription() {
-    return IdeBundle.message("macro.output.path");
+    return IdeLocalize.macroOutputPath().get();
   }
 
   @Override
   @RequiredReadAction
   public String expand(DataContext dataContext) {
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Project project = dataContext.getData(Project.KEY);
     if (project == null) {
       return null;
     }
 
-    VirtualFile file = dataContext.getData(PlatformDataKeys.VIRTUAL_FILE);
+    VirtualFile file = dataContext.getData(VirtualFile.KEY);
     if (file != null) {
       ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
       Module module = projectFileIndex.getModuleForFile(file);

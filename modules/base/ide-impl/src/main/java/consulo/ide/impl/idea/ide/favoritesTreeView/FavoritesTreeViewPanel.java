@@ -16,7 +16,9 @@
 
 package consulo.ide.impl.idea.ide.favoritesTreeView;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
+import consulo.application.HelpManager;
 import consulo.bookmark.ui.view.BookmarkNodeProvider;
 import consulo.bookmark.ui.view.FavoritesListNode;
 import consulo.bookmark.ui.view.FavoritesListProvider;
@@ -32,12 +34,10 @@ import consulo.ide.impl.idea.ide.favoritesTreeView.actions.*;
 import consulo.ide.impl.idea.ide.ui.customization.CustomizationUtil;
 import consulo.ide.impl.idea.ide.util.DeleteHandler;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
-import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.util.collection.ArrayUtil;
 import consulo.ide.impl.idea.util.EditSourceOnEnterKeyHandler;
 import consulo.ide.util.DirectoryChooserUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.refactoring.ui.CopyPasteDelegator;
 import consulo.language.editor.util.EditorHelper;
 import consulo.language.psi.*;
@@ -59,9 +59,7 @@ import consulo.project.ui.wm.dock.DockContainer;
 import consulo.project.ui.wm.dock.DockManager;
 import consulo.project.ui.wm.dock.DockableContent;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.DeleteProvider;
-import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.*;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.dnd.DnDAwareTree;
@@ -396,28 +394,28 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
 
   @Override
   public Object getData(@Nonnull Key<?> dataId) {
-    if (CommonDataKeys.PROJECT == dataId) {
+    if (Project.KEY == dataId) {
       return myProject;
     }
-    if (CommonDataKeys.NAVIGATABLE == dataId) {
+    if (Navigatable.KEY == dataId) {
       final FavoritesTreeNodeDescriptor[] selectedNodeDescriptors = FavoritesTreeUtil.getSelectedNodeDescriptors(myTree);
       return selectedNodeDescriptors.length == 1 ? selectedNodeDescriptors[0].getElement() : null;
     }
-    if (CommonDataKeys.NAVIGATABLE_ARRAY == dataId) {
+    if (Navigatable.KEY_OF_ARRAY == dataId) {
       final List<Navigatable> selectedElements = getSelectedElements(Navigatable.class);
       return selectedElements.isEmpty() ? null : selectedElements.toArray(new Navigatable[selectedElements.size()]);
     }
 
-    if (PlatformDataKeys.CUT_PROVIDER == dataId) {
+    if (CutProvider.KEY == dataId) {
       return myCopyPasteDelegator.getCutProvider();
     }
-    if (PlatformDataKeys.COPY_PROVIDER == dataId) {
+    if (CopyProvider.KEY == dataId) {
       return myCopyPasteDelegator.getCopyProvider();
     }
-    if (PlatformDataKeys.PASTE_PROVIDER == dataId) {
+    if (PasteProvider.KEY == dataId) {
       return myCopyPasteDelegator.getPasteProvider();
     }
-    if (PlatformDataKeys.HELP_ID == dataId) {
+    if (HelpManager.HELP_ID == dataId) {
       return "reference.toolWindows.favorites";
     }
     if (LangDataKeys.NO_NEW_ACTION == dataId) {
@@ -457,7 +455,7 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
       return getSelectedModules();
     }
 
-    if (PlatformDataKeys.DELETE_ELEMENT_PROVIDER == dataId) {
+    if (DeleteProvider.KEY == dataId) {
       final Object[] elements = getSelectedNodeElements();
       return elements != null && elements.length >= 1 && elements[0] instanceof Module ? myDeleteModuleProvider : myDeletePSIElementProvider;
     }
@@ -540,6 +538,7 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
     for (Object element : elements) {
       if (element == null) continue;
       if (klass.isAssignableFrom(element.getClass())) {
+        //noinspection unchecked
         result.add((T)element);
       }
     }
@@ -564,14 +563,15 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
     return result.isEmpty() ? null : result.toArray(new Module[result.size()]);
   }
 
+  @RequiredReadAction
   private Object[] getSelectedNodeElements() {
     final FavoritesTreeNodeDescriptor[] selectedNodeDescriptors = FavoritesTreeUtil.getSelectedNodeDescriptors(myTree);
     ArrayList<Object> result = new ArrayList<>();
     for (FavoritesTreeNodeDescriptor selectedNodeDescriptor : selectedNodeDescriptors) {
       if (selectedNodeDescriptor != null) {
         Object value = selectedNodeDescriptor.getElement().getValue();
-        if (value instanceof SmartPsiElementPointer) {
-          value = ((SmartPsiElementPointer)value).getElement();
+        if (value instanceof SmartPsiElementPointer elementPointer) {
+          value = elementPointer.getElement();
         }
         result.add(value);
       }
@@ -635,8 +635,8 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
     if (elements != null && elements.length > 0) {
       final ArrayList<AbstractTreeNode> nodes = new ArrayList<>();
       for (PsiElement element : elements) {
-        if (element instanceof SmartPsiElementPointer) {
-          element = ((SmartPsiElementPointer)element).getElement();
+        if (element instanceof SmartPsiElementPointer elementPointer) {
+          element = elementPointer.getElement();
         }
         final Collection<AbstractTreeNode> tmp = AddToFavoritesAction.createNodes(myProject, null, element, true, FavoritesManagerImpl.getInstance(myProject).getViewSettings());
         nodes.addAll(tmp);
@@ -671,6 +671,7 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
       }
     }
 
+    @RequiredReadAction
     private PsiElement[] getElementsToDelete() {
       ArrayList<PsiElement> result = new ArrayList<>();
       Object[] elements = getSelectedNodeElements();
@@ -682,7 +683,8 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
             final VirtualFile virtualFile = ((PsiDirectory)element).getVirtualFile();
             final String path = virtualFile.getPath();
             if (path.endsWith(URLUtil.ARCHIVE_SEPARATOR)) { // if is jar-file root
-              final VirtualFile vFile = LocalFileSystem.getInstance().findFileByPath(path.substring(0, path.length() - URLUtil.ARCHIVE_SEPARATOR.length()));
+              final VirtualFile vFile = LocalFileSystem.getInstance()
+                .findFileByPath(path.substring(0, path.length() - URLUtil.ARCHIVE_SEPARATOR.length()));
               if (vFile != null) {
                 final PsiFile psiFile = PsiManager.getInstance(myProject).findFile(vFile);
                 if (psiFile != null) {
@@ -724,6 +726,7 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
     }
 
     @Nullable
+    @RequiredReadAction
     private PsiDirectory[] getSelectedDirectories() {
       if (myBuilder == null) return null;
       final Object[] selectedNodeElements = getSelectedNodeElements();
@@ -733,7 +736,7 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
         if (psiElement instanceof PsiDirectory) {
           return new PsiDirectory[]{(PsiDirectory)psiElement};
         }
-        else if (psiElement instanceof PsiDirectoryContainer) {
+        else if (psiElement instanceof PsiDirectoryContainer directoryContainer) {
           final String moduleName = nodeProvider.getElementModuleName(selectedNodeElements[0]);
           GlobalSearchScope searchScope = GlobalSearchScope.projectScope(myProject);
           if (moduleName != null) {
@@ -742,7 +745,7 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
               searchScope = GlobalSearchScope.moduleScope(module);
             }
           }
-          return ((PsiDirectoryContainer)psiElement).getDirectories(searchScope);
+          return directoryContainer.getDirectories(searchScope);
         }
         else if (psiElement != null) {
           PsiFile file = psiElement.getContainingFile();
@@ -796,10 +799,12 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
   }
 
   @Override
+  @RequiredReadAction
   public void add(@Nonnull DockableContent content, RelativePoint dropTarget) {
-    if (content.getKey() instanceof VirtualFile) {
-      VirtualFile vFile = (VirtualFile)content.getKey();
-      final PsiFileSystemItem psiFile = vFile.isDirectory() ? PsiManager.getInstance(myProject).findDirectory(vFile) : PsiManager.getInstance(myProject).findFile(vFile);
+    if (content.getKey() instanceof VirtualFile vFile) {
+      final PsiFileSystemItem psiFile = vFile.isDirectory()
+        ? PsiManager.getInstance(myProject).findDirectory(vFile)
+        : PsiManager.getInstance(myProject).findFile(vFile);
       Point p = dropTarget.getScreenPoint();
       SwingUtilities.convertPointFromScreen(p, myTree);
       FavoritesListNode node = findFavoritesListNode(p);
