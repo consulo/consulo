@@ -20,7 +20,7 @@ import consulo.container.ExitCodes;
 import consulo.ide.impl.idea.diagnostic.VMOptions.MemoryKind;
 import consulo.ide.impl.idea.util.MemoryDumpHelper;
 import consulo.platform.Platform;
-import consulo.platform.base.localize.DiagnosticLocalize;
+import consulo.ide.impl.internal.localize.DiagnosticLocalize;
 import consulo.ide.localize.IdeLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;

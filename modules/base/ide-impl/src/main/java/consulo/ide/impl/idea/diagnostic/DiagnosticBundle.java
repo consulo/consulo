@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.diagnostic;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.component.util.localize.AbstractBundle;
-import consulo.platform.base.localize.DiagnosticLocalize;
+import consulo.ide.impl.internal.localize.DiagnosticLocalize;
 import org.jetbrains.annotations.PropertyKey;
 
 /**

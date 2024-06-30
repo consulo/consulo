@@ -26,7 +26,6 @@ import consulo.configurable.StandardConfigurableIds;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.application.localize.ApplicationLocalize;
-import consulo.platform.base.localize.IdeLocalize;
 import consulo.ui.Button;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;

@@ -40,7 +40,7 @@ import consulo.ide.impl.idea.openapi.updateSettings.impl.CheckForUpdateAction;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.ActionLocalize;
-import consulo.platform.base.localize.DiagnosticLocalize;
+import consulo.ide.impl.internal.localize.DiagnosticLocalize;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationAction;

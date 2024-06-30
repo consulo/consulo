@@ -2,7 +2,7 @@ package consulo.ide.impl.idea.diagnostic.errordialog;
 
 import consulo.application.Application;
 import consulo.platform.Platform;
-import consulo.platform.base.localize.DiagnosticLocalize;
+import consulo.ide.impl.internal.localize.DiagnosticLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import jakarta.annotation.Nonnull;

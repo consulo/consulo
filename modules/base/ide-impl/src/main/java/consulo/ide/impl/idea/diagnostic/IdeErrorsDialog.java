@@ -50,7 +50,7 @@ import consulo.logging.Logger;
 import consulo.logging.attachment.Attachment;
 import consulo.platform.Platform;
 import consulo.platform.base.localize.CommonLocalize;
-import consulo.platform.base.localize.DiagnosticLocalize;
+import consulo.ide.impl.internal.localize.DiagnosticLocalize;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.wm.IdeFrame;

@@ -23,7 +23,7 @@ import consulo.ide.impl.externalService.AuthorizationFailedException;
 import consulo.ide.impl.externalService.NoContentException;
 import consulo.ide.impl.externalService.NotFoundException;
 import consulo.ide.impl.externalService.NotModifiedException;
-import consulo.platform.base.localize.DiagnosticLocalize;
+import consulo.ide.impl.internal.localize.DiagnosticLocalize;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.ThreeState;
 import jakarta.annotation.Nullable;
