@@ -18,7 +18,6 @@ package consulo.ide.action;
 
 import consulo.dataContext.DataContext;
 import consulo.ide.IdeView;
-import consulo.language.editor.CommonDataKeys;
 import consulo.localize.LocalizeValue;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -78,7 +77,7 @@ public abstract class CreateInDirectoryActionBase extends AnAction {
   }
 
   protected boolean isAvailable(final DataContext dataContext) {
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Project project = dataContext.getData(Project.KEY);
     if (project == null) {
       return false;
     }
@@ -88,10 +87,6 @@ public abstract class CreateInDirectoryActionBase extends AnAction {
     }
 
     final IdeView view = dataContext.getData(IdeView.KEY);
-    if (view == null || view.getDirectories().length == 0) {
-      return false;
-    }
-
-    return true;
+    return view != null && view.getDirectories().length != 0;
   }
 }

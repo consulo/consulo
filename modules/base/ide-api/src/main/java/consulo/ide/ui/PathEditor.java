@@ -16,18 +16,19 @@
 package consulo.ide.ui;
 
 import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.dataContext.DataManager;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDialog;
 import consulo.fileChooser.IdeaFileChooser;
-import consulo.language.editor.CommonDataKeys;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.JBList;
+import consulo.ui.ex.awt.ScrollPaneFactory;
+import consulo.ui.ex.awt.ToolbarDecorator;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.ListUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
@@ -120,34 +121,25 @@ public class PathEditor {
       myComponent = ScrollPaneFactory.createScrollPane(myList, true);
     }
     else {
-      ToolbarDecorator toolbarDecorator = ToolbarDecorator.createDecorator(myList).disableUpDownActions().setAddAction(new AnActionButtonRunnable() {
-        @Override
-        public void run(AnActionButton button) {
+      ToolbarDecorator toolbarDecorator = ToolbarDecorator.createDecorator(myList)
+        .disableUpDownActions()
+        .setAddAction(button-> {
           final VirtualFile[] added = doAdd();
           if (added.length > 0) {
             setModified(true);
           }
           requestDefaultFocus();
           setSelectedRoots(added);
-        }
-      }).setRemoveAction(new AnActionButtonRunnable() {
-        @Override
-        public void run(AnActionButton button) {
+        })
+        .setRemoveAction(button-> {
           int[] idxs = myList.getSelectedIndices();
           doRemoveItems(idxs, myList);
-        }
-      }).setAddActionUpdater(new AnActionButtonUpdater() {
-        @Override
-        public boolean isEnabled(AnActionEvent e) {
-          return myEnabled;
-        }
-      }).setRemoveActionUpdater(new AnActionButtonUpdater() {
-        @Override
-        public boolean isEnabled(AnActionEvent e) {
+        })
+        .setAddActionUpdater(e-> myEnabled)
+        .setRemoveActionUpdater(e-> {
           Object[] values = getSelectedRoots();
           return values.length > 0 && myEnabled;
-        }
-      });
+        });
 
       addToolbarButtons(toolbarDecorator);
 
@@ -184,7 +176,7 @@ public class PathEditor {
 
   private VirtualFile[] doAdd() {
     VirtualFile baseDir = myAddBaseDir;
-    Project project = DataManager.getInstance().getDataContext(myComponent).getData(CommonDataKeys.PROJECT);
+    Project project = DataManager.getInstance().getDataContext(myComponent).getData(Project.KEY);
     if (baseDir == null && project != null) {
       baseDir = project.getBaseDir();
     }
@@ -214,17 +206,13 @@ public class PathEditor {
   }
 
   protected boolean isUrlInserted() {
-    if (getRowCount() > 0) {
-      return ((VirtualFile)getListModel().lastElement()).getFileSystem() instanceof HttpFileSystem;
-    }
-    return false;
+    return getRowCount() > 0 && ((VirtualFile)getListModel().lastElement()).getFileSystem() instanceof HttpFileSystem;
   }
 
   protected void requestDefaultFocus() {
     if (myList != null) {
-      IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> {
-        IdeFocusManager.getGlobalInstance().requestFocus(myList, true);
-      });
+      IdeFocusManager.getGlobalInstance()
+        .doWhenFocusSettlesDown(() -> IdeFocusManager.getGlobalInstance().requestFocus(myList, true));
     }
   }
 
@@ -242,7 +230,7 @@ public class PathEditor {
   }
 
   public void removePaths(VirtualFile... paths) {
-    final Set<VirtualFile> pathsSet = new java.util.HashSet<>(Arrays.asList(paths));
+    final Set<VirtualFile> pathsSet = new HashSet<>(Arrays.asList(paths));
     int size = getRowCount();
     final IntList indicesToRemove = IntLists.newArrayList(paths.length);
     for (int idx = 0; idx < size; idx++) {
@@ -300,12 +288,9 @@ public class PathEditor {
   private void keepSelectionState() {
     final Object[] selectedItems = getSelectedRoots();
 
-    SwingUtilities.invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        if (selectedItems != null) {
-          setSelectedRoots(selectedItems);
-        }
+    SwingUtilities.invokeLater(() -> {
+      if (selectedItems != null) {
+        setSelectedRoots(selectedItems);
       }
     });
   }
@@ -330,21 +315,18 @@ public class PathEditor {
 
   @Nullable
   private static FileType findFileType(final VirtualFile file) {
-    return ApplicationManager.getApplication().runReadAction(new Supplier<FileType>() {
-      @Override
-      public FileType get() {
-        VirtualFile tempFile = file;
-        if ((file.getFileSystem() instanceof ArchiveFileSystem) && file.getParent() == null) {
-          //[myakovlev] It was bug - directories with *.jar extensions was saved as files of JarFileSystem.
-          //    so we can not just return true, we should filter such directories.
-          String path = file.getPath().substring(0, file.getPath().length() - ArchiveFileSystem.ARCHIVE_SEPARATOR.length());
-          tempFile = LocalFileSystem.getInstance().findFileByPath(path);
-        }
-        if (tempFile != null && !tempFile.isDirectory()) {
-          return tempFile.getFileType();
-        }
-        return null;
+    return Application.get().runReadAction((Supplier<FileType>)() -> {
+      VirtualFile tempFile = file;
+      if ((file.getFileSystem() instanceof ArchiveFileSystem) && file.getParent() == null) {
+        //[myakovlev] It was bug - directories with *.jar extensions was saved as files of JarFileSystem.
+        //    so we can not just return true, we should filter such directories.
+        String path = file.getPath().substring(0, file.getPath().length() - ArchiveFileSystem.ARCHIVE_SEPARATOR.length());
+        tempFile = LocalFileSystem.getInstance().findFileByPath(path);
       }
+      if (tempFile != null && !tempFile.isDirectory()) {
+        return tempFile.getFileType();
+      }
+      return null;
     });
   }
 
@@ -375,20 +357,14 @@ public class PathEditor {
   }
 
   private static boolean isHttpRoot(VirtualFile virtualFileOrProjectRoot) {
-    if (virtualFileOrProjectRoot != null) {
-      return (virtualFileOrProjectRoot.getFileSystem() instanceof HttpFileSystem);
-    }
-    return false;
+    return virtualFileOrProjectRoot != null && (virtualFileOrProjectRoot.getFileSystem() instanceof HttpFileSystem);
   }
 
   private final class MyCellRenderer extends DefaultListCellRenderer {
     private String getPresentableString(final Object value) {
-      return ApplicationManager.getApplication().runReadAction(new Supplier<String>() {
-        @Override
-        public String get() {
-          //noinspection HardCodedStringLiteral
-          return (value instanceof VirtualFile) ? ((VirtualFile)value).getPresentableUrl() : "UNKNOWN OBJECT";
-        }
+      return Application.get().runReadAction((Supplier<String>)() -> {
+        //noinspection HardCodedStringLiteral
+        return (value instanceof VirtualFile virtualFile) ? virtualFile.getPresentableUrl() : "UNKNOWN OBJECT";
       });
     }
 

@@ -15,7 +15,7 @@
  */
 package consulo.versionControlSystem.impl.internal.change;
 
-import consulo.application.util.SystemInfo;
+import consulo.platform.Platform;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.FilePath;
@@ -30,7 +30,8 @@ import java.util.Comparator;
 public class HierarchicalFilePathComparator implements Comparator<FilePath> {
 
   public static final HierarchicalFilePathComparator IGNORE_CASE = new HierarchicalFilePathComparator(true);
-  public static final HierarchicalFilePathComparator SYSTEM_CASE_SENSITIVE = new HierarchicalFilePathComparator(SystemInfo.isFileSystemCaseSensitive);
+  public static final HierarchicalFilePathComparator SYSTEM_CASE_SENSITIVE =
+    new HierarchicalFilePathComparator(Platform.current().fs().isCaseSensitive());
 
   private final boolean myIgnoreCase;
 

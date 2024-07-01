@@ -15,11 +15,12 @@
  */
 package consulo.compiler.impl.internal.artifact;
 
-import consulo.application.util.SystemInfo;
 import consulo.compiler.CompileContext;
 import consulo.compiler.CompilerBundle;
 import consulo.compiler.CompilerMessageCategory;
+import consulo.compiler.localize.CompilerLocalize;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.util.io.FilePermissionCopier;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.ExceptionUtil;
@@ -85,7 +86,7 @@ public class DeploymentUtilImpl {
       if (LOG.isDebugEnabled()) {
         LOG.debug("Copy file '" + fromFile + "' to '" + toFile + "'");
       }
-      if (toFile.exists() && !SystemInfo.isFileSystemCaseSensitive) {
+      if (toFile.exists() && !Platform.current().fs().isCaseSensitive()) {
         File canonicalFile = toFile.getCanonicalFile();
         if (!canonicalFile.getAbsolutePath().equals(toFile.getAbsolutePath())) {
           FileUtil.delete(toFile);
@@ -116,7 +117,9 @@ public class DeploymentUtilImpl {
   }
 
   private static String createCopyErrorMessage(final File fromFile, final File toFile) {
-    return CompilerBundle.message("message.text.error.copying.file.to.file", FileUtil.toSystemDependentName(fromFile.getPath()),
-                                  FileUtil.toSystemDependentName(toFile.getPath()));
+    return CompilerLocalize.messageTextErrorCopyingFileToFile(
+      FileUtil.toSystemDependentName(fromFile.getPath()),
+      FileUtil.toSystemDependentName(toFile.getPath())
+    ).get();
   }
 }

@@ -15,7 +15,6 @@
  */
 package consulo.language.editor.impl.internal.daemon;
 
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.internal.LanguageEditorInternalHelper;
 import consulo.language.editor.localize.DaemonLocalize;
 import consulo.project.Project;
@@ -35,7 +34,7 @@ public class ConfigureInspectionsAction extends DumbAwareAction {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) {
       return;
     }
@@ -45,6 +44,6 @@ public class ConfigureInspectionsAction extends DumbAwareAction {
   @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setEnabled(e.getData(CommonDataKeys.PROJECT) != null);
+    e.getPresentation().setEnabled(e.getData(Project.KEY) != null);
   }
 }

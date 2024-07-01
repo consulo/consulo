@@ -15,7 +15,6 @@
  */
 package consulo.desktop.swt.wm.impl;
 
-import consulo.language.editor.CommonDataKeys;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import consulo.project.Project;
 import consulo.ui.MenuBar;
@@ -40,7 +39,7 @@ public class DesktopSwtRootView {
     myRootPanel.setSizeFull();
     myPresentationFactory = new MenuItemPresentationFactory();
 
-    myRootPanel.getComponent().putUserData(CommonDataKeys.PROJECT, myProject);
+    myRootPanel.getComponent().putUserData(Project.KEY, myProject);
 
     //myMenuBar = MenuBar.create();
     //myRootPanel.setMenuBar(myMenuBar);

@@ -19,18 +19,20 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.application.CommonBundle;
-import consulo.application.util.SystemInfo;
-import consulo.compiler.CompilerBundle;
+import consulo.compiler.localize.CompilerLocalize;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.logging.Logger;
 import consulo.module.content.ProjectRootManager;
+import consulo.platform.Platform;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.InputValidator;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
@@ -81,7 +83,7 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
     @Nullable
     final Pattern srcRoot;
 
-    private CompiledPattern(Pattern fileName, Pattern dir, Pattern srcRoot) {
+    private CompiledPattern(@Nonnull Pattern fileName, @Nullable Pattern dir, @Nullable Pattern srcRoot) {
       this.fileName = fileName;
       this.dir = dir;
       this.srcRoot = srcRoot;
@@ -174,6 +176,7 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
     }
   }
 
+  @RequiredUIAccess
   public void convertPatterns() {
     if (!needPatternConversion()) {
       return;
@@ -188,47 +191,62 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
       }
       if (!ok) {
         final String initialPatternString = patternsToString(getRegexpPatterns());
-        final String message = CompilerBundle
-                .message("message.resource.patterns.format.changed", Application.get().getName().get(), initialPatternString, CommonBundle.getOkButtonText(), CommonBundle.getCancelButtonText());
-        final String wildcardPatterns =
-                Messages.showInputDialog(myProject, message, CompilerBundle.message("pattern.conversion.dialog.title"), Messages.getWarningIcon(), initialPatternString, new InputValidator() {
-                  public boolean checkInput(String inputString) {
-                    return true;
-                  }
+        final String message = CompilerLocalize.messageResourcePatternsFormatChanged(
+          Application.get().getName(),
+          initialPatternString,
+          CommonLocalize.buttonOk(),
+          CommonLocalize.buttonCancel()
+        ).get();
+        final String wildcardPatterns = Messages.showInputDialog(
+          myProject,
+          message,
+          CompilerLocalize.patternConversionDialogTitle().get(),
+          UIUtil.getWarningIcon(),
+          initialPatternString,
+          new InputValidator() {
+            @Override
+            @RequiredUIAccess
+            public boolean checkInput(String inputString) {
+              return true;
+            }
 
-                  public boolean canClose(String inputString) {
-                    final StringTokenizer tokenizer = new StringTokenizer(inputString, ";", false);
-                    StringBuilder malformedPatterns = new StringBuilder();
+            @Override
+            @RequiredUIAccess
+            public boolean canClose(String inputString) {
+              final StringTokenizer tokenizer = new StringTokenizer(inputString, ";", false);
+              StringBuilder malformedPatterns = new StringBuilder();
 
-                    while (tokenizer.hasMoreTokens()) {
-                      String pattern = tokenizer.nextToken();
-                      try {
-                        addWildcardResourcePattern(pattern);
-                      }
-                      catch (PatternSyntaxException e) {
-                        malformedPatterns.append("\n\n");
-                        malformedPatterns.append(pattern);
-                        malformedPatterns.append(": ");
-                        malformedPatterns.append(e.getMessage());
-                      }
-                    }
+              while (tokenizer.hasMoreTokens()) {
+                String pattern = tokenizer.nextToken();
+                try {
+                  addWildcardResourcePattern(pattern);
+                }
+                catch (PatternSyntaxException e) {
+                  malformedPatterns.append("\n\n");
+                  malformedPatterns.append(pattern);
+                  malformedPatterns.append(": ");
+                  malformedPatterns.append(e.getMessage());
+                }
+              }
 
-                    if (malformedPatterns.length() > 0) {
-                      Messages.showErrorDialog(CompilerBundle.message("error.bad.resource.patterns", malformedPatterns.toString()), CompilerBundle.message("bad.resource.patterns.dialog.title"));
-                      removeWildcardPatterns();
-                      return false;
-                    }
-                    return true;
-                  }
-                });
-
+              if (malformedPatterns.length() > 0) {
+                Messages.showErrorDialog(
+                  CompilerLocalize.errorBadResourcePatterns(malformedPatterns.toString()).get(),
+                  CompilerLocalize.badResourcePatternsDialogTitle().get()
+                );
+                removeWildcardPatterns();
+                return false;
+              }
+              return true;
+            }
+          }
+        );
       }
     }
     finally {
       myWildcardPatternsInitialized = true;
     }
   }
-
 
   private void removeWildcardPatterns() {
     myWildcardPatterns.clear();
@@ -296,7 +314,7 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
   }
 
   private static Pattern compilePattern(String s) throws PatternSyntaxException {
-    return SystemInfo.isFileSystemCaseSensitive ? Pattern.compile(s) : Pattern.compile(s, Pattern.CASE_INSENSITIVE);
+    return Platform.current().fs().isCaseSensitive() ? Pattern.compile(s) : Pattern.compile(s, Pattern.CASE_INSENSITIVE);
   }
 
   public static boolean isPatternNegated(String wildcardPattern) {

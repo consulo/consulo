@@ -27,7 +27,7 @@ import consulo.fileChooser.PathChooserDialog;
 import consulo.ide.impl.idea.openapi.fileChooser.impl.FileChooserUtil;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -98,7 +98,8 @@ public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialo
   }
 
   @Override
-  public void choose(@Nullable VirtualFile toSelect, @Nonnull java.util.function.Consumer<List<VirtualFile>> callback) {
+  @RequiredUIAccess
+  public void choose(@Nullable VirtualFile toSelect, @Nonnull Consumer<List<VirtualFile>> callback) {
     if (toSelect != null && toSelect.getParent() != null) {
 
       String directoryName;
@@ -114,7 +115,6 @@ public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialo
       myFileDialog.setFile(fileName);
     }
 
-
     myFileDialog.setFilenameFilter((dir, name) -> {
       File file = new File(dir, name);
       return myFileChooserDescriptor.isFileSelectable(fileToVirtualFile(file));
@@ -124,7 +124,6 @@ public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialo
 
     final CommandProcessorEx commandProcessor = ApplicationManager.getApplication() != null ? (CommandProcessorEx)CommandProcessor.getInstance() : null;
     final boolean appStarted = commandProcessor != null;
-
 
     if (appStarted) {
       commandProcessor.enterModal();
@@ -140,9 +139,8 @@ public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialo
         commandProcessor.leaveModal();
         LaterInvocator.leaveModal(myFileDialog);
         if (parent != null) {
-          IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> {
-            IdeFocusManager.getGlobalInstance().requestFocus(parent, true);
-          });
+          IdeFocusManager globalInstance = IdeFocusManager.getGlobalInstance();
+          globalInstance.doWhenFocusSettlesDown(() -> globalInstance.requestFocus(parent, true));
         }
       }
     }

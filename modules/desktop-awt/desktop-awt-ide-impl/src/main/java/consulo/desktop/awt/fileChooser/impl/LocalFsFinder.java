@@ -20,7 +20,7 @@ import consulo.virtualFileSystem.VirtualFilePresentation;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.ide.impl.idea.openapi.fileChooser.FileSystemTree;
 import consulo.application.util.function.Computable;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
@@ -93,19 +93,13 @@ public class LocalFsFinder implements FileLookup.Finder, FileLookup {
     }
     public FileChooserFilter(final FileChooserDescriptor descriptor, final FileSystemTree tree) {
       myDescriptor = descriptor;
-      myShowHidden = new Computable<Boolean>() {
-        @Override
-        public Boolean compute() {
-          return tree.areHiddensShown();
-        }
-      };
+      myShowHidden = tree::areHiddensShown;
     }
 
     @Override
     public boolean isAccepted(final LookupFile file) {
       VirtualFile vFile = ((VfsFile)file).getFile();
-      if (vFile == null) return false;
-      return myDescriptor.isFileVisible(vFile, myShowHidden.compute());
+      return vFile != null && myDescriptor.isFileVisible(vFile, myShowHidden.compute());
     }
   }
 
@@ -154,7 +148,7 @@ public class LocalFsFinder implements FileLookup.Finder, FileLookup {
 
     @Override
     public List<LookupFile> getChildren(final LookupFilter filter) {
-      List<LookupFile> result = new ArrayList<LookupFile>();
+      List<LookupFile> result = new ArrayList<>();
       if (myFile == null) return result;
 
       VirtualFile[] kids = myFile.getChildren();
@@ -164,12 +158,7 @@ public class LocalFsFinder implements FileLookup.Finder, FileLookup {
           result.add(eachFile);
         }
       }
-      Collections.sort(result, new Comparator<LookupFile>() {
-        @Override
-        public int compare(LookupFile o1, LookupFile o2) {
-          return FileUtil.comparePaths(o1.getName(), o2.getName());
-        }
-      });
+      Collections.sort(result, (o1, o2) -> FileUtil.comparePaths(o1.getName(), o2.getName()));
 
       return result;
     }
@@ -196,9 +185,7 @@ public class LocalFsFinder implements FileLookup.Finder, FileLookup {
 
       final VfsFile vfsFile = (VfsFile)o;
 
-      if (myFile != null ? !myFile.equals(vfsFile.myFile) : vfsFile.myFile != null) return false;
-
-      return true;
+      return myFile != null ? myFile.equals(vfsFile.myFile) : vfsFile.myFile == null;
     }
 
     @Override
@@ -271,9 +258,7 @@ public class LocalFsFinder implements FileLookup.Finder, FileLookup {
 
       final IoFile ioFile = (IoFile)o;
 
-      if (myIoFile != null ? !myIoFile.equals(ioFile.myIoFile) : ioFile.myIoFile != null) return false;
-
-      return true;
+      return myIoFile != null ? myIoFile.equals(ioFile.myIoFile) : ioFile.myIoFile == null;
     }
 
     @Override

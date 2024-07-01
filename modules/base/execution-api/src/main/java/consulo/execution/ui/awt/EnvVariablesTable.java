@@ -16,11 +16,12 @@
 
 package consulo.execution.ui.awt;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.execution.configuration.EnvironmentVariable;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionsBundle;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.ColumnInfo;
@@ -28,9 +29,9 @@ import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ui.ex.awt.table.ListTableModel;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.table.TableCellEditor;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
@@ -111,9 +112,9 @@ public class EnvVariablesTable extends ListTableWithButtons<EnvironmentVariable>
   }
 
   public void editVariableName(final EnvironmentVariable environmentVariable) {
-    ApplicationManager.getApplication().invokeLater(() -> {
-      final EnvironmentVariable actualEnvVar = ContainerUtil.find(getElements(),
-                                                                  item -> StringUtil.equals(environmentVariable.getName(), item.getName()));
+    Application.get().invokeLater(() -> {
+      final EnvironmentVariable actualEnvVar =
+        ContainerUtil.find(getElements(), item -> StringUtil.equals(environmentVariable.getName(), item.getName()));
       if (actualEnvVar == null) {
         return;
       }
@@ -142,8 +143,9 @@ public class EnvVariablesTable extends ListTableWithButtons<EnvironmentVariable>
   @Nonnull
   @Override
   protected AnAction[] createExtraActions() {
-    AnAction copyButton = new AnAction(ActionsBundle.message("action.EditorCopy.text"), null, PlatformIconGroup.actionsCopy()) {
+    AnAction copyButton = new AnAction(ActionLocalize.actionEditorcopyText(), LocalizeValue.empty(), PlatformIconGroup.actionsCopy()) {
       @Override
+      @RequiredUIAccess
       public void actionPerformed(@Nonnull AnActionEvent e) {
         stopEditing();
         StringBuilder sb = new StringBuilder();
@@ -163,8 +165,9 @@ public class EnvVariablesTable extends ListTableWithButtons<EnvironmentVariable>
         e.getPresentation().setEnabled(!getSelection().isEmpty());
       }
     };
-    AnAction pasteButton = new AnAction(ActionsBundle.message("action.EditorPaste.text"), null, PlatformIconGroup.actionsMenu_paste()) {
+    AnAction pasteButton = new AnAction(ActionLocalize.actionEditorpasteText(), LocalizeValue.empty(), PlatformIconGroup.actionsMenu_paste()) {
       @Override
+      @RequiredUIAccess
       public void actionPerformed(@Nonnull AnActionEvent e) {
         removeSelected();
         stopEditing();

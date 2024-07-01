@@ -20,6 +20,7 @@ import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -43,6 +44,7 @@ public interface RefactoringActionHandler {
    * @param dataContext can be null for some but not all of refactoring action handlers
    *                    (it is recommended to pass DataManager.getDataContext() instead of null)
    */
+  @RequiredUIAccess
   void invoke(@Nonnull Project project, Editor editor, PsiFile file, DataContext dataContext);
 
   /**
@@ -54,5 +56,6 @@ public interface RefactoringActionHandler {
    * @param dataContext can be null for some but not all of refactoring action handlers
    *                    (it is recommended to pass DataManager.getDataContext() instead of null)
    */
+  @RequiredUIAccess
   void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, DataContext dataContext);
 }

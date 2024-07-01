@@ -40,6 +40,7 @@ import consulo.module.Module;
 import consulo.module.content.util.ModuleContentUtil;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.ItemPresentationProvider;
+import consulo.platform.Platform;
 import consulo.project.DumbService;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.Comparing;
@@ -226,7 +227,8 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
 
     for (VirtualFile vFile : myFile.getChildren()) {
       boolean isDir = vFile.isDirectory();
-      if (processor instanceof PsiFileSystemItemProcessor && !((PsiFileSystemItemProcessor)processor).acceptItem(vFile.getName(), isDir)) {
+      if (processor instanceof PsiFileSystemItemProcessor fileSystemItemProcessor
+        && !fileSystemItemProcessor.acceptItem(vFile.getName(), isDir)) {
         continue;
       }
       if (isDir) {
@@ -530,8 +532,8 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
   @Override
   public void checkAdd(@Nonnull PsiElement element) throws IncorrectOperationException {
     CheckUtil.checkWritable(this);
-    if (element instanceof PsiDirectory) {
-      String name = ((PsiDirectory)element).getName();
+    if (element instanceof PsiDirectory directory) {
+      String name = directory.getName();
       PsiDirectory[] subpackages = getSubdirectories();
       for (PsiDirectory dir : subpackages) {
         if (Comparing.strEqual(dir.getName(), name)) {
@@ -543,7 +545,7 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
       String name = psiFile.getName();
       PsiFile[] files = getFiles();
       for (PsiFile file : files) {
-        if (Comparing.strEqual(file.getName(), name, SystemInfo.isFileSystemCaseSensitive)) {
+        if (Comparing.strEqual(file.getName(), name, Platform.current().fs().isCaseSensitive())) {
           throw new IncorrectOperationException(VirtualFileSystemLocalize.fileAlreadyExistsError(file.getVirtualFile().getPresentableUrl()).get());
         }
       }

@@ -17,17 +17,17 @@ package consulo.component.impl.internal.macro;
 
 import consulo.application.Application;
 import consulo.application.macro.PathMacros;
-import consulo.application.util.SystemInfo;
 import consulo.component.macro.*;
+import consulo.platform.Platform;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.StandardFileSystems;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.VirtualFileSystem;
+import jakarta.annotation.Nullable;
 import org.jdom.Element;
 
-import jakarta.annotation.Nullable;
 import java.util.Map;
 
 public class BasePathMacroManager implements PathMacroManager {
@@ -96,32 +96,32 @@ public class BasePathMacroManager implements PathMacroManager {
 
   @Override
   public String expandPath(final String path) {
-    return getExpandMacroMap().substitute(path, SystemInfo.isFileSystemCaseSensitive);
+    return getExpandMacroMap().substitute(path, Platform.current().fs().isCaseSensitive());
   }
 
   @Override
   public String collapsePath(final String path) {
-    return getReplacePathMap().substitute(path, SystemInfo.isFileSystemCaseSensitive);
+    return getReplacePathMap().substitute(path, Platform.current().fs().isCaseSensitive());
   }
 
   @Override
   public void collapsePathsRecursively(final Element element) {
-    getReplacePathMap().substitute(element, SystemInfo.isFileSystemCaseSensitive, true);
+    getReplacePathMap().substitute(element, Platform.current().fs().isCaseSensitive(), true);
   }
 
   @Override
   public String collapsePathsRecursively(final String text) {
-    return getReplacePathMap().substituteRecursively(text, SystemInfo.isFileSystemCaseSensitive);
+    return getReplacePathMap().substituteRecursively(text, Platform.current().fs().isCaseSensitive());
   }
 
   @Override
   public void expandPaths(final Element element) {
-    getExpandMacroMap().substitute(element, SystemInfo.isFileSystemCaseSensitive);
+    getExpandMacroMap().substitute(element, Platform.current().fs().isCaseSensitive());
   }
 
   @Override
   public void collapsePaths(final Element element) {
-    getReplacePathMap().substitute(element, SystemInfo.isFileSystemCaseSensitive);
+    getReplacePathMap().substitute(element, Platform.current().fs().isCaseSensitive());
   }
 
   public PathMacros getPathMacros() {
@@ -133,7 +133,7 @@ public class BasePathMacroManager implements PathMacroManager {
   }
 
   protected static boolean pathsEqual(@Nullable String path1, @Nullable String path2) {
-    return path1 != null && path2 != null &&
-           FileUtil.pathsEqual(FileUtil.toSystemIndependentName(path1), FileUtil.toSystemIndependentName(path2));
+    return path1 != null && path2 != null
+      && FileUtil.pathsEqual(FileUtil.toSystemIndependentName(path1), FileUtil.toSystemIndependentName(path2));
   }
 }

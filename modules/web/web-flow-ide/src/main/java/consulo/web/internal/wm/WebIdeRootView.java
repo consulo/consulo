@@ -21,7 +21,6 @@ import consulo.ide.impl.actionSystem.impl.UnifiedActionUtil;
 import consulo.ide.impl.dataContext.BaseDataManager;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import consulo.ide.impl.wm.impl.UnifiedStatusBarImpl;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.MenuBar;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -47,7 +46,7 @@ public class WebIdeRootView {
     myProject = project;
     myPresentationFactory = new MenuItemPresentationFactory();
 
-    myRootPanel.getComponent().putUserData(CommonDataKeys.PROJECT, myProject);
+    myRootPanel.getComponent().putUserData(Project.KEY, myProject);
 
     myMenuBar = MenuBar.create();
     myRootPanel.setMenuBar(myMenuBar);

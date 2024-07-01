@@ -17,14 +17,13 @@
 package consulo.task.impl.internal.action;
 
 import consulo.application.dumb.DumbAware;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.task.LocalTask;
 import consulo.task.TaskManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nullable;
 
 /**
@@ -44,13 +43,14 @@ public abstract class BaseTaskAction extends AnAction implements DumbAware {
   }
 
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent event) {
     event.getPresentation().setEnabled(getProject(event) != null);
   }
 
   @Nullable
   public static Project getProject(@Nullable AnActionEvent event) {
-    return event == null ? null : event.getData(CommonDataKeys.PROJECT);
+    return event == null ? null : event.getData(Project.KEY);
   }
 
   @Nullable

@@ -15,9 +15,9 @@
  */
 package consulo.component.store.impl.internal;
 
-import consulo.application.util.SystemInfo;
 import consulo.component.impl.internal.macro.BasePathMacroManager;
 import consulo.component.macro.PathMacroManager;
+import consulo.platform.Platform;
 import consulo.util.collection.FactoryMap;
 import jakarta.inject.Provider;
 import org.jdom.Element;
@@ -47,22 +47,22 @@ public class TrackingPathMacroSubstitutorImpl implements TrackingPathMacroSubsti
 
   @Override
   public String expandPath(final String path) {
-    return ((BasePathMacroManager)myPathMacroManager.get()).getExpandMacroMap().substitute(path, SystemInfo.isFileSystemCaseSensitive);
+    return ((BasePathMacroManager)myPathMacroManager.get()).getExpandMacroMap().substitute(path, Platform.current().fs().isCaseSensitive());
   }
 
   @Override
   public String collapsePath(final String path) {
-    return ((BasePathMacroManager)myPathMacroManager.get()).getReplacePathMap().substitute(path, SystemInfo.isFileSystemCaseSensitive);
+    return ((BasePathMacroManager)myPathMacroManager.get()).getReplacePathMap().substitute(path, Platform.current().fs().isCaseSensitive());
   }
 
   @Override
   public void expandPaths(final Element element) {
-    ((BasePathMacroManager)myPathMacroManager.get()).getExpandMacroMap().substitute(element, SystemInfo.isFileSystemCaseSensitive);
+    ((BasePathMacroManager)myPathMacroManager.get()).getExpandMacroMap().substitute(element, Platform.current().fs().isCaseSensitive());
   }
 
   @Override
   public void collapsePaths(final Element element) {
-    ((BasePathMacroManager)myPathMacroManager.get()).getReplacePathMap().substitute(element, SystemInfo.isFileSystemCaseSensitive);
+    ((BasePathMacroManager)myPathMacroManager.get()).getReplacePathMap().substitute(element, Platform.current().fs().isCaseSensitive());
   }
 
   @Override
@@ -84,7 +84,7 @@ public class TrackingPathMacroSubstitutorImpl implements TrackingPathMacroSubsti
 
   @Override
   public Set<String> getComponents(final Collection<String> macros) {
-    final Set<String> result = new HashSet<String>();
+    final Set<String> result = new HashSet<>();
     for (String macro : myMacroToComponentNames.keySet()) {
       if (macros.contains(macro)) {
         result.addAll(myMacroToComponentNames.get(macro));
@@ -96,7 +96,7 @@ public class TrackingPathMacroSubstitutorImpl implements TrackingPathMacroSubsti
 
   @Override
   public Set<String> getUnknownMacros(final String componentName) {
-    final Set<String> result = new HashSet<String>();
+    final Set<String> result = new HashSet<>();
     result.addAll(componentName == null ? myMacroToComponentNames.keySet() : myComponentNameToMacros.get(componentName));
     return Collections.unmodifiableSet(result);
   }

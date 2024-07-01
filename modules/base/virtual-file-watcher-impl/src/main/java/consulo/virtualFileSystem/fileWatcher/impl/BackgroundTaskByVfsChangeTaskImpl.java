@@ -18,13 +18,13 @@ package consulo.virtualFileSystem.fileWatcher.impl;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.progress.ProgressManager;
-import consulo.application.util.SystemInfo;
 import consulo.build.ui.progress.BuildProgress;
 import consulo.build.ui.progress.BuildProgressDescriptor;
 import consulo.component.macro.ExpandMacroToPathMap;
 import consulo.component.macro.PathMacroProtocolProvider;
 import consulo.component.macro.ReplacePathToMacroMap;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.process.ExecutionException;
 import consulo.process.ProcessHandler;
 import consulo.process.ProcessOutputTypes;
@@ -48,9 +48,9 @@ import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsParameters;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -300,7 +300,7 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
     String[] allPaths = new String[generatedFiles.length];
     for (int i = 0; i < generatedFiles.length; i++) {
       String generatedFile = generatedFiles[i];
-      String expanded = expandOutMacroToPathMap.substitute(generatedFile, SystemInfo.isFileSystemCaseSensitive);
+      String expanded = expandOutMacroToPathMap.substitute(generatedFile, Platform.current().fs().isCaseSensitive());
       allPaths[i] = expanded;
     }
     return allPaths;

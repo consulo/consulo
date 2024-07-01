@@ -16,34 +16,24 @@
 
 package consulo.language.editor.impl.internal.template;
 
-import consulo.language.editor.template.context.TemplateContext;
-import consulo.language.editor.template.TemplateColors;
-import consulo.language.editor.template.context.TemplateContextType;
-import consulo.dataContext.DataManager;
-import consulo.language.lexer.CompositeLexer;
-import consulo.language.lexer.Lexer;
-import consulo.language.lexer.MergingLexerAdapter;
-import consulo.language.editor.CommonDataKeys;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorFactory;
-import consulo.codeEditor.EditorSettings;
-import consulo.codeEditor.EditorColors;
+import consulo.codeEditor.*;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributesKey;
-import consulo.codeEditor.EditorEx;
-import consulo.language.editor.highlight.LexerEditorHighlighter;
-import consulo.codeEditor.EditorHighlighter;
-import consulo.language.editor.highlight.EditorHighlighterFactory;
+import consulo.dataContext.DataManager;
+import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
-import consulo.language.editor.highlight.SyntaxHighlighter;
-import consulo.language.editor.highlight.SyntaxHighlighterBase;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
+import consulo.language.editor.highlight.*;
+import consulo.language.editor.template.TemplateColors;
+import consulo.language.editor.template.context.TemplateContext;
+import consulo.language.editor.template.context.TemplateContextType;
+import consulo.language.lexer.CompositeLexer;
+import consulo.language.lexer.Lexer;
+import consulo.language.lexer.MergingLexerAdapter;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -57,7 +47,7 @@ public class TemplateEditorUtil {
   }
 
   public static Editor createEditor(boolean isReadOnly, CharSequence text, @Nullable Map<TemplateContextType, Boolean> context) {
-    final Project project = DataManager.getInstance().getDataContext().getData(CommonDataKeys.PROJECT);
+    final Project project = DataManager.getInstance().getDataContext().getData(Project.KEY);
     return createEditor(isReadOnly, createDocument(text, context, project), project);
   }
 
@@ -149,7 +139,7 @@ public class TemplateEditorUtil {
 
     @Override
     @Nonnull
-    public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
+    public TextAttributesKey[] getTokenHighlights(@Nonnull IElementType tokenType) {
       if (tokenType == TemplateTokenType.VARIABLE) {
         return SyntaxHighlighterBase.pack(myOriginalHighlighter.getTokenHighlights(tokenType), TemplateColors.TEMPLATE_VARIABLE_ATTRIBUTES);
       }
