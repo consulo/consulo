@@ -19,8 +19,12 @@ import consulo.application.Application;
 import consulo.application.ApplicationProperties;
 import consulo.application.impl.internal.start.StartupProgress;
 import consulo.application.internal.ApplicationInfo;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.component.util.BuildNumber;
-import consulo.component.util.graph.*;
+import consulo.component.util.graph.DFSTBuilder;
+import consulo.component.util.graph.Graph;
+import consulo.component.util.graph.GraphGenerator;
+import consulo.component.util.graph.InboundSemiGraph;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.impl.*;
 import consulo.container.impl.classloader.Java9ModuleInitializer;
@@ -28,13 +32,12 @@ import consulo.container.impl.classloader.PluginClassLoaderFactory;
 import consulo.container.plugin.*;
 import consulo.container.util.StatCollector;
 import consulo.logging.Logger;
-import consulo.platform.base.localize.IdeLocalize;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.Couple;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -148,7 +151,9 @@ public class PluginsLoader {
 
     List<CompositeMessage> problemsWithPlugins = new SmartList<>();
     if (!brokenPluginsList.isEmpty()) {
-      problemsWithPlugins.add(new CompositeMessage().append("Following plugins are incompatible with current IDE build: " + StringUtil.join(brokenPluginsList, ", ")));
+      problemsWithPlugins.add(new CompositeMessage().append("Following plugins are incompatible with current IDE build: " + StringUtil.join(
+        brokenPluginsList,
+        ", ")));
     }
 
     CompositeMessage badPluginMessage = filterBadPlugins(info, result, disabledPluginNames);
@@ -190,7 +195,8 @@ public class PluginsLoader {
         final PluginId parentId = circularDependency.getSecond();
         cyclePresentation = id + "->" + parentId + "->...->" + id;
       }
-      problemsWithPlugins.add(new CompositeMessage().append(IdeLocalize.errorPluginsShouldNotHaveCyclicDependencies(cyclePresentation)));
+      problemsWithPlugins.add(new CompositeMessage().append(ApplicationLocalize.errorPluginsShouldNotHaveCyclicDependencies(
+        cyclePresentation)));
     }
 
     prepareLoadingPluginsErrorMessage(info, problemsWithPlugins, isHeadlessMode);
@@ -217,12 +223,16 @@ public class PluginsLoader {
           final PluginId[] dependentPluginIds = pluginDescriptor.getDependentPluginIds();
           final ClassLoader[] parentLoaders = getParentLoaders(idToDescriptorMap, dependentPluginIds);
 
-          final ClassLoader pluginClassLoader = createPluginClassLoader(idToDescriptorMap.keySet(), parentLoaders.length > 0 ? parentLoaders : new ClassLoader[]{parentLoader}, pluginDescriptor);
+          final ClassLoader pluginClassLoader = createPluginClassLoader(idToDescriptorMap.keySet(),
+                                                                        parentLoaders.length > 0 ? parentLoaders : new ClassLoader[]{parentLoader},
+                                                                        pluginDescriptor);
 
           if (System.getProperty("jdk.module.path") != null) {
             List<ModuleLayer> parentModuleLayer = getParentModuleLayer(idToDescriptorMap, dependentPluginIds);
 
-            pluginDescriptor.setModuleLayer(Java9ModuleInitializer.initializeEtcModules(parentModuleLayer, pluginDescriptor.getClassPath(idToDescriptorMap.keySet()), pluginClassLoader));
+            pluginDescriptor.setModuleLayer(Java9ModuleInitializer.initializeEtcModules(parentModuleLayer,
+                                                                                        pluginDescriptor.getClassPath(idToDescriptorMap.keySet()),
+                                                                                        pluginClassLoader));
           }
 
           pluginDescriptor.setLoader(pluginClassLoader);
@@ -284,7 +294,9 @@ public class PluginsLoader {
   }
 
   @Nonnull
-  public static List<PluginDescriptorImpl> loadDescriptorsFromPluginsPath(@Nullable StartupProgress progress, boolean isHeadlessMode, StatCollector stat) {
+  public static List<PluginDescriptorImpl> loadDescriptorsFromPluginsPath(@Nullable StartupProgress progress,
+                                                                          boolean isHeadlessMode,
+                                                                          StatCollector stat) {
     final List<PluginDescriptorImpl> result = new ArrayList<>();
 
     int pluginsCount = 0;
@@ -358,7 +370,9 @@ public class PluginsLoader {
   }
 
   @Nullable
-  static CompositeMessage filterBadPlugins(PluginsInitializeInfo info, List<PluginDescriptorImpl> result, final Map<PluginId, String> disabledPluginNames) {
+  static CompositeMessage filterBadPlugins(PluginsInitializeInfo info,
+                                           List<PluginDescriptorImpl> result,
+                                           final Map<PluginId, String> disabledPluginNames) {
     final Map<PluginId, PluginDescriptor> idToDescriptorMap = new HashMap<>();
     final CompositeMessage message = new CompositeMessage();
     for (Iterator<? extends PluginDescriptor> it = result.iterator(); it.hasNext(); ) {
@@ -367,7 +381,7 @@ public class PluginsLoader {
 
       if (idToDescriptorMap.containsKey(id)) {
         message.append("<br>");
-        message.append(IdeLocalize.messageDuplicatePluginId());
+        message.append(ApplicationLocalize.messageDuplicatePluginId());
         message.append(id.getIdString());
         it.remove();
       }
@@ -404,7 +418,10 @@ public class PluginsLoader {
             }
 
             message.append(
-                    PluginManager.getDisabledPlugins().contains(pluginId) ? IdeLocalize.errorRequiredPluginDisabled(name, pluginName) : IdeLocalize.errorRequiredPluginNotInstalled(name, pluginName));
+              PluginManager.getDisabledPlugins().contains(pluginId) ? ApplicationLocalize.errorRequiredPluginDisabled(name,
+                                                                                                                      pluginName) : ApplicationLocalize.errorRequiredPluginNotInstalled(
+                name,
+                pluginName));
           }
 
           it.remove();
@@ -423,7 +440,8 @@ public class PluginsLoader {
       message.append("<br>").append("<a href=\"" + PluginsInitializeInfo.DISABLE + "\">Disable ");
       if (disabledPluginIds.size() == 1) {
         final PluginId pluginId2Disable = disabledPluginIds.iterator().next();
-        message.append(idToDescriptorMap.containsKey(pluginId2Disable) ? idToDescriptorMap.get(pluginId2Disable).getName() : pluginId2Disable.getIdString());
+        message.append(idToDescriptorMap.containsKey(pluginId2Disable) ? idToDescriptorMap.get(pluginId2Disable)
+                                                                                          .getName() : pluginId2Disable.getIdString());
       }
       else {
         message.append("not loaded plugins");
@@ -437,8 +455,11 @@ public class PluginsLoader {
         }
       }
       if (possibleToEnable) {
-        message.append("<br>").append("<a href=\"" + PluginsInitializeInfo.ENABLE + "\">Enable ")
-                .append(faultyDescriptors.size() == 1 ? disabledPluginNames.get(faultyDescriptors.iterator().next()) : " all necessary plugins").append("</a>");
+        message.append("<br>")
+               .append("<a href=\"" + PluginsInitializeInfo.ENABLE + "\">Enable ")
+               .append(faultyDescriptors.size() == 1 ? disabledPluginNames.get(faultyDescriptors.iterator()
+                                                                                                .next()) : " all necessary plugins")
+               .append("</a>");
       }
       message.append("<br>").append("<a href=\"" + PluginsInitializeInfo.EDIT + "\">Open plugin manager</a>");
     }
@@ -509,7 +530,9 @@ public class PluginsLoader {
   }
 
   @Nullable
-  static ClassLoader createPluginClassLoader(@Nonnull Set<PluginId> enabledPluginIds, @Nonnull ClassLoader[] parentLoaders, @Nonnull PluginDescriptor pluginDescriptor) {
+  static ClassLoader createPluginClassLoader(@Nonnull Set<PluginId> enabledPluginIds,
+                                             @Nonnull ClassLoader[] parentLoaders,
+                                             @Nonnull PluginDescriptor pluginDescriptor) {
     try {
       return PluginClassLoaderFactory.create(enabledPluginIds, parentLoaders, pluginDescriptor);
     }

@@ -37,7 +37,7 @@ import consulo.language.editor.hierarchy.HierarchyProvider;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
 import consulo.navigation.Navigatable;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.OccurenceNavigator;

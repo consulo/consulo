@@ -23,7 +23,7 @@ import consulo.application.ui.event.FrameStateListener;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.fileEditor.*;
 import consulo.logging.Logger;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.util.io.FileAttributes;
 import consulo.virtualFileSystem.LocalFileSystem;

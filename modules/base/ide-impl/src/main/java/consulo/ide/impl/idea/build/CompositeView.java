@@ -8,7 +8,7 @@ import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.ui.ex.ComponentContainer;
 import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;

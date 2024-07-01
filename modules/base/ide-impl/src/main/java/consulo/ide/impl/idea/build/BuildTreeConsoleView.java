@@ -45,7 +45,7 @@ import consulo.navigation.Navigatable;
 import consulo.navigation.NonNavigatable;
 import consulo.platform.Platform;
 import consulo.platform.base.localize.ActionLocalize;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessEvent;
 import consulo.project.Project;

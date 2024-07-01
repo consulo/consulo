@@ -16,7 +16,7 @@ import consulo.ide.impl.VfsIconUtil;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.IdeDocumentHistoryImpl;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.platform.Platform;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.Gray;

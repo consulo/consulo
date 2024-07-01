@@ -19,7 +19,7 @@ import consulo.application.ui.UISettings;
 import consulo.ide.impl.idea.ui.InplaceButton;
 import consulo.ide.impl.idea.ui.MouseDragHelper;
 import consulo.ide.impl.idea.ui.util.Axis;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.tab.JBTabsPosition;

@@ -31,7 +31,7 @@ import consulo.ide.impl.updateSettings.impl.PluginDownloadFailedException;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.util.io.FilePermissionCopier;
 import consulo.util.io.FileUtil;
 import consulo.util.io.NioPathUtil;

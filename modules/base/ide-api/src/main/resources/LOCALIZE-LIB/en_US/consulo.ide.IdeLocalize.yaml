@@ -392,10 +392,6 @@ action.view.supertypes.hierarchy:
   text: Supertypes Hierarchy
 action.description.view.supertypes.hierarchy:
   text: Switch to Supertypes Hierarchy
-filetype.description.archive.files:
-  text: Archive files
-filetype.description.zip.files:
-  text: Zip files
 filetype.description.dtd:
   text: XML Document Type Definition
 filetype.description.gui.designer.form:
@@ -2629,7 +2625,5 @@ label.appearance.show.inner.whitespaces:
   text: Show inner whitespaces
 label.appearance.show.trailing.whitespaces:
   text: Show trailing whitespaces
-label.appearance.show.vertical.indent.guides:
-  text: Show vertical indent guides
 label.tabs.show.directory.for.non.unique.filenames:
   text: Show directory in editor tabs for non-unique filenames

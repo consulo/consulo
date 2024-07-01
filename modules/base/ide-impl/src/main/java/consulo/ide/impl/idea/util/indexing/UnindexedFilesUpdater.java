@@ -15,7 +15,7 @@ import consulo.module.content.PushedFilePropertiesUpdater;
 import consulo.module.content.internal.ProjectRootManagerEx;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.DumbModeTask;
 import consulo.project.DumbService;
 import consulo.project.Project;

@@ -21,7 +21,7 @@ import consulo.container.plugin.PluginManager;
 import consulo.ide.impl.idea.ide.GeneralSettings;
 import consulo.ide.impl.idea.ide.util.TipUIUtil;
 import consulo.ide.tipOfDay.TipOfDayProvider;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBDimension;

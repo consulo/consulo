@@ -10,7 +10,7 @@ import consulo.ide.impl.idea.ide.actions.runAnything.activity.RunAnythingProvide
 import consulo.ide.impl.idea.openapi.keymap.impl.ModifierKeyDoubleClickHandler;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.platform.Platform;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;

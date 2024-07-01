@@ -21,7 +21,7 @@
  */
 package consulo.ide.impl.idea.diagnostic;
 
-import consulo.platform.base.localize.DiagnosticLocalize;
+import consulo.ide.impl.internal.localize.DiagnosticLocalize;
 import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationGroup;
 

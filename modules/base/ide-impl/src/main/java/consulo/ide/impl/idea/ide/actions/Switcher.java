@@ -39,7 +39,7 @@ import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.wm.ToolWindowManager;

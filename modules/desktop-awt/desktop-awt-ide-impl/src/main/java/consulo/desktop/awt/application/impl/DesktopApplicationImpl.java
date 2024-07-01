@@ -59,7 +59,7 @@ import consulo.logging.attachment.Attachment;
 import consulo.logging.attachment.AttachmentFactory;
 import consulo.application.localize.ApplicationLocalize;
 import consulo.platform.base.localize.CommonLocalize;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.internal.ProjectManagerEx;

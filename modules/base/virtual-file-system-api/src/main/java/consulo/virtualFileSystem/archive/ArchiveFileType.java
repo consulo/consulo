@@ -17,14 +17,14 @@ package consulo.virtualFileSystem.archive;
 
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.platform.base.localize.IdeLocalize;
 import consulo.ui.image.Image;
 import consulo.util.lang.lazy.LazyValue;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.virtualFileSystem.fileType.FileType;
-
+import consulo.virtualFileSystem.fileType.localize.FileTypeLocalize;
 import jakarta.annotation.Nonnull;
+
 import java.util.function.Supplier;
 
 /**
@@ -55,7 +55,7 @@ public abstract class ArchiveFileType implements FileType {
   @Override
   @Nonnull
   public LocalizeValue getDescription() {
-    return IdeLocalize.filetypeDescriptionArchiveFiles();
+    return FileTypeLocalize.filetypeDescriptionArchiveFiles();
   }
 
   @Override

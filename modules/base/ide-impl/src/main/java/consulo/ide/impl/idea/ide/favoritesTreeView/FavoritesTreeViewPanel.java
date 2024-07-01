@@ -48,7 +48,7 @@ import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.Navigatable;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ui.view.internal.node.LibraryGroupElement;
 import consulo.project.ui.view.internal.node.NamedLibraryElement;

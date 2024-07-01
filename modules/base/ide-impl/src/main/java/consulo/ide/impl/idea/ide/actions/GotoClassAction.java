@@ -30,7 +30,7 @@ import consulo.language.psi.util.EditSourceUtil;
 import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
 import consulo.navigation.NavigationItem;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionManager;

@@ -33,7 +33,7 @@ import consulo.language.editor.structureView.StructureViewComposite;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;

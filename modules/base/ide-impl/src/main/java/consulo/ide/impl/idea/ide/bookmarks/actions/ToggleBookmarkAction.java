@@ -20,7 +20,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.bookmark.BookmarkManager;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;

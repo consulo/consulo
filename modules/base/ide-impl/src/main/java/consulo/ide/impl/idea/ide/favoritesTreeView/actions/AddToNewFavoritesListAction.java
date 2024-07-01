@@ -20,7 +20,7 @@ import consulo.application.AllIcons;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
 import consulo.language.editor.CommonDataKeys;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.action.AnAction;

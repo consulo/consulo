@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.ide.todo.TodoFilter;
 import consulo.ide.impl.idea.util.ui.Table;
 import consulo.language.psi.search.TodoPattern;
 import consulo.platform.base.localize.CommonLocalize;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.Messages;

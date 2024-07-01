@@ -20,7 +20,7 @@ import consulo.application.ui.UISettings;
 import consulo.ide.impl.idea.ide.ui.search.BooleanOptionDescription;
 import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.keymap.localize.KeyMapLocalize;
 import jakarta.annotation.Nonnull;

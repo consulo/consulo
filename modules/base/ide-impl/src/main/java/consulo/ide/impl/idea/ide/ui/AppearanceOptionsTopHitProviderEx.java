@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ide.ui;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.ide.ui.search.BooleanOptionDescription;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;

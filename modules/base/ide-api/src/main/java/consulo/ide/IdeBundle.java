@@ -20,7 +20,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.component.util.localize.AbstractBundle;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import org.jetbrains.annotations.PropertyKey;
 
 /**

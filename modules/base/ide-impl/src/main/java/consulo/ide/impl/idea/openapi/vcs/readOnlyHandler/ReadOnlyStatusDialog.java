@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.readOnlyHandler;
 
 import consulo.application.util.registry.Registry;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;

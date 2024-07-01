@@ -25,7 +25,7 @@ import consulo.fileChooser.provider.FileSaveDialogProvider;
 import consulo.ide.impl.fileChooser.FileOperateDialogSettings;
 import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.HorizontalLayout;

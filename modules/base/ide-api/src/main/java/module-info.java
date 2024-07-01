@@ -91,6 +91,7 @@ module consulo.ide.api {
   exports consulo.ide.newModule.ui;
   exports consulo.ide.ui;
   exports consulo.ide.ui.popup;
+  exports consulo.ide.localize;
   exports consulo.ide.util;
 
   exports consulo.ide.internal to consulo.ide.impl;

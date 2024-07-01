@@ -6,7 +6,7 @@ import consulo.application.progress.TaskInfo;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.ui.InplaceButton;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.util.GraphicsUtil;

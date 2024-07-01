@@ -9,7 +9,7 @@ import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingRunConfiguration
 import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingUtil;
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItem;
 import consulo.dataContext.DataContext;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.ui.image.Image;
 
 import jakarta.annotation.Nonnull;

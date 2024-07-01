@@ -9,7 +9,7 @@ import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingAction;
 import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingCache;
 import consulo.ide.impl.idea.ide.actions.runAnything.commands.RunAnythingCommandCustomizer;
 import consulo.ide.impl.idea.ide.actions.runAnything.execution.RunAnythingRunProfile;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.cmd.ParametersListUtil;

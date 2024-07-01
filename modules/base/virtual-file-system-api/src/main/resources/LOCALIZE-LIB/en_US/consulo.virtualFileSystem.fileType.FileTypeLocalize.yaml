@@ -54,3 +54,7 @@ unknown.file.type.description:
   text: Unknown file
 native.file.type.description:
   text: Files opened in associated applications
+filetype.description.archive.files:
+  text: Archive files
+filetype.description.zip.files:
+  text: Zip files

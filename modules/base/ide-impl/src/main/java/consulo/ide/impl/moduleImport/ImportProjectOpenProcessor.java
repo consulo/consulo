@@ -31,7 +31,7 @@ import consulo.project.internal.ProjectOpenProcessor;
 import consulo.util.lang.ThreeState;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.moduleImport.ModuleImportProcessor;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.ui.Alert;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;

@@ -19,7 +19,7 @@ import consulo.application.AllIcons;
 import consulo.bookmark.Bookmark;
 import consulo.bookmark.BookmarkManager;
 import consulo.platform.Platform;
-import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;

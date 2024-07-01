@@ -16,19 +16,19 @@
 
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.find.FindManager;
-import consulo.ide.impl.idea.find.FindUtil;
-import consulo.platform.base.localize.IdeLocalize;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.undoRedo.CommandProcessor;
+import consulo.application.dumb.DumbAware;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.TextEditor;
-import consulo.project.Project;
-import consulo.application.dumb.DumbAware;
+import consulo.find.FindManager;
+import consulo.ide.impl.idea.find.FindUtil;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.psi.PsiDocumentManager;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.undoRedo.CommandProcessor;
 
 public class SearchBackAction extends AnAction implements DumbAware {
   public SearchBackAction() {
@@ -38,8 +38,8 @@ public class SearchBackAction extends AnAction implements DumbAware {
   @Override
   @RequiredUIAccess
   public void actionPerformed(final AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
-    final FileEditor editor = e.getData(FileEditor.KEY);
+    final Project project = e.getRequiredData(Project.KEY);
+    final FileEditor editor = e.getRequiredData(FileEditor.KEY);
     CommandProcessor commandProcessor = CommandProcessor.getInstance();
     commandProcessor.executeCommand(
       project,
