@@ -15,12 +15,18 @@
  */
 package consulo.language.editor.ui;
 
+import consulo.ui.annotation.RequiredUIAccess;
+
 public interface TreeChooser<T> {
+  @RequiredUIAccess
   T getSelected();
 
+  @RequiredUIAccess
   void select(final T aClass);
 
+  @RequiredUIAccess
   void showDialog();
 
+  @RequiredUIAccess
   void showPopup();
 }
