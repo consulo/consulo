@@ -26,6 +26,7 @@ import consulo.externalService.impl.internal.update.PlatformOrPluginNode;
 import consulo.externalService.impl.internal.update.PlatformOrPluginUpdateResult;
 import consulo.ide.impl.idea.ide.actions.SettingsEntryPointAction;
 import consulo.ide.impl.idea.ide.plugins.*;
+import consulo.ide.impl.idea.openapi.updateSettings.impl.CompositePluginInstallIndicator;
 import consulo.ide.impl.idea.openapi.updateSettings.impl.PluginDownloader;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.plugins.InstalledPluginsState;
@@ -254,7 +255,13 @@ public class PlatformOrPluginDialog extends DialogWrapper {
       indicator -> {
         List<PluginDescriptor> installed = new ArrayList<>(myNodes.size());
 
+        int installCount = (int)myNodes
+          .stream()
+          .filter(it -> it.getFutureDescriptor() != null)
+          .count();
+        
         List<PluginDownloader> forInstall = new ArrayList<>(myNodes.size());
+        int i = 0;
         for (PlatformOrPluginNode platformOrPluginNode : myNodes) {
           PluginDescriptor pluginDescriptor = platformOrPluginNode.getFutureDescriptor();
           // update list contains broken plugins
@@ -271,7 +278,7 @@ public class PlatformOrPluginDialog extends DialogWrapper {
 
             forInstall.add(downloader);
 
-            downloader.download(indicator);
+            downloader.download(new CompositePluginInstallIndicator(indicator, i++, installCount));
           }
           catch (PluginDownloadFailedException e) {
             uiAccess.give(() -> Alerts.okError(e.getLocalizeMessage()).showAsync());

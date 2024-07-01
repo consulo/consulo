@@ -47,6 +47,7 @@ public class UpdatesConfigurable extends SimpleConfigurableByProperties implemen
     return "updateSettings";
   }
 
+  @Nonnull
   @Override
   public String getDisplayName() {
     return "Update Settings";
