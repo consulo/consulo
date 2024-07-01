@@ -18,25 +18,22 @@ package consulo.ide.impl.idea.codeInsight.editorActions;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
-import consulo.codeEditor.action.ExtensionEditorActionHandler;
-import consulo.language.editor.CodeInsightSettings;
-import consulo.dataContext.DataManager;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
-import consulo.application.ApplicationManager;
 import consulo.application.WriteAction;
-import consulo.codeEditor.action.EditorActionHandler;
-import consulo.document.FileDocumentManager;
 import consulo.codeEditor.*;
+import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.action.ExtensionEditorActionHandler;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.ide.impl.idea.util.text.CharArrayUtil;
+import consulo.language.codeStyle.CodeStyleManager;
+import consulo.language.editor.CodeInsightSettings;
 import consulo.language.editor.EditorNavigationDelegate;
-import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.language.codeStyle.CodeStyleManager;
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
-import consulo.document.Document;
+import consulo.project.Project;
 import consulo.ui.ex.action.IdeActions;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -58,7 +55,7 @@ public class EndHandler extends EditorActionHandler implements ExtensionEditorAc
       return;
     }
 
-    final Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(CommonDataKeys.PROJECT);
+    final Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(Project.KEY);
     if (project == null) {
       if (myOriginalHandler != null) {
         myOriginalHandler.execute(editor, caret, dataContext);
@@ -105,7 +102,7 @@ public class EndHandler extends EditorActionHandler implements ExtensionEditorAc
             caretModel.moveToVisualPosition(new VisualPosition(line, col));
 
             if (caretModel.getLogicalPosition().column != col){
-              if (!ApplicationManager.getApplication().isWriteAccessAllowed() &&
+              if (!project.getApplication().isWriteAccessAllowed() &&
                   !FileDocumentManager.getInstance().requestWriting(editor.getDocument(), project)) {
                 return;
               }

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.diff.impl;
 
+import consulo.application.HelpManager;
 import consulo.language.editor.hint.HintManager;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.language.editor.ui.awt.HintUtil;
@@ -36,7 +37,6 @@ import consulo.diff.request.DiffRequest;
 import consulo.diff.request.MessageDiffRequest;
 import consulo.diff.request.NoDiffRequest;
 import consulo.ui.ex.action.EmptyAction;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ui.ex.awt.action.ComboBoxAction;
 import consulo.ui.ex.awt.Messages;
@@ -908,7 +908,7 @@ public abstract class DiffRequestProcessor implements Disposable {
       else if (Project.KEY == dataId) {
         return myProject;
       }
-      else if (PlatformDataKeys.HELP_ID == dataId) {
+      else if (HelpManager.HELP_ID == dataId) {
         if (myActiveRequest.getUserData(DiffUserDataKeys.HELP_ID) != null) {
           return myActiveRequest.getUserData(DiffUserDataKeys.HELP_ID);
         }

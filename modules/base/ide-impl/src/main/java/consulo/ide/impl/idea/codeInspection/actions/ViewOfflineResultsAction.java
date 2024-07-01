@@ -21,7 +21,7 @@
 package consulo.ide.impl.idea.codeInspection.actions;
 
 import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.function.Computable;
@@ -37,7 +37,6 @@ import consulo.ide.impl.idea.codeInspection.offlineViewer.OfflineInspectionRVCon
 import consulo.ide.impl.idea.codeInspection.offlineViewer.OfflineViewParseUtil;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionResultsView;
 import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.impl.inspection.reference.RefManagerImpl;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionToolRegistrar;
@@ -52,6 +51,7 @@ import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -76,74 +76,73 @@ public class ViewOfflineResultsAction extends AnAction implements DumbAware {
   private static final String XML_EXTENSION = "xml";
 
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent event) {
     final Presentation presentation = event.getPresentation();
-    final Project project = event.getData(CommonDataKeys.PROJECT);
+    final Project project = event.getData(Project.KEY);
     presentation.setEnabled(project != null);
     presentation.setVisible(ActionPlaces.MAIN_MENU.equals(event.getPlace()));
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent event) {
-    final Project project = event.getData(CommonDataKeys.PROJECT);
+    final Project project = event.getData(Project.KEY);
 
     LOG.assertTrue(project != null);
 
-    final FileChooserDescriptor descriptor = new FileChooserDescriptor(false, true, false, false, false, false) {
-      @Override
-      public Image getIcon(VirtualFile file) {
-        if (file.isDirectory()) {
-          if (file.findChild(InspectionApplication.DESCRIPTIONS + ".xml") != null) {
-            return AllIcons.Nodes.InspectionResults;
+    final FileChooserDescriptor descriptor =
+      new FileChooserDescriptor(false, true, false, false, false, false) {
+        @Override
+        public Image getIcon(VirtualFile file) {
+          if (file.isDirectory()) {
+            if (file.findChild(InspectionApplication.DESCRIPTIONS + ".xml") != null) {
+              return AllIcons.Nodes.InspectionResults;
+            }
           }
+          return super.getIcon(file);
         }
-        return super.getIcon(file);
-      }
-    };
+      };
     descriptor.setTitle("Select Path");
     descriptor.setDescription("Select directory which contains exported inspections results");
     final VirtualFile virtualFile = IdeaFileChooser.chooseFile(descriptor, project, null);
     if (virtualFile == null || !virtualFile.isDirectory()) return;
 
-    final Map<String, Map<String, Set<OfflineProblemDescriptor>>> resMap =
-      new HashMap<String, Map<String, Set<OfflineProblemDescriptor>>>();
+    final Map<String, Map<String, Set<OfflineProblemDescriptor>>> resMap = new HashMap<>();
     final String[] profileName = new String[1];
-    final Runnable process = new Runnable() {
-      @Override
-      public void run() {
-        final VirtualFile[] files = virtualFile.getChildren();
-        try {
-          for (final VirtualFile inspectionFile : files) {
-            if (inspectionFile.isDirectory()) continue;
-            final String shortName = inspectionFile.getNameWithoutExtension();
-            final String extension = inspectionFile.getExtension();
-            if (shortName.equals(InspectionApplication.DESCRIPTIONS)) {
-              profileName[0] = ApplicationManager.getApplication().runReadAction(
-                new Computable<String>() {
-                  @Override
-                  @Nullable
-                  public String compute() {
-                    return OfflineViewParseUtil.parseProfileName(inspectionFile);
-                  }
+    final Runnable process = () -> {
+      final VirtualFile[] files = virtualFile.getChildren();
+      try {
+        for (final VirtualFile inspectionFile : files) {
+          if (inspectionFile.isDirectory()) continue;
+          final String shortName = inspectionFile.getNameWithoutExtension();
+          final String extension = inspectionFile.getExtension();
+          if (shortName.equals(InspectionApplication.DESCRIPTIONS)) {
+            profileName[0] = Application.get().runReadAction(
+              new Computable<String>() {
+                @Override
+                @Nullable
+                public String compute() {
+                  return OfflineViewParseUtil.parseProfileName(inspectionFile);
                 }
-              );
-            }
-            else if (XML_EXTENSION.equals(extension)) {
-              resMap.put(shortName, ApplicationManager.getApplication().runReadAction(
-                new Computable<Map<String, Set<OfflineProblemDescriptor>>>() {
-                  @Override
-                  public Map<String, Set<OfflineProblemDescriptor>> compute() {
-                    return OfflineViewParseUtil.parse(inspectionFile);
-                  }
+              }
+            );
+          }
+          else if (XML_EXTENSION.equals(extension)) {
+            resMap.put(shortName, Application.get().runReadAction(
+              new Computable<>() {
+                @Override
+                public Map<String, Set<OfflineProblemDescriptor>> compute() {
+                  return OfflineViewParseUtil.parse(inspectionFile);
                 }
-              ));
-            }
+              }
+            ));
           }
         }
-        catch (final Exception e) {  //all parse exceptions
-          SwingUtilities.invokeLater(() -> Messages.showInfoMessage(e.getMessage(), InspectionLocalize.offlineViewParseExceptionTitle().get()));
-          throw new ProcessCanceledException(); //cancel process
-        }
+      }
+      catch (final Exception e) {  //all parse exceptions
+        SwingUtilities.invokeLater(() -> Messages.showInfoMessage(e.getMessage(), InspectionLocalize.offlineViewParseExceptionTitle().get()));
+        throw new ProcessCanceledException(); //cancel process
       }
     };
     ProgressManager.getInstance().runProcessWithProgressAsynchronously(
@@ -165,6 +164,7 @@ public class ViewOfflineResultsAction extends AnAction implements DumbAware {
     );
   }
 
+  @RequiredUIAccess
   @SuppressWarnings({"WeakerAccess", "UnusedReturnValue"}) //used in TeamCity
   public static InspectionResultsView showOfflineView(
     @Nonnull Project project,
@@ -218,6 +218,7 @@ public class ViewOfflineResultsAction extends AnAction implements DumbAware {
   }
 
   @Nonnull
+  @RequiredUIAccess
   public static InspectionResultsView showOfflineView(
     @Nonnull Project project,
     @Nonnull Map<String, Map<String, Set<OfflineProblemDescriptor>>> resMap,

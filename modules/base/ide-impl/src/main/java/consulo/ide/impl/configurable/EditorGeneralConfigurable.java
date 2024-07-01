@@ -97,7 +97,11 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
         : ApplicationLocalize.checkboxEnableCtrlMousewheelChangesFontSize()
     );
     mouseLayout.add(cbEnableWheelFontChange);
-    propertyBuilder.add(cbEnableWheelFontChange, editorSettings::isWheelFontChangeEnabled, editorSettings::setWheelFontChangeEnabled);
+    propertyBuilder.add(
+      cbEnableWheelFontChange,
+      editorSettings::isWheelFontChangeEnabled,
+      editorSettings::setWheelFontChangeEnabled
+    );
 
     CheckBox cbEnableDnD = CheckBox.create(ApplicationLocalize.checkboxEnableDragNDropFunctionalityInEditor());
     mouseLayout.add(cbEnableDnD);
@@ -111,8 +115,10 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
     scrollingLayout.add(smoothScrolling);
     propertyBuilder.add(smoothScrolling, editorSettings::isSmoothScrolling, editorSettings::setSmoothScrolling);
 
-    RadioButton preferScrolling = RadioButton.create(LocalizeValue.localizeTODO("Prefer scrolling editor canvas to keep caret line centered"));
-    RadioButton preferMovingCaret = RadioButton.create(LocalizeValue.localizeTODO("Prefer moving caret line to minimize editor scrolling"));
+    RadioButton preferScrolling =
+      RadioButton.create(LocalizeValue.localizeTODO("Prefer scrolling editor canvas to keep caret line centered"));
+    RadioButton preferMovingCaret =
+      RadioButton.create(LocalizeValue.localizeTODO("Prefer moving caret line to minimize editor scrolling"));
 
     ValueGroup.createBool().add(preferScrolling).add(preferMovingCaret);
 
@@ -149,11 +155,17 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
     );
 
     IntBox recentLimit = IntBox.create();
-    limitsLayout.add(LabeledComponents.leftWithRight(ApplicationLocalize.editboxRecentFilesLimit().get(), recentLimit));
+    limitsLayout.add(LabeledComponents.leftWithRight(
+      ApplicationLocalize.editboxRecentFilesLimit().get(),
+      recentLimit
+    ));
     propertyBuilder.add(recentLimit, uiSettings::getRecentFilesLimit, uiSettings::setRecentFilesLimit);
 
     IntBox consoleHistoryLimit = IntBox.create();
-    limitsLayout.add(LabeledComponents.leftWithRight(ApplicationLocalize.editboxConsoleHistoryLimit().get(), consoleHistoryLimit));
+    limitsLayout.add(LabeledComponents.leftWithRight(
+      ApplicationLocalize.editboxConsoleHistoryLimit().get(),
+      consoleHistoryLimit
+    ));
     propertyBuilder.add(
       consoleHistoryLimit,
       () -> uiSettings.CONSOLE_COMMAND_HISTORY_LIMIT,
@@ -182,11 +194,19 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
 
     CheckBox useCustomSoftWrapIndent = CheckBox.create(ApplicationLocalize.checkboxUseCustomSoftWrapsIndent());
     useCustomSoftWrapIndent.setEnabled(false);
-    propertyBuilder.add(useCustomSoftWrapIndent, editorSettings::isUseCustomSoftWrapIndent, editorSettings::setUseCustomSoftWrapIndent);
+    propertyBuilder.add(
+      useCustomSoftWrapIndent,
+      editorSettings::isUseCustomSoftWrapIndent,
+      editorSettings::setUseCustomSoftWrapIndent
+    );
 
     IntBox customSoftWrapIndent = IntBox.create();
     customSoftWrapIndent.setEnabled(false);
-    propertyBuilder.add(customSoftWrapIndent, editorSettings::getCustomSoftWrapIndent, editorSettings::setCustomSoftWrapIndent);
+    propertyBuilder.add(
+      customSoftWrapIndent,
+      editorSettings::getCustomSoftWrapIndent,
+      editorSettings::setCustomSoftWrapIndent
+    );
 
     useSoftWrapsInConsole.addValueListener(event -> {
       useCustomSoftWrapIndent.setEnabled(event.getValue());
@@ -204,11 +224,19 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
     virtualSpaceLayout.add(allowPlacementCaretAtLineEnd);
 
     CheckBox allowPlacementCaretInsideTabs = CheckBox.create(ApplicationLocalize.checkboxAllowPlacementOfCaretInsideTabs());
-    propertyBuilder.add(allowPlacementCaretInsideTabs, editorSettings::isCaretInsideTabs, editorSettings::setCaretInsideTabs);
+    propertyBuilder.add(
+      allowPlacementCaretInsideTabs,
+      editorSettings::isCaretInsideTabs,
+      editorSettings::setCaretInsideTabs
+    );
     virtualSpaceLayout.add(allowPlacementCaretInsideTabs);
 
     CheckBox showVirtualSpacesBottom = CheckBox.create(ApplicationLocalize.checkboxShowVirtualSpaceAtFileBottom());
-    propertyBuilder.add(showVirtualSpacesBottom, editorSettings::isAdditionalPageAtBottom, editorSettings::setAdditionalPageAtBottom);
+    propertyBuilder.add(
+      showVirtualSpacesBottom,
+      editorSettings::isAdditionalPageAtBottom,
+      editorSettings::setAdditionalPageAtBottom
+    );
     virtualSpaceLayout.add(showVirtualSpacesBottom);
 
     layout.add(LabeledLayout.create(ApplicationLocalize.groupVirtualSpace(), virtualSpaceLayout));
@@ -243,7 +271,8 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
 
     VerticalLayout formattingLayout = VerticalLayout.create();
 
-    CheckBox showNotificationAfterReformat = CheckBox.create(LocalizeValue.localizeTODO("Show notification after reformat code action"));
+    CheckBox showNotificationAfterReformat =
+      CheckBox.create(LocalizeValue.localizeTODO("Show notification after reformat code action"));
     propertyBuilder.add(
       showNotificationAfterReformat,
       () -> editorSettings.getOptions().SHOW_NOTIFICATION_AFTER_REFORMAT_CODE_ACTION,
@@ -368,18 +397,32 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
       EditorSettingsExternalizable.STRIP_TRAILING_SPACES_CHANGED,
       ApplicationLocalize.comboboxStripModifiedLines().get()
     );
-    stripSpacesConfig.add(EditorSettingsExternalizable.STRIP_TRAILING_SPACES_WHOLE, ApplicationLocalize.comboboxStripAll().get());
-    stripSpacesConfig.add(EditorSettingsExternalizable.STRIP_TRAILING_SPACES_NONE, ApplicationLocalize.comboboxStripNone().get());
+    stripSpacesConfig.add(
+      EditorSettingsExternalizable.STRIP_TRAILING_SPACES_WHOLE,
+      ApplicationLocalize.comboboxStripAll().get()
+    );
+    stripSpacesConfig.add(
+      EditorSettingsExternalizable.STRIP_TRAILING_SPACES_NONE,
+      ApplicationLocalize.comboboxStripNone().get()
+    );
 
     ComboBox<String> stripTrailingSpacesOnSave = stripSpacesConfig.build();
-    propertyBuilder.add(stripTrailingSpacesOnSave, editorSettings::getStripTrailingSpaces, editorSettings::setStripTrailingSpaces);
+    propertyBuilder.add(
+      stripTrailingSpacesOnSave,
+      editorSettings::getStripTrailingSpaces,
+      editorSettings::setStripTrailingSpaces
+    );
     otherLayout.add(LabeledComponents.leftWithRight(
       ApplicationLocalize.comboboxStripTrailingSpacesOnSave().get(),
       stripTrailingSpacesOnSave
     ));
 
     CheckBox ensureLineFeedOnSave = CheckBox.create(LocalizeValue.localizeTODO("Ensure line feed at file end on Save"));
-    propertyBuilder.add(ensureLineFeedOnSave, editorSettings::isEnsureNewLineAtEOF, editorSettings::setEnsureNewLineAtEOF);
+    propertyBuilder.add(
+      ensureLineFeedOnSave,
+      editorSettings::isEnsureNewLineAtEOF,
+      editorSettings::setEnsureNewLineAtEOF
+    );
     otherLayout.add(ensureLineFeedOnSave);
 
     CheckBox showQuickDocOnMouseMove = CheckBox.create(LocalizeValue.localizeTODO("Show quick doc on mouse move"));

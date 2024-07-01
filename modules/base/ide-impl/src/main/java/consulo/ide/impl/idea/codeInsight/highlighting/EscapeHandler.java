@@ -23,7 +23,6 @@ import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.dataContext.DataContext;
 import consulo.find.FindManager;
 import consulo.find.FindModel;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.highlight.HighlightManager;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
@@ -42,11 +41,11 @@ public class EscapeHandler extends EditorActionHandler implements ExtensionEdito
   public void execute(Editor editor, DataContext dataContext) {
     editor.setHeaderComponent(null);
 
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Project project = dataContext.getData(Project.KEY);
     if (project != null) {
       HighlightManagerImpl highlightManager = (HighlightManagerImpl)HighlightManager.getInstance(project);
-      if (highlightManager != null && highlightManager.hideHighlights(editor, HighlightManager.HIDE_BY_ESCAPE | HighlightManager.HIDE_BY_ANY_KEY)) {
-
+      if (highlightManager != null
+        && highlightManager.hideHighlights(editor, HighlightManager.HIDE_BY_ESCAPE | HighlightManager.HIDE_BY_ANY_KEY)) {
         StatusBar statusBar = WindowManager.getInstance().getStatusBar(project);
         if (statusBar != null) {
           statusBar.setInfo("");
@@ -71,7 +70,7 @@ public class EscapeHandler extends EditorActionHandler implements ExtensionEdito
   @Override
   public boolean isEnabled(Editor editor, DataContext dataContext) {
     if (editor.hasHeaderComponent()) return true;
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Project project = dataContext.getData(Project.KEY);
 
     if (project != null) {
       HighlightManagerImpl highlightManager = (HighlightManagerImpl)HighlightManager.getInstance(project);

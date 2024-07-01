@@ -17,7 +17,6 @@ package consulo.ide.impl.execution;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.codeEditor.Editor;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.execution.internal.ExecutionDataContextCacher;
 import consulo.language.psi.PsiFile;
@@ -39,7 +38,7 @@ import java.util.Map;
 @ServiceImpl
 public class ExecutionDataContextCacherImpl implements ExecutionDataContextCacher {
   private static class CachingDataContext implements DataContext {
-    private static final Key[] keys = {Project.KEY, PlatformDataKeys.PROJECT_FILE_DIRECTORY, Editor.KEY, VirtualFile.KEY, Module.KEY, PsiFile.KEY};
+    private static final Key[] keys = {Project.KEY, Project.PROJECT_FILE_DIRECTORY, Editor.KEY, VirtualFile.KEY, Module.KEY, PsiFile.KEY};
     private final Map<Key, Object> values = new HashMap<>();
 
     @Nonnull

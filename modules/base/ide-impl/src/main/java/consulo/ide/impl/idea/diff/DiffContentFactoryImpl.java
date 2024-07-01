@@ -32,7 +32,7 @@ import consulo.ide.impl.idea.diff.contents.*;
 import consulo.ide.impl.idea.diff.tools.util.DiffNotifications;
 import consulo.ide.impl.idea.diff.util.DiffUserDataKeysEx;
 import consulo.ide.impl.idea.diff.util.DiffUtil;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.versionControlSystem.FilePath;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
@@ -98,26 +98,25 @@ public class DiffContentFactoryImpl extends DiffContentFactoryEx {
 
   @Nonnull
   @Override
-  public DocumentContent create(@Nonnull String text, @jakarta.annotation.Nullable DocumentContent referent) {
+  public DocumentContent create(@Nonnull String text, @Nullable DocumentContent referent) {
     return create(null, text, referent);
   }
 
-
   @Nonnull
   @Override
-  public DocumentContent create(@jakarta.annotation.Nullable Project project, @Nonnull String text) {
+  public DocumentContent create(@Nullable Project project, @Nonnull String text) {
     return create(project, text, (FileType)null);
   }
 
   @Nonnull
   @Override
-  public DocumentContent create(@jakarta.annotation.Nullable Project project, @Nonnull String text, @Nullable FileType type) {
+  public DocumentContent create(@Nullable Project project, @Nonnull String text, @Nullable FileType type) {
     return create(project, text, type, true);
   }
 
   @Nonnull
   @Override
-  public DocumentContent create(@Nullable Project project, @Nonnull String text, @jakarta.annotation.Nullable FileType type, boolean respectLineSeparators) {
+  public DocumentContent create(@Nullable Project project, @Nonnull String text, @Nullable FileType type, boolean respectLineSeparators) {
     return createImpl(project, text, type, null, null, respectLineSeparators, true);
   }
 
@@ -129,7 +128,7 @@ public class DiffContentFactoryImpl extends DiffContentFactoryEx {
 
   @Nonnull
   @Override
-  public DocumentContent create(@jakarta.annotation.Nullable Project project, @Nonnull String text, @Nullable VirtualFile highlightFile) {
+  public DocumentContent create(@Nullable Project project, @Nonnull String text, @Nullable VirtualFile highlightFile) {
     FileType fileType = highlightFile != null ? highlightFile.getFileType() : null;
     String fileName = highlightFile != null ? highlightFile.getName() : null;
     return createImpl(project, text, fileType, fileName, highlightFile, true, true);
@@ -137,18 +136,16 @@ public class DiffContentFactoryImpl extends DiffContentFactoryEx {
 
   @Nonnull
   @Override
-  public DocumentContent create(@jakarta.annotation.Nullable Project project, @Nonnull String text, @Nullable DocumentContent referent) {
+  public DocumentContent create(@Nullable Project project, @Nonnull String text, @Nullable DocumentContent referent) {
     if (referent == null) return create(text);
     return createImpl(project, text, referent.getContentType(), null, referent.getHighlightFile(), false, true);
   }
 
-
   @Nonnull
   @Override
-  public DocumentContent create(@Nonnull Document document, @jakarta.annotation.Nullable DocumentContent referent) {
+  public DocumentContent create(@Nonnull Document document, @Nullable DocumentContent referent) {
     return create(null, document, referent);
   }
-
 
   @Nonnull
   @Override
@@ -158,7 +155,7 @@ public class DiffContentFactoryImpl extends DiffContentFactoryEx {
 
   @Nonnull
   @Override
-  public DocumentContent create(@jakarta.annotation.Nullable Project project, @Nonnull Document document, @Nullable FileType fileType) {
+  public DocumentContent create(@Nullable Project project, @Nonnull Document document, @Nullable FileType fileType) {
     VirtualFile file = FileDocumentManager.getInstance().getFile(document);
     if (file == null) return new DocumentContentImpl(project, document, fileType, null, null, null, null);
     return create(project, document, file);
@@ -173,11 +170,10 @@ public class DiffContentFactoryImpl extends DiffContentFactoryEx {
 
   @Nonnull
   @Override
-  public DocumentContent create(@Nullable Project project, @Nonnull Document document, @jakarta.annotation.Nullable DocumentContent referent) {
+  public DocumentContent create(@Nullable Project project, @Nonnull Document document, @Nullable DocumentContent referent) {
     if (referent == null) return new DocumentContentImpl(document);
     return new DocumentContentImpl(project, document, referent.getContentType(), referent.getHighlightFile(), null, null, null);
   }
-
 
   @Nonnull
   @Override
@@ -188,9 +184,9 @@ public class DiffContentFactoryImpl extends DiffContentFactoryEx {
     return new FileContentImpl(project, file);
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   @Override
-  public DocumentContent createDocument(@jakarta.annotation.Nullable Project project, @Nonnull final VirtualFile file) {
+  public DocumentContent createDocument(@Nullable Project project, @Nonnull final VirtualFile file) {
     // TODO: add notification, that file is decompiled ?
     if (file.isDirectory()) return null;
     ThrowableComputable<Document, RuntimeException> action = () -> {
@@ -203,11 +199,10 @@ public class DiffContentFactoryImpl extends DiffContentFactoryEx {
 
   @Nullable
   @Override
-  public FileContent createFile(@jakarta.annotation.Nullable Project project, @Nonnull VirtualFile file) {
+  public FileContent createFile(@Nullable Project project, @Nonnull VirtualFile file) {
     if (file.isDirectory()) return null;
     return (FileContent)create(project, file);
   }
-
 
   @Nonnull
   @Override
@@ -218,7 +213,7 @@ public class DiffContentFactoryImpl extends DiffContentFactoryEx {
 
   @Nonnull
   @Override
-  public DocumentContent createFragment(@jakarta.annotation.Nullable Project project, @Nonnull DocumentContent content, @Nonnull TextRange range) {
+  public DocumentContent createFragment(@Nullable Project project, @Nonnull DocumentContent content, @Nonnull TextRange range) {
     return new DocumentFragmentContent(project, content, range);
   }
 
@@ -231,19 +226,19 @@ public class DiffContentFactoryImpl extends DiffContentFactoryEx {
 
   @Nonnull
   @Override
-  public DocumentContent createClipboardContent(@jakarta.annotation.Nullable DocumentContent referent) {
+  public DocumentContent createClipboardContent(@Nullable DocumentContent referent) {
     return createClipboardContent(null, referent);
   }
 
   @Nonnull
   @Override
-  public DiffContent createClipboardContent(@jakarta.annotation.Nullable Project project) {
+  public DiffContent createClipboardContent(@Nullable Project project) {
     return createClipboardContent(project, null);
   }
 
   @Nonnull
   @Override
-  public DocumentContent createClipboardContent(@jakarta.annotation.Nullable Project project, @Nullable DocumentContent referent) {
+  public DocumentContent createClipboardContent(@Nullable Project project, @Nullable DocumentContent referent) {
     String text = CopyPasteManager.getInstance().getContents(DataFlavor.stringFlavor);
 
     FileType type = referent != null ? referent.getContentType() : null;
@@ -252,12 +247,13 @@ public class DiffContentFactoryImpl extends DiffContentFactoryEx {
     return createImpl(project, StringUtil.notNullize(text), type, "Clipboard.txt", highlightFile, true, false);
   }
 
-
   @Nonnull
   @Override
-  public DiffContent createFromBytes(@jakarta.annotation.Nullable Project project,
-                                     @Nonnull byte[] content,
-                                     @Nonnull FilePath filePath) throws IOException {
+  public DiffContent createFromBytes(
+    @Nullable Project project,
+    @Nonnull byte[] content,
+    @Nonnull FilePath filePath
+  ) throws IOException {
     if (filePath.getFileType().isBinary()) {
       return createBinaryImpl(project, content, filePath.getFileType(), filePath.getName(), filePath.getVirtualFile());
     }
@@ -267,9 +263,11 @@ public class DiffContentFactoryImpl extends DiffContentFactoryEx {
 
   @Nonnull
   @Override
-  public DiffContent createFromBytes(@jakarta.annotation.Nullable Project project,
-                                     @Nonnull byte[] content,
-                                     @Nonnull VirtualFile highlightFile) throws IOException {
+  public DiffContent createFromBytes(
+    @Nullable Project project,
+    @Nonnull byte[] content,
+    @Nonnull VirtualFile highlightFile
+  ) throws IOException {
     // TODO: check if FileType.UNKNOWN is actually a text ?
     if (highlightFile.getFileType().isBinary()) {
       return createBinaryImpl(project, content, highlightFile.getFileType(), highlightFile.getName(), highlightFile);
@@ -280,33 +278,49 @@ public class DiffContentFactoryImpl extends DiffContentFactoryEx {
 
   @Nonnull
   @Override
-  public DocumentContent createDocumentFromBytes(@jakarta.annotation.Nullable Project project, @Nonnull byte[] content, @Nonnull FilePath filePath) {
-    return createFromBytesImpl(project, content, filePath.getFileType(), filePath.getName(), filePath.getVirtualFile(),
-                               filePath.getCharset());
+  public DocumentContent createDocumentFromBytes(@Nullable Project project, @Nonnull byte[] content, @Nonnull FilePath filePath) {
+    return createFromBytesImpl(
+      project,
+      content,
+      filePath.getFileType(),
+      filePath.getName(),
+      filePath.getVirtualFile(),
+      filePath.getCharset()
+    );
   }
 
   @Nonnull
   @Override
-  public DocumentContent createDocumentFromBytes(@jakarta.annotation.Nullable Project project, @Nonnull byte[] content, @Nonnull VirtualFile highlightFile) {
-    return createFromBytesImpl(project, content, highlightFile.getFileType(), highlightFile.getName(), highlightFile,
-                               highlightFile.getCharset());
+  public DocumentContent createDocumentFromBytes(@Nullable Project project, @Nonnull byte[] content, @Nonnull VirtualFile highlightFile) {
+    return createFromBytesImpl(
+      project,
+      content,
+      highlightFile.getFileType(),
+      highlightFile.getName(),
+      highlightFile,
+      highlightFile.getCharset()
+    );
   }
 
   @Nonnull
   @Override
-  public DiffContent createBinary(@jakarta.annotation.Nullable Project project,
-                                  @Nonnull byte[] content,
-                                  @Nonnull FileType type,
-                                  @Nonnull String fileName) throws IOException {
+  public DiffContent createBinary(
+    @Nullable Project project,
+    @Nonnull byte[] content,
+    @Nonnull FileType type,
+    @Nonnull String fileName
+  ) throws IOException {
     return createBinaryImpl(project, content, type, fileName, null);
   }
 
   @Nonnull
-  private DiffContent createBinaryImpl(@jakarta.annotation.Nullable Project project,
-                                       @Nonnull byte[] content,
-                                       @Nonnull FileType type,
-                                       @Nonnull String fileName,
-                                       @jakarta.annotation.Nullable VirtualFile highlightFile) throws IOException {
+  private DiffContent createBinaryImpl(
+    @Nullable Project project,
+    @Nonnull byte[] content,
+    @Nonnull FileType type,
+    @Nonnull String fileName,
+    @Nullable VirtualFile highlightFile
+  ) throws IOException {
     // workaround - our JarFileSystem and decompilers can't process non-local files
     boolean useTemporalFile = type instanceof ArchiveFileType || BinaryFileDecompiler.forFileType(type) != null;
 
@@ -323,26 +337,30 @@ public class DiffContentFactoryImpl extends DiffContentFactoryEx {
   }
 
   @Nonnull
-  private static DocumentContent createImpl(@jakarta.annotation.Nullable Project project,
-                                            @Nonnull String text,
-                                            @jakarta.annotation.Nullable FileType fileType,
-                                            @jakarta.annotation.Nullable String fileName,
-                                            @jakarta.annotation.Nullable VirtualFile highlightFile,
-                                            boolean respectLineSeparators,
-                                            boolean readOnly) {
+  private static DocumentContent createImpl(
+    @Nullable Project project,
+    @Nonnull String text,
+    @Nullable FileType fileType,
+    @Nullable String fileName,
+    @Nullable VirtualFile highlightFile,
+    boolean respectLineSeparators,
+    boolean readOnly
+  ) {
     return createImpl(project, text, fileType, fileName, highlightFile, null, null, respectLineSeparators, readOnly);
   }
 
   @Nonnull
-  private static DocumentContent createImpl(@jakarta.annotation.Nullable Project project,
-                                            @Nonnull String text,
-                                            @Nullable FileType fileType,
-                                            @Nullable String fileName,
-                                            @Nullable VirtualFile highlightFile,
-                                            @jakarta.annotation.Nullable Charset charset,
-                                            @jakarta.annotation.Nullable Boolean bom,
-                                            boolean respectLineSeparators,
-                                            boolean readOnly) {
+  private static DocumentContent createImpl(
+    @Nullable Project project,
+    @Nonnull String text,
+    @Nullable FileType fileType,
+    @Nullable String fileName,
+    @Nullable VirtualFile highlightFile,
+    @Nullable Charset charset,
+    @Nullable Boolean bom,
+    boolean respectLineSeparators,
+    boolean readOnly
+  ) {
     if (UnknownFileType.INSTANCE == fileType) fileType = PlainTextFileType.INSTANCE;
 
     // TODO: detect invalid (different across the file) separators ?
@@ -358,12 +376,14 @@ public class DiffContentFactoryImpl extends DiffContentFactoryEx {
   }
 
   @Nonnull
-  private static DocumentContent createFromBytesImpl(@Nullable Project project,
-                                                     @Nonnull byte[] content,
-                                                     @Nonnull FileType fileType,
-                                                     @Nonnull String fileName,
-                                                     @jakarta.annotation.Nullable VirtualFile highlightFile,
-                                                     @Nonnull Charset charset) {
+  private static DocumentContent createFromBytesImpl(
+    @Nullable Project project,
+    @Nonnull byte[] content,
+    @Nonnull FileType fileType,
+    @Nonnull String fileName,
+    @Nullable VirtualFile highlightFile,
+    @Nonnull Charset charset
+  ) {
     Charset bomCharset = CharsetToolkit.guessFromBOM(content);
     boolean isBOM = bomCharset != null;
     if (isBOM) charset = bomCharset;
@@ -385,10 +405,12 @@ public class DiffContentFactoryImpl extends DiffContentFactoryEx {
   }
 
   @Nonnull
-  private static VirtualFile createTemporalFile(@jakarta.annotation.Nullable Project project,
-                                                @Nonnull String prefix,
-                                                @Nonnull String suffix,
-                                                @Nonnull byte[] content) throws IOException {
+  private static VirtualFile createTemporalFile(
+    @Nullable Project project,
+    @Nonnull String prefix,
+    @Nonnull String suffix,
+    @Nonnull byte[] content
+  ) throws IOException {
     File tempFile = FileUtil.createTempFile(PathUtil.suggestFileName(prefix + "_", true, false), PathUtil.suggestFileName("_" + suffix, true, false), true);
     if (content.length != 0) {
       FileUtil.writeToFile(tempFile, content);
@@ -404,11 +426,13 @@ public class DiffContentFactoryImpl extends DiffContentFactoryEx {
   }
 
   @Nonnull
-  private static Document createDocument(@Nullable Project project,
-                                         @Nonnull String content,
-                                         @jakarta.annotation.Nullable FileType fileType,
-                                         @Nullable String fileName,
-                                         boolean readOnly) {
+  private static Document createDocument(
+    @Nullable Project project,
+    @Nonnull String content,
+    @Nullable FileType fileType,
+    @Nullable String fileName,
+    boolean readOnly
+  ) {
     if (project != null && !project.isDefault() &&
         fileType != null && !fileType.isBinary() &&
         Registry.is("diff.enable.psi.highlighting")) {
@@ -426,11 +450,13 @@ public class DiffContentFactoryImpl extends DiffContentFactoryEx {
   }
 
   @Nullable
-  private static Document createPsiDocument(@Nonnull Project project,
-                                            @Nonnull String content,
-                                            @Nonnull FileType fileType,
-                                            @Nonnull String fileName,
-                                            boolean readOnly) {
+  private static Document createPsiDocument(
+    @Nonnull Project project,
+    @Nonnull String content,
+    @Nonnull FileType fileType,
+    @Nonnull String fileName,
+    boolean readOnly
+  ) {
     ThrowableComputable<Document,RuntimeException> action = () -> {
       LightVirtualFile file = new LightVirtualFile(fileName, fileType, content);
       file.setWritable(!readOnly);

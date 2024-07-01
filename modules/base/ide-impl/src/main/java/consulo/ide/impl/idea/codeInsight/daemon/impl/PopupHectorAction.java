@@ -20,24 +20,26 @@
  */
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
+import consulo.dataContext.DataContext;
+import consulo.language.psi.PsiFile;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.dataContext.DataContext;
-import consulo.language.editor.LangDataKeys;
 import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.language.psi.PsiFile;
 
 public class PopupHectorAction extends AnAction {
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(final AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
-    final PsiFile file = dataContext.getData(LangDataKeys.PSI_FILE);
+    final PsiFile file = dataContext.getData(PsiFile.KEY);
     new HectorComponent(file).showComponent(JBPopupFactory.getInstance().guessBestPopupLocation(dataContext));
   }
 
   @Override
+  @RequiredUIAccess
   public void update(final AnActionEvent e) {
-    e.getPresentation().setEnabled(e.getDataContext().getData(LangDataKeys.PSI_FILE) != null);
+    e.getPresentation().setEnabled(e.getDataContext().getData(PsiFile.KEY) != null);
   }
 }

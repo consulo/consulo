@@ -15,51 +15,50 @@
  */
 package consulo.ide.impl.externalSystem.service.module.wizard;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.application.progress.Task;
 import consulo.component.persist.PersistentStateComponent;
+import consulo.content.library.Library;
+import consulo.content.library.LibraryTable;
 import consulo.externalSystem.localize.ExternalSystemLocalize;
 import consulo.externalSystem.model.DataNode;
 import consulo.externalSystem.model.ExternalSystemDataKeys;
 import consulo.externalSystem.model.ProjectSystemId;
-import consulo.externalSystem.service.project.ProjectData;
 import consulo.externalSystem.model.task.ExternalSystemTaskNotificationListener;
 import consulo.externalSystem.model.task.ProgressExecutionMode;
-import consulo.ide.impl.idea.openapi.externalSystem.service.internal.ExternalSystemResolveProjectTask;
-import consulo.ide.impl.idea.openapi.externalSystem.service.project.ExternalProjectRefreshCallback;
-import consulo.ide.impl.idea.openapi.externalSystem.service.project.manage.ProjectDataManager;
-import consulo.ide.impl.idea.openapi.externalSystem.service.settings.AbstractImportFromExternalSystemControl;
+import consulo.externalSystem.service.project.ProjectData;
 import consulo.externalSystem.setting.AbstractExternalSystemSettings;
 import consulo.externalSystem.setting.ExternalProjectSettings;
 import consulo.externalSystem.util.DisposeAwareProjectChange;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
-import consulo.externalSystem.ExternalSystemBundle;
+import consulo.ide.impl.idea.openapi.externalSystem.service.internal.ExternalSystemResolveProjectTask;
+import consulo.ide.impl.idea.openapi.externalSystem.service.project.ExternalProjectRefreshCallback;
+import consulo.ide.impl.idea.openapi.externalSystem.service.project.manage.ProjectDataManager;
+import consulo.ide.impl.idea.openapi.externalSystem.service.settings.AbstractImportFromExternalSystemControl;
 import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemUtil;
+import consulo.ide.impl.idea.openapi.roots.impl.libraries.ProjectLibraryTableImpl;
+import consulo.ide.moduleImport.ModuleImportProvider;
 import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressManager;
-import consulo.application.progress.Task;
+import consulo.module.content.internal.ProjectRootManagerEx;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import consulo.module.content.internal.ProjectRootManagerEx;
-import consulo.ide.impl.idea.openapi.roots.impl.libraries.ProjectLibraryTableImpl;
-import consulo.content.library.Library;
-import consulo.content.library.LibraryTable;
 import consulo.project.startup.StartupManager;
-import consulo.util.lang.ref.Ref;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.util.lang.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.logging.Logger;
-import consulo.ide.moduleImport.ModuleImportProvider;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.wizard.WizardStep;
 import consulo.ui.ex.wizard.WizardStepValidationException;
-
+import consulo.util.io.FileUtil;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.ref.Ref;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
@@ -126,58 +125,49 @@ public abstract class AbstractExternalModuleImportProvider<C extends AbstractImp
       beforeCommit(externalProjectNode, project);
     }
 
-    StartupManager.getInstance(project).runWhenProjectIsInitialized(new Runnable() {
-      @SuppressWarnings("unchecked")
-      @Override
-      public void run() {
-        AbstractExternalSystemSettings systemSettings = ExternalSystemApiUtil.getSettings(project, myExternalSystemId);
-        final ExternalProjectSettings projectSettings = getCurrentExternalProjectSettings();
-        Set<ExternalProjectSettings> projects = new HashSet<>(systemSettings.getLinkedProjectsSettings());
-        // add current importing project settings to linked projects settings or replace if similar already exist
-        projects.remove(projectSettings);
-        projects.add(projectSettings);
+    StartupManager.getInstance(project).runWhenProjectIsInitialized(() -> {
+      AbstractExternalSystemSettings systemSettings = ExternalSystemApiUtil.getSettings(project, myExternalSystemId);
+      final ExternalProjectSettings projectSettings = getCurrentExternalProjectSettings();
+      Set<ExternalProjectSettings> projects = new HashSet<>(systemSettings.getLinkedProjectsSettings());
+      // add current importing project settings to linked projects settings or replace if similar already exist
+      projects.remove(projectSettings);
+      projects.add(projectSettings);
 
-        systemSettings.copyFrom(myControl.getSystemSettings());
-        systemSettings.setLinkedProjectsSettings(projects);
+      systemSettings.copyFrom(myControl.getSystemSettings());
+      systemSettings.setLinkedProjectsSettings(projects);
 
-        if (externalProjectNode != null) {
-          ExternalSystemUtil.ensureToolWindowInitialized(project, myExternalSystemId);
-          ExternalSystemApiUtil.executeProjectChangeAction(new DisposeAwareProjectChange(project) {
-            @RequiredUIAccess
+      if (externalProjectNode != null) {
+        ExternalSystemUtil.ensureToolWindowInitialized(project, myExternalSystemId);
+        ExternalSystemApiUtil.executeProjectChangeAction(new DisposeAwareProjectChange(project) {
+          @Override
+          @RequiredUIAccess
+          public void execute() {
+            ProjectRootManagerEx.getInstanceEx(project).mergeRootsChangesDuring(()-> {
+              myProjectDataManager.importData(externalProjectNode.getKey(), Collections.singleton(externalProjectNode), project, true);
+              myExternalProjectNode = null;
+            });
+          }
+        });
+
+        final Runnable resolveDependenciesTask = () -> {
+          LocalizeValue progressText = ExternalSystemLocalize.progressResolveLibraries(myExternalSystemId.getDisplayName());
+          ProgressManager.getInstance().run(new Task.Backgroundable(project, progressText.get(), false) {
             @Override
-            public void execute() {
-              ProjectRootManagerEx.getInstanceEx(project).mergeRootsChangesDuring(new Runnable() {
-                @Override
-                public void run() {
-                  myProjectDataManager.importData(externalProjectNode.getKey(), Collections.singleton(externalProjectNode), project, true);
-                  myExternalProjectNode = null;
-                }
-              });
+            public void run(@Nonnull final ProgressIndicator indicator) {
+              if (project.isDisposed()) return;
+              ExternalSystemResolveProjectTask task =
+                new ExternalSystemResolveProjectTask(myExternalSystemId, project, projectSettings.getExternalProjectPath(), false);
+              task.execute(indicator, ExternalSystemTaskNotificationListener.EP_NAME.getExtensions());
+              DataNode<ProjectData> projectWithResolvedLibraries = task.getExternalProject();
+              if (projectWithResolvedLibraries == null) {
+                return;
+              }
+
+              setupLibraries(projectWithResolvedLibraries, project);
             }
           });
-
-          final Runnable resolveDependenciesTask = new Runnable() {
-            @Override
-            public void run() {
-              LocalizeValue progressText = ExternalSystemLocalize.progressResolveLibraries(myExternalSystemId.getDisplayName());
-              ProgressManager.getInstance().run(new Task.Backgroundable(project, progressText.get(), false) {
-                @Override
-                public void run(@Nonnull final ProgressIndicator indicator) {
-                  if (project.isDisposed()) return;
-                  ExternalSystemResolveProjectTask task = new ExternalSystemResolveProjectTask(myExternalSystemId, project, projectSettings.getExternalProjectPath(), false);
-                  task.execute(indicator, ExternalSystemTaskNotificationListener.EP_NAME.getExtensions());
-                  DataNode<ProjectData> projectWithResolvedLibraries = task.getExternalProject();
-                  if (projectWithResolvedLibraries == null) {
-                    return;
-                  }
-
-                  setupLibraries(projectWithResolvedLibraries, project);
-                }
-              });
-            }
-          };
-          UIUtil.invokeLaterIfNeeded(resolveDependenciesTask);
-        }
+        };
+        UIUtil.invokeLaterIfNeeded(resolveDependenciesTask);
       }
     });
   }
@@ -198,7 +188,7 @@ public abstract class AbstractExternalModuleImportProvider<C extends AbstractImp
     final String externalSystemName = myExternalSystemId.getReadableName().get();
     File projectFile = getProjectFile();
     if (projectFile == null) {
-      throw new WizardStepValidationException(ExternalSystemBundle.message("error.project.undefined"));
+      throw new WizardStepValidationException(ExternalSystemLocalize.errorProjectUndefined().get());
     }
     projectFile = getExternalProjectConfigToUse(projectFile);
     final Ref<WizardStepValidationException> error = new Ref<>();
@@ -213,7 +203,7 @@ public abstract class AbstractExternalModuleImportProvider<C extends AbstractImp
         if (!StringUtil.isEmpty(errorDetails)) {
           LOG.warn(errorDetails);
         }
-        error.set(new WizardStepValidationException(ExternalSystemBundle.message("error.resolve.with.reason", errorMessage)));
+        error.set(new WizardStepValidationException(ExternalSystemLocalize.errorResolveWithReason(errorMessage).get()));
       }
     };
 
@@ -221,15 +211,19 @@ public abstract class AbstractExternalModuleImportProvider<C extends AbstractImp
     final File finalProjectFile = projectFile;
     final String externalProjectPath = FileUtil.toCanonicalPath(finalProjectFile.getAbsolutePath());
     final Ref<WizardStepValidationException> exRef = new Ref<>();
-    executeAndRestoreDefaultProjectSettings(project, new Runnable() {
-      @Override
-      public void run() {
-        try {
-          ExternalSystemUtil.refreshProject(project, myExternalSystemId, externalProjectPath, callback, true, ProgressExecutionMode.MODAL_SYNC);
-        }
-        catch (IllegalArgumentException e) {
-          exRef.set(new WizardStepValidationException(ExternalSystemBundle.message("error.cannot.parse.project", externalSystemName)));
-        }
+    executeAndRestoreDefaultProjectSettings(project, ()-> {
+      try {
+        ExternalSystemUtil.refreshProject(
+          project,
+          myExternalSystemId,
+          externalProjectPath,
+          callback,
+          true,
+          ProgressExecutionMode.MODAL_SYNC
+        );
+      }
+      catch (IllegalArgumentException e) {
+        exRef.set(new WizardStepValidationException(ExternalSystemLocalize.errorCannotParseProject(externalSystemName).get()));
       }
     });
     WizardStepValidationException ex = exRef.get();
@@ -331,30 +325,30 @@ public abstract class AbstractExternalModuleImportProvider<C extends AbstractImp
       @RequiredUIAccess
       @Override
       public void execute() {
-        ProjectRootManagerEx.getInstanceEx(project).mergeRootsChangesDuring(new Runnable() {
-          @Override
-          public void run() {
-            if (ExternalSystemApiUtil.isNewProjectConstruction()) {
-              // Clean existing libraries (if any).
-              LibraryTable projectLibraryTable = ProjectLibraryTableImpl.getInstance(project);
-              if (projectLibraryTable == null) {
-                LOG.warn("Can't resolve external dependencies of the target gradle project (" + project + "). Reason: project " + "library table is undefined");
-                return;
-              }
-              LibraryTable.ModifiableModel model = projectLibraryTable.getModifiableModel();
-              try {
-                for (Library library : model.getLibraries()) {
-                  model.removeLibrary(library);
-                }
-              }
-              finally {
-                model.commit();
+        ProjectRootManagerEx.getInstanceEx(project).mergeRootsChangesDuring(() -> {
+          if (ExternalSystemApiUtil.isNewProjectConstruction()) {
+            // Clean existing libraries (if any).
+            LibraryTable projectLibraryTable = ProjectLibraryTableImpl.getInstance(project);
+            if (projectLibraryTable == null) {
+              LOG.warn(
+                "Can't resolve external dependencies of the target gradle project (" + project + ")." +
+                  " Reason: project library table is undefined"
+              );
+              return;
+            }
+            LibraryTable.ModifiableModel model = projectLibraryTable.getModifiableModel();
+            try {
+              for (Library library : model.getLibraries()) {
+                model.removeLibrary(library);
               }
             }
-
-            // Register libraries.
-            myProjectDataManager.importData(Collections.<DataNode<?>>singletonList(projectWithResolvedLibraries), project, false);
+            finally {
+              model.commit();
+            }
           }
+
+          // Register libraries.
+          myProjectDataManager.importData(Collections.<DataNode<?>>singletonList(projectWithResolvedLibraries), project, false);
         });
       }
     });
@@ -378,7 +372,10 @@ public abstract class AbstractExternalModuleImportProvider<C extends AbstractImp
   }
 
   @Override
-  public void buildSteps(@Nonnull Consumer<WizardStep<ExternalModuleImportContext<C>>> consumer, @Nonnull ExternalModuleImportContext<C> context) {
+  public void buildSteps(
+    @Nonnull Consumer<WizardStep<ExternalModuleImportContext<C>>> consumer,
+    @Nonnull ExternalModuleImportContext<C> context
+  ) {
     consumer.accept(new SelectExternalProjectStep<>());
   }
 

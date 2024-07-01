@@ -5,8 +5,6 @@ import com.intellij.rt.coverage.data.LineCoverage;
 import com.intellij.rt.coverage.data.LineData;
 import com.intellij.rt.coverage.data.ProjectData;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ApplicationManager;
-import consulo.application.CommonBundle;
 import consulo.application.util.function.Computable;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
@@ -27,35 +25,37 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.ide.impl.idea.coverage.view.CoverageViewSuiteListener;
-import consulo.project.ui.view.ProjectView;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerAdapter;
+import consulo.project.ui.view.ProjectView;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.Alarm;
+import consulo.util.io.FileUtil;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -219,7 +219,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
         message += "and traces directory \'" + FileUtil.getNameWithoutExtension(new File(fileName)) + "\' ";
       }
       message += "on disk?";
-      if (Messages.showYesNoDialog(myProject, message, CommonBundle.getWarningTitle(), Messages.getWarningIcon()) == Messages.YES) {
+      if (Messages.showYesNoDialog(myProject, message, CommonLocalize.titleWarning().get(), UIUtil.getWarningIcon()) == Messages.YES) {
         deleteCachedCoverage(fileName, deleteTraces);
       }
     }
@@ -285,57 +285,61 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
 
   @Override
   public void coverageGathered(@Nonnull final CoverageSuite suite) {
-    ApplicationManager.getApplication().invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        if (myProject.isDisposed()) return;
-        if (myCurrentSuitesBundle != null) {
-          final String message = CodeInsightBundle.message("display.coverage.prompt", suite.getPresentableName());
+    myProject.getApplication().invokeLater(() -> {
+      if (myProject.isDisposed()) return;
+      if (myCurrentSuitesBundle != null) {
+        final LocalizeValue message = CodeInsightLocalize.displayCoveragePrompt(suite.getPresentableName());
 
-          final CoverageOptionsProvider coverageOptionsProvider = CoverageOptionsProvider.getInstance(myProject);
-          final DialogWrapper.DoNotAskOption doNotAskOption = new DialogWrapper.DoNotAskOption() {
-            @Override
-            public boolean isToBeShown() {
-              return coverageOptionsProvider.getOptionToReplace() == 3;
-            }
-
-            @Override
-            public void setToBeShown(boolean value, int exitCode) {
-              coverageOptionsProvider.setOptionsToReplace(value ? 3 : exitCode);
-            }
-
-            @Override
-            public boolean canBeHidden() {
-              return true;
-            }
-
-            @Override
-            public boolean shouldSaveOptionsOnCancel() {
-              return true;
-            }
-
-            @Nonnull
-            @Override
-            public String getDoNotShowMessage() {
-              return CommonBundle.message("dialog.options.do.not.show");
-            }
-          };
-          final String[] options = myCurrentSuitesBundle.getCoverageEngine() == suite.getCoverageEngine()
-                                   ? new String[]{REPLACE_ACTIVE_SUITES, ADD_TO_ACTIVE_SUITES, DO_NOT_APPLY_COLLECTED_COVERAGE}
-                                   : new String[]{REPLACE_ACTIVE_SUITES, DO_NOT_APPLY_COLLECTED_COVERAGE};
-          final int answer = doNotAskOption.isToBeShown()
-                             ? Messages.showDialog(message, CodeInsightBundle.message("code.coverage"), options, 1, Messages.getQuestionIcon(), doNotAskOption)
-                             : coverageOptionsProvider.getOptionToReplace();
-          if (answer == DialogWrapper.OK_EXIT_CODE) {
-            chooseSuitesBundle(new CoverageSuitesBundle(suite));
+        final CoverageOptionsProvider coverageOptionsProvider = CoverageOptionsProvider.getInstance(myProject);
+        final DialogWrapper.DoNotAskOption doNotAskOption = new DialogWrapper.DoNotAskOption() {
+          @Override
+          public boolean isToBeShown() {
+            return coverageOptionsProvider.getOptionToReplace() == 3;
           }
-          else if (answer == 1) {
-            chooseSuitesBundle(new CoverageSuitesBundle(ArrayUtil.append(myCurrentSuitesBundle.getSuites(), suite)));
+
+          @Override
+          public void setToBeShown(boolean value, int exitCode) {
+            coverageOptionsProvider.setOptionsToReplace(value ? 3 : exitCode);
           }
-        }
-        else {
+
+          @Override
+          public boolean canBeHidden() {
+            return true;
+          }
+
+          @Override
+          public boolean shouldSaveOptionsOnCancel() {
+            return true;
+          }
+
+          @Nonnull
+          @Override
+          public String getDoNotShowMessage() {
+            return CommonLocalize.dialogOptionsDoNotShow().get();
+          }
+        };
+        final String[] options = myCurrentSuitesBundle.getCoverageEngine() == suite.getCoverageEngine()
+          ? new String[]{REPLACE_ACTIVE_SUITES, ADD_TO_ACTIVE_SUITES, DO_NOT_APPLY_COLLECTED_COVERAGE}
+          : new String[]{REPLACE_ACTIVE_SUITES, DO_NOT_APPLY_COLLECTED_COVERAGE};
+        final int answer = doNotAskOption.isToBeShown()
+          ? Messages.showDialog(
+            message.get(),
+            CodeInsightLocalize.codeCoverage().get(),
+            options,
+            1,
+            UIUtil.getQuestionIcon(),
+            doNotAskOption
+          )
+          : coverageOptionsProvider.getOptionToReplace();
+        if (answer == DialogWrapper.OK_EXIT_CODE) {
           chooseSuitesBundle(new CoverageSuitesBundle(suite));
         }
+        else if (answer == 1) {
+          chooseSuitesBundle(new CoverageSuitesBundle(ArrayUtil.append(myCurrentSuitesBundle.getSuites(), suite)));
+        }
+      }
+      else {
+        chooseSuitesBundle(new CoverageSuitesBundle(suite));
       }
     });
   }
@@ -343,14 +347,11 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
   @Override
   public void triggerPresentationUpdate() {
     renewInformationInEditors();
-    UIUtil.invokeLaterIfNeeded(new Runnable() {
-      @Override
-      public void run() {
+    UIUtil.invokeLaterIfNeeded(() -> {
         if (myProject.isDisposed()) return;
         ProjectView.getInstance(myProject).refresh();
         CoverageViewManager.getInstance(myProject).setReady(true);
-      }
-    });
+      });
   }
 
   @Override
@@ -450,7 +451,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
     synchronized (myLock) {
       if (myIsProjectClosing) return null;
     }
-    return ApplicationManager.getApplication().runReadAction(computation);
+    return myProject.getApplication().runReadAction(computation);
   }
 
   @Override
@@ -459,7 +460,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
     final ProjectData data = suite.getCoverageData();
     if (data == null) return;
     mySubCoverageIsActive = true;
-    final Map<String, Set<Integer>> executionTrace = new HashMap<String, Set<Integer>>();
+    final Map<String, Set<Integer>> executionTrace = new HashMap<>();
     for (CoverageSuite coverageSuite : suite.getSuites()) {
       final String fileName = coverageSuite.getCoverageDataFileName();
       final File tracesDir = getTracesDirectory(fileName);
@@ -475,7 +476,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
               final int linesSize = in.readInt();
               Set<Integer> lines = executionTrace.get(className);
               if (lines == null) {
-                lines = new HashSet<Integer>();
+                lines = new HashSet<>();
                 executionTrace.put(className, lines);
               }
               for (int l = 0; l < linesSize; l++) {
@@ -605,15 +606,16 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
   }
 
   @Nonnull
-  private CoverageSuite createCoverageSuite(final CoverageRunner coverageRunner,
-                                            final String name,
-                                            final CoverageFileProvider fileProvider,
-                                            final String[] filters,
-                                            final long lastCoverageTimeStamp,
-                                            final String suiteToMergeWith,
-                                            final boolean collectLineInfo,
-                                            final boolean tracingEnabled) {
-
+  private CoverageSuite createCoverageSuite(
+    final CoverageRunner coverageRunner,
+    final String name,
+    final CoverageFileProvider fileProvider,
+    final String[] filters,
+    final long lastCoverageTimeStamp,
+    final String suiteToMergeWith,
+    final boolean collectLineInfo,
+    final boolean tracingEnabled
+  ) {
     CoverageSuite suite = null;
     for (CoverageEngine engine : CoverageEngine.EP_NAME.getExtensionList()) {
       if (coverageRunner.acceptsCoverageEngine(engine)) {
@@ -630,7 +632,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
 
   private class CoverageEditorFactoryListener implements EditorFactoryListener {
     private final Alarm myAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, myProject);
-    private final Map<Editor, Runnable> myCurrentEditors = new HashMap<Editor, Runnable>();
+    private final Map<Editor, Runnable> myCurrentEditors = new HashMap<>();
 
     @Override
     public void editorCreated(@Nonnull EditorFactoryEvent event) {
@@ -640,7 +642,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
 
       final Editor editor = event.getEditor();
       if (editor.getProject() != myProject) return;
-      final PsiFile psiFile = ApplicationManager.getApplication().runReadAction(new Computable<PsiFile>() {
+      final PsiFile psiFile = myProject.getApplication().runReadAction(new Computable<PsiFile>() {
         @Nullable
         @Override
         public PsiFile compute() {
@@ -668,17 +670,14 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
           myAnnotators.put(editor, finalAnnotator);
         }
 
-        final Runnable request = new Runnable() {
-          @Override
-          public void run() {
+        final Runnable request = () -> {
             if (myProject.isDisposed()) return;
             if (myCurrentSuitesBundle != null) {
               if (engine.acceptedByFilters(psiFile, myCurrentSuitesBundle)) {
                 finalAnnotator.showCoverageInformation(myCurrentSuitesBundle);
               }
             }
-          }
-        };
+          };
         myCurrentEditors.put(editor, request);
         myAlarm.addRequest(request, 100);
       }

@@ -19,9 +19,9 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.event.EditorMouseEventArea;
 import consulo.codeEditor.EditorGutterComponentEx;
 import consulo.application.dumb.DumbAware;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.navigation.Navigatable;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 
 import jakarta.annotation.Nonnull;
@@ -53,6 +53,7 @@ public abstract class OpenInEditorWithMouseAction extends AnAction implements Du
   }
 
   @Override
+  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
     InputEvent inputEvent = e.getInputEvent();
     if (!(inputEvent instanceof MouseEvent)) {
@@ -60,7 +61,7 @@ public abstract class OpenInEditorWithMouseAction extends AnAction implements Du
       return;
     }
 
-    if (e.getData(CommonDataKeys.PROJECT) == null) {
+    if (e.getData(Project.KEY) == null) {
       e.getPresentation().setEnabledAndVisible(false);
       return;
     }
@@ -100,10 +101,11 @@ public abstract class OpenInEditorWithMouseAction extends AnAction implements Du
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     MouseEvent inputEvent = (MouseEvent)e.getInputEvent();
     OpenInEditorAction openInEditorAction = e.getRequiredData(OpenInEditorAction.KEY);
-    Project project = e.getRequiredData(CommonDataKeys.PROJECT);
+    Project project = e.getRequiredData(Project.KEY);
 
     Component component = inputEvent.getComponent();
     Point point = inputEvent.getPoint();
@@ -121,7 +123,7 @@ public abstract class OpenInEditorWithMouseAction extends AnAction implements Du
     openInEditorAction.openEditor(project, navigatable);
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private Editor getEditor(@Nonnull Component component) {
     for (Editor editor : myEditors) {
       if (editor != null && editor.getGutter() == component) {

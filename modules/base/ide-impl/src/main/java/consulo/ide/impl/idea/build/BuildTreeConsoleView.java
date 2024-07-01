@@ -3,6 +3,7 @@ package consulo.ide.impl.idea.build;
 
 import consulo.application.AllIcons;
 import consulo.application.Application;
+import consulo.application.HelpManager;
 import consulo.application.dumb.DumbAware;
 import consulo.application.util.DateFormatUtil;
 import consulo.application.util.UserHomeFileUtil;
@@ -37,7 +38,6 @@ import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.util.EditSourceOnEnterKeyHandler;
 import consulo.ide.impl.idea.util.concurrency.InvokerImpl;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -881,7 +881,7 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
   @Override
   @Nullable
   public Object getData(@Nonnull Key dataId) {
-    if (PlatformDataKeys.HELP_ID == dataId) return "reference.build.tool.window";
+    if (HelpManager.HELP_ID == dataId) return "reference.build.tool.window";
     if (Project.KEY == dataId) return myProject;
     if (Navigatable.KEY_OF_ARRAY == dataId) return extractSelectedNodesNavigatables();
     if (Navigatable.KEY == dataId) return extractSelectedNodeNavigatable();

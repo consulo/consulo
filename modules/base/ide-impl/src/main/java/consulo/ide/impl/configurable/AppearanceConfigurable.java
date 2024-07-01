@@ -16,6 +16,7 @@
 package consulo.ide.impl.configurable;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.application.ui.UIFontManager;
 import consulo.application.ui.UISettings;
 import consulo.colorScheme.EditorColorsManager;
@@ -96,9 +97,10 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
       VerticalLayout uiOptions = VerticalLayout.create();
       uiOptions.add(myCycleScrollingCheckBox = CheckBox.create(IdeLocalize.checkbooxCyclicScrollingInLists()));
       uiOptions.add(myHideIconsInQuickNavigation = CheckBox.create(IdeLocalize.checkboxShowIconsInQuickNavigation()));
-      uiOptions.add(myMoveMouseOnDefaultButtonCheckBox = CheckBox.create(IdeLocalize.checkboxPositionCursorOnDefaultButton()));
-      uiOptions.add(myHideNavigationPopupsCheckBox = CheckBox.create("Hide navigation popups on focus loss"));
-      uiOptions.add(myAltDNDCheckBox = CheckBox.create("Drag-n-Drop with ALT pressed only"));
+      uiOptions.add(myMoveMouseOnDefaultButtonCheckBox =
+        CheckBox.create(IdeLocalize.checkboxPositionCursorOnDefaultButton()));
+      uiOptions.add(myHideNavigationPopupsCheckBox = CheckBox.create(IdeLocalize.ideHideNavigationOnFocusLossDescription()));
+      uiOptions.add(myAltDNDCheckBox = CheckBox.create(IdeLocalize.dndWithAltPressedOnly()));
 
       myLafComboBox = ComboBox.create(StyleManager.get().getStyles());
       myLafComboBox.setTextRender(style -> style == null ? LocalizeValue.empty() : LocalizeValue.of(style.getName()));
@@ -123,7 +125,10 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
       useCustomFontLine.add(myOverrideLAFFonts = CheckBox.create(IdeLocalize.checkboxOverrideDefaultLafFonts()));
       Set<String> avaliableFontNames = FontManager.get().getAvailableFontNames();
       useCustomFontLine.add(myFontCombo = ComboBox.create(avaliableFontNames));
-      useCustomFontLine.add(LabeledBuilder.simple(IdeLocalize.labelFontSize(), myFontSizeCombo = TextBoxWithHistory.create().setHistory(UIUtil.getStandardFontSizes())));
+      useCustomFontLine.add(LabeledBuilder.simple(
+        IdeLocalize.labelFontSize(),
+        myFontSizeCombo = TextBoxWithHistory.create().setHistory(UIUtil.getStandardFontSizes())
+      ));
       uiOptions.add(useCustomFontLine);
 
       myOverrideLAFFonts.addValueListener(event -> {
@@ -166,16 +171,19 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
 
       rightWindowOption.add(myShowToolStripesCheckBox = CheckBox.create(IdeLocalize.checkboxShowToolWindowBars()));
       rightWindowOption.add(myWindowShortcutsCheckBox = CheckBox.create(IdeLocalize.checkboxShowToolWindowNumbers()));
-      rightWindowOption.add(myAllowMergeButtons = CheckBox.create("Allow merging buttons on dialogs"));
-      rightWindowOption.add(myUseSmallLabelsOnTabs = CheckBox.create("Small labels in editor tabs"));
+      rightWindowOption.add(myAllowMergeButtons = CheckBox.create(IdeLocalize.allowMergingDialogButtons()));
+      rightWindowOption.add(myUseSmallLabelsOnTabs = CheckBox.create(IdeLocalize.smallLabelsInEditorTabs()));
       rightWindowOption.add(myWidescreenLayoutCheckBox = CheckBox.create(IdeLocalize.checkboxWidescreenToolWindowLayout()));
       rightWindowOption.add(myRightLayoutCheckBox = CheckBox.create(IdeLocalize.checkboxRightToolwindowLayout()));
-      rightWindowOption.add(mySmoothScrollingBox = CheckBox.create("Smooth scrolling"));
+      rightWindowOption.add(mySmoothScrollingBox = CheckBox.create(ApplicationLocalize.checkboxSmoothScrolling()));
 
       myPanel.add(LabeledLayout.create(IdeLocalize.groupWindowOptions(), windowOptions));
 
       VerticalLayout presentationOptions = VerticalLayout.create();
-      presentationOptions.add(LabeledBuilder.simple(IdeLocalize.labelFontSize(), myPresentationModeFontSize = TextBoxWithHistory.create().setHistory(UIUtil.getStandardFontSizes())));
+      presentationOptions.add(LabeledBuilder.simple(
+        IdeLocalize.labelFontSize(),
+        myPresentationModeFontSize = TextBoxWithHistory.create().setHistory(UIUtil.getStandardFontSizes())
+      ));
       myPanel.add(LabeledLayout.create(IdeLocalize.groupPresentationMode(), presentationOptions));
     }
 
@@ -189,7 +197,11 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
 
         if (editor) {
           EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
-          render.withFont(FontManager.get().createFont(scheme.getEditorFontName(), scheme.getEditorFontSize(), Font.STYLE_PLAIN));
+          render.withFont(FontManager.get().createFont(
+            scheme.getEditorFontName(),
+            scheme.getEditorFontSize(),
+            Font.STYLE_PLAIN
+          ));
         }
 
         render.append(textForAntialiasingType(item));
@@ -272,7 +284,10 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
 
     isModified |= component.myHideIconsInQuickNavigation.getValue() != settings.SHOW_ICONS_IN_QUICK_NAVIGATION;
 
-    isModified |= !Comparing.equal(component.myPresentationModeFontSize.getValue(), Integer.toString(settings.PRESENTATION_MODE_FONT_SIZE));
+    isModified |= !Comparing.equal(
+      component.myPresentationModeFontSize.getValue(),
+      Integer.toString(settings.PRESENTATION_MODE_FONT_SIZE)
+    );
 
     isModified |= component.myMoveMouseOnDefaultButtonCheckBox.getValue() != settings.MOVE_MOUSE_ON_DEFAULT_BUTTON;
     isModified |= component.myHideNavigationPopupsCheckBox.getValue() != settings.HIDE_NAVIGATION_ON_FOCUS_LOSS;

@@ -25,6 +25,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nullable;
 
@@ -38,6 +39,7 @@ public class CleanupOnScopeIntention extends CleanupIntention {
 
   @Nullable
   @Override
+  @RequiredUIAccess
   protected AnalysisScope getScope(final Project project, final PsiFile file) {
     final Module module = ModuleUtilCore.findModuleForPsiElement(file);
     AnalysisScope analysisScope = new AnalysisScope(file);

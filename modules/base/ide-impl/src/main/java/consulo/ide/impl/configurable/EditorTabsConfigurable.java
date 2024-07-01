@@ -16,13 +16,13 @@
 package consulo.ide.impl.configurable;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.application.ui.UISettings;
 import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.SimpleConfigurableByProperties;
 import consulo.configurable.StandardConfigurableIds;
 import consulo.disposer.Disposable;
-import consulo.localize.LocalizeValue;
-import consulo.application.localize.ApplicationLocalize;
+import consulo.ide.localize.IdeLocalize;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
@@ -58,6 +58,7 @@ public class EditorTabsConfigurable extends SimpleConfigurableByProperties imple
     return StandardConfigurableIds.EDITOR_GROUP;
   }
 
+  @Nonnull
   @Override
   public String getDisplayName() {
     return "Tabs";
@@ -95,7 +96,7 @@ public class EditorTabsConfigurable extends SimpleConfigurableByProperties imple
     propertyBuilder.add(hideExtensionsInTabs, () -> uiSettings.HIDE_KNOWN_EXTENSION_IN_TABS, v -> uiSettings.HIDE_KNOWN_EXTENSION_IN_TABS = v);
     tabAppearanceLayout.add(hideExtensionsInTabs);
 
-    CheckBox showDirectoryWithNotUniqueName = CheckBox.create(LocalizeValue.localizeTODO("Show directory in editor tabs for non-unique filenames"));
+    CheckBox showDirectoryWithNotUniqueName = CheckBox.create(IdeLocalize.labelTabsShowDirectoryForNonUniqueFilenames());
     showDirectoryWithNotUniqueName.setEnabled(false);
     propertyBuilder.add(showDirectoryWithNotUniqueName, () -> uiSettings.SHOW_DIRECTORY_FOR_NON_UNIQUE_FILENAMES, v -> uiSettings.SHOW_DIRECTORY_FOR_NON_UNIQUE_FILENAMES = v);
     tabAppearanceLayout.add(showDirectoryWithNotUniqueName);

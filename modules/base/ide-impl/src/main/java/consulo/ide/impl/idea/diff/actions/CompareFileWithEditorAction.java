@@ -25,7 +25,6 @@ import consulo.diff.request.DiffRequest;
 import consulo.diff.util.Side;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.impl.idea.diff.DiffRequestFactory;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.lang.Pair;
@@ -43,20 +42,12 @@ public class CompareFileWithEditorAction extends BaseShowDiffAction {
     }
 
     VirtualFile currentFile = getEditingFile(e);
-    if (currentFile == null) {
-      return false;
-    }
-
-    if (!canCompare(selectedFile, currentFile)) {
-      return false;
-    }
-
-    return true;
+    return currentFile != null && canCompare(selectedFile, currentFile);
   }
 
   @Nullable
   private static VirtualFile getSelectedFile(@Nonnull AnActionEvent e) {
-    VirtualFile[] array = e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
+    VirtualFile[] array = e.getData(VirtualFile.KEY_OF_ARRAY);
     if (array == null || array.length != 1 || array[0].isDirectory()) {
       return null;
     }
@@ -66,7 +57,7 @@ public class CompareFileWithEditorAction extends BaseShowDiffAction {
 
   @Nullable
   private static VirtualFile getEditingFile(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) return null;
 
     return FileEditorManagerEx.getInstanceEx(project).getCurrentFile();
@@ -79,7 +70,7 @@ public class CompareFileWithEditorAction extends BaseShowDiffAction {
   @Nullable
   @Override
   protected DiffRequest getDiffRequest(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
 
     VirtualFile selectedFile = getSelectedFile(e);
     VirtualFile currentFile = getEditingFile(e);

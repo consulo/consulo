@@ -16,9 +16,9 @@
 
 package consulo.ide.impl.idea.codeInsight.hint;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.editor.action.CodeInsightEditorAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
@@ -41,20 +41,23 @@ public class PrevNextParameterHandler extends EditorActionHandler {
   private final boolean myIsNextParameterHandler;
 
   @Override
+  @RequiredReadAction
   protected boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
     if (!ParameterInfoController.existsForEditor(editor)) return false;
 
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Project project = dataContext.getData(Project.KEY);
     if (project == null) return false;
 
     PsiElement exprList = getExpressionList(editor, caret.getOffset(), project);
     if (exprList == null) return false;
 
     int lbraceOffset = exprList.getTextRange().getStartOffset();
-    return ParameterInfoController.findControllerAtOffset(editor, lbraceOffset) != null && ParameterInfoController.hasPrevOrNextParameter(editor, lbraceOffset, myIsNextParameterHandler);
+    return ParameterInfoController.findControllerAtOffset(editor, lbraceOffset) != null
+      && ParameterInfoController.hasPrevOrNextParameter(editor, lbraceOffset, myIsNextParameterHandler);
   }
 
   @Override
+  @RequiredReadAction
   protected void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
     int offset = caret != null ? caret.getOffset() : editor.getCaretModel().getOffset();
     PsiElement exprList = getExpressionList(editor, offset, dataContext);
@@ -66,7 +69,7 @@ public class PrevNextParameterHandler extends EditorActionHandler {
 
   @Nullable
   private static PsiElement getExpressionList(@Nonnull Editor editor, int offset, DataContext dataContext) {
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Project project = dataContext.getData(Project.KEY);
     return project != null ? getExpressionList(editor, offset, project) : null;
   }
 
@@ -77,7 +80,7 @@ public class PrevNextParameterHandler extends EditorActionHandler {
   }
 
   public static void commitDocumentsIfNeeded(@Nonnull AnActionEvent e) {
-    Editor editor = e.getData(CommonDataKeys.EDITOR);
+    Editor editor = e.getData(Editor.KEY);
     if (editor != null && ParameterInfoController.existsForEditor(editor)) {
       CodeInsightEditorAction.beforeActionPerformedUpdate(e);
     }

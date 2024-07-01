@@ -2,15 +2,16 @@
 
 package consulo.ide.impl.idea.codeInsight.generation.surroundWith;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.editor.action.CodeInsightActionHandler;
-import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.hint.HintManager;
-import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.surroundWith.SurroundWithRangeAdjuster;
 import consulo.language.editor.template.TemplateManager;
 import consulo.ide.impl.idea.codeInsight.template.impl.SurroundWithTemplateHandler;
 import consulo.dataContext.DataManager;
 import consulo.ide.IdeBundle;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionsBundle;
 import consulo.language.LangBundle;
 import consulo.dataContext.DataContext;
@@ -54,6 +55,7 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
   public static final TextRange CARET_IS_OK = new TextRange(0, 0);
 
   @Override
+  @RequiredUIAccess
   public void invoke(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull PsiFile file) {
     invoke(project, editor, file, null);
   }
@@ -63,6 +65,7 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
     return false;
   }
 
+  @RequiredReadAction
   public static void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file, Surrounder surrounder) {
     if (!EditorModificationUtil.checkModificationAllowed(editor)) return;
     if (file instanceof PsiCompiledElement) {
@@ -74,12 +77,13 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
     if (applicable != null) {
       showPopup(editor, applicable);
     }
-    else if (!ApplicationManager.getApplication().isUnitTestMode()) {
+    else if (!project.getApplication().isUnitTestMode()) {
       HintManager.getInstance().showErrorHint(editor, LangBundle.message("hint.text.couldn.t.find.surround"));
     }
   }
 
   @Nullable
+  @RequiredReadAction
   public static List<AnAction> buildSurroundActions(final Project project, final Editor editor, PsiFile file, @Nullable Surrounder surrounder) {
     SelectionModel selectionModel = editor.getSelectionModel();
     boolean hasSelection = selectionModel.hasSelection();
@@ -153,13 +157,16 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
                                             CharArrayUtil.shiftBackward(text, DocumentUtil.getLineEndOffset(caretOffset, document) - 1, " \t") + 1);
   }
 
-  private static void invokeSurrounderInTests(Project project,
-                                              Editor editor,
-                                              PsiFile file,
-                                              Surrounder surrounder,
-                                              int startOffset,
-                                              int endOffset, List<? extends SurroundDescriptor> surroundDescriptors) {
-    assert ApplicationManager.getApplication().isUnitTestMode();
+  @RequiredReadAction
+  private static void invokeSurrounderInTests(
+    Project project,
+    Editor editor,
+    PsiFile file,
+    Surrounder surrounder,
+    int startOffset,
+    int endOffset, List<? extends SurroundDescriptor> surroundDescriptors
+  ) {
+    assert project.getApplication().isUnitTestMode();
     for (SurroundDescriptor descriptor : surroundDescriptors) {
       final PsiElement[] elements = descriptor.getElementsToSurround(file, startOffset, endOffset);
       if (elements.length > 0) {
@@ -177,7 +184,8 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
     DataContext context = DataManager.getInstance().getDataContext(editor.getContentComponent());
     JBPopupFactory.ActionSelectionAid mnemonics = JBPopupFactory.ActionSelectionAid.MNEMONICS;
     DefaultActionGroup group = new DefaultActionGroup(applicable.toArray(AnAction.EMPTY_ARRAY));
-    ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(CodeInsightBundle.message("surround.with.chooser.title"), group, context, mnemonics, true);
+    ListPopup popup = JBPopupFactory.getInstance()
+      .createActionGroupPopup(CodeInsightLocalize.surroundWithChooserTitle().get(), group, context, mnemonics, true);
 
     editor.showPopupInBestPositionFor(popup);
   }
@@ -258,6 +266,7 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
     }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
       if (!FileDocumentManager.getInstance().requestWriting(myEditor.getDocument(), myProject)) {
         return;
@@ -277,9 +286,10 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
       super(ActionsBundle.message("action.ConfigureTemplatesAction.text"));
     }
 
+    @RequiredUIAccess
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
-      ShowSettingsUtil.getInstance().showSettingsDialog(e.getData(CommonDataKeys.PROJECT), CodeInsightBundle.message("templates.settings.page.title"));
+      ShowSettingsUtil.getInstance().showSettingsDialog(e.getData(Project.KEY), CodeInsightLocalize.templatesSettingsPageTitle().get());
     }
   }
 }

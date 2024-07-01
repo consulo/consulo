@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.diff.actions;
 import consulo.diff.DiffManager;
 import consulo.diff.request.DiffRequest;
 import consulo.application.dumb.DumbAware;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
@@ -50,7 +49,7 @@ abstract class BaseShowDiffAction extends AnAction implements DumbAware {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     DiffRequest request = getDiffRequest(e);
     if (request == null) return;
 
