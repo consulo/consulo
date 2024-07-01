@@ -15,7 +15,6 @@
  */
 package consulo.language.editor.refactoring.util;
 
-import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.hint.HintManager;
@@ -27,6 +26,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.usage.UsageInfo;
 import consulo.util.collection.ContainerUtil;
@@ -50,9 +50,11 @@ import java.util.HashSet;
 public class CommonRefactoringUtil {
   private CommonRefactoringUtil() { }
 
+  @RequiredUIAccess
   public static void showErrorMessage(String title, String message, @Nullable String helpId, @Nonnull Project project) {
-    if (ApplicationManager.getApplication().isUnitTestMode()) throw new RuntimeException(message);
-    RefactoringMessageDialog dialog = new RefactoringMessageDialog(title, message, helpId, "OptionPane.errorIcon", false, project);
+    if (project.getApplication().isUnitTestMode()) throw new RuntimeException(message);
+    RefactoringMessageDialog dialog =
+      new RefactoringMessageDialog(title, message, helpId, "OptionPane.errorIcon", false, project);
     dialog.show();
   }
 
@@ -76,14 +78,17 @@ public class CommonRefactoringUtil {
     }
   }
 
-  public static void showErrorHint(@Nonnull Project project,
-                                   @Nullable Editor editor,
-                                   @Nonnull @Nls String message,
-                                   @Nonnull @Nls String title,
-                                   @Nullable String helpId) {
-    if (ApplicationManager.getApplication().isUnitTestMode()) throw new RefactoringErrorHintException(message);
+  @RequiredUIAccess
+  public static void showErrorHint(
+    @Nonnull Project project,
+    @Nullable Editor editor,
+    @Nonnull @Nls String message,
+    @Nonnull @Nls String title,
+    @Nullable String helpId
+  ) {
+    if (project.getApplication().isUnitTestMode()) throw new RefactoringErrorHintException(message);
 
-    ApplicationManager.getApplication().invokeLater(() -> {
+    project.getApplication().invokeLater(() -> {
       if (editor == null || editor.getComponent().getRootPane() == null) {
         showErrorMessage(title, message, helpId, project);
       }
@@ -97,47 +102,69 @@ public class CommonRefactoringUtil {
     return StringUtil.htmlEmphasize(text);
   }
 
+  @RequiredUIAccess
   public static boolean checkReadOnlyStatus(@Nonnull PsiElement element) {
     final VirtualFile file = element.getContainingFile().getVirtualFile();
     return file != null && !ReadonlyStatusHandler.getInstance(element.getProject()).ensureFilesWritable(file).hasReadonlyFiles();
   }
 
+  @RequiredUIAccess
   public static boolean checkReadOnlyStatus(@Nonnull Project project, @Nonnull PsiElement element) {
     return checkReadOnlyStatus(element, project, RefactoringBundle.message("refactoring.cannot.be.performed"));
   }
 
+  @RequiredUIAccess
   public static boolean checkReadOnlyStatus(@Nonnull Project project, @Nonnull PsiElement... elements) {
     return checkReadOnlyStatus(project, Collections.<PsiElement>emptySet(), Arrays.asList(elements), RefactoringBundle.message("refactoring.cannot.be.performed"), true);
   }
 
-  public static boolean checkReadOnlyStatus(@Nonnull Project project, @Nonnull Collection<? extends PsiElement> elements, boolean notifyOnFail) {
+  @RequiredUIAccess
+  public static boolean checkReadOnlyStatus(
+    @Nonnull Project project,
+    @Nonnull Collection<? extends PsiElement> elements,
+    boolean notifyOnFail
+  ) {
     return checkReadOnlyStatus(project, Collections.<PsiElement>emptySet(), elements, RefactoringBundle.message("refactoring.cannot.be.performed"), notifyOnFail);
   }
 
+  @RequiredUIAccess
   public static boolean checkReadOnlyStatus(@Nonnull PsiElement element, @Nonnull Project project, @Nonnull String messagePrefix) {
-    return element.isWritable() || checkReadOnlyStatus(project, Collections.<PsiElement>emptySet(), Collections.singleton(element), messagePrefix, true);
+    return element.isWritable()
+      || checkReadOnlyStatus(project, Collections.<PsiElement>emptySet(), Collections.singleton(element), messagePrefix, true);
   }
 
+  @RequiredUIAccess
   public static boolean checkReadOnlyStatusRecursively(@Nonnull Project project, @Nonnull Collection<? extends PsiElement> elements) {
     return checkReadOnlyStatus(project, elements, Collections.<PsiElement>emptySet(), RefactoringBundle.message("refactoring.cannot.be.performed"), false);
   }
 
-  public static boolean checkReadOnlyStatusRecursively(@Nonnull Project project, @Nonnull Collection<? extends PsiElement> elements, boolean notifyOnFail) {
+  @RequiredUIAccess
+  public static boolean checkReadOnlyStatusRecursively(
+    @Nonnull Project project,
+    @Nonnull Collection<? extends PsiElement> elements,
+    boolean notifyOnFail
+  ) {
     return checkReadOnlyStatus(project, elements, Collections.<PsiElement>emptySet(), RefactoringBundle.message("refactoring.cannot.be.performed"), notifyOnFail);
   }
 
-  public static boolean checkReadOnlyStatus(@Nonnull Project project,
-                                            @Nonnull Collection<? extends PsiElement> recursive,
-                                            @Nonnull Collection<? extends PsiElement> flat,
-                                            boolean notifyOnFail) {
+  @RequiredUIAccess
+  public static boolean checkReadOnlyStatus(
+    @Nonnull Project project,
+    @Nonnull Collection<? extends PsiElement> recursive,
+    @Nonnull Collection<? extends PsiElement> flat,
+    boolean notifyOnFail
+  ) {
     return checkReadOnlyStatus(project, recursive, flat, RefactoringBundle.message("refactoring.cannot.be.performed"), notifyOnFail);
   }
 
-  private static boolean checkReadOnlyStatus(@Nonnull Project project,
-                                             @Nonnull Collection<? extends PsiElement> recursive,
-                                             @Nonnull Collection<? extends PsiElement> flat,
-                                             @Nonnull String messagePrefix,
-                                             boolean notifyOnFail) {
+  @RequiredUIAccess
+  private static boolean checkReadOnlyStatus(
+    @Nonnull Project project,
+    @Nonnull Collection<? extends PsiElement> recursive,
+    @Nonnull Collection<? extends PsiElement> flat,
+    @Nonnull String messagePrefix,
+    boolean notifyOnFail
+  ) {
     Collection<VirtualFile> readonly = new HashSet<>();  // not writable, but could be checked out
     Collection<VirtualFile> failed = new HashSet<>();  // those located in read-only filesystem
 

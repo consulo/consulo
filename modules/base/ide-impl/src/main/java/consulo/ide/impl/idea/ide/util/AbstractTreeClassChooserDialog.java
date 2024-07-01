@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.ide.util;
 
-import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.ui.wm.IdeFocusManager;
@@ -40,6 +39,7 @@ import consulo.project.Project;
 import consulo.project.content.scope.ProjectAwareSearchScope;
 import consulo.project.content.scope.ProjectScopes;
 import consulo.ui.ModalityState;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
@@ -52,8 +52,6 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -253,7 +251,8 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
       protected void initUI(ChooseByNamePopupComponent.Callback callback, ModalityState modalityState, boolean allowMultipleSelection) {
         super.initUI(callback, modalityState, allowMultipleSelection);
         dummyPanel.add(myGotoByNamePanel.getPanel(), BorderLayout.CENTER);
-        IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(IdeFocusTraversalPolicy.getPreferredFocusedComponent(myGotoByNamePanel.getPanel()));
+        IdeFocusManager.getGlobalInstance()
+          .doForceFocusWhenFocusSettlesDown(IdeFocusTraversalPolicy.getPreferredFocusedComponent(myGotoByNamePanel.getPanel()));
       }
 
       @Override
@@ -278,12 +277,7 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
 
     myGotoByNamePanel.invoke(new MyCallback(), getModalityState(), false);
 
-    myTabbedPane.addChangeListener(new ChangeListener() {
-      @Override
-      public void stateChanged(ChangeEvent e) {
-        handleSelectionChanged();
-      }
-    });
+    myTabbedPane.addChangeListener(e -> handleSelectionChanged());
 
     return myTabbedPane.getComponent();
   }
@@ -341,21 +335,25 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
   }
 
   @Override
+  @RequiredUIAccess
   public T getSelected() {
     return mySelectedClass;
   }
 
   @Override
+  @RequiredUIAccess
   public void select(@Nonnull final T aClass) {
     selectElementInTree(aClass);
   }
 
   @Override
+  @RequiredUIAccess
   public void showDialog() {
     show();
   }
 
   @Override
+  @RequiredUIAccess
   public void showPopup() {
     //todo leak via not shown dialog?
     ChooseByNamePopup popup = ChooseByNamePopup.createPopup(myProject, createChooseByNameModel(), getContext());
@@ -374,13 +372,10 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
 
 
   protected void selectElementInTree(@Nonnull final PsiElement element) {
-    ApplicationManager.getApplication().invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        if (myBuilder == null) return;
-        final VirtualFile vFile = PsiUtilBase.getVirtualFile(element);
-        myBuilder.select(element, vFile, false);
-      }
+    element.getApplication().invokeLater(() -> {
+      if (myBuilder == null) return;
+      final VirtualFile vFile = PsiUtilBase.getVirtualFile(element);
+      myBuilder.select(element, vFile, false);
     }, getModalityState());
   }
 

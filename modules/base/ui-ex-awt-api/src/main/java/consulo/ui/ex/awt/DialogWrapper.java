@@ -1694,12 +1694,14 @@ public abstract class DialogWrapper {
    */
   @Deprecated
   @DeprecationInfo("Use async version")
+  @RequiredUIAccess
   public void show() {
     showAndGetOk();
   }
 
   @Deprecated
   @DeprecationInfo("Use async version")
+  @RequiredUIAccess
   public boolean showAndGet() {
     show();
     return isOK();
@@ -1711,6 +1713,7 @@ public abstract class DialogWrapper {
    * @return result callback
    */
   @Nonnull
+  @RequiredUIAccess
   public AsyncResult<Boolean> showAndGetOk() {
     final AsyncResult<Boolean> result = new AsyncResult<>();
 
