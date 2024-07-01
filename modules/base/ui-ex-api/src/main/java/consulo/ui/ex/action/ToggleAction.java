@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ui.ex.action;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;
@@ -16,10 +17,14 @@ public abstract class ToggleAction extends AnAction implements Toggleable {
   public ToggleAction() {
   }
 
+  @Deprecated
+  @DeprecationInfo("Use variant with LocalizeValue")
   public ToggleAction(@Nullable @Nls(capitalization = Nls.Capitalization.Title) final String text) {
     super(text);
   }
 
+  @Deprecated
+  @DeprecationInfo("Use variant with LocalizeValue")
   public ToggleAction(@Nullable @Nls(capitalization = Nls.Capitalization.Title) final String text,
                       @Nullable @Nls(capitalization = Nls.Capitalization.Sentence) final String description,
                       @Nullable final Image icon) {
