@@ -28,6 +28,7 @@ import consulo.process.cmd.ParametersListUtil;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.InputValidator;
 import consulo.ui.ex.InputValidatorEx;
 import consulo.ui.ex.awt.event.DocumentAdapter;
@@ -154,6 +155,7 @@ public class Messages {
    *
    * @return number of button pressed: from 0 up to options.length-1 inclusive, or -1 for Cancel
    */
+  @RequiredUIAccess
   public static int showDialog(@Nullable Project project,
                                String message,
                                @Nonnull String title,
@@ -181,6 +183,7 @@ public class Messages {
   /**
    * @return number of button pressed: from 0 up to options.length-1 inclusive, or -1 for Cancel
    */
+  @RequiredUIAccess
   public static int showIdeaMessageDialog(@Nullable Project project,
                                           String message,
                                           String title,
@@ -200,6 +203,7 @@ public class Messages {
   /**
    * @return number of button pressed: from 0 up to options.length-1 inclusive, or -1 for Cancel
    */
+  @RequiredUIAccess
   public static int showDialog(Project project,
                                String message,
                                @Nonnull String title,
@@ -234,6 +238,7 @@ public class Messages {
   /**
    * @return number of button pressed: from 0 up to options.length-1 inclusive, or -1 for Cancel
    */
+  @RequiredUIAccess
   public static int showDialog(@Nonnull Component parent, String message, @Nonnull String title, @Nonnull String[] options, int defaultOptionIndex, @Nullable Image icon) {
     if (isApplicationInUnitTestOrHeadless()) {
       return ourTestImplementation.show(message);
@@ -261,6 +266,7 @@ public class Messages {
    * @see #showDialog(Project, String, String, String[], int, Image, DialogWrapper.DoNotAskOption)
    * @see #showDialog(Component, String, String, String[], int, Image)
    */
+  @RequiredUIAccess
   public static int showDialog(String message,
                                @Nonnull String title,
                                @Nonnull String[] options,
@@ -293,6 +299,7 @@ public class Messages {
    * @see #showDialog(Project, String, String, String[], int, Image)
    * @see #showDialog(Component, String, String, String[], int, Image)
    */
+  @RequiredUIAccess
   public static int showDialog(String message, String title, @Nonnull String[] options, int defaultOptionIndex, @Nullable Image icon, @Nullable DialogWrapper.DoNotAskOption doNotAskOption) {
     return showDialog(message, title, options, defaultOptionIndex, defaultOptionIndex, icon, doNotAskOption);
   }
@@ -304,6 +311,7 @@ public class Messages {
    * @see #showDialog(Project, String, String, String[], int, Image)
    * @see #showDialog(Component, String, String, String[], int, Image)
    */
+  @RequiredUIAccess
   public static int showDialog(String message, String title, @Nonnull String[] options, int defaultOptionIndex, @Nullable Image icon) {
     return showDialog(message, title, options, defaultOptionIndex, icon, null);
   }
@@ -311,6 +319,7 @@ public class Messages {
   /**
    * @see DialogWrapper#DialogWrapper(Project, boolean)
    */
+  @RequiredUIAccess
   public static void showMessageDialog(@Nullable Project project, String message, @Nonnull String title, @Nullable Image icon) {
     try {
       if (canShowMacSheetPanel()) {
@@ -325,6 +334,7 @@ public class Messages {
     showDialog(project, message, title, new String[]{OK_BUTTON}, 0, icon);
   }
 
+  @RequiredUIAccess
   public static void showMessageDialog(@Nonnull Component parent, String message, @Nonnull String title, @Nullable Image icon) {
     try {
       if (canShowMacSheetPanel()) {
@@ -345,6 +355,7 @@ public class Messages {
    * @see #showMessageDialog(Project, String, String, Image)
    * @see #showMessageDialog(Component, String, String, Image)
    */
+  @RequiredUIAccess
   public static void showMessageDialog(String message, @Nonnull String title, @Nullable Image icon) {
     try {
       if (canShowMacSheetPanel()) {
@@ -366,6 +377,7 @@ public class Messages {
    * @return {@link #YES} if user pressed "Yes" or {@link #NO} if user pressed "No" button.
    */
   @YesNoResult
+  @RequiredUIAccess
   public static int showYesNoDialog(@Nullable Project project, String message, @Nonnull String title, @Nonnull String yesText, @Nonnull String noText, @Nullable Image icon) {
     try {
       if (canShowMacSheetPanel()) {
@@ -386,6 +398,7 @@ public class Messages {
    * @return {@link #YES} if user pressed "Yes" or {@link #NO} if user pressed "No" button.
    */
   @YesNoResult
+  @RequiredUIAccess
   public static int showYesNoDialog(@Nullable Project project, String message, @Nonnull String title, @Nullable Image icon) {
     try {
       if (canShowMacSheetPanel()) {
@@ -407,6 +420,7 @@ public class Messages {
    * @return {@link #YES} if user pressed "Yes" or {@link #NO} if user pressed "No" button.
    */
   @YesNoResult
+  @RequiredUIAccess
   public static int showYesNoDialog(@Nonnull Component parent, String message, @Nonnull String title, @Nullable Image icon) {
     try {
       if (canShowMacSheetPanel()) {
@@ -431,6 +445,7 @@ public class Messages {
    * @see #showYesNoCancelDialog(java.awt.Component, String, String, javax.swing.Image)
    */
   @YesNoResult
+  @RequiredUIAccess
   public static int showYesNoDialog(String message,
                                     @Nonnull String title,
                                     @Nonnull String yesText,
@@ -460,6 +475,7 @@ public class Messages {
    * @see #showYesNoDialog(java.awt.Component, String, String, javax.swing.Image)
    */
   @YesNoResult
+  @RequiredUIAccess
   public static int showYesNoDialog(String message, String title, String yesText, String noText, @Nullable Image icon) {
     return showYesNoDialog(message, title, yesText, noText, icon, null);
   }
@@ -472,6 +488,7 @@ public class Messages {
    * @see #showYesNoDialog(Component, String, String, Image)
    */
   @YesNoResult
+  @RequiredUIAccess
   public static int showYesNoDialog(String message, @Nonnull String title, @Nullable Image icon) {
     try {
       if (canShowMacSheetPanel()) {
@@ -495,6 +512,7 @@ public class Messages {
    * @return {@link #OK} if user pressed "Ok" or {@link #CANCEL} if user pressed "Cancel" button.
    */
   @OkCancelResult
+  @RequiredUIAccess
   public static int showOkCancelDialog(Project project,
                                        String message,
                                        @Nonnull String title,
@@ -519,6 +537,7 @@ public class Messages {
    * @return {@link #OK} if user pressed "Ok" or {@link #CANCEL} if user pressed "Cancel" button.
    */
   @OkCancelResult
+  @RequiredUIAccess
   public static int showOkCancelDialog(Project project, String message, @Nonnull String title, @Nonnull String okText, @Nonnull String cancelText, Image icon) {
     return showOkCancelDialog(project, message, title, okText, cancelText, icon, null);
   }
@@ -527,6 +546,7 @@ public class Messages {
    * @return {@link #OK} if user pressed "Ok" or {@link #CANCEL} if user pressed "Cancel" button.
    */
   @OkCancelResult
+  @RequiredUIAccess
   public static int showOkCancelDialog(Project project, String message, String title, Image icon) {
     return showOkCancelDialog(project, message, title, OK_BUTTON, CANCEL_BUTTON, icon);
   }
@@ -535,6 +555,7 @@ public class Messages {
    * @return {@link #OK} if user pressed "Ok" or {@link #CANCEL} if user pressed "Cancel" button.
    */
   @OkCancelResult
+  @RequiredUIAccess
   public static int showOkCancelDialog(@Nonnull Component parent, String message, @Nonnull String title, @Nonnull String okText, @Nonnull String cancelText, Image icon) {
     try {
       if (canShowMacSheetPanel()) {
@@ -553,6 +574,7 @@ public class Messages {
    * @return {@link #OK} if user pressed "Ok" or {@link #CANCEL} if user pressed "Cancel" button.
    */
   @OkCancelResult
+  @RequiredUIAccess
   public static int showOkCancelDialog(@Nonnull Component parent, String message, String title, Image icon) {
     return showOkCancelDialog(parent, message, title, OK_BUTTON, CANCEL_BUTTON, icon);
   }
@@ -565,6 +587,7 @@ public class Messages {
    * @see #showOkCancelDialog(Component, String, String, Image)
    */
   @OkCancelResult
+  @RequiredUIAccess
   public static int showOkCancelDialog(String message, String title, Image icon) {
     return showOkCancelDialog(message, title, OK_BUTTON, CANCEL_BUTTON, icon, null);
   }
@@ -577,6 +600,7 @@ public class Messages {
    * @see #showOkCancelDialog(Component, String, String, String, String, Image)
    */
   @OkCancelResult
+  @RequiredUIAccess
   public static int showOkCancelDialog(String message, String title, String okText, String cancelText, Image icon) {
     return showOkCancelDialog(message, title, okText, cancelText, icon, null);
   }
@@ -589,6 +613,7 @@ public class Messages {
    * @see #showOkCancelDialog(Component, String, String, String, String, Image)
    */
   @OkCancelResult
+  @RequiredUIAccess
   public static int showOkCancelDialog(String message, @Nonnull String title, @Nonnull String okText, @Nonnull String cancelText, Image icon, @Nullable DialogWrapper.DoNotAskOption doNotAskOption) {
     try {
       if (canShowMacSheetPanel()) {
@@ -603,6 +628,7 @@ public class Messages {
     return showDialog(message, title, new String[]{okText, cancelText}, 0, icon, doNotAskOption) == 0 ? OK : CANCEL;
   }
 
+  @RequiredUIAccess
   public static int showCheckboxOkCancelDialog(String message, String title, String checkboxText, final boolean checked, final int defaultOptionIndex, final int focusedOptionIndex, Image icon) {
     return showCheckboxMessageDialog(message, title, new String[]{OK_BUTTON, CANCEL_BUTTON}, checkboxText, checked, defaultOptionIndex, focusedOptionIndex, icon,
                                      new BiFunction<Integer, JCheckBox, Integer>() {
@@ -613,6 +639,7 @@ public class Messages {
                                      });
   }
 
+  @RequiredUIAccess
   public static int showCheckboxMessageDialog(String message,
                                               String title,
                                               @Nonnull String[] options,
@@ -633,10 +660,12 @@ public class Messages {
   }
 
 
+  @RequiredUIAccess
   public static int showTwoStepConfirmationDialog(String message, String title, String checkboxText, Image icon) {
     return showCheckboxMessageDialog(message, title, new String[]{OK_BUTTON}, checkboxText, true, -1, -1, icon, null);
   }
 
+  @RequiredUIAccess
   public static void showErrorDialog(@Nullable Project project, @Nls String message, @Nls @Nonnull String title) {
     try {
       if (canShowMacSheetPanel()) {
@@ -650,6 +679,7 @@ public class Messages {
     showDialog(project, message, title, new String[]{OK_BUTTON}, 0, getErrorIcon());
   }
 
+  @RequiredUIAccess
   public static void showErrorDialog(@Nonnull Component component, String message, @Nls @Nonnull String title) {
     try {
       if (canShowMacSheetPanel()) {
@@ -663,6 +693,7 @@ public class Messages {
     showDialog(component, message, title, new String[]{OK_BUTTON}, 0, getErrorIcon());
   }
 
+  @RequiredUIAccess
   public static void showErrorDialog(@Nonnull Component component, String message) {
     try {
       if (canShowMacSheetPanel()) {
@@ -682,6 +713,7 @@ public class Messages {
    * @see #showErrorDialog(Project, String, String)
    * @see #showErrorDialog(Component, String, String)
    */
+  @RequiredUIAccess
   public static void showErrorDialog(String message, @Nonnull String title) {
     try {
       if (canShowMacSheetPanel()) {
@@ -695,6 +727,7 @@ public class Messages {
     showDialog(message, title, new String[]{OK_BUTTON}, 0, getErrorIcon());
   }
 
+  @RequiredUIAccess
   public static void showWarningDialog(@Nullable Project project, String message, @Nonnull String title) {
     try {
       if (canShowMacSheetPanel()) {
@@ -708,6 +741,7 @@ public class Messages {
     showDialog(project, message, title, new String[]{OK_BUTTON}, 0, getWarningIcon());
   }
 
+  @RequiredUIAccess
   public static void showWarningDialog(@Nonnull Component component, String message, @Nonnull String title) {
     try {
       if (canShowMacSheetPanel()) {
@@ -727,6 +761,7 @@ public class Messages {
    * @see #showWarningDialog(Project, String, String)
    * @see #showWarningDialog(Component, String, String)
    */
+  @RequiredUIAccess
   public static void showWarningDialog(String message, @Nonnull String title) {
     try {
       if (canShowMacSheetPanel()) {
@@ -744,11 +779,11 @@ public class Messages {
   public @interface YesNoCancelResult {
   }
 
-
   /**
    * @return {@link #YES} if user pressed "Yes" or {@link #NO} if user pressed "No", or {@link #CANCEL} if user pressed "Cancel" button.
    */
   @YesNoCancelResult
+  @RequiredUIAccess
   public static int showYesNoCancelDialog(Project project, String message, @Nonnull String title, @Nonnull String yes, @Nonnull String no, @Nonnull String cancel, @Nullable Image icon) {
     try {
       if (canShowMacSheetPanel()) {
@@ -766,6 +801,7 @@ public class Messages {
    * @return {@link #YES} if user pressed "Yes" or {@link #NO} if user pressed "No", or {@link #CANCEL} if user pressed "Cancel" button.
    */
   @YesNoCancelResult
+  @RequiredUIAccess
   public static int showYesNoCancelDialog(Project project, String message, String title, Image icon) {
     return showYesNoCancelDialog(project, message, title, YES_BUTTON, NO_BUTTON, CANCEL_BUTTON, icon);
   }
@@ -774,6 +810,7 @@ public class Messages {
    * @return {@link #YES} if user pressed "Yes" or {@link #NO} if user pressed "No", or {@link #CANCEL} if user pressed "Cancel" button.
    */
   @YesNoCancelResult
+  @RequiredUIAccess
   public static int showYesNoCancelDialog(@Nonnull Component parent, String message, @Nonnull String title, @Nonnull String yes, @Nonnull String no, @Nonnull String cancel, Image icon) {
     try {
       if (canShowMacSheetPanel()) {
@@ -791,10 +828,10 @@ public class Messages {
    * @return {@link #YES} if user pressed "Yes" or {@link #NO} if user pressed "No", or {@link #CANCEL} if user pressed "Cancel" button.
    */
   @YesNoCancelResult
+  @RequiredUIAccess
   public static int showYesNoCancelDialog(@Nonnull Component parent, String message, String title, Image icon) {
     return showYesNoCancelDialog(parent, message, title, YES_BUTTON, NO_BUTTON, CANCEL_BUTTON, icon);
   }
-
 
   /**
    * Use this method only if you do not know project or component
@@ -804,6 +841,7 @@ public class Messages {
    * @see #showYesNoCancelDialog(Component, String, String, String, String, String, Image)
    */
   @YesNoCancelResult
+  @RequiredUIAccess
   public static int showYesNoCancelDialog(String message,
                                           @Nonnull String title,
                                           @Nonnull String yes,
@@ -831,6 +869,7 @@ public class Messages {
    * @see #showYesNoCancelDialog(Component, String, String, String, String, String, Image)
    */
   @YesNoCancelResult
+  @RequiredUIAccess
   public static int showYesNoCancelDialog(String message, String title, String yes, String no, String cancel, Image icon) {
     return showYesNoCancelDialog(message, title, yes, no, cancel, icon, null);
   }
@@ -843,6 +882,7 @@ public class Messages {
    * @see #showYesNoCancelDialog(Component, String, String, Image)
    */
   @YesNoCancelResult
+  @RequiredUIAccess
   public static int showYesNoCancelDialog(String message, String title, Image icon) {
     return showYesNoCancelDialog(message, title, YES_BUTTON, NO_BUTTON, CANCEL_BUTTON, icon);
   }
@@ -851,6 +891,7 @@ public class Messages {
    * @return trimmed input string or <code>null</code> if user cancelled dialog.
    */
   @Nullable
+  @RequiredUIAccess
   public static String showPasswordDialog(@Nls String message, @Nls String title) {
     return showPasswordDialog(null, message, title, null, null);
   }
@@ -859,6 +900,7 @@ public class Messages {
    * @return trimmed input string or <code>null</code> if user cancelled dialog.
    */
   @Nullable
+  @RequiredUIAccess
   public static String showPasswordDialog(Project project, @Nls String message, @Nls String title, @Nullable Image icon) {
     return showPasswordDialog(project, message, title, icon, null);
   }
@@ -867,6 +909,7 @@ public class Messages {
    * @return trimmed input string or <code>null</code> if user cancelled dialog.
    */
   @Nullable
+  @RequiredUIAccess
   public static String showPasswordDialog(@Nullable Project project, @Nls String message, @Nls String title, @Nullable Image icon, @Nullable InputValidator validator) {
     if (isApplicationInUnitTestOrHeadless()) {
       return ourTestInputImplementation.show(message);
@@ -881,6 +924,7 @@ public class Messages {
    * @return trimmed input string or <code>null</code> if user cancelled dialog.
    */
   @Nullable
+  @RequiredUIAccess
   public static String showInputDialog(@Nullable Project project, String message, String title, @Nullable Image icon) {
     return showInputDialog(project, message, title, icon, null, null);
   }
@@ -889,6 +933,7 @@ public class Messages {
    * @return trimmed input string or <code>null</code> if user cancelled dialog.
    */
   @Nullable
+  @RequiredUIAccess
   public static String showInputDialog(@Nonnull Component parent, String message, String title, @Nullable Image icon) {
     return showInputDialog(parent, message, title, icon, null, null);
   }
@@ -900,11 +945,13 @@ public class Messages {
    * @see #showInputDialog(Component, String, String, Image)
    */
   @Nullable
+  @RequiredUIAccess
   public static String showInputDialog(String message, String title, @Nullable Image icon) {
     return showInputDialog(message, title, icon, null, null);
   }
 
   @Nullable
+  @RequiredUIAccess
   public static String showInputDialog(@Nullable Project project, @Nls String message, @Nls String title, @Nullable Image icon, @Nullable String initialValue, @Nullable InputValidator validator) {
     if (isApplicationInUnitTestOrHeadless()) {
       return ourTestInputImplementation.show(message);
@@ -917,6 +964,7 @@ public class Messages {
   }
 
   @Nullable
+  @RequiredUIAccess
   public static String showInputDialog(Project project,
                                        @Nls String message,
                                        @Nls String title,
@@ -948,6 +996,7 @@ public class Messages {
   }
 
   @Nullable
+  @RequiredUIAccess
   public static String showInputDialog(@Nonnull Component parent, String message, String title, @Nullable Image icon, @Nullable String initialValue, @Nullable InputValidator validator) {
     if (isApplicationInUnitTestOrHeadless()) {
       return ourTestInputImplementation.show(message);
@@ -967,6 +1016,7 @@ public class Messages {
    * @see #showInputDialog(Component, String, String, Image, String, InputValidator)
    */
   @Nullable
+  @RequiredUIAccess
   public static String showInputDialog(String message, String title, @Nullable Image icon, @Nullable String initialValue, @Nullable InputValidator validator) {
     if (isApplicationInUnitTestOrHeadless()) {
       return ourTestInputImplementation.show(message);
@@ -979,6 +1029,7 @@ public class Messages {
   }
 
   @Nullable
+  @RequiredUIAccess
   public static String showMultilineInputDialog(Project project, String message, String title, @Nullable String initialValue, @Nullable Image icon, @Nullable InputValidator validator) {
     if (isApplicationInUnitTestOrHeadless()) {
       return ourTestInputImplementation.show(message);
@@ -989,6 +1040,7 @@ public class Messages {
   }
 
   @Nonnull
+  @RequiredUIAccess
   public static Pair<String, Boolean> showInputDialogWithCheckBox(String message,
                                                                   String title,
                                                                   String checkboxText,
@@ -1008,6 +1060,7 @@ public class Messages {
   }
 
   @Nullable
+  @RequiredUIAccess
   public static String showEditableChooseDialog(String message, String title, @Nullable Image icon, String[] values, String initialValue, @Nullable InputValidator validator) {
     if (isApplicationInUnitTestOrHeadless()) {
       return ourTestInputImplementation.show(message);
@@ -1027,6 +1080,7 @@ public class Messages {
    * @deprecated It looks awful!
    */
   @Deprecated
+  @RequiredUIAccess
   public static int showChooseDialog(String message, String title, String[] values, String initialValue, @Nullable Image icon) {
     if (isApplicationInUnitTestOrHeadless()) {
       return ourTestImplementation.show(message);
@@ -1042,6 +1096,7 @@ public class Messages {
    * @deprecated It looks awful!
    */
   @Deprecated
+  @RequiredUIAccess
   public static int showChooseDialog(@Nonnull Component parent, String message, String title, String[] values, String initialValue, Image icon) {
     if (isApplicationInUnitTestOrHeadless()) {
       return ourTestImplementation.show(message);
@@ -1058,6 +1113,7 @@ public class Messages {
    * @deprecated It looks awful!
    */
   @Deprecated
+  @RequiredUIAccess
   public static int showChooseDialog(Project project, String message, String title, Image icon, String[] values, String initialValue) {
     if (isApplicationInUnitTestOrHeadless()) {
       return ourTestImplementation.show(message);
@@ -1072,6 +1128,7 @@ public class Messages {
   /**
    * Shows dialog with given message and title, information icon {@link #getInformationImage ()} and OK button
    */
+  @RequiredUIAccess
   public static void showInfoMessage(Component component, String message, @Nonnull String title) {
     try {
       if (canShowMacSheetPanel()) {
@@ -1088,6 +1145,7 @@ public class Messages {
   /**
    * Shows dialog with given message and title, information icon {@link #getInformationImage ()} and OK button
    */
+  @RequiredUIAccess
   public static void showInfoMessage(@Nullable Project project, @Nls String message, @Nls @Nonnull String title) {
     try {
       if (canShowMacSheetPanel()) {
@@ -1109,6 +1167,7 @@ public class Messages {
    * @see #showInputDialog(Project, String, String, Image, String, InputValidator)
    * @see #showInputDialog(Component, String, String, Image, String, InputValidator)
    */
+  @RequiredUIAccess
   public static void showInfoMessage(String message, @Nonnull String title) {
     try {
       if (canShowMacSheetPanel()) {
@@ -1125,6 +1184,7 @@ public class Messages {
   /**
    * Shows dialog with text area to edit long strings that don't fit in text field.
    */
+  @RequiredUIAccess
   public static void showTextAreaDialog(final JTextField textField,
                                         final String title,
                                         @NonNls final String dimensionServiceKey,
@@ -1163,6 +1223,7 @@ public class Messages {
     }
   }
 
+  @RequiredUIAccess
   public static void showTextAreaDialog(final JTextField textField, final String title, @NonNls final String dimensionServiceKey) {
     showTextAreaDialog(textField, title, dimensionServiceKey, ParametersListUtil.DEFAULT_LINE_PARSER, ParametersListUtil.DEFAULT_LINE_JOINER);
   }
