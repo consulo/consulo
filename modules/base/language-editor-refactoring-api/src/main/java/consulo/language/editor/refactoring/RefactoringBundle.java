@@ -16,7 +16,10 @@
 
 package consulo.language.editor.refactoring;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.application.CommonBundle;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.PropertyKey;
 
@@ -28,6 +31,9 @@ import java.util.ResourceBundle;
 /**
  * @author ven
  */
+@Deprecated(forRemoval = true)
+@DeprecationInfo("Use RefactoringLocalize")
+@MigratedExtensionsTo(RefactoringLocalize.class)
 public class RefactoringBundle {
   private static Reference<ResourceBundle> ourBundle;
 
