@@ -16,18 +16,18 @@
 
 package consulo.versionControlSystem.change;
 
-import consulo.application.util.SystemInfo;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.lang.Comparing;
 import consulo.versionControlSystem.FilePath;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsPathPresenter;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nullable;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -116,7 +116,7 @@ public class Change {
       if (!Comparing.equal(bFile, aFile)) return Type.MOVED;
 
       // enforce case-sensitive check
-      if (!SystemInfo.isFileSystemCaseSensitive) {
+      if (!Platform.current().fs().isCaseSensitive()) {
         String bPath = bFile.getPath();
         String aPath = aFile.getPath();
         if (!bPath.equals(aPath) && bPath.equalsIgnoreCase(aPath)) return Type.MOVED;
@@ -245,17 +245,17 @@ public class Change {
     } else if (isRenamed()) {
       return getRenamedText();
     }
-    return myIsReplaced ? VcsBundle.message("change.file.replaced.text") : null;
+    return myIsReplaced ? VcsLocalize.changeFileReplacedText().get() : null;
   }
 
   @Nullable
   protected String getRenamedText() {
-    return VcsBundle.message("change.file.renamed.from.text", myBeforeRevision.getFile().getName());
+    return VcsLocalize.changeFileRenamedFromText(myBeforeRevision.getFile().getName()).get();
   }
 
   @Nullable
   protected String getMovedText(final Project project) {
-    return VcsBundle.message("change.file.moved.from.text", getMoveRelativePath(project));
+    return VcsLocalize.changeFileMovedFromText(getMoveRelativePath(project)).get();
   }
 
   public boolean isIsReplaced() {

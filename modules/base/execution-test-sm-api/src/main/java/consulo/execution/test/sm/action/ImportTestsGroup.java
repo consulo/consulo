@@ -19,8 +19,8 @@ import consulo.application.AllIcons;
 import consulo.execution.test.TestStateStorage;
 import consulo.execution.test.sm.TestHistoryConfiguration;
 import consulo.execution.test.sm.runner.SMTRunnerConsoleProperties;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -48,7 +48,7 @@ public class ImportTestsGroup extends ActionGroup {
   @Override
   public AnAction[] getChildren(@Nullable AnActionEvent e) {
     if (e == null) return EMPTY_ARRAY;
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     if (project == null) return EMPTY_ARRAY;
     final Collection<String> filePaths = TestHistoryConfiguration.getInstance(project).getFiles();
     final File testHistoryRoot = TestStateStorage.getTestHistoryRoot(project);
@@ -65,7 +65,8 @@ public class ImportTestsGroup extends ActionGroup {
   }
 
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
-    e.getPresentation().setEnabledAndVisible(e.getData(CommonDataKeys.PROJECT) != null);
+    e.getPresentation().setEnabledAndVisible(e.getData(Project.KEY) != null);
   }
 }

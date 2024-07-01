@@ -15,8 +15,8 @@
  */
 package consulo.versionControlSystem.impl.internal.change;
 
-import consulo.application.util.SystemInfo;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.util.collection.MultiMap;
 import consulo.util.io.FileUtil;
@@ -24,6 +24,7 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.Couple;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.ThreeState;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsKey;
@@ -109,7 +110,8 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
   }
 
   private void checkForMultipleCopiesNotMove(boolean somethingChanged) {
-    final MultiMap<FilePath, Pair<Change, String>> moves = new MultiMap<FilePath, Pair<Change, String>>() {
+    final MultiMap<FilePath, Pair<Change, String>> moves = new MultiMap<>() {
+      @Override
       @Nonnull
       protected Collection<Pair<Change, String>> createCollection() {
         return new LinkedList<>();
@@ -174,6 +176,7 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
   /**
    * @return if list with name exists, return previous default list name or null of there wasn't previous
    */
+  @Override
   @Nullable
   public String setDefault(final String name) {
     final LocalChangeList newDefault = myMap.get(name);
@@ -192,6 +195,7 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
     return previousName;
   }
 
+  @Override
   public boolean setReadOnly(final String name, final boolean value) {
     final LocalChangeList list = myMap.get(name);
     if (list != null) {
@@ -200,6 +204,7 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
     return list != null;
   }
 
+  @Override
   public LocalChangeList addChangeList(@Nonnull final String name, @Nullable final String comment, @Nullable Object data) {
     return addChangeList(null, name, comment, false, data);
   }
@@ -255,6 +260,7 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
     myIdx.changeAdded(change, vcsKey);
   }
 
+  @Override
   public boolean removeChangeList(@Nonnull String name) {
     final LocalChangeList list = myMap.get(name);
     if (list == null) {
@@ -273,6 +279,7 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
     return true;
   }
 
+  @Override
   @Nullable
   public MultiMap<LocalChangeList, Change> moveChangesTo(final String name, final Change[] changes) {
     final LocalChangeListImpl changeList = (LocalChangeListImpl)myMap.get(name);
@@ -293,6 +300,7 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
     return null;
   }
 
+  @Override
   public boolean editName(@Nonnull final String fromName, @Nonnull final String toName) {
     if (fromName.equals(toName)) return false;
     final LocalChangeList list = myMap.get(fromName);
@@ -306,6 +314,7 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
     return canEdit;
   }
 
+  @Override
   @Nullable
   public String editComment(@Nonnull final String fromName, final String newComment) {
     final LocalChangeList list = myMap.get(fromName);
@@ -606,6 +615,7 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
       myListToChangesMap = new HashMap<>();
     }
 
+    @Override
     protected void processInChange(Couple<String> key, Change change) {
       LocalChangeList tmpList = myInternalMap.get(key);
       if (tmpList == null) {
@@ -634,6 +644,7 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
       myValidChanges = new ArrayList<>();
     }
 
+    @Override
     protected void processInChange(Couple<String> key, Change change) {
       final LocalChangeList list = myInternalMap.get(key);
       if (list != null) {
@@ -695,11 +706,11 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
     return null;
   }
 
-  public consulo.util.lang.ThreeState haveChangesUnder(@Nonnull VirtualFile virtualFile) {
+  public ThreeState haveChangesUnder(@Nonnull VirtualFile virtualFile) {
     FilePath dir = VcsUtil.getFilePath(virtualFile);
     FilePath changeCandidate = myIdx.getAffectedPaths().ceiling(dir);
     if (changeCandidate == null) {
-      return consulo.util.lang.ThreeState.NO;
+      return ThreeState.NO;
     }
     return FileUtil.isAncestorThreeState(dir.getPath(), changeCandidate.getPath(), false);
   }
@@ -834,20 +845,20 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
       return ourInstance;
     }
 
+    @Override
     public int compare(final Pair<Change, String> o1, final Pair<Change, String> o2) {
       final String s1 = o1.getFirst().getAfterRevision().getFile().getPresentableUrl();
       final String s2 = o2.getFirst().getAfterRevision().getFile().getPresentableUrl();
-      return SystemInfo.isFileSystemCaseSensitive ? s1.compareTo(s2) : s1.compareToIgnoreCase(s2);
+      return Platform.current().fs().isCaseSensitive() ? s1.compareTo(s2) : s1.compareToIgnoreCase(s2);
     }
   }
 
   @Override
   public String toString() {
-    return "ChangeListWorker{" +
-      "myMap=" +
-      StringUtil.join(myMap.values(), list -> "list: " + list.getName() + " changes: " + StringUtil.join(list.getChanges(),
-                                                                                                         change -> change.toString(),
-                                                                                                         ", "), "\n") +
-      '}';
+    return "ChangeListWorker{myMap=" + StringUtil.join(
+      myMap.values(),
+      list -> "list: " + list.getName() + " changes: " + StringUtil.join(list.getChanges(), Change::toString, ", "),
+      "\n"
+    ) + '}';
   }
 }

@@ -25,7 +25,6 @@ import consulo.execution.test.AbstractTestProxy;
 import consulo.execution.test.TestFrameworkRunningModel;
 import consulo.execution.test.stacktrace.DiffHyperlink;
 import consulo.execution.test.ui.TestTreeView;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -45,6 +44,7 @@ public class ViewAssertEqualsDiffAction extends AnAction implements TestTreeView
   public static final String ACTION_ID = "openAssertEqualsDiff";
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(final AnActionEvent e) {
     if (!openDiff(e.getDataContext(), null)) {
       final Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
@@ -52,9 +52,10 @@ public class ViewAssertEqualsDiffAction extends AnAction implements TestTreeView
     }
   }
 
+  @RequiredUIAccess
   public static boolean openDiff(DataContext context, @Nullable DiffHyperlink currentHyperlink) {
     final AbstractTestProxy testProxy = context.getData(AbstractTestProxy.KEY);
-    final Project project = context.getData(CommonDataKeys.PROJECT);
+    final Project project = context.getData(Project.KEY);
     if (testProxy != null) {
       DiffHyperlink diffViewerProvider = testProxy.getDiffViewerProvider();
       if (diffViewerProvider != null) {
@@ -75,7 +76,7 @@ public class ViewAssertEqualsDiffAction extends AnAction implements TestTreeView
   }
 
   private static List<DiffHyperlink> collectAvailableProviders(TestFrameworkRunningModel model) {
-    final List<DiffHyperlink> providers = new ArrayList<DiffHyperlink>();
+    final List<DiffHyperlink> providers = new ArrayList<>();
     if (model != null) {
       final AbstractTestProxy root = model.getRoot();
       final List<? extends AbstractTestProxy> allTests = root.getAllTests();
@@ -94,7 +95,7 @@ public class ViewAssertEqualsDiffAction extends AnAction implements TestTreeView
     final Presentation presentation = e.getPresentation();
     final boolean enabled;
     final DataContext dataContext = e.getDataContext();
-    if (dataContext.getData(CommonDataKeys.PROJECT) == null) {
+    if (dataContext.getData(Project.KEY) == null) {
       enabled = false;
     }
     else {

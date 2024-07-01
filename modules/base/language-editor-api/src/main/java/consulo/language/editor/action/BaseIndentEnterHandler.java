@@ -29,7 +29,6 @@ import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.codeStyle.FormattingModelBuilder;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
@@ -54,12 +53,12 @@ public class BaseIndentEnterHandler extends EnterHandlerDelegateAdapter {
   private final boolean myWorksWithFormatter;
 
   public BaseIndentEnterHandler(
-          final Language language,
-          final TokenSet indentTokens,
-          final IElementType lineCommentType,
-          final String lineCommentPrefix,
-          final TokenSet whitespaceTokens)
-  {
+    final Language language,
+    final TokenSet indentTokens,
+    final IElementType lineCommentType,
+    final String lineCommentPrefix,
+    final TokenSet whitespaceTokens
+  ) {
     this(language, indentTokens, lineCommentType, lineCommentPrefix, whitespaceTokens, false);
   }
 
@@ -81,7 +80,7 @@ public class BaseIndentEnterHandler extends EnterHandlerDelegateAdapter {
   }
 
   protected Result shouldSkipWithResult(@Nonnull final PsiFile file, @Nonnull final Editor editor, @Nonnull final DataContext dataContext) {
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Project project = dataContext.getData(Project.KEY);
     if (project == null) {
       return Result.Continue;
     }
@@ -113,13 +112,13 @@ public class BaseIndentEnterHandler extends EnterHandlerDelegateAdapter {
 
   @Override
   public Result preprocessEnter(
-          @Nonnull final PsiFile file,
-          @Nonnull final Editor editor,
-          @Nonnull final Ref<Integer> caretOffset,
-          @Nonnull final Ref<Integer> caretAdvance,
-          @Nonnull final DataContext dataContext,
-          final EditorActionHandler originalHandler)
-  {
+    @Nonnull final PsiFile file,
+    @Nonnull final Editor editor,
+    @Nonnull final Ref<Integer> caretOffset,
+    @Nonnull final Ref<Integer> caretAdvance,
+    @Nonnull final DataContext dataContext,
+    final EditorActionHandler originalHandler
+  ) {
     Result res = shouldSkipWithResult(file, editor, dataContext);
     if (res != null) {
       return res;

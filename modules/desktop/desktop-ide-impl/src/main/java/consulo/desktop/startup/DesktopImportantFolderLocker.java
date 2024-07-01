@@ -183,7 +183,7 @@ public final class DesktopImportantFolderLocker implements ImportantFolderLocker
   private static void addExistingPort(@Nonnull File portMarker, @Nonnull String path, @Nonnull MultiMap<Integer, String> portToPath) {
     if (portMarker.exists()) {
       try {
-        portToPath.putValue(Integer.parseInt(consulo.ide.impl.idea.openapi.util.io.FileUtil.loadFile(portMarker)), path);
+        portToPath.putValue(Integer.parseInt(Files.readString(portMarker.toPath())), path);
       }
       catch (Exception e) {
         log(e);

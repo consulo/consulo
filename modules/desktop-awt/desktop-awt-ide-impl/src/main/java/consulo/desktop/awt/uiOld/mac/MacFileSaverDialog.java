@@ -15,9 +15,9 @@
  */
 package consulo.desktop.awt.uiOld.mac;
 
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ui.ex.localize.UILocalize;
+import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.ui.ex.UIBundle;
 import java.util.function.Consumer;
 import consulo.desktop.awt.ui.OwnerOptional;
 import consulo.fileChooser.FileChooserDescriptor;
@@ -41,7 +41,7 @@ public class MacFileSaverDialog implements FileSaverDialog {
 
   private static String getChooserTitle(final FileChooserDescriptor descriptor) {
     final String title = descriptor.getTitle();
-    return title != null ? title : UIBundle.message("file.chooser.default.title");
+    return title != null ? title : UILocalize.fileChooserDefaultTitle().get();
   }
 
   public MacFileSaverDialog(FileSaverDescriptor descriptor, Project project) {
@@ -84,5 +84,4 @@ public class MacFileSaverDialog implements FileSaverDialog {
     final String vfsPath = FileUtil.toSystemIndependentName(file.getAbsolutePath());
     return localFileSystem.refreshAndFindFileByPath(vfsPath);
   }
-
 }

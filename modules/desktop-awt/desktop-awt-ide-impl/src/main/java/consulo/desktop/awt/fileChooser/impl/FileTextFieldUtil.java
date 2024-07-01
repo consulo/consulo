@@ -2,16 +2,16 @@
 package consulo.desktop.awt.fileChooser.impl;
 
 import consulo.application.ReadAction;
-import consulo.desktop.awt.fileChooser.impl.FileLookup.Finder;
-import consulo.application.util.SystemInfo;
-import consulo.util.lang.StringUtil;
 import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.application.util.matcher.NameUtil;
-import consulo.util.lang.function.ThrowableRunnable;
+import consulo.desktop.awt.fileChooser.impl.FileLookup.Finder;
 import consulo.logging.Logger;
-
+import consulo.platform.Platform;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.function.ThrowableRunnable;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -46,7 +46,8 @@ public final class FileTextFieldUtil {
     result.myClosestParent = result.current;
 
     if (result.current != null) {
-      result.currentParentMatch = SystemInfo.isFileSystemCaseSensitive ? typedText.equals(result.current.getAbsolutePath()) : typedText.equalsIgnoreCase(result.current.getAbsolutePath());
+      result.currentParentMatch = Platform.current().fs().isCaseSensitive()
+        ? typedText.equals(result.current.getAbsolutePath()) : typedText.equalsIgnoreCase(result.current.getAbsolutePath());
 
       result.closedPath = typed.endsWith(finder.getSeparator()) && typedText.length() > finder.getSeparator().length();
       final String currentParentText = result.current.getAbsolutePath();
@@ -74,7 +75,6 @@ public final class FileTextFieldUtil {
     else {
       result.effectivePrefix = typedText;
     }
-
 
     ReadAction.run(new ThrowableRunnable<>() {
       @Override
@@ -259,7 +259,7 @@ public final class FileTextFieldUtil {
     }
 
     @Override
-    public void setTextToFile(FileLookup.LookupFile file) {
+    public void setTextToFile(@Nonnull FileLookup.LookupFile file) {
       mySetText.accept(file);
     }
   }
@@ -285,7 +285,7 @@ public final class FileTextFieldUtil {
       if (prefix.length() == 0) {
         prefix = doc.getText(start, end - start);
       }
-      if (SystemInfo.isFileSystemCaseSensitive) {
+      if (Platform.current().fs().isCaseSensitive()) {
         toRemoveExistingName = name.startsWith(prefix) && prefix.length() > 0;
       }
       else {

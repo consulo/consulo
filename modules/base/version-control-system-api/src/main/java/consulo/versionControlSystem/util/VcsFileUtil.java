@@ -17,10 +17,8 @@ package consulo.versionControlSystem.util;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.application.util.SystemInfo;
 import consulo.platform.Platform;
 import consulo.project.Project;
-import consulo.util.collection.ContainerUtil;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.function.ThrowableConsumer;
 import consulo.util.lang.function.ThrowableFunction;
@@ -29,9 +27,9 @@ import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -74,11 +72,12 @@ public class VcsFileUtil {
    * @throws VcsException
    */
   @Nonnull
-  public static <T> List<T> foreachChunk(@Nonnull List<String> arguments,
-                                         int groupSize,
-                                         @Nonnull ThrowableFunction<List<String>, List<? extends T>, VcsException> processor)
-          throws VcsException {
-    List<T> result = ContainerUtil.newArrayList();
+  public static <T> List<T> foreachChunk(
+    @Nonnull List<String> arguments,
+    int groupSize,
+    @Nonnull ThrowableFunction<List<String>, List<? extends T>, VcsException> processor
+  ) throws VcsException {
+    List<T> result = new ArrayList<>();
 
     foreachChunk(arguments, groupSize, chunk -> {
       result.addAll(processor.apply(chunk));
@@ -360,7 +359,7 @@ public class VcsFileUtil {
     final List<VirtualFile> backTrace = new ArrayList<>();
     int idx = path.length - 1;
     while (current != null) {
-      if (SystemInfo.isFileSystemCaseSensitive ? current.getName().equals(path[idx]) : current.getName().equalsIgnoreCase(path[idx])) {
+      if (Platform.current().fs().isCaseSensitive() ? current.getName().equals(path[idx]) : current.getName().equalsIgnoreCase(path[idx])) {
         if (idx == 0) {
           return current;
         }

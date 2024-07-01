@@ -19,8 +19,8 @@
  */
 package consulo.project.ui.view.tree;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dataContext.DataContext;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
@@ -47,9 +47,7 @@ public class ModuleGroup {
 
     final ModuleGroup moduleGroup = (ModuleGroup)o;
 
-    if (!Arrays.equals(myGroupPath, moduleGroup.myGroupPath)) return false;
-
-    return true;
+    return Arrays.equals(myGroupPath, moduleGroup.myGroupPath);
   }
 
   public int hashCode() {
@@ -61,9 +59,10 @@ public class ModuleGroup {
   }
 
   @Nonnull
+  @RequiredReadAction
   public Collection<Module> modulesInGroup(Project project, boolean recursively) {
     final Module[] allModules = ModuleManager.getInstance(project).getModules();
-    List<Module> result = new ArrayList<Module>();
+    List<Module> result = new ArrayList<>();
     for (final Module module : allModules) {
       String[] group = ModuleManager.getInstance(project).getModuleGroupPath(module);
       if (group == null) continue;
@@ -74,14 +73,17 @@ public class ModuleGroup {
     return result;
   }
 
+  @RequiredReadAction
   public Collection<ModuleGroup> childGroups(Project project) {
     return childGroups(null, project);
   }
 
+  @RequiredReadAction
   public Collection<ModuleGroup> childGroups(DataContext dataContext) {
-    return childGroups(dataContext.getData(LangDataKeys.MODIFIABLE_MODULE_MODEL), dataContext.getData(CommonDataKeys.PROJECT));
+    return childGroups(dataContext.getData(LangDataKeys.MODIFIABLE_MODULE_MODEL), dataContext.getData(Project.KEY));
   }
 
+  @RequiredReadAction
   public Collection<ModuleGroup> childGroups(ModifiableModuleModel model, Project project) {
     final Module[] allModules;
     if ( model != null ) {
@@ -90,7 +92,7 @@ public class ModuleGroup {
       allModules = ModuleManager.getInstance(project).getModules();
     }
 
-    Set<ModuleGroup> result = new HashSet<ModuleGroup>();
+    Set<ModuleGroup> result = new HashSet<>();
     for (Module module : allModules) {
       String[] group;
       if ( model != null ) {

@@ -1,6 +1,6 @@
 package consulo.versionControlSystem.change;
 
-import consulo.application.util.SystemInfo;
+import consulo.platform.Platform;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.FilePath;
@@ -36,11 +36,11 @@ public class FilePathsHelper {
     String convPath = FileUtil.toSystemIndependentName(subpath);
 
     String withSlash = StringUtil.trimEnd(convParent, "/") + "/" + StringUtil.trimStart(convPath, "/");
-    return SystemInfo.isFileSystemCaseSensitive ? withSlash : withSlash.toUpperCase();
+    return Platform.current().fs().isCaseSensitive() ? withSlash : withSlash.toUpperCase();
   }
 
   public static String convertPath(final String s) {
     String result = FileUtil.toSystemIndependentName(s);
-    return SystemInfo.isFileSystemCaseSensitive ? result : result.toUpperCase();
+    return Platform.current().fs().isCaseSensitive() ? result : result.toUpperCase();
   }
 }

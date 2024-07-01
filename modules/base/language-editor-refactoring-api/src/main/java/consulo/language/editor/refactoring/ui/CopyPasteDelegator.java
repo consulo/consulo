@@ -5,13 +5,11 @@ package consulo.language.editor.refactoring.ui;
 import consulo.application.Application;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.FilePasteProvider;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PsiCopyPasteManager;
 import consulo.language.editor.refactoring.copy.CopyHandler;
 import consulo.language.editor.refactoring.internal.RefactoringInternalHelper;
-import consulo.language.editor.refactoring.move.MoveCallback;
 import consulo.language.editor.refactoring.move.MoveHandler;
 import consulo.language.psi.*;
 import consulo.language.psi.scope.GlobalSearchScope;
@@ -50,7 +48,7 @@ public class CopyPasteDelegator implements CopyPasteSupport {
   @Nonnull
   protected PsiElement[] getSelectedElements() {
     DataContext dataContext = DataManager.getInstance().getDataContext(myKeyReceiver);
-    return ObjectUtil.notNull(dataContext.getData(LangDataKeys.PSI_ELEMENT_ARRAY), PsiElement.EMPTY_ARRAY);
+    return ObjectUtil.notNull(dataContext.getData(PsiElement.KEY_OF_ARRAY), PsiElement.EMPTY_ARRAY);
   }
 
   @Nonnull
@@ -144,7 +142,7 @@ public class CopyPasteDelegator implements CopyPasteSupport {
 
       DumbService.getInstance(myProject).setAlternativeResolveEnabled(true);
       try {
-        final Module module = dataContext.getData(LangDataKeys.MODULE);
+        final Module module = dataContext.getData(Module.KEY);
         PsiElement target = getPasteTarget(dataContext, module);
         if (isCopied[0]) {
           pasteAfterCopy(elements, module, target, true);
@@ -165,8 +163,8 @@ public class CopyPasteDelegator implements CopyPasteSupport {
 
     private PsiElement getPasteTarget(@Nonnull DataContext dataContext, @Nullable Module module) {
       PsiElement target = dataContext.getData(LangDataKeys.PASTE_TARGET_PSI_ELEMENT);
-      if (module != null && target instanceof PsiDirectoryContainer) {
-        final PsiDirectory[] directories = ((PsiDirectoryContainer)target).getDirectories(GlobalSearchScope.moduleScope(module));
+      if (module != null && target instanceof PsiDirectoryContainer directoryContainer) {
+        final PsiDirectory[] directories = directoryContainer.getDirectories(GlobalSearchScope.moduleScope(module));
         if (directories.length == 1) {
           return directories[0];
         }
@@ -177,8 +175,9 @@ public class CopyPasteDelegator implements CopyPasteSupport {
     @Nullable
     private PsiDirectory getTargetDirectory(@Nullable Module module, @Nullable PsiElement target) {
       PsiDirectory targetDirectory = target instanceof PsiDirectory ? (PsiDirectory)target : null;
-      if (targetDirectory == null && target instanceof PsiDirectoryContainer) {
-        final PsiDirectory[] directories = module == null ? ((PsiDirectoryContainer)target).getDirectories() : ((PsiDirectoryContainer)target).getDirectories(GlobalSearchScope.moduleScope(module));
+      if (targetDirectory == null && target instanceof PsiDirectoryContainer directoryContainer) {
+        final PsiDirectory[] directories =
+          module == null ? directoryContainer.getDirectories() : directoryContainer.getDirectories(GlobalSearchScope.moduleScope(module));
         if (directories.length > 0) {
           targetDirectory = directories[0];
           targetDirectory.putCopyableUserData(SHOW_CHOOSER_KEY, directories.length > 1);
@@ -221,12 +220,7 @@ public class CopyPasteDelegator implements CopyPasteSupport {
     }
 
     private void pasteAfterCut(DataContext dataContext, PsiElement[] elements, PsiElement target) {
-      MoveHandler.doMove(myProject, elements, target, dataContext, new MoveCallback() {
-        @Override
-        public void refactoringCompleted() {
-          PsiCopyPasteManager.getInstance().clear();
-        }
-      });
+      MoveHandler.doMove(myProject, elements, target, dataContext, () -> PsiCopyPasteManager.getInstance().clear());
     }
 
     @Override
@@ -248,7 +242,7 @@ public class CopyPasteDelegator implements CopyPasteSupport {
     }
 
     private boolean isDefaultPasteEnabled(final DataContext dataContext) {
-      Project project = dataContext.getData(CommonDataKeys.PROJECT);
+      Project project = dataContext.getData(Project.KEY);
       if (project == null) {
         return false;
       }

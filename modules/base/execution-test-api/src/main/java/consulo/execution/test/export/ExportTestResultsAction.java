@@ -16,7 +16,6 @@
 package consulo.execution.test.export;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.progress.PerformInBackgroundOption;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
@@ -25,19 +24,22 @@ import consulo.component.ProcessCanceledException;
 import consulo.dataContext.DataContext;
 import consulo.execution.ExecutionBundle;
 import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.test.TestFrameworkRunningModel;
 import consulo.fileEditor.FileEditorManager;
-import consulo.language.editor.CommonDataKeys;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.logging.attachment.AttachmentFactory;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.NotificationType;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.util.io.FileUtil;
 import consulo.util.io.PathUtil;
 import consulo.util.io.URLUtil;
@@ -88,29 +90,23 @@ public class ExportTestResultsAction extends DumbAwareAction {
   }
 
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
     e.getPresentation().setEnabled(isEnabled(e.getDataContext()));
   }
 
   private boolean isEnabled(DataContext dataContext) {
-    if (myModel == null) {
-      return false;
-    }
-
-    if (dataContext.getData(CommonDataKeys.PROJECT) == null) {
-      return false;
-    }
-
-    return !myModel.getRoot().isInProgress();
+    return myModel != null && dataContext.getData(Project.KEY) != null && !myModel.getRoot().isInProgress();
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getDataContext().getData(CommonDataKeys.PROJECT);
+    final Project project = e.getDataContext().getData(Project.KEY);
     LOG.assertTrue(project != null);
     final ExportTestResultsConfiguration config = ExportTestResultsConfiguration.getInstance(project);
 
-    final String name = ExecutionBundle.message("export.test.results.filename", PathUtil.suggestFileName(myRunConfiguration.getName()));
+    final LocalizeValue name = ExecutionLocalize.exportTestResultsFilename(PathUtil.suggestFileName(myRunConfiguration.getName()));
     String filename = name + "." + config.getExportFormat().getDefaultExtension();
     boolean showDialog = true;
     while (showDialog) {
@@ -120,21 +116,30 @@ public class ExportTestResultsAction extends DumbAwareAction {
       }
       filename = d.getFileName();
       showDialog = getOutputFile(config, project, filename).exists() &&
-                   Messages.showOkCancelDialog(project, ExecutionBundle.message("export.test.results.file.exists.message", filename), ExecutionBundle.message("export.test.results.file.exists.title"),
-                                               Messages.getQuestionIcon()) != Messages.OK;
+        Messages.showOkCancelDialog(
+          project,
+          ExecutionLocalize.exportTestResultsFileExistsMessage(filename).get(),
+          ExecutionLocalize.exportTestResultsFileExistsTitle().get(),
+          UIUtil.getQuestionIcon()
+        ) != Messages.OK;
     }
 
     final String filename_ = filename;
-    ProgressManager.getInstance().run(new Task.Backgroundable(project, ExecutionBundle.message("export.test.results.task.name"), false, new PerformInBackgroundOption() {
-      @Override
-      public boolean shouldStartInBackground() {
-        return true;
-      }
+    ProgressManager.getInstance().run(new Task.Backgroundable(
+      project,
+      ExecutionLocalize.exportTestResultsTaskName().get(),
+      false,
+      new PerformInBackgroundOption() {
+        @Override
+        public boolean shouldStartInBackground() {
+          return true;
+        }
 
-      @Override
-      public void processSentToBackground() {
+        @Override
+        public void processSentToBackground() {
+        }
       }
-    }) {
+    ) {
       @Override
       public void run(@Nonnull ProgressIndicator indicator) {
         indicator.setIndeterminate(true);
@@ -149,7 +154,7 @@ public class ExportTestResultsAction extends DumbAwareAction {
         }
         catch (IOException | SAXException | TransformerException ex) {
           LOG.warn(ex);
-          showBalloon(project, NotificationType.ERROR, ExecutionBundle.message("export.test.results.failed", ex.getMessage()), null);
+          showBalloon(project, NotificationType.ERROR, ExecutionLocalize.exportTestResultsFailed(ex.getMessage()).get(), null);
           return;
         }
         catch (RuntimeException ex) {
@@ -158,7 +163,10 @@ public class ExportTestResultsAction extends DumbAwareAction {
           c.setOpenResults(false);
           try {
             String xml = getOutputText(c);
-            LOG.error("Failed to export test results: " + ExceptionUtil.getThrowableText(ex), AttachmentFactory.get().create("dump.xml", xml));
+            LOG.error(
+              "Failed to export test results: " + ExceptionUtil.getThrowableText(ex),
+              AttachmentFactory.get().create("dump.xml", xml)
+            );
           }
           catch (Throwable ignored) {
             LOG.error("Failed to export test results", ex);
@@ -166,18 +174,19 @@ public class ExportTestResultsAction extends DumbAwareAction {
           return;
         }
 
-        final Ref<VirtualFile> result = new Ref<VirtualFile>();
-        final Ref<String> error = new Ref<String>();
-        ApplicationManager.getApplication().invokeAndWait(new Runnable() {
+        final Ref<VirtualFile> result = new Ref<>();
+        final Ref<String> error = new Ref<>();
+        final Application application = project.getApplication();
+        application.invokeAndWait(new Runnable() {
           @Override
           public void run() {
-            result.set(ApplicationManager.getApplication().runWriteAction(new Supplier<VirtualFile>() {
+            result.set(application.runWriteAction(new Supplier<>() {
               @Override
               public VirtualFile get() {
                 outputFile.getParentFile().mkdirs();
                 final VirtualFile parent = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(outputFile.getParentFile());
                 if (parent == null || !parent.isValid()) {
-                  error.set(ExecutionBundle.message("failed.to.create.output.file", outputFile.getPath()));
+                  error.set(ExecutionLocalize.failedToCreateOutputFile(outputFile.getPath()).get());
                   return null;
                 }
 
@@ -204,19 +213,16 @@ public class ExportTestResultsAction extends DumbAwareAction {
             openEditorOrBrowser(result.get(), project, config.getExportFormat() == ExportTestResultsConfiguration.ExportFormat.Xml);
           }
           else {
-            HyperlinkListener listener = new HyperlinkListener() {
-              @Override
-              public void hyperlinkUpdate(HyperlinkEvent e) {
-                if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                  openEditorOrBrowser(result.get(), project, config.getExportFormat() == ExportTestResultsConfiguration.ExportFormat.Xml);
-                }
+            HyperlinkListener listener = e1 -> {
+              if (e1.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                openEditorOrBrowser(result.get(), project, config.getExportFormat() == ExportTestResultsConfiguration.ExportFormat.Xml);
               }
             };
-            showBalloon(project, NotificationType.INFO, ExecutionBundle.message("export.test.results.succeeded", outputFile.getName()), listener);
+            showBalloon(project, NotificationType.INFO, ExecutionLocalize.exportTestResultsSucceeded(outputFile.getName()).get(), listener);
           }
         }
         else {
-          showBalloon(project, NotificationType.ERROR, ExecutionBundle.message("export.test.results.failed", error.get()), null);
+          showBalloon(project, NotificationType.ERROR, ExecutionLocalize.exportTestResultsFailed(error.get()).get(), null);
         }
       }
     });
@@ -242,7 +248,7 @@ public class ExportTestResultsAction extends DumbAwareAction {
   }
 
   private static void openEditorOrBrowser(final VirtualFile result, final Project project, final boolean editor) {
-    ApplicationManager.getApplication().invokeLater(() -> {
+    project.getApplication().invokeLater(() -> {
       if (editor) {
         FileEditorManager.getInstance(project).openFile(result, true);
       }
@@ -252,7 +258,7 @@ public class ExportTestResultsAction extends DumbAwareAction {
     });
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private String getOutputText(ExportTestResultsConfiguration config) throws IOException, TransformerException, SAXException {
     ExportTestResultsConfiguration.ExportFormat exportFormat = config.getExportFormat();
 
@@ -272,13 +278,21 @@ public class ExportTestResultsAction extends DumbAwareAction {
       else {
         File xslFile = new File(config.getUserTemplatePath());
         if (!xslFile.isFile()) {
-          showBalloon(myRunConfiguration.getProject(), NotificationType.ERROR, ExecutionBundle.message("export.test.results.custom.template.not.found", xslFile.getPath()), null);
+          showBalloon(
+            myRunConfiguration.getProject(),
+            NotificationType.ERROR,
+            ExecutionLocalize.exportTestResultsCustomTemplateNotFound(xslFile.getPath()).get(),
+            null
+          );
           return null;
         }
         xslSource = new StreamSource(xslFile);
       }
       handler = transformerFactory.newTransformerHandler(xslSource);
-      handler.getTransformer().setParameter("TITLE", ExecutionBundle.message("export.test.results.filename", myRunConfiguration.getName(), myRunConfiguration.getType().getDisplayName()));
+      handler.getTransformer().setParameter(
+        "TITLE",
+        ExecutionBundle.message("export.test.results.filename", myRunConfiguration.getName(), myRunConfiguration.getType().getDisplayName())
+      );
     }
 
     StringWriter w = new StringWriter();
@@ -293,14 +307,11 @@ public class ExportTestResultsAction extends DumbAwareAction {
   }
 
   private void showBalloon(final Project project, final NotificationType type, final String text, @Nullable final HyperlinkListener listener) {
-    ApplicationManager.getApplication().invokeLater(new Runnable() {
-      public void run() {
-        if (project.isDisposed()) return;
-        if (ToolWindowManager.getInstance(project).getToolWindow(myToolWindowId) != null) {
-          ToolWindowManager.getInstance(project).notifyByBalloon(myToolWindowId, type, text, null, listener);
-        }
+    project.getApplication().invokeLater(() -> {
+      if (project.isDisposed()) return;
+      if (ToolWindowManager.getInstance(project).getToolWindow(myToolWindowId) != null) {
+        ToolWindowManager.getInstance(project).notifyByBalloon(myToolWindowId, type, text, null, listener);
       }
     });
   }
-
 }

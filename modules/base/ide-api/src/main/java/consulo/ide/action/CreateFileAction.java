@@ -18,11 +18,9 @@ package consulo.ide.action;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
 import consulo.application.WriteAction;
 import consulo.application.dumb.DumbAware;
 import consulo.externalService.statistic.UsageTrigger;
-import consulo.ide.IdeBundle;
 import consulo.ide.action.ui.NewItemPopupUtil;
 import consulo.ide.action.ui.NewItemSimplePopupPanel;
 import consulo.language.LangBundle;
@@ -79,9 +77,10 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
 
   @Override
   @Nonnull
+  @RequiredUIAccess
   protected void invokeDialog(final Project project, PsiDirectory directory, @Nonnull Consumer<PsiElement[]> elementsConsumer) {
     MyInputValidator validator = new MyValidator(project, directory);
-    if (ApplicationManager.getApplication().isUnitTestMode()) {
+    if (project.getApplication().isUnitTestMode()) {
       try {
         elementsConsumer.accept(validator.create("test"));
       }
@@ -94,10 +93,11 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
     }
   }
 
+  @RequiredUIAccess
   private JBPopup createLightWeightPopup(MyInputValidator validator, Consumer<PsiElement[]> consumer) {
     NewItemSimplePopupPanel contentPanel = new NewItemSimplePopupPanel();
     TextBox nameField = contentPanel.getTextField();
-    JBPopup popup = NewItemPopupUtil.createNewItemPopup(IdeBundle.message("title.new.file"), contentPanel, (JComponent)TargetAWT.to(nameField));
+    JBPopup popup = NewItemPopupUtil.createNewItemPopup(IdeLocalize.titleNewFile().get(), contentPanel, (JComponent)TargetAWT.to(nameField));
     contentPanel.addValidator(value -> {
       if (!validator.checkInput(value)) {
         String message = InputValidatorEx.getErrorText(validator, value, LangBundle.message("incorrect.name"));
@@ -170,17 +170,17 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
 
   @Override
   protected String getActionName(PsiDirectory directory, String newName) {
-    return IdeBundle.message("progress.creating.file", directory.getVirtualFile().getPresentableUrl(), File.separator, newName);
+    return IdeLocalize.progressCreatingFile(directory.getVirtualFile().getPresentableUrl(), File.separator, newName).get();
   }
 
   @Override
   protected String getErrorTitle() {
-    return IdeBundle.message("title.cannot.create.file");
+    return IdeLocalize.titleCannotCreateFile().get();
   }
 
   @Override
   protected String getCommandName() {
-    return IdeBundle.message("command.create.file");
+    return IdeLocalize.commandCreateFile().get();
   }
 
   protected String getFileName(String newName) {
@@ -261,6 +261,7 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
     }
 
     @Override
+    @RequiredUIAccess
     public PsiElement[] create(String newName) throws Exception {
       UsageTrigger.trigger("CreateFile." + CreateFileAction.this.getClass().getSimpleName());
       return super.create(newName);
