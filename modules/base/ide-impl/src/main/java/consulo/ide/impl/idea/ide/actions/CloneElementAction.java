@@ -16,9 +16,9 @@
 
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.annotation.access.RequiredReadAction;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.LangDataKeys;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.Presentation;
 import consulo.logging.Logger;
 import consulo.project.ui.wm.ToolWindowId;
@@ -36,7 +36,7 @@ public class CloneElementAction extends CopyElementAction {
   }
 
   @Override
-  @RequiredReadAction
+  @RequiredUIAccess
   protected void updateForEditor(DataContext dataContext, Presentation presentation) {
     super.updateForEditor(dataContext, presentation);
     presentation.setVisible(false);

@@ -16,7 +16,6 @@
 
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.LangDataKeys;
@@ -35,7 +34,7 @@ import consulo.undoRedo.CommandProcessor;
 
 public class CopyElementAction extends AnAction {
   @Override
-  @RequiredReadAction
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
     final Project project = dataContext.getData(Project.KEY);
@@ -96,7 +95,7 @@ public class CopyElementAction extends AnAction {
     }
   }
 
-  @RequiredReadAction
+  @RequiredUIAccess
   protected void updateForEditor(DataContext dataContext, Presentation presentation) {
     Editor editor = dataContext.getData(Editor.KEY);
     if (editor == null) {
@@ -107,7 +106,6 @@ public class CopyElementAction extends AnAction {
     Project project = dataContext.getData(Project.KEY);
     if (project == null) {
       return;
-
     }
     PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
 
@@ -127,7 +125,7 @@ public class CopyElementAction extends AnAction {
     presentation.setEnabled(elements != null && CopyHandler.canCopy(elements));
   }
 
-  @RequiredReadAction
+  @RequiredUIAccess
   private static PsiElement getTargetElement(final Editor editor, final Project project) {
     int offset = editor.getCaretModel().getOffset();
     PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());

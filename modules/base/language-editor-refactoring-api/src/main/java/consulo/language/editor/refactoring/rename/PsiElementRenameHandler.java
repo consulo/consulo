@@ -25,6 +25,7 @@ import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.action.BaseRefactoringAction;
 import consulo.language.editor.refactoring.internal.RefactoringInternalHelper;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.language.editor.scratch.ScratchUtil;
 import consulo.language.inject.InjectedLanguageManager;
@@ -34,6 +35,7 @@ import consulo.language.psi.meta.PsiMetaOwner;
 import consulo.language.psi.meta.PsiWritableMetaData;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
@@ -57,7 +59,7 @@ public class PsiElementRenameHandler implements RenameHandler {
   public static Key<String> DEFAULT_NAME = Key.create("DEFAULT_NAME");
 
   @Override
-  @RequiredReadAction
+  @RequiredUIAccess
   public void invoke(@Nonnull Project project, Editor editor, PsiFile file, DataContext dataContext) {
     PsiElement element = getElement(dataContext);
     if (element == null) {
@@ -73,12 +75,13 @@ public class PsiElementRenameHandler implements RenameHandler {
     }
 
     editor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
-    final PsiElement nameSuggestionContext = InjectedLanguageManager.getInstance(element.getProject()).findElementAtNoCommit(file, editor.getCaretModel().getOffset());
+    final PsiElement nameSuggestionContext =
+      InjectedLanguageManager.getInstance(element.getProject()).findElementAtNoCommit(file, editor.getCaretModel().getOffset());
     invoke(element, project, nameSuggestionContext, editor);
   }
 
   @Override
-  @RequiredReadAction
+  @RequiredUIAccess
   public void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, DataContext dataContext) {
     PsiElement element = elements.length == 1 ? elements[0] : null;
     if (element == null) element = getElement(dataContext);
@@ -94,7 +97,7 @@ public class PsiElementRenameHandler implements RenameHandler {
     }
   }
 
-  @RequiredReadAction
+  @RequiredUIAccess
   public static void invoke(PsiElement element, Project project, PsiElement nameSuggestionContext, @Nullable Editor editor) {
     if (element != null && !canRename(project, editor, element)) {
       return;
@@ -106,7 +109,9 @@ public class PsiElementRenameHandler implements RenameHandler {
         (contextFile == null || !ScratchUtil.isScratch(contextFile) && !PsiManager.getInstance(project).isInProject(nameSuggestionContext))) {
       final String message = "Selected element is used from non-project files. These usages won't be renamed. Proceed anyway?";
       if (project.getApplication().isUnitTestMode()) throw new CommonRefactoringUtil.RefactoringErrorHintException(message);
-      if (Messages.showYesNoDialog(project, message, RefactoringBundle.getCannotRefactorMessage(null), UIUtil.getWarningIcon()) != Messages.YES) {
+      int buttonPressed =
+        Messages.showYesNoDialog(project, message, RefactoringBundle.getCannotRefactorMessage(null), UIUtil.getWarningIcon());
+      if (buttonPressed != Messages.YES) {
         return;
       }
     }
@@ -116,8 +121,9 @@ public class PsiElementRenameHandler implements RenameHandler {
     rename(element, project, nameSuggestionContext, editor);
   }
 
-  @RequiredReadAction
-  public static boolean canRename(Project project, Editor editor, PsiElement element) throws CommonRefactoringUtil.RefactoringErrorHintException {
+  @RequiredUIAccess
+  public static boolean canRename(Project project, Editor editor, PsiElement element)
+    throws CommonRefactoringUtil.RefactoringErrorHintException {
     String message = renameabilityStatus(project, element);
     if (StringUtil.isNotEmpty(message)) {
       showErrorMessage(project, editor, message);
@@ -160,15 +166,17 @@ public class PsiElementRenameHandler implements RenameHandler {
     return null;
   }
 
+  @RequiredUIAccess
   static void showErrorMessage(Project project, @Nullable Editor editor, String message) {
     CommonRefactoringUtil.showErrorHint(project, editor, message, RefactoringBundle.message("rename.title"), null);
   }
 
+  @RequiredUIAccess
   public static void rename(PsiElement element, final Project project, PsiElement nameSuggestionContext, Editor editor) {
     rename(element, project, nameSuggestionContext, editor, null);
   }
 
-  @RequiredReadAction
+  @RequiredUIAccess
   public static void rename(
     PsiElement element,
     final Project project,
