@@ -16,15 +16,12 @@
 package consulo.desktop.awt.wm.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.annotation.component.ActionParentRef;
-import consulo.annotation.component.ActionRef;
-import consulo.annotation.component.ActionRefAnchor;
 import consulo.application.dumb.DumbAware;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.desktop.awt.wm.FocusManagerImpl;
 import consulo.desktop.awt.wm.FocusRequestInfo;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
@@ -52,6 +49,7 @@ public class FocusTracesAction extends AnAction implements DumbAware {
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
     final Project project = e.getData(Project.KEY);
     final IdeFocusManager manager = IdeFocusManager.getGlobalInstance();
@@ -60,12 +58,9 @@ public class FocusTracesAction extends AnAction implements DumbAware {
 
     myActive = !myActive;
     if (myActive) {
-      myFocusTracker = new AWTEventListener() {
-        @Override
-        public void eventDispatched(AWTEvent event) {
-          if (event instanceof FocusEvent && event.getID() == FocusEvent.FOCUS_GAINED) {
-            focusManager.getRequests().add(new FocusRequestInfo(((FocusEvent)event).getComponent(), new Throwable(), false));
-          }
+      myFocusTracker = event -> {
+        if (event instanceof FocusEvent && event.getID() == FocusEvent.FOCUS_GAINED) {
+          focusManager.getRequests().add(new FocusRequestInfo(((FocusEvent)event).getComponent(), new Throwable(), false));
         }
       };
       Toolkit.getDefaultToolkit().addAWTEventListener(myFocusTracker, AWTEvent.FOCUS_EVENT_MASK);
@@ -81,14 +76,10 @@ public class FocusTracesAction extends AnAction implements DumbAware {
   }
 
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
     final Presentation presentation = e.getPresentation();
-    if (myActive) {
-      presentation.setText("Stop Focus Tracing");
-    }
-    else {
-      presentation.setText("Start Focus Tracing");
-    }
-    presentation.setEnabled(e.getData(CommonDataKeys.PROJECT) != null);
+    presentation.setText(myActive ? "Stop Focus Tracing" : "Start Focus Tracing");
+    presentation.setEnabled(e.getData(Project.KEY) != null);
   }
 }

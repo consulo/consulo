@@ -16,8 +16,9 @@
 package consulo.desktop.awt.action;
 
 import consulo.desktop.awt.ui.impl.image.DesktopAWTScalableImage;
-import consulo.language.editor.CommonDataKeys;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.DialogWrapper;
@@ -25,6 +26,7 @@ import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.dnd.DnDDragStartBean;
 import consulo.ui.ex.awt.dnd.DnDImage;
 import consulo.ui.ex.awt.dnd.DnDSupport;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
@@ -34,8 +36,9 @@ import javax.swing.*;
  */
 public class TestDnd extends AnAction {
   @Override
-  public void actionPerformed(AnActionEvent e) {
-    new DialogWrapper(e == null ? null : e.getData(CommonDataKeys.PROJECT)) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
+    new DialogWrapper(e == null ? null : e.getData(Project.KEY)) {
       {
         setTitle("DnD Test");
         setScalableSize(600, 500);
@@ -44,7 +47,7 @@ public class TestDnd extends AnAction {
       @Nullable
       @Override
       protected JComponent createCenterPanel() {
-        JBList list = new JBList(new String[]{"1111111", "222222", "333333", "44444", "555555555555555555555555"});
+        JBList<String> list = new JBList<>(new String[]{"1111111", "222222", "333333", "44444", "555555555555555555555555"});
         DnDSupport.createBuilder(list)
           .setBeanProvider(info -> new DnDDragStartBean("something"))
           .setImageProvider(info -> new DnDImage(new DesktopAWTScalableImage(PlatformIconGroup.icon32())))

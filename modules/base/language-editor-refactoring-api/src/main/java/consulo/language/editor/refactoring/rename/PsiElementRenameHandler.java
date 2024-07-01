@@ -25,7 +25,6 @@ import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.action.BaseRefactoringAction;
 import consulo.language.editor.refactoring.internal.RefactoringInternalHelper;
-import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.language.editor.scratch.ScratchUtil;
 import consulo.language.inject.InjectedLanguageManager;

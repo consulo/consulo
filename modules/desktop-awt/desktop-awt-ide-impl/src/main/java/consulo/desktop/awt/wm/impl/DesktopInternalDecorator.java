@@ -62,7 +62,10 @@ import org.jetbrains.annotations.NonNls;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ComponentEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Map;
 
 /**
@@ -423,7 +426,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     }
     group.add(moveGroup);
 
-    DefaultActionGroup resize = new DefaultActionGroup(ActionsBundle.groupText("ResizeToolWindowGroup"), true);
+    DefaultActionGroup resize = new DefaultActionGroup(ActionLocalize.groupResizetoolwindowgroupText(), true);
     resize.add(new ResizeToolWindowAction.Left(myToolWindow, this));
     resize.add(new ResizeToolWindowAction.Right(myToolWindow, this));
     resize.add(new ResizeToolWindowAction.Up(myToolWindow, this));
@@ -507,6 +510,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
   /**
    * @return tool window associated with the decorator.
    */
+  @Nonnull
   @Override
   public DesktopToolWindowImpl getToolWindow() {
     return myToolWindow;
@@ -521,6 +525,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     return myInfo;
   }
 
+  @Override
   public int getHeaderHeight() {
     return myHeader.getPreferredSize().height;
   }
@@ -682,7 +687,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       fireVisibleOnPanelChanged(false);
       if (getToolWindow().isActive()) {
         fireHidden();

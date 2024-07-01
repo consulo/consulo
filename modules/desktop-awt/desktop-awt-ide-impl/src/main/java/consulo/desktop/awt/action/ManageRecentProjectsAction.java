@@ -15,18 +15,17 @@
  */
 package consulo.desktop.awt.action;
 
-import consulo.ide.impl.idea.ide.RecentProjectsManager;
-import consulo.ui.ex.action.ActionsBundle;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.Project;
-import consulo.ui.ex.popup.JBPopup;
-import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.desktop.awt.welcomeScreen.NewRecentProjectPanel;
 import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.ide.RecentProjectsManager;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopupFactory;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -34,7 +33,7 @@ import jakarta.annotation.Nonnull;
  */
 public class ManageRecentProjectsAction extends DumbAwareAction {
   public ManageRecentProjectsAction() {
-    super(ActionsBundle.actionText("ManageRecentProjects"));
+    super(ActionLocalize.actionManagerecentprojectsText());
   }
 
   @RequiredUIAccess
@@ -43,21 +42,21 @@ public class ManageRecentProjectsAction extends DumbAwareAction {
     Disposable disposable = Disposable.newDisposable();
     NewRecentProjectPanel panel = new NewRecentProjectPanel(disposable, false);
     JBPopup popup = JBPopupFactory.getInstance().createComponentPopupBuilder(panel.getRootPanel(), panel.getList())
-            .setTitle("Recent Projects")
-            .setFocusable(true)
-            .setRequestFocus(true)
-            .setMayBeParent(true)
-            .setMovable(true)
-            .createPopup();
-    consulo.disposer.Disposer.register(popup, disposable);
-    Project project = e.getRequiredData(CommonDataKeys.PROJECT);
+      .setTitle("Recent Projects")
+      .setFocusable(true)
+      .setRequestFocus(true)
+      .setMayBeParent(true)
+      .setMovable(true)
+      .createPopup();
+    Disposer.register(popup, disposable);
+    Project project = e.getRequiredData(Project.KEY);
     popup.showCenteredInCurrentWindow(project);
   }
 
   @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     boolean enable = false;
     if (project != null) {
       enable = RecentProjectsManager.getInstance().getRecentProjectsActions(false).length > 0;

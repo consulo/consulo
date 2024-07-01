@@ -2,18 +2,17 @@
 package consulo.desktop.awt.ui.plaf.darcula;
 
 import consulo.dataContext.DataManager;
-import consulo.language.editor.CommonDataKeys;
+import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.project.Project;
-import consulo.ui.ex.popup.event.JBPopupListener;
-import consulo.ui.ex.popup.event.LightweightWindowEvent;
-import consulo.ui.ex.popup.PopupStep;
-import consulo.ui.ex.popup.BaseListPopupStep;
-import consulo.ui.ex.awt.SimpleColoredComponent;
-import consulo.ui.ex.awt.TitledSeparator;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.JBList;
-import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.SimpleColoredComponent;
+import consulo.ui.ex.awt.TitledSeparator;
+import consulo.ui.ex.popup.BaseListPopupStep;
+import consulo.ui.ex.popup.PopupStep;
+import consulo.ui.ex.popup.event.JBPopupListener;
+import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -98,7 +97,7 @@ public class DarculaJBPopupComboPopup<T> implements ComboPopup, ItemListener, Mo
       }
     };
     step.setDefaultOptionIndex(myComboBox.getSelectedIndex());
-    Project project = DataManager.getInstance().getDataContext(myComboBox).getData(CommonDataKeys.PROJECT);
+    Project project = DataManager.getInstance().getDataContext(myComboBox).getData(Project.KEY);
     myPopup = new ListPopupImpl(project, step) {
       @Override
       public void cancel(InputEvent e) {
