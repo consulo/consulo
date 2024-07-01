@@ -29,6 +29,7 @@ module consulo.language.editor.refactoring.api {
   exports consulo.language.editor.refactoring.inline;
   exports consulo.language.editor.refactoring.rename.inplace;
   exports consulo.language.editor.refactoring.introduce.inplace;
+  exports consulo.language.editor.refactoring.localize;
   exports consulo.language.editor.refactoring.changeSignature;
   exports consulo.language.editor.refactoring.move;
   exports consulo.language.editor.refactoring.postfixTemplate;
