@@ -24,15 +24,11 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.action.ToggleAction;
-import consulo.codeEditor.Caret;
-import consulo.codeEditor.CaretModel;
-import consulo.codeEditor.LogicalPosition;
-import consulo.codeEditor.SelectionModel;
-import consulo.codeEditor.EditorEx;
 import consulo.application.dumb.DumbAware;
+import consulo.codeEditor.*;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.ToggleAction;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -42,7 +38,7 @@ public class ToggleColumnModeAction extends ToggleAction implements DumbAware {
   }
 
   @Override
-  public void setSelected(AnActionEvent e, boolean state) {
+  public void setSelected(@Nonnull AnActionEvent e, boolean state) {
     final EditorEx editor = getEditor(e);
     final SelectionModel selectionModel = editor.getSelectionModel();
     final CaretModel caretModel = editor.getCaretModel();
@@ -106,17 +102,17 @@ public class ToggleColumnModeAction extends ToggleAction implements DumbAware {
   }
 
   @Override
-  public boolean isSelected(AnActionEvent e) {
+  public boolean isSelected(@Nonnull AnActionEvent e) {
     final EditorEx ex = getEditor(e);
     return ex != null && ex.isColumnMode();
   }
 
   private static EditorEx getEditor(AnActionEvent e) {
-    return (EditorEx) e.getData(CommonDataKeys.EDITOR);
+    return (EditorEx) e.getData(Editor.KEY);
   }
 
   @Override
-  public void update(AnActionEvent e){
+  public void update(@Nonnull AnActionEvent e){
     EditorEx editor = getEditor(e);
     if (editor == null || editor.isOneLineMode()) {
       e.getPresentation().setEnabled(false);

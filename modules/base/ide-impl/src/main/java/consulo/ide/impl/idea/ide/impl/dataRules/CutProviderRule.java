@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.ide.impl.dataRules;
 
 import consulo.ui.ex.CutProvider;
 import consulo.dataContext.DataProvider;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.dataContext.GetDataRule;
@@ -33,7 +32,7 @@ public class CutProviderRule implements GetDataRule<CutProvider> {
 
   @Override
   public CutProvider getData(@Nonnull DataProvider dataProvider) {
-    final Editor editor = dataProvider.getDataUnchecked(PlatformDataKeys.EDITOR);
+    final Editor editor = dataProvider.getDataUnchecked(Editor.KEY);
     return editor instanceof EditorEx editorEx ? editorEx.getCutProvider() : null;
   }
 }

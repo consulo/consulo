@@ -2,7 +2,7 @@
 package consulo.desktop.awt.wm.impl.status;
 
 import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.PowerSaveMode;
 import consulo.application.PowerSaveModeListener;
 import consulo.application.impl.internal.progress.AbstractProgressIndicatorExBase;
@@ -13,11 +13,11 @@ import consulo.application.util.NotNullLazyValue;
 import consulo.application.util.registry.Registry;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.desktop.awt.internal.notification.EventLog;
+import consulo.desktop.awt.uiOld.AWTComponentProviderUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.FileEditorsSplitters;
 import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.desktop.awt.uiOld.AWTComponentProviderUtil;
 import consulo.ide.impl.idea.openapi.progress.impl.ProgressSuspender;
 import consulo.ide.impl.idea.openapi.progress.impl.ProgressSuspenderListener;
 import consulo.ide.impl.idea.openapi.project.ProjectUtil;
@@ -32,6 +32,7 @@ import consulo.ide.impl.ui.impl.ToolWindowPanelImplEx;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.internal.BalloonLayoutEx;
 import consulo.project.ui.wm.IdeFrame;
@@ -41,7 +42,6 @@ import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.ActionsBundle;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
@@ -98,7 +98,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable {
 
       icon.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
       icon.setBorder(StatusWidgetBorders.INSTANCE);
-      icon.setToolTipText(ActionsBundle.message("action.ShowProcessWindow.double.click"));
+      icon.setToolTipText(ActionLocalize.actionShowprocesswindowDoubleClick().get());
       return icon;
     }
   };
@@ -161,7 +161,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable {
   private void runOnProgressRelatedChange(@Nonnull Runnable runnable, Disposable parentDisposable) {
     synchronized (myOriginals) {
       if (!myDisposed) {
-        MessageBusConnection connection = ApplicationManager.getApplication().getMessageBus().connect(parentDisposable);
+        MessageBusConnection connection = Application.get().getMessageBus().connect(parentDisposable);
         connection.subscribe(PowerSaveModeListener.class, () -> UIUtil.invokeLaterIfNeeded(runnable));
         connection.subscribe(ProgressSuspenderListener.class, new ProgressSuspenderListener() {
           @Override
@@ -458,7 +458,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable {
       }
       balloon.addListener(new MyListener());
     }
-    balloon.show(new PositionTracker<Balloon>(anchor) {
+    balloon.show(new PositionTracker<>(anchor) {
       @Override
       public RelativePoint recalculateLocation(Balloon object) {
         Component c = getAnchor(pane);
@@ -806,7 +806,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable {
       myUpdateQueue.queue(new Update(new Object(), false, 0) {
         @Override
         public void run() {
-          ApplicationManager.getApplication().invokeLater(update);
+          Application.get().invokeLater(update);
         }
       });
     }

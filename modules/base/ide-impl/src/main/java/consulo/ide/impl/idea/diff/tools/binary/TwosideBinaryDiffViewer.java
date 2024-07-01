@@ -29,6 +29,7 @@ import consulo.ide.impl.idea.diff.tools.util.side.TwosideDiffViewer;
 import consulo.ide.impl.idea.diff.util.DiffUtil;
 import consulo.diff.util.Side;
 import consulo.application.AllIcons;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -75,12 +76,14 @@ public class TwosideBinaryDiffViewer extends TwosideDiffViewer<BinaryEditorHolde
   }
 
   @Override
+  @RequiredUIAccess
   protected void processContextHints() {
     super.processContextHints();
     myTransferableStateSupport.processContextHints(myRequest, myContext);
   }
 
   @Override
+  @RequiredUIAccess
   protected void updateContextHints() {
     super.updateContextHints();
     myTransferableStateSupport.updateContextHints(myRequest, myContext);
@@ -105,6 +108,7 @@ public class TwosideBinaryDiffViewer extends TwosideDiffViewer<BinaryEditorHolde
   //
 
   @Override
+  @RequiredUIAccess
   protected void onSlowRediff() {
     super.onSlowRediff();
     myStatusPanel.setBusy(true);
@@ -207,6 +211,7 @@ public class TwosideBinaryDiffViewer extends TwosideDiffViewer<BinaryEditorHolde
     }
 
     @Override
+    @RequiredUIAccess
     public void update(AnActionEvent e) {
       VirtualFile baseFile = getContentFile(myBaseSide);
       VirtualFile targetFile = getContentFile(myBaseSide.other());
@@ -216,6 +221,7 @@ public class TwosideBinaryDiffViewer extends TwosideDiffViewer<BinaryEditorHolde
     }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
       final VirtualFile baseFile = getContentFile(myBaseSide);
       final VirtualFile targetFile = getContentFile(myBaseSide.other());
@@ -242,6 +248,7 @@ public class TwosideBinaryDiffViewer extends TwosideDiffViewer<BinaryEditorHolde
 
   private class MyFocusOppositePaneAction extends FocusOppositePaneAction {
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
       setCurrentSide(getCurrentSide().other());
       DiffUtil.requestFocus(getProject(), getPreferredFocusedComponent());

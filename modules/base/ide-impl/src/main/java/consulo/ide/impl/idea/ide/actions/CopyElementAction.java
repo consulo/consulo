@@ -16,39 +16,39 @@
 
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.LangDataKeys;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.undoRedo.CommandProcessor;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
-import consulo.project.Project;
-import consulo.project.ui.wm.ToolWindowManager;
+import consulo.language.editor.LangDataKeys;
+import consulo.language.editor.refactoring.copy.CopyHandler;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.editor.refactoring.copy.CopyHandler;
+import consulo.project.Project;
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.undoRedo.CommandProcessor;
 
 public class CopyElementAction extends AnAction {
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Project project = dataContext.getData(Project.KEY);
     if (project == null) {
       return;
     }
 
-    CommandProcessor.getInstance().executeCommand(project, new Runnable() {
-      @Override
-      public void run() {
-        PsiDocumentManager.getInstance(project).commitAllDocuments();
-      }
-    }, "", null);
-    final Editor editor = dataContext.getData(PlatformDataKeys.EDITOR);
+    CommandProcessor.getInstance().executeCommand(
+      project,
+      () -> PsiDocumentManager.getInstance(project).commitAllDocuments(),
+      "",
+      null
+    );
+    final Editor editor = dataContext.getData(Editor.KEY);
     PsiElement[] elements;
 
     PsiDirectory defaultTargetDirectory;
@@ -64,8 +64,8 @@ public class CopyElementAction extends AnAction {
     }
     else {
       PsiElement element = dataContext.getData(LangDataKeys.TARGET_PSI_ELEMENT);
-      defaultTargetDirectory = element instanceof PsiDirectory ? (PsiDirectory)element : null;
-      elements = dataContext.getData(LangDataKeys.PSI_ELEMENT_ARRAY);
+      defaultTargetDirectory = element instanceof PsiDirectory directory ? directory : null;
+      elements = dataContext.getData(PsiElement.KEY_OF_ARRAY);
     }
     doCopy(elements, defaultTargetDirectory);
   }
@@ -75,16 +75,17 @@ public class CopyElementAction extends AnAction {
   }
 
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Project project = dataContext.getData(Project.KEY);
     presentation.setEnabled(false);
     if (project == null) {
       return;
     }
 
-    Editor editor = dataContext.getData(PlatformDataKeys.EDITOR);
+    Editor editor = dataContext.getData(Editor.KEY);
     if (editor != null) {
       updateForEditor(dataContext, presentation);
     }
@@ -94,17 +95,17 @@ public class CopyElementAction extends AnAction {
     }
   }
 
+  @RequiredUIAccess
   protected void updateForEditor(DataContext dataContext, Presentation presentation) {
-    Editor editor = dataContext.getData(PlatformDataKeys.EDITOR);
+    Editor editor = dataContext.getData(Editor.KEY);
     if (editor == null) {
       presentation.setVisible(false);
       return;
     }
 
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Project project = dataContext.getData(Project.KEY);
     if (project == null) {
       return;
-
     }
     PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
 
@@ -120,10 +121,11 @@ public class CopyElementAction extends AnAction {
   }
 
   protected void updateForToolWindow(String toolWindowId, DataContext dataContext, Presentation presentation) {
-    PsiElement[] elements = dataContext.getData(LangDataKeys.PSI_ELEMENT_ARRAY);
+    PsiElement[] elements = dataContext.getData(PsiElement.KEY_OF_ARRAY);
     presentation.setEnabled(elements != null && CopyHandler.canCopy(elements));
   }
 
+  @RequiredUIAccess
   private static PsiElement getTargetElement(final Editor editor, final Project project) {
     int offset = editor.getCaretModel().getOffset();
     PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());

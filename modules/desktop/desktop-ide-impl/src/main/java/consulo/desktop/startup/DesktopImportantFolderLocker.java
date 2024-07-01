@@ -21,7 +21,6 @@ import consulo.builtinWebServer.impl.http.ImportantFolderLockerViaBuiltInServer;
 import consulo.builtinWebServer.impl.http.MessageDecoder;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.application.JetBrainsProtocolHandler;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.util.NotNullProducer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
@@ -31,6 +30,7 @@ import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.MultiMap;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufOutputStream;
@@ -183,7 +183,7 @@ public final class DesktopImportantFolderLocker implements ImportantFolderLocker
   private static void addExistingPort(@Nonnull File portMarker, @Nonnull String path, @Nonnull MultiMap<Integer, String> portToPath) {
     if (portMarker.exists()) {
       try {
-        portToPath.putValue(Integer.parseInt(FileUtil.loadFile(portMarker)), path);
+        portToPath.putValue(Integer.parseInt(consulo.ide.impl.idea.openapi.util.io.FileUtil.loadFile(portMarker)), path);
       }
       catch (Exception e) {
         log(e);
@@ -221,7 +221,7 @@ public final class DesktopImportantFolderLocker implements ImportantFolderLocker
 
         if (result) {
           try {
-            String token = FileUtil.loadFile(new File(mySystemPath, TOKEN_FILE));
+            String token = consulo.ide.impl.idea.openapi.util.io.FileUtil.loadFile(new File(mySystemPath, TOKEN_FILE));
             @SuppressWarnings("IOResourceOpenedButNotSafelyClosed") DataOutputStream out = new DataOutputStream(socket.getOutputStream());
             out.writeUTF(ACTIVATE_COMMAND + token + "\0" + new File(".").getAbsolutePath() + "\0" + StringUtil.join(args, "\0"));
             out.flush();

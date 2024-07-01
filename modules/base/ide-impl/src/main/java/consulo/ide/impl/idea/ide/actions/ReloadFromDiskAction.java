@@ -16,13 +16,10 @@
 
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
@@ -32,14 +29,15 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.undoRedo.CommandProcessor;
 
 public class ReloadFromDiskAction extends AnAction implements DumbAware {
   @Override
   public void actionPerformed(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
-    final Editor editor = dataContext.getData(PlatformDataKeys.EDITOR);
+    final Project project = dataContext.getData(Project.KEY);
+    final Editor editor = dataContext.getData(Editor.KEY);
     if (editor == null) return;
     final PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
     if (psiFile == null) return;
@@ -48,13 +46,13 @@ public class ReloadFromDiskAction extends AnAction implements DumbAware {
       project,
       IdeLocalize.promptReloadFileFromDisk(psiFile.getVirtualFile().getPresentableUrl()).get(),
       IdeLocalize.titleReloadFile().get(),
-      Messages.getWarningIcon()
+      UIUtil.getWarningIcon()
     );
     if (res != 0) return;
 
     CommandProcessor.getInstance().executeCommand(
       project,
-      () -> ApplicationManager.getApplication().runWriteAction(
+      () -> project.getApplication().runWriteAction(
         () -> PsiManager.getInstance(project).reloadFromDisk(psiFile)
       ),
       IdeLocalize.commandReloadFromDisk().get(),
@@ -66,12 +64,12 @@ public class ReloadFromDiskAction extends AnAction implements DumbAware {
   public void update(AnActionEvent event){
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Project project = dataContext.getData(Project.KEY);
     if (project == null){
       presentation.setEnabled(false);
       return;
     }
-    Editor editor = dataContext.getData(PlatformDataKeys.EDITOR);
+    Editor editor = dataContext.getData(Editor.KEY);
     if (editor == null){
       presentation.setEnabled(false);
       return;

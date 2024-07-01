@@ -15,16 +15,16 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.codeEditor.Editor;
 import consulo.application.dumb.DumbAware;
 import consulo.application.util.registry.Registry;
+import consulo.codeEditor.Editor;
 import consulo.project.ui.wm.IdeFrame;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -68,7 +68,7 @@ public abstract class WindowAction extends AnAction implements DumbAware {
     Window window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
     boolean enabled = isEnabledFor(window);
     if (enabled && Registry.is("no.window.actions.in.editor")) {
-      Editor editor = event.getData(CommonDataKeys.EDITOR);
+      Editor editor = event.getData(Editor.KEY);
       enabled = editor == null || !editor.getContentComponent().hasFocus();
     }
     event.getPresentation().setEnabled(enabled);
@@ -86,6 +86,7 @@ public abstract class WindowAction extends AnAction implements DumbAware {
     }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
       if (mySizeHelper == null) {
         mySizeHelper = new JLabel("W"); // Must be sure to invoke label constructor from EDT thread or it may lead to a deadlock

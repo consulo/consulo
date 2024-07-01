@@ -9,7 +9,6 @@ import consulo.ide.impl.idea.ide.util.gotoByName.GotoFileModel;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.ui.IdeUICustomization;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.file.FileTypeManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -17,6 +16,7 @@ import consulo.language.psi.PsiFileSystemItem;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Couple;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -101,7 +101,7 @@ public class FileSearchEverywhereContributor extends AbstractGotoSEContributor {
     if (selected instanceof PsiFile) {
       VirtualFile file = ((PsiFile)selected).getVirtualFile();
       if (file != null && myProject != null) {
-        Pair<Integer, Integer> pos = getLineAndColumn(searchText);
+        Couple<Integer> pos = getLineAndColumn(searchText);
         OpenFileDescriptorImpl descriptor = new OpenFileDescriptorImpl(myProject, file, pos.first, pos.second);
         descriptor.setUseCurrentWindow(openInCurrentWindow(modifiers));
         if (descriptor.canNavigate()) {
@@ -116,7 +116,7 @@ public class FileSearchEverywhereContributor extends AbstractGotoSEContributor {
 
   @Override
   public Object getDataForItem(@Nonnull Object element, @Nonnull Key dataId) {
-    if (CommonDataKeys.PSI_FILE == dataId && element instanceof PsiFile) {
+    if (PsiFile.KEY == dataId && element instanceof PsiFile) {
       return element;
     }
 

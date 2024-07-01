@@ -22,7 +22,6 @@ import consulo.compiler.CompilerBundle;
 import consulo.compiler.CompilerManager;
 import consulo.compiler.action.CompileActionBase;
 import consulo.dataContext.DataContext;
-import consulo.language.editor.CommonDataKeys;
 import consulo.localHistory.LocalHistory;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -56,7 +55,7 @@ public class CompileProjectAction extends CompileActionBase {
     if (!presentation.isEnabled()) {
       return;
     }
-    Project project = event.getData(CommonDataKeys.PROJECT);
+    Project project = event.getData(Project.KEY);
     presentation.setEnabled(project != null);
   }
 }

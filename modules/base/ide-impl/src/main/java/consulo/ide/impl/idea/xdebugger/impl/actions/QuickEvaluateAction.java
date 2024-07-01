@@ -15,16 +15,15 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.actions;
 
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorGutter;
 import consulo.codeEditor.LogicalPosition;
-import consulo.project.Project;
 import consulo.ide.impl.idea.xdebugger.impl.DebuggerSupport;
 import consulo.ide.impl.idea.xdebugger.impl.evaluate.quick.common.QuickEvaluateHandler;
 import consulo.ide.impl.idea.xdebugger.impl.evaluate.quick.common.ValueHintType;
 import consulo.ide.impl.idea.xdebugger.impl.evaluate.quick.common.ValueLookupManager;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -50,11 +49,11 @@ public class QuickEvaluateAction extends XDebuggerActionBase {
 
     @Override
     public void perform(@Nonnull final Project project, final AnActionEvent event) {
-      Editor editor = event.getData(CommonDataKeys.EDITOR);
+      Editor editor = event.getData(Editor.KEY);
       if (editor != null) {
         LogicalPosition logicalPosition = editor.getCaretModel().getLogicalPosition();
-        ValueLookupManager.getInstance(project).
-                showHint(myHandler, editor, editor.logicalPositionToXY(logicalPosition), ValueHintType.MOUSE_CLICK_HINT);
+        ValueLookupManager.getInstance(project)
+          .showHint(myHandler, editor, editor.logicalPositionToXY(logicalPosition), ValueHintType.MOUSE_CLICK_HINT);
       }
     }
 
@@ -64,16 +63,8 @@ public class QuickEvaluateAction extends XDebuggerActionBase {
         return false;
       }
 
-      Editor editor = event.getData(CommonDataKeys.EDITOR);
-      if (editor == null) {
-        return false;
-      }
-
-      if (event.getData(EditorGutter.KEY) != null) {
-        return false;
-      }
-
-      return true;
+      Editor editor = event.getData(Editor.KEY);
+      return editor != null && event.getData(EditorGutter.KEY) == null;
     }
   }
 }

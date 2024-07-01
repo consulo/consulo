@@ -15,14 +15,14 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.application.dumb.DumbAware;
+import consulo.codeEditor.Editor;
+import consulo.ide.impl.idea.openapi.actionSystem.PopupAction;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.ide.impl.idea.openapi.actionSystem.PopupAction;
-import consulo.codeEditor.Editor;
 import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.application.dumb.DumbAware;
-import consulo.ui.ex.RelativePoint;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,6 +36,8 @@ public class ShowPopupMenuAction extends AnAction implements DumbAware, PopupAct
     setEnabledInModalContext(true);
   }
 
+  @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
     final RelativePoint relPoint = JBPopupFactory.getInstance().guessBestPopupLocation(e.getDataContext());
 
@@ -44,10 +46,10 @@ public class ShowPopupMenuAction extends AnAction implements DumbAware, PopupAct
 
     Point popupMenuPoint = relPoint.getPoint(focusOwner);
 
-    final Editor editor = e.getData(PlatformDataKeys.EDITOR);
+    final Editor editor = e.getData(Editor.KEY);
     int coord = editor != null
-                ? Math.max(0, popupMenuPoint.y - 1) //To avoid cursor jump to the line below. http://www.jetbrains.net/jira/browse/IDEADEV-10644
-                : popupMenuPoint.y;
+      ? Math.max(0, popupMenuPoint.y - 1) //To avoid cursor jump to the line below. http://www.jetbrains.net/jira/browse/IDEADEV-10644
+      : popupMenuPoint.y;
 
     focusOwner.dispatchEvent(
       new MouseEvent(
@@ -62,6 +64,8 @@ public class ShowPopupMenuAction extends AnAction implements DumbAware, PopupAct
     );
   }
 
+  @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
     KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
     e.getPresentation().setEnabled(focusManager.getFocusOwner() instanceof JComponent);

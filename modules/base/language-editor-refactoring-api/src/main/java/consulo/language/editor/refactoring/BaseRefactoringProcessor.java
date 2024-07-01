@@ -3,17 +3,17 @@
 package consulo.language.editor.refactoring;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.function.Processor;
 import consulo.application.util.registry.Registry;
+import consulo.codeEditor.Editor;
 import consulo.component.ProcessCanceledException;
 import consulo.content.scope.SearchScope;
 import consulo.dataContext.DataManager;
+import consulo.fileEditor.statusBar.StatusBarUtil;
 import consulo.language.Language;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.refactoring.event.RefactoringEventData;
 import consulo.language.editor.refactoring.event.RefactoringEventListener;
 import consulo.language.editor.refactoring.event.RefactoringListenerManager;
@@ -21,7 +21,6 @@ import consulo.language.editor.refactoring.internal.RefactoringInternalHelper;
 import consulo.language.editor.refactoring.internal.RefactoringListenerManagerEx;
 import consulo.language.editor.refactoring.ui.ConflictsDialog;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
-import consulo.fileEditor.statusBar.StatusBarUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -34,6 +33,7 @@ import consulo.module.ModuleManager;
 import consulo.module.UnloadedModuleDescription;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.undoRedo.*;
 import consulo.usage.*;
@@ -44,10 +44,10 @@ import consulo.util.collection.MultiMap;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.ref.Ref;
-import org.jetbrains.annotations.TestOnly;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.TestOnly;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.*;
@@ -187,7 +187,11 @@ public abstract class BaseRefactoringProcessor implements Runnable {
     }
 
     if (!refErrorLanguage.isNull()) {
-      Messages.showErrorDialog(myProject, RefactoringBundle.message("unsupported.refs.found", refErrorLanguage.get().getDisplayName()), RefactoringBundle.message("error.title"));
+      Messages.showErrorDialog(
+        myProject,
+        RefactoringBundle.message("unsupported.refs.found", refErrorLanguage.get().getDisplayName()),
+        RefactoringBundle.message("error.title")
+      );
       return;
     }
     if (DumbService.isDumb(myProject)) {
@@ -195,7 +199,11 @@ public abstract class BaseRefactoringProcessor implements Runnable {
       return;
     }
     if (!refProcessCanceled.isNull()) {
-      Messages.showErrorDialog(myProject, "Index corruption detected. Please retry the refactoring - indexes will be rebuilt automatically", RefactoringBundle.message("error.title"));
+      Messages.showErrorDialog(
+        myProject,
+        "Index corruption detected. Please retry the refactoring - indexes will be rebuilt automatically",
+        RefactoringBundle.message("error.title")
+      );
       return;
     }
 
@@ -238,8 +246,10 @@ public abstract class BaseRefactoringProcessor implements Runnable {
   }
 
   protected void previewRefactoring(@Nonnull UsageInfo[] usages) {
-    if (ApplicationManager.getApplication().isUnitTestMode()) {
-      if (!PREVIEW_IN_TESTS) throw new RuntimeException("Unexpected preview in tests: " + StringUtil.join(usages, UsageInfo::toString, ", "));
+    if (myProject.getApplication().isUnitTestMode()) {
+      if (!PREVIEW_IN_TESTS) {
+        throw new RuntimeException("Unexpected preview in tests: " + StringUtil.join(usages, UsageInfo::toString, ", "));
+      }
       ensureElementsWritable(usages, createUsageViewDescriptor(usages));
       execute(usages);
       return;
@@ -250,7 +260,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
     Supplier<UsageSearcher> factory = () -> new UsageInfoSearcherAdapter() {
       @Override
       public void generate(@Nonnull final Processor<Usage> processor) {
-        ApplicationManager.getApplication().runReadAction(() -> {
+        myProject.getApplication().runReadAction(() -> {
           for (int i = 0; i < elements.length; i++) {
             elements[i] = targets[i].getElement();
           }
@@ -291,15 +301,21 @@ public abstract class BaseRefactoringProcessor implements Runnable {
   }
 
   protected void execute(@Nonnull final UsageInfo[] usages) {
-    CommandProcessor.getInstance().executeCommand(myProject, () -> {
-      Collection<UsageInfo> usageInfos = new LinkedHashSet<>(Arrays.asList(usages));
-      doRefactoring(usageInfos);
-      if (isGlobalUndoAction()) CommandProcessor.getInstance().markCurrentCommandAsGlobal(myProject);
-    }, getCommandName(), null, getUndoConfirmationPolicy());
+    CommandProcessor.getInstance().executeCommand(
+      myProject,
+      () -> {
+        Collection<UsageInfo> usageInfos = new LinkedHashSet<>(Arrays.asList(usages));
+        doRefactoring(usageInfos);
+        if (isGlobalUndoAction()) CommandProcessor.getInstance().markCurrentCommandAsGlobal(myProject);
+      },
+      getCommandName(),
+      null,
+      getUndoConfirmationPolicy()
+    );
   }
 
   protected boolean isGlobalUndoAction() {
-    return DataManager.getInstance().getDataContext().getData(CommonDataKeys.EDITOR) == null;
+    return DataManager.getInstance().getDataContext().getData(Editor.KEY) == null;
   }
 
   @Nonnull
@@ -376,7 +392,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
   public static boolean processConflicts(@Nonnull Project project, @Nonnull MultiMap<PsiElement, String> conflicts) {
     if (conflicts.isEmpty()) return true;
 
-    if (ApplicationManager.getApplication().isUnitTestMode()) {
+    if (project.getApplication().isUnitTestMode()) {
       if (BaseRefactoringProcessor.ConflictsInTestsException.isTestIgnore()) return true;
       throw new BaseRefactoringProcessor.ConflictsInTestsException(conflicts.values());
     }
@@ -391,9 +407,14 @@ public abstract class BaseRefactoringProcessor implements Runnable {
     final PsiElement[] initialElements = viewDescriptor.getElements();
     final UsageTarget[] targets = PsiElementUsageTargetFactory.getInstance().create(initialElements);
     final Ref<Usage[]> convertUsagesRef = new Ref<>();
-    if (!ProgressManager.getInstance()
-            .runProcessWithProgressSynchronously(() -> ApplicationManager.getApplication().runReadAction(() -> convertUsagesRef.set(UsageInfo2UsageAdapter.convert(usageInfos))), "Preprocess Usages",
-                                                 true, myProject)) return;
+    if (!ProgressManager.getInstance().runProcessWithProgressSynchronously(
+      () -> myProject.getApplication().runReadAction(() -> convertUsagesRef.set(UsageInfo2UsageAdapter.convert(usageInfos))),
+      "Preprocess Usages",
+      true,
+      myProject
+    )) {
+      return;
+    }
 
     if (convertUsagesRef.isNull()) return;
 
@@ -438,6 +459,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
     usageView.addPerformOperationAction(refactoringRunnable, getCommandName(), canNotMakeString, RefactoringBundle.message("usageView.doAction"), false);
   }
 
+  @RequiredUIAccess
   private void doRefactoring(@Nonnull final Collection<UsageInfo> usageInfoSet) {
     for (Iterator<UsageInfo> iterator = usageInfoSet.iterator(); iterator.hasNext(); ) {
       UsageInfo usageInfo = iterator.next();
@@ -491,7 +513,12 @@ public abstract class BaseRefactoringProcessor implements Runnable {
       };
       ApplicationEx app = (ApplicationEx)Application.get();
       if (Registry.is("run.refactorings.under.progress")) {
-        app.runWriteActionWithNonCancellableProgressInDispatchThread(commandName, myProject, null, indicator -> performRefactoringRunnable.run());
+        app.runWriteActionWithNonCancellableProgressInDispatchThread(
+          commandName,
+          myProject,
+          null,
+          indicator -> performRefactoringRunnable.run()
+        );
       }
       else {
         app.runWriteAction(performRefactoringRunnable);
@@ -505,7 +532,12 @@ public abstract class BaseRefactoringProcessor implements Runnable {
       }
       myTransaction.commit();
       if (Registry.is("run.refactorings.under.progress")) {
-        app.runWriteActionWithNonCancellableProgressInDispatchThread(commandName, myProject, null, indicator -> performPsiSpoilingRefactoring());
+        app.runWriteActionWithNonCancellableProgressInDispatchThread(
+          commandName,
+          myProject,
+          null,
+          indicator -> performPsiSpoilingRefactoring()
+        );
       }
       else {
         app.runWriteAction(this::performPsiSpoilingRefactoring);
@@ -541,23 +573,29 @@ public abstract class BaseRefactoringProcessor implements Runnable {
 
   protected void prepareSuccessful() {
     if (myPrepareSuccessfulSwingThreadCallback != null) {
-      ApplicationManager.getApplication().invokeAndWait(myPrepareSuccessfulSwingThreadCallback);
+      myProject.getApplication().invokeAndWait(myPrepareSuccessfulSwingThreadCallback);
     }
   }
 
   @Override
+  @RequiredUIAccess
   public final void run() {
     Runnable runnable = this::doRun;
     if (shouldDisableAccessChecks()) {
       runnable = () -> RefactoringInternalHelper.getInstance().disableWriteChecksDuring(this::doRun);
     }
-    if (ApplicationManager.getApplication().isUnitTestMode()) {
-      ApplicationManager.getApplication().assertIsDispatchThread();
+    Application application = myProject.getApplication();
+    if (application.isUnitTestMode()) {
+      application.assertIsDispatchThread();
       runnable.run();
       return;
     }
-    if (ApplicationManager.getApplication().isWriteAccessAllowed()) {
-      LOG.error("Refactorings should not be started inside write action\n because they start progress inside and any read action from the progress task would cause the deadlock", new Exception());
+    if (application.isWriteAccessAllowed()) {
+      LOG.error(
+        "Refactorings should not be started inside write action\n" +
+          " because they start progress inside and any read action from the progress task would cause the deadlock",
+        new Exception()
+      );
       DumbService.getInstance(myProject).smartInvokeLater(runnable);
     }
     else {
@@ -619,7 +657,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
   }
 
   protected boolean showConflicts(@Nonnull MultiMap<PsiElement, String> conflicts, @Nullable final UsageInfo[] usages) {
-    if (!conflicts.isEmpty() && ApplicationManager.getApplication().isUnitTestMode()) {
+    if (!conflicts.isEmpty() && myProject.getApplication().isUnitTestMode()) {
       if (!ConflictsInTestsException.isTestIgnore()) throw new ConflictsInTestsException(conflicts.values());
       return true;
     }
@@ -666,7 +704,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
 
   @Nonnull
   protected ConflictsDialog createConflictsDialog(@Nonnull MultiMap<PsiElement, String> conflicts, @Nullable final UsageInfo[] usages) {
-    return new ConflictsDialog(myProject, conflicts, usages == null ? null : (Runnable)() -> execute(usages), false, true);
+    return new ConflictsDialog(myProject, conflicts, usages == null ? null : () -> execute(usages), false, true);
   }
 
   @Nonnull

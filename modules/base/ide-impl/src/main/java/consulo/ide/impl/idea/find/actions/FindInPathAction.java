@@ -18,13 +18,12 @@
 package consulo.ide.impl.idea.find.actions;
 
 import consulo.ide.impl.idea.find.findInProject.FindInProjectManager;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.LangDataKeys;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -36,12 +35,14 @@ import consulo.language.psi.PsiElement;
 import jakarta.annotation.Nonnull;
 
 public class FindInPathAction extends AnAction implements DumbAware {
-  public static final NotificationGroup NOTIFICATION_GROUP = NotificationGroup.toolWindowGroup("Find in Path", ToolWindowId.FIND, false);
+  public static final NotificationGroup NOTIFICATION_GROUP =
+    NotificationGroup.toolWindowGroup("Find in Path", ToolWindowId.FIND, false);
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
 
     FindInProjectManager findManager = FindInProjectManager.getInstance(project);
     if (!findManager.isEnabled()) {
@@ -58,13 +59,14 @@ public class FindInPathAction extends AnAction implements DumbAware {
   }
 
   @Override
+  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
     doUpdate(e);
   }
 
   static void doUpdate(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     presentation.setEnabled(project != null);
     if (ActionPlaces.isPopupPlace(e.getPlace())) {
       presentation.setVisible(isValidSearchScope(e));
@@ -72,11 +74,11 @@ public class FindInPathAction extends AnAction implements DumbAware {
   }
 
   private static boolean isValidSearchScope(@Nonnull AnActionEvent e) {
-    final PsiElement[] elements = e.getData(LangDataKeys.PSI_ELEMENT_ARRAY);
+    final PsiElement[] elements = e.getData(PsiElement.KEY_OF_ARRAY);
     if (elements != null && elements.length == 1 && elements[0] instanceof PsiDirectoryContainer) {
       return true;
     }
-    final VirtualFile[] virtualFiles = e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
+    final VirtualFile[] virtualFiles = e.getData(VirtualFile.KEY_OF_ARRAY);
     return virtualFiles != null && virtualFiles.length == 1 && virtualFiles[0].isDirectory();
   }
 }

@@ -27,23 +27,20 @@ import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.editor.EditorLastActionTracker;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.ui.ex.internal.ActionStubBase;
 import consulo.util.dataholder.Key;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nullable;
-
 @Singleton
 @ServiceImpl
-public class EditorLastActionTrackerImpl extends EditorLastActionTracker implements Disposable,
-                                                                                    AnActionListener,
-                                                                                    EditorMouseListener {
+public class EditorLastActionTrackerImpl extends EditorLastActionTracker implements Disposable, AnActionListener, EditorMouseListener {
   private static final Key<Boolean> DISPOSABLE_SET = Key.create("EditorLastActionTracker.dispose.handler.set");
 
   private final ActionManager myActionManager;
@@ -74,7 +71,7 @@ public class EditorLastActionTrackerImpl extends EditorLastActionTracker impleme
 
   @Override
   public void beforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
-    myCurrentEditor = dataContext.getData(CommonDataKeys.EDITOR);
+    myCurrentEditor = dataContext.getData(Editor.KEY);
     registerDisposeHandler(myCurrentEditor);
     if (myCurrentEditor != myLastEditor) {
       resetLastAction();
@@ -94,27 +91,27 @@ public class EditorLastActionTrackerImpl extends EditorLastActionTracker impleme
   }
 
   @Override
-  public void mousePressed(EditorMouseEvent e) {
+  public void mousePressed(@Nonnull EditorMouseEvent e) {
     resetLastAction();
   }
 
   @Override
-  public void mouseClicked(EditorMouseEvent e) {
+  public void mouseClicked(@Nonnull EditorMouseEvent e) {
     resetLastAction();
   }
 
   @Override
-  public void mouseReleased(EditorMouseEvent e) {
+  public void mouseReleased(@Nonnull EditorMouseEvent e) {
     resetLastAction();
   }
 
   @Override
-  public void mouseEntered(EditorMouseEvent e) {
+  public void mouseEntered(@Nonnull EditorMouseEvent e) {
 
   }
 
   @Override
-  public void mouseExited(EditorMouseEvent e) {
+  public void mouseExited(@Nonnull EditorMouseEvent e) {
 
   }
 

@@ -24,7 +24,7 @@ import consulo.desktop.awt.ui.plaf.intellij.IntelliJLaf;
 import consulo.externalService.update.UpdateSettings;
 import consulo.ide.impl.idea.ide.plugins.RepositoryHelper;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.util.io.FileUtil;
 import consulo.ide.util.DownloadUtil;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;

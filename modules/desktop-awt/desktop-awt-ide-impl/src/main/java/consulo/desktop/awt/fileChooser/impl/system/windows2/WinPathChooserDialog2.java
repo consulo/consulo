@@ -23,7 +23,7 @@ import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDialog;
 import consulo.ide.impl.idea.openapi.fileChooser.impl.FileChooserUtil;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;

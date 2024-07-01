@@ -15,34 +15,32 @@
  */
 package consulo.ide.impl.idea.diff.tools.dir;
 
-import consulo.ide.impl.idea.diff.DiffContext;
-import consulo.ide.impl.idea.diff.FrameDiffTool;
+import consulo.application.HelpManager;
+import consulo.dataContext.DataManager;
 import consulo.diff.content.DiffContent;
-import consulo.ide.impl.idea.diff.contents.DirectoryContent;
 import consulo.diff.content.EmptyContent;
 import consulo.diff.content.FileContent;
 import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.request.DiffRequest;
-import consulo.dataContext.DataManager;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.diff.DiffContext;
+import consulo.ide.impl.idea.diff.FrameDiffTool;
+import consulo.ide.impl.idea.diff.contents.DirectoryContent;
 import consulo.ide.impl.idea.ide.diff.ArchiveFileDiffElement;
 import consulo.ide.impl.idea.ide.diff.DiffElement;
 import consulo.ide.impl.idea.ide.diff.DirDiffSettings;
 import consulo.ide.impl.idea.ide.diff.VirtualFileDiffElement;
-import consulo.ui.ex.action.AnAction;
-import consulo.dataContext.DataProvider;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.ide.impl.idea.openapi.diff.impl.dir.DirDiffFrame;
 import consulo.ide.impl.idea.openapi.diff.impl.dir.DirDiffPanel;
 import consulo.ide.impl.idea.openapi.diff.impl.dir.DirDiffTableModel;
 import consulo.ide.impl.idea.openapi.diff.impl.dir.DirDiffWindow;
-import consulo.project.internal.DefaultProjectFactory;
 import consulo.project.Project;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.util.dataholder.Key;
+import consulo.project.internal.DefaultProjectFactory;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
-import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -94,15 +92,9 @@ class DirDiffViewer implements FrameDiffTool.DiffViewer {
 
     myPanel = new JPanel(new BorderLayout());
     myPanel.add(myDirDiffPanel.getPanel(), BorderLayout.CENTER);
-    DataManager.registerDataProvider(myPanel, new DataProvider() {
-      @Override
-      public Object getData(@Nonnull @NonNls Key dataId) {
-        if (PlatformDataKeys.HELP_ID == dataId) {
-          return "reference.dialogs.diff.folder";
-        }
-        return myDirDiffPanel.getData(dataId);
-      }
-    });
+    DataManager.registerDataProvider(myPanel,
+      dataId -> HelpManager.HELP_ID == dataId ? "reference.dialogs.diff.folder" : myDirDiffPanel.getData(dataId)
+    );
   }
 
   @Nonnull
@@ -120,6 +112,7 @@ class DirDiffViewer implements FrameDiffTool.DiffViewer {
   }
 
   @Override
+  @RequiredUIAccess
   public void dispose() {
     Disposer.dispose(myDirDiffPanel);
   }
@@ -145,25 +138,19 @@ class DirDiffViewer implements FrameDiffTool.DiffViewer {
     List<DiffContent> contents = ((ContentDiffRequest)request).getContents();
     if (contents.size() != 2) return false;
 
-    if (!canShowContent(contents.get(0))) return false;
-    if (!canShowContent(contents.get(1))) return false;
+    if (!canShowContent(contents.get(0)) || !canShowContent(contents.get(1))) {
+      return false;
+    }
 
-    if (contents.get(0) instanceof EmptyContent && contents.get(1) instanceof EmptyContent) return false;
-
-    return true;
+    return !(contents.get(0) instanceof EmptyContent) || !(contents.get(1) instanceof EmptyContent);
   }
 
   private static boolean canShowContent(@Nonnull DiffContent content) {
-    if (content instanceof EmptyContent) return true;
-    if (content instanceof DirectoryContent) return true;
-    if (content instanceof FileContent &&
-        content.getContentType() instanceof ArchiveFileType &&
-        ((FileContent)content).getFile().isValid() &&
-        ((FileContent)content).getFile().isInLocalFileSystem()) {
+    if (content instanceof EmptyContent || content instanceof DirectoryContent) {
       return true;
     }
-
-    return false;
+    return content instanceof FileContent fileContent && content.getContentType() instanceof ArchiveFileType
+      && fileContent.getFile().isValid() && fileContent.getFile().isInLocalFileSystem();
   }
 
   @Nonnull

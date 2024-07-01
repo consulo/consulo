@@ -18,9 +18,9 @@ package consulo.ide.impl.idea.refactoring.actions;
 import consulo.ide.impl.idea.ide.actions.QuickSwitchSchemeAction;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.refactoring.action.BaseRefactoringAction;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.ListPopup;
@@ -28,11 +28,13 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class RefactoringQuickListPopupAction extends QuickSwitchSchemeAction {
-
   @Override
-  protected void fillActions(@Nullable final Project project,
-                             @Nonnull final DefaultActionGroup group,
-                             @Nonnull final DataContext dataContext) {
+  @RequiredUIAccess
+  protected void fillActions(
+    @Nullable final Project project,
+    @Nonnull final DefaultActionGroup group,
+    @Nonnull final DataContext dataContext
+  ) {
     if (project == null) {
       return;
     }
@@ -42,11 +44,14 @@ public class RefactoringQuickListPopupAction extends QuickSwitchSchemeAction {
     collectEnabledChildren(action, group, dataContext, actionManager, false);
   }
 
-  private static void collectEnabledChildren(AnAction action,
-                                             @Nonnull DefaultActionGroup destinationGroup,
-                                             @Nonnull DataContext dataContext,
-                                             @Nonnull ActionManager actionManager,
-                                             boolean popup) {
+  @RequiredUIAccess
+  private static void collectEnabledChildren(
+    AnAction action,
+    @Nonnull DefaultActionGroup destinationGroup,
+    @Nonnull DataContext dataContext,
+    @Nonnull ActionManager actionManager,
+    boolean popup
+  ) {
     if (action instanceof DefaultActionGroup) {
       final AnAction[] children = ((DefaultActionGroup)action).getChildren(null);
       for (AnAction child : children) {
@@ -79,7 +84,7 @@ public class RefactoringQuickListPopupAction extends QuickSwitchSchemeAction {
 
   @Override
   protected void showPopup(AnActionEvent e, ListPopup popup) {
-    final Editor editor = e.getData(PlatformDataKeys.EDITOR);
+    final Editor editor = e.getData(Editor.KEY);
     if (editor != null) {
       editor.showPopupInBestPositionFor(popup);
     } else {
@@ -95,7 +100,9 @@ public class RefactoringQuickListPopupAction extends QuickSwitchSchemeAction {
   @Override
   public void update(AnActionEvent e) {
     super.update(e);
-    e.getPresentation().setVisible(e.getPlace() == ActionPlaces.MAIN_MENU || e.getPlace() == ActionPlaces.ACTION_PLACE_QUICK_LIST_POPUP_ACTION);
+    e.getPresentation().setVisible(
+      e.getPlace() == ActionPlaces.MAIN_MENU || e.getPlace() == ActionPlaces.ACTION_PLACE_QUICK_LIST_POPUP_ACTION
+    );
   }
 
   @Override

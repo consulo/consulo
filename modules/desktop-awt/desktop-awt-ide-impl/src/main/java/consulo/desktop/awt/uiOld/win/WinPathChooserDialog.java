@@ -15,37 +15,38 @@
  */
 package consulo.desktop.awt.uiOld.win;
 
-import consulo.application.impl.internal.LaterInvocator;
-import consulo.undoRedo.CommandProcessor;
-import consulo.ide.impl.idea.openapi.command.CommandProcessorEx;
-import consulo.ide.impl.idea.openapi.fileChooser.impl.FileChooserUtil;
-import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.ui.ex.UIBundle;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import java.util.function.Consumer;
-import consulo.desktop.awt.ui.OwnerOptional;
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.impl.internal.LaterInvocator;
 import consulo.component.ComponentManager;
+import consulo.desktop.awt.ui.OwnerOptional;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDialog;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.fileChooser.PathChooserDialog;
+import consulo.ide.impl.idea.openapi.command.CommandProcessorEx;
+import consulo.ide.impl.idea.openapi.fileChooser.impl.FileChooserUtil;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.localize.UILocalize;
+import consulo.undoRedo.CommandProcessor;
 import consulo.util.concurrent.AsyncResult;
+import consulo.util.io.FileUtil;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 /**
@@ -75,7 +76,7 @@ public class WinPathChooserDialog implements PathChooserDialog, FileChooserDialo
 
   private static String getChooserTitle(final FileChooserDescriptor descriptor) {
     final String title = descriptor.getTitle();
-    return title != null ? title : UIBundle.message("file.chooser.default.title");
+    return title != null ? title : UILocalize.fileChooserDefaultTitle().get();
   }
 
   @Nonnull
@@ -98,7 +99,8 @@ public class WinPathChooserDialog implements PathChooserDialog, FileChooserDialo
   }
 
   @Override
-  public void choose(@Nullable VirtualFile toSelect, @Nonnull java.util.function.Consumer<List<VirtualFile>> callback) {
+  @RequiredUIAccess
+  public void choose(@Nullable VirtualFile toSelect, @Nonnull Consumer<List<VirtualFile>> callback) {
     if (toSelect != null && toSelect.getParent() != null) {
 
       String directoryName;
@@ -114,7 +116,6 @@ public class WinPathChooserDialog implements PathChooserDialog, FileChooserDialo
       myFileDialog.setFile(fileName);
     }
 
-
     myFileDialog.setFilenameFilter((dir, name) -> {
       File file = new File(dir, name);
       return myFileChooserDescriptor.isFileSelectable(fileToVirtualFile(file));
@@ -122,9 +123,9 @@ public class WinPathChooserDialog implements PathChooserDialog, FileChooserDialo
 
     myFileDialog.setMultipleMode(myFileChooserDescriptor.isChooseMultiple());
 
-    final CommandProcessorEx commandProcessor = ApplicationManager.getApplication() != null ? (CommandProcessorEx)CommandProcessor.getInstance() : null;
+    final CommandProcessorEx commandProcessor =
+      ApplicationManager.getApplication() != null ? (CommandProcessorEx)CommandProcessor.getInstance() : null;
     final boolean appStarted = commandProcessor != null;
-
 
     if (appStarted) {
       commandProcessor.enterModal();
@@ -168,8 +169,8 @@ public class WinPathChooserDialog implements PathChooserDialog, FileChooserDialo
       if (!ArrayUtil.isEmpty(files)) {
         callback.accept(virtualFileList);
       }
-      else if (callback instanceof IdeaFileChooser.FileChooserConsumer) {
-        ((IdeaFileChooser.FileChooserConsumer)callback).cancelled();
+      else if (callback instanceof IdeaFileChooser.FileChooserConsumer fileChooserConsumer) {
+        fileChooserConsumer.cancelled();
       }
     }
   }
@@ -203,7 +204,7 @@ public class WinPathChooserDialog implements PathChooserDialog, FileChooserDialo
 
     AsyncResult<VirtualFile[]> result = AsyncResult.undefined();
     SwingUtilities.invokeLater(() -> {
-      final CommandProcessorEx commandProcessor = ApplicationManager.getApplication() != null ? (CommandProcessorEx)CommandProcessor.getInstance() : null;
+      final CommandProcessorEx commandProcessor = Application.get() != null ? (CommandProcessorEx)CommandProcessor.getInstance() : null;
       final boolean appStarted = commandProcessor != null;
 
       if (appStarted) {
@@ -269,8 +270,7 @@ public class WinPathChooserDialog implements PathChooserDialog, FileChooserDialo
   @Override
   public VirtualFile[] choose(@Nullable ComponentManager project, @Nonnull VirtualFile... toSelectFiles) {
     VirtualFile toSelect = toSelectFiles.length > 0 ? toSelectFiles[0] : null;
-    choose(toSelect, files -> {
-    });
+    choose(toSelect, files -> {});
     return virtualFiles;
   }
 }

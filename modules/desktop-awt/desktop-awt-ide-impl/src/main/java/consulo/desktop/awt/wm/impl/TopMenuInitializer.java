@@ -22,7 +22,6 @@ import consulo.dataContext.DataManager;
 import consulo.ide.impl.actions.AboutManager;
 import consulo.ide.impl.idea.ide.CommandLineProcessor;
 import consulo.ide.setting.ShowSettingsUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.wm.WindowManager;
@@ -51,7 +50,7 @@ public class TopMenuInitializer {
       desktop.setAboutHandler(e -> {
         DataManager dataManager = DataManager.getInstance();
 
-        Window window = WindowManager.getInstance().suggestParentWindow(dataManager.getDataContext().getData(CommonDataKeys.PROJECT));
+        Window window = WindowManager.getInstance().suggestParentWindow(dataManager.getDataContext().getData(Project.KEY));
 
         AboutManager aboutManager = application.getComponent(AboutManager.class);
 
@@ -101,6 +100,6 @@ public class TopMenuInitializer {
 
   @SuppressWarnings("deprecation")
   private static Project getProject() {
-    return DataManager.getInstance().getDataContext().getData(CommonDataKeys.PROJECT);
+    return DataManager.getInstance().getDataContext().getData(Project.KEY);
   }
 }

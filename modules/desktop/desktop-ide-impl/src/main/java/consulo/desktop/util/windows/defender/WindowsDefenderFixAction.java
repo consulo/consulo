@@ -15,22 +15,22 @@
  */
 package consulo.desktop.util.windows.defender;
 
-import consulo.ide.impl.idea.diagnostic.DiagnosticBundle;
+import consulo.application.Application;
 import consulo.ide.impl.idea.ide.BrowserUtil;
 import consulo.ide.impl.idea.ide.SystemHealthMonitor;
-import consulo.project.ui.notification.NotificationAction;
-import consulo.ui.ex.awt.Messages;
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.application.CommonBundle;
-import consulo.language.editor.CommonDataKeys;
+import consulo.platform.base.localize.CommonLocalize;
+import consulo.ide.impl.internal.localize.DiagnosticLocalize;
+import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationAction;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
-
 import jakarta.annotation.Nonnull;
+
 import java.nio.file.Path;
 import java.util.Collection;
 
@@ -46,22 +46,37 @@ public class WindowsDefenderFixAction extends NotificationAction {
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
-    int rc = Messages.showDialog(e.getData(CommonDataKeys.PROJECT),
-                                 DiagnosticBundle.message("virus.scanning.fix.explanation", Application.get().getName().get(), WindowsDefenderChecker.getInstance().getConfigurationInstructionsUrl()),
-                                 DiagnosticBundle.message("virus.scanning.fix.title"),
-                                 new String[]{DiagnosticBundle.message("virus.scanning.fix.automatically"), DiagnosticBundle.message("virus.scanning.fix.manually"),
-                                         CommonBundle.getCancelButtonText()}, 0, null);
+    int rc = Messages.showDialog(
+      e.getData(Project.KEY),
+      DiagnosticLocalize.virusScanningFixExplanation(
+        Application.get().getName().get(),
+        WindowsDefenderChecker.getInstance().getConfigurationInstructionsUrl()
+      ).get(),
+      DiagnosticLocalize.virusScanningFixTitle().get(),
+      new String[]{
+        DiagnosticLocalize.virusScanningFixAutomatically().get(),
+        DiagnosticLocalize.virusScanningFixManually().get(),
+        CommonLocalize.buttonCancel().get()
+      },
+      0,
+      null
+    );
 
     switch (rc) {
       case Messages.OK:
         notification.expire();
-        ApplicationManager.getApplication().executeOnPooledThread(() -> {
-          if (WindowsDefenderChecker.getInstance().runExcludePathsCommand(e.getData(CommonDataKeys.PROJECT), myPaths)) {
-            UIUtil.invokeLaterIfNeeded(() -> {
-              Notifications.Bus.notifyAndHide(new Notification(SystemHealthMonitor.GROUP, "", DiagnosticBundle.message("virus.scanning.fix.success.notification"), NotificationType.INFORMATION),
-                                              e.getData(CommonDataKeys.PROJECT));
-            });
+        Application.get().executeOnPooledThread(() -> {
+          if (WindowsDefenderChecker.getInstance().runExcludePathsCommand(e.getData(Project.KEY), myPaths)) {
+            UIUtil.invokeLaterIfNeeded(() -> Notifications.Bus.notifyAndHide(new Notification(
+              SystemHealthMonitor.GROUP,
+                "",
+                DiagnosticLocalize.virusScanningFixSuccessNotification().get(),
+                NotificationType.INFORMATION
+              ),
+              e.getData(Project.KEY)
+            ));
           }
         });
 

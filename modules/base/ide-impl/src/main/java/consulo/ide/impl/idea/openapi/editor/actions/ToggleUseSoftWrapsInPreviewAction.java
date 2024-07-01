@@ -19,6 +19,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.codeEditor.SoftWrapAppliancePlaces;
+import jakarta.annotation.Nonnull;
 
 public class ToggleUseSoftWrapsInPreviewAction extends AbstractToggleUseSoftWrapsAction {
   public ToggleUseSoftWrapsInPreviewAction() {
@@ -26,10 +27,10 @@ public class ToggleUseSoftWrapsInPreviewAction extends AbstractToggleUseSoftWrap
   }
 
   @Override
-  public boolean isSelected(AnActionEvent e) {
+  public boolean isSelected(@Nonnull AnActionEvent e) {
     Editor editor = getEditor(e);
     return editor == null
-           ? EditorSettingsExternalizable.getInstance().isUseSoftWraps(SoftWrapAppliancePlaces.PREVIEW)
-           : editor.getSettings().isUseSoftWraps();
+      ? EditorSettingsExternalizable.getInstance().isUseSoftWraps(SoftWrapAppliancePlaces.PREVIEW)
+      : editor.getSettings().isUseSoftWraps();
   }
 }

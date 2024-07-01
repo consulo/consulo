@@ -2,14 +2,13 @@
 
 package consulo.language.editor.action;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.document.DocCommandGroupId;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.FileModificationService;
-import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.editor.util.LanguageEditorUtil;
+import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
@@ -19,7 +18,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.UpdateInBackground;
 import consulo.undoRedo.CommandProcessor;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -30,7 +28,7 @@ public abstract class CodeInsightAction extends AnAction implements UpdateInBack
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project != null) {
       Editor editor = getEditor(e.getDataContext(), project, false);
       actionPerformedImpl(project, editor);
@@ -39,7 +37,7 @@ public abstract class CodeInsightAction extends AnAction implements UpdateInBack
 
   @Nullable
   protected Editor getEditor(@Nonnull DataContext dataContext, @Nonnull Project project, boolean forUpdate) {
-    return dataContext.getData(CommonDataKeys.EDITOR);
+    return dataContext.getData(Editor.KEY);
   }
 
   @RequiredUIAccess
@@ -54,18 +52,25 @@ public abstract class CodeInsightAction extends AnAction implements UpdateInBack
       return;
     }
 
-    CommandProcessor.getInstance().executeCommand(project, () -> {
-      final Runnable action = () -> {
-        if (!ApplicationManager.getApplication().isHeadlessEnvironment() && !editor.getContentComponent().isShowing()) return;
-        handler.invoke(project, editor, psiFile);
-      };
-      if (handler.startInWriteAction()) {
-        ApplicationManager.getApplication().runWriteAction(action);
-      }
-      else {
-        action.run();
-      }
-    }, getCommandName(), DocCommandGroupId.noneGroupId(editor.getDocument()), editor.getDocument());
+    CommandProcessor.getInstance().executeCommand(
+      project,
+      () -> {
+        Application application = project.getApplication();
+        final Runnable action = () -> {
+          if (!application.isHeadlessEnvironment() && !editor.getContentComponent().isShowing()) return;
+          handler.invoke(project, editor, psiFile);
+        };
+        if (handler.startInWriteAction()) {
+          application.runWriteAction(action);
+        }
+        else {
+          action.run();
+        }
+      },
+      getCommandName(),
+      DocCommandGroupId.noneGroupId(editor.getDocument()),
+      editor.getDocument()
+    );
   }
 
   @RequiredUIAccess
@@ -80,7 +85,7 @@ public abstract class CodeInsightAction extends AnAction implements UpdateInBack
   public void update(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
 
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) {
       presentation.setEnabled(false);
       return;
@@ -106,7 +111,14 @@ public abstract class CodeInsightAction extends AnAction implements UpdateInBack
     presentation.setEnabled(isValidForFile(project, editor, file));
   }
 
-  protected void update(@Nonnull Presentation presentation, @Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file, @Nonnull DataContext dataContext, @Nullable String actionPlace) {
+  protected void update(
+    @Nonnull Presentation presentation,
+    @Nonnull Project project,
+    @Nonnull Editor editor,
+    @Nonnull PsiFile file,
+    @Nonnull DataContext dataContext,
+    @Nullable String actionPlace
+  ) {
     update(presentation, project, editor, file);
   }
 

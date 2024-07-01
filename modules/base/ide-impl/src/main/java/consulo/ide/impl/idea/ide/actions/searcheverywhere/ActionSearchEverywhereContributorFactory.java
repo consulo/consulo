@@ -16,11 +16,11 @@
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoActionModel;
-import consulo.language.editor.CommonDataKeys;
+import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.UIExAWTDataKey;
-
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
@@ -28,6 +28,10 @@ public class ActionSearchEverywhereContributorFactory implements SearchEverywher
   @Nonnull
   @Override
   public SearchEverywhereContributor<GotoActionModel.MatchedValue> createContributor(@Nonnull AnActionEvent initEvent) {
-    return new ActionSearchEverywhereContributor(initEvent.getData(CommonDataKeys.PROJECT), initEvent.getData(UIExAWTDataKey.CONTEXT_COMPONENT), initEvent.getData(CommonDataKeys.EDITOR));
+    return new ActionSearchEverywhereContributor(
+      initEvent.getData(Project.KEY),
+      initEvent.getData(UIExAWTDataKey.CONTEXT_COMPONENT),
+      initEvent.getData(Editor.KEY)
+    );
   }
 }

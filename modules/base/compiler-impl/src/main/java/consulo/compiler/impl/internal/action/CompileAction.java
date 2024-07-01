@@ -28,9 +28,12 @@ import consulo.language.psi.*;
 import consulo.module.Module;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -67,7 +70,7 @@ public class CompileAction extends CompileActionBase {
     }
     DataContext dataContext = event.getDataContext();
 
-    presentation.setText(ActionsBundle.actionText(IdeActions.ACTION_COMPILE));
+    presentation.setText(ActionLocalize.actionCompileText().get());
     presentation.setVisible(true);
 
     Project project = dataContext.getData(Project.KEY);
@@ -143,7 +146,7 @@ public class CompileAction extends CompileActionBase {
 
   private static String createPresentationText(String elementDescription) {
     StringBuilder buffer = new StringBuilder(40);
-    buffer.append(ActionsBundle.actionText(IdeActions.ACTION_COMPILE)).append(" ");
+    buffer.append(ActionLocalize.actionCompileText()).append(" ");
     int length = elementDescription.length();
     if (length > 23) {
       if (StringUtil.startsWithChar(elementDescription, '\'')) {

@@ -16,12 +16,10 @@
 package consulo.ide.impl.idea.execution.testframework.actions;
 
 import consulo.dataContext.DataManager;
-import consulo.execution.ExecutionDataKeys;
 import consulo.execution.ExecutionManager;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.test.action.AbstractRerunFailedTestsAction;
 import consulo.execution.ui.RunContentDescriptor;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -44,7 +42,7 @@ public class RerunFailedTestsAction extends AnAction {
   }
 
   private static boolean getAction(@Nonnull AnActionEvent e, boolean execute) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) {
       return false;
     }
@@ -59,7 +57,7 @@ public class RerunFailedTestsAction extends AnAction {
       return false;
     }
 
-    ExecutionEnvironment environment = DataManager.getInstance().getDataContext(component).getData(ExecutionDataKeys.EXECUTION_ENVIRONMENT);
+    ExecutionEnvironment environment = DataManager.getInstance().getDataContext(component).getData(ExecutionEnvironment.KEY);
     if (environment == null) {
       return false;
     }

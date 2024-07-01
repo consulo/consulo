@@ -8,12 +8,12 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.ide.IdeBundle;
 import consulo.language.LangBundle;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.QualifiedNameProviderUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileSystemItem;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
@@ -49,7 +49,7 @@ public class CopyReferenceAction extends DumbAwareAction {
     boolean paths = false;
 
     DataContext dataContext = e.getDataContext();
-    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
+    Editor editor = dataContext.getData(Editor.KEY);
     if (editor != null && FileDocumentManager.getInstance().getFile(editor.getDocument()) != null) {
       enabled = true;
     }
@@ -84,14 +84,14 @@ public class CopyReferenceAction extends DumbAwareAction {
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Editor editor = dataContext.getData(Editor.KEY);
+    Project project = dataContext.getData(Project.KEY);
     List<PsiElement> elements = getPsiElements(dataContext, editor);
 
     String copy = getQualifiedName(editor, elements);
     if (copy != null) {
       CopyPasteManager.getInstance().setContents(new CopyReferenceFQNTransferable(copy));
-      setStatusBarText(project, IdeBundle.message("message.reference.to.fqn.has.been.copied", copy));
+      setStatusBarText(project, IdeLocalize.messageReferenceToFqnHasBeenCopied(copy).get());
     }
     else if (editor != null && project != null) {
       Document document = editor.getDocument();
@@ -118,7 +118,7 @@ public class CopyReferenceAction extends DumbAwareAction {
   private static boolean doCopy(List<? extends PsiElement> elements, @Nullable final Project project) {
     String toCopy = CopyReferenceUtil.doCopy(elements, null);
     CopyPasteManager.getInstance().setContents(new CopyReferenceFQNTransferable(toCopy));
-    setStatusBarText(project, IdeBundle.message("message.reference.to.fqn.has.been.copied", toCopy));
+    setStatusBarText(project, IdeLocalize.messageReferenceToFqnHasBeenCopied(toCopy).get());
 
     return true;
   }
@@ -127,5 +127,4 @@ public class CopyReferenceAction extends DumbAwareAction {
   public static String elementToFqn(@Nullable final PsiElement element) {
     return CopyReferenceUtil.elementToFqn(element, null);
   }
-
 }

@@ -13,6 +13,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.util.function.Processor;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorKeys;
 import consulo.content.base.SourcesOrderRootType;
 import consulo.content.library.Library;
 import consulo.content.scope.SearchScope;
@@ -28,10 +29,8 @@ import consulo.find.*;
 import consulo.ide.impl.idea.find.FindProgressIndicator;
 import consulo.ide.impl.idea.find.FindUtil;
 import consulo.ide.impl.idea.find.findInProject.FindInProjectManager;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.project.DumbServiceImpl;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.psi.*;
 import consulo.language.psi.scope.GlobalSearchScope;
@@ -43,7 +42,6 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.navigation.ItemPresentation;
-import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.content.scope.ProjectScopes;
 import consulo.ui.ex.action.ActionManager;
@@ -52,7 +50,9 @@ import consulo.ui.ex.content.Content;
 import consulo.ui.image.Image;
 import consulo.usage.*;
 import consulo.util.dataholder.Key;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.PatternUtil;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
 import consulo.virtualFileSystem.LocalFileProvider;
@@ -79,12 +79,12 @@ public class FindInProjectUtil {
 
   public static void setDirectoryName(@Nonnull FindModel model, @Nonnull DataContext dataContext) {
     PsiElement psiElement = null;
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Project project = dataContext.getData(Project.KEY);
 
-    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
-    if (project != null && editor == null && !DumbService.getInstance(project).isDumb()) {
+    Editor editor = dataContext.getData(Editor.KEY);
+    if (project != null && editor == null && !DumbServiceImpl.getInstance(project).isDumb()) {
       try {
-        psiElement = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
+        psiElement = dataContext.getData(PsiElement.KEY);
       }
       catch (IndexNotReadyException ignore) {
       }
@@ -102,7 +102,7 @@ public class FindInProjectUtil {
     }
 
     if (directoryName == null) {
-      VirtualFile virtualFile = dataContext.getData(CommonDataKeys.VIRTUAL_FILE);
+      VirtualFile virtualFile = dataContext.getData(VirtualFile.KEY);
       if (virtualFile != null && virtualFile.isDirectory()) directoryName = virtualFile.getPresentableUrl();
     }
 
@@ -198,7 +198,7 @@ public class FindInProjectUtil {
     final String finalPattern = pattern;
     final String finalNegativePattern = negativePattern;
 
-    return new Condition<CharSequence>() {
+    return new Condition<>() {
       final Pattern regExp = Pattern.compile(finalPattern, Pattern.CASE_INSENSITIVE);
       final Pattern negativeRegExp =
         StringUtil.isEmpty(finalNegativePattern) ? null : Pattern.compile(finalNegativePattern, Pattern.CASE_INSENSITIVE);
@@ -439,7 +439,7 @@ public class FindInProjectUtil {
       if (topLevelRegExpChars.size() != 1) return "";
 
       // leave only top level regExpChars
-      return StringUtil.join(getTopLevelRegExpChars(stringToFind, project), new Function<PsiElement, String>() {
+      return StringUtil.join(getTopLevelRegExpChars(stringToFind, project), new Function<>() {
         final Class regExpCharPsiClass = topLevelRegExpChars.get(0).getClass();
 
         @Override
@@ -455,10 +455,10 @@ public class FindInProjectUtil {
   }
 
   public static void initStringToFindFromDataContext(FindModel findModel, @Nonnull DataContext dataContext) {
-    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
+    Editor editor = dataContext.getData(Editor.KEY);
     FindUtil.initStringToFindWithSelection(findModel, editor);
     if (editor == null || !editor.getSelectionModel().hasSelection()) {
-      FindUtil.useFindStringFromFindInFileModel(findModel, dataContext.getData(CommonDataKeys.EDITOR_EVEN_IF_INACTIVE));
+      FindUtil.useFindStringFromFindInFileModel(findModel, dataContext.getData(EditorKeys.EDITOR_EVEN_IF_INACTIVE));
     }
   }
 
