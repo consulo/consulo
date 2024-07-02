@@ -2,50 +2,43 @@
 
 package consulo.ide.impl.idea.codeInsight.generation.surroundWith;
 
-import consulo.annotation.access.RequiredReadAction;
-import consulo.language.editor.action.CodeInsightActionHandler;
-import consulo.language.editor.hint.HintManager;
-import consulo.language.editor.localize.CodeInsightLocalize;
-import consulo.language.editor.surroundWith.SurroundWithRangeAdjuster;
-import consulo.language.editor.template.TemplateManager;
-import consulo.ide.impl.idea.codeInsight.template.impl.SurroundWithTemplateHandler;
-import consulo.dataContext.DataManager;
-import consulo.ide.IdeBundle;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionsBundle;
-import consulo.language.LangBundle;
-import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.SelectionModel;
-import consulo.language.Language;
-import consulo.ide.impl.idea.lang.folding.CustomFoldingSurroundDescriptor;
-import consulo.language.editor.surroundWith.SurroundDescriptor;
-import consulo.language.editor.surroundWith.Surrounder;
-import consulo.application.ApplicationManager;
-import consulo.language.editor.WriteCommandAction;
-import consulo.ide.impl.idea.openapi.editor.*;
-import consulo.document.FileDocumentManager;
-import consulo.ide.setting.ShowSettingsUtil;
-import consulo.project.Project;
-import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
 import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.document.util.DocumentUtil;
 import consulo.document.util.TextRange;
+import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.codeInsight.template.impl.SurroundWithTemplateHandler;
+import consulo.ide.impl.idea.lang.folding.CustomFoldingSurroundDescriptor;
+import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
+import consulo.ide.impl.idea.util.text.CharArrayUtil;
+import consulo.ide.setting.ShowSettingsUtil;
+import consulo.language.LangBundle;
+import consulo.language.Language;
+import consulo.language.editor.WriteCommandAction;
+import consulo.language.editor.action.CodeInsightActionHandler;
+import consulo.language.editor.hint.HintManager;
+import consulo.language.editor.localize.CodeInsightLocalize;
+import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
+import consulo.language.editor.surroundWith.SurroundDescriptor;
+import consulo.language.editor.surroundWith.SurroundWithRangeAdjuster;
+import consulo.language.editor.surroundWith.Surrounder;
+import consulo.language.editor.template.TemplateManager;
 import consulo.language.psi.PsiCompiledElement;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
-import consulo.document.util.DocumentUtil;
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.AnSeparator;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -65,7 +58,7 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
     return false;
   }
 
-  @RequiredReadAction
+  @RequiredUIAccess
   public static void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file, Surrounder surrounder) {
     if (!EditorModificationUtil.checkModificationAllowed(editor)) return;
     if (file instanceof PsiCompiledElement) {
@@ -83,8 +76,13 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
   }
 
   @Nullable
-  @RequiredReadAction
-  public static List<AnAction> buildSurroundActions(final Project project, final Editor editor, PsiFile file, @Nullable Surrounder surrounder) {
+  @RequiredUIAccess
+  public static List<AnAction> buildSurroundActions(
+    final Project project,
+    final Editor editor,
+    PsiFile file,
+    @Nullable Surrounder surrounder
+  ) {
     SelectionModel selectionModel = editor.getSelectionModel();
     boolean hasSelection = selectionModel.hasSelection();
     if (!hasSelection) {
@@ -153,11 +151,13 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
     int caretOffset = editor.getCaretModel().getOffset();
     Document document = editor.getDocument();
     CharSequence text = document.getImmutableCharSequence();
-    editor.getSelectionModel().setSelection(CharArrayUtil.shiftForward(text, DocumentUtil.getLineStartOffset(caretOffset, document), " \t"),
-                                            CharArrayUtil.shiftBackward(text, DocumentUtil.getLineEndOffset(caretOffset, document) - 1, " \t") + 1);
+    editor.getSelectionModel().setSelection(
+      CharArrayUtil.shiftForward(text, DocumentUtil.getLineStartOffset(caretOffset, document), " \t"),
+      CharArrayUtil.shiftBackward(text, DocumentUtil.getLineEndOffset(caretOffset, document) - 1, " \t") + 1
+    );
   }
 
-  @RequiredReadAction
+  @RequiredUIAccess
   private static void invokeSurrounderInTests(
     Project project,
     Editor editor,
@@ -190,6 +190,7 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
     editor.showPopupInBestPositionFor(popup);
   }
 
+  @RequiredUIAccess
   static void doSurround(final Project project, final Editor editor, final Surrounder surrounder, final PsiElement[] elements) {
     PsiDocumentManager.getInstance(project).commitAllDocuments();
     int col = editor.getCaretModel().getLogicalPosition().column;
@@ -200,7 +201,8 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
     }
     TextRange range = surrounder.surroundElements(project, editor, elements);
     if (range != CARET_IS_OK) {
-      if (TemplateManager.getInstance(project).getActiveTemplate(editor) == null && InplaceRefactoring.getActiveInplaceRenamer(editor) == null) {
+      if (TemplateManager.getInstance(project).getActiveTemplate(editor) == null
+        && InplaceRefactoring.getActiveInplaceRenamer(editor) == null) {
         LogicalPosition pos1 = new LogicalPosition(line, col);
         editor.getCaretModel().moveToLogicalPosition(pos1);
       }
@@ -215,7 +217,12 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
   }
 
   @Nullable
-  private static List<AnAction> doBuildSurroundActions(Project project, Editor editor, PsiFile file, Map<Surrounder, PsiElement[]> surrounders) {
+  private static List<AnAction> doBuildSurroundActions(
+    Project project,
+    Editor editor,
+    PsiFile file,
+    Map<Surrounder, PsiElement[]> surrounders
+  ) {
     List<AnAction> applicable = new ArrayList<>();
 
     Set<Character> usedMnemonicsSet = new HashSet<>();

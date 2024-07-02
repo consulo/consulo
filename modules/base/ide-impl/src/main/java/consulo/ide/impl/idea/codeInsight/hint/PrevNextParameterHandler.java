@@ -16,8 +16,8 @@
 
 package consulo.ide.impl.idea.codeInsight.hint;
 
-import consulo.annotation.access.RequiredReadAction;
 import consulo.language.editor.action.CodeInsightEditorAction;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Caret;
@@ -41,7 +41,7 @@ public class PrevNextParameterHandler extends EditorActionHandler {
   private final boolean myIsNextParameterHandler;
 
   @Override
-  @RequiredReadAction
+  @RequiredUIAccess
   protected boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
     if (!ParameterInfoController.existsForEditor(editor)) return false;
 
@@ -57,7 +57,7 @@ public class PrevNextParameterHandler extends EditorActionHandler {
   }
 
   @Override
-  @RequiredReadAction
+  @RequiredUIAccess
   protected void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
     int offset = caret != null ? caret.getOffset() : editor.getCaretModel().getOffset();
     PsiElement exprList = getExpressionList(editor, offset, dataContext);
