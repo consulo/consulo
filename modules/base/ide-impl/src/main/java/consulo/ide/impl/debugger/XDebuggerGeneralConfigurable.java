@@ -49,11 +49,19 @@ public class XDebuggerGeneralConfigurable extends SimpleConfigurableByProperties
 
     CheckBox showDebugWindowOnBreakpointCheckbox = CheckBox.create(XDebuggerLocalize.settingsShowWindowLabel());
     layout.add(showDebugWindowOnBreakpointCheckbox);
-    propertyBuilder.add(showDebugWindowOnBreakpointCheckbox, settings::isShowDebuggerOnBreakpoint, settings::setShowDebuggerOnBreakpoint);
+    propertyBuilder.add(
+      showDebugWindowOnBreakpointCheckbox,
+      settings::isShowDebuggerOnBreakpoint,
+      settings::setShowDebuggerOnBreakpoint
+    );
 
     CheckBox hideWindowCheckBox = CheckBox.create(XDebuggerLocalize.settingHideWindowLabel());
     layout.add(hideWindowCheckBox);
-    propertyBuilder.add(hideWindowCheckBox, settings::isHideDebuggerOnProcessTermination, settings::setHideDebuggerOnProcessTermination);
+    propertyBuilder.add(
+      hideWindowCheckBox,
+      settings::isHideDebuggerOnProcessTermination,
+      settings::setHideDebuggerOnProcessTermination
+    );
 
     CheckBox scrollToCenterCheckbox = CheckBox.create(XDebuggerLocalize.settingsScrollToCenter());
     layout.add(scrollToCenterCheckbox);

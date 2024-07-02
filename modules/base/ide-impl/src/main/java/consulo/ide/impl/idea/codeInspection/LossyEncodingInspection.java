@@ -32,7 +32,7 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.encoding.ChangeFileEncodingAction;
 import consulo.ide.impl.idea.openapi.vfs.encoding.EncodingUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;

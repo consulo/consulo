@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.codeInsight.highlighting;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
@@ -27,7 +28,6 @@ import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.document.util.TextRange;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.highlight.HighlightManager;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.language.editor.inject.InjectedEditorManager;
@@ -42,12 +42,11 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.ui.util.ColorValueUtil;
 import consulo.util.dataholder.Key;
-import consulo.util.dataholder.UserDataHolderEx;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.*;
 
 @Singleton
@@ -68,7 +67,7 @@ public class HighlightManagerImpl extends HighlightManager {
           Map<RangeHighlighter, HighlightManagerImpl.HighlightInfo> map = getHighlightInfoMap(editor, false);
           if (map == null) return;
 
-          ArrayList<RangeHighlighter> highlightersToRemove = new ArrayList<RangeHighlighter>();
+          ArrayList<RangeHighlighter> highlightersToRemove = new ArrayList<>();
           for (RangeHighlighter highlighter : map.keySet()) {
             HighlightManagerImpl.HighlightInfo info = map.get(highlighter);
             if (!info.editor.getDocument().equals(document)) continue;
@@ -96,7 +95,7 @@ public class HighlightManagerImpl extends HighlightManager {
       }
 
       private void requestHideHighlights(final DataContext dataContext) {
-        final Editor editor = dataContext.getData(PlatformDataKeys.EDITOR);
+        final Editor editor = dataContext.getData(Editor.KEY);
         if (editor == null) return;
 
         hideHighlights(editor, HighlightManager.HIDE_BY_ANY_KEY);
@@ -109,7 +108,7 @@ public class HighlightManagerImpl extends HighlightManager {
     if (editor instanceof EditorWindow) return getHighlightInfoMap(((EditorWindow)editor).getDelegate(), toCreate);
     Map<RangeHighlighter, HighlightInfo> map = editor.getUserData(HIGHLIGHT_INFO_MAP_KEY);
     if (map == null && toCreate) {
-      map = ((UserDataHolderEx)editor).putUserDataIfAbsent(HIGHLIGHT_INFO_MAP_KEY, new HashMap<RangeHighlighter, HighlightInfo>());
+      map = editor.putUserDataIfAbsent(HIGHLIGHT_INFO_MAP_KEY, new HashMap<>());
     }
     return map;
   }
@@ -118,7 +117,7 @@ public class HighlightManagerImpl extends HighlightManager {
   public RangeHighlighter[] getHighlighters(@Nonnull Editor editor) {
     Map<RangeHighlighter, HighlightInfo> highlightersMap = getHighlightInfoMap(editor, false);
     if (highlightersMap == null) return RangeHighlighter.EMPTY_ARRAY;
-    Set<RangeHighlighter> set = new HashSet<RangeHighlighter>();
+    Set<RangeHighlighter> set = new HashSet<>();
     for (Map.Entry<RangeHighlighter, HighlightInfo> entry : highlightersMap.entrySet()) {
       HighlightInfo info = entry.getValue();
       if (info.editor.equals(editor)) set.add(entry.getKey());
@@ -149,11 +148,14 @@ public class HighlightManagerImpl extends HighlightManager {
   }
 
   @Override
-  public void addOccurrenceHighlights(@Nonnull Editor editor,
-                                      @Nonnull PsiReference[] occurrences,
-                                      @Nonnull TextAttributes attributes,
-                                      boolean hideByTextChange,
-                                      Collection<RangeHighlighter> outHighlighters) {
+  @RequiredReadAction
+  public void addOccurrenceHighlights(
+    @Nonnull Editor editor,
+    @Nonnull PsiReference[] occurrences,
+    @Nonnull TextAttributes attributes,
+    boolean hideByTextChange,
+    Collection<RangeHighlighter> outHighlighters
+  ) {
     if (occurrences.length == 0) return;
     int flags = HIDE_BY_ESCAPE;
     if (hideByTextChange) {
@@ -184,11 +186,14 @@ public class HighlightManagerImpl extends HighlightManager {
   }
 
   @Override
-  public void addElementsOccurrenceHighlights(@Nonnull Editor editor,
-                                              @Nonnull PsiElement[] elements,
-                                              @Nonnull TextAttributes attributes,
-                                              boolean hideByTextChange,
-                                              Collection<RangeHighlighter> outHighlighters) {
+  @RequiredReadAction
+  public void addElementsOccurrenceHighlights(
+    @Nonnull Editor editor,
+    @Nonnull PsiElement[] elements,
+    @Nonnull TextAttributes attributes,
+    boolean hideByTextChange,
+    Collection<RangeHighlighter> outHighlighters
+  ) {
     addOccurrenceHighlights(editor, elements, attributes, hideByTextChange, outHighlighters);
   }
 
@@ -235,11 +240,14 @@ public class HighlightManagerImpl extends HighlightManager {
   }
 
   @Override
-  public void addOccurrenceHighlights(@Nonnull Editor editor,
-                                      @Nonnull PsiElement[] elements,
-                                      @Nonnull TextAttributes attributes,
-                                      boolean hideByTextChange,
-                                      Collection<RangeHighlighter> outHighlighters) {
+  @RequiredReadAction
+  public void addOccurrenceHighlights(
+    @Nonnull Editor editor,
+    @Nonnull PsiElement[] elements,
+    @Nonnull TextAttributes attributes,
+    boolean hideByTextChange,
+    Collection<RangeHighlighter> outHighlighters
+  ) {
     if (elements.length == 0) return;
     int flags = HIDE_BY_ESCAPE;
     if (hideByTextChange) {
@@ -270,7 +278,7 @@ public class HighlightManagerImpl extends HighlightManager {
     if (map == null) return false;
 
     boolean done = false;
-    ArrayList<RangeHighlighter> highlightersToRemove = new ArrayList<RangeHighlighter>();
+    ArrayList<RangeHighlighter> highlightersToRemove = new ArrayList<>();
     for (RangeHighlighter highlighter : map.keySet()) {
       HighlightInfo info = map.get(highlighter);
       if (!info.editor.equals(editor)) continue;

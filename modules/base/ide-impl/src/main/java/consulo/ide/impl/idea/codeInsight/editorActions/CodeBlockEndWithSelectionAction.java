@@ -24,7 +24,6 @@
  */
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
-import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
@@ -32,6 +31,7 @@ import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.project.Project;
 
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class CodeBlockEndWithSelectionAction extends EditorAction {
@@ -46,8 +46,8 @@ public class CodeBlockEndWithSelectionAction extends EditorAction {
     }
 
     @Override
-    public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
-      Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    public void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
+      Project project = dataContext.getData(Project.KEY);
       if (project != null) {
         CodeBlockUtil.moveCaretToCodeBlockEnd(project, editor, true);
       }

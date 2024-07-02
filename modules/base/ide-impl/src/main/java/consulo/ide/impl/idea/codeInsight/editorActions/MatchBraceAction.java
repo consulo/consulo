@@ -15,14 +15,14 @@
  */
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
 import consulo.codeEditor.CaretModel;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import gnu.trove.TIntHashSet;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -43,8 +43,8 @@ public class MatchBraceAction extends EditorAction {
     }
 
     @Override
-    public void execute(Editor editor, DataContext dataContext) {
-      Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    public void execute(@Nonnull Editor editor, DataContext dataContext) {
+      Project project = dataContext.getData(Project.KEY);
       if (project == null) {
         return;
       }

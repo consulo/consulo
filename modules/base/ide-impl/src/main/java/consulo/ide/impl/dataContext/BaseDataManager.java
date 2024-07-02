@@ -32,6 +32,9 @@ import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ModalityState;
+import consulo.ui.ex.CopyProvider;
+import consulo.ui.ex.CutProvider;
+import consulo.ui.ex.PasteProvider;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.util.collection.Maps;
@@ -187,15 +190,16 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
   }
 
   private void registerRules() {
-    myDataConstantToRuleMap.put(PlatformDataKeys.COPY_PROVIDER, new CopyProviderRule());
-    myDataConstantToRuleMap.put(PlatformDataKeys.CUT_PROVIDER, new CutProviderRule());
-    myDataConstantToRuleMap.put(PlatformDataKeys.PASTE_PROVIDER, new PasteProviderRule());
+    myDataConstantToRuleMap.put(CopyProvider.KEY, new CopyProviderRule());
+    myDataConstantToRuleMap.put(CutProvider.KEY, new CutProviderRule());
+    myDataConstantToRuleMap.put(PasteProvider.KEY, new PasteProviderRule());
     myDataConstantToRuleMap.put(PlatformDataKeys.FILE_TEXT, new FileTextRule());
     myDataConstantToRuleMap.put(FileEditor.KEY, new FileEditorRule());
     myDataConstantToRuleMap.put(Navigatable.KEY_OF_ARRAY, new NavigatableArrayRule());
     myDataConstantToRuleMap.put(EditorKeys.EDITOR_EVEN_IF_INACTIVE, new InactiveEditorRule());
   }
 
+  @Override
   @Nullable
   public <T> GetDataRule<T> getDataRule(@Nonnull Key<T> dataId) {
     GetDataRule<T> rule = getRuleFromMap(dataId);

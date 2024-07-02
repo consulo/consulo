@@ -37,7 +37,8 @@ public class FontEditorPreview implements PreviewPanel{
 
   private final ColorAndFontOptions myOptions;
 
-  private final EventDispatcher<ColorAndFontSettingsListener> myDispatcher = EventDispatcher.create(ColorAndFontSettingsListener.class);
+  private final EventDispatcher<ColorAndFontSettingsListener> myDispatcher =
+    EventDispatcher.create(ColorAndFontSettingsListener.class);
 
   FontEditorPreview(final ColorAndFontOptions options, boolean editable) {
     myOptions = options;
@@ -57,8 +58,8 @@ public class FontEditorPreview implements PreviewPanel{
       "\n" +
       "abcdefghijklmnopqrstuvwxyz 0123456789 (){}[]\n" +
       "ABCDEFGHIJKLMNOPQRSTUVWXYZ +-*/= .,;:!? #&$%@|^\n" +
-      // Create empty lines in order to make the gutter wide enough to display two-digits line numbers (other previews use long text
-      // and we don't want different gutter widths on color pages switching).
+      // Create empty lines in order to make the gutter wide enough to display two-digits line numbers
+      // (other previews use long text and we don't want different gutter widths on color pages switching).
       "\n" +
       "\n" +
       "\n";
@@ -82,10 +83,19 @@ public class FontEditorPreview implements PreviewPanel{
     }
   }
 
-  static Editor createPreviewEditor(String text, int column, int line, int selectedLine, ColorAndFontOptions options, boolean editable) {
+  static Editor createPreviewEditor(
+    String text,
+    int column,
+    int line,
+    int selectedLine,
+    ColorAndFontOptions options,
+    boolean editable
+  ) {
     EditorFactory editorFactory = EditorFactory.getInstance();
     Document editorDocument = editorFactory.createDocument(text);
-    EditorEx editor = (EditorEx) (editable ? editorFactory.createEditor(editorDocument) : editorFactory.createViewer(editorDocument));
+    EditorEx editor = (EditorEx) (
+      editable ? editorFactory.createEditor(editorDocument) : editorFactory.createViewer(editorDocument)
+    );
     editor.setColorsScheme(options.getSelectedScheme());
     EditorSettings settings = editor.getSettings();
     settings.setLineNumbersShown(true);

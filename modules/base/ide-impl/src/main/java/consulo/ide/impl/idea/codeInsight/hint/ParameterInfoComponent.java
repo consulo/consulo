@@ -402,14 +402,16 @@ private static final Color FOREGROUND = JBColor.namedColor("ParameterInfo.foregr
       trimComponents(1);
     }
 
-    private String setup(String text,
-                         Function<? super String, String> escapeFunction,
-                         int highlightStartOffset,
-                         int highlightEndOffset,
-                         boolean isDisabled,
-                         boolean strikeout,
-                         boolean isDisabledBeforeHighlight,
-                         Color background) {
+    private String setup(
+      String text,
+      Function<? super String, String> escapeFunction,
+      int highlightStartOffset,
+      int highlightEndOffset,
+      boolean isDisabled,
+      boolean strikeout,
+      boolean isDisabledBeforeHighlight,
+      Color background
+    ) {
       StringBuilder buf = new StringBuilder(text.length());
       setBackground(background);
 

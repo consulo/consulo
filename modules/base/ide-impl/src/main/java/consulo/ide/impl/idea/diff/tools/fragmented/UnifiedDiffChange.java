@@ -20,8 +20,8 @@ import consulo.ide.impl.idea.diff.util.*;
 import consulo.ide.impl.idea.diff.util.DiffUtil.UpdatedLineRange;
 import consulo.application.AllIcons;
 import consulo.diff.util.Side;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.document.Document;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.markup.GutterIconRenderer;
@@ -54,6 +54,7 @@ public class UnifiedDiffChange {
   @Nonnull
   private final List<MyGutterOperation> myOperations = new ArrayList<>();
 
+  @RequiredUIAccess
   public UnifiedDiffChange(@Nonnull UnifiedDiffViewer viewer, @Nonnull ChangedBlock block) {
     myViewer = viewer;
     myEditor = viewer.getEditor();
@@ -80,6 +81,7 @@ public class UnifiedDiffChange {
     myOperations.clear();
   }
 
+  @RequiredUIAccess
   private void installHighlighter(@Nonnull LineRange deleted, @Nonnull LineRange inserted) {
     assert myHighlighters.isEmpty();
 
@@ -87,6 +89,7 @@ public class UnifiedDiffChange {
     doInstallActionHighlighters();
   }
 
+  @RequiredUIAccess
   private void doInstallActionHighlighters() {
     boolean leftEditable = myViewer.isEditable(Side.LEFT, false);
     boolean rightEditable = myViewer.isEditable(Side.RIGHT, false);
@@ -130,6 +133,7 @@ public class UnifiedDiffChange {
   // Gutter
   //
 
+  @RequiredUIAccess
   public void updateGutterActions() {
     for (MyGutterOperation operation : myOperations) {
       operation.update();
@@ -137,12 +141,11 @@ public class UnifiedDiffChange {
   }
 
   @Nonnull
+  @RequiredUIAccess
   private MyGutterOperation createOperation(@Nonnull Side sourceSide) {
     int offset = myEditor.getDocument().getLineStartOffset(myLine1);
-    RangeHighlighter highlighter = myEditor.getMarkupModel().addRangeHighlighter(offset, offset,
-                                                                                 HighlighterLayer.ADDITIONAL_SYNTAX,
-                                                                                 null,
-                                                                                 HighlighterTargetArea.LINES_IN_RANGE);
+    RangeHighlighter highlighter = myEditor.getMarkupModel()
+      .addRangeHighlighter(offset, offset, HighlighterLayer.ADDITIONAL_SYNTAX, null, HighlighterTargetArea.LINES_IN_RANGE);
     return new MyGutterOperation(sourceSide, highlighter);
   }
 
@@ -152,6 +155,7 @@ public class UnifiedDiffChange {
     @Nonnull
     private final RangeHighlighter myHighlighter;
 
+    @RequiredUIAccess
     private MyGutterOperation(@Nonnull Side sourceSide, @Nonnull RangeHighlighter highlighter) {
       mySide = sourceSide;
       myHighlighter = highlighter;
@@ -163,11 +167,13 @@ public class UnifiedDiffChange {
       myHighlighter.dispose();
     }
 
+    @RequiredUIAccess
     public void update() {
       if (myHighlighter.isValid()) myHighlighter.setGutterIconRenderer(createRenderer());
     }
 
-    @jakarta.annotation.Nullable
+    @Nullable
+    @RequiredUIAccess
     public GutterIconRenderer createRenderer() {
       if (myViewer.isStateIsOutOfDate()) return null;
       if (!myViewer.isEditable(mySide.other(), true)) return null;
@@ -182,22 +188,30 @@ public class UnifiedDiffChange {
   }
 
   @Nullable
-  private GutterIconRenderer createIconRenderer(@Nonnull final Side sourceSide,
-                                                @Nonnull final String tooltipText,
-                                                @Nonnull final Image icon) {
+  private GutterIconRenderer createIconRenderer(
+    @Nonnull final Side sourceSide,
+    @Nonnull final String tooltipText,
+    @Nonnull final Image icon
+  ) {
     return new DiffGutterRenderer(icon, tooltipText) {
       @Override
+      @RequiredUIAccess
       protected void performAction(AnActionEvent e) {
         if (myViewer.isStateIsOutOfDate()) return;
         if (!myViewer.isEditable(sourceSide.other(), true)) return;
 
-        final Project project = e.getData(CommonDataKeys.PROJECT);
+        final Project project = e.getData(Project.KEY);
         final Document document = myViewer.getDocument(sourceSide.other());
 
-        DiffUtil.executeWriteCommand(document, project, "Replace change", () -> {
-          myViewer.replaceChange(UnifiedDiffChange.this, sourceSide);
-          myViewer.scheduleRediff();
-        });
+        DiffUtil.executeWriteCommand(
+          document,
+          project,
+          "Replace change",
+          () -> {
+            myViewer.replaceChange(UnifiedDiffChange.this, sourceSide);
+            myViewer.scheduleRediff();
+          }
+        );
         // applyChange() will schedule rediff, but we want to try to do it in sync
         // and we can't do it inside write action
         myViewer.rediff();

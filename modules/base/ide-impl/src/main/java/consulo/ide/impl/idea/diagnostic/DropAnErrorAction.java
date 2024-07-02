@@ -15,11 +15,11 @@
  */
 package consulo.ide.impl.idea.diagnostic;
 
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.action.DumbAwareAction;
 import consulo.compiler.artifact.ArtifactManager;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
 
 /**
  * Created by IntelliJ IDEA.
@@ -31,7 +31,7 @@ import consulo.logging.Logger;
 @SuppressWarnings({"HardCodedStringLiteral"})
 public class DropAnErrorAction extends DumbAwareAction {
   public DropAnErrorAction() {
-    super ("Drop an error");
+    super("Drop an error");
   }
 
   public void actionPerformed(AnActionEvent e) {
@@ -41,7 +41,7 @@ public class DropAnErrorAction extends DumbAwareAction {
     bar.fireNotificationPopup(new JLabel("<html><body><br><b>       Notifier      </b><br><br></body></html>"));
     */
 
-    ArtifactManager.getInstance(e.getData(CommonDataKeys.PROJECT));
+    ArtifactManager.getInstance(e.getData(Project.KEY));
     Logger.getInstance("test").error("Test");
   }
 }

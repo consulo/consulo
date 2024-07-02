@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.util.function.Processor;
 import consulo.codeEditor.Editor;
@@ -26,7 +27,6 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.action.SelectWordUtil;
 import consulo.language.psi.*;
 import consulo.project.Project;
@@ -45,8 +45,9 @@ public class UnSelectWordHandler extends EditorActionHandler implements Extensio
   }
 
   @Override
+  @RequiredReadAction
   public void execute(Editor editor, DataContext dataContext) {
-    Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(CommonDataKeys.PROJECT);
+    Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(Project.KEY);
     Document document = editor.getDocument();
     final PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(document);
 
@@ -61,10 +62,10 @@ public class UnSelectWordHandler extends EditorActionHandler implements Extensio
     doAction(editor, file);
   }
 
-
+  @RequiredReadAction
   private static void doAction(final Editor editor, PsiFile file) {
-    if (file instanceof PsiCompiledFile) {
-      file = ((PsiCompiledFile)file).getDecompiledPsiFile();
+    if (file instanceof PsiCompiledFile compiledFile) {
+      file = compiledFile.getDecompiledPsiFile();
       if (file == null) return;
     }
 
@@ -108,10 +109,10 @@ public class UnSelectWordHandler extends EditorActionHandler implements Extensio
 
     final TextRange selectionRange = new TextRange(editor.getSelectionModel().getSelectionStart(), editor.getSelectionModel().getSelectionEnd());
 
-    final Ref<TextRange> maximumRange = new Ref<TextRange>();
+    final Ref<TextRange> maximumRange = new Ref<>();
 
     final int finalCursorOffset = cursorOffset;
-    SelectWordUtil.processRanges(element, text, cursorOffset, editor, new Processor<TextRange>() {
+    SelectWordUtil.processRanges(element, text, cursorOffset, editor, new Processor<>() {
       @Override
       public boolean process(TextRange range) {
         if (selectionRange.contains(range) &&

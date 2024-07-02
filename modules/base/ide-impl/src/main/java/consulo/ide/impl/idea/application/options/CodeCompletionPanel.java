@@ -109,7 +109,7 @@ public class CodeCompletionPanel implements Supplier<Layout> {
 
     myCbSorting2 = CheckBox.create(LocalizeValue.localizeTODO("Sort lookup items lexicographically"));
 
-    if(PowerSaveMode.isEnabled()) {
+    if (PowerSaveMode.isEnabled()) {
       myCbAutocompletion2 = CheckBox.create(LocalizeValue.localizeTODO("Autopopup code completion (not available in Power Save mode)"));
     }
     else {

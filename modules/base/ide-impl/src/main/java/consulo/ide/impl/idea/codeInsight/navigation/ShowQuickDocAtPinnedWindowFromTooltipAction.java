@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.codeInsight.navigation;
 
 import consulo.application.AllIcons;
 import consulo.dataContext.DataContext;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.documentation.DocumentationManager;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
@@ -41,7 +40,7 @@ public class ShowQuickDocAtPinnedWindowFromTooltipAction extends AbstractDocumen
 
   @Override
   protected void doActionPerformed(@Nonnull DataContext context, @Nonnull PsiElement docAnchor, @Nonnull PsiElement originalElement) {
-    Project project = context.getData(CommonDataKeys.PROJECT);
+    Project project = context.getData(Project.KEY);
     if (project == null) {
       return;
     }

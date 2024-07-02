@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.diff.actions.impl;
 
 import consulo.diff.chain.DiffRequestChain;
 import consulo.diff.chain.DiffRequestProducer;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
@@ -29,6 +28,8 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.PopupStep;
 
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.util.function.Consumer;
@@ -96,13 +97,13 @@ public class GoToChangePopupBuilder {
     @Nonnull
     @Override
     protected JBPopup createPopup(@Nonnull AnActionEvent e) {
-      return JBPopupFactory.getInstance().createListPopup(new MyListPopupStep(e.getData(CommonDataKeys.PROJECT)));
+      return JBPopupFactory.getInstance().createListPopup(new MyListPopupStep(e.getData(Project.KEY)));
     }
 
     private class MyListPopupStep extends BaseListPopupStep<DiffRequestProducer> {
       private final Project myProject;
 
-      public MyListPopupStep(@jakarta.annotation.Nullable Project project) {
+      public MyListPopupStep(@Nullable Project project) {
         super("Go To Change", myChain.getRequests());
         setDefaultOptionIndex(myChain.getIndex());
         myProject = project;
@@ -121,12 +122,9 @@ public class GoToChangePopupBuilder {
 
       @Override
       public PopupStep onChosen(final DiffRequestProducer selectedValue, boolean finalChoice) {
-        return doFinalStep(new Runnable() {
-          @Override
-          public void run() {
-            int index = myChain.getRequests().indexOf(selectedValue);
-            myOnSelected.accept(index);
-          }
+        return doFinalStep(() -> {
+          int index = myChain.getRequests().indexOf(selectedValue);
+          myOnSelected.accept(index);
         });
       }
     }

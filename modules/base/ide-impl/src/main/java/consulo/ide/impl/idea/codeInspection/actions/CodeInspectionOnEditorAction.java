@@ -16,30 +16,31 @@
 
 package consulo.ide.impl.idea.codeInspection.actions;
 
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.scope.AnalysisScope;
+import consulo.dataContext.DataContext;
+import consulo.document.FileDocumentManager;
+import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextImpl;
+import consulo.ide.impl.idea.codeInspection.ex.InspectionManagerEx;
+import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.scheme.InspectionProfile;
-import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextImpl;
-import consulo.ide.impl.idea.codeInspection.ex.InspectionManagerEx;
-import consulo.dataContext.DataContext;
-import consulo.document.FileDocumentManager;
-import consulo.project.Project;
-import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
+import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.psi.PsiFile;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 
 public class CodeInspectionOnEditorAction extends AnAction {
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Project project = dataContext.getData(Project.KEY);
     if (project == null){
       return;
     }
-    PsiFile psiFile = dataContext.getData(CommonDataKeys.PSI_FILE);
+    PsiFile psiFile = dataContext.getData(PsiFile.KEY);
     if (psiFile != null){
       analyze(project, psiFile);
     }
@@ -58,10 +59,13 @@ public class CodeInspectionOnEditorAction extends AnAction {
   }
 
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
-    final PsiFile psiFile = dataContext.getData(CommonDataKeys.PSI_FILE);
-    e.getPresentation().setEnabled(project != null && psiFile != null  && DaemonCodeAnalyzer.getInstance(project).isHighlightingAvailable(psiFile));
+    final Project project = dataContext.getData(Project.KEY);
+    final PsiFile psiFile = dataContext.getData(PsiFile.KEY);
+    e.getPresentation().setEnabled(
+      project != null && psiFile != null && DaemonCodeAnalyzer.getInstance(project).isHighlightingAvailable(psiFile)
+    );
   }
 }

@@ -85,7 +85,8 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
     execute(editor, dataContext, null);
   }
 
-  @RequiredUIAccess@Override
+  @Override
+  @RequiredUIAccess
   public void execute(final Editor editor, final DataContext dataContext, @Nullable final Producer<Transferable> producer) {
     final Transferable transferable = EditorModificationUtil.getContentsToPasteToEditor(producer);
     if (transferable == null) return;
@@ -146,7 +147,8 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
     }
   }
 
-  @RequiredUIAccess private static void doPaste(
+  @RequiredUIAccess
+  private static void doPaste(
     final Editor editor,
     final Project project,
     final PsiFile file,

@@ -45,7 +45,6 @@ import consulo.language.editor.internal.ColorSettingsPages;
 import consulo.ide.impl.idea.packageDependencies.DependencyValidationManagerImpl;
 import consulo.ide.setting.Settings;
 import consulo.ide.setting.ShowSettingsUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
 import consulo.language.editor.packageDependency.DependencyValidationManager;
@@ -147,7 +146,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
           ShowSettingsUtil.getInstance().editConfigurable(window, page, runnable);
         }
         else {
-          ShowSettingsUtil.getInstance().editConfigurable(context.getData(CommonDataKeys.PROJECT), page, runnable);
+          ShowSettingsUtil.getInstance().editConfigurable(context.getData(Project.KEY), page, runnable);
         }
       }
     }

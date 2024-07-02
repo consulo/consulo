@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.diff.merge;
 
+import consulo.application.HelpManager;
 import consulo.ide.impl.idea.diff.DiffManagerEx;
 import consulo.ide.impl.idea.diff.actions.impl.NextDifferenceAction;
 import consulo.ide.impl.idea.diff.actions.impl.PrevDifferenceAction;
@@ -29,7 +30,6 @@ import consulo.dataContext.DataProvider;
 import consulo.diff.merge.MergeRequest;
 import consulo.diff.merge.MergeResult;
 import consulo.disposer.Disposable;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.BooleanGetter;
@@ -89,6 +89,7 @@ public abstract class MergeRequestProcessor implements Disposable {
   private BottomActions myBottomActions;
   private boolean myConflictResolved = false;
 
+  @RequiredUIAccess
   public MergeRequestProcessor(@Nullable Project project, @Nonnull MergeRequest request) {
     myProject = project;
     myRequest = request;
@@ -173,8 +174,7 @@ public abstract class MergeRequestProcessor implements Disposable {
   protected DefaultActionGroup collectToolbarActions(@Nullable List<AnAction> viewerActions) {
     DefaultActionGroup group = new DefaultActionGroup();
 
-    List<AnAction> navigationActions = ContainerUtil.<AnAction>list(new MyPrevDifferenceAction(),
-                                                                    new MyNextDifferenceAction());
+    List<AnAction> navigationActions = ContainerUtil.<AnAction>list(new MyPrevDifferenceAction(), new MyNextDifferenceAction());
     DiffUtil.addActionBlock(group, navigationActions);
 
     DiffUtil.addActionBlock(group, viewerActions);
@@ -223,16 +223,13 @@ public abstract class MergeRequestProcessor implements Disposable {
   @Override
   public void dispose() {
     if (myDisposed) return;
-    UIUtil.invokeLaterIfNeeded(new Runnable() {
-      @Override
-      public void run() {
-        if (myDisposed) return;
-        myDisposed = true;
+    UIUtil.invokeLaterIfNeeded(() -> {
+      if (myDisposed) return;
+      myDisposed = true;
 
-        onDispose();
+      onDispose();
 
-        destroyViewer();
-      }
+      destroyViewer();
     });
   }
 
@@ -342,7 +339,7 @@ public abstract class MergeRequestProcessor implements Disposable {
 
   @Nullable
   public String getHelpId() {
-    return (String)myMainPanel.getData(PlatformDataKeys.HELP_ID);
+    return (String)myMainPanel.getData(HelpManager.HELP_ID);
   }
 
   //
@@ -368,6 +365,7 @@ public abstract class MergeRequestProcessor implements Disposable {
 
   private static class MyNextDifferenceAction extends NextDifferenceAction {
     @Override
+    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
       if (!ActionPlaces.DIFF_TOOLBAR.equals(e.getPlace())) {
         e.getPresentation().setEnabled(true);
@@ -384,6 +382,7 @@ public abstract class MergeRequestProcessor implements Disposable {
     }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
       PrevNextDifferenceIterable iterable = e.getData(DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE);
       if (iterable != null && iterable.canGoNext()) {
@@ -394,6 +393,7 @@ public abstract class MergeRequestProcessor implements Disposable {
 
   private static class MyPrevDifferenceAction extends PrevDifferenceAction {
     @Override
+    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
       if (!ActionPlaces.DIFF_TOOLBAR.equals(e.getPlace())) {
         e.getPresentation().setEnabled(true);
@@ -410,6 +410,7 @@ public abstract class MergeRequestProcessor implements Disposable {
     }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
       PrevNextDifferenceIterable iterable = e.getData(DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE);
       if (iterable != null && iterable.canGoPrev()) {
@@ -441,7 +442,7 @@ public abstract class MergeRequestProcessor implements Disposable {
       if (Project.KEY == dataId) {
         return myProject;
       }
-      else if (PlatformDataKeys.HELP_ID == dataId) {
+      else if (HelpManager.HELP_ID == dataId) {
         if (myRequest.getUserData(DiffUserDataKeys.HELP_ID) != null) {
           return myRequest.getUserData(DiffUserDataKeys.HELP_ID);
         }
@@ -492,6 +493,7 @@ public abstract class MergeRequestProcessor implements Disposable {
     }
 
     @Override
+    @RequiredUIAccess
     public void finishMerge(@Nonnull MergeResult result) {
       applyRequestResult(result);
       MergeRequestProcessor.this.closeDialog();

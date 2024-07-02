@@ -15,23 +15,21 @@
  */
 package consulo.ide.impl.idea.codeInsight.highlighting.actions;
 
-import consulo.ide.impl.idea.codeInsight.highlighting.HighlightUsagesHandler;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.ui.ex.action.ActionsBundle;
-import consulo.language.editor.CommonDataKeys;
-import consulo.undoRedo.CommandProcessor;
+import consulo.application.dumb.DumbAware;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
-import consulo.application.dumb.DumbAware;
-import consulo.project.DumbService;
-import consulo.application.dumb.IndexNotReadyException;
-import consulo.project.Project;
+import consulo.ide.impl.idea.codeInsight.highlighting.HighlightUsagesHandler;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.project.DumbService;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.undoRedo.CommandProcessor;
 
 public class HighlightUsagesAction extends AnAction implements DumbAware {
   public HighlightUsagesAction() {
@@ -39,17 +37,18 @@ public class HighlightUsagesAction extends AnAction implements DumbAware {
   }
 
   @Override
+  @RequiredUIAccess
   public void update(final AnActionEvent event) {
     final Presentation presentation = event.getPresentation();
     final DataContext dataContext = event.getDataContext();
-    presentation.setEnabled(dataContext.getData(CommonDataKeys.PROJECT) != null &&
-                            dataContext.getData(PlatformDataKeys.EDITOR) != null);
+    presentation.setEnabled(dataContext.getData(Project.KEY) != null && dataContext.getData(Editor.KEY) != null);
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    final Editor editor = e.getDataContext().getData(PlatformDataKeys.EDITOR);
-    final Project project = e.getDataContext().getData(CommonDataKeys.PROJECT);
+    final Editor editor = e.getDataContext().getData(Editor.KEY);
+    final Project project = e.getDataContext().getData(Project.KEY);
     if (editor == null || project == null) return;
     String commandName = getTemplatePresentation().getText();
     if (commandName == null) commandName = "";
@@ -65,7 +64,7 @@ public class HighlightUsagesAction extends AnAction implements DumbAware {
             HighlightUsagesHandler.invoke(project, editor, psiFile);
           }
           catch (IndexNotReadyException ex) {
-            DumbService.getInstance(project).showDumbModeNotification(ActionsBundle.message("action.HighlightUsagesInFile.not.ready"));
+            DumbService.getInstance(project).showDumbModeNotification(ActionLocalize.actionHighlightusagesinfileNotReady().get());
           }
         }
       },

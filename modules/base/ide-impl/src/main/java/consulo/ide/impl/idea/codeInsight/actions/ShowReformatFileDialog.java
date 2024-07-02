@@ -15,14 +15,15 @@
  */
 package consulo.ide.impl.idea.codeInsight.actions;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.codeStyle.FormattingModelBuilder;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
@@ -32,11 +33,12 @@ public class ShowReformatFileDialog extends AnAction implements DumbAware {
   private static final @NonNls String HELP_ID = "editing.codeReformatting";
 
   @Override
+  @RequiredReadAction
   public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
-    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
+    Project project = dataContext.getData(Project.KEY);
+    Editor editor = dataContext.getData(Editor.KEY);
     if (project == null || editor == null) {
       presentation.setEnabled(false);
       return;
@@ -54,11 +56,12 @@ public class ShowReformatFileDialog extends AnAction implements DumbAware {
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
-    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
+    Project project = dataContext.getData(Project.KEY);
+    Editor editor = dataContext.getData(Editor.KEY);
     if (project == null || editor == null) {
       presentation.setEnabled(false);
       return;

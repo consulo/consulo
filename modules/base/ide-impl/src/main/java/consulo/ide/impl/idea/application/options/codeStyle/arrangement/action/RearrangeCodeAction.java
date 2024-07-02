@@ -20,7 +20,6 @@ import consulo.codeEditor.SelectionModel;
 import consulo.document.Document;
 import consulo.ide.impl.idea.codeInsight.actions.RearrangeCodeProcessor;
 import consulo.language.codeStyle.arrangement.Rearranger;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
@@ -41,7 +40,7 @@ public class RearrangeCodeAction extends AnAction {
   @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    PsiFile file = e.getDataContext().getData(CommonDataKeys.PSI_FILE);
+    PsiFile file = e.getDataContext().getData(PsiFile.KEY);
     boolean enabled = file != null && Rearranger.forLanguage(file.getLanguage()) != null;
     e.getPresentation().setEnabled(enabled);
   }
@@ -49,12 +48,12 @@ public class RearrangeCodeAction extends AnAction {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     if (project == null) {
       return;
     }
 
-    final Editor editor = e.getData(CommonDataKeys.EDITOR);
+    final Editor editor = e.getData(Editor.KEY);
     if (editor == null) {
       return;
     }

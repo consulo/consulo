@@ -23,7 +23,7 @@ import consulo.externalService.update.UpdateSettings;
 import consulo.ide.impl.externalService.NotFoundException;
 import consulo.ide.impl.externalService.impl.WebServiceApi;
 import consulo.ide.impl.externalService.impl.WebServiceApiSender;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.util.io.FileUtil;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.util.jdom.JDOMUtil;
