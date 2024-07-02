@@ -22,17 +22,15 @@ package consulo.ide.impl.idea.util.indexing;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.performance.PerformanceWatcher;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.function.Processor;
 import consulo.application.util.registry.Registry;
 import consulo.content.ContentIterator;
 import consulo.disposer.Disposable;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.project.CacheUpdateRunner;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.IndexableFileSet;
 import consulo.logging.Logger;
@@ -43,6 +41,7 @@ import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
 import consulo.project.event.ProjectManagerListener;
 import consulo.project.startup.StartupManager;
+import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import jakarta.annotation.Nonnull;
@@ -70,7 +69,7 @@ public class FileBasedIndexProjectHandler implements IndexableFileSet, Disposabl
       return;
     }
 
-    if (ApplicationManager.getApplication().isInternal()) {
+    if (project.getApplication().isInternal()) {
       project.getMessageBus().connect(this).subscribe(DumbModeListener.class, new DumbModeListener() {
 
         @Override
@@ -154,7 +153,7 @@ public class FileBasedIndexProjectHandler implements IndexableFileSet, Disposabl
         long calcDuration = System.currentTimeMillis() - start;
 
         indicator.setIndeterminate(false);
-        indicator.setText(IdeBundle.message("progress.indexing.updating"));
+        indicator.setTextValue(IdeLocalize.progressIndexingUpdating());
 
         LOG.info("Reindexing refreshed files: " + files.size() + " to update, calculated in " + calcDuration + "ms");
         if (!files.isEmpty()) {
@@ -168,7 +167,7 @@ public class FileBasedIndexProjectHandler implements IndexableFileSet, Disposabl
       public String toString() {
         StringBuilder sampleOfChangedFilePathsToBeIndexed = new StringBuilder();
 
-        index.processChangedFiles(project, new Processor<VirtualFile>() {
+        index.processChangedFiles(project, new Processor<>() {
           int filesInProjectToBeIndexed;
           final String projectBasePath = project.getBasePath();
 
@@ -196,7 +195,7 @@ public class FileBasedIndexProjectHandler implements IndexableFileSet, Disposabl
 
   private static boolean mightHaveManyChangedFilesInProject(Project project, FileBasedIndexImpl index) {
     long start = System.currentTimeMillis();
-    return !index.processChangedFiles(project, new Processor<VirtualFile>() {
+    return !index.processChangedFiles(project, new Processor<>() {
       int filesInProjectToBeIndexed;
       long sizeOfFilesToBeIndexed;
 
