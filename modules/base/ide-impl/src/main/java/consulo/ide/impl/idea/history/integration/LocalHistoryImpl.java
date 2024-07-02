@@ -52,7 +52,6 @@ import static consulo.ide.impl.idea.history.integration.LocalHistoryUtil.findRev
 @Singleton
 @ServiceImpl
 public class LocalHistoryImpl extends LocalHistory implements Disposable {
-  private final Application myApplication;
   private final MessageBus myBus;
   private MessageBusConnection myConnection;
   private ChangeList myChangeList;
@@ -70,17 +69,14 @@ public class LocalHistoryImpl extends LocalHistory implements Disposable {
 
   @Inject
   public LocalHistoryImpl(@Nonnull Application application) {
-    myApplication = application;
     myBus = application.getMessageBus();
 
-    initComponent();
+    if (application.isUnitTestMode() || !application.isHeadlessEnvironment()) {
+      initComponent();
+    }
   }
 
   private void initComponent() {
-    if (!myApplication.isUnitTestMode() && myApplication.isHeadlessEnvironment()) {
-      return;
-    }
-
     myShutdownTask = this::doDispose;
     ShutDownTracker.getInstance().registerShutdownTask(myShutdownTask);
 
