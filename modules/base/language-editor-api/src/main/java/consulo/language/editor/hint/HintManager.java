@@ -5,6 +5,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import org.intellij.lang.annotations.MagicConstant;
 
@@ -53,31 +54,44 @@ public abstract class HintManager {
   public @interface HideFlags {
   }
 
+  @RequiredUIAccess
   public abstract void showHint(@Nonnull JComponent component, @Nonnull RelativePoint p, @HideFlags int flags, int timeout);
 
+  @RequiredUIAccess
   public abstract void showErrorHint(@Nonnull Editor editor, @Nonnull String text);
 
+  @RequiredUIAccess
   public abstract void showErrorHint(@Nonnull Editor editor, @Nonnull String text, @PositionFlags short position);
 
+  @RequiredUIAccess
   public void showInformationHint(@Nonnull Editor editor, @Nonnull String text) {
     showInformationHint(editor, text, ABOVE);
   }
 
+  @RequiredUIAccess
   public abstract void showInformationHint(@Nonnull Editor editor, @Nonnull String text, @PositionFlags short position);
 
+  @RequiredUIAccess
   public abstract void showInformationHint(@Nonnull Editor editor, @Nonnull String text, @Nullable HyperlinkListener listener);
 
+  @RequiredUIAccess
   public abstract void showInformationHint(@Nonnull Editor editor, @Nonnull JComponent component);
 
+  @RequiredUIAccess
   public abstract void showQuestionHint(@Nonnull Editor editor, @Nonnull String hintText, int offset1, int offset2, @Nonnull QuestionAction action);
 
+  @RequiredUIAccess
   public abstract boolean hideHints(@HideFlags int mask, boolean onlyOne, boolean editorChanged);
 
+  @RequiredUIAccess
   public abstract void showErrorHint(@Nonnull Editor editor, @Nonnull String hintText, int offset1, int offset2, @PositionFlags short constraint, @HideFlags int flags, int timeout);
 
+  @RequiredUIAccess
   public abstract void hideAllHints();
 
+  @RequiredUIAccess
   public abstract boolean hasShownHintsThatWillHideByOtherHint(boolean willShowTooltip);
 
+  @RequiredUIAccess
   public abstract void setRequestFocusForNextHint(boolean requestFocus);
 }
