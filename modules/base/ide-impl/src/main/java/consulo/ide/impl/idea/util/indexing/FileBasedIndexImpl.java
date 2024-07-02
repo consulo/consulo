@@ -198,7 +198,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
 
   @Inject
   public FileBasedIndexImpl(Application application) {
-    myApplication = Application.get();
+    myApplication = application;
     myFileDocumentManager = FileDocumentManager.getInstance();
     myIsUnitTestMode = application.isUnitTestMode();
 
