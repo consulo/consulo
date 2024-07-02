@@ -49,7 +49,11 @@ public abstract class FileBasedIndex {
 
   public abstract void iterateIndexableFiles(@Nonnull ContentIterator processor, @Nonnull Project project, ProgressIndicator indicator);
 
-  public void iterateIndexableFilesConcurrently(@Nonnull ContentIterator processor, @Nonnull Project project, @Nonnull ProgressIndicator indicator) {
+  public void iterateIndexableFilesConcurrently(
+    @Nonnull ContentIterator processor,
+    @Nonnull Project project,
+    @Nonnull ProgressIndicator indicator
+  ) {
     iterateIndexableFiles(processor, project, indicator);
   }
 
@@ -73,7 +77,9 @@ public abstract class FileBasedIndex {
       return ((VirtualFileWithId)file).getId();
     }
 
-    throw new IllegalArgumentException("Virtual file doesn't support id: " + file + ", implementation class: " + file.getClass().getName());
+    throw new IllegalArgumentException(
+      "Virtual file doesn't support id: " + file + ", implementation class: " + file.getClass().getName()
+    );
   }
 
   // note: upsource implementation requires access to Project here, please don't remove
@@ -87,36 +93,48 @@ public abstract class FileBasedIndex {
   public abstract <K, V> List<V> getValues(@Nonnull ID<K, V> indexId, @Nonnull K dataKey, @Nonnull SearchScope filter);
 
   @Nonnull
-  public abstract <K, V> Collection<VirtualFile> getContainingFiles(@Nonnull ID<K, V> indexId, @Nonnull K dataKey, @Nonnull SearchScope filter);
+  public abstract <K, V> Collection<VirtualFile> getContainingFiles(
+    @Nonnull ID<K, V> indexId,
+    @Nonnull K dataKey,
+    @Nonnull SearchScope filter
+  );
 
   /**
-   * @return {@code false} if ValueProcessor.process() returned {@code false}; {@code true} otherwise or if ValueProcessor was not called at all
+   * @return {@code false} if ValueProcessor.process() returned {@code false};
+   * {@code true} otherwise or if ValueProcessor was not called at all
    */
-  public abstract <K, V> boolean processValues(@Nonnull ID<K, V> indexId,
-                                               @Nonnull K dataKey,
-                                               @Nullable VirtualFile inFile,
-                                               @Nonnull ValueProcessor<? super V> processor,
-                                               @Nonnull SearchScope filter);
+  public abstract <K, V> boolean processValues(
+    @Nonnull ID<K, V> indexId,
+    @Nonnull K dataKey,
+    @Nullable VirtualFile inFile,
+    @Nonnull ValueProcessor<? super V> processor,
+    @Nonnull SearchScope filter
+  );
 
   /**
-   * @return {@code false} if ValueProcessor.process() returned {@code false}; {@code true} otherwise or if ValueProcessor was not called at all
+   * @return {@code false} if ValueProcessor.process() returned {@code false};
+   * {@code true} otherwise or if ValueProcessor was not called at all
    */
-  public <K, V> boolean processValues(@Nonnull ID<K, V> indexId,
-                                      @Nonnull K dataKey,
-                                      @Nullable VirtualFile inFile,
-                                      @Nonnull ValueProcessor<? super V> processor,
-                                      @Nonnull SearchScope filter,
-                                      @Nullable IdFilter idFilter) {
+  public <K, V> boolean processValues(
+    @Nonnull ID<K, V> indexId,
+    @Nonnull K dataKey,
+    @Nullable VirtualFile inFile,
+    @Nonnull ValueProcessor<? super V> processor,
+    @Nonnull SearchScope filter,
+    @Nullable IdFilter idFilter
+  ) {
     return processValues(indexId, dataKey, inFile, processor, filter);
   }
 
   public abstract <K, V> long getIndexModificationStamp(@Nonnull ID<K, V> indexId, @Nonnull Project project);
 
-  public abstract <K, V> boolean processFilesContainingAllKeys(@Nonnull ID<K, V> indexId,
-                                                               @Nonnull Collection<? extends K> dataKeys,
-                                                               @Nonnull SearchScope filter,
-                                                               @Nullable Predicate<? super V> valueChecker,
-                                                               @Nonnull Predicate<? super VirtualFile> processor);
+  public abstract <K, V> boolean processFilesContainingAllKeys(
+    @Nonnull ID<K, V> indexId,
+    @Nonnull Collection<? extends K> dataKeys,
+    @Nonnull SearchScope filter,
+    @Nullable Predicate<? super V> valueChecker,
+    @Nonnull Predicate<? super VirtualFile> processor
+  );
 
   /**
    * It is guaranteed to return data which is up-to-date within the given project.
@@ -138,7 +156,12 @@ public abstract class FileBasedIndex {
 
   public abstract void requestReindex(@Nonnull VirtualFile file);
 
-  public abstract <K, V> boolean getFilesWithKey(@Nonnull ID<K, V> indexId, @Nonnull Set<? extends K> dataKeys, @Nonnull Processor<? super VirtualFile> processor, @Nonnull SearchScope filter);
+  public abstract <K, V> boolean getFilesWithKey(
+    @Nonnull ID<K, V> indexId,
+    @Nonnull Set<? extends K> dataKeys,
+    @Nonnull Processor<? super VirtualFile> processor,
+    @Nonnull SearchScope filter
+  );
 
   /**
    * Executes command and allow its to have an index access in dumb mode.
@@ -157,7 +180,10 @@ public abstract class FileBasedIndex {
     });
   }
 
-  public <T, E extends Throwable> T ignoreDumbMode(@Nonnull DumbModeAccessType dumbModeAccessType, @Nonnull ThrowableComputable<T, E> computable) throws E {
+  public <T, E extends Throwable> T ignoreDumbMode(
+    @Nonnull DumbModeAccessType dumbModeAccessType,
+    @Nonnull ThrowableComputable<T, E> computable
+  ) throws E {
     throw new UnsupportedOperationException();
   }
 
@@ -166,7 +192,12 @@ public abstract class FileBasedIndex {
    */
   public abstract <K> boolean processAllKeys(@Nonnull ID<K, ?> indexId, @Nonnull Processor<? super K> processor, @Nullable Project project);
 
-  public <K> boolean processAllKeys(@Nonnull ID<K, ?> indexId, @Nonnull Processor<? super K> processor, @Nonnull SearchScope scope, @Nullable IdFilter idFilter) {
+  public <K> boolean processAllKeys(
+    @Nonnull ID<K, ?> indexId,
+    @Nonnull Processor<? super K> processor,
+    @Nonnull SearchScope scope,
+    @Nullable IdFilter idFilter
+  ) {
     return processAllKeys(indexId, processor, ((ProjectAwareSearchScope)scope).getProject());
   }
 
@@ -174,11 +205,13 @@ public abstract class FileBasedIndex {
   @Nonnull
   public abstract <K, V> Map<K, V> getFileData(@Nonnull ID<K, V> id, @Nonnull VirtualFile virtualFile, @Nonnull Project project);
 
-  public static void iterateRecursively(@Nullable final VirtualFile root,
-                                        @Nonnull final ContentIterator processor,
-                                        @Nullable final ProgressIndicator indicator,
-                                        @Nullable final Set<? super VirtualFile> visitedRoots,
-                                        @Nullable final ProjectFileIndex projectFileIndex) {
+  public static void iterateRecursively(
+    @Nullable final VirtualFile root,
+    @Nonnull final ContentIterator processor,
+    @Nullable final ProgressIndicator indicator,
+    @Nullable final Set<? super VirtualFile> visitedRoots,
+    @Nullable final ProjectFileIndex projectFileIndex
+  ) {
     if (root == null) {
       return;
     }
@@ -245,7 +278,8 @@ public abstract class FileBasedIndex {
   @Deprecated
   public static final boolean ourEnableTracingOfKeyHashToVirtualFileMapping = true;
 
-  private static final boolean ourDisableIndexAccessDuringDumbMode = SystemProperties.getBooleanProperty("idea.disable.index.access.during.dumb.mode", false);
+  private static final boolean ourDisableIndexAccessDuringDumbMode =
+    SystemProperties.getBooleanProperty("idea.disable.index.access.during.dumb.mode", false);
 
   public static boolean isIndexAccessDuringDumbModeEnabled() {
     return !ourDisableIndexAccessDuringDumbMode;
