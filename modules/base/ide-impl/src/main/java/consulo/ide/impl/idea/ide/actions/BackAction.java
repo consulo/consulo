@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.Presentation;
 import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
 import consulo.application.dumb.DumbAware;
@@ -30,7 +29,7 @@ public class BackAction extends AnAction implements DumbAware {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) return;
     IdeDocumentHistory.getInstance(project).back();
   }
@@ -39,7 +38,7 @@ public class BackAction extends AnAction implements DumbAware {
   @Override
   public void update(@Nonnull AnActionEvent event){
     Presentation presentation = event.getPresentation();
-    Project project = event.getData(CommonDataKeys.PROJECT);
+    Project project = event.getData(Project.KEY);
     if (project == null || project.isDisposed()) {
       presentation.setEnabled(false);
       return;

@@ -17,11 +17,11 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.codeEditor.EditorFactory;
 import consulo.dataContext.DataContext;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.language.codeStyle.CodeStyleScheme;
 import consulo.language.codeStyle.CodeStyleSchemes;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -37,9 +37,13 @@ public class QuickChangeCodeStyleSchemeAction extends QuickSwitchSchemeAction {
     final CodeStyleSettingsManager manager = CodeStyleSettingsManager.getInstance(project);
     if (manager.PER_PROJECT_SETTINGS != null) {
       //noinspection HardCodedStringLiteral
-      group.add(new AnAction("<project>", "",
-                             manager.USE_PER_PROJECT_SETTINGS ? ourCurrentAction : ourNotCurrentAction) {
+      group.add(new AnAction(
+        "<project>",
+        "",
+        manager.USE_PER_PROJECT_SETTINGS ? ourCurrentAction : ourNotCurrentAction
+      ) {
         @Override
+        @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
           manager.USE_PER_PROJECT_SETTINGS = true;
         }
@@ -52,14 +56,20 @@ public class QuickChangeCodeStyleSchemeAction extends QuickSwitchSchemeAction {
     }
   }
 
-  private static void addScheme(final DefaultActionGroup group,
-                                final CodeStyleSettingsManager manager,
-                                final CodeStyleScheme currentScheme,
-                                final CodeStyleScheme scheme,
-                                final boolean addScheme) {
-    group.add(new AnAction(scheme.getName(), "",
-                           scheme == currentScheme && !manager.USE_PER_PROJECT_SETTINGS ? ourCurrentAction : ourNotCurrentAction) {
+  private static void addScheme(
+    final DefaultActionGroup group,
+    final CodeStyleSettingsManager manager,
+    final CodeStyleScheme currentScheme,
+    final CodeStyleScheme scheme,
+    final boolean addScheme
+  ) {
+    group.add(new AnAction(
+      scheme.getName(),
+      "",
+      scheme == currentScheme && !manager.USE_PER_PROJECT_SETTINGS ? ourCurrentAction : ourNotCurrentAction
+    ) {
       @Override
+      @RequiredUIAccess
       public void actionPerformed(@Nonnull AnActionEvent e) {
         if (addScheme) {
           CodeStyleSchemes.getInstance().addScheme(scheme);
@@ -78,8 +88,9 @@ public class QuickChangeCodeStyleSchemeAction extends QuickSwitchSchemeAction {
   }
 
   @Override
+  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);
-    e.getPresentation().setEnabled(e.getDataContext().getData(CommonDataKeys.PROJECT) != null);
+    e.getPresentation().setEnabled(e.getDataContext().getData(Project.KEY) != null);
   }
 }

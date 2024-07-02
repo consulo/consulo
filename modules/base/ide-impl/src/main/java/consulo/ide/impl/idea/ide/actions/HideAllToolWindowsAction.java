@@ -15,10 +15,10 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.IdeBundle;
-import consulo.language.editor.CommonDataKeys;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.application.dumb.DumbAware;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
 import consulo.project.ui.internal.ToolWindowLayout;
@@ -27,8 +27,10 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 
 public class HideAllToolWindowsAction extends AnAction implements DumbAware {
+  @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) {
       return;
     }
@@ -36,6 +38,7 @@ public class HideAllToolWindowsAction extends AnAction implements DumbAware {
     performAction(project);
   }
 
+  @RequiredUIAccess
   public static void performAction(final Project project) {
     ToolWindowManagerEx toolWindowManager = ToolWindowManagerEx.getInstanceEx(project);
 
@@ -70,9 +73,11 @@ public class HideAllToolWindowsAction extends AnAction implements DumbAware {
     }
   }
 
+  @Override
+  @RequiredUIAccess
   public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
-    Project project = event.getData(CommonDataKeys.PROJECT);
+    Project project = event.getData(Project.KEY);
     if (project == null) {
       presentation.setEnabled(false);
       return;
@@ -83,7 +88,7 @@ public class HideAllToolWindowsAction extends AnAction implements DumbAware {
     for (String id : ids) {
       if (toolWindowManager.getToolWindow(id).isVisible()) {
         presentation.setEnabled(true);
-        presentation.setText(IdeBundle.message("action.hide.all.windows"), true);
+        presentation.setText(IdeLocalize.actionHideAllWindows().get(), true);
         return;
       }
     }
@@ -91,7 +96,7 @@ public class HideAllToolWindowsAction extends AnAction implements DumbAware {
     final ToolWindowLayout layout = toolWindowManager.getLayoutToRestoreLater();
     if (layout != null) {
       presentation.setEnabled(true);
-      presentation.setText(IdeBundle.message("action.restore.windows"));
+      presentation.setTextValue(IdeLocalize.actionRestoreWindows());
       return;
     }
 

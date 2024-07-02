@@ -17,12 +17,15 @@
 package consulo.ide.impl.idea.history.integration.ui.actions;
 
 import consulo.ide.impl.idea.history.integration.ui.views.RecentChangesPopup;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
+import jakarta.annotation.Nonnull;
 
 public class RecentChangesAction extends LocalHistoryAction {
   @Override
-  public void actionPerformed(AnActionEvent e) {
-    new RecentChangesPopup(e == null ? null : e.getData(CommonDataKeys.PROJECT), getGateway(), getVcs()).show();
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
+    new RecentChangesPopup(e == null ? null : e.getData(Project.KEY), getGateway(), getVcs()).show();
   }
 }

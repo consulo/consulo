@@ -20,8 +20,8 @@ import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.history.core.LocalHistoryFacade;
 import consulo.ide.impl.idea.history.integration.IdeaGateway;
 import consulo.ide.impl.idea.history.integration.LocalHistoryImpl;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
@@ -35,10 +35,11 @@ import static consulo.util.lang.ObjectUtil.notNull;
 
 public abstract class LocalHistoryAction extends AnAction implements DumbAware {
   @Override
+  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
     Presentation p = e.getPresentation();
 
-    if (e.getData(CommonDataKeys.PROJECT) == null) {
+    if (e.getData(Project.KEY) == null) {
       p.setEnabledAndVisible(false);
     }
     else {
@@ -52,8 +53,9 @@ public abstract class LocalHistoryAction extends AnAction implements DumbAware {
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    actionPerformed(e.getRequiredData(CommonDataKeys.PROJECT), notNull(getGateway()), e);
+    actionPerformed(e.getRequiredData(Project.KEY), notNull(getGateway()), e);
   }
 
   protected String getText(@Nonnull AnActionEvent e) {
@@ -68,10 +70,12 @@ public abstract class LocalHistoryAction extends AnAction implements DumbAware {
     actionPerformed(p, gw, notNull(getFile(e)), e);
   }
 
-  protected boolean isEnabled(@Nonnull LocalHistoryFacade vcs,
-                              @Nonnull IdeaGateway gw,
-                              @jakarta.annotation.Nullable VirtualFile f,
-                              @Nonnull AnActionEvent e) {
+  protected boolean isEnabled(
+    @Nonnull LocalHistoryFacade vcs,
+    @Nonnull IdeaGateway gw,
+    @Nullable VirtualFile f,
+    @Nonnull AnActionEvent e
+  ) {
     return true;
   }
 

@@ -22,12 +22,12 @@ import consulo.application.dumb.IndexNotReadyException;
 import consulo.dataContext.DataManager;
 import consulo.execution.*;
 import consulo.execution.configuration.ConfigurationType;
+import consulo.execution.impl.internal.ExecutionManagerImpl;
 import consulo.execution.internal.RunManagerEx;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.ui.RunContentDescriptor;
-import consulo.execution.impl.internal.ExecutionManagerImpl;
-import consulo.language.editor.CommonDataKeys;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -58,7 +58,7 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
   @Override
   public void update(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (ActionPlaces.isMainMenuOrActionSearch(e.getPlace())) {
       presentation.setDescriptionValue(ExecutionLocalize.chooseRunConfigurationActionDescription());
     }
@@ -77,7 +77,13 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
     }
   }
 
-  private static void updatePresentation(@Nullable ExecutionTarget target, @Nullable RunnerAndConfigurationSettings settings, @Nullable Project project, @Nonnull Presentation presentation) {
+  @RequiredUIAccess
+  private static void updatePresentation(
+    @Nullable ExecutionTarget target,
+    @Nullable RunnerAndConfigurationSettings settings,
+    @Nullable Project project,
+    @Nonnull Presentation presentation
+  ) {
     if (project != null && target != null && settings != null) {
       String name = settings.getName();
       if (target != DefaultExecutionTarget.INSTANCE) {
@@ -94,10 +100,12 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
     }
     else {
       presentation.setTextValue(ExecutionLocalize.runComboBoxAddConfiguration());
-      presentation.putClientProperty(ComboBoxButton.LIKE_BUTTON, (Runnable)() -> {
-        ActionManager.getInstance().getAction(IdeActions.ACTION_EDIT_RUN_CONFIGURATIONS).actionPerformed(AnActionEvent.createFromDataContext("", null, DataManager.getInstance().getDataContext()));
-      });
-      presentation.setDescription(ActionsBundle.actionDescription(IdeActions.ACTION_EDIT_RUN_CONFIGURATIONS));
+      presentation.putClientProperty(
+        ComboBoxButton.LIKE_BUTTON,
+        (Runnable)() -> ActionManager.getInstance().getAction(IdeActions.ACTION_EDIT_RUN_CONFIGURATIONS)
+          .actionPerformed(AnActionEvent.createFromDataContext("", null, DataManager.getInstance().getDataContext()))
+      );
+      presentation.setDescriptionValue(ActionLocalize.actionEditrunconfigurationsDescription());
       presentation.setIcon(null);
     }
   }
@@ -138,7 +146,7 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
   @Nonnull
   public ActionGroup createPopupActionGroup(JComponent button) {
     final ActionGroup.Builder allActionsGroup = ActionGroup.newImmutableBuilder();
-    final Project project = DataManager.getInstance().getDataContext(button).getData(CommonDataKeys.PROJECT);
+    final Project project = DataManager.getInstance().getDataContext(button).getData(Project.KEY);
     if (project != null) {
       final RunManagerEx runManager = RunManagerEx.getInstanceEx(project);
 
@@ -186,7 +194,7 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
     @RequiredUIAccess
     @Override
     public void actionPerformed(final AnActionEvent e) {
-      final Project project = e.getData(CommonDataKeys.PROJECT);
+      final Project project = e.getData(Project.KEY);
       if (project != null) {
         RunnerAndConfigurationSettings settings = chooseTempSettings(project);
         if (settings != null) {
@@ -200,7 +208,7 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
     @Override
     public void update(final AnActionEvent e) {
       final Presentation presentation = e.getPresentation();
-      final Project project = e.getData(CommonDataKeys.PROJECT);
+      final Project project = e.getData(Project.KEY);
       if (project == null) {
         disable(presentation);
         return;
@@ -291,9 +299,9 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
       updatePresentation(ExecutionTargetManager.getActiveTarget(myProject), myConfiguration, myProject, e.getPresentation());
     }
 
-    @RequiredUIAccess
     @Override
-    public void update(final AnActionEvent e) {
+    @RequiredUIAccess
+    public void update(@Nonnull final AnActionEvent e) {
       super.update(e);
       updateIcon(e.getPresentation());
     }

@@ -17,18 +17,17 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.application.AllIcons;
-import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
-import consulo.language.editor.CommonDataKeys;
+import consulo.dataContext.DataContext;
 import consulo.project.Project;
-import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -51,8 +50,9 @@ public abstract class QuickSwitchSchemeAction extends AnAction implements DumbAw
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     DefaultActionGroup group = new DefaultActionGroup();
     fillActions(project, group, e.getDataContext());
     showPopup(e, group);
@@ -62,17 +62,20 @@ public abstract class QuickSwitchSchemeAction extends AnAction implements DumbAw
 
   private void showPopup(AnActionEvent e, DefaultActionGroup group) {
     if (!myShowPopupWithNoActions && group.getChildrenCount() == 0) return;
-    final ListPopup popup = JBPopupFactory.getInstance()
-      .createActionGroupPopup(getPopupTitle(e),
-                              group,
-                              e.getDataContext(), getAidMethod(),
-                              true, myActionPlace);
+    final ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(
+      getPopupTitle(e),
+      group,
+      e.getDataContext(),
+      getAidMethod(),
+      true,
+      myActionPlace
+    );
 
     showPopup(e, popup);
   }
 
   protected void showPopup(AnActionEvent e, ListPopup popup) {
-    popup.showCenteredInCurrentWindow(e.getData(CommonDataKeys.PROJECT));
+    popup.showCenteredInCurrentWindow(e.getData(Project.KEY));
   }
 
   protected JBPopupFactory.ActionSelectionAid getAidMethod() {
@@ -84,9 +87,10 @@ public abstract class QuickSwitchSchemeAction extends AnAction implements DumbAw
   }
 
   @Override
-  public void update(AnActionEvent e) {
+  @RequiredUIAccess
+  public void update(@Nonnull AnActionEvent e) {
     super.update(e);
-    e.getPresentation().setEnabled(e.getData(CommonDataKeys.PROJECT) != null && isEnabled());
+    e.getPresentation().setEnabled(e.getData(Project.KEY) != null && isEnabled());
   }
 
   protected abstract boolean isEnabled();

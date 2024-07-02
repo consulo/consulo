@@ -15,23 +15,21 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.action.Presentation;
 import consulo.application.WriteAction;
 import consulo.fileChooser.FileChooserDescriptor;
+import consulo.ide.moduleImport.ModuleImportContext;
+import consulo.ide.moduleImport.ModuleImportProcessor;
+import consulo.ide.moduleImport.ModuleImportProvider;
+import consulo.ide.moduleImport.ModuleImportProviders;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.ModuleManager;
 import consulo.project.Project;
-import consulo.ide.moduleImport.ModuleImportContext;
-import consulo.ide.moduleImport.ModuleImportProvider;
-import consulo.ide.moduleImport.ModuleImportProviders;
-import consulo.ide.moduleImport.ModuleImportProcessor;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.Pair;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -43,14 +41,15 @@ public class ImportModuleAction extends AnAction {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     assert project != null;
     executeImportAction(project, null);
   }
 
   @RequiredUIAccess
   public static void executeImportAction(@Nonnull Project project, @Nullable FileChooserDescriptor descriptor) {
-    AsyncResult<Pair<ModuleImportContext, ModuleImportProvider<ModuleImportContext>>> chooser = ModuleImportProcessor.showFileChooser(project, descriptor);
+    AsyncResult<Pair<ModuleImportContext, ModuleImportProvider<ModuleImportContext>>> chooser =
+      ModuleImportProcessor.showFileChooser(project, descriptor);
 
     chooser.doWhenDone(pair -> {
       ModuleImportContext context = pair.getFirst();
@@ -58,8 +57,7 @@ public class ImportModuleAction extends AnAction {
       ModuleImportProvider<ModuleImportContext> provider = pair.getSecond();
 
       ModifiableModuleModel modifiableModel = ModuleManager.getInstance(project).getModifiableModel();
-      provider.process(context, project, modifiableModel, module -> {
-      });
+      provider.process(context, project, modifiableModel, module -> {});
       WriteAction.runAndWait(modifiableModel::commit);
     });
   }
@@ -69,7 +67,7 @@ public class ImportModuleAction extends AnAction {
   public void update(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
 
-    if (e.getData(CommonDataKeys.PROJECT) == null) {
+    if (e.getData(Project.KEY) == null) {
       presentation.setEnabledAndVisible(false);
       return;
     }

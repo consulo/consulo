@@ -16,11 +16,10 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.IdeBundle;
+import consulo.ide.localize.IdeLocalize;
 import consulo.ui.ex.OccurenceNavigator;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
@@ -42,8 +41,10 @@ import java.awt.*;
 import java.util.LinkedList;
 
 abstract class OccurenceNavigatorActionBase extends AnAction implements DumbAware {
+  @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) return;
 
     OccurenceNavigator navigator = getNavigator(e.getDataContext());
@@ -64,13 +65,15 @@ abstract class OccurenceNavigatorActionBase extends AnAction implements DumbAwar
     if(occurenceInfo.getOccurenceNumber()==-1||occurenceInfo.getOccurencesCount()==-1){
       return;
     }
-    WindowManager.getInstance().getStatusBar(project).setInfo(
-      IdeBundle.message("message.occurrence.N.of.M", occurenceInfo.getOccurenceNumber(), occurenceInfo.getOccurencesCount()));
+    WindowManager.getInstance().getStatusBar(project)
+      .setInfo(IdeLocalize.messageOccurrenceNOfM(occurenceInfo.getOccurenceNumber(), occurenceInfo.getOccurencesCount()).get());
   }
 
+  @Override
+  @RequiredUIAccess
   public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
-    Project project = event.getData(CommonDataKeys.PROJECT);
+    Project project = event.getData(Project.KEY);
     if (project == null) {
       presentation.setEnabled(false);
       // make it invisible only in main menu to avoid initial invisibility in toolbars
@@ -96,6 +99,7 @@ abstract class OccurenceNavigatorActionBase extends AnAction implements DumbAwar
   protected abstract String getDescription(OccurenceNavigator navigator);
 
   @Nullable
+  @RequiredUIAccess
   protected OccurenceNavigator getNavigator(DataContext dataContext) {
     ContentManager contentManager = ContentManagerUtil.getContentManagerFromContext(dataContext, false);
     if (contentManager != null) {
@@ -110,7 +114,7 @@ abstract class OccurenceNavigatorActionBase extends AnAction implements DumbAwar
 
   @Nullable
   private static OccurenceNavigator findNavigator(JComponent parent) {
-    LinkedList<JComponent> queue = new LinkedList<JComponent>();
+    LinkedList<JComponent> queue = new LinkedList<>();
     queue.addLast(parent);
     while (!queue.isEmpty()) {
       JComponent component = queue.removeFirst();
@@ -146,7 +150,7 @@ abstract class OccurenceNavigatorActionBase extends AnAction implements DumbAwar
       }
     }
 
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Project project = dataContext.getData(Project.KEY);
     if (project == null) {
       return null;
     }
@@ -159,5 +163,4 @@ abstract class OccurenceNavigatorActionBase extends AnAction implements DumbAwar
     }
     return (Component)findNavigator(mgr.getToolWindow(id).getComponent());
   }
-
 }

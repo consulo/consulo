@@ -5,26 +5,25 @@ import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
 import consulo.content.scope.PackageSet;
 import consulo.ide.impl.idea.ide.util.scopeChooser.EditScopesDialog;
-import consulo.language.editor.packageDependency.DependencyValidationManager;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.codeStyle.CodeStyleScheme;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.fileSet.FileSetDescriptor;
 import consulo.language.codeStyle.fileSet.NamedScopeDescriptor;
 import consulo.language.codeStyle.ui.setting.CodeStyleSchemesModel;
+import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.language.editor.scope.NamedScopeManager;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.AnActionButton;
-import consulo.ui.ex.awt.AnActionButtonRunnable;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.ToolbarDecorator;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -37,28 +36,12 @@ public class ExcludedFilesList extends JBList<FileSetDescriptor> {
 
   public ExcludedFilesList() {
     super();
-    myFileListDecorator = ToolbarDecorator.createDecorator(this).setAddAction(new AnActionButtonRunnable() {
-      @Override
-      public void run(AnActionButton button) {
-        addDescriptor();
-      }
-    }).setRemoveAction(new AnActionButtonRunnable() {
-      @Override
-      public void run(AnActionButton button) {
-        removeDescriptor();
-      }
-    }).setEditAction(new AnActionButtonRunnable() {
-      @Override
-      public void run(AnActionButton button) {
-        editDescriptor();
-      }
-    }).disableUpDownActions();
-    addListSelectionListener(new ListSelectionListener() {
-      @Override
-      public void valueChanged(ListSelectionEvent e) {
-        onSelectionChange();
-      }
-    });
+    myFileListDecorator = ToolbarDecorator.createDecorator(this)
+      .setAddAction(button -> addDescriptor())
+      .setRemoveAction(button -> removeDescriptor())
+      .setEditAction(button -> editDescriptor()).disableUpDownActions();
+
+    addListSelectionListener(e -> onSelectionChange());
   }
 
   public void initModel() {
@@ -100,6 +83,7 @@ public class ExcludedFilesList extends JBList<FileSetDescriptor> {
     return myFileListDecorator;
   }
 
+  @RequiredUIAccess
   private void addDescriptor() {
     assert mySchemesModel != null;
     List<NamedScope> availableScopes = getAvailableScopes();
@@ -131,7 +115,7 @@ public class ExcludedFilesList extends JBList<FileSetDescriptor> {
 
   private List<NamedScope> getAvailableScopes() {
     Set<String> usedNames = getUsedScopeNames();
-    List<NamedScope> namedScopes = ContainerUtil.newArrayList();
+    List<NamedScope> namedScopes = new ArrayList<>();
     for (NamedScopesHolder holder : getScopeHolders()) {
       for (NamedScope scope : holder.getEditableScopes()) {
         if (!usedNames.contains(scope.getName())) {
@@ -143,7 +127,7 @@ public class ExcludedFilesList extends JBList<FileSetDescriptor> {
   }
 
   private Set<String> getUsedScopeNames() {
-    Set<String> usedScopeNames = ContainerUtil.newHashSet();
+    Set<String> usedScopeNames = new HashSet<>();
     for (int i = 0; i < myModel.size(); i++) {
       FileSetDescriptor descriptor = myModel.get(i);
       if (descriptor instanceof NamedScopeDescriptor) {
@@ -164,8 +148,8 @@ public class ExcludedFilesList extends JBList<FileSetDescriptor> {
   private void editDescriptor() {
     int i = getSelectedIndex();
     FileSetDescriptor selectedDescriptor = i >= 0 ? myModel.get(i) : null;
-    if (selectedDescriptor instanceof NamedScopeDescriptor) {
-      ensureScopeExists((NamedScopeDescriptor)selectedDescriptor);
+    if (selectedDescriptor instanceof NamedScopeDescriptor namedScopeDescriptor) {
+      ensureScopeExists(namedScopeDescriptor);
       editScope(selectedDescriptor.getName());
     }
     else {
@@ -240,7 +224,7 @@ public class ExcludedFilesList extends JBList<FileSetDescriptor> {
   }
 
   private List<NamedScopesHolder> getScopeHolders() {
-    List<NamedScopesHolder> holders = ContainerUtil.newArrayList();
+    List<NamedScopesHolder> holders = new ArrayList<>();
     Project project = getScopeHolderProject();
     holders.add(DependencyValidationManager.getInstance(project));
     holders.add(NamedScopeManager.getInstance(project));

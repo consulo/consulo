@@ -16,8 +16,8 @@
 
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.container.boot.ContainerPathManager;
+import consulo.util.io.FileUtil;
 import org.jetbrains.annotations.NonNls;
 
 import java.io.File;

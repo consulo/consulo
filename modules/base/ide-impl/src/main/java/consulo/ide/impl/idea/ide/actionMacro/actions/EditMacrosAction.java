@@ -15,13 +15,14 @@
  */
 package consulo.ide.impl.idea.ide.actionMacro.actions;
 
+import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.ide.actionMacro.ActionMacro;
 import consulo.ide.impl.idea.ide.actionMacro.ActionMacroManager;
 import consulo.ide.impl.idea.ide.actionMacro.EditMacrosDialog;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.application.dumb.DumbAware;
 
 /**
  * User: max
@@ -30,11 +31,14 @@ import consulo.application.dumb.DumbAware;
  */
 public class EditMacrosAction extends AnAction implements DumbAware {
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    EditMacrosDialog dialog = new EditMacrosDialog(e.getData(CommonDataKeys.PROJECT));
+    EditMacrosDialog dialog = new EditMacrosDialog(e.getData(Project.KEY));
     dialog.show();
   }
 
+  @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
     final ActionMacroManager manager = ActionMacroManager.getInstance();
     ActionMacro[] macros = manager.getAllMacros();

@@ -15,12 +15,12 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.internal.ToolWindowLayout;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
@@ -29,8 +29,10 @@ import consulo.ui.ex.action.Presentation;
  * @author Vladimir Kondratyev
  */
 public class StoreDefaultLayoutAction extends AnAction implements DumbAware {
+  @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e){
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if(project==null){
       return;
     }
@@ -38,8 +40,10 @@ public class StoreDefaultLayoutAction extends AnAction implements DumbAware {
     WindowManagerEx.getInstanceEx().setLayout(layout);
   }
 
+  @Override
+  @RequiredUIAccess
   public void update(AnActionEvent event){
     Presentation presentation = event.getPresentation();
-    presentation.setEnabled(event.getData(CommonDataKeys.PROJECT) != null);
+    presentation.setEnabled(event.getData(Project.KEY) != null);
   }
 }

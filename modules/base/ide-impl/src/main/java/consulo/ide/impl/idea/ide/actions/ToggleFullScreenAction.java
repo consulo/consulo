@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ui.ex.action.ActionsBundle;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
@@ -36,8 +36,6 @@ import java.awt.*;
  * @author pegov
  */
 public class ToggleFullScreenAction extends AnAction implements DumbAware {
-  private static final String TEXT_ENTER_FULL_SCREEN = ActionsBundle.message("action.ToggleFullScreen.text.enter");
-  private static final String TEXT_EXIT_FULL_SCREEN = ActionsBundle.message("action.ToggleFullScreen.text.exit");
 
   @RequiredUIAccess
   @Override
@@ -59,7 +57,9 @@ public class ToggleFullScreenAction extends AnAction implements DumbAware {
     p.setEnabledAndVisible(isApplicable);
 
     if (isApplicable) {
-      p.setText(frame.isInFullScreen() ? TEXT_EXIT_FULL_SCREEN : TEXT_ENTER_FULL_SCREEN);
+      p.setTextValue(
+        frame.isInFullScreen() ? ActionLocalize.actionTogglefullscreenTextExit() : ActionLocalize.actionTogglefullscreenTextEnter()
+      );
     }
   }
 

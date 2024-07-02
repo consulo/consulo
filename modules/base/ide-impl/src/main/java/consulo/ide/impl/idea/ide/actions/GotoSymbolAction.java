@@ -9,7 +9,6 @@ import consulo.ide.impl.idea.ide.actions.searcheverywhere.SymbolSearchEverywhere
 import consulo.ide.impl.idea.ide.util.gotoByName.*;
 import consulo.ide.navigation.GotoSymbolContributor;
 import consulo.language.Language;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -20,7 +19,7 @@ public class GotoSymbolAction extends GotoActionBase implements DumbAware {
 
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) return;
 
     boolean dumb = DumbService.isDumb(project);
@@ -36,7 +35,7 @@ public class GotoSymbolAction extends GotoActionBase implements DumbAware {
   public void gotoActionPerformed(@Nonnull AnActionEvent e) {
     FeatureUsageTracker.getInstance().triggerFeatureUsed("navigation.popup.symbol");
 
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) return;
 
     GotoSymbolModel2 model = new GotoSymbolModel2(project);

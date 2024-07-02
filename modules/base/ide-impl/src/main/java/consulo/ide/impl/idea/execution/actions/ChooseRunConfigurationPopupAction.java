@@ -19,23 +19,21 @@ package consulo.ide.impl.idea.execution.actions;
 import consulo.execution.executor.Executor;
 import consulo.execution.executor.ExecutorRegistry;
 import consulo.execution.executor.DefaultRunExecutor;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.Presentation;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
 
 public class ChooseRunConfigurationPopupAction extends AnAction {
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     assert project != null;
 
-    new ChooseRunConfigurationPopup(project,
-                                    getAdKey(),
-                                    getDefaultExecutor(),
-                                    getAlternativeExecutor()).show();
+    new ChooseRunConfigurationPopup(project, getAdKey(), getDefaultExecutor(), getAlternativeExecutor()).show();
   }
 
   protected Executor getDefaultExecutor() {
@@ -51,9 +49,10 @@ public class ChooseRunConfigurationPopupAction extends AnAction {
   }
 
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
     final Presentation presentation = e.getPresentation();
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
 
     presentation.setEnabled(true);
     if (project == null || project.isDisposed()) {

@@ -30,6 +30,7 @@ import consulo.document.Document;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.TextEditor;
 import consulo.find.*;
+import consulo.find.localize.FindLocalize;
 import consulo.ide.impl.idea.codeInsight.highlighting.HighlightManagerImpl;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.find.EditorSearchSession;
@@ -40,7 +41,6 @@ import consulo.ide.impl.idea.openapi.fileTypes.impl.AbstractFileType;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.ui.LightweightHint;
 import consulo.ide.impl.idea.ui.ReplacePromptDialog;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.Language;
 import consulo.language.ast.IElementType;
@@ -62,9 +62,11 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.version.LanguageVersion;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.navigation.NavigationItem;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.IdeActions;
@@ -142,11 +144,13 @@ public class FindManagerImpl extends FindManager {
   }
 
   @Override
+  @RequiredUIAccess
   public int showPromptDialog(@Nonnull final FindModel model, String title) {
     return showPromptDialogImpl(model, title, null);
   }
 
   @PromptResultValue
+  @RequiredUIAccess
   public int showPromptDialogImpl(@Nonnull final FindModel model, String title, @Nullable final MalformedReplacementStringException exception) {
     ReplacePromptDialog replacePromptDialog = new ReplacePromptDialog(model.isMultipleFiles(), title, myProject, exception) {
       @Override
@@ -387,6 +391,7 @@ public class FindManagerImpl extends FindManager {
   }
 
   @Override
+  @RequiredUIAccess
   public int showMalformedReplacementPrompt(@Nonnull FindModel model, String title, MalformedReplacementStringException exception) {
     return showPromptDialogImpl(model, title, exception);
   }
@@ -597,14 +602,16 @@ public class FindManagerImpl extends FindManager {
           }
         }
         else {
-          relevantLanguages = ContainerUtil.newHashSet();
+          relevantLanguages = new HashSet<>();
           if (ftype instanceof AbstractFileType) {
             if (model.isInCommentsOnly()) {
               tokensOfInterest = TokenSet.create(CustomHighlighterTokenType.LINE_COMMENT, CustomHighlighterTokenType.MULTI_LINE_COMMENT);
             }
             if (model.isInStringLiteralsOnly()) {
-              tokensOfInterest =
-                      TokenSet.orSet(tokensOfInterest, TokenSet.create(CustomHighlighterTokenType.STRING, CustomHighlighterTokenType.SINGLE_QUOTED_STRING));
+              tokensOfInterest = TokenSet.orSet(
+                tokensOfInterest,
+                TokenSet.create(CustomHighlighterTokenType.STRING, CustomHighlighterTokenType.SINGLE_QUOTED_STRING)
+              );
             }
           }
         }
@@ -831,7 +838,7 @@ public class FindManagerImpl extends FindManager {
   }
 
   private static MalformedReplacementStringException createMalformedReplacementException(FindModel model, Exception e) {
-    return new MalformedReplacementStringException(FindBundle.message("find.replace.invalid.replacement.string", model.getStringToReplace()), e);
+    return new MalformedReplacementStringException(FindLocalize.findReplaceInvalidReplacementString(model.getStringToReplace()).get(), e);
   }
 
   private static String replaceWithCaseRespect(String toReplace, String foundString) {
@@ -978,6 +985,7 @@ public class FindManagerImpl extends FindManager {
     return findUsagesManager.getFindUsagesHandler(element, forHighlightUsages);
   }
 
+  @RequiredUIAccess
   private static boolean highlightNextHighlighter(RangeHighlighter[] highlighters, Editor editor, int offset, boolean isForward, boolean secondPass) {
     RangeHighlighter highlighterToSelect = null;
     Object wasNotFound = editor.getUserData(HIGHLIGHTER_WAS_NOT_FOUND_KEY);
@@ -1011,28 +1019,22 @@ public class FindManagerImpl extends FindManager {
 
     if (wasNotFound == null) {
       editor.putUserData(HIGHLIGHTER_WAS_NOT_FOUND_KEY, Boolean.TRUE);
-      String message = FindBundle.message("find.highlight.no.more.highlights.found");
+      LocalizeValue message = FindLocalize.findHighlightNoMoreHighlightsFound();
       if (isForward) {
         AnAction action = ActionManager.getInstance().getAction(IdeActions.ACTION_FIND_NEXT);
         String shortcutsText = KeymapUtil.getFirstKeyboardShortcutText(action);
-        if (shortcutsText.isEmpty()) {
-          message = FindBundle.message("find.search.again.from.top.action.message", message);
-        }
-        else {
-          message = FindBundle.message("find.search.again.from.top.hotkey.message", message, shortcutsText);
-        }
+        message = shortcutsText.isEmpty()
+          ? FindLocalize.findSearchAgainFromTopActionMessage(message)
+          : FindLocalize.findSearchAgainFromTopHotkeyMessage(message, shortcutsText);
       }
       else {
         AnAction action = ActionManager.getInstance().getAction(IdeActions.ACTION_FIND_PREVIOUS);
         String shortcutsText = KeymapUtil.getFirstKeyboardShortcutText(action);
-        if (shortcutsText.isEmpty()) {
-          message = FindBundle.message("find.search.again.from.bottom.action.message", message);
-        }
-        else {
-          message = FindBundle.message("find.search.again.from.bottom.hotkey.message", message, shortcutsText);
-        }
+        message = shortcutsText.isEmpty()
+          ? FindLocalize.findSearchAgainFromBottomActionMessage(message)
+          : FindLocalize.findSearchAgainFromBottomHotkeyMessage(message, shortcutsText);
       }
-      JComponent component = HintUtil.createInformationLabel(message);
+      JComponent component = HintUtil.createInformationLabel(message.get());
       final LightweightHint hint = new LightweightHint(component);
       HintManagerImpl.getInstanceImpl().showEditorHint(
         hint,

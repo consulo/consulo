@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.history.integration.ui.views;
 
 import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.HelpManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
@@ -38,12 +38,13 @@ import consulo.ide.impl.idea.history.integration.ui.models.RevisionProcessingPro
 import consulo.ide.impl.idea.history.utils.LocalHistoryLog;
 import consulo.ide.impl.idea.ide.actions.ShowFilePathAction;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.CreatePatchConfigurationPanel;
 import consulo.ide.impl.idea.ui.ExcludingTraversalPolicy;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
@@ -54,6 +55,7 @@ import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.image.Image;
 import consulo.util.lang.Couple;
+import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.ChangesUtil;
@@ -115,6 +117,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
     myUpdateQueue.setRestartTimerOnAdd(true);
 
     facade.addListener(new LocalHistoryFacade.Listener() {
+      @Override
       public void changeSetFinished() {
         scheduleRevisionsUpdate(null);
       }
@@ -143,7 +146,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
     root.setFocusTraversalPolicy(traversalPolicy);
     root.setFocusTraversalPolicyProvider(true);
 
-    consulo.util.lang.Pair<JComponent, Dimension> diffAndToolbarSize = createDiffPanel(root, traversalPolicy);
+    Pair<JComponent, Dimension> diffAndToolbarSize = createDiffPanel(root, traversalPolicy);
     myDiffView = new MyDiffContainer(diffAndToolbarSize.first);
     Disposer.register(this, myDiffView);
 
@@ -180,7 +183,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
     super.dispose();
   }
 
-  protected abstract consulo.util.lang.Pair<JComponent, Dimension> createDiffPanel(JPanel root, ExcludingTraversalPolicy traversalPolicy);
+  protected abstract Pair<JComponent, Dimension> createDiffPanel(JPanel root, ExcludingTraversalPolicy traversalPolicy);
 
   private JComponent createRevisionsSide(Dimension prefToolBarSize) {
     ActionGroup actions = createRevisionsActions();
@@ -220,6 +223,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
 
   private void addPopupMenuToComponent(JComponent comp, final ActionGroup ag) {
     comp.addMouseListener(new PopupHandler() {
+      @Override
       public void invokePopup(Component c, int x, int y) {
         ActionPopupMenu m = createPopupMenu(ag);
         m.getComponent().show(c, x, y);
@@ -253,6 +257,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
         return getPriority() >= update1.getPriority();
       }
 
+      @Override
       public void run() {
         if (isDisposed() || myProject.isDisposed()) return;
 
@@ -301,14 +306,12 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
         SwingUtilities.invokeAndWait(runnable);
       }
     }
-    catch (InterruptedException e) {
-      throw new RuntimeException(e);
-    }
-    catch (InvocationTargetException e) {
+    catch (InterruptedException | InvocationTargetException e) {
       throw new RuntimeException(e);
     }
   }
 
+  @RequiredUIAccess
   protected void updateActions() {
     if (showRevisionsList()) {
       myToolBar.updateActionsImmediately();
@@ -321,8 +324,9 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
     final Ref<ContentDiffRequest> requestRef = new Ref<>();
 
     new Task.Modal(myProject, LocalHistoryBundle.message("message.processing.revisions"), false) {
+      @Override
       public void run(@Nonnull final ProgressIndicator i) {
-        ApplicationManager.getApplication().runReadAction(() -> {
+        Application.get().runReadAction(() -> {
           RevisionProcessingProgressAdapter p = new RevisionProcessingProgressAdapter(i);
           p.processingLeftRevision();
           DiffContent left = m.getLeftDiffContent(p);
@@ -369,6 +373,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
     return myModel.isRevertEnabled();
   }
 
+  @RequiredUIAccess
   protected void revert(Reverter r) {
     try {
       if (!askForProceeding(r)) return;
@@ -387,6 +392,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
     }
   }
 
+  @RequiredUIAccess
   private boolean askForProceeding(Reverter r) throws IOException {
     List<String> questions = r.askUserForProceeding();
     if (questions.isEmpty()) return true;
@@ -395,7 +401,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
       myProject,
       LocalHistoryBundle.message("message.do.you.want.to.proceed", formatQuestions(questions)),
       CommonLocalize.titleWarning().get(),
-      Messages.getWarningIcon()
+      UIUtil.getWarningIcon()
     ) == Messages.YES;
   }
 
@@ -444,6 +450,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
     return myModel.isCreatePatchEnabled();
   }
 
+  @RequiredUIAccess
   private void createPatch() {
     try {
       if (!myModel.canPerformCreatePatch()) {
@@ -460,10 +467,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
       showNotification(LocalHistoryBundle.message("message.patch.created"));
       ShowFilePathAction.openFile(new File(p.getFileName()));
     }
-    catch (VcsException e) {
-      showError(LocalHistoryBundle.message("message.error.during.create.patch", e));
-    }
-    catch (IOException e) {
+    catch (VcsException | IOException e) {
       showError(LocalHistoryBundle.message("message.error.during.create.patch", e));
     }
   }
@@ -472,6 +476,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
     return FileUtil.findSequentNonexistentFile(new File(myProject.getBasePath()), "local_history", "patch");
   }
 
+  @RequiredUIAccess
   private boolean showAsDialog(CreatePatchConfigurationPanel p) {
     final DialogWrapper dialogWrapper = new MyDialogWrapper(myProject, p);
     dialogWrapper.setTitle(LocalHistoryBundle.message("create.patch.dialog.title"));
@@ -481,6 +486,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
   }
 
 
+  @RequiredUIAccess
   public void showError(String s) {
     Messages.showErrorDialog(myProject, s, CommonLocalize.titleError().get());
   }
@@ -495,13 +501,15 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
     }
 
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       doPerform(myModel);
     }
 
     protected abstract void doPerform(T model);
 
     @Override
+    @RequiredUIAccess
     public void update(AnActionEvent e) {
       Presentation p = e.getPresentation();
       p.setEnabled(isEnabled());
@@ -557,14 +565,17 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
       myIndicator = i;
     }
 
+    @Override
     public void processingLeftRevision() {
       myIndicator.setText(LocalHistoryBundle.message("message.processing.left.revision"));
     }
 
+    @Override
     public void processingRightRevision() {
       myIndicator.setText(LocalHistoryBundle.message("message.processing.right.revision"));
     }
 
+    @Override
     public void processed(int percentage) {
       myIndicator.setFraction(percentage / 100.0);
     }
@@ -589,6 +600,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
       finishUpdating();
     }
 
+    @Override
     public void dispose() {
       myIcon.dispose();
     }
@@ -604,22 +616,26 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
     }
 
     private class MyOverlayLayout extends AbstractLayoutManager {
+      @Override
       public void layoutContainer(Container parent) {
         myContent.setBounds(0, 0, getWidth(), getHeight());
         myLoadingPanel.setBounds(0, 0, getWidth(), getHeight());
       }
 
+      @Override
       public Dimension preferredLayoutSize(Container parent) {
         return myContent.getPreferredSize();
       }
     }
 
     private class MyPanelLayout extends AbstractLayoutManager {
+      @Override
       public void layoutContainer(Container parent) {
         Dimension size = myIcon.getPreferredSize();
         myIcon.setBounds((getWidth() - size.width) / 2, (getHeight() - size.height) / 2, size.width, size.height);
       }
 
+      @Override
       public Dimension preferredLayoutSize(Container parent) {
         return myContent.getPreferredSize();
       }
@@ -645,12 +661,14 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
 
     @Nullable
     @Override
+    @RequiredUIAccess
     public JComponent getPreferredFocusedComponent() {
       return IdeFocusTraversalPolicy.getPreferredFocusedComponent(myPanel.getPanel());
     }
 
     @Nullable
     @Override
+    @RequiredUIAccess
     protected ValidationInfo doValidate() {
       return myPanel.validateFields();
     }

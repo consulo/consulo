@@ -15,33 +15,34 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.action.Presentation;
-import consulo.ui.ex.action.ToggleAction;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.ToggleAction;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowType;
+import jakarta.annotation.Nonnull;
 
 public class ToggleDockModeAction extends ToggleAction implements DumbAware {
-
+  @Override
+  @RequiredUIAccess
   public boolean isSelected(AnActionEvent event) {
-    Project project = event.getData(CommonDataKeys.PROJECT);
+    Project project = event.getData(Project.KEY);
     if (project == null) {
       return false;
     }
     ToolWindowManager windowManager = ToolWindowManager.getInstance(project);
     String id = windowManager.getActiveToolWindowId();
-    if (id == null) {
-      return false;
-    }
-    return ToolWindowType.DOCKED == windowManager.getToolWindow(id).getType();
+    return id != null && ToolWindowType.DOCKED == windowManager.getToolWindow(id).getType();
   }
 
+  @Override
+  @RequiredUIAccess
   public void setSelected(AnActionEvent event, boolean flag) {
-    Project project = event.getData(CommonDataKeys.PROJECT);
+    Project project = event.getData(Project.KEY);
     if (project == null) {
       return;
     }
@@ -60,10 +61,12 @@ public class ToggleDockModeAction extends ToggleAction implements DumbAware {
     }
   }
 
-  public void update(AnActionEvent event) {
+  @Override
+  @RequiredUIAccess
+  public void update(@Nonnull AnActionEvent event) {
     super.update(event);
     Presentation presentation = event.getPresentation();
-    Project project = event.getData(CommonDataKeys.PROJECT);
+    Project project = event.getData(Project.KEY);
     if (project == null) {
       presentation.setEnabled(false);
       return;
