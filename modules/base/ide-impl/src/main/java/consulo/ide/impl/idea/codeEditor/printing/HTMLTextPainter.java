@@ -27,7 +27,6 @@ import consulo.colorScheme.TextAttributes;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.util.lang.Comparing;
-import consulo.util.io.CharsetToolkit;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -43,6 +42,7 @@ import org.jetbrains.annotations.NonNls;
 
 import java.awt.*;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.*;
 
@@ -63,7 +63,7 @@ class HTMLTextPainter {
   private final LineMarkerInfo[] myMethodSeparators;
   private int myCurrentMethodSeparator;
   private final Project myProject;
-  private final Map<TextAttributes, String> myStyleMap = new HashMap<TextAttributes, String>();
+  private final Map<TextAttributes, String> myStyleMap = new HashMap<>();
 
   @RequiredReadAction
   public HTMLTextPainter(PsiFile psiFile, Project project, String dirName, boolean printLineNumbers) {
@@ -87,7 +87,7 @@ class HTMLTextPainter {
     PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(project);
     Document document = psiDocumentManager.getDocument(psiFile);
 
-    List<LineMarkerInfo> methodSeparators = new ArrayList<LineMarkerInfo>();
+    List<LineMarkerInfo> methodSeparators = new ArrayList<>();
     if (document != null) {
       final List<LineMarkerInfo> separators = FileSeparatorUtil.getFileSeparators(psiFile, document);
       methodSeparators.addAll(separators);
@@ -103,23 +103,24 @@ class HTMLTextPainter {
     myFirstLineNumber = firstLineNumber;
   }
 
+  @RequiredReadAction
   @SuppressWarnings({"HardCodedStringLiteral"})
   public void paint(TreeMap refMap, FileType fileType) throws FileNotFoundException {
     HighlighterIterator hIterator = myHighlighter.createIterator(myOffset);
-    if(hIterator.atEnd()) return;
-    OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(myHTMLFileName), CharsetToolkit.UTF8_CHARSET);
+    if (hIterator.atEnd()) return;
+    OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(myHTMLFileName), StandardCharsets.UTF_8);
     lineCount = myFirstLineNumber;
     TextAttributes prevAttributes = null;
     Iterator refKeys = null;
 
     int refOffset = -1;
     PsiReference ref = null;
-    if(refMap != null) {
+    if (refMap != null) {
       refKeys = refMap.keySet().iterator();
-      if(refKeys.hasNext()) {
+      if (refKeys.hasNext()) {
         Integer key = (Integer)refKeys.next();
         ref = (PsiReference)refMap.get(key);
-        refOffset = key.intValue();
+        refOffset = key;
       }
     }
 
@@ -137,14 +138,14 @@ class HTMLTextPainter {
         myCurrentMethodSeparator++;
       }
 
-      while(!hIterator.atEnd()) {
+      while (!hIterator.atEnd()) {
         TextAttributes textAttributes = hIterator.getTextAttributes();
         int hStart = hIterator.getStart();
         int hEnd = hIterator.getEnd();
         if (hEnd > mySegmentEnd) break;
 
         boolean haveNonWhiteSpace = false;
-        for(int offset = hStart; offset < hEnd; offset++) {
+        for (int offset = hStart; offset < hEnd; offset++) {
           char c = myText.charAt(offset);
           if (c != ' ' && c != '\t') {
             haveNonWhiteSpace = true;
@@ -158,12 +159,12 @@ class HTMLTextPainter {
           continue;
         }
 
-        if(refOffset > 0 && hStart <= refOffset && hEnd > refOffset) {
+        if (refOffset > 0 && hStart <= refOffset && hEnd > refOffset) {
           referenceEnd = writeReferenceTag(writer, ref);
         }
-//        if(myForceFonts || !equals(prevAttributes, textAttributes)) {
-        if(!equals(prevAttributes, textAttributes) && referenceEnd < 0 ) {
-          if(closeTag != null) {
+//        if (myForceFonts || !equals(prevAttributes, textAttributes)) {
+        if (!equals(prevAttributes, textAttributes) && referenceEnd < 0 ) {
+          if (closeTag != null) {
             writer.write(closeTag);
           }
           closeTag = writeFontTag(writer, textAttributes);
@@ -179,38 +180,39 @@ class HTMLTextPainter {
         }
 
         writeString(writer, myText, hStart, hEnd - hStart, fileType);
-//        if(closeTag != null) {
+//        if (closeTag != null) {
 //          writer.write(closeTag);
 //        }
-        if(referenceEnd > 0 && hEnd >= referenceEnd) {
+        if (referenceEnd > 0 && hEnd >= referenceEnd) {
           writer.write("</a>");
           referenceEnd = -1;
-          if(refKeys.hasNext()) {
+          if (refKeys.hasNext()) {
             Integer key = (Integer)refKeys.next();
             ref = (PsiReference)refMap.get(key);
-            refOffset = key.intValue();
+            refOffset = key;
           }
         }
         hIterator.advance();
       }
-      if(closeTag != null) {
+      if (closeTag != null) {
         writer.write(closeTag);
       }
       writeFooter(writer);
     }
-    catch(IOException e) {
+    catch (IOException e) {
       LOG.error(e);
     }
     finally {
       try {
         writer.close();
       }
-      catch(IOException e) {
+      catch (IOException e) {
         LOG.error(e);
       }
     }
   }
 
+  @RequiredReadAction
   private int writeReferenceTag(Writer writer, PsiReference ref) throws IOException {
     PsiElement refClass = ref.resolve();
 
@@ -218,16 +220,16 @@ class HTMLTextPainter {
     String refPackageName = PsiPackageHelper.getInstance(myProject).getQualifiedName(refFile.getContainingDirectory(), false);
     String psiPackageName = PsiPackageHelper.getInstance(myProject).getQualifiedName(myPsiFile.getContainingDirectory(), false);
 
-    StringBuffer fileName = new StringBuffer();
+    StringBuilder fileName = new StringBuilder();
     if (!psiPackageName.equals(refPackageName)) {
       StringTokenizer tokens = new StringTokenizer(psiPackageName, ".");
-      while(tokens.hasMoreTokens()) {
+      while (tokens.hasMoreTokens()) {
         tokens.nextToken();
         fileName.append("../");
       }
 
       StringTokenizer refTokens = new StringTokenizer(refPackageName, ".");
-      while(refTokens.hasMoreTokens()) {
+      while (refTokens.hasMoreTokens()) {
         String token = refTokens.nextToken();
         fileName.append(token);
         fileName.append('/');
@@ -241,19 +243,18 @@ class HTMLTextPainter {
 
   @SuppressWarnings({"HardCodedStringLiteral"})
   private String writeFontTag(Writer writer, TextAttributes textAttributes) throws IOException {
-//    "<FONT COLOR=\"#000000\">"
     writer.write("<span class=\"" + myStyleMap.get(textAttributes) + "\">");
     return "</span>";
   }
 
   @SuppressWarnings({"HardCodedStringLiteral"})
   private void writeString(Writer writer, CharSequence charArray, int start, int length, FileType fileType) throws IOException {
-    for(int i=start; i<start+length; i++) {
+    for (int i=start; i<start+length; i++) {
       char c = charArray.charAt(i);
-      if(c=='<') {
+      if (c=='<') {
         writeChar(writer, "&lt;");
       }
-      else if(c=='>') {
+      else if (c=='>') {
         writeChar(writer, "&gt;");
       }
       else if (c=='&') {
@@ -324,7 +325,7 @@ class HTMLTextPainter {
     writeStyles(writer);
     writer.write("</head>\r\n");
     ColorValue color = scheme.getDefaultBackground();
-    if (color==null) color = StandardColors.GRAY;
+    if (color == null) color = StandardColors.GRAY;
     writer.write("<BODY BGCOLOR=\"#" + Integer.toString(RGBColor.toRGBValue(color.toRGB()) & 0xFFFFFF, 16) + "\">\r\n");
     writer.write("<TABLE CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH=\"100%\" BGCOLOR=\"#C0C0C0\" >\r\n");
     writer.write("<TR><TD><CENTER>\r\n");
@@ -338,7 +339,7 @@ class HTMLTextPainter {
     writer.write("<style type=\"text/css\">\n");
     writer.write(".ln { color: rgb(0,0,0); font-weight: normal; font-style: normal; }\n");
     HighlighterIterator hIterator = myHighlighter.createIterator(myOffset);
-    while(!hIterator.atEnd()) {
+    while (!hIterator.atEnd()) {
       TextAttributes textAttributes = hIterator.getTextAttributes();
       if (!myStyleMap.containsKey(textAttributes)) {
         String styleName = "s" + myStyleMap.size();
@@ -372,22 +373,11 @@ class HTMLTextPainter {
     if (attributes2 == null) {
       return attributes1 == null;
     }
-    if(attributes1 == null) {
-      return false;
-    }
-    if(!Comparing.equal(attributes1.getForegroundColor(), attributes2.getForegroundColor())) {
-      return false;
-    }
-    if(attributes1.getFontType() != attributes2.getFontType()) {
-      return false;
-    }
-    if(!Comparing.equal(attributes1.getBackgroundColor(), attributes2.getBackgroundColor())) {
-      return false;
-    }
-    if(!Comparing.equal(attributes1.getEffectColor(), attributes2.getEffectColor())) {
-      return false;
-    }
-    return true;
+    return attributes1 != null
+      && Comparing.equal(attributes1.getForegroundColor(), attributes2.getForegroundColor())
+      && attributes1.getFontType() == attributes2.getFontType()
+      && Comparing.equal(attributes1.getBackgroundColor(), attributes2.getBackgroundColor())
+      && Comparing.equal(attributes1.getEffectColor(), attributes2.getEffectColor());
   }
 
   public String getHTMLFileName() {

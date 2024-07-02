@@ -17,9 +17,10 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.ide.impl.idea.ide.fileTemplates.ui.ConfigureTemplatesDialog;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 
 public class EditFileTemplatesAction extends AnAction{
   public EditFileTemplatesAction(String text) {
@@ -27,8 +28,9 @@ public class EditFileTemplatesAction extends AnAction{
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e){
-    ConfigureTemplatesDialog dialog = new ConfigureTemplatesDialog(e.getDataContext().getData(CommonDataKeys.PROJECT));
+    ConfigureTemplatesDialog dialog = new ConfigureTemplatesDialog(e.getDataContext().getData(Project.KEY));
     dialog.show();
   }
 }

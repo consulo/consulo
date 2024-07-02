@@ -18,31 +18,36 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.application.dumb.DumbAware;
 import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.ide.IdeBundle;
-import consulo.language.editor.CommonDataKeys;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.undoRedo.CommandProcessor;
 
 public class PrevSplitAction extends AnAction implements DumbAware {
+  @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     final CommandProcessor commandProcessor = CommandProcessor.getInstance();
     commandProcessor.executeCommand(
-      project, new Runnable(){
-        public void run() {
-          final FileEditorManagerEx manager = FileEditorManagerEx.getInstanceEx(project);
-          manager.setCurrentWindow(manager.getPrevWindow(manager.getCurrentWindow()));
-        }
-      }, IdeBundle.message("command.go.to.prev.split"), null
+      project,
+      () -> {
+        final FileEditorManagerEx manager = FileEditorManagerEx.getInstanceEx(project);
+        manager.setCurrentWindow(manager.getPrevWindow(manager.getCurrentWindow()));
+      },
+      IdeLocalize.commandGoToPrevSplit().get(),
+      null
     );
   }
   
+  @Override
+  @RequiredUIAccess
   public void update(final AnActionEvent event){
-    final Project project = event.getData(CommonDataKeys.PROJECT);
+    final Project project = event.getData(Project.KEY);
     final Presentation presentation = event.getPresentation();
     if (project == null) {
       presentation.setEnabled(false);

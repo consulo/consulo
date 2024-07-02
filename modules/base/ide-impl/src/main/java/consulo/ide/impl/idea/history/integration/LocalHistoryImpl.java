@@ -16,34 +16,33 @@
 package consulo.ide.impl.idea.history.integration;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.history.core.*;
-import consulo.ide.impl.idea.history.integration.ui.models.DirectoryHistoryDialogModel;
-import consulo.ide.impl.idea.history.integration.ui.models.EntireFileHistoryDialogModel;
-import consulo.ide.impl.idea.history.integration.ui.models.HistoryDialogModel;
-import consulo.ide.impl.idea.history.utils.LocalHistoryLog;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.application.AccessRule;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.application.util.registry.Registry;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.history.core.*;
+import consulo.ide.impl.idea.history.integration.ui.models.DirectoryHistoryDialogModel;
+import consulo.ide.impl.idea.history.integration.ui.models.EntireFileHistoryDialogModel;
+import consulo.ide.impl.idea.history.integration.ui.models.HistoryDialogModel;
+import consulo.ide.impl.idea.history.utils.LocalHistoryLog;
 import consulo.localHistory.*;
 import consulo.project.Project;
 import consulo.undoRedo.CommandProcessor;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.ShutDownTracker;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.BulkFileListener;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -72,13 +71,13 @@ public class LocalHistoryImpl extends LocalHistory implements Disposable {
   public LocalHistoryImpl(@Nonnull Application application) {
     myBus = application.getMessageBus();
 
-    initComponent();
+    if (application.isUnitTestMode() || !application.isHeadlessEnvironment()) {
+      initComponent();
+    }
   }
 
   private void initComponent() {
-    if (!ApplicationManager.getApplication().isUnitTestMode() && ApplicationManager.getApplication().isHeadlessEnvironment()) return;
-
-    myShutdownTask = () -> doDispose();
+    myShutdownTask = this::doDispose;
     ShutDownTracker.getInstance().registerShutdownTask(myShutdownTask);
 
     initHistory();
@@ -139,6 +138,7 @@ public class LocalHistoryImpl extends LocalHistory implements Disposable {
     ShutDownTracker.getInstance().unregisterShutdownTask(myShutdownTask);
   }
 
+  @Override
   @TestOnly
   public void cleanupForNextTest() {
     doDispose();
@@ -210,7 +210,7 @@ public class LocalHistoryImpl extends LocalHistory implements Disposable {
     return isInitialized.get();
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   public LocalHistoryFacade getFacade() {
     return myVcs;
   }

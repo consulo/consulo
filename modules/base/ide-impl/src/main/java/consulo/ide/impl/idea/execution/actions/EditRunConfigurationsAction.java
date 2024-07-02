@@ -22,7 +22,6 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.ide.impl.execution.editor.RunConfigurationFileEditorEarlyAccessDescriptor;
 import consulo.ide.impl.execution.editor.RunConfigurationVirtualFile;
 import consulo.ide.impl.idea.execution.impl.EditConfigurationsDialog;
-import consulo.language.editor.CommonDataKeys;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
@@ -37,7 +36,7 @@ public class EditRunConfigurationsAction extends DumbAwareAction {
   @RequiredUIAccess
   @Override
   public void actionPerformed(final AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
 
     if (project == null) {
       //setup template project configurations

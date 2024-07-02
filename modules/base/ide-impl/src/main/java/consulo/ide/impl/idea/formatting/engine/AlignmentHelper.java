@@ -15,12 +15,12 @@
  */
 package consulo.ide.impl.idea.formatting.engine;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.ide.impl.idea.diagnostic.LogMessageEx;
 import consulo.ide.impl.idea.formatting.*;
 import consulo.language.ast.ASTNode;
 import consulo.language.Language;
 import consulo.document.Document;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.codeStyle.Alignment;
 import consulo.language.codeStyle.Block;
 import consulo.language.codeStyle.internal.AbstractBlockWrapper;
@@ -29,10 +29,7 @@ import consulo.language.codeStyle.internal.LeafBlockWrapper;
 import consulo.util.collection.MultiMap;
 import consulo.logging.Logger;
 
-import java.util.EnumMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class AlignmentHelper {
   private static final Logger LOG = Logger.getInstance(AlignmentHelper.class);
@@ -43,14 +40,14 @@ public class AlignmentHelper {
     ALIGNMENT_PROCESSORS.put(Alignment.Anchor.RIGHT, new RightEdgeAlignmentProcessor());
   }
 
-  private final Set<Alignment> myAlignmentsToSkip = ContainerUtil.newHashSet();
+  private final Set<Alignment> myAlignmentsToSkip = new HashSet<>();
   private final Document myDocument;
   private final BlockIndentOptions myBlockIndentOptions;
 
   private final AlignmentCyclesDetector myCyclesDetector;
 
-  private final Map<LeafBlockWrapper, Set<LeafBlockWrapper>> myBackwardShiftedAlignedBlocks = ContainerUtil.newHashMap();
-  private final Map<AbstractBlockWrapper, Set<AbstractBlockWrapper>> myAlignmentMappings = ContainerUtil.newHashMap();
+  private final Map<LeafBlockWrapper, Set<LeafBlockWrapper>> myBackwardShiftedAlignedBlocks = new HashMap<>();
+  private final Map<AbstractBlockWrapper, Set<AbstractBlockWrapper>> myAlignmentMappings = new HashMap<>();
 
   public AlignmentHelper(Document document, MultiMap<Alignment, Block> blocksToAlign, BlockIndentOptions options) {
     myDocument = document;
@@ -59,14 +56,18 @@ public class AlignmentHelper {
     myCyclesDetector = new AlignmentCyclesDetector(totalBlocks);
   }
 
+  @RequiredReadAction
   private static void reportAlignmentProcessingError(BlockAlignmentProcessor.Context context) {
     ASTNode node = context.targetBlock.getNode();
     Language language = node != null ? node.getPsi().getLanguage() : null;
-    LogMessageEx.error(LOG,
-                       (language != null ? language.getDisplayName() + ": " : "") +
-                       "Can't align block " + context.targetBlock, context.document.getText());
+    LogMessageEx.error(
+      LOG,
+      (language != null ? language.getDisplayName() + ": " : "") +
+        "Can't align block " + context.targetBlock, context.document.getText()
+    );
   }
 
+  @RequiredReadAction
   public LeafBlockWrapper applyAlignment(final AlignmentImpl alignment, final LeafBlockWrapper currentBlock) {
     BlockAlignmentProcessor alignmentProcessor = ALIGNMENT_PROCESSORS.get(alignment.getAnchor());
     if (alignmentProcessor == null) {
@@ -75,8 +76,13 @@ public class AlignmentHelper {
     }
 
     BlockAlignmentProcessor.Context context = new BlockAlignmentProcessor.Context(
-            myDocument, alignment, currentBlock, myAlignmentMappings, myBackwardShiftedAlignedBlocks,
-            myBlockIndentOptions.getIndentOptions(currentBlock));
+      myDocument,
+      alignment,
+      currentBlock,
+      myAlignmentMappings,
+      myBackwardShiftedAlignedBlocks,
+      myBlockIndentOptions.getIndentOptions(currentBlock)
+    );
     final LeafBlockWrapper offsetResponsibleBlock = alignment.getOffsetRespBlockBefore(currentBlock);
     myCyclesDetector.registerOffsetResponsibleBlock(offsetResponsibleBlock);
     BlockAlignmentProcessor.Result result = alignmentProcessor.applyAlignment(context);

@@ -16,9 +16,9 @@
 
 package consulo.ide.impl.idea.history.core;
 
-import consulo.application.util.SystemInfo;
-import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.platform.Platform;
+import consulo.util.lang.StringUtil;
 
 import java.util.Collections;
 
@@ -103,6 +103,6 @@ public class Paths {
   }
 
   public static void useSystemCaseSensitivity() {
-    myIsCaseSensitive = SystemInfo.isFileSystemCaseSensitive;
+    myIsCaseSensitive = Platform.current().fs().isCaseSensitive();
   }
 }

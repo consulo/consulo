@@ -22,11 +22,13 @@ import consulo.ide.impl.idea.history.integration.IdeaGateway;
 import consulo.ide.impl.idea.history.integration.ui.views.SelectionHistoryDialog;
 import consulo.ide.impl.idea.vcsUtil.VcsSelectionUtil;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.versionControlSystem.action.VcsContext;
 import consulo.versionControlSystem.history.VcsSelection;
 import consulo.versionControlSystem.impl.internal.action.VcsContextWrapper;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class ShowSelectionHistoryAction extends ShowHistoryAction {
@@ -41,12 +43,13 @@ public class ShowSelectionHistoryAction extends ShowHistoryAction {
   }
 
   @Override
-  protected String getText(AnActionEvent e) {
+  protected String getText(@Nonnull AnActionEvent e) {
     VcsSelection sel = getSelection(e);
     return sel == null ? super.getText(e) : sel.getActionName();
   }
 
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
     if (e.getData(Editor.KEY) == null) {
       e.getPresentation().setVisible(false);
@@ -57,7 +60,7 @@ public class ShowSelectionHistoryAction extends ShowHistoryAction {
   }
 
   @Override
-  protected boolean isEnabled(LocalHistoryFacade vcs, IdeaGateway gw, VirtualFile f, AnActionEvent e) {
+  protected boolean isEnabled(@Nonnull LocalHistoryFacade vcs, @Nonnull IdeaGateway gw, VirtualFile f, @Nonnull AnActionEvent e) {
     return super.isEnabled(vcs, gw, f, e) && !f.isDirectory() && getSelection(e) != null;
   }
 

@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.history.integration.ui.models;
 
+import consulo.application.util.function.Computable;
 import consulo.ide.impl.idea.history.core.LocalHistoryFacade;
 import consulo.ide.impl.idea.history.core.RevisionsCollector;
 import consulo.ide.impl.idea.history.core.revisions.Difference;
@@ -25,16 +26,14 @@ import consulo.ide.impl.idea.history.core.tree.RootEntry;
 import consulo.ide.impl.idea.history.integration.IdeaGateway;
 import consulo.ide.impl.idea.history.integration.patches.PatchCreator;
 import consulo.ide.impl.idea.history.integration.revertion.Reverter;
-import consulo.application.ApplicationManager;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.project.Project;
-import consulo.application.util.function.Computable;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.Change;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -84,16 +83,14 @@ public abstract class HistoryDialogModel {
   }
 
   protected Pair<Revision, List<RevisionItem>> calcRevisionsCache() {
-    return ApplicationManager.getApplication().runReadAction(new Computable<Pair<Revision, List<RevisionItem>>>() {
-      public Pair<Revision, List<RevisionItem>> compute() {
-        myGateway.registerUnsavedDocuments(myVcs);
-        String path = myFile.getPath();
-        RootEntry root = myGateway.createTransientRootEntry();
-        RevisionsCollector collector = new RevisionsCollector(myVcs, root, path, myProject.getLocationHash(), myFilter);
+    return myProject.getApplication().runReadAction((Computable<Pair<Revision,List<RevisionItem>>>)()-> {
+      myGateway.registerUnsavedDocuments(myVcs);
+      String path = myFile.getPath();
+      RootEntry root = myGateway.createTransientRootEntry();
+      RevisionsCollector collector = new RevisionsCollector(myVcs, root, path, myProject.getLocationHash(), myFilter);
 
-        List<Revision> all = collector.getResult();
-        return Pair.create(all.get(0), groupRevisions(all.subList(1, all.size())));
-      }
+      List<Revision> all = collector.getResult();
+      return Pair.create(all.get(0), groupRevisions(all.subList(1, all.size())));
     });
   }
 

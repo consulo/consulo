@@ -20,23 +20,22 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
 import consulo.application.impl.internal.store.IApplicationStore;
 import consulo.container.boot.ContainerPathManager;
-import consulo.ide.impl.idea.ide.startup.StartupActionScriptManager;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
-import consulo.ide.impl.idea.util.io.ZipUtil;
 import consulo.externalService.impl.internal.update.UpdateSettingsImpl;
-import consulo.localize.LocalizeValue;
+import consulo.ide.impl.idea.ide.startup.StartupActionScriptManager;
+import consulo.ide.impl.idea.util.io.ZipUtil;
 import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIExAWTDataKey;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.MultiMap;
+import consulo.util.io.FileUtil;
 import jakarta.annotation.Nonnull;
 
 import java.awt.*;
@@ -69,6 +68,7 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
     ).doWhenDone(this::doImport);
   }
 
+  @RequiredUIAccess
   private void doImport(String path) {
     final File saveFile = new File(path);
     try {
@@ -124,7 +124,7 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
       relativeNamesToExtract.add(ExportSettingsAction.INSTALLED_TXT);
 
       final File tempFile = new File(ContainerPathManager.get().getPluginTempPath() + "/" + saveFile.getName());
-      FileUtil.copy(saveFile, tempFile);
+      consulo.ide.impl.idea.openapi.util.io.FileUtil.copy(saveFile, tempFile);
       File outDir = new File(ContainerPathManager.get().getConfigPath());
       final ImportSettingsFilenameFilter filenameFilter = new ImportSettingsFilenameFilter(relativeNamesToExtract);
       StartupActionScriptManager.ActionCommand unzip = new StartupActionScriptManager.UnzipCommand(tempFile, outDir, filenameFilter);
@@ -136,17 +136,18 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
 
       UpdateSettingsImpl.getInstance().setLastTimeCheck(0);
 
-      LocalizeValue applicationName = Application.get().getName();
-      LocalizeValue message = ApplicationManager.getApplication().isRestartCapable()
+      Application application = Application.get();
+      LocalizeValue applicationName = application.getName();
+      LocalizeValue message = application.isRestartCapable()
         ? IdeLocalize.messageSettingsImportedSuccessfullyRestart(applicationName, applicationName)
         : IdeLocalize.messageSettingsImportedSuccessfully(applicationName, applicationName);
       final int ret = Messages.showOkCancelDialog(
         message.get(),
         IdeLocalize.titleRestartNeeded().get(),
-        Messages.getQuestionIcon()
+        UIUtil.getQuestionIcon()
       );
       if (ret == Messages.OK) {
-        ApplicationManager.getApplication().restart(true);
+        application.restart(true);
       }
     }
     catch (ZipException e1) {
@@ -181,9 +182,9 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
     List<ExportSettingsAction.ExportableItem> components = new ArrayList<>();
     for (ExportSettingsAction.ExportableItem component : registeredComponents) {
       for (File exportFile : component.getExportFiles()) {
-        String rPath = FileUtilRt.getRelativePath(configPath, exportFile);
+        String rPath = FileUtil.getRelativePath(configPath, exportFile);
         assert rPath != null;
-        String relativePath = FileUtilRt.toSystemIndependentName(rPath);
+        String relativePath = FileUtil.toSystemIndependentName(rPath);
         if (exportFile.isDirectory()) {
           relativePath += '/';
         }

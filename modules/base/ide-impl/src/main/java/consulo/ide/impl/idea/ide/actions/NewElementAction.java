@@ -16,20 +16,19 @@
 
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.IdeBundle;
-import consulo.ide.IdeView;
-import consulo.ide.impl.idea.openapi.actionSystem.*;
-import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
-import consulo.language.editor.CommonDataKeys;
+import consulo.dataContext.DataContext;
+import consulo.ide.IdeView;
+import consulo.ide.impl.idea.openapi.actionSystem.PopupAction;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.LangDataKeys;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.util.ActionGroupUtil;
 import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.util.lang.function.Condition;
-
 import jakarta.annotation.Nullable;
 
 /**
@@ -38,6 +37,7 @@ import jakarta.annotation.Nullable;
 @SuppressWarnings({"MethodMayBeStatic"})
 public class NewElementAction extends AnAction implements DumbAware, PopupAction {
   @Override
+  @RequiredUIAccess
   public void actionPerformed(final AnActionEvent event) {
     showPopup(event.getDataContext());
   }
@@ -47,16 +47,17 @@ public class NewElementAction extends AnAction implements DumbAware, PopupAction
   }
 
   protected ListPopup createPopup(DataContext dataContext) {
-    return JBPopupFactory.getInstance()
-      .createActionGroupPopup(getPopupTitle(),
-                              getGroup(dataContext),
-                              dataContext,
-                              isShowNumbers(),
-                              isShowDisabledActions(),
-                              isHonorActionMnemonics(),
-                              getDisposeCallback(),
-                              getMaxRowCount(),
-                              getPreselectActionCondition(dataContext));
+    return JBPopupFactory.getInstance().createActionGroupPopup(
+      getPopupTitle(),
+      getGroup(dataContext),
+      dataContext,
+      isShowNumbers(),
+      isShowDisabledActions(),
+      isHonorActionMnemonics(),
+      getDisposeCallback(),
+      getMaxRowCount(),
+      getPreselectActionCondition(dataContext)
+    );
   }
 
   protected int getMaxRowCount() {
@@ -86,14 +87,15 @@ public class NewElementAction extends AnAction implements DumbAware, PopupAction
   }
 
   protected String getPopupTitle() {
-    return IdeBundle.message("title.popup.new.element");
+    return IdeLocalize.titlePopupNewElement().get();
   }
 
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e){
     final Presentation presentation = e.getPresentation();
     final DataContext context = e.getDataContext();
-    final Project project = context.getData(CommonDataKeys.PROJECT);
+    final Project project = context.getData(Project.KEY);
     if (project == null) {
       presentation.setEnabled(false);
       return;

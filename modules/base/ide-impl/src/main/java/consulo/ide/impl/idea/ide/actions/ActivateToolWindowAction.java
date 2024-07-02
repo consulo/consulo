@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.language.editor.CommonDataKeys;
 import consulo.localize.LocalizeValue;
 import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
@@ -50,6 +49,7 @@ public class ActivateToolWindowAction extends DumbAwareAction {
     return myToolWindowId;
   }
 
+  @RequiredUIAccess
   public static void ensureToolWindowActionRegistered(@Nonnull ToolWindow toolWindow) {
     ActionManager actionManager = ActionManager.getInstance();
     String actionId = getActionIdForToolWindow(toolWindow.getId());
@@ -61,6 +61,7 @@ public class ActivateToolWindowAction extends DumbAwareAction {
     }
   }
 
+  @RequiredUIAccess
   public static void updateToolWindowActionPresentation(@Nonnull ToolWindow toolWindow) {
     ActionManager actionManager = ActionManager.getInstance();
     String actionId = getActionIdForToolWindow(toolWindow.getId());
@@ -73,7 +74,7 @@ public class ActivateToolWindowAction extends DumbAwareAction {
   @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     Presentation presentation = e.getPresentation();
     if (project == null || project.isDisposed()) {
       presentation.setEnabledAndVisible(false);
@@ -102,7 +103,7 @@ public class ActivateToolWindowAction extends DumbAwareAction {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) return;
     ToolWindowManager windowManager = ToolWindowManager.getInstance(project);
     if (windowManager.isEditorComponentActive() || !myToolWindowId.equals(windowManager.getActiveToolWindowId())) {

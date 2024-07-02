@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.history.core.changes.ChangeSet;
 import consulo.ide.impl.idea.history.utils.LocalHistoryLog;
 import consulo.ide.impl.idea.ide.BrowserUtil;
 import consulo.ide.impl.idea.ide.actions.ShowFilePathAction;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.util.io.FileUtil;
 import consulo.index.io.storage.AbstractStorage;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
@@ -102,17 +102,15 @@ public class ChangeListStorageImpl implements ChangeListStorage {
       LocalHistoryLog.LOG.warn("cannot read storage timestamp", ex);
     }
 
-    LocalHistoryLog.LOG.error("Local history is broken" +
-                              "(version:" +
-                              VERSION +
-                              ",current timestamp:" +
-                              DateFormat.getDateTimeInstance().format(timestamp) +
-                              ",storage timestamp:" +
-                              DateFormat.getDateTimeInstance().format(storageTimestamp) +
-                              ",vfs timestamp:" +
-                              DateFormat.getDateTimeInstance().format(vfsTimestamp) +
-                              ")\n" +
-                              message, e);
+    LocalHistoryLog.LOG.error(
+      "Local history is broken" +
+        "(version:" + VERSION +
+        ",current timestamp:" + DateFormat.getDateTimeInstance().format(timestamp) +
+        ",storage timestamp:" + DateFormat.getDateTimeInstance().format(storageTimestamp) +
+        ",vfs timestamp:" + DateFormat.getDateTimeInstance().format(vfsTimestamp) +
+        ")\n" + message,
+      e
+    );
 
     myStorage.close();
     try {
@@ -134,19 +132,25 @@ public class ChangeListStorageImpl implements ChangeListStorage {
                              "<br>" +
                              "Please attach log files from <a href=\"file\">" + logFile + "</a><br>" +
                              "to the <a href=\"url\">YouTrack issue</a>";*/
-    Notifications.Bus.notify(new Notification(Notifications.SYSTEM_MESSAGES_GROUP, "Local History is broken", message /*+ createIssuePart*/, NotificationType.ERROR, new NotificationListener() {
-      @Override
-      public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
-        if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-          if ("url".equals(event.getDescription())) {
-            BrowserUtil.browse("http://youtrack.jetbrains.net/issue/IDEA-71270");
-          }
-          else {
-            ShowFilePathAction.openFile(logFile);
+    Notifications.Bus.notify(
+      new Notification(
+        Notifications.SYSTEM_MESSAGES_GROUP,
+        "Local History is broken",
+        message /*+ createIssuePart*/,
+        NotificationType.ERROR,
+        (notification, event) -> {
+          if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+            if ("url".equals(event.getDescription())) {
+              BrowserUtil.browse("http://youtrack.jetbrains.net/issue/IDEA-71270");
+            }
+            else {
+              ShowFilePathAction.openFile(logFile);
+            }
           }
         }
-      }
-    }), null);
+      ),
+      null
+    );
   }
 
   @Override

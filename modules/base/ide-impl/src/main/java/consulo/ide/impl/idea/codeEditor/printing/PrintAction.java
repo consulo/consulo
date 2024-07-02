@@ -16,29 +16,28 @@
 
 package consulo.ide.impl.idea.codeEditor.printing;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
-import consulo.application.dumb.DumbAware;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.LangDataKeys;
-import consulo.language.editor.PlatformDataKeys;
+import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiFile;
 
 public class PrintAction extends AnAction implements DumbAware {
   public PrintAction() {
     super();
-
   }
 
   @Override
+  @RequiredReadAction
   public void actionPerformed(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Project project = dataContext.getData(Project.KEY);
     if (project == null) {
       return;
     }
@@ -46,17 +45,17 @@ public class PrintAction extends AnAction implements DumbAware {
   }
 
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent event){
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
-    VirtualFile file = dataContext.getData(PlatformDataKeys.VIRTUAL_FILE);
-    if(file != null && file.isDirectory()) {
+    VirtualFile file = dataContext.getData(VirtualFile.KEY);
+    if (file != null && file.isDirectory()) {
       presentation.setEnabled(true);
       return;
     }
-    Editor editor = dataContext.getData(PlatformDataKeys.EDITOR);
-    PsiFile psiFile = dataContext.getData(LangDataKeys.PSI_FILE);
+    Editor editor = dataContext.getData(Editor.KEY);
+    PsiFile psiFile = dataContext.getData(PsiFile.KEY);
     presentation.setEnabled(psiFile != null || editor != null);
   }
-
 }

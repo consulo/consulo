@@ -15,38 +15,37 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.application.dumb.DumbAware;
+import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
+import consulo.project.Project;
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.ToggleAction;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.internal.ToolWindowEx;
-import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import jakarta.annotation.Nonnull;
 
 public abstract class BaseToolWindowToggleAction extends ToggleAction implements DumbAware {
-
   @Override
+  @RequiredUIAccess
   public final boolean isSelected(AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null || project.isDisposed()) {
       return false;
     }
     ToolWindowManager mgr = ToolWindowManager.getInstance(project);
     String id = mgr.getActiveToolWindowId();
-    if (id == null) {
-      return false;
-    }
-    return isSelected(mgr.getToolWindow(id));
+    return id != null && isSelected(mgr.getToolWindow(id));
   }
 
   protected abstract boolean isSelected(ToolWindow window);
 
   @Override
+  @RequiredUIAccess
   public final void setSelected(AnActionEvent e, boolean state) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) {
       return;
     }
@@ -64,10 +63,11 @@ public abstract class BaseToolWindowToggleAction extends ToggleAction implements
   protected abstract void setSelected(ToolWindow window, boolean state);
 
   @Override
-  public final void update(AnActionEvent e) {
+  @RequiredUIAccess
+  public final void update(@Nonnull AnActionEvent e) {
     super.update(e);
     Presentation presentation = e.getPresentation();
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) {
       presentation.setEnabled(false);
       return;

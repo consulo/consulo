@@ -15,18 +15,20 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.language.editor.CommonDataKeys;
-import consulo.project.Project;
 import consulo.application.dumb.DumbAware;
-import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.toolWindow.ToolWindow;
 
 public class HideToolWindowAction extends AnAction implements DumbAware {
+  @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) {
       return;
     }
@@ -39,9 +41,11 @@ public class HideToolWindowAction extends AnAction implements DumbAware {
     toolWindowManager.getToolWindow(id).hide(null);
   }
 
+  @Override
+  @RequiredUIAccess
   public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
-    Project project = event.getData(CommonDataKeys.PROJECT);
+    Project project = event.getData(Project.KEY);
     if (project == null) {
       presentation.setEnabled(false);
       return;

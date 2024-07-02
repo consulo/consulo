@@ -24,6 +24,7 @@ import consulo.ide.impl.idea.history.integration.ui.views.HistoryDialog;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 
 public class ShowHistoryAction extends LocalHistoryActionWithDialog {
   @Override
@@ -33,7 +34,7 @@ public class ShowHistoryAction extends LocalHistoryActionWithDialog {
   }
 
   @Override
-  protected boolean isEnabled(LocalHistoryFacade vcs, IdeaGateway gw, VirtualFile f, AnActionEvent e) {
+  protected boolean isEnabled(@Nonnull LocalHistoryFacade vcs, @Nonnull IdeaGateway gw, VirtualFile f, @Nonnull AnActionEvent e) {
     return f != null && gw.isVersioned(f) && (f.isDirectory() || gw.areContentChangesVersioned(f));
   }
 }

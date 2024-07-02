@@ -19,7 +19,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.ide.impl.idea.ide.actions.GotoActionBase;
 import consulo.ide.navigation.GotoSymbolContributor;
-import consulo.language.editor.CommonDataKeys;
+import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.inject.Inject;
 
@@ -42,6 +42,6 @@ public class SymbolSearchEverywhereContributorFactory implements SearchEverywher
       return null;
 
     }
-    return new SymbolSearchEverywhereContributor(initEvent.getData(CommonDataKeys.PROJECT), GotoActionBase.getPsiContext(initEvent));
+    return new SymbolSearchEverywhereContributor(initEvent.getData(Project.KEY), GotoActionBase.getPsiContext(initEvent));
   }
 }

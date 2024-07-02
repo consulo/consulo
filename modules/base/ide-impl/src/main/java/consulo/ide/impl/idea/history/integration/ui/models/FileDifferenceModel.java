@@ -16,16 +16,16 @@
 
 package consulo.ide.impl.idea.history.integration.ui.models;
 
+import consulo.application.util.DateFormatUtil;
 import consulo.diff.DiffContentFactory;
 import consulo.diff.content.DiffContent;
 import consulo.diff.content.DocumentContent;
+import consulo.document.Document;
 import consulo.ide.impl.idea.history.core.tree.Entry;
 import consulo.ide.impl.idea.history.integration.IdeaGateway;
 import consulo.ide.impl.idea.history.integration.LocalHistoryBundle;
-import consulo.document.Document;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.application.util.DateFormatUtil;
+import consulo.util.io.FileUtil;
 
 public abstract class FileDifferenceModel {
   protected final Project myProject;

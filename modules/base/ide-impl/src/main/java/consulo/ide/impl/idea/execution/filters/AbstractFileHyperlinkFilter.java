@@ -6,19 +6,19 @@ import consulo.application.WriteAction;
 import consulo.execution.ui.console.Filter;
 import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.execution.ui.console.OpenFileHyperlinkInfo;
-import consulo.project.Project;
-import consulo.module.content.ProjectFileIndex;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.lang.ref.Ref;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.logging.Logger;
 import consulo.ide.impl.util.LocalFileFinder;
-
+import consulo.logging.Logger;
+import consulo.module.content.ProjectFileIndex;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.ref.Ref;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;

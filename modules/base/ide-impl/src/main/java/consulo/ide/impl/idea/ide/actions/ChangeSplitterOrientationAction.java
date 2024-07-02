@@ -16,16 +16,18 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 
 /**
  * @author Vladimir Kondratyev
  */
 public final class ChangeSplitterOrientationAction extends SplitterActionBase {
+  @Override
+  @RequiredUIAccess
   public void actionPerformed(final AnActionEvent event) {
-    final Project project = event.getData(CommonDataKeys.PROJECT);
+    final Project project = event.getData(Project.KEY);
     final FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
     fileEditorManager.changeSplitterOrientation ();
   }

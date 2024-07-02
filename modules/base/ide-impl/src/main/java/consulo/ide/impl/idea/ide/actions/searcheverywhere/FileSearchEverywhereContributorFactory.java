@@ -17,9 +17,8 @@ package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.ide.actions.GotoActionBase;
-import consulo.language.editor.CommonDataKeys;
+import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
-
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
@@ -27,6 +26,6 @@ public class FileSearchEverywhereContributorFactory implements SearchEverywhereC
   @Nonnull
   @Override
   public SearchEverywhereContributor<Object> createContributor(@Nonnull AnActionEvent initEvent) {
-    return new FileSearchEverywhereContributor(initEvent.getData(CommonDataKeys.PROJECT), GotoActionBase.getPsiContext(initEvent));
+    return new FileSearchEverywhereContributor(initEvent.getData(Project.KEY), GotoActionBase.getPsiContext(initEvent));
   }
 }

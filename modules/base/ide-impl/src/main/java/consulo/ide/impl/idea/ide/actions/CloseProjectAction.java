@@ -15,18 +15,16 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.impl.idea.ide.RecentProjectsManager;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.action.Presentation;
 import consulo.application.dumb.DumbAware;
+import consulo.ide.impl.idea.ide.RecentProjectsManager;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.wm.WelcomeFrameManager;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
-
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
@@ -45,7 +43,7 @@ public class CloseProjectAction extends AnAction implements DumbAware {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent event) {
-    Project project = event.getRequiredData(CommonDataKeys.PROJECT);
+    Project project = event.getRequiredData(Project.KEY);
 
     myProjectManager.closeAndDisposeAsync(project, UIAccess.current()).doWhenDone(() -> {
       myRecentProjectsManager.updateLastProjectPath();
@@ -57,7 +55,7 @@ public class CloseProjectAction extends AnAction implements DumbAware {
   @Override
   public void update(@Nonnull AnActionEvent event) {
     Presentation presentation = event.getPresentation();
-    Project project = event.getData(CommonDataKeys.PROJECT);
+    Project project = event.getData(Project.KEY);
     presentation.setEnabled(project != null);
   }
 }

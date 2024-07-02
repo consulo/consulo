@@ -19,18 +19,18 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.ide.IdeView;
 import consulo.ide.action.ui.NewItemPopupUtil;
 import consulo.ide.action.ui.NewItemSimplePopupPanel;
+import consulo.ide.localize.IdeLocalize;
 import consulo.ide.util.DirectoryChooserUtil;
 import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
 import consulo.content.ContentFolderTypeProvider;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.actions.CreateDirectoryOrPackageType;
 import consulo.language.LangBundle;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiPackageSupportProvider;
 import consulo.language.util.ModuleUtilCore;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectFileIndex;
@@ -55,14 +55,14 @@ import java.util.function.Consumer;
 
 public class CreateDirectoryOrPackageAction extends AnAction implements DumbAware {
   public CreateDirectoryOrPackageAction() {
-    super(IdeBundle.message("action.create.new.directory.or.package"), IdeBundle.message("action.create.new.directory.or.package"), null);
+    super(IdeLocalize.actionCreateNewDirectoryOrPackage(), IdeLocalize.actionCreateNewDirectoryOrPackage(), null);
   }
 
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     IdeView view = e.getData(IdeView.KEY);
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
 
     if (view == null || project == null) {
       return;
@@ -80,20 +80,30 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
 
     CreateDirectoryOrPackageHandler validator = new CreateDirectoryOrPackageHandler(project, directory, info.getThird(), info.getThird().getSeparator());
 
-    String title = isDirectory ? IdeBundle.message("title.new.directory") : IdeBundle.message("title.new.package");
+    LocalizeValue title = isDirectory ? IdeLocalize.titleNewDirectory() : IdeLocalize.titleNewPackage();
 
     String defaultValue = info.getThird().getDefaultValue(directory);
 
-    createLightWeightPopup(validator, title, defaultValue, element -> {
-      if (element != null) {
-        view.selectElement(element);
-      }
-    }).showCenteredInCurrentWindow(project);
+    createLightWeightPopup(
+      validator,
+      title.get(),
+      defaultValue,
+      element -> {
+        if (element != null) {
+          view.selectElement(element);
+        }
+      })
+      .showCenteredInCurrentWindow(project);
   }
 
   @Nonnull
   @RequiredUIAccess
-  private JBPopup createLightWeightPopup(CreateDirectoryOrPackageHandler validator, String title, String defaultValue, Consumer<PsiElement> consumer) {
+  private JBPopup createLightWeightPopup(
+    CreateDirectoryOrPackageHandler validator,
+    String title,
+    String defaultValue,
+    Consumer<PsiElement> consumer
+  ) {
     NewItemSimplePopupPanel contentPanel = new NewItemSimplePopupPanel();
     TextBox nameField = contentPanel.getTextField();
     nameField.setValue(defaultValue);
@@ -123,7 +133,7 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
   public void update(@Nonnull AnActionEvent event) {
     Presentation presentation = event.getPresentation();
 
-    Project project = event.getData(CommonDataKeys.PROJECT);
+    Project project = event.getData(Project.KEY);
     if (project == null) {
       presentation.setVisible(false);
       presentation.setEnabled(false);
