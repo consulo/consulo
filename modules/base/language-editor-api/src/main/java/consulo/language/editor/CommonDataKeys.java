@@ -28,7 +28,7 @@ import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 
-@Deprecated
+@Deprecated(forRemoval = true)
 @DeprecationInfo("Use #KEY fields")
 public interface CommonDataKeys {
   Key<Project> PROJECT = Project.KEY;

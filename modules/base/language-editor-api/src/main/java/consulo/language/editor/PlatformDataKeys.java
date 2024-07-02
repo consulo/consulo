@@ -35,7 +35,7 @@ import java.util.Comparator;
  * @author yole
  */
 public interface PlatformDataKeys extends CommonDataKeys {
-  @Deprecated
+  @Deprecated(forRemoval = true)
   Key<FileEditor> FILE_EDITOR = FileEditor.KEY;
 
   /**
@@ -53,6 +53,7 @@ public interface PlatformDataKeys extends CommonDataKeys {
   /**
    * Returns help id (String)
    */
+  @Deprecated(forRemoval = true)
   Key<String> HELP_ID = HelpManager.HELP_ID;
 
   /**
@@ -65,20 +66,24 @@ public interface PlatformDataKeys extends CommonDataKeys {
    */
   Key<consulo.ui.Component> CONTEXT_UI_COMPONENT = Key.create("contextUIComponent");
 
+  @Deprecated(forRemoval = true)
   Key<CopyProvider> COPY_PROVIDER = CopyProvider.KEY;
 
+  @Deprecated(forRemoval = true)
   Key<CutProvider> CUT_PROVIDER = CutProvider.KEY;
 
+  @Deprecated(forRemoval = true)
   Key<PasteProvider> PASTE_PROVIDER = PasteProvider.KEY;
 
+  @Deprecated(forRemoval = true)
   Key<DeleteProvider> DELETE_ELEMENT_PROVIDER = DeleteProvider.KEY;
 
   Key<Object> SELECTED_ITEM = Key.create("selectedItem");
   Key<Object[]> SELECTED_ITEMS = Key.create("selectedItems");
   Key<ContentManager> CONTENT_MANAGER = Key.create("contentManager");
-  @Deprecated
+  @Deprecated(forRemoval = true)
   Key<ToolWindow> TOOL_WINDOW = ToolWindow.KEY;
-  @Deprecated
+  @Deprecated(forRemoval = true)
   Key<StatusBar> STATUS_BAR = StatusBar.KEY;
   Key<TreeExpander> TREE_EXPANDER = Key.create("treeExpander");
   Key<ExporterToTextFile> EXPORTER_TO_TEXT_FILE = Key.create("exporterToTextFile");
@@ -86,7 +91,7 @@ public interface PlatformDataKeys extends CommonDataKeys {
   Key<Disposable> UI_DISPOSABLE = Key.create("ui.disposable");
 
   Key<ContentManager> NONEMPTY_CONTENT_MANAGER = Key.create("nonemptyContentManager");
-  @Deprecated
+  @Deprecated(forRemoval = true)
   Key<ModalityState> MODALITY_STATE = ModalityState.KEY;
   Key<Boolean> SOURCE_NAVIGATION_LOCKED = Key.create("sourceNavigationLocked");
 

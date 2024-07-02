@@ -26,7 +26,7 @@ import consulo.util.dataholder.Key;
  * @author VISTALL
  * @since 09/12/2020
  */
-@Deprecated
+@Deprecated(forRemoval = true)
 @DeprecationInfo("Use keys from classes")
 public interface ExecutionDataKeys {
   Key<RunProfile> RUN_PROFILE = RunProfile.KEY;
