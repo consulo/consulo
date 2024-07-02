@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.virtualFileSystem.archive;
 
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.impl.jar.JarHandler;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.ArchiveFileSystem;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.VfsImplUtil;
@@ -84,7 +84,7 @@ public abstract class ArchiveFileSystemBase extends ArchiveFileSystem implements
     final int jarSeparatorIndex = path.indexOf(URLUtil.ARCHIVE_SEPARATOR);
     if (jarSeparatorIndex > 0) {
       final String root = path.substring(0, jarSeparatorIndex);
-      return FileUtil.normalize(root) + path.substring(jarSeparatorIndex);
+      return consulo.ide.impl.idea.openapi.util.io.FileUtil.normalize(root) + path.substring(jarSeparatorIndex);
     }
     return super.normalize(path);
   }

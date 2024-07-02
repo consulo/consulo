@@ -15,18 +15,10 @@
  */
 package consulo.ide.impl.idea.vcs.log.impl;
 
-import consulo.application.ApplicationManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.ServiceManager;
-import consulo.versionControlSystem.AbstractVcs;
 import consulo.ide.impl.idea.openapi.vcs.CalledInAwt;
-import consulo.versionControlSystem.root.VcsRoot;
-import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.versionControlSystem.log.VcsLogFilter;
-import consulo.versionControlSystem.log.VcsLogProvider;
-import consulo.versionControlSystem.log.VcsLogRefresher;
 import consulo.ide.impl.idea.vcs.log.data.*;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogColorManagerImpl;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogPanel;
@@ -35,12 +27,19 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
 import consulo.util.collection.MultiMap;
+import consulo.versionControlSystem.AbstractVcs;
+import consulo.versionControlSystem.log.VcsLogFilter;
+import consulo.versionControlSystem.log.VcsLogProvider;
+import consulo.versionControlSystem.log.VcsLogRefresher;
+import consulo.versionControlSystem.root.VcsRoot;
+import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -68,11 +67,13 @@ public class VcsLogManager implements Disposable {
     this(project, uiProperties, roots, true, null);
   }
 
-  public VcsLogManager(@Nonnull Project project,
-                       @Nonnull VcsLogTabsProperties uiProperties,
-                       @Nonnull Collection<VcsRoot> roots,
-                       boolean scheduleRefreshImmediately,
-                       @Nullable Runnable recreateHandler) {
+  public VcsLogManager(
+    @Nonnull Project project,
+    @Nonnull VcsLogTabsProperties uiProperties,
+    @Nonnull Collection<VcsRoot> roots,
+    boolean scheduleRefreshImmediately,
+    @Nullable Runnable recreateHandler
+  ) {
     myProject = project;
     myUiProperties = uiProperties;
     myRecreateMainLogHandler = recreateHandler;
@@ -155,7 +156,7 @@ public class VcsLogManager implements Disposable {
 
   @Nonnull
   public static Map<VirtualFile, VcsLogProvider> findLogProviders(@Nonnull Collection<VcsRoot> roots, @Nonnull Project project) {
-    Map<VirtualFile, VcsLogProvider> logProviders = ContainerUtil.newHashMap();
+    Map<VirtualFile, VcsLogProvider> logProviders = new HashMap<>();
     List<VcsLogProvider> allLogProviders = project.getExtensionPoint(VcsLogProvider.class).getExtensionList();
     for (VcsRoot root : roots) {
       AbstractVcs vcs = root.getVcs();
@@ -219,7 +220,7 @@ public class VcsLogManager implements Disposable {
 
     protected void processError(@Nullable Object source, @Nonnull Throwable e) {
       if (myRecreateMainLogHandler != null) {
-        ApplicationManager.getApplication().invokeLater(() -> {
+        myProject.getApplication().invokeLater(() -> {
           String message = "Fatal error, VCS Log re-created: " + e.getMessage();
           if (isLogVisible()) {
             LOG.info(e);

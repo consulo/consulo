@@ -18,22 +18,23 @@ package consulo.ide.impl.idea.xdebugger.impl.actions;
 import consulo.application.dumb.DumbAware;
 import consulo.execution.debug.XDebuggerUtil;
 import consulo.ide.impl.idea.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
-import consulo.language.editor.CommonDataKeys;
+import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
  */
 public class UseInlineDebuggerAction extends ToggleAction implements DumbAware {
   @Override
-  public boolean isSelected(AnActionEvent e) {
+  public boolean isSelected(@Nonnull AnActionEvent e) {
     return XDebuggerSettingManagerImpl.getInstanceImpl().getDataViewSettings().isShowValuesInline();
   }
 
   @Override
   public void setSelected(AnActionEvent e, boolean state) {
     XDebuggerSettingManagerImpl.getInstanceImpl().getDataViewSettings().setShowValuesInline(state);
-    XDebuggerUtil.getInstance().rebuildAllSessionsViews(e.getData(CommonDataKeys.PROJECT));
+    XDebuggerUtil.getInstance().rebuildAllSessionsViews(e.getData(Project.KEY));
   }
 }

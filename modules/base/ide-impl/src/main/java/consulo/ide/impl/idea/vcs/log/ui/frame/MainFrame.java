@@ -360,7 +360,7 @@ public class MainFrame extends JPanel implements DataProvider, Disposable {
 
     @Override
     protected void onDetailsLoaded(@Nonnull List<VcsFullCommitDetails> detailsList) {
-      List<Change> changes = ContainerUtil.newArrayList();
+      List<Change> changes = new ArrayList<>();
       List<VcsFullCommitDetails> detailsListReversed = ContainerUtil.reverse(detailsList);
       for (VcsFullCommitDetails details : detailsListReversed) {
         changes.addAll(details.getChanges());

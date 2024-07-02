@@ -19,6 +19,7 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.graph.utils.TimestampGetter;
 import jakarta.annotation.Nonnull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 class BekBranchMerger {
@@ -30,11 +31,13 @@ class BekBranchMerger {
   private final TimestampGetter myTimestampGetter;
 
   @Nonnull
-  private final List<Integer> myInverseResultList = ContainerUtil.newArrayList();
+  private final List<Integer> myInverseResultList = new ArrayList<>();
 
-  public BekBranchMerger(@Nonnull List<BekBranch> bekBranches,
-                         @Nonnull BekEdgeRestrictions edgeRestrictions,
-                         @Nonnull TimestampGetter timestampGetter) {
+  public BekBranchMerger(
+    @Nonnull List<BekBranch> bekBranches,
+    @Nonnull BekEdgeRestrictions edgeRestrictions,
+    @Nonnull TimestampGetter timestampGetter
+  ) {
     myBekBranches = bekBranches;
     myEdgeRestrictions = edgeRestrictions;
     myTimestampGetter = timestampGetter;

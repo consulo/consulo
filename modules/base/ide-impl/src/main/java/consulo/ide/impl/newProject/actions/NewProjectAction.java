@@ -15,11 +15,11 @@
  */
 package consulo.ide.impl.newProject.actions;
 
-import consulo.language.editor.CommonDataKeys;
 import consulo.application.CommonBundle;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.RecentProjectsManager;
+import consulo.ide.localize.IdeLocalize;
 import consulo.ide.newModule.NewOrImportModuleUtil;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.WriteAction;
 import consulo.application.dumb.DumbAware;
@@ -27,6 +27,7 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.ex.awt.Messages;
 import consulo.application.util.SystemInfo;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.JBUI;
@@ -98,12 +99,12 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
     protected JPanel createSouthPanel() {
       JPanel buttonsPanel = new JPanel(new GridLayout(1, 2, SystemInfo.isMacOSLeopard ? 0 : 5, 0));
 
-      myCancelButton = new JButton(CommonBundle.getCancelButtonText());
+      myCancelButton = new JButton(CommonLocalize.buttonCancel().get());
       myCancelButton.addActionListener(e -> doCancelAction());
 
       buttonsPanel.add(myCancelButton);
 
-      myOkButton = new JButton(CommonBundle.getOkButtonText()) {
+      myOkButton = new JButton(CommonBundle.message("button.ok")) {
         @Override
         public boolean isDefaultButton() {
           return true;
@@ -140,7 +141,7 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull final AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     NewProjectDialog dialog = new NewProjectDialog(project, null);
 
     if (dialog.showAndGet()) {
@@ -150,8 +151,9 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
 
   @Nonnull
   @Override
+  @RequiredUIAccess
   public JComponent createSlide(@Nonnull Disposable parentDisposable, @Nonnull WelcomeScreenSlider owner) {
-    owner.setTitle(IdeBundle.message("title.new.project"));
+    owner.setTitle(IdeLocalize.titleNewProject().get());
 
     return new SlideNewProjectPanel(parentDisposable, owner, null, null);
   }
@@ -186,7 +188,11 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
     baseDir.refresh(false, true);
 
     if (childCount > 0) {
-      int rc = Messages.showYesNoDialog(project, "The directory '" + location + "' is not empty. Continue?", "Create New Project", Messages.getQuestionIcon());
+      int rc = Messages.showYesNoDialog(project,
+        "The directory '" + location + "' is not empty. Continue?",
+        "Create New Project",
+        UIUtil.getQuestionIcon()
+      );
       if (rc == Messages.NO) {
         return;
       }
@@ -195,8 +201,13 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
     RecentProjectsManager.getInstance().setLastProjectCreationLocation(location.getParent());
 
     UIAccess uiAccess = UIAccess.current();
-    ProjectManager.getInstance().openProjectAsync(baseDir, uiAccess).doWhenDone((openedProject) -> {
-      uiAccess.give(() -> NewOrImportModuleUtil.doCreate(panel.getProcessor(), panel.getWizardContext(), openedProject, baseDir));
-    });
+    ProjectManager.getInstance()
+      .openProjectAsync(baseDir, uiAccess)
+      .doWhenDone((openedProject) -> uiAccess.give(() -> NewOrImportModuleUtil.doCreate(
+        panel.getProcessor(),
+        panel.getWizardContext(),
+        openedProject,
+        baseDir
+      )));
   }
 }

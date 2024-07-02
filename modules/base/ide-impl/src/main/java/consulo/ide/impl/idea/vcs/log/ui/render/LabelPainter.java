@@ -53,10 +53,8 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
-import java.util.Collection;
-import java.util.LinkedHashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 import static consulo.ide.impl.idea.vcs.log.ui.render.RectanglePainter.LABEL_ARC;
 
@@ -79,7 +77,7 @@ public class LabelPainter {
   private final VcsLogDataImpl myLogData;
 
   @Nonnull
-  private List<Pair<String, LabelIcon>> myLabels = ContainerUtil.newArrayList();
+  private List<Pair<String, LabelIcon>> myLabels = new ArrayList<>();
   private int myHeight = JBUI.scale(22);
   private int myWidth = 0;
   @Nonnull
@@ -133,15 +131,17 @@ public class LabelPainter {
   }
 
   @Nonnull
-  private static Pair<List<Pair<String, LabelIcon>>, Integer> calculatePresentation(@Nonnull List<RefGroup> refGroups,
-                                                                                                                        @Nonnull FontMetrics fontMetrics,
-                                                                                                                        int height,
-                                                                                                                        @Nonnull Color background,
-                                                                                                                        int availableWidth,
-                                                                                                                        boolean compact) {
+  private static Pair<List<Pair<String, LabelIcon>>, Integer> calculatePresentation(
+    @Nonnull List<RefGroup> refGroups,
+    @Nonnull FontMetrics fontMetrics,
+    int height,
+    @Nonnull Color background,
+    int availableWidth,
+    boolean compact
+  ) {
     int width = LEFT_PADDING + RIGHT_PADDING;
 
-    List<Pair<String, LabelIcon>> labels = ContainerUtil.newArrayList();
+    List<Pair<String, LabelIcon>> labels = new ArrayList<>();
     if (refGroups.isEmpty()) return Pair.create(labels, width);
 
     if (compact) return calculateCompactPresentation(refGroups, fontMetrics, height, background, availableWidth);
@@ -150,14 +150,16 @@ public class LabelPainter {
 
 
   @Nonnull
-  private static Pair<List<Pair<String, LabelIcon>>, Integer> calculateCompactPresentation(@Nonnull List<RefGroup> refGroups,
-                                                                                                                               @Nonnull FontMetrics fontMetrics,
-                                                                                                                               int height,
-                                                                                                                               @Nonnull Color background,
-                                                                                                                               int availableWidth) {
+  private static Pair<List<Pair<String, LabelIcon>>, Integer> calculateCompactPresentation(
+    @Nonnull List<RefGroup> refGroups,
+    @Nonnull FontMetrics fontMetrics,
+    int height,
+    @Nonnull Color background,
+    int availableWidth
+  ) {
     int width = LEFT_PADDING + RIGHT_PADDING;
 
-    List<Pair<String, LabelIcon>> labels = ContainerUtil.newArrayList();
+    List<Pair<String, LabelIcon>> labels = new ArrayList<>();
     if (refGroups.isEmpty()) return Pair.create(labels, width);
 
     for (RefGroup group : refGroups) {
@@ -176,14 +178,16 @@ public class LabelPainter {
   }
 
   @Nonnull
-  private static Pair<List<Pair<String, LabelIcon>>, Integer> calculateLongPresentation(@Nonnull List<RefGroup> refGroups,
-                                                                                                                            @Nonnull FontMetrics fontMetrics,
-                                                                                                                            int height,
-                                                                                                                            @Nonnull Color background,
-                                                                                                                            int availableWidth) {
+  private static Pair<List<Pair<String, LabelIcon>>, Integer> calculateLongPresentation(
+    @Nonnull List<RefGroup> refGroups,
+    @Nonnull FontMetrics fontMetrics,
+    int height,
+    @Nonnull Color background,
+    int availableWidth
+  ) {
     int width = LEFT_PADDING + RIGHT_PADDING;
 
-    List<Pair<String, LabelIcon>> labels = ContainerUtil.newArrayList();
+    List<Pair<String, LabelIcon>> labels = new ArrayList<>();
     if (refGroups.isEmpty()) return Pair.create(labels, width);
 
     for (int i = 0; i < refGroups.size(); i++) {
@@ -220,7 +224,7 @@ public class LabelPainter {
 
   @Nonnull
   private static Color[] getColors(@Nonnull Collection<RefGroup> groups) {
-    LinkedHashMap<Color, Integer> usedColors = ContainerUtil.newLinkedHashMap();
+    LinkedHashMap<Color, Integer> usedColors = new LinkedHashMap<>();
 
     for (RefGroup group : groups) {
       List<Color> colors = group.getColors();
@@ -231,7 +235,7 @@ public class LabelPainter {
       }
     }
 
-    List<Color> result = ContainerUtil.newArrayList();
+    List<Color> result = new ArrayList<>();
     for (Map.Entry<Color, Integer> entry : usedColors.entrySet()) {
       result.add(entry.getKey());
       if (entry.getValue() > 1) {

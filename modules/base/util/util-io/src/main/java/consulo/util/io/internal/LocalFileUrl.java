@@ -70,12 +70,12 @@ public final class LocalFileUrl implements Url {
 
   @Override
   public boolean equals(Object o) {
-    return this == o || ((o instanceof LocalFileUrl) && path.equals(((LocalFileUrl)o).path));
+    return this == o || (o instanceof LocalFileUrl localFileUrl && path.equals(localFileUrl.path));
   }
 
   @Override
   public boolean equalsIgnoreCase(@Nullable Url o) {
-    return this == o || ((o instanceof LocalFileUrl) && path.equalsIgnoreCase(((LocalFileUrl)o).path));
+    return this == o || (o instanceof LocalFileUrl localFileUrl && path.equalsIgnoreCase(localFileUrl.path));
   }
 
   @Override

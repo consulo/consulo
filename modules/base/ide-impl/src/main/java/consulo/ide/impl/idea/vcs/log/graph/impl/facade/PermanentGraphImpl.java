@@ -40,17 +40,16 @@ import consulo.versionControlSystem.log.graph.GraphCommit;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class PermanentGraphImpl<CommitId> implements PermanentGraph<CommitId>, PermanentGraphInfo<CommitId> {
 
   @Nonnull
-  public static <CommitId> PermanentGraphImpl<CommitId> newInstance(@Nonnull List<? extends GraphCommit<CommitId>> graphCommits,
-                                                                    @Nonnull final GraphColorManager<CommitId> graphColorManager,
-                                                                    @Nonnull Set<CommitId> branchesCommitId) {
+  public static <CommitId> PermanentGraphImpl<CommitId> newInstance(
+    @Nonnull List<? extends GraphCommit<CommitId>> graphCommits,
+    @Nonnull final GraphColorManager<CommitId> graphColorManager,
+    @Nonnull Set<CommitId> branchesCommitId
+  ) {
     PermanentLinearGraphBuilder<CommitId> permanentLinearGraphBuilder = PermanentLinearGraphBuilder.newInstance(graphCommits);
     NotLoadedCommitsIdsGenerator<CommitId> idsGenerator = new NotLoadedCommitsIdsGenerator<>();
     PermanentLinearGraphImpl linearGraph = permanentLinearGraphBuilder.build(idsGenerator);
@@ -139,7 +138,7 @@ public class PermanentGraphImpl<CommitId> implements PermanentGraph<CommitId>, P
   @Nonnull
   @Override
   public List<GraphCommit<CommitId>> getAllCommits() {
-    List<GraphCommit<CommitId>> result = ContainerUtil.newArrayList();
+    List<GraphCommit<CommitId>> result = new ArrayList<>();
     for (int index = 0; index < myPermanentLinearGraph.nodesCount(); index++) {
       CommitId commitId = myPermanentCommitsInfo.getCommitId(index);
       List<Integer> downNodes = LinearGraphUtils.getDownNodesIncludeNotLoad(myPermanentLinearGraph, index);
@@ -176,7 +175,7 @@ public class PermanentGraphImpl<CommitId> implements PermanentGraph<CommitId>, P
       return new IntContainedInBranchCondition<>(branchNodes);
     }
     else {
-      final Set<CommitId> branchNodes = ContainerUtil.newHashSet();
+      final Set<CommitId> branchNodes = new HashSet<>();
       myReachableNodes.walk(headIds, node -> branchNodes.add(myPermanentCommitsInfo.getCommitId(node)));
       return new ContainedInBranchCondition<>(branchNodes);
     }
@@ -208,7 +207,7 @@ public class PermanentGraphImpl<CommitId> implements PermanentGraph<CommitId>, P
 
   private static class NotLoadedCommitsIdsGenerator<CommitId> implements NotNullFunction<CommitId, Integer> {
     @Nonnull
-    private final Map<Integer, CommitId> myNotLoadedCommits = ContainerUtil.newHashMap();
+    private final Map<Integer, CommitId> myNotLoadedCommits = new HashMap<>();
 
     @Nonnull
     @Override

@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.vcs.log.ui.actions;
 
 import consulo.component.extension.Extensions;
 import consulo.project.Project;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogUiProperties;
 import consulo.versionControlSystem.log.VcsLogHighlighterFactory;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogInternalDataKeys;
@@ -30,6 +29,7 @@ import consulo.ui.ex.action.AnSeparator;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties.VcsLogHighlighterProperty;
@@ -38,7 +38,7 @@ public class HighlightersActionGroup extends ActionGroup {
   @Nonnull
   @Override
   public AnAction[] getChildren(@Nullable AnActionEvent e) {
-    List<AnAction> actions = ContainerUtil.newArrayList();
+    List<AnAction> actions = new ArrayList<>();
 
     if (e != null) {
       if (e.getData(VcsLogInternalDataKeys.LOG_UI_PROPERTIES) != null) {

@@ -17,7 +17,6 @@
 package consulo.ide.impl.idea.vcs.log.graph.impl.print;
 
 import consulo.ide.impl.idea.util.NullableFunction;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.graph.api.EdgeFilter;
 import consulo.ide.impl.idea.vcs.log.graph.api.LinearGraph;
 import consulo.ide.impl.idea.vcs.log.graph.api.elements.GraphEdge;
@@ -29,6 +28,7 @@ import consulo.ide.impl.idea.vcs.log.graph.utils.NormalEdge;
 import consulo.logging.Logger;
 import consulo.util.collection.SLRUMap;
 import consulo.util.collection.SmartList;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import jakarta.annotation.Nonnull;
@@ -84,11 +84,13 @@ public class PrintElementGeneratorImpl extends AbstractPrintElementGenerator {
   }
 
   @TestOnly
-  public PrintElementGeneratorImpl(@Nonnull LinearGraph graph,
-                                   @Nonnull PrintElementManager printElementManager,
-                                   int longEdgeSize,
-                                   int visiblePartSize,
-                                   int edgeWithArrowSize) {
+  public PrintElementGeneratorImpl(
+    @Nonnull LinearGraph graph,
+    @Nonnull PrintElementManager printElementManager,
+    int longEdgeSize,
+    int visiblePartSize,
+    int edgeWithArrowSize
+  ) {
     super(graph, printElementManager);
     myEdgesInRowGenerator = new EdgesInRowGenerator(graph);
     myGraphElementComparator = printElementManager.getGraphElementComparator();
@@ -104,7 +106,7 @@ public class PrintElementGeneratorImpl extends AbstractPrintElementGenerator {
       double sum = 0;
       double sumSquares = 0;
       int edgesCount = 0;
-      Set<NormalEdge> currentNormalEdges = ContainerUtil.newHashSet();
+      Set<NormalEdge> currentNormalEdges = new HashSet<>();
 
       for (int i = 0; i < n; i++) {
         List<GraphEdge> adjacentEdges = myLinearGraph.getAdjacentEdges(i, EdgeFilter.ALL);
@@ -182,8 +184,7 @@ public class PrintElementGeneratorImpl extends AbstractPrintElementGenerator {
         }
       }
 
-      if (element instanceof GraphEdge) {
-        GraphEdge edge = (GraphEdge)element;
+      if (element instanceof GraphEdge edge) {
         Integer endPos = endPosition.apply(edge);
         if (endPos != null) result.add(new ShortEdge(edge, startPosition, endPos));
       }
@@ -234,7 +235,7 @@ public class PrintElementGeneratorImpl extends AbstractPrintElementGenerator {
     return result;
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private RowElementType getArrowType(@Nonnull GraphEdge edge, int rowIndex) {
     NormalEdge normalEdge = asNormalEdge(edge);
     if (normalEdge != null) {
@@ -261,7 +262,7 @@ public class PrintElementGeneratorImpl extends AbstractPrintElementGenerator {
     return null;
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private RowElementType getArrowType(@Nonnull NormalEdge normalEdge, int rowIndex) {
     int edgeSize = normalEdge.down - normalEdge.up;
     int upOffset = rowIndex - normalEdge.up;

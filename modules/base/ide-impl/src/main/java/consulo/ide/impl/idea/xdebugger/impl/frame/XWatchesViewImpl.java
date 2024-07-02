@@ -18,15 +18,13 @@ package consulo.ide.impl.idea.xdebugger.impl.frame;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.CompositeDisposable;
-import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XDebuggerActions;
-import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.frame.XStackFrame;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.ide.impl.idea.ui.ListenerUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.xdebugger.impl.XDebugSessionImpl;
 import consulo.ide.impl.idea.xdebugger.impl.ui.DebuggerSessionTabBase;
 import consulo.ide.impl.idea.xdebugger.impl.ui.DebuggerUIUtil;
@@ -35,6 +33,7 @@ import consulo.ide.impl.idea.xdebugger.impl.ui.XDebugSessionTab;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.XDebuggerTree;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.actions.XWatchTransferable;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.*;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.dnd.DnDEvent;
@@ -45,11 +44,10 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.EmptyRunnable;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
-import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreePath;
 import java.awt.*;
@@ -83,13 +81,22 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
     DebuggerUIUtil.registerActionOnComponent(XDebuggerActions.XCOPY_WATCH, tree, myDisposables);
     DebuggerUIUtil.registerActionOnComponent(XDebuggerActions.XEDIT_WATCH, tree, myDisposables);
 
-    EmptyAction.registerWithShortcutSet(XDebuggerActions.XNEW_WATCH, CommonActionsPanel.getCommonShortcut(CommonActionsPanel.Buttons.ADD), tree);
-    EmptyAction.registerWithShortcutSet(XDebuggerActions.XREMOVE_WATCH, CommonActionsPanel.getCommonShortcut(CommonActionsPanel.Buttons.REMOVE), tree);
+    EmptyAction.registerWithShortcutSet(
+      XDebuggerActions.XNEW_WATCH,
+      CommonActionsPanel.getCommonShortcut(CommonActionsPanel.Buttons.ADD),
+      tree
+    );
+    EmptyAction.registerWithShortcutSet(
+      XDebuggerActions.XREMOVE_WATCH,
+      CommonActionsPanel.getCommonShortcut(CommonActionsPanel.Buttons.REMOVE),
+      tree
+    );
 
     DnDManager.getInstance().registerTarget(this, tree);
 
     new AnAction() {
       @Override
+      @RequiredUIAccess
       public void actionPerformed(@Nonnull AnActionEvent e) {
         Object contents = CopyPasteManager.getInstance().getContents(XWatchTransferable.EXPRESSIONS_FLAVOR);
         if (contents instanceof List) {
@@ -110,7 +117,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
     toolbar.setTargetComponent(tree);
 
     if (!myWatchesInVariables) {
-      getTree().getEmptyText().setText(XDebuggerBundle.message("debugger.no.watches"));
+      getTree().getEmptyText().setText(XDebuggerLocalize.debuggerNoWatches().get());
     }
     getPanel().add(component, myWatchesInVariables ? BorderLayout.WEST : BorderLayout.NORTH);
 
@@ -124,7 +131,8 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
     final ClickListener mouseListener = new ClickListener() {
       @Override
       public boolean onClick(@Nonnull MouseEvent event, int clickCount) {
-        if (!SwingUtilities.isLeftMouseButton(event) || ((event.getModifiers() & (InputEvent.SHIFT_MASK | InputEvent.ALT_MASK | InputEvent.CTRL_MASK | InputEvent.META_MASK)) != 0)) {
+        if (!SwingUtilities.isLeftMouseButton(event)
+          || ((event.getModifiers() & (InputEvent.SHIFT_MASK | InputEvent.ALT_MASK | InputEvent.CTRL_MASK | InputEvent.META_MASK)) != 0)) {
           return false;
         }
         boolean sameRow = isAboveSelectedItem(event, watchTree);
@@ -135,7 +143,8 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
         final AnAction editWatchAction = ActionManager.getInstance().getAction(XDebuggerActions.XEDIT_WATCH);
         Presentation presentation = editWatchAction.getTemplatePresentation().clone();
         DataContext context = DataManager.getInstance().getDataContext(watchTree);
-        final AnActionEvent actionEvent = new AnActionEvent(null, context, "WATCH_TREE", presentation, ActionManager.getInstance(), 0);
+        final AnActionEvent actionEvent =
+          new AnActionEvent(null, context, "WATCH_TREE", presentation, ActionManager.getInstance(), 0);
         Runnable runnable = () -> editWatchAction.actionPerformed(actionEvent);
         if (editAlarm.isEmpty() && quitePeriod.isEmpty()) {
           editAlarm.addRequest(runnable, UIUtil.getMultiClickInterval());
@@ -172,21 +181,14 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
     };
     ListenerUtil.addFocusListener(watchTree, focusListener);
 
-    final TreeSelectionListener selectionListener = new TreeSelectionListener() {
-      @Override
-      public void valueChanged(@Nonnull TreeSelectionEvent e) {
-        quitePeriod.addRequest(EmptyRunnable.getInstance(), UIUtil.getMultiClickInterval());
-      }
-    };
+    final TreeSelectionListener selectionListener =
+      e -> quitePeriod.addRequest(EmptyRunnable.getInstance(), UIUtil.getMultiClickInterval());
     watchTree.addTreeSelectionListener(selectionListener);
-    myDisposables.add(new Disposable() {
-      @Override
-      public void dispose() {
-        ListenerUtil.removeClickListener(watchTree, mouseListener);
-        ListenerUtil.removeClickListener(watchTree, mouseEmptySpaceListener);
-        ListenerUtil.removeFocusListener(watchTree, focusListener);
-        watchTree.removeTreeSelectionListener(selectionListener);
-      }
+    myDisposables.add(() -> {
+      ListenerUtil.removeClickListener(watchTree, mouseListener);
+      ListenerUtil.removeClickListener(watchTree, mouseEmptySpaceListener);
+      ListenerUtil.removeFocusListener(watchTree, focusListener);
+      watchTree.removeTreeSelectionListener(selectionListener);
     });
   }
 
@@ -208,12 +210,14 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
     return false;
   }
 
+  @RequiredUIAccess
   private void executeAction(@Nonnull String watch) {
     AnAction action = ActionManager.getInstance().getAction(watch);
     Presentation presentation = action.getTemplatePresentation().clone();
     DataContext context = DataManager.getInstance().getDataContext(getTree());
 
-    AnActionEvent actionEvent = new AnActionEvent(null, context, ActionPlaces.DEBUGGER_TOOLBAR, presentation, ActionManager.getInstance(), 0);
+    AnActionEvent actionEvent =
+      new AnActionEvent(null, context, ActionPlaces.DEBUGGER_TOOLBAR, presentation, ActionManager.getInstance(), 0);
     action.actionPerformed(actionEvent);
   }
 
@@ -256,8 +260,9 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
     }
     else {
       XDebuggerTreeNode root = tree.getRoot();
-      List<? extends WatchNode> current = root instanceof WatchesRootNode ? ((WatchesRootNode)tree.getRoot()).getWatchChildren() : Collections.emptyList();
-      List<XExpression> list = ContainerUtil.newArrayList();
+      List<? extends WatchNode> current =
+        root instanceof WatchesRootNode ? ((WatchesRootNode)tree.getRoot()).getWatchChildren() : Collections.emptyList();
+      List<XExpression> list = new ArrayList<>();
       for (WatchNode child : current) {
         list.add(child.getExpression());
       }
@@ -314,7 +319,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
   }
 
   public void updateSessionData() {
-    List<XExpression> watchExpressions = ContainerUtil.newArrayList();
+    List<XExpression> watchExpressions = new ArrayList<>();
     List<? extends WatchNode> children = myRootNode.getWatchChildren();
     for (WatchNode child : children) {
       watchExpressions.add(child.getExpression());
@@ -354,7 +359,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
       possible = ((EventInfo)object).getTextForFlavor(DataFlavor.stringFlavor) != null;
     }
 
-    aEvent.setDropPossible(possible, XDebuggerBundle.message("xdebugger.drop.text.add.to.watches"));
+    aEvent.setDropPossible(possible, XDebuggerLocalize.xdebuggerDropTextAddToWatches().get());
 
     return true;
   }

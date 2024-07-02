@@ -15,37 +15,34 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.filter;
 
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.Presentation;
-import consulo.ui.ex.awt.action.CustomComponentAction;
-import consulo.application.ApplicationManager;
-import consulo.logging.Logger;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.application.Application;
 import consulo.application.util.function.Computable;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.util.NotNullComputable;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.vcs.log.VcsLogRootFilterImpl;
+import consulo.ide.impl.idea.vcs.log.data.*;
+import consulo.ide.impl.idea.vcs.log.impl.VcsLogFilterCollectionImpl.VcsLogFilterCollectionBuilder;
+import consulo.ide.impl.idea.vcs.log.impl.VcsLogHashFilterImpl;
+import consulo.ide.impl.idea.vcs.log.impl.VcsLogUserFilterImpl;
+import consulo.ide.impl.idea.vcs.log.ui.VcsLogActionPlaces;
+import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
+import consulo.logging.Logger;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.SearchTextField;
+import consulo.ui.ex.awt.SearchTextFieldWithStoredHistory;
+import consulo.ui.ex.awt.action.CustomComponentAction;
+import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.log.*;
-import consulo.versionControlSystem.log.VcsLogDataPack;
 import consulo.versionControlSystem.log.util.VcsLogUtil;
+import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.awt.event.DocumentAdapter;
-import consulo.ui.ex.awt.SearchTextField;
-import consulo.ui.ex.awt.SearchTextFieldWithStoredHistory;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.vcs.log.*;
-import consulo.ide.impl.idea.vcs.log.data.*;
-import consulo.ide.impl.idea.vcs.log.impl.*;
-import consulo.ide.impl.idea.vcs.log.impl.VcsLogFilterCollectionImpl.VcsLogFilterCollectionBuilder;
-import consulo.ide.impl.idea.vcs.log.ui.VcsLogActionPlaces;
-import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
-import consulo.versionControlSystem.util.VcsUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -133,30 +130,31 @@ public class VcsLogClassicFilterUi implements VcsLogFilterUi {
     actionGroup.add(new FilterActionComponent(() -> new BranchFilterPopupComponent(myUi, myUiProperties, myBranchFilterModel).initUi()));
     actionGroup.add(new FilterActionComponent(() -> new UserFilterPopupComponent(myUiProperties, myLogData, myUserFilterModel).initUi()));
     actionGroup.add(new FilterActionComponent(() -> new DateFilterPopupComponent(myDateFilterModel).initUi()));
-    actionGroup.add(new FilterActionComponent(
-            () -> new StructureFilterPopupComponent(myStructureFilterModel, myUi.getColorManager()).initUi()));
+    actionGroup.add(
+      new FilterActionComponent(() -> new StructureFilterPopupComponent(myStructureFilterModel, myUi.getColorManager()).initUi())
+    );
     return actionGroup;
   }
 
   @Nonnull
   @Override
+  @RequiredUIAccess
   public VcsLogFilterCollection getFilters() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
-    Pair<VcsLogTextFilter, VcsLogHashFilter> filtersFromText =
-            getFiltersFromTextArea(myTextFilterModel.getFilter(),
-                                   myUiProperties.get(MainVcsLogUiProperties.TEXT_FILTER_REGEX),
-                                   myUiProperties.get(MainVcsLogUiProperties.TEXT_FILTER_MATCH_CASE));
-    return new VcsLogFilterCollectionBuilder().with(myBranchFilterModel.getFilter())
-            .with(myUserFilterModel.getFilter())
-            .with(filtersFromText.second)
-            .with(myDateFilterModel.getFilter())
-            .with(filtersFromText.first)
-            .with(myStructureFilterModel.getFilter() == null
-                  ? null
-                  : myStructureFilterModel.getFilter().getStructureFilter())
-            .with(myStructureFilterModel.getFilter() == null
-                  ? null
-                  : myStructureFilterModel.getFilter().getRootFilter()).build();
+    Application.get().assertIsDispatchThread();
+    Pair<VcsLogTextFilter, VcsLogHashFilter> filtersFromText = getFiltersFromTextArea(
+      myTextFilterModel.getFilter(),
+      myUiProperties.get(MainVcsLogUiProperties.TEXT_FILTER_REGEX),
+      myUiProperties.get(MainVcsLogUiProperties.TEXT_FILTER_MATCH_CASE)
+    );
+    return new VcsLogFilterCollectionBuilder()
+      .with(myBranchFilterModel.getFilter())
+      .with(myUserFilterModel.getFilter())
+      .with(filtersFromText.second)
+      .with(myDateFilterModel.getFilter())
+      .with(filtersFromText.first)
+      .with(myStructureFilterModel.getFilter() == null ? null : myStructureFilterModel.getFilter().getStructureFilter())
+      .with(myStructureFilterModel.getFilter() == null ? null : myStructureFilterModel.getFilter().getRootFilter())
+      .build();
   }
 
   @Nonnull
@@ -170,7 +168,7 @@ public class VcsLogClassicFilterUi implements VcsLogFilterUi {
     if (StringUtil.isEmptyOrSpaces(text)) {
       return Pair.empty();
     }
-    List<String> hashes = ContainerUtil.newArrayList();
+    List<String> hashes = new ArrayList<>();
     for (String word : StringUtil.split(text, " ")) {
       if (!StringUtil.isEmptyOrSpaces(word) && word.matches(HASH_PATTERN)) {
         hashes.add(word);
@@ -194,8 +192,9 @@ public class VcsLogClassicFilterUi implements VcsLogFilterUi {
   }
 
   @Override
+  @RequiredUIAccess
   public void setFilter(@Nonnull VcsLogFilter filter) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    Application.get().assertIsDispatchThread();
     if (filter instanceof VcsLogBranchFilter) {
       myBranchFilterModel.setFilter((VcsLogBranchFilter)filter);
     }
@@ -216,12 +215,14 @@ public class VcsLogClassicFilterUi implements VcsLogFilterUi {
       myComponentCreator = componentCreator;
     }
 
+    @Nonnull
     @Override
-    public JComponent createCustomComponent(Presentation presentation, String place) {
+    public JComponent createCustomComponent(@Nonnull Presentation presentation, @Nonnull String place) {
       return myComponentCreator.compute();
     }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
     }
   }
@@ -252,7 +253,7 @@ public class VcsLogClassicFilterUi implements VcsLogFilterUi {
     @Override
     protected VcsLogBranchFilter createFilter(@Nonnull List<String> values) {
       return VcsLogBranchFilterImpl
-              .fromTextPresentation(values, ContainerUtil.map2Set(getDataPack().getRefs().getBranches(), VcsRef::getName));
+        .fromTextPresentation(values, ContainerUtil.map2Set(getDataPack().getRefs().getBranches(), VcsRef::getName));
     }
 
     @Nonnull
@@ -287,8 +288,7 @@ public class VcsLogClassicFilterUi implements VcsLogFilterUi {
     }
 
     boolean hasUnsavedChanges() {
-      if (myText == null) return false;
-      return getFilter() == null || !myText.equals(getFilter().getText());
+      return myText != null && (getFilter() == null || !myText.equals(getFilter().getText()));
     }
 
     @Override
@@ -300,9 +300,11 @@ public class VcsLogClassicFilterUi implements VcsLogFilterUi {
     @Nonnull
     @Override
     protected VcsLogTextFilter createFilter(@Nonnull List<String> values) {
-      return new VcsLogTextFilterImpl(ObjectUtil.assertNotNull(ContainerUtil.getFirstItem(values)),
-                                      myUiProperties.get(MainVcsLogUiProperties.TEXT_FILTER_REGEX),
-                                      myUiProperties.get(MainVcsLogUiProperties.TEXT_FILTER_MATCH_CASE));
+      return new VcsLogTextFilterImpl(
+        ObjectUtil.assertNotNull(ContainerUtil.getFirstItem(values)),
+        myUiProperties.get(MainVcsLogUiProperties.TEXT_FILTER_REGEX),
+        myUiProperties.get(MainVcsLogUiProperties.TEXT_FILTER_MATCH_CASE)
+      );
     }
 
     @Nonnull
@@ -320,9 +322,11 @@ public class VcsLogClassicFilterUi implements VcsLogFilterUi {
     @Nonnull
     private final Set<VirtualFile> myRoots;
 
-    public FileFilterModel(NotNullComputable<VcsLogDataPack> dataPackGetter,
-                           @Nonnull Set<VirtualFile> roots,
-                           MainVcsLogUiProperties uiProperties) {
+    public FileFilterModel(
+      NotNullComputable<VcsLogDataPack> dataPackGetter,
+      @Nonnull Set<VirtualFile> roots,
+      MainVcsLogUiProperties uiProperties
+    ) {
       super("file", dataPackGetter, uiProperties);
       myRoots = roots;
     }
@@ -367,7 +371,7 @@ public class VcsLogClassicFilterUi implements VcsLogFilterUi {
 
     @Nullable
     private VcsLogRootFilter createRootsFilter(@Nonnull List<String> values) {
-      List<VirtualFile> selectedRoots = ContainerUtil.newArrayList();
+      List<VirtualFile> selectedRoots = new ArrayList<>();
       for (String path : values) {
         VirtualFile root = LocalFileSystem.getInstance().findFileByPath(path);
         if (root != null) {

@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.actions;
 
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ide.impl.idea.xdebugger.impl.DebuggerSupport;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -40,6 +40,7 @@ public abstract class XDebuggerActionBase extends AnAction implements AnAction.T
   }
 
   @Override
+  @RequiredUIAccess
   public void update(final AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     boolean hidden = isHidden(event);
@@ -60,7 +61,7 @@ public abstract class XDebuggerActionBase extends AnAction implements AnAction.T
   }
 
   protected boolean isEnabled(final AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project != null) {
       for (DebuggerSupport support : DebuggerSupport.getDebuggerSupports()) {
         if (isEnabled(project, e, support)) {
@@ -79,12 +80,13 @@ public abstract class XDebuggerActionBase extends AnAction implements AnAction.T
   }
 
   @Override
-  public void actionPerformed(final AnActionEvent e) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull final AnActionEvent e) {
     performWithHandler(e);
   }
 
   protected boolean performWithHandler(AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) {
       return true;
     }
@@ -103,7 +105,7 @@ public abstract class XDebuggerActionBase extends AnAction implements AnAction.T
   }
 
   protected boolean isHidden(AnActionEvent event) {
-    final Project project = event.getData(CommonDataKeys.PROJECT);
+    final Project project = event.getData(Project.KEY);
     if (project != null) {
       for (DebuggerSupport support : DebuggerSupport.getDebuggerSupports()) {
         if (!getHandler(support).isHidden(project, event)) {

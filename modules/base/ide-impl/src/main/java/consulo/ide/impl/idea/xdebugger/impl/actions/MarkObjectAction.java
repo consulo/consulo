@@ -15,13 +15,12 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.actions;
 
-import consulo.ui.ex.action.ActionsBundle;
+import consulo.ide.impl.idea.xdebugger.impl.DebuggerSupport;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.project.Project;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.Presentation;
-import consulo.project.Project;
-import consulo.ide.impl.idea.xdebugger.impl.DebuggerSupport;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -30,7 +29,7 @@ import jakarta.annotation.Nonnull;
 public class MarkObjectAction extends XDebuggerActionBase {
   @Override
   public void update(AnActionEvent event) {
-    Project project = event.getData(CommonDataKeys.PROJECT);
+    Project project = event.getData(Project.KEY);
     boolean enabled = false;
     Presentation presentation = event.getPresentation();
     boolean hidden = true;
@@ -42,10 +41,10 @@ public class MarkObjectAction extends XDebuggerActionBase {
           enabled = true;
           String text;
           if (handler.isMarked(project, event)) {
-            text = ActionsBundle.message("action.Debugger.MarkObject.unmark.text");
+            text = ActionLocalize.actionDebuggerMarkobjectUnmarkText().get();
           }
           else {
-            text = ActionsBundle.message("action.Debugger.MarkObject.text");
+            text = ActionLocalize.actionDebuggerMarkobjectText().get();
           }
           presentation.setText(text);
           break;

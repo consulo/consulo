@@ -15,8 +15,7 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
-import consulo.language.editor.CommonDataKeys;
-import consulo.versionControlSystem.log.VcsLogDataKeys;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.log.VcsLogUi;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
 import consulo.ide.impl.idea.vcs.log.ui.frame.MainFrame;
@@ -33,16 +32,18 @@ public class FocusTextFilterAction extends DumbAwareAction {
   }
 
   @Override
+  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
-    VcsLogUi ui = e.getData(VcsLogDataKeys.VCS_LOG_UI);
+    Project project = e.getData(Project.KEY);
+    VcsLogUi ui = e.getData(VcsLogUi.KEY);
     e.getPresentation().setEnabledAndVisible(project != null && ui != null && ui instanceof VcsLogUiImpl);
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getRequiredData(CommonDataKeys.PROJECT);
-    MainFrame mainFrame = ((VcsLogUiImpl)e.getRequiredData(VcsLogDataKeys.VCS_LOG_UI)).getMainFrame();
+    Project project = e.getRequiredData(Project.KEY);
+    MainFrame mainFrame = ((VcsLogUiImpl)e.getRequiredData(VcsLogUi.KEY)).getMainFrame();
     if (mainFrame.getTextFilter().getTextEditor().hasFocus()) {
       ProjectIdeFocusManager.getInstance(project).requestFocus(mainFrame.getGraphTable(), true);
     }

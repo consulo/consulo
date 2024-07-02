@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.vcs.log.graph.impl.print;
 
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.graph.EdgePrintElement;
 import consulo.versionControlSystem.log.graph.PrintElement;
 import consulo.ide.impl.idea.vcs.log.graph.api.LinearGraph;
@@ -31,6 +30,7 @@ import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 public abstract class AbstractPrintElementGenerator implements PrintElementGenerator {
@@ -46,10 +46,11 @@ public abstract class AbstractPrintElementGenerator implements PrintElementGener
   }
 
   @Nonnull
+  @Override
   public Collection<PrintElementWithGraphElement> getPrintElements(int rowIndex) {
     Collection<PrintElementWithGraphElement> result = new ArrayList<>();
 
-    Map<GraphEdge, SimpleRowElement> arrows = ContainerUtil.newHashMap();
+    Map<GraphEdge, SimpleRowElement> arrows = new HashMap<>();
 
     for (SimpleRowElement rowElement : getSimpleRowElements(rowIndex)) {
       if (!rowElement.myType.equals(RowElementType.NODE)) {

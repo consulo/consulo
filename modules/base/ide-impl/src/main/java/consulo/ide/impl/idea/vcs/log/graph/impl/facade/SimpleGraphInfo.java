@@ -32,15 +32,13 @@ import consulo.ide.impl.idea.vcs.log.graph.utils.LinearGraphUtils;
 import consulo.ide.impl.idea.vcs.log.graph.utils.TimestampGetter;
 import consulo.ide.impl.idea.vcs.log.graph.utils.impl.CompressedIntList;
 import consulo.ide.impl.idea.vcs.log.graph.utils.impl.IntTimestampGetter;
+import consulo.util.collection.SmartList;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
 import consulo.versionControlSystem.log.graph.GraphCommit;
-
 import jakarta.annotation.Nonnull;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+
+import java.util.*;
 
 import static consulo.ide.impl.idea.vcs.log.graph.utils.LinearGraphUtils.asLiteLinearGraph;
 
@@ -69,23 +67,25 @@ public class SimpleGraphInfo<CommitId> implements PermanentGraphInfo<CommitId> {
     myBranchNodeIds = branchNodeIds;
   }
 
-  public static <CommitId> SimpleGraphInfo<CommitId> build(@Nonnull final LinearGraph linearGraph,
-                                                           @Nonnull GraphLayout oldLayout,
-                                                           @Nonnull final PermanentCommitsInfo<CommitId> permanentCommitsInfo,
-                                                           int permanentGraphSize,
-                                                           @Nonnull Set<Integer> branchNodeIds) {
+  public static <CommitId> SimpleGraphInfo<CommitId> build(
+    @Nonnull final LinearGraph linearGraph,
+    @Nonnull GraphLayout oldLayout,
+    @Nonnull final PermanentCommitsInfo<CommitId> permanentCommitsInfo,
+    int permanentGraphSize,
+    @Nonnull Set<Integer> branchNodeIds
+  ) {
     int firstVisibleRow = 1000; // todo get first visible row from table somehow
     int delta = 1000;
     final int start = Math.max(0, firstVisibleRow - delta);
     final int end = Math.min(linearGraph.nodesCount(), start + 2 * delta); // no more than 2*1000 commits;
 
-    final List<GraphCommit<CommitId>> graphCommits = ContainerUtil.newArrayListWithCapacity(end - start);
-    final List<CommitId> commitsIdMap = ContainerUtil.newArrayListWithCapacity(end - start);
+    final List<GraphCommit<CommitId>> graphCommits = new ArrayList<>(end - start);
+    final List<CommitId> commitsIdMap = new ArrayList<>(end - start);
 
     for (int row = start; row < end; row++) {
       int nodeId = linearGraph.getNodeId(row);
       CommitId commit = permanentCommitsInfo.getCommitId(nodeId);
-      List<CommitId> parents = ContainerUtil.newSmartList();
+      List<CommitId> parents = new SmartList<>();
       parents.addAll(ContainerUtil.mapNotNull(asLiteLinearGraph(linearGraph).getNodes(row, LiteLinearGraph.NodeFilter.DOWN), row1 -> {
         if (row1 < start || row1 >= end) return null;
         return permanentCommitsInfo.getCommitId(linearGraph.getNodeId(row1));
@@ -99,7 +99,7 @@ public class SimpleGraphInfo<CommitId> implements PermanentGraphInfo<CommitId> {
     PermanentLinearGraphImpl newLinearGraph = PermanentLinearGraphBuilder.newInstance(graphCommits).build();
 
     final int[] layoutIndexes = new int[end - start];
-    List<Integer> headNodeIndexes = ContainerUtil.newArrayList();
+    List<Integer> headNodeIndexes = new ArrayList<>();
 
     ObjectIntMap<CommitId> commitIdToInteger = reverseCommitIdMap(permanentCommitsInfo, permanentGraphSize);
     for (int row = start; row < end; row++) {
@@ -111,12 +111,7 @@ public class SimpleGraphInfo<CommitId> implements PermanentGraphInfo<CommitId> {
       }
     }
 
-    ContainerUtil.sort(headNodeIndexes, new Comparator<Integer>() {
-      @Override
-      public int compare(Integer o1, Integer o2) {
-        return layoutIndexes[o1] - layoutIndexes[o2];
-      }
-    });
+    ContainerUtil.sort(headNodeIndexes, (o1, o2) -> layoutIndexes[o1] - layoutIndexes[o2]);
     int[] starts = new int[headNodeIndexes.size()];
     for (int i = 0; i < starts.length; i++) {
       starts[i] = layoutIndexes[headNodeIndexes.get(i)];
@@ -155,7 +150,7 @@ public class SimpleGraphInfo<CommitId> implements PermanentGraphInfo<CommitId> {
   @Nonnull
   @Override
   public PermanentCommitsInfo<CommitId> getPermanentCommitsInfo() {
-    return new PermanentCommitsInfo<CommitId>() {
+    return new PermanentCommitsInfo<>() {
       @Nonnull
       @Override
       public CommitId getCommitId(int nodeId) {
@@ -180,7 +175,7 @@ public class SimpleGraphInfo<CommitId> implements PermanentGraphInfo<CommitId> {
       @Nonnull
       @Override
       public Set<Integer> convertToNodeIds(@Nonnull Collection<CommitId> heads) {
-        Set<Integer> result = ContainerUtil.newHashSet();
+        Set<Integer> result = new HashSet<>();
         for (int id = 0; id < myLinearGraph.nodesCount(); id++) {
           if (heads.contains(myFunction.apply(id))) {
             result.add(id);

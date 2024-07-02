@@ -1,16 +1,15 @@
 package consulo.ide.impl.idea.vcs.log.ui;
 
 import consulo.logging.Logger;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.JBColor;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * @author Kirill Likhodedov
@@ -19,7 +18,7 @@ public class VcsLogColorManagerImpl implements VcsLogColorManager {
   private static final Logger LOG = Logger.getInstance(VcsLogColorManagerImpl.class);
 
   private static Color[] ROOT_COLORS =
-          {JBColor.RED, JBColor.GREEN, JBColor.BLUE, JBColor.ORANGE, JBColor.CYAN, JBColor.YELLOW, JBColor.MAGENTA, JBColor.PINK};
+    {JBColor.RED, JBColor.GREEN, JBColor.BLUE, JBColor.ORANGE, JBColor.CYAN, JBColor.YELLOW, JBColor.MAGENTA, JBColor.PINK};
 
   @Nonnull
   private final List<VirtualFile> myRoots;
@@ -30,7 +29,7 @@ public class VcsLogColorManagerImpl implements VcsLogColorManager {
   public VcsLogColorManagerImpl(@Nonnull Collection<VirtualFile> roots) {
     myRoots = new ArrayList<>(roots);
     Collections.sort(myRoots, Comparator.comparing(VirtualFile::getName));
-    myRoots2Colors = ContainerUtil.newHashMap();
+    myRoots2Colors = new HashMap<>();
     int i = 0;
     for (VirtualFile root : myRoots) {
       Color color;

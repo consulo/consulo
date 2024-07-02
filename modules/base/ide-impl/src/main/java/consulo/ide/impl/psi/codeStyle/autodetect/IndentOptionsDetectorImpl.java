@@ -6,7 +6,7 @@ import consulo.language.codeStyle.Block;
 import consulo.language.codeStyle.FormattingContext;
 import consulo.language.codeStyle.FormattingModel;
 import consulo.language.codeStyle.FormattingModelBuilder;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.util.io.FileUtil;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.application.progress.ProgressIndicator;
 import consulo.document.Document;
@@ -88,10 +88,7 @@ public class IndentOptionsDetectorImpl implements IndentOptionsDetector {
 
   private boolean isFileBigToDetect() {
     VirtualFile file = myFile.getVirtualFile();
-    if (file != null && file.getLength() > FileUtil.MEGABYTE) {
-      return true;
-    }
-    return false;
+    return file != null && file.getLength() > FileUtil.MEGABYTE;
   }
 }
 

@@ -43,14 +43,14 @@ public class LinearFragmentGenerator {
   @Nonnull
   private final Set<Integer> myPinnedNodes;
 
-  private final Function<Integer, List<Integer>> upNodesFun = new Function<Integer, List<Integer>>() {
+  private final Function<Integer, List<Integer>> upNodesFun = new Function<>() {
     @Override
     public List<Integer> apply(Integer integer) {
       return myLinearGraph.getNodes(integer, UP);
     }
   };
 
-  private final Function<Integer, List<Integer>> downNodesFun = new Function<Integer, List<Integer>>() {
+  private final Function<Integer, List<Integer>> downNodesFun = new Function<>() {
     @Override
     public List<Integer> apply(Integer integer) {
       return myLinearGraph.getNodes(integer, DOWN);
@@ -66,8 +66,8 @@ public class LinearFragmentGenerator {
   public GraphFragment getRelativeFragment(@Nonnull GraphElement element) {
     int upNodeIndex;
     int downNodeIndex;
-    if (element instanceof GraphNode) {
-      upNodeIndex = ((GraphNode)element).getNodeIndex();
+    if (element instanceof GraphNode node) {
+      upNodeIndex = node.getNodeIndex();
       downNodeIndex = upNodeIndex;
     }
     else {
@@ -97,7 +97,7 @@ public class LinearFragmentGenerator {
     return getFragment(upperVisibleNodeIndex, downNodesFun, upNodesFun, myPinnedNodes, true);
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   public GraphFragment getUpFragment(int lowerNodeIndex) {
     return getFragment(lowerNodeIndex, upNodesFun, downNodesFun, myPinnedNodes, false);
   }

@@ -15,18 +15,12 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.Project;
-import consulo.ui.ex.action.ActionButtonComponent;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.popup.ListPopup;
-import consulo.versionControlSystem.log.VcsLogDataKeys;
-import consulo.versionControlSystem.log.VcsLogUi;
 import consulo.ide.impl.wm.impl.ToolWindowContentUI;
+import consulo.project.Project;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.ex.popup.ListPopup;
+import consulo.versionControlSystem.log.VcsLogUi;
 import jakarta.annotation.Nonnull;
 
 import java.awt.*;
@@ -43,7 +37,14 @@ public class VcsLogGearActionGroup extends DumbAwareAction {
   public void actionPerformed(@Nonnull AnActionEvent e) {
     DefaultActionGroup group = new DefaultActionGroup(ActionManager.getInstance().getAction(myActionGroup));
 
-    ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(null, group, e.getDataContext(), JBPopupFactory.ActionSelectionAid.MNEMONICS, true, ToolWindowContentUI.POPUP_PLACE);
+    ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(
+      null,
+      group,
+      e.getDataContext(),
+      JBPopupFactory.ActionSelectionAid.MNEMONICS,
+      true,
+      ToolWindowContentUI.POPUP_PLACE
+    );
     Component component = e.getInputEvent().getComponent();
     if (component instanceof ActionButtonComponent) {
       popup.showUnderneathOf(component);
@@ -55,8 +56,8 @@ public class VcsLogGearActionGroup extends DumbAwareAction {
 
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
-    VcsLogUi logUi = e.getData(VcsLogDataKeys.VCS_LOG_UI);
+    Project project = e.getData(Project.KEY);
+    VcsLogUi logUi = e.getData(VcsLogUi.KEY);
     e.getPresentation().setEnabledAndVisible(project != null && logUi != null);
   }
 }

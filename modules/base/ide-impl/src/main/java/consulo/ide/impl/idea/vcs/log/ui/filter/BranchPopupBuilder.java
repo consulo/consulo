@@ -125,10 +125,10 @@ public abstract class BranchPopupBuilder {
   }
 
   private static class Groups {
-    private final TreeSet<String> singletonGroups = ContainerUtil.newTreeSet();
-    private final List<List<String>> recentGroups = ContainerUtil.newArrayList();
-    private final TreeMap<String, TreeSet<String>> expandedGroups = ContainerUtil.newTreeMap();
-    private final TreeMap<String, TreeSet<String>> collapsedGroups = ContainerUtil.newTreeMap();
+    private final TreeSet<String> singletonGroups = new TreeSet<>();
+    private final List<List<String>> recentGroups = new ArrayList<>();
+    private final TreeMap<String, TreeSet<String>> expandedGroups = new TreeMap<>();
+    private final TreeMap<String, TreeSet<String>> collapsedGroups = new TreeMap<>();
   }
 
   private static void putActionsForReferences(List<RefGroup> references, Groups actions) {

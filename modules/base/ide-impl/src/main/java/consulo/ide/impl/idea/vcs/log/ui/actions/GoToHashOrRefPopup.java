@@ -15,15 +15,13 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.progress.ProgressManager;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.textCompletion.DefaultTextCompletionValueDescriptor;
 import consulo.ide.impl.idea.util.textCompletion.ValuesCompletionProvider;
-import consulo.versionControlSystem.log.VcsLogRefs;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogColorManager;
 import consulo.ide.impl.idea.vcs.log.ui.frame.VcsLogGraphTable;
-import consulo.versionControlSystem.util.VcsImplUtil;
 import consulo.language.editor.completion.CompletionParameters;
 import consulo.language.editor.completion.CompletionResultSet;
 import consulo.language.editor.completion.lookup.InsertHandler;
@@ -39,18 +37,18 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.ImageEffects;
+import consulo.versionControlSystem.log.VcsLogRefs;
 import consulo.versionControlSystem.log.VcsRef;
+import consulo.versionControlSystem.util.VcsImplUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.util.Collection;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -88,15 +86,12 @@ public class GoToHashOrRefPopup {
           final Future future = ((mySelectedRef == null || (!mySelectedRef.getName().equals(getText().trim()))) ? myOnSelectedHash.apply(getText().trim()) : myOnSelectedRef.apply(mySelectedRef));
           myFuture = future;
           showProgress();
-          ApplicationManager.getApplication().executeOnPooledThread(() -> {
+          Application.get().executeOnPooledThread(() -> {
             try {
               future.get();
               okPopup();
             }
-            catch (CancellationException ex) {
-              cancelPopup();
-            }
-            catch (InterruptedException ex) {
+            catch (CancellationException | InterruptedException ex) {
               cancelPopup();
             }
             catch (ExecutionException ex) {
@@ -120,11 +115,16 @@ public class GoToHashOrRefPopup {
     panel.add(myTextField);
     panel.setBorder(new EmptyBorder(2, 2, 2, 2));
 
-    myPopup = JBPopupFactory.getInstance().createComponentPopupBuilder(panel, myTextField.getPreferableFocusComponent()).setCancelOnClickOutside(true).setCancelOnWindowDeactivation(true)
-            .setCancelKeyEnabled(true).setRequestFocus(true).createPopup();
+    myPopup = JBPopupFactory.getInstance()
+      .createComponentPopupBuilder(panel, myTextField.getPreferableFocusComponent())
+      .setCancelOnClickOutside(true)
+      .setCancelOnWindowDeactivation(true)
+      .setCancelKeyEnabled(true)
+      .setRequestFocus(true)
+      .createPopup();
     myPopup.addListener(new JBPopupListener.Adapter() {
       @Override
-      public void onClosed(LightweightWindowEvent event) {
+      public void onClosed(@Nonnull LightweightWindowEvent event) {
         if (!event.isOk()) {
           if (myFuture != null) {
             myFuture.cancel(true);
@@ -137,11 +137,11 @@ public class GoToHashOrRefPopup {
   }
 
   private void cancelPopup() {
-    ApplicationManager.getApplication().invokeLater(() -> myPopup.cancel());
+    Application.get().invokeLater(myPopup::cancel);
   }
 
   private void okPopup() {
-    ApplicationManager.getApplication().invokeLater(() -> myPopup.closeOk(null));
+    Application.get().invokeLater(() -> myPopup.closeOk(null));
   }
 
   public void show(@Nonnull JComponent anchor) {
@@ -155,21 +155,28 @@ public class GoToHashOrRefPopup {
     @Nonnull
     private final Collection<VirtualFile> myRoots;
 
-    public VcsRefCompletionProvider(@Nonnull Project project,
-                                    @Nonnull VcsLogRefs refs,
-                                    @Nonnull Collection<VirtualFile> roots,
-                                    @Nonnull VcsLogColorManager colorManager,
-                                    @Nonnull Comparator<VcsRef> comparator) {
+    public VcsRefCompletionProvider(
+      @Nonnull Project project,
+      @Nonnull VcsLogRefs refs,
+      @Nonnull Collection<VirtualFile> roots,
+      @Nonnull VcsLogColorManager colorManager,
+      @Nonnull Comparator<VcsRef> comparator
+    ) {
       super(new VcsRefDescriptor(project, colorManager, comparator, roots), ContainerUtil.emptyList());
       myRefs = refs;
       myRoots = roots;
     }
 
     @Override
-    public void fillCompletionVariants(@Nonnull CompletionParameters parameters, @Nonnull String prefix, @Nonnull CompletionResultSet result) {
+    public void fillCompletionVariants(
+      @Nonnull CompletionParameters parameters,
+      @Nonnull String prefix,
+      @Nonnull CompletionResultSet result
+    ) {
       addValues(result, filterAndSort(result, myRefs.getBranches().stream()));
 
-      Future<List<VcsRef>> future = ApplicationManager.getApplication().executeOnPooledThread(() -> filterAndSort(result, myRefs.stream().filter(ref -> !ref.getType().isBranch())));
+      Future<List<VcsRef>> future = Application.get()
+        .executeOnPooledThread(() -> filterAndSort(result, myRefs.stream().filter(ref -> !ref.getType().isBranch())));
       while (true) {
         try {
           List<VcsRef> tags = future.get(TIMEOUT, TimeUnit.MILLISECONDS);
@@ -200,7 +207,8 @@ public class GoToHashOrRefPopup {
 
     @Nonnull
     private List<VcsRef> filterAndSort(@Nonnull CompletionResultSet result, @Nonnull Stream<VcsRef> stream) {
-      return ContainerUtil.sorted(stream.filter(ref -> myRoots.contains(ref.getRoot()) && result.getPrefixMatcher().prefixMatches(ref.getName())).collect(Collectors.toList()), myDescriptor);
+      return ContainerUtil.sorted(stream.filter(ref -> myRoots.contains(ref.getRoot())
+        && result.getPrefixMatcher().prefixMatches(ref.getName())).collect(Collectors.toList()), myDescriptor);
     }
   }
 
@@ -212,9 +220,14 @@ public class GoToHashOrRefPopup {
     @Nonnull
     private final Comparator<VcsRef> myReferenceComparator;
     @Nonnull
-    private final Map<VirtualFile, String> myCachedRootNames = ContainerUtil.newHashMap();
+    private final Map<VirtualFile, String> myCachedRootNames = new HashMap<>();
 
-    private VcsRefDescriptor(@Nonnull Project project, @Nonnull VcsLogColorManager manager, @Nonnull Comparator<VcsRef> comparator, @Nonnull Collection<VirtualFile> roots) {
+    private VcsRefDescriptor(
+      @Nonnull Project project,
+      @Nonnull VcsLogColorManager manager,
+      @Nonnull Comparator<VcsRef> comparator,
+      @Nonnull Collection<VirtualFile> roots
+    ) {
       myProject = project;
       myColorManager = manager;
       myReferenceComparator = comparator;
@@ -269,16 +282,14 @@ public class GoToHashOrRefPopup {
     protected InsertHandler<LookupElement> createInsertHandler(@Nonnull VcsRef item) {
       return (context, item1) -> {
         mySelectedRef = (VcsRef)item1.getObject();
-        ApplicationManager.getApplication().invokeLater(() -> {
-          // handleInsert is called in the middle of some other code that works with editor
-          // (see CodeCompletionHandlerBase.insertItem)
-          // for example, scrolls editor
-          // problem is that in onOk we make text field not editable
-          // by some reason this is done by disposing its editor and creating a new one
-          // so editor gets disposed here and CodeCompletionHandlerBase can not finish doing whatever it is doing with it
-          // I counter this by invoking onOk in invokeLater
-          myTextField.onOk();
-        });
+        // handleInsert is called in the middle of some other code that works with editor
+        // (see CodeCompletionHandlerBase.insertItem)
+        // for example, scrolls editor
+        // problem is that in onOk we make text field not editable
+        // by some reason this is done by disposing its editor and creating a new one
+        // so editor gets disposed here and CodeCompletionHandlerBase can not finish doing whatever it is doing with it
+        // I counter this by invoking onOk in invokeLater
+        myProject.getApplication().invokeLater(myTextField::onOk);
       };
     }
   }

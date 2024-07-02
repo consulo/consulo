@@ -15,14 +15,15 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.Change;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.CreatePatchFromChangesAction;
 
 public class VcsLogCreatePatchAction extends CreatePatchFromChangesAction {
-
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
     Change[] changes;
     e.getPresentation().setEnabled((changes = e.getData(VcsDataKeys.CHANGES)) != null && changes.length > 0);

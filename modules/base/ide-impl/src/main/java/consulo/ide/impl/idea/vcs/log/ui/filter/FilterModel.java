@@ -16,13 +16,13 @@
 package consulo.ide.impl.idea.vcs.log.ui.filter;
 
 import consulo.application.util.function.Computable;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.versionControlSystem.log.VcsLogDataPack;
 import consulo.versionControlSystem.log.VcsLogFilter;
 import consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -34,7 +34,7 @@ abstract class FilterModel<Filter extends VcsLogFilter> {
   @Nonnull
   private final Computable<VcsLogDataPack> myDataPackProvider;
   @Nonnull
-  private final Collection<Runnable> mySetFilterListeners = ContainerUtil.newArrayList();
+  private final Collection<Runnable> mySetFilterListeners = new ArrayList<>();
 
   @Nullable private Filter myFilter;
 

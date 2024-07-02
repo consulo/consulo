@@ -16,7 +16,7 @@
 package consulo.desktop.awt.fileEditor.impl;
 
 import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.registry.Registry;
@@ -24,19 +24,18 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.ScrollingModel;
 import consulo.dataContext.DataProvider;
+import consulo.desktop.awt.uiOld.AWTComponentProviderUtil;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.*;
 import consulo.fileEditor.event.FileEditorManagerBeforeListener;
 import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.fileEditor.internal.EditorWindowHolder;
 import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.desktop.awt.uiOld.AWTComponentProviderUtil;
 import consulo.ide.impl.fileEditor.FileEditorWindowBase;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.EditorHistoryManagerImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.ide.impl.idea.openapi.ui.ThreeComponentsSplitter;
 import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
@@ -417,7 +416,7 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
       addFocusListener(new FocusAdapter() {
         @Override
         public void focusGained(FocusEvent e) {
-          ApplicationManager.getApplication().invokeLater(() -> {
+          Application.get().invokeLater(() -> {
             if (!hasFocus()) return;
             final JComponent focus = myEditor.getSelectedEditorWithProvider().getFileEditor().getPreferredFocusedComponent();
             if (focus != null && !focus.hasFocus()) {
@@ -711,6 +710,7 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
     }
   }
 
+  @RequiredUIAccess
   private void processSiblingEditor(final DesktopFileEditorWithProviderComposite siblingEditor) {
     if (getTabCount() < UISettings.getInstance().getEditorTabLimit() && findFileComposite(siblingEditor.getFile()) == null) {
       setEditor(siblingEditor, true);
@@ -825,7 +825,7 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
     final VirtualFile[] allFiles = getFiles();
     final Set<VirtualFile> histFiles = EditorHistoryManagerImpl.getInstance(getManager().getProject()).getFileSet();
 
-    LinkedHashSet<VirtualFile> closingOrder = ContainerUtil.newLinkedHashSet();
+    LinkedHashSet<VirtualFile> closingOrder = new LinkedHashSet<>();
 
     // first, we search for files not in history
     for (final VirtualFile file : allFiles) {

@@ -15,11 +15,11 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.actions;
 
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.action.ToggleAction;
-import consulo.project.Project;
 import consulo.ide.impl.idea.xdebugger.impl.DebuggerSupport;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.ToggleAction;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -27,7 +27,7 @@ import consulo.ide.impl.idea.xdebugger.impl.DebuggerSupport;
 public class MuteBreakpointAction extends ToggleAction {
   @Override
   public boolean isSelected(final AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project != null) {
       for (DebuggerSupport support : DebuggerSupport.getDebuggerSupports()) {
         DebuggerToggleActionHandler handler = support.getMuteBreakpointsHandler();
@@ -41,7 +41,7 @@ public class MuteBreakpointAction extends ToggleAction {
 
   @Override
   public void setSelected(final AnActionEvent e, final boolean state) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project != null) {
       for (DebuggerSupport support : DebuggerSupport.getDebuggerSupports()) {
         DebuggerToggleActionHandler handler = support.getMuteBreakpointsHandler();
@@ -54,9 +54,9 @@ public class MuteBreakpointAction extends ToggleAction {
   }
 
   @Override
-  public void update(final AnActionEvent e) {
+  public void update(@Nonnull final AnActionEvent e) {
     super.update(e);
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project != null) {
       for (DebuggerSupport support : DebuggerSupport.getDebuggerSupports()) {
         DebuggerToggleActionHandler handler = support.getMuteBreakpointsHandler();

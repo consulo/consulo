@@ -17,7 +17,6 @@
 package consulo.ide.impl.idea.vcs.log.graph.impl.permanent;
 
 
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.versionControlSystem.log.graph.GraphCommit;
 import jakarta.annotation.Nonnull;
 
@@ -26,7 +25,7 @@ import java.util.*;
 public class DuplicateParentFixer {
 
   public static <CommitId> AbstractList<? extends GraphCommit<CommitId>> fixDuplicateParentCommits(final List<? extends GraphCommit<CommitId>> finalCommits) {
-    return new AbstractList<GraphCommit<CommitId>>() {
+    return new AbstractList<>() {
       @Override
       public GraphCommit<CommitId> get(int index) {
         return fixParentsDuplicate(finalCommits.get(index));
@@ -87,7 +86,7 @@ public class DuplicateParentFixer {
     Set<CommitId> allParents = new HashSet<>(parents);
     if (parents.size() == allParents.size()) return commit;
 
-    List<CommitId> correctParents = ContainerUtil.newArrayList();
+    List<CommitId> correctParents = new ArrayList<>();
     for (CommitId commitId : parents) {
       if (allParents.remove(commitId)) {
         correctParents.add(commitId);

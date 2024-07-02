@@ -15,43 +15,48 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.Project;
-import consulo.versionControlSystem.log.VcsLog;
-import consulo.versionControlSystem.log.VcsLogDataKeys;
-import consulo.versionControlSystem.log.VcsLogUi;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.vcs.log.impl.VcsGoToRefComparator;
-import consulo.versionControlSystem.log.util.VcsLogUtil;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.versionControlSystem.log.VcsLog;
+import consulo.versionControlSystem.log.VcsLogUi;
+import consulo.versionControlSystem.log.util.VcsLogUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 
 import java.util.Set;
 
 public class GoToHashOrRefAction extends DumbAwareAction {
-
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     VcsLogUtil.triggerUsage(e);
 
-    Project project = e.getRequiredData(CommonDataKeys.PROJECT);
-    final VcsLog log = e.getRequiredData(VcsLogDataKeys.VCS_LOG);
-    final VcsLogUiImpl logUi = (VcsLogUiImpl)e.getRequiredData(VcsLogDataKeys.VCS_LOG_UI);
+    Project project = e.getRequiredData(Project.KEY);
+    final VcsLog log = e.getRequiredData(VcsLog.KEY);
+    final VcsLogUiImpl logUi = (VcsLogUiImpl)e.getRequiredData(VcsLogUi.KEY);
 
     Set<VirtualFile> visibleRoots = VcsLogUtil.getVisibleRoots(logUi);
-    GoToHashOrRefPopup popup =
-      new GoToHashOrRefPopup(project, logUi.getDataPack().getRefs(), visibleRoots, text -> log.jumpToReference(text),
-                                                      vcsRef -> logUi.jumpToCommit(vcsRef.getCommitHash(), vcsRef.getRoot()),
-                             logUi.getColorManager(),
-                             new VcsGoToRefComparator(logUi.getDataPack().getLogProviders()));
+    GoToHashOrRefPopup popup = new GoToHashOrRefPopup(
+      project,
+      logUi.getDataPack().getRefs(),
+      visibleRoots,
+      log::jumpToReference,
+      vcsRef -> logUi.jumpToCommit(vcsRef.getCommitHash(), vcsRef.getRoot()),
+      logUi.getColorManager(),
+      new VcsGoToRefComparator(logUi.getDataPack().getLogProviders())
+    );
     popup.show(logUi.getTable());
   }
 
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
-    VcsLog log = e.getData(VcsLogDataKeys.VCS_LOG);
-    VcsLogUi logUi = e.getData(VcsLogDataKeys.VCS_LOG_UI);
-    e.getPresentation().setEnabledAndVisible(e.getData(CommonDataKeys.PROJECT) != null && log != null && logUi != null);
+    VcsLog log = e.getData(VcsLog.KEY);
+    VcsLogUi logUi = e.getData(VcsLogUi.KEY);
+    e.getPresentation().setEnabledAndVisible(e.getData(Project.KEY) != null && log != null && logUi != null);
   }
 }

@@ -23,7 +23,6 @@ import consulo.externalService.statistic.UsageDescriptor;
 import consulo.project.Project;
 import consulo.versionControlSystem.VcsKey;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import consulo.versionControlSystem.log.VcsLogProvider;
 import consulo.ide.impl.idea.vcs.log.data.DataPack;
@@ -33,6 +32,7 @@ import consulo.ide.impl.idea.vcs.log.impl.VcsProjectLog;
 
 import jakarta.annotation.Nonnull;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -51,7 +51,7 @@ public class VcsLogRepoSizeCollector extends AbstractApplicationUsagesCollector 
         PermanentGraph<Integer> permanentGraph = dataPack.getPermanentGraph();
         MultiMap<VcsKey, VirtualFile> groupedRoots = groupRootsByVcs(dataPack.getLogProviders());
 
-        Set<UsageDescriptor> usages = ContainerUtil.newHashSet();
+        Set<UsageDescriptor> usages = new HashSet<>();
         usages.add(StatisticsUtilKt.getCountingUsage("data.commit.count", permanentGraph.getAllCommits().size(), asList(0, 1, 100, 1000, 10 * 1000, 100 * 1000, 500 * 1000)));
         for (VcsKey vcs : groupedRoots.keySet()) {
           usages.add(StatisticsUtilKt.getCountingUsage("data." + vcs.getName().toLowerCase() + ".root.count", groupedRoots.get(vcs).size(), asList(0, 1, 2, 5, 8, 15, 30, 50, 100, 500, 1000)));

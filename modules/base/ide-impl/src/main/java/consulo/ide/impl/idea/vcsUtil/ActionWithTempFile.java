@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.vcsUtil;
 
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.util.io.FileUtil;
 import consulo.versionControlSystem.VcsException;
 import org.jetbrains.annotations.NonNls;
 
@@ -50,7 +50,7 @@ public abstract class ActionWithTempFile {
   private void init() throws IOException {
     myTempFile = FileUtil.createTempFile(TMP_PREFIX, TMP_SUFFIX);
     FileUtil.delete(myTempFile);
-    FileUtil.rename(mySourceFile, myTempFile);
+    consulo.ide.impl.idea.openapi.util.io.FileUtil.rename(mySourceFile, myTempFile);
   }
 
   protected abstract void executeInternal() throws VcsException;
@@ -61,7 +61,7 @@ public abstract class ActionWithTempFile {
     }
     finally {
       try {
-        FileUtil.rename(myTempFile, mySourceFile);
+        consulo.ide.impl.idea.openapi.util.io.FileUtil.rename(myTempFile, mySourceFile);
       }
       finally {
         FileUtil.delete(myTempFile);

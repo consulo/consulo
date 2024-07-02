@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
 import consulo.application.AllIcons;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import consulo.application.util.registry.Registry;
@@ -33,20 +33,19 @@ public class OpenAnotherLogTabAction extends DumbAwareAction {
 
   @Override
   public void update(AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null || !Registry.is("vcs.log.open.another.log.visible", false)) {
       e.getPresentation().setEnabledAndVisible(false);
       return;
     }
     VcsProjectLog projectLog = VcsProjectLog.getInstance(project);
     VcsLogManager logManager = e.getData(VcsLogInternalDataKeys.LOG_MANAGER);
-    e.getPresentation()
-            .setEnabledAndVisible(logManager != null && projectLog.getLogManager() == logManager); // only for main log (it is a question, how and where we want to open tabs for external logs)
+    e.getPresentation().setEnabledAndVisible(logManager != null && projectLog.getLogManager() == logManager); // only for main log (it is a question, how and where we want to open tabs for external logs)
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    VcsLogContentProvider
-            .openAnotherLogTab(e.getRequiredData(VcsLogInternalDataKeys.LOG_MANAGER), e.getRequiredData(CommonDataKeys.PROJECT));
+    VcsLogContentProvider.openAnotherLogTab(e.getRequiredData(VcsLogInternalDataKeys.LOG_MANAGER), e.getRequiredData(Project.KEY));
   }
 }
