@@ -22,6 +22,7 @@ import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.ide.IdeTooltip;
 import consulo.ide.impl.idea.ui.LightweightHint;
 import consulo.ide.impl.idea.ui.ListenerUtil;
+import consulo.language.editor.hint.HintColorUtil;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.hint.QuestionAction;
 import consulo.language.editor.impl.internal.hint.HintListener;
@@ -50,6 +51,7 @@ import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.lang.BitUtil;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import jakarta.annotation.Nonnull;
@@ -67,6 +69,7 @@ import java.util.List;
 public class HintManagerImpl extends HintManager {
   private static final Logger LOG = Logger.getInstance(HintManager.class);
 
+  private final Application myApplication;
   private final MyEditorManagerListener myEditorManagerListener;
   private final EditorMouseListener myEditorMouseListener;
 
@@ -84,12 +87,12 @@ public class HintManagerImpl extends HintManager {
   private boolean myRequestFocusForNextHint;
 
   private static int getPriority(QuestionAction action) {
-    return action instanceof PriorityQuestionAction ? ((PriorityQuestionAction)action).getPriority() : 0;
+    return action instanceof PriorityQuestionAction priorityQuestionAction ? priorityQuestionAction.getPriority() : 0;
   }
 
   @RequiredUIAccess
   public boolean canShowQuestionAction(QuestionAction action) {
-    Application.get().assertIsDispatchThread();
+    myApplication.assertIsDispatchThread();
     return myQuestionAction == null || getPriority(myQuestionAction) <= getPriority(action);
   }
 
@@ -113,7 +116,9 @@ public class HintManagerImpl extends HintManager {
     return (HintManagerImpl)ServiceManager.getService(HintManager.class);
   }
 
-  public HintManagerImpl() {
+  @Inject
+  public HintManagerImpl(Application application) {
+    myApplication = application;
     myEditorManagerListener = new MyEditorManagerListener();
 
     myCaretMoveListener = new CaretListener() {
@@ -137,7 +142,7 @@ public class HintManagerImpl extends HintManager {
       projectManagerListener.projectOpened(project);
     }
 
-    MessageBusConnection busConnection = Application.get().getMessageBus().connect();
+    MessageBusConnection busConnection = myApplication.getMessageBus().connect();
     busConnection.subscribe(ProjectManagerListener.class, projectManagerListener);
     busConnection.subscribe(AnActionListener.class, new MyAnActionListener());
 
@@ -162,7 +167,9 @@ public class HintManagerImpl extends HintManager {
       @Override
       public void documentChanged(@Nonnull DocumentEvent event) {
         LOG.assertTrue(SwingUtilities.isEventDispatchThread());
-        if (event.getOldLength() == 0 && event.getNewLength() == 0) return;
+        if (event.getOldLength() == 0 && event.getNewLength() == 0) {
+          return;
+        }
         HintInfo[] infos = getHintsStackArray();
         for (HintInfo info : infos) {
           if (BitUtil.isSet(info.flags, HIDE_BY_TEXT_CHANGE)) {
@@ -202,16 +209,14 @@ public class HintManagerImpl extends HintManager {
 
   @RequiredUIAccess
   public boolean performCurrentQuestionAction() {
-    Application.get().assertIsDispatchThread();
+    myApplication.assertIsDispatchThread();
     if (myQuestionAction != null && myQuestionHint != null) {
       if (myQuestionHint.isVisible()) {
         if (LOG.isDebugEnabled()) {
           LOG.debug("performing an action:" + myQuestionAction);
         }
-        if (myQuestionAction.execute()) {
-          if (myQuestionHint != null) {
-            myQuestionHint.hide();
-          }
+        if (myQuestionAction.execute() && myQuestionHint != null) {
+          myQuestionHint.hide();
         }
         return true;
       }
@@ -238,9 +243,8 @@ public class HintManagerImpl extends HintManager {
   public boolean hasShownHintsThatWillHideByOtherHint(boolean willShowTooltip) {
     LOG.assertTrue(SwingUtilities.isEventDispatchThread());
     for (HintInfo hintInfo : getHintsStackArray()) {
-      if (hintInfo.hint.isVisible() && BitUtil.isSet(hintInfo.flags, HIDE_BY_OTHER_HINT)) return true;
-      if (willShowTooltip && hintInfo.hint.isAwtTooltip()) {
-        // only one AWT tooltip can be visible, so this hint will hide even though it's not marked with HIDE_BY_OTHER_HINT
+      if (hintInfo.hint.isVisible() && BitUtil.isSet(hintInfo.flags, HIDE_BY_OTHER_HINT)
+        || willShowTooltip && hintInfo.hint.isAwtTooltip()) {
         return true;
       }
     }
@@ -248,14 +252,18 @@ public class HintManagerImpl extends HintManager {
   }
 
   private static void updateScrollableHintPosition(VisibleAreaEvent e, LightweightHint hint, boolean hideIfOutOfEditor) {
-    if (hint.getComponent() instanceof ScrollAwareHint) {
-      ((ScrollAwareHint)hint.getComponent()).editorScrolled();
+    if (hint.getComponent() instanceof ScrollAwareHint scrollAwareHint) {
+      scrollAwareHint.editorScrolled();
     }
 
-    if (!hint.isVisible()) return;
+    if (!hint.isVisible()) {
+      return;
+    }
 
     Editor editor = e.getEditor();
-    if (!editor.getComponent().isShowing() || editor.isOneLineMode()) return;
+    if (!editor.getComponent().isShowing() || editor.isOneLineMode()) {
+      return;
+    }
     Rectangle newRectangle = e.getOldRectangle();
     Rectangle oldRectangle = e.getNewRectangle();
 
@@ -294,7 +302,7 @@ public class HintManagerImpl extends HintManager {
     final int timeout,
     final boolean reviveOnEditorChange
   ) {
-    Application.get().assertIsDispatchThread();
+    myApplication.assertIsDispatchThread();
     editor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
     editor.getScrollingModel().runActionOnScrollingFinished(() -> {
       LogicalPosition pos = editor.getCaretModel().getLogicalPosition();
@@ -353,9 +361,10 @@ public class HintManagerImpl extends HintManager {
       hideAllHints();
     }
 
-    Application application = Application.get();
-    if (!application.isUnitTestMode() && !editor.getContentComponent().isShowing()) return;
-    if (!application.isActive()) return;
+    if (!myApplication.isUnitTestMode() && !editor.getContentComponent().isShowing()
+      || !myApplication.isActive()) {
+      return;
+    }
 
     updateLastEditor(editor);
 
@@ -443,7 +452,9 @@ public class HintManagerImpl extends HintManager {
 
   @RequiredUIAccess
   private static void doShowInGivenLocation(final LightweightHint hint, final Editor editor, Point p, HintHint hintInfo, boolean updateSize) {
-    if (Application.get().isUnitTestMode()) return;
+    if (Application.get().isUnitTestMode()) {
+      return;
+    }
     JComponent externalComponent = getExternalComponent(editor);
     Dimension size = updateSize ? hint.getComponent().getPreferredSize() : hint.getComponent().getSize();
 
@@ -532,7 +543,9 @@ public class HintManagerImpl extends HintManager {
     if (rootPane != null) {
       JLayeredPane lp = rootPane.getLayeredPane();
       for (HintInfo info : getHintsStackArray()) {
-        if (!info.hint.isSelectingHint()) continue;
+        if (!info.hint.isSelectingHint()) {
+          continue;
+        }
         IdeTooltip tooltip = info.hint.getCurrentIdeTooltip();
         if (tooltip != null) {
           Point p = tooltip.getShowingPoint().getPoint(lp);
@@ -677,7 +690,9 @@ public class HintManagerImpl extends HintManager {
     @PositionFlags short constraint,
     boolean showByBalloon
   ) {
-    if (Application.get().isHeadlessEnvironment()) return new Point();
+    if (Application.get().isHeadlessEnvironment()) {
+      return new Point();
+    }
     Point p = _getHintPosition(hint, editor, pos1, pos2, constraint, showByBalloon);
     JComponent externalComponent = getExternalComponent(editor);
     Dimension hintSize = hint.getComponent().getPreferredSize();
@@ -706,7 +721,9 @@ public class HintManagerImpl extends HintManager {
   public static JComponent getExternalComponent(@Nonnull Editor editor) {
     JComponent externalComponent = editor.getComponent();
     JRootPane rootPane = externalComponent.getRootPane();
-    if (rootPane == null) return externalComponent;
+    if (rootPane == null) {
+      return externalComponent;
+    }
     JLayeredPane layeredPane = rootPane.getLayeredPane();
     return layeredPane != null ? layeredPane : rootPane;
   }
@@ -806,7 +823,7 @@ public class HintManagerImpl extends HintManager {
 
   @RequiredUIAccess
   public void showInformationHint(@Nonnull Editor editor, @Nonnull JComponent component, @PositionFlags short position) {
-    if (Application.get().isUnitTestMode()) {
+    if (myApplication.isUnitTestMode()) {
       return;
     }
     AccessibleContextUtil.setName(component, "Hint");
@@ -868,12 +885,13 @@ public class HintManagerImpl extends HintManager {
     @Nonnull final QuestionAction action,
     @PositionFlags short constraint
   ) {
-    Application.get().assertIsDispatchThread();
+    myApplication.assertIsDispatchThread();
     hideQuestionHint();
     TextAttributes attributes = new TextAttributes();
-    attributes.setEffectColor(TargetAWT.from(HintUtil.QUESTION_UNDERSCORE_COLOR));
+    attributes.setEffectColor(TargetAWT.from(HintColorUtil.QUESTION_UNDERSCORE_COLOR));
     attributes.setEffectType(EffectType.LINE_UNDERSCORE);
-    final RangeHighlighter highlighter = editor.getMarkupModel().addRangeHighlighter(offset1, offset2, HighlighterLayer.ERROR + 1, attributes, HighlighterTargetArea.EXACT_RANGE);
+    final RangeHighlighter highlighter = editor.getMarkupModel()
+      .addRangeHighlighter(offset1, offset2, HighlighterLayer.ERROR + 1, attributes, HighlighterTargetArea.EXACT_RANGE);
 
     hint.addHintListener(new HintListener() {
       @Override
@@ -888,14 +906,22 @@ public class HintManagerImpl extends HintManager {
       }
     });
 
-    showEditorHint(hint, editor, p, HIDE_BY_ANY_KEY | HIDE_BY_TEXT_CHANGE | UPDATE_BY_SCROLLING | HIDE_IF_OUT_OF_EDITOR | DONT_CONSUME_ESCAPE, 0, false, createHintHint(editor, p, hint, constraint));
+    showEditorHint(
+      hint,
+      editor,
+      p,
+      HIDE_BY_ANY_KEY | HIDE_BY_TEXT_CHANGE | UPDATE_BY_SCROLLING | HIDE_IF_OUT_OF_EDITOR | DONT_CONSUME_ESCAPE,
+      0,
+      false,
+      createHintHint(editor, p, hint, constraint)
+    );
     myQuestionAction = action;
     myQuestionHint = hint;
   }
 
   @RequiredUIAccess
   private void hideQuestionHint() {
-    Application.get().assertIsDispatchThread();
+    myApplication.assertIsDispatchThread();
     if (myQuestionHint != null) {
       myQuestionHint.hide();
       myQuestionHint = null;
@@ -985,10 +1011,14 @@ public class HintManagerImpl extends HintManager {
     @Override
     @RequiredUIAccess
     public void beforeActionPerformed(@Nonnull AnAction action, @Nonnull DataContext dataContext, @Nonnull AnActionEvent event) {
-      if (action instanceof ActionToIgnore) return;
+      if (action instanceof ActionToIgnore) {
+        return;
+      }
 
       AnAction escapeAction = ActionManagerEx.getInstanceEx().getAction(IdeActions.ACTION_EDITOR_ESCAPE);
-      if (action == escapeAction) return;
+      if (action == escapeAction) {
+        return;
+      }
 
       hideHints(HIDE_BY_ANY_KEY, false, false);
     }
@@ -1020,11 +1050,11 @@ public class HintManagerImpl extends HintManager {
     @Override
     @RequiredUIAccess
     public void projectClosed(@Nonnull Project project) {
-      Application.get().assertIsDispatchThread();
+      myApplication.assertIsDispatchThread();
 
       // avoid leak through consulo.ide.impl.idea.codeInsight.hint.TooltipController.myCurrentTooltip
       TooltipController.getInstance().cancelTooltips();
-      Application.get().invokeLater(() -> hideHints(0, false, false));
+      myApplication.invokeLater(() -> hideHints(0, false, false));
 
       myQuestionAction = null;
       myQuestionHint = null;
