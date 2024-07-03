@@ -735,6 +735,14 @@ run.dashboard.stopped.group.name:
   text: Stopped
 run.dashboard.failed.group.name:
   text: Failed
+run.dashboard.configurable.add.configuration.type:
+  text: Add Configuration Type
+run.dashboard.configurable.types.panel.hint:
+  text: Select one or more types
+run.dashboard.remove.run.configuration.type.confirmation:
+  text: Remove {0} from Services?
+run.dashboard.remove.run.configuration.types.confirmation:
+  text: Remove {0} configuration types from Services?
 confirm.process.stop:
   text: Confirm process stop
 stop.process:
@@ -805,5 +813,67 @@ log.monitor.edit.aliases.show.all.checkbox.title:
   text: '&Show all files coverable by pattern'
 title.submitting.error.report:
   text: Submitting Error Report
+
+service.view.open.in.new.tab.ad.text:
+  text: Drag node onto tool window header to open a new tab
+service.view.empty.tree.text:
+  text: No services configured.
+service.view.empty.tab.text:
+  text: No content available
+service.view.empty.selection.text:
+  text: Select service to view details
+service.view.add.service.action.name:
+  text: Add service
+service.view.delete.confirmation:
+  text: "Delete {0}?"
+service.view.items:
+  text: "{0, choice, 1#1 item|1<{0,number,integer} items}"
+service.view.group.label:
+  text: "Group name:"
+service.view.group.title:
+  text: Group Services
+service.view.all.services:
+  text: All Services
+service.view.scroll.from.editor.action.name:
+  text: Select Opened Service
+service.view.scroll.from.editor.action.description:
+  text: Select the service open in the active editor
+service.view.activate.tool.window.action.name:
+  text: "{0} (Services)"
+service.view.activate.tool.window.action.description:
+  text: Activate Services window
+service.view.include.into.services.action.text:
+  text: Add to Services Tool Window
+service.view.configure.dialog.title:
+  text: Configure Services Tool Window
+service.view.configure.dialog.description:
+  text: "Exclude a service to show it as a separate tool window. <br>Exclude a run configuration type to show its output in the Run/Debug tool window."
+service.view.configure.exclude.button.text:
+  text: "&Exclude >"
+service.view.configure.include.button.text:
+  text: "< &Include"
+service.view.configure.included.label.text:
+  text: "Services tool window:"
+service.view.configure.excluded.label.text:
+  text: "Separate tool windows:"
+service.view.configure.run.configuration.types:
+  text: Run/Debug Configuration Types
+service.view.configure.run.tool.windows:
+  text: Run/Debug
+
 run.combo.box.add.configuration:
   text: Add Configuration...
+show.irrelevant.configurations.action.name:
+  text: "{0} more items\u2026"
+run.dashboard.configured.group.name:
+  text: Not Started
+run.dashboard.configurations.message:
+  text: Start/Stop selected configurations
+run.dashboard.rerun.action.name:
+  text: Rerun
+run.dashboard.rerun.action.description:
+  text: Rerun selected configuration(s)
+run.dashboard.restart.debugger.action.name:
+  text: Rerun in Debug Mode
+run.dashboard.restart.debugger.action.description:
+  text: Rerun selected configuration(s) in Debug Mode
