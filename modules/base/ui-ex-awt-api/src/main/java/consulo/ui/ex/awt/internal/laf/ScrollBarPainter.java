@@ -10,10 +10,10 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.EditorColorsUtil;
 import consulo.ui.ex.awt.MixedColorProducer;
 import consulo.ui.ex.awt.RegionPainter;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.paint.RectanglePainter;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.style.StyleManager;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -141,7 +141,7 @@ public abstract class ScrollBarPainter implements RegionPainter<Float> {
       alpha = Integer.min(alpha, 255);
     }
     else {
-      alpha = UIUtil.isUnderDarcula() ? DARK_ALPHA : LIGHT_ALPHA;
+      alpha = StyleManager.get().getCurrentStyle().isDark() ? DARK_ALPHA : LIGHT_ALPHA;
     }
 
     return ColorUtil.toAlpha(color, alpha);
@@ -190,10 +190,17 @@ public abstract class ScrollBarPainter implements RegionPainter<Float> {
 
     public Thumb(@Nonnull Supplier<? extends Component> supplier, boolean opaque) {
       super(supplier);
-      fillProducer = new MixedColorProducer(opaque ? getColor(supplier, THUMB_OPAQUE_BACKGROUND) : getColor(supplier, THUMB_BACKGROUND, THUMB_OPAQUE_BACKGROUND),
-                                            opaque ? getColor(supplier, THUMB_OPAQUE_HOVERED_BACKGROUND) : getColor(supplier, THUMB_HOVERED_BACKGROUND, THUMB_OPAQUE_HOVERED_BACKGROUND));
-      drawProducer = new MixedColorProducer(opaque ? getColor(supplier, THUMB_OPAQUE_FOREGROUND) : getColor(supplier, THUMB_FOREGROUND, THUMB_OPAQUE_FOREGROUND),
-                                            opaque ? getColor(supplier, THUMB_OPAQUE_HOVERED_FOREGROUND) : getColor(supplier, THUMB_HOVERED_FOREGROUND, THUMB_OPAQUE_HOVERED_FOREGROUND));
+      fillProducer = new MixedColorProducer(
+        opaque ? getColor(supplier, THUMB_OPAQUE_BACKGROUND)
+          : getColor(supplier, THUMB_BACKGROUND, THUMB_OPAQUE_BACKGROUND),
+        opaque ? getColor(supplier, THUMB_OPAQUE_HOVERED_BACKGROUND)
+          : getColor(supplier, THUMB_HOVERED_BACKGROUND, THUMB_OPAQUE_HOVERED_BACKGROUND)
+      );
+      drawProducer = new MixedColorProducer(
+        opaque ? getColor(supplier, THUMB_OPAQUE_FOREGROUND) : getColor(supplier, THUMB_FOREGROUND, THUMB_OPAQUE_FOREGROUND),
+        opaque ? getColor(supplier, THUMB_OPAQUE_HOVERED_FOREGROUND)
+          : getColor(supplier, THUMB_HOVERED_FOREGROUND, THUMB_OPAQUE_HOVERED_FOREGROUND)
+      );
     }
 
     @Override

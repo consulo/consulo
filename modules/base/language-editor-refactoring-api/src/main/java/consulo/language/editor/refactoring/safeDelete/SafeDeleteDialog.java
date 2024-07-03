@@ -20,22 +20,22 @@ import consulo.application.HelpManager;
 import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.RefactoringSettings;
 import consulo.language.editor.refactoring.internal.RefactoringInternalHelper;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.util.DeleteUtil;
 import consulo.language.editor.refactoring.util.TextOccurrencesUtil;
 import consulo.language.psi.PsiElement;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.StateRestoringCheckBox;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * @author dsl
@@ -62,7 +62,7 @@ public class SafeDeleteDialog extends DialogWrapper {
     myElements = elements;
     myCallback = callback;
     myDelegate = getDelegate();
-    setTitle(SafeDeleteHandler.REFACTORING_NAME);
+    setTitle(SafeDeleteHandler.REFACTORING_NAME.get());
     init();
   }
 
@@ -71,10 +71,7 @@ public class SafeDeleteDialog extends DialogWrapper {
   }
 
   public boolean isSearchForTextOccurences() {
-    if (myCbSearchTextOccurrences != null) {
-      return myCbSearchTextOccurrences.isSelected();
-    }
-    return false;
+    return myCbSearchTextOccurrences != null && myCbSearchTextOccurrences.isSelected();
   }
 
   @Override
@@ -93,8 +90,10 @@ public class SafeDeleteDialog extends DialogWrapper {
     final JPanel panel = new JPanel(new GridBagLayout());
     final GridBagConstraints gbc = new GridBagConstraints();
 
-    final String promptKey = isDelete() ? "prompt.delete.elements" : "search.for.usages.and.delete.elements";
-    final String warningMessage = DeleteUtil.generateWarningMessage(RefactoringBundle.message(promptKey), myElements);
+    String message = isDelete()
+      ? RefactoringBundle.message("prompt.delete.elements")
+      : RefactoringBundle.message("search.for.usages.and.delete.elements");
+    final String warningMessage = DeleteUtil.generateWarningMessage(message, myElements);
 
     gbc.insets = JBUI.insets(4, 8);
     gbc.weighty = 1;
@@ -112,14 +111,11 @@ public class SafeDeleteDialog extends DialogWrapper {
       gbc.weightx = 0.0;
       gbc.gridwidth = 1;
       gbc.insets = JBUI.insets(4, 8, 0, 8);
-      myCbSafeDelete = new JCheckBox(RefactoringBundle.message("checkbox.safe.delete.with.usage.search"));
+      myCbSafeDelete = new JCheckBox(RefactoringLocalize.checkboxSafeDeleteWithUsageSearch().get());
       panel.add(myCbSafeDelete, gbc);
-      myCbSafeDelete.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          updateControls(myCbSearchInComments);
-          updateControls(myCbSearchTextOccurrences);
-        }
+      myCbSafeDelete.addActionListener(e -> {
+        updateControls(myCbSearchInComments);
+        updateControls(myCbSearchTextOccurrences);
       });
     }
 
@@ -128,13 +124,13 @@ public class SafeDeleteDialog extends DialogWrapper {
     gbc.weightx = 0.0;
     gbc.gridwidth = 1;
     myCbSearchInComments = new StateRestoringCheckBox();
-    myCbSearchInComments.setText(RefactoringBundle.getSearchInCommentsAndStringsText());
+    myCbSearchInComments.setText(RefactoringLocalize.searchInCommentsAndStrings().get());
     panel.add(myCbSearchInComments, gbc);
 
     if (needSearchForTextOccurrences()) {
       gbc.gridx++;
       myCbSearchTextOccurrences = new StateRestoringCheckBox();
-      myCbSearchTextOccurrences.setText(RefactoringBundle.getSearchForTextOccurrencesText());
+      myCbSearchTextOccurrences.setText(RefactoringLocalize.searchForTextOccurrences().get());
       panel.add(myCbSearchTextOccurrences, gbc);
     }
 
@@ -193,9 +189,15 @@ public class SafeDeleteDialog extends DialogWrapper {
 
 
   @Override
+  @RequiredUIAccess
   protected void doOKAction() {
     if (DumbService.isDumb(myProject)) {
-      Messages.showMessageDialog(myProject, "Safe delete refactoring is not available while indexing is in progress", "Indexing", null);
+      Messages.showMessageDialog(
+        myProject,
+        "Safe delete refactoring is not available while indexing is in progress",
+        "Indexing",
+        null
+      );
       return;
     }
 
@@ -229,9 +231,6 @@ public class SafeDeleteDialog extends DialogWrapper {
   }
 
   private boolean isSafeDelete() {
-    if (isDelete()) {
-      return myCbSafeDelete.isSelected();
-    }
-    return true;
+    return !isDelete() || myCbSafeDelete.isSelected();
   }
 }

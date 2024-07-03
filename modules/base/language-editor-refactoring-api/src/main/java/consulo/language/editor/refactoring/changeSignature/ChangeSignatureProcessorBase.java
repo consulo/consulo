@@ -15,14 +15,15 @@
  */
 package consulo.language.editor.refactoring.changeSignature;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.editor.QualifiedNameProviderUtil;
 import consulo.language.editor.refactoring.BaseRefactoringProcessor;
-import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.RefactoringTransaction;
 import consulo.language.editor.refactoring.ResolveSnapshotProvider;
 import consulo.language.editor.refactoring.event.RefactoringElementListener;
 import consulo.language.editor.refactoring.event.RefactoringEventData;
 import consulo.language.editor.refactoring.event.UndoRefactoringElementListener;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.findUsage.DescriptiveNameUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
@@ -35,9 +36,9 @@ import consulo.undoRedo.UndoableAction;
 import consulo.usage.MoveRenameUsageInfo;
 import consulo.usage.UsageInfo;
 import consulo.util.collection.ContainerUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.*;
 
 /**
@@ -48,7 +49,6 @@ public abstract class ChangeSignatureProcessorBase extends BaseRefactoringProces
 
   protected final ChangeInfo myChangeInfo;
   protected final PsiManager myManager;
-
 
   protected ChangeSignatureProcessorBase(Project project, ChangeInfo changeInfo) {
     super(project);
@@ -65,7 +65,7 @@ public abstract class ChangeSignatureProcessorBase extends BaseRefactoringProces
   @Override
   @Nonnull
   protected UsageInfo[] findUsages() {
-    List<UsageInfo> infos = new ArrayList<UsageInfo>();
+    List<UsageInfo> infos = new ArrayList<>();
 
     for (ChangeSignatureUsageProcessor processor : ChangeSignatureUsageProcessor.EP_NAME.getExtensionList()) {
       ContainerUtil.addAll(infos, processor.findUsages(myChangeInfo));
@@ -76,20 +76,20 @@ public abstract class ChangeSignatureProcessorBase extends BaseRefactoringProces
 
   protected List<UsageInfo> filterUsages(List<UsageInfo> infos) {
     Map<PsiElement, MoveRenameUsageInfo> moveRenameInfos = new HashMap<>();
-    Set<PsiElement> usedElements = new HashSet<PsiElement>();
+    Set<PsiElement> usedElements = new HashSet<>();
 
-    List<UsageInfo> result = new ArrayList<UsageInfo>(infos.size() / 2);
+    List<UsageInfo> result = new ArrayList<>(infos.size() / 2);
     for (UsageInfo info : infos) {
       LOG.assertTrue(info != null, getClass());
       PsiElement element = info.getElement();
-      if (info instanceof MoveRenameUsageInfo) {
+      if (info instanceof MoveRenameUsageInfo moveRenameUsageInfo) {
         if (usedElements.contains(element)) continue;
-        moveRenameInfos.put(element, (MoveRenameUsageInfo)info);
+        moveRenameInfos.put(element, moveRenameUsageInfo);
       }
       else {
         moveRenameInfos.remove(element);
         usedElements.add(element);
-        if (!(info instanceof PossiblyIncorrectUsage) || ((PossiblyIncorrectUsage)info).isCorrect()) {
+        if (!(info instanceof PossiblyIncorrectUsage possiblyIncorrectUsage && !possiblyIncorrectUsage.isCorrect())) {
           result.add(info);
         }
       }
@@ -138,8 +138,8 @@ public abstract class ChangeSignatureProcessorBase extends BaseRefactoringProces
       UndoableAction action = new BasicUndoableAction() {
         @Override
         public void undo() {
-          if (elementListener instanceof UndoRefactoringElementListener) {
-            ((UndoRefactoringElementListener)elementListener).undoElementMovedOrRenamed(myChangeInfo.getMethod(), fqn);
+          if (elementListener instanceof UndoRefactoringElementListener undoRefactoringElementListener) {
+            undoRefactoringElementListener.undoElementMovedOrRenamed(myChangeInfo.getMethod(), fqn);
           }
         }
 
@@ -152,8 +152,9 @@ public abstract class ChangeSignatureProcessorBase extends BaseRefactoringProces
     try {
       final List<ChangeSignatureUsageProcessor> processors = ChangeSignatureUsageProcessor.EP_NAME.getExtensionList();
 
-      final ResolveSnapshotProvider resolveSnapshotProvider = myChangeInfo.isParameterNamesChanged() ? ResolveSnapshotProvider.forLanguage(myChangeInfo.getMethod().getLanguage()) : null;
-      final List<ResolveSnapshotProvider.ResolveSnapshot> snapshots = new ArrayList<ResolveSnapshotProvider.ResolveSnapshot>();
+      final ResolveSnapshotProvider resolveSnapshotProvider =
+        myChangeInfo.isParameterNamesChanged() ? ResolveSnapshotProvider.forLanguage(myChangeInfo.getMethod().getLanguage()) : null;
+      final List<ResolveSnapshotProvider.ResolveSnapshot> snapshots = new ArrayList<>();
       for (ChangeSignatureUsageProcessor processor : processors) {
         if (resolveSnapshotProvider != null) {
           processor.registerConflictResolvers(snapshots, resolveSnapshotProvider, usages, myChangeInfo);
@@ -195,9 +196,11 @@ public abstract class ChangeSignatureProcessorBase extends BaseRefactoringProces
     }
   }
 
+  @Nonnull
   @Override
+  @RequiredReadAction
   protected String getCommandName() {
-    return RefactoringBundle.message("changing.signature.of.0", DescriptiveNameUtil.getDescriptiveName(myChangeInfo.getMethod()));
+    return RefactoringLocalize.changingSignatureOf0(DescriptiveNameUtil.getDescriptiveName(myChangeInfo.getMethod())).get();
   }
 
   public ChangeInfo getChangeInfo() {

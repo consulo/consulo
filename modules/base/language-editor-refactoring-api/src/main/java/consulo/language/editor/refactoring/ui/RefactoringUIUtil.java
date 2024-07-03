@@ -16,8 +16,8 @@
 
 package consulo.language.editor.refactoring.ui;
 
-import consulo.application.ApplicationManager;
-import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.application.Application;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.util.RefactoringDescriptionLocation;
 import consulo.language.findUsage.DescriptiveNameUtil;
 import consulo.language.psi.ElementDescriptionUtil;
@@ -25,6 +25,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.usage.UsageViewUtil;
 import org.jetbrains.annotations.NonNls;
 
@@ -51,12 +52,8 @@ public class RefactoringUIUtil {
     }
 
     final String s = message;
-    ApplicationManager.getApplication().invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        Messages.showMessageDialog(project, s, RefactoringBundle.message("error.title"), Messages.getErrorIcon());
-      }
-    });
+    Application.get()
+      .invokeLater(() -> Messages.showMessageDialog(project, s, RefactoringLocalize.errorTitle().get(), UIUtil.getErrorIcon()));
   }
 
   public static String calculatePsiElementDescriptionList(PsiElement[] elements) {

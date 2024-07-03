@@ -21,8 +21,8 @@ import consulo.application.ApplicationManager;
 import consulo.application.CommonBundle;
 import consulo.application.Result;
 import consulo.language.editor.WriteCommandAction;
-import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.internal.RefactoringInternalHelper;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.move.fileOrDirectory.MoveFilesOrDirectoriesUtil;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.language.editor.refactoring.util.PlatformPackageUtil;
@@ -30,6 +30,7 @@ import consulo.language.editor.util.EditorHelper;
 import consulo.language.psi.*;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
@@ -38,15 +39,16 @@ import consulo.module.content.ProjectRootManager;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.encoding.EncodingRegistry;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -64,7 +66,9 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
     for (PsiElement element : elements) {
       if (!(element instanceof PsiDirectory || element instanceof PsiFile)) return false;
       if (!element.isValid()) return false;
-      if (element instanceof PsiCompiledFile) return false;
+      if (element instanceof PsiCompiledFile) {
+        return false;
+      }
 
       String name = ((PsiFileSystemItem)element).getName();
       if (names.contains(name)) {
@@ -154,9 +158,12 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
         return;
       }
 
-      CommandProcessor.getInstance()
-              .executeCommand(project, () -> copyImpl(files, newName, targetDirectory, false, openInEditor), RefactoringBundle.message("copy.handler.copy.files.directories"), null);
-
+      CommandProcessor.getInstance().executeCommand(
+        project,
+        () -> copyImpl(files, newName, targetDirectory, false, openInEditor),
+        RefactoringLocalize.copyHandlerCopyFilesDirectories().get(),
+        null
+      );
     }
   }
 
@@ -169,8 +176,8 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
   @RequiredReadAction
   public static void doCloneFile(PsiElement element) {
     PsiDirectory targetDirectory;
-    if (element instanceof PsiDirectory) {
-      targetDirectory = ((PsiDirectory)element).getParentDirectory();
+    if (element instanceof PsiDirectory directory) {
+      targetDirectory = directory.getParentDirectory();
     }
     else {
       targetDirectory = PlatformPackageUtil.getDirectory(element);
@@ -194,9 +201,8 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
     for (PsiElement element : elements) {
       PsiDirectory directory;
 
-      if (element instanceof PsiDirectory) {
-        directory = (PsiDirectory)element;
-        directory = directory.getParentDirectory();
+      if (element instanceof PsiDirectory psiDirectory) {
+        directory = psiDirectory.getParentDirectory();
       }
       else if (element instanceof PsiFile) {
         directory = PlatformPackageUtil.getDirectory(element);
@@ -223,8 +229,14 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
   /**
    * @param newName can be not null only if elements.length == 1
    */
-  @RequiredReadAction
-  private static void copyImpl(@Nonnull final VirtualFile[] files, @Nullable final String newName, @Nonnull final PsiDirectory targetDirectory, final boolean doClone, final boolean openInEditor) {
+  @RequiredUIAccess
+  private static void copyImpl(
+    @Nonnull final VirtualFile[] files,
+    @Nullable final String newName,
+    @Nonnull final PsiDirectory targetDirectory,
+    final boolean doClone,
+    final boolean openInEditor
+  ) {
     if (doClone && files.length != 1) {
       throw new IllegalArgumentException("invalid number of elements to clone:" + files.length);
     }
@@ -238,7 +250,9 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
       return;
     }
 
-    String title = RefactoringBundle.message(doClone ? "copy.handler.clone.files.directories" : "copy.handler.copy.files.directories");
+    LocalizeValue title = doClone
+      ? RefactoringLocalize.copyHandlerCloneFilesDirectories()
+      : RefactoringLocalize.copyHandlerCopyFilesDirectories();
     try {
       PsiFile firstFile = null;
       final int[] choice = files.length > 1 || files[0].isDirectory() ? new int[]{-1} : null;
@@ -249,7 +263,7 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
           LOG.info("invalid file: " + file.getExtension());
           continue;
         }
-        PsiFile f = copyToDirectory((PsiFileSystemItem)psiElement, newName, targetDirectory, choice, title);
+        PsiFile f = copyToDirectory((PsiFileSystemItem)psiElement, newName, targetDirectory, choice, title.get());
         if (firstFile == null) {
           firstFile = f;
         }
@@ -264,7 +278,7 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
       }
     }
     catch (final IncorrectOperationException | IOException ex) {
-      Messages.showErrorDialog(project, ex.getMessage(), RefactoringBundle.message("error.title"));
+      Messages.showErrorDialog(project, ex.getMessage(), RefactoringLocalize.errorTitle().get());
     }
   }
 
@@ -287,10 +301,14 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
    */
   @Nullable
   @RequiredReadAction
-  public static PsiFile copyToDirectory(@Nonnull PsiFileSystemItem elementToCopy, @Nullable String newName, @Nonnull PsiDirectory targetDirectory, @Nullable int[] choice, @Nullable String title)
-          throws IncorrectOperationException, IOException {
-    if (elementToCopy instanceof PsiFile) {
-      PsiFile file = (PsiFile)elementToCopy;
+  public static PsiFile copyToDirectory(
+    @Nonnull PsiFileSystemItem elementToCopy,
+    @Nullable String newName,
+    @Nonnull PsiDirectory targetDirectory,
+    @Nullable int[] choice,
+    @Nullable String title
+  ) throws IncorrectOperationException, IOException {
+    if (elementToCopy instanceof PsiFile file) {
       String name = newName == null ? file.getName() : newName;
       if (checkFileExist(targetDirectory, choice, file, name, "Copy")) return null;
       return new WriteCommandAction<PsiFile>(targetDirectory.getProject(), title) {
@@ -309,8 +327,7 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
         }
       }.execute().getResultObject();
     }
-    else if (elementToCopy instanceof PsiDirectory) {
-      PsiDirectory directory = (PsiDirectory)elementToCopy;
+    else if (elementToCopy instanceof PsiDirectory directory) {
       if (directory.equals(targetDirectory)) {
         return null;
       }

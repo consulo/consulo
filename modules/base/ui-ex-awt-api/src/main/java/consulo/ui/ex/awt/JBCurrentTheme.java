@@ -19,6 +19,7 @@ package consulo.ui.ex.awt;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.ui.style.StyleManager;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.border.Border;
@@ -144,21 +145,38 @@ public class JBCurrentTheme {
 
     @Nonnull
     public static Color defaultButtonColor() {
-      return UIUtil.isUnderDarcula() ? JBColor.namedColor("Button.default.focusColor", JBColor.namedColor("Focus.defaultButtonBorderColor", 0x97c3f3)) : focusColor();
+      return StyleManager.get().getCurrentStyle().isDark()
+        ? JBColor.namedColor(
+          "Button.default.focusColor",
+          JBColor.namedColor("Focus.defaultButtonBorderColor", 0x97C3F3)
+        )
+        : focusColor();
     }
 
     @Nonnull
     public static Color errorColor(boolean active) {
       return active
-             ? JBColor.namedColor("Component.errorFocusColor", JBColor.namedColor("Focus.activeErrorBorderColor", 0xe53e4d))
-             : JBColor.namedColor("Component.inactiveErrorFocusColor", JBColor.namedColor("Focus.inactiveErrorBorderColor", 0xebbcbc));
+        ? JBColor.namedColor(
+          "Component.errorFocusColor",
+          JBColor.namedColor("Focus.activeErrorBorderColor", 0xE53E4D)
+        )
+        : JBColor.namedColor(
+          "Component.inactiveErrorFocusColor",
+          JBColor.namedColor("Focus.inactiveErrorBorderColor", 0xEBBCBC)
+        );
     }
 
     @Nonnull
     public static Color warningColor(boolean active) {
       return active
-             ? JBColor.namedColor("Component.warningFocusColor", JBColor.namedColor("Focus.activeWarningBorderColor", 0xe2a53a))
-             : JBColor.namedColor("Component.inactiveWarningFocusColor", JBColor.namedColor("Focus.inactiveWarningBorderColor", 0xffd385));
+        ? JBColor.namedColor(
+          "Component.warningFocusColor",
+          JBColor.namedColor("Focus.activeWarningBorderColor", 0xE2A53A)
+        )
+        : JBColor.namedColor(
+          "Component.inactiveWarningFocusColor",
+          JBColor.namedColor("Focus.inactiveWarningBorderColor", 0xFFD385)
+        );
     }
   }
 
@@ -267,7 +285,11 @@ public class JBCurrentTheme {
 
     @Nonnull
     public static Color titlePaneButtonHoverBackground() {
-      return JBColor.namedColor("TitlePane.Button.hoverBackground", new JBColor(ColorUtil.withAlpha(Color.BLACK, .1), ColorUtil.withAlpha(Color.WHITE, .1)));
+      return JBColor.namedColor(
+        "TitlePane.Button.hoverBackground",
+        new JBColor(ColorUtil.withAlpha(Color.BLACK, .1),
+          ColorUtil.withAlpha(Color.WHITE, .1))
+      );
     }
 
     @Nonnull
@@ -351,7 +373,9 @@ public class JBCurrentTheme {
 
     @Nonnull
     public static Color disabledForeground(boolean selected) {
-      return selected ? JBColor.namedColor("Label.selectedDisabledForeground", 0x999999) : JBColor.namedColor("Label.disabledForeground", JBColor.namedColor("Label.disabledText", 0x999999));
+      return selected
+        ? JBColor.namedColor("Label.selectedDisabledForeground", 0x999999)
+        : JBColor.namedColor("Label.disabledForeground", JBColor.namedColor("Label.disabledText", 0x999999));
     }
 
     @Nonnull

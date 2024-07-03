@@ -131,10 +131,7 @@ public abstract class RenamePsiElementProcessor {
   @Nullable
   @NonNls
   public String getHelpID(final PsiElement element) {
-    if (element instanceof PsiFile) {
-      return "refactoring.renameFile";
-    }
-    return "refactoring.renameDialogs";
+    return element instanceof PsiFile ? "refactoring.renameFile" : "refactoring.renameDialogs";
   }
 
   public boolean isToSearchInComments(final PsiElement element) {

@@ -15,12 +15,13 @@
  */
 package consulo.language.editor.refactoring.move.fileOrDirectory;
 
-import consulo.application.ApplicationManager;
 import consulo.language.editor.refactoring.BaseRefactoringProcessor;
-import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.event.RefactoringElementListener;
 import consulo.language.editor.refactoring.event.RefactoringEventData;
-import consulo.language.editor.refactoring.move.*;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
+import consulo.language.editor.refactoring.move.FileReferenceContextUtil;
+import consulo.language.editor.refactoring.move.MoveCallback;
+import consulo.language.editor.refactoring.move.MoveFileHandler;
 import consulo.language.editor.refactoring.rename.RenameUtil;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.language.editor.util.EditorHelper;
@@ -37,12 +38,13 @@ import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.usage.NonCodeUsageInfo;
 import consulo.usage.UsageInfo;
 import consulo.usage.UsageViewDescriptor;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -115,9 +117,9 @@ public class MoveFilesOrDirectoriesProcessor extends BaseRefactoringProcessor {
     if (!mySearchForReferences) {
       return;
     }
-    if (element instanceof PsiFile) {
-      final List<UsageInfo> usages = MoveFileHandler.forElement((PsiFile)element)
-              .findUsages(((PsiFile)element), myNewParent, mySearchInComments, mySearchInNonJavaFiles);
+    if (element instanceof PsiFile file) {
+      final List<UsageInfo> usages =
+        MoveFileHandler.forElement(file).findUsages(file, myNewParent, mySearchInComments, mySearchInNonJavaFiles);
       if (usages != null) {
         result.addAll(usages);
         myFoundUsages.put((PsiFile)element, usages);
@@ -158,16 +160,19 @@ public class MoveFilesOrDirectoriesProcessor extends BaseRefactoringProcessor {
       for (final PsiElement element : myElementsToMove) {
         final RefactoringElementListener elementListener = getTransaction().getElementListener(element);
 
-        if (element instanceof PsiDirectory) {
-          if (mySearchForReferences) encodeDirectoryFiles(element);
-          MoveFilesOrDirectoriesUtil.doMoveDirectory((PsiDirectory)element, myNewParent);
-          for (PsiElement psiElement : element.getChildren()) {
+        if (element instanceof PsiDirectory directory) {
+          if (mySearchForReferences) {
+            encodeDirectoryFiles(directory);
+          }
+          MoveFilesOrDirectoriesUtil.doMoveDirectory(directory, myNewParent);
+          for (PsiElement psiElement : directory.getChildren()) {
             processDirectoryFiles(movedFiles, oldToNewMap, psiElement);
           }
         }
-        else if (element instanceof PsiFile) {
-          final PsiFile movedFile = (PsiFile)element;
-          if (mySearchForReferences) FileReferenceContextUtil.encodeFileReferences(element);
+        else if (element instanceof PsiFile movedFile) {
+          if (mySearchForReferences) {
+            FileReferenceContextUtil.encodeFileReferences(element);
+          }
           MoveFileHandler.forElement(movedFile).prepareMovedFile(movedFile, myNewParent, oldToNewMap);
 
           PsiFile moving = myNewParent.findFile(movedFile.getName());
@@ -208,8 +213,9 @@ public class MoveFilesOrDirectoriesProcessor extends BaseRefactoringProcessor {
       Throwable cause = e.getCause();
       if (cause instanceof IOException) {
         LOG.info(e);
-        ApplicationManager.getApplication().invokeLater(
-                () -> Messages.showMessageDialog(myProject, cause.getMessage(), RefactoringBundle.message("error.title"), Messages.getErrorIcon()));
+        myProject.getApplication().invokeLater(
+          () -> Messages.showMessageDialog(myProject, cause.getMessage(), RefactoringLocalize.errorTitle().get(), UIUtil.getErrorIcon())
+        );
       }
       else {
         LOG.error(e);
@@ -251,8 +257,7 @@ public class MoveFilesOrDirectoriesProcessor extends BaseRefactoringProcessor {
   }
 
   private static void processDirectoryFiles(List<PsiFile> movedFiles, Map<PsiElement, PsiElement> oldToNewMap, PsiElement psiElement) {
-    if (psiElement instanceof PsiFile) {
-      final PsiFile movedFile = (PsiFile)psiElement;
+    if (psiElement instanceof PsiFile movedFile) {
       MoveFileHandler.forElement(movedFile).prepareMovedFile(movedFile, movedFile.getParent(), oldToNewMap);
       movedFiles.add(movedFile);
     }
@@ -266,8 +271,7 @@ public class MoveFilesOrDirectoriesProcessor extends BaseRefactoringProcessor {
   protected void retargetUsages(UsageInfo[] usages, Map<PsiElement, PsiElement> oldToNewMap) {
     final List<NonCodeUsageInfo> nonCodeUsages = new ArrayList<>();
     for (UsageInfo usageInfo : usages) {
-      if (usageInfo instanceof MyUsageInfo) {
-        final MyUsageInfo info = (MyUsageInfo)usageInfo;
+      if (usageInfo instanceof MyUsageInfo info) {
         final PsiElement element = myElementsToMove[info.myIndex];
 
         if (info.getReference() instanceof FileReference || info.getReference() instanceof PsiDynaReference) {
@@ -284,8 +288,8 @@ public class MoveFilesOrDirectoriesProcessor extends BaseRefactoringProcessor {
         if (refElement != null && refElement.isValid()) {
           info.myReference.bindToElement(element);
         }
-      } else if (usageInfo instanceof NonCodeUsageInfo) {
-        nonCodeUsages.add((NonCodeUsageInfo)usageInfo);
+      } else if (usageInfo instanceof NonCodeUsageInfo nonCodeUsageInfo) {
+        nonCodeUsages.add(nonCodeUsageInfo);
       }
     }
 
@@ -298,7 +302,7 @@ public class MoveFilesOrDirectoriesProcessor extends BaseRefactoringProcessor {
 
   @Override
   protected String getCommandName() {
-    return RefactoringBundle.message("move.title");
+    return RefactoringLocalize.moveTitle().get();
   }
 
   static class MyUsageInfo extends UsageInfo {

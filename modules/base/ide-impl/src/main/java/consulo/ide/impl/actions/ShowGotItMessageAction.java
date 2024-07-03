@@ -15,13 +15,14 @@
  */
 package consulo.ide.impl.actions;
 
+import consulo.ide.impl.idea.ui.GotItMessage;
+import consulo.project.Project;
+import consulo.project.ui.wm.WindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.popup.Balloon;
-import consulo.project.ui.wm.WindowManager;
-import consulo.ide.impl.idea.ui.GotItMessage;
-import consulo.ui.ex.RelativePoint;
 
 import java.awt.*;
 
@@ -31,9 +32,10 @@ import java.awt.*;
  */
 public class ShowGotItMessageAction extends AnAction {
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
     GotItMessage.createMessage("Test", "Test ReflectionMessage")
-            .setDisposable(e.getData(CommonDataKeys.PROJECT))
-            .show(new RelativePoint(WindowManager.getInstance().getFrame(e.getData(CommonDataKeys.PROJECT)), new Point(0, 0)), Balloon.Position.above);
+      .setDisposable(e.getData(Project.KEY))
+      .show(new RelativePoint(WindowManager.getInstance().getFrame(e.getData(Project.KEY)), new Point(0, 0)), Balloon.Position.above);
   }
 }

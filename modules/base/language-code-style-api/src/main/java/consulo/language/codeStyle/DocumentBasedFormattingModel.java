@@ -104,8 +104,8 @@ public class DocumentBasedFormattingModel implements FormattingModelEx {
 
   @Override
   public TextRange replaceWhiteSpace(TextRange textRange, ASTNode nodeAfter, String whiteSpace) {
-    if (myOriginalFormattingModel instanceof FormattingModelWithShiftIndentInsideDocumentRange) {
-      whiteSpace = ((FormattingModelWithShiftIndentInsideDocumentRange)myOriginalFormattingModel).adjustWhiteSpaceInsideDocument(nodeAfter, whiteSpace);
+    if (myOriginalFormattingModel instanceof FormattingModelWithShiftIndentInsideDocumentRange formattingModelWithShiftIndent) {
+      whiteSpace = formattingModelWithShiftIndent.adjustWhiteSpaceInsideDocument(nodeAfter, whiteSpace);
     }
 
     boolean removesStartMarker;
@@ -151,8 +151,8 @@ public class DocumentBasedFormattingModel implements FormattingModelEx {
 
   @Override
   public TextRange shiftIndentInsideRange(ASTNode node, TextRange range, int indent) {
-    if (myOriginalFormattingModel instanceof FormattingModelWithShiftIndentInsideDocumentRange) {
-      final TextRange newRange = ((FormattingModelWithShiftIndentInsideDocumentRange)myOriginalFormattingModel).shiftIndentInsideDocumentRange(myDocument, node, range, indent);
+    if (myOriginalFormattingModel instanceof FormattingModelWithShiftIndentInsideDocumentRange formattingModelWithShiftIndent) {
+      final TextRange newRange = formattingModelWithShiftIndent.shiftIndentInsideDocumentRange(myDocument, node, range, indent);
       if (newRange != null) return newRange;
     }
 

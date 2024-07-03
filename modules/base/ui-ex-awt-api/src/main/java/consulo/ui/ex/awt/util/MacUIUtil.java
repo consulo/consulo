@@ -21,8 +21,9 @@ import consulo.application.util.registry.Registry;
 import consulo.platform.Platform;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.awt.UIUtil;
-
+import consulo.ui.style.StyleManager;
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.GeneralPath;
@@ -45,7 +46,7 @@ public class MacUIUtil {
   }
 
   public static void paintFocusRing(Graphics2D g, Color ringColor, Rectangle bounds, boolean oval) {
-    int correction = UIUtil.isUnderDarcula() ? 50 : 0;
+    int correction = StyleManager.get().getCurrentStyle().isDark() ? 50 : 0;
     final Color[] colors = new Color[]{ColorUtil.toAlpha(ringColor, 180 - correction), ColorUtil.toAlpha(ringColor, 120 - correction),
             ColorUtil.toAlpha(ringColor, 70 - correction), ColorUtil.toAlpha(ringColor, 100 - correction), ColorUtil.toAlpha(ringColor, 50 - correction)};
 
@@ -109,8 +110,8 @@ public class MacUIUtil {
 
   public static Color getFocusRingColor() {
     final Object o = UIManager.get("Focus.color");
-    if (o instanceof Color) {
-      return (Color)o;
+    if (o instanceof Color color) {
+      return color;
     }
 
     return new Color(64, 113, 167);

@@ -25,6 +25,7 @@ import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.action.BaseRefactoringAction;
 import consulo.language.editor.refactoring.internal.RefactoringInternalHelper;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.language.editor.scratch.ScratchUtil;
 import consulo.language.inject.InjectedLanguageManager;
@@ -32,6 +33,7 @@ import consulo.language.inject.InjectedLanguageManagerUtil;
 import consulo.language.psi.*;
 import consulo.language.psi.meta.PsiMetaOwner;
 import consulo.language.psi.meta.PsiWritableMetaData;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -137,29 +139,29 @@ public class PsiElementRenameHandler implements RenameHandler {
     if (element == null) return "";
 
     boolean hasRenameProcessor = RenamePsiElementProcessor.forElement(element) != RenamePsiElementProcessor.DEFAULT;
-    boolean hasWritableMetaData = element instanceof PsiMetaOwner && ((PsiMetaOwner)element).getMetaData() instanceof PsiWritableMetaData;
+    boolean hasWritableMetaData = element instanceof PsiMetaOwner metaOwner && metaOwner.getMetaData() instanceof PsiWritableMetaData;
 
     if (!hasRenameProcessor && !hasWritableMetaData && !(element instanceof PsiNamedElement)) {
-      return RefactoringBundle.getCannotRefactorMessage(RefactoringBundle.message("error.wrong.caret.position.symbol.to.rename"));
+      return RefactoringBundle.getCannotRefactorMessage(RefactoringLocalize.errorWrongCaretPositionSymbolToRename().get());
     }
 
     if (!PsiManager.getInstance(project).isInProject(element)) {
       if (element.isPhysical()) {
         VirtualFile virtualFile = PsiUtilCore.getVirtualFile(element);
         if (!(virtualFile != null && RefactoringInternalHelper.getInstance().isWriteAccessAllowed(virtualFile, project))) {
-          String message = RefactoringBundle.message("error.out.of.project.element", UsageViewUtil.getType(element));
-          return RefactoringBundle.getCannotRefactorMessage(message);
+          LocalizeValue message = RefactoringLocalize.errorOutOfProjectElement(UsageViewUtil.getType(element));
+          return RefactoringBundle.getCannotRefactorMessage(message.get());
         }
       }
 
       if (!element.isWritable()) {
-        return RefactoringBundle.getCannotRefactorMessage(RefactoringBundle.message("error.cannot.be.renamed"));
+        return RefactoringBundle.getCannotRefactorMessage(RefactoringLocalize.errorCannotBeRenamed().get());
       }
     }
 
     if (InjectedLanguageManagerUtil.isInInjectedLanguagePrefixSuffix(element)) {
-      final String message = RefactoringBundle.message("error.in.injected.lang.prefix.suffix", UsageViewUtil.getType(element));
-      return RefactoringBundle.getCannotRefactorMessage(message);
+      final LocalizeValue message = RefactoringLocalize.errorInInjectedLangPrefixSuffix(UsageViewUtil.getType(element));
+      return RefactoringBundle.getCannotRefactorMessage(message.get());
     }
 
     return null;
@@ -167,7 +169,7 @@ public class PsiElementRenameHandler implements RenameHandler {
 
   @RequiredUIAccess
   static void showErrorMessage(Project project, @Nullable Editor editor, String message) {
-    CommonRefactoringUtil.showErrorHint(project, editor, message, RefactoringBundle.message("rename.title"), null);
+    CommonRefactoringUtil.showErrorHint(project, editor, message, RefactoringLocalize.renameTitle().get(), null);
   }
 
   @RequiredUIAccess

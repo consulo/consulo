@@ -15,7 +15,7 @@
  */
 package consulo.language.editor.refactoring.rename.inplace;
 
-import consulo.application.ApplicationManager;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Result;
 import consulo.application.util.function.CommonProcessors;
 import consulo.application.util.query.Query;
@@ -60,6 +60,7 @@ import consulo.module.content.ProjectRootManager;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
 import consulo.project.content.scope.ProjectScopes;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.PositionTracker;
 import consulo.ui.ex.RelativePoint;
@@ -67,6 +68,7 @@ import consulo.ui.ex.action.Shortcut;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.DottedBorder;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
@@ -102,7 +104,7 @@ public abstract class InplaceRefactoring {
   protected static final Logger LOG = Logger.getInstance(InplaceRefactoring.class);
   protected static final String PRIMARY_VARIABLE_NAME = "PrimaryVariable";
   protected static final String OTHER_VARIABLE_NAME = "OtherVariable";
-  protected static final Stack<InplaceRefactoring> ourRenamersStack = new Stack<InplaceRefactoring>();
+  protected static final Stack<InplaceRefactoring> ourRenamersStack = new Stack<>();
   public static final Key<InplaceRefactoring> INPLACE_RENAMER = Key.create("EditorInplaceRenamer");
   public static final Key<Boolean> INTRODUCE_RESTART = Key.create("INTRODUCE_RESTART");
 
@@ -128,7 +130,13 @@ public abstract class InplaceRefactoring {
   protected RelativePoint myTarget;
 
   public InplaceRefactoring(Editor editor, PsiNamedElement elementToRename, Project project) {
-    this(editor, elementToRename, project, elementToRename != null ? elementToRename.getName() : null, elementToRename != null ? elementToRename.getName() : null);
+    this(
+      editor,
+      elementToRename,
+      project,
+      elementToRename != null ? elementToRename.getName() : null,
+      elementToRename != null ? elementToRename.getName() : null
+    );
   }
 
   public InplaceRefactoring(Editor editor, PsiNamedElement elementToRename, Project project, final String oldName) {
@@ -143,7 +151,8 @@ public abstract class InplaceRefactoring {
     if (myElementToRename != null) {
       myInitialName = initialName;
       final PsiFile containingFile = myElementToRename.getContainingFile();
-      if (!notSameFile(getTopLevelVirtualFile(containingFile.getViewProvider()), containingFile) && myElementToRename != null && myElementToRename.getTextRange() != null) {
+      if (!notSameFile(getTopLevelVirtualFile(containingFile.getViewProvider()), containingFile)
+        && myElementToRename != null && myElementToRename.getTextRange() != null) {
         myRenameOffset = myEditor.getDocument().createRangeMarker(myElementToRename.getTextRange());
         myRenameOffset.setGreedyToRight(true);
         myRenameOffset.setGreedyToLeft(true); // todo not sure if we need this
@@ -151,12 +160,18 @@ public abstract class InplaceRefactoring {
     }
   }
 
+  @RequiredUIAccess
   public static void unableToStartWarning(Project project, Editor editor) {
     final StartMarkAction startMarkAction = StartMarkAction.canStart(project);
     final String message = startMarkAction.getCommandName() + " is not finished yet.";
     final Document oldDocument = startMarkAction.getDocument();
     if (editor == null || oldDocument != editor.getDocument()) {
-      final int exitCode = Messages.showYesNoDialog(project, message, RefactoringBundle.getCannotRefactorMessage(null), "Continue Started", "Cancel Started", Messages.getErrorIcon());
+      final int exitCode = Messages.showYesNoDialog(project, message,
+        RefactoringBundle.getCannotRefactorMessage(null),
+        "Continue Started",
+        "Cancel Started",
+        UIUtil.getErrorIcon()
+      );
       navigateToStarted(oldDocument, project, exitCode);
     }
     else {
@@ -169,6 +184,7 @@ public abstract class InplaceRefactoring {
   }
 
 
+  @RequiredUIAccess
   public boolean performInplaceRefactoring(final LinkedHashSet<String> nameSuggestions) {
     myNameSuggestions = nameSuggestions;
     if (InjectedLanguageManagerUtil.isInInjectedLanguagePrefixSuffix(myElementToRename)) {
@@ -203,12 +219,14 @@ public abstract class InplaceRefactoring {
       return false; // Should have valid local search scope for inplace rename
     }
     //no need to process further when file is read-only
-    if (!CommonRefactoringUtil.checkReadOnlyStatus(myProject, containingFile)) return true;
+    if (!CommonRefactoringUtil.checkReadOnlyStatus(myProject, containingFile)) {
+      return true;
+    }
 
     myEditor.putUserData(INPLACE_RENAMER, this);
     ourRenamersStack.push(this);
 
-    final List<Pair<PsiElement, TextRange>> stringUsages = new ArrayList<Pair<PsiElement, TextRange>>();
+    final List<Pair<PsiElement, TextRange>> stringUsages = new ArrayList<>();
     collectAdditionalElementsToRename(stringUsages);
     return buildTemplateAndStart(refs, stringUsages, scope, containingFile);
   }
@@ -219,15 +237,15 @@ public abstract class InplaceRefactoring {
 
   protected SearchScope getReferencesSearchScope(VirtualFile file) {
     return file == null || ProjectRootManager.getInstance(myProject).getFileIndex().isInContent(file)
-           ? ProjectScopes.getProjectScope(myElementToRename.getProject())
-           : new LocalSearchScope(myElementToRename.getContainingFile());
+      ? ProjectScopes.getProjectScope(myElementToRename.getProject())
+      : new LocalSearchScope(myElementToRename.getContainingFile());
   }
 
   @Nullable
   protected PsiElement checkLocalScope() {
     final SearchScope searchScope = PsiSearchScopeUtil.getUseScope(myElementToRename);
-    if (searchScope instanceof LocalSearchScope) {
-      final PsiElement[] elements = ((LocalSearchScope)searchScope).getScope();
+    if (searchScope instanceof LocalSearchScope localSearchScope) {
+      final PsiElement[] elements = localSearchScope.getScope();
       return PsiTreeUtil.findCommonParent(elements);
     }
 
@@ -260,7 +278,13 @@ public abstract class InplaceRefactoring {
     return processor.getResults();
   }
 
-  protected boolean buildTemplateAndStart(final Collection<PsiReference> refs, final Collection<Pair<PsiElement, TextRange>> stringUsages, final PsiElement scope, final PsiFile containingFile) {
+  @RequiredUIAccess
+  protected boolean buildTemplateAndStart(
+    final Collection<PsiReference> refs,
+    final Collection<Pair<PsiElement, TextRange>> stringUsages,
+    final PsiElement scope,
+    final PsiFile containingFile
+  ) {
     final PsiElement context = InjectedLanguageManager.getInstance(containingFile.getProject()).getInjectionHost(containingFile);
     myScope = context != null ? context.getContainingFile() : scope;
     final TemplateBuilder builder = TemplateBuilderFactory.getInstance().createTemplateBuilder(myScope);
@@ -296,8 +320,18 @@ public abstract class InplaceRefactoring {
     catch (final StartMarkAction.AlreadyStartedException e) {
       final Document oldDocument = e.getDocument();
       if (oldDocument != myEditor.getDocument()) {
-        final int exitCode = Messages.showYesNoCancelDialog(myProject, e.getMessage(), getCommandName(), "Navigate to Started", "Cancel Started", "Cancel", Messages.getErrorIcon());
-        if (exitCode == Messages.CANCEL) return true;
+        final int exitCode = Messages.showYesNoCancelDialog(
+          myProject,
+          e.getMessage(),
+          getCommandName(),
+          "Navigate to Started",
+          "Cancel Started",
+          "Cancel",
+          UIUtil.getErrorIcon()
+        );
+        if (exitCode == Messages.CANCEL) {
+          return true;
+        }
         navigateToAlreadyStarted(oldDocument, exitCode);
         return true;
       }
@@ -368,7 +402,7 @@ public abstract class InplaceRefactoring {
     template.setToReformat(false);
     TextRange range = myScope.getTextRange();
     assert range != null;
-    myHighlighters = new ArrayList<RangeHighlighter>();
+    myHighlighters = new ArrayList<>();
     Editor topLevelEditor = EditorWindow.getTopLevelEditor(myEditor);
     topLevelEditor.getCaretModel().moveToOffset(range.getStartOffset());
 
@@ -380,7 +414,7 @@ public abstract class InplaceRefactoring {
   private void highlightTemplateVariables(Template template, Editor topLevelEditor) {
     //add highlights
     if (myHighlighters != null) { // can be null if finish is called during testing
-      Map<TextRange, TextAttributes> rangesToHighlight = new HashMap<TextRange, TextAttributes>();
+      Map<TextRange, TextAttributes> rangesToHighlight = new HashMap<>();
       final TemplateState templateState = TemplateManager.getInstance(myProject).getTemplateState(topLevelEditor);
       if (templateState != null) {
         EditorColorsManager colorsManager = EditorColorsManager.getInstance();
@@ -404,15 +438,12 @@ public abstract class InplaceRefactoring {
 
   private void restoreOldCaretPositionAndSelection(final int offset) {
     //move to old offset
-    Runnable runnable = new Runnable() {
-      @Override
-      public void run() {
-        myEditor.getCaretModel().moveToOffset(restoreCaretOffset(offset));
-        restoreSelection();
-      }
+    Runnable runnable = () -> {
+      myEditor.getCaretModel().moveToOffset(restoreCaretOffset(offset));
+      restoreSelection();
     };
 
-    final LookupEx lookup = (LookupEx)LookupManager.getActiveLookup(myEditor);
+    final LookupEx lookup = LookupManager.getActiveLookup(myEditor);
     if (lookup != null && lookup.getLookupStart() <= (restoreCaretOffset(offset))) {
       lookup.setFocusDegree(LookupFocusDegree.UNFOCUSED);
       lookup.performGuardedChange(runnable);
@@ -440,14 +471,17 @@ public abstract class InplaceRefactoring {
       if (virtualFile != null) {
         final FileEditor[] editors = FileEditorManager.getInstance(project).getEditors(virtualFile);
         for (FileEditor editor : editors) {
-          if (editor instanceof TextEditor) {
-            final Editor textEditor = ((TextEditor)editor).getEditor();
+          if (editor instanceof TextEditor tEditor) {
+            final Editor textEditor = tEditor.getEditor();
             final TemplateState templateState = TemplateManager.getInstance(project).getTemplateState(textEditor);
             if (templateState != null) {
               if (exitCode == DialogWrapper.OK_EXIT_CODE) {
                 final TextRange range = templateState.getVariableRange(PRIMARY_VARIABLE_NAME);
                 if (range != null) {
-                  OpenFileDescriptorFactory.getInstance(project).builder(virtualFile).offset(range.getStartOffset()).build().navigate(true);
+                  OpenFileDescriptorFactory.getInstance(project).builder(virtualFile)
+                    .offset(range.getStartOffset())
+                    .build()
+                    .navigate(true);
                   return;
                 }
               }
@@ -463,8 +497,9 @@ public abstract class InplaceRefactoring {
   }
 
   @Nullable
+  @RequiredReadAction
   protected PsiElement getNameIdentifier() {
-    return myElementToRename instanceof PsiNameIdentifierOwner ? ((PsiNameIdentifierOwner)myElementToRename).getNameIdentifier() : null;
+    return myElementToRename instanceof PsiNameIdentifierOwner nameIdentifierOwner ? nameIdentifierOwner.getNameIdentifier() : null;
   }
 
   public static EditorEx createPreviewComponent(Project project, FileType languageFileType) {
@@ -497,29 +532,37 @@ public abstract class InplaceRefactoring {
   protected StartMarkAction startRename() throws StartMarkAction.AlreadyStartedException {
     final StartMarkAction[] markAction = new StartMarkAction[1];
     final StartMarkAction.AlreadyStartedException[] ex = new StartMarkAction.AlreadyStartedException[1];
-    CommandProcessor.getInstance().executeCommand(myProject, new Runnable() {
-      @Override
-      public void run() {
+    CommandProcessor.getInstance().executeCommand(
+      myProject,
+      () -> {
         try {
           markAction[0] = StartMarkAction.start(myEditor.getDocument(), myProject, getCommandName());
         }
         catch (StartMarkAction.AlreadyStartedException e) {
           ex[0] = e;
         }
-      }
-    }, getCommandName(), null);
+      },
+      getCommandName(),
+      null
+    );
     if (ex[0] != null) throw ex[0];
     return markAction[0];
   }
 
   @Nullable
+  @RequiredReadAction
   protected PsiNamedElement getVariable() {
     // todo we can use more specific class, shouldn't we?
     //Class clazz = myElementToRename != null? myElementToRename.getClass() : PsiNameIdentifierOwner.class; 
     if (myElementToRename != null && myElementToRename.isValid()) {
       if (Comparing.strEqual(myOldName, myElementToRename.getName())) return myElementToRename;
       if (myRenameOffset != null) {
-        return PsiTreeUtil.findElementOfClassAtRange(myElementToRename.getContainingFile(), myRenameOffset.getStartOffset(), myRenameOffset.getEndOffset(), PsiNameIdentifierOwner.class);
+        return PsiTreeUtil.findElementOfClassAtRange(
+          myElementToRename.getContainingFile(),
+          myRenameOffset.getStartOffset(),
+          myRenameOffset.getEndOffset(),
+          PsiNameIdentifierOwner.class
+        );
       }
     }
 
@@ -551,8 +594,8 @@ public abstract class InplaceRefactoring {
     // Note, that myEditorFile can be different from myElement.getContainingFile() e.g. in injections: myElement declaration in one
     // file / usage in another !
     final PsiReference reference = (myEditorFile != null ? myEditorFile : myElementToRename.getContainingFile()).findReferenceAt(myEditor.getCaretModel().getOffset());
-    if (reference instanceof PsiMultiReference) {
-      final PsiReference[] references = ((PsiMultiReference)reference).getReferences();
+    if (reference instanceof PsiMultiReference psiMultiReference) {
+      final PsiReference[] references = psiMultiReference.getReferences();
       for (PsiReference ref : references) {
         addReferenceIfNeeded(refs, ref);
       }
@@ -562,6 +605,7 @@ public abstract class InplaceRefactoring {
     }
   }
 
+  @RequiredReadAction
   private void addReferenceIfNeeded(@Nonnull final Collection<PsiReference> refs, @Nullable final PsiReference reference) {
     if (reference != null && reference.isReferenceTo(myElementToRename) && !refs.contains(reference)) {
       refs.add(reference);
@@ -588,28 +632,27 @@ public abstract class InplaceRefactoring {
 
   protected void revertState() {
     if (myOldName == null) return;
-    CommandProcessor.getInstance().executeCommand(myProject, new Runnable() {
-      @Override
-      public void run() {
+    CommandProcessor.getInstance().executeCommand(
+      myProject,
+      () -> {
         final Editor topLevelEditor = EditorWindow.getTopLevelEditor(myEditor);
-        ApplicationManager.getApplication().runWriteAction(new Runnable() {
-          @Override
-          public void run() {
-            final TemplateState state = TemplateManager.getInstance(myProject).getTemplateState(topLevelEditor);
-            assert state != null;
-            final int segmentsCount = state.getSegmentsCount();
-            final Document document = topLevelEditor.getDocument();
-            for (int i = 0; i < segmentsCount; i++) {
-              final TextRange segmentRange = state.getSegmentRange(i);
-              document.replaceString(segmentRange.getStartOffset(), segmentRange.getEndOffset(), myOldName);
-            }
+        myProject.getApplication().runWriteAction(() -> {
+          final TemplateState state = TemplateManager.getInstance(myProject).getTemplateState(topLevelEditor);
+          assert state != null;
+          final int segmentsCount = state.getSegmentsCount();
+          final Document document = topLevelEditor.getDocument();
+          for (int i = 0; i < segmentsCount; i++) {
+            final TextRange segmentRange = state.getSegmentRange(i);
+            document.replaceString(segmentRange.getStartOffset(), segmentRange.getEndOffset(), myOldName);
           }
         });
         if (!myProject.isDisposed() && myProject.isOpen()) {
           PsiDocumentManager.getInstance(myProject).commitDocument(topLevelEditor.getDocument());
         }
-      }
-    }, getCommandName(), null);
+      },
+      getCommandName(),
+      null
+    );
   }
 
   /**
@@ -634,10 +677,8 @@ public abstract class InplaceRefactoring {
       myHighlighters = null;
       myEditor.putUserData(INPLACE_RENAMER, null);
     }
-    if (myBalloon != null) {
-      if (!isRestart()) {
-        myBalloon.hide();
-      }
+    if (myBalloon != null && !isRestart()) {
+      myBalloon.hide();
     }
   }
 
@@ -694,8 +735,7 @@ public abstract class InplaceRefactoring {
 
   protected static VirtualFile getTopLevelVirtualFile(final FileViewProvider fileViewProvider) {
     VirtualFile file = fileViewProvider.getVirtualFile();
-    if (file instanceof VirtualFileWindow) file = ((VirtualFileWindow)file).getDelegate();
-    return file;
+    return file instanceof VirtualFileWindow virtualFileWindow ? virtualFileWindow.getDelegate() : file;
   }
 
   @TestOnly
@@ -771,21 +811,20 @@ public abstract class InplaceRefactoring {
   protected void showBalloon() {
     final JComponent component = getComponent();
     if (component == null) return;
-    if (ApplicationManager.getApplication().isHeadlessEnvironment()) return;
+    if (myProject.getApplication().isHeadlessEnvironment()) {
+      return;
+    }
     final BalloonBuilder balloonBuilder = JBPopupFactory.getInstance().createDialogBalloonBuilder(component, null).setSmallVariant(true);
     myBalloon = balloonBuilder.createBalloon();
     final Editor topLevelEditor = EditorWindow.getTopLevelEditor(myEditor);
     Disposer.register(myProject, myBalloon);
-    Disposer.register(myBalloon, new Disposable() {
-      @Override
-      public void dispose() {
-        releaseIfNotRestart();
-        topLevelEditor.putUserData(EditorPopupHelper.ANCHOR_POPUP_POSITION, null);
-      }
+    Disposer.register(myBalloon, () -> {
+      releaseIfNotRestart();
+      topLevelEditor.putUserData(EditorPopupHelper.ANCHOR_POPUP_POSITION, null);
     });
     topLevelEditor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
     final JBPopupFactory popupFactory = JBPopupFactory.getInstance();
-    myBalloon.show(new PositionTracker<Balloon>(topLevelEditor.getContentComponent()) {
+    myBalloon.show(new PositionTracker<>(topLevelEditor.getContentComponent()) {
       @Override
       public RelativePoint recalculateLocation(Balloon object) {
         EditorPopupHelper editorPopupHelper = EditorPopupHelper.getInstance();

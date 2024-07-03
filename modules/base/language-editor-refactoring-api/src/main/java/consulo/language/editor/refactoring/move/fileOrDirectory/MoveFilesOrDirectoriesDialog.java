@@ -16,16 +16,16 @@
 
 package consulo.language.editor.refactoring.move.fileOrDirectory;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.HelpManager;
 import consulo.disposer.Disposer;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.FileChooserFactory;
-import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.RefactoringSettings;
 import consulo.language.editor.refactoring.copy.CopyFilesOrDirectoriesDialog;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.language.editor.refactoring.util.DirectoryUtil;
 import consulo.language.psi.PsiDirectory;
@@ -33,8 +33,10 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RecentsManager;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.IdeActions;
@@ -42,9 +44,9 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.undoRedo.CommandProcessor;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import java.io.File;
@@ -72,7 +74,7 @@ public class MoveFilesOrDirectoriesDialog extends DialogWrapper {
     super(project, true);
     myProject = project;
     myCallback = callback;
-    setTitle(RefactoringBundle.message("move.title"));
+    setTitle(RefactoringLocalize.moveTitle());
     init();
   }
 
@@ -102,11 +104,13 @@ public class MoveFilesOrDirectoriesDialog extends DialogWrapper {
       myTargetDirectoryField.getChildComponent().setHistory(recentEntries);
     }
     final FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
-    myTargetDirectoryField.addBrowseFolderListener(RefactoringBundle.message("select.target.directory"),
-                                                   RefactoringBundle.message("the.file.will.be.moved.to.this.directory"),
-                                                   myProject,
-                                                   descriptor,
-                                                   TextComponentAccessor.TEXT_FIELD_WITH_HISTORY_WHOLE_TEXT);
+    myTargetDirectoryField.addBrowseFolderListener(
+      RefactoringLocalize.selectTargetDirectory().get(),
+      RefactoringLocalize.theFileWillBeMovedToThisDirectory().get(),
+      myProject,
+      descriptor,
+      TextComponentAccessor.TEXT_FIELD_WITH_HISTORY_WHOLE_TEXT
+    );
     final JTextField textField = myTargetDirectoryField.getChildComponent().getTextEditor();
     FileChooserFactory.getInstance().installFileCompletion(textField, descriptor, true, getDisposable());
     textField.getDocument().addDocumentListener(new DocumentAdapter() {
@@ -120,32 +124,26 @@ public class MoveFilesOrDirectoriesDialog extends DialogWrapper {
 
     String shortcutText = KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction(IdeActions.ACTION_CODE_COMPLETION));
 
-    myCbSearchForReferences = new NonFocusableCheckBox(RefactoringBundle.message("search.for.references"));
+    myCbSearchForReferences = new NonFocusableCheckBox(RefactoringLocalize.searchForReferences().get());
     myCbSearchForReferences.setSelected(RefactoringSettings.getInstance().MOVE_SEARCH_FOR_REFERENCES_FOR_FILE);
 
     myOpenInEditorCb = new NonFocusableCheckBox("Open moved files in editor");
     myOpenInEditorCb.setSelected(isOpenInEditor());
 
     return FormBuilder.createFormBuilder().addComponent(myNameLabel)
-            .addLabeledComponent(RefactoringBundle.message("move.files.to.directory.label"), myTargetDirectoryField, UIUtil.LARGE_VGAP)
-            .addTooltip(RefactoringBundle.message("path.completion.shortcut", shortcutText))
-            .addComponentToRightColumn(myCbSearchForReferences, UIUtil.LARGE_VGAP)
-            .addComponentToRightColumn(myOpenInEditorCb, UIUtil.LARGE_VGAP)
-            .getPanel();
+      .addLabeledComponent(RefactoringLocalize.moveFilesToDirectoryLabel().get(), myTargetDirectoryField, UIUtil.LARGE_VGAP)
+      .addTooltip(RefactoringLocalize.pathCompletionShortcut(shortcutText).get())
+      .addComponentToRightColumn(myCbSearchForReferences, UIUtil.LARGE_VGAP)
+      .addComponentToRightColumn(myOpenInEditorCb, UIUtil.LARGE_VGAP)
+      .getPanel();
   }
 
   public void setData(PsiElement[] psiElements, PsiDirectory initialTargetDirectory, @NonNls String helpID) {
     if (psiElements.length == 1) {
-      String text;
-      if (psiElements[0] instanceof PsiFile) {
-        text = RefactoringBundle.message("move.file.0",
-                                         CopyFilesOrDirectoriesDialog.shortenPath(((PsiFile)psiElements[0]).getVirtualFile()));
-      }
-      else {
-        text = RefactoringBundle.message("move.directory.0",
-                                         CopyFilesOrDirectoriesDialog.shortenPath(((PsiDirectory)psiElements[0]).getVirtualFile()));
-      }
-      myNameLabel.setText(text);
+      LocalizeValue text = psiElements[0] instanceof PsiFile file
+        ? RefactoringLocalize.moveFile0(CopyFilesOrDirectoriesDialog.shortenPath(file.getVirtualFile()))
+        : RefactoringLocalize.moveDirectory0(CopyFilesOrDirectoriesDialog.shortenPath(((PsiDirectory)psiElements[0]).getVirtualFile()));
+      myNameLabel.setText(text.get());
     }
     else {
       boolean isFile = true;
@@ -154,11 +152,9 @@ public class MoveFilesOrDirectoriesDialog extends DialogWrapper {
         isFile &= psiElement instanceof PsiFile;
         isDirectory &= psiElement instanceof PsiDirectory;
       }
-      myNameLabel.setText(isFile ?
-                          RefactoringBundle.message("move.specified.files") :
-                          isDirectory ?
-                          RefactoringBundle.message("move.specified.directories") :
-                          RefactoringBundle.message("move.specified.elements"));
+      LocalizeValue text = isFile ? RefactoringLocalize.moveSpecifiedFiles()
+        : isDirectory ? RefactoringLocalize.moveSpecifiedDirectories() : RefactoringLocalize.moveSpecifiedElements();
+      myNameLabel.setText(text.get());
     }
 
     final String initialTargetPath = initialTargetDirectory == null ? "" : initialTargetDirectory.getVirtualFile().getPresentableUrl();
@@ -179,10 +175,8 @@ public class MoveFilesOrDirectoriesDialog extends DialogWrapper {
   }
 
   public static boolean isOpenInEditor() {
-    if (ApplicationManager.getApplication().isUnitTestMode()) {
-      return false;
-    }
-    return ApplicationPropertiesComponent.getInstance().getBoolean(MOVE_FILES_OPEN_IN_EDITOR, false);
+    return !Application.get().isUnitTestMode()
+      && ApplicationPropertiesComponent.getInstance().getBoolean(MOVE_FILES_OPEN_IN_EDITOR, false);
   }
 
   private void validateOKButton() {
@@ -190,6 +184,7 @@ public class MoveFilesOrDirectoriesDialog extends DialogWrapper {
   }
 
   @Override
+  @RequiredUIAccess
   protected void doOKAction() {
     ApplicationPropertiesComponent.getInstance().setValue(MOVE_FILES_OPEN_IN_EDITOR, myOpenInEditorCb.isSelected(), false);
     //myTargetDirectoryField.getChildComponent().addCurrentTextToHistory();
@@ -201,25 +196,29 @@ public class MoveFilesOrDirectoriesDialog extends DialogWrapper {
       return;
     }
 
-    CommandProcessor.getInstance().executeCommand(myProject, () -> {
-      final Runnable action = () -> {
-        String directoryName = myTargetDirectoryField.getChildComponent().getText().replace(File.separatorChar, '/');
-        try {
-          myTargetDirectory = DirectoryUtil.mkdirs(PsiManager.getInstance(myProject), directoryName);
-        }
-        catch (IncorrectOperationException e) {
-          // ignore
-        }
-      };
+    CommandProcessor.getInstance().executeCommand(
+      myProject,
+      () -> {
+        final Runnable action = () -> {
+          String directoryName = myTargetDirectoryField.getChildComponent().getText().replace(File.separatorChar, '/');
+          try {
+            myTargetDirectory = DirectoryUtil.mkdirs(PsiManager.getInstance(myProject), directoryName);
+          }
+          catch (IncorrectOperationException e) {
+            // ignore
+          }
+        };
 
-      ApplicationManager.getApplication().runWriteAction(action);
-      if (myTargetDirectory == null) {
-        CommonRefactoringUtil.showErrorMessage(getTitle(),
-                                               RefactoringBundle.message("cannot.create.directory"), myHelpID, myProject);
-        return;
-      }
-      myCallback.run(this);
-    }, RefactoringBundle.message("move.title"), null);
+        myProject.getApplication().runWriteAction(action);
+        if (myTargetDirectory == null) {
+          CommonRefactoringUtil.showErrorMessage(getTitle(), RefactoringLocalize.cannotCreateDirectory().get(), myHelpID, myProject);
+          return;
+        }
+        myCallback.run(this);
+      },
+      RefactoringLocalize.moveTitle().get(),
+      null
+    );
   }
 
   public PsiDirectory getTargetDirectory() {

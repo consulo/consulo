@@ -16,13 +16,13 @@
 
 package consulo.language.editor.refactoring.rename;
 
-import consulo.application.ApplicationManager;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
 import consulo.application.HelpManager;
 import consulo.codeEditor.Editor;
-import consulo.component.extension.Extensions;
 import consulo.configurable.ConfigurationException;
 import consulo.dataContext.DataContext;
-import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.rename.inplace.VariableInplaceRenameHandler;
 import consulo.language.editor.refactoring.ui.NameSuggestionsField;
 import consulo.language.editor.refactoring.ui.RefactoringDialog;
@@ -31,16 +31,18 @@ import consulo.language.findUsage.DescriptiveNameUtil;
 import consulo.language.plain.PlainTextFileType;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.NonFocusableCheckBox;
 import consulo.usage.UsageViewUtil;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.xml.XmlStringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
@@ -62,13 +64,12 @@ public class RenameDialog extends RefactoringDialog {
   private final PsiElement myPsiElement;
   private final PsiElement myNameSuggestionContext;
   private final Editor myEditor;
-  private static final String REFACTORING_NAME = RefactoringBundle.message("rename.title");
+  private static final LocalizeValue REFACTORING_NAME = RefactoringLocalize.renameTitle();
   private NameSuggestionsField.DataChanged myNameChangedListener;
-  private final Map<AutomaticRenamerFactory, JCheckBox> myAutomaticRenamers = new HashMap<AutomaticRenamerFactory, JCheckBox>();
+  private final Map<AutomaticRenamerFactory, JCheckBox> myAutomaticRenamers = new HashMap<>();
   private String myOldName;
 
-  public RenameDialog(@Nonnull Project project, @Nonnull PsiElement psiElement, @Nullable PsiElement nameSuggestionContext,
-                      Editor editor) {
+  public RenameDialog(@Nonnull Project project, @Nonnull PsiElement psiElement, @Nullable PsiElement nameSuggestionContext, Editor editor) {
     super(project, true);
 
     assert psiElement.isValid();
@@ -90,12 +91,13 @@ public class RenameDialog extends RefactoringDialog {
       myCbSearchTextOccurences.setSelected(toSearchForTextOccurences);
     }
 
-    if (!ApplicationManager.getApplication().isUnitTestMode()) validateButtons();
+    if (!myProject.getApplication().isUnitTestMode()) validateButtons();
     myHelpID = RenamePsiElementProcessor.forElement(psiElement).getHelpID(psiElement);
   }
 
+  @RequiredUIAccess
   public static void showRenameDialog(DataContext dataContext, RenameDialog dialog) {
-    if (ApplicationManager.getApplication().isUnitTestMode()) {
+    if (Application.get().isUnitTestMode()) {
       final String name = dataContext.getData(PsiElementRenameHandler.DEFAULT_NAME);
       //noinspection TestOnlyProblems
       dialog.performRename(name);
@@ -108,7 +110,7 @@ public class RenameDialog extends RefactoringDialog {
 
   @Nonnull
   protected String getLabelText() {
-    return RefactoringBundle.message("rename.0.and.its.usages.to", getFullName());
+    return RefactoringLocalize.rename0AndItsUsagesTo(getFullName()).get();
   }
 
   @Nonnull
@@ -135,6 +137,7 @@ public class RenameDialog extends RefactoringDialog {
     return RenamePsiElementProcessor.forElement(myPsiElement).isToSearchInComments(myPsiElement);
   }
 
+  @RequiredReadAction
   protected String getFullName() {
     final String name = DescriptiveNameUtil.getDescriptiveName(myPsiElement);
     return (UsageViewUtil.getType(myPsiElement) + " " + name).trim();
@@ -152,12 +155,7 @@ public class RenameDialog extends RefactoringDialog {
     if (myPsiElement instanceof PsiFile && myEditor == null) {
       myNameSuggestionsField.selectNameWithoutExtension();
     }
-    myNameChangedListener = new NameSuggestionsField.DataChanged() {
-      @Override
-      public void dataChanged() {
-        processNewNameChanged();
-      }
-    };
+    myNameChangedListener = this::processNewNameChanged;
     myNameSuggestionsField.addDataChangedListener(myNameChangedListener);
 
   }
@@ -171,17 +169,19 @@ public class RenameDialog extends RefactoringDialog {
   }
 
   public String[] getSuggestedNames() {
-    final LinkedHashSet<String> result = new LinkedHashSet<String>();
+    final LinkedHashSet<String> result = new LinkedHashSet<>();
     final String initialName = VariableInplaceRenameHandler.getInitialName();
     if (initialName != null) {
       result.add(initialName);
     }
     result.add(UsageViewUtil.getShortName(myPsiElement));
-    for(NameSuggestionProvider provider: NameSuggestionProvider.EP_NAME.getExtensionList()) {
+    for (NameSuggestionProvider provider : NameSuggestionProvider.EP_NAME.getExtensionList()) {
       SuggestedNameInfo info = provider.getSuggestedNames(myPsiElement, myNameSuggestionContext, result);
       if (info != null) {
         mySuggestedNameInfo = info;
-        if (provider instanceof PreferrableNameSuggestionProvider && !((PreferrableNameSuggestionProvider)provider).shouldCheckOthers()) break;
+        if (provider instanceof PreferrableNameSuggestionProvider pnsp && !pnsp.shouldCheckOthers()) {
+          break;
+        }
       }
     }
     return ArrayUtil.toStringArray(result);
@@ -252,7 +252,7 @@ public class RenameDialog extends RefactoringDialog {
     gbConstraints.weightx = 1;
     gbConstraints.fill = GridBagConstraints.BOTH;
     myCbSearchInComments = new NonFocusableCheckBox();
-    myCbSearchInComments.setText(RefactoringBundle.getSearchInCommentsAndStringsText());
+    myCbSearchInComments.setText(RefactoringLocalize.searchInCommentsAndStrings().get());
     myCbSearchInComments.setSelected(true);
     panel.add(myCbSearchInComments, gbConstraints);
 
@@ -262,7 +262,7 @@ public class RenameDialog extends RefactoringDialog {
     gbConstraints.weightx = 1;
     gbConstraints.fill = GridBagConstraints.BOTH;
     myCbSearchTextOccurences = new NonFocusableCheckBox();
-    myCbSearchTextOccurences.setText(RefactoringBundle.getSearchForTextOccurrencesText());
+    myCbSearchTextOccurences.setText(RefactoringLocalize.searchForTextOccurrences().get());
     myCbSearchTextOccurences.setSelected(true);
     panel.add(myCbSearchTextOccurences, gbConstraints);
     if (!TextOccurrencesUtil.isSearchTextOccurencesEnabled(myPsiElement)) {
@@ -313,7 +313,7 @@ public class RenameDialog extends RefactoringDialog {
 
     final RenameProcessor processor = createRenameProcessor(newName);
 
-    for(Map.Entry<AutomaticRenamerFactory, JCheckBox> e: myAutomaticRenamers.entrySet()) {
+    for (Map.Entry<AutomaticRenamerFactory, JCheckBox> e: myAutomaticRenamers.entrySet()) {
       e.getKey().setEnabled(e.getValue().isSelected());
       if (e.getValue().isSelected()) {
         processor.addRenamerFactory(e.getKey());

@@ -15,25 +15,26 @@
  */
 package consulo.language.editor.refactoring.rename.inplace;
 
-import consulo.application.ApplicationManager;
 import consulo.application.Result;
 import consulo.application.progress.ProgressManager;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.SelectionModel;
 import consulo.codeEditor.RealEditor;
+import consulo.codeEditor.SelectionModel;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.inject.EditorWindow;
-import consulo.language.editor.refactoring.action.RefactoringActionHandler;
-import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.ResolveSnapshotProvider;
+import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.language.editor.refactoring.event.RefactoringElementListener;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.rename.*;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.language.editor.refactoring.util.TextOccurrencesUtil;
 import consulo.language.psi.*;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.internal.FinishMarkAction;
@@ -41,13 +42,12 @@ import consulo.undoRedo.internal.StartMarkAction;
 import consulo.usage.UsageInfo;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.Pair;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.function.BiPredicate;
 
 /**
  * @author ven
@@ -62,7 +62,13 @@ public class VariableInplaceRenamer extends InplaceRefactoring {
   }
 
   public VariableInplaceRenamer(PsiNamedElement elementToRename, Editor editor, Project project) {
-    this(elementToRename, editor, project, elementToRename != null ? elementToRename.getName() : null, elementToRename != null ? elementToRename.getName() : null);
+    this(
+      elementToRename,
+      editor,
+      project,
+      elementToRename != null ? elementToRename.getName() : null,
+      elementToRename != null ? elementToRename.getName() : null
+    );
   }
 
   public VariableInplaceRenamer(PsiNamedElement elementToRename, Editor editor, Project project, final String initialName, final String oldName) {
@@ -83,14 +89,11 @@ public class VariableInplaceRenamer extends InplaceRefactoring {
     final String stringToSearch = myElementToRename.getName();
     final PsiFile currentFile = PsiDocumentManager.getInstance(myProject).getPsiFile(myEditor.getDocument());
     if (stringToSearch != null) {
-      TextOccurrencesUtil.processUsagesInStringsAndComments(myElementToRename, stringToSearch, true, new BiPredicate<PsiElement, TextRange>() {
-        @Override
-        public boolean test(PsiElement psiElement, TextRange textRange) {
-          if (psiElement.getContainingFile() == currentFile) {
-            stringUsages.add(Pair.create(psiElement, textRange));
-          }
-          return true;
+      TextOccurrencesUtil.processUsagesInStringsAndComments(myElementToRename, stringToSearch, true, (psiElement, textRange) -> {
+        if (psiElement.getContainingFile() == currentFile) {
+          stringUsages.add(Pair.create(psiElement, textRange));
         }
+        return true;
       });
     }
   }
@@ -170,18 +173,21 @@ public class VariableInplaceRenamer extends InplaceRefactoring {
     if (variable != null) {
       final int offset = variable.getTextOffset();
       restoreCaretOffset(offset);
-      myEditor.showPopupInBestPositionFor(JBPopupFactory.getInstance().createConfirmation("Inserted identifier is not valid", "Continue editing", "Cancel", new Runnable() {
-        @Override
-        public void run() {
-          createInplaceRenamerToRestart(variable, myEditor, newName).performInplaceRefactoring(nameSuggestions);
-        }
-      }, 0));
+      myEditor.showPopupInBestPositionFor(JBPopupFactory.getInstance()
+        .createConfirmation(
+          "Inserted identifier is not valid",
+          "Continue editing",
+          CommonLocalize.buttonCancel().get(),
+          () -> createInplaceRenamerToRestart(variable, myEditor, newName).performInplaceRefactoring(nameSuggestions),
+          0
+        ));
     }
   }
 
   protected void renameSynthetic(String newName) {
   }
 
+  @RequiredUIAccess
   protected void performRefactoringRename(final String newName, final StartMarkAction markAction) {
     try {
       if (!isIdentifier(newName, myLanguage)) {
@@ -198,39 +204,39 @@ public class VariableInplaceRenamer extends InplaceRefactoring {
       }
       for (AutomaticRenamerFactory factory : AutomaticRenamerFactory.EP_NAME.getExtensionList()) {
         if (factory.isApplicable(elementToRename)) {
-          final List<UsageInfo> usages = new ArrayList<UsageInfo>();
-          final AutomaticRenamer renamer = factory.createRenamer(elementToRename, newName, new ArrayList<UsageInfo>());
+          final List<UsageInfo> usages = new ArrayList<>();
+          final AutomaticRenamer renamer = factory.createRenamer(elementToRename, newName, new ArrayList<>());
           if (renamer.hasAnythingToRename()) {
-            if (!ApplicationManager.getApplication().isUnitTestMode()) {
+            if (!myProject.getApplication().isUnitTestMode()) {
               final AutomaticRenamingDialog renamingDialog = new AutomaticRenamingDialog(myProject, renamer);
               renamingDialog.show();
               if (!renamingDialog.isOK()) return;
             }
 
-            final Runnable runnable = () -> ApplicationManager.getApplication().runReadAction(new Runnable() {
-              @Override
-              public void run() {
-                renamer.findUsages(usages, false, false);
-              }
-            });
+            final Runnable runnable = () -> myProject.getApplication()
+              .runReadAction(() -> renamer.findUsages(usages, false, false));
 
-            if (!ProgressManager.getInstance().runProcessWithProgressSynchronously(runnable, RefactoringBundle.message("searching.for.variables"), true, myProject)) {
+            if (!ProgressManager.getInstance().runProcessWithProgressSynchronously(
+              runnable,
+              RefactoringLocalize.searchingForVariables().get(),
+              true,
+              myProject
+            )) {
               return;
             }
 
-            if (!CommonRefactoringUtil.checkReadOnlyStatus(myProject, PsiUtilCore.toPsiElementArray(renamer.getElements()))) return;
-            final Runnable performAutomaticRename = new Runnable() {
-              @Override
-              public void run() {
-                CommandProcessor.getInstance().markCurrentCommandAsGlobal(myProject);
-                final UsageInfo[] usageInfos = usages.toArray(new UsageInfo[usages.size()]);
-                final MultiMap<PsiElement, UsageInfo> classified = RenameProcessor.classifyUsages(renamer.getElements(), usageInfos);
-                for (final PsiNamedElement element : renamer.getElements()) {
-                  final String newElementName = renamer.getNewName(element);
-                  if (newElementName != null) {
-                    final Collection<UsageInfo> infos = classified.get(element);
-                    RenameUtil.doRename(element, newElementName, infos.toArray(new UsageInfo[infos.size()]), myProject, RefactoringElementListener.DEAF);
-                  }
+            if (!CommonRefactoringUtil.checkReadOnlyStatus(myProject, PsiUtilCore.toPsiElementArray(renamer.getElements()))) {
+              return;
+            }
+            final Runnable performAutomaticRename = () -> {
+              CommandProcessor.getInstance().markCurrentCommandAsGlobal(myProject);
+              final UsageInfo[] usageInfos = usages.toArray(new UsageInfo[usages.size()]);
+              final MultiMap<PsiElement, UsageInfo> classified = RenameProcessor.classifyUsages(renamer.getElements(), usageInfos);
+              for (final PsiNamedElement element : renamer.getElements()) {
+                final String newElementName = renamer.getNewName(element);
+                if (newElementName != null) {
+                  final Collection<UsageInfo> infos = classified.get(element);
+                  RenameUtil.doRename(element, newElementName, infos.toArray(new UsageInfo[infos.size()]), myProject, RefactoringElementListener.DEAF);
                 }
               }
             };
@@ -240,16 +246,11 @@ public class VariableInplaceRenamer extends InplaceRefactoring {
                 performAutomaticRename.run();
               }
             };
-            if (ApplicationManager.getApplication().isUnitTestMode()) {
+            if (myProject.getApplication().isUnitTestMode()) {
               writeCommandAction.execute();
             }
             else {
-              ApplicationManager.getApplication().invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                  writeCommandAction.execute();
-                }
-              });
+              myProject.getApplication().invokeLater(writeCommandAction::execute);
             }
           }
         }
@@ -267,10 +268,11 @@ public class VariableInplaceRenamer extends InplaceRefactoring {
 
   @Override
   protected String getCommandName() {
-    return RefactoringBundle.message("renaming.command.name", myInitialName);
+    return RefactoringLocalize.renamingCommandName(myInitialName).get();
   }
 
   @Override
+  @RequiredUIAccess
   protected boolean performRefactoring() {
     boolean bind = false;
     if (myInsertedName != null) {
@@ -287,7 +289,7 @@ public class VariableInplaceRenamer extends InplaceRefactoring {
       else {
         if (mySnapshot != null) {
           if (isIdentifier(myInsertedName, myLanguage)) {
-            ApplicationManager.getApplication().runWriteAction(() -> mySnapshot.apply(myInsertedName));
+            myProject.getApplication().runWriteAction(() -> mySnapshot.apply(myInsertedName));
           }
         }
       }

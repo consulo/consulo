@@ -22,7 +22,7 @@ package consulo.language.editor.refactoring.ui;
 
 import consulo.fileEditor.FileEditorLocation;
 import consulo.language.editor.highlight.ReadWriteAccessDetector;
-import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import consulo.ui.ex.SimpleTextAttributes;
@@ -35,10 +35,10 @@ import consulo.usage.*;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -82,8 +82,8 @@ public class ConflictsDialog extends DialogWrapper{
     }
     myConflictDescriptions = ArrayUtil.toStringArray(conflicts);
     myElementConflictDescription = conflictDescriptions;
-    setTitle(RefactoringBundle.message("problems.detected.title"));
-    setOKButtonText(RefactoringBundle.message("continue.button"));
+    setTitle(RefactoringLocalize.problemsDetectedTitle());
+    setOKButtonText(RefactoringLocalize.continueButton().get());
     setOKActionEnabled(alwaysShowOkButton || myDoRefactoringRunnable != null);
     init();
   }
@@ -100,8 +100,8 @@ public class ConflictsDialog extends DialogWrapper{
     myProject = project;
     myConflictDescriptions = conflictDescriptions;
     myCanShowConflictsInView = true;
-    setTitle(RefactoringBundle.message("problems.detected.title"));
-    setOKButtonText(RefactoringBundle.message("continue.button"));
+    setTitle(RefactoringLocalize.problemsDetectedTitle());
+    setOKButtonText(RefactoringLocalize.continueButton().get());
     init();
   }
 
@@ -129,7 +129,7 @@ public class ConflictsDialog extends DialogWrapper{
   protected JComponent createCenterPanel() {
     JPanel panel = new JPanel(new BorderLayout(0, 2));
 
-    panel.add(new JLabel(RefactoringBundle.message("the.following.problems.were.found")), BorderLayout.NORTH);
+    panel.add(new JLabel(RefactoringLocalize.theFollowingProblemsWereFound().get()), BorderLayout.NORTH);
 
     @NonNls StringBuilder buf = new StringBuilder();
     for (String description : myConflictDescriptions) {
@@ -138,14 +138,16 @@ public class ConflictsDialog extends DialogWrapper{
     }
     JEditorPane messagePane = new JEditorPane(UIUtil.HTML_MIME, buf.toString());
     messagePane.setEditable(false);
-    JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(messagePane,
-                                                                ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-                                                                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(
+      messagePane,
+      ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+      ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED
+    );
     scrollPane.setPreferredSize(new Dimension(500, 400));
     panel.add(scrollPane, BorderLayout.CENTER);
 
     if (getOKAction().isEnabled()) {
-      panel.add(new JLabel(RefactoringBundle.message("do.you.wish.to.ignore.them.and.continue")), BorderLayout.SOUTH);
+      panel.add(new JLabel(RefactoringLocalize.doYouWishToIgnoreThemAndContinue().get()), BorderLayout.SOUTH);
     }
 
     return panel;
@@ -157,7 +159,7 @@ public class ConflictsDialog extends DialogWrapper{
 
   private class CancelAction extends AbstractAction {
     public CancelAction() {
-      super(RefactoringBundle.message("cancel.button"));
+      super(RefactoringLocalize.cancelButton().get());
       putValue(DEFAULT_ACTION,Boolean.TRUE);
     }
 
@@ -221,7 +223,12 @@ public class ConflictsDialog extends DialogWrapper{
       if (myDoRefactoringRunnable != null) {
         usageView.addPerformOperationAction(
           myDoRefactoringRunnable,
-          myCommandName != null ? myCommandName : RefactoringBundle.message("retry.command"), "Unable to perform refactoring. There were changes in code after the usages have been found.", RefactoringBundle.message("usageView.doAction"));
+          myCommandName != null
+            ? myCommandName
+            : RefactoringLocalize.retryCommand().get(),
+          "Unable to perform refactoring. There were changes in code after the usages have been found.",
+          RefactoringLocalize.usageviewDoaction().get()
+        );
       }
       close(SHOW_CONFLICTS_EXIT_CODE);
     }

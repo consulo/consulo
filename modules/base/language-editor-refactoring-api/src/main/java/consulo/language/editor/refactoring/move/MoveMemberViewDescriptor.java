@@ -20,10 +20,10 @@
  */
 package consulo.language.editor.refactoring.move;
 
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.psi.PsiElement;
-import consulo.usage.UsageViewDescriptor;
 import consulo.usage.UsageViewBundle;
-import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.usage.UsageViewDescriptor;
 import jakarta.annotation.Nonnull;
 
 public class MoveMemberViewDescriptor implements UsageViewDescriptor {
@@ -41,17 +41,16 @@ public class MoveMemberViewDescriptor implements UsageViewDescriptor {
 
   @Override
   public String getProcessedElementsHeader() {
-    return RefactoringBundle.message("move.members.elements.header");
+    return RefactoringLocalize.moveMembersElementsHeader().get();
   }
 
   @Override
   public String getCodeReferencesText(int usagesCount, int filesCount) {
-    return RefactoringBundle.message("references.to.be.changed", UsageViewBundle.getReferencesString(usagesCount, filesCount));
+    return RefactoringLocalize.referencesToBeChanged(UsageViewBundle.getReferencesString(usagesCount, filesCount)).get();
   }
 
   @Override
   public String getCommentReferencesText(int usagesCount, int filesCount) {
     return null;
   }
-
 }
