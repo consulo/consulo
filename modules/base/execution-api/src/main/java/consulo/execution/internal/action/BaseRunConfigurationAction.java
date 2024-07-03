@@ -18,7 +18,6 @@ package consulo.execution.internal.action;
 
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
-import consulo.execution.ExecutionBundle;
 import consulo.execution.ProgramRunnerUtil;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.action.ConfigurationContext;
@@ -27,7 +26,7 @@ import consulo.execution.configuration.ConfigurationType;
 import consulo.execution.configuration.LocatableConfiguration;
 import consulo.execution.configuration.LocatableConfigurationBase;
 import consulo.execution.configuration.RunConfiguration;
-import consulo.localize.LocalizeValue;
+import consulo.execution.localize.ExecutionLocalize;import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
@@ -145,7 +144,7 @@ public abstract class BaseRunConfigurationAction extends ActionGroup {
         final Editor editor = dataContext.getData(Editor.KEY);
         Collections.sort(producers, ConfigurationFromContext.NAME_COMPARATOR);
         final ListPopup popup = JBPopupFactory.getInstance()
-                .createListPopup(new BaseListPopupStep<ConfigurationFromContext>(ExecutionBundle.message("configuration.action.chooser.title"), producers) {
+                .createListPopup(new BaseListPopupStep<ConfigurationFromContext>(ExecutionLocalize.configurationActionChooserTitle().get(), producers) {
                   @Override
                   @Nonnull
                   public String getTextFor(final ConfigurationFromContext producer) {

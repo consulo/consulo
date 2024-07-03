@@ -16,6 +16,7 @@
 package consulo.execution;
 
 import consulo.configurable.ConfigurationException;
+import consulo.execution.localize.ExecutionLocalize;
 
 public class RuntimeConfigurationException extends ConfigurationException {
   public RuntimeConfigurationException(final String message, final String title) {
@@ -23,6 +24,6 @@ public class RuntimeConfigurationException extends ConfigurationException {
   }
 
   public RuntimeConfigurationException(final String message) {
-    super(message, ExecutionBundle.message("run.configuration.error.dialog.title"));
+    super(message, ExecutionLocalize.runConfigurationErrorDialogTitle().get());
   }
 }

@@ -22,7 +22,6 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.component.ProcessCanceledException;
 import consulo.dataContext.DataContext;
-import consulo.execution.ExecutionBundle;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.test.TestFrameworkRunningModel;
@@ -291,7 +290,7 @@ public class ExportTestResultsAction extends DumbAwareAction {
       handler = transformerFactory.newTransformerHandler(xslSource);
       handler.getTransformer().setParameter(
         "TITLE",
-        ExecutionBundle.message("export.test.results.filename", myRunConfiguration.getName(), myRunConfiguration.getType().getDisplayName())
+        ExecutionLocalize.exportTestResultsFilename(myRunConfiguration.getName()).get()
       );
     }
 

@@ -5,8 +5,8 @@ package consulo.execution.configuration;
 
 import consulo.application.AccessRule;
 import consulo.component.util.pointer.NamedPointer;
-import consulo.execution.ExecutionBundle;
 import consulo.execution.RuntimeConfigurationException;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
@@ -17,11 +17,11 @@ import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.Tag;
 import consulo.util.xml.serializer.annotation.Transient;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.List;
 
 @Tag("module")
@@ -121,11 +121,11 @@ public class RunConfigurationModule implements JDOMExternalizable {
       if (myModulePointer != null) {
         String moduleName = myModulePointer.getName();
         if (ModuleManager.getInstance(myProject).getUnloadedModuleDescription(moduleName) != null) {
-          throw new RuntimeConfigurationError(ExecutionBundle.message("module.is.unloaded.from.project.error.text", moduleName));
+          throw new RuntimeConfigurationError(ExecutionLocalize.moduleIsUnloadedFromProjectErrorText(moduleName).get());
         }
-        throw new RuntimeConfigurationError(ExecutionBundle.message("module.doesn.t.exist.in.project.error.text", moduleName));
+        throw new RuntimeConfigurationError(ExecutionLocalize.moduleDoesnTExistInProjectErrorText(moduleName).get());
       }
-      throw new RuntimeConfigurationError(ExecutionBundle.message("module.not.specified.error.text"));
+      throw new RuntimeConfigurationError(ExecutionLocalize.moduleNotSpecifiedErrorText().get());
     }
   }
 }

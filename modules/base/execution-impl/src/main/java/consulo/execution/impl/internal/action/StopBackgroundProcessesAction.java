@@ -5,12 +5,12 @@ import consulo.application.AllIcons;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.TaskInfo;
 import consulo.dataContext.DataContext;
-import consulo.execution.ExecutionBundle;
-import consulo.language.editor.CommonDataKeys;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.internal.StatusBarEx;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.IdeFrame;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -35,14 +35,16 @@ import java.util.List;
 
 public class StopBackgroundProcessesAction extends DumbAwareAction implements AnAction.TransparentUpdate {
   @Override
+  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setEnabled(!getCancellableProcesses(e.getData(CommonDataKeys.PROJECT)).isEmpty());
+    e.getPresentation().setEnabled(!getCancellableProcesses(e.getData(Project.KEY)).isEmpty());
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     List<StopAction.HandlerItem> handlerItems = getItemsList(getCancellableProcesses(project));
 
     if (handlerItems.isEmpty()) {
@@ -50,7 +52,7 @@ public class StopBackgroundProcessesAction extends DumbAwareAction implements An
     }
 
     final JBList<StopAction.HandlerItem> list = new JBList<>(handlerItems);
-    list.setCellRenderer(new GroupedItemsListRenderer<>(new ListItemDescriptorAdapter<StopAction.HandlerItem>() {
+    list.setCellRenderer(new GroupedItemsListRenderer<>(new ListItemDescriptorAdapter<>() {
       @Nullable
       @Override
       public String getTextFor(StopAction.HandlerItem item) {
@@ -71,15 +73,20 @@ public class StopBackgroundProcessesAction extends DumbAwareAction implements An
 
     AWTPopupFactory popupFactory = (AWTPopupFactory)JBPopupFactory.getInstance();
     JBPopup popup = popupFactory.createListPopupBuilder(list)
-                                .setMovable(true)
-                                .setTitle(handlerItems.size() == 1 ? ExecutionBundle.message("confirm.background.process.stop") : ExecutionBundle.message(
-                                  "stop.background.process"))
-                                .setNamerForFiltering(o -> o.displayName)
-                                .setItemsChosenCallback((c) -> {
-                                  for (Object o : c) {
-                                    if (o instanceof StopAction.HandlerItem) ((StopAction.HandlerItem)o).stop();
-                                  }
-                                }).setRequestFocus(true).createPopup();
+      .setMovable(true)
+      .setTitle(
+        handlerItems.size() == 1
+          ? ExecutionLocalize.confirmBackgroundProcessStop().get()
+          : ExecutionLocalize.stopBackgroundProcess().get()
+      )
+      .setNamerForFiltering(o -> o.displayName)
+      .setItemsChosenCallback((c) -> {
+        for (Object o : c) {
+          if (o instanceof StopAction.HandlerItem) ((StopAction.HandlerItem)o).stop();
+        }
+      }).
+      setRequestFocus(true)
+      .createPopup();
 
     InputEvent inputEvent = e.getInputEvent();
     Component component = inputEvent != null ? inputEvent.getComponent() : null;
@@ -92,7 +99,6 @@ public class StopBackgroundProcessesAction extends DumbAwareAction implements An
     else {
       popup.showCenteredInCurrentWindow(project);
     }
-
   }
 
   @Nonnull

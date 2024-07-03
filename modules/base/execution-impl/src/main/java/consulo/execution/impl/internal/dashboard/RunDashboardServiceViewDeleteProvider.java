@@ -1,21 +1,20 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.execution.impl.internal.dashboard;
 
-import consulo.application.CommonBundle;
 import consulo.dataContext.DataContext;
-import consulo.execution.ExecutionBundle;
 import consulo.execution.configuration.ConfigurationType;
 import consulo.execution.dashboard.RunDashboardGroup;
 import consulo.execution.dashboard.RunDashboardManager;
 import consulo.execution.impl.internal.dashboard.tree.GroupingNode;
 import consulo.execution.impl.internal.dashboard.tree.RunDashboardGroupImpl;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.service.ServiceViewContributorDeleteProvider;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.awt.MessageDialogBuilder;
-import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.ObjectUtil;
@@ -49,23 +48,24 @@ final class RunDashboardServiceViewDeleteProvider implements ServiceViewContribu
       return;
     }
 
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Project project = dataContext.getData(Project.KEY);
     if (project == null) return;
 
     ConfigurationType onlyType = ContainerUtil.getOnlyItem(targetTypes);
     String message;
     if (onlyType != null) {
-      message = ExecutionBundle.message("run.dashboard.remove.run.configuration.type.confirmation", onlyType.getDisplayName());
+      message = ExecutionLocalize.runDashboardRemoveRunConfigurationTypeConfirmation(onlyType.getDisplayName()).get();
     }
     else {
-      message = ExecutionBundle.message("run.dashboard.remove.run.configuration.types.confirmation", targetTypes.size());
+      message = ExecutionLocalize.runDashboardRemoveRunConfigurationTypesConfirmation(targetTypes.size()).get();
     }
 
-    if (!MessageDialogBuilder.yesNo(CommonBundle.message("button.remove"), message)
-                             .yesText(CommonBundle.message("button.remove"))
-                             .icon(Messages.getWarningIcon())
-                             .project(project)
-                             .isYes()) {
+    boolean yesPressed = MessageDialogBuilder.yesNo(CommonLocalize.buttonRemove().get(), message)
+      .yesText(CommonLocalize.buttonRemove().get())
+      .icon(UIUtil.getWarningIcon())
+      .project(project)
+      .isYes();
+    if (!yesPressed) {
       return;
     }
     RunDashboardManager runDashboardManager = RunDashboardManager.getInstance(project);
@@ -88,8 +88,8 @@ final class RunDashboardServiceViewDeleteProvider implements ServiceViewContribu
 
     List<ConfigurationType> types = new SmartList<>();
     for (Object item : items) {
-      if (item instanceof GroupingNode) {
-        RunDashboardGroup group = ((GroupingNode)item).getGroup();
+      if (item instanceof GroupingNode groupingNode) {
+        RunDashboardGroup group = groupingNode.getGroup();
         ConfigurationType type = ObjectUtil.tryCast(((RunDashboardGroupImpl<?>)group).getValue(), ConfigurationType.class);
         if (type != null) {
           types.add(type);

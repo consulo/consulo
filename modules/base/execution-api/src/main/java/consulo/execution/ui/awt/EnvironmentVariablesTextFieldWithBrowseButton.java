@@ -15,9 +15,9 @@
  */
 package consulo.execution.ui.awt;
 
-import consulo.execution.ExecutionBundle;
 import consulo.execution.configuration.EnvironmentVariable;
 import consulo.execution.configuration.EnvironmentVariablesData;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.process.cmd.GeneralCommandLine;
@@ -30,14 +30,13 @@ import consulo.ui.ex.awt.HyperlinkLabel;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
 import java.awt.*;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -160,7 +159,7 @@ public class EnvironmentVariablesTextFieldWithBrowseButton implements UserActivi
     table.setValues(convertToVariables(new TreeMap<>(new GeneralCommandLine().getParentEnvironment()), true));
     table.getActionsPanel().setVisible(false);
     DialogBuilder builder = new DialogBuilder(parent);
-    builder.setTitle(ExecutionBundle.message("environment.variables.system.dialog.title"));
+    builder.setTitle(ExecutionLocalize.environmentVariablesSystemDialogTitle().get());
     builder.centerPanel(table.getComponent());
     builder.addCloseButton();
     builder.show();
@@ -177,7 +176,7 @@ public class EnvironmentVariablesTextFieldWithBrowseButton implements UserActivi
 
   private class MyEnvironmentVariablesDialog extends DialogWrapper {
     private final EnvVariablesTable myEnvVariablesTable;
-    private final JCheckBox myUseDefaultCb = new JCheckBox(ExecutionBundle.message("env.vars.checkbox.title"));
+    private final JCheckBox myUseDefaultCb = new JCheckBox(ExecutionLocalize.envVarsCheckboxTitle().get());
     private final JPanel myWholePanel = new JPanel(new BorderLayout());
 
     protected MyEnvironmentVariablesDialog() {
@@ -189,19 +188,16 @@ public class EnvironmentVariablesTextFieldWithBrowseButton implements UserActivi
       myWholePanel.add(myEnvVariablesTable.getComponent(), BorderLayout.CENTER);
       JPanel useDefaultPanel = new JPanel(new BorderLayout());
       useDefaultPanel.add(myUseDefaultCb, BorderLayout.CENTER);
-      HyperlinkLabel showLink = new HyperlinkLabel(ExecutionBundle.message("env.vars.show.system"));
+      HyperlinkLabel showLink = new HyperlinkLabel(ExecutionLocalize.envVarsShowSystem().get());
       useDefaultPanel.add(showLink, BorderLayout.EAST);
-      showLink.addHyperlinkListener(new HyperlinkListener() {
-        @Override
-        public void hyperlinkUpdate(HyperlinkEvent e) {
-          if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-            showParentEnvironmentDialog(MyEnvironmentVariablesDialog.this.getWindow());
-          }
+      showLink.addHyperlinkListener(e -> {
+        if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+          showParentEnvironmentDialog(MyEnvironmentVariablesDialog.this.getWindow());
         }
       });
 
       myWholePanel.add(useDefaultPanel, BorderLayout.SOUTH);
-      setTitle(ExecutionBundle.message("environment.variables.dialog.title"));
+      setTitle(ExecutionLocalize.environmentVariablesDialogTitle());
       init();
     }
 

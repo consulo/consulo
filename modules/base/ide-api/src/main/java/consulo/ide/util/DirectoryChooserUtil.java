@@ -22,7 +22,8 @@ import consulo.ide.IdeBundle;
 import consulo.ide.IdeView;
 import consulo.ide.internal.DirectoryChooserDialog;
 import consulo.ide.internal.DirectoryChooserFactory;
-import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.ide.localize.IdeLocalize;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.psi.PsiDirectory;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
@@ -54,7 +55,7 @@ public class DirectoryChooserUtil {
   public static PsiDirectory selectDirectory(Project project, PsiDirectory[] packageDirectories, PsiDirectory defaultDirectory, String postfixToShow) {
     ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
 
-    ArrayList<PsiDirectory> possibleDirs = new ArrayList<PsiDirectory>();
+    ArrayList<PsiDirectory> possibleDirs = new ArrayList<>();
     for (PsiDirectory dir : packageDirectories) {
       if (!dir.isValid()) continue;
       if (!dir.isWritable()) continue;
@@ -69,7 +70,7 @@ public class DirectoryChooserUtil {
     if (ApplicationManager.getApplication().isUnitTestMode()) return possibleDirs.get(0);
 
     DirectoryChooserDialog chooser = Application.get().getInstance(DirectoryChooserFactory.class).create(project);
-    chooser.setTitle(IdeBundle.message("title.choose.destination.directory"));
+    chooser.setTitle(IdeLocalize.titleChooseDestinationDirectory().get());
     chooser.fillList(possibleDirs.toArray(new PsiDirectory[possibleDirs.size()]), defaultDirectory, project, postfixToShow);
     chooser.show();
     return chooser.isOK() ? chooser.getSelectedDirectory() : null;
@@ -78,7 +79,7 @@ public class DirectoryChooserUtil {
   @Nullable
   public static PsiDirectory chooseDirectory(PsiDirectory[] targetDirectories, @Nullable PsiDirectory initialDirectory, @Nonnull Project project, Map<PsiDirectory, String> relativePathsToCreate) {
     DirectoryChooserDialog chooser = Application.get().getInstance(DirectoryChooserFactory.class).create(project);
-    chooser.setTitle(RefactoringBundle.message("choose.destination.directory"));
+    chooser.setTitle(RefactoringLocalize.chooseDestinationDirectory().get());
     chooser.fillList(targetDirectories, initialDirectory, project, relativePathsToCreate);
     chooser.show();
     if (!chooser.isOK()) return null;

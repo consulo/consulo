@@ -16,7 +16,7 @@
 
 package consulo.execution.configuration.log.ui;
 
-import consulo.execution.ExecutionBundle;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.awt.DialogWrapper;
@@ -40,7 +40,7 @@ public class EditLogPatternDialog extends DialogWrapper {
 
   public EditLogPatternDialog() {
     super(true);
-    setTitle(ExecutionBundle.message("log.monitor.edit.aliases.title"));
+    setTitle(ExecutionLocalize.logMonitorEditAliasesTitle());
     init();
   }
 

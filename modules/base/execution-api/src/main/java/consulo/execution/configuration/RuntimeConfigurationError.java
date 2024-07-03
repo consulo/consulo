@@ -15,16 +15,16 @@
  */
 package consulo.execution.configuration;
 
-import consulo.execution.ExecutionBundle;
 import consulo.execution.RuntimeConfigurationException;
+import consulo.execution.localize.ExecutionLocalize;
 
 public class RuntimeConfigurationError extends RuntimeConfigurationException {
   public RuntimeConfigurationError(final String message) {
-    super(message, ExecutionBundle.message("error.common.title"));
+    super(message, ExecutionLocalize.errorCommonTitle().get());
   }
 
   public RuntimeConfigurationError(final String message, final Runnable quickFix) {
-    super(message, ExecutionBundle.message("error.common.title"));
+    super(message, ExecutionLocalize.errorCommonTitle().get());
     setQuickFix(quickFix);
   }
 }

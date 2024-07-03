@@ -22,7 +22,7 @@ package consulo.execution.test.stacktrace;
 
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.execution.ExecutionBundle;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.test.Printable;
 import consulo.execution.test.Printer;
 import consulo.execution.test.action.ViewAssertEqualsDiffAction;
@@ -32,9 +32,9 @@ import consulo.execution.ui.console.HyperlinkInfoBase;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.RelativePoint;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 
 public class DiffHyperlink implements Printable {
@@ -80,7 +80,7 @@ public class DiffHyperlink implements Printable {
   }
 
   protected String getTitle() {
-    return ExecutionBundle.message("strings.equal.failed.dialog.title");
+    return ExecutionLocalize.stringsEqualFailedDialogTitle().get();
   }
 
   public String getDiffTitle() {
@@ -106,13 +106,13 @@ public class DiffHyperlink implements Printable {
   public void printOn(final Printer printer) {
     if (!hasMoreThanOneLine(myActual.trim()) && !hasMoreThanOneLine(myExpected.trim()) && myPrintOneLine) {
       printer.print(NEW_LINE, ConsoleViewContentType.ERROR_OUTPUT);
-      printer.print(ExecutionBundle.message("diff.content.expected.for.file.title"), ConsoleViewContentType.SYSTEM_OUTPUT);
+      printer.print(ExecutionLocalize.diffContentExpectedForFileTitle().get(), ConsoleViewContentType.SYSTEM_OUTPUT);
       printer.print(myExpected + NEW_LINE, ConsoleViewContentType.ERROR_OUTPUT);
-      printer.print(ExecutionBundle.message("junit.actual.text.label"), ConsoleViewContentType.SYSTEM_OUTPUT);
+      printer.print(ExecutionLocalize.junitActualTextLabel().get(), ConsoleViewContentType.SYSTEM_OUTPUT);
       printer.print(myActual + NEW_LINE, ConsoleViewContentType.ERROR_OUTPUT);
     }
     printer.print(" ", ConsoleViewContentType.ERROR_OUTPUT);
-    printer.printHyperlink(ExecutionBundle.message("junit.click.to.see.diff.link"), myDiffHyperlink);
+    printer.printHyperlink(ExecutionLocalize.junitClickToSeeDiffLink().get(), myDiffHyperlink);
     printer.print(NEW_LINE, ConsoleViewContentType.ERROR_OUTPUT);
   }
 

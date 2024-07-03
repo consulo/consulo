@@ -18,23 +18,24 @@ package consulo.execution.test.export;
 import consulo.application.Application;
 import consulo.application.progress.ProgressManager;
 import consulo.execution.DefaultExecutionTarget;
-import consulo.execution.ExecutionBundle;
 import consulo.execution.ExecutionTarget;
 import consulo.execution.configuration.RunConfiguration;
-import consulo.execution.util.ConsoleBuffer;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.test.*;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.execution.ui.console.HyperlinkInfo;
+import consulo.execution.util.ConsoleBuffer;
+import consulo.localize.LocalizeValue;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
 import consulo.util.xml.serializer.WriteExternalException;
+import jakarta.annotation.Nonnull;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
-import jakarta.annotation.Nonnull;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -99,8 +100,11 @@ public class TestResultsXmlFormatter {
 
     Map<String, String> runAttrs = new HashMap<>();
     runAttrs.put(ATTR_NAME, myRuntimeConfiguration.getName());
-    String footerText = ExecutionBundle.message("export.test.results.footer", Application.get().getName(), new SimpleDateFormat().format(new Date()));
-    runAttrs.put(ATTR_FOORTER_TEXT, footerText);
+    LocalizeValue footerText = ExecutionLocalize.exportTestResultsFooter(
+      Application.get().getName(),
+      new SimpleDateFormat().format(new Date())
+    );
+    runAttrs.put(ATTR_FOORTER_TEXT, footerText.get());
     Long duration = myTestRoot.getDuration();
     if (duration != null) {
       runAttrs.put(ATTR_DURATION, String.valueOf(duration));

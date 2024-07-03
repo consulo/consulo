@@ -16,6 +16,7 @@
 package consulo.execution;
 
 import consulo.content.bundle.Sdk;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.module.Module;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionHelper;
@@ -34,50 +35,50 @@ public class CantRunException extends ExecutionException {
 
   public static CantRunException noModuleConfigured(final String moduleName) {
     if (moduleName.trim().length() == 0) {
-      return new CantRunException(ExecutionBundle.message("no.module.defined.error.message"));
+      return new CantRunException(ExecutionLocalize.noModuleDefinedErrorMessage().get());
     }
-    return new CantRunException(ExecutionBundle.message("module.does.not.exist.error.message", moduleName));
+    return new CantRunException(ExecutionLocalize.moduleDoesNotExistErrorMessage(moduleName).get());
   }
 
   @Deprecated
   public static CantRunException noJdkForModule(@Nonnull final Module module) {
-    return new CantRunException(ExecutionBundle.message("no.jdk.for.module.error.message", module.getName()));
+    return new CantRunException(ExecutionLocalize.noJdkForModuleErrorMessage(module.getName()).get());
   }
 
   public static CantRunException noModuleExtension(@Nonnull Module module, @Nonnull final Class<? extends ModuleExtension> extensionName) {
 
-    return new CantRunException(ExecutionBundle.message("no.sdk.for.module.extension.error.message", extensionName.getName(), module.getName()));
+    return new CantRunException(ExecutionLocalize.noSdkForModuleExtensionErrorMessage(extensionName.getName(), module.getName()).get());
   }
 
   public static CantRunException noSdkForModuleExtension(@Nonnull final ModuleExtension e) {
     String moduleExtensionName = ModuleExtensionHelper.getInstance(e.getProject()).getModuleExtensionName(e);
-    return new CantRunException(ExecutionBundle.message("no.sdk.for.module.extension.error.message", moduleExtensionName, e.getModule().getName()));
+    return new CantRunException(ExecutionLocalize.noSdkForModuleExtensionErrorMessage(moduleExtensionName, e.getModule().getName()).get());
   }
 
   public static CantRunException jdkMisconfigured(@Nonnull final Sdk jdk, @Nonnull final Module module) {
-    return new CantRunException(ExecutionBundle.message("jdk.is.bad.configured.error.message", jdk.getName()));
+    return new CantRunException(ExecutionLocalize.jdkIsBadConfiguredErrorMessage(jdk.getName()).get());
   }
 
   public static CantRunException classNotFound(@Nonnull final String className, @Nonnull final Module module) {
-    return new CantRunException(ExecutionBundle.message("class.not.found.in.module.error.message", className, module.getName()));
+    return new CantRunException(ExecutionLocalize.classNotFoundInModuleErrorMessage(className, module.getName()).get());
   }
 
   public static CantRunException packageNotFound(final String packageName) {
-    return new CantRunException(ExecutionBundle.message("package.not.found.error.message", packageName));
+    return new CantRunException(ExecutionLocalize.packageNotFoundErrorMessage(packageName).get());
   }
 
   public static CantRunException noJdkConfigured(final String jdkName) {
     if (jdkName != null) {
-      return new CantRunException(ExecutionBundle.message("jdk.not.configured.error.message", jdkName));
+      return new CantRunException(ExecutionLocalize.jdkNotConfiguredErrorMessage(jdkName).get());
     }
-    return new CantRunException(ExecutionBundle.message("project.has.no.jdk.error.message"));
+    return new CantRunException(ExecutionLocalize.projectHasNoJdkErrorMessage().get());
   }
 
   public static CantRunException badModuleDependencies() {
-    return new CantRunException(ExecutionBundle.message("some.modules.has.circular.dependency.error.message"));
+    return new CantRunException(ExecutionLocalize.someModulesHasCircularDependencyErrorMessage().get());
   }
 
   public static CantRunException noJdkConfigured() {
-    return new CantRunException(ExecutionBundle.message("project.has.no.jdk.configured.error.message"));
+    return new CantRunException(ExecutionLocalize.projectHasNoJdkConfiguredErrorMessage().get());
   }
 }

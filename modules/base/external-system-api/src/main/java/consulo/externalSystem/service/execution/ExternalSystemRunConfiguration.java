@@ -1,11 +1,9 @@
 package consulo.externalSystem.service.execution;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.util.DateFormatUtil;
 import consulo.document.FileDocumentManager;
 import consulo.execution.DefaultExecutionResult;
-import consulo.execution.ExecutionBundle;
 import consulo.execution.ExecutionResult;
 import consulo.execution.configuration.ConfigurationFactory;
 import consulo.execution.configuration.LocatableConfigurationBase;
@@ -16,12 +14,13 @@ import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.execution.configuration.ui.SettingsEditorGroup;
 import consulo.execution.debug.DefaultDebugExecutor;
 import consulo.execution.executor.Executor;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ProgramRunner;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.TextConsoleBuilderFactory;
-import consulo.externalSystem.ExternalSystemBundle;
 import consulo.externalSystem.internal.ExternalSystemInternalHelper;
+import consulo.externalSystem.localize.ExternalSystemLocalize;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
 import consulo.externalSystem.model.execution.ExternalTaskExecutionInfo;
@@ -30,6 +29,7 @@ import consulo.externalSystem.model.task.ExternalSystemTask;
 import consulo.externalSystem.model.task.ExternalSystemTaskId;
 import consulo.externalSystem.model.task.ExternalSystemTaskNotificationListenerAdapter;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.process.ExecutionException;
 import consulo.process.NopProcessHandler;
@@ -105,9 +105,11 @@ public class ExternalSystemRunConfiguration extends LocatableConfigurationBase {
   @Override
   public SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
     SettingsEditorGroup<ExternalSystemRunConfiguration> group = new SettingsEditorGroup<>();
-    group.addEditor(ExecutionBundle.message("run.configuration.configuration.tab.title"), new ExternalSystemRunConfigurationEditor(getProject(),
-                                                                                                                                   myExternalSystemId));
-    group.addEditor(ExecutionBundle.message("logs.tab.title"), new LogConfigurationPanel<>());
+    group.addEditor(
+      ExecutionLocalize.runConfigurationConfigurationTabTitle().get(),
+      new ExternalSystemRunConfigurationEditor(getProject(), myExternalSystemId)
+    );
+    group.addEditor(ExecutionLocalize.logsTabTitle().get(), new LogConfigurationPanel<>());
     return group;
   }
 
@@ -128,10 +130,12 @@ public class ExternalSystemRunConfiguration extends LocatableConfigurationBase {
 
     private final int myDebugPort;
 
-    public MyRunnableState(@Nonnull ProjectSystemId externalSystemId,
-                           @Nonnull ExternalSystemTaskExecutionSettings settings,
-                           @Nonnull Project project,
-                           boolean debug) {
+    public MyRunnableState(
+      @Nonnull ProjectSystemId externalSystemId,
+      @Nonnull ExternalSystemTaskExecutionSettings settings,
+      @Nonnull Project project,
+      boolean debug
+    ) {
       myExternalSystemId = externalSystemId;
       mySettings = settings;
       myProject = project;
@@ -167,14 +171,14 @@ public class ExternalSystemRunConfiguration extends LocatableConfigurationBase {
         tasks.add(new ExternalTaskPojo(taskName, mySettings.getExternalProjectPath(), null));
       }
       if (tasks.isEmpty()) {
-        throw new ExecutionException(ExternalSystemBundle.message("run.error.undefined.task"));
+        throw new ExecutionException(ExternalSystemLocalize.runErrorUndefinedTask().get());
       }
       String debuggerSetup = null;
       if (myDebugPort > 0) {
         debuggerSetup = "-agentlib:jdwp=transport=dt_socket,server=n,suspend=y,address=" + myDebugPort;
       }
 
-      ApplicationManager.getApplication().assertIsDispatchThread();
+      myProject.getApplication().assertIsDispatchThread();
       FileDocumentManager.getInstance().saveAllDocuments();
 
       ExternalSystemInternalHelper helper = Application.get().getInstance(ExternalSystemInternalHelper.class);
@@ -183,54 +187,43 @@ public class ExternalSystemRunConfiguration extends LocatableConfigurationBase {
       final MyProcessHandler processHandler = new MyProcessHandler(task);
       console.attachToProcess(processHandler);
 
-      ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
-        @Override
-        public void run() {
-          final String startDateTime = DateFormatUtil.formatTimeWithSeconds(System.currentTimeMillis());
-          final String greeting;
-          if (mySettings.getTaskNames().size() > 1) {
-            greeting = ExternalSystemBundle.message("run.text.starting.multiple.task", startDateTime, StringUtil.join(mySettings.getTaskNames(), " "));
+      myProject.getApplication().executeOnPooledThread((Runnable)() -> {
+        final String startDateTime = DateFormatUtil.formatTimeWithSeconds(System.currentTimeMillis());
+        final LocalizeValue greeting = mySettings.getTaskNames().size() > 1
+          ? ExternalSystemLocalize.runTextStartingMultipleTask(startDateTime, StringUtil.join(mySettings.getTaskNames(), " "))
+          : ExternalSystemLocalize.runTextStartingSingleTask(startDateTime, StringUtil.join(mySettings.getTaskNames(), " "));
+        processHandler.notifyTextAvailable(greeting.get(), ProcessOutputTypes.SYSTEM);
+        task.execute(new ExternalSystemTaskNotificationListenerAdapter() {
+
+          private boolean myResetGreeting = true;
+
+          @Override
+          public void onTaskOutput(@Nonnull ExternalSystemTaskId id, @Nonnull String text, boolean stdOut) {
+            if (myResetGreeting) {
+              processHandler.notifyTextAvailable("\r", ProcessOutputTypes.SYSTEM);
+              myResetGreeting = false;
+            }
+            processHandler.notifyTextAvailable(text, stdOut ? ProcessOutputTypes.STDOUT : ProcessOutputTypes.STDERR);
           }
-          else {
-            greeting = ExternalSystemBundle.message("run.text.starting.single.task", startDateTime, StringUtil.join(mySettings.getTaskNames(), " "));
+
+          @Override
+          public void onFailure(@Nonnull ExternalSystemTaskId id, @Nonnull Exception e) {
+            String exceptionMessage = ExceptionUtil.getMessage(e);
+            String text = exceptionMessage == null ? e.toString() : exceptionMessage;
+            processHandler.notifyTextAvailable(text + '\n', ProcessOutputTypes.STDERR);
+            processHandler.notifyProcessTerminated(0);
           }
-          processHandler.notifyTextAvailable(greeting, ProcessOutputTypes.SYSTEM);
-          task.execute(new ExternalSystemTaskNotificationListenerAdapter() {
 
-            private boolean myResetGreeting = true;
-
-            @Override
-            public void onTaskOutput(@Nonnull ExternalSystemTaskId id, @Nonnull String text, boolean stdOut) {
-              if (myResetGreeting) {
-                processHandler.notifyTextAvailable("\r", ProcessOutputTypes.SYSTEM);
-                myResetGreeting = false;
-              }
-              processHandler.notifyTextAvailable(text, stdOut ? ProcessOutputTypes.STDOUT : ProcessOutputTypes.STDERR);
-            }
-
-            @Override
-            public void onFailure(@Nonnull ExternalSystemTaskId id, @Nonnull Exception e) {
-              String exceptionMessage = ExceptionUtil.getMessage(e);
-              String text = exceptionMessage == null ? e.toString() : exceptionMessage;
-              processHandler.notifyTextAvailable(text + '\n', ProcessOutputTypes.STDERR);
-              processHandler.notifyProcessTerminated(0);
-            }
-
-            @Override
-            public void onEnd(@Nonnull ExternalSystemTaskId id) {
-              final String endDateTime = DateFormatUtil.formatTimeWithSeconds(System.currentTimeMillis());
-              final String farewell;
-              if (mySettings.getTaskNames().size() > 1) {
-                farewell = ExternalSystemBundle.message("run.text.ended.multiple.task", endDateTime, StringUtil.join(mySettings.getTaskNames(), " "));
-              }
-              else {
-                farewell = ExternalSystemBundle.message("run.text.ended.single.task", endDateTime, StringUtil.join(mySettings.getTaskNames(), " "));
-              }
-              processHandler.notifyTextAvailable(farewell, ProcessOutputTypes.SYSTEM);
-              processHandler.notifyProcessTerminated(0);
-            }
-          });
-        }
+          @Override
+          public void onEnd(@Nonnull ExternalSystemTaskId id) {
+            final String endDateTime = DateFormatUtil.formatTimeWithSeconds(System.currentTimeMillis());
+            final LocalizeValue farewell = mySettings.getTaskNames().size() > 1
+              ? ExternalSystemLocalize.runTextEndedMultipleTask(endDateTime, StringUtil.join(mySettings.getTaskNames(), " "))
+              : ExternalSystemLocalize.runTextEndedSingleTask(endDateTime, StringUtil.join(mySettings.getTaskNames(), " "));
+            processHandler.notifyTextAvailable(farewell.get(), ProcessOutputTypes.SYSTEM);
+            processHandler.notifyProcessTerminated(0);
+          }
+        });
       });
       return new DefaultExecutionResult(console, processHandler);
     }

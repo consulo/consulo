@@ -15,7 +15,8 @@
  */
 package consulo.execution.test;
 
-import consulo.execution.ExecutionBundle;
+import consulo.execution.localize.ExecutionLocalize;
+import consulo.localize.LocalizeValue;
 
 /**
  * @author Roman Chernyatchik
@@ -59,26 +60,26 @@ public interface TestStateInfo {
 
   //WARN: It is Hack, see PoolOfTestStates, API is necessary
   enum Magnitude {
-    SKIPPED_INDEX(0, 1, ExecutionBundle.message("sm.test.runner.magnitude.skipped.failed.title")),
-    COMPLETE_INDEX(1, 3, ExecutionBundle.message("sm.test.runner.magnitude.completed.failed.title")),
-    NOT_RUN_INDEX(2, 0, ExecutionBundle.message("sm.test.runner.magnitude.not.run.failed.title")),
-    RUNNING_INDEX(3, 7, ExecutionBundle.message("sm.test.runner.magnitude.running.failed.title")),
-    TERMINATED_INDEX(4, 6, ExecutionBundle.message("sm.test.runner.magnitude.terminated.failed.title")),
-    IGNORED_INDEX(5, 2, ExecutionBundle.message("sm.test.runner.magnitude.ignored.failed.title")),
-    FAILED_INDEX(6, 4, ExecutionBundle.message("sm.test.runner.magnitude.assertion.failed.title")),
-    ERROR_INDEX(8, 5, ExecutionBundle.message("sm.test.runner.magnitude.testerror.title")),
-    PASSED_INDEX(COMPLETE_INDEX.getValue(), COMPLETE_INDEX.getSortWeight(), ExecutionBundle.message("sm.test.runner.magnitude.passed.title"));
+    SKIPPED_INDEX(0, 1, ExecutionLocalize.smTestRunnerMagnitudeSkippedFailedTitle()),
+    COMPLETE_INDEX(1, 3, ExecutionLocalize.smTestRunnerMagnitudeCompletedFailedTitle()),
+    NOT_RUN_INDEX(2, 0, ExecutionLocalize.smTestRunnerMagnitudeNotRunFailedTitle()),
+    RUNNING_INDEX(3, 7, ExecutionLocalize.smTestRunnerMagnitudeRunningFailedTitle()),
+    TERMINATED_INDEX(4, 6, ExecutionLocalize.smTestRunnerMagnitudeTerminatedFailedTitle()),
+    IGNORED_INDEX(5, 2, ExecutionLocalize.smTestRunnerMagnitudeIgnoredFailedTitle()),
+    FAILED_INDEX(6, 4, ExecutionLocalize.smTestRunnerMagnitudeAssertionFailedTitle()),
+    ERROR_INDEX(8, 5, ExecutionLocalize.smTestRunnerMagnitudeTesterrorTitle()),
+    PASSED_INDEX(COMPLETE_INDEX.getValue(), COMPLETE_INDEX.getSortWeight(), ExecutionLocalize.smTestRunnerMagnitudePassedTitle());
 
     private final int myValue;
     private final int mySortWeight;
-    private final String myTitle;
+    private final LocalizeValue myTitle;
 
     /**
      * @param value Some magic parameter from legal
      * @param sortWeight Weight for sort comparator
      * @param title Title
      */
-    Magnitude(final int value, final int sortWeight, final String title) {
+    Magnitude(final int value, final int sortWeight, final LocalizeValue title) {
       myValue = value;
       myTitle = title;
       mySortWeight = sortWeight;
@@ -89,7 +90,7 @@ public interface TestStateInfo {
     }
 
     public String getTitle() {
-      return myTitle;
+      return myTitle.get();
     }
 
     public int getSortWeight() {

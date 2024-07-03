@@ -2,7 +2,7 @@
 package consulo.execution.ui.console;
 
 import consulo.application.dumb.DumbAware;
-import consulo.execution.ExecutionBundle;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
@@ -11,9 +11,9 @@ import consulo.util.io.URLUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -105,7 +105,11 @@ public class UrlFilter implements Filter, DumbAware {
     public void navigate(@Nonnull Project project) {
       VirtualFile file = getVirtualFile();
       if (file == null || !file.isValid()) {
-        Messages.showErrorDialog(project, ExecutionBundle.message("message.cannot.find.file.0", StringUtil.trimMiddle(myUrl, 150)), ExecutionBundle.message("title.cannot.open.file"));
+        Messages.showErrorDialog(
+          project,
+          ExecutionLocalize.messageCannotFindFile0(StringUtil.trimMiddle(myUrl, 150)).get(),
+          ExecutionLocalize.titleCannotOpenFile().get()
+        );
         return;
       }
       super.navigate(project);

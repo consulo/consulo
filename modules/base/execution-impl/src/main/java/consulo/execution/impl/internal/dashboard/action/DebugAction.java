@@ -2,16 +2,16 @@
 package consulo.execution.impl.internal.dashboard.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.execution.ExecutionBundle;
 import consulo.execution.executor.Executor;
 import consulo.execution.executor.ExecutorRegistry;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nullable;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author konstantin.aleev
@@ -33,13 +33,13 @@ public final class DebugAction extends ExecutorAction {
   protected void update(@Nonnull AnActionEvent e, boolean running) {
     Presentation presentation = e.getPresentation();
     if (running) {
-      presentation.setText(ExecutionBundle.message("run.dashboard.restart.debugger.action.name"));
-      presentation.setDescription(ExecutionBundle.message("run.dashboard.restart.debugger.action.description"));
+      presentation.setTextValue(ExecutionLocalize.runDashboardRestartDebuggerActionName());
+      presentation.setDescriptionValue(ExecutionLocalize.runDashboardRestartDebuggerActionDescription());
       presentation.setIcon(PlatformIconGroup.actionsRestartdebugger());
     }
     else {
-      presentation.setText(ExecutionBundle.message("run.dashboard.debug.action.name"));
-      presentation.setDescription(ExecutionBundle.message("run.dashboard.debug.action.description"));
+      presentation.setTextValue(ExecutionLocalize.runDashboardDebugActionName());
+      presentation.setDescriptionValue(ExecutionLocalize.runDashboardDebugActionDescription());
       presentation.setIcon(PlatformIconGroup.actionsStartdebugger());
     }
   }

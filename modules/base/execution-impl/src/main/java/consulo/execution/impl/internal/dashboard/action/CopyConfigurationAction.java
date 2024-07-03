@@ -2,7 +2,6 @@
 package consulo.execution.impl.internal.dashboard.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.execution.ExecutionBundle;
 import consulo.execution.RunConfigurationEditor;
 import consulo.execution.RunManager;
 import consulo.execution.RunnerAndConfigurationSettings;
@@ -11,6 +10,7 @@ import consulo.execution.configuration.ConfigurationFactoryEx;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.dashboard.RunDashboardRunConfigurationNode;
 import consulo.execution.impl.internal.configuration.RunnerAndConfigurationSettingsImpl;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionPlaces;
@@ -79,9 +79,8 @@ public final class CopyConfigurationAction extends AnAction {
 //      ((RunConfigurationBase)configuration).onConfigurationCopied();
 //    }
 
-    boolean edited = RunConfigurationEditor.getInstance(project).editConfiguration(project, copiedSettings,
-                                                                              ExecutionBundle.message(
-                                                                                "run.dashboard.edit.configuration.dialog.title"));
+    boolean edited = RunConfigurationEditor.getInstance(project)
+      .editConfiguration(project, copiedSettings, ExecutionLocalize.runDashboardEditConfigurationDialogTitle().get());
 
     if (edited) {
       runManager.addConfiguration(copiedSettings);

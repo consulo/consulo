@@ -3,9 +3,9 @@ package consulo.execution.impl.internal.dashboard.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.application.AllIcons;
-import consulo.execution.ExecutionBundle;
 import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.executor.Executor;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
@@ -33,13 +33,13 @@ public final class RunAction extends ExecutorAction {
   protected void update(@Nonnull AnActionEvent e, boolean running) {
     Presentation presentation = e.getPresentation();
     if (running) {
-      presentation.setText(ExecutionBundle.message("run.dashboard.rerun.action.name"));
-      presentation.setDescription(ExecutionBundle.message("run.dashboard.rerun.action.description"));
+      presentation.setTextValue(ExecutionLocalize.runDashboardRerunActionName());
+      presentation.setDescriptionValue(ExecutionLocalize.runDashboardRerunActionDescription());
       presentation.setIcon( AllIcons.Actions.Restart);
     }
     else {
-      presentation.setText(ExecutionBundle.message("run.dashboard.run.action.name"));
-      presentation.setDescription(ExecutionBundle.message("run.dashboard.run.action.description"));
+      presentation.setTextValue(ExecutionLocalize.runDashboardRunActionName());
+      presentation.setDescriptionValue(ExecutionLocalize.runDashboardRunActionDescription());
       presentation.setIcon(AllIcons.Actions.Execute);
     }
   }

@@ -16,11 +16,11 @@
 
 package consulo.execution.impl.internal;
 
-import consulo.application.CommonBundle;
 import consulo.execution.ApplicationExecutionSettings;
-import consulo.execution.ExecutionBundle;
 import consulo.execution.ProcessCloseConfirmation;
 import consulo.execution.impl.internal.ui.RunContentManagerImpl;
+import consulo.execution.localize.ExecutionLocalize;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.process.BaseProcessHandler;
 import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessEvent;
@@ -28,6 +28,7 @@ import consulo.process.event.ProcessListener;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ArrayUtil;
 
 import java.util.ArrayList;
@@ -53,11 +54,11 @@ public class TerminateRemoteProcessDialog {
       return confirmation;
     }
     List<String> options = new ArrayList<>(3);
-    options.add(ExecutionBundle.message("button.terminate"));
+    options.add(ExecutionLocalize.buttonTerminate().get());
     if (canDisconnect) {
-      options.add(ExecutionBundle.message("button.disconnect"));
+      options.add(ExecutionLocalize.buttonDisconnect().get());
     }
-    options.add(CommonBundle.getCancelButtonText());
+    options.add(CommonLocalize.buttonCancel().get());
     DialogWrapper.DoNotAskOption.Adapter doNotAskOption = new DialogWrapper.DoNotAskOption.Adapter() {
       @Override
       public void rememberChoice(boolean isSelected, int exitCode) {
@@ -83,9 +84,15 @@ public class TerminateRemoteProcessDialog {
 
 
     boolean defaultDisconnect = processHandler.detachIsDefault();
-    int exitCode = Messages.showDialog(project, ExecutionBundle.message("terminate.process.confirmation.text", sessionName),
-                                       ExecutionBundle.message("process.is.running.dialog.title", sessionName), ArrayUtil.toStringArray(options),
-                                       canDisconnect && defaultDisconnect ? 1 : 0, Messages.getWarningIcon(), doNotAskOption);
+    int exitCode = Messages.showDialog(
+      project,
+      ExecutionLocalize.terminateProcessConfirmationText(sessionName).get(),
+      ExecutionLocalize.processIsRunningDialogTitle(sessionName).get(),
+      ArrayUtil.toStringArray(options),
+      canDisconnect && defaultDisconnect ? 1 : 0,
+      UIUtil.getWarningIcon(),
+      doNotAskOption
+    );
     processHandler.removeProcessListener(listener);
     if (alreadyGone.get()) {
       return ProcessCloseConfirmation.DISCONNECT;

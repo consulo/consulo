@@ -17,7 +17,7 @@ package consulo.execution.ui;
 
 import consulo.application.AllIcons;
 import consulo.execution.CommonProgramRunConfigurationParameters;
-import consulo.execution.ExecutionBundle;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.ui.awt.CommonProgramParametersPanel;
 import consulo.execution.ui.awt.EnvironmentVariablesTextFieldWithBrowseButton;
 import consulo.fileChooser.FileChooserDescriptorFactory;
@@ -67,21 +67,21 @@ public class CommonProgramParametersLayout<P extends CommonProgramRunConfigurati
     addBefore(builder);
 
     myProgramParametersComponent = TextBoxWithExpandAction.create(AllIcons.Actions.ShowViewer, "", ParametersListUtil.DEFAULT_LINE_PARSER, ParametersListUtil.DEFAULT_LINE_JOINER);
-    builder.addLabeled(ExecutionBundle.message("run.configuration.program.parameters"), myProgramParametersComponent);
+    builder.addLabeled(ExecutionLocalize.runConfigurationProgramParameters().get(), myProgramParametersComponent);
 
     FileChooserTextBoxBuilder workDirBuilder = FileChooserTextBoxBuilder.create(getProject());
     workDirBuilder.fileChooserDescriptor(FileChooserDescriptorFactory.createSingleFolderDescriptor());
-    workDirBuilder.dialogTitle(ExecutionBundle.message("select.working.directory.message"));
+    workDirBuilder.dialogTitle(ExecutionLocalize.selectWorkingDirectoryMessage());
     workDirBuilder.dialogDescription(LocalizeValue.of());
 
     myWorkDirectoryBox = workDirBuilder.build();
     myWorkDirectoryBox.getComponent()
             .addFirstExtension(new TextBoxWithExtensions.Extension(false, PlatformIconGroup.generalInlinevariables(), PlatformIconGroup.generalInlinevariableshover(), event -> showMacroDialog()));
 
-    builder.addLabeled(ExecutionBundle.message("run.configuration.working.directory.label"), myWorkDirectoryBox.getComponent());
+    builder.addLabeled(ExecutionLocalize.runConfigurationWorkingDirectoryLabel(), myWorkDirectoryBox.getComponent());
 
     myEnvVariablesComponent = new EnvironmentVariablesTextFieldWithBrowseButton();
-    builder.addLabeled(ExecutionBundle.message("environment.variables.component.title"), myEnvVariablesComponent.getComponent());
+    builder.addLabeled(ExecutionLocalize.environmentVariablesComponentTitle(), myEnvVariablesComponent.getComponent());
 
     addAfter(builder);
 

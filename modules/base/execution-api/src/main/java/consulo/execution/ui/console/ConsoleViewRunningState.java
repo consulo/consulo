@@ -15,7 +15,7 @@
  */
 package consulo.execution.ui.console;
 
-import consulo.execution.ExecutionBundle;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessEvent;
 import consulo.process.event.ProcessListener;
@@ -109,7 +109,7 @@ public class ConsoleViewRunningState extends ConsoleState {
   @Override
   public void sendUserInput(final String input) throws IOException {
     if (myUserInputWriter == null) {
-      throw new IOException(ExecutionBundle.message("no.user.process.input.error.message"));
+      throw new IOException(ExecutionLocalize.noUserProcessInputErrorMessage().get());
     }
     myUserInputWriter.write(input);
     myUserInputWriter.flush();

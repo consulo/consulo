@@ -16,13 +16,13 @@
 package consulo.execution.test;
 
 import consulo.dataContext.DataContext;
-import consulo.execution.ExecutionBundle;
 import consulo.execution.action.Location;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.configuration.RunProfile;
-import consulo.navigation.OpenFileDescriptor;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.language.psi.PsiElement;
 import consulo.navigation.Navigatable;
+import consulo.navigation.OpenFileDescriptor;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
@@ -34,9 +34,9 @@ import consulo.ui.ex.SystemNotifications;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.tree.TreePath;
 import java.awt.*;
@@ -224,23 +224,23 @@ public class TestsUIUtil {
 
     public TestResultPresentation getPresentation(int failedCount, int passedCount, int notStartedCount, int ignoredCount) {
       if (myRoot == null) {
-        myBalloonText = myTitle = myStarted ? "Tests were interrupted" : ExecutionBundle.message("test.not.started.progress.text");
+        myBalloonText = myTitle = myStarted ? "Tests were interrupted" : ExecutionLocalize.testNotStartedProgressText().get();
         myText = "";
         myType = NotificationType.WARNING;
       }
       else {
         if (failedCount > 0) {
-          myTitle = ExecutionBundle.message("junit.runing.info.tests.failed.label");
+          myTitle = ExecutionLocalize.junitRuningInfoTestsFailedLabel().get();
           myText = passedCount + " passed, " + failedCount + " failed" + (notStartedCount > 0 ? ", " + notStartedCount + " not started" : "");
           myType = NotificationType.ERROR;
         }
         else if (notStartedCount > 0) {
-          myTitle = ignoredCount > 0 ? "Tests Ignored" : ExecutionBundle.message("junit.running.info.failed.to.start.error.message");
+          myTitle = ignoredCount > 0 ? "Tests Ignored" : ExecutionLocalize.junitRunningInfoFailedToStartErrorMessage().get();
           myText = passedCount + " passed, " + notStartedCount + (ignoredCount > 0 ? " ignored" : " not started");
           myType = ignoredCount == 0 ? NotificationType.WARNING : NotificationType.ERROR;
         }
         else {
-          myTitle = ExecutionBundle.message("junit.runing.info.tests.passed.label");
+          myTitle = ExecutionLocalize.junitRuningInfoTestsPassedLabel().get();
           myText = passedCount + " passed";
           myType = NotificationType.INFORMATION;
         }

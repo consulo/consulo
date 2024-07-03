@@ -16,7 +16,7 @@
 
 package consulo.execution.configuration.log;
 
-import consulo.execution.ExecutionBundle;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.process.ProcessOutputTypes;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
@@ -88,7 +88,7 @@ public class DefaultLogFilterModel extends LogFilterModel {
   }
 
   private void addStandartFilters(ArrayList<LogFilter> filters, final LogConsolePreferences prefs) {
-    filters.add(new MyFilter(ExecutionBundle.message("log.console.filter.show.all"), prefs) {
+    filters.add(new MyFilter(ExecutionLocalize.logConsoleFilterShowAll().get(), prefs) {
       @Override
       public void selectFilter() {
         prefs.FILTER_ERRORS = false;
@@ -102,7 +102,7 @@ public class DefaultLogFilterModel extends LogFilterModel {
         return !prefs.FILTER_ERRORS && !prefs.FILTER_INFO && !prefs.FILTER_WARNINGS && !prefs.FILTER_DEBUG;
       }
     });
-    filters.add(new MyFilter(ExecutionBundle.message("log.console.filter.show.errors.warnings.and.infos"), prefs) {
+    filters.add(new MyFilter(ExecutionLocalize.logConsoleFilterShowErrorsWarningsAndInfos().get(), prefs) {
       @Override
       public void selectFilter() {
         prefs.FILTER_ERRORS = false;
@@ -116,7 +116,7 @@ public class DefaultLogFilterModel extends LogFilterModel {
         return !prefs.FILTER_ERRORS && !prefs.FILTER_INFO && !prefs.FILTER_WARNINGS && prefs.FILTER_DEBUG;
       }
     });
-    filters.add(new MyFilter(ExecutionBundle.message("log.console.filter.show.errors.and.warnings"), prefs) {
+    filters.add(new MyFilter(ExecutionLocalize.logConsoleFilterShowErrorsAndWarnings().get(), prefs) {
       @Override
       public void selectFilter() {
         prefs.FILTER_ERRORS = false;
@@ -130,7 +130,7 @@ public class DefaultLogFilterModel extends LogFilterModel {
         return !prefs.FILTER_ERRORS && prefs.FILTER_INFO && !prefs.FILTER_WARNINGS && prefs.FILTER_DEBUG;
       }
     });
-    filters.add(new MyFilter(ExecutionBundle.message("log.console.filter.show.errors"), prefs) {
+    filters.add(new MyFilter(ExecutionLocalize.logConsoleFilterShowErrors().get(), prefs) {
       @Override
       public void selectFilter() {
         prefs.FILTER_ERRORS = false;

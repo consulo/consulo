@@ -20,6 +20,7 @@ import consulo.component.extension.ExtensionException;
 import consulo.execution.*;
 import consulo.execution.configuration.*;
 import consulo.execution.executor.Executor;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.runner.ProgramRunner;
 import consulo.logging.Logger;
 import consulo.util.collection.SmartList;
@@ -126,12 +127,10 @@ public class RunnerAndConfigurationSettingsImpl implements JDOMExternalizable, C
 
   @Override
   public Supplier<RunnerAndConfigurationSettings> createFactory() {
-    return new Supplier<>() {
-      @Override
-      public RunnerAndConfigurationSettings get() {
-        RunConfiguration configuration = myConfiguration.getFactory().createConfiguration(ExecutionBundle.message("default.run.configuration.name"), myConfiguration);
-        return new RunnerAndConfigurationSettingsImpl(myManager, configuration, false);
-      }
+    return () -> {
+      RunConfiguration configuration = myConfiguration.getFactory()
+        .createConfiguration(ExecutionLocalize.defaultRunConfigurationName().get(), myConfiguration);
+      return new RunnerAndConfigurationSettingsImpl(myManager, configuration, false);
     };
   }
 
@@ -196,9 +195,9 @@ public class RunnerAndConfigurationSettingsImpl implements JDOMExternalizable, C
 
   @Override
   public void readExternal(Element element) throws InvalidDataException {
-    myIsTemplate = Boolean.valueOf(element.getAttributeValue(TEMPLATE_FLAG_ATTRIBUTE)).booleanValue();
-    myTemporary = Boolean.valueOf(element.getAttributeValue(TEMPORARY_ATTRIBUTE)).booleanValue() || TEMP_CONFIGURATION.equals(element.getName());
-    myEditBeforeRun = Boolean.valueOf(element.getAttributeValue(EDIT_BEFORE_RUN)).booleanValue();
+    myIsTemplate = Boolean.valueOf(element.getAttributeValue(TEMPLATE_FLAG_ATTRIBUTE));
+    myTemporary = Boolean.valueOf(element.getAttributeValue(TEMPORARY_ATTRIBUTE)) || TEMP_CONFIGURATION.equals(element.getName());
+    myEditBeforeRun = Boolean.valueOf(element.getAttributeValue(EDIT_BEFORE_RUN));
     myFolderName = element.getAttributeValue(FOLDER_NAME);
     //assert myID == null: "myId must be null at readExternal() stage";
     //myID = element.getAttributeValue(UNIQUE_ID, UUID.randomUUID().toString());

@@ -19,19 +19,19 @@ import consulo.application.AllIcons;
 import consulo.desktop.awt.action.ActionButtonImpl;
 import consulo.desktop.awt.action.ActionButtonWithText;
 import consulo.desktop.awt.action.ActionToolbarImpl;
-import consulo.ui.ex.awt.GraphicsConfig;
-import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.Gray;
-import consulo.ui.ex.awt.JBUIScale;
-import consulo.ui.ex.awt.util.GraphicsUtil;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.GraphicsConfig;
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.ex.action.*;
-import consulo.ui.ex.action.ActionButtonComponent;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.ui.style.StyleManager;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -103,8 +103,7 @@ public class ActionButtonUI extends ComponentUI implements consulo.desktop.awt.a
     }
     final ShortcutSet shortcutSet = action.getShortcutSet();
     final Shortcut[] shortcuts = shortcutSet.getShortcuts();
-    for (int i = 0; i < shortcuts.length; i++) {
-      Shortcut shortcut = shortcuts[i];
+    for (Shortcut shortcut : shortcuts) {
       if (shortcut instanceof KeyboardShortcut) {
         KeyboardShortcut keyboardShortcut = (KeyboardShortcut)shortcut;
         if (keyboardShortcut.getSecondKeyStroke() == null) { // we are interested only in "mnemonic-like" shortcuts
@@ -112,8 +111,8 @@ public class ActionButtonUI extends ComponentUI implements consulo.desktop.awt.a
           final int modifiers = keyStroke.getModifiers();
           if ((modifiers & KeyEvent.ALT_MASK) != 0) {
             return (keyStroke.getKeyChar() != KeyEvent.CHAR_UNDEFINED)
-                   ? text.indexOf(keyStroke.getKeyChar())
-                   : text.indexOf(KeyEvent.getKeyText(keyStroke.getKeyCode()));
+              ? text.indexOf(keyStroke.getKeyChar())
+              : text.indexOf(KeyEvent.getKeyText(keyStroke.getKeyCode()));
           }
         }
       }
@@ -152,7 +151,7 @@ public class ActionButtonUI extends ComponentUI implements consulo.desktop.awt.a
       }
     }
     else {
-      final double shift = UIUtil.isUnderDarcula() ? 1 / 0.49 : 0.49;
+      final double shift = StyleManager.get().getCurrentStyle().isDark() ? 1 / 0.49 : 0.49;
       g.setColor(ColorUtil.shift(UIUtil.getPanelBackground(), shift));
       ((Graphics2D)g).setStroke(BASIC_STROKE);
       final GraphicsConfig config = GraphicsUtil.setupAAPainting(g);
@@ -184,7 +183,7 @@ public class ActionButtonUI extends ComponentUI implements consulo.desktop.awt.a
     }
     else {
       final Color bg = UIUtil.getPanelBackground();
-      final boolean dark = UIUtil.isUnderDarcula();
+      final boolean dark = StyleManager.get().getCurrentStyle().isDark();
       g.setColor(state == ActionButtonComponent.PUSHED ? ColorUtil.shift(bg, dark ? 1d / 0.7d : 0.7d) : dark ? Gray._255.withAlpha(40) : ALPHA_40);
       g.fillRect(JBUI.scale(1), JBUI.scale(1), size.width - JBUI.scale(2), size.height - JBUI.scale(2));
     }

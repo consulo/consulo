@@ -15,26 +15,27 @@
  */
 package consulo.desktop.awt.uiOld.messages;
 
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.Messages;
-import consulo.application.util.SystemInfo;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.ui.ex.Gray;
-import consulo.ui.ex.JBColor;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.application.util.SystemInfo;
 import consulo.ide.impl.desktop.awt.graphics.GraphicsUtilities;
 import consulo.ide.impl.desktop.awt.graphics.ShadowRenderer;
+import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.logging.Logger;
-
+import consulo.ui.ex.Gray;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.style.StyleManager;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.KeyEvent;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -198,19 +199,14 @@ public class SheetController {
     w.getRootPane().setDefaultButton(myDefaultButton);
 
 
-    ActionListener actionListener = new ActionListener() {
-      @Override
-      public void actionPerformed(@Nonnull ActionEvent e) {
-        if (e.getSource() instanceof JButton) {
-          myResult = ((JButton)e.getSource()).getName();
-        }
-        mySheetMessage.startAnimation(false);
+    ActionListener actionListener = e -> {
+      if (e.getSource() instanceof JButton jButton) {
+        myResult = jButton.getName();
       }
+      mySheetMessage.startAnimation(false);
     };
 
-    mySheetPanel.registerKeyboardAction(actionListener,
-                                        VK_ESC_KEYSTROKE,
-                                        JComponent.WHEN_IN_FOCUSED_WINDOW);
+    mySheetPanel.registerKeyboardAction(actionListener, VK_ESC_KEYSTROKE, JComponent.WHEN_IN_FOCUSED_WINDOW);
 
     for (JButton button: buttons) {
       button.addActionListener(actionListener);
@@ -235,7 +231,7 @@ public class SheetController {
 
         paintShadow(g);
         // draw the sheet background
-        if (UIUtil.isUnderDarcula()) {
+        if (StyleManager.get().getCurrentStyle().isDark()) {
           g.fillRoundRect((int)dialog.getX(), (int)dialog.getY() - 5, (int)dialog.getWidth(), (int)(5 + dialog.getHeight()), 5, 5);
         } else {
           //todo make bottom corners
@@ -285,22 +281,19 @@ public class SheetController {
 
     messageTextPane.setContentType("text/html");
 
-    messageTextPane.addHyperlinkListener(new HyperlinkListener() {
-      @Override
-      public void hyperlinkUpdate(HyperlinkEvent he) {
-        if(he.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-          if(Desktop.isDesktopSupported()) {
-            try {
-              URL url = he.getURL();
-              if (url != null) {
-                Desktop.getDesktop().browse(url.toURI());
-              } else {
-                LOG.warn("URL is null; HyperlinkEvent: " + he.toString());
-              }
+    messageTextPane.addHyperlinkListener(he -> {
+      if (he.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+        if (Desktop.isDesktopSupported()) {
+          try {
+            URL url = he.getURL();
+            if (url != null) {
+              Desktop.getDesktop().browse(url.toURI());
+            } else {
+              LOG.warn("URL is null; HyperlinkEvent: " + he.toString());
             }
-            catch (IOException | URISyntaxException e) {
-              LOG.error(e);
-            }
+          }
+          catch (IOException | URISyntaxException e) {
+            LOG.error(e);
           }
         }
       }
@@ -388,9 +381,8 @@ public class SheetController {
     g2d.clearRect(SHADOW_BORDER, 0, SHEET_WIDTH, SHEET_HEIGHT);
   }
 
-
   private static float getShadowAlpha() {
-    return ((UIUtil.isUnderDarcula())) ? .85f : .35f;
+    return StyleManager.get().getCurrentStyle().isDark() ? .85f : .35f;
   }
 
   private void paintShadowFromParent(Graphics2D g2d) {
@@ -438,12 +430,7 @@ public class SheetController {
     doNotAskCheckBox.setText(myDoNotAskOption.getDoNotShowMessage());
     doNotAskCheckBox.setSelected(!myDoNotAskOption.isToBeShown());
     doNotAskCheckBox.setOpaque(false);
-    doNotAskCheckBox.addItemListener(new ItemListener() {
-      @Override
-      public void itemStateChanged(@Nonnull ItemEvent e) {
-        myDoNotAskResult = (e.getStateChange() == ItemEvent.SELECTED);
-      }
-    });
+    doNotAskCheckBox.addItemListener(e -> myDoNotAskResult = (e.getStateChange() == ItemEvent.SELECTED));
     doNotAskCheckBox.repaint();
     doNotAskCheckBox.setSize(doNotAskCheckBox.getPreferredSize());
 
@@ -466,9 +453,9 @@ public class SheetController {
     myOffScreenFrame.add(mySheetPanel);
     myOffScreenFrame.getRootPane().setDefaultButton(myDefaultButton);
 
-    final BufferedImage image = SystemInfo.isJavaVersionAtLeast(7, 0, 0) ?
-                                UIUtil.createImage(SHEET_NC_WIDTH, SHEET_NC_HEIGHT, BufferedImage.TYPE_INT_ARGB) :
-                                GraphicsUtilities.createCompatibleTranslucentImage(SHEET_NC_WIDTH, SHEET_NC_HEIGHT);
+    final BufferedImage image = SystemInfo.isJavaVersionAtLeast(7, 0, 0)
+      ? UIUtil.createImage(SHEET_NC_WIDTH, SHEET_NC_HEIGHT, BufferedImage.TYPE_INT_ARGB)
+      : GraphicsUtilities.createCompatibleTranslucentImage(SHEET_NC_WIDTH, SHEET_NC_HEIGHT);
 
     Graphics g = image.createGraphics();
     mySheetPanel.paint(g);

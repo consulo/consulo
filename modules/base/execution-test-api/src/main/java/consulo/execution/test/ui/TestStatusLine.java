@@ -15,7 +15,7 @@
  */
 package consulo.execution.test.ui;
 
-import consulo.execution.ExecutionBundle;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.ColorProgressBar;
 import consulo.ui.ex.awt.JBDimension;
@@ -46,7 +46,7 @@ public class TestStatusLine extends JPanel {
                                                               new Insets(2, 8, 0, 8), 0, 0));
     setStatusColor(ColorProgressBar.GREEN);
     add(myState, BorderLayout.CENTER);
-    myState.append(ExecutionBundle.message("junit.runing.info.starting.label"));
+    myState.append(ExecutionLocalize.junitRuningInfoStartingLabel().get());
   }
 
   public void formatTestMessage(final int testsTotal,

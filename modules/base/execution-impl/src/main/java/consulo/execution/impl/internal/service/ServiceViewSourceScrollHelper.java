@@ -2,7 +2,7 @@
 package consulo.execution.impl.internal.service;
 
 import consulo.application.AllIcons;
-import consulo.execution.ExecutionBundle;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.service.ServiceViewManager;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
@@ -102,9 +102,11 @@ final class ServiceViewSourceScrollHelper {
     private final ServiceViewAutoScrollFromSourceHandler myScrollFromHandler;
 
     ScrollFromEditorAction(ServiceViewAutoScrollFromSourceHandler scrollFromHandler) {
-      super(ExecutionBundle.message("service.view.scroll.from.editor.action.name"),
-            ExecutionBundle.message("service.view.scroll.from.editor.action.description"),
-            AllIcons.General.Locate);
+      super(
+        ExecutionLocalize.serviceViewScrollFromEditorActionName(),
+        ExecutionLocalize.serviceViewScrollFromEditorActionDescription(),
+        AllIcons.General.Locate
+      );
       myScrollFromHandler = scrollFromHandler;
     }
 

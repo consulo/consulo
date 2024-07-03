@@ -15,20 +15,15 @@
  */
 package consulo.execution.test;
 
-import consulo.execution.ExecutionBundle;
-import consulo.ui.ex.OccurenceNavigator;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.execution.test.AbstractTestProxy;
-import consulo.execution.test.Filter;
-import consulo.execution.test.TestFrameworkRunningModel;
+import consulo.execution.localize.ExecutionLocalize;
+import consulo.ui.ex.OccurenceNavigator;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FailedTestsNavigator implements OccurenceNavigator {
-  private static final String NEXT_NAME = ExecutionBundle.message("next.faled.test.action.name");
-  private static final String PREVIOUS_NAME = ExecutionBundle.message("prev.faled.test.action.name");
   private TestFrameworkRunningModel myModel;
 
   @Override
@@ -69,12 +64,12 @@ public class FailedTestsNavigator implements OccurenceNavigator {
 
   @Override
   public String getNextOccurenceActionName() {
-    return NEXT_NAME;
+    return ExecutionLocalize.nextFaledTestActionName().get();
   }
 
   @Override
   public String getPreviousOccurenceActionName() {
-    return PREVIOUS_NAME;
+    return ExecutionLocalize.prevFaledTestActionName().get();
   }
 
   private FailedTestInfo getNextOccurenceInfo() {
