@@ -504,8 +504,9 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
         Vector<DefaultMutableTreeNode> result = new Vector<>();
         if (parent instanceof JComponent jComponent) {
           Object o = jComponent.getClientProperty(CLICK_INFO);
-          if (o instanceof List<PropertyBean> list) {
-            result.add(new ClickInfoNode(list));
+          if (o instanceof List) {
+            //noinspection unchecked
+            result.add(new ClickInfoNode((List<PropertyBean>)o));
           }
         }
         if (parent instanceof Container container) {
