@@ -15,7 +15,7 @@
  */
 package consulo.execution.test.export;
 
-import consulo.execution.ExecutionBundle;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.util.io.FileUtil;
@@ -52,7 +52,7 @@ public class ExportTestResultsDialog extends DialogWrapper {
     });
 
     setScalableSize(600, 400);
-    setTitle(ExecutionBundle.message("export.test.results.dialog.title"));
+    setTitle(ExecutionLocalize.exportTestResultsDialogTitle());
     init();
 
     revalidate();

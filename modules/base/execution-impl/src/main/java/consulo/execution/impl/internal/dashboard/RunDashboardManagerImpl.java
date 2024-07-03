@@ -12,7 +12,6 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.execution.ExecutionBundle;
 import consulo.execution.ExecutionManager;
 import consulo.execution.RunManager;
 import consulo.execution.RunnerAndConfigurationSettings;
@@ -31,6 +30,7 @@ import consulo.execution.impl.internal.service.ServiceViewManagerImpl;
 import consulo.execution.impl.internal.service.ServiceViewUIUtils;
 import consulo.execution.impl.internal.ui.RunContentManagerImpl;
 import consulo.execution.internal.RunnerLayoutUiImpl;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.service.ServiceEventListener;
 import consulo.execution.service.ServiceViewDescriptor;
@@ -731,7 +731,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
   JComponent getEmptyContent() {
     if (myEmptyContent == null) {
       JBPanelWithEmptyText textPanel = new JBPanelWithEmptyText()
-        .withEmptyText(ExecutionBundle.message("run.dashboard.configurations.message"));
+        .withEmptyText(ExecutionLocalize.runDashboardConfigurationsMessage().get());
       textPanel.setFocusable(true);
       JPanel mainPanel = new NonOpaquePanel(new BorderLayout());
       mainPanel.add(textPanel, BorderLayout.CENTER);

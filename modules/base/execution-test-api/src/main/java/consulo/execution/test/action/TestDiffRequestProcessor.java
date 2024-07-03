@@ -13,8 +13,9 @@ import consulo.diff.chain.SimpleDiffRequestChain;
 import consulo.diff.content.DiffContent;
 import consulo.diff.request.DiffRequest;
 import consulo.diff.request.SimpleDiffRequest;
-import consulo.execution.ExecutionBundle;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.test.stacktrace.DiffHyperlink;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.io.URLUtil;
@@ -22,10 +23,10 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.StandardFileSystems;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
-import org.jetbrains.annotations.Nls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Nls;
+
 import java.util.Objects;
 
 public class TestDiffRequestProcessor {
@@ -72,10 +73,14 @@ public class TestDiffRequestProcessor {
       DiffContent content1 = createContentWithTitle(myProject, text1, file1, file2);
       DiffContent content2 = createContentWithTitle(myProject, text2, file2, file1);
 
-      String title1 = file1 != null ? ExecutionBundle.message("diff.content.expected.title.with.file.url", file1.getPresentableUrl()) : ExecutionBundle.message("diff.content.expected.title");
-      String title2 = file2 != null ? ExecutionBundle.message("diff.content.actual.title.with.file.url", file2.getPresentableUrl()) : ExecutionBundle.message("diff.content.actual.title");
+      LocalizeValue title1 = file1 != null
+        ? ExecutionLocalize.diffContentExpectedTitleWithFileUrl(file1.getPresentableUrl())
+        : ExecutionLocalize.diffContentExpectedTitle();
+      LocalizeValue title2 = file2 != null
+        ? ExecutionLocalize.diffContentActualTitleWithFileUrl(file2.getPresentableUrl())
+        : ExecutionLocalize.diffContentActualTitle();
 
-      return new SimpleDiffRequest(windowTitle, content1, content2, title1, title2);
+      return new SimpleDiffRequest(windowTitle, content1, content2, title1.get(), title2.get());
     }
 
     @Override

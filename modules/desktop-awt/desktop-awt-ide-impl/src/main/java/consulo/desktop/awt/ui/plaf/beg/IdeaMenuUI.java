@@ -12,6 +12,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.paint.LinePainter2D;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awt.util.UISettingsUtil;
+import consulo.ui.style.StyleManager;
 import org.jetbrains.annotations.Nls;
 
 import javax.swing.*;
@@ -54,7 +55,7 @@ public class IdeaMenuUI extends BasicMenuUI {
     super.installDefaults();
     Integer integer = UIUtil.getPropertyMaxGutterIconWidth(getPropertyPrefix());
     if (integer != null) {
-      myMaxGutterIconWidth2 = myMaxGutterIconWidth = integer.intValue();
+      myMaxGutterIconWidth2 = myMaxGutterIconWidth = integer;
     }
 
     selectionBackground = UIUtil.getListSelectionBackground(true);
@@ -182,7 +183,7 @@ public class IdeaMenuUI extends BasicMenuUI {
 
   protected final void paintHover(Graphics g, JComponent comp, JMenu jMenu, Icon allowedIcon) {
     g.setColor(selectionBackground);
-    if (allowedIcon != null && !(UIUtil.isUnderIntelliJLaF() || UIUtil.isUnderDarcula())) {
+    if (allowedIcon != null && !(UIUtil.isUnderIntelliJLaF() || StyleManager.get().getCurrentStyle().isDark())) {
       g.fillRect(k, 0, jMenu.getWidth() - k, jMenu.getHeight());
     }
     else if (IdeaPopupMenuUI.isPartOfPopupMenu(comp) && Registry.is("popup.menu.roundSelection.enabled", false)) {

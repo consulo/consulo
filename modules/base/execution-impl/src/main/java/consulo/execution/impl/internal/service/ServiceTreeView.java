@@ -6,7 +6,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.execution.ExecutionBundle;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.service.ServiceEventListener;
 import consulo.execution.service.ServiceViewContributor;
 import consulo.execution.service.ServiceViewDescriptor;
@@ -38,8 +38,6 @@ import javax.swing.*;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Queue;
@@ -412,33 +410,40 @@ final class ServiceTreeView extends ServiceView {
   }
 
   private static void setEmptyText(JComponent component, StatusText emptyText) {
-    emptyText.setText(ExecutionBundle.message("service.view.empty.tree.text"));
-    emptyText.appendSecondaryText(ExecutionBundle.message("service.view.add.service.action.name"),
-                                  SimpleTextAttributes.LINK_PLAIN_ATTRIBUTES,
-                                  new ActionListener() {
-                                    @Override
-                                    public void actionPerformed(ActionEvent e) {
-                                      ActionGroup addActionGroup = ObjectUtil.tryCast(
-                                        ActionManager.getInstance().getAction(ADD_SERVICE_ACTION_ID), ActionGroup.class);
-                                      if (addActionGroup == null) return;
+    emptyText.setText(ExecutionLocalize.serviceViewEmptyTreeText().get());
+    emptyText.appendSecondaryText(
+      ExecutionLocalize.serviceViewAddServiceActionName().get(),
+      SimpleTextAttributes.LINK_PLAIN_ATTRIBUTES,
+      e -> {
+        ActionGroup addActionGroup = ObjectUtil.tryCast(
+          ActionManager.getInstance().getAction(ADD_SERVICE_ACTION_ID), ActionGroup.class);
+        if (addActionGroup == null) return;
 
-                                      Point position = component.getMousePosition();
-                                      if (position == null) {
-                                        Rectangle componentBounds = component.getBounds();
-                                        Rectangle textBounds = emptyText.getComponent().getBounds();
-                                        position = new Point(componentBounds.width / 2,
-                                                             componentBounds.height / (emptyText.isShowAboveCenter() ? 3 : 2) +
-                                                               textBounds.height / 4);
+        Point position = component.getMousePosition();
+        if (position == null) {
+          Rectangle componentBounds = component.getBounds();
+          Rectangle textBounds = emptyText.getComponent().getBounds();
+          position = new Point(componentBounds.width / 2,
+                               componentBounds.height / (emptyText.isShowAboveCenter() ? 3 : 2) +
+                                 textBounds.height / 4);
 
-                                      }
-                                      DataContext dataContext = DataManager.getInstance().getDataContext(component);
-                                      JBPopupFactory.getInstance().createActionGroupPopup(
-                                                      addActionGroup.getTemplatePresentation().getText(), addActionGroup, dataContext,
-                                                      JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
-                                                      false, null, -1, null, ActionPlaces.getActionGroupPopupPlace(ADD_SERVICE_ACTION_ID))
-                                                    .show(new RelativePoint(component, position));
-                                    }
-                                  });
+        }
+        DataContext dataContext = DataManager.getInstance().getDataContext(component);
+        JBPopupFactory.getInstance()
+          .createActionGroupPopup(
+            addActionGroup.getTemplatePresentation().getText(),
+            addActionGroup,
+            dataContext,
+            JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
+            false,
+            null,
+            -1,
+            null,
+            ActionPlaces.getActionGroupPopupPlace(ADD_SERVICE_ACTION_ID)
+          )
+          .show(new RelativePoint(component, position));
+      }
+    );
     AnAction addAction = ActionManager.getInstance().getAction(ADD_SERVICE_ACTION_ID);
     ShortcutSet shortcutSet = addAction == null ? null : addAction.getShortcutSet();
     Shortcut shortcut = shortcutSet == null ? null : ArrayUtil.getFirstElement(shortcutSet.getShortcuts());

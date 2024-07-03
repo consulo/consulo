@@ -13,7 +13,7 @@ import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.execution.ExecutionBundle;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.service.*;
 import consulo.navigation.ItemPresentation;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -626,10 +626,14 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
       }
       String name = viewState.id;
       if (StringUtil.isEmpty(name)) {
-        name = Messages.showInputDialog(project,
-                                        ExecutionBundle.message("service.view.group.label"),
-                                        ExecutionBundle.message("service.view.group.title"),
-                                        null, null, null);
+        name = Messages.showInputDialog(
+          project,
+          ExecutionLocalize.serviceViewGroupLabel().get(),
+          ExecutionLocalize.serviceViewGroupTitle().get(),
+          null,
+          null,
+          null
+        );
         if (StringUtil.isEmpty(name)) return null;
       }
       return new PresentationData(name, null, AllIcons.Nodes.Folder, null);
@@ -642,8 +646,13 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
     return addServiceContent(contentManager, serviceView, presentation, select, -1);
   }
 
-  private static Content addServiceContent(ContentManager contentManager, ServiceView serviceView, ItemPresentation presentation,
-                                           boolean select, int index) {
+  private static Content addServiceContent(
+    ContentManager contentManager,
+    ServiceView serviceView,
+    ItemPresentation presentation,
+    boolean select,
+    int index
+  ) {
     Content content =
       ContentFactory.getInstance().createContent(serviceView, ServiceViewDragHelper.getDisplayName(presentation), false);
     content.putUserData(ToolWindow.SHOW_CONTENT_ICON, Boolean.TRUE);
@@ -1023,7 +1032,7 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
       if (myContentManager.getContentCount() > 1) {
         Content mainContent = getMainContent(myContentManager);
         if (mainContent != null) {
-          mainContent.setDisplayName(ExecutionBundle.message("service.view.all.services"));
+          mainContent.setDisplayName(ExecutionLocalize.serviceViewAllServices().get());
         }
       }
     }
@@ -1330,10 +1339,11 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
     ActivateToolWindowByContributorAction(ServiceViewContributor<?> contributor, ItemPresentation contributorPresentation) {
       myContributor = contributor;
       Presentation templatePresentation = getTemplatePresentation();
-      templatePresentation.setText(ExecutionBundle.message("service.view.activate.tool.window.action.name",
-                                                           ServiceViewDragHelper.getDisplayName(contributorPresentation)));
+      templatePresentation.setTextValue(
+        ExecutionLocalize.serviceViewActivateToolWindowActionName(ServiceViewDragHelper.getDisplayName(contributorPresentation))
+      );
       templatePresentation.setIcon(contributorPresentation.getIcon(false));
-      templatePresentation.setDescription(ExecutionBundle.message("service.view.activate.tool.window.action.description"));
+      templatePresentation.setDescriptionValue(ExecutionLocalize.serviceViewActivateToolWindowActionDescription());
     }
 
     @Override

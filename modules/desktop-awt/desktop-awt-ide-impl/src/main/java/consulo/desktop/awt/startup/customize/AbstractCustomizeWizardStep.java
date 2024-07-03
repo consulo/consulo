@@ -19,6 +19,7 @@ import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.UIUtil;
 
+import consulo.ui.style.StyleManager;
 import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
@@ -37,7 +38,11 @@ public abstract class AbstractCustomizeWizardStep extends JPanel {
 
   @Nonnull
   protected static Color getSelectionBackground() {
-    return ColorUtil.mix(UIUtil.getListSelectionBackground(true), UIUtil.getLabelBackground(), UIUtil.isUnderDarcula() ? .5 : .75);
+    return ColorUtil.mix(
+      UIUtil.getListSelectionBackground(true),
+      UIUtil.getLabelBackground(),
+      StyleManager.get().getCurrentStyle().isDark() ? .5 : .75
+    );
   }
 
   protected static JPanel createBigButtonPanel(LayoutManager layout, final JToggleButton anchorButton, final Runnable action) {

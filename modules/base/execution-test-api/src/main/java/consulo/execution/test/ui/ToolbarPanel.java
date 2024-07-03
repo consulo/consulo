@@ -26,12 +26,11 @@ import consulo.application.ui.action.DumbAwareToggleBooleanProperty;
 import consulo.application.ui.action.DumbAwareToggleInvertedBooleanProperty;
 import consulo.application.ui.action.ToggleBooleanProperty;
 import consulo.disposer.Disposable;
-import consulo.execution.ExecutionBundle;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.configuration.RunProfile;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.test.FailedTestsNavigator;
 import consulo.execution.test.TestConsoleProperties;
-import consulo.execution.test.TestFrameworkPropertyListener;
 import consulo.execution.test.TestFrameworkRunningModel;
 import consulo.execution.test.action.*;
 import consulo.execution.test.export.ExportTestResultsAction;
@@ -55,26 +54,41 @@ public class ToolbarPanel extends JPanel implements OccurenceNavigator, Disposab
   public ToolbarPanel(final TestConsoleProperties properties, final JComponent parent) {
     super(new BorderLayout());
     final DefaultActionGroup actionGroup = new DefaultActionGroup();
-    actionGroup.addAction(new DumbAwareToggleInvertedBooleanProperty(ExecutionBundle.message("junit.run.hide.passed.action.name"), ExecutionBundle.message("junit.run.hide.passed.action.description"),
-                                                                     AllIcons.RunConfigurations.TestPassed, properties, TestConsoleProperties.HIDE_PASSED_TESTS));
-    actionGroup.add(new DumbAwareToggleInvertedBooleanProperty("Show Ignored", "Show Ignored", AllIcons.RunConfigurations.TestIgnored, properties, TestConsoleProperties.HIDE_IGNORED_TEST));
+    actionGroup.addAction(new DumbAwareToggleInvertedBooleanProperty(
+      ExecutionLocalize.junitRunHidePassedActionName().get(),
+      ExecutionLocalize.junitRunHidePassedActionDescription().get(),
+      AllIcons.RunConfigurations.TestPassed,
+      properties,
+      TestConsoleProperties.HIDE_PASSED_TESTS
+    ));
+    actionGroup.add(new DumbAwareToggleInvertedBooleanProperty(
+      "Show Ignored",
+      "Show Ignored",
+      AllIcons.RunConfigurations.TestIgnored,
+      properties,
+      TestConsoleProperties.HIDE_IGNORED_TEST
+    ));
     actionGroup.addSeparator();
 
 
-    actionGroup.addAction(new DumbAwareToggleBooleanProperty(ExecutionBundle.message("junit.runing.info.sort.alphabetically.action.name"),
-                                                             ExecutionBundle.message("junit.runing.info.sort.alphabetically.action.description"), AllIcons.ObjectBrowser.Sorted, properties,
-                                                             TestConsoleProperties.SORT_ALPHABETICALLY));
+    actionGroup.addAction(new DumbAwareToggleBooleanProperty(
+      ExecutionLocalize.junitRuningInfoSortAlphabeticallyActionName().get(),
+      ExecutionLocalize.junitRuningInfoSortAlphabeticallyActionDescription().get(),
+      AllIcons.ObjectBrowser.Sorted,
+      properties,
+      TestConsoleProperties.SORT_ALPHABETICALLY
+    ));
     final ToggleModelAction sortByStatistics = new SortByDurationAction(properties);
     myActions.add(sortByStatistics);
     actionGroup.addAction(sortByStatistics);
     actionGroup.addSeparator();
 
     AnAction action = CommonActionsManager.getInstance().createExpandAllAction(myTreeExpander, parent);
-    action.getTemplatePresentation().setDescription(ExecutionBundle.message("junit.runing.info.expand.test.action.name"));
+    action.getTemplatePresentation().setDescriptionValue(ExecutionLocalize.junitRuningInfoExpandTestActionName());
     actionGroup.add(action);
 
     action = CommonActionsManager.getInstance().createCollapseAllAction(myTreeExpander, parent);
-    action.getTemplatePresentation().setDescription(ExecutionBundle.message("junit.runing.info.collapse.test.action.name"));
+    action.getTemplatePresentation().setDescriptionValue(ExecutionLocalize.junitRuningInfoCollapseTestActionName());
     actionGroup.add(action);
 
     actionGroup.addSeparator();
@@ -103,26 +117,44 @@ public class ToolbarPanel extends JPanel implements OccurenceNavigator, Disposab
     final DefaultActionGroup secondaryGroup = new DefaultActionGroup();
     secondaryGroup.setPopup(true);
     secondaryGroup.getTemplatePresentation().setIcon(AllIcons.General.GearPlain);
-    secondaryGroup
-            .add(new DumbAwareToggleBooleanProperty(ExecutionBundle.message("junit.runing.info.track.test.action.name"), ExecutionBundle.message("junit.runing.info.track.test.action.description"),
-                                                    null, properties, TestConsoleProperties.TRACK_RUNNING_TEST));
+    secondaryGroup.add(new DumbAwareToggleBooleanProperty(
+      ExecutionLocalize.junitRuningInfoTrackTestActionName().get(),
+      ExecutionLocalize.junitRuningInfoTrackTestActionDescription().get(),
+      null,
+      properties,
+      TestConsoleProperties.TRACK_RUNNING_TEST
+    ));
 
     secondaryGroup.add(new DumbAwareToggleBooleanProperty("Show Inline Statistics", "Toggle the visibility of the test duration in the tree", null, properties,
                                                           TestConsoleProperties.SHOW_INLINE_STATISTICS));
 
     secondaryGroup.addSeparator();
-    secondaryGroup.add(new DumbAwareToggleBooleanProperty(ExecutionBundle.message("junit.runing.info.scroll.to.stacktrace.action.name"),
-                                                          ExecutionBundle.message("junit.runing.info.scroll.to.stacktrace.action.description"), null, properties,
-                                                          TestConsoleProperties.SCROLL_TO_STACK_TRACE));
-    secondaryGroup.add(new ToggleBooleanProperty(ExecutionBundle.message("junit.runing.info.open.source.at.exception.action.name"),
-                                                 ExecutionBundle.message("junit.runing.info.open.source.at.exception.action.description"), null, properties, TestConsoleProperties.OPEN_FAILURE_LINE));
+    secondaryGroup.add(new DumbAwareToggleBooleanProperty(
+      ExecutionLocalize.junitRuningInfoScrollToStacktraceActionName().get(),
+      ExecutionLocalize.junitRuningInfoScrollToStacktraceActionDescription().get(),
+      null,
+      properties,
+      TestConsoleProperties.SCROLL_TO_STACK_TRACE
+    ));
+    secondaryGroup.add(new ToggleBooleanProperty(
+      ExecutionLocalize.junitRuningInfoOpenSourceAtExceptionActionName().get(),
+      ExecutionLocalize.junitRuningInfoOpenSourceAtExceptionActionDescription().get(),
+      null,
+      properties,
+      TestConsoleProperties.OPEN_FAILURE_LINE
+    ));
     myScrollToSource = new ScrollToTestSourceAction(properties);
     secondaryGroup.add(myScrollToSource);
 
     secondaryGroup.add(new AdjustAutotestDelayActionGroup(parent));
     secondaryGroup.addSeparator();
-    secondaryGroup
-            .add(new DumbAwareToggleBooleanProperty(ExecutionBundle.message("junit.runing.info.select.first.failed.action.name"), null, null, properties, TestConsoleProperties.SELECT_FIRST_DEFECT));
+    secondaryGroup.add(new DumbAwareToggleBooleanProperty(
+      ExecutionLocalize.junitRuningInfoSelectFirstFailedActionName().get(),
+      null,
+      null,
+      properties,
+      TestConsoleProperties.SELECT_FIRST_DEFECT
+    ));
     properties.appendAdditionalActions(secondaryGroup, parent, properties);
     actionGroup.add(secondaryGroup);
 
@@ -142,22 +174,16 @@ public class ToolbarPanel extends JPanel implements OccurenceNavigator, Disposab
     for (ToggleModelAction action : myActions) {
       action.setModel(model);
     }
-    TestFrameworkActions.addPropertyListener(TestConsoleProperties.SORT_ALPHABETICALLY, new TestFrameworkPropertyListener<Boolean>() {
-      @Override
-      public void onChanged(Boolean value) {
-        final AbstractTestTreeBuilder builder = model.getTreeBuilder();
-        if (builder != null) {
-          builder.setTestsComparator(value);
-        }
+    TestFrameworkActions.addPropertyListener(TestConsoleProperties.SORT_ALPHABETICALLY, value  -> {
+      final AbstractTestTreeBuilder builder = model.getTreeBuilder();
+      if (builder != null) {
+        builder.setTestsComparator(value);
       }
     }, model, true);
-    TestFrameworkActions.addPropertyListener(TestConsoleProperties.SORT_BY_DURATION, new TestFrameworkPropertyListener<Boolean>() {
-      @Override
-      public void onChanged(Boolean value) {
-        final AbstractTestTreeBuilder builder = model.getTreeBuilder();
-        if (builder != null) {
-          builder.setStatisticsComparator(model.getProperties(), value);
-        }
+    TestFrameworkActions.addPropertyListener(TestConsoleProperties.SORT_BY_DURATION, value  -> {
+      final AbstractTestTreeBuilder builder = model.getTreeBuilder();
+      if (builder != null) {
+        builder.setStatisticsComparator(model.getProperties(), value);
       }
     }, model, true);
   }
@@ -205,8 +231,13 @@ public class ToolbarPanel extends JPanel implements OccurenceNavigator, Disposab
     private TestFrameworkRunningModel myModel;
 
     public SortByDurationAction(TestConsoleProperties properties) {
-      super(ExecutionBundle.message("junit.runing.info.sort.by.statistics.action.name"), ExecutionBundle.message("junit.runing.info.sort.by.statistics.action.description"),
-            AllIcons.RunConfigurations.SortbyDuration, properties, TestConsoleProperties.SORT_BY_DURATION);
+      super(
+        ExecutionLocalize.junitRuningInfoSortByStatisticsActionName().get(),
+        ExecutionLocalize.junitRuningInfoSortByStatisticsActionDescription().get(),
+        AllIcons.RunConfigurations.SortbyDuration,
+        properties,
+        TestConsoleProperties.SORT_BY_DURATION
+      );
     }
 
     @Override

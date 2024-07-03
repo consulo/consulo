@@ -23,7 +23,6 @@ import consulo.component.util.config.Storage;
 import consulo.component.util.config.StoringPropertyContainer;
 import consulo.disposer.Disposable;
 import consulo.execution.DefaultExecutionTarget;
-import consulo.execution.ExecutionBundle;
 import consulo.execution.ExecutionTarget;
 import consulo.execution.configuration.ModuleRunProfile;
 import consulo.execution.configuration.RunProfile;
@@ -31,17 +30,19 @@ import consulo.execution.debug.DefaultDebugExecutor;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XDebuggerManager;
 import consulo.execution.executor.Executor;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.ui.ExecutionConsole;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.DefaultActionGroup;
-import org.intellij.lang.annotations.JdkConstants;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.intellij.lang.annotations.JdkConstants;
+
 import javax.swing.*;
 import javax.swing.tree.TreeSelectionModel;
 import java.util.ArrayList;
@@ -207,15 +208,15 @@ public abstract class TestConsoleProperties extends StoringPropertyContainer imp
 
   @Nonnull
   protected ToggleBooleanProperty createIncludeNonStartedInRerun(TestConsoleProperties target) {
-    String text = ExecutionBundle.message("junit.runing.info.include.non.started.in.rerun.failed.action.name");
-    return new DumbAwareToggleBooleanProperty(text, null, null, target, INCLUDE_NON_STARTED_IN_RERUN_FAILED);
+    LocalizeValue text = ExecutionLocalize.junitRuningInfoIncludeNonStartedInRerunFailedActionName();
+    return new DumbAwareToggleBooleanProperty(text.get(), null, null, target, INCLUDE_NON_STARTED_IN_RERUN_FAILED);
   }
 
   @Nonnull
   protected ToggleBooleanProperty createHideSuccessfulConfig(TestConsoleProperties target) {
-    String text = ExecutionBundle.message("junit.runing.info.hide.successful.config.action.name");
+    LocalizeValue text = ExecutionLocalize.junitRuningInfoHideSuccessfulConfigActionName();
     setIfUndefined(HIDE_SUCCESSFUL_CONFIG, true);
-    return new DumbAwareToggleBooleanProperty(text, null, null, target, HIDE_SUCCESSFUL_CONFIG);
+    return new DumbAwareToggleBooleanProperty(text.get(), null, null, target, HIDE_SUCCESSFUL_CONFIG);
   }
 
   @JdkConstants.TreeSelectionMode

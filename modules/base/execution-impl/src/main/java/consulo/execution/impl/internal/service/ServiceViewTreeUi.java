@@ -3,7 +3,7 @@ package consulo.execution.impl.internal.service;
 
 import consulo.application.ApplicationManager;
 import consulo.dataContext.DataManager;
-import consulo.execution.ExecutionBundle;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.service.ServiceViewActionUtils;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.awt.*;
@@ -25,8 +25,8 @@ final class ServiceViewTreeUi implements ServiceViewUi {
   private final JPanel myMasterPanel;
   private final JPanel myDetailsPanel;
   private final JPanel myContentComponentPanel;
-  private final JBPanelWithEmptyText myMessagePanel = new JBPanelWithEmptyText().withEmptyText(
-    ExecutionBundle.message("service.view.empty.selection.text"));
+  private final JBPanelWithEmptyText myMessagePanel =
+    new JBPanelWithEmptyText().withEmptyText(ExecutionLocalize.serviceViewEmptySelectionText().get());
   private final Set<JComponent> myDetailsComponents = Sets.newWeakHashSet();
   private ActionToolbar myServiceActionToolbar;
   private JComponent myServiceActionToolbarWrapper;

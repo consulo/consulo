@@ -20,17 +20,18 @@ import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
 import consulo.content.scope.SearchScope;
 import consulo.execution.DefaultExecutionResult;
-import consulo.execution.ExecutionBundle;
 import consulo.execution.ExecutionResult;
 import consulo.execution.ExecutionTarget;
 import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.executor.Executor;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ProgramRunner;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.Filter;
 import consulo.execution.ui.console.TextConsoleBuilder;
 import consulo.execution.ui.console.TextConsoleBuilderFactory;
+import consulo.localize.LocalizeValue;
 import consulo.process.ExecutionException;
 import consulo.process.ProcessHandler;
 import consulo.process.cmd.GeneralCommandLine;
@@ -39,7 +40,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.ToggleAction;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 /**
@@ -131,7 +131,7 @@ public abstract class CommandLineState implements RunProfileState {
     private final ProcessHandler myProcessHandler;
 
     public PauseOutputAction(final ConsoleView console, final ProcessHandler processHandler) {
-      super(ExecutionBundle.message("run.configuration.pause.output.action.name"), null, AllIcons.Actions.Pause);
+      super(ExecutionLocalize.runConfigurationPauseOutputActionName(), LocalizeValue.empty(), AllIcons.Actions.Pause);
       myConsole = console;
       myProcessHandler = processHandler;
     }

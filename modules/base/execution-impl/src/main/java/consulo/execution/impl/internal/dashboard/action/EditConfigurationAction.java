@@ -2,10 +2,10 @@
 package consulo.execution.impl.internal.dashboard.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.execution.ExecutionBundle;
 import consulo.execution.RunConfigurationEditor;
 import consulo.execution.RunManager;
 import consulo.execution.dashboard.RunDashboardRunConfigurationNode;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionPlaces;
@@ -51,7 +51,7 @@ public final class EditConfigurationAction extends AnAction {
     RunDashboardRunConfigurationNode node = project == null ? null : RunDashboardActionUtils.getTarget(e);
     if (node == null) return;
 
-    RunConfigurationEditor.getInstance(project).editConfiguration(project, node.getConfigurationSettings(),
-                                                                  ExecutionBundle.message("run.dashboard.edit.configuration.dialog.title"));
+    RunConfigurationEditor.getInstance(project)
+      .editConfiguration(project, node.getConfigurationSettings(), ExecutionLocalize.runDashboardEditConfigurationDialogTitle().get());
   }
 }

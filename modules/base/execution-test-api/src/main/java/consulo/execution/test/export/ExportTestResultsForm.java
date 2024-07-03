@@ -17,7 +17,7 @@ package consulo.execution.test.export;
 
 import consulo.application.AllIcons;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.execution.ExecutionBundle;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.proxy.EventDispatcher;
@@ -30,8 +30,8 @@ import consulo.ui.ex.event.UserActivityListener;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -69,15 +69,27 @@ public class ExportTestResultsForm {
 
     myFileNameField.setText(defaultFileName);
 
-    myCustomTemplateField
-            .addBrowseFolderListener(ExecutionBundle.message("export.test.results.custom.template.chooser.title"), null, null, new FileChooserDescriptor(true, false, false, false, false, false) {
-              public boolean isFileSelectable(VirtualFile file) {
-                return "xsl".equalsIgnoreCase(file.getExtension()) || "xslt".equalsIgnoreCase(file.getExtension());
-              }
-            }, TextComponentAccessor.TEXT_FIELD_WHOLE_TEXT, false);
+    myCustomTemplateField.addBrowseFolderListener(
+      ExecutionLocalize.exportTestResultsCustomTemplateChooserTitle().get(),
+      null,
+      null,
+      new FileChooserDescriptor(true, false, false, false, false, false) {
+        public boolean isFileSelectable(VirtualFile file) {
+          return "xsl".equalsIgnoreCase(file.getExtension()) || "xslt".equalsIgnoreCase(file.getExtension());
+        }
+      },
+      TextComponentAccessor.TEXT_FIELD_WHOLE_TEXT,
+      false
+    );
 
-    myFolderField.addBrowseFolderListener(ExecutionBundle.message("export.test.results.output.folder.chooser.title"), null, null, FileChooserDescriptorFactory.createSingleFolderDescriptor(),
-                                          TextComponentAccessor.TEXT_FIELD_WHOLE_TEXT, false);
+    myFolderField.addBrowseFolderListener(
+      ExecutionLocalize.exportTestResultsOutputFolderChooserTitle().get(),
+      null,
+      null,
+      FileChooserDescriptorFactory.createSingleFolderDescriptor(),
+      TextComponentAccessor.TEXT_FIELD_WHOLE_TEXT,
+      false
+    );
 
     myFileNameField.getDocument().addDocumentListener(new DocumentAdapter() {
       @Override
@@ -116,7 +128,11 @@ public class ExportTestResultsForm {
   }
 
   private void updateOpenInLabel() {
-    myOpenExportedFileCb.setText(ExecutionBundle.message(shouldOpenInBrowser(myFileNameField.getText()) ? "export.test.results.open.browser" : "export.test.results.open.editor"));
+    myOpenExportedFileCb.setText(
+      shouldOpenInBrowser(myFileNameField.getText())
+        ? ExecutionLocalize.exportTestResultsOpenBrowser().get()
+        : ExecutionLocalize.exportTestResultsOpenEditor().get()
+    );
   }
 
   public static boolean shouldOpenInBrowser(String filename) {
@@ -162,19 +178,19 @@ public class ExportTestResultsForm {
   public String validate() {
     if (getExportFormat() == ExportTestResultsConfiguration.ExportFormat.UserTemplate) {
       if (StringUtil.isEmpty(myCustomTemplateField.getText())) {
-        return ExecutionBundle.message("export.test.results.custom.template.path.empty");
+        return ExecutionLocalize.exportTestResultsCustomTemplatePathEmpty().get();
       }
       File file = new File(myCustomTemplateField.getText());
       if (!file.isFile()) {
-        return ExecutionBundle.message("export.test.results.custom.template.not.found", file.getAbsolutePath());
+        return ExecutionLocalize.exportTestResultsCustomTemplateNotFound(file.getAbsolutePath()).get();
       }
     }
 
     if (StringUtil.isEmpty(myFileNameField.getText())) {
-      return ExecutionBundle.message("export.test.results.output.filename.empty");
+      return ExecutionLocalize.exportTestResultsOutputFilenameEmpty().get();
     }
     if (StringUtil.isEmpty(myFolderField.getText())) {
-      return ExecutionBundle.message("export.test.results.output.path.empty");
+      return ExecutionLocalize.exportTestResultsOutputPathEmpty().get();
     }
 
     return null;

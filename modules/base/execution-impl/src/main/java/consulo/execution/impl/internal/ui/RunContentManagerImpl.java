@@ -17,14 +17,13 @@ package consulo.execution.impl.internal.ui;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.application.util.Semaphore;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.execution.ExecutionBundle;
 import consulo.execution.ExecutionUtil;
 import consulo.execution.ProcessCloseConfirmation;
 import consulo.execution.RunnerAndConfigurationSettings;
@@ -33,6 +32,7 @@ import consulo.execution.dashboard.RunDashboardManager;
 import consulo.execution.executor.Executor;
 import consulo.execution.impl.internal.RunToolWindowManager;
 import consulo.execution.impl.internal.TerminateRemoteProcessDialog;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.execution.ui.RunContentManager;
@@ -258,7 +258,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
       return;
     }
 
-    ApplicationManager.getApplication().invokeLater(() -> {
+    Application.get().invokeLater(() -> {
       ToolWindow window = ToolWindowManager.getInstance(myProject).getToolWindow(toolWindowId);
       // let's activate tool window, but don't move focus
       //
@@ -626,12 +626,12 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
     final boolean killable =
       !modal && processHandler instanceof KillableProcessHandler killableProcessHandler && killableProcessHandler.canKillProcess();
 
-    String title = ExecutionBundle.message("terminating.process.progress.title", descriptor.getDisplayName());
+    String title = ExecutionLocalize.terminatingProcessProgressTitle(descriptor.getDisplayName()).get();
     ProgressManager.getInstance().run(new Task.Backgroundable(myProject, title, true) {
 
       {
         if (killable) {
-          String cancelText = ExecutionBundle.message("terminating.process.progress.kill");
+          String cancelText = ExecutionLocalize.terminatingProcessProgressKill().get();
           setCancelText(cancelText);
           setCancelTooltipText(cancelText);
         }
@@ -652,7 +652,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
         final Semaphore semaphore = new Semaphore();
         semaphore.down();
 
-        ApplicationManager.getApplication().executeOnPooledThread(() -> {
+        Application.get().executeOnPooledThread(() -> {
           final ProcessHandler processHandler1 = descriptor.getProcessHandler();
           try {
             if (processHandler1 != null) {
@@ -664,8 +664,8 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
           }
         });
 
-        progressIndicator.setText(ExecutionBundle.message("waiting.for.vm.detach.progress.text"));
-        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+        progressIndicator.setTextValue(ExecutionLocalize.waitingForVmDetachProgressText());
+        Application.get().executeOnPooledThread(new Runnable() {
           @Override
           public void run() {
             while (true) {

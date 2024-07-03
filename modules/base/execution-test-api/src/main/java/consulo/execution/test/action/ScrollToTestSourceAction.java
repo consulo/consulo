@@ -18,7 +18,7 @@ package consulo.execution.test.action;
 import consulo.application.AllIcons;
 import consulo.application.ui.action.ToggleBooleanProperty;
 import consulo.component.util.config.AbstractProperty;
-import consulo.execution.ExecutionBundle;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.test.TestConsoleProperties;
 import consulo.execution.test.TestFrameworkRunningModel;
 
@@ -26,8 +26,13 @@ public class ScrollToTestSourceAction extends ToggleBooleanProperty.Disablable {
   private TestFrameworkRunningModel myModel;
 
   public ScrollToTestSourceAction(final TestConsoleProperties properties) {
-    super(ExecutionBundle.message("junit.auto.scroll.to.source.action.name"), ExecutionBundle.message("junit.open.text.in.editor.action.name"), AllIcons.General.AutoscrollToSource, properties,
-          TestConsoleProperties.SCROLL_TO_SOURCE);
+    super(
+      ExecutionLocalize.junitAutoScrollToSourceActionName(),
+      ExecutionLocalize.junitOpenTextInEditorActionName(),
+      AllIcons.General.AutoscrollToSource,
+      properties,
+      TestConsoleProperties.SCROLL_TO_SOURCE
+    );
   }
 
   protected boolean isEnabled() {

@@ -20,7 +20,7 @@
  */
 package consulo.execution.test;
 
-import consulo.execution.ExecutionBundle;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.localHistory.LocalHistory;
 import consulo.project.Project;
 import consulo.ui.ex.JBColor;
@@ -37,11 +37,11 @@ public class LvcsHelper {
 
     if (model.getRoot().isDefect()) {
       color = RED.getRGB();
-      label = ExecutionBundle.message("junit.runing.info.tests.failed.label");
+      label = ExecutionLocalize.junitRuningInfoTestsFailedLabel().get();
     }
     else {
       color = GREEN.getRGB();
-      label = ExecutionBundle.message("junit.runing.info.tests.passed.label");
+      label = ExecutionLocalize.junitRuningInfoTestsPassedLabel().get();
     }
     final TestConsoleProperties consoleProperties = model.getProperties();
     String name = label + " " + consoleProperties.getConfiguration().getName();

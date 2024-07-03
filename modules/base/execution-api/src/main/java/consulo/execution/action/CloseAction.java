@@ -15,14 +15,17 @@
  */
 package consulo.execution.action;
 
-import consulo.execution.ExecutionBundle;
-import consulo.execution.ExecutionManager;
-import consulo.execution.executor.Executor;
-import consulo.execution.ui.RunContentDescriptor;
 import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
+import consulo.execution.ExecutionManager;
+import consulo.execution.executor.Executor;
+import consulo.execution.localize.ExecutionLocalize;
+import consulo.execution.ui.RunContentDescriptor;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
+import jakarta.annotation.Nonnull;
 
 public class CloseAction extends AnAction implements DumbAware {
   private RunContentDescriptor myContentDescriptor;
@@ -36,12 +39,13 @@ public class CloseAction extends AnAction implements DumbAware {
     copyFrom(ActionManager.getInstance().getAction(IdeActions.ACTION_CLOSE));
     final Presentation templatePresentation = getTemplatePresentation();
     templatePresentation.setIcon(AllIcons.Actions.Cancel);
-    templatePresentation.setText(ExecutionBundle.message("close.tab.action.name"));
-    templatePresentation.setDescription(null);
+    templatePresentation.setTextValue(ExecutionLocalize.closeTabActionName());
+    templatePresentation.setDescriptionValue(LocalizeValue.empty());
   }
 
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     final RunContentDescriptor contentDescriptor = getContentDescriptor();
     if (contentDescriptor == null) {
       return;

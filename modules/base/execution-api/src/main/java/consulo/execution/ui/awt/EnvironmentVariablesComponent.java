@@ -20,15 +20,15 @@
  */
 package consulo.execution.ui.awt;
 
-import consulo.execution.ExecutionBundle;
 import consulo.execution.configuration.EnvironmentVariablesData;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.UserActivityProviderComponent;
 import consulo.ui.ex.awt.LabeledComponent;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import jakarta.annotation.Nonnull;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
 import java.util.Map;
@@ -49,7 +49,7 @@ public class EnvironmentVariablesComponent extends LabeledComponent<JComponent> 
     super();
     myEnvVars = new EnvironmentVariablesTextFieldWithBrowseButton();
     setComponent((JComponent)TargetAWT.to(myEnvVars.getComponent()));
-    setText(ExecutionBundle.message("environment.variables.component.title"));
+    setText(ExecutionLocalize.environmentVariablesComponentTitle().get());
   }
 
   public void setEnvs(@Nonnull Map<String, String> envs) {

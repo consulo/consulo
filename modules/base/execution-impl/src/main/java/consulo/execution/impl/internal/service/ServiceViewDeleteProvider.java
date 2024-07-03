@@ -1,11 +1,11 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.execution.impl.internal.service;
 
-import consulo.application.CommonBundle;
 import consulo.dataContext.DataContext;
-import consulo.execution.ExecutionBundle;
-import consulo.language.editor.CommonDataKeys;
+import consulo.execution.localize.ExecutionLocalize;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIExAWTDataKey;
@@ -30,8 +30,9 @@ final class ServiceViewDeleteProvider implements DeleteProvider {
 //  }
 
   @Override
+  @RequiredUIAccess
   public void deleteElement(@Nonnull DataContext dataContext) {
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Project project = dataContext.getData(Project.KEY);
     if (project == null) return;
 
     List<ServiceViewItem> selectedItems = ServiceViewActionProvider.getSelectedItems(dataContext);
@@ -42,12 +43,13 @@ final class ServiceViewDeleteProvider implements DeleteProvider {
     items = filterChildren(items);
     if (items.isEmpty()) return;
 
-    if (Messages.showYesNoDialog(project,
-                                 ExecutionBundle.message("service.view.delete.confirmation",
-                                                         ExecutionBundle.message("service.view.items", items.size())),
-                                 CommonBundle.message("button.delete"),
-                                 Messages.getWarningIcon())
-      != Messages.YES) {
+    if (Messages.showYesNoDialog(
+      project,
+      ExecutionLocalize.serviceViewDeleteConfirmation(ExecutionLocalize.serviceViewItems(items.size()).get()).get(),
+      CommonLocalize.buttonDelete().get(),
+      UIUtil.getWarningIcon())
+      != Messages.YES
+    ) {
       return;
     }
     for (Pair<ServiceViewItem, Runnable> item : items) {
@@ -57,8 +59,7 @@ final class ServiceViewDeleteProvider implements DeleteProvider {
 
   @Override
   public boolean canDeleteElement(@Nonnull DataContext dataContext) {
-    List<ServiceViewItem
-      > selectedItems = ServiceViewActionProvider.getSelectedItems(dataContext);
+    List<ServiceViewItem> selectedItems = ServiceViewActionProvider.getSelectedItems(dataContext);
     if (!ContainerUtil.exists(selectedItems, item -> item.getViewDescriptor().getRemover() != null)) {
       return false;
     }

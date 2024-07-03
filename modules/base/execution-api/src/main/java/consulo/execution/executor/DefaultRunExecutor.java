@@ -17,7 +17,7 @@
 package consulo.execution.executor;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.execution.ExecutionBundle;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.image.Image;
@@ -33,7 +33,7 @@ public class DefaultRunExecutor extends Executor {
   @Override
   @Nonnull
   public String getStartActionText() {
-    return ExecutionBundle.message("default.runner.start.action.text");
+    return ExecutionLocalize.defaultRunnerStartActionText().get();
   }
 
   @Override
@@ -54,13 +54,13 @@ public class DefaultRunExecutor extends Executor {
 
   @Override
   public String getDescription() {
-    return ExecutionBundle.message("standard.runner.description");
+    return ExecutionLocalize.standardRunnerDescription().get();
   }
 
   @Override
   @Nonnull
   public String getActionName() {
-    return ExecutionBundle.message("tool.window.name.run");
+    return ExecutionLocalize.toolWindowNameRun().get();
   }
 
   @Override

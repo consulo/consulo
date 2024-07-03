@@ -24,6 +24,7 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
+import consulo.ui.style.StyleManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -86,7 +87,7 @@ public class PoppedIcon implements Icon, Image {
     }
     else {
       final Color bg = UIUtil.getPanelBackground();
-      final boolean dark = UIUtil.isUnderDarcula();
+      final boolean dark = StyleManager.get().getCurrentStyle().isDark();
       g.setColor(state == ActionButtonComponent.PUSHED ? ColorUtil.shift(bg, dark ? 1d / 0.7d : 0.7d) : dark ? Gray._255.withAlpha(40) : ALPHA_40);
       g.fillRect(JBUI.scale(1), JBUI.scale(1), size.width - JBUI.scale(2), size.height - JBUI.scale(2));
     }
@@ -100,7 +101,7 @@ public class PoppedIcon implements Icon, Image {
       }
     }
     else {
-      final double shift = UIUtil.isUnderDarcula() ? 1 / 0.49 : 0.49;
+      final double shift = StyleManager.get().getCurrentStyle().isDark() ? 1 / 0.49 : 0.49;
       g.setColor(ColorUtil.shift(UIUtil.getPanelBackground(), shift));
       ((Graphics2D)g).setStroke(BASIC_STROKE);
       final GraphicsConfig config = GraphicsUtil.setupAAPainting(g);

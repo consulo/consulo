@@ -16,24 +16,24 @@
 
 package consulo.execution.impl.internal;
 
-import consulo.execution.BeforeRunTask;
-import consulo.execution.BeforeRunTaskProvider;
-import consulo.execution.ExecutionBundle;
-import consulo.execution.configuration.RunConfiguration;
-import consulo.execution.runner.ExecutionEnvironment;
 import consulo.application.AllIcons;
 import consulo.dataContext.DataContext;
+import consulo.execution.BeforeRunTask;
+import consulo.execution.BeforeRunTaskProvider;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.localize.ExecutionLocalize;
+import consulo.execution.runner.ExecutionEnvironment;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.util.jdom.JDOMUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jdom.Attribute;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -57,7 +57,7 @@ public class UnknownBeforeRunTaskProvider extends BeforeRunTaskProvider<UnknownB
   @Nonnull
   @Override
   public String getName() {
-    return ExecutionBundle.message("before.launch.run.unknown.task");
+    return ExecutionLocalize.beforeLaunchRunUnknownTask().get();
   }
 
   @Nullable
@@ -69,7 +69,7 @@ public class UnknownBeforeRunTaskProvider extends BeforeRunTaskProvider<UnknownB
   @Nonnull
   @Override
   public String getDescription(UnknownTask task) {
-    return ExecutionBundle.message("before.launch.run.unknown.task") + " " + myId.toString();
+    return ExecutionLocalize.beforeLaunchRunUnknownTask() + " " + myId.toString();
   }
 
   @Nonnull

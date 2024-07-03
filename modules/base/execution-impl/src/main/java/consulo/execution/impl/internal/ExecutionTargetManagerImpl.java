@@ -16,6 +16,7 @@ import consulo.execution.event.RunManagerListener;
 import consulo.execution.event.RunManagerListenerEvent;
 import consulo.execution.impl.internal.compound.CompoundRunConfiguration;
 import consulo.execution.impl.internal.configuration.RunManagerImpl;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
@@ -44,7 +45,7 @@ public final class ExecutionTargetManagerImpl extends ExecutionTargetManager imp
     @Nonnull
     @Override
     public String getDisplayName() {
-      return ExecutionBundle.message("multiple.specified");
+      return ExecutionLocalize.multipleSpecified().get();
     }
 
     @Override

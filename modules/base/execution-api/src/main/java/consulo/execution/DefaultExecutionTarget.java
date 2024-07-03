@@ -16,6 +16,7 @@
 package consulo.execution;
 
 import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.ui.image.Image;
 
 import jakarta.annotation.Nonnull;
@@ -32,7 +33,7 @@ public class DefaultExecutionTarget extends ExecutionTarget {
   @Nonnull
   @Override
   public String getDisplayName() {
-    return ExecutionBundle.message("node.default");
+    return ExecutionLocalize.nodeDefault().get();
   }
 
   @Override

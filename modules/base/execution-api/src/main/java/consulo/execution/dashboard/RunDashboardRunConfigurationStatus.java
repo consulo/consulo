@@ -2,8 +2,9 @@
 package consulo.execution.dashboard;
 
 import consulo.component.util.WeighedItem;
-import consulo.execution.ExecutionBundle;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.ui.RunContentDescriptor;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.process.BaseProcessHandler;
 import consulo.process.ProcessHandler;
@@ -15,27 +16,27 @@ import org.jetbrains.annotations.Nls;
  * @author konstantin.aleev
  */
 public class RunDashboardRunConfigurationStatus implements WeighedItem {
-  public static final RunDashboardRunConfigurationStatus STARTED = new RunDashboardRunConfigurationStatus(
-    ExecutionBundle.message("run.dashboard.started.group.name"), PlatformIconGroup.actionsExecute(), 10);
-  public static final RunDashboardRunConfigurationStatus FAILED = new RunDashboardRunConfigurationStatus(
-    ExecutionBundle.message("run.dashboard.failed.group.name"), PlatformIconGroup.generalError(), 20);
-  public static final RunDashboardRunConfigurationStatus STOPPED = new RunDashboardRunConfigurationStatus(
-    ExecutionBundle.message("run.dashboard.stopped.group.name"), PlatformIconGroup.actionsRestart(), 30);
-  public static final RunDashboardRunConfigurationStatus CONFIGURED = new RunDashboardRunConfigurationStatus(
-    ExecutionBundle.message("run.dashboard.configured.group.name"), PlatformIconGroup.generalSettings(), 40);
+  public static final RunDashboardRunConfigurationStatus STARTED =
+    new RunDashboardRunConfigurationStatus(ExecutionLocalize.runDashboardStartedGroupName(), PlatformIconGroup.actionsExecute(), 10);
+  public static final RunDashboardRunConfigurationStatus FAILED =
+    new RunDashboardRunConfigurationStatus(ExecutionLocalize.runDashboardFailedGroupName(), PlatformIconGroup.generalError(), 20);
+  public static final RunDashboardRunConfigurationStatus STOPPED =
+    new RunDashboardRunConfigurationStatus(ExecutionLocalize.runDashboardStoppedGroupName(), PlatformIconGroup.actionsRestart(), 30);
+  public static final RunDashboardRunConfigurationStatus CONFIGURED =
+    new RunDashboardRunConfigurationStatus(ExecutionLocalize.runDashboardConfiguredGroupName(), PlatformIconGroup.generalSettings(), 40);
 
-  private final @Nls String myName;
+  private final LocalizeValue myName;
   private final Image myIcon;
   private final int myWeight;
 
-  public RunDashboardRunConfigurationStatus(@Nls String name, Image icon, int weight) {
+  public RunDashboardRunConfigurationStatus(LocalizeValue name, Image icon, int weight) {
     myName = name;
     myIcon = icon;
     myWeight = weight;
   }
 
   public @Nls String getName() {
-    return myName;
+    return myName.get();
   }
 
   public Image getIcon() {

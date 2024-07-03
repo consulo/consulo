@@ -24,6 +24,7 @@ import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.ExecutionUtil;
 import consulo.execution.executor.Executor;
 import consulo.execution.executor.ExecutorRegistry;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.runner.ProgramRunner;
 import consulo.ui.ex.action.Presentation;
 import consulo.util.lang.Pair;
@@ -35,7 +36,7 @@ public class RunContextAction extends BaseRunConfigurationAction {
   private final Executor myExecutor;
 
   public RunContextAction(@Nonnull final Executor executor) {
-    super(ExecutionBundle.message("perform.action.with.context.configuration.action.name", executor.getStartActionText()), null, executor.getIcon());
+    super(ExecutionLocalize.performActionWithContextConfigurationActionName(executor.getStartActionText()).get(), null, executor.getIcon());
     myExecutor = executor;
   }
 

@@ -17,7 +17,7 @@ package consulo.execution.ui.awt;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.execution.CommonProgramRunConfigurationParameters;
-import consulo.execution.ExecutionBundle;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.localize.LocalizeValue;
 import consulo.module.Module;
@@ -31,9 +31,9 @@ import consulo.ui.ex.FileChooserTextBoxBuilder;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.io.PathUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -80,18 +80,25 @@ public class CommonProgramParametersPanel extends JPanel implements PanelWithAnc
 
   @RequiredUIAccess
   protected void initComponents() {
-    myProgramParametersComponent = LabeledComponent.create(new RawCommandLineEditor(), ExecutionBundle.message("run.configuration.program.parameters"));
+    myProgramParametersComponent = LabeledComponent.create(new RawCommandLineEditor(), ExecutionLocalize.runConfigurationProgramParameters().get());
 
-    FileChooserTextBoxBuilder workDirBuilder = FileChooserTextBoxBuilder.create(getProject());
-    workDirBuilder.fileChooserDescriptor(FileChooserDescriptorFactory.createSingleFolderDescriptor());
-    workDirBuilder.dialogTitle(ExecutionBundle.message("select.working.directory.message"));
-    workDirBuilder.dialogDescription(LocalizeValue.of());
+    FileChooserTextBoxBuilder workDirBuilder = FileChooserTextBoxBuilder.create(getProject())
+      .fileChooserDescriptor(FileChooserDescriptorFactory.createSingleFolderDescriptor())
+      .dialogTitle(ExecutionLocalize.selectWorkingDirectoryMessage())
+      .dialogDescription(LocalizeValue.of());
 
     myWorkDirectoryBox = workDirBuilder.build();
-    myWorkDirectoryBox.getComponent()
-            .addFirstExtension(new TextBoxWithExtensions.Extension(false, PlatformIconGroup.generalInlinevariables(), PlatformIconGroup.generalInlinevariableshover(), event -> showMacroDialog()));
+    myWorkDirectoryBox.getComponent().addFirstExtension(new TextBoxWithExtensions.Extension(
+      false,
+      PlatformIconGroup.generalInlinevariables(),
+      PlatformIconGroup.generalInlinevariableshover(),
+      event -> showMacroDialog()
+    ));
 
-    myWorkingDirectoryComponent = LabeledComponent.create((JComponent)TargetAWT.to(myWorkDirectoryBox.getComponent()), ExecutionBundle.message("run.configuration.working.directory.label"));
+    myWorkingDirectoryComponent = LabeledComponent.create(
+      (JComponent)TargetAWT.to(myWorkDirectoryBox.getComponent()),
+      ExecutionLocalize.runConfigurationWorkingDirectoryLabel().get()
+    );
     myEnvVariablesComponent = new EnvironmentVariablesComponent();
 
     myEnvVariablesComponent.setLabelLocation(BorderLayout.WEST);
@@ -105,9 +112,7 @@ public class CommonProgramParametersPanel extends JPanel implements PanelWithAnc
 
   @RequiredUIAccess
   private void showMacroDialog() {
-    MacroSelector.getInstance().select(getProject(), myModuleContext, macro -> {
-      myWorkDirectoryBox.setValue(macro.getDecoratedName());
-    });
+    MacroSelector.getInstance().select(getProject(), myModuleContext, macro -> myWorkDirectoryBox.setValue(macro.getDecoratedName()));
   }
 
   protected void addComponents() {

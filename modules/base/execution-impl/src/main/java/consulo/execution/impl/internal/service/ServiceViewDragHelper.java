@@ -2,12 +2,13 @@
 package consulo.execution.impl.internal.service;
 
 import consulo.dataContext.DataProvider;
-import consulo.execution.ExecutionBundle;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.service.ServiceViewContributor;
 import consulo.execution.service.ServiceViewDescriptor;
 import consulo.execution.service.ServiceViewDnDDescriptor;
 import consulo.execution.service.ServiceViewManager;
 import consulo.language.editor.PlatformDataKeys;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.ItemPresentation;
 import consulo.project.Project;
 import consulo.ui.ex.awt.RelativeRectangle;
@@ -236,8 +237,8 @@ final class ServiceViewDragHelper {
         c.append(getDisplayName(presentation));
       }
       else {
-        String text = ExecutionBundle.message("service.view.items", size);
-        c.append(text);
+        LocalizeValue text = ExecutionLocalize.serviceViewItems(size);
+        c.append(text.get());
       }
 
       Dimension preferredSize = c.getPreferredSize();

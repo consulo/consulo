@@ -15,13 +15,15 @@
  */
 package consulo.execution;
 
+import consulo.execution.localize.ExecutionLocalize;
+
 public class RuntimeConfigurationWarning extends RuntimeConfigurationException {
   public RuntimeConfigurationWarning(final String message) {
     this(message, null);
   }
 
   public RuntimeConfigurationWarning(final String message, final Runnable quickFix) {
-    super(message, ExecutionBundle.message("warning.common.title"));
+    super(message, ExecutionLocalize.warningCommonTitle().get());
     setQuickFix(quickFix);
   }
 }

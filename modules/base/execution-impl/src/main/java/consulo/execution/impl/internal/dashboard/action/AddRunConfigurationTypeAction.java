@@ -18,11 +18,11 @@ package consulo.execution.impl.internal.dashboard.action;
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionParentRef;
 import consulo.annotation.component.ActionRef;
-import consulo.execution.ExecutionBundle;
 import consulo.execution.configuration.ConfigurationType;
 import consulo.execution.dashboard.RunDashboardManager;
 import consulo.execution.impl.internal.configuration.ConfigurationTypeSelector;
 import consulo.execution.impl.internal.service.action.AddServiceActionGroup;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -79,41 +79,37 @@ public class AddRunConfigurationTypeAction extends DumbAwareAction {
     var hiddenCount = allTypes.size() - configurationTypes.size();
     List<Object> popupList = new ArrayList<>(configurationTypes);
     if (hiddenCount > 0) {
-      popupList.add(ExecutionBundle.message("show.irrelevant.configurations.action.name", hiddenCount));
+      popupList.add(ExecutionLocalize.showIrrelevantConfigurationsActionName(hiddenCount).get());
     }
 
     var builder = JBPopupFactory.getInstance().createPopupChooserBuilder(popupList)
-                                .setTitle(ExecutionBundle.message("run.dashboard.configurable.add.configuration.type"))
-                                .setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION)
-                                .setRenderer(new ColoredListCellRenderer() {
-                                  @Override
-                                  protected void customizeCellRenderer(@Nonnull JList list,
-                                                                       Object value,
-                                                                       int index,
-                                                                       boolean selected,
-                                                                       boolean hasFocus) {
-                                    if (value instanceof ConfigurationType configurationType) {
-                                      setIcon(configurationType.getIcon());
-                                      append(configurationType.getDisplayName().get());
-                                    }
-                                    else {
-                                      append(String.valueOf(value));
-                                    }
-                                  }
-                                })
-                                .setMovable(true)
-                                .setResizable(true)
-                                .setNamerForFiltering(o -> o instanceof ConfigurationType type ? type.getDisplayName().get() : null)
-                                .setAdText(ExecutionBundle.message("run.dashboard.configurable.types.panel.hint"))
-                                .setItemsChosenCallback(selectedValues -> {
-                                  var value = ContainerUtil.getOnlyItem(selectedValues);
-                                  if (value instanceof String) {
-                                    showAddPopup(project, addedTypes, onAddCallback, popupOpener, false);
-                                    return;
-                                  }
+      .setTitle(ExecutionLocalize.runDashboardConfigurableAddConfigurationType().get())
+      .setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION)
+      .setRenderer(new ColoredListCellRenderer() {
+        @Override
+        protected void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus) {
+          if (value instanceof ConfigurationType configurationType) {
+            setIcon(configurationType.getIcon());
+            append(configurationType.getDisplayName().get());
+          }
+          else {
+            append(String.valueOf(value));
+          }
+        }
+      })
+      .setMovable(true)
+      .setResizable(true)
+      .setNamerForFiltering(o -> o instanceof ConfigurationType type ? type.getDisplayName().get() : null)
+      .setAdText(ExecutionLocalize.runDashboardConfigurableTypesPanelHint().get())
+      .setItemsChosenCallback(selectedValues -> {
+        var value = ContainerUtil.getOnlyItem(selectedValues);
+        if (value instanceof String) {
+          showAddPopup(project, addedTypes, onAddCallback, popupOpener, false);
+          return;
+        }
 
-                                  onAddCallback.accept(ContainerUtil.filterIsInstance(selectedValues, ConfigurationType.class));
-                                });
+        onAddCallback.accept(ContainerUtil.filterIsInstance(selectedValues, ConfigurationType.class));
+      });
 
     popupOpener.accept(builder.createPopup());
   }

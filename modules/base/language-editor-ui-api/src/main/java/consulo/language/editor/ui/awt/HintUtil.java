@@ -13,6 +13,7 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.internal.IdeTooltipManager;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
+import consulo.ui.style.StyleManager;
 import consulo.util.lang.ref.Ref;
 import org.intellij.lang.annotations.JdkConstants;
 
@@ -82,10 +83,12 @@ public class HintUtil {
     return createInformationLabel(text, null, null, null);
   }
 
-  public static JComponent createInformationLabel(@Nonnull String text,
-                                                  @Nullable HyperlinkListener hyperlinkListener,
-                                                  @Nullable MouseListener mouseListener,
-                                                  @Nullable Ref<? super Consumer<? super String>> updatedTextConsumer) {
+  public static JComponent createInformationLabel(
+    @Nonnull String text,
+    @Nullable HyperlinkListener hyperlinkListener,
+    @Nullable MouseListener mouseListener,
+    @Nullable Ref<? super Consumer<? super String>> updatedTextConsumer
+  ) {
     HintHint hintHint = getInformationHint();
     HintLabel label = createLabel(text, null, hintHint.getTextBackground(), hintHint);
     configureLabel(label, hyperlinkListener, mouseListener, updatedTextConsumer);
@@ -94,8 +97,11 @@ public class HintUtil {
 
   @Nonnull
   public static HintHint getInformationHint() {
-    return new HintHint().setBorderColor(INFORMATION_BORDER_COLOR).setTextBg(TargetAWT.to(getInformationColor())).setTextFg(UIUtil.isUnderDarcula() ? UIUtil.getLabelForeground() : Color.black)
-            .setFont(getBoldFont()).setAwtTooltip(true);
+    return new HintHint()
+      .setBorderColor(INFORMATION_BORDER_COLOR)
+      .setTextBg(TargetAWT.to(getInformationColor()))
+      .setTextFg(StyleManager.get().getCurrentStyle().isDark() ? UIUtil.getLabelForeground() : Color.black)
+      .setFont(getBoldFont()).setAwtTooltip(true);
   }
 
   public static CompoundBorder createHintBorder() {
@@ -153,10 +159,12 @@ public class HintUtil {
     return new HintLabel(component);
   }
 
-  public static JComponent createErrorLabel(@Nonnull String text,
-                                            @Nullable HyperlinkListener hyperlinkListener,
-                                            @Nullable MouseListener mouseListener,
-                                            @Nullable Ref<? super Consumer<? super String>> updatedTextConsumer) {
+  public static JComponent createErrorLabel(
+    @Nonnull String text,
+    @Nullable HyperlinkListener hyperlinkListener,
+    @Nullable MouseListener mouseListener,
+    @Nullable Ref<? super Consumer<? super String>> updatedTextConsumer
+  ) {
     Color bg = TargetAWT.to(getErrorColor());
     HintHint hintHint = new HintHint().setTextBg(bg).setTextFg(JBColor.foreground()).setFont(getBoldFont()).setAwtTooltip(true);
 
@@ -216,10 +224,12 @@ public class HintUtil {
                          UIUtil.getCssFontDeclaration(hintHint.getTextFont(), hintHint.getTextForeground(), hintHint.getLinkForeground(), hintHint.getUlImg()), htmlBody);
   }
 
-  private static void configureLabel(@Nonnull HintLabel label,
-                                     @Nullable HyperlinkListener hyperlinkListener,
-                                     @Nullable MouseListener mouseListener,
-                                     @Nullable Ref<? super Consumer<? super String>> updatedTextConsumer) {
+  private static void configureLabel(
+    @Nonnull HintLabel label,
+    @Nullable HyperlinkListener hyperlinkListener,
+    @Nullable MouseListener mouseListener,
+    @Nullable Ref<? super Consumer<? super String>> updatedTextConsumer
+  ) {
     if (hyperlinkListener != null) {
       label.myPane.addHyperlinkListener(hyperlinkListener);
     }
