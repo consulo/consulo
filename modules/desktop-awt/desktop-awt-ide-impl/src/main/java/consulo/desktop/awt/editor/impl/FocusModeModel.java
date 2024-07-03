@@ -1,55 +1,55 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.editor.impl;
 
-import consulo.desktop.awt.ui.IdeEventQueue;
-import consulo.application.ApplicationManager;
-import consulo.document.impl.RangeMarkerTree;
+import consulo.application.Application;
+import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Caret;
-import consulo.document.RangeMarker;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.colorScheme.EditorColorsScheme;
 import consulo.codeEditor.event.CaretEvent;
 import consulo.codeEditor.event.CaretListener;
 import consulo.codeEditor.event.SelectionEvent;
 import consulo.codeEditor.event.SelectionListener;
-import consulo.document.internal.DocumentEx;
-import consulo.document.internal.RangeMarkerEx;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
-import consulo.document.util.Segment;
-import consulo.document.util.TextRange;
-import consulo.application.util.registry.Registry;
-import consulo.document.util.DocumentUtil;
-import consulo.util.lang.ObjectUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.document.RangeMarker;
+import consulo.document.impl.RangeMarkerTree;
+import consulo.document.internal.DocumentEx;
+import consulo.document.internal.RangeMarkerEx;
+import consulo.document.util.DocumentUtil;
+import consulo.document.util.Segment;
+import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.util.ColorValueUtil;
+import consulo.util.collection.SmartList;
 import consulo.util.dataholder.Key;
-
+import consulo.util.lang.ObjectUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
-import static consulo.colorScheme.EffectType.LINE_UNDERSCORE;
 import static consulo.codeEditor.markup.HighlighterTargetArea.EXACT_RANGE;
+import static consulo.colorScheme.EffectType.LINE_UNDERSCORE;
 
 public class FocusModeModel implements Disposable {
   public static final Key<TextAttributes> FOCUS_MODE_ATTRIBUTES = Key.create("editor.focus.mode.attributes");
   public static final int LAYER = 10_000;
 
-  private final List<RangeHighlighter> myFocusModeMarkup = ContainerUtil.newSmartList();
+  private final List<RangeHighlighter> myFocusModeMarkup = new SmartList<>();
   @Nonnull
   private final DesktopEditorImpl myEditor;
   private RangeMarker myFocusModeRange;
 
-  private final List<FocusModeModelListener> mySegmentListeners = ContainerUtil.newSmartList();
+  private final List<FocusModeModelListener> mySegmentListeners = new SmartList<>();
   private final RangeMarkerTree<FocusRegion> myFocusMarkerTree;
 
   public FocusModeModel(@Nonnull DesktopEditorImpl editor) {
@@ -105,7 +105,10 @@ public class FocusModeModel implements Disposable {
 
   public void applyFocusMode(@Nonnull Caret caret) {
     // Focus mode should not be applied when idea is used as rd server (for example, centaur mode).
-    if (ApplicationManager.getApplication().isHeadlessEnvironment() && !ApplicationManager.getApplication().isUnitTestMode()) return;
+    Application application = Application.get();
+    if (application.isHeadlessEnvironment() && !application.isUnitTestMode()) {
+      return;
+    }
 
     RangeMarkerEx[] startRange = new RangeMarkerEx[1];
     RangeMarkerEx[] endRange = new RangeMarkerEx[1];

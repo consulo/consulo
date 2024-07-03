@@ -15,24 +15,26 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.frame;
 
-import consulo.ui.ex.awt.GraphicsConfig;
-import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.AsyncProcessIcon;
-import consulo.ui.ex.awt.util.GraphicsUtil;
+import consulo.ui.ex.awt.GraphicsConfig;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.image.Image;
-
+import consulo.ui.style.StyleManager;
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.geom.Area;
 import java.awt.geom.Path2D;
+import java.util.ArrayList;
 import java.util.List;
 
 // TODO [VISTALL] we need impl UI Image, due we don't have unified impl
@@ -139,10 +141,12 @@ public abstract class ProgressStripeIcon implements Icon, Image {
       super(component, shift);
     }
 
+    @Override
     public int getChunkWidth() {
       return 2 * JBUI.scale(GRADIENT);
     }
 
+    @Override
     public void paint(@Nonnull Graphics2D g2, int x, int y, int shift) {
       Color dark;
       Color light;
@@ -168,8 +172,8 @@ public abstract class ProgressStripeIcon implements Icon, Image {
 
   @Nonnull
   public static AsyncProcessIcon generateIcon(@Nonnull JComponent component) {
-    List<Image> result = ContainerUtil.newArrayList();
-    if (UIUtil.isUnderAquaBasedLookAndFeel() && !UIUtil.isUnderDarcula()) {
+    List<Image> result = new ArrayList<>();
+    if (UIUtil.isUnderAquaBasedLookAndFeel() && !StyleManager.get().getCurrentStyle().isDark()) {
       for (int i = 0; i < 2 * JBUI.scale(GradientIcon.GRADIENT); i += JBUI.scale(TRANSLATE)) {
         result.add(new GradientIcon(component, i));
       }

@@ -15,31 +15,30 @@
  */
 package consulo.ide.impl.moduleImport;
 
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.impl.ProjectUtil;
+import consulo.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.moduleImport.ModuleImportContext;
+import consulo.ide.moduleImport.ModuleImportProcessor;
+import consulo.ide.moduleImport.ModuleImportProvider;
 import consulo.ide.moduleImport.ModuleImportProviders;
 import consulo.ide.newModule.NewOrImportModuleUtil;
-import consulo.ide.moduleImport.ModuleImportContext;
-import consulo.ide.moduleImport.ModuleImportProvider;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.impl.internal.DefaultProjectOpenProcessor;
 import consulo.project.internal.ProjectOpenProcessor;
-import consulo.util.lang.ThreeState;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.moduleImport.ModuleImportProcessor;
-import consulo.ide.localize.IdeLocalize;
 import consulo.ui.Alert;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.Pair;
-
+import consulo.util.lang.ThreeState;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.util.List;
 import java.util.function.Consumer;
@@ -96,7 +95,8 @@ public class ImportProjectOpenProcessor extends ProjectOpenProcessor {
   public AsyncResult<Project> doOpenProjectAsync(@Nonnull VirtualFile virtualFile, @Nonnull UIAccess uiAccess) {
     File ioPath = VfsUtil.virtualToIoFile(virtualFile);
 
-    List<ModuleImportProvider> targetProviders = ContainerUtil.filter(myProviders, moduleImportProvider -> moduleImportProvider.canImport(ioPath));
+    List<ModuleImportProvider> targetProviders =
+      ContainerUtil.filter(myProviders, moduleImportProvider -> moduleImportProvider.canImport(ioPath));
 
     if (targetProviders.size() == 0) {
       throw new IllegalArgumentException("must be not empty");
@@ -108,13 +108,17 @@ public class ImportProjectOpenProcessor extends ProjectOpenProcessor {
     if (!uiAccess.isHeadless() && DefaultProjectOpenProcessor.getInstance().canOpenProject(new File(expectedProjectPath))) {
       Alert<ThreeState> alert = Alert.create();
       alert.title(IdeLocalize.titleOpenProject());
-      alert.text(IdeBundle.message("project.import.open.existing", "an existing project", FileUtil.toSystemDependentName(ioPath.getPath()), virtualFile.getName()));
+      alert.text(IdeLocalize.projectImportOpenExisting(
+        "an existing project",
+        FileUtil.toSystemDependentName(ioPath.getPath()),
+        virtualFile.getName()
+      ));
       alert.asQuestion();
 
-      alert.button(IdeBundle.message("project.import.open.existing.openExisting"), ThreeState.YES);
+      alert.button(IdeLocalize.projectImportOpenExistingOpenexisting().get(), ThreeState.YES);
       alert.asDefaultButton();
 
-      alert.button(IdeBundle.message("project.import.open.existing.reimport"), ThreeState.NO);
+      alert.button(IdeLocalize.projectImportOpenExistingReimport().get(), ThreeState.NO);
 
       alert.button(Alert.CANCEL, ThreeState.UNSURE);
       alert.asExitButton();

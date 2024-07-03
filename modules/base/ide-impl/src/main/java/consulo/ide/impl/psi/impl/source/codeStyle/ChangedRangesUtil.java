@@ -7,6 +7,7 @@ import consulo.document.util.TextRange;
 import consulo.language.psi.PsiFile;
 import consulo.language.codeStyle.ChangedRangesInfo;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.SmartList;
 import org.jetbrains.annotations.Contract;
 import jakarta.annotation.Nonnull;
 
@@ -42,7 +43,7 @@ class ChangedRangesUtil {
     if (allChangedRanges.isEmpty()) return allChangedRanges;
     List<TextRange> sorted = ContainerUtil.sorted(allChangedRanges, Segment.BY_START_OFFSET_THEN_END_OFFSET);
 
-    List<TextRange> result = ContainerUtil.newSmartList();
+    List<TextRange> result = new SmartList<>();
 
     TextRange prev = sorted.get(0);
     for (TextRange next : sorted) {

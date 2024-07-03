@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.vcs.log.graph.impl.facade;
 
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.graph.api.LinearGraph;
 import consulo.ide.impl.idea.vcs.log.graph.api.elements.GraphEdge;
 import consulo.ide.impl.idea.vcs.log.graph.impl.facade.GraphChanges.EdgeImpl;
@@ -23,10 +22,11 @@ import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 public class GraphChangesUtil {
-  public static final GraphChanges<Integer> SOME_CHANGES = new GraphChanges<Integer>() {
+  public static final GraphChanges<Integer> SOME_CHANGES = new GraphChanges<>() {
     @Nonnull
     @Override
     public Collection<Node<Integer>> getChangedNodes() {
@@ -52,10 +52,12 @@ public class GraphChangesUtil {
     return new EdgeImpl<>(up, down, edge.getTargetId(), removed);
   }
 
-  public static GraphChanges<Integer> edgesReplaced(Collection<GraphEdge> removedEdges,
-                                                    Collection<GraphEdge> addedEdges,
-                                                    LinearGraph delegateGraph) {
-    final Set<GraphChanges.Edge<Integer>> edgeChanges = ContainerUtil.newHashSet();
+  public static GraphChanges<Integer> edgesReplaced(
+    Collection<GraphEdge> removedEdges,
+    Collection<GraphEdge> addedEdges,
+    LinearGraph delegateGraph
+  ) {
+    final Set<GraphChanges.Edge<Integer>> edgeChanges = new HashSet<>();
 
     for (GraphEdge edge : removedEdges) {
       edgeChanges.add(edgeChanged(edge, delegateGraph, true));

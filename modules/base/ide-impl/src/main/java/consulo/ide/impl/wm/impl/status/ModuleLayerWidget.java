@@ -15,33 +15,32 @@
  */
 package consulo.ide.impl.wm.impl.status;
 
-import consulo.project.ui.wm.StatusBarWidgetFactory;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
 import consulo.application.WriteAction;
-import consulo.language.util.ModuleUtilCore;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ui.ex.popup.ListPopup;
-import consulo.util.lang.Comparing;
-import consulo.project.ui.wm.CustomStatusBarWidget;
-import consulo.project.ui.wm.StatusBar;
-import consulo.project.ui.wm.StatusBarWidget;
+import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.openapi.wm.impl.status.EditorBasedStatusBarPopup;
 import consulo.ide.impl.idea.util.ListWithSelection;
+import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.ModuleRootLayer;
 import consulo.module.content.layer.event.ModuleRootLayerListener;
 import consulo.project.Project;
+import consulo.project.ui.wm.CustomStatusBarWidget;
+import consulo.project.ui.wm.StatusBar;
+import consulo.project.ui.wm.StatusBarWidget;
+import consulo.project.ui.wm.StatusBarWidgetFactory;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.ex.popup.ListPopup;
+import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Map;
 
 /**
@@ -118,7 +117,7 @@ public class ModuleLayerWidget extends EditorBasedStatusBarPopup implements Cust
         @RequiredUIAccess
         @Override
         public void actionPerformed(@Nonnull AnActionEvent e) {
-          Project project = e.getData(CommonDataKeys.PROJECT);
+          Project project = e.getData(Project.KEY);
           VirtualFile selectedFile = getSelectedFile();
           if (selectedFile == null || project == null) {
             return;

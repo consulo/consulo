@@ -21,16 +21,14 @@ import consulo.util.collection.primitive.ints.IntIntMap;
 import consulo.util.collection.primitive.ints.IntMaps;
 
 import jakarta.annotation.Nonnull;
+
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 public class IndentUsageStatisticsImpl implements IndentUsageStatistics {
-  private static final Comparator<IndentUsageInfo> DECREASING_ORDER = new Comparator<IndentUsageInfo>() {
-    @Override
-    public int compare(@Nonnull IndentUsageInfo o1, @Nonnull IndentUsageInfo o2) {
-      return o1.getTimesUsed() < o2.getTimesUsed() ? 1 : o1.getTimesUsed() == o2.getTimesUsed() ? 0 : -1;
-    }
-  };
+  private static final Comparator<IndentUsageInfo> DECREASING_ORDER =
+    (o1, o2) -> o1.getTimesUsed() < o2.getTimesUsed() ? 1 : o1.getTimesUsed() == o2.getTimesUsed() ? 0 : -1;
 
   private List<LineIndentInfo> myLineInfos;
 
@@ -41,7 +39,7 @@ public class IndentUsageStatisticsImpl implements IndentUsageStatistics {
   private int myTotalLinesWithWhiteSpaces = 0;
 
   private IntIntMap myIndentToUsagesMap = IntMaps.newIntIntHashMap();
-  private List<IndentUsageInfo> myIndentUsages = ContainerUtil.newArrayList();
+  private List<IndentUsageInfo> myIndentUsages = new ArrayList<>();
   private Stack<IndentData> myParentIndents = ContainerUtil.newStack(new IndentData(0, 0));
 
   public IndentUsageStatisticsImpl(@Nonnull List<LineIndentInfo> lineInfos) {
@@ -53,10 +51,8 @@ public class IndentUsageStatisticsImpl implements IndentUsageStatistics {
 
   @Nonnull
   private static List<IndentUsageInfo> toIndentUsageList(@Nonnull IntIntMap indentToUsages) {
-    List<IndentUsageInfo> indentUsageInfos = ContainerUtil.newArrayList();
-    indentToUsages.forEach((key, value) -> {
-      indentUsageInfos.add(new IndentUsageInfo(key, value));
-    });
+    List<IndentUsageInfo> indentUsageInfos = new ArrayList<>();
+    indentToUsages.forEach((key, value) -> indentUsageInfos.add(new IndentUsageInfo(key, value)));
     return indentUsageInfos;
   }
 

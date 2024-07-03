@@ -15,16 +15,15 @@
  */
 package consulo.ide.impl.idea.vcs.log.impl;
 
+import consulo.application.Application;
 import consulo.application.PowerSaveMode;
-import consulo.disposer.Disposable;
-import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.util.registry.Registry;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.versionControlSystem.log.VcsLogRefresher;
+import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogDataImpl;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogFilterer;
+import consulo.versionControlSystem.log.VcsLogRefresher;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
@@ -35,9 +34,9 @@ public class PostponableLogRefresher implements VcsLogRefresher {
   @Nonnull
   protected final VcsLogDataImpl myLogData;
   @Nonnull
-  private final Set<VirtualFile> myRootsToRefresh = ContainerUtil.newHashSet();
+  private final Set<VirtualFile> myRootsToRefresh = new HashSet<>();
   @Nonnull
-  private final Set<VcsLogWindow> myLogWindows = ContainerUtil.newHashSet();
+  private final Set<VcsLogWindow> myLogWindows = new HashSet<>();
 
   public PostponableLogRefresher(@Nonnull VcsLogDataImpl logData) {
     myLogData = logData;
@@ -65,8 +64,7 @@ public class PostponableLogRefresher implements VcsLogRefresher {
   }
 
   protected boolean canRefreshNow() {
-    if (keepUpToDate()) return true;
-    return isLogVisible();
+    return keepUpToDate() || isLogVisible();
   }
 
   public boolean isLogVisible() {
@@ -95,15 +93,19 @@ public class PostponableLogRefresher implements VcsLogRefresher {
     filterer.onRefresh();
   }
 
+  @Override
   public void refresh(@Nonnull final VirtualFile root) {
-    ApplicationManager.getApplication().invokeLater(() -> {
-      if (canRefreshNow()) {
-        myLogData.refresh(Collections.singleton(root));
-      }
-      else {
-        myRootsToRefresh.add(root);
-      }
-    }, IdeaModalityState.any());
+    Application.get().invokeLater(
+      () -> {
+        if (canRefreshNow()) {
+          myLogData.refresh(Collections.singleton(root));
+        }
+        else {
+          myRootsToRefresh.add(root);
+        }
+      },
+      IdeaModalityState.any()
+    );
   }
 
   protected void refreshPostponedRoots() {

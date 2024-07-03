@@ -15,7 +15,8 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.breakpoints;
 
-import consulo.application.ApplicationManager;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
 import consulo.application.WriteAction;
 import consulo.codeEditor.DocumentMarkupModel;
 import consulo.codeEditor.markup.*;
@@ -34,17 +35,17 @@ import consulo.execution.debug.breakpoint.XLineBreakpoint;
 import consulo.execution.debug.breakpoint.XLineBreakpointType;
 import consulo.execution.debug.breakpoint.XLineBreakpointTypeResolver;
 import consulo.execution.debug.ui.DebuggerColors;
-import consulo.util.lang.Comparing;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.image.Image;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragSource;
@@ -71,7 +72,7 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
   }
 
   public void updateUI() {
-    if (isDisposed() || ApplicationManager.getApplication().isUnitTestMode()) {
+    if (isDisposed() || Application.get().isUnitTestMode()) {
       return;
     }
 
@@ -101,8 +102,8 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
       myHighlighter = null;
     }
 
-    if (myType instanceof XBreakpointTypeWithDocumentDelegation) {
-      document = ((XBreakpointTypeWithDocumentDelegation)myType).getDocumentForHighlighting(document);
+    if (myType instanceof XBreakpointTypeWithDocumentDelegation xBreakpointTypeWithDocumentDelegation) {
+      document = xBreakpointTypeWithDocumentDelegation.getDocumentForHighlighting(document);
     }
 
     EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
@@ -124,7 +125,7 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
 
     MarkupModelEx markupModel;
     if (highlighter == null) {
-      markupModel = (MarkupModelEx)DocumentMarkupModel.forDocument(document, getProject(), true);
+      markupModel = DocumentMarkupModel.forDocument(document, getProject(), true);
       TextRange range = myType.getHighlightRange(this);
       if (range != null && !range.isEmpty()) {
         TextRange lineRange = DocumentUtil.getLineTextRange(document, getLine());
@@ -150,7 +151,7 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
     updateIcon();
 
     if (markupModel == null) {
-      markupModel = (MarkupModelEx)DocumentMarkupModel.forDocument(document, getProject(), false);
+      markupModel = DocumentMarkupModel.forDocument(document, getProject(), false);
       if (markupModel != null) {
         // renderersChanged false - we don't change gutter size
         markupModel.fireAttributesChanged((RangeHighlighterEx)highlighter, false, false);
@@ -165,6 +166,7 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
     return FileDocumentManager.getInstance().getDocument(file);
   }
 
+  @Override
   @Nullable
   public VirtualFile getFile() {
     return VirtualFileManager.getInstance().findFileByUrl(getFileUrl());
@@ -204,7 +206,7 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
 
   @Nullable
   public RangeHighlighter getHighlighter() {
-    return myHighlighter instanceof RangeHighlighter ? (RangeHighlighter)myHighlighter : null;
+    return myHighlighter instanceof RangeHighlighter rangeHighlighter ? rangeHighlighter : null;
   }
 
   @Override
@@ -244,7 +246,9 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
         if (canMoveTo(line, file)) {
           final XBreakpointManager breakpointManager = XDebuggerManager.getInstance(getProject()).getBreakpointManager();
           if (isCopyAction(actionId)) {
-            WriteAction.run(() -> ((XBreakpointManagerImpl)breakpointManager).copyLineBreakpoint(XLineBreakpointImpl.this, file.getUrl(), line));
+            WriteAction.run(
+              () -> ((XBreakpointManagerImpl)breakpointManager).copyLineBreakpoint(XLineBreakpointImpl.this, file.getUrl(), line)
+            );
           }
           else {
             setFileUrl(file.getUrl());
@@ -276,8 +280,10 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
     };
   }
 
+  @RequiredReadAction
   private boolean canMoveTo(int line, VirtualFile file) {
-    return file != null && XLineBreakpointTypeResolver.forFile(getProject(), file, line) != null && getBreakpointManager().findBreakpointAtLine(myType, file, line) == null;
+    return file != null && XLineBreakpointTypeResolver.forFile(getProject(), file, line) != null
+      && getBreakpointManager().findBreakpointAtLine(myType, file, line) == null;
   }
 
   public void updatePosition() {

@@ -15,9 +15,6 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.ui.tree.actions;
 
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.project.Project;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XDebuggerManager;
 import consulo.ide.impl.idea.xdebugger.impl.XDebugSessionImpl;
@@ -25,6 +22,8 @@ import consulo.ide.impl.idea.xdebugger.impl.frame.XWatchesView;
 import consulo.ide.impl.idea.xdebugger.impl.ui.DebuggerUIUtil;
 import consulo.ide.impl.idea.xdebugger.impl.ui.XDebugSessionTab;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -52,7 +51,7 @@ public class XAddToWatchesTreeAction extends XDebuggerTreeActionBase {
 
   private static XWatchesView getWatchesView(@Nonnull AnActionEvent e) {
     XWatchesView view = e.getData(XWatchesView.DATA_KEY);
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (view == null && project != null) {
       XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
       if (session != null) {

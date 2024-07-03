@@ -16,35 +16,30 @@
 package consulo.ide.impl.idea.vcs.log.ui.filter;
 
 import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
-import consulo.versionControlSystem.FilePathComparator;
-import consulo.ui.ex.awt.*;
+import consulo.application.util.function.Computable;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.ide.impl.idea.openapi.fileChooser.ex.FileNodeDescriptor;
 import consulo.ide.impl.idea.openapi.fileChooser.ex.FileSystemTreeImpl;
-import consulo.module.Module;
-import consulo.module.ModuleManager;
-import consulo.project.Project;
-import consulo.module.content.ModuleRootManager;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.application.util.function.Computable;
-import consulo.versionControlSystem.FilePath;
-import consulo.versionControlSystem.change.ChangeListManager;
-import consulo.versionControlSystem.impl.internal.change.PlusMinus;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.VirtualFileListCellRenderer;
-import consulo.ui.ex.awt.ClickListener;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.awt.JBList;
-import consulo.ui.ex.awt.tree.Tree;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.ide.impl.idea.util.treeWithCheckedNodes.SelectionManager;
 import consulo.ide.impl.idea.util.treeWithCheckedNodes.TreeNodeState;
-
+import consulo.module.Module;
+import consulo.module.ModuleManager;
+import consulo.module.content.ModuleRootManager;
+import consulo.project.Project;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
+import consulo.ui.ex.awt.tree.Tree;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.FilePathComparator;
+import consulo.versionControlSystem.change.ChangeListManager;
+import consulo.versionControlSystem.impl.internal.change.PlusMinus;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -76,17 +71,19 @@ public class VcsStructureChooser extends DialogWrapper {
   @Nonnull
   private final Map<VirtualFile, String> myModulesSet;
   @Nonnull
-  private final Set<VirtualFile> mySelectedFiles = ContainerUtil.newHashSet();
+  private final Set<VirtualFile> mySelectedFiles = new HashSet<>();
 
   @Nonnull
   private final SelectionManager mySelectionManager;
 
   private Tree myTree;
 
-  public VcsStructureChooser(@Nonnull Project project,
-                             @Nonnull String title,
-                             @Nonnull Collection<VirtualFile> initialSelection,
-                             @Nonnull List<VirtualFile> roots) {
+  public VcsStructureChooser(
+    @Nonnull Project project,
+    @Nonnull String title,
+    @Nonnull Collection<VirtualFile> initialSelection,
+    @Nonnull List<VirtualFile> roots
+  ) {
     super(project, true);
     setTitle(title);
     myProject = project;
@@ -103,15 +100,11 @@ public class VcsStructureChooser extends DialogWrapper {
 
   @Nonnull
   private Map<VirtualFile, String> calculateModules(@Nonnull List<VirtualFile> roots) {
-    Map<VirtualFile, String> result = ContainerUtil.newHashMap();
+    Map<VirtualFile, String> result = new HashMap<>();
 
     final ModuleManager moduleManager = ModuleManager.getInstance(myProject);
     // assertion for read access inside
-    Module[] modules = ApplicationManager.getApplication().runReadAction(new Computable<Module[]>() {
-      public Module[] compute() {
-        return moduleManager.getModules();
-      }
-    });
+    Module[] modules = myProject.getApplication().runReadAction((Computable<Module[]>)() -> moduleManager.getModules());
 
     TreeSet<VirtualFile> checkSet = new TreeSet<>(FilePathComparator.getInstance());
     checkSet.addAll(roots);
@@ -244,7 +237,7 @@ public class VcsStructureChooser extends DialogWrapper {
     selectedLabel.setBorder(JBUI.Borders.empty(2, 0));
     panel.add(selectedLabel, BorderLayout.SOUTH);
 
-    mySelectionManager.setSelectionChangeListener(new PlusMinus<VirtualFile>() {
+    mySelectionManager.setSelectionChangeListener(new PlusMinus<>() {
       @Override
       public void plus(VirtualFile virtualFile) {
         mySelectedFiles.add(virtualFile);

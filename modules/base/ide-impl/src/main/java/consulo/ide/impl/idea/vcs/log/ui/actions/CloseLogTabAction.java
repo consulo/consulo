@@ -15,30 +15,31 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
-import consulo.ui.ex.action.CloseTabToolbarAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
+import consulo.ide.impl.idea.util.ContentUtilEx;
+import consulo.ide.impl.idea.vcs.log.impl.VcsLogContentProvider;
 import consulo.project.Project;
-import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.CloseTabToolbarAction;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
-import consulo.ide.impl.idea.util.ContentUtilEx;
 import consulo.ui.ex.content.ContentsUtil;
-import consulo.ide.impl.idea.vcs.log.impl.VcsLogContentProvider;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class CloseLogTabAction extends CloseTabToolbarAction {
   @Override
+  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);
-    if (e.getData(CommonDataKeys.PROJECT) == null) {
+    if (e.getData(Project.KEY) == null) {
       e.getPresentation().setEnabledAndVisible(false);
       return;
     }
-    ContentManager contentManager = getContentManager(e.getData(CommonDataKeys.PROJECT));
+    ContentManager contentManager = getContentManager(e.getData(Project.KEY));
     if (contentManager == null || getTabbedContent(contentManager) == null) {
       e.getPresentation().setEnabledAndVisible(false);
       return;
@@ -46,8 +47,10 @@ public class CloseLogTabAction extends CloseTabToolbarAction {
     e.getPresentation().setEnabledAndVisible(true);
   }
 
+  @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     assert project != null;
 
     ContentManager contentManager = getContentManager(project);

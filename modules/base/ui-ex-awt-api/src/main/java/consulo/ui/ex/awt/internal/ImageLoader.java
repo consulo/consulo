@@ -109,12 +109,16 @@ public class ImageLoader implements Serializable {
         if (useCache) {
           cacheKey = path + (type == SVG ? "_@" + scale + "x" : "");
           Image image = ourCache.get(cacheKey);
-          if (image != null) return image;
+          if (image != null) {
+            return image;
+          }
         }
         url = new URL(path);
         URLConnection connection = url.openConnection();
         if (connection instanceof HttpURLConnection) {
-          if (!original) return null;
+          if (!original) {
+            return null;
+          }
           connection.addRequestProperty("User-Agent", "Consulo");
         }
         stream = connection.getInputStream();
@@ -388,8 +392,8 @@ public class ImageLoader implements Serializable {
   public static Image scaleImage(Image image, double scale) {
     if (scale == 1.0) return image;
 
-    if (image instanceof JBHiDPIScaledImage) {
-      return ((JBHiDPIScaledImage)image).scale(scale);
+    if (image instanceof JBHiDPIScaledImage hiDPIScaledImage) {
+      return hiDPIScaledImage.scale(scale);
     }
     int w = image.getWidth(null);
     int h = image.getHeight(null);

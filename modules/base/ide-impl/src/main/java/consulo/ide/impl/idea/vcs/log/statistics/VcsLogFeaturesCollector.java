@@ -18,19 +18,19 @@ package consulo.ide.impl.idea.vcs.log.statistics;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.externalService.statistic.AbstractApplicationUsagesCollector;
 import consulo.externalService.statistic.CollectUsagesException;
-import consulo.ide.impl.idea.internal.statistic.StatisticsUtilKt;
 import consulo.externalService.statistic.ConvertUsagesUtil;
 import consulo.externalService.statistic.UsageDescriptor;
-import consulo.project.Project;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.internal.statistic.StatisticsUtilKt;
 import consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties;
 import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;
 import consulo.ide.impl.idea.vcs.log.impl.VcsProjectLog;
-import consulo.versionControlSystem.log.VcsLogHighlighterFactory;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
-
+import consulo.project.Project;
+import consulo.versionControlSystem.log.VcsLogHighlighterFactory;
 import jakarta.annotation.Nonnull;
+
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 import static consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties.*;
@@ -47,7 +47,7 @@ public class VcsLogFeaturesCollector extends AbstractApplicationUsagesCollector 
       if (ui != null) {
         MainVcsLogUiProperties properties = ui.getProperties();
 
-        Set<UsageDescriptor> usages = ContainerUtil.newHashSet();
+        Set<UsageDescriptor> usages = new HashSet<>();
         usages.add(StatisticsUtilKt.getBooleanUsage("ui.details", properties.get(SHOW_DETAILS)));
         usages.add(StatisticsUtilKt.getBooleanUsage("ui.long.edges", properties.get(SHOW_LONG_EDGES)));
 

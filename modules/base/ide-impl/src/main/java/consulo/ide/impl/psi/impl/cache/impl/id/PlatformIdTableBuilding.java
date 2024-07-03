@@ -15,10 +15,10 @@
  */
 package consulo.ide.impl.psi.impl.cache.impl.id;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.EditorHighlighter;
 import consulo.codeEditor.HighlighterIterator;
 import consulo.language.custom.CustomSyntaxTableFileType;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.internal.custom.CustomHighlighterTokenType;
 import consulo.language.psi.stub.BaseFilterLexer;
 import consulo.language.psi.stub.IndexPatternUtil;
@@ -50,6 +50,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -63,11 +64,20 @@ public class PlatformIdTableBuilding {
   }
 
   @Nullable
-  public static DataIndexer<TodoIndexEntry, Integer, FileContent> getTodoIndexer(FileType fileType, Project project, final VirtualFile virtualFile) {
+  @RequiredReadAction
+  public static DataIndexer<TodoIndexEntry, Integer, FileContent> getTodoIndexer(
+    FileType fileType,
+    Project project,
+    final VirtualFile virtualFile
+  ) {
     final DataIndexer<TodoIndexEntry, Integer, FileContent> extIndexer;
     if (fileType instanceof SubstitutedFileType && !((SubstitutedFileType)fileType).isSameFileType()) {
       SubstitutedFileType sft = (SubstitutedFileType)fileType;
-      extIndexer = new CompositeTodoIndexer(fileType, getTodoIndexer(sft.getOriginalFileType(), project, virtualFile), getTodoIndexer(sft.getFileType(), project, virtualFile));
+      extIndexer = new CompositeTodoIndexer(
+        fileType,
+        getTodoIndexer(sft.getOriginalFileType(), project, virtualFile),
+        getTodoIndexer(sft.getFileType(), project, virtualFile)
+      );
     }
     else {
       extIndexer = TodoIndexer.forFileType(fileType);
@@ -168,6 +178,7 @@ public class PlatformIdTableBuilding {
 
     @Override
     @Nonnull
+    @RequiredReadAction
     public Map<TodoIndexEntry, Integer> map(final FileContent inputData) {
       if (IndexPatternUtil.getIndexPatternCount() > 0) {
         final CharSequence chars = inputData.getContentAsText();
@@ -187,7 +198,7 @@ public class PlatformIdTableBuilding {
         BaseFilterLexer.TodoScanningState todoScanningState = null;
         final HighlighterIterator iterator = highlighter.createIterator(0);
 
-        Map<Language, LanguageVersion> languageVersionCache = ContainerUtil.newLinkedHashMap();
+        Map<Language, LanguageVersion> languageVersionCache = new LinkedHashMap<>();
         if (myLanguageVersion != null) {
           languageVersionCache.put(myLanguageVersion.getLanguage(), myLanguageVersion);
         }
@@ -217,6 +228,7 @@ public class PlatformIdTableBuilding {
       return Collections.emptyMap();
     }
 
+    @RequiredReadAction
     private boolean isCommentToken(Map<Language, LanguageVersion> cache, IElementType token) {
       Language language = token.getLanguage();
       LanguageVersion languageVersion = cache.get(language);

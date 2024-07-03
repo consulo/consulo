@@ -31,6 +31,7 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import javax.swing.tree.TreeNode;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -65,7 +66,7 @@ public class WatchesRootNode extends XValueContainerNode<XValueContainer> {
     });
     setLeaf(false);
     myWatchesView = watchesView;
-    myChildren = ContainerUtil.newArrayList();
+    myChildren = new ArrayList<>();
     for (XExpression watchExpression : expressions) {
       myChildren.add(new WatchNodeImpl(myTree, this, watchExpression, stackFrame));
     }
@@ -111,17 +112,21 @@ public class WatchesRootNode extends XValueContainerNode<XValueContainer> {
    * @deprecated Use {@link #addWatchExpression(XStackFrame, XExpression, int, boolean)}
    */
   @Deprecated
-  public void addWatchExpression(@Nullable XDebuggerEvaluator evaluator,
-                                 @Nonnull XExpression expression,
-                                 int index,
-                                 boolean navigateToWatchNode) {
+  public void addWatchExpression(
+    @Nullable XDebuggerEvaluator evaluator,
+    @Nonnull XExpression expression,
+    int index,
+    boolean navigateToWatchNode
+  ) {
     addWatchExpression((XStackFrame)null, expression, index, navigateToWatchNode);
   }
 
-  public void addWatchExpression(@Nullable XStackFrame stackFrame,
-                                 @Nonnull XExpression expression,
-                                 int index,
-                                 boolean navigateToWatchNode) {
+  public void addWatchExpression(
+    @Nullable XStackFrame stackFrame,
+    @Nonnull XExpression expression,
+    int index,
+    boolean navigateToWatchNode
+  ) {
     WatchNodeImpl message = new WatchNodeImpl(myTree, this, expression, stackFrame);
     if (index == -1) {
       myChildren.add(message);

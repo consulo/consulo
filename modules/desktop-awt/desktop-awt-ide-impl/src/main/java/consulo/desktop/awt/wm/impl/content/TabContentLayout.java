@@ -1,27 +1,27 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.wm.impl.content;
 
-import consulo.ui.ex.awt.dnd.DnDSupport;
-import consulo.ui.ex.awt.dnd.DnDTarget;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ui.ex.popup.ListPopup;
-import consulo.util.lang.StringUtil;
-import consulo.ui.ex.UIBundle;
-import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.awt.RelativeRectangle;
-import consulo.ui.ex.content.Content;
-import consulo.ui.ex.content.ContentManager;
-import consulo.ui.ex.content.event.ContentManagerEvent;
-import consulo.ui.ex.content.TabbedContent;
-import consulo.ui.ex.awt.paint.LinePainter2D;
 import consulo.ide.impl.idea.ui.tabs.impl.singleRow.MoreTabsIcon;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.ui.BaseButtonBehavior;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.awt.RelativeRectangle;
 import consulo.ui.ex.awt.UIUtil;
-
+import consulo.ui.ex.awt.dnd.DnDSupport;
+import consulo.ui.ex.awt.dnd.DnDTarget;
+import consulo.ui.ex.awt.paint.LinePainter2D;
+import consulo.ui.ex.content.Content;
+import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.content.TabbedContent;
+import consulo.ui.ex.content.event.ContentManagerEvent;
+import consulo.ui.ex.localize.UILocalize;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.ex.popup.ListPopup;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -42,7 +42,7 @@ class TabContentLayout extends ContentLayout {
       return myLastLayout.moreRect;
     }
   };
-  List<AnAction> myDoubleClickActions = ContainerUtil.newArrayList();
+  List<AnAction> myDoubleClickActions = new ArrayList<>();
 
   TabContentLayout(DesktopToolWindowContentUi ui) {
     super(ui);
@@ -360,12 +360,12 @@ class TabContentLayout extends ContentLayout {
 
   @Override
   public String getCloseActionName() {
-    return UIBundle.message("tabbed.pane.close.tab.action.name");
+    return UILocalize.tabbedPaneCloseTabActionName().get();
   }
 
   @Override
   public String getCloseAllButThisActionName() {
-    return UIBundle.message("tabbed.pane.close.all.tabs.but.this.action.name");
+    return UILocalize.tabbedPaneCloseAllTabsButThisActionName().get();
   }
 
   @Override

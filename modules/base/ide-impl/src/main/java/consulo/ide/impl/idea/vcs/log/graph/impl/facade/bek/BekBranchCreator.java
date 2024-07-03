@@ -15,15 +15,15 @@
  */
 package consulo.ide.impl.idea.vcs.log.graph.impl.facade.bek;
 
-import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.graph.api.LinearGraph;
 import consulo.ide.impl.idea.vcs.log.graph.impl.permanent.GraphLayoutImpl;
 import consulo.ide.impl.idea.vcs.log.graph.utils.DfsUtil;
 import consulo.ide.impl.idea.vcs.log.graph.utils.Flags;
 import consulo.ide.impl.idea.vcs.log.graph.utils.impl.BitSetFlags;
+import consulo.util.lang.Pair;
 import jakarta.annotation.Nonnull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static consulo.ide.impl.idea.vcs.log.graph.utils.LinearGraphUtils.getDownNodes;
@@ -50,7 +50,7 @@ class BekBranchCreator {
 
   @Nonnull
   public Pair<List<BekBranch>, BekEdgeRestrictions> getResult() {
-    List<BekBranch> bekBranches = ContainerUtil.newArrayList();
+    List<BekBranch> bekBranches = new ArrayList<>();
 
     for (int headNode : myGraphLayout.getHeadNodeIndex()) {
       List<Integer> nextBranch = createNextBranch(headNode);
@@ -60,7 +60,7 @@ class BekBranchCreator {
   }
 
   public List<Integer> createNextBranch(int headNode) {
-    final List<Integer> nodeIndexes = ContainerUtil.newArrayList();
+    final List<Integer> nodeIndexes = new ArrayList<>();
 
     assert !myDoneNodes.get(headNode);
     myDoneNodes.set(headNode, true);
@@ -68,37 +68,34 @@ class BekBranchCreator {
 
     final int startLayout = myGraphLayout.getLayoutIndex(headNode);
 
-    myDfsUtil.nodeDfsIterator(headNode, new DfsUtil.NextNode() {
-      @Override
-      public int fun(int currentNode) {
-        int currentLayout = myGraphLayout.getLayoutIndex(currentNode);
-        List<Integer> downNodes = getDownNodes(myPermanentGraph, currentNode);
-        for (int i = downNodes.size() - 1; i >= 0; i--) {
-          int downNode = downNodes.get(i);
+    myDfsUtil.nodeDfsIterator(headNode, currentNode -> {
+      int currentLayout = myGraphLayout.getLayoutIndex(currentNode);
+      List<Integer> downNodes = getDownNodes(myPermanentGraph, currentNode);
+      for (int i = downNodes.size() - 1; i >= 0; i--) {
+        int downNode = downNodes.get(i);
 
-          if (myDoneNodes.get(downNode)) {
-            if (myGraphLayout.getLayoutIndex(downNode) < startLayout) myEdgeRestrictions.addRestriction(currentNode, downNode);
+        if (myDoneNodes.get(downNode)) {
+          if (myGraphLayout.getLayoutIndex(downNode) < startLayout) myEdgeRestrictions.addRestriction(currentNode, downNode);
+        }
+        else if (currentLayout <= myGraphLayout.getLayoutIndex(downNode)) {
+
+          // almost ok node, except (may be) up nodes
+          boolean hasUndoneUpNodes = false;
+          for (int upNode : getUpNodes(myPermanentGraph, downNode)) {
+            if (!myDoneNodes.get(upNode) && myGraphLayout.getLayoutIndex(upNode) <= myGraphLayout.getLayoutIndex(downNode)) {
+              hasUndoneUpNodes = true;
+              break;
+            }
           }
-          else if (currentLayout <= myGraphLayout.getLayoutIndex(downNode)) {
 
-            // almost ok node, except (may be) up nodes
-            boolean hasUndoneUpNodes = false;
-            for (int upNode : getUpNodes(myPermanentGraph, downNode)) {
-              if (!myDoneNodes.get(upNode) && myGraphLayout.getLayoutIndex(upNode) <= myGraphLayout.getLayoutIndex(downNode)) {
-                hasUndoneUpNodes = true;
-                break;
-              }
-            }
-
-            if (!hasUndoneUpNodes) {
-              myDoneNodes.set(downNode, true);
-              nodeIndexes.add(downNode);
-              return downNode;
-            }
+          if (!hasUndoneUpNodes) {
+            myDoneNodes.set(downNode, true);
+            nodeIndexes.add(downNode);
+            return downNode;
           }
         }
-        return NODE_NOT_FOUND;
       }
+      return DfsUtil.NextNode.NODE_NOT_FOUND;
     });
 
     return nodeIndexes;

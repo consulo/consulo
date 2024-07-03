@@ -17,25 +17,25 @@
 package consulo.ide.impl.idea.vcs.log.graph.impl.permanent;
 
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.versionControlSystem.log.graph.GraphCommit;
 import consulo.ide.impl.idea.vcs.log.graph.api.permanent.PermanentCommitsInfo;
 import consulo.ide.impl.idea.vcs.log.graph.utils.IntList;
 import consulo.ide.impl.idea.vcs.log.graph.utils.TimestampGetter;
 import consulo.ide.impl.idea.vcs.log.graph.utils.impl.CompressedIntList;
 import consulo.ide.impl.idea.vcs.log.graph.utils.impl.IntTimestampGetter;
 import consulo.logging.Logger;
-
+import consulo.versionControlSystem.log.graph.GraphCommit;
 import jakarta.annotation.Nonnull;
 
 import java.util.*;
-import java.util.function.Function;
 
 public class PermanentCommitsInfoImpl<CommitId> implements PermanentCommitsInfo<CommitId> {
   private static final Logger LOG = Logger.getInstance(PermanentCommitsInfoImpl.class);
 
   @Nonnull
-  public static <CommitId> PermanentCommitsInfoImpl<CommitId> newInstance(@Nonnull final List<? extends GraphCommit<CommitId>> graphCommits,
-                                                                          @Nonnull Map<Integer, CommitId> notLoadedCommits) {
+  public static <CommitId> PermanentCommitsInfoImpl<CommitId> newInstance(
+    @Nonnull final List<? extends GraphCommit<CommitId>> graphCommits,
+    @Nonnull Map<Integer, CommitId> notLoadedCommits
+  ) {
     TimestampGetter timestampGetter = createTimestampGetter(graphCommits);
 
     boolean isIntegerCase = !graphCommits.isEmpty() && graphCommits.get(0).getId().getClass() == Integer.class;
@@ -45,7 +45,7 @@ public class PermanentCommitsInfoImpl<CommitId> implements PermanentCommitsInfo<
       commitIdIndex = (List<CommitId>)createCompressedIntList((List<? extends GraphCommit<Integer>>)graphCommits);
     }
     else {
-      commitIdIndex = ContainerUtil.map(graphCommits, (Function<GraphCommit<CommitId>, CommitId>)graphCommit -> graphCommit.getId());
+      commitIdIndex = ContainerUtil.map(graphCommits, GraphCommit::getId);
     }
     return new PermanentCommitsInfoImpl<>(timestampGetter, commitIdIndex, notLoadedCommits);
   }
@@ -78,7 +78,7 @@ public class PermanentCommitsInfoImpl<CommitId> implements PermanentCommitsInfo<
         return graphCommits.get(index).getId();
       }
     }, 30);
-    return new AbstractList<Integer>() {
+    return new AbstractList<>() {
       @Nonnull
       @Override
       public Integer get(int index) {
@@ -145,14 +145,15 @@ public class PermanentCommitsInfoImpl<CommitId> implements PermanentCommitsInfo<
 
   @Nonnull
   public List<CommitId> convertToCommitIdList(@Nonnull Collection<Integer> commitIndexes) {
-    return ContainerUtil.map(commitIndexes, integer -> getCommitId(integer));
+    return ContainerUtil.map(commitIndexes, this::getCommitId);
   }
 
   @Nonnull
   public Set<CommitId> convertToCommitIdSet(@Nonnull Collection<Integer> commitIndexes) {
-    return ContainerUtil.map2Set(commitIndexes, integer -> getCommitId(integer));
+    return ContainerUtil.map2Set(commitIndexes, this::getCommitId);
   }
 
+  @Override
   @Nonnull
   public Set<Integer> convertToNodeIds(@Nonnull Collection<CommitId> commitIds) {
     return convertToNodeIds(commitIds, false);
@@ -160,8 +161,8 @@ public class PermanentCommitsInfoImpl<CommitId> implements PermanentCommitsInfo<
 
   @Nonnull
   public Set<Integer> convertToNodeIds(@Nonnull Collection<CommitId> commitIds, boolean reportNotFound) {
-    Set<Integer> result = ContainerUtil.newHashSet();
-    Set<CommitId> matchedIds = ContainerUtil.newHashSet();
+    Set<Integer> result = new HashSet<>();
+    Set<CommitId> matchedIds = new HashSet<>();
     for (int i = 0; i < myCommitIdIndexes.size(); i++) {
       CommitId commitId = myCommitIdIndexes.get(i);
       if (commitIds.contains(commitId)) {

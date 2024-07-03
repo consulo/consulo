@@ -16,34 +16,28 @@
 package consulo.ide.impl.idea.vcs.log.ui.frame;
 
 import com.google.common.primitives.Ints;
-import consulo.disposer.Disposable;
-import consulo.application.ApplicationManager;
-import consulo.colorScheme.event.EditorColorsListener;
+import consulo.application.Application;
 import consulo.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.event.EditorColorsListener;
+import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
 import consulo.ide.impl.idea.openapi.roots.ui.componentsList.components.ScrollablePanel;
-import consulo.ui.ex.awt.OnePixelDivider;
-import consulo.ui.ex.awt.VerticalFlowLayout;
-import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.history.VcsHistoryUtil;
-import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ide.impl.idea.ui.SeparatorComponent;
-import consulo.ui.ex.awt.JBLabel;
 import consulo.ide.impl.idea.ui.components.JBLoadingPanel;
-import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.StatusText;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.versionControlSystem.log.VcsFullCommitDetails;
-import consulo.versionControlSystem.log.VcsRef;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogDataImpl;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogColorManager;
+import consulo.ui.ex.awt.*;
+import consulo.util.lang.StringUtil;
+import consulo.versionControlSystem.log.VcsFullCommitDetails;
+import consulo.versionControlSystem.log.VcsRef;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * @author Kirill Likhodedov
@@ -231,12 +225,12 @@ class DetailsPanel extends JPanel implements EditorColorsListener {
     protected void onSelection(@Nonnull int[] selection) {
       rebuildCommitPanels(selection);
       final List<Integer> currentSelection = mySelection;
-      ApplicationManager.getApplication().executeOnPooledThread(() -> {
-        List<Collection<VcsRef>> result = ContainerUtil.newArrayList();
+      Application.get().executeOnPooledThread(() -> {
+        List<Collection<VcsRef>> result = new ArrayList<>();
         for (Integer row : currentSelection) {
           result.add(myGraphTable.getModel().getRefsAtRow(row));
         }
-        ApplicationManager.getApplication().invokeLater(() -> {
+        Application.get().invokeLater(() -> {
           if (currentSelection == mySelection) {
             for (int i = 0; i < currentSelection.size(); i++) {
               CommitPanel commitPanel = getCommitPanel(i);
