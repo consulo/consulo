@@ -1512,7 +1512,8 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
     }
     else if (type == Insets.class) {
       if (s.length >= 5) {
-        return JBUI.insets(Integer.parseInt(s[1]), Integer.parseInt(s[2]), Integer.parseInt(s[4]), Integer.parseInt(s[4]));
+        //noinspection UseDPIAwareInsets
+        return new Insets(Integer.parseInt(s[1]), Integer.parseInt(s[2]), Integer.parseInt(s[4]), Integer.parseInt(s[4]));
       }
     }
     else if (type == Color.class) {

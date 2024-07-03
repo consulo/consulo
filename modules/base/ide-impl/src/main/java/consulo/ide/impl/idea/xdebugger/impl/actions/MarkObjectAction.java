@@ -39,14 +39,11 @@ public class MarkObjectAction extends XDebuggerActionBase {
         hidden &= handler.isHidden(project, event);
         if (handler.isEnabled(project, event)) {
           enabled = true;
-          String text;
-          if (handler.isMarked(project, event)) {
-            text = ActionLocalize.actionDebuggerMarkobjectUnmarkText().get();
-          }
-          else {
-            text = ActionLocalize.actionDebuggerMarkobjectText().get();
-          }
-          presentation.setText(text);
+          presentation.setTextValue(
+            handler.isMarked(project, event)
+              ? ActionLocalize.actionDebuggerMarkobjectUnmarkText()
+              : ActionLocalize.actionDebuggerMarkobjectText()
+          );
           break;
         }
       }
