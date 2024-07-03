@@ -1482,9 +1482,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
     }
   }
 
-  /**
-   * @noinspection UseJBColor
-   */
+  @SuppressWarnings({"UseJBColor", "UseDPIAwareInsets"})
   private static Object fromObject(Object o, Class<?> type) {
     if (o == null) return null;
     if (type.isAssignableFrom(o.getClass())) return o;
