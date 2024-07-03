@@ -30,6 +30,7 @@ import consulo.language.psi.PsiNameIdentifierOwner;
 import consulo.language.psi.PsiReference;
 import consulo.project.Project;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -93,6 +94,7 @@ public class ChangeSignatureAction extends BasePlatformRefactoringAction {
   protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider provider, final PsiElement element) {
     return new RefactoringActionHandler() {
       @Override
+      @RequiredUIAccess
       public void invoke(@Nonnull Project project, Editor editor, PsiFile file, DataContext dataContext) {
         editor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
         final PsiElement targetMember = findTargetMember(element);
@@ -101,7 +103,7 @@ public class ChangeSignatureAction extends BasePlatformRefactoringAction {
           if (handler != null) {
             final String notFoundMessage = handler.getTargetNotFoundMessage();
             if (notFoundMessage != null) {
-              CommonRefactoringUtil.showErrorHint(project, editor, notFoundMessage, ChangeSignatureHandler.REFACTORING_NAME, null);
+              CommonRefactoringUtil.showErrorHint(project, editor, notFoundMessage, ChangeSignatureHandler.REFACTORING_NAME.get(), null);
             }
           }
           return;
