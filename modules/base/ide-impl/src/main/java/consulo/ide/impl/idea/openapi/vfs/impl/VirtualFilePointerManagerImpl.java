@@ -36,6 +36,7 @@ import gnu.trove.TObjectHashingStrategy;
 import gnu.trove.TObjectIntHashMap;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
@@ -63,12 +64,19 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
     }
   };
 
+  private final Application myApplication;
   private final Map<VirtualFileSystem, Map<VirtualFilePointerListener, FilePointerPartNode>> myRoots =
     Maps.newHashMap(ContainerUtil.identityStrategy()); // guarded by this
   // compare by identity because VirtualFilePointerContainer has too smart equals
-  private final Set<VirtualFilePointerContainerImpl> myContainers = Sets.newHashSet(ContainerUtil.identityStrategy()); // guarded by myContainers
+  private final Set<VirtualFilePointerContainerImpl> myContainers = Sets.newHashSet(ContainerUtil.identityStrategy());
+  // guarded by myContainers
 
   private int myPointerSetModCount;
+
+  @Inject
+  public VirtualFilePointerManagerImpl(Application application) {
+    myApplication = application;
+  }
 
   @Override
   public void dispose() {
@@ -119,11 +127,13 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
     return pointers;
   }
 
-  private void addRelevantPointers(VirtualFile parent,
-                                   int childNameId,
-                                   @Nonnull MultiMap<VirtualFilePointerListener, FilePointerPartNode> out,
-                                   boolean addSubdirectoryPointers,
-                                   @Nonnull VirtualFileSystem fs) {
+  private void addRelevantPointers(
+    VirtualFile parent,
+    int childNameId,
+    @Nonnull MultiMap<VirtualFilePointerListener, FilePointerPartNode> out,
+    boolean addSubdirectoryPointers,
+    @Nonnull VirtualFileSystem fs
+  ) {
     if (childNameId <= 0) throw new IllegalArgumentException("invalid argument childNameId: " + childNameId);
     Map<VirtualFilePointerListener, FilePointerPartNode> myPointers = myRoots.get(fs);
     if (myPointers != null) {
@@ -166,7 +176,13 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
    * @return
    */
   @Nonnull
-  private VirtualFilePointer create(@Nullable VirtualFile file, @Nullable String url, @Nonnull Disposable parentDisposable, @Nullable VirtualFilePointerListener listener, boolean recursive) {
+  private VirtualFilePointer create(
+    @Nullable VirtualFile file,
+    @Nullable String url,
+    @Nonnull Disposable parentDisposable,
+    @Nullable VirtualFilePointerListener listener,
+    boolean recursive
+  ) {
     VirtualFileSystem fileSystem;
     String protocol;
     String path;
@@ -196,7 +212,8 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
     }
 
     if (fileSystem instanceof TempFileSystem && listener == null) {
-      // Since VFS events work correctly in temp FS as well, ideally, this branch shouldn't exist and normal VFPointer should be used in all tests
+      // Since VFS events work correctly in temp FS as well, ideally,
+      // this branch shouldn't exist and normal VFPointer should be used in all tests
       // but we have so many tests that create pointers, not dispose and leak them,
       // so for now we create normal pointers only when there are listeners.
       // maybe, later we'll fix all those tests
@@ -253,7 +270,12 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
   private final Map<String, IdentityVirtualFilePointer> myUrlToIdentity = new HashMap<>(); // guarded by this
 
   @Nonnull
-  private synchronized IdentityVirtualFilePointer getOrCreateIdentity(@Nonnull String url, @Nullable VirtualFile found, boolean recursive, @Nonnull Disposable parentDisposable) {
+  private synchronized IdentityVirtualFilePointer getOrCreateIdentity(
+    @Nonnull String url,
+    @Nullable VirtualFile found,
+    boolean recursive,
+    @Nonnull Disposable parentDisposable
+  ) {
     IdentityVirtualFilePointer pointer = myUrlToIdentity.get(url);
     if (pointer == null) {
       pointer = new IdentityVirtualFilePointer(found, url) {
@@ -344,18 +366,21 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
   }
 
   @Nonnull
-  private synchronized VirtualFilePointerImpl getOrCreate(VirtualFile file,
-                                                          String path,
-                                                          String url,
-                                                          boolean recursive,
-                                                          @Nonnull Disposable parentDisposable,
-                                                          @Nullable VirtualFilePointerListener listener,
-                                                          @Nonnull NewVirtualFileSystem fs) {
+  private synchronized VirtualFilePointerImpl getOrCreate(
+    VirtualFile file,
+    String path,
+    String url,
+    boolean recursive,
+    @Nonnull Disposable parentDisposable,
+    @Nullable VirtualFilePointerListener listener,
+    @Nonnull NewVirtualFileSystem fs
+  ) {
     VirtualFilePointerListener nl = ObjectUtil.notNull(listener, NULL_LISTENER);
     Map<VirtualFilePointerListener, FilePointerPartNode> myPointers = myRoots.computeIfAbsent(fs, __ -> new HashMap<>());
     FilePointerPartNode root = myPointers.computeIfAbsent(nl, __ -> FilePointerPartNode.createFakeRoot());
 
-    FilePointerPartNode node = file == null ? FilePointerPartNode.findOrCreateNodeByPath(root, path, fs) : root.findOrCreateNodeByFile(file, fs);
+    FilePointerPartNode node = file == null
+      ? FilePointerPartNode.findOrCreateNodeByPath(root, path, fs) : root.findOrCreateNodeByFile(file, fs);
 
     VirtualFilePointerImpl pointer = node.getAnyPointer();
     if (pointer == null) {
@@ -377,7 +402,11 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
 
   @Override
   @Nonnull
-  public VirtualFilePointer duplicate(@Nonnull VirtualFilePointer pointer, @Nonnull Disposable parent, @Nullable VirtualFilePointerListener listener) {
+  public VirtualFilePointer duplicate(
+    @Nonnull VirtualFilePointer pointer,
+    @Nonnull Disposable parent,
+    @Nullable VirtualFilePointerListener listener
+  ) {
     VirtualFile file = pointer.getFile();
     return file == null ? create(pointer.getUrl(), parent, listener) : create(file, parent, listener);
   }
@@ -410,7 +439,10 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
 
   @Override
   @Nonnull
-  public synchronized VirtualFilePointerContainer createContainer(@Nonnull Disposable parent, @Nullable VirtualFilePointerListener listener) {
+  public synchronized VirtualFilePointerContainer createContainer(
+    @Nonnull Disposable parent,
+    @Nullable VirtualFilePointerListener listener
+  ) {
     return registerContainer(parent, new VirtualFilePointerContainerImpl(this, parent, listener));
   }
 
@@ -521,7 +553,9 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
       }
     }
     long prepareElapsedMs = System.currentTimeMillis() - start;
-    VirtualFilePointer[] allPointers = allPointersToFire.isEmpty() ? VirtualFilePointer.EMPTY_ARRAY : allPointersToFire.toArray(VirtualFilePointer.EMPTY_ARRAY);
+    VirtualFilePointer[] allPointers = allPointersToFire.isEmpty()
+      ? VirtualFilePointer.EMPTY_ARRAY
+      : allPointersToFire.toArray(VirtualFilePointer.EMPTY_ARRAY);
 
     return new ChangeApplier() {
       @SuppressWarnings("FieldAccessedSynchronizedAndUnsynchronized")
@@ -549,7 +583,7 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
         }
 
         if (allPointers.length != 0) {
-          Application.get().getMessageBus().syncPublisher(VirtualFilePointerListener.class).beforeValidityChanged(allPointers);
+          myApplication.getMessageBus().syncPublisher(VirtualFilePointerListener.class).beforeValidityChanged(allPointers);
         }
 
         assertConsistency();
@@ -606,7 +640,7 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
     int eventsSize
   ) {
     long start = System.currentTimeMillis();
-    Application.get().assertIsWriteThread(); // guarantees no attempts to get read action lock under "this" lock
+    myApplication.assertIsWriteThread(); // guarantees no attempts to get read action lock under "this" lock
     incModificationCount();
 
     VirtualFileManager virtualFileManager = VirtualFileManager.getInstance();
@@ -623,7 +657,7 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
         VirtualFile fileAfter = after.first;
         if (URL_COMPARATOR.compare(urlBefore, urlAfter) != 0 || !node.urlEndsWithName(urlAfter, fileAfter)) {
           VirtualFileSystem fs = virtualFileManager.getFileSystem(VirtualFileManager.extractProtocol(urlAfter));
-          if (fs instanceof NewVirtualFileSystem) {
+          if (fs instanceof NewVirtualFileSystem nvfs) {
             List<VirtualFilePointerImpl> myPointers = new SmartList<>();
             node.addAllPointersTo(myPointers);
 
@@ -632,8 +666,9 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
             FilePointerPartNode root = node.remove();
 
             String path = trimTrailingSeparators(VfsUtilCore.urlToPath(urlAfter));
-            FilePointerPartNode newNode =
-                    fileAfter == null ? FilePointerPartNode.findOrCreateNodeByPath(root, path, (NewVirtualFileSystem)fs) : root.findOrCreateNodeByFile(fileAfter, (NewVirtualFileSystem)fs);
+            FilePointerPartNode newNode = fileAfter == null
+              ? FilePointerPartNode.findOrCreateNodeByPath(root, path, nvfs)
+              : root.findOrCreateNodeByFile(fileAfter, nvfs);
             newNode.addAllPointersTo(myPointers);
             int pointersDelta = myPointers.size() - newNode.pointersUnder;
             Object newMyPointers = myPointers.size() == 1 ? myPointers.get(0) : myPointers.toArray(new VirtualFilePointerImpl[0]);
@@ -655,7 +690,7 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
     }
 
     if (allPointers.length != 0) {
-      Application.get().getMessageBus().syncPublisher(VirtualFilePointerListener.class).validityChanged(allPointers);
+      myApplication.getMessageBus().syncPublisher(VirtualFilePointerListener.class).validityChanged(allPointers);
     }
 
     assertConsistency();
@@ -663,24 +698,19 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
     if (afterElapsedMs > 1000 || prepareElapsedMs > 1000) {
       int totalPointers;
       synchronized (this) {
-        totalPointers = myRoots.values().stream().flatMapToInt(myPointers -> myPointers.values().stream().mapToInt(root -> root.pointersUnder)).sum();
+        totalPointers = myRoots.values().stream()
+          .flatMapToInt(myPointers -> myPointers.values().stream().mapToInt(root -> root.pointersUnder))
+          .sum();
       }
-      LOG.warn("VirtualFilePointerManagerImpl.prepareChange(" +
-               eventsSize +
-               " events): " +
-               prepareElapsedMs +
-               "ms." +
-               " after(toFireEvents: " +
-               toFireEvents.size() +
-               ", toUpdateUrl: " +
-               toUpdateUrls +
-               ", eventList: " +
-               eventList +
-               "): " +
-               afterElapsedMs +
-               "ms." +
-               " total pointers: " +
-               totalPointers);
+      LOG.warn(
+        "VirtualFilePointerManagerImpl.prepareChange(" + eventsSize +
+          " events): " + prepareElapsedMs + "ms." +
+          " after(toFireEvents: " + toFireEvents.size() +
+          ", toUpdateUrl: " + toUpdateUrls +
+          ", eventList: " + eventList +
+          "): " + afterElapsedMs + "ms." +
+          " total pointers: " + totalPointers
+      );
     }
   }
 
@@ -699,7 +729,7 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
 
   @Override
   public long getModificationCount() {
-    // depends on PersistentFS.getStructureModificationCount() - because consulo.ide.impl.idea.openapi.vfs.impl.FilePointerPartNode.update does
+    // depends on PersistentFS.getStructureModificationCount() - because consulo.ide.impl.idea.openapi.vfs.impl.FilePointerPartNode.update
     // depends on its own modification counter - because we need to change both before and after VFS changes
     return super.getModificationCount() + PersistentFS.getInstance().getStructureModificationCount();
   }
@@ -747,7 +777,8 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
         myCounts.forEachEntry((pointer, disposeCount) -> {
           boolean isDisposed = !(pointer instanceof IdentityVirtualFilePointer) && pointer.myNode == null;
           if (isDisposed) {
-            pointer.getTraceableDisposable().throwDisposalError("Already disposed:\n" + pointer.getTraceableDisposable().getStackTrace());
+            pointer.getTraceableDisposable()
+              .throwDisposalError("Already disposed:\n" + pointer.getTraceableDisposable().getStackTrace());
           }
           int after = pointer.incrementUsageCount(-(disposeCount - 1));
           LOG.assertTrue(after > 0, after);
