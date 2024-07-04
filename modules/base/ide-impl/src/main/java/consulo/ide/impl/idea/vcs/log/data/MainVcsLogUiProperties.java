@@ -16,11 +16,11 @@
 package consulo.ide.impl.idea.vcs.log.data;
 
 import consulo.ide.impl.idea.openapi.vcs.CalledInAwt;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -57,7 +57,7 @@ public interface MainVcsLogUiProperties extends VcsLogUiProperties {
   void removeChangeListener(@Nonnull VcsLogUiPropertiesListener listener);
 
   class VcsLogHighlighterProperty extends VcsLogUiProperty<Boolean> {
-    private static final Map<String, VcsLogHighlighterProperty> ourProperties = ContainerUtil.newHashMap();
+    private static final Map<String, VcsLogHighlighterProperty> ourProperties = new HashMap<>();
     @Nonnull
     private final String myId;
 

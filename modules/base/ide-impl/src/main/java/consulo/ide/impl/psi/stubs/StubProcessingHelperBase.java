@@ -75,8 +75,8 @@ public abstract class StubProcessingHelperBase {
 
   @Nonnull
   private static List<StubbedSpine> getAllSpines(PsiFile psiFile) {
-    if (!(psiFile instanceof PsiFileImpl) && psiFile instanceof PsiFileWithStubSupport) {
-      return Collections.singletonList(((PsiFileWithStubSupport)psiFile).getStubbedSpine());
+    if (!(psiFile instanceof PsiFileImpl) && psiFile instanceof PsiFileWithStubSupport psiFileWithStubSupport) {
+      return Collections.singletonList(psiFileWithStubSupport.getStubbedSpine());
     }
 
     return ContainerUtil.map(StubTreeBuilder.getStubbedRoots(psiFile.getViewProvider()), t -> ((PsiFileImpl)t.second).getStubbedSpine());
@@ -86,7 +86,9 @@ public abstract class StubProcessingHelperBase {
     if (requiredClass.isInstance(psiElement)) return true;
 
     StubTree stubTree = ((PsiFileWithStubSupport)psiFile).getStubTree();
-    if (stubTree == null && psiFile instanceof PsiFileImpl) stubTree = ((PsiFileImpl)psiFile).calcStubTree();
+    if (stubTree == null && psiFile instanceof PsiFileImpl psiFileImpl) {
+      stubTree = psiFileImpl.calcStubTree();
+    }
     inconsistencyDetected(stubTree, (PsiFileWithStubSupport)psiFile);
     return false;
   }

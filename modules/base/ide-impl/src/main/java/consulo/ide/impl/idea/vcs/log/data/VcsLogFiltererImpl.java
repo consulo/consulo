@@ -15,23 +15,23 @@
  */
 package consulo.ide.impl.idea.vcs.log.data;
 
-import consulo.application.ApplicationManager;
-import consulo.logging.Logger;
-import consulo.component.ProcessCanceledException;
+import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
-import consulo.project.Project;
+import consulo.component.ProcessCanceledException;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.versionControlSystem.log.VcsLogFilterCollection;
 import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogFilterCollectionImpl;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.util.lang.Pair;
-
+import consulo.versionControlSystem.log.VcsLogFilterCollection;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class VcsLogFiltererImpl implements VcsLogFilterer {
@@ -51,22 +51,24 @@ public class VcsLogFiltererImpl implements VcsLogFilterer {
   @Nonnull
   private CommitCountStage myCommitCount = CommitCountStage.INITIAL;
   @Nonnull
-  private List<MoreCommitsRequest> myRequestsToRun = ContainerUtil.newArrayList();
+  private List<MoreCommitsRequest> myRequestsToRun = new ArrayList<>();
   @Nonnull
   private List<VisiblePackChangeListener> myVisiblePackChangeListeners = ContainerUtil.createLockFreeCopyOnWriteList();
   @Nonnull
   private volatile VisiblePack myVisiblePack = VisiblePack.EMPTY;
   private volatile boolean myIsValid = true;
 
-  public VcsLogFiltererImpl(@Nonnull final Project project,
-                            @Nonnull VcsLogDataImpl logData,
-                            @Nonnull PermanentGraph.SortType initialSortType) {
+  public VcsLogFiltererImpl(
+    @Nonnull final Project project,
+    @Nonnull VcsLogDataImpl logData,
+    @Nonnull PermanentGraph.SortType initialSortType
+  ) {
     myLogData = logData;
     myVisiblePackBuilder = myLogData.createVisiblePackBuilder();
     myFilters = new VcsLogFilterCollectionImpl(null, null, null, null, null, null, null);
     mySortType = initialSortType;
 
-    myTaskController = new SingleTaskController<Request, VisiblePack>(visiblePack -> {
+    myTaskController = new SingleTaskController<>(visiblePack -> {
       myVisiblePack = visiblePack;
       for (VisiblePackChangeListener listener : myVisiblePackChangeListeners) {
         listener.onVisiblePackChange(visiblePack);
@@ -150,9 +152,9 @@ public class VcsLogFiltererImpl implements VcsLogFilterer {
 
       if (visiblePack != null && myIsValid) {
         final List<MoreCommitsRequest> requestsToRun = myRequestsToRun;
-        myRequestsToRun = ContainerUtil.newArrayList();
+        myRequestsToRun = new ArrayList<>();
 
-        ApplicationManager.getApplication().invokeLater(() -> {
+        Application.get().invokeLater(() -> {
           for (MoreCommitsRequest request : requestsToRun) {
             request.onLoaded.run();
           }

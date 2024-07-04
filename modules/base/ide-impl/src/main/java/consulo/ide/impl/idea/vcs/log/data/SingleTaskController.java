@@ -15,11 +15,11 @@
  */
 package consulo.ide.impl.idea.vcs.log.data;
 
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -50,7 +50,7 @@ public abstract class SingleTaskController<Request, Result> {
 
   public SingleTaskController(@Nonnull Consumer<Result> handler) {
     myResultHandler = handler;
-    myAwaitingRequests = ContainerUtil.newArrayList();
+    myAwaitingRequests = new ArrayList<>();
   }
 
   /**
@@ -84,7 +84,7 @@ public abstract class SingleTaskController<Request, Result> {
   protected final List<Request> popRequests() {
     synchronized (LOCK) {
       List<Request> requests = myAwaitingRequests;
-      myAwaitingRequests = ContainerUtil.newArrayList();
+      myAwaitingRequests = new ArrayList<>();
       LOG.debug("Popped requests: " + requests);
       return requests;
     }

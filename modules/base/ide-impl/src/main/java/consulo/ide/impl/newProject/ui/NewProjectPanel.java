@@ -17,38 +17,28 @@ package consulo.ide.impl.newProject.ui;
 
 import consulo.application.Application;
 import consulo.application.CommonBundle;
+import consulo.disposer.Disposable;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.impl.ProjectUtil;
-import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.ide.impl.welcomeScreen.BaseWelcomeScreenPanel;
+import consulo.ide.newModule.*;
+import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.VerticalFlowLayout;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.awt.JBCardLayout;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.JBLabel;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.internal.SwingUIDecorator;
 import consulo.ui.ex.awt.tree.AsyncTreeModel;
 import consulo.ui.ex.awt.tree.StructureTreeModel;
 import consulo.ui.ex.awt.tree.Tree;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.tree.TreeUtil;
-import consulo.disposer.Disposable;
-import consulo.ide.newModule.NewModuleBuilder;
-import consulo.ide.newModule.NewModuleBuilderProcessor;
-import consulo.ide.newModule.NewModuleContext;
-import consulo.ide.newModule.NewModuleContextItem;
-import consulo.ide.impl.welcomeScreen.BaseWelcomeScreenPanel;
-import consulo.ide.newModule.NewModuleWizardContext;
-import consulo.logging.Logger;
-import consulo.ui.ex.awt.internal.SwingUIDecorator;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.wizard.WizardSession;
 import consulo.ui.ex.wizard.WizardStep;
-
+import consulo.util.io.FileUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.tree.TreePath;
 import java.awt.*;
@@ -162,8 +152,8 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
 
       Object node = TreeUtil.getLastUserObject(selected);
       Object selectedValue = node;
-      if(node instanceof NodeDescriptor) {
-        selectedValue = ((NodeDescriptor)node).getElement();
+      if (node instanceof NodeDescriptor nodeDescriptor) {
+        selectedValue = nodeDescriptor.getElement();
       }
 
       rightContentPanel.removeAll();
@@ -174,7 +164,8 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
         myWizardSession = null;
       }
 
-      myProcessor = selectedValue instanceof NewModuleContextItem ? (NewModuleBuilderProcessor<NewModuleWizardContext>)((NewModuleContextItem)selectedValue).getProcessor() : null;
+      myProcessor = selectedValue instanceof NewModuleContextItem newModuleContextItem
+        ? (NewModuleBuilderProcessor<NewModuleWizardContext>)newModuleContextItem.getProcessor() : null;
 
       String id = null;
       Component toShow = null;
@@ -278,7 +269,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
   }
 
   public void finish() {
-    if(myWizardSession != null) {
+    if (myWizardSession != null) {
       myWizardSession.finish();
     }
   }

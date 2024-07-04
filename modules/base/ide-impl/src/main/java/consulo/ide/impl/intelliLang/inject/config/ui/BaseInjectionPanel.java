@@ -85,23 +85,23 @@ public class BaseInjectionPanel extends AbstractInjectionPanel<BaseInjection>
 	protected void apply(BaseInjection other)
 	{
 		final String displayName = myNameTextField.getText();
-		if(StringUtil.isEmpty(displayName))
+		if (StringUtil.isEmpty(displayName))
 		{
 			throw new IllegalArgumentException("Display name should not be empty");
 		}
 		other.setDisplayName(displayName);
 		boolean enabled = true;
 		final StringBuilder sb = new StringBuilder();
-		final ArrayList<InjectionPlace> places = new ArrayList<InjectionPlace>();
-		for(String s : myTextArea.getText().split("\\s*\n\\s*"))
+		final ArrayList<InjectionPlace> places = new ArrayList<>();
+		for (String s : myTextArea.getText().split("\\s*\n\\s*"))
 		{
 			final boolean nextEnabled;
-			if(s.startsWith("+"))
+			if (s.startsWith("+"))
 			{
 				nextEnabled = true;
 				s = s.substring(1).trim();
 			}
-			else if(s.startsWith("-"))
+			else if (s.startsWith("-"))
 			{
 				nextEnabled = false;
 				s = s.substring(1).trim();
@@ -111,7 +111,7 @@ public class BaseInjectionPanel extends AbstractInjectionPanel<BaseInjection>
 				sb.append(s.trim());
 				continue;
 			}
-			if(sb.length() > 0)
+			if (sb.length() > 0)
 			{
 				final String text = sb.toString();
 				places.add(new InjectionPlace(myHelper.compileElementPattern(text), enabled));
@@ -120,21 +120,21 @@ public class BaseInjectionPanel extends AbstractInjectionPanel<BaseInjection>
 			sb.append(s);
 			enabled = nextEnabled;
 		}
-		if(sb.length() > 0)
+		if (sb.length() > 0)
 		{
 			final String text = sb.toString();
 			places.add(new InjectionPlace(myHelper.compileElementPattern(text), enabled));
 		}
-		for(InjectionPlace place : places)
+		for (InjectionPlace place : places)
 		{
 			ElementPattern<PsiElement> pattern = place.getElementPattern();
-			if(pattern instanceof PatternCompilerImpl.LazyPresentablePattern)
+			if (pattern instanceof PatternCompilerImpl.LazyPresentablePattern)
 			{
 				try
 				{
 					((PatternCompilerImpl.LazyPresentablePattern) pattern).compile();
 				}
-				catch(Throwable ex)
+				catch (Throwable ex)
 				{
 					throw (RuntimeException) new IllegalArgumentException("Pattern failed to compile:").initCause(ex);
 				}
@@ -147,7 +147,7 @@ public class BaseInjectionPanel extends AbstractInjectionPanel<BaseInjection>
 	protected void resetImpl()
 	{
 		final StringBuilder sb = new StringBuilder();
-		for(InjectionPlace place : getOrigInjection().getInjectionPlaces())
+		for (InjectionPlace place : getOrigInjection().getInjectionPlaces())
 		{
 			sb.append(place.isEnabled() ? "+ " : "- ").append(place.getText()).append("\n");
 		}

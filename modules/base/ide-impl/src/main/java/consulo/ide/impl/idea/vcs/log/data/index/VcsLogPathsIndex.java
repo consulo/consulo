@@ -15,36 +15,31 @@
  */
 package consulo.ide.impl.idea.vcs.log.data.index;
 
-import consulo.index.io.*;
-import consulo.util.lang.Couple;
-import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.versionControlSystem.FilePath;
-import consulo.versionControlSystem.change.Change;
-import consulo.ide.impl.idea.util.PathUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.index.io.StorageException;
-import consulo.versionControlSystem.log.VcsFullCommitDetails;
-import consulo.ide.impl.idea.vcs.log.impl.FatalErrorHandler;
-import consulo.versionControlSystem.log.base.VcsChangesLazilyParsedDetails;
-import consulo.ide.impl.idea.vcs.log.util.PersistentUtil;
 import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.util.PathUtil;
+import consulo.ide.impl.idea.vcs.log.impl.FatalErrorHandler;
+import consulo.ide.impl.idea.vcs.log.util.PersistentUtil;
+import consulo.index.io.*;
 import consulo.index.io.data.DataExternalizer;
+import consulo.index.io.data.IOUtil;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
-import consulo.index.io.data.IOUtil;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.Couple;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.log.VcsFullCommitDetails;
+import consulo.versionControlSystem.log.base.VcsChangesLazilyParsedDetails;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
+
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 
 import static consulo.ide.impl.idea.util.containers.ContainerUtil.newTroveSet;
@@ -72,9 +67,13 @@ public class VcsLogPathsIndex extends VcsLogFullDetailsIndex<Integer> {
   @Nonnull
   private static PersistentEnumeratorBase<String> createPathsEnumerator(@Nonnull String logId) throws IOException {
     File storageFile = PersistentUtil.getStorageFile(INDEX, INDEX_PATHS_IDS, logId, getVersion(), true);
-    return new PersistentBTreeEnumerator<>(storageFile, SystemInfo.isFileSystemCaseSensitive ? EnumeratorStringDescriptor.INSTANCE
-                                                                                             : new ToLowerCaseStringDescriptor(),
-                                           Page.PAGE_SIZE, null, getVersion());
+    return new PersistentBTreeEnumerator<>(
+      storageFile,
+      Platform.current().fs().isCaseSensitive() ? EnumeratorStringDescriptor.INSTANCE : new ToLowerCaseStringDescriptor(),
+      Page.PAGE_SIZE,
+      null,
+      getVersion()
+    );
   }
 
   @Override
@@ -84,7 +83,7 @@ public class VcsLogPathsIndex extends VcsLogFullDetailsIndex<Integer> {
   }
 
   public IntSet getCommitsForPaths(@Nonnull Collection<FilePath> paths) throws IOException, StorageException {
-    Set<Integer> allPathIds = ContainerUtil.newHashSet();
+    Set<Integer> allPathIds = new HashSet<>();
     for (FilePath path : paths) {
       allPathIds.add(myPathsIndexer.myPathsEnumerator.enumerate(path.getPath()));
     }
@@ -100,11 +99,12 @@ public class VcsLogPathsIndex extends VcsLogFullDetailsIndex<Integer> {
   }
 
   @Nonnull
-  public Set<Integer> addCommitsAndGetRenames(@Nonnull Set<Integer> newPathIds,
-                                              @Nonnull Set<Integer> allPathIds,
-                                              @Nonnull IntSet commits)
-          throws StorageException {
-    Set<Integer> renames = ContainerUtil.newHashSet();
+  public Set<Integer> addCommitsAndGetRenames(
+    @Nonnull Set<Integer> newPathIds,
+    @Nonnull Set<Integer> allPathIds,
+    @Nonnull IntSet commits
+  ) throws StorageException {
+    Set<Integer> renames = new HashSet<>();
     for (Integer key : newPathIds) {
       iterateCommitIdsAndValues(key, (value, commit) -> {
         commits.add(commit);
@@ -155,13 +155,13 @@ public class VcsLogPathsIndex extends VcsLogFullDetailsIndex<Integer> {
 
       Collection<Couple<String>> moves;
       Collection<String> changedPaths;
-      if (inputData instanceof VcsChangesLazilyParsedDetails) {
-        changedPaths = ((VcsChangesLazilyParsedDetails)inputData).getModifiedPaths();
-        moves = ((VcsChangesLazilyParsedDetails)inputData).getRenamedPaths();
+      if (inputData instanceof VcsChangesLazilyParsedDetails vcsChangesLazilyParsedDetails) {
+        changedPaths = vcsChangesLazilyParsedDetails.getModifiedPaths();
+        moves = vcsChangesLazilyParsedDetails.getRenamedPaths();
       }
       else {
-        moves = ContainerUtil.newHashSet();
-        changedPaths = ContainerUtil.newHashSet();
+        moves = new HashSet<>();
+        changedPaths = new HashSet<>();
         for (Change change : inputData.getChanges()) {
           if (change.getAfterRevision() != null) changedPaths.add(change.getAfterRevision().getFile().getPath());
           if (change.getBeforeRevision() != null) changedPaths.add(change.getBeforeRevision().getFile().getPath());
@@ -197,7 +197,7 @@ public class VcsLogPathsIndex extends VcsLogFullDetailsIndex<Integer> {
 
     @Nonnull
     private Collection<String> getParentPaths(@Nonnull Collection<String> paths) {
-      Set<String> result = ContainerUtil.newHashSet();
+      Set<String> result = new HashSet<>();
       for (String path : paths) {
         while (!path.isEmpty() && !result.contains(path)) {
           result.add(path);

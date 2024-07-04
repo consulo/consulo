@@ -1,17 +1,17 @@
 package consulo.ide.impl.idea.util;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.dumb.DumbAware;
 import consulo.language.Language;
 import consulo.language.editor.completion.CompletionContributor;
 import consulo.language.editor.completion.CompletionParameters;
 import consulo.language.editor.completion.CompletionResultSet;
-import consulo.application.dumb.DumbAware;
 import consulo.language.editor.ui.awt.TextFieldCompletionProvider;
 import consulo.language.plain.PlainTextLanguage;
-import consulo.project.DumbService;
+import consulo.language.plain.psi.PsiPlainTextFile;
 import consulo.language.psi.PsiFile;
-import consulo.language.plain.psi.PsiPlainTextFile;import consulo.annotation.access.RequiredReadAction;
-
+import consulo.project.DumbService;
 import jakarta.annotation.Nonnull;
 
 /**

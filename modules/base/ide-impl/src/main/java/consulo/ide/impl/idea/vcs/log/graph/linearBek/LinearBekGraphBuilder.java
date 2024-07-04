@@ -53,7 +53,7 @@ class LinearBekGraphBuilder {
     }
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   public MergeFragment collapseFragment(int mergeCommit) {
     MergeFragment fragment = getFragment(mergeCommit);
     if (fragment != null) {
@@ -63,7 +63,7 @@ class LinearBekGraphBuilder {
     return null;
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   public MergeFragment getFragment(int mergeCommit) {
     List<Integer> downNodes = ContainerUtil.sorted(LinearGraphUtils.getDownNodes(myLinearBekGraph, mergeCommit));
     if (downNodes.size() != 2) return null;
@@ -71,7 +71,7 @@ class LinearBekGraphBuilder {
     return getFragment(downNodes.get(1), downNodes.get(0), mergeCommit);
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private MergeFragment getFragment(int leftChild, int rightChild, int parent) {
     MergeFragment fragment = new MergeFragment(parent, leftChild, rightChild);
 
@@ -176,7 +176,7 @@ class LinearBekGraphBuilder {
   @Nonnull
   private Set<Integer> calculateMagicSet(int node) {
     Set<Integer> magicSet;
-    magicSet = ContainerUtil.newHashSet(MAGIC_SET_SIZE);
+    magicSet = new HashSet<>(MAGIC_SET_SIZE);
 
     PriorityQueue<Integer> magicQueue = new PriorityQueue<>(MAGIC_SET_SIZE);
     magicQueue.addAll(ContainerUtil.map(myLinearBekGraph.getAdjacentEdges(node, EdgeFilter.NORMAL_DOWN), GRAPH_EDGE_TO_DOWN_NODE));
@@ -239,7 +239,7 @@ class LinearBekGraphBuilder {
     }
 
     public Set<Integer> getTailsAndBody() {
-      Set<Integer> nodes = ContainerUtil.newHashSet();
+      Set<Integer> nodes = new HashSet<>();
       PrimitiveIterator.OfInt it = myBlockBody.iterator();
       while (it.hasNext()) {
         nodes.add(it.next());
@@ -252,7 +252,7 @@ class LinearBekGraphBuilder {
     }
 
     public Set<Integer> getAllNodes() {
-      Set<Integer> nodes = ContainerUtil.newHashSet();
+      Set<Integer> nodes = new HashSet<>();
       nodes.add(myParent);
       nodes.add(myLeftChild);
       nodes.add(myRightChild);

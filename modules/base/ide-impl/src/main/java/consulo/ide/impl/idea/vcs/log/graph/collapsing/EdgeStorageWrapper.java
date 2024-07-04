@@ -16,15 +16,17 @@
 package consulo.ide.impl.idea.vcs.log.graph.collapsing;
 
 import consulo.ide.impl.idea.util.Functions;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.graph.api.EdgeFilter;
 import consulo.ide.impl.idea.vcs.log.graph.api.LinearGraph;
 import consulo.ide.impl.idea.vcs.log.graph.api.elements.GraphEdge;
 import consulo.ide.impl.idea.vcs.log.graph.api.elements.GraphEdgeType;
+import consulo.util.collection.SmartList;
+import consulo.util.lang.Couple;
 import consulo.util.lang.Pair;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
@@ -40,24 +42,26 @@ public class EdgeStorageWrapper {
   private final Function<Integer, Integer> myGetNodeIdByIndex;
 
   public EdgeStorageWrapper(@Nonnull EdgeStorage edgeStorage, @Nonnull final LinearGraph graph) {
-    this(edgeStorage, nodeId -> graph.getNodeIndex(nodeId), nodeIndex -> graph.getNodeId(nodeIndex));
+    this(edgeStorage, graph::getNodeIndex, graph::getNodeId);
   }
 
-  public EdgeStorageWrapper(@Nonnull EdgeStorage edgeStorage,
-                            @Nonnull Function<Integer, Integer> getNodeIndexById,
-                            @Nonnull Function<Integer, Integer> getNodeIdByIndex) {
+  public EdgeStorageWrapper(
+    @Nonnull EdgeStorage edgeStorage,
+    @Nonnull Function<Integer, Integer> getNodeIndexById,
+    @Nonnull Function<Integer, Integer> getNodeIdByIndex
+  ) {
     myEdgeStorage = edgeStorage;
     myGetNodeIndexById = getNodeIndexById;
     myGetNodeIdByIndex = getNodeIdByIndex;
   }
 
   public void removeEdge(@Nonnull GraphEdge graphEdge) {
-    Pair<Integer, Integer> nodeIds = getNodeIds(graphEdge);
+    Couple<Integer> nodeIds = getNodeIds(graphEdge);
     myEdgeStorage.removeEdge(nodeIds.first, nodeIds.second, graphEdge.getType());
   }
 
   public void createEdge(@Nonnull GraphEdge graphEdge) {
-    Pair<Integer, Integer> nodeIds = getNodeIds(graphEdge);
+    Couple<Integer> nodeIds = getNodeIds(graphEdge);
     myEdgeStorage.createEdge(nodeIds.first, nodeIds.second, graphEdge.getType());
   }
 
@@ -71,7 +75,7 @@ public class EdgeStorageWrapper {
 
   @Nonnull
   public List<GraphEdge> getAdjacentEdges(int nodeIndex, @Nonnull EdgeFilter filter) {
-    List<GraphEdge> result = ContainerUtil.newSmartList();
+    List<GraphEdge> result = new SmartList<>();
     for (Pair<Integer, GraphEdgeType> retrievedEdge : myEdgeStorage.getEdges(myGetNodeIdByIndex.apply(nodeIndex))) {
       GraphEdge edge = decompressEdge(nodeIndex, retrievedEdge.first, retrievedEdge.second);
       if (matchedEdge(nodeIndex, edge, filter)) result.add(edge);
@@ -81,7 +85,7 @@ public class EdgeStorageWrapper {
 
   @Nonnull
   public Set<GraphEdge> getEdges() {
-    Set<GraphEdge> result = ContainerUtil.newHashSet();
+    Set<GraphEdge> result = new HashSet<>();
     for (int id : myEdgeStorage.getKnownIds()) {
       result.addAll(getAdjacentEdges(myGetNodeIndexById.apply(id), EdgeFilter.ALL));
     }
@@ -89,19 +93,19 @@ public class EdgeStorageWrapper {
   }
 
   @Nonnull
-  private Pair<Integer, Integer> getNodeIds(@Nonnull GraphEdge graphEdge) {
+  private Couple<Integer> getNodeIds(@Nonnull GraphEdge graphEdge) {
     if (graphEdge.getUpNodeIndex() != null) {
       Integer mainId = myGetNodeIdByIndex.apply(graphEdge.getUpNodeIndex());
       if (graphEdge.getDownNodeIndex() != null) {
-        return Pair.create(mainId, myGetNodeIdByIndex.apply(graphEdge.getDownNodeIndex()));
+        return Couple.of(mainId, myGetNodeIdByIndex.apply(graphEdge.getDownNodeIndex()));
       }
       else {
-        return Pair.create(mainId, convertToInt(graphEdge.getTargetId()));
+        return Couple.of(mainId, convertToInt(graphEdge.getTargetId()));
       }
     }
     else {
       assert graphEdge.getDownNodeIndex() != null;
-      return Pair.create(myGetNodeIdByIndex.apply(graphEdge.getDownNodeIndex()), convertToInt(graphEdge.getTargetId()));
+      return Couple.of(myGetNodeIdByIndex.apply(graphEdge.getDownNodeIndex()), convertToInt(graphEdge.getTargetId()));
     }
   }
 

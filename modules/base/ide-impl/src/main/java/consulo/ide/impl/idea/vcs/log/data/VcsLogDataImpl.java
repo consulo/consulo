@@ -16,35 +16,31 @@
 package consulo.ide.impl.idea.vcs.log.data;
 
 import consulo.application.CachesInvalidator;
-import consulo.application.ApplicationManager;
-import consulo.ide.ServiceManager;
-import consulo.logging.Logger;
-import consulo.application.util.BackgroundTaskQueue;
-import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
-import consulo.project.Project;
-import consulo.disposer.Disposer;
+import consulo.application.util.BackgroundTaskQueue;
 import consulo.application.util.registry.Registry;
-import consulo.versionControlSystem.VcsException;
-import consulo.versionControlSystem.log.*;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.util.lang.function.ThrowableConsumer;
+import consulo.component.ProcessCanceledException;
+import consulo.disposer.Disposer;
+import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.data.index.VcsLogIndex;
 import consulo.ide.impl.idea.vcs.log.data.index.VcsLogPersistentIndex;
 import consulo.ide.impl.idea.vcs.log.impl.FatalErrorHandler;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogCachesInvalidator;
 import consulo.ide.impl.idea.vcs.log.util.PersistentUtil;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.util.lang.function.ThrowableConsumer;
+import consulo.versionControlSystem.VcsException;
+import consulo.versionControlSystem.log.*;
 import consulo.versionControlSystem.util.StopWatch;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class VcsLogDataImpl implements VcsLogData {
@@ -71,7 +67,7 @@ public class VcsLogDataImpl implements VcsLogData {
    * Current user name, as specified in the VCS settings.
    * It can be configured differently for different roots => store in a map.
    */
-  private final Map<VirtualFile, VcsUser> myCurrentUser = ContainerUtil.newHashMap();
+  private final Map<VirtualFile, VcsUser> myCurrentUser = new HashMap<>();
 
   /**
    * Cached details of the latest commits.
@@ -97,7 +93,11 @@ public class VcsLogDataImpl implements VcsLogData {
   @Nonnull
   private final VcsLogIndex myIndex;
 
-  public VcsLogDataImpl(@Nonnull Project project, @Nonnull Map<VirtualFile, VcsLogProvider> logProviders, @Nonnull FatalErrorHandler fatalErrorsConsumer) {
+  public VcsLogDataImpl(
+    @Nonnull Project project,
+    @Nonnull Map<VirtualFile, VcsLogProvider> logProviders,
+    @Nonnull FatalErrorHandler fatalErrorsConsumer
+  ) {
     myProject = project;
     myLogProviders = logProviders;
     myDataLoaderQueue = new BackgroundTaskQueue(project.getApplication(), project, "Loading history...");
@@ -148,7 +148,7 @@ public class VcsLogDataImpl implements VcsLogData {
   }
 
   private void fireDataPackChangeEvent(@Nonnull final DataPack dataPack) {
-    ApplicationManager.getApplication().invokeLater(() -> {
+    myProject.getApplication().invokeLater(() -> {
       for (DataPackChangeListener listener : myDataPackChangeListeners) {
         listener.onDataPackChange(dataPack);
       }
@@ -227,16 +227,19 @@ public class VcsLogDataImpl implements VcsLogData {
   }
 
   @Nonnull
+  @Override
   public Set<VcsUser> getAllUsers() {
     return myUserRegistry.getUsers();
   }
 
   @Nonnull
+  @Override
   public Map<VirtualFile, VcsUser> getCurrentUser() {
     return myCurrentUser;
   }
 
   @Nonnull
+  @Override
   public Project getProject() {
     return myProject;
   }
@@ -304,6 +307,7 @@ public class VcsLogDataImpl implements VcsLogData {
   }
 
   @Nonnull
+  @Override
   public VcsLogProvider getLogProvider(@Nonnull VirtualFile root) {
     return myLogProviders.get(root);
   }

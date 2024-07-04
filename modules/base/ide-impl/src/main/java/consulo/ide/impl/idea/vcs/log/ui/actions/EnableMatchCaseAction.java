@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.vcs.log.ui.actions;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.versionControlSystem.log.VcsLogDataKeys;
 import consulo.versionControlSystem.log.VcsLogProperties;
 import consulo.versionControlSystem.log.VcsLogProvider;
 import consulo.versionControlSystem.log.VcsLogUi;
@@ -43,7 +42,7 @@ public class EnableMatchCaseAction extends BooleanPropertyToggleAction {
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);
 
-    VcsLogUi ui = e.getData(VcsLogDataKeys.VCS_LOG_UI);
+    VcsLogUi ui = e.getData(VcsLogUi.KEY);
     VcsLogUiProperties properties = e.getData(VcsLogInternalDataKeys.LOG_UI_PROPERTIES);
     if (ui != null && properties != null && properties.exists(MainVcsLogUiProperties.TEXT_FILTER_MATCH_CASE)) {
       boolean regexEnabled = properties.exists(MainVcsLogUiProperties.TEXT_FILTER_REGEX)

@@ -20,7 +20,6 @@ import com.google.common.base.Suppliers;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.util.collection.SmartList;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.versionControlSystem.log.VcsRef;
 import consulo.ide.impl.idea.vcs.log.util.TroveUtil;
 import consulo.util.collection.primitive.ints.IntList;
@@ -72,9 +71,7 @@ public class CompressedRefs {
     if (myBranches.containsKey(index)) result.addAll(myBranches.get(index));
     IntList tags = myTags.get(index);
     if (tags != null) {
-      tags.forEach(value -> {
-        result.add(myHashMap.getVcsRef(value));
-      });
+      tags.forEach(value -> result.add(myHashMap.getVcsRef(value)));
     }
     return result;
   }
@@ -96,9 +93,9 @@ public class CompressedRefs {
 
   @Nonnull
   public Collection<VcsRef> getRefs() {
-    return new AbstractCollection<VcsRef>() {
+    return new AbstractCollection<>() {
       private final Supplier<Collection<VcsRef>> myLoadedRefs =
-              Suppliers.memoize(() -> CompressedRefs.this.stream().collect(Collectors.toList()));
+        Suppliers.memoize(() -> CompressedRefs.this.stream().collect(Collectors.toList()));
 
       @Nonnull
       @Override
@@ -115,7 +112,7 @@ public class CompressedRefs {
 
   @Nonnull
   public Collection<Integer> getCommits() {
-    Set<Integer> result = ContainerUtil.newHashSet();
+    Set<Integer> result = new HashSet<>();
     TroveUtil.streamKeys(myBranches).forEach(result::add);
     TroveUtil.streamKeys(myTags).forEach(result::add);
     return result;

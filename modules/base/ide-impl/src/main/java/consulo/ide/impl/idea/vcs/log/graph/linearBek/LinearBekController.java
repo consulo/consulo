@@ -15,9 +15,7 @@
  */
 package consulo.ide.impl.idea.vcs.log.graph.linearBek;
 
-import consulo.util.lang.function.Condition;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.versionControlSystem.log.graph.action.GraphAction;
 import consulo.ide.impl.idea.vcs.log.graph.api.EdgeFilter;
 import consulo.ide.impl.idea.vcs.log.graph.api.GraphLayout;
 import consulo.ide.impl.idea.vcs.log.graph.api.LinearGraph;
@@ -32,7 +30,7 @@ import consulo.ide.impl.idea.vcs.log.graph.impl.facade.GraphChangesUtil;
 import consulo.ide.impl.idea.vcs.log.graph.impl.facade.bek.BekIntMap;
 import consulo.ide.impl.idea.vcs.log.graph.utils.LinearGraphUtils;
 import consulo.logging.Logger;
-
+import consulo.versionControlSystem.log.graph.action.GraphAction;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -68,30 +66,30 @@ public class LinearBekController extends CascadeController {
     if (action.getAffectedElement() != null) {
       if (action.getType() == GraphAction.Type.MOUSE_CLICK) {
         GraphElement graphElement = action.getAffectedElement().getGraphElement();
-        if (graphElement instanceof GraphNode) {
-          LinearGraphAnswer answer = collapseNode((GraphNode)graphElement);
+        if (graphElement instanceof GraphNode node) {
+          LinearGraphAnswer answer = collapseNode(node);
           if (answer != null) return answer;
-          for (GraphEdge dottedEdge : getAllAdjacentDottedEdges((GraphNode)graphElement)) {
+          for (GraphEdge dottedEdge : getAllAdjacentDottedEdges(node)) {
             LinearGraphAnswer expandedAnswer = expandEdge(dottedEdge);
             if (expandedAnswer != null) return expandedAnswer;
           }
         }
-        else if (graphElement instanceof GraphEdge) {
-          return expandEdge((GraphEdge)graphElement);
+        else if (graphElement instanceof GraphEdge edge) {
+          return expandEdge(edge);
         }
       }
       else if (action.getType() == GraphAction.Type.MOUSE_OVER) {
         GraphElement graphElement = action.getAffectedElement().getGraphElement();
-        if (graphElement instanceof GraphNode) {
-          LinearGraphAnswer answer = highlightNode((GraphNode)graphElement);
+        if (graphElement instanceof GraphNode node) {
+          LinearGraphAnswer answer = highlightNode(node);
           if (answer != null) return answer;
-          for (GraphEdge dottedEdge : getAllAdjacentDottedEdges((GraphNode)graphElement)) {
+          for (GraphEdge dottedEdge : getAllAdjacentDottedEdges(node)) {
             LinearGraphAnswer highlightAnswer = highlightEdge(dottedEdge);
             if (highlightAnswer != null) return highlightAnswer;
           }
         }
-        else if (graphElement instanceof GraphEdge) {
-          return highlightEdge((GraphEdge)graphElement);
+        else if (graphElement instanceof GraphEdge edge) {
+          return highlightEdge(edge);
         }
       }
     }
@@ -106,26 +104,21 @@ public class LinearBekController extends CascadeController {
 
   @Nonnull
   private List<GraphEdge> getAllAdjacentDottedEdges(GraphNode graphElement) {
-    return ContainerUtil.filter(myCompiledGraph.getAdjacentEdges(graphElement.getNodeIndex(), EdgeFilter.ALL), new Condition<GraphEdge>() {
-      @Override
-      public boolean value(GraphEdge graphEdge) {
-        return graphEdge.getType() == GraphEdgeType.DOTTED;
-      }
-    });
+    return ContainerUtil.filter(
+      myCompiledGraph.getAdjacentEdges(graphElement.getNodeIndex(), EdgeFilter.ALL),
+      graphEdge -> graphEdge.getType() == GraphEdgeType.DOTTED
+    );
   }
 
   @Nonnull
   private LinearGraphAnswer expandAll() {
     return new LinearGraphAnswer(GraphChangesUtil.SOME_CHANGES) {
-      @jakarta.annotation.Nullable
+      @Nullable
       @Override
       public Runnable getGraphUpdater() {
-        return new Runnable() {
-          @Override
-          public void run() {
-            myCompiledGraph.myDottedEdges.removeAll();
-            myCompiledGraph.myHiddenEdges.removeAll();
-          }
+        return () -> {
+          myCompiledGraph.myDottedEdges.removeAll();
+          myCompiledGraph.myHiddenEdges.removeAll();
         };
       }
     };
@@ -137,15 +130,10 @@ public class LinearBekController extends CascadeController {
     new LinearBekGraphBuilder(workingGraph, myBekGraphLayout).collapseAll();
     return new LinearGraphAnswer(
       GraphChangesUtil.edgesReplaced(workingGraph.getRemovedEdges(), workingGraph.getAddedEdges(), getDelegateGraph())) {
-      @jakarta.annotation.Nullable
+      @Nullable
       @Override
       public Runnable getGraphUpdater() {
-        return new Runnable() {
-          @Override
-          public void run() {
-            workingGraph.applyChanges();
-          }
-        };
+        return workingGraph::applyChanges;
       }
     };
   }
@@ -155,7 +143,7 @@ public class LinearBekController extends CascadeController {
     Set<LinearBekGraphBuilder.MergeFragment> toCollapse = collectFragmentsToCollapse(node);
     if (toCollapse.isEmpty()) return null;
 
-    Set<Integer> toHighlight = ContainerUtil.newHashSet();
+    Set<Integer> toHighlight = new HashSet<>();
     for (LinearBekGraphBuilder.MergeFragment fragment : toCollapse) {
       toHighlight.addAll(fragment.getAllNodes());
     }
@@ -184,12 +172,7 @@ public class LinearBekController extends CascadeController {
   }
 
   private SortedSet<Integer> collectNodesToCollapse(GraphNode node) {
-    SortedSet<Integer> toCollapse = new TreeSet<>(new Comparator<Integer>() {
-      @Override
-      public int compare(Integer o1, Integer o2) {
-        return o2.compareTo(o1);
-      }
-    });
+    SortedSet<Integer> toCollapse = new TreeSet<>((Comparator<Integer>)(o1, o2) -> o2.compareTo(o1));
     for (LinearBekGraphBuilder.MergeFragment f : collectFragmentsToCollapse(node)) {
       toCollapse.add(f.getParent());
       toCollapse.addAll(f.getTailsAndBody());
@@ -199,11 +182,11 @@ public class LinearBekController extends CascadeController {
 
   @Nonnull
   private Set<LinearBekGraphBuilder.MergeFragment> collectFragmentsToCollapse(GraphNode node) {
-    Set<LinearBekGraphBuilder.MergeFragment> result = ContainerUtil.newHashSet();
+    Set<LinearBekGraphBuilder.MergeFragment> result = new HashSet<>();
 
     int mergesCount = 0;
 
-    LinkedHashSet<Integer> toProcess = ContainerUtil.newLinkedHashSet();
+    LinkedHashSet<Integer> toProcess = new LinkedHashSet<>();
     toProcess.add(node.getNodeIndex());
     while (!toProcess.isEmpty()) {
       Integer i = ContainerUtil.getFirstItem(toProcess);

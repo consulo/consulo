@@ -15,21 +15,21 @@
  */
 package consulo.ide.impl.idea.vcs.log.util;
 
+import consulo.container.boot.ContainerPathManager;
+import consulo.ide.impl.idea.util.PathUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.index.io.KeyDescriptor;
 import consulo.index.io.Page;
 import consulo.index.io.PersistentBTreeEnumerator;
 import consulo.index.io.PersistentEnumeratorBase;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.util.lang.StringUtil;
 import consulo.index.io.data.IOUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.PathUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.project.Project;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.log.VcsLogProvider;
-import consulo.container.boot.ContainerPathManager;
-
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Comparator;

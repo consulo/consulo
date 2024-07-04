@@ -15,9 +15,8 @@
  */
 package consulo.ide.impl.idea.util;
 
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.platform.Platform;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.XmlSerializer;
 import consulo.util.xml.serializer.annotation.Attribute;
@@ -27,6 +26,7 @@ import jakarta.annotation.Nullable;
 import org.jdom.Element;
 import org.jetbrains.annotations.Contract;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -45,7 +45,7 @@ public class PathMappingSettings extends AbstractPathMapper implements Cloneable
 
   @Nonnull
   private static List<PathMapping> create(@Nullable final List<PathMapping> mappings) {
-    List<PathMapping> result = ContainerUtil.newArrayList();
+    List<PathMapping> result = new ArrayList<>();
     if (mappings != null) {
       for (PathMapping m : mappings) {
         if (m != null && !isAnyEmpty(m.getLocalRoot(), m.getRemoteRoot())) {
@@ -57,7 +57,7 @@ public class PathMappingSettings extends AbstractPathMapper implements Cloneable
   }
 
   public PathMappingSettings() {
-    myPathMappings = ContainerUtil.newArrayList();
+    myPathMappings = new ArrayList<>();
   }
 
   @Nonnull

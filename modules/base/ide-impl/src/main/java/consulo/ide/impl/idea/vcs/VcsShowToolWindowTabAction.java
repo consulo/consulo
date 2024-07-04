@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.vcs;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentManager;
@@ -29,9 +29,10 @@ import static consulo.util.lang.ObjectUtil.assertNotNull;
 
 public abstract class VcsShowToolWindowTabAction extends DumbAwareAction {
 
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getRequiredData(CommonDataKeys.PROJECT);
+    final Project project = e.getRequiredData(Project.KEY);
     ToolWindow toolWindow = assertNotNull(getToolWindow(project));
     final ChangesViewContentManager changesViewContentManager = (ChangesViewContentManager)ChangesViewContentManager.getInstance(project);
     final String tabName = getTabName();
@@ -41,26 +42,22 @@ public abstract class VcsShowToolWindowTabAction extends DumbAwareAction {
       toolWindow.hide(null);
     }
     else {
-      Runnable runnable = contentAlreadySelected ? null : new Runnable() {
-        @Override
-        public void run() {
-          changesViewContentManager.selectContent(tabName, true);
-        }
-      };
+      Runnable runnable = contentAlreadySelected ? null : () -> changesViewContentManager.selectContent(tabName, true);
       toolWindow.activate(runnable, true, true);
     }
   }
 
   @Nullable
-  private static ToolWindow getToolWindow(@jakarta.annotation.Nullable Project project) {
+  private static ToolWindow getToolWindow(@Nullable Project project) {
     if (project == null) return null;
     return ToolWindowManager.getInstance(project).getToolWindow(ChangesViewContentManager.TOOLWINDOW_ID);
   }
 
   @Override
+  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);
-    e.getPresentation().setEnabledAndVisible(getToolWindow(e.getData(CommonDataKeys.PROJECT)) != null);
+    e.getPresentation().setEnabledAndVisible(getToolWindow(e.getData(Project.KEY)) != null);
   }
 
   @Nonnull

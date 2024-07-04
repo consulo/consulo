@@ -15,33 +15,29 @@
  */
 package consulo.ide.impl.idea.util;
 
-import consulo.dataContext.DataManager;
-import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
 import consulo.project.Project;
 import consulo.ui.ex.OpenSourceUtil;
-
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 /**
  * @author lesya
  */
-
 public class EditSourceOnEnterKeyHandler{
   public static void install(final JTree tree){
     tree.addKeyListener(
       new KeyAdapter() {
+        @Override
         public void keyPressed(KeyEvent e) {
           if (KeyEvent.VK_ENTER == e.getKeyCode()) {
             DataContext dataContext = DataManager.getInstance().getDataContext(tree);
 
-            Project project = dataContext.getData(CommonDataKeys.PROJECT);
+            Project project = dataContext.getData(Project.KEY);
             if (project == null) return;
 
             OpenSourceUtil.openSourcesFrom(dataContext, false);
@@ -51,26 +47,32 @@ public class EditSourceOnEnterKeyHandler{
     );
   }
 
-  public static void install(final JComponent component,
-                           @Nullable final Runnable whenPerformed) {
-    component.registerKeyboardAction(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
+  public static void install(final JComponent component, @Nullable final Runnable whenPerformed) {
+    component.registerKeyboardAction(
+      e -> {
         DataContext dataContext = DataManager.getInstance().getDataContext(component);
         OpenSourceUtil.openSourcesFrom(dataContext, true);
         if (whenPerformed != null) whenPerformed.run();
-      }
-    }, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), JComponent.WHEN_FOCUSED);
+      },
+      KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),
+      JComponent.WHEN_FOCUSED
+    );
   }
 
-  public static void install(@Nullable final Runnable before, final JComponent component,
-                             @Nullable final Runnable whenPerformed) {
-    component.registerKeyboardAction(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
+  public static void install(
+    @Nullable final Runnable before,
+    final JComponent component,
+    @Nullable final Runnable whenPerformed
+  ) {
+    component.registerKeyboardAction(
+      e -> {
         DataContext dataContext = DataManager.getInstance().getDataContext(component);
         if (before != null) before.run();
         OpenSourceUtil.openSourcesFrom(dataContext, true);
         if (whenPerformed != null) whenPerformed.run();
-      }
-    }, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), JComponent.WHEN_FOCUSED);
+      },
+      KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),
+      JComponent.WHEN_FOCUSED
+    );
   }
 }

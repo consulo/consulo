@@ -1,19 +1,18 @@
 package consulo.ide.impl.idea.vcs.log.graph;
 
-import consulo.ui.ex.JBColor;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.paint.ColorGenerator;
+import consulo.ui.ex.JBColor;
 import jakarta.annotation.Nonnull;
 
 import java.awt.*;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author erokhins
  */
 public class DefaultColorGenerator implements ColorGenerator {
-
-  private static final Map<Integer, JBColor> ourColorMap = ContainerUtil.newHashMap();
+  private static final Map<Integer, JBColor> ourColorMap = new HashMap<>();
 
   static {
     ourColorMap.put(GraphColorManagerImpl.DEFAULT_COLOR, JBColor.BLACK);

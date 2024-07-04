@@ -18,12 +18,13 @@ package consulo.ide.impl.idea.vcs.log.data;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.PeekingIterator;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.versionControlSystem.log.VcsCommitMetadata;
 import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
 import consulo.util.collection.primitive.ints.IntMaps;
-
+import consulo.versionControlSystem.log.VcsCommitMetadata;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class TopCommitsCache {
   @Nonnull
   private final ConcurrentIntObjectMap<VcsCommitMetadata> myCache = IntMaps.newConcurrentIntObjectHashMap();
   @Nonnull
-  private List<VcsCommitMetadata> mySortedDetails = ContainerUtil.newArrayList();
+  private List<VcsCommitMetadata> mySortedDetails = new ArrayList<>();
 
   public TopCommitsCache(@Nonnull VcsLogStorage hashMap) {
     myHashMap = hashMap;
@@ -48,7 +49,7 @@ public class TopCommitsCache {
     if (newDetails.isEmpty()) return;
     Iterator<VcsCommitMetadata> it = new MergingIterator(mySortedDetails, newDetails);
 
-    List<VcsCommitMetadata> result = ContainerUtil.newArrayList();
+    List<VcsCommitMetadata> result = new ArrayList<>();
     boolean isBroken = false;
     while (it.hasNext()) {
       VcsCommitMetadata detail = it.next();

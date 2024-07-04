@@ -15,17 +15,16 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.ToggleAction;
 import consulo.application.dumb.DumbAware;
-import consulo.versionControlSystem.log.VcsLogDataKeys;
-import consulo.versionControlSystem.log.VcsLogUi;
+import consulo.ide.impl.idea.vcs.log.VcsLogIcons;
 import consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogUiProperties;
 import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogInternalDataKeys;
 import consulo.ide.impl.idea.vcs.log.util.BekUtil;
-import consulo.ide.impl.idea.vcs.log.VcsLogIcons;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.ToggleAction;
+import consulo.versionControlSystem.log.VcsLogUi;
 import jakarta.annotation.Nonnull;
 
 public class IntelliSortChooserToggleAction extends ToggleAction implements DumbAware {
@@ -59,7 +58,7 @@ public class IntelliSortChooserToggleAction extends ToggleAction implements Dumb
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);
 
-    VcsLogUi logUI = e.getData(VcsLogDataKeys.VCS_LOG_UI);
+    VcsLogUi logUI = e.getData(VcsLogUi.KEY);
     VcsLogUiProperties properties = e.getData(VcsLogInternalDataKeys.LOG_UI_PROPERTIES);
     e.getPresentation().setVisible(BekUtil.isBekEnabled());
     e.getPresentation().setEnabled(BekUtil.isBekEnabled() && logUI != null);
@@ -67,9 +66,7 @@ public class IntelliSortChooserToggleAction extends ToggleAction implements Dumb
     if (properties != null && properties.exists(MainVcsLogUiProperties.BEK_SORT_TYPE)) {
       boolean off = properties.get(MainVcsLogUiProperties.BEK_SORT_TYPE) == PermanentGraph.SortType.Normal;
       String description = "Turn IntelliSort " + (off ? "on" : "off") + ": " +
-                           (off
-                            ? PermanentGraph.SortType.Bek.getDescription().toLowerCase()
-                            : PermanentGraph.SortType.Normal.getDescription().toLowerCase()) + ".";
+        (off ? PermanentGraph.SortType.Bek : PermanentGraph.SortType.Normal).getDescription().toLowerCase() + ".";
       e.getPresentation().setDescription(description);
       e.getPresentation().setText(description);
     }
