@@ -1146,8 +1146,8 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
           // will call getChildren() anyway, beyond a shadow of a doubt
           directory.createAndAddChildren(added, true, (childCreated, childInfo) -> {
             // enqueue recursive children
-            if (childCreated instanceof VirtualDirectoryImpl virtualDirectory && childInfo.getChildren() != null) {
-              queue.add(Pair.create(virtualDirectory, childInfo.getChildren()));
+            if (childCreated instanceof VirtualDirectoryImpl childVDir && childInfo.getChildren() != null) {
+              queue.add(Pair.create(childVDir, childInfo.getChildren()));
             }
           });
         }
