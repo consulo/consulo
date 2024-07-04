@@ -555,6 +555,7 @@
                 <descriptor>${project.basedir}/src/assembly/desktop-awt-win.xml</descriptor>
                 <descriptor>${project.basedir}/src/assembly/desktop-awt-linux.xml</descriptor>
                 <descriptor>${project.basedir}/src/assembly/desktop-awt-mac-x86-64.xml</descriptor>
+                <descriptor>${project.basedir}/src/assembly/desktop-awt-mac-aarch64.xml</descriptor>
 
                 <descriptor>${project.basedir}/src/assembly/web.xml</descriptor>
               </descriptors>

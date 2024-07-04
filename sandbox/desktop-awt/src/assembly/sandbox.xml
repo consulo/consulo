@@ -67,7 +67,14 @@
       <outputDirectory>Consulo/platform/buildSNAPSHOT/</outputDirectory>
     </fileSet>
     <fileSet>
-      <directory>${project.basedir}/../../distribution/platform/consulo.desktop.awt/mac</directory>
+      <directory>${project.basedir}/../../distribution/platform/consulo.desktop.awt/mac64</directory>
+      <includes>
+        <include>**</include>
+      </includes>
+      <outputDirectory>Consulo/platform/buildSNAPSHOT/</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>${project.basedir}/../../distribution/platform/consulo.desktop.awt/macA64</directory>
       <includes>
         <include>**</include>
       </includes>

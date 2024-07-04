@@ -16,7 +16,7 @@
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/2.0.0"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.0.0 http://maven.apache.org/xsd/assembly-2.0.0.xsd">
-  <id>desktop-awt-mac-x86-64</id>
+  <id>desktop-awt-mac-aarch64</id>
   <formats>
     <format>zip</format>
   </formats>
@@ -29,7 +29,7 @@
 
   <fileSets>
     <fileSet>
-      <directory>${project.basedir}/boot/mac64/</directory>
+      <directory>${project.basedir}/boot/macA64/</directory>
       <includes>
         <include>**</include>
       </includes>
@@ -50,7 +50,7 @@
       <outputDirectory>${file.separator}Consulo.app${file.separator}Contents${file.separator}platform${file.separator}buildSNAPSHOT${file.separator}</outputDirectory>
     </fileSet>
     <fileSet>
-      <directory>${project.basedir}/platform/consulo.desktop.awt/mac64</directory>
+      <directory>${project.basedir}/platform/consulo.desktop.awt/macA64</directory>
       <includes>
         <include>*/**</include>
       </includes>
