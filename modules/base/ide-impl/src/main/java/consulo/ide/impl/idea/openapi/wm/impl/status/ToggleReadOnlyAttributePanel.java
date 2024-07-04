@@ -13,9 +13,11 @@ import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.ActionsBundle;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -91,6 +93,7 @@ public final class ToggleReadOnlyAttributePanel implements StatusBarWidget.Multi
   }
 
   @Override
+  @RequiredUIAccess
   public Consumer<MouseEvent> getClickConsumer() {
     return mouseEvent -> {
       final VirtualFile file = getCurrentFile();
@@ -104,7 +107,7 @@ public final class ToggleReadOnlyAttributePanel implements StatusBarWidget.Multi
         myStatusBar.updateWidget(getId());
       }
       catch (IOException e) {
-        Messages.showMessageDialog(getProject(), e.getMessage(), UIBundle.message("error.dialog.title"), Messages.getErrorIcon());
+        Messages.showMessageDialog(getProject(), e.getMessage(), UIBundle.message("error.dialog.title"), UIUtil.getErrorIcon());
       }
     };
   }

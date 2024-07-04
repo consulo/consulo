@@ -37,16 +37,8 @@ public abstract class RecentProjectsWelcomeScreenActionBase extends DumbAwareAct
   @Nullable
   public static DefaultListModel getDataModel(@Nonnull AnActionEvent e) {
     final JList list = getList(e);
-    if (list != null) {
-      ListModel model = list.getModel();
-      if (model instanceof NameFilteringListModel) {
-        model = ((NameFilteringListModel)model).getOriginalModel();
-        if (model instanceof DefaultListModel) {
-          return (DefaultListModel)model;
-        }
-      }
-    }
-    return null;
+    return list != null && list.getModel() instanceof NameFilteringListModel nameFilteringListModel
+      && nameFilteringListModel.getOriginalModel() instanceof DefaultListModel defaultListModel ? defaultListModel : null;
   }
 
   @Nonnull
@@ -66,10 +58,7 @@ public abstract class RecentProjectsWelcomeScreenActionBase extends DumbAwareAct
   @Nullable
   public static JList getList(@Nonnull AnActionEvent e) {
     final Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-    if (component instanceof JList) {
-      return (JList)component;
-    }
-    return null;
+    return component instanceof JList jList ? jList : null;
   }
 
   public static boolean hasGroupSelected(@Nonnull AnActionEvent e) {

@@ -1,30 +1,29 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.vfs.newvfs.persistent;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.ReadAction;
-import consulo.platform.Platform;
-import consulo.util.lang.Pair;
-import consulo.application.util.SystemInfo;
-import consulo.util.io.FileAttributes;
-import consulo.application.util.registry.Registry;
-import consulo.virtualFileSystem.VFileProperty;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.NewVirtualFile;
-import consulo.virtualFileSystem.NewVirtualFileSystem;
-import consulo.virtualFileSystem.event.VFileEvent;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.VirtualDirectoryImpl;
 import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.util.collection.Queue;
+import consulo.application.util.registry.Registry;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.VirtualDirectoryImpl;
 import consulo.ide.impl.idea.util.text.FilePathHashingStrategy;
+import consulo.platform.Platform;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;
+import consulo.util.collection.Queue;
 import consulo.util.collection.Sets;
-import org.jetbrains.annotations.TestOnly;
-
+import consulo.util.io.FileAttributes;
+import consulo.util.lang.Pair;
+import consulo.virtualFileSystem.NewVirtualFile;
+import consulo.virtualFileSystem.NewVirtualFileSystem;
+import consulo.virtualFileSystem.VFileProperty;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.event.VFileEvent;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.TestOnly;
+
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.*;
@@ -33,8 +32,8 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
-import static consulo.util.lang.Pair.pair;
 import static consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.VfsEventGenerationHelper.LOG;
+import static consulo.util.lang.Pair.pair;
 
 class LocalFileSystemRefreshWorker {
   private final boolean myIsRecursive;
@@ -82,7 +81,7 @@ class LocalFileSystemRefreshWorker {
   private RefreshContext createRefreshContext(@Nonnull NewVirtualFileSystem fs, @Nonnull PersistentFS persistentFS, @Nonnull HashingStrategy<String> strategy) {
     int parallelism = Registry.intValue("vfs.use.nio-based.local.refresh.worker.parallelism", Runtime.getRuntime().availableProcessors() - 1);
 
-    if (myIsRecursive && parallelism > 0 && !ApplicationManager.getApplication().isDispatchThread()) {
+    if (myIsRecursive && parallelism > 0 && !Application.get().isDispatchThread()) {
       return new ConcurrentRefreshContext(fs, persistentFS, strategy, parallelism);
     }
     return new SequentialRefreshContext(fs, persistentFS, strategy);
@@ -169,7 +168,7 @@ class LocalFileSystemRefreshWorker {
 
       // generating events unless a directory was changed in between
       boolean hasEvents = ReadAction.compute(() -> {
-        if (ApplicationManager.getApplication().isDisposed()) {
+        if (Application.get().isDisposed()) {
           return true;
         }
         if (!Arrays.equals(persistedNames, refreshContext.persistence.list(dir)) || !Arrays.equals(children, dir.getChildren())) {
@@ -187,7 +186,7 @@ class LocalFileSystemRefreshWorker {
   }
 
   static Pair<String[], VirtualFile[]> getDirectorySnapshot(@Nonnull PersistentFS persistence, @Nonnull VirtualDirectoryImpl dir) {
-    return ReadAction.compute(() -> ApplicationManager.getApplication().isDisposed() ? null : pair(persistence.list(dir), dir.getChildren()));
+    return ReadAction.compute(() -> Application.get().isDisposed() ? null : pair(persistence.list(dir), dir.getChildren()));
   }
 
   private void partialDirRefresh(@Nonnull VirtualDirectoryImpl dir, @Nonnull RefreshContext refreshContext) {
@@ -429,8 +428,8 @@ class LocalFileSystemRefreshWorker {
 
       myHelper.checkWritableAttributeChange(child, myRefreshContext.persistence.isWritable(child), isWritable(file, attributes, isDirectory));
 
-      if (attributes instanceof DosFileAttributes) {
-        myHelper.checkHiddenAttributeChange(child, child.is(VFileProperty.HIDDEN), ((DosFileAttributes)attributes).isHidden());
+      if (attributes instanceof DosFileAttributes dosFileAttributes) {
+        myHelper.checkHiddenAttributeChange(child, child.is(VFileProperty.HIDDEN), dosFileAttributes.isHidden());
       }
 
       if (isLink) {
@@ -503,7 +502,7 @@ class LocalFileSystemRefreshWorker {
 
   @Nonnull
   private static Path fixCaseIfNeeded(@Nonnull Path path, @Nonnull VirtualFile file) throws IOException {
-    if (SystemInfo.isFileSystemCaseSensitive) return path;
+    if (Platform.current().fs().isCaseSensitive()) return path;
     // Mac: toRealPath() will return the current file's name w.r.t. case
     // Win: toRealPath(LinkOption.NOFOLLOW_LINKS) will return the current file's name w.r.t. case
     return file.is(VFileProperty.SYMLINK) ? path.toRealPath(LinkOption.NOFOLLOW_LINKS) : path.toRealPath();
@@ -512,12 +511,11 @@ class LocalFileSystemRefreshWorker {
   private static boolean isWritable(@Nonnull Path file, @Nonnull BasicFileAttributes a, boolean directory) {
     boolean isWritable;
 
-    if (a instanceof DosFileAttributes) {
-      DosFileAttributes dosFileAttributes = (DosFileAttributes)a;
+    if (a instanceof DosFileAttributes dosFileAttributes) {
       isWritable = directory || !dosFileAttributes.isReadOnly();
     }
-    else if (a instanceof PosixFileAttributes) {
-      isWritable = ((PosixFileAttributes)a).permissions().contains(PosixFilePermission.OWNER_WRITE);
+    else if (a instanceof PosixFileAttributes posixFileAttributes) {
+      isWritable = posixFileAttributes.permissions().contains(PosixFilePermission.OWNER_WRITE);
     }
     else {
       isWritable = file.toFile().canWrite();

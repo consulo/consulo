@@ -21,7 +21,7 @@ import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.TitledHandler;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.refactoring.BaseRefactoringProcessor;
-import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.rename.PsiElementRenameHandler;
 import consulo.language.editor.refactoring.rename.RenameDialog;
 import consulo.language.editor.refactoring.rename.RenameHandler;
@@ -41,6 +41,7 @@ import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -63,17 +64,19 @@ public abstract class DirectoryAsPackageRenameHandlerBase<T extends PsiDirectory
   @Nullable
   protected abstract T getPackage(PsiDirectory psiDirectory);
 
-  protected abstract BaseRefactoringProcessor createProcessor(final String newQName,
-                                                              final Project project,
-                                                              final PsiDirectory[] dirsToRename,
-                                                              boolean searchInComments,
-                                                              boolean searchInNonJavaFiles);
+  protected abstract BaseRefactoringProcessor createProcessor(
+    final String newQName,
+    final Project project,
+    final PsiDirectory[] dirsToRename,
+    boolean searchInComments,
+    boolean searchInNonJavaFiles
+  );
 
   @Override
   public boolean isAvailableOnDataContext(final DataContext dataContext) {
     PsiElement element = adjustForRename(dataContext, PsiElementRenameHandler.getElement(dataContext));
-    if (element instanceof PsiDirectory) {
-      final VirtualFile virtualFile = ((PsiDirectory)element).getVirtualFile();
+    if (element instanceof PsiDirectory directory) {
+      final VirtualFile virtualFile = directory.getVirtualFile();
       final Project project = element.getProject();
       if (Comparing.equal(project.getBaseDir(), virtualFile)) return false;
       if (ProjectRootManager.getInstance(project).getFileIndex().isInContent(virtualFile)) {
@@ -84,10 +87,10 @@ public abstract class DirectoryAsPackageRenameHandlerBase<T extends PsiDirectory
   }
 
   private static PsiElement adjustForRename(DataContext dataContext, PsiElement element) {
-    if (element instanceof PsiDirectoryContainer) {
+    if (element instanceof PsiDirectoryContainer directoryContainer) {
       final Module module = dataContext.getData(LangDataKeys.MODULE);
       if (module != null) {
-        final PsiDirectory[] directories = ((PsiDirectoryContainer)element).getDirectories(GlobalSearchScope.moduleScope(module));
+        final PsiDirectory[] directories = directoryContainer.getDirectories(GlobalSearchScope.moduleScope(module));
         if (directories.length >= 1) {
           element = directories[0];
         }
@@ -153,27 +156,30 @@ public abstract class DirectoryAsPackageRenameHandlerBase<T extends PsiDirectory
               moduleDirs = null;
             }
           }
-          final String promptMessage = "Package \'" +
-                                       aPackage.getName() +
-                                       "\' contains directories in libraries which cannot be renamed. Do you want to rename " +
-                                       (moduleDirs == null ? "current directory" : "current module directories");
+          final String promptMessage = "Package \'" + aPackage.getName() +
+              "\' contains directories in libraries which cannot be renamed. Do you want to rename " +
+              (moduleDirs == null ? "current directory" : "current module directories");
           if (projectDirectories.length > 0) {
             int ret = Messages.showYesNoCancelDialog(
               project,
               promptMessage + " or all directories in project?",
-              RefactoringBundle.message("warning.title"),
-              RefactoringBundle.message("rename.current.directory"),
-              RefactoringBundle.message("rename.directories"),
+              RefactoringLocalize.warningTitle().get(),
+              RefactoringLocalize.renameCurrentDirectory().get(),
+              RefactoringLocalize.renameDirectories().get(),
               CommonLocalize.buttonCancel().get(),
-              Messages.getWarningIcon()
+              UIUtil.getWarningIcon()
             );
             if (ret == 2) return;
             renameDirs(project, nameSuggestionContext, editor, psiDirectory, aPackage,
                        ret == 0 ? (moduleDirs == null ? new PsiDirectory[]{psiDirectory} : moduleDirs) : projectDirectories);
           }
           else {
-            if (Messages.showOkCancelDialog(project, promptMessage + "?", RefactoringBundle.message("warning.title"),
-                                    Messages.getWarningIcon()) == DialogWrapper.OK_EXIT_CODE) {
+            if (Messages.showOkCancelDialog(
+              project,
+              promptMessage + "?",
+              RefactoringLocalize.warningTitle().get(),
+              UIUtil.getWarningIcon()
+            ) == DialogWrapper.OK_EXIT_CODE) {
               renameDirs(project, nameSuggestionContext, editor, psiDirectory, aPackage, psiDirectory);
             }
           }
@@ -182,16 +188,17 @@ public abstract class DirectoryAsPackageRenameHandlerBase<T extends PsiDirectory
           final StringBuffer message = new StringBuffer();
           RenameUtil.buildPackagePrefixChangedMessage(virtualFiles, message, qualifiedName);
           buildMultipleDirectoriesInPackageMessage(message, getQualifiedName(aPackage), directories);
-          message.append(RefactoringBundle.message("directories.and.all.references.to.package.will.be.renamed",
-                                                   psiDirectory.getVirtualFile().getPresentableUrl()));
+          message.append(
+            RefactoringLocalize.directoriesAndAllReferencesToPackageWillBeRenamed(psiDirectory.getVirtualFile().getPresentableUrl()).get()
+          );
           int ret = Messages.showYesNoCancelDialog(
             project,
             message.toString(),
-            RefactoringBundle.message("warning.title"),
-            RefactoringBundle.message("rename.package.button.text"),
-            RefactoringBundle.message("rename.directory.button.text"),
+            RefactoringLocalize.warningTitle().get(),
+            RefactoringLocalize.renamePackageButtonText().get(),
+            RefactoringLocalize.renameDirectoryButtonText().get(),
             CommonLocalize.buttonCancel().get(),
-            Messages.getWarningIcon()
+            UIUtil.getWarningIcon()
           );
           if (ret == 0) {
             PsiElementRenameHandler.rename(aPackage, project, nameSuggestionContext, editor);
@@ -229,7 +236,7 @@ public abstract class DirectoryAsPackageRenameHandlerBase<T extends PsiDirectory
     String packageQname,
     PsiDirectory[] directories
   ) {
-    message.append(RefactoringBundle.message("multiple.directories.correspond.to.package"));
+    message.append(RefactoringLocalize.multipleDirectoriesCorrespondToPackage().get());
     message.append(packageQname);
     message.append(":\n\n");
     for (int i = 0; i < directories.length; i++) {
@@ -241,8 +248,9 @@ public abstract class DirectoryAsPackageRenameHandlerBase<T extends PsiDirectory
     }
   }
 
+  @Nonnull
   @Override
   public String getActionTitle() {
-    return RefactoringBundle.message("rename.directory.title");
+    return RefactoringLocalize.renameDirectoryTitle().get();
   }
 }

@@ -19,7 +19,7 @@ import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfile
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionToolRegistrar;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.util.io.FileUtil;
 import consulo.language.editor.inspection.scheme.Profile;
 import consulo.language.editor.inspection.scheme.ProfileManager;
 import org.jdom.Element;
@@ -57,9 +57,11 @@ public class InspectionProfileLoadUtil {
   }
 
   @Nonnull
-  public static Profile load(@Nonnull File file,
-                             @Nonnull InspectionToolRegistrar registrar,
-                             @Nonnull ProfileManager profileManager) throws JDOMException, IOException, InvalidDataException {
+  public static Profile load(
+    @Nonnull File file,
+    @Nonnull InspectionToolRegistrar registrar,
+    @Nonnull ProfileManager profileManager
+  ) throws JDOMException, IOException, InvalidDataException {
     Element element = JDOMUtil.loadDocument(file).getRootElement();
     InspectionProfileImpl profile = new InspectionProfileImpl(getProfileName(file, element), registrar, profileManager);
     final Element profileElement = element.getChild(PROFILE_TAG);

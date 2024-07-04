@@ -16,19 +16,17 @@
 
 package consulo.ide.impl.idea.tasks.actions;
 
-import consulo.task.impl.internal.action.BaseTaskAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.action.Presentation;
 import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
 import consulo.task.CustomTaskState;
 import consulo.task.LocalTask;
 import consulo.task.TaskManager;
 import consulo.task.TaskRepository;
 import consulo.task.impl.internal.TaskManagerImpl;
+import consulo.task.impl.internal.action.BaseTaskAction;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.awt.Messages;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -37,18 +35,19 @@ import jakarta.annotation.Nonnull;
 public class CloseTaskAction extends BaseTaskAction
 {
 
+	@Override
 	@RequiredUIAccess
 	public void actionPerformed(@Nonnull AnActionEvent e)
 	{
-      Project project = e.getData(CommonDataKeys.PROJECT);
+		Project project = e.getData(Project.KEY);
 		assert project != null;
 		TaskManagerImpl taskManager = (TaskManagerImpl) TaskManager.getManager(project);
 		LocalTask task = taskManager.getActiveTask();
 		CloseTaskDialog dialog = new CloseTaskDialog(project, task);
-		if(dialog.showAndGet())
+		if (dialog.showAndGet())
 		{
 			final CustomTaskState taskState = dialog.getCloseIssueState();
-			if(taskState != null)
+			if (taskState != null)
 			{
 				try
 				{
@@ -57,7 +56,7 @@ public class CloseTaskAction extends BaseTaskAction
 					repository.setTaskState(task, taskState);
 					repository.setPreferredCloseTaskState(taskState);
 				}
-				catch(Exception e1)
+				catch (Exception e1)
 				{
 					Messages.showErrorDialog(project, e1.getMessage(), "Cannot Set State For Issue");
 				}

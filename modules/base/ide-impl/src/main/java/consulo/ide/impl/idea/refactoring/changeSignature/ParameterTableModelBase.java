@@ -15,26 +15,26 @@
  */
 package consulo.ide.impl.idea.refactoring.changeSignature;
 
-import consulo.language.editor.refactoring.changeSignature.ParameterInfo;
-import consulo.ui.ex.awt.BooleanTableCellRenderer;
-import consulo.ui.ex.awt.ColoredTableCellRenderer;
-import consulo.ui.ex.awt.table.BooleanTableCellEditor;
-import consulo.ui.ex.awt.util.ColorUtil;
-import consulo.ui.ex.awt.SimpleColoredComponent;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.project.Project;
-import consulo.language.psi.PsiCodeFragment;
-import consulo.language.psi.PsiElement;
-import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.ide.impl.idea.refactoring.ui.CodeFragmentTableCellEditorBase;
 import consulo.ide.impl.idea.refactoring.ui.CodeFragmentTableCellRenderer;
+import consulo.ide.impl.idea.ui.RowEditableTableModel;
+import consulo.language.editor.refactoring.changeSignature.ParameterInfo;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.ui.StringTableCellEditor;
-import consulo.ide.impl.idea.ui.*;
+import consulo.language.psi.PsiCodeFragment;
+import consulo.language.psi.PsiElement;
+import consulo.project.Project;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.BooleanTableCellRenderer;
+import consulo.ui.ex.awt.ColoredTableCellRenderer;
 import consulo.ui.ex.awt.ColumnInfo;
+import consulo.ui.ex.awt.SimpleColoredComponent;
+import consulo.ui.ex.awt.table.BooleanTableCellEditor;
 import consulo.ui.ex.awt.table.ListTableModel;
-
+import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -116,8 +116,8 @@ public abstract class ParameterTableModelBase<P extends ParameterInfo, TableItem
               component.setBackground(ColorUtil.toAlpha(bg, 230));
             }
 
-            if (component instanceof SimpleColoredComponent) {
-              ((SimpleColoredComponent)component).setIpad(new Insets(0, 0, 0, 0));
+            if (component instanceof SimpleColoredComponent coloredComponent) {
+              coloredComponent.setIpad(new Insets(0, 0, 0, 0));
             }
 
             return component;
@@ -137,7 +137,7 @@ public abstract class ParameterTableModelBase<P extends ParameterInfo, TableItem
     private final FileType myFileType;
 
     public TypeColumn(Project project, FileType fileType) {
-      this(project, fileType, RefactoringBundle.message("column.name.type"));
+      this(project, fileType, RefactoringLocalize.columnNameType().get());
     }
 
     public TypeColumn(Project project, FileType fileType, String title) {
@@ -171,7 +171,7 @@ public abstract class ParameterTableModelBase<P extends ParameterInfo, TableItem
     private final Project myProject;
 
     public NameColumn(Project project) {
-      this(project, RefactoringBundle.message("column.name.name"));
+      this(project, RefactoringLocalize.columnNameName().get());
     }
 
     public NameColumn(Project project, String title) {
@@ -212,12 +212,13 @@ public abstract class ParameterTableModelBase<P extends ParameterInfo, TableItem
     }
   }
 
-  protected static class DefaultValueColumn<P extends ParameterInfo, TableItem extends ParameterTableModelItemBase<P>> extends ColumnInfoBase<P, TableItem, PsiCodeFragment> {
+  protected static class DefaultValueColumn<P extends ParameterInfo, TableItem extends ParameterTableModelItemBase<P>>
+    extends ColumnInfoBase<P, TableItem, PsiCodeFragment> {
     private final Project myProject;
     private final FileType myFileType;
 
     public DefaultValueColumn(Project project, FileType fileType) {
-      this(project, fileType, RefactoringBundle.message("column.name.default.value"));
+      this(project, fileType, RefactoringLocalize.columnNameDefaultValue().get());
     }
 
     public DefaultValueColumn(Project project, FileType fileType, String title) {
@@ -247,10 +248,11 @@ public abstract class ParameterTableModelBase<P extends ParameterInfo, TableItem
     }
   }
 
-  protected static class AnyVarColumn<P extends ParameterInfo, TableItem extends ParameterTableModelItemBase<P>> extends ColumnInfoBase<P, TableItem, Boolean> {
+  protected static class AnyVarColumn<P extends ParameterInfo, TableItem extends ParameterTableModelItemBase<P>>
+    extends ColumnInfoBase<P, TableItem, Boolean> {
 
     public AnyVarColumn() {
-      super(RefactoringBundle.message("column.name.any.var"));
+      super(RefactoringLocalize.columnNameAnyVar().get());
     }
 
     @Override

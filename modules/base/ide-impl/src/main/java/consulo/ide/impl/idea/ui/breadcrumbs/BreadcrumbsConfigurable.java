@@ -4,28 +4,21 @@ package consulo.ide.impl.idea.ui.breadcrumbs;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ui.UISettings;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
-import consulo.configurable.ApplicationConfigurable;
-import consulo.configurable.ConfigurationException;
-import consulo.configurable.SearchableConfigurable;
-import consulo.configurable.StandardConfigurableIds;
+import consulo.configurable.*;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
-import consulo.configurable.CompositeConfigurable;
 import consulo.ide.impl.idea.openapi.options.colors.pages.GeneralColorsPage;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.HorizontalLayout;
 import consulo.ide.impl.idea.ui.components.panels.VerticalLayout;
 import consulo.language.Language;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.JBUIScale;
-import consulo.ui.ex.awt.LinkLabel;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.*;
+import consulo.util.collection.SmartList;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
@@ -35,7 +28,6 @@ import java.util.Map.Entry;
 import static consulo.application.ApplicationBundle.message;
 import static consulo.ide.impl.idea.application.options.colors.ColorAndFontOptions.selectOrEditColor;
 import static consulo.util.lang.StringUtil.naturalCompare;
-import static consulo.ide.impl.idea.util.containers.ContainerUtil.newSmartList;
 import static javax.swing.SwingConstants.LEFT;
 
 /**
@@ -148,7 +140,7 @@ final class BreadcrumbsConfigurable extends CompositeConfigurable<BreadcrumbsCon
   @Nonnull
   @Override
   protected List<BreadcrumbsProviderConfigurable> createConfigurables() {
-    final List<BreadcrumbsProviderConfigurable> configurables = newSmartList();
+    final List<BreadcrumbsProviderConfigurable> configurables = new SmartList<>();
     for (final BreadcrumbsProvider provider : BreadcrumbsProvider.EP_NAME.getExtensionList()) {
       for (final Language language : provider.getLanguages()) {
         configurables.add(new BreadcrumbsProviderConfigurable(provider, language));

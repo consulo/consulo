@@ -23,10 +23,9 @@ import consulo.execution.unscramble.*;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.IdeaFileChooser;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vcs.configurable.VcsContentAnnotationConfigurable;
+import consulo.ide.localize.IdeLocalize;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -35,6 +34,7 @@ import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import jakarta.annotation.Nonnull;
@@ -108,19 +108,19 @@ public class UnscrambleDialog extends DialogWrapper {
     FormBuilder topPanel = FormBuilder.createFormBuilder();
     topPanel.addLabeledComponent("Analyzer:", myAnalyzerBox);
 
-    topPanel.addComponent(myUseUnscrambler = new JBCheckBox(IdeBundle.message("unscramble.use.unscrambler.checkbox")));
+    topPanel.addComponent(myUseUnscrambler = new JBCheckBox(IdeLocalize.unscrambleUseUnscramblerCheckbox().get()));
 
     myUnscrambleChooser = new ComboBox<>();
-    topPanel.addLabeledComponent(myUnscramberLabel = new JBLabel(IdeBundle.message("unscramble.unscrambler.combobox")), myUnscrambleChooser);
+    topPanel.addLabeledComponent(myUnscramberLabel = new JBLabel(IdeLocalize.unscrambleUnscramblerCombobox().get()), myUnscrambleChooser);
 
     myLogFileChooserPanel = new JPanel(new BorderLayout());
-    topPanel.addLabeledComponent(myLogFileLabel = new JBLabel(IdeBundle.message("unscramble.log.path.label")), myLogFileChooserPanel);
+    topPanel.addLabeledComponent(myLogFileLabel = new JBLabel(IdeLocalize.unscrambleLogPathLabel().get()), myLogFileChooserPanel);
     createLogFileChooser();
 
     myRootPanel.addToTop(topPanel.getPanel());
 
     myEditorPanel = new JPanel(new BorderLayout());
-    myEditorPanel.add(new JLabel(IdeBundle.message("unscramble.stacktrace.caption")), BorderLayout.NORTH);
+    myEditorPanel.add(new JLabel(IdeLocalize.unscrambleStacktraceCaption().get()), BorderLayout.NORTH);
     myRootPanel.addToCenter(myEditorPanel);
 
     createEditor();
@@ -148,7 +148,7 @@ public class UnscrambleDialog extends DialogWrapper {
 
     reset();
 
-    setTitle(IdeBundle.message("unscramble.dialog.title"));
+    setTitle(IdeLocalize.unscrambleDialogTitle());
     init();
   }
 
@@ -181,7 +181,7 @@ public class UnscrambleDialog extends DialogWrapper {
     int index = 0;
     if (selectedUnscrambler != null) {
       for (int i = 0; i < count; i++) {
-        final UnscrambleSupport unscrambleSupport = (UnscrambleSupport)myUnscrambleChooser.getItemAt(i);
+        final UnscrambleSupport unscrambleSupport = myUnscrambleChooser.getItemAt(i);
         if (unscrambleSupport != null && Comparing.strEqual(unscrambleSupport.getId(), selectedUnscrambler.getId())) {
           index = i;
           break;
@@ -219,7 +219,7 @@ public class UnscrambleDialog extends DialogWrapper {
   }
 
   public static List<String> getSavedLogFileUrls() {
-    final List<String> res = new ArrayList<String>();
+    final List<String> res = new ArrayList<>();
     final String savedUrl = PropertiesComponent.getInstance().getValue(PROPERTY_LOG_FILE_HISTORY_URLS);
     final String[] strings = savedUrl == null ? ArrayUtil.EMPTY_STRING_ARRAY : savedUrl.split(":::");
     for (int i = 0; i != strings.length; ++i) {
@@ -251,7 +251,12 @@ public class UnscrambleDialog extends DialogWrapper {
     myLogFile = new TextFieldWithHistory();
     JPanel panel = GuiUtils.constructFieldWithBrowseButton(myLogFile, e -> {
       FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor();
-      IdeaFileChooser.chooseFiles(descriptor, myProject, null, files -> myLogFile.setText(FileUtil.toSystemDependentName(files.get(files.size() - 1).getPath())));
+      IdeaFileChooser.chooseFiles(
+        descriptor,
+        myProject,
+        null,
+        files -> myLogFile.setText(FileUtil.toSystemDependentName(files.get(files.size() - 1).getPath()))
+      );
     });
     myLogFileChooserPanel.add(panel, BorderLayout.CENTER);
   }
@@ -269,7 +274,7 @@ public class UnscrambleDialog extends DialogWrapper {
     myUnscrambleChooser.setRenderer(new ColoredListCellRenderer<UnscrambleSupport>() {
       @Override
       protected void customizeCellRenderer(@Nonnull JList<? extends UnscrambleSupport> list, UnscrambleSupport value, int index, boolean selected, boolean hasFocus) {
-        append(value == null ? IdeBundle.message("unscramble.no.unscrambler.item") : value.getName().get());
+        append(value == null ? IdeLocalize.unscrambleNoUnscramblerItem().get() : value.getName().get());
       }
     });
   }
@@ -330,7 +335,7 @@ public class UnscrambleDialog extends DialogWrapper {
 
   private final class NormalizeTextAction extends AbstractAction {
     public NormalizeTextAction() {
-      putValue(NAME, IdeBundle.message("unscramble.normalize.button"));
+      putValue(NAME, IdeLocalize.unscrambleNormalizeButton().get());
       putValue(DEFAULT_ACTION, Boolean.FALSE);
     }
 
@@ -379,9 +384,9 @@ public class UnscrambleDialog extends DialogWrapper {
 
   private RunContentDescriptor addConsole(final Project project, final List<ThreadState> threadDump, String unscrambledTrace) {
     Image icon = null;
-    String message = IdeBundle.message("unscramble.unscrambled.stacktrace.tab");
+    String message = IdeLocalize.unscrambleUnscrambledStacktraceTab().get();
     if (!threadDump.isEmpty()) {
-      message = IdeBundle.message("unscramble.unscrambled.threaddump.tab");
+      message = IdeLocalize.unscrambleUnscrambledThreaddumpTab().get();
       icon = PlatformIconGroup.actionsDump();
     }
     else {
@@ -392,7 +397,7 @@ public class UnscrambleDialog extends DialogWrapper {
       }
     }
     if (ContainerUtil.find(threadDump, DEADLOCK_CONDITION) != null) {
-      message = IdeBundle.message("unscramble.unscrambled.deadlock.tab");
+      message = IdeLocalize.unscrambleUnscrambledDeadlockTab().get();
       icon = PlatformIconGroup.debuggerKillprocess();
     }
     return AnalyzeStacktraceUtil.addConsole(project, threadDump.size() > 1 ? (consoleView, toolbarActions) -> {

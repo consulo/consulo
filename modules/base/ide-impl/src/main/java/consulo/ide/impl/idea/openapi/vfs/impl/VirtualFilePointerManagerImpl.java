@@ -2,16 +2,13 @@
 package consulo.ide.impl.idea.openapi.vfs.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.progress.ProgressManager;
-import consulo.application.util.SystemInfo;
 import consulo.component.util.SimpleModificationTracker;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.concurrency.ConcurrentCollectionFactory;
 import consulo.ide.impl.idea.openapi.application.impl.ApplicationInfoImpl;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.ArchiveFileSystem;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.FileNameCache;
@@ -22,6 +19,7 @@ import consulo.language.file.FileTypeManager;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.util.collection.*;
+import consulo.util.io.FileUtil;
 import consulo.util.io.URLUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
@@ -49,8 +47,9 @@ import java.util.stream.Collectors;
 @ServiceImpl
 public final class VirtualFilePointerManagerImpl extends SimpleModificationTracker implements Disposable, VirtualFilePointerManager {
   private static final Logger LOG = Logger.getInstance(VirtualFilePointerManagerImpl.class);
-  private static final Comparator<String> URL_COMPARATOR = SystemInfo.isFileSystemCaseSensitive ? String::compareTo : String::compareToIgnoreCase;
-  static final boolean IS_UNDER_UNIT_TEST = ApplicationManager.getApplication().isUnitTestMode();
+  private static final Comparator<String> URL_COMPARATOR =
+    Platform.current().fs().isCaseSensitive() ? String::compareTo : String::compareToIgnoreCase;
+  static final boolean IS_UNDER_UNIT_TEST = Application.get().isUnitTestMode();
 
   private static final VirtualFilePointerListener NULL_LISTENER = new VirtualFilePointerListener() {
     @Override
@@ -64,7 +63,8 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
     }
   };
 
-  private final Map<VirtualFileSystem, Map<VirtualFilePointerListener, FilePointerPartNode>> myRoots = Maps.newHashMap(ContainerUtil.identityStrategy()); // guarded by this
+  private final Map<VirtualFileSystem, Map<VirtualFilePointerListener, FilePointerPartNode>> myRoots =
+    Maps.newHashMap(ContainerUtil.identityStrategy()); // guarded by this
   // compare by identity because VirtualFilePointerContainer has too smart equals
   private final Set<VirtualFilePointerContainerImpl> myContainers = Sets.newHashSet(ContainerUtil.identityStrategy()); // guarded by myContainers
 
@@ -219,7 +219,10 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
       // if newly created path is the same as the one extracted from url then the url did not change, we can reuse it
       //noinspection StringEquality
       if (cleanPath != path) {
-        url = VirtualFileManager.constructUrl(protocol, cleanPath + (fileSystem instanceof ArchiveFileSystem ? ArchiveFileSystem.ARCHIVE_SEPARATOR : ""));
+        url = VirtualFileManager.constructUrl(
+          protocol,
+          cleanPath + (fileSystem instanceof ArchiveFileSystem ? ArchiveFileSystem.ARCHIVE_SEPARATOR : "")
+        );
         path = cleanPath;
       }
       if (url.contains("..")) {
@@ -232,7 +235,10 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
         else {
           // when someone is crazy enough to create VFP for not-yet existing file from the path with "..", ignore all symlinks
           path = FileUtil.toCanonicalPath(path);
-          url = VirtualFileManager.constructUrl(protocol, path + (fileSystem instanceof ArchiveFileSystem ? ArchiveFileSystem.ARCHIVE_SEPARATOR : ""));
+          url = VirtualFileManager.constructUrl(
+            protocol,
+            path + (fileSystem instanceof ArchiveFileSystem ? ArchiveFileSystem.ARCHIVE_SEPARATOR : "")
+          );
         }
       }
       if (file == null && StringUtil.isEmptyOrSpaces(path)) {
@@ -280,7 +286,7 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
   // trim trailing /
   @Nonnull
   private static String cleanupPath(@Nonnull String path) {
-    path = FileUtilRt.toSystemIndependentName(path);
+    path = FileUtil.toSystemIndependentName(path);
     path = trimTrailingSeparators(path);
     for (int i = 0; i < path.length(); ) {
       int slash = path.indexOf('/', i);
@@ -450,14 +456,14 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
       for (VFileEvent event : events) {
         ProgressManager.checkCanceled();
         VirtualFileSystem fs = event.getFileSystem();
-        if (!(fs instanceof VirtualFilePointerCapableFileSystem)) continue;
-        if (event instanceof VFileDeleteEvent) {
-          VFileDeleteEvent deleteEvent = (VFileDeleteEvent)event;
+        if (!(fs instanceof VirtualFilePointerCapableFileSystem)) {
+          continue;
+        }
+        if (event instanceof VFileDeleteEvent deleteEvent) {
           VirtualFile file = deleteEvent.getFile();
           addRelevantPointers(file.getParent(), ((VirtualFileSystemEntry)file).getNameId(), toFireEvents, true, fs);
         }
-        else if (event instanceof VFileCreateEvent) {
-          VFileCreateEvent createEvent = (VFileCreateEvent)event;
+        else if (event instanceof VFileCreateEvent createEvent) {
           boolean fireSubdirectoryPointers;
           if (createEvent.isDirectory()) {
             // when a new empty directory "/a/b" is created, there's no need to fire any deeper pointers like "/a/b/c/d.txt" - they're not created yet
@@ -467,7 +473,7 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
           else {
             String createdFileName = createEvent.getChildName();
             // if the .jar file created, there may be many files hiding inside
-            FileType fileType = FileTypeManager.getInstance().getFileTypeByExtension(FileUtilRt.getExtension(createdFileName));
+            FileType fileType = FileTypeManager.getInstance().getFileTypeByExtension(FileUtil.getExtension(createdFileName));
             fireSubdirectoryPointers = fileType instanceof ArchiveFileType;
           }
           addRelevantPointers(createEvent.getParent(), createEvent.getChildNameId(), toFireEvents, fireSubdirectoryPointers, fs);
@@ -475,12 +481,10 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
           toUpdateUrl.putAllValues(toFireEvents);
 
         }
-        else if (event instanceof VFileCopyEvent) {
-          VFileCopyEvent copyEvent = (VFileCopyEvent)event;
+        else if (event instanceof VFileCopyEvent copyEvent) {
           addRelevantPointers(copyEvent.getNewParent(), toNameId(copyEvent.getNewChildName()), toFireEvents, true, fs);
         }
-        else if (event instanceof VFileMoveEvent) {
-          VFileMoveEvent moveEvent = (VFileMoveEvent)event;
+        else if (event instanceof VFileMoveEvent moveEvent) {
           VirtualFile eventFile = moveEvent.getFile();
           int newNameId = ((VirtualFileSystemEntry)eventFile).getNameId();
           addRelevantPointers(moveEvent.getNewParent(), newNameId, toFireEvents, true, fs);
@@ -490,8 +494,7 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
           toFireEvents.putAllValues(nodes); // files deleted from eventFile and created in moveEvent.getNewParent()
           collectNodes(nodes, toUpdateUrl);
         }
-        else if (event instanceof VFilePropertyChangeEvent) {
-          VFilePropertyChangeEvent change = (VFilePropertyChangeEvent)event;
+        else if (event instanceof VFilePropertyChangeEvent change) {
           if (VirtualFile.PROP_NAME.equals(change.getPropertyName()) && !Comparing.equal(change.getOldValue(), change.getNewValue())) {
             VirtualFile eventFile = change.getFile();
             VirtualFile parent = eventFile.getParent(); // e.g. for LightVirtualFiles
@@ -546,7 +549,7 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
         }
 
         if (allPointers.length != 0) {
-          ApplicationManager.getApplication().getMessageBus().syncPublisher(VirtualFilePointerListener.class).beforeValidityChanged(allPointers);
+          Application.get().getMessageBus().syncPublisher(VirtualFilePointerListener.class).beforeValidityChanged(allPointers);
         }
 
         assertConsistency();
@@ -594,14 +597,16 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
     }
   }
 
-  private void after(@Nonnull MultiMap<VirtualFilePointerListener, FilePointerPartNode> toFireEvents,
-                     @Nonnull MultiMap<VirtualFilePointerListener, FilePointerPartNode> toUpdateUrls,
-                     @Nonnull List<? extends EventDescriptor> eventList,
-                     @Nonnull VirtualFilePointer[] allPointers,
-                     long prepareElapsedMs,
-                     int eventsSize) {
+  private void after(
+    @Nonnull MultiMap<VirtualFilePointerListener, FilePointerPartNode> toFireEvents,
+    @Nonnull MultiMap<VirtualFilePointerListener, FilePointerPartNode> toUpdateUrls,
+    @Nonnull List<? extends EventDescriptor> eventList,
+    @Nonnull VirtualFilePointer[] allPointers,
+    long prepareElapsedMs,
+    int eventsSize
+  ) {
     long start = System.currentTimeMillis();
-    ApplicationManager.getApplication().assertIsWriteThread(); // guarantees no attempts to get read action lock under "this" lock
+    Application.get().assertIsWriteThread(); // guarantees no attempts to get read action lock under "this" lock
     incModificationCount();
 
     VirtualFileManager virtualFileManager = VirtualFileManager.getInstance();
@@ -650,7 +655,7 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
     }
 
     if (allPointers.length != 0) {
-      ApplicationManager.getApplication().getMessageBus().syncPublisher(VirtualFilePointerListener.class).validityChanged(allPointers);
+      Application.get().getMessageBus().syncPublisher(VirtualFilePointerListener.class).validityChanged(allPointers);
     }
 
     assertConsistency();
@@ -700,9 +705,11 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
   }
 
   private static class DelegatingDisposable implements Disposable {
-    private static final ConcurrentMap<Disposable, DelegatingDisposable> ourInstances = ConcurrentCollectionFactory.createMap(ContainerUtil.identityStrategy());
+    private static final ConcurrentMap<Disposable, DelegatingDisposable> ourInstances =
+      ConcurrentCollectionFactory.createMap(ContainerUtil.identityStrategy());
 
-    private final TObjectIntHashMap<VirtualFilePointerImpl> myCounts = new TObjectIntHashMap<>(TObjectHashingStrategy.IDENTITY); // guarded by this
+    private final TObjectIntHashMap<VirtualFilePointerImpl> myCounts =
+      new TObjectIntHashMap<>(TObjectHashingStrategy.IDENTITY); // guarded by this
     private final Disposable myParent;
 
     private DelegatingDisposable(@Nonnull Disposable parent, @Nonnull VirtualFilePointerImpl firstPointer) {

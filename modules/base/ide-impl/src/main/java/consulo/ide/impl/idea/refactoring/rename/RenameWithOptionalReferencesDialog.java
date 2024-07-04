@@ -16,14 +16,14 @@
 package consulo.ide.impl.idea.refactoring.rename;
 
 import consulo.codeEditor.Editor;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.rename.RenameDialog;
-import consulo.project.Project;
 import consulo.language.psi.PsiElement;
-import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.project.Project;
 import consulo.ui.ex.awt.NonFocusableCheckBox;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -48,7 +48,7 @@ public abstract class RenameWithOptionalReferencesDialog extends RenameDialog {
     gbConstraints.weighty = 0;
     gbConstraints.weightx = 1;
     gbConstraints.fill = GridBagConstraints.BOTH;
-    myCbSearchForReferences = new NonFocusableCheckBox(RefactoringBundle.message("search.for.references"));
+    myCbSearchForReferences = new NonFocusableCheckBox(RefactoringLocalize.searchForReferences().get());
     myCbSearchForReferences.setSelected(getSearchForReferences());
     panel.add(myCbSearchForReferences, gbConstraints);
 

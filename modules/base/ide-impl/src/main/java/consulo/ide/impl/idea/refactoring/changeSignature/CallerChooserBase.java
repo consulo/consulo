@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.refactoring.changeSignature;
 
-import consulo.application.ApplicationManager;
 import consulo.application.util.query.Query;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorColors;
@@ -25,13 +24,10 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributes;
 import consulo.component.ProcessCanceledException;
 import consulo.document.Document;
-import consulo.ui.ex.awt.tree.CheckboxTree;
-import consulo.ui.ex.awt.tree.CheckboxTreeBase;
-import consulo.ui.ex.awt.tree.CheckedTreeNode;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.highlight.HighlightManager;
 import consulo.language.editor.highlight.HighlighterFactory;
-import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -39,16 +35,19 @@ import consulo.language.psi.PsiReference;
 import consulo.language.psi.scope.LocalSearchScope;
 import consulo.language.psi.search.ReferencesSearch;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.Splitter;
+import consulo.ui.ex.awt.tree.CheckboxTree;
+import consulo.ui.ex.awt.tree.CheckboxTreeBase;
+import consulo.ui.ex.awt.tree.CheckedTreeNode;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.util.Alarm;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
-import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
@@ -100,20 +99,12 @@ public abstract class CallerChooserBase<M extends PsiElement> extends DialogWrap
       final CheckedTreeNode root = (CheckedTreeNode)myTree.getModel().getRoot();
       myRoot = (MethodNodeBase)root.getFirstChild();
     }
-    myTreeSelectionListener = new TreeSelectionListener() {
-      @Override
-      public void valueChanged(TreeSelectionEvent e) {
-        final TreePath path = e.getPath();
-        if (path != null) {
-          final MethodNodeBase<M> node = (MethodNodeBase)path.getLastPathComponent();
-          myAlarm.cancelAllRequests();
-          myAlarm.addRequest(new Runnable() {
-            @Override
-            public void run() {
-              updateEditorTexts(node);
-            }
-          }, 300);
-        }
+    myTreeSelectionListener = e -> {
+      final TreePath path = e.getPath();
+      if (path != null) {
+        final MethodNodeBase<M> node = (MethodNodeBase)path.getLastPathComponent();
+        myAlarm.cancelAllRequests();
+        myAlarm.addRequest(() -> updateEditorTexts(node), 300);
       }
     };
     myTree.getSelectionModel().addTreeSelectionListener(myTreeSelectionListener);
@@ -135,6 +126,7 @@ public abstract class CallerChooserBase<M extends PsiElement> extends DialogWrap
     return result;
   }
 
+  @RequiredUIAccess
   private void updateEditorTexts(final MethodNodeBase<M> node) {
     final MethodNodeBase<M> parentNode = (MethodNodeBase)node.getParent();
     final String callerText = node != myRoot ? getText(node.getMethod()) : "";
@@ -142,12 +134,9 @@ public abstract class CallerChooserBase<M extends PsiElement> extends DialogWrap
     final String calleeText = node != myRoot ? getText(parentNode.getMethod()) : "";
     final Document calleeDocument = myCalleeEditor.getDocument();
 
-    ApplicationManager.getApplication().runWriteAction(new Runnable() {
-      @Override
-      public void run() {
-        callerDocument.setText(callerText);
-        calleeDocument.setText(calleeText);
-      }
+    myProject.getApplication().runWriteAction(() -> {
+      callerDocument.setText(callerText);
+      calleeDocument.setText(calleeText);
     });
 
     final M caller = node.getMethod();
@@ -158,15 +147,21 @@ public abstract class CallerChooserBase<M extends PsiElement> extends DialogWrap
       TextAttributes attributes = colorManager.getGlobalScheme().getAttributes(EditorColors.TEXT_SEARCH_RESULT_ATTRIBUTES);
       int start = getStartOffset(caller);
       for (PsiElement element : findElementsToHighlight(caller, callee)) {
-        highlighter.addRangeHighlight(myCallerEditor, element.getTextRange().getStartOffset() - start,
-                                      element.getTextRange().getEndOffset() - start, attributes, false, null);
+        highlighter.addRangeHighlight(
+          myCallerEditor,
+          element.getTextRange().getStartOffset() - start,
+          element.getTextRange().getEndOffset() - start,
+          attributes,
+          false,
+          null
+        );
       }
     }
   }
 
   protected Collection<PsiElement> findElementsToHighlight(M caller, PsiElement callee) {
     Query<PsiReference> references = ReferencesSearch.search(callee, new LocalSearchScope(caller), false);
-    return ContainerUtil.mapNotNull(references, psiReference -> psiReference.getElement());
+    return ContainerUtil.mapNotNull(references, PsiReference::getElement);
   }
 
   @Override
@@ -202,12 +197,14 @@ public abstract class CallerChooserBase<M extends PsiElement> extends DialogWrap
     myCallerEditor = createEditor();
     myCalleeEditor = createEditor();
     final JComponent callerComponent = myCallerEditor.getComponent();
-    callerComponent.setBorder(IdeBorderFactory.createTitledBorder(RefactoringBundle.message("caller.chooser.caller.method"),
-                                                                  false));
+    callerComponent.setBorder(
+      IdeBorderFactory.createTitledBorder(RefactoringLocalize.callerChooserCallerMethod().get(), false)
+    );
     splitter.setFirstComponent(callerComponent);
     final JComponent calleeComponent = myCalleeEditor.getComponent();
-    calleeComponent.setBorder(IdeBorderFactory.createTitledBorder(RefactoringBundle.message("caller.chooser.callee.method"),
-                                                                  false));
+    calleeComponent.setBorder(
+      IdeBorderFactory.createTitledBorder(RefactoringLocalize.callerChooserCalleeMethod().get(), false)
+    );
     splitter.setSecondComponent(calleeComponent);
     splitter.setBorder(IdeBorderFactory.createRoundedBorder());
     return splitter;
@@ -222,31 +219,30 @@ public abstract class CallerChooserBase<M extends PsiElement> extends DialogWrap
   }
 
   private Tree createTree() {
-    final Runnable cancelCallback = new Runnable() {
-      @Override
-      public void run() {
-        if (myInitDone) {
-          close(CANCEL_EXIT_CODE);
-        }
-        else {
-          throw new ProcessCanceledException();
-        }
+    final Runnable cancelCallback = () -> {
+      if (myInitDone) {
+        close(CANCEL_EXIT_CODE);
+      }
+      else {
+        throw new ProcessCanceledException();
       }
     };
-    final CheckedTreeNode root = createTreeNode(null, new HashSet<M>(), cancelCallback);
-    myRoot = createTreeNode(myMethod, new HashSet<M>(), cancelCallback);
+    final CheckedTreeNode root = createTreeNode(null, new HashSet<>(), cancelCallback);
+    myRoot = createTreeNode(myMethod, new HashSet<>(), cancelCallback);
     root.add(myRoot);
     final CheckboxTree.CheckboxTreeCellRenderer cellRenderer = new CheckboxTree.CheckboxTreeCellRenderer(true, false) {
       @Override
-      public void customizeRenderer(JTree tree,
-                                    Object value,
-                                    boolean selected,
-                                    boolean expanded,
-                                    boolean leaf,
-                                    int row,
-                                    boolean hasFocus) {
-        if (value instanceof MethodNodeBase) {
-          ((MethodNodeBase)value).customizeRenderer(getTextRenderer());
+      public void customizeRenderer(
+        JTree tree,
+        Object value,
+        boolean selected,
+        boolean expanded,
+        boolean leaf,
+        int row,
+        boolean hasFocus
+      ) {
+        if (value instanceof MethodNodeBase methodNodeBase) {
+          methodNodeBase.customizeRenderer(getTextRenderer());
         }
       }
     };
@@ -283,15 +279,15 @@ public abstract class CallerChooserBase<M extends PsiElement> extends DialogWrap
 
   @Override
   protected void doOKAction() {
-    final Set<M> selectedMethods = new HashSet<M>();
+    final Set<M> selectedMethods = new HashSet<>();
     getSelectedMethods(selectedMethods);
     myCallback.accept(selectedMethods);
     super.doOKAction();
   }
 
   @Override
+  @RequiredUIAccess
   public JComponent getPreferredFocusedComponent() {
     return myTree;
   }
-
 }

@@ -17,13 +17,14 @@
 package consulo.ide.impl.idea.tasks.actions;
 
 import consulo.ide.impl.idea.ide.BrowserUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.task.TaskManager;
 import consulo.task.impl.internal.action.BaseTaskAction;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
@@ -31,7 +32,9 @@ import jakarta.annotation.Nullable;
  */
 public class OpenTaskInBrowserAction extends BaseTaskAction {
   
-  public void actionPerformed(AnActionEvent e) {
+  @Override
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     String url = getIssueUrl(e);
     if (url != null) {
       BrowserUtil.launchBrowser(url);
@@ -39,6 +42,7 @@ public class OpenTaskInBrowserAction extends BaseTaskAction {
   }
 
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent event) {
     super.update(event);
     if (event.getPresentation().isEnabled()) {
@@ -56,7 +60,7 @@ public class OpenTaskInBrowserAction extends BaseTaskAction {
 
   @Nullable
   private static String getIssueUrl(AnActionEvent event) {
-    Project project = event.getData(CommonDataKeys.PROJECT);
+    Project project = event.getData(Project.KEY);
     return project == null ? null : TaskManager.getManager(project).getActiveTask().getIssueUrl();
   }
 }

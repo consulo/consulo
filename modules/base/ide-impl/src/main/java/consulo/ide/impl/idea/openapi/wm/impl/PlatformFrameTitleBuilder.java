@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.ui.UISettings;
 import consulo.application.util.UserHomeFileUtil;
 import consulo.fileEditor.VfsPresentationUtil;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
@@ -28,11 +27,12 @@ import consulo.module.content.util.ProjectUtilCore;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.wm.FrameTitleBuilder;
+import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import java.util.Arrays;
 
 /**

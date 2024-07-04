@@ -15,22 +15,22 @@
  */
 package consulo.ide.impl.idea.openapi.wm.impl;
 
-import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.JBPanel;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.ui.style.StyleManager;
 
 import java.awt.*;
 
 public class IdePanePanel extends JBPanel {
-
   public IdePanePanel(LayoutManager layout) {
     super(layout);
 
     setBackground(new JBColor(() -> {
       Color light = ColorUtil.darker(UIUtil.getPanelBackground(), 3);
-      return UIUtil.isUnderDarcula() ? Gray._40 : light;
+      return StyleManager.get().getCurrentStyle().isDark() ? Gray._40 : light;
     }));
   }
 }

@@ -16,7 +16,6 @@
 
 package consulo.ide.impl.idea.tasks.actions;
 
-import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.versionControlSystem.change.ChangeList;
@@ -46,10 +45,10 @@ public class AssociateWithTaskAction extends ToggleAction implements DumbAware {
     if (lists == null) {
       return false;
     }
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     TaskManager manager = TaskManager.getManager(project);
     for (ChangeList list : lists) {
-      if (list instanceof LocalChangeList && manager.getAssociatedTask((LocalChangeList)list) == null) {
+      if (list instanceof LocalChangeList localChangeList && manager.getAssociatedTask(localChangeList) == null) {
         return false;
       }
     }
@@ -62,11 +61,11 @@ public class AssociateWithTaskAction extends ToggleAction implements DumbAware {
     if (lists == null) {
       return;
     }
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     TaskManager manager = TaskManager.getManager(project);
     for (ChangeList list : lists) {
-      if (list instanceof LocalChangeList) {
-        manager.trackContext((LocalChangeList)list);
+      if (list instanceof LocalChangeList localChangeList) {
+        manager.trackContext(localChangeList);
       }
     }
   }

@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.ui;
 
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
@@ -34,7 +33,7 @@ public class ShowColorPickerAction extends AnAction {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     JComponent root = rootComponent(project);
     if (root != null) {
       ColorChooser.chooseColor(root, "Color Picker", null, true, true, color -> {

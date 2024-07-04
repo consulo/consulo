@@ -16,13 +16,12 @@
 
 package consulo.ide.impl.idea.refactoring.inline;
 
-import consulo.project.Project;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.psi.PsiElement;
-import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.project.Project;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public abstract class InlineOptionsWithSearchSettingsDialog extends InlineOptionsDialog {
@@ -73,8 +72,8 @@ public abstract class InlineOptionsWithSearchSettingsDialog extends InlineOption
     panel.add(super.createCenterPanel(), gbc);
 
 
-    myCbSearchInComments = new JCheckBox(RefactoringBundle.message("search.in.comments.and.strings"), isSearchInCommentsAndStrings());
-    myCbSearchTextOccurences = new JCheckBox(RefactoringBundle.message("search.for.text.occurrences"), isSearchForTextOccurrences());
+    myCbSearchInComments = new JCheckBox(RefactoringLocalize.searchInCommentsAndStrings().get(), isSearchInCommentsAndStrings());
+    myCbSearchTextOccurences = new JCheckBox(RefactoringLocalize.searchForTextOccurrences().get(), isSearchForTextOccurrences());
     gbc.weightx = 0;
     gbc.gridwidth = 1;
     gbc.gridy = 1;
@@ -82,12 +81,7 @@ public abstract class InlineOptionsWithSearchSettingsDialog extends InlineOption
     panel.add(myCbSearchInComments, gbc);
     gbc.gridx = 1;
     panel.add(myCbSearchTextOccurences, gbc);
-    final ActionListener actionListener = new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        setEnabledSearchSettngs(myRbInlineAll.isSelected());
-      }
-    };
+    final ActionListener actionListener = e -> setEnabledSearchSettngs(myRbInlineAll.isSelected());
     myRbInlineThisOnly.addActionListener(actionListener);
     myRbInlineAll.addActionListener(actionListener);
     setEnabledSearchSettngs(myRbInlineAll.isSelected());

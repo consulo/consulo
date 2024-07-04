@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.openapi.wm.impl;
 
 import consulo.application.util.UserHomeFileUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -85,7 +84,7 @@ public class ProjectWindowActionGroup extends DefaultActionGroup {
   }
 
   public void activateNextWindow(AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     if (project == null) {
       return;
     }
@@ -100,7 +99,7 @@ public class ProjectWindowActionGroup extends DefaultActionGroup {
   }
 
   public void activatePreviousWindow(AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     if (project == null) {
       return;
     }
@@ -142,7 +141,7 @@ public class ProjectWindowActionGroup extends DefaultActionGroup {
       final ProjectWindowAction windowAction = (ProjectWindowAction) child;
       if (projectName.equals(windowAction.getProjectName())) {
         if (result == null) {
-          result = new ArrayList<ProjectWindowAction>();
+          result = new ArrayList<>();
         }
         result.add(windowAction);
       }

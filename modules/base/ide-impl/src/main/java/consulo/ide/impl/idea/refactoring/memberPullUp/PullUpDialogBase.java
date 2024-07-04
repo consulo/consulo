@@ -15,23 +15,22 @@
  */
 package consulo.ide.impl.idea.refactoring.memberPullUp;
 
-import consulo.project.Project;
-import consulo.language.psi.PsiElement;
-import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.ide.impl.idea.refactoring.ui.AbstractMemberSelectionTable;
+import consulo.ide.impl.idea.refactoring.ui.MemberSelectionPanelBase;
 import consulo.language.editor.refactoring.classMember.AbstractMemberInfoStorage;
 import consulo.language.editor.refactoring.classMember.MemberInfoBase;
 import consulo.language.editor.refactoring.classMember.MemberInfoChange;
 import consulo.language.editor.refactoring.classMember.MemberInfoModel;
-import consulo.ide.impl.idea.refactoring.ui.AbstractMemberSelectionTable;
-import consulo.ide.impl.idea.refactoring.ui.MemberSelectionPanelBase;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.ui.RefactoringDialog;
+import consulo.language.psi.PsiElement;
+import consulo.project.Project;
 import consulo.usage.UsageViewUtil;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,7 +98,7 @@ public abstract class PullUpDialogBase<Storage extends AbstractMemberInfoStorage
 
     myClassCombo = new JComboBox(mySuperClasses.toArray());
     initClassCombo(myClassCombo);
-    classComboLabel.setText(RefactoringBundle.message("pull.up.members.to", UsageViewUtil.getLongName(myClass)));
+    classComboLabel.setText(RefactoringLocalize.pullUpMembersTo(UsageViewUtil.getLongName(myClass)).get());
     classComboLabel.setLabelFor(myClassCombo);
     final Class preselection = getPreselection();
     int indexToSelect = 0;
@@ -107,12 +106,9 @@ public abstract class PullUpDialogBase<Storage extends AbstractMemberInfoStorage
       indexToSelect = mySuperClasses.indexOf(preselection);
     }
     myClassCombo.setSelectedIndex(indexToSelect);
-    myClassCombo.addItemListener(new ItemListener() {
-      @Override
-      public void itemStateChanged(ItemEvent e) {
-        if (e.getStateChange() == ItemEvent.SELECTED) {
-          updateMemberInfo();
-        }
+    myClassCombo.addItemListener(e -> {
+      if (e.getStateChange() == ItemEvent.SELECTED) {
+        updateMemberInfo();
       }
     });
     updateMemberInfo();
@@ -134,9 +130,10 @@ public abstract class PullUpDialogBase<Storage extends AbstractMemberInfoStorage
   @Override
   protected JComponent createCenterPanel() {
     JPanel panel = new JPanel(new BorderLayout());
-    myMemberSelectionPanel = new MemberSelectionPanelBase<Member, MemberInfo, AbstractMemberSelectionTable<Member, MemberInfo>>(RefactoringBundle.message("members.to.be.pulled.up"), createMemberSelectionTable(myMemberInfos));
+    myMemberSelectionPanel =
+      new MemberSelectionPanelBase<>(RefactoringLocalize.membersToBePulledUp().get(), createMemberSelectionTable(myMemberInfos));
     myMemberInfoModel = createMemberInfoModel();
-    myMemberInfoModel.memberInfoChanged(new MemberInfoChange<Member, MemberInfo>(myMemberInfos));
+    myMemberInfoModel.memberInfoChanged(new MemberInfoChange<>(myMemberInfos));
     myMemberSelectionPanel.getTable().setMemberInfoModel(myMemberInfoModel);
     myMemberSelectionPanel.getTable().addMemberInfoChangeListener(myMemberInfoModel);
     panel.add(myMemberSelectionPanel, BorderLayout.CENTER);

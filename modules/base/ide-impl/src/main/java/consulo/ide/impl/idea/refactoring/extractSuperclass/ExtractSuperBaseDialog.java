@@ -15,26 +15,26 @@
  */
 package consulo.ide.impl.idea.refactoring.extractSuperclass;
 
-import consulo.undoRedo.CommandProcessor;
 import consulo.application.HelpManager;
-import consulo.project.Project;
-import consulo.ui.ex.awt.ComponentWithBrowseButton;
-import consulo.util.lang.StringUtil;
-import consulo.language.psi.PsiDirectory;
-import consulo.language.psi.PsiElement;
-import consulo.language.editor.refactoring.BaseRefactoringProcessor;
-import consulo.language.editor.refactoring.RefactoringBundle;
-import consulo.language.editor.refactoring.classMember.MemberInfoBase;
 import consulo.ide.impl.idea.refactoring.ui.DocCommentPanel;
+import consulo.language.editor.refactoring.BaseRefactoringProcessor;
+import consulo.language.editor.refactoring.classMember.MemberInfoBase;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.ui.RefactoringDialog;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
-import consulo.ui.ex.RecentsManager;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
-
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.RecentsManager;
+import consulo.ui.ex.awt.ComponentWithBrowseButton;
+import consulo.undoRedo.CommandProcessor;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -129,9 +129,9 @@ public abstract class ExtractSuperBaseDialog<ClassType extends PsiElement, Membe
     Box box = Box.createHorizontalBox();
     final String s = StringUtil.decapitalize(getEntityName());
     myRbExtractSuperclass = new JRadioButton();
-    myRbExtractSuperclass.setText(RefactoringBundle.message("extractSuper.extract", s));
+    myRbExtractSuperclass.setText(RefactoringLocalize.extractsuperExtract(s).get());
     myRbExtractSubclass = new JRadioButton();
-    myRbExtractSubclass.setText(RefactoringBundle.message("extractSuper.rename.original.class", s));
+    myRbExtractSubclass.setText(RefactoringLocalize.extractsuperRenameOriginalClass(s).get());
     box.add(myRbExtractSuperclass);
     box.add(myRbExtractSubclass);
     box.add(Box.createHorizontalGlue());
@@ -141,12 +141,7 @@ public abstract class ExtractSuperBaseDialog<ClassType extends PsiElement, Membe
     customizeRadiobuttons(box, buttonGroup);
     myRbExtractSuperclass.setSelected(true);
 
-    ItemListener listener = new ItemListener() {
-      @Override
-      public void itemStateChanged(ItemEvent e) {
-        updateDialog();
-      }
-    };
+    ItemListener listener = e -> updateDialog();
     myRbExtractSuperclass.addItemListener(listener);
     myRbExtractSubclass.addItemListener(listener);
     return box;
@@ -195,6 +190,7 @@ public abstract class ExtractSuperBaseDialog<ClassType extends PsiElement, Membe
     }
 
   @Override
+  @RequiredUIAccess
   public JComponent getPreferredFocusedComponent() {
     return myExtractedSuperNameField;
   }
@@ -224,6 +220,7 @@ public abstract class ExtractSuperBaseDialog<ClassType extends PsiElement, Membe
   }
 
   @Override
+  @RequiredUIAccess
   protected void doAction() {
     final String[] errorString = new String[]{null};
     final String extractedSuperName = getExtractedSuperName();
@@ -242,22 +239,20 @@ public abstract class ExtractSuperBaseDialog<ClassType extends PsiElement, Membe
         myExtractedSuperNameField.requestFocusInWindow();
       }
       else {
-        CommandProcessor.getInstance().executeCommand(myProject, new Runnable() {
-          @Override
-          public void run() {
+        CommandProcessor.getInstance().executeCommand(
+          myProject,
+          () -> {
             try {
               preparePackage();
             }
-            catch (IncorrectOperationException e) {
+            catch (IncorrectOperationException | OperationFailedException e) {
               errorString[0] = e.getMessage();
               myPackageNameField.requestFocusInWindow();
             }
-            catch (OperationFailedException e) {
-              errorString[0] = e.getMessage();
-              myPackageNameField.requestFocusInWindow();
-            }
-          }
-        }, RefactoringBundle.message("create.directory"), null);
+          },
+          RefactoringLocalize.createDirectory().get(),
+          null
+        );
       }
     }
     if (errorString[0] != null) {
@@ -296,7 +291,7 @@ public abstract class ExtractSuperBaseDialog<ClassType extends PsiElement, Membe
   }
 
   public Collection<MemberInfoType> getSelectedMemberInfos() {
-    ArrayList<MemberInfoType> result = new ArrayList<MemberInfoType>(myMemberInfos.size());
+    ArrayList<MemberInfoType> result = new ArrayList<>(myMemberInfos.size());
     for (MemberInfoType info : myMemberInfos) {
       if (info.isChecked()) {
         result.add(info);
@@ -304,6 +299,4 @@ public abstract class ExtractSuperBaseDialog<ClassType extends PsiElement, Membe
     }
     return result;
   }
-
-
 }

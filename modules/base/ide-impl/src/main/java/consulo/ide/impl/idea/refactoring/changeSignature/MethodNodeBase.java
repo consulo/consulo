@@ -15,15 +15,16 @@
  */
 package consulo.ide.impl.idea.refactoring.changeSignature;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressManager;
-import consulo.project.Project;
 import consulo.component.util.Iconable;
-import consulo.util.lang.ref.Ref;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
+import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.psi.PsiElement;
-import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.project.Project;
 import consulo.ui.ex.awt.tree.CheckedTreeNode;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
-import consulo.language.icon.IconDescriptorUpdaters;
+import consulo.util.lang.ref.Ref;
 
 import javax.swing.tree.TreeNode;
 import java.util.*;
@@ -56,7 +57,7 @@ public abstract class MethodNodeBase<M extends PsiElement> extends CheckedTreeNo
       final List<M> callers = findCallers();
       children = new Vector(callers.size());
       for (M caller : callers) {
-        final HashSet<M> called = new HashSet<M>(myCalled);
+        final HashSet<M> called = new HashSet<>(myCalled);
         called.add(myMethod);
         final MethodNodeBase<M> child = createNode(caller, called);
         children.add(child);
@@ -85,19 +86,20 @@ public abstract class MethodNodeBase<M extends PsiElement> extends CheckedTreeNo
 
   private List<M> findCallers() {
     if (myMethod == null) return Collections.emptyList();
-    final Ref<List<M>> callers = new Ref<List<M>>();
-    if (!ProgressManager.getInstance().runProcessWithProgressSynchronously(new Runnable() {
-      @Override
-      public void run() {
-        callers.set(computeCallers());
-      }
-    }, RefactoringBundle.message("caller.chooser.looking.for.callers"), true, myProject)) {
+    final Ref<List<M>> callers = new Ref<>();
+    if (!ProgressManager.getInstance().runProcessWithProgressSynchronously(
+      () -> callers.set(computeCallers()),
+      RefactoringLocalize.callerChooserLookingForCallers().get(),
+      true,
+      myProject
+    )) {
       myCancelCallback.run();
       return Collections.emptyList();
     }
     return callers.get();
   }
 
+  @RequiredReadAction
   public void customizeRenderer(ColoredTreeCellRenderer renderer) {
     if (myMethod == null) return;
     int flags = Iconable.ICON_FLAG_VISIBILITY | Iconable.ICON_FLAG_READ_STATUS;

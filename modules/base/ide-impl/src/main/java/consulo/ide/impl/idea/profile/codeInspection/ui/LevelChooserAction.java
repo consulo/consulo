@@ -15,24 +15,24 @@
  */
 package consulo.ide.impl.idea.profile.codeInspection.ui;
 
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
-import consulo.language.editor.rawHighlight.HighlightInfoType;
-import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
+import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.SeverityUtil;
-import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
 import consulo.ide.impl.idea.codeInspection.ex.SeverityEditorDialog;
 import consulo.language.editor.annotation.HighlightSeverity;
-import consulo.ui.ex.awt.action.ComboBoxAction;
-import consulo.application.dumb.DumbAware;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
+import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
+import consulo.language.editor.rawHighlight.HighlightInfoType;
 import consulo.language.editor.rawHighlight.SeverityProvider;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
-
+import consulo.ui.ex.awt.action.ComboBoxAction;
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -69,7 +69,7 @@ public abstract class LevelChooserAction extends ComboBoxAction implements DumbA
       @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull final AnActionEvent e) {
-        final SeverityEditorDialog dlg = new SeverityEditorDialog(e.getData(CommonDataKeys.PROJECT), myChosen, mySeverityRegistrar);
+        final SeverityEditorDialog dlg = new SeverityEditorDialog(e.getData(Project.KEY), myChosen, mySeverityRegistrar);
         if (dlg.showAndGet()) {
           final HighlightInfoType type = dlg.getSelectedType();
           if (type != null) {
@@ -84,7 +84,7 @@ public abstract class LevelChooserAction extends ComboBoxAction implements DumbA
   }
 
   public static SortedSet<HighlightSeverity> getSeverities(final SeverityRegistrarImpl severityRegistrar) {
-    final SortedSet<HighlightSeverity> severities = new TreeSet<HighlightSeverity>(severityRegistrar);
+    final SortedSet<HighlightSeverity> severities = new TreeSet<>(severityRegistrar);
     for (final SeverityRegistrarImpl.SeverityBasedTextAttributes type : SeverityUtil.getRegisteredHighlightingInfoTypes(severityRegistrar)) {
       severities.add(type.getSeverity());
     }
@@ -119,6 +119,7 @@ public abstract class LevelChooserAction extends ComboBoxAction implements DumbA
     }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull final AnActionEvent e) {
       final HighlightSeverity severity = getSeverity();
       setChosen(severity);

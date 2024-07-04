@@ -15,16 +15,14 @@
  */
 package consulo.ide.impl.idea.openapi.wm.impl;
 
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.action.ToggleAction;
 import consulo.application.dumb.DumbAware;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import consulo.application.ui.wm.IdeFocusManager;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -107,11 +105,8 @@ public class ProjectWindowAction extends ToggleAction implements DumbAware {
   @Override
   public boolean isSelected(AnActionEvent e) {
     // show check mark for active and visible project frame
-    final Project project = e.getData(CommonDataKeys.PROJECT);
-    if (project == null) {
-      return false;
-    }
-    return myProjectLocation.equals(project.getPresentableUrl());
+    final Project project = e.getData(Project.KEY);
+    return project != null && myProjectLocation.equals(project.getPresentableUrl());
   }
 
   @Override

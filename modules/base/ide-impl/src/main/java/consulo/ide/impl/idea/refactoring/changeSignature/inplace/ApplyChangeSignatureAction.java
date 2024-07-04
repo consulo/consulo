@@ -17,13 +17,13 @@ package consulo.ide.impl.idea.refactoring.changeSignature.inplace;
 
 import consulo.codeEditor.Editor;
 import consulo.language.editor.intention.SyntheticIntentionAction;
-import consulo.project.Project;
+import consulo.language.editor.refactoring.action.BaseRefactoringIntentionAction;
+import consulo.language.editor.refactoring.changeSignature.ChangeInfo;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.editor.refactoring.action.BaseRefactoringIntentionAction;
-import consulo.language.editor.refactoring.RefactoringBundle;
-import consulo.language.editor.refactoring.changeSignature.ChangeInfo;
 import consulo.language.util.IncorrectOperationException;
+import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -37,7 +37,7 @@ public class ApplyChangeSignatureAction extends BaseRefactoringIntentionAction i
   @Nonnull
   @Override
   public String getText() {
-    return RefactoringBundle.message("changing.signature.of.0", myMethodName);
+    return RefactoringLocalize.changingSignatureOf0(myMethodName).get();
   }
 
   @Override

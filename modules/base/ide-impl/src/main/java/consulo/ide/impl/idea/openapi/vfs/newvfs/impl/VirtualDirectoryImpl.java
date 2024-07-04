@@ -1,18 +1,17 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.vfs.newvfs.impl;
 
-import consulo.application.ApplicationManager;
-import consulo.application.util.SystemInfo;
+import consulo.application.Application;
 import consulo.ide.impl.idea.openapi.application.impl.ApplicationInfoImpl;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.ChildInfoImpl;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.FSRecords;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFS;
 import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.language.psi.cache.PsiCachedValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.util.collection.CharSequenceHashingStrategy;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.Sets;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
@@ -43,7 +42,7 @@ import java.util.stream.Collectors;
 public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
   private static final Logger LOG = Logger.getInstance(VirtualDirectoryImpl.class);
 
-  private static final boolean CHECK = ApplicationManager.getApplication().isUnitTestMode();
+  private static final boolean CHECK = Application.get().isUnitTestMode();
 
   final VfsData.DirectoryData myData;
   private final NewVirtualFileSystem myFs;
@@ -164,7 +163,7 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
   }
 
   private VirtualFileSystemEntry handleInvalidDirectory() {
-    if (!ApplicationManager.getApplication().isReadAccessAllowed()) {
+    if (!Application.get().isReadAccessAllowed()) {
       // We can be inside refreshAndFindFileByPath, which must be called outside read action, and
       // throwing an exception doesn't seem a good idea when the callers can't do anything about it
       return null;
@@ -238,13 +237,13 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
     if (delegate.markNewFilesAsDirty()) {
       child.markDirty();
     }
-    if (attributes.isDirectory() && child instanceof VirtualDirectoryImpl && isEmptyDirectory) {
+    if (attributes.isDirectory() && child instanceof VirtualDirectoryImpl virtualDirectory && isEmptyDirectory) {
       // when creating empty directory we need to make sure
       // every file crested inside will fire "file created" event
       // in order to virtual file pointer manager get those events
       // to update its pointers properly
       // (because currently VirtualFilePointerManager ignores empty directory creation events for performance reasons)
-      ((VirtualDirectoryImpl)child).setChildrenLoaded();
+      virtualDirectory.setChildrenLoaded();
     }
 
     return child;
@@ -346,13 +345,15 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
           CharSequence name2 = o2.name;
           int cmp = compareNames(name1, name2, caseSensitive);
           if (cmp == 0 && name1 != name2 && errorsCount[0] < 10) {
-            LOG.error(ourPersistence + " returned duplicate file names(" + name1 + "," + name2 + ")" +
-                      " caseSensitive: " + caseSensitive +
-                      " SystemInfo.isFileSystemCaseSensitive: " + SystemInfo.isFileSystemCaseSensitive +
-                      " Platform.current().os(): " + Platform.current().os().name() + " " + Platform.current().os().version() +
-                      " wasChildrenLoaded: " + wasChildrenLoaded +
-                      " in the dir: " + this + ";" +
-                      " children: " + Arrays.stream(childrenIds).map(Objects::toString).collect(Collectors.joining(", ")));
+            LOG.error(
+              ourPersistence + " returned duplicate file names(" + name1 + "," + name2 + ")" +
+                " caseSensitive: " + caseSensitive +
+                " SystemInfo.isFileSystemCaseSensitive: " + Platform.current().fs().isCaseSensitive() +
+                " Platform.current().os(): " + Platform.current().os().name() + " " + Platform.current().os().version() +
+                " wasChildrenLoaded: " + wasChildrenLoaded +
+                " in the dir: " + this + ";" +
+                " children: " + Arrays.stream(childrenIds).map(Objects::toString).collect(Collectors.joining(", "))
+            );
             errorsCount[0]++;
             if (!caseSensitive) {
               // Sometimes file system rules for case insensitive comparison differ from Java rules.
@@ -447,7 +448,10 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
 
   private static void error(String message, VirtualFileSystemEntry[] array, Object... details) {
     String children = StringUtil.join(array, VirtualDirectoryImpl::verboseToString, "\n");
-    String detailsStr = StringUtil.join(ContainerUtil.<Object, Object>map(details, o -> o instanceof Object[] ? Arrays.toString((Object[])o) : o), "\n");
+    String detailsStr = StringUtil.join(
+      ContainerUtil.<Object, Object>map(details, o -> o instanceof Object[] objArray ? Arrays.toString(objArray) : o),
+      "\n"
+    );
     throw new AssertionError(message + "; children: " + children + "\nDetails: " + detailsStr);
   }
 
@@ -475,7 +479,11 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
   }
 
   // optimisation: works faster than added.forEach(this::addChild)
-  public void createAndAddChildren(@Nonnull List<? extends ChildInfo> added, boolean markAllChildrenLoaded, @Nonnull PairConsumer<? super VirtualFile, ? super ChildInfo> fileCreated) {
+  public void createAndAddChildren(
+    @Nonnull List<? extends ChildInfo> added,
+    boolean markAllChildrenLoaded,
+    @Nonnull PairConsumer<? super VirtualFile, ? super ChildInfo> fileCreated
+  ) {
     if (added.size() <= 1) {
       //noinspection ForLoopReplaceableByForEach
       for (int i = 0; i < added.size(); i++) {
@@ -514,7 +522,7 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
         VirtualFileSystemEntry file = createChild(info.getId(), info.getNameId(), getFileSystem(), attributes, isEmptyDirectory);
         fileCreated.consume(file, info);
       }
-      List<ChildInfo> existingChildren = new AbstractList<ChildInfo>() {
+      List<ChildInfo> existingChildren = new AbstractList<>() {
         @Override
         public ChildInfo get(int index) {
           int id = oldIds[index];
@@ -527,7 +535,13 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
           return oldIds.length;
         }
       };
-      ContainerUtil.processSortedListsInOrder(added, existingChildren, pairComparator, true, nextInfo -> mergedIds.add(nextInfo.getId()));
+      ContainerUtil.processSortedListsInOrder(
+        added,
+        existingChildren,
+        pairComparator,
+        true,
+        nextInfo -> mergedIds.add(nextInfo.getId())
+      );
       myData.myChildrenIds = mergedIds.toArray();
 
       if (markAllChildrenLoaded) {
@@ -713,8 +727,8 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
   private void markDirtyRecursivelyInternal() {
     for (VirtualFileSystemEntry child : getArraySafely()) {
       child.markDirtyInternal();
-      if (child instanceof VirtualDirectoryImpl) {
-        ((VirtualDirectoryImpl)child).markDirtyRecursivelyInternal();
+      if (child instanceof VirtualDirectoryImpl virtualDirectory) {
+        virtualDirectory.markDirtyRecursivelyInternal();
       }
     }
   }

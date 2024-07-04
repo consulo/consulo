@@ -1,6 +1,6 @@
 package consulo.ide.impl.idea.remote;
 
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.util.io.FileUtil;
 import jakarta.annotation.Nonnull;
 
 /**

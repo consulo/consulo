@@ -2,9 +2,6 @@
 package consulo.ide.impl.idea.openapi.vfs.impl.local;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.application.util.SystemInfo;
-import consulo.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.DiskQueryRelay;
 import consulo.ide.impl.idea.openapi.vfs.SafeWriteRequestor;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.VfsImplUtil;
@@ -16,6 +13,7 @@ import consulo.platform.Platform;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.io.FileAttributes;
 import consulo.util.io.FileTooBigException;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.ThrowableConsumer;
 import consulo.virtualFileSystem.*;
@@ -200,7 +198,7 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
   public void refreshIoFiles(@Nonnull Iterable<? extends File> files, boolean async, boolean recursive, @Nullable Runnable onFinish) {
     VirtualFileManagerEx manager = (VirtualFileManagerEx)VirtualFileManager.getInstance();
 
-    Application app = ApplicationManager.getApplication();
+    Application app = Application.get();
     boolean fireCommonRefreshSession = app.isDispatchThread() || app.isWriteAccessAllowed();
     if (fireCommonRefreshSession) manager.fireBeforeRefreshStart(false);
 
@@ -376,7 +374,7 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
 
   @Override
   public boolean isCaseSensitive() {
-    return SystemInfo.isFileSystemCaseSensitive;
+    return Platform.current().fs().isCaseSensitive();
   }
 
   @Override

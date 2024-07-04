@@ -15,13 +15,13 @@
  */
 package consulo.ide.impl.idea.ui.content;
 
-import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
+import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
-import consulo.ui.ex.internal.ToolWindowEx;
-import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.internal.ToolWindowEx;
 
 public class ContentManagerUtil {
   private ContentManagerUtil() {
@@ -30,8 +30,9 @@ public class ContentManagerUtil {
   /**
    * This is utility method. It returns <code>ContentManager</code> from the current context.
    */
-  public static ContentManager getContentManagerFromContext(DataContext dataContext, boolean requiresVisibleToolWindow){
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+  @RequiredUIAccess
+  public static ContentManager getContentManagerFromContext(DataContext dataContext, boolean requiresVisibleToolWindow) {
+    Project project = dataContext.getData(Project.KEY);
     if (project == null) {
       return null;
     }
@@ -39,16 +40,14 @@ public class ContentManagerUtil {
     ToolWindowManagerEx mgr=ToolWindowManagerEx.getInstanceEx(project);
 
     String id = mgr.getActiveToolWindowId();
-    if (id == null) {
-      if(mgr.isEditorComponentActive()){
-        id = mgr.getLastActiveToolWindowId();
-      }
+    if (id == null && mgr.isEditorComponentActive()) {
+      id = mgr.getLastActiveToolWindowId();
     }
-    if(id == null){
+    if (id == null){
       return null;
     }
 
-    ToolWindowEx toolWindow = (ToolWindowEx)mgr.getToolWindow(id);
+    ToolWindowEx toolWindow = (ToolWindowEx) mgr.getToolWindow(id);
     if (requiresVisibleToolWindow && !toolWindow.isVisible()) {
       return null;
     }
