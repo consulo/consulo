@@ -30,7 +30,8 @@ import consulo.ide.impl.idea.diff.requests.UnknownFileTypeDiffRequest;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.*;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.ApplyFilePatchBase;
 import consulo.ide.impl.idea.openapi.util.Getter;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ChangeGoToChangePopupAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.ApplyPatchForBaseRevisionTexts;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.PatchDiffRequestFactory;
@@ -60,10 +61,14 @@ import java.util.*;
 import java.util.function.Consumer;
 
 public class DiffShelvedChangesAction extends AnAction implements DumbAware {
+  @Override
+  @RequiredUIAccess
   public void update(final AnActionEvent e) {
     e.getPresentation().setEnabled(isEnabled(e.getDataContext()));
   }
 
+  @Override
+  @RequiredUIAccess
   public void actionPerformed(final AnActionEvent e) {
     showShelvedChangesDiff(e.getDataContext());
   }
@@ -76,11 +81,10 @@ public class DiffShelvedChangesAction extends AnAction implements DumbAware {
     if (changeLists == null) {
       changeLists = dc.getData(ShelvedChangesViewManager.SHELVED_RECYCLED_CHANGELIST_KEY);
     }
-    if (changeLists == null || changeLists.length != 1) return false;
-
-    return true;
+    return changeLists != null && changeLists.length == 1;
   }
 
+  @RequiredUIAccess
   public static void showShelvedChangesDiff(final DataContext dc) {
     final Project project = dc.getData(Project.KEY);
     if (project == null) return;
@@ -133,9 +137,11 @@ public class DiffShelvedChangesAction extends AnAction implements DumbAware {
     }
   }
 
-  private static void processBinaryFiles(@Nonnull final Project project,
-                                         @Nonnull List<ShelvedBinaryFile> files,
-                                         @Nonnull List<MyDiffRequestProducer> diffRequestProducers) {
+  private static void processBinaryFiles(
+    @Nonnull final Project project,
+    @Nonnull List<ShelvedBinaryFile> files,
+    @Nonnull List<MyDiffRequestProducer> diffRequestProducers
+  ) {
     final String base = project.getBaseDir().getPath();
     for (final ShelvedBinaryFile shelvedChange : files) {
       final File file = new File(base, shelvedChange.AFTER_PATH == null ? shelvedChange.BEFORE_PATH : shelvedChange.AFTER_PATH);
@@ -203,9 +209,19 @@ public class DiffShelvedChangesAction extends AnAction implements DumbAware {
                 return baseRevisionTextPatchEP.provideContent(relativePath, commitContext);
               };
 
-              Getter<ApplyPatchForBaseRevisionTexts> getter = () -> ApplyPatchForBaseRevisionTexts.create(project, file, pathBeforeRename, patch, baseContentGetter);
+              Getter<ApplyPatchForBaseRevisionTexts> getter =
+                () -> ApplyPatchForBaseRevisionTexts.create(project, file, pathBeforeRename, patch, baseContentGetter);
 
-              return PatchDiffRequestFactory.createConflictDiffRequest(project, file, patch, "Shelved Version", getter, getName(), context, indicator);
+              return PatchDiffRequestFactory.createConflictDiffRequest(
+                project,
+                file,
+                patch,
+                "Shelved Version",
+                getter,
+                getName(),
+                context,
+                indicator
+              );
             }
             catch (VcsException e) {
               throw new DiffRequestProducerException("Can't show diff for '" + getName() + "'", e);
@@ -236,10 +252,7 @@ public class DiffShelvedChangesAction extends AnAction implements DumbAware {
         try {
           textFilePatches = ShelveChangesManager.loadPatches(myProject, shelvedChange.getPatchPath(), commitContext);
         }
-        catch (IOException e) {
-          throw new VcsException(e);
-        }
-        catch (PatchSyntaxException e) {
+        catch (IOException | PatchSyntaxException e) {
           throw new VcsException(e);
         }
         myFilePatchesMap.put(shelvedChange.getPatchPath(), textFilePatches);

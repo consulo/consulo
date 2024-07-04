@@ -32,7 +32,6 @@ import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
 import consulo.ui.ex.action.AnAction;
@@ -40,13 +39,14 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderBase;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.util.io.FileUtil;
 import consulo.versionControlSystem.FilePath;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ChangeGoToChangePopupAction;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -66,7 +66,7 @@ public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
   }
 
   private boolean isVisible(final DataContext dc) {
-    final Project project = dc.getData(CommonDataKeys.PROJECT);
+    final Project project = dc.getData(Project.KEY);
     return (project != null) && (dc.getData(VcsDataKeys.LABEL_BEFORE) != null) && (dc.getData(VcsDataKeys.LABEL_AFTER) != null);
   }
 
@@ -81,7 +81,7 @@ public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
     final DataContext dc = e.getDataContext();
     if ((!isVisible(dc)) || (!isEnabled(dc))) return;
 
-    final Project project = dc.getData(CommonDataKeys.PROJECT);
+    final Project project = dc.getData(Project.KEY);
     final Iterable<Pair<FilePath, FileStatus>> iterable = e.getRequiredData(VcsDataKeys.UPDATE_VIEW_FILES_ITERABLE);
     final Label before = (Label)e.getRequiredData(VcsDataKeys.LABEL_BEFORE);
     final Label after = (Label)e.getRequiredData(VcsDataKeys.LABEL_AFTER);
@@ -92,7 +92,7 @@ public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
   }
 
   private static class MyDiffRequestChain extends UserDataHolderBase implements DiffRequestChain, GoToChangePopupBuilder.Chain {
-    @jakarta.annotation.Nullable
+    @Nullable
     private final Project myProject;
     @Nonnull
     private final Label myBefore;
@@ -103,11 +103,13 @@ public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
 
     private int myIndex;
 
-    public MyDiffRequestChain(@jakarta.annotation.Nullable Project project,
-                              @Nonnull Iterable<Pair<FilePath, FileStatus>> iterable,
-                              @Nonnull Label before,
-                              @Nonnull Label after,
-                              @jakarta.annotation.Nullable FilePath filePath) {
+    public MyDiffRequestChain(
+      @Nullable Project project,
+      @Nonnull Iterable<Pair<FilePath, FileStatus>> iterable,
+      @Nonnull Label before,
+      @Nonnull Label after,
+      @Nullable FilePath filePath
+    ) {
       myProject = project;
       myBefore = before;
       myAfter = after;
@@ -139,7 +141,7 @@ public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
     @Nonnull
     @Override
     public AnAction createGoToChangeAction(@Nonnull Consumer<Integer> onSelected) {
-      return new ChangeGoToChangePopupAction.Fake<MyDiffRequestChain>(this, myIndex, onSelected) {
+      return new ChangeGoToChangePopupAction.Fake<>(this, myIndex, onSelected) {
         @Nonnull
         @Override
         protected FilePath getFilePath(int index) {

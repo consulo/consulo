@@ -15,19 +15,21 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
+import consulo.application.dumb.DumbAware;
+import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentManager;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentManager;
 
 /**
  * @author yole
  */
 public class RefreshCommittedAction extends AnAction implements DumbAware {
+  @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     CommittedChangesPanel panel = ChangesViewContentManager.getInstance(project).getActiveComponent(CommittedChangesPanel.class);
     assert panel != null;
     if (panel.isInLoad()) return;
@@ -39,8 +41,10 @@ public class RefreshCommittedAction extends AnAction implements DumbAware {
     }
   }
 
+  @Override
+  @RequiredUIAccess
   public void update(final AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project != null) {
       CommittedChangesPanel panel = ChangesViewContentManager.getInstance(project).getActiveComponent(CommittedChangesPanel.class);
       e.getPresentation().setEnabled(panel != null && (! panel.isInLoad()));

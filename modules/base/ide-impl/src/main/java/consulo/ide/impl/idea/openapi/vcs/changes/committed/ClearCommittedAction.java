@@ -17,9 +17,9 @@ package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentManager;
-import consulo.language.editor.CommonDataKeys;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.versionControlSystem.RepositoryLocation;
@@ -35,8 +35,10 @@ public class ClearCommittedAction extends AnAction implements DumbAware {
     super("Clear", "Clears cached revisions", PlatformIconGroup.generalRemove());
   }
 
+  @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     CommittedChangesPanel panel = ChangesViewContentManager.getInstance(project).getActiveComponent(CommittedChangesPanel.class);
     assert panel != null;
     if (panel.isInLoad()) return;
@@ -45,8 +47,10 @@ public class ClearCommittedAction extends AnAction implements DumbAware {
     }
   }
 
+  @Override
+  @RequiredUIAccess
   public void update(final AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project != null) {
       CommittedChangesPanel panel = ChangesViewContentManager.getInstance(project).getActiveComponent(CommittedChangesPanel.class);
       RepositoryLocation rl = panel == null ? null : panel.getRepositoryLocation();

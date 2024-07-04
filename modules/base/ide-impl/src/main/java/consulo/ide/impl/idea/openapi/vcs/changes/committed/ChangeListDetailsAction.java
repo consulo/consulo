@@ -17,9 +17,9 @@ package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.dataContext.DataManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopup;
@@ -27,6 +27,7 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.IssueLinkHtmlRenderer;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.ui.ex.awt.BrowserHyperlinkListener;
 import consulo.ui.ex.awt.ScrollPaneFactory;
@@ -41,19 +42,25 @@ import javax.swing.*;
  * @author yole
  */
 public class ChangeListDetailsAction extends AnAction implements DumbAware {
+  @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     final ChangeList[] changeLists = e.getData(VcsDataKeys.CHANGE_LISTS);
-    if (changeLists != null && changeLists.length > 0 && changeLists [0] instanceof CommittedChangeList) {
-      showDetailsPopup(project, (CommittedChangeList) changeLists [0]);
+    if (changeLists != null && changeLists.length > 0 && changeLists[0] instanceof CommittedChangeList committedChangeList) {
+      showDetailsPopup(project, committedChangeList);
     }
   }
 
+  @Override
+  @RequiredUIAccess
   public void update(final AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     final ChangeList[] changeLists = e.getData(VcsDataKeys.CHANGE_LISTS);
-    e.getPresentation().setEnabled(project != null && changeLists != null && changeLists.length == 1 &&
-      changeLists [0] instanceof CommittedChangeList);
+    e.getPresentation().setEnabled(
+      project != null && changeLists != null && changeLists.length == 1
+        && changeLists[0] instanceof CommittedChangeList
+    );
   }
 
   public static void showDetailsPopup(final Project project, final CommittedChangeList changeList) {
@@ -68,19 +75,21 @@ public class ChangeListDetailsAction extends AnAction implements DumbAware {
       }
     }
     @NonNls String committer = "<b>" + changeList.getCommitterName() + "</b>";
-    detailsBuilder.append(VcsBundle.message("changelist.details.committed.format", committer,
-                                            DateFormatUtil.formatPrettyDateTime(changeList.getCommitDate())));
+    detailsBuilder.append(VcsLocalize.changelistDetailsCommittedFormat(
+      committer,
+      DateFormatUtil.formatPrettyDateTime(changeList.getCommitDate())
+    ).get());
     detailsBuilder.append("<br>");
 
     if (provider != null) {
       final CommittedChangeList originalChangeList;
-      if (changeList instanceof ReceivedChangeList) {
-        originalChangeList = ((ReceivedChangeList) changeList).getBaseList();
+      if (changeList instanceof ReceivedChangeList receivedChangeList) {
+        originalChangeList = receivedChangeList.getBaseList();
       }
       else {
         originalChangeList = changeList;
       }
-      for(ChangeListColumn column: provider.getColumns()) {
+      for (ChangeListColumn column: provider.getColumns()) {
         if (ChangeListColumn.isCustom(column)) {
           String value = column.getValue(originalChangeList).toString();
           if (value.length() == 0) {
@@ -106,9 +115,8 @@ public class ChangeListDetailsAction extends AnAction implements DumbAware {
         .setResizable(true)
         .setMovable(true)
         .setRequestFocus(true)
-        .setTitle(VcsBundle.message("changelist.details.title"))
+        .setTitle(VcsLocalize.changelistDetailsTitle().get())
         .createPopup();
     hint.showInBestPositionFor(DataManager.getInstance().getDataContext());
   }
-
 }

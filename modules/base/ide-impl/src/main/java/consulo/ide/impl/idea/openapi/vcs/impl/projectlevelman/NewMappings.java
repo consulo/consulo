@@ -15,30 +15,29 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman;
 
-import consulo.util.lang.EmptyRunnable;
-import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.util.lang.StringUtil;
+import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.vcs.impl.DefaultVcsRootPolicy;
 import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
-import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
-import consulo.versionControlSystem.*;
-import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.Functions;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.application.ApplicationManager;
-import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
 import consulo.util.collection.MultiMap;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.EmptyRunnable;
+import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
+import consulo.versionControlSystem.*;
+import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusManager;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.*;
 import java.util.function.Function;
 
@@ -91,7 +90,7 @@ public class NewMappings implements Disposable {
 
   // for tests
   public void setFileWatchRequestsManager(FileWatchRequestsManager fileWatchRequestsManager) {
-    assert ApplicationManager.getApplication().isUnitTestMode();
+    assert myProject.getApplication().isUnitTestMode();
     myFileWatchRequestsManager = fileWatchRequestsManager;
   }
 
@@ -133,7 +132,7 @@ public class NewMappings implements Disposable {
     keepActiveVcs(() -> {
       // sorted -> map. sorted mappings are NOT changed;
       switched.set(trySwitchVcs(path, activeVcsName));
-      if (!switched.get().booleanValue()) {
+      if (!switched.get()) {
         myVcsToPaths.putValue(newMapping.getVcs(), newMapping);
         sortedMappingsByMap();
       }
@@ -210,8 +209,8 @@ public class NewMappings implements Disposable {
     mappingsChanged();
   }
 
-  @jakarta.annotation.Nullable
-  public VcsDirectoryMapping getMappingFor(@jakarta.annotation.Nullable VirtualFile file) {
+  @Nullable
+  public VcsDirectoryMapping getMappingFor(@Nullable VirtualFile file) {
     if (file == null) return null;
     if (!file.isInLocalFileSystem()) {
       return null;
@@ -229,7 +228,8 @@ public class NewMappings implements Disposable {
 
     // performance: calculate file path just once, rather than once per mapping
     String path = file.getPath();
-    final String systemIndependentPath = FileUtil.toSystemIndependentName((file.isDirectory() && (!path.endsWith("/"))) ? (path + "/") : path);
+    final String systemIndependentPath =
+      FileUtil.toSystemIndependentName((file.isDirectory() && (!path.endsWith("/"))) ? (path + "/") : path);
     final VcsDirectoryMapping[] mappings;
     synchronized (myLock) {
       mappings = mySortedMappings;
@@ -243,7 +243,7 @@ public class NewMappings implements Disposable {
     return null;
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   public String getVcsFor(@Nonnull VirtualFile file) {
     VcsDirectoryMapping mapping = getMappingFor(file);
     if (mapping == null) {
@@ -252,10 +252,12 @@ public class NewMappings implements Disposable {
     return mapping.getVcs();
   }
 
-  private boolean fileMatchesMapping(@Nonnull VirtualFile file,
-                                     final Object matchContext,
-                                     final String systemIndependentPath,
-                                     final VcsDirectoryMapping mapping) {
+  private boolean fileMatchesMapping(
+    @Nonnull VirtualFile file,
+    final Object matchContext,
+    final String systemIndependentPath,
+    final VcsDirectoryMapping mapping
+  ) {
     if (mapping.getDirectory().length() == 0) {
       return myDefaultVcsRootPolicy.matchesDefaultMapping(file, matchContext);
     }
@@ -333,7 +335,7 @@ public class NewMappings implements Disposable {
     myFileWatchRequestsManager.ping();
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   public String haveDefaultMapping() {
     synchronized (myLock) {
       // empty mapping MUST be first
@@ -386,7 +388,11 @@ public class NewMappings implements Disposable {
       else {
         final AbstractVcs<?> vcs = allVcses.getByName(vcsName);
         if (vcs == null) {
-          VcsBalloonProblemNotifier.showOverChangesView(myProject, "VCS plugin not found for mapping to : '" + vcsName + "'", NotificationType.ERROR);
+          VcsBalloonProblemNotifier.showOverChangesView(
+            myProject,
+            "VCS plugin not found for mapping to : '" + vcsName + "'",
+            NotificationType.ERROR
+          );
           continue;
         }
         filteredFiles = vcs.filterUniqueRoots(objects, fileConvertor);
@@ -488,7 +494,7 @@ public class NewMappings implements Disposable {
       }
     }
 
-    @jakarta.annotation.Nullable
+    @Nullable
     private static Set<String> notInBottom(final Set<String> top, final Set<String> bottom) {
       Set<String> notInBottom = null;
       for (String topItem : top) {

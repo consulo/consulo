@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.openapi.diff.impl.patch.FilePatch;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.PatchEP;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.PatchSyntaxException;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.TextFilePatch;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelveChangesManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelvedChangeList;
 import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelvedChangesViewManager;
@@ -61,11 +61,13 @@ public class ImportToShelfExecutor implements ApplyPatchExecutor<TextFilePatchIn
   }
 
   @Override
-  public void apply(@Nonnull List<FilePatch> remaining,
-                    @Nonnull final MultiMap<VirtualFile, TextFilePatchInProgress> patchGroupsToApply,
-                    @jakarta.annotation.Nullable LocalChangeList localList,
-                    @Nullable final String fileName,
-                    @Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo) {
+  public void apply(
+    @Nonnull List<FilePatch> remaining,
+    @Nonnull final MultiMap<VirtualFile, TextFilePatchInProgress> patchGroupsToApply,
+    @Nullable LocalChangeList localList,
+    @Nullable final String fileName,
+    @Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo
+  ) {
     if (fileName == null) {
       LOG.error("Patch file name shouldn't be null");
       return;

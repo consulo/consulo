@@ -15,28 +15,27 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.ex;
 
+import consulo.codeEditor.Editor;
 import consulo.diff.DiffContentFactory;
 import consulo.diff.DiffManager;
-import consulo.ide.impl.idea.diff.actions.DocumentFragmentContent;
 import consulo.diff.content.DiffContent;
 import consulo.diff.content.DocumentContent;
 import consulo.diff.request.DiffRequest;
 import consulo.diff.request.SimpleDiffRequest;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.project.Project;
 import consulo.document.util.TextRange;
-import consulo.versionControlSystem.VcsBundle;
+import consulo.ide.impl.idea.diff.actions.DocumentFragmentContent;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import consulo.ui.annotation.RequiredUIAccess;
 
 public class ShowLineStatusRangeDiffAction extends BaseLineStatusRangeAction {
-  public ShowLineStatusRangeDiffAction(@Nonnull LineStatusTracker lineStatusTracker, @Nonnull Range range, @jakarta.annotation.Nullable Editor editor) {
+  public ShowLineStatusRangeDiffAction(@Nonnull LineStatusTracker lineStatusTracker, @Nonnull Range range, @Nullable Editor editor) {
     super(lineStatusTracker, range);
     ActionUtil.copyFrom(this, "ChangesView.Diff");
   }
@@ -49,23 +48,26 @@ public class ShowLineStatusRangeDiffAction extends BaseLineStatusRangeAction {
   @RequiredUIAccess
   @Override
   public void actionPerformed(final AnActionEvent e) {
-    DiffManager.getInstance().showDiff(e.getData(CommonDataKeys.PROJECT), createDiffData());
+    DiffManager.getInstance().showDiff(e.getData(Project.KEY), createDiffData());
   }
 
   private DiffRequest createDiffData() {
     Range range = expand(myRange, myLineStatusTracker.getDocument(), myLineStatusTracker.getVcsDocument());
 
-    DiffContent vcsContent = createDiffContent(myLineStatusTracker.getVcsDocument(),
-                                               myLineStatusTracker.getVcsTextRange(range),
-                                               null);
-    DiffContent currentContent = createDiffContent(myLineStatusTracker.getDocument(),
-                                                   myLineStatusTracker.getCurrentTextRange(range),
-                                                   myLineStatusTracker.getVirtualFile());
+    DiffContent vcsContent =
+      createDiffContent(myLineStatusTracker.getVcsDocument(), myLineStatusTracker.getVcsTextRange(range), null);
+    DiffContent currentContent = createDiffContent(
+      myLineStatusTracker.getDocument(),
+      myLineStatusTracker.getCurrentTextRange(range),
+      myLineStatusTracker.getVirtualFile()
+    );
 
-    return new SimpleDiffRequest(VcsBundle.message("dialog.title.diff.for.range"),
-                                 vcsContent, currentContent,
-                                 VcsBundle.message("diff.content.title.up.to.date"),
-                                 VcsBundle.message("diff.content.title.current.range")
+    return new SimpleDiffRequest(
+      VcsLocalize.dialogTitleDiffForRange().get(),
+      vcsContent,
+      currentContent,
+      VcsLocalize.diffContentTitleUpToDate().get(),
+      VcsLocalize.diffContentTitleCurrentRange().get()
     );
   }
 

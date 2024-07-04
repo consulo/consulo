@@ -26,7 +26,6 @@ import consulo.ide.impl.idea.diff.DiffRequestFactory;
 import consulo.ide.impl.idea.diff.InvalidDiffRequestException;
 import consulo.ide.impl.idea.diff.merge.MergeUtil;
 import consulo.ide.impl.idea.diff.util.DiffUtil;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
@@ -38,6 +37,7 @@ import consulo.ui.ex.awt.table.ListTableModel;
 import consulo.ui.ex.awt.table.TableView;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.SmartList;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
 import consulo.versionControlSystem.VcsException;
@@ -128,8 +128,8 @@ public class MultipleFileMergeDialog extends DialogWrapper {
         return 10;
       }
     });
-    if (myProvider instanceof MergeProvider2) {
-      myMergeSession = ((MergeProvider2)myProvider).createMergeSession(files);
+    if (myProvider instanceof MergeProvider2 mergeProvider2) {
+      myMergeSession = mergeProvider2.createMergeSession(files);
       Collections.addAll(columns, myMergeSession.getMergeInfoColumns());
     }
     else {
@@ -215,7 +215,7 @@ public class MultipleFileMergeDialog extends DialogWrapper {
 
     for (final VirtualFile file : files) {
       final Ref<Exception> ex = new Ref<>();
-      ApplicationManager.getApplication().runWriteAction(() -> CommandProcessor.getInstance().executeCommand(myProject, () -> {
+      myProject.getApplication().runWriteAction(() -> CommandProcessor.getInstance().executeCommand(myProject, () -> {
         try {
           if (!(myProvider instanceof MergeProvider2) || myMergeSession.canMerge(file)) {
             if (!DiffUtil.makeWritable(myProject, file)) {
@@ -309,7 +309,7 @@ public class MultipleFileMergeDialog extends DialogWrapper {
         checkMarkModifiedProject(file);
 
         if (result != MergeResult.CANCEL) {
-          ApplicationManager.getApplication().runWriteAction(() -> markFileProcessed(file, getSessionResolution(result)));
+          myProject.getApplication().runWriteAction(() -> markFileProcessed(file, getSessionResolution(result)));
         }
       };
 

@@ -12,6 +12,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.ex;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
@@ -35,11 +36,13 @@ public class RollbackLineStatusRangeAction extends RollbackLineStatusAction {
   }
 
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
     e.getPresentation().setEnabledAndVisible(true);
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(final AnActionEvent e) {
     rollback(myTracker, myEditor, myRange);
   }

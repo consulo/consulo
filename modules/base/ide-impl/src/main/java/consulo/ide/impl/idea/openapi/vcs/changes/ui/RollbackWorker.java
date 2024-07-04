@@ -15,26 +15,31 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.progress.PerformInBackgroundOption;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.application.progress.Task;
+import consulo.component.ProcessCanceledException;
+import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
+import consulo.ide.impl.idea.openapi.vcs.changes.VcsGuess;
+import consulo.ide.impl.idea.openapi.vcs.rollback.DefaultRollbackEnvironment;
 import consulo.localHistory.LocalHistory;
 import consulo.localHistory.LocalHistoryAction;
-import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.progress.*;
-import consulo.component.ProcessCanceledException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.project.util.WaitForProgressToShow;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
-import consulo.ide.impl.idea.openapi.vcs.changes.*;
-import consulo.ide.impl.idea.openapi.vcs.rollback.DefaultRollbackEnvironment;
-import consulo.versionControlSystem.*;
+import consulo.versionControlSystem.AbstractVcsHelper;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.VcsConfiguration;
+import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.rollback.RollbackEnvironment;
 import consulo.versionControlSystem.update.RefreshVFsSynchronously;
-import consulo.project.util.WaitForProgressToShow;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -86,21 +91,24 @@ public class RollbackWorker {
 
     final Runnable rollbackAction = new MyRollbackRunnable(changes, deleteLocallyAddedFiles, afterRefresh, localHistoryActionName);
 
-    if (ApplicationManager.getApplication().isDispatchThread() && !myInvokedFromModalContext) {
+    if (myProject.getApplication().isDispatchThread() && !myInvokedFromModalContext) {
       ProgressManager.getInstance().run(new Task.Backgroundable(
         myProject,
         myOperationName,
         true,
         new PerformInBackgroundOption() {
+          @Override
           public boolean shouldStartInBackground() {
             return VcsConfiguration.getInstance(myProject).PERFORM_ROLLBACK_IN_BACKGROUND;
           }
 
+          @Override
           public void processSentToBackground() {
             VcsConfiguration.getInstance(myProject).PERFORM_ROLLBACK_IN_BACKGROUND = true;
           }
         }
       ) {
+        @Override
         public void run(@Nonnull ProgressIndicator indicator) {
           rollbackAction.run();
         }
@@ -139,6 +147,7 @@ public class RollbackWorker {
       myLocalHistoryActionName = localHistoryActionName;
     }
 
+    @Override
     public void run() {
       ChangesUtil.markInternalOperation(myChanges, true);
       try {

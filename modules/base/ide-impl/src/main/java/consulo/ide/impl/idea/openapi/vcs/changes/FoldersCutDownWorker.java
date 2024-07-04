@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.HashSet;
@@ -25,7 +25,7 @@ public class FoldersCutDownWorker {
   private final Set<String> myPaths;
 
   public FoldersCutDownWorker() {
-    myPaths = new HashSet<String>();
+    myPaths = new HashSet<>();
   }
 
   public boolean addCurrent(final VirtualFile file) {

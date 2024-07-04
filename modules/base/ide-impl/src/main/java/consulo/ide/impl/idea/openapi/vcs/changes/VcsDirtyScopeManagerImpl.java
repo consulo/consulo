@@ -225,7 +225,7 @@ public class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager implements Di
     }
     Set<AbstractVcs> keys = ContainerUtil.union(files.keySet(), dirs.keySet());
 
-    Map<AbstractVcs, VcsDirtyScopeImpl> scopes = ContainerUtil.newHashMap();
+    Map<AbstractVcs, VcsDirtyScopeImpl> scopes = new HashMap<>();
     for (AbstractVcs key : keys) {
       VcsDirtyScopeImpl scope = new VcsDirtyScopeImpl(key, myProject);
       scopes.put(key, scope);
@@ -272,7 +272,7 @@ public class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager implements Di
 
     VcsInvalidated invalidated = calculateInvalidated(dirtBuilder);
     VcsInvalidated inProgress = calculateInvalidated(dirtBuilderInProgress);
-    Collection<FilePath> result = ContainerUtil.newArrayList();
+    Collection<FilePath> result = new ArrayList<>();
     for (FilePath fp : files) {
       if (invalidated.isFileDirty(fp) || inProgress.isFileDirty(fp)) {
         result.add(fp);
@@ -283,7 +283,11 @@ public class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager implements Di
 
   @Nonnull
   private static String toString(@Nonnull final MultiMap<AbstractVcs, FilePath> filesByVcs) {
-    return StringUtil.join(filesByVcs.keySet(), vcs -> vcs.getName() + ": " + StringUtil.join(filesByVcs.get(vcs), FilePath::getPath, "\n"), "\n");
+    return StringUtil.join(
+      filesByVcs.keySet(),
+      vcs -> vcs.getName() + ": " + StringUtil.join(filesByVcs.get(vcs), FilePath::getPath, "\n"),
+      "\n"
+    );
   }
 
   @Nullable

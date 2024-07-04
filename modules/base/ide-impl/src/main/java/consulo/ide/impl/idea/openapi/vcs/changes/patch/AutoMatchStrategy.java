@@ -16,10 +16,10 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.patch;
 
 import consulo.ide.impl.idea.openapi.diff.impl.patch.TextFilePatch;
-import consulo.application.util.SystemInfo;
+import consulo.platform.Platform;
+import consulo.util.collection.MultiMap;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.util.collection.MultiMap;
 import jakarta.annotation.Nullable;
 
 import java.util.Collection;
@@ -56,7 +56,7 @@ abstract class AutoMatchStrategy {
     }
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   protected Collection<VirtualFile> suggestFolderForCreation(final TextFilePatch creation) {
     final String newFileParentPath = extractPathWithoutName(creation.getAfterName());
     if (newFileParentPath != null) {
@@ -79,7 +79,7 @@ abstract class AutoMatchStrategy {
     String path = patch.getBeforeName() == null ? patch.getAfterName() : patch.getBeforeName();
     path = path.replace("\\", "/");
 
-    final boolean caseSensitive = SystemInfo.isFileSystemCaseSensitive;
+    final boolean caseSensitive = Platform.current().fs().isCaseSensitive();
     final Collection<VirtualFile> result = new LinkedList<>();
     for (VirtualFile vf : in) {
       final String vfPath = vf.getPath();
@@ -90,7 +90,7 @@ abstract class AutoMatchStrategy {
     return result;
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   protected String extractPathWithoutName(final String path) {
     final String replaced = path.replace("\\", "/");
     final int idx = replaced.lastIndexOf('/');

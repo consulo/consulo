@@ -19,13 +19,14 @@ package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 import consulo.application.AllIcons;
 import consulo.application.util.UserHomeFileUtil;
 import consulo.ide.impl.idea.openapi.util.SystemInfoRt;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.util.io.FileUtil;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangesUtil;
 
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import static consulo.ui.ex.awt.FontUtil.spaceAndThinSpace;
 
@@ -48,7 +49,12 @@ public class ChangesBrowserFilePathNode extends ChangesBrowserNode<FilePath> {
   }
 
   @Override
-  public void render(final ChangesBrowserNodeRenderer renderer, final boolean selected, final boolean expanded, final boolean hasFocus) {
+  public void render(
+    @Nonnull final ChangesBrowserNodeRenderer renderer,
+    final boolean selected,
+    final boolean expanded,
+    final boolean hasFocus
+  ) {
     final FilePath path = (FilePath)userObject;
     if (path.isDirectory() || !isLeaf()) {
       renderer.append(getRelativePath(path), SimpleTextAttributes.REGULAR_ATTRIBUTES);
@@ -61,7 +67,10 @@ public class ChangesBrowserFilePathNode extends ChangesBrowserNode<FilePath> {
       if (renderer.isShowFlatten()) {
         renderer.append(path.getName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
         FilePath parentPath = path.getParentPath();
-        renderer.append(spaceAndThinSpace() + UserHomeFileUtil.getLocationRelativeToUserHome(parentPath.getPresentableUrl()), SimpleTextAttributes.GRAYED_ATTRIBUTES);
+        renderer.append(
+          spaceAndThinSpace() + UserHomeFileUtil.getLocationRelativeToUserHome(parentPath.getPresentableUrl()),
+          SimpleTextAttributes.GRAYED_ATTRIBUTES
+        );
       }
       else {
         renderer.append(getRelativePath(path), SimpleTextAttributes.REGULAR_ATTRIBUTES);
@@ -85,17 +94,13 @@ public class ChangesBrowserFilePathNode extends ChangesBrowserNode<FilePath> {
     return FileUtil.toSystemDependentName(getUserObject().getPath());
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   public static FilePath safeCastToFilePath(Object o) {
-    if (o instanceof FilePath) return (FilePath)o;
-    if (o instanceof Change) {
-      return ChangesUtil.getAfterPath((Change)o);
-    }
-    return null;
+    return o instanceof FilePath filePath ? filePath : o instanceof Change change ? ChangesUtil.getAfterPath(change) : null;
   }
 
   @Nonnull
-  public static String getRelativePath(@jakarta.annotation.Nullable FilePath parent, @Nonnull FilePath child) {
+  public static String getRelativePath(@Nullable FilePath parent, @Nonnull FilePath child) {
     boolean isLocal = !child.isNonLocal();
     boolean caseSensitive = isLocal && SystemInfoRt.isFileSystemCaseSensitive;
     String result = parent != null ? FileUtil.getRelativePath(parent.getPath(), child.getPath(), '/', caseSensitive) : null;
@@ -105,16 +110,14 @@ public class ChangesBrowserFilePathNode extends ChangesBrowserNode<FilePath> {
     return isLocal ? FileUtil.toSystemDependentName(result) : result;
   }
 
+  @Override
   public int getSortWeight() {
     if (((FilePath)userObject).isDirectory()) return DIRECTORY_PATH_SORT_WEIGHT;
     return FILE_PATH_SORT_WEIGHT;
   }
 
+  @Override
   public int compareUserObjects(final Object o2) {
-    if (o2 instanceof FilePath) {
-      return getUserObject().getPath().compareToIgnoreCase(((FilePath)o2).getPath());
-    }
-
-    return 0;
+    return o2 instanceof FilePath filePath ? getUserObject().getPath().compareToIgnoreCase(filePath.getPath()) : 0;
   }
 }

@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.openapi.vcs.changes.patch;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.util.function.Computable;
 import consulo.diff.DiffManager;
 import consulo.diff.merge.MergeRequest;
@@ -31,9 +31,8 @@ import consulo.ide.impl.idea.openapi.diff.impl.patch.*;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.ApplyFilePatch;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.ApplyFilePatchBase;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.GenericPatchApplier;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.localize.LocalizeValue;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
@@ -42,7 +41,8 @@ import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
@@ -70,6 +70,7 @@ public class ApplyPatchAction extends DumbAwareAction {
   private static final Logger LOG = Logger.getInstance(ApplyPatchAction.class);
 
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
     Project project = e.getData(Project.KEY);
     if (isProjectOrScopeView(e.getPlace())) {
@@ -82,6 +83,8 @@ public class ApplyPatchAction extends DumbAwareAction {
     }
   }
 
+  @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
     final Project project = e.getRequiredData(Project.KEY);
     if (ChangeListManager.getInstance(project).isFreezedWithNotification("Can not apply patch now")) return;
@@ -116,6 +119,7 @@ public class ApplyPatchAction extends DumbAwareAction {
   }
 
   // used by TeamCity plugin
+  @RequiredUIAccess
   public static void showApplyPatch(@Nonnull final Project project, @Nonnull final VirtualFile file) {
     final ApplyPatchDifferentiatedDialog dialog = new ApplyPatchDifferentiatedDialog(
       project,
@@ -172,6 +176,7 @@ public class ApplyPatchAction extends DumbAwareAction {
 
   @Nonnull
   @NonNls
+  @RequiredUIAccess
   public static ApplyPatchStatus applyOnly(
     @Nullable final Project project,
     @Nonnull final ApplyFilePatchBase patch,
@@ -254,7 +259,7 @@ public class ApplyPatchAction extends DumbAwareAction {
           "_Abort",
           "_Skip",
           CommonLocalize.buttonCancel().get(),
-          Messages.getQuestionIcon()
+          UIUtil.getQuestionIcon()
         );
 
         if (result13 == Messages.YES) {
@@ -275,6 +280,7 @@ public class ApplyPatchAction extends DumbAwareAction {
   }
 
   @Nonnull
+  @RequiredUIAccess
   private static ApplyFilePatch.Result tryApplyPatch(
     @Nullable final Project project,
     @Nonnull final ApplyFilePatchBase patch,
@@ -283,7 +289,7 @@ public class ApplyPatchAction extends DumbAwareAction {
     @Nullable final CommitContext commitContext
   ) {
     final FilePatch patchBase = patch.getPatch();
-    return ApplicationManager.getApplication().runWriteAction((Computable<ApplyFilePatch.Result>) () -> {
+    return Application.get().runWriteAction((Computable<ApplyFilePatch.Result>) () -> {
       try {
         return patch.apply(file, context, project, VcsUtil.getFilePath(file), () -> {
           final BaseRevisionTextPatchEP baseRevisionTextPatchEP =

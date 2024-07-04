@@ -15,11 +15,11 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.shelf;
 
-import consulo.language.editor.CommonDataKeys;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.ApplyPatchDefaultExecutor;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.ApplyPatchDifferentiatedDialog;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.ApplyPatchExecutor;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.ApplyPatchMode;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.document.FileDocumentManager;
@@ -39,8 +39,9 @@ import java.util.Collections;
  */
 public class UnshelveWithDialogAction extends AnAction {
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     final ShelvedChangeList[] changeLists = e.getData(ShelvedChangesViewManager.SHELVED_CHANGELIST_KEY);
     if (project == null || changeLists == null || changeLists.length != 1) return;
 
@@ -54,16 +55,21 @@ public class UnshelveWithDialogAction extends AnAction {
     if (! changeLists[0].getBinaryFiles().isEmpty()) {
       VcsBalloonProblemNotifier.showOverChangesView(project, "Binary file(s) would be skipped.", NotificationType.WARNING);
     }
-    final ApplyPatchDifferentiatedDialog dialog =
-      new ApplyPatchDifferentiatedDialog(project, new ApplyPatchDefaultExecutor(project), Collections.<ApplyPatchExecutor>emptyList(),
-                                         ApplyPatchMode.UNSHELVE, virtualFile);
+    final ApplyPatchDifferentiatedDialog dialog = new ApplyPatchDifferentiatedDialog(
+      project,
+      new ApplyPatchDefaultExecutor(project),
+      Collections.<ApplyPatchExecutor>emptyList(),
+      ApplyPatchMode.UNSHELVE,
+      virtualFile
+    );
     dialog.setHelpId("reference.dialogs.vcs.unshelve");
     dialog.show();
   }
 
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     final ShelvedChangeList[] changes = e.getData(ShelvedChangesViewManager.SHELVED_CHANGELIST_KEY);
     e.getPresentation().setEnabled(project != null && changes != null && changes.length == 1);
   }

@@ -1,8 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.vcs.changes.patch;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ide.impl.idea.openapi.application.ex.ClipboardUtil;
 import consulo.document.FileDocumentManager;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -22,16 +22,19 @@ public class ApplyPatchFromClipboardAction extends DumbAwareAction {
 
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     String text = ClipboardUtil.getTextInClipboard();
     // allow to apply from clipboard even if we do not detect it as a patch, because during applying we parse content more precisely
     e.getPresentation().setEnabled(project != null && text != null && ChangeListManager.getInstance(project).isFreezed() == null);
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getRequiredData(CommonDataKeys.PROJECT);
-    if (ChangeListManager.getInstance(project).isFreezedWithNotification(VcsBundle.message("patch.apply.cannot.apply.now"))) return;
+    final Project project = e.getRequiredData(Project.KEY);
+    if (ChangeListManager.getInstance(project).isFreezedWithNotification(VcsBundle.message("patch.apply.cannot.apply.now"))) {
+      return;
+    }
     FileDocumentManager.getInstance().saveAllDocuments();
 
     String clipboardText = ClipboardUtil.getTextInClipboard();
