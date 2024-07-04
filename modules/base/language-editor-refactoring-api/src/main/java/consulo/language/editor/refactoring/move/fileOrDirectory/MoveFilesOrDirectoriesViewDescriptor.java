@@ -16,7 +16,7 @@
 
 package consulo.language.editor.refactoring.move.fileOrDirectory;
 
-import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -24,7 +24,6 @@ import consulo.usage.UsageViewBundle;
 import consulo.usage.UsageViewDescriptor;
 import consulo.usage.UsageViewUtil;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 
 class MoveFilesOrDirectoriesViewDescriptor implements UsageViewDescriptor {
@@ -35,22 +34,23 @@ class MoveFilesOrDirectoriesViewDescriptor implements UsageViewDescriptor {
   public MoveFilesOrDirectoriesViewDescriptor(PsiElement[] elementsToMove, PsiDirectory newParent) {
     myElementsToMove = elementsToMove;
     if (elementsToMove.length == 1) {
-      myProcessedElementsHeader = StringUtil.capitalize(RefactoringBundle.message("move.single.element.elements.header",
-                                                                                  UsageViewUtil.getType(elementsToMove[0]),
-                                                                                  newParent.getVirtualFile().getPresentableUrl()));
-      myCodeReferencesText = RefactoringBundle.message("references.in.code.to.0.1",
-                                                       UsageViewUtil.getType(elementsToMove[0]), UsageViewUtil.getLongName(elementsToMove[0]));
+      myProcessedElementsHeader = StringUtil.capitalize(RefactoringLocalize.moveSingleElementElementsHeader(
+        UsageViewUtil.getType(elementsToMove[0]),
+        newParent.getVirtualFile().getPresentableUrl()
+      ).get());
+      myCodeReferencesText =
+        RefactoringLocalize.referencesInCodeTo01(UsageViewUtil.getType(elementsToMove[0]), UsageViewUtil.getLongName(elementsToMove[0])).get();
     }
     else {
       if (elementsToMove[0] instanceof PsiFile) {
         myProcessedElementsHeader =
-          StringUtil.capitalize(RefactoringBundle.message("move.files.elements.header", newParent.getVirtualFile().getPresentableUrl()));
+          StringUtil.capitalize(RefactoringLocalize.moveFilesElementsHeader(newParent.getVirtualFile().getPresentableUrl()).get());
       }
       else if (elementsToMove[0] instanceof PsiDirectory){
-        myProcessedElementsHeader = StringUtil
-          .capitalize(RefactoringBundle.message("move.directories.elements.header", newParent.getVirtualFile().getPresentableUrl()));
+        myProcessedElementsHeader =
+          StringUtil.capitalize(RefactoringLocalize.moveDirectoriesElementsHeader(newParent.getVirtualFile().getPresentableUrl()).get());
       }
-      myCodeReferencesText = RefactoringBundle.message("references.found.in.code");
+      myCodeReferencesText = RefactoringLocalize.referencesFoundInCode().get();
     }
   }
 
@@ -72,8 +72,6 @@ class MoveFilesOrDirectoriesViewDescriptor implements UsageViewDescriptor {
 
   @Override
   public String getCommentReferencesText(int usagesCount, int filesCount) {
-    return RefactoringBundle.message("comments.elements.header",
-                                     UsageViewBundle.getOccurencesString(usagesCount, filesCount));
+    return RefactoringLocalize.commentsElementsHeader(UsageViewBundle.getOccurencesString(usagesCount, filesCount)).get();
   }
-
 }

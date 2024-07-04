@@ -28,6 +28,7 @@ import consulo.document.util.TextRange;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.move.fileOrDirectory.MoveFilesOrDirectoriesUtil;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.language.editor.util.PsiUtilBase;
@@ -35,19 +36,22 @@ import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 
 public class MoveHandler implements RefactoringActionHandler {
-  public static final String REFACTORING_NAME = RefactoringBundle.message("move.title");
+  public static final LocalizeValue REFACTORING_NAME = RefactoringLocalize.moveTitle();
 
   /**
    * called by an Action in AtomicAction when refactoring is invoked from Editor
    */
+  @RequiredUIAccess
   @Override
   public void invoke(@Nonnull Project project, Editor editor, PsiFile file, DataContext dataContext) {
     int offset = editor.getCaretModel().getOffset();
@@ -55,8 +59,10 @@ public class MoveHandler implements RefactoringActionHandler {
     PsiElement element = file.findElementAt(offset);
     while (true) {
       if (element == null) {
-        String message = RefactoringBundle.getCannotRefactorMessage(RefactoringBundle.message("the.caret.should.be.positioned.at.the.class.method.or.field.to.be.refactored"));
-        CommonRefactoringUtil.showErrorHint(project, editor, message, REFACTORING_NAME, null);
+        String message = RefactoringBundle.getCannotRefactorMessage(
+          RefactoringLocalize.theCaretShouldBePositionedAtTheClassMethodOrFieldToBeRefactored().get()
+        );
+        CommonRefactoringUtil.showErrorHint(project, editor, message, REFACTORING_NAME.get(), null);
         return;
       }
 
@@ -77,7 +83,13 @@ public class MoveHandler implements RefactoringActionHandler {
     }
   }
 
-  private static boolean tryToMoveElement(final PsiElement element, final Project project, final DataContext dataContext, final PsiReference reference, final Editor editor) {
+  private static boolean tryToMoveElement(
+    final PsiElement element,
+    final Project project,
+    final DataContext dataContext,
+    final PsiReference reference,
+    final Editor editor
+  ) {
     for (MoveHandlerDelegate delegate : MoveHandlerDelegate.EP_NAME.getExtensionList()) {
       if (delegate.tryToMove(element, project, dataContext, reference, editor)) {
         return true;
@@ -91,9 +103,10 @@ public class MoveHandler implements RefactoringActionHandler {
    * called by an Action in AtomicAction
    */
   @Override
+  @RequiredUIAccess
   public void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, DataContext dataContext) {
     final PsiElement targetContainer = dataContext == null ? null : dataContext.getData(LangDataKeys.TARGET_PSI_ELEMENT);
-    final Set<PsiElement> filesOrDirs = new HashSet<PsiElement>();
+    final Set<PsiElement> filesOrDirs = new HashSet<>();
     for (MoveHandlerDelegate delegate : MoveHandlerDelegate.EP_NAME.getExtensionList()) {
       if (delegate.canMove(dataContext) && delegate.isValidTarget(targetContainer, elements)) {
         delegate.collectFilesOrDirsFromContext(dataContext, filesOrDirs);

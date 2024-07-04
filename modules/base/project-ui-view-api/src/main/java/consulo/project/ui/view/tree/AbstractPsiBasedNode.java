@@ -219,7 +219,7 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
   @Nullable
   public NavigationItem getNavigationItem() {
     final PsiElement psiElement = extractPsiFromValue();
-    return psiElement instanceof NavigationItem ? (NavigationItem)psiElement : null;
+    return psiElement instanceof NavigationItem navigationItem ? navigationItem : null;
   }
 
   @Override

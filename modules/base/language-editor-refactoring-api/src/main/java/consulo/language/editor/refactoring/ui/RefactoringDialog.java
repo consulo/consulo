@@ -17,7 +17,7 @@ package consulo.language.editor.refactoring.ui;
 
 import consulo.configurable.ConfigurationException;
 import consulo.language.editor.refactoring.BaseRefactoringProcessor;
-import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
@@ -124,9 +124,9 @@ public abstract class RefactoringDialog extends DialogWrapper {
   @Override
   @Nonnull
   protected Action[] createActions() {
-    List<Action> actions = new ArrayList<Action>();
+    List<Action> actions = new ArrayList<>();
     actions.add(getRefactorAction());
-    if(hasPreviewButton()) actions.add(getPreviewAction());
+    if (hasPreviewButton()) actions.add(getPreviewAction());
     actions.add(getCancelAction());
 
     if (hasHelpAction ())
@@ -144,7 +144,7 @@ public abstract class RefactoringDialog extends DialogWrapper {
 
   private class RefactorAction extends AbstractAction {
     public RefactorAction() {
-      putValue(Action.NAME, RefactoringBundle.message("refactor.button"));
+      putValue(Action.NAME, RefactoringLocalize.refactorButton().get());
       putValue(DEFAULT_ACTION, Boolean.TRUE);
     }
 
@@ -156,7 +156,7 @@ public abstract class RefactoringDialog extends DialogWrapper {
 
   private class PreviewAction extends AbstractAction {
     public PreviewAction() {
-      putValue(Action.NAME, RefactoringBundle.message("preview.button"));
+      putValue(Action.NAME, RefactoringLocalize.previewButton().get());
 
       if (Platform.current().os().isMac()) {
         putValue(FOCUSED_ACTION, Boolean.TRUE);
@@ -170,12 +170,7 @@ public abstract class RefactoringDialog extends DialogWrapper {
   }
 
   protected void invokeRefactoring(BaseRefactoringProcessor processor) {
-    final Runnable prepareSuccessfulCallback = new Runnable() {
-      @Override
-      public void run() {
-        close(DialogWrapper.OK_EXIT_CODE);
-      }
-    };
+    final Runnable prepareSuccessfulCallback = () -> close(DialogWrapper.OK_EXIT_CODE);
     processor.setPrepareSuccessfulSwingThreadCallback(prepareSuccessfulCallback);
     processor.setPreviewUsages(isPreviewUsages());
     processor.run();

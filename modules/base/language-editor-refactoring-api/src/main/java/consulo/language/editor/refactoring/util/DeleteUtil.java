@@ -16,7 +16,7 @@
 
 package consulo.language.editor.refactoring.util;
 
-import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.psi.ElementDescriptionUtil;
 import consulo.language.psi.PsiDirectoryContainer;
 import consulo.language.psi.PsiElement;
@@ -50,9 +50,9 @@ public class DeleteUtil {
       pluralToSingular.put(type, ElementDescriptionUtil.getElementDescription(elementToDelete, DeleteTypeDescriptionLocation.SINGULAR));
       int oldCount = countMap.get(type).intValue();
       countMap.put(type, oldCount+1);
-      if (elementToDelete instanceof PsiDirectoryContainer) {
+      if (elementToDelete instanceof PsiDirectoryContainer directoryContainer) {
         containerType = type;
-        directoryCount += ((PsiDirectoryContainer) elementToDelete).getDirectories().length;
+        directoryCount += directoryContainer.getDirectories().length;
       }
     }
 
@@ -60,7 +60,7 @@ public class DeleteUtil {
     for (Map.Entry<String, Integer> entry : countMap.entrySet()) {
       if (buffer.length() > 0) {
         if (buffer.length() > 0) {
-          buffer.append(" ").append(RefactoringBundle.message("prompt.delete.and")).append(" ");
+          buffer.append(" ").append(RefactoringLocalize.promptDeleteAnd().get()).append(" ");
         }
       }
       final int count = entry.getValue().intValue();
@@ -74,7 +74,7 @@ public class DeleteUtil {
       }
 
       if (entry.getKey().equals(containerType)) {
-        buffer.append(" ").append(RefactoringBundle.message("prompt.delete.directory.paren", directoryCount));
+        buffer.append(" ").append(RefactoringLocalize.promptDeleteDirectoryParen(directoryCount).get());
       }
     }
     return MessageFormat.format(messageTemplate, buffer.toString());

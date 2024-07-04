@@ -16,11 +16,10 @@
 
 package consulo.language.editor.refactoring.safeDelete;
 
-import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.ui.UsageViewDescriptorAdapter;
 import consulo.language.psi.PsiElement;
 import consulo.usage.UsageViewBundle;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -41,17 +40,16 @@ public class SafeDeleteUsageViewDescriptor extends UsageViewDescriptorAdapter {
 
   @Override
   public String getProcessedElementsHeader() {
-    return RefactoringBundle.message("items.to.be.deleted");
+    return RefactoringLocalize.itemsToBeDeleted().get();
   }
 
   @Override
   public String getCodeReferencesText(int usagesCount, int filesCount) {
-    return RefactoringBundle.message("references.in.code", UsageViewBundle.getReferencesString(usagesCount, filesCount));
+    return RefactoringLocalize.referencesInCode(UsageViewBundle.getReferencesString(usagesCount, filesCount)).get();
   }
 
   @Override
   public String getCommentReferencesText(int usagesCount, int filesCount) {
-    return RefactoringBundle.message("safe.delete.comment.occurences.header",
-                                     UsageViewBundle.getOccurencesString(usagesCount, filesCount));
+    return RefactoringLocalize.safeDeleteCommentOccurencesHeader(UsageViewBundle.getOccurencesString(usagesCount, filesCount)).get();
   }
 }

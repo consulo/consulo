@@ -20,13 +20,13 @@
  */
 package consulo.language.editor.refactoring.safeDelete;
 
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.UIUtil;
-import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,8 +40,8 @@ public class UnsafeUsagesDialog extends DialogWrapper {
   public UnsafeUsagesDialog(String[] conflictDescriptions, Project project) {
     super(project, true);
     myConflictDescriptions = conflictDescriptions;
-    setTitle(RefactoringBundle.message("usages.detected"));
-    setOKButtonText(RefactoringBundle.message("delete.anyway.button"));
+    setTitle(RefactoringLocalize.usagesDetected());
+    setOKButtonText(RefactoringLocalize.deleteAnywayButton().get());
     init();
   }
 
@@ -63,7 +63,7 @@ public class UnsafeUsagesDialog extends DialogWrapper {
     myMessagePane.setEditable(false);
     JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(myMessagePane);
     scrollPane.setPreferredSize(new Dimension(500, 400));
-    panel.add(new JLabel(RefactoringBundle.message("the.following.problems.were.found")), BorderLayout.NORTH);
+    panel.add(new JLabel(RefactoringLocalize.theFollowingProblemsWereFound().get()), BorderLayout.NORTH);
     panel.add(scrollPane, BorderLayout.CENTER);
 
     @NonNls StringBuffer buf = new StringBuffer();
@@ -91,7 +91,7 @@ public class UnsafeUsagesDialog extends DialogWrapper {
 
   private class CancelAction extends AbstractAction {
     public CancelAction() {
-      super(RefactoringBundle.message("cancel.button"));
+      super(RefactoringLocalize.cancelButton().get());
     }
 
     @Override
@@ -102,7 +102,7 @@ public class UnsafeUsagesDialog extends DialogWrapper {
 
   private class ViewUsagesAction extends AbstractAction {
     public ViewUsagesAction() {
-      super(RefactoringBundle.message("view.usages"));
+      super(RefactoringLocalize.viewUsages().get());
       putValue(DialogWrapper.DEFAULT_ACTION, Boolean.TRUE);
     }
 

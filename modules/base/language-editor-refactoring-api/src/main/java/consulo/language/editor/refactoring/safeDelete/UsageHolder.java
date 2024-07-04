@@ -17,7 +17,7 @@
 package consulo.language.editor.refactoring.safeDelete;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.safeDelete.usageInfo.SafeDeleteReferenceUsageInfo;
 import consulo.language.editor.refactoring.ui.RefactoringUIUtil;
 import consulo.language.psi.PsiElement;
@@ -27,7 +27,6 @@ import consulo.project.Project;
 import consulo.project.content.GeneratedSourcesFilter;
 import consulo.usage.UsageInfo;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -65,9 +64,12 @@ class UsageHolder {
   @Nonnull
   public String getDescription() {
     final PsiElement element = myElementPointer.getElement();
-    String message = RefactoringBundle.message("0.has.1.usages.that.are.not.safe.to.delete", RefactoringUIUtil.getDescription(element, true), myUnsafeUsages);
+    String message = RefactoringLocalize.zeroHas1UsagesThatAreNotSafeToDelete(
+      RefactoringUIUtil.getDescription(element, true),
+      myUnsafeUsages
+    ).get();
     if (myNonCodeUnsafeUsages > 0) {
-      message += "<br>" + RefactoringBundle.message("safe.delete.of.those.0.in.comments.strings.non.code", myNonCodeUnsafeUsages);
+      message += "<br>" + RefactoringLocalize.safeDeleteOfThose0InCommentsStringsNonCode(myNonCodeUnsafeUsages);
     }
     return message;
   }

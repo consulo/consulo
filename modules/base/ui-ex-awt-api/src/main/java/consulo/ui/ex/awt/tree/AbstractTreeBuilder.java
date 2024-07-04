@@ -470,7 +470,7 @@ public class AbstractTreeBuilder implements Disposable {
     public boolean equals(Object object) {
       if (object == this) return true;
       // this hack allows to find a node in a map without checking a class type
-      return object instanceof consulo.ui.ex.awt.tree.TreeNode && Comparing.equal(getEqualityObject(), ((consulo.ui.ex.awt.tree.TreeNode)object).getEqualityObject());
+      return object instanceof consulo.ui.ex.awt.tree.TreeNode treeNode && Comparing.equal(getEqualityObject(), treeNode.getEqualityObject());
     }
   }
 

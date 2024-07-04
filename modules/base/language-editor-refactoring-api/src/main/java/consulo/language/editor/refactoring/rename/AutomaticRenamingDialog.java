@@ -18,7 +18,7 @@ package consulo.language.editor.refactoring.rename;
 
 import consulo.application.ApplicationManager;
 import consulo.disposer.Disposer;
-import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.ui.EnableDisableAction;
 import consulo.language.editor.refactoring.ui.RefactoringUIUtil;
 import consulo.language.editor.refactoring.ui.StringTableCellEditor;
@@ -110,7 +110,7 @@ public class AutomaticRenamingDialog extends DialogWrapper {
 
     myShouldRename = new boolean[myRenames.length];
     if (myRenamer.isSelectedByDefault()) {
-      for(int i=0; i<myShouldRename.length; i++) {
+      for (int i = 0; i < myShouldRename.length; i++) {
         myShouldRename [i] = true;
       }
     }
@@ -323,9 +323,9 @@ public class AutomaticRenamingDialog extends DialogWrapper {
     public String getColumnName(int column) {
       switch(column) {
         case OLD_NAME_COLUMN:
-          return RefactoringBundle.message("automatic.renamer.enity.name.column", myRenamer.entityName());
+          return RefactoringLocalize.automaticRenamerEnityNameColumn(myRenamer.entityName()).get();
         case NEW_NAME_COLUMN:
-          return RefactoringBundle.message("automatic.renamer.rename.to.column");
+          return RefactoringLocalize.automaticRenamerRenameToColumn().get();
         default:
           return " ";
       }

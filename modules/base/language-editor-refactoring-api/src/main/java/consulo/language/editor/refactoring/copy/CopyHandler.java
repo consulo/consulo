@@ -39,7 +39,10 @@ public class CopyHandler {
   public static boolean canCopy(PsiElement[] elements) {
     if (elements.length > 0) {
       for (CopyHandlerDelegate delegate : CopyHandlerDelegate.EP_NAME.getExtensionList()) {
-        if (delegate instanceof CopyHandlerDelegateBase ? ((CopyHandlerDelegateBase)delegate).canCopy(elements, true) : delegate.canCopy(elements)) return true;
+        if (delegate instanceof CopyHandlerDelegateBase copyHandlerDelegate
+          ? copyHandlerDelegate.canCopy(elements, true) : delegate.canCopy(elements)) {
+          return true;
+        }
       }
     }
     return false;
@@ -59,11 +62,9 @@ public class CopyHandler {
   public static boolean canClone(PsiElement[] elements) {
     if (elements.length > 0) {
       for (CopyHandlerDelegate delegate : CopyHandlerDelegate.EP_NAME.getExtensionList()) {
-        if (delegate instanceof CopyHandlerDelegateBase ? ((CopyHandlerDelegateBase)delegate).canCopy(elements, true) : delegate.canCopy(elements)) {
-          if (delegate instanceof CopyHandlerDelegateBase && ((CopyHandlerDelegateBase)delegate).forbidToClone(elements, true)) {
-            return false;
-          }
-          return true;
+        if (delegate instanceof CopyHandlerDelegateBase copyDelegate
+          ? copyDelegate.canCopy(elements, true) : delegate.canCopy(elements)) {
+          return !(delegate instanceof CopyHandlerDelegateBase copyDelegate && copyDelegate.forbidToClone(elements, true));
         }
       }
     }
@@ -90,8 +91,8 @@ public class CopyHandler {
       Content selectedContent = window.getContentManager().getSelectedContent();
       if (selectedContent != null) {
         JComponent component = selectedContent.getComponent();
-        if (component instanceof TwoPaneIdeView) {
-          ((TwoPaneIdeView)component).selectElement(newElement, selectInActivePanel);
+        if (component instanceof TwoPaneIdeView twoPaneIdeView) {
+          twoPaneIdeView.selectElement(newElement, selectInActivePanel);
           return;
         }
       }

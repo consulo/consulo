@@ -15,13 +15,14 @@
  */
 package consulo.language.editor.refactoring.changeSignature;
 
-import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
-import consulo.project.Project;
+import consulo.dataContext.DataContext;
+import consulo.language.editor.refactoring.action.RefactoringActionHandler;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.editor.refactoring.action.RefactoringActionHandler;
-import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -29,7 +30,7 @@ import jakarta.annotation.Nullable;
  * @author Maxim.Medvedev
  */
 public interface ChangeSignatureHandler extends RefactoringActionHandler {
-  String REFACTORING_NAME = RefactoringBundle.message("changeSignature.refactoring.name");
+  LocalizeValue REFACTORING_NAME = RefactoringLocalize.changesignatureRefactoringName();
 
   @Nullable
   PsiElement findTargetMember(PsiFile file, Editor editor);

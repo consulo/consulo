@@ -19,6 +19,7 @@ import consulo.logging.Logger;
 import consulo.ui.ex.awt.ImageUtil;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.style.StyleManager;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.io.BufferExposingByteArrayOutputStream;
 import consulo.util.io.FileUtil;
@@ -26,11 +27,11 @@ import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.SystemProperties;
 import consulo.util.lang.reflect.ReflectionUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.imgscalr.Scalr;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImageOp;
@@ -131,18 +132,15 @@ public class ImageLoader implements Serializable {
     }
 
     Image loadImpl(final URL url, final InputStream stream, final double scale) throws IOException {
-      LoadFunction f = new LoadFunction() {
-        @Override
-        public Image load(@Nullable LoadFunction delegate, @Nonnull Type type) throws IOException {
-          switch (type) {
-            case SVG:
-              throw new UnsupportedOperationException("svg is not supported");
-              //return SVGLoader.load(url, stream, ImageDesc.this.scale);
-            case IMG:
-              return ImageLoader.load(stream, scale);
-          }
-          return null;
+      LoadFunction f = (delegate, type) -> {
+        switch (type) {
+          case SVG:
+            throw new UnsupportedOperationException("svg is not supported");
+            //return SVGLoader.load(url, stream, ImageDesc.this.scale);
+          case IMG:
+            return ImageLoader.load(stream, scale);
         }
+        return null;
       };
       if (measureLoad != null) {
         return measureLoad.load(f, type);
@@ -279,34 +277,21 @@ public class ImageLoader implements Serializable {
     }
 
     public ImageConverterChain withFilter(final Supplier<ImageFilter> filter) {
-      return with(new ImageConverter() {
-        @Override
-        public Image convert(Image source, ImageDesc desc) {
-          return ImageUtil.filter(source, filter.get());
-        }
-      });
+      return with((source, desc) -> ImageUtil.filter(source, filter.get()));
     }
 
     public ImageConverterChain withRetina() {
-      return with(new ImageConverter() {
-        @Override
-        public Image convert(Image source, ImageDesc desc) {
-          if (source != null && UIUtil.isJreHiDPIEnabled() && desc.scale > 1) {
-            return RetinaImage.createFrom(source, (int)desc.scale, ourComponent);
-          }
-          return source;
+      return with((source, desc) -> {
+        if (source != null && UIUtil.isJreHiDPIEnabled() && desc.scale > 1) {
+          return RetinaImage.createFrom(source, (int)desc.scale, ourComponent);
         }
+        return source;
       });
     }
 
     public ImageConverterChain withHiDPI(final JBUI.ScaleContext ctx) {
       if (ctx == null) return this;
-      return with(new ImageConverter() {
-        @Override
-        public Image convert(Image source, ImageDesc desc) {
-          return ImageUtil.ensureHiDPI(source, ctx);
-        }
-      });
+      return with((source, desc) -> ImageUtil.ensureHiDPI(source, ctx));
     }
 
     public ImageConverterChain with(ImageConverter f) {
@@ -346,17 +331,12 @@ public class ImageLoader implements Serializable {
 
   @Nullable
   public static Image loadFromUrl(@Nonnull URL url, boolean allowFloatScaling) {
-    return loadFromUrl(url, allowFloatScaling, (ImageFilter)null);
+    return loadFromUrl(url, allowFloatScaling, null);
   }
 
   @Nullable
   public static Image loadFromUrl(@Nonnull URL url, boolean allowFloatScaling, final ImageFilter filter) {
-    return loadFromUrl(url, allowFloatScaling, true, new Supplier[]{new Supplier() {
-      @Override
-      public Object get() {
-        return filter;
-      }
-    }}, JBUI.ScaleContext.create());
+    return loadFromUrl(url, allowFloatScaling, true, new Supplier[]{() -> filter}, JBUI.ScaleContext.create());
   }
 
   /**
@@ -364,24 +344,30 @@ public class ImageLoader implements Serializable {
    * Then wraps the image with {@link JBHiDPIScaledImage} if necessary.
    */
   @Nullable
-  public static Image loadFromUrl(@Nonnull URL url, final boolean allowFloatScaling, boolean useCache, Supplier<ImageFilter>[] filters, final JBUI.ScaleContext ctx) {
+  public static Image loadFromUrl(
+    @Nonnull URL url,
+    final boolean allowFloatScaling,
+    boolean useCache,
+    Supplier<ImageFilter>[] filters,
+    final JBUI.ScaleContext ctx
+  ) {
     // We can't check all 3rd party plugins and convince the authors to add @2x icons.
     // In IDE-managed HiDPI mode with scale > 1.0 we scale images manually.
 
-    return ImageDescList.create(url.toString(), null, UIUtil.isUnderDarcula(), allowFloatScaling, ctx).load(ImageConverterChain.create().
-            withFilter(filters).
-            with(new ImageConverter() {
-              @Override
-              public Image convert(Image source, ImageDesc desc) {
-                if (source != null && desc.type != SVG) {
-                  double scale = adjustScaleFactor(allowFloatScaling, ctx.getScale(PIX_SCALE));
-                  if (desc.scale > 1) scale /= desc.scale; // compensate the image original scale
-                  source = scaleImage(source, scale);
-                }
-                return source;
-              }
-            }).
-            withHiDPI(ctx), useCache);
+    return ImageDescList.create(url.toString(), null, StyleManager.get().getCurrentStyle().isDark(), allowFloatScaling, ctx).load(
+      ImageConverterChain.create()
+        .withFilter(filters)
+        .with((source, desc) -> {
+          if (source != null && desc.type != SVG) {
+            double scale = adjustScaleFactor(allowFloatScaling, ctx.getScale(PIX_SCALE));
+            if (desc.scale > 1) scale /= desc.scale; // compensate the image original scale
+            source = scaleImage(source, scale);
+          }
+          return source;
+        })
+        .withHiDPI(ctx),
+      useCache
+    );
   }
 
   private static double adjustScaleFactor(boolean allowFloatScaling, double scale) {
@@ -410,7 +396,7 @@ public class ImageLoader implements Serializable {
 
   @Nullable
   public static Image loadFromResource(@NonNls @Nonnull String s) {
-    return loadFromResource(s, UIUtil.isUnderDarcula());
+    return loadFromResource(s, StyleManager.get().getCurrentStyle().isDark());
   }
 
   @Nullable
@@ -422,7 +408,7 @@ public class ImageLoader implements Serializable {
 
   @Nullable
   public static Image loadFromResource(@NonNls @Nonnull String path, @Nonnull Class aClass) {
-    return loadFromResource(path, aClass, UIUtil.isUnderDarcula());
+    return loadFromResource(path, aClass, StyleManager.get().getCurrentStyle().isDark());
   }
 
   @Nullable
@@ -442,12 +428,7 @@ public class ImageLoader implements Serializable {
   public static Image loadFromStream(@Nonnull final InputStream inputStream, final int scale, final ImageFilter filter) {
     Image image = load(inputStream, scale);
     ImageDesc desc = new ImageDesc("", null, scale, IMG);
-    return ImageConverterChain.create().withFilter(new Supplier<ImageFilter>() {
-      @Override
-      public ImageFilter get() {
-        return filter;
-      }
-    }).withRetina().convert(image, desc);
+    return ImageConverterChain.create().withFilter(() -> filter).withRetina().convert(image, desc);
   }
 
   private static Image load(@Nonnull final InputStream inputStream, double scale) {
@@ -495,6 +476,6 @@ public class ImageLoader implements Serializable {
    */
   public static List<Pair<String, Integer>> getFileNames(@Nonnull String file, boolean dark, boolean retina) {
     new UnsupportedOperationException("unsupported method").printStackTrace();
-    return new ArrayList<Pair<String, Integer>>();
+    return new ArrayList<>();
   }
 }

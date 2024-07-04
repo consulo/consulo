@@ -19,6 +19,7 @@ import consulo.language.editor.refactoring.event.RefactoringEventListener;
 import consulo.language.editor.refactoring.event.RefactoringListenerManager;
 import consulo.language.editor.refactoring.internal.RefactoringInternalHelper;
 import consulo.language.editor.refactoring.internal.RefactoringListenerManagerEx;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.ui.ConflictsDialog;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.language.psi.PsiDocumentManager;
@@ -28,6 +29,7 @@ import consulo.language.psi.PsiUtilCore;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.localHistory.LocalHistory;
 import consulo.localHistory.LocalHistoryAction;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.ModuleManager;
 import consulo.module.UnloadedModuleDescription;
@@ -155,6 +157,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
   @Nonnull
   protected abstract String getCommandName();
 
+  @RequiredUIAccess
   protected void doRun() {
     if (!PsiDocumentManager.getInstance(myProject).commitAllDocumentsUnderProgress()) {
       return;
@@ -182,15 +185,16 @@ public abstract class BaseRefactoringProcessor implements Runnable {
       }
     };
 
-    if (!ProgressManager.getInstance().runProcessWithProgressSynchronously(findUsagesRunnable, RefactoringBundle.message("progress.text"), true, myProject)) {
+    if (!ProgressManager.getInstance()
+      .runProcessWithProgressSynchronously(findUsagesRunnable, RefactoringLocalize.progressText().get(), true, myProject)) {
       return;
     }
 
     if (!refErrorLanguage.isNull()) {
       Messages.showErrorDialog(
         myProject,
-        RefactoringBundle.message("unsupported.refs.found", refErrorLanguage.get().getDisplayName()),
-        RefactoringBundle.message("error.title")
+        RefactoringLocalize.unsupportedRefsFound(refErrorLanguage.get().getDisplayName()).get(),
+        RefactoringLocalize.errorTitle().get()
       );
       return;
     }
@@ -202,7 +206,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
       Messages.showErrorDialog(
         myProject,
         "Index corruption detected. Please retry the refactoring - indexes will be rebuilt automatically",
-        RefactoringBundle.message("error.title")
+        RefactoringLocalize.errorTitle().get()
       );
       return;
     }
@@ -220,7 +224,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
     if (!isPreview) {
       isPreview = !ensureElementsWritable(usages, descriptor) || UsageViewUtil.hasReadOnlyUsages(usages);
       if (isPreview) {
-        StatusBarUtil.setStatusBarInfo(myProject, RefactoringBundle.message("readonly.occurences.found"));
+        StatusBarUtil.setStatusBarInfo(myProject, RefactoringLocalize.readonlyOccurencesFound().get());
       }
     }
     if (isPreview) {
@@ -295,6 +299,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
     return ensureFilesWritable(myProject, elements);
   }
 
+  @RequiredUIAccess
   private static boolean ensureFilesWritable(@Nonnull Project project, @Nonnull Collection<? extends PsiElement> elements) {
     PsiElement[] psiElements = PsiUtilCore.toPsiElementArray(elements);
     return CommonRefactoringUtil.checkReadOnlyStatus(project, psiElements);
@@ -326,11 +331,11 @@ public abstract class BaseRefactoringProcessor implements Runnable {
   @Nonnull
   private static UsageViewPresentation createPresentation(@Nonnull UsageViewDescriptor descriptor, @Nonnull Usage[] usages) {
     UsageViewPresentation presentation = new UsageViewPresentation();
-    presentation.setTabText(RefactoringBundle.message("usageView.tabText"));
+    presentation.setTabText(RefactoringLocalize.usageviewTabtext().get());
     presentation.setTargetsNodeText(descriptor.getProcessedElementsHeader());
     presentation.setShowReadOnlyStatusAsRed(true);
     presentation.setShowCancelButton(true);
-    presentation.setUsagesString(RefactoringBundle.message("usageView.usagesText"));
+    presentation.setUsagesString(RefactoringLocalize.usageviewUsagestext().get());
     int codeUsageCount = 0;
     int nonCodeUsageCount = 0;
     int dynamicUsagesCount = 0;
@@ -389,6 +394,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
    * @param conflicts map with conflict messages and locations
    * @return true if refactoring could proceed or false if refactoring should be cancelled
    */
+  @RequiredUIAccess
   public static boolean processConflicts(@Nonnull Project project, @Nonnull MultiMap<PsiElement, String> conflicts) {
     if (conflicts.isEmpty()) return true;
 
@@ -444,11 +450,12 @@ public abstract class BaseRefactoringProcessor implements Runnable {
       }
     };
 
-    String canNotMakeString = RefactoringBundle.message("usageView.need.reRun");
+    LocalizeValue canNotMakeString = RefactoringLocalize.usageviewNeedRerun();
 
-    addDoRefactoringAction(usageView, refactoringRunnable, canNotMakeString);
+    addDoRefactoringAction(usageView, refactoringRunnable, canNotMakeString.get());
     usageView.setRerunAction(new AbstractAction() {
       @Override
+      @RequiredUIAccess
       public void actionPerformed(ActionEvent e) {
         doRun();
       }
@@ -456,7 +463,13 @@ public abstract class BaseRefactoringProcessor implements Runnable {
   }
 
   private void addDoRefactoringAction(@Nonnull UsageView usageView, @Nonnull Runnable refactoringRunnable, @Nonnull String canNotMakeString) {
-    usageView.addPerformOperationAction(refactoringRunnable, getCommandName(), canNotMakeString, RefactoringBundle.message("usageView.doAction"), false);
+    usageView.addPerformOperationAction(
+      refactoringRunnable,
+      getCommandName(),
+      canNotMakeString,
+      RefactoringLocalize.usageviewDoaction().get(),
+      false
+    );
   }
 
   @RequiredUIAccess
@@ -549,11 +562,11 @@ public abstract class BaseRefactoringProcessor implements Runnable {
 
     int count = writableUsageInfos.length;
     if (count > 0) {
-      StatusBarUtil.setStatusBarInfo(myProject, RefactoringBundle.message("statusBar.refactoring.result", count));
+      StatusBarUtil.setStatusBarInfo(myProject, RefactoringLocalize.statusbarRefactoringResult(count).get());
     }
     else {
       if (!isPreviewUsages(writableUsageInfos)) {
-        StatusBarUtil.setStatusBarInfo(myProject, RefactoringBundle.message("statusBar.noUsages"));
+        StatusBarUtil.setStatusBarInfo(myProject, RefactoringLocalize.statusbarNousages().get());
       }
     }
   }
@@ -652,10 +665,12 @@ public abstract class BaseRefactoringProcessor implements Runnable {
    * @deprecated use {@link #showConflicts(MultiMap, UsageInfo[])}
    */
   @Deprecated
+  @RequiredUIAccess
   protected boolean showConflicts(@Nonnull MultiMap<PsiElement, String> conflicts) {
     return showConflicts(conflicts, null);
   }
 
+  @RequiredUIAccess
   protected boolean showConflicts(@Nonnull MultiMap<PsiElement, String> conflicts, @Nullable final UsageInfo[] usages) {
     if (!conflicts.isEmpty() && myProject.getApplication().isUnitTestMode()) {
       if (!ConflictsInTestsException.isTestIgnore()) throw new ConflictsInTestsException(conflicts.values());

@@ -19,7 +19,6 @@ import consulo.application.AllIcons;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.registry.Registry;
 import consulo.component.ProcessCanceledException;
-import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.event.DocumentAdapter;
@@ -29,9 +28,9 @@ import consulo.ide.impl.idea.refactoring.ui.*;
 import consulo.ide.impl.idea.util.ui.table.JBListTable;
 import consulo.ide.impl.idea.util.ui.table.JBTableRowEditor;
 import consulo.language.editor.refactoring.BaseRefactoringProcessor;
-import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.changeSignature.ChangeSignatureHandler;
 import consulo.language.editor.refactoring.changeSignature.ParameterInfo;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.ui.RefactoringDialog;
 import consulo.language.editor.refactoring.ui.StringTableCellEditor;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
@@ -40,8 +39,10 @@ import consulo.language.file.LanguageFileType;
 import consulo.language.psi.PsiCodeFragment;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.awt.*;
@@ -53,9 +54,9 @@ import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.image.ImageEffects;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
@@ -137,12 +138,9 @@ public abstract class ChangeSignatureDialogBase<ParamInfo extends ParameterInfo,
     setTitle(ChangeSignatureHandler.REFACTORING_NAME);
     init();
     doUpdateSignature();
-    Disposer.register(myDisposable, new Disposable() {
-      @Override
-      public void dispose() {
-        myUpdateSignatureAlarm.cancelAllRequests();
-        myDisposed = true;
-      }
+    Disposer.register(myDisposable, () -> {
+      myUpdateSignatureAlarm.cancelAllRequests();
+      myDisposed = true;
     });
   }
 
@@ -171,7 +169,7 @@ public abstract class ChangeSignatureDialogBase<ParamInfo extends ParameterInfo,
   }
 
   public List<ParamInfo> getParameters() {
-    List<ParamInfo> result = new ArrayList<ParamInfo>(myParametersTableModel.getRowCount());
+    List<ParamInfo> result = new ArrayList<>(myParametersTableModel.getRowCount());
     for (ParameterTableModelItemBase<ParamInfo> item : myParametersTableModel.getItems()) {
       result.add(item.parameter);
     }
@@ -183,6 +181,7 @@ public abstract class ChangeSignatureDialogBase<ParamInfo extends ParameterInfo,
   }
 
   @Override
+  @RequiredUIAccess
   public JComponent getPreferredFocusedComponent() {
     final JTable table = getTableComponent();
 
@@ -211,11 +210,14 @@ public abstract class ChangeSignatureDialogBase<ParamInfo extends ParameterInfo,
   @Override
   protected JComponent createNorthPanel() {
     final JPanel panel = new JPanel(new GridBagLayout());
-    GridBagConstraints gbc = new GridBagConstraints(0, 0, 1, 1, 0, 1, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0);
+    GridBagConstraints gbc = new GridBagConstraints(
+      0, 0, 1, 1, 0, 1, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+      JBUI.emptyInsets(), 0, 0
+    );
 
     myNamePanel = new JPanel(new BorderLayout(0, 2));
     myNameField = new EditorTextField(myMethod.getName());
-    final JLabel nameLabel = new JLabel(RefactoringBundle.message("changeSignature.name.prompt"));
+    final JLabel nameLabel = new JLabel(RefactoringLocalize.changesignatureNamePrompt().get());
     nameLabel.setLabelFor(myNameField);
     myNameField.setEnabled(myMethod.canChangeName());
     if (myMethod.canChangeName()) {
@@ -227,8 +229,8 @@ public abstract class ChangeSignatureDialogBase<ParamInfo extends ParameterInfo,
 
     createVisibilityPanel();
 
-    if (myMethod.canChangeVisibility() && myVisibilityPanel instanceof ComboBoxVisibilityPanel) {
-      ((ComboBoxVisibilityPanel)myVisibilityPanel).registerUpDownActionsFor(myNameField);
+    if (myMethod.canChangeVisibility() && myVisibilityPanel instanceof ComboBoxVisibilityPanel comboBoxVisibilityPanel) {
+      comboBoxVisibilityPanel.registerUpDownActionsFor(myNameField);
       myVisibilityPanel.setBorder(new EmptyBorder(0, 0, 0, 8));
       panel.add(myVisibilityPanel, gbc);
       gbc.gridx++;
@@ -239,7 +241,7 @@ public abstract class ChangeSignatureDialogBase<ParamInfo extends ParameterInfo,
     if (myMethod.canChangeReturnType() != MethodDescriptor.ReadWriteOption.None) {
       JPanel typePanel = new JPanel(new BorderLayout(0, 2));
       typePanel.setBorder(new EmptyBorder(0, 0, 0, 8));
-      final JLabel typeLabel = new JLabel(RefactoringBundle.message("changeSignature.return.type.prompt"));
+      final JLabel typeLabel = new JLabel(RefactoringLocalize.changesignatureReturnTypePrompt().get());
       myReturnTypeCodeFragment = createReturnTypeCodeFragment();
       final Document document = PsiDocumentManager.getInstance(myProject).getDocument(myReturnTypeCodeFragment);
       myReturnTypeField = createReturnTypeTextField(document);
@@ -307,7 +309,7 @@ public abstract class ChangeSignatureDialogBase<ParamInfo extends ParameterInfo,
     }
     else {
       final TabbedPaneWrapper tabbedPane = new TabbedPaneWrapper(getDisposable());
-      tabbedPane.addTab(RefactoringBundle.message("parameters.border.title"), panel);
+      tabbedPane.addTab(RefactoringLocalize.parametersBorderTitle().get(), panel);
       for (Pair<String, JPanel> extraPanel : panels) {
         tabbedPane.addTab(extraPanel.first, extraPanel.second);
       }
@@ -336,25 +338,30 @@ public abstract class ChangeSignatureDialogBase<ParamInfo extends ParameterInfo,
     }
 
     myPropagateParamChangesButton =
-            new AnActionButton(RefactoringBundle.message("changeSignature.propagate.parameters.title"), null, ImageEffects.layered(AllIcons.Nodes.Parameter, AllIcons.Actions.New)) {
-              @Override
-              public void actionPerformed(AnActionEvent e) {
-                final Ref<CallerChooserBase<Method>> chooser = new Ref<CallerChooserBase<Method>>();
-                Consumer<Set<Method>> callback = callers -> {
-                  myMethodsToPropagateParameters = callers;
-                  myParameterPropagationTreeToReuse = chooser.get().getTree();
-                };
-                try {
-                  String message = RefactoringBundle.message("changeSignature.parameter.caller.chooser");
-                  chooser.set(createCallerChooser(message, myParameterPropagationTreeToReuse, callback));
-                }
-                catch (ProcessCanceledException ex) {
-                  // user cancelled initial callers search, don't show dialog
-                  return;
-                }
-                chooser.get().show();
-              }
-            };
+      new AnActionButton(
+        RefactoringLocalize.changesignaturePropagateParametersTitle(),
+        LocalizeValue.empty(),
+        ImageEffects.layered(AllIcons.Nodes.Parameter, AllIcons.Actions.New)
+      ) {
+        @Override
+        @RequiredUIAccess
+        public void actionPerformed(@Nonnull AnActionEvent e) {
+          final Ref<CallerChooserBase<Method>> chooser = new Ref<>();
+          Consumer<Set<Method>> callback = callers -> {
+            myMethodsToPropagateParameters = callers;
+            myParameterPropagationTreeToReuse = chooser.get().getTree();
+          };
+          try {
+            LocalizeValue message = RefactoringLocalize.changesignatureParameterCallerChooser();
+            chooser.set(createCallerChooser(message.get(), myParameterPropagationTreeToReuse, callback));
+          }
+          catch (ProcessCanceledException ex) {
+            // user cancelled initial callers search, don't show dialog
+            return;
+          }
+          chooser.get().show();
+        }
+      };
 
     final JPanel result = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP));
     result.add(panel);
@@ -385,7 +392,7 @@ public abstract class ChangeSignatureDialogBase<ParamInfo extends ParameterInfo,
 
 
   protected JPanel createParametersPanel(boolean hasTabsInDialog) {
-    myParametersTable = new TableView<ParameterTableModelItem>(myParametersTableModel) {
+    myParametersTable = new TableView<>(myParametersTableModel) {
 
       @Override
       public void removeEditor() {
@@ -401,12 +408,11 @@ public abstract class ChangeSignatureDialogBase<ParamInfo extends ParameterInfo,
 
       private void clearEditorListeners() {
         final TableCellEditor editor = getCellEditor();
-        if (editor instanceof StringTableCellEditor) {
-          final StringTableCellEditor ed = (StringTableCellEditor)editor;
+        if (editor instanceof StringTableCellEditor ed) {
           ed.clearListeners();
         }
-        else if (editor instanceof CodeFragmentTableCellEditorBase) {
-          ((CodeFragmentTableCellEditorBase)editor).clearListeners();
+        else if (editor instanceof CodeFragmentTableCellEditorBase ed) {
+          ed.clearListeners();
         }
       }
 
@@ -424,12 +430,11 @@ public abstract class ChangeSignatureDialogBase<ParamInfo extends ParameterInfo,
           }
         };
 
-        if (editor instanceof StringTableCellEditor) {
-          final StringTableCellEditor ed = (StringTableCellEditor)editor;
+        if (editor instanceof StringTableCellEditor ed) {
           ed.addDocumentListener(listener);
         }
-        else if (editor instanceof CodeFragmentTableCellEditorBase) {
-          ((CodeFragmentTableCellEditorBase)editor).addDocumentListener(listener);
+        else if (editor instanceof CodeFragmentTableCellEditorBase ed) {
+          ed.addDocumentListener(listener);
         }
         return super.prepareEditor(editor, row, column);
       }
@@ -465,25 +470,26 @@ public abstract class ChangeSignatureDialogBase<ParamInfo extends ParameterInfo,
           final List<ParameterTableModelItem> items = myParametersTable.getItems();
           JBTableRowEditor editor = getTableEditor(myParametersList.getTable(), items.get(row));
           LOG.assertTrue(editor != null);
-          editor.addDocumentListener(new JBTableRowEditor.RowDocumentListener() {
-            @Override
-            public void documentChanged(DocumentEvent e, int column) {
-              if (myParametersTableModel.getColumnClass(column).equals(String.class)) {
-                myParametersTableModel.setValueAtWithoutUpdate(e.getDocument().getText(), row, column);
-              }
-
-              updateSignature();
+          editor.addDocumentListener((e, column) -> {
+            if (myParametersTableModel.getColumnClass(column).equals(String.class)) {
+              myParametersTableModel.setValueAtWithoutUpdate(e.getDocument().getText(), row, column);
             }
+
+            updateSignature();
           });
           return editor;
         }
       };
-      final JPanel buttonsPanel = ToolbarDecorator.createDecorator(myParametersList.getTable()).addExtraAction(myPropagateParamChangesButton).createPanel();
+      final JPanel buttonsPanel = ToolbarDecorator.createDecorator(myParametersList.getTable())
+        .addExtraAction(myPropagateParamChangesButton)
+        .createPanel();
       myParametersList.getTable().getModel().addTableModelListener(mySignatureUpdater);
       return buttonsPanel;
     }
     else {
-      final JPanel buttonsPanel = ToolbarDecorator.createDecorator(getTableComponent()).addExtraAction(myPropagateParamChangesButton).createPanel();
+      final JPanel buttonsPanel = ToolbarDecorator.createDecorator(getTableComponent())
+        .addExtraAction(myPropagateParamChangesButton)
+        .createPanel();
 
       myPropagateParamChangesButton.setEnabled(false);
       myPropagateParamChangesButton.setVisible(false);
@@ -516,7 +522,7 @@ public abstract class ChangeSignatureDialogBase<ParamInfo extends ParameterInfo,
   private JComponent createSignaturePanel() {
     mySignatureArea = createSignaturePreviewComponent();
     JPanel panel = new JPanel(new BorderLayout());
-    panel.add(SeparatorFactory.createSeparator(RefactoringBundle.message("signature.preview.border.title"), null), BorderLayout.NORTH);
+    panel.add(SeparatorFactory.createSeparator(RefactoringLocalize.signaturePreviewBorderTitle().get(), null), BorderLayout.NORTH);
     panel.add(mySignatureArea, BorderLayout.CENTER);
     mySignatureArea.setPreferredSize(new Dimension(-1, 130));
     mySignatureArea.setMinimumSize(new Dimension(-1, 130));
@@ -564,18 +570,10 @@ public abstract class ChangeSignatureDialogBase<ParamInfo extends ParameterInfo,
   protected void updateSignature() {
     if (mySignatureArea == null || myPropagateParamChangesButton == null) return;
 
-    final Runnable updateRunnable = new Runnable() {
-      @Override
-      public void run() {
-        if (myDisposed) return;
-        myUpdateSignatureAlarm.cancelAllRequests();
-        myUpdateSignatureAlarm.addRequest(new Runnable() {
-          @Override
-          public void run() {
-            updateSignatureAlarmFired();
-          }
-        }, 100);
-      }
+    final Runnable updateRunnable = () -> {
+      if (myDisposed) return;
+      myUpdateSignatureAlarm.cancelAllRequests();
+      myUpdateSignatureAlarm.addRequest(this::updateSignatureAlarmFired, 100);
     };
     //noinspection SSBasedInspection
     SwingUtilities.invokeLater(updateRunnable);
@@ -607,6 +605,7 @@ public abstract class ChangeSignatureDialogBase<ParamInfo extends ParameterInfo,
   }
 
   @Override
+  @RequiredUIAccess
   protected void doAction() {
     if (myParametersTable != null) {
       TableUtil.stopEditing(myParametersTable);
@@ -619,7 +618,11 @@ public abstract class ChangeSignatureDialogBase<ParamInfo extends ParameterInfo,
       return;
     }
     if (myMethodsToPropagateParameters != null && !mayPropagateParameters()) {
-      Messages.showWarningDialog(myProject, RefactoringBundle.message("changeSignature.parameters.wont.propagate"), ChangeSignatureHandler.REFACTORING_NAME);
+      Messages.showWarningDialog(
+        myProject,
+        RefactoringLocalize.changesignatureParametersWontPropagate().get(),
+        ChangeSignatureHandler.REFACTORING_NAME.get()
+      );
       myMethodsToPropagateParameters = null;
     }
 

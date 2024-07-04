@@ -16,7 +16,7 @@
 
 package consulo.language.editor.refactoring.rename;
 
-import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
@@ -26,8 +26,8 @@ import consulo.usage.UsageViewUtil;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Set;
@@ -58,15 +58,16 @@ public class RenameViewDescriptor implements UsageViewDescriptor{
         }
       }
 
-      processedElementsHeaders.add(StringUtil.capitalize(
-        RefactoringBundle.message("0.to.be.renamed.to.1.2", UsageViewUtil.getType(element), prefix, newName)));
+      processedElementsHeaders.add(
+        StringUtil.capitalize(RefactoringLocalize.zeroToBeRenamedTo12(UsageViewUtil.getType(element), prefix, newName).get())
+      );
       codeReferences.add(UsageViewUtil.getType(element) + " " + UsageViewUtil.getLongName(element));
     }
 
 
     myProcessedElementsHeader = StringUtil.join(ArrayUtil.toStringArray(processedElementsHeaders), ", ");
-    myCodeReferencesText =  RefactoringBundle.message("references.in.code.to.0", StringUtil.join(ArrayUtil.toStringArray(codeReferences),
-                                                                                                 ", "));
+    myCodeReferencesText =
+      RefactoringLocalize.referencesInCodeTo0(StringUtil.join(ArrayUtil.toStringArray(codeReferences), ", ")).get();
   }
 
   @Override
@@ -87,8 +88,6 @@ public class RenameViewDescriptor implements UsageViewDescriptor{
 
   @Override
   public String getCommentReferencesText(int usagesCount, int filesCount) {
-    return RefactoringBundle.message("comments.elements.header",
-                                     UsageViewBundle.getOccurencesString(usagesCount, filesCount));
+    return RefactoringLocalize.commentsElementsHeader(UsageViewBundle.getOccurencesString(usagesCount, filesCount)).get();
   }
-
 }

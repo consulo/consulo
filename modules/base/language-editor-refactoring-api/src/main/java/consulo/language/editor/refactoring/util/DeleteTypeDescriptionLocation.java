@@ -16,11 +16,10 @@
 
 package consulo.language.editor.refactoring.util;
 
-import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.findUsage.FindUsagesProvider;
 import consulo.language.psi.*;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -50,17 +49,17 @@ public class DeleteTypeDescriptionLocation extends ElementDescriptionLocation {
   public static class DefaultProvider implements ElementDescriptionProvider {
     @Override
     public String getElementDescription(@Nonnull final PsiElement element, @Nonnull final ElementDescriptionLocation location) {
-      if (location instanceof DeleteTypeDescriptionLocation) {
-        final boolean plural = ((DeleteTypeDescriptionLocation)location).isPlural();
+      if (location instanceof DeleteTypeDescriptionLocation deleteTypeDescriptionLocation) {
+        final boolean plural = deleteTypeDescriptionLocation.isPlural();
         final int count = plural ? 2 : 1;
-        if (element instanceof PsiFileSystemItem && PsiUtilBase.isSymLink((PsiFileSystemItem)element)) {
-          return RefactoringBundle.message("prompt.delete.symlink", count);
+        if (element instanceof PsiFileSystemItem psiFileSystemItem && PsiUtilBase.isSymLink(psiFileSystemItem)) {
+          return RefactoringLocalize.promptDeleteSymlink(count).get();
         }
         if (element instanceof PsiFile) {
-          return RefactoringBundle.message("prompt.delete.file", count);
+          return RefactoringLocalize.promptDeleteFile(count).get();
         }
         if (element instanceof PsiDirectory) {
-          return RefactoringBundle.message("prompt.delete.directory", count);
+          return RefactoringLocalize.promptDeleteDirectory(count).get();
         }
         if (!plural) {
           return FindUsagesProvider.forLanguage(element.getLanguage()).getType(element);

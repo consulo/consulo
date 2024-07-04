@@ -1,6 +1,5 @@
 package consulo.language.editor.refactoring;
 
-import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.dataContext.DataContext;
@@ -10,6 +9,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiNavigateUtil;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -24,9 +24,9 @@ public abstract class ClassRefactoringHandlerBase implements RefactoringActionHa
   protected static void navigate(final PsiElement element) {
     PsiNavigateUtil.navigate(element);
   }
-  
+
   @Override
-  @RequiredReadAction
+  @RequiredUIAccess
   public void invoke(@Nonnull Project project, Editor editor, PsiFile file, DataContext dataContext) {
     int offset = editor.getCaretModel().getOffset();
     editor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
@@ -35,13 +35,14 @@ public abstract class ClassRefactoringHandlerBase implements RefactoringActionHa
 
     while (true) {
       if (element == null || element instanceof PsiFile) {
-        String message = RefactoringBundle
-          .getCannotRefactorMessage(getInvalidPositionMessage());
+        String message = RefactoringBundle.getCannotRefactorMessage(getInvalidPositionMessage());
         CommonRefactoringUtil.showErrorHint(project, editor, message, getTitle(), getHelpId());
         return;
       }
 
-      if (!CommonRefactoringUtil.checkReadOnlyStatus(project, element)) return;
+      if (!CommonRefactoringUtil.checkReadOnlyStatus(project, element)) {
+        return;
+      }
 
       if (acceptsElement(element)) {
         invoke(project, new PsiElement[]{position}, dataContext);
@@ -52,6 +53,7 @@ public abstract class ClassRefactoringHandlerBase implements RefactoringActionHa
   }
 
   @Override
+  @RequiredUIAccess
   public void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, DataContext dataContext) {
     final PsiFile file = dataContext.getData(PsiFile.KEY);
     final Editor editor = dataContext.getData(Editor.KEY);

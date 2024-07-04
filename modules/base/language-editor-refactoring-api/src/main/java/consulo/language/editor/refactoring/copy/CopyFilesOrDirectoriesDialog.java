@@ -15,16 +15,17 @@
  */
 package consulo.language.editor.refactoring.copy;
 
-import consulo.application.ApplicationManager;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.HelpManager;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.util.DirectoryUtil;
 import consulo.language.psi.*;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RecentsManager;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.IdeActions;
@@ -36,8 +37,8 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.util.io.PathUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -86,15 +87,14 @@ public class CopyFilesOrDirectoriesDialog extends DialogWrapper {
       throw new IllegalArgumentException("wrong number of elements to clone: " + elements.length);
     }
 
-    setTitle(RefactoringBundle.message(doClone ? "copy.files.clone.title" : "copy.files.copy.title"));
+    setTitle(doClone ? RefactoringLocalize.copyFilesCloneTitle() : RefactoringLocalize.copyFilesCopyTitle());
     init();
 
     if (elements.length == 1) {
-      String text;
-      if (elements[0] instanceof PsiFile) {
-        PsiFile file = (PsiFile)elements[0];
+      LocalizeValue text;
+      if (elements[0] instanceof PsiFile file) {
         String url = shortenPath(file.getVirtualFile());
-        text = RefactoringBundle.message(doClone ? "copy.files.clone.file.0" : "copy.files.copy.file.0", url);
+        text = doClone ? RefactoringLocalize.copyFilesCloneFile0(url) : RefactoringLocalize.copyFilesCopyFile0(url);
         final String fileName = file.getName();
         myNewNameField.setText(fileName);
         final int dotIdx = fileName.lastIndexOf(".");
@@ -107,10 +107,10 @@ public class CopyFilesOrDirectoriesDialog extends DialogWrapper {
       else {
         PsiDirectory directory = (PsiDirectory)elements[0];
         String url = shortenPath(directory.getVirtualFile());
-        text = RefactoringBundle.message(doClone ? "copy.files.clone.directory.0" : "copy.files.copy.directory.0", url);
+        text = doClone ? RefactoringLocalize.copyFilesCloneDirectory0(url) : RefactoringLocalize.copyFilesCopyDirectory0(url);
         myNewNameField.setText(directory.getName());
       }
-      myInformationLabel.setText(text);
+      myInformationLabel.setText(text.get());
     }
     else {
       setMultipleElementCopyLabel(elements);
@@ -145,13 +145,13 @@ public class CopyFilesOrDirectoriesDialog extends DialogWrapper {
       }
     }
     if (allFiles) {
-      myInformationLabel.setText(RefactoringBundle.message("copy.files.copy.specified.files.label"));
+      myInformationLabel.setText(RefactoringLocalize.copyFilesCopySpecifiedFilesLabel().get());
     }
     else if (allDirectories) {
-      myInformationLabel.setText(RefactoringBundle.message("copy.files.copy.specified.directories.label"));
+      myInformationLabel.setText(RefactoringLocalize.copyFilesCopySpecifiedDirectoriesLabel().get());
     }
     else {
-      myInformationLabel.setText(RefactoringBundle.message("copy.files.copy.specified.mixed.label"));
+      myInformationLabel.setText(RefactoringLocalize.copyFilesCopySpecifiedMixedLabel().get());
     }
   }
 
@@ -186,7 +186,7 @@ public class CopyFilesOrDirectoriesDialog extends DialogWrapper {
     if (myShowNewNameField) {
       myNewNameField = new JTextField();
       myNewNameField.getDocument().addDocumentListener(documentListener);
-      formBuilder.addLabeledComponent(RefactoringBundle.message("copy.files.new.name.label"), myNewNameField);
+      formBuilder.addLabeledComponent(RefactoringLocalize.copyFilesNewNameLabel().get(), myNewNameField);
     }
 
     if (myShowDirectoryField) {
@@ -197,21 +197,23 @@ public class CopyFilesOrDirectoriesDialog extends DialogWrapper {
         myTargetDirectoryField.getChildComponent().setHistory(recentEntries);
       }
       final FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
-      myTargetDirectoryField.addBrowseFolderListener(RefactoringBundle.message("select.target.directory"),
-                                                     RefactoringBundle.message("the.file.will.be.copied.to.this.directory"),
-                                                     myProject, descriptor,
-                                                     TextComponentAccessor.TEXT_FIELD_WITH_HISTORY_WHOLE_TEXT);
+      myTargetDirectoryField.addBrowseFolderListener(RefactoringLocalize.selectTargetDirectory().get(),
+        RefactoringLocalize.theFileWillBeCopiedToThisDirectory().get(),
+        myProject,
+        descriptor,
+        TextComponentAccessor.TEXT_FIELD_WITH_HISTORY_WHOLE_TEXT
+      );
       myTargetDirectoryField.getChildComponent().addDocumentListener(new DocumentAdapter() {
         @Override
         protected void textChanged(DocumentEvent e) {
           validateOKButton();
         }
       });
-      formBuilder.addLabeledComponent(RefactoringBundle.message("copy.files.to.directory.label"), myTargetDirectoryField);
+      formBuilder.addLabeledComponent(RefactoringLocalize.copyFilesToDirectoryLabel().get(), myTargetDirectoryField);
 
       String shortcutText =
         KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction(IdeActions.ACTION_CODE_COMPLETION));
-      formBuilder.addTooltip(RefactoringBundle.message("path.completion.shortcut", shortcutText));
+      formBuilder.addTooltip(RefactoringLocalize.pathCompletionShortcut(shortcutText).get());
     }
 
     final JPanel wrapper = new JPanel(new BorderLayout());
@@ -233,12 +235,13 @@ public class CopyFilesOrDirectoriesDialog extends DialogWrapper {
   }
 
   @Override
+  @RequiredUIAccess
   protected void doOKAction() {
     if (myShowNewNameField) {
       String newName = getNewName();
 
       if (newName.length() == 0) {
-        Messages.showErrorDialog(myProject, RefactoringBundle.message("no.new.name.specified"), RefactoringBundle.message("error.title"));
+        Messages.showErrorDialog(myProject, RefactoringLocalize.noNewNameSpecified().get(), RefactoringLocalize.errorTitle().get());
         return;
       }
 
@@ -253,31 +256,31 @@ public class CopyFilesOrDirectoriesDialog extends DialogWrapper {
       final String targetDirectoryName = myTargetDirectoryField.getChildComponent().getText();
 
       if (targetDirectoryName.length() == 0) {
-        Messages.showErrorDialog(myProject, RefactoringBundle.message("no.target.directory.specified"),
-                                 RefactoringBundle.message("error.title"));
+        Messages.showErrorDialog(
+          myProject,
+          RefactoringLocalize.noTargetDirectorySpecified().get(),
+          RefactoringLocalize.errorTitle().get()
+        );
         return;
       }
 
       RecentsManager.getInstance(myProject).registerRecentEntry(RECENT_KEYS, targetDirectoryName);
 
-      CommandProcessor.getInstance().executeCommand(myProject, new Runnable() {
-        @Override
-        public void run() {
-          ApplicationManager.getApplication().runWriteAction(new Runnable() {
-            @Override
-            public void run() {
-              try {
-                myTargetDirectory =
-                  DirectoryUtil.mkdirs(PsiManager.getInstance(myProject), targetDirectoryName.replace(File.separatorChar, '/'));
-              }
-              catch (IncorrectOperationException ignored) { }
-            }
-          });
-        }
-      }, RefactoringBundle.message("create.directory"), null);
+      CommandProcessor.getInstance().executeCommand(
+        myProject,
+        () -> myProject.getApplication().runWriteAction(() -> {
+          try {
+            myTargetDirectory =
+              DirectoryUtil.mkdirs(PsiManager.getInstance(myProject), targetDirectoryName.replace(File.separatorChar, '/'));
+          }
+          catch (IncorrectOperationException ignored) { }
+        }),
+        RefactoringLocalize.createDirectory().get(),
+        null
+      );
 
       if (myTargetDirectory == null) {
-        Messages.showErrorDialog(myProject, RefactoringBundle.message("cannot.create.directory"), RefactoringBundle.message("error.title"));
+        Messages.showErrorDialog(myProject, RefactoringLocalize.cannotCreateDirectory().get(), RefactoringLocalize.errorTitle().get());
         return;
       }
     }

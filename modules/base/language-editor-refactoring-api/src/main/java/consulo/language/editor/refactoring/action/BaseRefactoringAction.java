@@ -30,6 +30,7 @@ import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.refactoring.ContextAwareActionHandler;
 import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.language.psi.*;
@@ -104,9 +105,13 @@ public abstract class BaseRefactoringAction extends AnAction implements UpdateIn
       return;
     }
     if (handler == null) {
-      CommonRefactoringUtil.showErrorHint(project, editor, RefactoringBundle
-                                                  .getCannotRefactorMessage(RefactoringBundle.message("error.wrong.caret.position.symbol.to.refactor")),
-                                          RefactoringBundle.getCannotRefactorMessage(null), null);
+      CommonRefactoringUtil.showErrorHint(
+        project,
+        editor,
+        RefactoringBundle.getCannotRefactorMessage(RefactoringLocalize.errorWrongCaretPositionSymbolToRefactor().get()),
+        RefactoringBundle.getCannotRefactorMessage(null),
+        null
+      );
       return;
     }
 

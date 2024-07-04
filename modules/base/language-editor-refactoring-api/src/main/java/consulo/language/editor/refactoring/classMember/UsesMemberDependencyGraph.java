@@ -24,13 +24,13 @@
  */
 package consulo.language.editor.refactoring.classMember;
 
-import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.psi.NavigatablePsiElement;
 import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -47,17 +47,17 @@ public class UsesMemberDependencyGraph<T extends NavigatablePsiElement, C extend
 
   public UsesMemberDependencyGraph(C aClass, C superClass, boolean recursive) {
     myRecursive = recursive;
-    mySelectedNormal = new HashSet<T>();
-    mySelectedAbstract = new HashSet<T>();
-    myMemberDependenciesStorage = new MemberDependenciesStorage<T, C>(aClass, superClass);
+    mySelectedNormal = new HashSet<>();
+    mySelectedAbstract = new HashSet<>();
+    myMemberDependenciesStorage = new MemberDependenciesStorage<>(aClass, superClass);
   }
 
 
   @Override
   public Set<? extends T> getDependent() {
     if (myDependencies == null) {
-      myDependencies = new HashSet<T>();
-      myDependenciesToDependentMap = new HashMap<T, HashSet<T>>();
+      myDependencies = new HashSet<>();
+      myDependenciesToDependentMap = new HashMap<>();
       buildDeps(null, mySelectedNormal);
     }
     return myDependencies;
@@ -66,21 +66,21 @@ public class UsesMemberDependencyGraph<T extends NavigatablePsiElement, C extend
   @Override
   public Set<? extends T> getDependenciesOf(T member) {
     final Set dependent = getDependent();
-    if(!dependent.contains(member)) return null;
+    if (!dependent.contains(member)) return null;
     return myDependenciesToDependentMap.get(member);
   }
 
   public String getElementTooltip(T element) {
     final Set<? extends T> dependencies = getDependenciesOf(element);
-    if(dependencies == null || dependencies.size() == 0) return null;
+    if (dependencies == null || dependencies.size() == 0) return null;
 
-    ArrayList<String> strings = new ArrayList<String>();
+    ArrayList<String> strings = new ArrayList<>();
     for (T dep : dependencies) {
       strings.add(dep.getName());
     }
 
-    if(strings.isEmpty()) return null;
-    return RefactoringBundle.message("used.by.0", StringUtil.join(strings, ", "));
+    if (strings.isEmpty()) return null;
+    return RefactoringLocalize.usedBy0(StringUtil.join(strings, ", ")).get();
   }
 
 
@@ -121,7 +121,7 @@ public class UsesMemberDependencyGraph<T extends NavigatablePsiElement, C extend
     if (sourceElement != null) {
       HashSet<T> relations = myDependenciesToDependentMap.get(member);
       if (relations == null) {
-        relations = new HashSet<T>();
+        relations = new HashSet<>();
         myDependenciesToDependentMap.put(member, relations);
       }
       relations.add(sourceElement);

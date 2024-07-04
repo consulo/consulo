@@ -18,16 +18,18 @@ package consulo.language.editor.refactoring.util;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.hint.HintManager;
-import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.file.FileTypeManager;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiDirectoryContainer;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.usage.UsageInfo;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
@@ -35,10 +37,10 @@ import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
-import org.jetbrains.annotations.Nls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Nls;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -110,12 +112,18 @@ public class CommonRefactoringUtil {
 
   @RequiredUIAccess
   public static boolean checkReadOnlyStatus(@Nonnull Project project, @Nonnull PsiElement element) {
-    return checkReadOnlyStatus(element, project, RefactoringBundle.message("refactoring.cannot.be.performed"));
+    return checkReadOnlyStatus(element, project, RefactoringLocalize.refactoringCannotBePerformed().get());
   }
 
   @RequiredUIAccess
   public static boolean checkReadOnlyStatus(@Nonnull Project project, @Nonnull PsiElement... elements) {
-    return checkReadOnlyStatus(project, Collections.<PsiElement>emptySet(), Arrays.asList(elements), RefactoringBundle.message("refactoring.cannot.be.performed"), true);
+    return checkReadOnlyStatus(
+      project,
+      Collections.<PsiElement>emptySet(),
+      Arrays.asList(elements),
+      RefactoringLocalize.refactoringCannotBePerformed().get(),
+      true
+    );
   }
 
   @RequiredUIAccess
@@ -124,7 +132,13 @@ public class CommonRefactoringUtil {
     @Nonnull Collection<? extends PsiElement> elements,
     boolean notifyOnFail
   ) {
-    return checkReadOnlyStatus(project, Collections.<PsiElement>emptySet(), elements, RefactoringBundle.message("refactoring.cannot.be.performed"), notifyOnFail);
+    return checkReadOnlyStatus(
+      project,
+      Collections.<PsiElement>emptySet(),
+      elements,
+      RefactoringLocalize.refactoringCannotBePerformed().get(),
+      notifyOnFail
+    );
   }
 
   @RequiredUIAccess
@@ -135,7 +149,13 @@ public class CommonRefactoringUtil {
 
   @RequiredUIAccess
   public static boolean checkReadOnlyStatusRecursively(@Nonnull Project project, @Nonnull Collection<? extends PsiElement> elements) {
-    return checkReadOnlyStatus(project, elements, Collections.<PsiElement>emptySet(), RefactoringBundle.message("refactoring.cannot.be.performed"), false);
+    return checkReadOnlyStatus(
+      project,
+      elements,
+      Collections.<PsiElement>emptySet(),
+      RefactoringLocalize.refactoringCannotBePerformed().get(),
+      false
+    );
   }
 
   @RequiredUIAccess
@@ -144,7 +164,13 @@ public class CommonRefactoringUtil {
     @Nonnull Collection<? extends PsiElement> elements,
     boolean notifyOnFail
   ) {
-    return checkReadOnlyStatus(project, elements, Collections.<PsiElement>emptySet(), RefactoringBundle.message("refactoring.cannot.be.performed"), notifyOnFail);
+    return checkReadOnlyStatus(
+      project,
+      elements,
+      Collections.<PsiElement>emptySet(),
+      RefactoringLocalize.refactoringCannotBePerformed().get(),
+      notifyOnFail
+    );
   }
 
   @RequiredUIAccess
@@ -154,7 +180,7 @@ public class CommonRefactoringUtil {
     @Nonnull Collection<? extends PsiElement> flat,
     boolean notifyOnFail
   ) {
-    return checkReadOnlyStatus(project, recursive, flat, RefactoringBundle.message("refactoring.cannot.be.performed"), notifyOnFail);
+    return checkReadOnlyStatus(project, recursive, flat, RefactoringLocalize.refactoringCannotBePerformed().get(), notifyOnFail);
   }
 
   @RequiredUIAccess
@@ -178,29 +204,33 @@ public class CommonRefactoringUtil {
       StringBuilder message = new StringBuilder(messagePrefix).append('\n');
       int i = 0;
       for (VirtualFile virtualFile : failed) {
-        String subj = RefactoringBundle.message(virtualFile.isDirectory() ? "directory.description" : "file.description", virtualFile.getPresentableUrl());
+        LocalizeValue subj = virtualFile.isDirectory()
+          ? RefactoringLocalize.directoryDescription(virtualFile.getPresentableUrl())
+          : RefactoringLocalize.fileDescription(virtualFile.getPresentableUrl());
         if (virtualFile.getFileSystem().isReadOnly()) {
-          message.append(RefactoringBundle.message("0.is.located.in.a.archive.file", subj)).append('\n');
+          message.append(RefactoringLocalize.zeroIsLocatedInAArchiveFile(subj).get()).append('\n');
         }
         else {
-          message.append(RefactoringBundle.message("0.is.read.only", subj)).append('\n');
+          message.append(RefactoringLocalize.zeroIsReadOnly(subj).get()).append('\n');
         }
         if (i++ > 20) {
           message.append("...\n");
           break;
         }
       }
-      showErrorMessage(RefactoringBundle.message("error.title"), message.toString(), null, project);
+      showErrorMessage(RefactoringLocalize.errorTitle().get(), message.toString(), null, project);
       return false;
     }
 
     return failed.isEmpty();
   }
 
-  private static boolean checkReadOnlyStatus(Collection<? extends PsiElement> elements,
-                                             boolean recursively,
-                                             Collection<VirtualFile> readonly,
-                                             Collection<VirtualFile> failed) {
+  private static boolean checkReadOnlyStatus(
+    Collection<? extends PsiElement> elements,
+    boolean recursively,
+    Collection<VirtualFile> readonly,
+    Collection<VirtualFile> failed
+  ) {
     boolean seenNonWritablePsiFilesWithoutVirtualFile = false;
 
     for (PsiElement element : elements) {
@@ -285,15 +315,16 @@ public class CommonRefactoringUtil {
     return false;
   }
 
-  public static boolean checkFileExist(@Nullable PsiDirectory targetDirectory, int[] choice, PsiFile file, String name, String title) {
+  @RequiredUIAccess public static boolean checkFileExist(@Nullable PsiDirectory targetDirectory, int[] choice, PsiFile file, String name, String title) {
     if (targetDirectory == null) return false;
     final PsiFile existing = targetDirectory.findFile(name);
     if (existing != null && !existing.equals(file)) {
       int selection;
       if (choice == null || choice[0] == -1) {
         String message = String.format("File '%s' already exists in directory '%s'", name, targetDirectory.getVirtualFile().getPath());
-        String[] options = choice == null ? new String[]{"Overwrite", "Skip"} : new String[]{"Overwrite", "Skip", "Overwrite for all", "Skip for all"};
-        selection = Messages.showDialog(message, title, options, 0, Messages.getQuestionIcon());
+        String[] options =
+          choice == null ? new String[]{"Overwrite", "Skip"} : new String[]{"Overwrite", "Skip", "Overwrite for all", "Skip for all"};
+        selection = Messages.showDialog(message, title, options, 0, UIUtil.getQuestionIcon());
       }
       else {
         selection = choice[0];
@@ -305,7 +336,7 @@ public class CommonRefactoringUtil {
       }
 
       if (selection == 0 && file != existing) {
-        WriteCommandAction.writeCommandAction(targetDirectory.getProject()).withName(title).run(() -> existing.delete());
+        WriteCommandAction.writeCommandAction(targetDirectory.getProject()).withName(title).run(existing::delete);
       }
       else {
         return true;

@@ -26,9 +26,9 @@ import consulo.language.Language;
 import consulo.language.editor.CodeInsightUtilCore;
 import consulo.language.editor.QualifiedNameProviderUtil;
 import consulo.language.editor.refactoring.NamesValidator;
-import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.event.RefactoringElementListener;
 import consulo.language.editor.refactoring.event.UndoRefactoringElementListener;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.language.editor.refactoring.util.NonCodeSearchDescriptionLocation;
 import consulo.language.editor.refactoring.util.TextOccurrencesUtil;
@@ -54,9 +54,9 @@ import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.*;
 
 public class RenameUtil {
@@ -135,17 +135,16 @@ public class RenameUtil {
 
   public static void buildPackagePrefixChangedMessage(final VirtualFile[] virtualFiles, StringBuffer message, final String qualifiedName) {
     if (virtualFiles.length > 0) {
-      message.append(RefactoringBundle.message("package.occurs.in.package.prefixes.of.the.following.source.folders.n", qualifiedName));
+      message.append(RefactoringLocalize.packageOccursInPackagePrefixesOfTheFollowingSourceFoldersN(qualifiedName).get());
       for (final VirtualFile virtualFile : virtualFiles) {
         message.append(virtualFile.getPresentableUrl()).append("\n");
       }
-      message.append(RefactoringBundle.message("these.package.prefixes.will.be.changed"));
+      message.append(RefactoringLocalize.thesePackagePrefixesWillBeChanged().get());
     }
   }
 
   private static String getStringToReplace(PsiElement element, String newName, boolean nonJava, final RenamePsiElementProcessor theProcessor) {
-    if (element instanceof PsiMetaOwner) {
-      final PsiMetaOwner psiMetaOwner = (PsiMetaOwner)element;
+    if (element instanceof PsiMetaOwner psiMetaOwner) {
       final PsiMetaData metaData = psiMetaOwner.getMetaData();
       if (metaData != null) {
         return metaData.getName();
@@ -169,21 +168,22 @@ public class RenameUtil {
   }
 
   public static void checkRename(PsiElement element, String newName) throws IncorrectOperationException {
-    if (element instanceof PsiCheckedRenameElement) {
-      ((PsiCheckedRenameElement)element).checkSetName(newName);
+    if (element instanceof PsiCheckedRenameElement psiCheckedRenameElement) {
+      psiCheckedRenameElement.checkSetName(newName);
     }
   }
 
   public static void doRename(final PsiElement element, String newName, UsageInfo[] usages, final Project project,
                               @Nullable final RefactoringElementListener listener) throws IncorrectOperationException{
     final RenamePsiElementProcessor processor = RenamePsiElementProcessor.forElement(element);
-    final String fqn = element instanceof PsiFile ? ((PsiFile)element).getVirtualFile().getPath() : QualifiedNameProviderUtil.elementToFqn(element, null);
+    final String fqn = element instanceof PsiFile file ? file.getVirtualFile().getPath()
+      : QualifiedNameProviderUtil.elementToFqn(element, null);
     if (fqn != null) {
       UndoableAction action = new BasicUndoableAction() {
         @Override
         public void undo() throws UnexpectedUndoException {
-          if (listener instanceof UndoRefactoringElementListener) {
-            ((UndoRefactoringElementListener)listener).undoElementMovedOrRenamed(element, fqn);
+          if (listener instanceof UndoRefactoringElementListener undoRefactoringElementListener) {
+            undoRefactoringElementListener.undoElementMovedOrRenamed(element, fqn);
           }
         }
 
@@ -209,22 +209,19 @@ public class RenameUtil {
         final String helpID = RenamePsiElementProcessor.forElement(element).getHelpID(element);
         String message = e.getMessage();
         if (StringUtil.isEmpty(message)) {
-          message = RefactoringBundle.message("rename.not.supported");
+          message = RefactoringLocalize.renameNotSupported().get();
         }
-        CommonRefactoringUtil.showErrorMessage(RefactoringBundle.message("rename.title"), message, helpID, project);
+        CommonRefactoringUtil.showErrorMessage(RefactoringLocalize.renameTitle().get(), message, helpID, project);
       }
     });
   }
 
-  public static void doRenameGenericNamedElement(@Nonnull PsiElement namedElement, String newName, UsageInfo[] usages,
-                                                 @Nullable RefactoringElementListener listener) throws IncorrectOperationException {
-    PsiWritableMetaData writableMetaData = null;
-    if (namedElement instanceof PsiMetaOwner) {
-      final PsiMetaData metaData = ((PsiMetaOwner)namedElement).getMetaData();
-      if (metaData instanceof PsiWritableMetaData) {
-        writableMetaData = (PsiWritableMetaData)metaData;
-      }
-    }
+  public static void doRenameGenericNamedElement(
+    @Nonnull PsiElement namedElement, String newName, UsageInfo[] usages,
+    @Nullable RefactoringElementListener listener
+  ) throws IncorrectOperationException {
+    PsiWritableMetaData writableMetaData = namedElement instanceof PsiMetaOwner metaOwner
+      && metaOwner.getMetaData() instanceof PsiWritableMetaData wmd ? wmd : null;
     if (writableMetaData == null && !(namedElement instanceof PsiNamedElement)) {
       LOG.error("Unknown element type:" + namedElement);
     }
@@ -276,8 +273,8 @@ public class RenameUtil {
     final List<UnresolvableCollisionUsageInfo> result = new ArrayList<UnresolvableCollisionUsageInfo>();
     for (Iterator<UsageInfo> iterator = usages.iterator(); iterator.hasNext();) {
       UsageInfo usageInfo = iterator.next();
-      if (usageInfo instanceof UnresolvableCollisionUsageInfo) {
-        result.add((UnresolvableCollisionUsageInfo)usageInfo);
+      if (usageInfo instanceof UnresolvableCollisionUsageInfo unresolvableCollisionUsageInfo) {
+        result.add(unresolvableCollisionUsageInfo);
         iterator.remove();
       }
     }
@@ -286,8 +283,8 @@ public class RenameUtil {
 
   public static void addConflictDescriptions(UsageInfo[] usages, MultiMap<PsiElement, String> conflicts) {
     for (UsageInfo usage : usages) {
-      if (usage instanceof UnresolvableCollisionUsageInfo) {
-        conflicts.putValue(usage.getElement(), ((UnresolvableCollisionUsageInfo)usage).getDescription());
+      if (usage instanceof UnresolvableCollisionUsageInfo unresolvableCollisionUsageInfo) {
+        conflicts.putValue(usage.getElement(), unresolvableCollisionUsageInfo.getDescription());
       }
     }
   }

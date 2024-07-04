@@ -15,55 +15,48 @@
  */
 package consulo.ide.impl.idea.refactoring.changeSignature.inplace;
 
-import consulo.language.editor.highlight.HighlightManager;
-import consulo.language.findUsage.DescriptiveNameUtil;
 import consulo.application.Result;
-import consulo.language.editor.WriteCommandAction;
-import consulo.undoRedo.internal.FinishMarkAction;
-import consulo.undoRedo.internal.StartMarkAction;
-import consulo.codeEditor.CodeInsightColors;
-import consulo.codeEditor.EditorColors;
+import consulo.codeEditor.*;
+import consulo.codeEditor.markup.HighlighterLayer;
+import consulo.codeEditor.markup.HighlighterTargetArea;
+import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.TextAttributes;
+import consulo.disposer.Disposer;
+import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
-import consulo.codeEditor.EditorEx;
-import consulo.codeEditor.markup.HighlighterLayer;
-import consulo.codeEditor.ScrollType;
-import consulo.codeEditor.markup.HighlighterTargetArea;
-import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.colorScheme.TextAttributes;
+import consulo.document.util.TextRange;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorFactory;
-import consulo.codeEditor.VisualPosition;
+import consulo.language.editor.WriteCommandAction;
+import consulo.language.editor.highlight.HighlightManager;
+import consulo.language.editor.refactoring.changeSignature.ChangeInfo;
+import consulo.language.editor.refactoring.changeSignature.ChangeSignatureHandler;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
+import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
+import consulo.language.findUsage.DescriptiveNameUtil;
+import consulo.language.psi.*;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.PositionTracker;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.NonFocusableCheckBox;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.BalloonBuilder;
 import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.disposer.Disposer;
-import consulo.document.Document;
+import consulo.undoRedo.internal.FinishMarkAction;
+import consulo.undoRedo.internal.StartMarkAction;
 import consulo.util.dataholder.Key;
-import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiWhiteSpace;
-import consulo.language.psi.util.PsiTreeUtil;
-import consulo.language.psi.PsiUtilCore;
-import consulo.language.editor.refactoring.RefactoringBundle;
-import consulo.language.editor.refactoring.changeSignature.ChangeInfo;
-import consulo.language.editor.refactoring.changeSignature.ChangeSignatureHandler;
-import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
-import consulo.ui.ex.awt.NonFocusableCheckBox;
-import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.awt.JBLabel;
-import consulo.ui.ex.PositionTracker;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -85,14 +78,22 @@ public class InplaceChangeSignature implements DocumentListener {
   private boolean myDelegate;
   private EditorEx myPreview;
 
+  @RequiredUIAccess
   public InplaceChangeSignature(Project project, Editor editor, @Nonnull PsiElement element) {
     myDocumentManager = PsiDocumentManager.getInstance(project);
     myProject = project;
     try {
-      myMarkAction = StartMarkAction.start(editor.getDocument(), project, ChangeSignatureHandler.REFACTORING_NAME);
+      myMarkAction = StartMarkAction.start(editor.getDocument(), project, ChangeSignatureHandler.REFACTORING_NAME.get());
     }
     catch (StartMarkAction.AlreadyStartedException e) {
-      final int exitCode = Messages.showYesNoDialog(myProject, e.getMessage(), ChangeSignatureHandler.REFACTORING_NAME, "Navigate to Started", "Cancel", Messages.getErrorIcon());
+      final int exitCode = Messages.showYesNoDialog(
+        myProject,
+        e.getMessage(),
+        ChangeSignatureHandler.REFACTORING_NAME.get(),
+        "Navigate to Started",
+        CommonLocalize.buttonCancel().get(),
+        UIUtil.getErrorIcon()
+      );
       if (exitCode == Messages.CANCEL) return;
       PsiElement method = myStableChange.getMethod();
       VirtualFile virtualFile = PsiUtilCore.getVirtualFile(method);
@@ -110,7 +111,14 @@ public class InplaceChangeSignature implements DocumentListener {
 
     HighlightManager highlightManager = HighlightManager.getInstance(myProject);
     TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(EditorColors.LIVE_TEMPLATE_ATTRIBUTES);
-    highlightManager.addRangeHighlight(editor, highlightingRange.getStartOffset(), highlightingRange.getEndOffset(), attributes, false, myHighlighters);
+    highlightManager.addRangeHighlight(
+      editor,
+      highlightingRange.getStartOffset(),
+      highlightingRange.getEndOffset(),
+      attributes,
+      false,
+      myHighlighters
+    );
     for (RangeHighlighter highlighter : myHighlighters) {
       highlighter.setGreedyToRight(true);
       highlighter.setGreedyToLeft(true);
@@ -211,18 +219,28 @@ public class InplaceChangeSignature implements DocumentListener {
     }.execute();
     TextAttributes deprecatedAttributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(CodeInsightColors.DEPRECATED_ATTRIBUTES);
     for (TextRange range : deleteRanges) {
-      myPreview.getMarkupModel().addRangeHighlighter(range.getStartOffset(), range.getEndOffset(), HighlighterLayer.ADDITIONAL_SYNTAX,
-                                                     deprecatedAttributes, HighlighterTargetArea.EXACT_RANGE);
+      myPreview.getMarkupModel().addRangeHighlighter(
+        range.getStartOffset(),
+        range.getEndOffset(),
+        HighlighterLayer.ADDITIONAL_SYNTAX,
+        deprecatedAttributes,
+        HighlighterTargetArea.EXACT_RANGE
+      );
     }
-    TextAttributes todoAttributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(CodeInsightColors.TODO_DEFAULT_ATTRIBUTES);
+    TextAttributes todoAttributes =
+      EditorColorsManager.getInstance().getGlobalScheme().getAttributes(CodeInsightColors.TODO_DEFAULT_ATTRIBUTES);
     for (TextRange range : newRanges) {
-      myPreview.getMarkupModel().addRangeHighlighter(range.getStartOffset(), range.getEndOffset(), HighlighterLayer.ADDITIONAL_SYNTAX,
-                                                     todoAttributes, HighlighterTargetArea.EXACT_RANGE);
+      myPreview.getMarkupModel().addRangeHighlighter(
+        range.getStartOffset(),
+        range.getEndOffset(),
+        HighlighterLayer.ADDITIONAL_SYNTAX,
+        todoAttributes, HighlighterTargetArea.EXACT_RANGE
+      );
     }
   }
 
   protected void showBalloon() {
-    NonFocusableCheckBox checkBox = new NonFocusableCheckBox(RefactoringBundle.message("delegation.panel.delegate.via.overloading.method"));
+    NonFocusableCheckBox checkBox = new NonFocusableCheckBox(RefactoringLocalize.delegationPanelDelegateViaOverloadingMethod().get());
     checkBox.addActionListener(e -> {
       myDelegate = checkBox.isSelected();
       updateCurrentInfo();
@@ -235,7 +253,7 @@ public class InplaceChangeSignature implements DocumentListener {
     final BalloonBuilder balloonBuilder = JBPopupFactory.getInstance().createDialogBalloonBuilder(content, null).setSmallVariant(true);
     myBalloon = balloonBuilder.createBalloon();
     myEditor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
-    myBalloon.show(new PositionTracker<Balloon>(myEditor.getContentComponent()) {
+    myBalloon.show(new PositionTracker<>(myEditor.getContentComponent()) {
       @Override
       public RelativePoint recalculateLocation(Balloon object) {
         int offset = myStableChange.getMethod().getTextOffset();
