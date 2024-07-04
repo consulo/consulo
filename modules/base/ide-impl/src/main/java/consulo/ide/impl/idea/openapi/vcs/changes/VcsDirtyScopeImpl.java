@@ -16,32 +16,30 @@
 
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
-import consulo.application.ApplicationManager;
-import consulo.project.Project;
-import consulo.util.lang.Comparing;
 import consulo.application.util.function.Computable;
+import consulo.application.util.function.Processor;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.project.Project;
+import consulo.util.collection.HashingStrategy;
+import consulo.util.collection.MultiMap;
+import consulo.util.collection.Sets;
+import consulo.util.collection.SmartList;
+import consulo.util.lang.Comparing;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.change.VcsDirtyScopeModifier;
 import consulo.versionControlSystem.change.VcsModifiableDirtyScope;
 import consulo.versionControlSystem.root.VcsRoot;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.util.lang.function.PairProcessor;
-import consulo.application.util.function.Processor;
-import consulo.util.collection.SmartList;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.containers.Convertor;
-import consulo.util.collection.MultiMap;
 import consulo.versionControlSystem.util.VcsUtil;
-import consulo.util.collection.HashingStrategy;
-import consulo.util.collection.Sets;
+import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -50,7 +48,7 @@ import java.util.function.Consumer;
  * @author yole
  */
 public class VcsDirtyScopeImpl extends VcsModifiableDirtyScope {
-  private static final HashingStrategy<FilePath> CASE_SENSITIVE_FILE_PATH_HASHING_STRATEGY = new HashingStrategy<FilePath>() {
+  private static final HashingStrategy<FilePath> CASE_SENSITIVE_FILE_PATH_HASHING_STRATEGY = new HashingStrategy<>() {
     @Override
     public int hashCode(@Nonnull FilePath path) {
       return Objects.hash(path.getPath(), path.isDirectory(), path.isNonLocal());
@@ -245,25 +243,20 @@ public class VcsDirtyScopeImpl extends VcsModifiableDirtyScope {
 
     for (Map.Entry<VirtualFile, Collection<FileOrDir>> entry : perRoot.entrySet()) {
       final Collection<FileOrDir> set = entry.getValue();
-      final Collection<FileOrDir> newCollection = FileUtil.removeAncestors(set, new Convertor<FileOrDir, String>() {
-                                                                             @Override
-                                                                             public String convert(FileOrDir o) {
-                                                                               return o.myPath.getPath();
-                                                                             }
-                                                                           }, new PairProcessor<FileOrDir, FileOrDir>() {
-                                                                             @Override
-                                                                             public boolean process(FileOrDir parent, FileOrDir child) {
-                                                                               if (parent.myRecursive) {
-                                                                                 return true;
-                                                                               }
-                                                                               // if under non-recursive dirty dir, generally do not remove child with one exception...
-                                                                               if (child.myRecursive || child.myPath.isDirectory()) {
-                                                                                 return false;
-                                                                               }
-                                                                               // only if dir non-recursively + non-recursive file child -> can be truncated to dir only
-                                                                               return Comparing.equal(child.myPath.getParentPath(), parent.myPath);
-                                                                             }
-                                                                           }
+      final Collection<FileOrDir> newCollection = FileUtil.removeAncestors(
+        set,
+        o -> o.myPath.getPath(),
+        (parent, child) -> {
+          if (parent.myRecursive) {
+            return true;
+          }
+          // if under non-recursive dirty dir, generally do not remove child with one exception...
+          if (child.myRecursive || child.myPath.isDirectory()) {
+            return false;
+          }
+          // only if dir non-recursively + non-recursive file child -> can be truncated to dir only
+          return Comparing.equal(child.myPath.getParentPath(), parent.myPath);
+        }
       );
       set.retainAll(newCollection);
     }
@@ -299,12 +292,7 @@ public class VcsDirtyScopeImpl extends VcsModifiableDirtyScope {
   }
 
   private void addFilePathToMap(MultiMap<VirtualFile, FileOrDir> perRoot, final FilePath dir, final boolean recursively) {
-    VirtualFile vcsRoot = ApplicationManager.getApplication().runReadAction(new Computable<VirtualFile>() {
-      @Override
-      public VirtualFile compute() {
-        return myVcsManager.getVcsRootFor(dir);
-      }
-    });
+    VirtualFile vcsRoot = myProject.getApplication().runReadAction((Computable<VirtualFile>)() -> myVcsManager.getVcsRootFor(dir));
     if (vcsRoot != null) {
       perRoot.putValue(vcsRoot, new FileOrDir(dir, recursively));
     }
@@ -470,7 +458,7 @@ public class VcsDirtyScopeImpl extends VcsModifiableDirtyScope {
     }
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private static VirtualFile obtainVirtualFile(FilePath file) {
     VirtualFile vFile = file.getVirtualFile();
     return vFile == null ? VfsUtil.findFileByIoFile(file.getIOFile(), false) : vFile;

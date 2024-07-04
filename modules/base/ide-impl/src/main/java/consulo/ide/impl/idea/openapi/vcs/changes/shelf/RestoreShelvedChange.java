@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.shelf;
 
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.versionControlSystem.localize.VcsLocalize;
@@ -27,16 +27,19 @@ public class RestoreShelvedChange extends AnAction {
   }
 
   @Override
+  @RequiredUIAccess
   public void update(final AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     final ShelvedChangeList[] recycledChanges = e.getData(ShelvedChangesViewManager.SHELVED_RECYCLED_CHANGELIST_KEY);
     e.getPresentation().setTextValue(VcsLocalize.vcsShelfActionRestoreText());
     e.getPresentation().setDescriptionValue(VcsLocalize.vcsShelfActionRestoreDescription());
     e.getPresentation().setEnabled((project != null) && ((recycledChanges != null) && (recycledChanges.length == 1)));
   }
 
+  @Override
+  @RequiredUIAccess
   public void actionPerformed(final AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     final ShelvedChangeList[] recycledChanges = e.getData(ShelvedChangesViewManager.SHELVED_RECYCLED_CHANGELIST_KEY);
     if (recycledChanges != null && recycledChanges.length == 1) {
       ShelveChangesManager.getInstance(project).restoreList(recycledChanges[0]);

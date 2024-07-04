@@ -15,25 +15,22 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.patch;
 
-import consulo.application.ApplicationManager;
+import consulo.application.util.function.Computable;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.FilePatch;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.TextFilePatch;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.GenericPatchApplier;
-import consulo.project.Project;
-import consulo.application.util.function.Computable;
-import consulo.util.lang.function.Condition;
-import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.versionControlSystem.util.ObjectsConvertor;
 import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelveChangesManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelvedBinaryFilePatch;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.containers.Convertor;
+import consulo.project.Project;
 import consulo.util.collection.MultiMap;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.Pair;
+import consulo.versionControlSystem.util.ObjectsConvertor;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -187,12 +184,7 @@ public class MatchPatchPaths {
       else {
         //files order is not defined, so get the best variant depends on it, too
         final List<AbstractFilePatchInProgress> variants =
-                ObjectsConvertor.convert(files, new Convertor<VirtualFile, AbstractFilePatchInProgress>() {
-                  @Override
-                  public AbstractFilePatchInProgress convert(VirtualFile o) {
-                    return processMatch(patch, o);
-                  }
-                }, ObjectsConvertor.NOT_NULL);
+          ObjectsConvertor.convert(files, o -> processMatch(patch, o), ObjectsConvertor.NOT_NULL);
         if (variants.isEmpty()) {
           newOrWithoutMatches.add(patch); // just to be sure
         }
@@ -203,31 +195,22 @@ public class MatchPatchPaths {
     }
   }
 
-  private Collection<VirtualFile> findFilesFromIndex(@Nonnull final PatchBaseDirectoryDetector directoryDetector,
-                                                     @Nonnull final String fileName) {
-    Collection<VirtualFile> files = ApplicationManager.getApplication().runReadAction(new Computable<Collection<VirtualFile>>() {
-      public Collection<VirtualFile> compute() {
-        return directoryDetector.findFiles(fileName);
-      }
-    });
+  private Collection<VirtualFile> findFilesFromIndex(
+    @Nonnull final PatchBaseDirectoryDetector directoryDetector,
+    @Nonnull final String fileName
+  ) {
+    Collection<VirtualFile> files = myProject.getApplication()
+      .runReadAction((Computable<Collection<VirtualFile>>)() -> directoryDetector.findFiles(fileName));
     final File shelfResourcesDirectory = ShelveChangesManager.getInstance(myProject).getShelfResourcesDirectory();
-    return ContainerUtil.filter(files, new Condition<VirtualFile>() {
-      @Override
-      public boolean value(VirtualFile file) {
-        return !FileUtil.isAncestor(shelfResourcesDirectory, VfsUtilCore.virtualToIoFile(file), false);
-      }
-    });
+    return ContainerUtil.filter(files, file -> !FileUtil.isAncestor(shelfResourcesDirectory, VfsUtilCore.virtualToIoFile(file), false));
   }
 
-  private static void putSelected(@Nonnull MultiMap<VirtualFile, AbstractFilePatchInProgress> result,
-                                  @Nonnull final List<AbstractFilePatchInProgress> variants,
-                                  @Nonnull AbstractFilePatchInProgress patchInProgress) {
-    patchInProgress.setAutoBases(ObjectsConvertor.convert(variants, new Convertor<AbstractFilePatchInProgress, VirtualFile>() {
-      @Override
-      public VirtualFile convert(AbstractFilePatchInProgress o) {
-        return o.getBase();
-      }
-    }, ObjectsConvertor.NOT_NULL));
+  private static void putSelected(
+    @Nonnull MultiMap<VirtualFile, AbstractFilePatchInProgress> result,
+    @Nonnull final List<AbstractFilePatchInProgress> variants,
+    @Nonnull AbstractFilePatchInProgress patchInProgress
+  ) {
+    patchInProgress.setAutoBases(ObjectsConvertor.convert(variants, AbstractFilePatchInProgress::getBase, ObjectsConvertor.NOT_NULL));
     result.putValue(patchInProgress.getBase(), patchInProgress);
   }
 
@@ -323,7 +306,7 @@ public class MatchPatchPaths {
     return new Pair<>(parent, idx + 1);
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private static AbstractFilePatchInProgress processMatch(final FilePatch patch, final VirtualFile file) {
     final String beforeName = patch.getBeforeName();
     final Pair<VirtualFile, Integer> pair = compareNames(beforeName, file);
@@ -339,8 +322,8 @@ public class MatchPatchPaths {
 
   @Nullable
   private static AbstractFilePatchInProgress createPatchInProgress(@Nonnull FilePatch patch, @Nonnull VirtualFile dir) {
-    return patch instanceof TextFilePatch ? new TextFilePatchInProgress((TextFilePatch)patch, null, dir) :
-           patch instanceof ShelvedBinaryFilePatch ? new BinaryFilePatchInProgress((ShelvedBinaryFilePatch)patch, null, dir)
-                                                   : null;
+    return patch instanceof TextFilePatch textFilePatch ? new TextFilePatchInProgress(textFilePatch, null, dir)
+      : patch instanceof ShelvedBinaryFilePatch binaryFilePatch ? new BinaryFilePatchInProgress(binaryFilePatch, null, dir)
+      : null;
   }
 }

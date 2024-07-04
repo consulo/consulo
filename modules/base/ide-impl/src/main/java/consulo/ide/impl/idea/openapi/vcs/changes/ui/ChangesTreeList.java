@@ -22,7 +22,7 @@ import consulo.dataContext.TypeSafeDataProvider;
 import consulo.diff.localize.DiffLocalize;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewTree;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.TreeLinkMouseListener;
 import consulo.ide.impl.idea.ui.SmartExpander;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -340,11 +340,11 @@ public abstract class ChangesTreeList<T> extends Tree implements TypeSafeDataPro
   private int findRowContainingFile(@Nonnull TreeNode root, @Nonnull final VirtualFile toSelect) {
     final Ref<Integer> row = Ref.create(-1);
     TreeUtil.traverse(root, node -> {
-      if (node instanceof DefaultMutableTreeNode) {
-        Object userObject = ((DefaultMutableTreeNode)node).getUserObject();
-        if (userObject instanceof Change) {
-          if (matches((Change)userObject, toSelect)) {
-            TreeNode[] path = ((DefaultMutableTreeNode)node).getPath();
+      if (node instanceof DefaultMutableTreeNode mutableTreeNode) {
+        Object userObject = mutableTreeNode.getUserObject();
+        if (userObject instanceof Change change) {
+          if (matches(change, toSelect)) {
+            TreeNode[] path = mutableTreeNode.getPath();
             row.set(getRowForPath(new TreePath(path)));
           }
         }
@@ -679,11 +679,11 @@ public abstract class ChangesTreeList<T> extends Tree implements TypeSafeDataPro
   @Override
   public Color getFileColorFor(Object object) {
     VirtualFile file;
-    if (object instanceof FilePath) {
-      file = ((FilePath)object).getVirtualFile();
+    if (object instanceof FilePath filePath) {
+      file = filePath.getVirtualFile();
     }
-    else if (object instanceof Change) {
-      file = ((Change)object).getVirtualFile();
+    else if (object instanceof Change change) {
+      file = change.getVirtualFile();
     }
     else {
       file = ObjectUtil.tryCast(object, VirtualFile.class);

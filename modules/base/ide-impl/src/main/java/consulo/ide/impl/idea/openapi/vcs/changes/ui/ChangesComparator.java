@@ -15,9 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
-import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
+import consulo.platform.Platform;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.Change;
@@ -42,12 +41,13 @@ public class ChangesComparator implements Comparator<Change> {
     myTreeCompare = treeCompare;
   }
 
+  @Override
   public int compare(final Change o1, final Change o2) {
     final FilePath filePath1 = ChangesUtil.getFilePath(o1);
     final FilePath filePath2 = ChangesUtil.getFilePath(o2);
     if (myTreeCompare) {
-      final String path1 = FileUtilRt.toSystemIndependentName(filePath1.getPath());
-      final String path2 = FileUtilRt.toSystemIndependentName(filePath2.getPath());
+      final String path1 = FileUtil.toSystemIndependentName(filePath1.getPath());
+      final String path2 = FileUtil.toSystemIndependentName(filePath2.getPath());
       final int lastSlash1 = path1.lastIndexOf('/');
       final String parentPath1 = lastSlash1 >= 0 && !filePath1.isDirectory() ? path1.substring(0, lastSlash1) : path1;
       final int lastSlash2 = path2.lastIndexOf('/');
@@ -59,7 +59,7 @@ public class ChangesComparator implements Comparator<Change> {
       else if (FileUtil.isAncestor(parentPath1, parentPath2, true)) {
         return 1;
       }
-      final int compare = StringUtil.compare(parentPath1, parentPath2, !SystemInfo.isFileSystemCaseSensitive);
+      final int compare = StringUtil.compare(parentPath1, parentPath2, !Platform.current().fs().isCaseSensitive());
       if (compare != 0) {
         return compare;
       }

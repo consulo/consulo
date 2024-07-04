@@ -15,20 +15,18 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.shelf;
 
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-
 import jakarta.annotation.Nonnull;
 
 public class ShowHideRecycledAction extends AnAction {
   @RequiredUIAccess
   @Override
   public void update(@Nonnull final AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     final Presentation presentation = e.getPresentation();
     if (project == null) {
       presentation.setEnabledAndVisible(false);
@@ -43,7 +41,7 @@ public class ShowHideRecycledAction extends AnAction {
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull final AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     if (project == null) {
       return;
     }

@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
 import consulo.application.dumb.DumbAware;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 
@@ -25,8 +25,10 @@ import consulo.ui.ex.action.AnActionEvent;
  * @author yole
  */
 public class RefreshIncomingChangesAction extends AnAction implements DumbAware {
+  @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project != null) {
       doRefresh(project);
     }
@@ -43,8 +45,10 @@ public class RefreshIncomingChangesAction extends AnAction implements DumbAware 
     });
   }
 
+  @Override
+  @RequiredUIAccess
   public void update(final AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     e.getPresentation().setEnabled(project != null && !CommittedChangesCache.getInstance(project).isRefreshingIncomingChanges());
   }
 }

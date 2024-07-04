@@ -4,7 +4,6 @@ import consulo.diff.chain.DiffRequestChain;
 import consulo.diff.chain.DiffRequestProducer;
 import consulo.ide.impl.idea.diff.actions.impl.GoToChangePopupBuilder;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowser;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
@@ -38,25 +37,27 @@ public abstract class ChangeGoToChangePopupAction<Chain extends DiffRequestChain
   @Nonnull
   @Override
   protected JBPopup createPopup(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) project = ProjectManager.getInstance().getDefaultProject();
 
-    Ref<JBPopup> popup = new Ref<JBPopup>();
+    Ref<JBPopup> popup = new Ref<>();
     ChangesBrowser cb = new MyChangesBrowser(project, getChanges(), getCurrentSelection(), popup);
 
-    popup.set(JBPopupFactory.getInstance()
-                      .createComponentPopupBuilder(cb, cb.getPreferredFocusedComponent())
-                      .setResizable(true)
-                      .setModalContext(false)
-                      .setFocusable(true)
-                      .setRequestFocus(true)
-                      .setCancelOnWindowDeactivation(true)
-                      .setCancelOnOtherWindowOpen(true)
-                      .setMovable(true)
-                      .setCancelKeyEnabled(true)
-                      .setCancelOnClickOutside(true)
-                      .setDimensionServiceKey(project, "Diff.GoToChangePopup", false)
-                      .createPopup());
+    popup.set(
+      JBPopupFactory.getInstance()
+        .createComponentPopupBuilder(cb, cb.getPreferredFocusedComponent())
+        .setResizable(true)
+        .setModalContext(false)
+        .setFocusable(true)
+        .setRequestFocus(true)
+        .setCancelOnWindowDeactivation(true)
+        .setCancelOnOtherWindowOpen(true)
+        .setMovable(true)
+        .setCancelKeyEnabled(true)
+        .setCancelOnClickOutside(true)
+        .setDimensionServiceKey(project, "Diff.GoToChangePopup", false)
+        .createPopup()
+    );
 
     return popup.get();
   }
@@ -65,12 +66,12 @@ public abstract class ChangeGoToChangePopupAction<Chain extends DiffRequestChain
   // Abstract
   //
 
-  protected abstract int findSelectedStep(@jakarta.annotation.Nullable Change change);
+  protected abstract int findSelectedStep(@Nullable Change change);
 
   @Nonnull
   protected abstract List<Change> getChanges();
 
-  @jakarta.annotation.Nullable
+  @Nullable
   protected abstract Change getCurrentSelection();
 
   //
@@ -81,19 +82,18 @@ public abstract class ChangeGoToChangePopupAction<Chain extends DiffRequestChain
     @Nonnull
     private final Ref<JBPopup> myPopup;
 
-    public MyChangesBrowser(@Nonnull Project project,
-                            @Nonnull List<Change> changes,
-                            @Nullable final Change currentChange,
-                            @Nonnull Ref<JBPopup> popup) {
+    public MyChangesBrowser(
+      @Nonnull Project project,
+      @Nonnull List<Change> changes,
+      @Nullable final Change currentChange,
+      @Nonnull Ref<JBPopup> popup
+    ) {
       super(project, null, changes, null, false, false, null, MyUseCase.LOCAL_CHANGES, null);
       setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
       setChangesToDisplay(changes);
 
-      UiNotifyConnector.doWhenFirstShown(this, new Runnable() {
-        @Override
-        public void run() {
-          if (currentChange != null) select(Collections.singletonList(currentChange));
-        }
+      UiNotifyConnector.doWhenFirstShown(this, () -> {
+        if (currentChange != null) select(Collections.singletonList(currentChange));
       });
 
       myPopup = popup;
@@ -139,7 +139,7 @@ public abstract class ChangeGoToChangePopupAction<Chain extends DiffRequestChain
       // we want to show ChangeBrowser-based popup, so have to create some fake changes
       List<? extends DiffRequestProducer> requests = chain.getRequests();
 
-      myChanges = new ArrayList<Change>(requests.size());
+      myChanges = new ArrayList<>(requests.size());
       for (int i = 0; i < requests.size(); i++) {
         FilePath path = getFilePath(i);
         FileStatus status = getFileStatus(i);
@@ -155,7 +155,7 @@ public abstract class ChangeGoToChangePopupAction<Chain extends DiffRequestChain
     protected abstract FileStatus getFileStatus(int index);
 
     @Override
-    protected int findSelectedStep(@jakarta.annotation.Nullable Change change) {
+    protected int findSelectedStep(@Nullable Change change) {
       return myChanges.indexOf(change);
     }
 
@@ -165,7 +165,7 @@ public abstract class ChangeGoToChangePopupAction<Chain extends DiffRequestChain
       return myChanges;
     }
 
-    @jakarta.annotation.Nullable
+    @Nullable
     @Override
     protected Change getCurrentSelection() {
       if (mySelection < 0 || mySelection >= myChanges.size()) return null;

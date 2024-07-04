@@ -16,26 +16,27 @@
 
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
+import consulo.application.HelpManager;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.application.HelpManager;
+import consulo.ide.impl.idea.openapi.vcs.changes.IgnoredPathPresentation;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.TextFieldWithBrowseButton;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.versionControlSystem.VcsBundle;
-import consulo.ide.impl.idea.openapi.vcs.changes.*;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.versionControlSystem.change.*;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.event.DocumentAdapter;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import org.jetbrains.annotations.NonNls;
+import consulo.util.io.FileUtil;
+import consulo.versionControlSystem.change.*;
+import consulo.versionControlSystem.localize.VcsLocalize;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
@@ -63,13 +64,16 @@ public class IgnoreUnversionedDialog extends DialogWrapper {
     super(project, false);
     myProject = project;
     myPresentation = new IgnoredPathPresentation(myProject);
-    setTitle(VcsBundle.message("ignored.edit.title"));
+    setTitle(VcsLocalize.ignoredEditTitle());
     init();
-    myIgnoreFileTextField.addBrowseFolderListener("Select File to Ignore",
-                                                  "Select the file which will not be tracked for changes",
-                                                  project,
-                                                  new FileChooserDescriptor(true, false, false, true, false, false));
+    myIgnoreFileTextField.addBrowseFolderListener(
+      "Select File to Ignore",
+      "Select the file which will not be tracked for changes",
+      project,
+      new FileChooserDescriptor(true, false, false, true, false, false)
+    );
     myIgnoreFileTextField.getTextField().getDocument().addDocumentListener(new DocumentAdapter() {
+      @Override
       protected void textChanged(final DocumentEvent e) {
         // on text change, clear remembered files to ignore
         if (!myInternalChange) {
@@ -77,15 +81,13 @@ public class IgnoreUnversionedDialog extends DialogWrapper {
         }
       }
     });
-    myIgnoreDirectoryTextField.addBrowseFolderListener("Select Directory to Ignore",
-                                                       "Select the directory which will not be tracked for changes",
-                                                       project,
-                                                       FileChooserDescriptorFactory.createSingleFolderDescriptor());
-    ActionListener listener = new ActionListener() {
-      public void actionPerformed(final ActionEvent e) {
-        updateControls();
-      }
-    };
+    myIgnoreDirectoryTextField.addBrowseFolderListener(
+      "Select Directory to Ignore",
+      "Select the directory which will not be tracked for changes",
+      project,
+      FileChooserDescriptorFactory.createSingleFolderDescriptor()
+    );
+    ActionListener listener = e -> updateControls();
     myIgnoreAllFilesUnderRadioButton.addActionListener(listener);
     myIgnoreAllFilesMatchingRadioButton.addActionListener(listener);
     myIgnoreSpecifiedFileRadioButton.addActionListener(listener);
@@ -113,7 +115,7 @@ public class IgnoreUnversionedDialog extends DialogWrapper {
   private int getDirectoriesToIgnore() {
     int result = 0;
     if (myFilesToIgnore != null) {
-      for(VirtualFile f: myFilesToIgnore) {
+      for (VirtualFile f: myFilesToIgnore) {
         if (f.isDirectory()) {
           result++;
         }
@@ -122,7 +124,8 @@ public class IgnoreUnversionedDialog extends DialogWrapper {
     return result;
   }
 
-  @jakarta.annotation.Nullable
+  @Override
+  @Nullable
   protected JComponent createCenterPanel() {
     return myPanel;
   }
@@ -138,7 +141,7 @@ public class IgnoreUnversionedDialog extends DialogWrapper {
         myIgnoreFileTextField.setText(path);
       }
       else {
-        myIgnoreFileTextField.setText(VcsBundle.message("ignored.edit.multiple.files", virtualFiles.size()));
+        myIgnoreFileTextField.setText(VcsLocalize.ignoredEditMultipleFiles(virtualFiles.size()).get());
       }
     }
     finally {
@@ -146,7 +149,7 @@ public class IgnoreUnversionedDialog extends DialogWrapper {
     }
 
     int dirCount = 0;
-    for(VirtualFile file: virtualFiles) {
+    for (VirtualFile file: virtualFiles) {
       if (file.isDirectory()) {
         myIgnoreAllFilesUnderRadioButton.setSelected(true);
         myIgnoreSpecifiedFileRadioButton.setEnabled(false);
@@ -158,7 +161,7 @@ public class IgnoreUnversionedDialog extends DialogWrapper {
 
     final VirtualFile[] ancestors = VfsUtil.getCommonAncestors(VfsUtil.toVirtualFileArray(virtualFiles));
     if (dirCount > 1) {
-      myIgnoreDirectoryTextField.setText(VcsBundle.message("ignored.edit.multiple.directories", dirCount));
+      myIgnoreDirectoryTextField.setText(VcsLocalize.ignoredEditMultipleDirectories(dirCount).get());
     }
     else if (ancestors.length > 0) {
       myIgnoreDirectoryTextField.setText(ancestors [0].getPresentableUrl());
@@ -168,7 +171,7 @@ public class IgnoreUnversionedDialog extends DialogWrapper {
     }
 
     final Set<String> extensions = new HashSet<>();
-    for(VirtualFile vf: virtualFiles) {
+    for (VirtualFile vf: virtualFiles) {
       final String extension = vf.getExtension();
       if (extension != null) {
         extensions.add(extension);
@@ -240,12 +243,14 @@ public class IgnoreUnversionedDialog extends DialogWrapper {
     return result.toArray(new IgnoredFileBean[result.size()]);
   }
 
-  @Override @NonNls
+  @Override
+  @NonNls
   protected String getDimensionServiceKey() {
     return "IgnoreUnversionedDialog";
   }
 
-  public static void ignoreSelectedFiles(@Nonnull Project project, @Nonnull List<VirtualFile> files, @jakarta.annotation.Nullable Runnable callback) {
+  @RequiredUIAccess
+  public static void ignoreSelectedFiles(@Nonnull Project project, @Nonnull List<VirtualFile> files, @Nullable Runnable callback) {
     IgnoreUnversionedDialog dlg = new IgnoreUnversionedDialog(project);
     dlg.setFilesToIgnore(files);
 

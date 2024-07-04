@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.util.io.FileUtil;
 import consulo.versionControlSystem.change.ChangesUtil;
 
 import jakarta.annotation.Nonnull;

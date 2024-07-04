@@ -18,9 +18,9 @@ package consulo.ide.impl.idea.openapi.vcs.impl;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AccessRule;
-import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.progress.ProgressManager;
+import consulo.application.util.DateFormatUtil;
 import consulo.application.util.function.Processor;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.application.util.registry.Registry;
@@ -34,29 +34,20 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.TextConsoleBuilderFactory;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.util.lang.StringUtil;
-import consulo.ide.impl.idea.openapi.vcs.*;
-import consulo.versionControlSystem.change.ChangesUtil;
-import consulo.versionControlSystem.change.VcsAnnotationLocalChangesListener;
+import consulo.ide.impl.idea.openapi.vcs.CalledInAwt;
+import consulo.ide.impl.idea.openapi.vcs.VcsShowConfirmationOptionImpl;
+import consulo.ide.impl.idea.openapi.vcs.VcsShowOptionsSettingImpl;
 import consulo.ide.impl.idea.openapi.vcs.changes.VcsAnnotationLocalChangesListenerImpl;
 import consulo.ide.impl.idea.openapi.vcs.checkout.CompositeCheckoutListener;
 import consulo.ide.impl.idea.openapi.vcs.ex.ProjectLevelVcsManagerEx;
-import consulo.versionControlSystem.checkout.CheckoutProvider;
-import consulo.versionControlSystem.history.VcsHistoryCache;
-import consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman.*;
-import consulo.versionControlSystem.update.ActionInfo;
+import consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman.MappingsToRoots;
+import consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman.NewMappings;
+import consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman.OptionsAndConfirmations;
+import consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman.ProjectLevelVcsManagerSerialization;
 import consulo.ide.impl.idea.openapi.vcs.update.UpdateInfoTree;
-import consulo.versionControlSystem.change.ContentRevisionCache;
-import consulo.versionControlSystem.internal.VcsFileListenerContextHelper;
-import consulo.versionControlSystem.root.VcsRoot;
-import consulo.versionControlSystem.root.VcsRootSettings;
-import consulo.versionControlSystem.update.UpdatedFiles;
 import consulo.ide.impl.idea.openapi.vcs.update.UpdatedFilesListener;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.util.ContentUtilEx;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.application.util.DateFormatUtil;
 import consulo.ide.impl.idea.vcs.ViewUpdateInfoNotification;
 import consulo.language.content.FileIndexFacade;
 import consulo.localize.LocalizeValue;
@@ -64,6 +55,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.DefaultActionGroup;
@@ -71,13 +63,27 @@ import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.versionControlSystem.*;
+import consulo.versionControlSystem.change.ChangesUtil;
+import consulo.versionControlSystem.change.ContentRevisionCache;
+import consulo.versionControlSystem.change.VcsAnnotationLocalChangesListener;
+import consulo.versionControlSystem.checkout.CheckoutProvider;
+import consulo.versionControlSystem.history.VcsHistoryCache;
+import consulo.versionControlSystem.internal.VcsFileListenerContextHelper;
 import consulo.versionControlSystem.localize.VcsLocalize;
+import consulo.versionControlSystem.root.VcsRoot;
+import consulo.versionControlSystem.root.VcsRootSettings;
+import consulo.versionControlSystem.update.ActionInfo;
+import consulo.versionControlSystem.update.UpdatedFiles;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusManager;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Attribute;
@@ -86,8 +92,6 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -140,7 +144,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
 
   private volatile int myBackgroundOperationCounter;
 
-  private final Set<ActionKey> myBackgroundRunningTasks = ContainerUtil.newHashSet();
+  private final Set<ActionKey> myBackgroundRunningTasks = new HashSet<>();
 
   private final List<VcsConsoleLine> myPendingOutput = new ArrayList<>();
 
@@ -271,8 +275,12 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
   public AbstractVcs getVcsFor(final FilePath file) {
     final VirtualFile vFile = ChangesUtil.findValidParentAccurately(file);
     ThrowableComputable<AbstractVcs, RuntimeException> action = () -> {
-      if (!ApplicationManager.getApplication().isUnitTestMode() && !myProject.isInitialized()) return null;
-      if (myProject.isDisposed()) throw new ProcessCanceledException();
+      if (!myProject.getApplication().isUnitTestMode() && !myProject.isInitialized()) {
+        return null;
+      }
+      if (myProject.isDisposed()) {
+        throw new ProcessCanceledException();
+      }
       if (vFile != null) {
         return getVcsFor(vFile);
       }
@@ -386,18 +394,21 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
   public void addMessageToConsoleWindow(@Nullable VcsConsoleLine line) {
     if (line == null) return;
 
-    ApplicationManager.getApplication().invokeLater(() -> {
-      // for default and disposed projects the ContentManager is not available.
-      if (myProject.isDisposed() || myProject.isDefault()) return;
-      final ContentManager contentManager = getContentManager();
-      if (contentManager == null) {
-        myPendingOutput.add(line);
-      }
-      else {
-        getOrCreateConsoleContent(contentManager);
-        line.print(myConsole);
-      }
-    }, IdeaModalityState.defaultModalityState());
+    myProject.getApplication().invokeLater(
+      () -> {
+        // for default and disposed projects the ContentManager is not available.
+        if (myProject.isDisposed() || myProject.isDefault()) return;
+        final ContentManager contentManager = getContentManager();
+        if (contentManager == null) {
+          myPendingOutput.add(line);
+        }
+        else {
+          getOrCreateConsoleContent(contentManager);
+          line.print(myConsole);
+        }
+      },
+      IdeaModalityState.defaultModalityState()
+    );
   }
 
   private Content getOrCreateConsoleContent(final ContentManager contentManager) {
@@ -411,7 +422,8 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
       JPanel panel = new JPanel(new BorderLayout());
       panel.add(myConsole.getComponent(), BorderLayout.CENTER);
 
-      ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar("VcsManager", new DefaultActionGroup(myConsole.createConsoleActions()), false);
+      ActionToolbar toolbar = ActionManager.getInstance()
+        .createActionToolbar("VcsManager", new DefaultActionGroup(myConsole.createConsoleActions()), false);
       panel.add(toolbar.getComponent(), BorderLayout.WEST);
 
       content = ContentFactory.getInstance().createContent(panel, displayName, true);
@@ -611,7 +623,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
   @Override
   public void stopBackgroundVcsOperation() {
     // in fact, the condition is "should not be called under ApplicationManager.invokeLater() and similar"
-    assert !ApplicationManager.getApplication().isDispatchThread() || ApplicationManager.getApplication().isUnitTestMode();
+    assert !myProject.getApplication().isDispatchThread() || myProject.getApplication().isUnitTestMode();
     LOG.assertTrue(myBackgroundOperationCounter > 0, "myBackgroundOperationCounter > 0");
     myBackgroundOperationCounter--;
   }
@@ -786,26 +798,30 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
    * @deprecated {@link BackgroundableActionLock}
    */
   @Deprecated
+  @RequiredUIAccess
   public BackgroundableActionEnabledHandler getBackgroundableActionHandler(final VcsBackgroundableActions action) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    myProject.getApplication().assertIsDispatchThread();
     return new BackgroundableActionEnabledHandler(myProject, action);
   }
 
   @CalledInAwt
+  @RequiredUIAccess
   boolean isBackgroundTaskRunning(@Nonnull Object... keys) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    myProject.getApplication().assertIsDispatchThread();
     return myBackgroundRunningTasks.contains(new ActionKey(keys));
   }
 
   @CalledInAwt
+  @RequiredUIAccess
   void startBackgroundTask(@Nonnull Object... keys) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    myProject.getApplication().assertIsDispatchThread();
     LOG.assertTrue(myBackgroundRunningTasks.add(new ActionKey(keys)));
   }
 
   @CalledInAwt
+  @RequiredUIAccess
   void stopBackgroundTask(@Nonnull Object... keys) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    myProject.getApplication().assertIsDispatchThread();
     LOG.assertTrue(myBackgroundRunningTasks.remove(new ActionKey(keys)));
   }
 
@@ -815,25 +831,16 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
 
   @Override
   public boolean isFileInContent(@Nullable final VirtualFile vf) {
-    ThrowableComputable<Boolean, RuntimeException> action = () -> vf != null &&
-                                                                  (myExcludedIndex.isInContent(vf) ||
-                                                                   isFileInBaseDir(vf) ||
-                                                                   vf.equals(myProject.getBaseDir()) ||
-                                                                   hasExplicitMapping(vf) ||
-                                                                   isInDirectoryBasedRoot(vf) ||
-                                                                   !Registry.is("ide.hide.excluded.files") && myExcludedIndex.isExcludedFile(vf)) &&
-                                                                  !isIgnored(vf);
+    ThrowableComputable<Boolean, RuntimeException> action = () -> vf != null && (
+      myExcludedIndex.isInContent(vf) || isFileInBaseDir(vf) || vf.equals(myProject.getBaseDir()) || hasExplicitMapping(vf)
+        || isInDirectoryBasedRoot(vf) || !Registry.is("ide.hide.excluded.files") && myExcludedIndex.isExcludedFile(vf)
+    ) && !isIgnored(vf);
     return AccessRule.read(action);
   }
 
   @Override
   public boolean isIgnored(VirtualFile vf) {
-    if (Registry.is("ide.hide.excluded.files")) {
-      return myExcludedIndex.isExcludedFile(vf);
-    }
-    else {
-      return myExcludedIndex.isUnderIgnored(vf);
-    }
+    return Registry.is("ide.hide.excluded.files") ? myExcludedIndex.isExcludedFile(vf) : myExcludedIndex.isUnderIgnored(vf);
   }
 
   private boolean isInDirectoryBasedRoot(final VirtualFile file) {
@@ -873,8 +880,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
 
     @Override
     public final boolean equals(Object o) {
-      if (o == null || getClass() != o.getClass()) return false;
-      return Arrays.equals(myObjects, ((ActionKey)o).myObjects);
+      return !(o == null || getClass() != o.getClass()) && Arrays.equals(myObjects, ((ActionKey)o).myObjects);
     }
 
     @Override

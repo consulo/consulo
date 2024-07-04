@@ -37,9 +37,9 @@ import consulo.ide.impl.idea.openapi.diff.impl.patch.*;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.ApplyFilePatchBase;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.formove.CustomBinaryPatchApplier;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.formove.PatchApplier;
-import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.Comparing;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.CalledInAny;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListUtil;
@@ -123,28 +123,32 @@ public class ShelveChangesManager implements JDOMExternalizable {
   public ShelveChangesManager(Project project, ProjectPathMacroManager projectPathMacroManager, SchemeManagerFactory schemeManagerFactory, ChangeListManager changeListManager) {
     myProject = project;
     myBus = project.getMessageBus();
-    mySchemeManager = schemeManagerFactory.createSchemeManager(SHELVE_MANAGER_DIR_PATH, new BaseSchemeProcessor<ShelvedChangeList, ShelvedChangeList>() {
-      @Nullable
-      @Override
-      public ShelvedChangeList readScheme(@Nonnull Element element, boolean duringLoad) throws InvalidDataException {
-        return readOneShelvedChangeList(element);
-      }
+    mySchemeManager = schemeManagerFactory.createSchemeManager(
+      SHELVE_MANAGER_DIR_PATH,
+      new BaseSchemeProcessor<ShelvedChangeList, ShelvedChangeList>() {
+        @Nullable
+        @Override
+        public ShelvedChangeList readScheme(@Nonnull Element element, boolean duringLoad) throws InvalidDataException {
+          return readOneShelvedChangeList(element);
+        }
 
-      @Nonnull
-      @Override
-      public Parent writeScheme(@Nonnull ShelvedChangeList scheme) throws WriteExternalException {
-        Element child = new Element(ELEMENT_CHANGELIST);
-        scheme.writeExternal(child);
-        projectPathMacroManager.collapsePaths(child);
-        return child;
-      }
+        @Nonnull
+        @Override
+        public Parent writeScheme(@Nonnull ShelvedChangeList scheme) throws WriteExternalException {
+          Element child = new Element(ELEMENT_CHANGELIST);
+          scheme.writeExternal(child);
+          projectPathMacroManager.collapsePaths(child);
+          return child;
+        }
 
-      @Nonnull
-      @Override
-      public String getName(@Nonnull ShelvedChangeList immutableElement) {
-        return immutableElement.getName();
-      }
-    }, RoamingType.DEFAULT);
+        @Nonnull
+        @Override
+        public String getName(@Nonnull ShelvedChangeList immutableElement) {
+          return immutableElement.getName();
+        }
+      },
+      RoamingType.DEFAULT
+    );
 
     myCleaningFuture = JobScheduler.getScheduler().scheduleWithFixedDelay(new Runnable() {
       @Override
@@ -234,7 +238,7 @@ public class ShelveChangesManager implements JDOMExternalizable {
    */
   @Nonnull
   public Collection<String> checkAndMigrateOldPatchResourcesToNewSchemeStorage() {
-    Collection<String> nonMigratedPaths = ContainerUtil.newArrayList();
+    Collection<String> nonMigratedPaths = new ArrayList<>();
     for (ShelvedChangeList list : mySchemeManager.getAllSchemes()) {
       File patchDir = new File(myFileProcessor.getBaseDir(), list.getName());
       nonMigratedPaths.addAll(migrateIfNeededToSchemeDir(list, patchDir));
@@ -246,13 +250,13 @@ public class ShelveChangesManager implements JDOMExternalizable {
   private static Collection<String> migrateIfNeededToSchemeDir(@Nonnull ShelvedChangeList list, @Nonnull File targetDirectory) {
     // it should be enough for migration to check if resource directory exists. If any bugs appeared add isAncestor checks for each path
     if (targetDirectory.exists() || !targetDirectory.mkdirs()) return ContainerUtil.emptyList();
-    Collection<String> nonMigratedPaths = ContainerUtil.newArrayList();
+    Collection<String> nonMigratedPaths = new ArrayList<>();
     //try to move .patch file
     File patchFile = new File(list.PATH);
     if (patchFile.exists()) {
       File newPatchFile = getPatchFileInConfigDir(targetDirectory);
       try {
-        FileUtil.copy(patchFile, newPatchFile);
+        consulo.ide.impl.idea.openapi.util.io.FileUtil.copy(patchFile, newPatchFile);
         list.PATH = FileUtil.toSystemIndependentName(newPatchFile.getPath());
         FileUtil.delete(patchFile);
       }
@@ -267,7 +271,7 @@ public class ShelveChangesManager implements JDOMExternalizable {
         if (!StringUtil.isEmptyOrSpaces(file.AFTER_PATH) && shelvedFile.exists()) {
           File newShelvedFile = new File(targetDirectory, PathUtil.getFileName(file.AFTER_PATH));
           try {
-            FileUtil.copy(shelvedFile, newShelvedFile);
+            consulo.ide.impl.idea.openapi.util.io.FileUtil.copy(shelvedFile, newShelvedFile);
             file.SHELVED_PATH = FileUtil.toSystemIndependentName(newShelvedFile.getPath());
             FileUtil.delete(shelvedFile);
           }
@@ -296,7 +300,11 @@ public class ShelveChangesManager implements JDOMExternalizable {
     return ContainerUtil.newUnmodifiableList(ContainerUtil.filter(mySchemeManager.getAllSchemes(), list -> recycled == list.isRecycled()));
   }
 
-  public ShelvedChangeList shelveChanges(final Collection<Change> changes, final String commitMessage, final boolean rollback) throws IOException, VcsException {
+  public ShelvedChangeList shelveChanges(
+    final Collection<Change> changes,
+    final String commitMessage,
+    final boolean rollback
+  ) throws IOException, VcsException {
     return shelveChanges(changes, commitMessage, rollback, false);
   }
 
@@ -343,7 +351,7 @@ public class ShelveChangesManager implements JDOMExternalizable {
 
       if (rollback) {
         final String operationName = UIUtil.removeMnemonic(RollbackChangesDialog.operationNameByChanges(myProject, changes));
-        boolean modalContext = ApplicationManager.getApplication().isDispatchThread() && LaterInvocator.isInModalContext();
+        boolean modalContext = myProject.getApplication().isDispatchThread() && LaterInvocator.isInModalContext();
         if (progressIndicator != null) {
           progressIndicator.startNonCancelableSection();
         }
@@ -491,7 +499,7 @@ public class ShelveChangesManager implements JDOMExternalizable {
         try {
           final List<TextFilePatch> patchesList = loadPatches(myProject, file.getPath(), new CommitContext());
           if (!patchesList.isEmpty()) {
-            FileUtil.copy(new File(file.getPath()), patchPath);
+            consulo.ide.impl.idea.openapi.util.io.FileUtil.copy(new File(file.getPath()), patchPath);
             // add only if ok to read patch
             mySchemeManager.addNewScheme(list, false);
             result.add(list);
@@ -519,7 +527,7 @@ public class ShelveChangesManager implements JDOMExternalizable {
     String shelvedPath = null;
     if (afterFile != null) {
       File shelvedFile = new File(schemePatchDir, afterFile.getName());
-      FileUtil.copy(afterRevision.getFile().getIOFile(), shelvedFile);
+      consulo.ide.impl.idea.openapi.util.io.FileUtil.copy(afterRevision.getFile().getIOFile(), shelvedFile);
       shelvedPath = shelvedFile.getPath();
     }
     String beforePath = ChangesUtil.getProjectRelativePath(myProject, beforeFile);
@@ -648,7 +656,7 @@ public class ShelveChangesManager implements JDOMExternalizable {
       patches.add(new ShelvedBinaryFilePatch(shelvedBinaryFile));
     }
 
-    ApplicationManager.getApplication().invokeAndWait(
+    myProject.getApplication().invokeAndWait(
       () -> {
         final BinaryPatchApplier binaryPatchApplier = new BinaryPatchApplier();
         final PatchApplier<ShelvedBinaryFilePatch> patchApplier = new PatchApplier<>(
@@ -770,12 +778,13 @@ public class ShelveChangesManager implements JDOMExternalizable {
     return result;
   }
 
+  @RequiredUIAccess
   private void unshelveBinaryFile(final ShelvedBinaryFile file, @Nonnull final VirtualFile patchTarget) throws IOException {
     final Ref<IOException> ex = new Ref<>();
     final Ref<VirtualFile> patchedFileRef = new Ref<>();
     final File shelvedFile = file.SHELVED_PATH == null ? null : new File(file.SHELVED_PATH);
 
-    ApplicationManager.getApplication().runWriteAction(new Runnable() {
+    myProject.getApplication().runWriteAction(new Runnable() {
       @Override
       public void run() {
         try {
@@ -852,7 +861,7 @@ public class ShelveChangesManager implements JDOMExternalizable {
   private ShelvedChangeList createRecycledChangelist(ShelvedChangeList changeList) throws IOException {
     final File newPatchDir = generateUniqueSchemePatchDir(changeList.DESCRIPTION, true);
     final File newPath = getPatchFileInConfigDir(newPatchDir);
-    FileUtil.copy(new File(changeList.PATH), newPath);
+    consulo.ide.impl.idea.openapi.util.io.FileUtil.copy(new File(changeList.PATH), newPath);
     final ShelvedChangeList listCopy = new ShelvedChangeList(
       newPath.getAbsolutePath(),
       changeList.DESCRIPTION,
@@ -990,7 +999,7 @@ public class ShelveChangesManager implements JDOMExternalizable {
     CommitContext commitContext,
     boolean loadContent
   ) throws IOException, PatchSyntaxException {
-    char[] text = FileUtil.loadFileText(new File(patchPath), CharsetToolkit.UTF8);
+    char[] text = consulo.ide.impl.idea.openapi.util.io.FileUtil.loadFileText(new File(patchPath), CharsetToolkit.UTF8);
     PatchReader reader = new PatchReader(new CharArrayCharSequence(text), loadContent);
     final List<TextFilePatch> textFilePatches = reader.readTextPatches();
     ApplyPatchDefaultExecutor.applyAdditionalInfoBefore(project, reader.getAdditionalInfo(null), commitContext);

@@ -19,22 +19,19 @@ import consulo.ui.ex.action.AnAction;
 import consulo.util.dataholder.Key;
 import consulo.diff.DiffDialogHints;
 import consulo.versionControlSystem.change.Change;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ShowDiffContext {
   @Nonnull
   private final DiffDialogHints myDialogHints;
 
   @Nullable private List<AnAction> myActions;
-  @jakarta.annotation.Nullable
+  @Nullable
   private Map<Key, Object> myChainContext;
-  @jakarta.annotation.Nullable
+  @Nullable
   private Map<Change, Map<Key, Object>> myRequestContext;
 
   public ShowDiffContext() {
@@ -71,23 +68,25 @@ public class ShowDiffContext {
   }
 
   public void addActions(@Nonnull List<AnAction> action) {
-    if (myActions == null) myActions = ContainerUtil.newArrayList();
+    if (myActions == null) myActions = new ArrayList<>();
     myActions.addAll(action);
   }
 
   public void addAction(@Nonnull AnAction action) {
-    if (myActions == null) myActions = ContainerUtil.newArrayList();
+    if (myActions == null) myActions = new ArrayList<>();
     myActions.add(action);
   }
 
   public <T> void putChainContext(@Nonnull Key<T> key, T value) {
-    if (myChainContext == null) myChainContext = ContainerUtil.newHashMap();
+    if (myChainContext == null) {
+      myChainContext = new HashMap<>();
+    }
     myChainContext.put(key, value);
   }
 
   public <T> void putChangeContext(@Nonnull Change change, @Nonnull Key<T> key, T value) {
-    if (myRequestContext == null) myRequestContext = ContainerUtil.newHashMap();
-    if (!myRequestContext.containsKey(change)) myRequestContext.put(change, ContainerUtil.<Key, Object>newHashMap());
+    if (myRequestContext == null) myRequestContext = new HashMap<>();
+    if (!myRequestContext.containsKey(change)) myRequestContext.put(change, new HashMap<>());
     myRequestContext.get(change).put(key, value);
   }
 }

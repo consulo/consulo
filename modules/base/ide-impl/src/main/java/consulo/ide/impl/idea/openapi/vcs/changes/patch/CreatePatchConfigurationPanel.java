@@ -27,11 +27,11 @@ import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.FileChooserFactory;
 import consulo.fileChooser.FileSaverDescriptor;
 import consulo.fileChooser.FileSaverDialog;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.project.Project;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;
 import consulo.util.io.CharsetToolkit;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.localize.VcsLocalize;
@@ -64,12 +64,11 @@ public class CreatePatchConfigurationPanel {
 
     myFileNameField.addActionListener(e -> {
       final FileSaverDialog dialog =
-              FileChooserFactory.getInstance().createSaveFileDialog(
-                      new FileSaverDescriptor("Save Patch to", ""), myMainPanel);
+        FileChooserFactory.getInstance().createSaveFileDialog(new FileSaverDescriptor("Save Patch to", ""), myMainPanel);
       final String path = FileUtil.toSystemIndependentName(getFileName());
       final int idx = path.lastIndexOf("/");
-      VirtualFile baseDir = idx == -1 ? project.getBaseDir() :
-                            (LocalFileSystem.getInstance().refreshAndFindFileByIoFile(new File(path.substring(0, idx))));
+      VirtualFile baseDir = idx == -1 ? project.getBaseDir()
+        : LocalFileSystem.getInstance().refreshAndFindFileByIoFile(new File(path.substring(0, idx)));
       baseDir = baseDir == null ? project.getBaseDir() : baseDir;
       final String name = idx == -1 ? path : path.substring(idx + 1);
       final VirtualFileWrapper fileWrapper = dialog.save(baseDir, name);

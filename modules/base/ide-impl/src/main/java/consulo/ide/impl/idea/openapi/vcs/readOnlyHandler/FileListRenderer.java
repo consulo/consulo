@@ -15,13 +15,13 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.readOnlyHandler;
 
-import consulo.virtualFileSystem.VirtualFilePresentation;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.SimpleTextAttributes;
-
+import consulo.ui.ex.awt.ColoredListCellRenderer;
+import consulo.util.io.FileUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFilePresentation;
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 
 public class FileListRenderer extends ColoredListCellRenderer {

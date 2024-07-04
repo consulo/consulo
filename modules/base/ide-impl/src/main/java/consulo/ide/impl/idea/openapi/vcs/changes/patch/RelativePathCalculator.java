@@ -15,9 +15,10 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.patch;
 
-import consulo.application.util.SystemInfo;
+import consulo.platform.Platform;
 import consulo.versionControlSystem.VcsBundle;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.File;
 
@@ -37,10 +38,7 @@ public class RelativePathCalculator {
   }
 
   private static boolean stringEqual(@Nonnull final String s1, @Nonnull final String s2) {
-    if (! SystemInfo.isFileSystemCaseSensitive) {
-      return s1.equalsIgnoreCase(s2);
-    }
-    return s1.equals(s2);
+    return Platform.current().fs().isCaseSensitive() ? s1.equals(s2) : s1.equalsIgnoreCase(s2);
   }
 
   public void execute() {
@@ -110,7 +108,7 @@ public class RelativePathCalculator {
     return myResult;
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   public static String getMovedString(final String beforeName, final String afterName) {
     if ((beforeName != null) && (afterName != null) && (! stringEqual(beforeName, afterName))) {
       final RelativePathCalculator calculator = new RelativePathCalculator(beforeName, afterName);

@@ -22,20 +22,20 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.shelf;
 
-import consulo.ide.impl.idea.openapi.diff.impl.patch.FilePatch;
 import consulo.component.persist.scheme.ExternalInfo;
 import consulo.component.persist.scheme.ExternalizableScheme;
+import consulo.ide.impl.idea.openapi.diff.impl.patch.FilePatch;
+import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.util.io.FileUtil;
 import consulo.util.xml.serializer.DefaultJDOMExternalizer;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.virtualFileSystem.status.FileStatus;
-import consulo.logging.Logger;
+import jakarta.annotation.Nonnull;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.util.ArrayList;
