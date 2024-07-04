@@ -20,44 +20,39 @@ import consulo.application.HelpManager;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.execution.ExecutionBundle;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.FileChooserFactory;
 import consulo.fileChooser.PathChooserDialog;
 import consulo.ide.impl.idea.ide.macro.MacrosDialog;
-import consulo.language.editor.CommonDataKeys;
 import consulo.pathMacro.MacroManager;
 import consulo.project.Project;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 import net.miginfocom.swing.MigLayout;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.List;
-import java.util.function.Consumer;
 
 public class ToolEditorDialog extends DialogWrapper {
   private final JTextField myNameField = new JTextField();
   private final JTextField myDescriptionField = new JTextField();
-  private final ComboBox myGroupCombo = new ComboBox(-1);
+  private final ComboBox<String> myGroupCombo = new ComboBox<>(-1);
   private final JCheckBox myShowInMainMenuCheckbox = new JCheckBox(ToolsBundle.message("tools.menu.main.checkbox"));
   private final JCheckBox myShowInEditorCheckbox = new JCheckBox(ToolsBundle.message("tools.menu.editor.checkbox"));
   private final JCheckBox myShowInProjectTreeCheckbox = new JCheckBox(ToolsBundle.message("tools.menu.project.checkbox"));
   private final JCheckBox myShowInSearchResultsPopupCheckbox = new JCheckBox(ToolsBundle.message("tools.menu.search.checkbox"));
   private final JCheckBox myUseConsoleCheckbox = new JCheckBox(ToolsBundle.message("tools.open.console.checkbox"));
-  private final JCheckBox myShowConsoleOnStdOutCheckbox = new JCheckBox(ExecutionBundle.message("logs.show.console.on.stdout"));
-  private final JCheckBox myShowConsoleOnStdErrCheckbox = new JCheckBox(ExecutionBundle.message("logs.show.console.on.stderr"));
+  private final JCheckBox myShowConsoleOnStdOutCheckbox = new JCheckBox(ExecutionLocalize.logsShowConsoleOnStdout().get());
+  private final JCheckBox myShowConsoleOnStdErrCheckbox = new JCheckBox(ExecutionLocalize.logsShowConsoleOnStderr().get());
   private final JCheckBox mySynchronizedAfterRunCheckbox = new JCheckBox(ToolsBundle.message("tools.synchronize.files.checkbox"));
   private boolean myEnabled;
 
@@ -186,7 +181,7 @@ public class ToolEditorDialog extends DialogWrapper {
     myOutputFiltersButton = new JButton(ToolsBundle.message("tools.filters.button"));
 
     DataContext dataContext = DataManager.getInstance().getDataContext(parent);
-    myProject = dataContext.getData(CommonDataKeys.PROJECT);
+    myProject = dataContext.getData(Project.KEY);
     MacroManager.getInstance().cacheMacrosPreview(dataContext);
     setTitle(title);
     init();
@@ -230,7 +225,7 @@ public class ToolEditorDialog extends DialogWrapper {
     constr = new GridBagConstraints();
     constr.gridx = 2;
     constr.gridy = 0;
-    constr.insets = new Insets(0, 0, 0, 0);
+    constr.insets = JBUI.emptyInsets();
     constr.fill = GridBagConstraints.HORIZONTAL;
     constr.anchor = GridBagConstraints.BASELINE_LEADING;
     myInsertCommandMacroButton = new JButton(ToolsBundle.message("tools.insert.macro.button"));
@@ -309,56 +304,42 @@ public class ToolEditorDialog extends DialogWrapper {
     return pane;
   }
 
-  protected void addWorkingDirectoryBrowseAction(final JPanel pane,
-                                                 FixedSizeButton browseDirectoryButton,
-                                                 JTextField tfCommandWorkingDirectory) {
-    browseDirectoryButton.addActionListener(
-      new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
-          PathChooserDialog chooser = FileChooserFactory.getInstance().createPathChooser(descriptor, myProject, pane);
+  protected void addWorkingDirectoryBrowseAction(
+    final JPanel pane,
+    FixedSizeButton browseDirectoryButton,
+    JTextField tfCommandWorkingDirectory
+  ) {
+    browseDirectoryButton.addActionListener(e -> {
+      FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
+      PathChooserDialog chooser = FileChooserFactory.getInstance().createPathChooser(descriptor, myProject, pane);
 
-          chooser.choose(null, new Consumer<List<VirtualFile>>() {
-            @Override
-            public void accept(List<VirtualFile> files) {
-              VirtualFile file = files.size() > 0 ? files.get(0) : null;
-              if (file != null) {
-                myTfCommandWorkingDirectory.setText(file.getPresentableUrl());
-              }
-            }
-          });
+      chooser.choose(null, files -> {
+        VirtualFile file = files.size() > 0 ? files.get(0) : null;
+        if (file != null) {
+          myTfCommandWorkingDirectory.setText(file.getPresentableUrl());
         }
-      }
-    );
+      });
+    });
   }
 
   protected void addCommandBrowseAction(final JPanel pane, FixedSizeButton browseCommandButton, JTextField tfCommand) {
-    browseCommandButton.addActionListener(
-      new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFileOrExecutableAppDescriptor();
-          PathChooserDialog chooser = FileChooserFactory.getInstance().createPathChooser(descriptor, myProject, pane);
-          chooser.choose(null, new Consumer<List<VirtualFile>>() {
-            @Override
-            public void accept(List<VirtualFile> files) {
-              VirtualFile file = files.size() > 0 ? files.get(0) : null;
-              if (file != null) {
-                myTfCommand.setText(file.getPresentableUrl());
-                String workingDirectory = myTfCommandWorkingDirectory.getText();
-                if (workingDirectory == null || workingDirectory.length() == 0) {
-                  VirtualFile parent = file.getParent();
-                  if (parent != null && parent.isDirectory()) {
-                    myTfCommandWorkingDirectory.setText(parent.getPresentableUrl());
-                  }
-                }
-              }
+    browseCommandButton.addActionListener(e -> {
+      FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFileOrExecutableAppDescriptor();
+      PathChooserDialog chooser = FileChooserFactory.getInstance().createPathChooser(descriptor, myProject, pane);
+      chooser.choose(null, files -> {
+        VirtualFile file = files.size() > 0 ? files.get(0) : null;
+        if (file != null) {
+          myTfCommand.setText(file.getPresentableUrl());
+          String workingDirectory = myTfCommandWorkingDirectory.getText();
+          if (workingDirectory == null || workingDirectory.length() == 0) {
+            VirtualFile parent = file.getParent();
+            if (parent != null && parent.isDirectory()) {
+              myTfCommandWorkingDirectory.setText(parent.getPresentableUrl());
             }
-          });
+          }
         }
-      }
-    );
+      });
+    });
   }
 
   private class InsertMacroActionListener implements ActionListener {
@@ -387,14 +368,11 @@ public class ToolEditorDialog extends DialogWrapper {
   }
 
   private void addListeners() {
-    myOutputFiltersButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        OutputFiltersDialog dialog = new OutputFiltersDialog(myOutputFiltersButton, getData().getOutputFilters());
-        dialog.show();
-        if (dialog.isOK()) {
-          myOutputFilters = dialog.getData();
-        }
+    myOutputFiltersButton.addActionListener(e -> {
+      OutputFiltersDialog dialog = new OutputFiltersDialog(myOutputFiltersButton, getData().getOutputFilters());
+      dialog.show();
+      if (dialog.isOK()) {
+        myOutputFilters = dialog.getData();
       }
     });
     myInsertCommandMacroButton.addActionListener(new InsertMacroActionListener(myTfCommand));
@@ -408,12 +386,9 @@ public class ToolEditorDialog extends DialogWrapper {
       }
     });
 
-    myUseConsoleCheckbox.addChangeListener(new ChangeListener() {
-      @Override
-      public void stateChanged(ChangeEvent e) {
-        myShowConsoleOnStdOutCheckbox.setVisible(myUseConsoleCheckbox.isSelected());
-        myShowConsoleOnStdErrCheckbox.setVisible(myUseConsoleCheckbox.isSelected());
-      }
+    myUseConsoleCheckbox.addChangeListener(e -> {
+      myShowConsoleOnStdOutCheckbox.setVisible(myUseConsoleCheckbox.isSelected());
+      myShowConsoleOnStdErrCheckbox.setVisible(myUseConsoleCheckbox.isSelected());
     });
   }
 
@@ -464,9 +439,9 @@ public class ToolEditorDialog extends DialogWrapper {
     if (myGroupCombo.getItemCount() > 0) {
       myGroupCombo.removeAllItems();
     }
-    for (int i = 0; i < existingGroups.length; i++) {
-      if (existingGroups[i] != null) {
-        myGroupCombo.addItem(existingGroups[i]);
+    for (String existingGroup : existingGroups) {
+      if (existingGroup != null) {
+        myGroupCombo.addItem(existingGroup);
       }
     }
     myGroupCombo.setSelectedItem(tool.getGroup());

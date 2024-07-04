@@ -16,24 +16,21 @@
 package consulo.ide.impl.idea.refactoring.extractMethod;
 
 import consulo.ide.impl.idea.codeInsight.codeFragment.CodeFragment;
-import consulo.application.ApplicationManager;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.project.Project;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.Messages;
-import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.ide.impl.idea.refactoring.ui.MethodSignatureComponent;
 import consulo.ide.impl.idea.refactoring.util.SimpleParameterTablePanel;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.event.DocumentAdapter;
-import java.util.HashMap;
+import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class AbstractExtractMethodDialog extends DialogWrapper implements ExtractMethodSettings {
   private JPanel myContentPane;
@@ -70,7 +67,7 @@ public class AbstractExtractMethodDialog extends DialogWrapper implements Extrac
     myOutputVariables = new ArrayList<>(fragment.getOutputVariables());
     Collections.sort(myOutputVariables);
     setModal(true);
-    setTitle(RefactoringBundle.message("extract.method.title"));
+    setTitle(RefactoringLocalize.extractMethodTitle().get());
     init();
   }
 
@@ -133,14 +130,19 @@ public class AbstractExtractMethodDialog extends DialogWrapper implements Extrac
   }
 
   @Override
+  @RequiredUIAccess
   protected void doOKAction() {
     final String error = myValidator.check(getMethodName());
     if (error != null){
-      if (ApplicationManager.getApplication().isUnitTestMode()){
-        Messages.showInfoMessage(error, RefactoringBundle.message("error.title"));
+      if (myProject.getApplication().isUnitTestMode()){
+        Messages.showInfoMessage(error, RefactoringLocalize.errorTitle().get());
         return;
       }
-      if (Messages.showOkCancelDialog(error + ". " + RefactoringBundle.message("do.you.wish.to.continue"), RefactoringBundle.message("warning.title"), Messages.getWarningIcon()) != Messages.OK){
+      if (Messages.showOkCancelDialog(
+        error + ". " + RefactoringLocalize.doYouWishToContinue(),
+        RefactoringLocalize.warningTitle().get(),
+        UIUtil.getWarningIcon()
+      ) != Messages.OK) {
         return;
       }
     }
@@ -165,6 +167,7 @@ public class AbstractExtractMethodDialog extends DialogWrapper implements Extrac
       }
 
       @Override
+      @RequiredUIAccess
       protected void doEnterAction() {
         doOKAction();
       }
@@ -193,7 +196,9 @@ public class AbstractExtractMethodDialog extends DialogWrapper implements Extrac
         builder.append(outputName);
       }
     }
-    myOutputVariablesTextArea.setText(builder.length() > 0 ? builder.toString() : RefactoringBundle.message("refactoring.extract.method.dialog.empty"));
+    myOutputVariablesTextArea.setText(
+      builder.length() > 0 ? builder.toString() : RefactoringLocalize.refactoringExtractMethodDialogEmpty().get()
+    );
   }
 
   private void updateSignature() {

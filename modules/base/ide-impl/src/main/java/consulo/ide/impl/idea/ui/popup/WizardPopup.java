@@ -2,7 +2,6 @@
 package consulo.ide.impl.idea.ui.popup;
 
 import consulo.dataContext.DataManager;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.popup.TreePopupStep;
 import consulo.project.Project;
 import consulo.application.util.registry.Registry;
@@ -45,7 +44,8 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
   protected final PopupStep<Object> myStep;
   protected WizardPopup myChild;
 
-  private final Timer myAutoSelectionTimer = TimerUtil.createNamedTimer("Wizard auto-selection", Registry.intValue("ide.popup.auto.delay", 500), this);
+  private final Timer myAutoSelectionTimer =
+    TimerUtil.createNamedTimer("Wizard auto-selection", Registry.intValue("ide.popup.auto.delay", 500), this);
 
   private final MnemonicsSearch myMnemonicsSearch;
   private Object myParentValue;
@@ -62,7 +62,7 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
    */
   @Deprecated
   public WizardPopup(@Nonnull PopupStep<Object> aStep) {
-    this(DataManager.getInstance().getDataContext().getData(CommonDataKeys.PROJECT), null, aStep);
+    this(DataManager.getInstance().getDataContext().getData(Project.KEY), null, aStep);
   }
 
   public WizardPopup(@Nullable Project project, @Nullable JBPopup aParent, @Nonnull PopupStep<Object> aStep) {
@@ -376,14 +376,14 @@ public abstract class WizardPopup extends AbstractPopup implements ActionListene
   }
 
   protected WizardPopup createPopup(WizardPopup parent, PopupStep step, Object parentValue) {
-    if (step instanceof AsyncPopupStep) {
-      return new AsyncPopupImpl(getProject(), parent, (AsyncPopupStep)step, parentValue);
+    if (step instanceof AsyncPopupStep asyncPopupStep) {
+      return new AsyncPopupImpl(getProject(), parent, asyncPopupStep, parentValue);
     }
-    if (step instanceof ListPopupStep) {
-      return new ListPopupImpl(getProject(), parent, (ListPopupStep)step, parentValue);
+    if (step instanceof ListPopupStep listPopupStep) {
+      return new ListPopupImpl(getProject(), parent, listPopupStep, parentValue);
     }
-    else if (step instanceof TreePopupStep) {
-      return new TreePopupImpl(getProject(), parent, (TreePopupStep)step, parentValue);
+    else if (step instanceof TreePopupStep treePopupStep) {
+      return new TreePopupImpl(getProject(), parent, treePopupStep, parentValue);
     }
     else {
       throw new IllegalArgumentException(step.getClass().toString());

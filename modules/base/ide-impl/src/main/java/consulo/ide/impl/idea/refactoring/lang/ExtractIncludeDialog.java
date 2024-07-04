@@ -16,27 +16,28 @@
 
 package consulo.ide.impl.idea.refactoring.lang;
 
-import consulo.language.editor.refactoring.util.DirectoryUtil;
-import consulo.application.ApplicationManager;
-import consulo.undoRedo.CommandProcessor;
-import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeChooser;
 import consulo.application.HelpManager;
+import consulo.fileChooser.FileChooserDescriptorFactory;
+import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeChooser;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
+import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
+import consulo.language.editor.refactoring.util.DirectoryUtil;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiManager;
+import consulo.language.psi.path.PsiFileSystemItemUtil;
+import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.TextFieldWithBrowseButton;
 import consulo.ui.ex.awt.VerticalFlowLayout;
+import consulo.ui.ex.awt.event.DocumentAdapter;
+import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.language.psi.PsiDirectory;
-import consulo.language.psi.PsiManager;
-import consulo.language.psi.path.PsiFileSystemItemUtil;
-import consulo.language.editor.refactoring.RefactoringBundle;
-import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
-import consulo.ui.ex.awt.event.DocumentAdapter;
-import consulo.language.util.IncorrectOperationException;
+import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -50,7 +51,7 @@ public class ExtractIncludeDialog extends DialogWrapper {
   protected TextFieldWithBrowseButton myTargetDirectoryField;
   private JTextField myNameField;
   private final PsiDirectory myCurrentDirectory;
-  private static final String REFACTORING_NAME = RefactoringBundle.message("extractIncludeFile.name");
+  private static final LocalizeValue REFACTORING_NAME = RefactoringLocalize.extractincludefileName();
   protected final String myExtension;
   protected JLabel myTargetDirLabel;
 
@@ -101,11 +102,14 @@ public class ExtractIncludeDialog extends DialogWrapper {
 
     myTargetDirectoryField = new TextFieldWithBrowseButton();
     myTargetDirectoryField.setText(myCurrentDirectory.getVirtualFile().getPresentableUrl());
-    myTargetDirectoryField.addBrowseFolderListener(RefactoringBundle.message("select.target.directory"),
-                                                   RefactoringBundle.message("select.target.directory.description"),
-                                                   null, FileChooserDescriptorFactory.createSingleFolderDescriptor());
+    myTargetDirectoryField.addBrowseFolderListener(
+      RefactoringLocalize.selectTargetDirectory().get(),
+      RefactoringLocalize.selectTargetDirectoryDescription().get(),
+      null,
+      FileChooserDescriptorFactory.createSingleFolderDescriptor()
+    );
 
-    myTargetDirLabel.setText(RefactoringBundle.message("extract.to.directory"));
+    myTargetDirLabel.setText(RefactoringLocalize.extractToDirectory().get());
     panel.add(myTargetDirectoryField);
 
     myTargetDirectoryField.getTextField().getDocument().addDocumentListener(new DocumentAdapter() {
@@ -121,14 +125,16 @@ public class ExtractIncludeDialog extends DialogWrapper {
   }
 
   protected String getNameLabel() {
-    return RefactoringBundle.message("name.for.extracted.include.file", myExtension);
+    return RefactoringLocalize.nameForExtractedIncludeFile(myExtension).get();
   }
 
   private void validateOKButton() {
     final String fileName = myNameField.getText().trim();
-    setOKActionEnabled(myTargetDirectoryField.getText().trim().length() > 0 &&
-                       fileName.length() > 0 && fileName.indexOf(File.separatorChar) < 0 &&
-                       !StringUtil.containsAnyChar(fileName, "*?><\":;|") && fileName.indexOf(".") != 0);
+    setOKActionEnabled(
+      myTargetDirectoryField.getText().trim().length() > 0
+        && fileName.length() > 0 && fileName.indexOf(File.separatorChar) < 0
+        && !StringUtil.containsAnyChar(fileName, "*?><\":;|") && fileName.indexOf(".") != 0
+    );
   }
 
   private static boolean isFileExist(@Nonnull final String directory, @Nonnull final String fileName) {
@@ -136,6 +142,7 @@ public class ExtractIncludeDialog extends DialogWrapper {
   }
 
   @Override
+  @RequiredUIAccess
   protected void doOKAction() {
     final Project project = myCurrentDirectory.getProject();
 
@@ -143,7 +150,11 @@ public class ExtractIncludeDialog extends DialogWrapper {
     final String targetFileName = getTargetFileName();
 
     if (isFileExist(directoryName, targetFileName)) {
-      Messages.showErrorDialog(project, RefactoringBundle.message("file.already.exist", targetFileName), RefactoringBundle.message("file.already.exist.title"));
+      Messages.showErrorDialog(
+        project,
+        RefactoringLocalize.fileAlreadyExist(targetFileName).get(),
+        RefactoringLocalize.fileAlreadyExistTitle().get()
+      );
       return;
     }
 
@@ -152,26 +163,25 @@ public class ExtractIncludeDialog extends DialogWrapper {
       return;
     }
 
-    CommandProcessor.getInstance().executeCommand(project, new Runnable() {
-      @Override
-      public void run() {
-        final Runnable action = new Runnable() {
-          @Override
-          public void run() {
-            try {
-              PsiDirectory targetDirectory = DirectoryUtil.mkdirs(PsiManager.getInstance(project), directoryName);
-              targetDirectory.checkCreateFile(targetFileName);
-              final String webPath = PsiFileSystemItemUtil.getRelativePath(myCurrentDirectory, targetDirectory);
-              myTargetDirectory = webPath == null ? null : targetDirectory;
-            }
-            catch (IncorrectOperationException e) {
-              CommonRefactoringUtil.showErrorMessage(REFACTORING_NAME, e.getMessage(), null, project);
-            }
+    CommandProcessor.getInstance().executeCommand(
+      project,
+      () -> {
+        final Runnable action = () -> {
+          try {
+            PsiDirectory targetDirectory = DirectoryUtil.mkdirs(PsiManager.getInstance(project), directoryName);
+            targetDirectory.checkCreateFile(targetFileName);
+            final String webPath = PsiFileSystemItemUtil.getRelativePath(myCurrentDirectory, targetDirectory);
+            myTargetDirectory = webPath == null ? null : targetDirectory;
+          }
+          catch (IncorrectOperationException e) {
+            CommonRefactoringUtil.showErrorMessage(REFACTORING_NAME.get(), e.getMessage(), null, project);
           }
         };
-        ApplicationManager.getApplication().runWriteAction(action);
-      }
-    }, RefactoringBundle.message("create.directory"), null);
+        project.getApplication().runWriteAction(action);
+      },
+      RefactoringLocalize.createDirectory().get(),
+      null
+    );
     if (myTargetDirectory == null) return;
     super.doOKAction();
   }

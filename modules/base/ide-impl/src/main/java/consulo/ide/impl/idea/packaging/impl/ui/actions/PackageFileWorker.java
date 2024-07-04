@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.packaging.impl.ui.actions;
 
 import consulo.application.AccessRule;
-import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
@@ -28,7 +27,6 @@ import consulo.compiler.artifact.element.ArtifactRootElement;
 import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.compiler.localize.CompilerLocalize;
 import consulo.ide.impl.idea.openapi.deployment.DeploymentUtil;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.util.PathUtil;
 import consulo.localize.LocalizeValue;
@@ -39,6 +37,7 @@ import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
 import consulo.util.concurrent.AsyncResult;
+import consulo.util.io.FileUtil;
 import consulo.util.io.zip.JBZipEntry;
 import consulo.util.io.zip.JBZipFile;
 import consulo.util.lang.StringUtil;
@@ -71,12 +70,7 @@ public class PackageFileWorker {
   }
 
   public static void startPackagingFiles(Project project, List<VirtualFile> files, Artifact[] artifacts, final @Nonnull Runnable onFinishedInAwt) {
-    startPackagingFiles(project, files, artifacts).doWhenProcessed(new Runnable() {
-      @Override
-      public void run() {
-        ApplicationManager.getApplication().invokeLater(onFinishedInAwt);
-      }
-    });
+    startPackagingFiles(project, files, artifacts).doWhenProcessed(() -> project.getApplication().invokeLater(onFinishedInAwt));
   }
 
   public static AsyncResult<Void> startPackagingFiles(final Project project, final List<VirtualFile> files, final Artifact[] artifacts) {
@@ -127,7 +121,7 @@ public class PackageFileWorker {
   }
 
   private void packageFile(String outputPath, List<CompositePackagingElement<?>> parents) throws IOException {
-    List<CompositePackagingElement<?>> parentsList = new ArrayList<CompositePackagingElement<?>>(parents);
+    List<CompositePackagingElement<?>> parentsList = new ArrayList<>(parents);
     Collections.reverse(parentsList);
     if (!parentsList.isEmpty() && parentsList.get(0) instanceof ArtifactRootElement) {
       parentsList = parentsList.subList(1, parentsList.size());
@@ -144,7 +138,7 @@ public class PackageFileWorker {
       }
       else {
         LOG.debug("  copying to " + fullOutputPath);
-        FileUtil.copy(myFile, target);
+        consulo.ide.impl.idea.openapi.util.io.FileUtil.copy(myFile, target);
       }
       return;
     }
@@ -184,8 +178,10 @@ public class PackageFileWorker {
       try {
         final JBZipEntry entry = zipFile.getOrCreateEntry(nextPathInArchive);
         LOG.debug("  extracting to temp file: " + nextPathInArchive + " from " + archivePath);
-        final File tempFile = FileUtil.createTempFile("packageFile" + FileUtil.sanitizeFileName(nextPathInArchive),
-                                                      FileUtil.getExtension(PathUtil.getFileName(nextPathInArchive)));
+        final File tempFile = FileUtil.createTempFile(
+          "packageFile" + FileUtil.sanitizeFileName(nextPathInArchive),
+          FileUtil.getExtension(PathUtil.getFileName(nextPathInArchive))
+        );
         if (entry.getSize() != -1) {
           FileUtil.writeToFile(tempFile, entry.getData());
         }

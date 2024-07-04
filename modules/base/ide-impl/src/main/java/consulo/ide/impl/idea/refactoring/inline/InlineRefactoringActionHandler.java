@@ -20,32 +20,34 @@
  */
 package consulo.ide.impl.idea.refactoring.inline;
 
-import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.action.BaseRefactoringAction;
+import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.language.editor.refactoring.inline.InlineActionHandler;
 import consulo.language.editor.refactoring.inline.InlineHandler;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
-
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 
 public class InlineRefactoringActionHandler implements RefactoringActionHandler {
   private static final Logger LOG = Logger.getInstance(InlineRefactoringActionHandler.class);
-  private static final String REFACTORING_NAME = RefactoringBundle.message("inline.title");
+  private static final LocalizeValue REFACTORING_NAME = RefactoringLocalize.inlineTitle();
 
   @Override
-  @RequiredReadAction
+  @RequiredUIAccess
   public void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, DataContext dataContext) {
     LOG.assertTrue(elements.length == 1);
     if (dataContext == null) {
@@ -63,7 +65,7 @@ public class InlineRefactoringActionHandler implements RefactoringActionHandler 
   }
 
   @Override
-  @RequiredReadAction
+  @RequiredUIAccess
   public void invoke(@Nonnull final Project project, Editor editor, PsiFile file, DataContext dataContext) {
     editor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
 
@@ -81,12 +83,12 @@ public class InlineRefactoringActionHandler implements RefactoringActionHandler 
 
       if (invokeInliner(editor, element)) return;
 
-      String message = RefactoringBundle.getCannotRefactorMessage(RefactoringBundle.message("error.wrong.caret.position.method.or.local.name"));
-      CommonRefactoringUtil.showErrorHint(project, editor, message, REFACTORING_NAME, null);
+      String message = RefactoringBundle.getCannotRefactorMessage(RefactoringLocalize.errorWrongCaretPositionMethodOrLocalName().get());
+      CommonRefactoringUtil.showErrorHint(project, editor, message, REFACTORING_NAME.get(), null);
     }
   }
 
-  @RequiredReadAction
+  @RequiredUIAccess
   public static boolean invokeInliner(@Nullable Editor editor, PsiElement element) {
     final List<InlineHandler> handlers = InlineHandler.forLanguage(element.getLanguage());
     for (InlineHandler handler : handlers) {

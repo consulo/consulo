@@ -2,29 +2,29 @@
 package consulo.ide.impl.idea.openapi.vfs.newvfs.persistent;
 
 import consulo.application.ReadAction;
-import consulo.logging.Logger;
+import consulo.ide.impl.idea.openapi.vfs.newvfs.ChildInfoImpl;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.file.FileTypeManager;
+import consulo.logging.Logger;
+import consulo.module.content.ProjectFileIndex;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.internal.ProjectManagerEx;
-import consulo.module.content.ProjectFileIndex;
-import consulo.util.lang.Comparing;
+import consulo.util.collection.SmartList;
+import consulo.util.collection.Stack;
 import consulo.util.io.FileAttributes;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.function.ThrowableRunnable;
 import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.ChildInfoImpl;
-import consulo.virtualFileSystem.NewVirtualFile;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.util.lang.function.ThrowableRunnable;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.util.collection.Stack;
 import consulo.virtualFileSystem.event.*;
-
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
+
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -56,11 +56,13 @@ class VfsEventGenerationHelper {
     }
   }
 
-  void scheduleCreation(@Nonnull VirtualFile parent,
-                        @Nonnull String childName,
-                        @Nonnull FileAttributes attributes,
-                        @Nullable String symlinkTarget,
-                        @Nonnull ThrowableRunnable<RefreshWorker.RefreshCancelledException> checkCanceled) throws RefreshWorker.RefreshCancelledException {
+  void scheduleCreation(
+    @Nonnull VirtualFile parent,
+    @Nonnull String childName,
+    @Nonnull FileAttributes attributes,
+    @Nullable String symlinkTarget,
+    @Nonnull ThrowableRunnable<RefreshWorker.RefreshCancelledException> checkCanceled
+  ) throws RefreshWorker.RefreshCancelledException {
     if (LOG.isTraceEnabled()) LOG.trace("create parent=" + parent + " name=" + childName + " attr=" + attributes);
     ChildInfo[] children = null;
     if (attributes.isDirectory() && parent.getFileSystem() instanceof LocalFileSystem && !attributes.isSymLink()) {
@@ -115,8 +117,8 @@ class VfsEventGenerationHelper {
     // top of the stack contains list of children found so far in the current directory
     Stack<List<ChildInfo>> stack = new Stack<>();
     ChildInfo fakeRoot = new ChildInfoImpl(ChildInfoImpl.UNKNOWN_ID_YET, "", null, null, null);
-    stack.push(ContainerUtil.newSmartList(fakeRoot));
-    FileVisitor<Path> visitor = new SimpleFileVisitor<Path>() {
+    stack.push(new SmartList<>(fakeRoot));
+    FileVisitor<Path> visitor = new SimpleFileVisitor<>() {
       int checkCanceledCount;
 
       @Override
@@ -161,7 +163,12 @@ class VfsEventGenerationHelper {
         // store children back
         ChildInfo parentInfo = ContainerUtil.getLastItem(parentInfos);
         ChildInfo[] children = childInfos.toArray(ChildInfo.EMPTY_ARRAY);
-        ChildInfo newInfo = new ChildInfoImpl(parentInfo.getId(), parentInfo.getNameId(), parentInfo.getFileAttributes(), children, parentInfo.getSymLinkTarget());
+        ChildInfo newInfo = new ChildInfoImpl(parentInfo.getId(),
+          parentInfo.getNameId(),
+          parentInfo.getFileAttributes(),
+          children,
+          parentInfo.getSymLinkTarget()
+        );
         parentInfos.set(parentInfos.size() - 1, newInfo);
         return FileVisitResult.CONTINUE;
       }

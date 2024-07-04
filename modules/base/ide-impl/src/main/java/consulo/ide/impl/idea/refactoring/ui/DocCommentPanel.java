@@ -25,7 +25,7 @@
 package consulo.ide.impl.idea.refactoring.ui;
 
 import consulo.ide.impl.idea.refactoring.util.DocCommentPolicy;
-import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.UIUtil;
 
@@ -41,25 +41,30 @@ public class DocCommentPanel extends JPanel {
 
   public DocCommentPanel(String title) {
     setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-    myBorder = IdeBorderFactory.createTitledBorder(title, true,
-                                                   new Insets(IdeBorderFactory.TITLED_BORDER_TOP_INSET,
-                                                              UIUtil.DEFAULT_HGAP,
-                                                              IdeBorderFactory.TITLED_BORDER_BOTTOM_INSET,
-                                                              IdeBorderFactory.TITLED_BORDER_RIGHT_INSET));
+    myBorder = IdeBorderFactory.createTitledBorder(
+      title,
+      true,
+      new Insets(
+        IdeBorderFactory.TITLED_BORDER_TOP_INSET,
+        UIUtil.DEFAULT_HGAP,
+        IdeBorderFactory.TITLED_BORDER_BOTTOM_INSET,
+        IdeBorderFactory.TITLED_BORDER_RIGHT_INSET
+      )
+    );
     this.setBorder(myBorder);
 
     myRbJavaDocAsIs = new JRadioButton();
-    myRbJavaDocAsIs.setText(RefactoringBundle.message("javadoc.as.is"));
+    myRbJavaDocAsIs.setText(RefactoringLocalize.javadocAsIs().get());
     add(myRbJavaDocAsIs);
     myRbJavaDocAsIs.setFocusable(false);
 
     myRbJavaDocCopy = new JRadioButton();
-    myRbJavaDocCopy.setText(RefactoringBundle.message("javadoc.copy"));
+    myRbJavaDocCopy.setText(RefactoringLocalize.javadocCopy().get());
     myRbJavaDocCopy.setFocusable(false);
     add(myRbJavaDocCopy);
 
     myRbJavaDocMove = new JRadioButton();
-    myRbJavaDocMove.setText(RefactoringBundle.message("javadoc.move"));
+    myRbJavaDocMove.setText(RefactoringLocalize.javadocMove().get());
     myRbJavaDocMove.setFocusable(false);
     add(myRbJavaDocMove);
 

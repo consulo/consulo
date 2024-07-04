@@ -15,15 +15,15 @@
  */
 package consulo.ide.impl.idea.openapi.vfs;
 
-import consulo.application.util.SystemInfo;
 import consulo.application.util.function.Processor;
 import consulo.content.ContentIterator;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.ide.impl.idea.util.containers.DistinctRootsCollection;
-import consulo.util.io.URLUtil;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
+import consulo.util.io.FileUtil;
+import consulo.util.io.URLUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.*;
@@ -32,9 +32,9 @@ import consulo.virtualFileSystem.impl.internal.RawFileLoaderImpl;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.*;
 import java.net.URL;
 import java.util.*;
@@ -216,7 +216,7 @@ public class VfsUtilCore {
   @Nonnull
   public static String loadText(@Nonnull VirtualFile file, int length) throws IOException {
     try (InputStreamReader reader = new InputStreamReader(file.getInputStream(), file.getCharset())) {
-      return new String(FileUtil.loadText(reader, length));
+      return new String(consulo.ide.impl.idea.openapi.util.io.FileUtil.loadText(reader, length));
     }
   }
 
@@ -246,7 +246,7 @@ public class VfsUtilCore {
   }
 
   public static List<File> virtualToIoFiles(@Nonnull Collection<VirtualFile> scope) {
-    return ContainerUtil.map2List(scope, file -> virtualToIoFile(file));
+    return ContainerUtil.map2List(scope, VfsUtilCore::virtualToIoFile);
   }
 
   @Nonnull
@@ -307,7 +307,7 @@ public class VfsUtilCore {
     if (!processor.process(root)) return false;
 
     if (root.isDirectory()) {
-      final LinkedList<VirtualFile[]> queue = new LinkedList<VirtualFile[]>();
+      final LinkedList<VirtualFile[]> queue = new LinkedList<>();
 
       queue.add(root.getChildren());
 
@@ -364,7 +364,7 @@ public class VfsUtilCore {
    */
   @Nonnull
   static VirtualFile[] getPathComponents(@Nonnull VirtualFile file) {
-    ArrayList<VirtualFile> componentsList = new ArrayList<VirtualFile>();
+    ArrayList<VirtualFile> componentsList = new ArrayList<>();
     while (file != null) {
       componentsList.add(file);
       file = file.getParent();
@@ -390,7 +390,7 @@ public class VfsUtilCore {
   public static VirtualFile findContainingDirectory(@Nonnull VirtualFile file, @Nonnull CharSequence name) {
     VirtualFile parent = file.isDirectory() ? file : file.getParent();
     while (parent != null) {
-      if (Comparing.equal(parent.getNameSequence(), name, SystemInfo.isFileSystemCaseSensitive)) {
+      if (Comparing.equal(parent.getNameSequence(), name, Platform.current().fs().isCaseSensitive())) {
         return parent;
       }
       parent = parent.getParent();
@@ -423,7 +423,7 @@ public class VfsUtilCore {
     if (!processor.process(root)) return;
 
     if (root.isDirectory() && directoryFilter.convert(root)) {
-      final LinkedList<VirtualFile[]> queue = new LinkedList<VirtualFile[]>();
+      final LinkedList<VirtualFile[]> queue = new LinkedList<>();
 
       queue.add(root.getChildren());
 

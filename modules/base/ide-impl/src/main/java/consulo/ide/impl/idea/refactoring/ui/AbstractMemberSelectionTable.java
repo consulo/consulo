@@ -17,30 +17,30 @@
 package consulo.ide.impl.idea.refactoring.ui;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.component.util.Iconable;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.TypeSafeDataProvider;
-import consulo.language.editor.refactoring.ui.EnableDisableAction;
-import consulo.ui.ex.JBColor;
-import consulo.component.util.Iconable;
-import consulo.language.psi.PsiElement;
-import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.classMember.MemberInfoBase;
 import consulo.language.editor.refactoring.classMember.MemberInfoChange;
 import consulo.language.editor.refactoring.classMember.MemberInfoChangeListener;
 import consulo.language.editor.refactoring.classMember.MemberInfoModel;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
+import consulo.language.editor.refactoring.ui.EnableDisableAction;
+import consulo.language.icon.IconDescriptorUpdaters;
+import consulo.language.psi.PsiElement;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.BooleanTableCellRenderer;
 import consulo.ui.ex.awt.ColoredTableCellRenderer;
 import consulo.ui.ex.awt.speedSearch.TableSpeedSearch;
 import consulo.ui.ex.awt.table.JBTable;
-import consulo.language.icon.IconDescriptorUpdaters;
-import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
@@ -59,7 +59,6 @@ public abstract class AbstractMemberSelectionTable<T extends PsiElement, M exten
   protected static final int DISPLAY_NAME_COLUMN = 1;
   protected static final int ABSTRACT_COLUMN = 2;
   public static final Image EMPTY_OVERRIDE_ICON = Image.empty(Image.DEFAULT_ICON_SIZE);
-  protected static final String DISPLAY_NAME_COLUMN_HEADER = RefactoringBundle.message("member.column");
   protected static final int OVERRIDE_ICON_POSITION = 2;
   protected static final int VISIBILITY_ICON_POSITION = 1;
   protected static final int MEMBER_ICON_POSITION = 0;
@@ -298,7 +297,7 @@ public abstract class AbstractMemberSelectionTable<T extends PsiElement, M exten
         case ABSTRACT_COLUMN:
           return myTable.myAbstractColumnHeader;
         case DISPLAY_NAME_COLUMN:
-          return DISPLAY_NAME_COLUMN_HEADER;
+          return RefactoringLocalize.memberColumn().get();
         default:
           throw new RuntimeException("Incorrect column index");
       }

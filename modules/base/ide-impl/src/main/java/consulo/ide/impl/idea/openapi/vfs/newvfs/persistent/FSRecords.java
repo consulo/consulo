@@ -1,13 +1,13 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.vfs.newvfs.persistent;
 
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.HeavyProcessLatch;
 import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.application.util.concurrent.SequentialTaskExecutor;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.container.boot.ContainerPathManager;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.CachedFileType;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.FileNameCache;
@@ -24,10 +24,8 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
-import consulo.util.io.BufferExposingByteArrayOutputStream;
-import consulo.util.io.ByteArraySequence;
-import consulo.util.io.FileAttributes;
-import consulo.util.io.UnsyncByteArrayInputStream;
+import consulo.util.io.*;
+import consulo.util.lang.BitUtil;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.SystemProperties;
 import consulo.util.lang.function.ThrowableRunnable;
@@ -199,7 +197,7 @@ public class FSRecords {
 
       int count = fileLength / RECORD_SIZE;
       for (int n = 2; n < count; n++) {
-        if (consulo.util.lang.BitUtil.isSet(getFlags(n), FREE_RECORD_FLAG)) {
+        if (BitUtil.isSet(getFlags(n), FREE_RECORD_FLAG)) {
           myFreeRecords.add(n);
         }
       }
@@ -338,13 +336,13 @@ public class FSRecords {
         }
         catch (final IOException e1) {
           final Runnable warnAndShutdown = () -> {
-            if (ApplicationManager.getApplication().isUnitTestMode()) {
+            if (Application.get().isUnitTestMode()) {
               //noinspection CallToPrintStackTrace
               e1.printStackTrace();
             }
             else {
               final String message = "Files in " + basePath.getPath() + " are locked.\n" + ApplicationNamesInfo.getInstance().getProductName() + " will not be able to start up.";
-              if (!ApplicationManager.getApplication().isHeadlessEnvironment()) {
+              if (!Application.get().isHeadlessEnvironment()) {
                 JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), message, "Fatal Error", JOptionPane.ERROR_MESSAGE);
               }
               else {
@@ -1470,7 +1468,8 @@ public class FSRecords {
   private static void checkFileIsValid(int fileId) throws IOException {
     assert fileId > 0 : fileId;
     if (!lazyVfsDataCleaning) {
-      assert !consulo.util.lang.BitUtil.isSet(doGetFlags(fileId), FREE_RECORD_FLAG) : "Accessing attribute of a deleted page: " + fileId + ":" + doGetNameSequence(fileId);
+      assert !BitUtil.isSet(doGetFlags(fileId), FREE_RECORD_FLAG)
+        : "Accessing attribute of a deleted page: " + fileId + ":" + doGetNameSequence(fileId);
     }
   }
 
@@ -1804,7 +1803,7 @@ public class FSRecords {
       LOG.assertTrue((flags & ~ALL_VALID_FLAGS) == 0, "Invalid flags: 0x" + Integer.toHexString(flags) + ", id: " + id);
       int currentId = id;
       boolean isFreeRecord = readAndHandleErrors(() -> DbConnection.myFreeRecords.contains(currentId));
-      if (consulo.util.lang.BitUtil.isSet(flags, FREE_RECORD_FLAG)) {
+      if (BitUtil.isSet(flags, FREE_RECORD_FLAG)) {
         LOG.assertTrue(isFreeRecord, "Record, marked free, not in free list: " + id);
       }
       else {
@@ -1822,8 +1821,8 @@ public class FSRecords {
     assert parentId >= 0 && parentId < recordCount;
     if (parentId > 0 && getParent(parentId) > 0) {
       int parentFlags = getFlags(parentId);
-      assert !consulo.util.lang.BitUtil.isSet(parentFlags, FREE_RECORD_FLAG) : parentId + ": " + Integer.toHexString(parentFlags);
-      assert consulo.util.lang.BitUtil.isSet(parentFlags, PersistentFS.IS_DIRECTORY_FLAG) : parentId + ": " + Integer.toHexString(parentFlags);
+      assert !BitUtil.isSet(parentFlags, FREE_RECORD_FLAG) : parentId + ": " + Integer.toHexString(parentFlags);
+      assert BitUtil.isSet(parentFlags, PersistentFS.IS_DIRECTORY_FLAG) : parentId + ": " + Integer.toHexString(parentFlags);
     }
 
     CharSequence name = getNameSequence(id);

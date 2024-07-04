@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vfs.impl;
 
 import consulo.application.util.SystemInfo;
 import consulo.ide.impl.idea.openapi.application.impl.ApplicationInfoImpl;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtilRt;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.ArchiveFileSystem;
@@ -181,32 +181,18 @@ class FilePointerPartNode {
       CharSequence name = fromNameId(nameId);
       int index = binarySearchChildByName(name);
       FilePointerPartNode child;
-      assert index < 0 : index +
-                         " : child= '" +
-                         (child = children[index]) +
-                         "'" +
-                         "; child.nameEqualTo(nameId)=" +
-                         child.nameEqualTo(nameId) +
-                         "; child.getClass()=" +
-                         child.getClass() +
-                         "; child.nameId=" +
-                         child.nameId +
-                         "; child.getName()='" +
-                         child.getName() +
-                         "'" +
-                         "; nameId=" +
-                         nameId +
-                         "; name='" +
-                         name +
-                         "'" +
-                         "; compare(child) = " +
-                         StringUtil.compare(child.getName(), name, !SystemInfo.isFileSystemCaseSensitive) +
-                         ";" +
-                         " UrlPart.nameEquals: " +
-                         FileUtil.PATH_CHAR_SEQUENCE_HASHING_STRATEGY.equals(child.getName(), fromNameId(nameId)) +
-                         "; name.equals(child.getName())=" +
-                         name.equals(child.getName())
-              ;
+      assert index < 0
+        : index + " : child= '" + (child = children[index]) + "'" +
+        "; child.nameEqualTo(nameId)=" + child.nameEqualTo(nameId) +
+        "; child.getClass()=" + child.getClass() +
+        "; child.nameId=" + child.nameId +
+        "; child.getName()='" + child.getName() + "'" +
+        "; nameId=" + nameId +
+        "; name='" + name + "'" +
+        "; compare(child) = " + StringUtil.compare(child.getName(), name, !Platform.current().fs().isCaseSensitive()) +
+        "; UrlPart.nameEquals: " +
+        consulo.ide.impl.idea.openapi.util.io.FileUtil.PATH_CHAR_SEQUENCE_HASHING_STRATEGY.equals(child.getName(), fromNameId(nameId)) +
+        "; name.equals(child.getName())=" + name.equals(child.getName());
       child = new FilePointerPartNode(nameId, this);
       children = ArrayUtil.insert(children, -index - 1, child);
       return child;
@@ -222,7 +208,7 @@ class FilePointerPartNode {
     return ObjectUtil.binarySearch(0, children.length, i -> {
       FilePointerPartNode child = children[i];
       CharSequence childName = child.getName();
-      return StringUtil.compare(childName, name, !SystemInfo.isFileSystemCaseSensitive);
+      return StringUtil.compare(childName, name, !Platform.current().fs().isCaseSensitive());
     });
   }
 
@@ -245,7 +231,8 @@ class FilePointerPartNode {
         out.add(node);
       }
       if (addSubdirectoryPointers) {
-        // when "a/b" changed, treat all "a/b/*" virtual file pointers as changed because that's what happens on directory rename "a"->"newA": "a" deleted and "newA" created
+        // when "a/b" changed, treat all "a/b/*" virtual file pointers as changed
+        // because that's what happens on directory rename "a"->"newA": "a" deleted and "newA" created
         addAllPointersStrictlyUnder(node, out);
       }
     }
@@ -288,7 +275,8 @@ class FilePointerPartNode {
       child.doCheckConsistency();
       assert child.parent == this;
       if (i != 0) {
-        assert !FileUtil.namesEqual(child.getName().toString(), children[i - 1].getName().toString()) : "child[" + i + "] = " + child + "; [-1] = " + children[i - 1];
+        assert !FileUtil.namesEqual(child.getName().toString(), children[i - 1].getName().toString())
+          : "child[" + i + "] = " + child + "; [-1] = " + children[i - 1];
       }
     }
     childSum += leavesNumber();
@@ -303,20 +291,14 @@ class FilePointerPartNode {
       if (!path.isEmpty() && nameFromPath.isEmpty() && Platform.current().os().isUnix()) {
         nameFromPath = "/";
       }
-      assert StringUtilRt.equal(nameFromPath, name, SystemInfo.isFileSystemCaseSensitive) : "fileAndUrl: " +
-                                                                                            fileAndUrl +
-                                                                                            "; but this: " +
-                                                                                            this +
-                                                                                            "; nameFromPath: " +
-                                                                                            nameFromPath +
-                                                                                            "; name: " +
-                                                                                            name +
-                                                                                            "; parent: " +
-                                                                                            parent +
-                                                                                            "; path: " +
-                                                                                            path +
-                                                                                            "; url: " +
-                                                                                            url;
+      assert StringUtilRt.equal(nameFromPath, name, Platform.current().fs().isCaseSensitive())
+        : "fileAndUrl: " + fileAndUrl +
+        "; but this: " + this +
+        "; nameFromPath: " + nameFromPath +
+        "; name: " + name +
+        "; parent: " + parent +
+        "; path: " + path +
+        "; url: " + url;
     }
     boolean hasFile = fileAndUrl != null && fileAndUrl.first != null;
     if (hasFile) {
@@ -463,8 +445,8 @@ class FilePointerPartNode {
   // for "file://a/b/c.txt" return "a/b", for "jar://a/b/j.jar!/c.txt" return "/a/b/j.jar"
   private static VirtualFile getParentThroughJars(@Nonnull VirtualFile file, @Nonnull VirtualFileSystem fs) {
     VirtualFile parent = file.getParent();
-    if (parent == null && fs instanceof ArchiveFileSystem) {
-      VirtualFile local = ((ArchiveFileSystem)fs).getLocalByEntry(file);
+    if (parent == null && fs instanceof ArchiveFileSystem archiveFileSystem) {
+      VirtualFile local = archiveFileSystem.getLocalByEntry(file);
       if (local != null) {
         parent = local.getParent();
       }
@@ -507,12 +489,13 @@ class FilePointerPartNode {
       else {
         currentFile = currentFile == null ? null : currentFile.findChild(name);
       }
-      FilePointerPartNode child = currentFile == null ? new UrlPartNode(name, currentNode) : new FilePointerPartNode(getNameId(currentFile), currentNode);
+      FilePointerPartNode child = currentFile == null
+        ? new UrlPartNode(name, currentNode) : new FilePointerPartNode(getNameId(currentFile), currentNode);
 
       currentNode.children = ArrayUtil.insert(currentNode.children, -index - 1, child);
       currentNode = child;
-      if (i != 0 && fs instanceof ArchiveFileSystem && currentFile != null && !currentFile.isDirectory()) {
-        currentFile = ((ArchiveFileSystem)fs).getRootByLocal(currentFile);
+      if (i != 0 && fs instanceof ArchiveFileSystem archiveFileSystem && currentFile != null && !currentFile.isDirectory()) {
+        currentFile = archiveFileSystem.getRootByLocal(currentFile);
       }
     }
     return currentNode;
@@ -539,14 +522,19 @@ class FilePointerPartNode {
     return names;
   }
 
-  private static VirtualFile findFileFromRoot(@Nonnull NewVirtualFile root, @Nonnull NewVirtualFileSystem fs, @Nonnull List<String> names, int startIndex) {
+  private static VirtualFile findFileFromRoot(
+    @Nonnull NewVirtualFile root,
+    @Nonnull NewVirtualFileSystem fs,
+    @Nonnull List<String> names,
+    int startIndex
+  ) {
     VirtualFile file = root;
     // start from before-the-last because it's the root, which we already found
     for (int i = names.size() - 2; i >= startIndex; i--) {
       String name = names.get(i);
       file = file.findChild(name);
-      if (fs instanceof ArchiveFileSystem && file != null && !file.isDirectory() && file.getFileSystem() != fs) {
-        file = ((ArchiveFileSystem)fs).getRootByLocal(file);
+      if (fs instanceof ArchiveFileSystem archiveFileSystem && file != null && !file.isDirectory() && file.getFileSystem() != fs) {
+        file = archiveFileSystem.getRootByLocal(file);
       }
       if (file == null) break;
     }

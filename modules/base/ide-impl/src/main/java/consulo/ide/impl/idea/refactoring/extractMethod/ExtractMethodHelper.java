@@ -34,10 +34,13 @@ import consulo.component.ProcessCanceledException;
 import consulo.find.FindManager;
 import consulo.ide.impl.idea.ui.ReplacePromptDialog;
 import consulo.language.editor.highlight.HighlightManager;
-import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.Pair;
 import jakarta.annotation.Nonnull;
@@ -63,17 +66,14 @@ public class ExtractMethodHelper {
       return;
     }
     final Project project = callElement.getProject();
-    ProgressManager.getInstance().run(new Task.Backgroundable(project, RefactoringBundle.message("searching.for.duplicates"), true) {
+    ProgressManager.getInstance().run(new Task.Backgroundable(project, RefactoringLocalize.searchingForDuplicates().get(), true) {
+      @Override
       public void run(@Nonnull ProgressIndicator indicator) {
         if (myProject == null || myProject.isDisposed()) return;
-        final List<SimpleMatch> duplicates = ApplicationManager.getApplication().runReadAction(new Computable<List<SimpleMatch>>() {
-          @Override
-          public List<SimpleMatch> compute() {
-            return finder.findDuplicates(scope, generatedMethod);
-          }
-        });
+        final List<SimpleMatch> duplicates =
+          project.getApplication().runReadAction((Computable<List<SimpleMatch>>)() -> finder.findDuplicates(scope, generatedMethod));
 
-        ApplicationManager.getApplication().invokeLater(() -> replaceDuplicates(callElement, editor, replacer, duplicates));
+        project.getApplication().invokeLater(() -> replaceDuplicates(callElement, editor, replacer, duplicates));
       }
     });
   }
@@ -91,18 +91,24 @@ public class ExtractMethodHelper {
    * @see #replaceDuplicates(PsiElement, Editor, Consumer, List)
    */
   @Nonnull
-  public static List<SimpleMatch> collectDuplicates(@Nonnull SimpleDuplicatesFinder finder,
-                                                    @Nonnull List<PsiElement> searchScopes,
-                                                    @Nonnull PsiElement generatedMethod) {
+  public static List<SimpleMatch> collectDuplicates(
+    @Nonnull SimpleDuplicatesFinder finder,
+    @Nonnull List<PsiElement> searchScopes,
+    @Nonnull PsiElement generatedMethod
+  ) {
     final Project project = generatedMethod.getProject();
     try {
       //noinspection RedundantCast
       return ProgressManager.getInstance().runProcessWithProgressSynchronously(
-              (ThrowableComputable<List<SimpleMatch>, RuntimeException>)() -> {
-                ProgressManager.getInstance().getProgressIndicator().setIndeterminate(true);
-                ThrowableComputable<List<SimpleMatch>, RuntimeException> action = () -> finder.findDuplicates(searchScopes, generatedMethod);
-                return AccessRule.read(action);
-              }, RefactoringBundle.message("searching.for.duplicates"), true, project);
+        (ThrowableComputable<List<SimpleMatch>, RuntimeException>)() -> {
+          ProgressManager.getInstance().getProgressIndicator().setIndeterminate(true);
+          ThrowableComputable<List<SimpleMatch>, RuntimeException> action = () -> finder.findDuplicates(searchScopes, generatedMethod);
+          return AccessRule.read(action);
+        },
+        RefactoringLocalize.searchingForDuplicates().get(),
+        true,
+        project
+      );
     }
     catch (ProcessCanceledException e) {
       return Collections.emptyList();
@@ -119,6 +125,7 @@ public class ExtractMethodHelper {
    * @param duplicates  discovered duplicates of extracted code fragment
    * @see #collectDuplicates(SimpleDuplicatesFinder, List, PsiElement)
    */
+  @RequiredUIAccess
   public static void replaceDuplicates(
     @Nonnull PsiElement callElement,
     @Nonnull Editor editor,
@@ -126,7 +133,7 @@ public class ExtractMethodHelper {
     @Nonnull List<SimpleMatch> duplicates
   ) {
     if (!duplicates.isEmpty()) {
-      final String message = RefactoringBundle.message("0.has.detected.1.code.fragments.in.this.file.that.can.be.replaced.with.a.call.to.extracted.method",
+      final LocalizeValue message = RefactoringLocalize.zeroHasDetected1CodeFragmentsInThisFileThatCanBeReplacedWithACallToExtractedMethod(
         Application.get().getName(),
         duplicates.size()
       );
@@ -135,9 +142,9 @@ public class ExtractMethodHelper {
       final int exitCode = !isUnittest
         ? Messages.showYesNoDialog(
           project,
-          message,
-          RefactoringBundle.message("refactoring.extract.method.dialog.title"),
-          Messages.getInformationIcon()
+          message.get(),
+          RefactoringLocalize.refactoringExtractMethodDialogTitle().get(),
+          UIUtil.getInformationIcon()
         )
         : Messages.YES;
       if (exitCode == Messages.YES) {
@@ -153,7 +160,7 @@ public class ExtractMethodHelper {
             //noinspection ConstantConditions
             if (!isUnittest) {
               ReplacePromptDialog promptDialog =
-                new ReplacePromptDialog(false, RefactoringBundle.message("replace.fragment"), project);
+                new ReplacePromptDialog(false, RefactoringLocalize.replaceFragment().get(), project);
               promptDialog.show();
               promptResult = promptDialog.getExitCode();
             }
@@ -188,7 +195,7 @@ public class ExtractMethodHelper {
   ) {
     CommandProcessor.getInstance().executeCommand(
       project,
-      () -> ApplicationManager.getApplication().runWriteAction(() -> replacer.accept(replacement)),
+      () -> project.getApplication().runWriteAction(() -> replacer.accept(replacement)),
       "Replace duplicate",
       null
     );

@@ -40,7 +40,6 @@ import consulo.ide.impl.idea.profile.codeInspection.ui.inspectionsTree.Inspectio
 import consulo.ide.impl.idea.profile.codeInspection.ui.inspectionsTree.InspectionsConfigTreeTable;
 import consulo.ide.impl.idea.profile.codeInspection.ui.table.ScopesAndSeveritiesTable;
 import consulo.ide.impl.idea.util.config.StorageAccessors;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.impl.internal.inspection.scheme.DefaultProjectProfileManager;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
@@ -154,6 +153,7 @@ public class SingleInspectionProfilePanel extends JPanel {
 
   @NonNls
   @Nullable
+  @RequiredUIAccess
   public static ModifiableModel createNewProfile(
     final int initValue,
     ModifiableModel selectedProfile,
@@ -540,7 +540,7 @@ public class SingleInspectionProfilePanel extends JPanel {
       @Override
       @RequiredUIAccess
       public void actionPerformed(@Nonnull AnActionEvent e) {
-        mySelectedProfile.resetToEmpty(e.getData(CommonDataKeys.PROJECT));
+        mySelectedProfile.resetToEmpty(e.getData(Project.KEY));
         loadDescriptorsConfigs(false);
         postProcessModification();
       }
@@ -669,8 +669,9 @@ public class SingleInspectionProfilePanel extends JPanel {
     new TreeSpeedSearch(myTreeTable.getTree(), o -> {
       final InspectionConfigTreeNode node = (InspectionConfigTreeNode)o.getLastPathComponent();
       final Descriptor descriptor = node.getDefaultDescriptor();
-      return descriptor != null ? InspectionsConfigTreeComparator.getDisplayTextToSort(descriptor.getText()) : InspectionsConfigTreeComparator
-        .getDisplayTextToSort(node.getGroupName());
+      return descriptor != null
+        ? InspectionsConfigTreeComparator.getDisplayTextToSort(descriptor.getText())
+        : InspectionsConfigTreeComparator.getDisplayTextToSort(node.getGroupName());
     });
 
 

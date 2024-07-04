@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vfs.impl.jar;
 
 import consulo.util.io.BufferExposingByteArrayInputStream;
 import consulo.util.io.FileAttributes;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.Couple;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
@@ -41,7 +41,12 @@ public class CoreJarVirtualFile extends VirtualFile {
   private final VirtualFile myParent;
   private List<VirtualFile> myChildren = null;
 
-  public CoreJarVirtualFile(@Nonnull CoreJarHandler handler, @Nonnull String name, @Nonnull FileAttributes entry, @Nullable CoreJarVirtualFile parent) {
+  public CoreJarVirtualFile(
+    @Nonnull CoreJarHandler handler,
+    @Nonnull String name,
+    @Nonnull FileAttributes entry,
+    @Nullable CoreJarVirtualFile parent
+  ) {
     myHandler = handler;
     myName = name;
     myEntry = entry;
@@ -49,7 +54,7 @@ public class CoreJarVirtualFile extends VirtualFile {
 
     if (parent != null) {
       if (parent.myChildren == null) {
-        parent.myChildren = new SmartList<VirtualFile>();
+        parent.myChildren = new SmartList<>();
       }
       parent.myChildren.add(this);
     }

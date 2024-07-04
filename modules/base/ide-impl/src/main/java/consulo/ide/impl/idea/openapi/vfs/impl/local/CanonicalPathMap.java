@@ -1,9 +1,11 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.vfs.impl.local;
 
+import consulo.util.collection.SmartList;
+import consulo.util.lang.Couple;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.impl.internal.mediator.FileSystemUtil;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.MultiMap;
@@ -33,7 +35,7 @@ class CanonicalPathMap {
     myRecursiveWatchRoots = new ArrayList<>(recursive);
     myFlatWatchRoots = new ArrayList<>(flat);
 
-    List<Pair<String, String>> mapping = ContainerUtil.newSmartList();
+    List<Pair<String, String>> mapping = new SmartList<>();
     Map<String, String> resolvedPaths = resolvePaths(recursive, flat);
     myCanonicalRecursiveWatchRoots = mapPaths(resolvedPaths, recursive, mapping);
     myCanonicalFlatWatchRoots = mapPaths(resolvedPaths, flat, mapping);
@@ -50,14 +52,18 @@ class CanonicalPathMap {
   }
 
   @Nonnull
-  private static List<String> mapPaths(@Nonnull Map<String, String> resolvedPaths, @Nonnull List<String> paths, @Nonnull Collection<? super Pair<String, String>> mapping) {
+  private static List<String> mapPaths(
+    @Nonnull Map<String, String> resolvedPaths,
+    @Nonnull List<String> paths,
+    @Nonnull Collection<? super Pair<String, String>> mapping
+  ) {
     List<String> canonicalPaths = new ArrayList<>(paths);
     for (int i = 0; i < paths.size(); i++) {
       String path = paths.get(i);
       String canonicalPath = resolvedPaths.get(path);
       if (canonicalPath != null && !path.equals(canonicalPath)) {
         canonicalPaths.set(i, canonicalPath);
-        mapping.add(Pair.create(canonicalPath, path));
+        mapping.add(Couple.of(canonicalPath, path));
       }
     }
     return canonicalPaths;
@@ -108,7 +114,7 @@ class CanonicalPathMap {
     if (myFlatWatchRoots.isEmpty() && myRecursiveWatchRoots.isEmpty()) return Collections.emptyList();
 
     Collection<String> affectedPaths = applyMapping(reportedPath);
-    Collection<String> changedPaths = ContainerUtil.newSmartList();
+    Collection<String> changedPaths = new SmartList<>();
 
     ext:
     for (String path : affectedPaths) {
@@ -157,7 +163,7 @@ class CanonicalPathMap {
       return Collections.singletonList(reportedPath);
     }
 
-    List<String> results = ContainerUtil.newSmartList(reportedPath);
+    List<String> results = new SmartList<>(reportedPath);
     List<String> pathComponents = FileUtil.splitPath(reportedPath);
 
     File runningPath = null;

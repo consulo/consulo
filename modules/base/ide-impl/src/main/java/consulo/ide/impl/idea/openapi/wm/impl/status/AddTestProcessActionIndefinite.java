@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.wm.impl.status;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.project.Project;
@@ -30,30 +30,30 @@ public class AddTestProcessActionIndefinite extends AnAction implements DumbAwar
     super("Add Test Process");
   }
 
+  @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
 
     new Task.Backgroundable(project, "Test", true) {
+      @Override
       public void run(@Nonnull final ProgressIndicator indicator) {
         try {
           Thread.currentThread().sleep(6000);
 
-          countTo(900, new AddTestProcessActionIndefinite.Count() {
-            public void onCount(int each) throws InterruptedException {
-              indicator.setText("Found: " + each / 20 + 1);
-              if (each / 10.0 == Math.round(each / 10.0)) {
-                indicator.setText("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-              }
-              Thread.currentThread().sleep(10);
-              indicator.checkCanceled();
-              indicator.setText2("bla bla bla");
+          countTo(900, each -> {
+            indicator.setText("Found: " + each / 20 + 1);
+            if (each / 10.0 == Math.round(each / 10.0)) {
+              indicator.setText("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
             }
+            Thread.currentThread().sleep(10);
+            indicator.checkCanceled();
+            indicator.setText2("bla bla bla");
           });
           indicator.stop();
         }
         catch (Exception e1) {
           indicator.stop();
-          return;
         }
       }
     }.queue();

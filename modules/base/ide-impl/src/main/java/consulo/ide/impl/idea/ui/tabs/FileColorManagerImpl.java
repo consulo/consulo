@@ -27,16 +27,16 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.project.Project;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.ui.style.StyleManager;
 import consulo.util.collection.ImmutableMapBuilder;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
@@ -141,7 +141,7 @@ public class FileColorManagerImpl extends FileColorManager implements Persistent
   @Override
   public Collection<String> getColorNames() {
     final Set<String> names = ourDefaultColors.keySet();
-    final List<String> sorted = new ArrayList<String>(names);
+    final List<String> sorted = new ArrayList<>(names);
     Collections.sort(sorted);
     return sorted;
   }
@@ -259,10 +259,9 @@ public class FileColorManagerImpl extends FileColorManager implements Persistent
   }
 
   static String getAlias(String text) {
-    if (UIUtil.isUnderDarcula()) {
+    if (StyleManager.get().getCurrentStyle().isDark()) {
       if (text.equals("Yellow")) return "Brown";
     }
     return text;
   }
-
 }

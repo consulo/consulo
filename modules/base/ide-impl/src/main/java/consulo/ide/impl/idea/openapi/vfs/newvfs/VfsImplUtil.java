@@ -15,29 +15,26 @@
  */
 package consulo.ide.impl.idea.openapi.vfs.newvfs;
 
-import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.util.lang.StringUtil;
-import consulo.ide.impl.idea.openapi.vfs.impl.ArchiveHandler;
-import consulo.util.lang.function.PairFunction;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
+import consulo.ide.impl.idea.openapi.vfs.impl.ArchiveHandler;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.virtualFileSystem.archive.ArchiveFileSystemBase;
 import consulo.logging.Logger;
 import consulo.util.collection.Maps;
-import consulo.ide.impl.virtualFileSystem.archive.ArchiveFileSystemBase;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.Couple;
+import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.function.PairFunction;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.*;
-import consulo.virtualFileSystem.NewVirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
-
-import static consulo.util.lang.Pair.pair;
 
 public class VfsImplUtil {
   private static final Logger LOG = Logger.getInstance(VfsImplUtil.class);
@@ -80,9 +77,9 @@ public class VfsImplUtil {
   }
 
   @Nonnull
-  public static Pair<NewVirtualFile, NewVirtualFile> findCachedFileByPath(@Nonnull NewVirtualFileSystem vfs, @Nonnull String path) {
+  public static Couple<NewVirtualFile> findCachedFileByPath(@Nonnull NewVirtualFileSystem vfs, @Nonnull String path) {
     Pair<NewVirtualFile, Iterable<String>> data = prepare(vfs, path);
-    if (data == null) return Pair.empty();
+    if (data == null) return Couple.of();
 
     NewVirtualFile file = data.first;
     for (String pathElement : data.second) {
@@ -103,10 +100,10 @@ public class VfsImplUtil {
         file = file.findChildIfCached(pathElement);
       }
 
-      if (file == null) return pair(null, last);
+      if (file == null) return Couple.of(null, last);
     }
 
-    return pair(file, null);
+    return Couple.of(file, null);
   }
 
   @Nullable
@@ -177,13 +174,21 @@ public class VfsImplUtil {
   private static final Map<String, Set<String>> ourDominatorsMap = Maps.newHashMap(FileUtil.PATH_HASHING_STRATEGY);
 
   @Nonnull
-  public static <T extends ArchiveHandler> T getHandler(@Nonnull ArchiveFileSystem vfs, @Nonnull VirtualFile entryFile, @Nonnull PairFunction<String, ArchiveFileSystemBase, T> producer) {
+  public static <T extends ArchiveHandler> T getHandler(
+    @Nonnull ArchiveFileSystem vfs,
+    @Nonnull VirtualFile entryFile,
+    @Nonnull PairFunction<String, ArchiveFileSystemBase, T> producer
+  ) {
     String localPath = vfs.extractLocalPath(vfs.extractRootPath(entryFile.getPath()));
     return getHandler(vfs, localPath, producer);
   }
 
   @Nonnull
-  public static <T extends ArchiveHandler> T getHandler(@Nonnull ArchiveFileSystem vfs, @Nonnull String localPath, @Nonnull PairFunction<String, ArchiveFileSystemBase, T> producer) {
+  public static <T extends ArchiveHandler> T getHandler(
+    @Nonnull ArchiveFileSystem vfs,
+    @Nonnull String localPath,
+    @Nonnull PairFunction<String, ArchiveFileSystemBase, T> producer
+  ) {
     checkSubscription();
 
     ArchiveHandler handler;
@@ -223,7 +228,7 @@ public class VfsImplUtil {
   private static void checkSubscription() {
     if (ourSubscribed.getAndSet(true)) return;
 
-    Application app = ApplicationManager.getApplication();
+    Application app = Application.get();
     app.getMessageBus().connect(app).subscribe(BulkFileListener.class, new BulkFileListener() {
       @Override
       public void after(@Nonnull List<? extends VFileEvent> events) {
@@ -231,20 +236,18 @@ public class VfsImplUtil {
 
         synchronized (ourLock) {
           for (VFileEvent event : events) {
-            if (!(event.getFileSystem() instanceof LocalFileSystem)) continue;
-
-            if (event instanceof VFileCreateEvent) continue; // created file should not invalidate + getFile is costly
-
-            if (event instanceof VFilePropertyChangeEvent && !VirtualFile.PROP_NAME.equals(((VFilePropertyChangeEvent)event).getPropertyName())) {
+            if (!(event.getFileSystem() instanceof LocalFileSystem)
+              || event instanceof VFileCreateEvent // created file should not invalidate + getFile is costly
+              || event instanceof VFilePropertyChangeEvent changeEvent && !VirtualFile.PROP_NAME.equals(changeEvent.getPropertyName())) {
               continue;
             }
 
             String path = event.getPath();
-            if (event instanceof VFilePropertyChangeEvent) {
-              path = ((VFilePropertyChangeEvent)event).getOldPath();
+            if (event instanceof VFilePropertyChangeEvent vFilePropertyChangeEvent) {
+              path = vFilePropertyChangeEvent.getOldPath();
             }
-            else if (event instanceof VFileMoveEvent) {
-              path = ((VFileMoveEvent)event).getOldPath();
+            else if (event instanceof VFileMoveEvent vFileMoveEvent) {
+              path = vFileMoveEvent.getOldPath();
             }
 
             VirtualFile file = event.getFile();
@@ -293,7 +296,7 @@ public class VfsImplUtil {
     private void registerPathToRefresh(String path, ArchiveFileSystem vfs) {
       NewVirtualFile root = ManagingFS.getInstance().findRoot(vfs.composeRootPath(path), vfs);
       if (root != null) {
-        if (myRootsToRefresh == null) myRootsToRefresh = ContainerUtil.newHashSet();
+        if (myRootsToRefresh == null) myRootsToRefresh = new HashSet<>();
         myRootsToRefresh.add(root);
       }
     }
@@ -303,7 +306,7 @@ public class VfsImplUtil {
         for (NewVirtualFile root : myRootsToRefresh) {
           root.markDirtyRecursively();
         }
-        boolean async = !ApplicationManager.getApplication().isUnitTestMode();
+        boolean async = !Application.get().isUnitTestMode();
         RefreshQueue.getInstance().refresh(async, true, null, myRootsToRefresh);
       }
     }

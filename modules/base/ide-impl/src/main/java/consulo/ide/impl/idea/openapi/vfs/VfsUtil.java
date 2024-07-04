@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vfs;
 
 import consulo.application.util.function.Processor;
 import consulo.ide.impl.idea.openapi.util.SystemInfoRt;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.util.io.FileUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.PathUtil;
 import consulo.ide.impl.idea.util.containers.Convertor;
@@ -27,7 +27,6 @@ import consulo.platform.Platform;
 import consulo.util.io.Url;
 import consulo.util.io.Urls;
 import consulo.util.lang.Comparing;
-import consulo.util.lang.SystemProperties;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
@@ -95,7 +94,7 @@ public class VfsUtil extends VfsUtilCore {
       throw new FileNotFoundException(resourceUrl);
     }
     try {
-      byte[] bytes = FileUtil.adaptiveLoadBytes(out);
+      byte[] bytes = consulo.ide.impl.idea.openapi.util.io.FileUtil.adaptiveLoadBytes(out);
       file.setBinaryContent(bytes);
     }
     finally {

@@ -15,24 +15,25 @@
  */
 package consulo.ide.impl.idea.openapi.wm.impl;
 
-import consulo.ui.ex.Painter;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
-
+import consulo.ui.ex.Painter;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
 final class PaintersHelper implements Painter.Listener {
   private static final Logger LOG = Logger.getInstance(PaintersHelper.class);
 
-  private final Set<Painter> myPainters = ContainerUtil.newLinkedHashSet();
-  private final Map<Painter, Component> myPainter2Component = ContainerUtil.newLinkedHashMap();
+  private final Set<Painter> myPainters = new LinkedHashSet<>();
+  private final Map<Painter, Component> myPainter2Component = new LinkedHashMap<>();
 
   private final JComponent myRootComponent;
 

@@ -15,10 +15,10 @@
  */
 package consulo.ide.impl.idea.refactoring.ui;
 
-import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.ide.impl.idea.util.ui.UpDownHandler;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.ui.ex.awt.ListCellRendererWrapper;
 import consulo.ui.ex.awt.util.DialogUtil;
-import consulo.ide.impl.idea.util.ui.UpDownHandler;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -35,14 +35,14 @@ import java.util.Map;
  */
 public class ComboBoxVisibilityPanel<V> extends VisibilityPanelBase<V> {
   private final JLabel myLabel;
-  protected final JComboBox myComboBox;
-  private final Map<V, String> myNamesMap = new HashMap<V, String>();
+  protected final JComboBox<V> myComboBox;
+  private final Map<V, String> myNamesMap = new HashMap<>();
 
   public ComboBoxVisibilityPanel(String name, V[] options, String[] presentableNames) {
     setLayout(new BorderLayout(0,2));
     myLabel = new JLabel(name);
     add(myLabel, BorderLayout.NORTH);
-    myComboBox = new JComboBox(options);
+    myComboBox = new JComboBox<>(options);
     myComboBox.setRenderer(getRenderer());
     add(myComboBox, BorderLayout.SOUTH);
     for (int i = 0; i < options.length; i++) {
@@ -88,11 +88,11 @@ public class ComboBoxVisibilityPanel<V> extends VisibilityPanelBase<V> {
   }
 
   public ComboBoxVisibilityPanel(V[] options) {
-    this(RefactoringBundle.message("visibility.combo.title"), options);
+    this(RefactoringLocalize.visibilityComboTitle().get(), options);
   }
 
   public ComboBoxVisibilityPanel(V[] options, String[] presentableNames) {
-    this(RefactoringBundle.message("visibility.combo.title"), options, presentableNames);
+    this(RefactoringLocalize.visibilityComboTitle().get(), options, presentableNames);
   }
 
   protected void addOption(int index, V option, String presentableName, boolean select) {
@@ -113,6 +113,7 @@ public class ComboBoxVisibilityPanel<V> extends VisibilityPanelBase<V> {
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public V getVisibility() {
     return (V)myComboBox.getSelectedItem();
   }

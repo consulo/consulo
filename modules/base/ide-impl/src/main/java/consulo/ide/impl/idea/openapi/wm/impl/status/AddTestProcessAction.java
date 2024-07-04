@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.openapi.wm.impl.status;
 
-import consulo.language.editor.CommonDataKeys;
 import consulo.application.dumb.DumbAware;
 import consulo.application.progress.PerformInBackgroundOption;
 import consulo.application.progress.ProgressIndicator;
@@ -33,8 +32,6 @@ import consulo.ui.ex.popup.BalloonBuilder;
 
 import jakarta.annotation.Nonnull;
 import javax.swing.*;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
 import java.awt.*;
 
 @SuppressWarnings({"HardCodedStringLiteral"})
@@ -59,47 +56,46 @@ public class AddTestProcessAction extends AnAction implements DumbAware {
     builder.createBalloon().show(new RelativePoint(ro, point), Balloon.Position.above);
 
 
-    final Project p = e.getData(CommonDataKeys.PROJECT);
+    final Project p = e.getData(Project.KEY);
     if (p != null) {
-      ToolWindowManager.getInstance(p)
-        .notifyByBalloon("TODO", NotificationType.INFO, "Started. <a href=\"#a\">Click me!</a>", null, new HyperlinkListener() {
-          public void hyperlinkUpdate(final HyperlinkEvent e) {
-            System.out.println(e);
-          }
-        });
+      ToolWindowManager.getInstance(p).notifyByBalloon(
+        "TODO",
+        NotificationType.INFO,
+        "Started. <a href=\"#a\">Click me!</a>",
+        null,
+        System.out::println
+      );
     }
 
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     new Task.Backgroundable(project, "Test Process", true, PerformInBackgroundOption.DEAF) {
+      @Override
       public void run(@Nonnull final ProgressIndicator indicator) {
         try {
           indicator.setText("welcome!");
 
           Thread.currentThread().sleep(6000);
 
-          countTo(1000, new Count() {
-            public void onCount(int each) {
-
+          countTo(1000, each -> {
 //              if (each == 5) {
 //                createAnotherProgress(project);
 //              }
 
-              indicator.setText("Found: " + each / 20 + 1);
-              if (each / 10.0 == Math.round(each / 10.0)) {
-                indicator.setText(null);
-              }
-              indicator.setFraction(each / 1000.0);
-
-              try {
-                Thread.currentThread().sleep(100);
-              }
-              catch (InterruptedException e1) {
-                e1.printStackTrace();
-              }
-
-              indicator.checkCanceled();
-              indicator.setText2("bla bla bla");
+            indicator.setText("Found: " + each / 20 + 1);
+            if (each / 10.0 == Math.round(each / 10.0)) {
+              indicator.setText(null);
             }
+            indicator.setFraction(each / 1000.0);
+
+            try {
+              Thread.currentThread().sleep(100);
+            }
+            catch (InterruptedException e1) {
+              e1.printStackTrace();
+            }
+
+            indicator.checkCanceled();
+            indicator.setText2("bla bla bla");
           });
           indicator.stop();
         }
@@ -111,7 +107,6 @@ public class AddTestProcessAction extends AnAction implements DumbAware {
           catch (InterruptedException e2) {
             e2.printStackTrace();
           }
-          return;
         }
         catch (InterruptedException e1) {
           e1.printStackTrace();
@@ -122,26 +117,25 @@ public class AddTestProcessAction extends AnAction implements DumbAware {
 
   private void createAnotherProgress(final Project project) {
     final Task.Modal task = new Task.Modal(project, "Test2", true/*, PerformInBackgroundOption.DEAF*/) {
+      @Override
       public void run(@Nonnull final ProgressIndicator indicator) {
         try {
-          countTo(1000, new Count() {
-            public void onCount(int each) {
-              indicator.setText("Found: " + each / 20 + 1);
-              if (each / 10.0 == Math.round(each / 10.0)) {
-                indicator.setText(null);
-              }
-              indicator.setFraction(each / 1000.0);
-
-              try {
-                Thread.currentThread().sleep(100);
-              }
-              catch (InterruptedException e1) {
-                e1.printStackTrace();
-              }
-
-              indicator.checkCanceled();
-              indicator.setText2("bla bla bla");
+          countTo(1000, each -> {
+            indicator.setText("Found: " + each / 20 + 1);
+            if (each / 10.0 == Math.round(each / 10.0)) {
+              indicator.setText(null);
             }
+            indicator.setFraction(each / 1000.0);
+
+            try {
+              Thread.currentThread().sleep(100);
+            }
+            catch (InterruptedException e1) {
+              e1.printStackTrace();
+            }
+
+            indicator.checkCanceled();
+            indicator.setText2("bla bla bla");
           });
           indicator.stop();
         }
@@ -153,7 +147,6 @@ public class AddTestProcessAction extends AnAction implements DumbAware {
           catch (InterruptedException e2) {
             e2.printStackTrace();
           }
-          return;
         }
       }
     };
@@ -161,11 +154,7 @@ public class AddTestProcessAction extends AnAction implements DumbAware {
 //    ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
 //    task.run(indicator != null ? indicator : new EmptyProgressIndicator());
 
-    SwingUtilities.invokeLater(new Runnable() {
-      public void run() {
-        task.queue();
-      }
-    });
+    SwingUtilities.invokeLater(task::queue);
   }
 
   private void countTo(int top, Count count) {

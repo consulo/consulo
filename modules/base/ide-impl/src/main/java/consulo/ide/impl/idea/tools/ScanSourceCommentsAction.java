@@ -19,22 +19,24 @@
  */
 package consulo.ide.impl.idea.tools;
 
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.logging.Logger;
-import consulo.language.file.LanguageFileType;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.project.Project;
-import consulo.content.ContentIterator;
-import consulo.module.content.ProjectRootManager;
-import consulo.ui.ex.awt.Messages;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.file.LanguageFileType;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiRecursiveElementWalkingVisitor;
+import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
+import consulo.module.content.ProjectRootManager;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.virtualFileSystem.VirtualFile;
 
 import java.io.PrintStream;
 import java.util.HashMap;
@@ -46,47 +48,43 @@ public class ScanSourceCommentsAction extends AnAction {
   private static final Logger LOG = Logger.getInstance(ScanSourceCommentsAction.class);
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-
-    final Project p = e.getDataContext().getData(CommonDataKeys.PROJECT);
-    final String file =
-      Messages.showInputDialog(p, "Enter path to the file comments will be extracted to", "Comments File Path", Messages.getQuestionIcon());
+    final Project p = e.getDataContext().getData(Project.KEY);
+    final String file = Messages.showInputDialog(
+      p,
+      "Enter path to the file comments will be extracted to",
+      "Comments File Path",
+      UIUtil.getQuestionIcon()
+    );
 
     try {
       final PrintStream stream = new PrintStream(file);
       stream.println("Comments in " + p.getName());
 
-      ProgressManager.getInstance().runProcessWithProgressSynchronously(new Runnable() {
-        @Override
-        public void run() {
-          final ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
-          ProjectRootManager.getInstance(p).getFileIndex().iterateContent(new ContentIterator() {
-            @Override
-            public boolean processFile(VirtualFile fileOrDir) {
-              if (fileOrDir.isDirectory()) {
-                indicator.setText("Extracting comments");
-                indicator.setText2(fileOrDir.getPresentableUrl());
-              }
-              scanCommentsInFile(p, fileOrDir);
-              return true;
-            }
-          });
-
-          indicator.setText2("");
-          int count = 1;
-          for (CommentDescriptor descriptor : myComments.values()) {
-            stream.println("#" + count + " ---------------------------------------------------------------");
-            descriptor.print(stream);
-            stream.println();
-            count++;
+      ProgressManager.getInstance().runProcessWithProgressSynchronously(() -> {
+        final ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
+        ProjectRootManager.getInstance(p).getFileIndex().iterateContent(fileOrDir -> {
+          if (fileOrDir.isDirectory()) {
+            indicator.setText("Extracting comments");
+            indicator.setText2(fileOrDir.getPresentableUrl());
           }
+          scanCommentsInFile(p, fileOrDir);
+          return true;
+        });
 
+        indicator.setText2Value(LocalizeValue.empty());
+        int count = 1;
+        for (CommentDescriptor descriptor : myComments.values()) {
+          stream.println("#" + count + " ---------------------------------------------------------------");
+          descriptor.print(stream);
+          stream.println();
+          count++;
         }
+
       }, "Generating Comments", true, p);
 
-
       stream.close();
-
     }
     catch (Throwable e1) {
       LOG.error(e1);
@@ -94,7 +92,7 @@ public class ScanSourceCommentsAction extends AnAction {
     }
   }
 
-  private final Map<String, CommentDescriptor> myComments = new HashMap<String, CommentDescriptor>();
+  private final Map<String, CommentDescriptor> myComments = new HashMap<>();
 
   private void commentFound(VirtualFile file, String text) {
     String reduced = text.replaceAll("\\s", "");
@@ -106,6 +104,7 @@ public class ScanSourceCommentsAction extends AnAction {
     descriptor.addFile(file);
   }
 
+  @RequiredReadAction
   private void scanCommentsInFile(Project project, final VirtualFile vFile) {
     if (!vFile.isDirectory() && vFile.getFileType() instanceof LanguageFileType) {
       PsiFile psiFile = PsiManager.getInstance(project).findFile(vFile);
@@ -122,10 +121,9 @@ public class ScanSourceCommentsAction extends AnAction {
     }
   }
 
-
   private class CommentDescriptor {
     private final String myText;
-    private final Set<VirtualFile> myFiles = new LinkedHashSet<VirtualFile>();
+    private final Set<VirtualFile> myFiles = new LinkedHashSet<>();
 
     public CommentDescriptor(String text) {
       myText = text;

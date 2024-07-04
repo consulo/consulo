@@ -17,29 +17,23 @@ package consulo.ide.impl.idea.openapi.vfs.impl.local;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.JobScheduler;
 import consulo.disposer.Disposer;
 import consulo.document.FileDocumentManager;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.util.lang.StringUtil;
-import consulo.virtualFileSystem.ManagingFS;
-import consulo.virtualFileSystem.NewVirtualFile;
-import consulo.virtualFileSystem.RefreshQueue;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.VfsImplUtil;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFS;
-import consulo.util.lang.ObjectUtil;
-import consulo.util.io.URLUtil;
 import consulo.util.collection.Maps;
+import consulo.util.io.FileUtil;
+import consulo.util.io.URLUtil;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
-import consulo.virtualFileSystem.RefreshableFileSystem;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFilePointerCapableFileSystem;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.*;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -99,7 +93,7 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Re
               STATUS_UPDATE_PERIOD, STATUS_UPDATE_PERIOD, TimeUnit.MILLISECONDS);
     }
 
-    Disposer.register(app, () -> myWatcher.dispose());
+    Disposer.register(app, myWatcher::dispose);
   }
 
   @Nonnull
@@ -228,8 +222,8 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Re
   private void markPathsDirty(Iterable<String> dirtyPaths) {
     for (String dirtyPath : dirtyPaths) {
       VirtualFile file = findFileByPathIfCached(dirtyPath);
-      if (file instanceof NewVirtualFile) {
-        ((NewVirtualFile)file).markDirty();
+      if (file instanceof NewVirtualFile newVirtualFile) {
+        newVirtualFile.markDirty();
       }
     }
   }
@@ -358,7 +352,7 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Re
   }
 
   private void setUpFileWatcher() {
-    if (!ApplicationManager.getApplication().isDisposeInProgress() && myWatcher.isOperational()) {
+    if (!Application.get().isDisposeInProgress() && myWatcher.isOperational()) {
       List<String> recursiveRoots = new ArrayList<>();
       List<String> flatRoots = new ArrayList<>();
 

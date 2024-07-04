@@ -16,15 +16,13 @@
 
 package consulo.ide.impl.idea.refactoring.inline;
 
-import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressManager;
 import consulo.codeEditor.Editor;
-import consulo.util.lang.StringUtil;
 import consulo.language.Language;
 import consulo.language.editor.TargetElementUtil;
 import consulo.language.editor.refactoring.BaseRefactoringProcessor;
-import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.inline.InlineHandler;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.ui.ConflictsDialog;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.language.psi.PsiElement;
@@ -33,12 +31,14 @@ import consulo.language.psi.PsiReference;
 import consulo.language.psi.search.ReferencesSearch;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
 import consulo.usage.UsageInfo;
 import consulo.util.collection.MultiMap;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
-
 import jakarta.annotation.Nullable;
+
 import java.util.*;
 
 /**
@@ -49,6 +49,7 @@ public class GenericInlineHandler {
 
   private static final Logger LOG = Logger.getInstance(GenericInlineHandler.class);
 
+  @RequiredUIAccess
   public static boolean invoke(final PsiElement element, @Nullable Editor editor, final InlineHandler languageSpecific) {
     final PsiReference invocationReference = editor != null ? TargetElementUtil.findReference(editor) : null;
     final InlineHandler.Settings settings = languageSpecific.prepareInlineElement(element, editor, invocationReference != null);
@@ -62,17 +63,17 @@ public class GenericInlineHandler {
       allReferences = Collections.singleton(invocationReference);
     }
     else {
-      final Ref<Collection<? extends PsiReference>> usagesRef = new Ref<Collection<? extends PsiReference>>();
-      ProgressManager.getInstance().runProcessWithProgressSynchronously(new Runnable() {
-        @Override
-        public void run() {
-          usagesRef.set(ReferencesSearch.search(element).findAll());
-        }
-      }, "Find Usages", false, element.getProject());
+      final Ref<Collection<? extends PsiReference>> usagesRef = new Ref<>();
+      ProgressManager.getInstance().runProcessWithProgressSynchronously(
+        () -> usagesRef.set(ReferencesSearch.search(element).findAll()),
+        "Find Usages",
+        false,
+        element.getProject()
+      );
       allReferences = usagesRef.get();
     }
 
-    final MultiMap<PsiElement, String> conflicts = new MultiMap<PsiElement, String>();
+    final MultiMap<PsiElement, String> conflicts = new MultiMap<>();
     final Map<Language, InlineHandler.Inliner> inliners = initializeInliners(element, settings, allReferences);
 
     for (PsiReference reference : allReferences) {
@@ -81,7 +82,7 @@ public class GenericInlineHandler {
 
     final Project project = element.getProject();
     if (!conflicts.isEmpty()) {
-      if (ApplicationManager.getApplication().isUnitTestMode()) {
+      if (project.getApplication().isUnitTestMode()) {
         throw new BaseRefactoringProcessor.ConflictsInTestsException(conflicts.values());
       }
       else {
@@ -93,7 +94,7 @@ public class GenericInlineHandler {
       }
     }
 
-    HashSet<PsiElement> elements = new HashSet<PsiElement>();
+    HashSet<PsiElement> elements = new HashSet<>();
     for (PsiReference reference : allReferences) {
       PsiElement refElement = reference.getElement();
       if (refElement != null) {
@@ -107,40 +108,36 @@ public class GenericInlineHandler {
     if (!CommonRefactoringUtil.checkReadOnlyStatusRecursively(project, elements, true)) {
       return true;
     }
-    ApplicationManager.getApplication().runWriteAction(new Runnable() {
-      @Override
-      public void run() {
-        final String subj = element instanceof PsiNamedElement ? ((PsiNamedElement)element).getName() : "element";
+    project.getApplication().runWriteAction(() -> {
+      final String subj = element instanceof PsiNamedElement ? ((PsiNamedElement)element).getName() : "element";
 
-        CommandProcessor.getInstance().executeCommand(project, new Runnable() {
-          @Override
-          public void run() {
-            final PsiReference[] references = sortDepthFirstRightLeftOrder(allReferences);
+      CommandProcessor.getInstance().executeCommand(project, () -> {
+        final PsiReference[] references = sortDepthFirstRightLeftOrder(allReferences);
 
 
-            final UsageInfo[] usages = new UsageInfo[references.length];
-            for (int i = 0; i < references.length; i++) {
-              usages[i] = new UsageInfo(references[i]);
-            }
+        final UsageInfo[] usages = new UsageInfo[references.length];
+        for (int i = 0; i < references.length; i++) {
+          usages[i] = new UsageInfo(references[i]);
+        }
 
-            for (UsageInfo usage : usages) {
-              inlineReference(usage, element, inliners);
-            }
+        for (UsageInfo usage : usages) {
+          inlineReference(usage, element, inliners);
+        }
 
-            if (!settings.isOnlyOneReferenceToInline()) {
-              languageSpecific.removeDefinition(element, settings);
-            }
-          }
-        }, RefactoringBundle.message("inline.command", StringUtil.notNullize(subj, "<nameless>")), null);
-      }
+        if (!settings.isOnlyOneReferenceToInline()) {
+          languageSpecific.removeDefinition(element, settings);
+        }
+      }, RefactoringLocalize.inlineCommand(StringUtil.notNullize(subj, "<nameless>")).get(), null);
     });
     return true;
   }
 
-  public static Map<Language, InlineHandler.Inliner> initializeInliners(PsiElement element,
-                                                                        InlineHandler.Settings settings,
-                                                                        Collection<? extends PsiReference> allReferences) {
-    final Map<Language, InlineHandler.Inliner> inliners = new HashMap<Language, InlineHandler.Inliner>();
+  public static Map<Language, InlineHandler.Inliner> initializeInliners(
+    PsiElement element,
+    InlineHandler.Settings settings,
+    Collection<? extends PsiReference> allReferences
+  ) {
+    final Map<Language, InlineHandler.Inliner> inliners = new HashMap<>();
     for (PsiReference ref : allReferences) {
       if (ref == null) {
         LOG.error("element: " + element.getClass()+ ", allReferences contains null!");
@@ -164,10 +161,12 @@ public class GenericInlineHandler {
     return inliners;
   }
 
-  public static void collectConflicts(final PsiReference reference,
-                                      final PsiElement element,
-                                      final Map<Language, InlineHandler.Inliner> inliners,
-                                      final MultiMap<PsiElement, String> conflicts) {
+  public static void collectConflicts(
+    final PsiReference reference,
+    final PsiElement element,
+    final Map<Language, InlineHandler.Inliner> inliners,
+    final MultiMap<PsiElement, String> conflicts
+  ) {
     final PsiElement referenceElement = reference.getElement();
     if (referenceElement == null) return;
     final Language language = referenceElement.getLanguage();
@@ -185,9 +184,11 @@ public class GenericInlineHandler {
     }
   }
 
-  public static void inlineReference(final UsageInfo usage,
-                                     final PsiElement element,
-                                     final Map<Language, InlineHandler.Inliner> inliners) {
+  public static void inlineReference(
+    final UsageInfo usage,
+    final PsiElement element,
+    final Map<Language, InlineHandler.Inliner> inliners
+  ) {
     PsiElement usageElement = usage.getElement();
     if (usageElement == null) return;
     final Language language = usageElement.getLanguage();
@@ -200,14 +201,11 @@ public class GenericInlineHandler {
   //order of usages across different files is irrelevant
   public static PsiReference[] sortDepthFirstRightLeftOrder(final Collection<? extends PsiReference> allReferences) {
     final PsiReference[] usages = allReferences.toArray(new PsiReference[allReferences.size()]);
-    Arrays.sort(usages, new Comparator<PsiReference>() {
-      @Override
-      public int compare(final PsiReference usage1, final PsiReference usage2) {
-        final PsiElement element1 = usage1.getElement();
-        final PsiElement element2 = usage2.getElement();
-        if (element1 == null || element2 == null) return 0;
-        return element2.getTextRange().getStartOffset() - element1.getTextRange().getStartOffset();
-      }
+    Arrays.sort(usages, (usage1, usage2) -> {
+      final PsiElement element1 = usage1.getElement();
+      final PsiElement element2 = usage2.getElement();
+      if (element1 == null || element2 == null) return 0;
+      return element2.getTextRange().getStartOffset() - element1.getTextRange().getStartOffset();
     });
     return usages;
   }
