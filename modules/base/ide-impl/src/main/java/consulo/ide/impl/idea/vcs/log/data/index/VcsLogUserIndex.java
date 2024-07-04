@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.vcs.log.data.index;
 
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.index.io.DataIndexer;
 import consulo.index.io.StorageException;
 import consulo.index.io.VoidDataExternalizer;
@@ -30,6 +29,7 @@ import consulo.util.collection.primitive.ints.IntSet;
 import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -53,7 +53,7 @@ public class VcsLogUserIndex extends VcsLogFullDetailsIndex<Void> {
   }
 
   public IntSet getCommitsForUsers(@Nonnull Set<VcsUser> users) throws IOException, StorageException {
-    Set<Integer> ids = ContainerUtil.newHashSet();
+    Set<Integer> ids = new HashSet<>();
     for (VcsUser user : users) {
       ids.add(myUserRegistry.getUserId(user));
     }

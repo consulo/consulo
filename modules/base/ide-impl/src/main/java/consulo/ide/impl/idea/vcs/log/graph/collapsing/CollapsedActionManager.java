@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.vcs.log.graph.collapsing;
 
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.versionControlSystem.log.graph.action.GraphAction;
 import consulo.ide.impl.idea.vcs.log.graph.api.EdgeFilter;
 import consulo.ide.impl.idea.vcs.log.graph.api.LinearGraph;
 import consulo.ide.impl.idea.vcs.log.graph.api.elements.GraphEdge;
@@ -33,18 +32,15 @@ import consulo.ide.impl.idea.vcs.log.graph.impl.visible.LinearFragmentGenerator;
 import consulo.ide.impl.idea.vcs.log.graph.impl.visible.LinearFragmentGenerator.GraphFragment;
 import consulo.ide.impl.idea.vcs.log.graph.utils.LinearGraphUtils;
 import consulo.ide.impl.idea.vcs.log.graph.utils.UnsignedBitSet;
-import consulo.util.lang.function.Condition;
-
+import consulo.versionControlSystem.log.graph.action.GraphAction;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+
+import java.util.*;
 
 class CollapsedActionManager {
 
-  @jakarta.annotation.Nullable
+  @Nullable
   public static LinearGraphAnswer performAction(@Nonnull CollapsedController graphController, @Nonnull LinearGraphAction action) {
     ActionContext context = new ActionContext(graphController.getCollapsedGraph(), graphController.getPermanentGraphInfo(), action);
 
@@ -59,12 +55,7 @@ class CollapsedActionManager {
 
   public static void expandNodes(@Nonnull final CollapsedGraph collapsedGraph, Set<Integer> nodesToShow) {
     FragmentGenerator generator =
-      new FragmentGenerator(LinearGraphUtils.asLiteLinearGraph(collapsedGraph.getDelegatedGraph()), new Condition<Integer>() {
-        @Override
-        public boolean value(Integer nodeIndex) {
-          return collapsedGraph.isNodeVisible(nodeIndex);
-        }
-      });
+      new FragmentGenerator(LinearGraphUtils.asLiteLinearGraph(collapsedGraph.getDelegatedGraph()), collapsedGraph::isNodeVisible);
 
     CollapsedGraph.Modification modification = collapsedGraph.startModification();
 
@@ -123,7 +114,7 @@ class CollapsedActionManager {
       return myGraphAction.getType();
     }
 
-    @jakarta.annotation.Nullable
+    @Nullable
     GraphElement getAffectedGraphElement() {
       return myGraphAction.getAffectedElement() == null ? null : myGraphAction.getAffectedElement().getGraphElement();
     }
@@ -144,7 +135,7 @@ class CollapsedActionManager {
 
     @Nonnull
     Set<Integer> convertToDelegateNodeIndex(@Nonnull Collection<Integer> compiledNodeIndexes) {
-      return ContainerUtil.map2Set(compiledNodeIndexes, nodeIndex -> convertToDelegateNodeIndex(nodeIndex));
+      return ContainerUtil.map2Set(compiledNodeIndexes, this::convertToDelegateNodeIndex);
     }
 
     @Nonnull
@@ -163,15 +154,15 @@ class CollapsedActionManager {
     @Nonnull
     private final LinearFragmentGenerator linearFragmentGenerator;
 
-    private FragmentGenerators(@Nonnull final LinearGraph linearGraph,
-                               @Nonnull PermanentGraphInfo<?> permanentGraphInfo,
-                               @Nonnull final UnsignedBitSet matchedNodeId) {
-      fragmentGenerator = new FragmentGenerator(LinearGraphUtils.asLiteLinearGraph(linearGraph), new Condition<Integer>() {
-        @Override
-        public boolean value(Integer nodeIndex) {
-          return matchedNodeId.get(linearGraph.getNodeId(nodeIndex));
-        }
-      });
+    private FragmentGenerators(
+      @Nonnull final LinearGraph linearGraph,
+      @Nonnull PermanentGraphInfo<?> permanentGraphInfo,
+      @Nonnull final UnsignedBitSet matchedNodeId
+    ) {
+      fragmentGenerator = new FragmentGenerator(
+        LinearGraphUtils.asLiteLinearGraph(linearGraph),
+        nodeIndex -> matchedNodeId.get(linearGraph.getNodeId(nodeIndex))
+      );
 
       Set<Integer> branchNodeIndexes = LinearGraphUtils.convertIdsToNodeIndexes(linearGraph, permanentGraphInfo.getBranchNodeIds());
       linearFragmentGenerator = new LinearFragmentGenerator(LinearGraphUtils.asLiteLinearGraph(linearGraph), branchNodeIndexes);
@@ -179,7 +170,7 @@ class CollapsedActionManager {
   }
 
   private final static ActionCase LINEAR_COLLAPSE_CASE = new ActionCase() {
-    @jakarta.annotation.Nullable
+    @Nullable
     @Override
     public LinearGraphAnswer performAction(@Nonnull final ActionContext context) {
       if (isForDelegateGraph(context)) return null;
@@ -201,21 +192,18 @@ class CollapsedActionManager {
       if (fragment == null) return null;
 
       Set<Integer> middleCompiledNodes = compiledFragmentGenerator.getMiddleNodes(fragment.upNodeIndex, fragment.downNodeIndex, true);
-      Set<GraphEdge> dottedCompiledEdges = ContainerUtil.newHashSet();
+      Set<GraphEdge> dottedCompiledEdges = new HashSet<>();
       for (Integer middleNodeIndex : middleCompiledNodes) {
-        dottedCompiledEdges.addAll(ContainerUtil.filter(context.getCompiledGraph().getAdjacentEdges(middleNodeIndex, EdgeFilter.NORMAL_ALL),
-                                                        new Condition<GraphEdge>() {
-                                                          @Override
-                                                          public boolean value(GraphEdge edge) {
-                                                            return edge.getType() == GraphEdgeType.DOTTED;
-                                                          }
-                                                        }));
+        dottedCompiledEdges.addAll(ContainerUtil.filter(
+          context.getCompiledGraph().getAdjacentEdges(middleNodeIndex, EdgeFilter.NORMAL_ALL),
+          edge -> edge.getType() == GraphEdgeType.DOTTED
+        ));
       }
 
       int upNodeIndex = context.convertToDelegateNodeIndex(fragment.upNodeIndex);
       int downNodeIndex = context.convertToDelegateNodeIndex(fragment.downNodeIndex);
       Set<Integer> middleNodes = context.convertToDelegateNodeIndex(middleCompiledNodes);
-      Set<GraphEdge> dottedEdges = ContainerUtil.map2Set(dottedCompiledEdges, edge -> context.convertToDelegateEdge(edge));
+      Set<GraphEdge> dottedEdges = ContainerUtil.map2Set(dottedCompiledEdges, context::convertToDelegateEdge);
 
       CollapsedGraph.Modification modification = context.myCollapsedGraph.startModification();
       for (GraphEdge edge : dottedEdges) modification.removeEdge(edge);
@@ -251,7 +239,7 @@ class CollapsedActionManager {
   };
 
   private final static ActionCase COLLAPSE_ALL = new ActionCase() {
-    @jakarta.annotation.Nullable
+    @Nonnull
     @Override
     public LinearGraphAnswer performAction(@Nonnull ActionContext context) {
       CollapsedGraph.Modification modification = context.myCollapsedGraph.startModification();
@@ -283,7 +271,7 @@ class CollapsedActionManager {
   };
 
   private final static ActionCase LINEAR_EXPAND_CASE = new ActionCase() {
-    @jakarta.annotation.Nullable
+    @Nullable
     @Override
     public LinearGraphAnswer performAction(@Nonnull ActionContext context) {
       if (isForDelegateGraph(context)) return null;
@@ -349,9 +337,10 @@ class CollapsedActionManager {
   private static GraphEdge getDottedEdge(@Nullable GraphElement graphElement, @Nonnull LinearGraph graph) {
     if (graphElement == null) return null;
 
-    if (graphElement instanceof GraphEdge && ((GraphEdge)graphElement).getType() == GraphEdgeType.DOTTED) return (GraphEdge)graphElement;
-    if (graphElement instanceof GraphNode) {
-      GraphNode node = (GraphNode)graphElement;
+    if (graphElement instanceof GraphEdge edge && edge.getType() == GraphEdgeType.DOTTED) {
+      return edge;
+    }
+    if (graphElement instanceof GraphNode node) {
       for (GraphEdge edge : graph.getAdjacentEdges(node.getNodeIndex(), EdgeFilter.NORMAL_ALL)) {
         if (edge.getType() == GraphEdgeType.DOTTED) return edge;
       }
@@ -372,12 +361,7 @@ class CollapsedActionManager {
     @Nullable
     @Override
     public Runnable getGraphUpdater() {
-      return new Runnable() {
-        @Override
-        public void run() {
-          myModification.apply();
-        }
-      };
+      return myModification::apply;
     }
   }
 }

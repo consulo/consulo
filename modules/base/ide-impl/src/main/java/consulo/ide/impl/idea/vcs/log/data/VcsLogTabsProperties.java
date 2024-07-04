@@ -22,12 +22,12 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
 
 import java.util.Map;
+import java.util.TreeMap;
 
 @Singleton
 @State(name = "Vcs.Log.Tabs.Properties", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
@@ -73,6 +73,6 @@ public class VcsLogTabsProperties implements PersistentStateComponent<VcsLogTabs
   }
 
   public static class State {
-    public Map<String, VcsLogUiPropertiesImpl.State> TAB_STATES = ContainerUtil.newTreeMap();
+    public Map<String, VcsLogUiPropertiesImpl.State> TAB_STATES = new TreeMap<>();
   }
 }

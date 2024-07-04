@@ -15,12 +15,12 @@
  */
 package consulo.ide.impl.idea.usageView;
 
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.psi.PsiElement;
-import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.usage.UsageViewBundle;
 import consulo.usage.UsageViewDescriptor;
-
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Dmitry Avdeev
@@ -46,10 +46,10 @@ public class BaseUsageViewDescriptor implements UsageViewDescriptor {
 
   @Override
   public String getCodeReferencesText(int usagesCount, int filesCount) {
-    return RefactoringBundle.message("references.to.be.changed", UsageViewBundle.getReferencesString(usagesCount, filesCount));
+    return RefactoringLocalize.referencesToBeChanged(UsageViewBundle.getReferencesString(usagesCount, filesCount)).get();
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   @Override
   public String getCommentReferencesText(int usagesCount, int filesCount) {
     return null;

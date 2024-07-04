@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.vcs.log.data;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.vcs.CalledInAny;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -28,9 +28,9 @@ import consulo.util.lang.function.Conditions;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.log.*;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 import java.util.List;
 import java.util.*;
@@ -49,18 +49,18 @@ public class ContainingBranchesGetter {
 
   // other fields accessed only from EDT
   @Nonnull
-  private final List<Runnable> myLoadingFinishedListeners = ContainerUtil.newArrayList();
+  private final List<Runnable> myLoadingFinishedListeners = new ArrayList<>();
   @Nonnull
   private SLRUMap<CommitId, List<String>> myCache = createCache();
   @Nonnull
-  private Map<VirtualFile, ContainedInBranchCondition> myConditions = ContainerUtil.newHashMap();
+  private Map<VirtualFile, ContainedInBranchCondition> myConditions = new HashMap<>();
   private int myCurrentBranchesChecksum;
 
   ContainingBranchesGetter(@Nonnull VcsLogDataImpl logData, @Nonnull Disposable parentDisposable) {
     myLogData = logData;
     myTaskExecutor = new SequentialLimitedLifoExecutor<>(parentDisposable, 10, task -> {
       final List<String> branches = task.getContainingBranches(myLogData);
-      ApplicationManager.getApplication().invokeLater(() -> {
+      Application.get().invokeLater(() -> {
         // if cache is cleared (because of log refresh) during this task execution,
         // this will put obsolete value into the old instance we don't care anymore
         task.cache.put(new CommitId(task.hash, task.root), branches);
@@ -81,12 +81,12 @@ public class ContainingBranchesGetter {
     myCache = createCache();
     myTaskExecutor.clear();
     Map<VirtualFile, ContainedInBranchCondition> conditions = myConditions;
-    myConditions = ContainerUtil.newHashMap();
+    myConditions = new HashMap<>();
     for (ContainedInBranchCondition c : conditions.values()) {
       c.dispose();
     }
     // re-request containing branches information for the commit user (possibly) currently stays on
-    ApplicationManager.getApplication().invokeLater(() -> notifyListeners());
+    Application.get().invokeLater(this::notifyListeners);
   }
 
   /**
@@ -234,8 +234,7 @@ public class ContainingBranchesGetter {
 
     @Override
     public boolean value(CommitId commitId) {
-      if (isDisposed) return false;
-      return myCondition.value(myLogData.getCommitIndex(commitId.getHash(), commitId.getRoot()));
+      return !isDisposed && myCondition.value(myLogData.getCommitIndex(commitId.getHash(), commitId.getRoot()));
     }
 
     public void dispose() {

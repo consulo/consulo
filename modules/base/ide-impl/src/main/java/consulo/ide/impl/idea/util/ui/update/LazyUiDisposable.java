@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.util.ui.update;
 
 import consulo.dataContext.DataManager;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
@@ -30,6 +29,7 @@ import consulo.application.ApplicationProperties;
 import jakarta.annotation.Nonnull;
 
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 
 public abstract class LazyUiDisposable<T extends Disposable> implements Activatable {
@@ -59,8 +59,8 @@ public abstract class LazyUiDisposable<T extends Disposable> implements Activata
     try {
       findParentDisposable().doWhenDone(parent -> {
         Project project = null;
-        if (ApplicationManager.getApplication() != null) {
-          project = DataManager.getInstance().getDataContext().getData(CommonDataKeys.PROJECT);
+        if (project.getApplication() != null) {
+          project = DataManager.getInstance().getDataContext().getData(Project.KEY);
         }
         initialize(parent, myChild, project);
         Disposer.register(parent, myChild);

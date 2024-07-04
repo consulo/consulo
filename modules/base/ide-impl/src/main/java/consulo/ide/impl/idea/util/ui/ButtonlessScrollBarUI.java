@@ -23,6 +23,7 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.RegionPainter;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.ScrollBarUIConstants;
+import consulo.ui.style.StyleManager;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -265,7 +266,7 @@ public class ButtonlessScrollBarUI extends BasicScrollBarUI {
 
   protected Color adjustColor(Color c) {
     if (!myMouseIsOverThumb) return c;
-    final int sign = UIUtil.isUnderDarcula() ? -1 : 1;
+    final int sign = StyleManager.get().getCurrentStyle().isDark() ? -1 : 1;
     return Gray.get(Math.max(0, Math.min(255, c.getRed() - sign * getAnimationColorShift())));
   }
 

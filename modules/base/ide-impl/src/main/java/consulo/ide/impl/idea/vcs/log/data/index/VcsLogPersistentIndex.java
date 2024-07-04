@@ -15,35 +15,36 @@
  */
 package consulo.ide.impl.idea.vcs.log.data.index;
 
-import consulo.application.progress.*;
+import consulo.application.progress.PerformInBackgroundOption;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.application.progress.Task;
+import consulo.application.util.function.Processor;
 import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
-import consulo.application.ApplicationManager;
-import consulo.ide.ServiceManager;
-import consulo.index.io.*;
-import consulo.project.Project;
-import consulo.util.lang.function.Condition;
 import consulo.disposer.Disposer;
-import consulo.versionControlSystem.FilePath;
-import consulo.versionControlSystem.VcsException;
-import consulo.index.io.data.IOUtil;
-import consulo.versionControlSystem.log.*;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.util.EmptyConsumer;
-import consulo.application.util.function.Processor;
-import consulo.util.lang.function.ThrowableRunnable;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.index.io.StorageException;
 import consulo.ide.impl.idea.vcs.log.data.*;
 import consulo.ide.impl.idea.vcs.log.impl.FatalErrorHandler;
 import consulo.ide.impl.idea.vcs.log.ui.filter.VcsLogTextFilterImpl;
 import consulo.ide.impl.idea.vcs.log.util.PersistentSet;
 import consulo.ide.impl.idea.vcs.log.util.PersistentSetImpl;
-import consulo.versionControlSystem.util.StopWatch;
 import consulo.ide.impl.idea.vcs.log.util.TroveUtil;
+import consulo.index.io.*;
+import consulo.index.io.data.IOUtil;
 import consulo.logging.Logger;
+import consulo.project.Project;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
+import consulo.util.lang.function.Condition;
+import consulo.util.lang.function.ThrowableRunnable;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.VcsException;
+import consulo.versionControlSystem.log.*;
+import consulo.versionControlSystem.util.StopWatch;
+import consulo.virtualFileSystem.VirtualFile;
 import gnu.trove.TIntHashSet;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -81,23 +82,25 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
   @Nonnull
   private final SingleTaskController<IndexingRequest, Void> mySingleTaskController = new MySingleTaskController();
   @Nonnull
-  private final Map<VirtualFile, AtomicInteger> myNumberOfTasks = ContainerUtil.newHashMap();
+  private final Map<VirtualFile, AtomicInteger> myNumberOfTasks = new HashMap<>();
 
   @Nonnull
   private Map<VirtualFile, TIntHashSet> myCommitsToIndex = new HashMap<>();
 
-  public VcsLogPersistentIndex(@Nonnull Project project,
-                               @Nonnull VcsLogStorage hashMap,
-                               @Nonnull VcsLogProgress progress,
-                               @Nonnull Map<VirtualFile, VcsLogProvider> providers,
-                               @Nonnull FatalErrorHandler fatalErrorsConsumer,
-                               @Nonnull Disposable disposableParent) {
+  public VcsLogPersistentIndex(
+    @Nonnull Project project,
+    @Nonnull VcsLogStorage hashMap,
+    @Nonnull VcsLogProgress progress,
+    @Nonnull Map<VirtualFile, VcsLogProvider> providers,
+    @Nonnull FatalErrorHandler fatalErrorsConsumer,
+    @Nonnull Disposable disposableParent
+  ) {
     myHashMap = hashMap;
     myProject = project;
     myProgress = progress;
     myProviders = providers;
     myFatalErrorsConsumer = fatalErrorsConsumer;
-    myRoots = ContainerUtil.newLinkedHashSet();
+    myRoots = new LinkedHashSet<>();
 
     for (Map.Entry<VirtualFile, VcsLogProvider> entry : providers.entrySet()) {
       if (VcsLogProperties.get(entry.getValue(), VcsLogProperties.SUPPORTS_INDEXING)) {
@@ -139,7 +142,7 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
     for (VirtualFile root : commitsToIndex.keySet()) {
       myNumberOfTasks.get(root).incrementAndGet();
     }
-    myCommitsToIndex = ContainerUtil.newHashMap();
+    myCommitsToIndex = new HashMap<>();
 
     mySingleTaskController.request(new IndexingRequest(commitsToIndex, full));
   }
@@ -176,6 +179,7 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
     }
   }
 
+  @Override
   public void markCorrupted() {
     if (myIndexStorage != null) myIndexStorage.commits.markCorrupted();
   }
@@ -354,7 +358,7 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
 
     IntSet filteredByUser = null;
     if (userFilter != null) {
-      Set<VcsUser> users = ContainerUtil.newHashSet();
+      Set<VcsUser> users = new HashSet<>();
       for (VirtualFile root : myRoots) {
         users.addAll(userFilter.getUsers(root));
       }
@@ -475,9 +479,13 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
 
     @Override
     protected void startNewBackgroundTask() {
-      ApplicationManager.getApplication().invokeLater(() -> {
-        Task.Backgroundable task = new Task.Backgroundable(VcsLogPersistentIndex.this.myProject, "Indexing Commit Data", true,
-                                                           PerformInBackgroundOption.ALWAYS_BACKGROUND) {
+      myProject.getApplication().invokeLater(() -> {
+        Task.Backgroundable task = new Task.Backgroundable(
+          VcsLogPersistentIndex.this.myProject,
+          "Indexing Commit Data",
+          true,
+          PerformInBackgroundOption.ALWAYS_BACKGROUND
+        ) {
           @Override
           public void run(@Nonnull ProgressIndicator indicator) {
             List<IndexingRequest> requests;

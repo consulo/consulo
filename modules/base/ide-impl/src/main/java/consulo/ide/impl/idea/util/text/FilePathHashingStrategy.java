@@ -15,10 +15,9 @@
  */
 package consulo.ide.impl.idea.util.text;
 
-import consulo.application.util.SystemInfo;
+import consulo.platform.Platform;
 import consulo.util.collection.CharSequenceHashingStrategy;
 import consulo.util.collection.HashingStrategy;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -30,12 +29,13 @@ public class FilePathHashingStrategy {
 
   @Nonnull
   public static HashingStrategy<String> create() {
-    return create(SystemInfo.isFileSystemCaseSensitive);
+    return create(Platform.current().fs().isCaseSensitive());
   }
 
   @Nonnull
   public static HashingStrategy<CharSequence> createForCharSequence() {
-    return SystemInfo.isFileSystemCaseSensitive ? CharSequenceHashingStrategy.CASE_SENSITIVE : CharSequenceHashingStrategy.CASE_INSENSITIVE;
+    return Platform.current().fs().isCaseSensitive()
+      ? CharSequenceHashingStrategy.CASE_SENSITIVE : CharSequenceHashingStrategy.CASE_INSENSITIVE;
   }
 
   @Nonnull

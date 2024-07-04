@@ -15,18 +15,18 @@
  */
 package consulo.ide.impl.idea.vcs.log.data;
 
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.function.Condition;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ContentRevision;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.versionControlSystem.log.VcsCommitMetadata;
 import consulo.versionControlSystem.log.VcsFullCommitDetails;
 import consulo.versionControlSystem.log.VcsLogDetailsFilter;
 import consulo.versionControlSystem.log.VcsLogStructureFilter;
 import consulo.versionControlSystem.util.VcsUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
@@ -37,7 +37,7 @@ public class VcsLogStructureFilterImpl implements VcsLogDetailsFilter, VcsLogStr
   private final Collection<FilePath> myFiles;
 
   public VcsLogStructureFilterImpl(@Nonnull Set<VirtualFile> files) {
-    this(ContainerUtil.map(files, file -> VcsUtil.getFilePath(file)));
+    this(ContainerUtil.map(files, VcsUtil::getFilePath));
   }
 
   public VcsLogStructureFilterImpl(@Nonnull Collection<FilePath> files) {
@@ -52,8 +52,8 @@ public class VcsLogStructureFilterImpl implements VcsLogDetailsFilter, VcsLogStr
 
   @Override
   public boolean matches(@Nonnull VcsCommitMetadata details) {
-    if ((details instanceof VcsFullCommitDetails)) {
-      for (Change change : ((VcsFullCommitDetails)details).getChanges()) {
+    if (details instanceof VcsFullCommitDetails vcsFullCommitDetails) {
+      for (Change change : vcsFullCommitDetails.getChanges()) {
         ContentRevision before = change.getBeforeRevision();
         if (before != null && matches(before.getFile().getPath())) {
           return true;
@@ -71,11 +71,6 @@ public class VcsLogStructureFilterImpl implements VcsLogDetailsFilter, VcsLogStr
   }
 
   private boolean matches(@Nonnull final String path) {
-    return ContainerUtil.find(myFiles, new Condition<VirtualFile>() {
-      @Override
-      public boolean value(VirtualFile file) {
-        return FileUtil.isAncestor(file.getPath(), path, false);
-      }
-    }) != null;
+    return ContainerUtil.find(myFiles, (Condition<VirtualFile>)file-> FileUtil.isAncestor(file.getPath(), path, false)) != null;
   }
 }

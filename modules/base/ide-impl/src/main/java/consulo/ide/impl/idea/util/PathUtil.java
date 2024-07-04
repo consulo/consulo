@@ -17,16 +17,15 @@ package consulo.ide.impl.idea.util;
 
 import consulo.ide.impl.idea.openapi.application.PathManager;
 import consulo.ide.impl.idea.openapi.util.SystemInfoRt;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
-import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.nio.charset.Charset;
 import java.util.Locale;
 import java.util.Set;
@@ -48,13 +47,13 @@ public class PathUtil {
 
   @Contract("null -> null; !null -> !null")
   public static String toSystemIndependentName(@Nullable String path) {
-    return path == null ? null : FileUtilRt.toSystemIndependentName(path);
+    return path == null ? null : FileUtil.toSystemIndependentName(path);
   }
 
 
   @Contract("null -> null; !null -> !null")
   public static String toSystemDependentName(@Nullable String path) {
-    return path == null ? null : FileUtilRt.toSystemDependentName(path);
+    return path == null ? null : FileUtil.toSystemDependentName(path);
   }
 
   @Nonnull

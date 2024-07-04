@@ -1,7 +1,6 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.util.ui.tree;
 
-import consulo.application.ApplicationManager;
 import consulo.component.util.Iconable;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
@@ -15,7 +14,6 @@ import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.ide.impl.idea.openapi.util.Setter;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.LangBundle;
@@ -25,7 +23,7 @@ import consulo.language.impl.util.PerFileMappingsBase;
 import consulo.module.content.ProjectFileIndex;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
-import consulo.ui.ex.ColoredTextContainer;
+import consulo.ui.annotation.RequiredUIAccess;import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleColoredText;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.*;
@@ -43,9 +41,10 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.KeyWithDefaultValue;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
-import consulo.util.lang.StringUtil;
+import consulo.util.lang.Pair;import consulo.util.lang.StringUtil;
 import consulo.util.lang.Trinity;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
@@ -286,7 +285,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
     TableUtil.editCellAt(myTable, myTable.getSelectedRow(), 0);
     TextFieldWithBrowseButton panel = ObjectUtil.tryCast(myTable.getEditorComponent(), TextFieldWithBrowseButton.class);
     if (panel != null) {
-      ApplicationManager.getApplication().invokeLater(() -> {
+      myProject.getApplication().invokeLater(() -> {
         if (myTable.getEditorComponent() == panel) {
           panel.getButton().doClick();
         }
@@ -296,7 +295,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
 
   @Nullable
   public T getNewMapping(@Nullable VirtualFile file) {
-    for (consulo.util.lang.Pair<Object, T> p : ContainerUtil.reverse(myModel.data)) {
+    for (Pair<Object, T> p : ContainerUtil.reverse(myModel.data)) {
       if (keyMatches(p.first, file, false) && p.second != null) return p.second;
     }
     ProjectFileIndex index = ProjectFileIndex.getInstance(myProject);
@@ -319,10 +318,9 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
 
   private static boolean keyMatches(@Nullable Object key, @Nullable VirtualFile file, boolean strict) {
     if (file == null) return key == null;
-    if (key instanceof VirtualFile) return VfsUtilCore.isAncestor((VirtualFile)key, file, strict);
+    if (key instanceof VirtualFile virtualFile) return VfsUtilCore.isAncestor(virtualFile, file, strict);
     // todo also patterns
-    if (key == null) return true;
-    return false;
+    return key == null;
   }
 
   @Override
@@ -378,7 +376,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
 
   protected Map<VirtualFile, T> getNewMappings() {
     HashMap<VirtualFile, T> map = new HashMap<>();
-    for (consulo.util.lang.Pair<Object, T> p : myModel.data) {
+    for (Pair<Object, T> p : myModel.data) {
       if (p.second != null) {
         map.put((VirtualFile)p.first, p.second);
       }
@@ -400,7 +398,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
   }
 
   public void selectFile(@Nonnull VirtualFile virtualFile, boolean addIfMissing) {
-    VirtualFile file = virtualFile instanceof VirtualFileWindow ? ((VirtualFileWindow)virtualFile).getDelegate() : virtualFile;
+    VirtualFile file = virtualFile instanceof VirtualFileWindow virtualFileWindow ? virtualFileWindow.getDelegate() : virtualFile;
     int[] rows = findRow(file, addIfMissing, false);
     if (rows.length == 0 && addIfMissing) {
       doAddFiles(Collections.singletonList(virtualFile));
@@ -413,9 +411,9 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
 
   protected int[] findRow(VirtualFile file, boolean strict, boolean all) {
     TIntArrayList rows = new TIntArrayList();
-    List<consulo.util.lang.Pair<Object, T>> reversed = ContainerUtil.reverse(myModel.data);
+    List<Pair<Object, T>> reversed = ContainerUtil.reverse(myModel.data);
     for (int i = 0, size = reversed.size(); i < size; i++) {
-      consulo.util.lang.Pair<Object, T> p = reversed.get(i);
+      Pair<Object, T> p = reversed.get(i);
       if (keyMatches(p.first, file, strict)) {
         rows.add(size - i - 1);
         if (!all) break;
@@ -425,10 +423,10 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
   }
 
   private static String keyToString(Object o) {
-    if (o == null) return "";
-    if (o instanceof String) return (String)o;
-    if (o instanceof VirtualFile) return FileUtil.toSystemDependentName(((VirtualFile)o).getPath());
-    return String.valueOf(o);
+    return o == null ? ""
+      : o instanceof String s ? s
+      : o instanceof VirtualFile virtualFile ? FileUtil.toSystemDependentName(virtualFile.getPath())
+      : String.valueOf(o);
   }
 
   private void setupPerFileTable() {
@@ -445,7 +443,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
       @Override
       public String toString(TableModel model, int row, int column) {
         text.clear();
-        consulo.util.lang.Pair<Object, T> pair = myModel.data.get(row);
+        Pair<Object, T> pair = myModel.data.get(row);
         if (column == 0) {
           renderTarget(pair.first, text);
         }
@@ -463,7 +461,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
     sorter.setSortsOnUpdates(true);
     myTable.setRowSorter(sorter);
     myTable.getRowSorter().setSortKeys(Collections.singletonList(new RowSorter.SortKey(0, SortOrder.ASCENDING)));
-    new TableSpeedSearch(myTable, o -> keyToString(o));
+    new TableSpeedSearch(myTable, PerFileConfigurableBase::keyToString);
 
     FontMetrics metrics = myTable.getFontMetrics(myTable.getFont());
     int maxValueWidth = 2 * metrics.stringWidth(myTable.getModel().getColumnName(1));
@@ -497,7 +495,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
 
       @Override
       protected void customizeCellRenderer(@Nonnull JTable table, @Nullable Object value, boolean selected, boolean hasFocus, int row, int column) {
-        consulo.util.lang.Pair<Object, T> p = myModel.data.get(myTable.convertRowIndexToModel(row));
+        Pair<Object, T> p = myModel.data.get(myTable.convertRowIndexToModel(row));
         if (p.second != null) {
           setTransparentIconBackground(true);
           renderValue(p.first, p.second, this);
@@ -514,7 +512,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
       @Override
       public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
         int modelRow = myTable.convertRowIndexToModel(row);
-        consulo.util.lang.Pair<Object, T> pair = myModel.data.get(modelRow);
+        Pair<Object, T> pair = myModel.data.get(modelRow);
         Object target = pair.first;
         if (!(target instanceof VirtualFile)) return null;
         startValue = (VirtualFile)target;
@@ -545,12 +543,12 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
       @Override
       public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
         int modelRow = myTable.convertRowIndexToModel(row);
-        consulo.util.lang.Pair<Object, T> pair = myModel.data.get(modelRow);
+        Pair<Object, T> pair = myModel.data.get(modelRow);
         Object target = pair.first;
         editorValue = pair.second; // (T)value
         if (!canEditTarget(target, editorValue)) return null;
 
-        JPanel panel = createActionPanel(target, new Value<T>() {
+        JPanel panel = createActionPanel(target, new Value<>() {
           @Override
           public T get() {
             return editorValue;
@@ -613,7 +611,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
       public Color getBackground() {
         // track "Table.selectionInactiveBackground" switch
         Container parent = getParent();
-        return parent instanceof JTable ? ((JTable)parent).getSelectionBackground() : super.getBackground();
+        return parent instanceof JTable jTable ? jTable.getSelectionBackground() : super.getBackground();
       }
     };
     panel.add(comboComponent, BorderLayout.CENTER);
@@ -630,14 +628,14 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
     TIntArrayList rows = new TIntArrayList();
     boolean toOverride = false;
     for (int i = 0, size = myModel.data.size(); i < size; i++) {
-      consulo.util.lang.Pair<Object, T> p = myModel.data.get(i);
-      if (p.first instanceof VirtualFile) {
+      Pair<Object, T> p = myModel.data.get(i);
+      if (p.first instanceof VirtualFile virtualFile) {
         for (Object key : keys) {
           if (key == p.first) {
             if (keysToo) rows.add(-i - 1);
             break;
           }
-          else if (keyMatches(key, (VirtualFile)p.first, true)) {
+          else if (keyMatches(key, virtualFile, true)) {
             toOverride = true;
             rows.add(i);
             break;
@@ -665,6 +663,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
     return ret;
   }
 
+  @RequiredUIAccess
   private int askUserToOverrideSubdirectories() {
     String question = param(OVERRIDE_QUESTION);
     String title = param(OVERRIDE_TITLE);
@@ -676,7 +675,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
       LangBundle.message("button.override"),
       LangBundle.message("button.do.not.override"),
       CommonLocalize.buttonCancel().get(),
-      Messages.getWarningIcon()
+      UIUtil.getWarningIcon()
     );
   }
 
@@ -693,14 +692,15 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
   }
 
   protected void renderTarget(@Nullable Object target, @Nonnull ColoredTextContainer renderer) {
-    VirtualFile file = target instanceof VirtualFile ? (VirtualFile)target : null;
+    VirtualFile file = target instanceof VirtualFile virtualFile ? virtualFile : null;
     if (file != null) {
       renderer.setIcon(VfsIconUtil.getIcon(file, Iconable.ICON_FLAG_READ_STATUS, myProject));
       VirtualFile parent = file.getParent();
       if (parent != null) {
         String projectPath = myProject.getBasePath();
         String parentPath = parent.getPath();
-        String relativePath = projectPath != null && parentPath.startsWith(projectPath) ? "..." + parentPath.substring(projectPath.length()) : parentPath;
+        String relativePath = projectPath != null && parentPath.startsWith(projectPath)
+          ? "..." + parentPath.substring(projectPath.length()) : parentPath;
         String presentablePath = FileUtil.toSystemDependentName(relativePath + "/");
         renderer.append(presentablePath, SimpleTextAttributes.GRAY_ATTRIBUTES);
       }
@@ -786,7 +786,9 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
 
   @Nonnull
   protected Collection<T> getValueVariants(@Nullable Object target) {
-    if (myMappings instanceof PerFileMappingsBase) return ((PerFileMappingsBase<T>)myMappings).getAvailableValues();
+    if (myMappings instanceof PerFileMappingsBase) {
+      return ((PerFileMappingsBase<T>)myMappings).getAvailableValues();
+    }
     throw new UnsupportedOperationException();
   }
 
@@ -827,7 +829,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
 
   private static class MyModel<T> extends AbstractTableModel {
     final String[] columnNames;
-    final List<consulo.util.lang.Pair<Object, T>> data = new ArrayList<>();
+    final List<Pair<Object, T>> data = new ArrayList<>();
 
     MyModel(String... names) {
       columnNames = names;
@@ -860,7 +862,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
 
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-      consulo.util.lang.Pair<Object, T> pair = data.get(rowIndex);
+      Pair<Object, T> pair = data.get(rowIndex);
       if (columnIndex == 1) {
         if (Comparing.equal(aValue, pair.second)) return;
         @SuppressWarnings("unchecked") T t = (T)aValue;

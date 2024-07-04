@@ -16,8 +16,7 @@
 package consulo.ide.impl.idea.util.io;
 
 import consulo.logging.Logger;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
+import consulo.util.io.FileUtil;
 import consulo.util.io.StreamUtil;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
@@ -39,7 +38,7 @@ public class ZipUtil {
   }
 
   public interface FileContentProcessor {
-    FileContentProcessor STANDARD = file -> new FileInputStream(file);
+    FileContentProcessor STANDARD = FileInputStream::new;
 
     InputStream getContent(File file) throws IOException;
   }
@@ -197,21 +196,15 @@ public class ZipUtil {
       file.mkdir();
     }
     else {
-      final BufferedInputStream is = new BufferedInputStream(inputStream);
-      final BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(file));
-      try {
+      try (BufferedInputStream is = new BufferedInputStream(inputStream);
+           BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(file))) {
         FileUtil.copy(is, os);
-      }
-      finally {
-        os.close();
-        is.close();
       }
     }
   }
 
   public static boolean isZipContainsFolder(File zip) throws IOException {
-    ZipFile zipFile = new ZipFile(zip);
-    try {
+    try (ZipFile zipFile = new ZipFile(zip)) {
       Enumeration en = zipFile.entries();
 
       while (en.hasMoreElements()) {
@@ -226,14 +219,10 @@ public class ZipUtil {
       }
       return false;
     }
-    finally {
-      zipFile.close();
-    }
   }
 
   public static boolean isZipContainsEntry(File zip, String relativePath) throws IOException {
-    ZipFile zipFile = new ZipFile(zip);
-    try {
+    try (ZipFile zipFile = new ZipFile(zip)) {
       Enumeration en = zipFile.entries();
 
       while (en.hasMoreElements()) {
@@ -243,9 +232,6 @@ public class ZipUtil {
         }
       }
       return false;
-    }
-    finally {
-      zipFile.close();
     }
   }
 
@@ -298,23 +284,15 @@ public class ZipUtil {
     }
   }
 
-  @Nullable
+  @Nonnull
   public static File compressFile(@Nonnull File srcFile, @Nonnull File zipFile) throws IOException {
-    InputStream is = new FileInputStream(srcFile);
-    try {
-      ZipOutputStream os = new ZipOutputStream(new FileOutputStream(zipFile));
-      try {
+    try (InputStream is = new FileInputStream(srcFile)) {
+      try (ZipOutputStream os = new ZipOutputStream(new FileOutputStream(zipFile))) {
         os.putNextEntry(new ZipEntry(srcFile.getName()));
-        FileUtilRt.copy(is, os);
+        FileUtil.copy(is, os);
         os.closeEntry();
         return zipFile;
       }
-      finally {
-        os.close();
-      }
-    }
-    finally {
-      is.close();
     }
   }
 }

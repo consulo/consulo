@@ -15,11 +15,10 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.versionControlSystem.log.VcsLogDataKeys;
-import consulo.versionControlSystem.log.VcsLogUi;
 import consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogUiProperties;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.versionControlSystem.log.VcsLogUi;
 import jakarta.annotation.Nonnull;
 
 public class ShowRootsColumnAction extends BooleanPropertyToggleAction {
@@ -36,7 +35,7 @@ public class ShowRootsColumnAction extends BooleanPropertyToggleAction {
   @Override
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);
-    VcsLogUi ui = e.getData(VcsLogDataKeys.VCS_LOG_UI);
+    VcsLogUi ui = e.getData(VcsLogUi.KEY);
     if (ui == null || !ui.isMultipleRoots()) e.getPresentation().setEnabledAndVisible(false);
   }
 }

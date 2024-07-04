@@ -20,14 +20,14 @@ import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XDebuggerUtil;
 import consulo.execution.debug.setting.XDebuggerSettingsManager;
 import consulo.ide.impl.idea.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
-import consulo.language.editor.CommonDataKeys;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.ToggleAction;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * @author egor
@@ -44,7 +44,7 @@ final class ShowLibraryFramesAction extends ToggleAction {
 
   @Inject
   public ShowLibraryFramesAction(Provider<XDebuggerSettingsManager> provider) {
-    super("", "", AllIcons.General.Filter);
+    super(LocalizeValue.empty(), LocalizeValue.empty(), AllIcons.General.Filter);
     myXDebuggerSettingsManagerProvider = provider;
   }
 
@@ -90,6 +90,6 @@ final class ShowLibraryFramesAction extends ToggleAction {
   public void setSelected(AnActionEvent e, boolean enabled) {
     boolean newValue = !enabled;
     XDebuggerSettingManagerImpl.getInstanceImpl().getDataViewSettings().setShowLibraryStackFrames(newValue);
-    XDebuggerUtil.getInstance().rebuildAllSessionsViews(e.getData(CommonDataKeys.PROJECT));
+    XDebuggerUtil.getInstance().rebuildAllSessionsViews(e.getData(Project.KEY));
   }
 }

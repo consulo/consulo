@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.vcs.log.graph.collapsing;
 
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.graph.api.EdgeFilter;
 import consulo.ide.impl.idea.vcs.log.graph.api.LinearGraph;
 import consulo.ide.impl.idea.vcs.log.graph.api.elements.GraphEdge;
@@ -23,11 +22,12 @@ import consulo.ide.impl.idea.vcs.log.graph.api.elements.GraphNode;
 import consulo.ide.impl.idea.vcs.log.graph.utils.UnsignedBitSet;
 import consulo.ide.impl.idea.vcs.log.graph.utils.UpdatableIntToIntMap;
 import consulo.ide.impl.idea.vcs.log.graph.utils.impl.ListIntToIntMap;
+import consulo.util.collection.SmartList;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 import java.util.PrimitiveIterator;
 import java.util.concurrent.atomic.AtomicReference;
@@ -279,16 +279,14 @@ public class CollapsedGraph {
     }
 
     private boolean isVisibleEdge(@Nullable Integer compiledUpNode, @Nullable Integer compiledDownNode) {
-      if (compiledUpNode != null && compiledUpNode == -1) return false;
-      if (compiledDownNode != null && compiledDownNode == -1) return false;
-      return true;
+      return (compiledUpNode == null || compiledUpNode != -1) && (compiledDownNode == null || compiledDownNode != -1);
     }
 
     @Nonnull
     @Override
     public List<GraphEdge> getAdjacentEdges(int nodeIndex, @Nonnull EdgeFilter filter) {
       assertNotUnderModification();
-      List<GraphEdge> result = ContainerUtil.newSmartList();
+      List<GraphEdge> result = new SmartList<>();
       int delegateIndex = myNodesMap.getLongIndex(nodeIndex);
 
       // add delegate edges

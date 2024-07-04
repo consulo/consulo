@@ -72,15 +72,12 @@ public class ReflectionUtil {
         final TypeVariable typeVariable = (TypeVariable)resolved;
         index = ArrayUtilRt.find(anInterface.getTypeParameters(), typeVariable);
         if (index < 0) {
-          LOG.error("Cannot resolve type variable:\n" +
-                    "typeVariable = " +
-                    typeVariable +
-                    "\n" +
-                    "genericDeclaration = " +
-                    declarationToString(typeVariable.getGenericDeclaration()) +
-                    "\n" +
-                    "searching in " +
-                    declarationToString(anInterface));
+          LOG.error(
+            "Cannot resolve type variable:\n" +
+              "typeVariable = " + typeVariable + "\n" +
+              "genericDeclaration = " + declarationToString(typeVariable.getGenericDeclaration()) + "\n" +
+              "searching in " + declarationToString(anInterface)
+          );
         }
         final Type type = i < genericInterfaces.length ? genericInterfaces[i] : aClass.getGenericSuperclass();
         if (type instanceof Class) {
@@ -144,13 +141,13 @@ public class ReflectionUtil {
       if (type instanceof Class) {
         return (Class)type;
       }
-      if (type instanceof ParameterizedType) {
-        return (Class<?>)((ParameterizedType)type).getRawType();
+      if (type instanceof ParameterizedType parameterizedType) {
+        return (Class<?>)parameterizedType.getRawType();
       }
-      if (type instanceof TypeVariable && classType instanceof ParameterizedType) {
+      if (type instanceof TypeVariable && classType instanceof ParameterizedType parameterizedType) {
         final int index = ArrayUtilRt.find(aClass.getTypeParameters(), type);
         if (index >= 0) {
-          return getRawType(getActualTypeArguments((ParameterizedType)classType)[index]);
+          return getRawType(getActualTypeArguments(parameterizedType)[index]);
         }
       }
     }
@@ -162,7 +159,7 @@ public class ReflectionUtil {
 
   @Nonnull
   public static List<Field> collectFields(@Nonnull Class clazz) {
-    List<Field> result = ContainerUtil.newArrayList();
+    List<Field> result = new ArrayList<>();
     for (Class c : classTraverser(clazz)) {
       result.addAll(getClassDeclaredFields(c));
     }
@@ -171,12 +168,7 @@ public class ReflectionUtil {
 
   @Nonnull
   public static Field findField(@Nonnull Class clazz, @Nullable final Class type, @Nonnull final String name) throws NoSuchFieldException {
-    Field result = processFields(clazz, new Condition<Field>() {
-      @Override
-      public boolean value(Field field) {
-        return name.equals(field.getName()) && (type == null || field.getType().equals(type));
-      }
-    });
+    Field result = processFields(clazz, field -> name.equals(field.getName()) && (type == null || field.getType().equals(type)));
     if (result != null) return result;
 
     throw new NoSuchFieldException("Class: " + clazz + " name: " + name + " type: " + type);
@@ -184,12 +176,10 @@ public class ReflectionUtil {
 
   @Nonnull
   public static Field findAssignableField(@Nonnull Class<?> clazz, @Nullable final Class<?> fieldType, @Nonnull final String fieldName) throws NoSuchFieldException {
-    Field result = processFields(clazz, new Condition<Field>() {
-      @Override
-      public boolean value(Field field) {
-        return fieldName.equals(field.getName()) && (fieldType == null || fieldType.isAssignableFrom(field.getType()));
-      }
-    });
+    Field result = processFields(
+      clazz,
+      field -> fieldName.equals(field.getName()) && (fieldType == null || fieldType.isAssignableFrom(field.getType()))
+    );
     if (result != null) return result;
     throw new NoSuchFieldException("Class: " + clazz + " fieldName: " + fieldName + " fieldType: " + fieldType);
   }
@@ -241,13 +231,13 @@ public class ReflectionUtil {
           field.set(object, Boolean.FALSE);
         }
         else if (int.class.equals(type)) {
-          field.set(object, Integer.valueOf(0));
+          field.set(object, 0);
         }
         else if (double.class.equals(type)) {
-          field.set(object, Double.valueOf(0));
+          field.set(object, 0d);
         }
         else if (float.class.equals(type)) {
-          field.set(object, Float.valueOf(0));
+          field.set(object, 0f);
         }
       }
       else {
@@ -319,7 +309,7 @@ public class ReflectionUtil {
 
   @Nonnull
   private static List<Method> filterRealMethods(@Nonnull Method[] methods) {
-    List<Method> result = ContainerUtil.newArrayList();
+    List<Method> result = new ArrayList<>();
     for (Method method : methods) {
       if (!method.isSynthetic()) {
         result.add(method);
@@ -334,7 +324,13 @@ public class ReflectionUtil {
     return method == null ? null : method.getDeclaringClass();
   }
 
-  public static <T> T getField(@Nonnull Class objectClass, @Nullable Object object, @Nullable Class<T> fieldType, @Nonnull @NonNls String fieldName) {
+  @SuppressWarnings("unchecked")
+  public static <T> T getField(
+    @Nonnull Class objectClass,
+    @Nullable Object object,
+    @Nullable Class<T> fieldType,
+    @Nonnull @NonNls String fieldName
+  ) {
     try {
       final Field field = findAssignableField(objectClass, fieldType, fieldName);
       return (T)field.get(object);
@@ -349,6 +345,7 @@ public class ReflectionUtil {
     }
   }
 
+  @SuppressWarnings("unchecked")
   public static <T> T getStaticFieldValue(@Nonnull Class objectClass, @Nullable Class<T> fieldType, @Nonnull @NonNls String fieldName) {
     try {
       final Field field = findAssignableField(objectClass, fieldType, fieldName);
@@ -368,7 +365,13 @@ public class ReflectionUtil {
   }
 
   // returns true if value was set
-  public static <T> boolean setField(@Nonnull Class objectClass, Object object, @Nullable Class<T> fieldType, @Nonnull @NonNls String fieldName, T value) {
+  public static <T> boolean setField(
+    @Nonnull Class objectClass,
+    Object object,
+    @Nullable Class<T> fieldType,
+    @Nonnull @NonNls String fieldName,
+    T value
+  ) {
     try {
       final Field field = findAssignableField(objectClass, fieldType, fieldName);
       field.set(object, value);
@@ -472,7 +475,7 @@ public class ReflectionUtil {
   }
 
   public static boolean copyFields(@Nonnull Field[] fields, @Nonnull Object from, @Nonnull Object to, @Nullable DifferenceFilter diffFilter) {
-    Set<Field> sourceFields = new HashSet<Field>(Arrays.asList(from.getClass().getFields()));
+    Set<Field> sourceFields = new HashSet<>(Arrays.asList(from.getClass().getFields()));
     boolean valuesChanged = false;
     for (Field field : fields) {
       if (sourceFields.contains(field)) {
@@ -559,7 +562,7 @@ public class ReflectionUtil {
 
   @Nonnull
   public static JBTreeTraverser<Class> classTraverser(@Nullable Class root) {
-    return new JBTreeTraverser<Class>(CLASS_STRUCTURE).unique().withRoot(root);
+    return new JBTreeTraverser<>(CLASS_STRUCTURE).unique().withRoot(root);
   }
 
   private static final Function<Class, Iterable<Class>> CLASS_STRUCTURE = aClass -> JBIterable.of(aClass.getSuperclass()).append(aClass.getInterfaces());

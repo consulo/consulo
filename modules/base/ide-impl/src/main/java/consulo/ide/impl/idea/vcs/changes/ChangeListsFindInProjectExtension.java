@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.vcs.changes;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.find.FindModel;
 import consulo.ide.impl.idea.find.impl.FindInProjectExtension;
-import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import consulo.versionControlSystem.VcsDataKeys;
@@ -38,7 +37,7 @@ import consulo.util.collection.ContainerUtil;
 public class ChangeListsFindInProjectExtension implements FindInProjectExtension {
   @Override
   public boolean initModelFromContext(FindModel model, DataContext dataContext) {
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Project project = dataContext.getData(Project.KEY);
     if (project == null) {
       return false;
     }
@@ -51,9 +50,13 @@ public class ChangeListsFindInProjectExtension implements FindInProjectExtension
 
     if (changeList != null) {
       String changeListName = changeList.getName();
-      ChangeListsSearchScopeProvider changeListsScopeProvider = SearchScopeProvider.EP_NAME.findExtension(ChangeListsSearchScopeProvider.class);
+      ChangeListsSearchScopeProvider changeListsScopeProvider =
+        SearchScopeProvider.EP_NAME.findExtension(ChangeListsSearchScopeProvider.class);
       if (changeListsScopeProvider != null) {
-        SearchScope changeListScope = ContainerUtil.find(changeListsScopeProvider.getSearchScopes(project), scope -> scope.getDisplayName().equals(changeListName));
+        SearchScope changeListScope = ContainerUtil.find(
+          changeListsScopeProvider.getSearchScopes(project),
+          scope -> scope.getDisplayName().equals(changeListName)
+        );
         if (changeListScope != null) {
           model.setCustomScope(true);
           model.setCustomScopeName(changeListScope.getDisplayName());

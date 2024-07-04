@@ -6,7 +6,7 @@
 package consulo.ide.impl.psi.stubs;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.function.Processors;
@@ -15,7 +15,6 @@ import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.util.ModificationTracker;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFS;
 import consulo.ide.impl.idea.util.ConcurrencyUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -42,6 +41,7 @@ import consulo.util.collection.Maps;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.io.BufferExposingByteArrayOutputStream;
+import consulo.util.io.FileUtil;
 import consulo.util.io.UnsyncByteArrayInputStream;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.lazy.LazyValue;
@@ -73,11 +73,14 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
     private final TObjectIntHashMap<ID<?, ?>> myIndexIdToVersionMap = new TObjectIntHashMap<>();
   }
 
-  private final Map<StubIndexKey<?, ?>, Supplier<Map<CompositeKey, StubIdList>>> myCachedStubIds = FactoryMap.createMap(k -> {
-    UpdatableIndex<Integer, SerializedStubTree, FileContent> index = getStubUpdatingIndex();
-    ModificationTracker tracker = index::getModificationStamp;
-    return LazyValue.notNullWithModCount(() -> ContainerUtil.newConcurrentMap(), tracker::getModificationCount);
-  }, ContainerUtil::newConcurrentMap);
+  private final Map<StubIndexKey<?, ?>, Supplier<Map<CompositeKey, StubIdList>>> myCachedStubIds = FactoryMap.createMap(
+    k -> {
+      UpdatableIndex<Integer, SerializedStubTree, FileContent> index = getStubUpdatingIndex();
+      ModificationTracker tracker = index::getModificationStamp;
+      return LazyValue.notNullWithModCount(() -> ContainerUtil.newConcurrentMap(), tracker::getModificationCount);
+    },
+    ContainerUtil::newConcurrentMap
+  );
 
   private final StubProcessingHelper myStubProcessingHelper;
   private final IndexAccessValidator myAccessValidator = new IndexAccessValidator();
@@ -161,15 +164,17 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
 
       @Override
       public boolean traceKeyHashToVirtualFileMapping() {
-        return extension instanceof StringStubIndexExtension && ((StringStubIndexExtension)extension).traceKeyHashToVirtualFileMapping();
+        return extension instanceof StringStubIndexExtension stubIndexExtension && stubIndexExtension.traceKeyHashToVirtualFileMapping();
       }
     };
   }
 
-  private static <K> void registerIndexer(@Nonnull final StubIndexExtension<K, ?> extension,
-                                          final boolean forceClean,
-                                          @Nonnull AsyncState state,
-                                          @Nonnull IndicesRegistrationResult registrationResultSink) throws IOException {
+  private static <K> void registerIndexer(
+    @Nonnull final StubIndexExtension<K, ?> extension,
+    final boolean forceClean,
+    @Nonnull AsyncState state,
+    @Nonnull IndicesRegistrationResult registrationResultSink
+  ) throws IOException {
     final StubIndexKey<K, ?> indexKey = extension.getKey();
     final int version = extension.getVersion();
     FileBasedIndexExtension<K, Void> wrappedExtension = wrapStubIndexExtension(extension);
@@ -212,9 +217,10 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
         UpdatableIndex<K, Void, FileContent> index = new VfsAwareMapReduceIndex<>(wrappedExtension, memStorage, null, null, null, lock);
 
         if (stubUpdatingIndex instanceof MergedInvertedIndex) {
-          ProvidedIndexExtension<Integer, SerializedStubTree> ex = ((MergedInvertedIndex<Integer, SerializedStubTree>)stubUpdatingIndex).getProvidedExtension();
-          if (ex instanceof StubProvidedIndexExtension) {
-            ProvidedIndexExtension<K, Void> providedStubIndexExtension = ((StubProvidedIndexExtension)ex).findProvidedStubIndex(extension);
+          ProvidedIndexExtension<Integer, SerializedStubTree> ex =
+            ((MergedInvertedIndex<Integer, SerializedStubTree>)stubUpdatingIndex).getProvidedExtension();
+          if (ex instanceof StubProvidedIndexExtension stubProvidedIndexExtension) {
+            ProvidedIndexExtension<K, Void> providedStubIndexExtension = stubProvidedIndexExtension.findProvidedStubIndex(extension);
             if (providedStubIndexExtension != null) {
               index = ProvidedIndexExtension.wrapWithProvidedIndex(providedStubIndexExtension, wrappedExtension, index);
             }
@@ -641,11 +647,12 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
   }
 
   private boolean dropUnregisteredIndices(@Nonnull AsyncState state) {
-    if (ApplicationManager.getApplication().isDisposed() || !IndexInfrastructure.hasIndices()) {
+    if (Application.get().isDisposed() || !IndexInfrastructure.hasIndices()) {
       return false;
     }
 
-    Set<String> indicesToDrop = new HashSet<>(myPreviouslyRegistered != null ? myPreviouslyRegistered.registeredIndices : Collections.emptyList());
+    Set<String> indicesToDrop =
+      new HashSet<>(myPreviouslyRegistered != null ? myPreviouslyRegistered.registeredIndices : Collections.emptyList());
     for (ID<?, ?> key : state.myIndices.keySet()) {
       indicesToDrop.remove(key.getName());
     }
@@ -672,11 +679,16 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
     myPreviouslyRegistered = state;
   }
 
-  public <K> void updateIndex(@Nonnull StubIndexKey<K, ?> key, int fileId, @Nonnull final Map<K, StubIdList> oldInputData, @Nonnull final Map<K, StubIdList> newInputData) {
+  public <K> void updateIndex(
+    @Nonnull StubIndexKey<K, ?> key,
+    int fileId,
+    @Nonnull final Map<K, StubIdList> oldInputData,
+    @Nonnull final Map<K, StubIdList> newInputData
+  ) {
     try {
       final UpdatableIndex<K, Void, FileContent> index = getIndex(key);
       if (index == null) return;
-      index.updateWithMap(new AbstractUpdateData<K, Void>(fileId) {
+      index.updateWithMap(new AbstractUpdateData<>(fileId) {
         @Override
         protected boolean iterateKeys(@Nonnull KeyValueUpdateProcessor<? super K, ? super Void> addProcessor,
                                       @Nonnull KeyValueUpdateProcessor<? super K, ? super Void> updateProcessor,
@@ -718,7 +730,8 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
 
     @Override
     protected void prepare() {
-      Iterator<StubIndexExtension> extensionsIterator = IndexInfrastructure.hasIndices() ? StubIndexExtension.EP_NAME.getExtensionList().iterator() : Collections.emptyIterator();
+      Iterator<StubIndexExtension> extensionsIterator = IndexInfrastructure.hasIndices()
+        ? StubIndexExtension.EP_NAME.getExtensionList().iterator() : Collections.emptyIterator();
 
       boolean forceClean = Boolean.TRUE == ourForcedClean.getAndSet(Boolean.FALSE);
       while (extensionsIterator.hasNext()) {
@@ -726,9 +739,7 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
         if (extension == null) break;
         extension.getKey(); // initialize stub index keys
 
-        addNestedInitializationTask(() -> {
-          registerIndexer(extension, forceClean, state, indicesRegistrationSink);
-        });
+        addNestedInitializationTask(() -> registerIndexer(extension, forceClean, state, indicesRegistrationSink));
       }
     }
 
@@ -750,7 +761,7 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
       if (updated.length() > 0) {
         final Throwable e = new Throwable(updated.toString());
         // avoid direct forceRebuild as it produces dependency cycle (IDEA-105485)
-        ApplicationManager.getApplication().invokeLater(() -> forceRebuild(e), IdeaModalityState.nonModal());
+        Application.get().invokeLater(() -> forceRebuild(e), IdeaModalityState.nonModal());
       }
 
       myInitialized = true;

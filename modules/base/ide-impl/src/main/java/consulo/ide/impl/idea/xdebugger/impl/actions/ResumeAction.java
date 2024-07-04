@@ -15,16 +15,16 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.actions;
 
-import consulo.ide.impl.idea.execution.actions.ChooseDebugConfigurationPopupAction;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.application.dumb.DumbAware;
-import consulo.project.DumbService;
-import consulo.project.Project;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XDebuggerManager;
+import consulo.ide.impl.idea.execution.actions.ChooseDebugConfigurationPopupAction;
 import consulo.ide.impl.idea.xdebugger.impl.DebuggerSupport;
+import consulo.project.DumbService;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -33,7 +33,7 @@ import jakarta.annotation.Nonnull;
 public class ResumeAction extends XDebuggerActionBase implements DumbAware {
   @Override
   protected boolean isEnabled(AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) return false;
 
     XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
@@ -44,9 +44,10 @@ public class ResumeAction extends XDebuggerActionBase implements DumbAware {
   }
 
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     if (!performWithHandler(e)) {
-      Project project = e == null ? null : e.getData(CommonDataKeys.PROJECT);
+      Project project = e == null ? null : e.getData(Project.KEY);
       if (project != null && !DumbService.isDumb(project)) {
         new ChooseDebugConfigurationPopupAction().actionPerformed(e);
       }

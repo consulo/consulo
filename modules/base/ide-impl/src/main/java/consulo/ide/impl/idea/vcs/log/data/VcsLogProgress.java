@@ -15,16 +15,18 @@
  */
 package consulo.ide.impl.idea.vcs.log.data;
 
-import consulo.disposer.Disposable;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
+import consulo.application.impl.internal.progress.AbstractProgressIndicatorBase;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.impl.internal.progress.AbstractProgressIndicatorBase;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -33,11 +35,11 @@ public class VcsLogProgress implements Disposable {
   @Nonnull
   private final Object myLock = new Object();
   @Nonnull
-  private final List<ProgressListener> myListeners = ContainerUtil.newArrayList();
+  private final List<ProgressListener> myListeners = new ArrayList<>();
   @Nonnull
-  private Set<ProgressIndicator> myTasksWithVisibleProgress = ContainerUtil.newHashSet();
+  private Set<ProgressIndicator> myTasksWithVisibleProgress = new HashSet<>();
   @Nonnull
-  private Set<ProgressIndicator> myTasksWithSilentProgress = ContainerUtil.newHashSet();
+  private Set<ProgressIndicator> myTasksWithSilentProgress = new HashSet<>();
 
   @Nonnull
   public ProgressIndicator createProgressIndicator() {
@@ -45,7 +47,7 @@ public class VcsLogProgress implements Disposable {
   }
 
   public ProgressIndicator createProgressIndicator(boolean visible) {
-    if (ApplicationManager.getApplication().isHeadlessEnvironment()) {
+    if (Application.get().isHeadlessEnvironment()) {
       return new EmptyProgressIndicator();
     }
     return new VcsLogProgressIndicator(visible);
@@ -57,7 +59,7 @@ public class VcsLogProgress implements Disposable {
       if (parentDisposable != null) {
         Disposer.register(parentDisposable, () -> removeProgressIndicatorListener(listener));
       }
-      if (isRunning()) ApplicationManager.getApplication().invokeLater(listener::progressStarted);
+      if (isRunning()) Application.get().invokeLater(listener::progressStarted);
     }
   }
 
@@ -100,7 +102,7 @@ public class VcsLogProgress implements Disposable {
   private void fireNotification(@Nonnull Consumer<ProgressListener> action) {
     synchronized (myLock) {
       List<ProgressListener> list = ContainerUtil.newArrayList(myListeners);
-      ApplicationManager.getApplication().invokeLater(() -> list.forEach(action));
+      Application.get().invokeLater(() -> list.forEach(action));
     }
   }
 

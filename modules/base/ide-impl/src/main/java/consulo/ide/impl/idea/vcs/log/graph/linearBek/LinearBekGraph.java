@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.vcs.log.graph.linearBek;
 
-import consulo.util.lang.function.Condition;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.graph.api.EdgeFilter;
 import consulo.ide.impl.idea.vcs.log.graph.api.LinearGraph;
@@ -26,10 +25,7 @@ import consulo.ide.impl.idea.vcs.log.graph.collapsing.EdgeStorageWrapper;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class LinearBekGraph implements LinearGraph {
   @Nonnull
@@ -78,7 +74,7 @@ public class LinearBekGraph implements LinearGraph {
   }
 
   public Collection<GraphEdge> expandEdge(@Nonnull final GraphEdge edge) {
-    Set<GraphEdge> result = ContainerUtil.newHashSet();
+    Set<GraphEdge> result = new HashSet<>();
 
     assert edge.getType() == GraphEdgeType.DOTTED;
     myDottedEdges.removeEdge(edge);
@@ -113,25 +109,15 @@ public class LinearBekGraph implements LinearGraph {
 
     public Collection<GraphEdge> getAddedEdges() {
       Set<GraphEdge> result = myDottedEdges.getEdges();
-      result.removeAll(ContainerUtil.filter(myHiddenEdges.getEdges(), new Condition<GraphEdge>() {
-        @Override
-        public boolean value(GraphEdge graphEdge) {
-          return graphEdge.getType() == GraphEdgeType.DOTTED;
-        }
-      }));
+      result.removeAll(ContainerUtil.filter(myHiddenEdges.getEdges(), graphEdge-> graphEdge.getType() == GraphEdgeType.DOTTED));
       result.removeAll(myLinearGraph.myDottedEdges.getEdges());
       return result;
     }
 
     public Collection<GraphEdge> getRemovedEdges() {
-      Set<GraphEdge> result = ContainerUtil.newHashSet();
+      Set<GraphEdge> result = new HashSet<>();
       Set<GraphEdge> hidden = myHiddenEdges.getEdges();
-      result.addAll(ContainerUtil.filter(hidden, new Condition<GraphEdge>() {
-        @Override
-        public boolean value(GraphEdge graphEdge) {
-          return graphEdge.getType() != GraphEdgeType.DOTTED;
-        }
-      }));
+      result.addAll(ContainerUtil.filter(hidden, graphEdge-> graphEdge.getType() != GraphEdgeType.DOTTED));
       result.addAll(ContainerUtil.intersection(hidden, myLinearGraph.myDottedEdges.getEdges()));
       result.removeAll(myLinearGraph.myHiddenEdges.getEdges());
       return result;

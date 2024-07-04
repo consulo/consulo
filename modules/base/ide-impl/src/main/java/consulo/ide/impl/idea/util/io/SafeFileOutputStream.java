@@ -1,14 +1,14 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.util.io;
 
-import consulo.application.CommonBundle;
-import consulo.util.io.BufferExposingByteArrayOutputStream;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.logging.Logger;
-
+import consulo.platform.base.localize.CommonLocalize;
+import consulo.util.io.BufferExposingByteArrayOutputStream;
+import consulo.util.io.FileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -107,7 +107,7 @@ public class SafeFileOutputStream extends OutputStream {
       throw new IllegalStateException(e);
     }
     catch (ExecutionException e) {
-      throw new IOException(CommonBundle.message("safe.write.backup", myTarget, myBackupName), e.getCause());
+      throw new IOException(CommonLocalize.safeWriteBackup(myTarget, myBackupName).get(), e.getCause());
     }
   }
 
@@ -116,7 +116,7 @@ public class SafeFileOutputStream extends OutputStream {
       return Files.newOutputStream(myTarget, MAIN_WRITE);
     }
     catch (IOException e) {
-      throw new IOException(CommonBundle.message("safe.write.open", myTarget), e);
+      throw new IOException(CommonLocalize.safeWriteOpen(myTarget).get(), e);
     }
   }
 
@@ -139,7 +139,7 @@ public class SafeFileOutputStream extends OutputStream {
 
   private void restoreFromBackup(@Nullable Path backup, IOException e) throws IOException {
     if (backup == null) {
-      throw new IOException(CommonBundle.message("safe.write.junk", myTarget), e);
+      throw new IOException(CommonLocalize.safeWriteJunk(myTarget).get(), e);
     }
 
     boolean restored = true;
@@ -151,10 +151,10 @@ public class SafeFileOutputStream extends OutputStream {
       e.addSuppressed(ex);
     }
     if (restored) {
-      throw new IOException(CommonBundle.message("safe.write.restored", myTarget), e);
+      throw new IOException(CommonLocalize.safeWriteRestored(myTarget).get(), e);
     }
     else {
-      throw new IOException(CommonBundle.message("safe.write.junk.backup", myTarget, backup.getFileName()), e);
+      throw new IOException(CommonLocalize.safeWriteJunkBackup(myTarget, backup.getFileName()).get(), e);
     }
   }
 }

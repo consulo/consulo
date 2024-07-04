@@ -2,10 +2,6 @@
 package consulo.ide.impl.psi.stubs;
 
 import consulo.application.progress.ProgressManager;
-import consulo.util.lang.Comparing;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.util.lang.StringUtil;
-import consulo.virtualFileSystem.FileAttribute;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.FSRecords;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.indexing.IndexInfrastructure;
@@ -19,14 +15,18 @@ import consulo.language.psi.stub.BinaryFileStubBuilder;
 import consulo.language.psi.stub.IStubFileElementType;
 import consulo.language.template.TemplateLanguage;
 import consulo.logging.Logger;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.FileAttribute;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import gnu.trove.TLongObjectHashMap;
 import gnu.trove.TObjectLongHashMap;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -71,7 +71,7 @@ class StubVersionMap {
     Set<FileType> loadedFileTypes = new HashSet<>();
 
     if (canUsePreviousMappings) {
-      List<String> stringList = StringUtil.split(FileUtil.loadFile(allIndexedFiles, ourEncoding), LINE_SEPARATOR);
+      List<String> stringList = StringUtil.split(consulo.ide.impl.idea.openapi.util.io.FileUtil.loadFile(allIndexedFiles, ourEncoding), LINE_SEPARATOR);
       long allIndexedFilesVersion = Long.parseLong(stringList.get(0));
 
       if (allIndexedFilesVersion == currentStubIndexStamp) {

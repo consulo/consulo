@@ -26,6 +26,7 @@ import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 
+import consulo.ui.style.StyleManager;
 import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -135,13 +136,15 @@ public abstract class VcsLogPopupComponent extends JPanel {
   }
 
   private void setDefaultForeground() {
-    myNameLabel.setForeground(UIUtil.isUnderDarcula() ? UIUtil.getLabelForeground() : UIUtil.getInactiveTextColor());
-    myValueLabel.setForeground(UIUtil.isUnderDarcula() ? UIUtil.getLabelForeground() : UIUtil.getInactiveTextColor().darker().darker());
+    boolean isDark = StyleManager.get().getCurrentStyle().isDark();
+    myNameLabel.setForeground(isDark ? UIUtil.getLabelForeground() : UIUtil.getInactiveTextColor());
+    myValueLabel.setForeground(isDark ? UIUtil.getLabelForeground() : UIUtil.getInactiveTextColor().darker().darker());
   }
 
   private void setOnHoverForeground() {
-    myNameLabel.setForeground(UIUtil.isUnderDarcula() ? UIUtil.getLabelForeground() : UIUtil.getTextAreaForeground());
-    myValueLabel.setForeground(UIUtil.isUnderDarcula() ? UIUtil.getLabelForeground() : UIUtil.getTextFieldForeground());
+    boolean isDark = StyleManager.get().getCurrentStyle().isDark();
+    myNameLabel.setForeground(isDark ? UIUtil.getLabelForeground() : UIUtil.getTextAreaForeground());
+    myValueLabel.setForeground(isDark ? UIUtil.getLabelForeground() : UIUtil.getTextFieldForeground());
   }
 
   private void showPopupMenu() {

@@ -15,23 +15,22 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.frame;
 
-import consulo.ui.ex.awt.util.ColorUtil;
-import consulo.ui.ex.awt.JBLabel;
-import consulo.ui.ex.awt.Wrapper;
-import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.util.collection.MultiMap;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.versionControlSystem.log.VcsRef;
-import consulo.versionControlSystem.log.VcsRefType;
 import consulo.ide.impl.idea.vcs.log.ui.render.LabelIcon;
 import consulo.ide.impl.idea.vcs.log.ui.render.RectanglePainter;
+import consulo.ui.ex.awt.JBLabel;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.Wrapper;
+import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.image.Image;
-
+import consulo.ui.style.StyleManager;
+import consulo.util.collection.MultiMap;
+import consulo.util.lang.ObjectUtil;
+import consulo.versionControlSystem.log.VcsRef;
+import consulo.versionControlSystem.log.VcsRefType;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Collection;
@@ -164,12 +163,7 @@ public class ReferencesPanel extends JPanel {
 
   @Nonnull
   public static Color getLabelColor(@Nonnull Color color) {
-    if (UIUtil.isUnderDarcula()) {
-      color = ColorUtil.darker(color, 6);
-    }
-    else {
-      color = ColorUtil.brighter(color, 6);
-    }
+    color = StyleManager.get().getCurrentStyle().isDark() ? ColorUtil.darker(color, 6) : ColorUtil.brighter(color, 6);
     return ColorUtil.desaturate(color, 3);
   }
 

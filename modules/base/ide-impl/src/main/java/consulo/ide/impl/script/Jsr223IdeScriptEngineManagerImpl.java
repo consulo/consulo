@@ -94,7 +94,7 @@ public class Jsr223IdeScriptEngineManagerImpl extends IdeScriptEngineManager {
     ClassLoader l = ObjectUtil.notNull(loader, AllPluginsLoader.INSTANCE);
     return ClassLoaderUtil.runWithClassLoader(
       l,
-      (Computable<IdeScriptEngine>)()  -> createIdeScriptEngine(getScriptEngineManager().getEngineByExtension(extension))
+      (Computable<IdeScriptEngine>)() -> createIdeScriptEngine(getScriptEngineManager().getEngineByExtension(extension))
     );
   }
 
@@ -202,7 +202,7 @@ public class Jsr223IdeScriptEngineManagerImpl extends IdeScriptEngineManager {
 
     @Override
     public Object eval(@Nonnull final String script) throws IdeScriptException {
-      return ClassLoaderUtil.runWithClassLoader(myLoader, (ThrowableComputable<Object, IdeScriptException>)()  -> {
+      return ClassLoaderUtil.runWithClassLoader(myLoader, (ThrowableComputable<Object, IdeScriptException>)() -> {
         try {
           return myEngine.eval(script);
         }

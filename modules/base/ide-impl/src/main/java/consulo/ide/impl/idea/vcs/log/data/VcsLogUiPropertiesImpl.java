@@ -28,15 +28,17 @@ import java.util.*;
  */
 public abstract class VcsLogUiPropertiesImpl implements PersistentStateComponent<VcsLogUiPropertiesImpl.State>, MainVcsLogUiProperties {
   private static final int RECENTLY_FILTERED_VALUES_LIMIT = 10;
-  private static final Set<VcsLogUiProperty> SUPPORTED_PROPERTIES = ContainerUtil.newHashSet(MainVcsLogUiProperties.SHOW_DETAILS,
-                                                                                             MainVcsLogUiProperties.SHOW_LONG_EDGES,
-                                                                                             MainVcsLogUiProperties.BEK_SORT_TYPE,
-                                                                                             MainVcsLogUiProperties.SHOW_ROOT_NAMES,
-                                                                                             MainVcsLogUiProperties.COMPACT_REFERENCES_VIEW,
-                                                                                             MainVcsLogUiProperties.SHOW_TAG_NAMES,
-                                                                                             MainVcsLogUiProperties.TEXT_FILTER_MATCH_CASE,
-                                                                                             MainVcsLogUiProperties.TEXT_FILTER_REGEX);
-  private final Set<VcsLogUiPropertiesListener> myListeners = ContainerUtil.newLinkedHashSet();
+  private static final Set<VcsLogUiProperty> SUPPORTED_PROPERTIES = ContainerUtil.newHashSet(
+    MainVcsLogUiProperties.SHOW_DETAILS,
+    MainVcsLogUiProperties.SHOW_LONG_EDGES,
+    MainVcsLogUiProperties.BEK_SORT_TYPE,
+    MainVcsLogUiProperties.SHOW_ROOT_NAMES,
+    MainVcsLogUiProperties.COMPACT_REFERENCES_VIEW,
+    MainVcsLogUiProperties.SHOW_TAG_NAMES,
+    MainVcsLogUiProperties.TEXT_FILTER_MATCH_CASE,
+    MainVcsLogUiProperties.TEXT_FILTER_REGEX
+  );
+  private final Set<VcsLogUiPropertiesListener> myListeners = new LinkedHashSet<>();
 
   public static class State {
     public boolean SHOW_DETAILS_IN_CHANGES = true;
@@ -45,8 +47,8 @@ public abstract class VcsLogUiPropertiesImpl implements PersistentStateComponent
     public boolean SHOW_ROOT_NAMES = false;
     public Deque<UserGroup> RECENTLY_FILTERED_USER_GROUPS = new ArrayDeque<>();
     public Deque<UserGroup> RECENTLY_FILTERED_BRANCH_GROUPS = new ArrayDeque<>();
-    public Map<String, Boolean> HIGHLIGHTERS = ContainerUtil.newTreeMap();
-    public Map<String, List<String>> FILTERS = ContainerUtil.newTreeMap();
+    public Map<String, Boolean> HIGHLIGHTERS = new TreeMap<>();
+    public Map<String, List<String>> FILTERS = new TreeMap<>();
     public boolean COMPACT_REFERENCES_VIEW = true;
     public boolean SHOW_TAG_NAMES = false;
     public TextFilterSettings TEXT_FILTER_SETTINGS = new TextFilterSettings();
@@ -84,8 +86,8 @@ public abstract class VcsLogUiPropertiesImpl implements PersistentStateComponent
     else if (TEXT_FILTER_REGEX.equals(property)) {
       return (T)Boolean.valueOf(getTextFilterSettings().REGEX);
     }
-    else if (property instanceof VcsLogHighlighterProperty) {
-      Boolean result = getState().HIGHLIGHTERS.get(((VcsLogHighlighterProperty)property).getId());
+    else if (property instanceof VcsLogHighlighterProperty vcsLogHighlighterProperty) {
+      Boolean result = getState().HIGHLIGHTERS.get(vcsLogHighlighterProperty.getId());
       if (result == null) return (T)Boolean.TRUE;
       return (T)result;
     }
@@ -113,13 +115,13 @@ public abstract class VcsLogUiPropertiesImpl implements PersistentStateComponent
       getState().BEK_SORT_TYPE = ((PermanentGraph.SortType)value).ordinal();
     }
     else if (TEXT_FILTER_REGEX.equals(property)) {
-      getTextFilterSettings().REGEX = (boolean)(Boolean)value;
+      getTextFilterSettings().REGEX = (Boolean)value;
     }
     else if (TEXT_FILTER_MATCH_CASE.equals(property)) {
-      getTextFilterSettings().MATCH_CASE = (boolean)(Boolean)value;
+      getTextFilterSettings().MATCH_CASE = (Boolean)value;
     }
-    else if (property instanceof VcsLogHighlighterProperty) {
-      getState().HIGHLIGHTERS.put(((VcsLogHighlighterProperty)property).getId(), (Boolean)value);
+    else if (property instanceof VcsLogHighlighterProperty vcsLogHighlighterProperty) {
+      getState().HIGHLIGHTERS.put(vcsLogHighlighterProperty.getId(), (Boolean)value);
     }
     else {
       throw new UnsupportedOperationException("Property " + property + " does not exist");
@@ -129,10 +131,7 @@ public abstract class VcsLogUiPropertiesImpl implements PersistentStateComponent
 
   @Override
   public <T> boolean exists(@Nonnull VcsLogUiProperty<T> property) {
-    if (SUPPORTED_PROPERTIES.contains(property) || property instanceof VcsLogHighlighterProperty) {
-      return true;
-    }
-    return false;
+    return SUPPORTED_PROPERTIES.contains(property) || property instanceof VcsLogHighlighterProperty;
   }
 
   @Nonnull
@@ -218,8 +217,7 @@ public abstract class VcsLogUiPropertiesImpl implements PersistentStateComponent
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
       UserGroup group = (UserGroup)o;
-      if (!users.equals(group.users)) return false;
-      return true;
+      return users.equals(group.users);
     }
 
     @Override

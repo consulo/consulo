@@ -27,6 +27,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -34,7 +35,7 @@ public class LinearGraphUtils {
   public static final LinearGraphController.LinearGraphAnswer DEFAULT_GRAPH_ANSWER =
     new LinearGraphController.LinearGraphAnswer(Cursor.getDefaultCursor(), null);
 
-  public static boolean intEqual(@jakarta.annotation.Nullable Integer value, int number) {
+  public static boolean intEqual(@Nullable Integer value, int number) {
     return value != null && value == number;
   }
 
@@ -46,7 +47,7 @@ public class LinearGraphUtils {
     return intEqual(edge.getUpNodeIndex(), nodeIndex);
   }
 
-  public static boolean isNormalEdge(@jakarta.annotation.Nullable GraphEdge edge) {
+  public static boolean isNormalEdge(@Nullable GraphEdge edge) {
     if (edge != null && edge.getType().isNormalEdge()) {
       assert edge.getUpNodeIndex() != null && edge.getDownNodeIndex() != null;
       return true;
@@ -71,12 +72,12 @@ public class LinearGraphUtils {
 
   @Nonnull
   public static List<Integer> getUpNodes(@Nonnull LinearGraph graph, final int nodeIndex) {
-    return ContainerUtil.mapNotNull(graph.getAdjacentEdges(nodeIndex, EdgeFilter.NORMAL_UP), graphEdge -> graphEdge.getUpNodeIndex());
+    return ContainerUtil.mapNotNull(graph.getAdjacentEdges(nodeIndex, EdgeFilter.NORMAL_UP), GraphEdge::getUpNodeIndex);
   }
 
   @Nonnull
   public static List<Integer> getDownNodes(@Nonnull LinearGraph graph, final int nodeIndex) {
-    return ContainerUtil.mapNotNull(graph.getAdjacentEdges(nodeIndex, EdgeFilter.NORMAL_DOWN), graphEdge -> graphEdge.getDownNodeIndex());
+    return ContainerUtil.mapNotNull(graph.getAdjacentEdges(nodeIndex, EdgeFilter.NORMAL_DOWN), GraphEdge::getDownNodeIndex);
   }
 
   @Nonnull
@@ -121,9 +122,11 @@ public class LinearGraphUtils {
     }
   }
 
-  public static LinearGraphController.LinearGraphAnswer createSelectedAnswer(@Nonnull LinearGraph linearGraph,
-                                                                             @Nonnull Collection<Integer> selectedNodeIndexes) {
-    Set<Integer> selectedIds = ContainerUtil.newHashSet();
+  public static LinearGraphController.LinearGraphAnswer createSelectedAnswer(
+    @Nonnull LinearGraph linearGraph,
+    @Nonnull Collection<Integer> selectedNodeIndexes
+  ) {
+    Set<Integer> selectedIds = new HashSet<>();
     for (Integer nodeIndex : selectedNodeIndexes) {
       if (nodeIndex == null) continue;
       selectedIds.add(linearGraph.getNodeId(nodeIndex));
@@ -131,7 +134,7 @@ public class LinearGraphUtils {
     return new LinearGraphController.LinearGraphAnswer(getCursor(true), selectedIds);
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   public static GraphEdge getEdge(@Nonnull LinearGraph graph, int up, int down) {
     List<GraphEdge> edges = graph.getAdjacentEdges(up, EdgeFilter.NORMAL_DOWN);
     for (GraphEdge edge : edges) {
@@ -144,12 +147,12 @@ public class LinearGraphUtils {
 
   @Nonnull
   public static Set<Integer> convertNodeIndexesToIds(@Nonnull final LinearGraph graph, @Nonnull Collection<Integer> nodeIndexes) {
-    return ContainerUtil.map2Set(nodeIndexes, nodeIndex -> graph.getNodeId(nodeIndex));
+    return ContainerUtil.map2Set(nodeIndexes, graph::getNodeId);
   }
 
   @Nonnull
   public static Set<Integer> convertIdsToNodeIndexes(@Nonnull final LinearGraph graph, @Nonnull Collection<Integer> ids) {
-    List<Integer> result = ContainerUtil.mapNotNull(ids, id -> graph.getNodeIndex(id));
+    List<Integer> result = ContainerUtil.mapNotNull(ids, graph::getNodeIndex);
     return ContainerUtil.newHashSet(result);
   }
 }

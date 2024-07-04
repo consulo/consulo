@@ -15,15 +15,14 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.Project;
-import consulo.ui.ex.awt.ScrollingUtil;
-import consulo.versionControlSystem.log.VcsLogDataKeys;
-import consulo.versionControlSystem.log.VcsLogUi;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
 import consulo.ide.impl.idea.vcs.log.ui.frame.VcsLogGraphTable;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.awt.ScrollingUtil;
+import consulo.versionControlSystem.log.VcsLogUi;
 import jakarta.annotation.Nonnull;
 
 public class ShowCommitTooltipAction extends DumbAwareAction {
@@ -32,20 +31,22 @@ public class ShowCommitTooltipAction extends DumbAwareAction {
   }
 
   @Override
+  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
-    VcsLogUi ui = e.getData(VcsLogDataKeys.VCS_LOG_UI);
+    Project project = e.getData(Project.KEY);
+    VcsLogUi ui = e.getData(VcsLogUi.KEY);
     if (project == null || ui == null) {
       e.getPresentation().setEnabledAndVisible(false);
     }
     else {
-      e.getPresentation().setEnabledAndVisible(ui instanceof VcsLogUiImpl && ((VcsLogUiImpl)ui).getTable().getSelectedRowCount() == 1);
+      e.getPresentation().setEnabledAndVisible(ui instanceof VcsLogUiImpl vcsLogUi && vcsLogUi.getTable().getSelectedRowCount() == 1);
     }
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    VcsLogGraphTable table = ((VcsLogUiImpl)e.getRequiredData(VcsLogDataKeys.VCS_LOG_UI)).getTable();
+    VcsLogGraphTable table = ((VcsLogUiImpl)e.getRequiredData(VcsLogUi.KEY)).getTable();
     int row = table.getSelectedRow();
     if (ScrollingUtil.isVisible(table, row)) {
       table.showTooltip(row);

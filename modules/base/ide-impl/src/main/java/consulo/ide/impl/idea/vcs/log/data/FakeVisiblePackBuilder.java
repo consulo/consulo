@@ -29,6 +29,8 @@ import consulo.ide.impl.idea.vcs.log.graph.impl.facade.VisibleGraphImpl;
 import consulo.versionControlSystem.log.util.VcsLogUtil;
 import jakarta.annotation.Nonnull;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -41,9 +43,10 @@ public class FakeVisiblePackBuilder {
   }
 
   @Nonnull
+  @SuppressWarnings("unchecked")
   public VisiblePack build(@Nonnull VisiblePack visiblePack) {
-    if (visiblePack.getVisibleGraph() instanceof VisibleGraphImpl && visiblePack.getVisibleGraph().getVisibleCommitCount() > 0) {
-      return build(visiblePack.getDataPack(), ((VisibleGraphImpl<Integer>)visiblePack.getVisibleGraph()), visiblePack.getFilters());
+    if (visiblePack.getVisibleGraph() instanceof VisibleGraphImpl visibleGraph && visibleGraph.getVisibleCommitCount() > 0) {
+      return build(visiblePack.getDataPack(), (VisibleGraphImpl<Integer>)visibleGraph, visiblePack.getFilters());
     }
     else {
       VisibleGraph<Integer> newGraph = EmptyVisibleGraph.getInstance();
@@ -53,18 +56,22 @@ public class FakeVisiblePackBuilder {
   }
 
   @Nonnull
-  private VisiblePack build(@Nonnull DataPackBase oldPack,
-                            @Nonnull VisibleGraphImpl<Integer> oldGraph,
-                            @Nonnull VcsLogFilterCollection filters) {
+  private VisiblePack build(
+    @Nonnull DataPackBase oldPack,
+    @Nonnull VisibleGraphImpl<Integer> oldGraph,
+    @Nonnull VcsLogFilterCollection filters
+  ) {
     final PermanentGraphInfo<Integer> info = oldGraph.buildSimpleGraphInfo();
-    Set<Integer> heads = ContainerUtil.map2Set(info.getPermanentGraphLayout().getHeadNodeIndex(),
-                                               integer -> info.getPermanentCommitsInfo().getCommitId(integer));
+    Set<Integer> heads = ContainerUtil.map2Set(
+      info.getPermanentGraphLayout().getHeadNodeIndex(),
+      integer -> info.getPermanentCommitsInfo().getCommitId(integer)
+    );
 
     RefsModel newRefsModel = createRefsModel(oldPack.getRefsModel(), heads, oldGraph, oldPack.getLogProviders());
     DataPackBase newPack = new DataPackBase(oldPack.getLogProviders(), newRefsModel, false);
 
     GraphColorManagerImpl colorManager =
-            new GraphColorManagerImpl(newRefsModel, DataPack.createHashGetter(myHashMap), DataPack.getRefManagerMap(oldPack.getLogProviders()));
+      new GraphColorManagerImpl(newRefsModel, DataPack.createHashGetter(myHashMap), DataPack.getRefManagerMap(oldPack.getLogProviders()));
 
     VisibleGraph<Integer> newGraph =
             new VisibleGraphImpl<>(new CollapsedController(new BaseController(info), info, null), info, colorManager);
@@ -74,14 +81,16 @@ public class FakeVisiblePackBuilder {
 
   @Nonnull
   private RefsModel createEmptyRefsModel() {
-    return new RefsModel(ContainerUtil.newHashMap(), ContainerUtil.newHashSet(), myHashMap, ContainerUtil.newHashMap());
+    return new RefsModel(new HashMap<>(), new HashSet<>(), myHashMap, new HashMap<>());
   }
 
-  private RefsModel createRefsModel(@Nonnull RefsModel refsModel,
-                                    @Nonnull Set<Integer> heads,
-                                    @Nonnull VisibleGraph<Integer> visibleGraph,
-                                    @Nonnull Map<VirtualFile, VcsLogProvider> providers) {
-    Set<VcsRef> branchesAndHeads = ContainerUtil.newHashSet();
+  private RefsModel createRefsModel(
+    @Nonnull RefsModel refsModel,
+    @Nonnull Set<Integer> heads,
+    @Nonnull VisibleGraph<Integer> visibleGraph,
+    @Nonnull Map<VirtualFile, VcsLogProvider> providers
+  ) {
+    Set<VcsRef> branchesAndHeads = new HashSet<>();
     refsModel.getBranches().stream().filter(ref -> {
       int index = myHashMap.getCommitIndex(ref.getCommitHash(), ref.getRoot());
       Integer row = visibleGraph.getVisibleRowIndex(index);
@@ -90,10 +99,10 @@ public class FakeVisiblePackBuilder {
     heads.stream().flatMap(head -> refsModel.refsToCommit(head).stream()).forEach(branchesAndHeads::add);
 
     Map<VirtualFile, Set<VcsRef>> map = VcsLogUtil.groupRefsByRoot(branchesAndHeads);
-    Map<VirtualFile, CompressedRefs> refs = ContainerUtil.newHashMap();
+    Map<VirtualFile, CompressedRefs> refs = new HashMap<>();
     for (VirtualFile root : providers.keySet()) {
       Set<VcsRef> refsForRoot = map.get(root);
-      refs.put(root, new CompressedRefs(refsForRoot == null ? ContainerUtil.newHashSet() : refsForRoot, myHashMap));
+      refs.put(root, new CompressedRefs(refsForRoot == null ? new HashSet<>() : refsForRoot, myHashMap));
     }
     return new RefsModel(refs, heads, myHashMap, providers);
   }

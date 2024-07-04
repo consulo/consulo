@@ -18,24 +18,26 @@ package consulo.ide.impl.idea.vcs.log.data;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
-import consulo.ide.impl.idea.util.NotNullFunction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.data.index.VcsLogIndex;
 import consulo.ide.impl.idea.vcs.log.graph.GraphCommitImpl;
 import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;
 import consulo.ide.impl.idea.vcs.log.impl.RequirementsImpl;
-import consulo.versionControlSystem.util.StopWatch;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.lang.Pair;
 import consulo.versionControlSystem.VcsException;
-import consulo.versionControlSystem.log.*;
+import consulo.versionControlSystem.log.TimedVcsCommit;
+import consulo.versionControlSystem.log.VcsCommitMetadata;
+import consulo.versionControlSystem.log.VcsLogProvider;
+import consulo.versionControlSystem.log.VcsRef;
 import consulo.versionControlSystem.log.graph.GraphCommit;
+import consulo.versionControlSystem.util.StopWatch;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -90,7 +92,7 @@ public class VcsLogRefresherImpl implements VcsLogRefresher {
     myRecentCommitCount = recentCommitsCount;
     myProgress = progress;
 
-    mySingleTaskController = new SingleTaskController<RefreshRequest, DataPack>(dataPack -> {
+    mySingleTaskController = new SingleTaskController<>(dataPack -> {
       myDataPack = dataPack;
       dataPackUpdateHandler.accept(dataPack);
     }) {
@@ -154,8 +156,7 @@ public class VcsLogRefresherImpl implements VcsLogRefresher {
 
   @Nonnull
   private Map<VirtualFile, VcsLogProvider> getProvidersForRoots(@Nonnull Set<VirtualFile> roots) {
-    return ContainerUtil.map2Map(roots,
-                                 root -> Pair.create(root, myProviders.get(root)));
+    return ContainerUtil.map2Map(roots, root -> Pair.create(root, myProviders.get(root)));
   }
 
   @Override
@@ -190,8 +191,7 @@ public class VcsLogRefresherImpl implements VcsLogRefresher {
 
   @Nonnull
   private GraphCommitImpl<Integer> compactCommit(@Nonnull TimedVcsCommit commit, @Nonnull final VirtualFile root) {
-    List<Integer> parents = ContainerUtil.map(commit.getParents(),
-                                              (NotNullFunction<Hash, Integer>)hash -> myHashMap.getCommitIndex(hash, root));
+    List<Integer> parents = ContainerUtil.map(commit.getParents(), hash -> myHashMap.getCommitIndex(hash, root));
     int index = myHashMap.getCommitIndex(commit.getId(), root);
     myIndex.markForIndexing(index, root);
     return new GraphCommitImpl<>(index, parents, commit.getTimestamp());
@@ -241,7 +241,7 @@ public class VcsLogRefresherImpl implements VcsLogRefresher {
 
     @Nonnull
     private Collection<VirtualFile> getRootsToRefresh(@Nonnull List<RefreshRequest> requests) {
-      Collection<VirtualFile> rootsToRefresh = ContainerUtil.newArrayList();
+      Collection<VirtualFile> rootsToRefresh = new ArrayList<>();
       for (RefreshRequest request : requests) {
         if (request == RefreshRequest.RELOAD_ALL) {
           myCurrentDataPack = DataPack.EMPTY;
@@ -289,9 +289,11 @@ public class VcsLogRefresherImpl implements VcsLogRefresher {
     }
 
     @Nonnull
-    private Map<VirtualFile, CompressedRefs> getAllNewRefs(@Nonnull LogInfo newInfo,
-                                                           @Nonnull Map<VirtualFile, CompressedRefs> previousRefs) {
-      Map<VirtualFile, CompressedRefs> result = ContainerUtil.newHashMap();
+    private Map<VirtualFile, CompressedRefs> getAllNewRefs(
+      @Nonnull LogInfo newInfo,
+      @Nonnull Map<VirtualFile, CompressedRefs> previousRefs
+    ) {
+      Map<VirtualFile, CompressedRefs> result = new HashMap<>();
       for (VirtualFile root : previousRefs.keySet()) {
         CompressedRefs newInfoRefs = newInfo.getRefs().get(root);
         result.put(root, newInfoRefs != null ? newInfoRefs : previousRefs.get(root));
@@ -299,9 +301,11 @@ public class VcsLogRefresherImpl implements VcsLogRefresher {
       return result;
     }
 
-    private void loadLogAndRefs(@Nonnull Collection<VirtualFile> roots,
-                                @Nonnull Map<VirtualFile, CompressedRefs> prevRefs,
-                                int commitCount) throws VcsException {
+    private void loadLogAndRefs(
+      @Nonnull Collection<VirtualFile> roots,
+      @Nonnull Map<VirtualFile, CompressedRefs> prevRefs,
+      int commitCount
+    ) throws VcsException {
       LogInfo logInfo = loadRecentData(prepareRequirements(roots, commitCount, prevRefs));
       for (VirtualFile root : roots) {
         myLoadedInfo.put(root, logInfo.getCommits(root));
@@ -310,10 +314,12 @@ public class VcsLogRefresherImpl implements VcsLogRefresher {
     }
 
     @Nonnull
-    private Map<VirtualFile, VcsLogProvider.Requirements> prepareRequirements(@Nonnull Collection<VirtualFile> roots,
-                                                                              int commitCount,
-                                                                              @Nonnull Map<VirtualFile, CompressedRefs> prevRefs) {
-      Map<VirtualFile, VcsLogProvider.Requirements> requirements = ContainerUtil.newHashMap();
+    private Map<VirtualFile, VcsLogProvider.Requirements> prepareRequirements(
+      @Nonnull Collection<VirtualFile> roots,
+      int commitCount,
+      @Nonnull Map<VirtualFile, CompressedRefs> prevRefs
+    ) {
+      Map<VirtualFile, VcsLogProvider.Requirements> requirements = new HashMap<>();
       for (VirtualFile root : roots) {
         requirements.put(root, new RequirementsImpl(commitCount, true, prevRefs.get(root).getRefs()));
       }
@@ -321,10 +327,12 @@ public class VcsLogRefresherImpl implements VcsLogRefresher {
     }
 
     @Nullable
-    private List<GraphCommit<Integer>> join(@Nonnull List<? extends GraphCommit<Integer>> recentCommits,
-                                            @Nonnull List<GraphCommit<Integer>> fullLog,
-                                            @Nonnull Map<VirtualFile, CompressedRefs> previousRefs,
-                                            @Nonnull Map<VirtualFile, CompressedRefs> newRefs) {
+    private List<GraphCommit<Integer>> join(
+      @Nonnull List<? extends GraphCommit<Integer>> recentCommits,
+      @Nonnull List<GraphCommit<Integer>> fullLog,
+      @Nonnull Map<VirtualFile, CompressedRefs> previousRefs,
+      @Nonnull Map<VirtualFile, CompressedRefs> newRefs
+    ) {
       StopWatch sw = StopWatch.start("joining new commits");
       Collection<Integer> prevRefIndices =
               previousRefs.values().stream().flatMap(refs -> refs.getCommits().stream()).collect(Collectors.toSet());
@@ -364,7 +372,7 @@ public class VcsLogRefresherImpl implements VcsLogRefresher {
       new ProviderIterator() {
         @Override
         void each(@Nonnull final VirtualFile root, @Nonnull VcsLogProvider provider) throws VcsException {
-          final List<GraphCommit<Integer>> graphCommits = ContainerUtil.newArrayList();
+          final List<GraphCommit<Integer>> graphCommits = new ArrayList<>();
           VcsLogProvider.LogData data = provider.readAllHashes(root, commit -> graphCommits.add(compactCommit(commit, root)));
           logInfo.put(root, graphCommits);
           logInfo.put(root, data.getRefs());
@@ -422,16 +430,15 @@ public class VcsLogRefresherImpl implements VcsLogRefresher {
 
     @Nonnull
     Map<VirtualFile, VcsLogProvider.Requirements> asMap(@Nonnull Collection<VirtualFile> roots) {
-      return ContainerUtil
-              .map2Map(roots, root -> Pair.<VirtualFile, VcsLogProvider.Requirements>create(root, this));
+      return ContainerUtil.map2Map(roots, root -> Pair.<VirtualFile, VcsLogProvider.Requirements>create(root, this));
     }
   }
 
   @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
   private static class LogInfo {
     private final VcsLogStorage myHashMap;
-    private final Map<VirtualFile, CompressedRefs> myRefs = ContainerUtil.newHashMap();
-    private final Map<VirtualFile, List<GraphCommit<Integer>>> myCommits = ContainerUtil.newHashMap();
+    private final Map<VirtualFile, CompressedRefs> myRefs = new HashMap<>();
+    private final Map<VirtualFile, List<GraphCommit<Integer>>> myCommits = new HashMap<>();
 
     public LogInfo(VcsLogStorage hashMap) {
       myHashMap = hashMap;

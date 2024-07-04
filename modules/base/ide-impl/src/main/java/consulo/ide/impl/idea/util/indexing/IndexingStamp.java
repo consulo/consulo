@@ -1,23 +1,21 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.util.indexing;
 
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
-import consulo.virtualFileSystem.InvalidVirtualFileAccessException;
-import consulo.virtualFileSystem.FileAttribute;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.FSRecords;
-import consulo.language.psi.stub.StubIndexKey;
-import consulo.util.collection.SmartList;
-import consulo.util.lang.SystemProperties;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.index.io.ID;
 import consulo.index.io.data.DataInputOutputUtil;
+import consulo.language.psi.stub.StubIndexKey;
+import consulo.util.collection.SmartList;
 import consulo.util.collection.primitive.ints.IntObjectMap;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.SystemProperties;
+import consulo.virtualFileSystem.FileAttribute;
+import consulo.virtualFileSystem.InvalidVirtualFileAccessException;
 import gnu.trove.TObjectLongHashMap;
-import gnu.trove.TObjectLongProcedure;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -120,7 +118,7 @@ public class IndexingStamp {
       //noinspection ResultOfMethodCallIgnored
       file.getParentFile().mkdirs();
     }
-    try (final DataOutputStream os = FileUtilRt.doIOOperation(new FileUtilRt.RepeatableIOOperation<DataOutputStream, FileNotFoundException>() {
+    try (final DataOutputStream os = FileUtil.doIOOperation(new FileUtil.RepeatableIOOperation<DataOutputStream, FileNotFoundException>() {
       @Nullable
       @Override
       public DataOutputStream execute(boolean lastAttempt) throws FileNotFoundException {
@@ -261,48 +259,41 @@ public class IndexingStamp {
         final long[] data = new long[2];
         final int dominatingStampIndex = 0;
         final int numberOfOutdatedIndex = 1;
-        myIndexStamps.forEachEntry(new TObjectLongProcedure<ID<?, ?>>() {
-          @Override
-          public boolean execute(ID<?, ?> a, long b) {
-            if (b == INDEX_DATA_OUTDATED_STAMP) {
-              ++data[numberOfOutdatedIndex];
-              b = getIndexCreationStamp(a);
-            }
-            data[dominatingStampIndex] = Math.max(data[dominatingStampIndex], b);
-
-            return true;
+        myIndexStamps.forEachEntry((a,b) -> {
+          if (b == INDEX_DATA_OUTDATED_STAMP) {
+            ++data[numberOfOutdatedIndex];
+            b = getIndexCreationStamp(a);
           }
+          data[dominatingStampIndex] = Math.max(data[dominatingStampIndex], b);
+
+          return true;
         });
         if (data[numberOfOutdatedIndex] > 0) {
           assert data[numberOfOutdatedIndex] < ID.MAX_NUMBER_OF_INDICES;
           DataInputOutputUtil.writeTIME(stream, DataInputOutputUtil.timeBase + data[numberOfOutdatedIndex]);
-          myIndexStamps.forEachEntry(new TObjectLongProcedure<ID<?, ?>>() {
-            @Override
-            public boolean execute(final ID<?, ?> id, final long timestamp) {
-              try {
-                if (timestamp == INDEX_DATA_OUTDATED_STAMP) {
-                  DataInputOutputUtil.writeINT(stream, id.getUniqueId());
-                }
-                return true;
-              }
-              catch (IOException e) {
-                throw new RuntimeException(e);
-              }
-            }
-          });
-        }
-        DataInputOutputUtil.writeTIME(stream, data[dominatingStampIndex]);
-        myIndexStamps.forEachEntry(new TObjectLongProcedure<ID<?, ?>>() {
-          @Override
-          public boolean execute(final ID<?, ?> id, final long timestamp) {
+          myIndexStamps.forEachEntry((id, timestamp) -> {
             try {
-              if (timestamp == INDEX_DATA_OUTDATED_STAMP) return true;
-              DataInputOutputUtil.writeINT(stream, id.getUniqueId());
+              if (timestamp == INDEX_DATA_OUTDATED_STAMP) {
+                DataInputOutputUtil.writeINT(stream, id.getUniqueId());
+              }
               return true;
             }
             catch (IOException e) {
               throw new RuntimeException(e);
             }
+          });
+        }
+        DataInputOutputUtil.writeTIME(stream, data[dominatingStampIndex]);
+        myIndexStamps.forEachEntry((id, timestamp) -> {
+          try {
+            if (timestamp == INDEX_DATA_OUTDATED_STAMP) {
+              return true;
+            }
+            DataInputOutputUtil.writeINT(stream, id.getUniqueId());
+            return true;
+          }
+          catch (IOException e) {
+            throw new RuntimeException(e);
           }
         });
       }

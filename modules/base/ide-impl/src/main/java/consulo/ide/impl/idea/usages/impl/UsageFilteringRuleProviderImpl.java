@@ -20,7 +20,6 @@ import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.usages.impl.rules.ReadAccessFilteringRule;
 import consulo.ide.impl.idea.usages.impl.rules.WriteAccessFilteringRule;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -31,8 +30,8 @@ import consulo.usage.UsageViewBundle;
 import consulo.usage.rule.UsageFilteringRule;
 import consulo.usage.rule.UsageFilteringRuleListener;
 import consulo.usage.rule.UsageFilteringRuleProvider;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -49,7 +48,7 @@ public class UsageFilteringRuleProviderImpl implements UsageFilteringRuleProvide
   @Override
   @Nonnull
   public UsageFilteringRule[] getActiveRules(@Nonnull Project project) {
-    final List<UsageFilteringRule> rules = new ArrayList<UsageFilteringRule>();
+    final List<UsageFilteringRule> rules = new ArrayList<>();
 
     if (!myReadWriteState.isShowReadAccess()) {
       rules.add(new ReadAccessFilteringRule());
@@ -109,14 +108,14 @@ public class UsageFilteringRuleProviderImpl implements UsageFilteringRuleProvide
     }
 
     @Override
-    public boolean isSelected(AnActionEvent e) {
+    public boolean isSelected(@Nonnull AnActionEvent e) {
       return myReadWriteState.isShowReadAccess();
     }
 
     @Override
     public void setSelected(AnActionEvent e, boolean state) {
       myReadWriteState.setShowReadAccess(state);
-      Project project = e.getData(CommonDataKeys.PROJECT);
+      Project project = e.getData(Project.KEY);
       if (project == null) return;
       project.getMessageBus().syncPublisher(UsageFilteringRuleListener.class).rulesChanged();
     }
@@ -128,14 +127,14 @@ public class UsageFilteringRuleProviderImpl implements UsageFilteringRuleProvide
     }
 
     @Override
-    public boolean isSelected(AnActionEvent e) {
+    public boolean isSelected(@Nonnull AnActionEvent e) {
       return myReadWriteState.isShowWriteAccess();
     }
 
     @Override
     public void setSelected(AnActionEvent e, boolean state) {
       myReadWriteState.setShowWriteAccess(state);
-      Project project = e.getData(CommonDataKeys.PROJECT);
+      Project project = e.getData(Project.KEY);
       if (project == null) return;
       project.getMessageBus().syncPublisher(UsageFilteringRuleListener.class).rulesChanged();
     }

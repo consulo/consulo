@@ -15,14 +15,13 @@
  */
 package consulo.ide.impl.idea.vcs.log.data;
 
-import consulo.versionControlSystem.log.*;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.graph.GraphColorManagerImpl;
-import consulo.versionControlSystem.log.graph.GraphCommit;
 import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;
 import consulo.ide.impl.idea.vcs.log.graph.impl.facade.PermanentGraphImpl;
+import consulo.versionControlSystem.log.*;
+import consulo.versionControlSystem.log.graph.GraphCommit;
 import consulo.versionControlSystem.util.StopWatch;
+import consulo.virtualFileSystem.VirtualFile;
 import gnu.trove.TIntHashSet;
 import jakarta.annotation.Nonnull;
 
@@ -44,15 +43,17 @@ public class DataPack extends DataPackBase {
   }
 
   @Nonnull
-  static DataPack build(@Nonnull List<? extends GraphCommit<Integer>> commits,
-                        @Nonnull Map<VirtualFile, CompressedRefs> refs,
-                        @Nonnull Map<VirtualFile, VcsLogProvider> providers,
-                        @Nonnull final VcsLogStorage hashMap,
-                        boolean full) {
+  static DataPack build(
+    @Nonnull List<? extends GraphCommit<Integer>> commits,
+    @Nonnull Map<VirtualFile, CompressedRefs> refs,
+    @Nonnull Map<VirtualFile, VcsLogProvider> providers,
+    @Nonnull final VcsLogStorage hashMap,
+    boolean full
+  ) {
     RefsModel refsModel;
     PermanentGraph<Integer> permanentGraph;
     if (commits.isEmpty()) {
-      refsModel = new RefsModel(refs, ContainerUtil.<Integer>newHashSet(), hashMap, providers);
+      refsModel = new RefsModel(refs, new HashSet<>(), hashMap, providers);
       permanentGraph = EmptyPermanentGraph.getInstance();
     }
     else {
@@ -87,7 +88,7 @@ public class DataPack extends DataPackBase {
       }
     }
 
-    Set<Integer> heads = ContainerUtil.newHashSet();
+    Set<Integer> heads = new HashSet<>();
     for (GraphCommit<Integer> commit : commits) {
       if (!parents.contains(commit.getId())) {
         heads.add(commit.getId());
@@ -107,7 +108,7 @@ public class DataPack extends DataPackBase {
 
   @Nonnull
   public static Map<VirtualFile, VcsLogRefManager> getRefManagerMap(@Nonnull Map<VirtualFile, VcsLogProvider> logProviders) {
-    Map<VirtualFile, VcsLogRefManager> map = ContainerUtil.newHashMap();
+    Map<VirtualFile, VcsLogRefManager> map = new HashMap<>();
     for (Map.Entry<VirtualFile, VcsLogProvider> entry : logProviders.entrySet()) {
       map.put(entry.getKey(), entry.getValue().getReferenceManager());
     }
@@ -117,7 +118,7 @@ public class DataPack extends DataPackBase {
   @Nonnull
   private static DataPack createEmptyInstance() {
     RefsModel emptyModel =
-      new RefsModel(ContainerUtil.newHashMap(), ContainerUtil.<Integer>newHashSet(), VcsLogStorageImpl.EMPTY, ContainerUtil.newHashMap());
+      new RefsModel(new HashMap<>(), new HashSet<>(), VcsLogStorageImpl.EMPTY, new HashMap<>());
     return new DataPack(emptyModel, EmptyPermanentGraph.getInstance(), Collections.<VirtualFile, VcsLogProvider>emptyMap(), false);
   }
 

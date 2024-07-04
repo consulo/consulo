@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.vcs.log.graph.collapsing;
 
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.graph.api.LinearGraph;
 import consulo.ide.impl.idea.vcs.log.graph.api.elements.GraphEdge;
 import consulo.ide.impl.idea.vcs.log.graph.api.elements.GraphElement;
@@ -26,7 +25,9 @@ import consulo.ide.impl.idea.vcs.log.graph.impl.facade.GraphChanges;
 import consulo.ide.impl.idea.vcs.log.graph.impl.facade.ReachableNodes;
 import consulo.ide.impl.idea.vcs.log.graph.utils.UnsignedBitSet;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class CollapsedController extends CascadeController {
@@ -35,7 +36,7 @@ public class CollapsedController extends CascadeController {
 
   public CollapsedController(@Nonnull CascadeController delegateLinearGraphController,
                              @Nonnull final PermanentGraphInfo<?> permanentGraphInfo,
-                             @jakarta.annotation.Nullable Set<Integer> idsOfVisibleBranches) {
+                             @Nullable Set<Integer> idsOfVisibleBranches) {
     super(delegateLinearGraphController, permanentGraphInfo);
     UnsignedBitSet initVisibility =
       ReachableNodes.getReachableNodes(permanentGraphInfo.getLinearGraph(), idsOfVisibleBranches);
@@ -56,7 +57,7 @@ public class CollapsedController extends CascadeController {
   }
 
   private void applyDelegateChanges(LinearGraph graph, GraphChanges<Integer> changes) {
-    Set<Integer> nodesToShow = ContainerUtil.newHashSet();
+    Set<Integer> nodesToShow = new HashSet<>();
 
     for (GraphChanges.Edge<Integer> e : changes.getChangedEdges()) {
       if (!e.removed()) {
@@ -89,7 +90,7 @@ public class CollapsedController extends CascadeController {
     CollapsedActionManager.expandNodes(myCollapsedGraph, nodesToShow);
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   @Override
   protected LinearGraphAnswer performAction(@Nonnull LinearGraphAction action) {
     return CollapsedActionManager.performAction(this, action);
@@ -106,28 +107,26 @@ public class CollapsedController extends CascadeController {
     return myCollapsedGraph;
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   @Override
   protected GraphElement convertToDelegate(@Nonnull GraphElement graphElement) {
     return convertToDelegate(graphElement, myCollapsedGraph);
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   public static GraphElement convertToDelegate(@Nonnull GraphElement graphElement, CollapsedGraph collapsedGraph) {
-    if (graphElement instanceof GraphEdge) {
-      Integer upIndex = ((GraphEdge)graphElement).getUpNodeIndex();
-      Integer downIndex = ((GraphEdge)graphElement).getDownNodeIndex();
+    if (graphElement instanceof GraphEdge edge) {
+      Integer upIndex = edge.getUpNodeIndex();
+      Integer downIndex = edge.getDownNodeIndex();
       if (upIndex != null && downIndex != null && collapsedGraph.isMyCollapsedEdge(upIndex, downIndex)) return null;
 
       Integer convertedUpIndex = upIndex == null ? null : collapsedGraph.convertToDelegateNodeIndex(upIndex);
       Integer convertedDownIndex = downIndex == null ? null : collapsedGraph.convertToDelegateNodeIndex(downIndex);
 
-      return new GraphEdge(convertedUpIndex, convertedDownIndex, ((GraphEdge)graphElement).getTargetId(),
-                           ((GraphEdge)graphElement).getType());
+      return new GraphEdge(convertedUpIndex, convertedDownIndex, edge.getTargetId(), edge.getType());
     }
-    else if (graphElement instanceof GraphNode) {
-      return new GraphNode(collapsedGraph.convertToDelegateNodeIndex((((GraphNode)graphElement).getNodeIndex())),
-                           ((GraphNode)graphElement).getType());
+    else if (graphElement instanceof GraphNode node) {
+      return new GraphNode(collapsedGraph.convertToDelegateNodeIndex(node.getNodeIndex()), node.getType());
     }
     return null;
   }

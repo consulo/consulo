@@ -15,10 +15,10 @@
  */
 package consulo.ide.impl.idea.util;
 
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -61,7 +61,7 @@ public abstract class AbstractPathMapper implements PathMapper {
   @Nonnull
   @Override
   public final List<String> convertToRemote(@Nonnull Collection<String> paths) {
-    List<String> result = ContainerUtil.newArrayList();
+    List<String> result = new ArrayList<>();
     for (String p : paths) {
       result.add(convertToRemote(p));
     }

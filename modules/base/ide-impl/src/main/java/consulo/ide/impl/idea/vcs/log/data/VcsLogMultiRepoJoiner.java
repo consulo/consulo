@@ -1,6 +1,5 @@
 package consulo.ide.impl.idea.vcs.log.data;
 
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.versionControlSystem.log.graph.GraphCommit;
 import jakarta.annotation.Nonnull;
 
@@ -20,7 +19,7 @@ public class VcsLogMultiRepoJoiner<CommitId, Commit extends GraphCommit<CommitId
     }
     List<Commit> result = new ArrayList<>(size);
 
-    Map<Commit, Iterator<Commit>> nextCommits = ContainerUtil.newHashMap();
+    Map<Commit, Iterator<Commit>> nextCommits = new HashMap<>();
     for (List<Commit> log : logsFromRepos) {
       Iterator<Commit> iterator = log.iterator();
       if (iterator.hasNext()) {

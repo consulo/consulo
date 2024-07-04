@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.vcs.log.util;
 
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
@@ -28,6 +27,7 @@ import gnu.trove.TIntObjectIterator;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -73,7 +73,7 @@ public class TroveUtil {
       result = intersect(result, set);
     }
 
-    if (result == null) return ContainerUtil.newHashSet();
+    if (result == null) return new HashSet<>();
     return createJavaSet(result);
   }
 
@@ -104,7 +104,7 @@ public class TroveUtil {
 
   @Nonnull
   private static Set<Integer> createJavaSet(@Nonnull IntSet set) {
-    Set<Integer> result = ContainerUtil.newHashSet(set.size());
+    Set<Integer> result = new HashSet<>(set.size());
     set.forEach(result::add);
     return result;
   }
