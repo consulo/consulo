@@ -26,11 +26,13 @@ import consulo.language.editor.refactoring.util.TextOccurrencesUtil;
 import consulo.language.psi.PsiElement;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.CheckBox;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.StateRestoringCheckBoxWrapper;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.StateRestoringCheckBox;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -45,10 +47,10 @@ public class SafeDeleteDialog extends DialogWrapper {
   private final PsiElement[] myElements;
   private final Callback myCallback;
 
-  private StateRestoringCheckBox myCbSearchInComments;
-  private StateRestoringCheckBox myCbSearchTextOccurrences;
+  private StateRestoringCheckBoxWrapper myCbSearchInComments;
+  private StateRestoringCheckBoxWrapper myCbSearchTextOccurrences;
 
-  private JCheckBox myCbSafeDelete;
+  private CheckBox myCbSafeDelete;
 
   private final SafeDeleteProcessorDelegate myDelegate;
 
@@ -67,11 +69,11 @@ public class SafeDeleteDialog extends DialogWrapper {
   }
 
   public boolean isSearchInComments() {
-    return myCbSearchInComments.isSelected();
+    return myCbSearchInComments.getValue();
   }
 
   public boolean isSearchForTextOccurences() {
-    return myCbSearchTextOccurrences != null && myCbSearchTextOccurrences.isSelected();
+    return myCbSearchTextOccurrences != null && myCbSearchTextOccurrences.getValue();
   }
 
   @Override
@@ -86,6 +88,7 @@ public class SafeDeleteDialog extends DialogWrapper {
   }
 
   @Override
+  @RequiredUIAccess
   protected JComponent createNorthPanel() {
     final JPanel panel = new JPanel(new GridBagLayout());
     final GridBagConstraints gbc = new GridBagConstraints();
@@ -111,9 +114,9 @@ public class SafeDeleteDialog extends DialogWrapper {
       gbc.weightx = 0.0;
       gbc.gridwidth = 1;
       gbc.insets = JBUI.insets(4, 8, 0, 8);
-      myCbSafeDelete = new JCheckBox(RefactoringLocalize.checkboxSafeDeleteWithUsageSearch().get());
-      panel.add(myCbSafeDelete, gbc);
-      myCbSafeDelete.addActionListener(e -> {
+      myCbSafeDelete = CheckBox.create(RefactoringLocalize.checkboxSafeDeleteWithUsageSearch());
+      panel.add(TargetAWT.to(myCbSafeDelete), gbc);
+      myCbSafeDelete.addValueListener(e -> {
         updateControls(myCbSearchInComments);
         updateControls(myCbSearchTextOccurrences);
       });
@@ -123,33 +126,32 @@ public class SafeDeleteDialog extends DialogWrapper {
     gbc.gridx = 0;
     gbc.weightx = 0.0;
     gbc.gridwidth = 1;
-    myCbSearchInComments = new StateRestoringCheckBox();
-    myCbSearchInComments.setText(RefactoringLocalize.searchInCommentsAndStrings().get());
-    panel.add(myCbSearchInComments, gbc);
+    myCbSearchInComments = new StateRestoringCheckBoxWrapper(RefactoringLocalize.searchInCommentsAndStrings());
+    panel.add(TargetAWT.to(myCbSearchInComments.getComponent()), gbc);
 
     if (needSearchForTextOccurrences()) {
       gbc.gridx++;
-      myCbSearchTextOccurrences = new StateRestoringCheckBox();
-      myCbSearchTextOccurrences.setText(RefactoringLocalize.searchForTextOccurrences().get());
-      panel.add(myCbSearchTextOccurrences, gbc);
+      myCbSearchTextOccurrences = new StateRestoringCheckBoxWrapper(RefactoringLocalize.searchForTextOccurrences());
+      panel.add(TargetAWT.to(myCbSearchTextOccurrences.getComponent()), gbc);
     }
 
     final RefactoringSettings refactoringSettings = RefactoringSettings.getInstance();
     if (myCbSafeDelete != null) {
-      myCbSafeDelete.setSelected(refactoringSettings.SAFE_DELETE_WHEN_DELETE);
+      myCbSafeDelete.setValue(refactoringSettings.SAFE_DELETE_WHEN_DELETE);
     }
-    myCbSearchInComments.setSelected(myDelegate != null ? myDelegate.isToSearchInComments(myElements[0]) : refactoringSettings.SAFE_DELETE_SEARCH_IN_COMMENTS);
+    myCbSearchInComments.setValue(myDelegate != null ? myDelegate.isToSearchInComments(myElements[0]) : refactoringSettings.SAFE_DELETE_SEARCH_IN_COMMENTS);
     if (myCbSearchTextOccurrences != null) {
-      myCbSearchTextOccurrences.setSelected(myDelegate != null ? myDelegate.isToSearchForTextOccurrences(myElements[0]) : refactoringSettings.SAFE_DELETE_SEARCH_IN_NON_JAVA);
+      myCbSearchTextOccurrences.setValue(myDelegate != null ? myDelegate.isToSearchForTextOccurrences(myElements[0]) : refactoringSettings.SAFE_DELETE_SEARCH_IN_NON_JAVA);
     }
     updateControls(myCbSearchTextOccurrences);
     updateControls(myCbSearchInComments);
     return panel;
   }
 
-  private void updateControls(@Nullable StateRestoringCheckBox checkBox) {
+  @RequiredUIAccess
+  private void updateControls(@Nullable StateRestoringCheckBoxWrapper checkBox) {
     if (checkBox == null) return;
-    if (myCbSafeDelete == null || myCbSafeDelete.isSelected()) {
+    if (myCbSafeDelete == null || myCbSafeDelete.getValue()) {
       checkBox.makeSelectable();
     }
     else {
@@ -212,7 +214,7 @@ public class SafeDeleteDialog extends DialogWrapper {
 
     final RefactoringSettings refactoringSettings = RefactoringSettings.getInstance();
     if (myCbSafeDelete != null) {
-      refactoringSettings.SAFE_DELETE_WHEN_DELETE = myCbSafeDelete.isSelected();
+      refactoringSettings.SAFE_DELETE_WHEN_DELETE = myCbSafeDelete.getValue();
     }
     if (isSafeDelete()) {
       if (myDelegate == null) {
@@ -231,6 +233,6 @@ public class SafeDeleteDialog extends DialogWrapper {
   }
 
   private boolean isSafeDelete() {
-    return !isDelete() || myCbSafeDelete.isSelected();
+    return !isDelete() || myCbSafeDelete.getValue();
   }
 }
