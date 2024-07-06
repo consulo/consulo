@@ -27,13 +27,14 @@ import consulo.ide.impl.idea.openapi.vcs.changes.actions.MoveChangesToAnotherLis
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.RollbackDialogAction;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.Label;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.ComboBox;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.Condition;
@@ -52,7 +53,6 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.List;
 import java.util.*;
 
@@ -405,22 +405,20 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
         }
       });
 
-      myChooser.addItemListener(new ItemListener() {
-        public void itemStateChanged(ItemEvent e) {
-          if (e.getStateChange() == ItemEvent.SELECTED) {
-            final LocalChangeList changeList = (LocalChangeList)myChooser.getSelectedItem();
-            setSelectedList(changeList);
-            myChooser.setToolTipText(changeList == null ? "" : (changeList.getName()));
-          }
+      myChooser.addItemListener(e -> {
+        if (e.getStateChange() == ItemEvent.SELECTED) {
+          final LocalChangeList changeList = (LocalChangeList)myChooser.getSelectedItem();
+          setSelectedList(changeList);
+          myChooser.setToolTipText(changeList == null ? "" : (changeList.getName()));
         }
       });
 
       myChooser.setEditable(false);
       add(myChooser, BorderLayout.CENTER);
 
-      JLabel label = new JLabel(VcsLocalize.commitDialogChangelistLabel().get());
-      label.setLabelFor(myChooser);
-      add(label, BorderLayout.WEST);
+      Label label = Label.create(VcsLocalize.commitDialogChangelistLabel());
+      label.setTarget(TargetAWT.wrap(myChooser));
+      add(TargetAWT.to(label), BorderLayout.WEST);
     }
 
     public void updateLists(@Nonnull List<? extends ChangeList> lists) {
@@ -438,7 +436,7 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
     }
   }
 
-  private class MyChangeListListener extends ChangeListAdapter {
+  private class MyChangeListListener implements ChangeListListener {
     public void changeListAdded(ChangeList list) {
       updateListsInChooser();
     }
