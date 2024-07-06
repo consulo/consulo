@@ -20,7 +20,7 @@ import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.util.lang.StringUtil;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
-import consulo.language.impl.internal.psi.LoadTextUtil;
+import consulo.virtualFileSystem.internal.LoadTextUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementVisitor;
 import consulo.language.psi.PsiFile;

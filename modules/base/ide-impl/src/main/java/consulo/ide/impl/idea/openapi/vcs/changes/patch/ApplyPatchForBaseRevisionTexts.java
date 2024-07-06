@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.openapi.diff.impl.patch.PatchHunk;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.TextFilePatch;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.GenericPatchApplier;
 import consulo.ide.impl.idea.openapi.util.Getter;
-import consulo.language.impl.internal.psi.LoadTextUtil;
+import consulo.virtualFileSystem.internal.LoadTextUtil;
 import consulo.project.Project;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.FilePath;

@@ -153,7 +153,7 @@ public class ScratchFileActions {
     PsiFile file = e.getData(PsiFile.KEY);
     Editor editor = e.getData(Editor.KEY);
     if (file == null && editor != null) {
-      // see data provider in consulo.ide.impl.idea.diff.tools.holders.TextEditorHolder
+      // see data provider in consulo.desktop.awt.diff.impl.internal.TextEditorHolder
       file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
     }
 

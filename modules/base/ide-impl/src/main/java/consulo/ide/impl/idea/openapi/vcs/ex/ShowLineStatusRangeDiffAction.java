@@ -15,28 +15,29 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.ex;
 
+import consulo.codeEditor.Editor;
 import consulo.diff.DiffContentFactory;
 import consulo.diff.DiffManager;
-import consulo.ide.impl.idea.diff.actions.DocumentFragmentContent;
 import consulo.diff.content.DiffContent;
 import consulo.diff.content.DocumentContent;
 import consulo.diff.request.DiffRequest;
 import consulo.diff.request.SimpleDiffRequest;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.project.Project;
 import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.language.editor.CommonDataKeys;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import consulo.ui.annotation.RequiredUIAccess;
 
 public class ShowLineStatusRangeDiffAction extends BaseLineStatusRangeAction {
-  public ShowLineStatusRangeDiffAction(@Nonnull LineStatusTracker lineStatusTracker, @Nonnull Range range, @jakarta.annotation.Nullable Editor editor) {
+  public ShowLineStatusRangeDiffAction(@Nonnull LineStatusTracker lineStatusTracker,
+                                       @Nonnull Range range,
+                                       @Nullable Editor editor) {
     super(lineStatusTracker, range);
     ActionUtil.copyFrom(this, "ChangesView.Diff");
   }
@@ -73,7 +74,7 @@ public class ShowLineStatusRangeDiffAction extends BaseLineStatusRangeAction {
   private DiffContent createDiffContent(@Nonnull Document document, @Nonnull TextRange textRange, @Nullable VirtualFile file) {
     final Project project = myLineStatusTracker.getProject();
     DocumentContent content = DiffContentFactory.getInstance().create(project, document, file);
-    return new DocumentFragmentContent(project, content, textRange);
+    return DiffContentFactory.getInstance().createFragment(project, content, textRange);
   }
 
   @Nonnull

@@ -13,7 +13,7 @@ import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
 import consulo.component.util.Iconable;
 import consulo.ide.impl.VfsIconUtil;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.IdeDocumentHistoryImpl;
+import consulo.fileEditor.history.PlaceInfo;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.platform.Platform;
 import consulo.ide.localize.IdeLocalize;
@@ -95,7 +95,7 @@ class RecentLocationsRenderer extends ColoredListCellRenderer<RecentLocationItem
     @Nonnull JList<? extends RecentLocationItem> list,
     @Nonnull SpeedSearch speedSearch,
     @Nullable String breadcrumb,
-    @Nonnull IdeDocumentHistoryImpl.PlaceInfo placeInfo,
+    @Nonnull PlaceInfo placeInfo,
     @Nonnull EditorColorsScheme colorsScheme,
     boolean selected
   ) {
@@ -157,7 +157,7 @@ class RecentLocationsRenderer extends ColoredListCellRenderer<RecentLocationItem
     @Nonnull Project project,
     @Nonnull JList<? extends RecentLocationItem> list,
     @Nonnull SpeedSearch speedSearch,
-    @Nonnull IdeDocumentHistoryImpl.PlaceInfo placeInfo,
+    @Nonnull PlaceInfo placeInfo,
     @Nonnull EditorColorsScheme colorsScheme,
     @Nullable String breadcrumbText,
     boolean selected
@@ -200,7 +200,7 @@ class RecentLocationsRenderer extends ColoredListCellRenderer<RecentLocationItem
   }
 
   @Nullable
-  private static Image fetchIcon(@Nonnull Project project, @Nonnull IdeDocumentHistoryImpl.PlaceInfo placeInfo) {
+  private static Image fetchIcon(@Nonnull Project project, @Nonnull PlaceInfo placeInfo) {
     return VfsIconUtil.getIcon(placeInfo.getFile(), Iconable.ICON_FLAG_READ_STATUS, project);
   }
 

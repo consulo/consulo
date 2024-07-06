@@ -6,7 +6,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorKeys;
 import consulo.ide.impl.idea.ide.util.EditorGotoLineNumberDialog;
 import consulo.ide.impl.idea.ide.util.GotoLineNumberDialog;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
+import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;

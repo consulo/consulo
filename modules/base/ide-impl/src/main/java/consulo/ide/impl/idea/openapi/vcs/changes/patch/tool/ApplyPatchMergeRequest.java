@@ -23,13 +23,14 @@ import consulo.diff.merge.MergeResult;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.AppliedTextPatch;
 import consulo.language.editor.WriteCommandAction;
 import consulo.project.Project;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.function.Consumer;
 
 public class ApplyPatchMergeRequest extends MergeRequest implements ApplyPatchRequest {
-  @Nullable private final Project myProject;
+  @Nullable
+  private final Project myProject;
 
   @Nonnull
   private final DocumentContent myResultContent;
@@ -41,7 +42,8 @@ public class ApplyPatchMergeRequest extends MergeRequest implements ApplyPatchRe
   @Nonnull
   private final String myLocalContent;
 
-  @Nullable private final String myWindowTitle;
+  @Nullable
+  private final String myWindowTitle;
   @Nonnull
   private final String myLocalTitle;
   @Nonnull
@@ -49,7 +51,8 @@ public class ApplyPatchMergeRequest extends MergeRequest implements ApplyPatchRe
   @Nonnull
   private final String myPatchTitle;
 
-  @Nullable private final Consumer<MergeResult> myCallback;
+  @Nullable
+  private final Consumer<MergeResult> myCallback;
 
   public ApplyPatchMergeRequest(@Nullable Project project,
                                 @Nonnull DocumentContent resultContent,

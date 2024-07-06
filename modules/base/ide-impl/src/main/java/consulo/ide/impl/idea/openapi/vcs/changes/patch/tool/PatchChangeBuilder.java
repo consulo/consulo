@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.patch.tool;
 
-import consulo.ide.impl.idea.diff.tools.fragmented.LineNumberConvertor;
-import consulo.ide.impl.idea.diff.util.DiffUtil;
-import consulo.ide.impl.idea.diff.util.LineRange;
+import consulo.diff.impl.internal.fragment.LineNumberConvertor;
+import consulo.diff.impl.internal.util.DiffImplUtil;
+import consulo.diff.util.LineRange;
 import consulo.document.impl.DocumentImpl;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.AppliedTextPatch;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.AppliedTextPatch.AppliedSplitPatchHunk;
@@ -25,13 +25,13 @@ import consulo.ide.impl.idea.openapi.vcs.changes.patch.AppliedTextPatch.HunkStat
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-class PatchChangeBuilder {
+public class PatchChangeBuilder {
   @Nonnull
   private final StringBuilder myBuilder = new StringBuilder();
   @Nonnull
@@ -57,7 +57,7 @@ class PatchChangeBuilder {
       LineRange appliedTo = hunk.getAppliedToLines();
       List<String> inserted = hunk.getInsertedLines();
 
-      DiffUtil.applyModification(document, appliedTo.start, appliedTo.end, inserted);
+      DiffImplUtil.applyModification(document, appliedTo.start, appliedTo.end, inserted);
     }
 
     return document.getText();
@@ -151,7 +151,7 @@ class PatchChangeBuilder {
   }
 
 
-  static class Hunk {
+  public static class Hunk {
     @Nonnull
     private final List<String> myInsertedLines;
     @Nonnull

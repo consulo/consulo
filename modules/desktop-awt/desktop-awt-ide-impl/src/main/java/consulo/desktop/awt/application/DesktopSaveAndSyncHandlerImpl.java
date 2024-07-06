@@ -52,7 +52,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 @Singleton
 @ServiceImpl
-public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements Disposable {
+public class DesktopSaveAndSyncHandlerImpl implements SaveAndSyncHandler, Disposable {
   private static final Logger LOG = Logger.getInstance(SaveAndSyncHandler.class);
 
   private final Application myApplication;
@@ -203,5 +203,15 @@ public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements
   public void unblockSyncOnFrameActivation() {
     myBlockSyncOnFrameActivationCount.decrementAndGet();
     LOG.debug("sync unblocked");
+  }
+
+  @Override
+  public boolean isSaveOnFrameDeactivation() {
+    return mySettings.isSaveOnFrameDeactivation();
+  }
+
+  @Override
+  public boolean isSyncOnFrameActivation() {
+    return mySettings.isSyncOnFrameActivation();
   }
 }

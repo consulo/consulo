@@ -22,7 +22,7 @@ import consulo.application.util.registry.Registry;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.NonProjectFileWritingAccessExtension;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
+import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.module.content.ProjectFileIndex;
 import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;

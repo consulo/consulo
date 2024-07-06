@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.ex;
 
-import consulo.ide.impl.idea.diff.util.DiffUtil;
+import consulo.diff.impl.internal.util.DiffImplUtil;
 import consulo.application.Application;
 import consulo.application.event.ApplicationAdapter;
 import consulo.application.ApplicationManager;
@@ -40,7 +40,7 @@ import org.jetbrains.annotations.TestOnly;
 
 import java.util.*;
 
-import static consulo.ide.impl.idea.diff.util.DiffUtil.getLineCount;
+import static consulo.diff.impl.internal.util.DiffImplUtil.getLineCount;
 import static consulo.ide.impl.idea.openapi.localVcs.UpToDateLineNumberProvider.ABSENT_LINE_NUMBER;
 
 @SuppressWarnings({"MethodMayBeStatic", "FieldAccessedSynchronizedAndUnsynchronized"})
@@ -560,8 +560,8 @@ public abstract class LineStatusTrackerBase {
       return Collections.singletonList(new Range(changedLine1, changedLine2, vcsLine1, vcsLine2));
     }
 
-    List<String> lines = DiffUtil.getLines(myDocument, changedLine1, changedLine2);
-    List<String> vcsLines = DiffUtil.getLines(myVcsDocument, vcsLine1, vcsLine2);
+    List<String> lines = DiffImplUtil.getLines(myDocument, changedLine1, changedLine2);
+    List<String> vcsLines = DiffImplUtil.getLines(myVcsDocument, vcsLine1, vcsLine2);
 
     return RangesBuilder.createRanges(lines, vcsLines, changedLine1, vcsLine1, isDetectWhitespaceChangedLines());
   }
@@ -704,7 +704,7 @@ public abstract class LineStatusTrackerBase {
   }
 
   protected void doRollbackRange(@Nonnull Range range) {
-    DiffUtil.applyModification(myDocument, range.getLine1(), range.getLine2(), myVcsDocument, range.getVcsLine1(), range.getVcsLine2());
+    DiffImplUtil.applyModification(myDocument, range.getLine1(), range.getLine2(), myVcsDocument, range.getVcsLine1(), range.getVcsLine2());
   }
 
   @RequiredWriteAction
@@ -716,7 +716,7 @@ public abstract class LineStatusTrackerBase {
   public void rollbackChanges(@Nonnull final BitSet lines) {
     List<Range> toRollback = new ArrayList<>();
     for (Range range : myRanges) {
-      boolean check = DiffUtil.isSelectedByLine(lines, range.getLine1(), range.getLine2());
+      boolean check = DiffImplUtil.isSelectedByLine(lines, range.getLine1(), range.getLine2());
       if (check) {
         toRollback.add(range);
       }
@@ -810,7 +810,7 @@ public abstract class LineStatusTrackerBase {
       if (!range.isValid()) {
         LOG.warn("Current TextRange of invalid range");
       }
-      return DiffUtil.getLinesRange(myDocument, range.getLine1(), range.getLine2());
+      return DiffImplUtil.getLinesRange(myDocument, range.getLine1(), range.getLine2());
     }
   }
 
@@ -821,7 +821,7 @@ public abstract class LineStatusTrackerBase {
       if (!range.isValid()) {
         LOG.warn("Vcs TextRange of invalid range");
       }
-      return DiffUtil.getLinesRange(myVcsDocument, range.getVcsLine1(), range.getVcsLine2());
+      return DiffImplUtil.getLinesRange(myVcsDocument, range.getVcsLine1(), range.getVcsLine2());
     }
   }
 

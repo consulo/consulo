@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.ide.impl.idea.codeInsight.breadcrumbs.FileBreadcrumbsCollector;
+import consulo.fileEditor.history.PlaceInfo;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.RecentPlacesListener;
 import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerEx;
 import consulo.application.ui.UISettings;
@@ -30,7 +31,7 @@ import consulo.codeEditor.HighlighterIterator;
 import consulo.codeEditor.LightHighlighterClient;
 import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.colorScheme.TextAttributes;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
+import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.IdeDocumentHistoryImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
@@ -71,8 +72,8 @@ public class RecentLocationsDataModel {
   private final SynchronizedClearableLazy<List<RecentLocationItem>> navigationPlaces;
   private final SynchronizedClearableLazy<List<RecentLocationItem>> changedPlaces;
 
-  private NotNullLazyValue<Map<IdeDocumentHistoryImpl.PlaceInfo, String>> changedPlacedBreadcrumbsMap;
-  private NotNullLazyValue<Map<IdeDocumentHistoryImpl.PlaceInfo, String>> navigationPlacesBreadcrumbsMap;
+  private NotNullLazyValue<Map<PlaceInfo, String>> changedPlacedBreadcrumbsMap;
+  private NotNullLazyValue<Map<PlaceInfo, String>> navigationPlacesBreadcrumbsMap;
 
   public RecentLocationsDataModel(Project project, List<Editor> editorsToRelease) {
     this.project = project;
@@ -81,12 +82,12 @@ public class RecentLocationsDataModel {
 
     projectConnection.subscribe(RecentPlacesListener.class, new RecentPlacesListener() {
       @Override
-      public void recentPlaceAdded(@Nonnull IdeDocumentHistoryImpl.PlaceInfo changePlace, boolean isChanged) {
+      public void recentPlaceAdded(@Nonnull PlaceInfo changePlace, boolean isChanged) {
         resetPlaces(isChanged);
       }
 
       @Override
-      public void recentPlaceRemoved(@Nonnull IdeDocumentHistoryImpl.PlaceInfo changePlace, boolean isChanged) {
+      public void recentPlaceRemoved(@Nonnull PlaceInfo changePlace, boolean isChanged) {
         resetPlaces(isChanged);
       }
 
@@ -128,7 +129,7 @@ public class RecentLocationsDataModel {
   }
 
   @Nullable
-  private EditorEx createEditor(Project project, IdeDocumentHistoryImpl.PlaceInfo placeInfo) {
+  private EditorEx createEditor(Project project, PlaceInfo placeInfo) {
     RangeMarker positionOffset = placeInfo.getCaretPosition();
     if (positionOffset == null || !positionOffset.isValid()) {
       return null;
@@ -168,7 +169,7 @@ public class RecentLocationsDataModel {
     Project project,
     EditorEx editor,
     Document document,
-    IdeDocumentHistoryImpl.PlaceInfo placeInfo,
+    PlaceInfo placeInfo,
     TextRange textRange
   ) {
     EditorColorsScheme colorsScheme = EditorColorsManager.getInstance().getGlobalScheme();
@@ -183,7 +184,7 @@ public class RecentLocationsDataModel {
     Document document,
     EditorColorsScheme colorsScheme,
     TextRange textRange,
-    IdeDocumentHistoryImpl.PlaceInfo placeInfo
+    PlaceInfo placeInfo
   ) {
     EditorHighlighter editorHighlighter =
       EditorHighlighterFactory.getInstance().createEditorHighlighter(placeInfo.getFile(), colorsScheme, project);
@@ -304,13 +305,13 @@ public class RecentLocationsDataModel {
   }
 
   @Nonnull
-  private List<IdeDocumentHistoryImpl.PlaceInfo> getPlaces(Project project, boolean changed) {
+  private List<PlaceInfo> getPlaces(Project project, boolean changed) {
     IdeDocumentHistory ideDocumentHistory = IdeDocumentHistory.getInstance(project);
-    List<IdeDocumentHistoryImpl.PlaceInfo> infos =
+    List<PlaceInfo> infos =
       ContainerUtil.reverse(changed ? ideDocumentHistory.getChangePlaces() : ideDocumentHistory.getBackPlaces());
 
-    List<IdeDocumentHistoryImpl.PlaceInfo> infosCopy = new ArrayList<>();
-    for (IdeDocumentHistoryImpl.PlaceInfo info : infos) {
+    List<PlaceInfo> infosCopy = new ArrayList<>();
+    for (PlaceInfo info : infos) {
       if (infosCopy.stream().noneMatch(info1 -> IdeDocumentHistoryImpl.isSame(info, info1))) {
         infosCopy.add(info);
       }
@@ -331,11 +332,11 @@ public class RecentLocationsDataModel {
   }
 
   @Nonnull
-  private Map<IdeDocumentHistoryImpl.PlaceInfo, String> collectBreadcrumbs(Project project, List<RecentLocationItem> items) {
+  private Map<PlaceInfo, String> collectBreadcrumbs(Project project, List<RecentLocationItem> items) {
     return items.stream().map(RecentLocationItem::getInfo).collect(Collectors.toMap(it -> it, it -> getBreadcrumbs(project, it)));
   }
 
-  private String getBreadcrumbs(Project project, IdeDocumentHistoryImpl.PlaceInfo placeInfo) {
+  private String getBreadcrumbs(Project project, PlaceInfo placeInfo) {
     RangeMarker rangeMarker = placeInfo.getCaretPosition();
     String fileName = placeInfo.getFile().getName();
     if (rangeMarker == null) {
@@ -358,7 +359,7 @@ public class RecentLocationsDataModel {
     return StringUtil.shortenTextWithEllipsis(breadcrumbsText, 50, 0);
   }
 
-  public Map<IdeDocumentHistoryImpl.PlaceInfo, String> getBreadcrumbsMap(boolean changed) {
+  public Map<PlaceInfo, String> getBreadcrumbsMap(boolean changed) {
     return changed ? changedPlacedBreadcrumbsMap.getValue() : navigationPlacesBreadcrumbsMap.getValue();
   }
 }

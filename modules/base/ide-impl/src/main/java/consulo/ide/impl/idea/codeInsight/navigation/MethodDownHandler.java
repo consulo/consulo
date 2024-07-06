@@ -20,7 +20,7 @@ import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
+import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.language.editor.moveUpDown.MethodUpDownUtil;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;

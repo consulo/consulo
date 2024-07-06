@@ -16,15 +16,14 @@
 package consulo.language.file.light;
 
 import consulo.language.Language;
-import consulo.language.file.CharsetUtil;
 import consulo.util.lang.LocalTimeCounter;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.light.TextLightVirtualFileBase;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 import java.nio.charset.Charset;
 
 /**
@@ -55,10 +54,14 @@ public class LightVirtualFile extends TextLightVirtualFileBase {
   }
 
   public LightVirtualFile(@Nonnull String name, final FileType fileType, @Nonnull CharSequence text, final long modificationStamp) {
-    this(name, fileType, text, CharsetUtil.extractCharsetFromFileContent(null, null, fileType, text), modificationStamp);
+    this(name, fileType, text, fileType == null ? null : fileType.extractCharsetFromFileContent(null, null, text), modificationStamp);
   }
 
-  public LightVirtualFile(@Nonnull String name, final FileType fileType, @Nonnull CharSequence text, Charset charset, final long modificationStamp) {
+  public LightVirtualFile(@Nonnull String name,
+                          final FileType fileType,
+                          @Nonnull CharSequence text,
+                          Charset charset,
+                          final long modificationStamp) {
     super(name, fileType, modificationStamp);
     setContent(text);
     setCharset(charset);

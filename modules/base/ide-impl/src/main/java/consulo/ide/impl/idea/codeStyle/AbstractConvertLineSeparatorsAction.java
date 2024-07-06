@@ -21,7 +21,7 @@ import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.util.LineSeparator;
 import consulo.language.editor.WriteCommandAction;
-import consulo.language.impl.internal.psi.LoadTextUtil;
+import consulo.virtualFileSystem.internal.LoadTextUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;

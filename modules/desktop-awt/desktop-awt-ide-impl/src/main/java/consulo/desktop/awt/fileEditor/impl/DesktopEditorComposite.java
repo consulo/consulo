@@ -30,7 +30,7 @@ import consulo.fileEditor.impl.internal.FileEditorProviderManagerImpl;
 import consulo.fileEditor.internal.EditorWindowHolder;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.impl.TabFactoryBuilderImpl;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
+import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.IdeDocumentHistoryImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

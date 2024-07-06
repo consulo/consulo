@@ -8,6 +8,6 @@ module consulo.version.control.system.impl {
   requires consulo.code.editor.api;
 
   exports consulo.versionControlSystem.impl.internal to consulo.ide.impl;
-  exports consulo.versionControlSystem.impl.internal.change to consulo.ide.impl;
+  exports consulo.versionControlSystem.impl.internal.change to consulo.ide.impl, consulo.desktop.awt.ide.impl;
   exports consulo.versionControlSystem.impl.internal.action to consulo.ide.impl;
 }

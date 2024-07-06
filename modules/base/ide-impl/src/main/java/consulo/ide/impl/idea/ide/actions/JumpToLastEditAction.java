@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
+import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.project.Project;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.annotation.RequiredUIAccess;

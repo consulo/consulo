@@ -45,7 +45,7 @@ import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.find.impl.FindInProjectUtil;
 import consulo.ide.impl.idea.find.replaceInProject.ReplaceInProjectManager;
 import consulo.ide.impl.idea.openapi.editor.actions.IncrementalFindAction;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
+import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ide.impl.idea.ui.LightweightHint;

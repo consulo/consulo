@@ -16,13 +16,13 @@
 package consulo.util.lang;
 
 import consulo.util.lang.internal.NaturalComparator;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Function;
@@ -2121,7 +2121,7 @@ public final class StringUtil {
     if (words.isEmpty()) {
       return List.of();
     }
-    
+
     // hope long words are rare
     words.sort(new Comparator<String>() {
       @Override
@@ -2165,7 +2165,7 @@ public final class StringUtil {
     }
     return escaped;
   }
-  
+
   public static void assertValidSeparators(@Nonnull CharSequence s) {
     char[] chars = CharArrayUtil.fromSequenceWithoutCopying(s);
     int slashRIndex = -1;
@@ -2977,5 +2977,87 @@ public final class StringUtil {
   @SuppressWarnings({"StringEquality", "StringEqualitySSR"})
   public static boolean areSameInstance(@Nullable String s1, @Nullable String s2) {
     return s1 == s2;
+  }
+
+  @Contract(pure = true)
+  public static boolean equalsIgnoreWhitespaces(@Nullable CharSequence s1, @Nullable CharSequence s2) {
+    if (s1 == null ^ s2 == null) {
+      return false;
+    }
+
+    if (s1 == null) {
+      return true;
+    }
+
+    int len1 = s1.length();
+    int len2 = s2.length();
+
+    int index1 = 0;
+    int index2 = 0;
+    while (index1 < len1 && index2 < len2) {
+      if (s1.charAt(index1) == s2.charAt(index2)) {
+        index1++;
+        index2++;
+        continue;
+      }
+
+      boolean skipped = false;
+      while (index1 != len1 && isWhiteSpace(s1.charAt(index1))) {
+        skipped = true;
+        index1++;
+      }
+      while (index2 != len2 && isWhiteSpace(s2.charAt(index2))) {
+        skipped = true;
+        index2++;
+      }
+
+      if (!skipped) return false;
+    }
+
+    for (; index1 != len1; index1++) {
+      if (!isWhiteSpace(s1.charAt(index1))) return false;
+    }
+    for (; index2 != len2; index2++) {
+      if (!isWhiteSpace(s2.charAt(index2))) return false;
+    }
+
+    return true;
+  }
+
+  @Contract(pure = true)
+  public static boolean equalsTrimWhitespaces(@Nonnull CharSequence s1, @Nonnull CharSequence s2) {
+    int start1 = 0;
+    int end1 = s1.length();
+    int start2 = 0;
+    int end2 = s2.length();
+
+    while (start1 < end1) {
+      char c = s1.charAt(start1);
+      if (!isWhiteSpace(c)) break;
+      start1++;
+    }
+
+    while (start1 < end1) {
+      char c = s1.charAt(end1 - 1);
+      if (!isWhiteSpace(c)) break;
+      end1--;
+    }
+
+    while (start2 < end2) {
+      char c = s2.charAt(start2);
+      if (!isWhiteSpace(c)) break;
+      start2++;
+    }
+
+    while (start2 < end2) {
+      char c = s2.charAt(end2 - 1);
+      if (!isWhiteSpace(c)) break;
+      end2--;
+    }
+
+    CharSequence ts1 = new CharSequenceSubSequence(s1, start1, end1);
+    CharSequence ts2 = new CharSequenceSubSequence(s2, start2, end2);
+
+    return equals(ts1, ts2);
   }
 }

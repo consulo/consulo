@@ -7,7 +7,7 @@ import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFS;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFSImpl;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
-import consulo.language.impl.internal.psi.LoadTextUtil;
+import consulo.virtualFileSystem.internal.LoadTextUtil;
 import consulo.util.lang.LocalTimeCounter;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.encoding.EncodingManager;

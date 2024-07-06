@@ -15,10 +15,11 @@
  */
 package consulo.versionControlSystem;
 
+import consulo.diff.DiffFilePath;
 import consulo.document.Document;
-import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -28,7 +29,7 @@ import java.nio.charset.Charset;
 /**
  * Represents a path to a (possibly non-existing) file on disk or in a VCS repository.
  */
-public interface FilePath {
+public interface FilePath extends DiffFilePath {
   /**
    * @return a virtual file that corresponds to this path, or null if the virtual file is no more valid.
    */
@@ -92,6 +93,17 @@ public interface FilePath {
    * @return true if {@code this} file is ancestor of the {@code parent}.
    */
   boolean isUnder(FilePath parent, boolean strict);
+
+  /**
+   * Check if the provided file is an ancestor of the current file.
+   *
+   * @param parent a possible parent
+   * @param strict if false, the method also returns true if files are equal
+   * @return true if {@code this} file is ancestor of the {@code parent}.
+   */
+  default boolean isUnder(DiffFilePath parent, boolean strict) {
+    return isUnder((FilePath)parent, strict);
+  }
 
   /**
    * @return the parent path or null if there are no parent

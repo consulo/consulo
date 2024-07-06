@@ -400,10 +400,10 @@
       <action id="Diff.ShowDiff" class="consulo.ui.ex.action.EmptyAction"
               icon="consulo.platform.base.PlatformIconGroup@actions.diff"/>
       <!-- CommonShortcuts.getDiff() -->
-      <action id="CompareTwoFiles" class="consulo.ide.impl.idea.diff.actions.CompareFilesAction"
+      <action id="CompareTwoFiles" class="consulo.diff.impl.internal.action.CompareFilesAction"
               icon="consulo.platform.base.PlatformIconGroup@actions.diff"/>
-      <action id="CompareFileWithEditor" class="consulo.ide.impl.idea.diff.actions.CompareFileWithEditorAction"/>
-      <action id="CompareClipboardWithSelection" class="consulo.ide.impl.idea.diff.actions.CompareClipboardWithSelectionAction"/>
+      <action id="CompareFileWithEditor" class="consulo.diff.impl.internal.action.CompareFileWithEditorAction"/>
+      <action id="CompareClipboardWithSelection" class="consulo.diff.impl.internal.action.CompareClipboardWithSelectionAction"/>
 
       <separator/>
       <action id="Diff.FocusOppositePane" class="consulo.ui.ex.action.EmptyAction"/>
@@ -461,41 +461,11 @@
       <action id="Diff.CompareWithBase.Right" class="consulo.ui.ex.action.EmptyAction"/>
       <separator/>
 
-      <action id="CompareDirs" class="consulo.ide.impl.idea.diff.actions.CompareFilesAction" text="Compare Directories"
+      <action id="CompareDirs" class="consulo.diff.impl.internal.action.CompareFilesAction" text="Compare Directories"
               use-shortcut-of="CompareTwoFiles"/>
 
       <separator/>
       <add-to-group group-id="Vcs.KeymapGroup"/>
-    </group>
-
-    <group id="DirDiffMenu">
-      <action id="DirDiffMenu.SetCopyToRight" class="consulo.ide.impl.idea.openapi.diff.impl.dir.actions.popup.SetCopyToRight"
-              text="Set Copy to Right"
-              icon="consulo.platform.base.PlatformIconGroup@vcs.arrow_right"/>
-      <action id="DirDiffMenu.SetCopyToLeft" class="consulo.ide.impl.idea.openapi.diff.impl.dir.actions.popup.SetCopyToLeft"
-              text="Set Copy to Left"
-              icon="consulo.platform.base.PlatformIconGroup@vcs.arrow_left"/>
-      <action id="DirDiffMenu.SetDelete" class="consulo.ide.impl.idea.openapi.diff.impl.dir.actions.popup.SetDelete" text="Set Delete"
-              icon="consulo.platform.base.PlatformIconGroup@vcs.remove"/>
-      <action id="DirDiffMenu.SetNoOperation" class="consulo.ide.impl.idea.openapi.diff.impl.dir.actions.popup.SetNoOperation"
-              text="Set Do Nothing"/>
-      <separator/>
-      <action id="DirDiffMenu.SetDefault" class="consulo.ide.impl.idea.openapi.diff.impl.dir.actions.popup.SetDefault"
-              text="Set Default"/>
-      <action id="DirDiffMenu.WarnOnDeletion" class="consulo.ide.impl.idea.openapi.diff.impl.dir.actions.popup.WarnOnDeletion"
-              text="Warn When Delete"/>
-      <separator/>
-      <action id="DirDiffMenu.EnableLeft" class="consulo.ui.ex.action.EmptyAction" text="Show new files on left side"
-              icon="consulo.platform.base.PlatformIconGroup@vcs.arrow_right"/>
-      <action id="DirDiffMenu.EnableRight" class="consulo.ui.ex.action.EmptyAction" text="Show new files on right side"
-              icon="consulo.platform.base.PlatformIconGroup@vcs.arrow_left"/>
-      <action id="DirDiffMenu.EnableEqual" class="consulo.ui.ex.action.EmptyAction" text="Show equal files"
-              icon="consulo.platform.base.PlatformIconGroup@vcs.equal"/>
-      <action id="DirDiffMenu.EnableNotEqual" class="consulo.ui.ex.action.EmptyAction" text="Show difference"
-              icon="consulo.platform.base.PlatformIconGroup@vcs.not_equal"/>
-      <separator/>
-
-      <add-to-group group-id="Diff.KeymapGroup" anchor="last"/>
     </group>
 
     <action id="ExportToTextFile" class="consulo.ide.impl.idea.ide.actions.ExportToTextFileAction"
@@ -1124,8 +1094,7 @@
     </group>
 
     <group id="ShelvedChangesPopupMenu">
-      <action id="ShelveChanges.UnshelveWithDialog" class="consulo.ide.impl.idea.openapi.vcs.changes.shelf.UnshelveWithDialogAction"
-              text="Unshelve..." description="Correct paths where to apply patches and unshelve"/>
+      <reference id="ShelveChanges.UnshelveWithDialog" />
       <action id="ShelvedChanges.Restore" class="consulo.ide.impl.idea.openapi.vcs.changes.shelf.RestoreShelvedChange"/>
       <action id="ShelvedChanges.Diff" class="consulo.ide.impl.idea.openapi.vcs.changes.shelf.DiffShelvedChangesAction"
               icon="consulo.platform.base.PlatformIconGroup@actions.diff" use-shortcut-of="Diff.ShowDiff"/>
@@ -2707,8 +2676,7 @@
           <separator/>
           <reference ref="ChangesView.CreatePatch"/>
           <reference ref="ChangesView.ApplyPatch"/>
-          <action id="ChangesView.ApplyPatchFromClipboard"
-                  class="consulo.ide.impl.idea.openapi.vcs.changes.patch.ApplyPatchFromClipboardAction"/>
+          <reference id="ChangesView.ApplyPatchFromClipboard" />
           <reference ref="ChangesView.Shelve"/>
         </group>
 

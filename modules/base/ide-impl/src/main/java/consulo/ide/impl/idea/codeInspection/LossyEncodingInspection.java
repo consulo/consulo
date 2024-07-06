@@ -42,7 +42,7 @@ import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.file.FileViewProvider;
-import consulo.language.impl.internal.psi.LoadTextUtil;
+import consulo.virtualFileSystem.internal.LoadTextUtil;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;

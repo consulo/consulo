@@ -19,9 +19,9 @@ import consulo.application.util.function.Processor;
 import consulo.colorScheme.TextAttributes;
 import consulo.disposer.Disposable;
 import consulo.document.MarkupIterator;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.function.Consumer;
 
 /**
@@ -55,7 +55,10 @@ public interface MarkupModelEx extends MarkupModel {
   MarkupIterator<RangeHighlighterEx> overlappingIterator(int startOffset, int endOffset);
 
   @Nonnull
-  MarkupIterator<RangeHighlighterEx> overlappingIterator(int startOffset, int endOffset, boolean onlyRenderedInGutter, boolean onlyRenderedInScrollBar);
+  MarkupIterator<RangeHighlighterEx> overlappingIterator(int startOffset,
+                                                         int endOffset,
+                                                         boolean onlyRenderedInGutter,
+                                                         boolean onlyRenderedInScrollBar);
 
   // optimization: creates highlighter and fires only one event: highlighterCreated
   @Nonnull
@@ -68,5 +71,9 @@ public interface MarkupModelEx extends MarkupModel {
                                                             Consumer<? super RangeHighlighterEx> changeAttributesAction);
 
   // runs change attributes action and fires highlighterChanged event if there were changes
-  void changeAttributesInBatch(@Nonnull RangeHighlighterEx highlighter, @Nonnull Consumer<? super RangeHighlighterEx> changeAttributesAction);
+  void changeAttributesInBatch(@Nonnull RangeHighlighterEx highlighter,
+                               @Nonnull Consumer<? super RangeHighlighterEx> changeAttributesAction);
+
+  default void setErrorStripeVisible(boolean value) {
+  }
 }

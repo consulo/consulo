@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.execution.editor;
 
-import consulo.ide.impl.idea.openapi.fileEditor.impl.IdeDocumentHistoryImpl;
+import consulo.fileEditor.history.SkipFromDocumentHistory;
 import consulo.virtualFileSystem.VirtualFileWithoutContent;
 import consulo.language.file.light.LightVirtualFile;
 
@@ -23,7 +23,7 @@ import consulo.language.file.light.LightVirtualFile;
  * @author VISTALL
  * @since 19/12/2021
  */
-public class RunConfigurationVirtualFile extends LightVirtualFile implements VirtualFileWithoutContent, IdeDocumentHistoryImpl.SkipFromDocumentHistory {
+public class RunConfigurationVirtualFile extends LightVirtualFile implements VirtualFileWithoutContent, SkipFromDocumentHistory {
   public RunConfigurationVirtualFile() {
     super("Run Configurations", RunConfigurationFileType.INSTANCE, "");
   }

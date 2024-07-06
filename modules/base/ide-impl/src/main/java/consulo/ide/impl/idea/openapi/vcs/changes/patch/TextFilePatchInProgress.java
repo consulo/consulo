@@ -15,25 +15,25 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.patch;
 
+import consulo.application.ApplicationManager;
+import consulo.application.progress.ProgressIndicator;
+import consulo.component.ProcessCanceledException;
 import consulo.diff.chain.DiffRequestProducer;
 import consulo.diff.chain.DiffRequestProducerException;
 import consulo.diff.request.DiffRequest;
 import consulo.ide.impl.idea.diff.requests.UnknownFileTypeDiffRequest;
-import consulo.application.ApplicationManager;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.FilePatch;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.PatchReader;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.TextFilePatch;
-import consulo.virtualFileSystem.fileType.UnknownFileType;
-import consulo.component.ProcessCanceledException;
-import consulo.application.progress.ProgressIndicator;
-import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.Getter;
+import consulo.ide.impl.idea.openapi.vcs.changes.SimpleContentRevision;
+import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.ContentRevision;
-import consulo.ide.impl.idea.openapi.vcs.changes.SimpleContentRevision;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.versionControlSystem.util.VcsUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.UnknownFileType;
 import jakarta.annotation.Nonnull;
 
 import java.io.File;

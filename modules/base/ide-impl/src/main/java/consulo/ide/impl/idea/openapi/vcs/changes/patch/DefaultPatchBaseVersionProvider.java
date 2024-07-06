@@ -23,7 +23,7 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.patch;
 
 import consulo.versionControlSystem.history.VcsFileRevisionDvcsSpecific;
-import consulo.language.impl.internal.psi.LoadTextUtil;
+import consulo.virtualFileSystem.internal.LoadTextUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.lang.ref.Ref;
@@ -32,7 +32,6 @@ import consulo.versionControlSystem.change.ContentRevision;
 import consulo.versionControlSystem.diff.DiffProvider;
 import consulo.versionControlSystem.history.*;
 import consulo.versionControlSystem.localize.VcsLocalize;
-import consulo.versionControlSystem.util.VcsRunnable;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 

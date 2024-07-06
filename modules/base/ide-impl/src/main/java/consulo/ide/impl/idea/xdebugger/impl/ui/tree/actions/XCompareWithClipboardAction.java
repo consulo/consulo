@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.xdebugger.impl.ui.tree.actions;
 
 import consulo.diff.DiffManager;
-import consulo.ide.impl.idea.diff.DiffRequestFactory;
+import consulo.diff.DiffRequestFactory;
 import consulo.diff.request.DiffRequest;
 import consulo.project.Project;
 import consulo.ui.ex.awt.UIUtil;

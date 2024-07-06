@@ -19,21 +19,21 @@ package consulo.ide.impl.idea.openapi.vcs.changes.patch;
 import consulo.application.ApplicationManager;
 import consulo.application.util.function.Computable;
 import consulo.diff.DiffManager;
+import consulo.diff.InvalidDiffRequestException;
+import consulo.diff.internal.DiffUserDataKeysEx;
 import consulo.diff.merge.MergeRequest;
 import consulo.diff.merge.MergeResult;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
-import consulo.ide.impl.idea.diff.InvalidDiffRequestException;
-import consulo.ide.impl.idea.diff.util.DiffUserDataKeysEx;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.*;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.ApplyFilePatch;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.ApplyFilePatchBase;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.GenericPatchApplier;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.localize.LocalizeValue;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
@@ -41,8 +41,8 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
@@ -96,7 +96,9 @@ public class ApplyPatchAction extends DumbAwareAction {
       showApplyPatch(project, vFile);
     }
     else {
-      final FileChooserDescriptor descriptor = ApplyPatchDifferentiatedDialog.createSelectPatchDescriptor();
+      ApplyPatchDifferentiatedDialogFactory factory = project.getApplication().getInstance(ApplyPatchDifferentiatedDialogFactory.class);
+
+      final FileChooserDescriptor descriptor = factory.createSelectPatchDescriptor();
       final VcsApplicationSettings settings = VcsApplicationSettings.getInstance();
       final VirtualFile toSelect = settings.PATCH_STORAGE_LOCATION == null ? null
         : LocalFileSystem.getInstance().refreshAndFindFileByIoFile(new File(settings.PATCH_STORAGE_LOCATION));
@@ -117,7 +119,9 @@ public class ApplyPatchAction extends DumbAwareAction {
 
   // used by TeamCity plugin
   public static void showApplyPatch(@Nonnull final Project project, @Nonnull final VirtualFile file) {
-    final ApplyPatchDifferentiatedDialog dialog = new ApplyPatchDifferentiatedDialog(
+    ApplyPatchDifferentiatedDialogFactory factory = project.getApplication().getInstance(ApplyPatchDifferentiatedDialogFactory.class);
+
+    final DialogWrapper dialog = factory.create(
       project,
       new ApplyPatchDefaultExecutor(project),
       Collections.<ApplyPatchExecutor>singletonList(new ImportToShelfExecutor(project)),
@@ -139,7 +143,9 @@ public class ApplyPatchAction extends DumbAwareAction {
       VcsNotifier.getInstance(project).notifyWeakError("Selected file " + patchPath + " is not patch type file ");
       return false;
     }
-    final ApplyPatchDifferentiatedDialog dialog = new ApplyPatchDifferentiatedDialog(
+
+    ApplyPatchDifferentiatedDialogFactory factory = project.getApplication().getInstance(ApplyPatchDifferentiatedDialogFactory.class);
+    final DialogWrapper dialog = factory.create(
       project,
       new ApplyPatchDefaultExecutor(project),
       Collections.emptyList(),
@@ -283,7 +289,7 @@ public class ApplyPatchAction extends DumbAwareAction {
     @Nullable final CommitContext commitContext
   ) {
     final FilePatch patchBase = patch.getPatch();
-    return ApplicationManager.getApplication().runWriteAction((Computable<ApplyFilePatch.Result>) () -> {
+    return ApplicationManager.getApplication().runWriteAction((Computable<ApplyFilePatch.Result>)() -> {
       try {
         return patch.apply(file, context, project, VcsUtil.getFilePath(file), () -> {
           final BaseRevisionTextPatchEP baseRevisionTextPatchEP =

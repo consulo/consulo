@@ -22,22 +22,26 @@ import consulo.annotation.component.ServiceAPI;
  * @author Kirill Likhodedov
  */
 @ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
-public abstract class SaveAndSyncHandler {
+public interface SaveAndSyncHandler {
   public static SaveAndSyncHandler getInstance() {
     return Application.get().getInstance(SaveAndSyncHandler.class);
   }
 
-  public abstract void saveProjectsAndDocuments();
+  void saveProjectsAndDocuments();
 
-  public abstract void scheduleRefresh();
+  void scheduleRefresh();
 
-  public abstract void refreshOpenFiles();
+  void refreshOpenFiles();
 
-  public abstract void blockSaveOnFrameDeactivation();
+  void blockSaveOnFrameDeactivation();
 
-  public abstract void unblockSaveOnFrameDeactivation();
+  void unblockSaveOnFrameDeactivation();
 
-  public abstract void blockSyncOnFrameActivation();
+  void blockSyncOnFrameActivation();
 
-  public abstract void unblockSyncOnFrameActivation();
+  void unblockSyncOnFrameActivation();
+  
+  boolean isSaveOnFrameDeactivation();
+
+  boolean isSyncOnFrameActivation();
 }

@@ -27,7 +27,7 @@ import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.util.LineSeparator;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.file.FileTypeManager;
-import consulo.language.impl.internal.psi.LoadTextUtil;
+import consulo.virtualFileSystem.internal.LoadTextUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.keyFMap.KeyFMap;
 import consulo.util.io.FileTooBigException;

@@ -31,7 +31,7 @@ import consulo.ide.impl.idea.ide.commander.CommanderPanel;
 import consulo.ide.impl.idea.ide.commander.ProjectListBuilder;
 import consulo.ide.impl.idea.ide.structureView.newStructureView.TreeModelWrapper;
 import consulo.ide.impl.idea.ide.util.treeView.smartTree.SmartTreeStructure;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
+import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.language.editor.structureView.PsiStructureViewFactory;

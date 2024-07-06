@@ -34,7 +34,7 @@ import consulo.language.codeStyle.CodeStyle;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.impl.file.AbstractFileViewProvider;
 import consulo.language.impl.internal.pom.PomAspectGuard;
-import consulo.language.impl.internal.psi.LoadTextUtil;
+import consulo.virtualFileSystem.internal.LoadTextUtil;
 import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;

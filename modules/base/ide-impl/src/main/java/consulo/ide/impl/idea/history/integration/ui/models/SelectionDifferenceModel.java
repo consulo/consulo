@@ -16,17 +16,16 @@
 
 package consulo.ide.impl.idea.history.integration.ui.models;
 
+import consulo.application.util.diff.FilesTooBigForDiffException;
 import consulo.diff.DiffContentFactory;
-import consulo.ide.impl.idea.diff.actions.DocumentFragmentContent;
 import consulo.diff.content.DiffContent;
 import consulo.diff.content.DocumentContent;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.history.core.revisions.Revision;
 import consulo.ide.impl.idea.history.core.tree.Entry;
 import consulo.ide.impl.idea.history.integration.IdeaGateway;
-import consulo.document.Document;
 import consulo.project.Project;
-import consulo.document.util.TextRange;
-import consulo.application.util.diff.FilesTooBigForDiffException;
 
 public class SelectionDifferenceModel extends FileDifferenceModel {
   private final SelectionCalculator myCalculator;
@@ -99,7 +98,7 @@ public class SelectionDifferenceModel extends FileDifferenceModel {
     int toOffset = d.getLineEndOffset(myTo);
 
     DocumentContent documentContent = DiffContentFactory.getInstance().create(myProject, d);
-    return new DocumentFragmentContent(myProject, documentContent, new TextRange(fromOffset, toOffset));
+    return DiffContentFactory.getInstance().createFragment(myProject, documentContent, new TextRange(fromOffset, toOffset));
   }
 
   private DocumentContent getDiffContent(Revision r, RevisionProcessingProgress p) {

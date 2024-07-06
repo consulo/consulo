@@ -51,7 +51,7 @@ public class ApplyPatchDefaultExecutor implements ApplyPatchExecutor<AbstractFil
   @Override
   public void apply(@Nonnull List<FilePatch> remaining,
                     @Nonnull MultiMap<VirtualFile, AbstractFilePatchInProgress> patchGroupsToApply,
-                    @jakarta.annotation.Nullable LocalChangeList localList,
+                    @Nullable LocalChangeList localList,
                     @Nullable String fileName,
                     @Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo) {
     final CommitContext commitContext = new CommitContext();
@@ -60,7 +60,7 @@ public class ApplyPatchDefaultExecutor implements ApplyPatchExecutor<AbstractFil
     executeAndApplyAdditionalInfo(localList, additionalInfo, commitContext, appliers);
   }
 
-  protected ApplyPatchStatus executeAndApplyAdditionalInfo(@jakarta.annotation.Nullable LocalChangeList localList,
+  protected ApplyPatchStatus executeAndApplyAdditionalInfo(@Nullable LocalChangeList localList,
                                                            @Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo,
                                                            @Nonnull CommitContext commitContext,
                                                            @Nonnull Collection<PatchApplier> appliers) {
@@ -96,7 +96,7 @@ public class ApplyPatchDefaultExecutor implements ApplyPatchExecutor<AbstractFil
   }
 
   private static void applyAdditionalInfoImpl(final Project project,
-                                              @jakarta.annotation.Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo,
+                                              @Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo,
                                               CommitContext commitContext,
                                               final Consumer<InfoGroup> worker) {
     final PatchEP[] extensions = Extensions.getExtensions(PatchEP.EP_NAME, project);

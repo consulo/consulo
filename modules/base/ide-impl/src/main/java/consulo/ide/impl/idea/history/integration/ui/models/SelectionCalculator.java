@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.history.integration.ui.models;
 
-import consulo.ide.impl.idea.diff.Block;
+import consulo.diff.Block;
 import consulo.ide.impl.idea.history.core.Content;
 import consulo.ide.impl.idea.history.core.revisions.Revision;
 import consulo.ide.impl.idea.history.core.tree.Entry;

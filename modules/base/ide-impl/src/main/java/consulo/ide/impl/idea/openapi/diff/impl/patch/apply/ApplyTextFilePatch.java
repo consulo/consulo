@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.openapi.diff.impl.patch.CharsetEP;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.TextFilePatch;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.language.impl.internal.psi.LoadTextUtil;
+import consulo.virtualFileSystem.internal.LoadTextUtil;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.versionControlSystem.FilePath;

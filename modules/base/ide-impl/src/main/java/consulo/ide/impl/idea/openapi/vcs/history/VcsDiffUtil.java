@@ -35,8 +35,8 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.*;
 
-import static consulo.ide.impl.idea.diff.util.DiffUserDataKeysEx.VCS_DIFF_LEFT_CONTENT_TITLE;
-import static consulo.ide.impl.idea.diff.util.DiffUserDataKeysEx.VCS_DIFF_RIGHT_CONTENT_TITLE;
+import static consulo.diff.internal.DiffUserDataKeysEx.VCS_DIFF_LEFT_CONTENT_TITLE;
+import static consulo.diff.internal.DiffUserDataKeysEx.VCS_DIFF_RIGHT_CONTENT_TITLE;
 
 public class VcsDiffUtil {
 

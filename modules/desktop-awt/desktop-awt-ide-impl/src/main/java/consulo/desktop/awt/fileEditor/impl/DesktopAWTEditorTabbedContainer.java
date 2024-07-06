@@ -30,7 +30,7 @@ import consulo.ide.impl.idea.ide.GeneralSettings;
 import consulo.ide.impl.idea.ide.actions.CloseAction;
 import consulo.ide.impl.idea.ide.actions.ShowFilePathAction;
 import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
+import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.DockableEditorContainerFactory;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.IdeDocumentHistoryImpl;

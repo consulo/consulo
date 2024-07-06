@@ -15,41 +15,40 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
-import consulo.diff.DiffContentFactory;
-import consulo.ide.impl.idea.diff.DiffContentFactoryEx;
-import consulo.diff.DiffManager;
-import consulo.ide.impl.idea.diff.DiffRequestFactory;
-import consulo.diff.content.DiffContent;
-import consulo.diff.content.DocumentContent;
-import consulo.diff.request.DiffRequest;
-import consulo.diff.request.SimpleDiffRequest;
-import consulo.diff.DiffUserDataKeys;
-import consulo.ide.impl.idea.diff.util.DiffUserDataKeysEx;
-import consulo.diff.util.Side;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorFactory;
-import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
-import consulo.project.Project;
-import consulo.util.lang.Pair;
-import consulo.util.lang.ref.Ref;
-import consulo.versionControlSystem.change.BinaryContentRevision;
-import consulo.versionControlSystem.change.ByteBackedContentRevision;
-import consulo.versionControlSystem.*;
-import consulo.versionControlSystem.change.ContentRevision;
-import consulo.versionControlSystem.diff.DiffProvider;
-import consulo.versionControlSystem.diff.ItemLatestState;
-import consulo.versionControlSystem.history.VcsRevisionNumber;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorFactory;
+import consulo.component.ProcessCanceledException;
+import consulo.diff.DiffContentFactory;
+import consulo.diff.DiffManager;
+import consulo.diff.DiffRequestFactory;
+import consulo.diff.DiffUserDataKeys;
+import consulo.diff.content.DiffContent;
+import consulo.diff.content.DocumentContent;
+import consulo.diff.internal.DiffContentFactoryEx;
+import consulo.diff.request.DiffRequest;
+import consulo.diff.request.SimpleDiffRequest;
+import consulo.diff.util.Side;
 import consulo.ide.impl.idea.openapi.vcs.impl.BackgroundableActionEnabledHandler;
 import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
 import consulo.ide.impl.idea.openapi.vcs.impl.VcsBackgroundableActions;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.lang.Pair;
+import consulo.util.lang.ref.Ref;
+import consulo.versionControlSystem.*;
+import consulo.versionControlSystem.change.BinaryContentRevision;
+import consulo.versionControlSystem.change.ByteBackedContentRevision;
+import consulo.versionControlSystem.change.ContentRevision;
+import consulo.versionControlSystem.diff.DiffProvider;
+import consulo.versionControlSystem.diff.ItemLatestState;
+import consulo.versionControlSystem.diff.VcsDiffDataKeys;
+import consulo.versionControlSystem.history.VcsRevisionNumber;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -96,7 +95,7 @@ public abstract class DiffActionExecutor {
       diffContent = contentFactory.create(myProject, content, fileRevision.getFile());
     }
 
-    diffContent.putUserData(DiffUserDataKeysEx.REVISION_INFO, Pair.create(fileRevision.getFile(), fileRevision.getRevisionNumber()));
+    diffContent.putUserData(VcsDiffDataKeys.REVISION_INFO, Pair.create(fileRevision.getFile(), fileRevision.getRevisionNumber()));
     return diffContent;
   }
 

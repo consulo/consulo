@@ -18,14 +18,13 @@ package consulo.ide.impl.idea.openapi.vcs.merge;
 
 import consulo.application.ApplicationManager;
 import consulo.diff.DiffManager;
+import consulo.diff.DiffRequestFactory;
+import consulo.diff.InvalidDiffRequestException;
+import consulo.diff.impl.internal.util.DiffImplUtil;
 import consulo.diff.merge.MergeRequest;
 import consulo.diff.merge.MergeResult;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.ide.impl.idea.diff.DiffRequestFactory;
-import consulo.ide.impl.idea.diff.InvalidDiffRequestException;
-import consulo.ide.impl.idea.diff.merge.MergeUtil;
-import consulo.ide.impl.idea.diff.util.DiffUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
@@ -218,7 +217,7 @@ public class MultipleFileMergeDialog extends DialogWrapper {
       ApplicationManager.getApplication().runWriteAction(() -> CommandProcessor.getInstance().executeCommand(myProject, () -> {
         try {
           if (!(myProvider instanceof MergeProvider2) || myMergeSession.canMerge(file)) {
-            if (!DiffUtil.makeWritable(myProject, file)) {
+            if (!DiffImplUtil.makeWritable(myProject, file)) {
               throw new IOException("File is read-only: " + file.getPresentableName());
             }
             MergeData data = myProvider.loadRevisions(file);
@@ -348,7 +347,6 @@ public class MultipleFileMergeDialog extends DialogWrapper {
   }
 
   private void checkMarkModifiedProject(@Nonnull VirtualFile file) {
-    MergeUtil.reportProjectFileChangeIfNeeded(myProject, file);
   }
 
   private void createUIComponents() {

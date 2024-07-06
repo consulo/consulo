@@ -15,22 +15,20 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.ex;
 
-import consulo.ide.impl.idea.diff.util.DiffUtil;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.codeEditor.Editor;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.*;
-import consulo.virtualFileSystem.fileType.FileType;
 import consulo.application.dumb.DumbAware;
-import consulo.versionControlSystem.VcsApplicationSettings;
-import consulo.ide.impl.idea.openapi.vcs.actions.ShowNextChangeMarkerAction;
-import consulo.ide.impl.idea.openapi.vcs.actions.ShowPrevChangeMarkerAction;
+import consulo.codeEditor.Editor;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.vcs.actions.ShowNextChangeMarkerAction;
+import consulo.ide.impl.idea.openapi.vcs.actions.ShowPrevChangeMarkerAction;
 import consulo.platform.base.icon.PlatformIconGroup;
-
+import consulo.ui.ex.action.*;
+import consulo.versionControlSystem.VcsApplicationSettings;
+import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -68,8 +66,10 @@ public class LineStatusTrackerDrawing {
     protected ActionToolbar buildToolbar(@Nullable Point mousePosition, @Nonnull Disposable parentDisposable) {
       final DefaultActionGroup group = new DefaultActionGroup();
 
-      final ShowPrevChangeMarkerAction localShowPrevAction = new ShowPrevChangeMarkerAction(myTracker.getPrevRange(myRange), myTracker, myEditor);
-      final ShowNextChangeMarkerAction localShowNextAction = new ShowNextChangeMarkerAction(myTracker.getNextRange(myRange), myTracker, myEditor);
+      final ShowPrevChangeMarkerAction localShowPrevAction =
+        new ShowPrevChangeMarkerAction(myTracker.getPrevRange(myRange), myTracker, myEditor);
+      final ShowNextChangeMarkerAction localShowNextAction =
+        new ShowNextChangeMarkerAction(myTracker.getNextRange(myRange), myTracker, myEditor);
       final RollbackLineStatusRangeAction rollback = new RollbackLineStatusRangeAction(myTracker, myRange, myEditor);
       final ShowLineStatusRangeDiffAction showDiff = new ShowLineStatusRangeDiffAction(myTracker, myRange, myEditor);
       final CopyLineStatusRangeAction copyRange = new CopyLineStatusRangeAction(myTracker, myRange);
@@ -83,11 +83,11 @@ public class LineStatusTrackerDrawing {
       group.add(toggleWordDiff);
 
       JComponent editorComponent = myEditor.getComponent();
-      DiffUtil.registerAction(localShowPrevAction, editorComponent);
-      DiffUtil.registerAction(localShowNextAction, editorComponent);
-      DiffUtil.registerAction(rollback, editorComponent);
-      DiffUtil.registerAction(showDiff, editorComponent);
-      DiffUtil.registerAction(copyRange, editorComponent);
+      registerAction(localShowPrevAction, editorComponent);
+      registerAction(localShowNextAction, editorComponent);
+      registerAction(rollback, editorComponent);
+      registerAction(showDiff, editorComponent);
+      registerAction(copyRange, editorComponent);
 
       final List<AnAction> actionList = ActionUtil.getActions(editorComponent);
       Disposer.register(parentDisposable, () -> {
@@ -99,6 +99,10 @@ public class LineStatusTrackerDrawing {
       });
 
       return ActionManager.getInstance().createActionToolbar(ActionPlaces.FILEHISTORY_VIEW_TOOLBAR, group, true);
+    }
+
+    private static void registerAction(@Nonnull AnAction action, @Nonnull JComponent component) {
+      action.registerCustomShortcutSet(action.getShortcutSet(), component);
     }
 
     @Nonnull
@@ -115,7 +119,8 @@ public class LineStatusTrackerDrawing {
     private final Editor myEditor;
     @Nonnull
     private final LineStatusTracker myTracker;
-    @Nullable private final Point myMousePosition;
+    @Nullable
+    private final Point myMousePosition;
 
     public ToggleByWordDiffAction(@Nonnull Range range,
                                   @Nonnull Editor editor,

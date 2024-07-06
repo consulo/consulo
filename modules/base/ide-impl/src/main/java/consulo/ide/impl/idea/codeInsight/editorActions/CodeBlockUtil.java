@@ -33,7 +33,7 @@ import consulo.language.Language;
 import consulo.codeEditor.EditorEx;
 import consulo.language.editor.action.CodeBlockProvider;
 import consulo.codeEditor.HighlighterIterator;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
+import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.document.Document;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;

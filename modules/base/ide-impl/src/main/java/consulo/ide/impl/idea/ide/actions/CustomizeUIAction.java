@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.ide.impl.idea.ide.ui.customization.CustomizationConfigurable;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ide.setting.ShowSettingsUtil;
@@ -29,8 +30,10 @@ public class CustomizeUIAction extends AnAction {
     super("Customize Menus and Toolbars...");
   }
 
+  @RequiredUIAccess
+  @Override
   public void actionPerformed(AnActionEvent e) {
     final Project project = e.getData(Project.KEY);
-    ShowSettingsUtil.getInstance().editConfigurable(project, new CustomizationConfigurable());
+    ShowSettingsUtil.getInstance().showAndSelect(project, CustomizationConfigurable.class);
   }
 }

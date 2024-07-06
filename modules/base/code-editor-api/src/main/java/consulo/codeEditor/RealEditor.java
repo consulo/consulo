@@ -18,10 +18,10 @@ package consulo.codeEditor;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
-import consulo.util.lang.function.Condition;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
+import java.util.function.Predicate;
 
 /**
  * @author VISTALL
@@ -58,7 +58,7 @@ public interface RealEditor extends EditorEx {
 
   boolean shouldSoftWrapsBeForced();
 
-  void setHighlightingFilter(@Nullable Condition<RangeHighlighter> filter);
+  void setHighlightingFilter(@Nullable Predicate<RangeHighlighter> filter);
 
   int getFontSize();
 

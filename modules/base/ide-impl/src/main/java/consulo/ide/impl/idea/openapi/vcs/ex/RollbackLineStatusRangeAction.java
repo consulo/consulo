@@ -26,7 +26,7 @@ public class RollbackLineStatusRangeAction extends RollbackLineStatusAction {
   @Nonnull
   private final Range myRange;
 
-  public RollbackLineStatusRangeAction(@Nonnull LineStatusTracker tracker, @Nonnull Range range, @jakarta.annotation.Nullable Editor editor) {
+  public RollbackLineStatusRangeAction(@Nonnull LineStatusTracker tracker, @Nonnull Range range, @Nullable Editor editor) {
     ActionUtil.copyFrom(this, IdeActions.SELECTED_CHANGES_ROLLBACK);
 
     myTracker = tracker;

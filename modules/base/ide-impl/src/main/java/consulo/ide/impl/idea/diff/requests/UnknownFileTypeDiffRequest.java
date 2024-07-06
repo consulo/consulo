@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.diff.requests;
 
-import consulo.ide.impl.idea.diff.DiffContext;
-import consulo.ide.impl.idea.diff.DiffContextEx;
+import consulo.diff.DiffContext;
+import consulo.diff.DiffContextEx;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.file.FileTypeManager;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
@@ -33,12 +33,12 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 
 public class UnknownFileTypeDiffRequest extends ComponentDiffRequest {
-  @jakarta.annotation.Nullable
+  @Nullable
   private final String myFileName;
-  @jakarta.annotation.Nullable
+  @Nullable
   private final String myTitle;
 
-  public UnknownFileTypeDiffRequest(@Nonnull VirtualFile file, @jakarta.annotation.Nullable String title) {
+  public UnknownFileTypeDiffRequest(@Nonnull VirtualFile file, @Nullable String title) {
     this(file.getName(), title);
   }
 
@@ -68,12 +68,12 @@ public class UnknownFileTypeDiffRequest extends ComponentDiffRequest {
     return JBUI.Panels.simplePanel(label).withBorder(JBUI.Borders.empty(5));
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   public String getFileName() {
     return myFileName;
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   @Override
   public String getTitle() {
     return myTitle;

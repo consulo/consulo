@@ -21,6 +21,7 @@ import consulo.diff.DiffManager;
 import consulo.diff.DiffUserDataKeys;
 import consulo.diff.chain.DiffRequestChain;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
+import consulo.versionControlSystem.change.diff.ChangeDiffRequestProducer;
 import consulo.versionControlSystem.impl.internal.change.FakeRevision;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;

@@ -35,29 +35,30 @@ module consulo.application.api {
   exports consulo.application.localize;
 
   exports consulo.application.internal to
-          consulo.ide.impl,
-          consulo.desktop.ide.impl,
-          consulo.desktop.awt.ide.impl,
-          consulo.desktop.swt.ide.impl,
-          consulo.document.impl,
-          consulo.language.impl,
-          consulo.application.impl,
-          consulo.test.impl,
-          consulo.ui.ex.api,
-          consulo.project.impl,
-          consulo.language.editor.refactoring.api,
-          consulo.http.api,
-          consulo.builtin.web.server.impl,
-          consulo.version.control.system.distributed.api,
-          consulo.compiler.impl,
-          consulo.logging.log4j2.impl;
+    consulo.ide.impl,
+    consulo.desktop.ide.impl,
+    consulo.desktop.awt.ide.impl,
+    consulo.desktop.swt.ide.impl,
+    consulo.document.impl,
+    consulo.language.impl,
+    consulo.application.impl,
+    consulo.test.impl,
+    consulo.ui.ex.api,
+    consulo.project.impl,
+    consulo.language.editor.refactoring.api,
+    consulo.http.api,
+    consulo.builtin.web.server.impl,
+    consulo.version.control.system.distributed.api,
+    consulo.compiler.impl,
+    consulo.logging.log4j2.impl,
+    consulo.diff.impl;
 
   exports consulo.application.internal.util to
-          consulo.language.api,
-          consulo.language.impl,
-          consulo.language.inject.impl,
-          consulo.test.impl,
-          consulo.application.impl;
+    consulo.language.api,
+    consulo.language.impl,
+    consulo.language.inject.impl,
+    consulo.test.impl,
+    consulo.application.impl;
 
   exports consulo.application.util.mac.foundation;
 

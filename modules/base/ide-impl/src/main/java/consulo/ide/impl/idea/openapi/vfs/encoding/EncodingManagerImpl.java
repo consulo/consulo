@@ -24,7 +24,7 @@ import consulo.ide.impl.idea.ide.AppLifecycleListener;
 import consulo.logging.Logger;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-import consulo.language.impl.internal.psi.LoadTextUtil;
+import consulo.virtualFileSystem.internal.LoadTextUtil;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
 import consulo.project.ProjectManager;

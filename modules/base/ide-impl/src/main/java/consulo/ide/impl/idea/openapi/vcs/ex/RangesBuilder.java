@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.ex;
 
-import consulo.ide.impl.idea.diff.util.DiffUtil;
+import consulo.diff.impl.internal.util.DiffImplUtil;
 import consulo.document.Document;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
@@ -40,7 +40,7 @@ public class RangesBuilder {
   @Nonnull
   public static List<Range> createRanges(@Nonnull Document current, @Nonnull Document vcs, boolean innerWhitespaceChanges)
           throws FilesTooBigForDiffException {
-    return createRanges(DiffUtil.getLines(current), DiffUtil.getLines(vcs), 0, 0, innerWhitespaceChanges);
+    return createRanges(DiffImplUtil.getLines(current), DiffImplUtil.getLines(vcs), 0, 0, innerWhitespaceChanges);
   }
 
   @Nonnull

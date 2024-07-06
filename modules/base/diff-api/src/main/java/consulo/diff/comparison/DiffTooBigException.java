@@ -27,7 +27,6 @@ public class DiffTooBigException extends ProcessCanceledException {
     super(cause);
   }
 
-
   @Override
   public String getMessage() {
     return MESSAGE;

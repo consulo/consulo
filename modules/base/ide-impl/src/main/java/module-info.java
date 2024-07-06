@@ -87,6 +87,7 @@ open module consulo.ide.impl {
   requires consulo.builtin.web.server.impl;
   requires consulo.credential.storage.impl;
   requires consulo.version.control.system.impl;
+  requires consulo.diff.impl;
 
   requires consulo.ui.impl;
   requires consulo.localize.impl;
@@ -301,28 +302,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.designer.propertyTable.renderers;
   exports consulo.ide.impl.idea.diagnostic;
   exports consulo.ide.impl.idea.diagnostic.errordialog;
-  exports consulo.ide.impl.idea.diff;
-  exports consulo.ide.impl.idea.diff.actions;
-  exports consulo.ide.impl.idea.diff.actions.impl;
-  exports consulo.ide.impl.idea.diff.comparison;
-  exports consulo.ide.impl.idea.diff.comparison.iterables;
-  exports consulo.ide.impl.idea.diff.contents;
-  exports consulo.ide.impl.idea.diff.editor;
-  exports consulo.ide.impl.idea.diff.fragments;
-  exports consulo.ide.impl.idea.diff.impl;
-  exports consulo.ide.impl.idea.diff.merge;
-  exports consulo.ide.impl.idea.diff.requests;
-  exports consulo.ide.impl.idea.diff.tools;
-  exports consulo.ide.impl.idea.diff.tools.binary;
-  exports consulo.ide.impl.idea.diff.tools.dir;
-  exports consulo.ide.impl.idea.diff.tools.external;
-  exports consulo.ide.impl.idea.diff.tools.fragmented;
-  exports consulo.ide.impl.idea.diff.tools.holders;
-  exports consulo.ide.impl.idea.diff.tools.simple;
-  exports consulo.ide.impl.idea.diff.tools.util;
-  exports consulo.ide.impl.idea.diff.tools.util.base;
-  exports consulo.ide.impl.idea.diff.tools.util.side;
-  exports consulo.ide.impl.idea.diff.util;
   exports consulo.ide.impl.idea.dupLocator;
   exports consulo.ide.impl.idea.dupLocator.equivalence;
   exports consulo.ide.impl.idea.dupLocator.index;
@@ -405,7 +384,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.ide.browsers.impl;
   exports consulo.ide.impl.idea.ide.caches;
   exports consulo.ide.impl.idea.ide.commander;
-  exports consulo.ide.impl.idea.ide.diff;
   exports consulo.ide.impl.idea.ide.dnd;
   exports consulo.ide.impl.idea.ide.errorTreeView;
   exports consulo.ide.impl.idea.ide.errorTreeView.actions;
@@ -495,8 +473,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.diff.ex;
   exports consulo.ide.impl.idea.openapi.diff.impl;
   exports consulo.ide.impl.idea.openapi.diff.impl.dir;
-  exports consulo.ide.impl.idea.openapi.diff.impl.dir.actions;
-  exports consulo.ide.impl.idea.openapi.diff.impl.dir.actions.popup;
   exports consulo.ide.impl.idea.openapi.diff.impl.fragments;
   exports consulo.ide.impl.idea.openapi.diff.impl.highlighting;
   exports consulo.ide.impl.idea.openapi.diff.impl.patch;
@@ -551,7 +527,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.fileChooser.impl;
   exports consulo.ide.impl.idea.openapi.fileChooser.tree;
   exports consulo.ide.impl.idea.openapi.fileEditor;
-  exports consulo.ide.impl.idea.openapi.fileEditor.ex;
   exports consulo.ide.impl.idea.openapi.fileEditor.impl;
   exports consulo.ide.impl.idea.openapi.fileEditor.impl.http;
   exports consulo.ide.impl.idea.openapi.fileEditor.impl.tabActions;
@@ -942,4 +917,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.configurable to consulo.sand.language.plugin, consulo.desktop.awt.ide.impl;
   exports consulo.ide.impl.desktop.awt.editor to consulo.desktop.awt.ide.impl;
   exports consulo.ide.impl.wm.statusBar to consulo.desktop.awt.ide.impl;
+  exports consulo.ide.impl.idea.diff.actions.impl to consulo.desktop.awt.ide.impl;
+  exports consulo.ide.impl.idea.diff.requests to consulo.desktop.awt.ide.impl;
 }

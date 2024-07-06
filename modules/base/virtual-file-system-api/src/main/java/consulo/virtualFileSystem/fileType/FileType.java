@@ -16,13 +16,15 @@
 package consulo.virtualFileSystem.fileType;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.component.ComponentManager;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayFactory;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
+import java.nio.charset.Charset;
 
 public interface FileType {
   FileType[] EMPTY_ARRAY = new FileType[0];
@@ -113,6 +115,13 @@ public interface FileType {
    */
   @Nullable
   default String getCharset(@Nonnull VirtualFile file, final byte[] content) {
+    return null;
+  }
+
+  @Nullable
+  default Charset extractCharsetFromFileContent(@Nullable ComponentManager project,
+                                                @Nullable VirtualFile file,
+                                                @Nonnull CharSequence content) {
     return null;
   }
 }

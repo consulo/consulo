@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.diff.requests;
 
-import consulo.ide.impl.idea.diff.DiffContext;
+import consulo.diff.DiffContext;
 import consulo.diff.request.DiffRequest;
 
 import jakarta.annotation.Nonnull;

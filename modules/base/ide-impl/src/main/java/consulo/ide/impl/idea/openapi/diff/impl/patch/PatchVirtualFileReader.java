@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.diff.impl.patch;
 
-import consulo.language.impl.internal.psi.LoadTextUtil;
+import consulo.virtualFileSystem.internal.LoadTextUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.io.IOException;

@@ -26,21 +26,17 @@ import consulo.application.progress.Task;
 import consulo.application.util.function.AsynchConsumer;
 import consulo.codeEditor.Editor;
 import consulo.disposer.Disposer;
-import consulo.document.FileDocumentManager;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
-import consulo.ide.impl.idea.openapi.diff.DiffContent;
-import consulo.ide.impl.idea.openapi.diff.DocumentContent;
-import consulo.ide.impl.idea.openapi.diff.SimpleContent;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.openapi.progress.impl.BackgroundableProcessIndicator;
 import consulo.ide.impl.idea.openapi.util.Getter;
-import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.actions.AnnotateToggleAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.*;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.*;
-import consulo.ide.impl.idea.openapi.vcs.history.*;
+import consulo.ide.impl.idea.openapi.vcs.history.FileHistoryRefresher;
+import consulo.ide.impl.idea.openapi.vcs.history.FileHistoryRefresherI;
 import consulo.ide.impl.idea.openapi.vcs.merge.MultipleFileMergeDialog;
 import consulo.ide.impl.idea.openapi.vcs.vfs.VcsFileSystem;
 import consulo.ide.impl.idea.openapi.vcs.vfs.VcsVirtualFile;
@@ -50,7 +46,6 @@ import consulo.ide.impl.idea.util.BufferedListConsumer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.ui.ConfirmationDialog;
 import consulo.ide.impl.idea.vcs.history.VcsHistoryProviderEx;
-import consulo.language.file.FileTypeManager;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.view.MessageView;
@@ -70,6 +65,7 @@ import consulo.ui.ex.errorTreeView.*;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.annotate.AnnotationProvider;
 import consulo.versionControlSystem.annotate.FileAnnotation;
@@ -77,7 +73,6 @@ import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.CommitResultHandler;
 import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.versionControlSystem.history.ShortVcsRevisionNumber;
-import consulo.versionControlSystem.history.VcsFileRevision;
 import consulo.versionControlSystem.history.VcsHistoryProvider;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.versionControlSystem.localize.VcsLocalize;
@@ -87,18 +82,15 @@ import consulo.versionControlSystem.util.VcsUtil;
 import consulo.versionControlSystem.versionBrowser.ChangeBrowserSettings;
 import consulo.versionControlSystem.versionBrowser.ChangesBrowserSettingsEditor;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
-import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.*;
@@ -598,16 +590,6 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
     final MultipleFileMergeDialog fileMergeDialog = new MultipleFileMergeDialog(myProject, files, provider, mergeDialogCustomizer);
     fileMergeDialog.show();
     return fileMergeDialog.getProcessedFiles();
-  }
-
-  private static DiffContent getContentForVersion(final VcsFileRevision version, final File file) throws IOException, VcsException {
-    VirtualFile vFile = LocalFileSystem.getInstance().findFileByIoFile(file);
-    if (vFile != null && version instanceof CurrentRevision && !vFile.getFileType().isBinary()) {
-      return new DocumentContent(FileDocumentManager.getInstance().getDocument(vFile), vFile.getFileType());
-    }
-    else {
-      return new SimpleContent(VcsHistoryUtil.loadRevisionContentGuessEncoding(version, vFile, null), FileTypeManager.getInstance().getFileTypeByFileName(file.getName()));
-    }
   }
 
   @Override

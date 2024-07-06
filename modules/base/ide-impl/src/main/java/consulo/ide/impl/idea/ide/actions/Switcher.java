@@ -21,7 +21,7 @@ import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.impl.VfsIconUtil;
 import consulo.ide.impl.idea.ide.util.gotoByName.QuickSearchComponent;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
+import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.EditorHistoryManagerImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.IdeDocumentHistoryImpl;

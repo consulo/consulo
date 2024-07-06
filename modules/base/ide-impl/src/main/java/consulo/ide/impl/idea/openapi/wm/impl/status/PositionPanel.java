@@ -13,7 +13,7 @@ import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.statusBar.EditorBasedWidget;
 import consulo.ide.impl.idea.ide.util.EditorGotoLineNumberDialog;
 import consulo.ide.impl.idea.ide.util.GotoLineNumberDialog;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
+import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;

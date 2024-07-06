@@ -34,6 +34,7 @@ import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
+import consulo.virtualFileSystem.internal.LoadTextUtil;
 import org.jetbrains.annotations.NonNls;
 
 import jakarta.annotation.Nonnull;

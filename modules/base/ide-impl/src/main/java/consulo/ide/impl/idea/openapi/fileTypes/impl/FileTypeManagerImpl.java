@@ -35,7 +35,7 @@ import consulo.language.file.LanguageFileType;
 import consulo.language.file.event.FileTypeEvent;
 import consulo.language.file.event.FileTypeListener;
 import consulo.language.file.light.LightVirtualFile;
-import consulo.language.impl.internal.psi.LoadTextUtil;
+import consulo.virtualFileSystem.internal.LoadTextUtil;
 import consulo.language.internal.custom.SyntaxTable;
 import consulo.language.plain.PlainTextFileType;
 import consulo.logging.Logger;

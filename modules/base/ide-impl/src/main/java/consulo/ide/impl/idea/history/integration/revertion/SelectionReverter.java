@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.history.integration.revertion;
 
-import consulo.ide.impl.idea.diff.Block;
+import consulo.diff.Block;
 import consulo.ide.impl.idea.history.core.LocalHistoryFacade;
 import consulo.ide.impl.idea.history.core.revisions.Revision;
 import consulo.ide.impl.idea.history.core.tree.Entry;

@@ -22,8 +22,8 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.diff.fragment.DiffFragment;
 import consulo.diff.fragment.LineFragment;
 import consulo.diff.fragment.MergeLineFragment;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.List;
 
 /**
@@ -33,7 +33,7 @@ import java.util.List;
  * It's good idea not to compare String due to expensive subSequence() implementation. Use CharSequenceSubSequence.
  */
 @ServiceAPI(ComponentScope.APPLICATION)
-public abstract class ComparisonManager {
+public interface ComparisonManager {
   @Nonnull
   public static ComparisonManager getInstance() {
     return Application.get().getInstance(ComparisonManager.class);
@@ -43,60 +43,60 @@ public abstract class ComparisonManager {
    * Compare two texts by-line
    */
   @Nonnull
-  public abstract List<LineFragment> compareLines(@Nonnull CharSequence text1,
-                                                  @Nonnull CharSequence text2,
-                                                  @Nonnull ComparisonPolicy policy,
-                                                  @Nonnull ProgressIndicator indicator) throws DiffTooBigException;
+  List<LineFragment> compareLines(@Nonnull CharSequence text1,
+                                  @Nonnull CharSequence text2,
+                                  @Nonnull ComparisonPolicy policy,
+                                  @Nonnull ProgressIndicator indicator) throws DiffTooBigException;
 
   /**
    * Compare two texts by-line and then compare changed fragments by-word
    */
   @Nonnull
-  public abstract List<LineFragment> compareLinesInner(@Nonnull CharSequence text1,
-                                                       @Nonnull CharSequence text2,
-                                                       @Nonnull ComparisonPolicy policy,
-                                                       @Nonnull ProgressIndicator indicator) throws DiffTooBigException;
+  List<LineFragment> compareLinesInner(@Nonnull CharSequence text1,
+                                       @Nonnull CharSequence text2,
+                                       @Nonnull ComparisonPolicy policy,
+                                       @Nonnull ProgressIndicator indicator) throws DiffTooBigException;
 
   @Nonnull
   @Deprecated
-  public abstract List<LineFragment> compareLinesInner(@Nonnull CharSequence text1,
-                                                       @Nonnull CharSequence text2,
-                                                       @Nonnull List<LineFragment> lineFragments,
-                                                       @Nonnull ComparisonPolicy policy,
-                                                       @Nonnull ProgressIndicator indicator) throws DiffTooBigException;
+  List<LineFragment> compareLinesInner(@Nonnull CharSequence text1,
+                                       @Nonnull CharSequence text2,
+                                       @Nonnull List<LineFragment> lineFragments,
+                                       @Nonnull ComparisonPolicy policy,
+                                       @Nonnull ProgressIndicator indicator) throws DiffTooBigException;
 
   /**
    * Compare three texts by-line (LEFT - BASE - RIGHT)
    */
   @Nonnull
-  public abstract List<MergeLineFragment> compareLines(@Nonnull CharSequence text1,
-                                                       @Nonnull CharSequence text2,
-                                                       @Nonnull CharSequence text3,
-                                                       @Nonnull ComparisonPolicy policy,
-                                                       @Nonnull ProgressIndicator indicator) throws DiffTooBigException;
+  List<MergeLineFragment> compareLines(@Nonnull CharSequence text1,
+                                       @Nonnull CharSequence text2,
+                                       @Nonnull CharSequence text3,
+                                       @Nonnull ComparisonPolicy policy,
+                                       @Nonnull ProgressIndicator indicator) throws DiffTooBigException;
 
   /**
    * Compare two texts by-word
    */
   @Nonnull
-  public abstract List<DiffFragment> compareWords(@Nonnull CharSequence text1,
-                                                  @Nonnull CharSequence text2,
-                                                  @Nonnull ComparisonPolicy policy,
-                                                  @Nonnull ProgressIndicator indicator) throws DiffTooBigException;
+  List<DiffFragment> compareWords(@Nonnull CharSequence text1,
+                                  @Nonnull CharSequence text2,
+                                  @Nonnull ComparisonPolicy policy,
+                                  @Nonnull ProgressIndicator indicator) throws DiffTooBigException;
 
   /**
    * Compare two texts by-char
    */
   @Nonnull
-  public abstract List<DiffFragment> compareChars(@Nonnull CharSequence text1,
-                                                  @Nonnull CharSequence text2,
-                                                  @Nonnull ComparisonPolicy policy,
-                                                  @Nonnull ProgressIndicator indicator) throws DiffTooBigException;
+  List<DiffFragment> compareChars(@Nonnull CharSequence text1,
+                                  @Nonnull CharSequence text2,
+                                  @Nonnull ComparisonPolicy policy,
+                                  @Nonnull ProgressIndicator indicator) throws DiffTooBigException;
 
   /**
    * Check if two texts are equal using ComparisonPolicy
    */
-  public abstract boolean isEquals(@Nonnull CharSequence text1, @Nonnull CharSequence text2, @Nonnull ComparisonPolicy policy);
+  boolean isEquals(@Nonnull CharSequence text1, @Nonnull CharSequence text2, @Nonnull ComparisonPolicy policy);
 
   //
   // Post process line fragments
@@ -104,20 +104,20 @@ public abstract class ComparisonManager {
 
   /**
    * compareLinesInner() comparison can produce adjustment line chunks. This method allows to squash shem.
-   *
+   * <p>
    * ex: "A\nB" vs "A X\nB Y" will result to two LineFragments: [0, 1) - [0, 1) and [1, 2) - [1, 2)
-   *     squash will produce a single fragment: [0, 2) - [0, 2)
+   * squash will produce a single fragment: [0, 2) - [0, 2)
    */
   @Nonnull
-  public abstract List<LineFragment> squash(@Nonnull List<LineFragment> oldFragments);
+  List<LineFragment> squash(@Nonnull List<LineFragment> oldFragments);
 
   /**
-   * @see #squash
    * @param trim - if leading/trailing LineFragments with equal contents should be skipped
+   * @see #squash
    */
   @Nonnull
-  public abstract List<LineFragment> processBlocks(@Nonnull List<LineFragment> oldFragments,
-                                                   @Nonnull final CharSequence text1, @Nonnull final CharSequence text2,
-                                                   @Nonnull final ComparisonPolicy policy,
-                                                   final boolean squash, final boolean trim);
+  List<LineFragment> processBlocks(@Nonnull List<LineFragment> oldFragments,
+                                   @Nonnull final CharSequence text1, @Nonnull final CharSequence text2,
+                                   @Nonnull final ComparisonPolicy policy,
+                                   final boolean squash, final boolean trim);
 }

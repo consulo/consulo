@@ -43,7 +43,7 @@ import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.colorScheme.TextAttributes;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
+import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.ui.ex.awt.HintHint;

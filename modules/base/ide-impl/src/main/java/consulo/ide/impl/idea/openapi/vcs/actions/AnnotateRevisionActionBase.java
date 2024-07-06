@@ -6,7 +6,7 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.codeEditor.Editor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
-import consulo.language.impl.internal.psi.LoadTextUtil;
+import consulo.virtualFileSystem.internal.LoadTextUtil;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;

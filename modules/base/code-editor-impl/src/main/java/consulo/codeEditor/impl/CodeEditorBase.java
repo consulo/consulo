@@ -10,10 +10,9 @@ import consulo.application.util.Queryable;
 import consulo.application.util.function.Processor;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.*;
-import consulo.codeEditor.event.*;
 import consulo.codeEditor.action.EditorAction;
+import consulo.codeEditor.event.*;
 import consulo.codeEditor.internal.CodeEditorInternalHelper;
-import consulo.codeEditor.RealEditor;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.codeEditor.markup.MarkupModelListener;
 import consulo.codeEditor.markup.RangeHighlighter;
@@ -28,8 +27,8 @@ import consulo.disposer.util.DisposerUtil;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 import consulo.document.impl.DocumentImpl;
-import consulo.document.internal.EditorDocumentPriorities;
 import consulo.document.internal.DocumentEx;
+import consulo.document.internal.EditorDocumentPriorities;
 import consulo.document.internal.PrioritizedDocumentListener;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.logging.Logger;
@@ -48,19 +47,19 @@ import consulo.util.collection.Lists;
 import consulo.util.collection.SmartList;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
-import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.util.List;
 import java.util.*;
 import java.util.function.IntFunction;
+import java.util.function.Predicate;
 
 /**
  * Common part from desktop CodeEditor implementation
@@ -434,7 +433,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
 
   protected final TraceableDisposable myTraceableDisposable = TraceableDisposable.newTraceDisposable(true);
 
-  protected Condition<RangeHighlighter> myHighlightingFilter;
+  protected Predicate<RangeHighlighter> myHighlightingFilter;
 
   @Nonnull
   protected final MarkupModelListener myMarkupModelListener;
@@ -886,14 +885,14 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
   }
 
   @Override
-  public void setHighlightingFilter(@Nullable Condition<RangeHighlighter> filter) {
+  public void setHighlightingFilter(@Nullable Predicate<RangeHighlighter> filter) {
     if (myHighlightingFilter == filter) return;
-    Condition<RangeHighlighter> oldFilter = myHighlightingFilter;
+    Predicate<RangeHighlighter> oldFilter = myHighlightingFilter;
     myHighlightingFilter = filter;
 
     for (RangeHighlighter highlighter : myDocumentMarkupModel.getDelegate().getAllHighlighters()) {
-      boolean oldAvailable = oldFilter == null || oldFilter.value(highlighter);
-      boolean newAvailable = filter == null || filter.value(highlighter);
+      boolean oldAvailable = oldFilter == null || oldFilter.test(highlighter);
+      boolean newAvailable = filter == null || filter.test(highlighter);
       if (oldAvailable != newAvailable) {
         myMarkupModelListener.attributesChanged(highlighter, true, EditorUtil.attributesImpactFontStyleOrColor(highlighter.getTextAttributes()));
       }
@@ -902,7 +901,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
 
   @Override
   public boolean isHighlighterAvailable(@Nonnull RangeHighlighter highlighter) {
-    return myHighlightingFilter == null || myHighlightingFilter.value(highlighter);
+    return myHighlightingFilter == null || myHighlightingFilter.test(highlighter);
   }
 
   @Override

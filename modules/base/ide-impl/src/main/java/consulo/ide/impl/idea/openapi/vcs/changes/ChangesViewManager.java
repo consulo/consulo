@@ -31,7 +31,9 @@ import consulo.diff.DiffPlaces;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.FileDocumentManager;
-import consulo.ide.impl.idea.diff.util.DiffUtil;
+import consulo.ide.impl.idea.openapi.vcs.CacheChangeProcessorBridge;
+import consulo.ide.impl.idea.openapi.vcs.CacheChangeProcessorBridgeFactory;
+import consulo.ide.impl.idea.openapi.vcs.CacheChangeProcessorImpl;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.IgnoredSettingsAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelveChangesManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.*;
@@ -40,6 +42,7 @@ import consulo.language.impl.DebugUtil;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.project.Project;
+import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.TreeExpander;
 import consulo.ui.ex.action.*;
@@ -105,11 +108,11 @@ public class ChangesViewManager implements ChangesViewI, Disposable, PersistentS
 
   private boolean myDetailsOn;
   @Nonnull
-  private final NotNullLazyValue<MyChangeProcessor> myDiffDetails = new NotNullLazyValue<MyChangeProcessor>() {
+  private final NotNullLazyValue<CacheChangeProcessorBridge> myDiffDetails = new NotNullLazyValue<>() {
     @Nonnull
     @Override
-    protected MyChangeProcessor compute() {
-      return new MyChangeProcessor(myProject);
+    protected CacheChangeProcessorBridge compute() {
+      return myProject.getInstance(CacheChangeProcessorBridgeFactory.class).create(new MyChangeProcessor());
     }
   };
 
@@ -163,7 +166,11 @@ public class ChangesViewManager implements ChangesViewI, Disposable, PersistentS
     myProject.getUIAccess().give(() -> myContentManager.addContent(myContent));
 
     scheduleRefresh();
-    myProject.getMessageBus().connect().subscribe(RemoteRevisionChangeListener.class, () -> ApplicationManager.getApplication().invokeLater(() -> refreshView(), IdeaModalityState.nonModal(), myProject.getDisposed()));
+    myProject.getMessageBus()
+             .connect()
+             .subscribe(RemoteRevisionChangeListener.class,
+                        () -> ApplicationManager.getApplication()
+                                                .invokeLater(() -> refreshView(), IdeaModalityState.nonModal(), myProject.getDisposed()));
 
     myDetailsOn = VcsConfiguration.getInstance(myProject).LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN;
     changeDetails();
@@ -184,7 +191,9 @@ public class ChangesViewManager implements ChangesViewI, Disposable, PersistentS
     EmptyAction.registerWithShortcutSet("ChangesView.RemoveChangeList", CommonShortcuts.getDelete(), panel);
     EmptyAction.registerWithShortcutSet(IdeActions.MOVE_TO_ANOTHER_CHANGE_LIST, CommonShortcuts.getMove(), panel);
     EmptyAction.registerWithShortcutSet("ChangesView.Rename", CommonShortcuts.getRename(), panel);
-    EmptyAction.registerWithShortcutSet("ChangesView.SetDefault", new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_U, InputEvent.ALT_DOWN_MASK | ctrlMask())), panel);
+    EmptyAction.registerWithShortcutSet("ChangesView.SetDefault",
+                                        new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_U, InputEvent.ALT_DOWN_MASK | ctrlMask())),
+                                        panel);
     EmptyAction.registerWithShortcutSet("ChangesView.Diff", CommonShortcuts.getDiff(), panel);
 
     DefaultActionGroup group = (DefaultActionGroup)ActionManager.getInstance().getAction("ChangesViewToolbar");
@@ -207,7 +216,8 @@ public class ChangesViewManager implements ChangesViewI, Disposable, PersistentS
     visualActionsGroup.add(new IgnoredSettingsAction());
     visualActionsGroup.add(new ToggleDetailsAction());
     visualActionsGroup.add(new ContextHelpAction(ChangesListView.HELP_ID));
-    ActionToolbar actionToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.CHANGES_VIEW_TOOLBAR, visualActionsGroup, false);
+    ActionToolbar actionToolbar =
+      ActionManager.getInstance().createActionToolbar(ActionPlaces.CHANGES_VIEW_TOOLBAR, visualActionsGroup, false);
     actionToolbar.setTargetComponent(panel);
     toolbarPanel.add(actionToolbar.getComponent(), BorderLayout.CENTER);
 
@@ -328,10 +338,14 @@ public class ChangesViewManager implements ChangesViewI, Disposable, PersistentS
     ChangeListManagerImpl changeListManager = ChangeListManagerImpl.getInstanceImpl(myProject);
 
     TreeModelBuilder treeModelBuilder =
-            new TreeModelBuilder(myProject, myView.isShowFlatten()).setChangeLists(changeListManager.getChangeListsCopy()).setLocallyDeletedPaths(changeListManager.getDeletedFiles())
-                    .setModifiedWithoutEditing(changeListManager.getModifiedWithoutEditing()).setSwitchedFiles(changeListManager.getSwitchedFilesMap())
-                    .setSwitchedRoots(changeListManager.getSwitchedRoots()).setLockedFolders(changeListManager.getLockedFolders())
-                    .setLogicallyLockedFiles(changeListManager.getLogicallyLockedFolders()).setUnversioned(changeListManager.getUnversionedFiles());
+      new TreeModelBuilder(myProject, myView.isShowFlatten()).setChangeLists(changeListManager.getChangeListsCopy())
+                                                             .setLocallyDeletedPaths(changeListManager.getDeletedFiles())
+                                                             .setModifiedWithoutEditing(changeListManager.getModifiedWithoutEditing())
+                                                             .setSwitchedFiles(changeListManager.getSwitchedFilesMap())
+                                                             .setSwitchedRoots(changeListManager.getSwitchedRoots())
+                                                             .setLockedFolders(changeListManager.getLockedFolders())
+                                                             .setLogicallyLockedFiles(changeListManager.getLogicallyLockedFolders())
+                                                             .setUnversioned(changeListManager.getUnversionedFiles());
     if (myState.myShowIgnored) {
       treeModelBuilder.setIgnored(changeListManager.getIgnoredFiles(), changeListManager.isIgnoredInUpdateMode());
     }
@@ -520,20 +534,27 @@ public class ChangesViewManager implements ChangesViewI, Disposable, PersistentS
     }
   }
 
-  private class MyChangeProcessor extends CacheChangeProcessor {
-    public MyChangeProcessor(@Nonnull Project project) {
-      super(project, DiffPlaces.CHANGES_VIEW);
-      Disposer.register(project, this);
+  private class MyChangeProcessor implements CacheChangeProcessorImpl {
+    @Override
+    public String getPlace() {
+      return DiffPlaces.CHANGES_VIEW;
     }
 
     @Override
-    public boolean isWindowFocused() {
-      return DiffUtil.isFocusedComponent(myProject, myContent.getComponent());
+    public void init(Project project, CacheChangeProcessorBridge bridge) {
+      Disposer.register(project, bridge);
+    }
+
+    @Override
+    public Boolean isWindowFocused() {
+      Component component = myContent.getComponent();
+      if (component == null) return false;
+      return ProjectIdeFocusManager.getInstance(myProject).getFocusedDescendantFor(component) != null;
     }
 
     @Nonnull
     @Override
-    protected List<Change> getSelectedChanges() {
+    public List<Change> getSelectedChanges() {
       List<Change> result = myView.getSelectedChanges().collect(toList());
       if (result.isEmpty()) result = myView.getChanges().collect(toList());
       return result;
@@ -541,12 +562,12 @@ public class ChangesViewManager implements ChangesViewI, Disposable, PersistentS
 
     @Nonnull
     @Override
-    protected List<Change> getAllChanges() {
+    public List<Change> getAllChanges() {
       return myView.getChanges().collect(toList());
     }
 
     @Override
-    protected void selectChange(@Nonnull Change change) {
+    public void selectChange(@Nonnull Change change) {
       DefaultMutableTreeNode root = (DefaultMutableTreeNode)myView.getModel().getRoot();
       DefaultMutableTreeNode node = TreeUtil.findNodeWithObject(root, change);
       if (node != null) {
@@ -567,7 +588,12 @@ public class ChangesViewManager implements ChangesViewI, Disposable, PersistentS
       if (attachedObject instanceof ShelvedChangeListDragBean) {
         FileDocumentManager.getInstance().saveAllDocuments();
         ShelvedChangeListDragBean shelvedBean = (ShelvedChangeListDragBean)attachedObject;
-        ShelveChangesManager.getInstance(myProject).unshelveSilentlyAsynchronously(myProject, shelvedBean.getShelvedChangelists(), shelvedBean.getChanges(), shelvedBean.getBinaryFiles(), null);
+        ShelveChangesManager.getInstance(myProject)
+                            .unshelveSilentlyAsynchronously(myProject,
+                                                            shelvedBean.getShelvedChangelists(),
+                                                            shelvedBean.getChanges(),
+                                                            shelvedBean.getBinaryFiles(),
+                                                            null);
       }
     }
 

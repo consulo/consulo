@@ -1,11 +1,12 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.actions.diff;
 
+import consulo.diff.chain.DiffRequestChain;
+import consulo.ide.impl.idea.diff.actions.impl.GoToChangePopupBuilder;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.action.AnAction;
 import consulo.util.dataholder.UserDataHolderBase;
-import consulo.ide.impl.idea.diff.actions.impl.GoToChangePopupBuilder;
-import consulo.diff.chain.DiffRequestChain;
 import consulo.versionControlSystem.change.Change;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.versionControlSystem.change.diff.ChangeDiffRequestProducer;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

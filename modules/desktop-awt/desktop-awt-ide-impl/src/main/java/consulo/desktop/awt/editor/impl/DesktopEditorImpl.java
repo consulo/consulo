@@ -52,7 +52,7 @@ import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUIUtil;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.editor.impl.FoldingPopupManager;
 import consulo.ide.impl.idea.openapi.editor.markup.LineMarkerRendererEx;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
+import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.platform.Platform;
 import consulo.util.lang.Comparing;

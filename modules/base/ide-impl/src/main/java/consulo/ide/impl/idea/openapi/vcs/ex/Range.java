@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.ex;
 
-import consulo.ide.impl.idea.diff.util.DiffUtil;
+import consulo.diff.impl.internal.util.DiffImplUtil;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.logging.Logger;
 
@@ -212,7 +212,7 @@ public class Range {
    * Check, if caret at <line> is corresponds to the current range
    */
   public boolean isSelectedByLine(int line) {
-    return DiffUtil.isSelectedByLine(line, myLine1, myLine2);
+    return DiffImplUtil.isSelectedByLine(line, myLine1, myLine2);
   }
 
   @Nonnull

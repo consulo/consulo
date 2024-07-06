@@ -11,6 +11,7 @@ import consulo.ide.impl.idea.codeInsight.intention.impl.ShowIntentionActionsHand
 import consulo.language.editor.impl.internal.template.TemplateManagerImpl;
 import consulo.language.editor.impl.internal.template.TemplateStateImpl;
 import consulo.codeEditor.EditorEx;
+import consulo.language.editor.intention.IntentionActionFilter;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.ApplicationManager;

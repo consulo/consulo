@@ -19,7 +19,7 @@ import consulo.ide.IdeBundle;
 import consulo.language.editor.folding.FoldingDescriptor;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
+import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;

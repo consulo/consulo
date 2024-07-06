@@ -15,38 +15,39 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.update;
 
-import consulo.ide.impl.idea.diff.DiffContentFactoryEx;
+import consulo.application.dumb.DumbAware;
+import consulo.application.progress.ProgressIndicator;
+import consulo.component.ProcessCanceledException;
+import consulo.dataContext.DataContext;
 import consulo.diff.DiffDialogHints;
 import consulo.diff.DiffManager;
-import consulo.ide.impl.idea.diff.DiffRequestFactoryImpl;
-import consulo.ide.impl.idea.diff.actions.impl.GoToChangePopupBuilder;
 import consulo.diff.chain.DiffRequestChain;
 import consulo.diff.chain.DiffRequestProducer;
 import consulo.diff.chain.DiffRequestProducerException;
 import consulo.diff.content.DiffContent;
+import consulo.diff.internal.DiffContentFactoryEx;
+import consulo.diff.internal.DiffRequestFactoryEx;
 import consulo.diff.request.DiffRequest;
 import consulo.diff.request.SimpleDiffRequest;
+import consulo.ide.impl.idea.diff.actions.impl.GoToChangePopupBuilder;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ChangeGoToChangePopupAction;
+import consulo.language.editor.CommonDataKeys;
 import consulo.localHistory.ByteContent;
 import consulo.localHistory.Label;
-import consulo.component.ProcessCanceledException;
-import consulo.application.progress.ProgressIndicator;
-import consulo.dataContext.DataContext;
-import consulo.application.dumb.DumbAware;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
-import consulo.util.lang.Pair;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderBase;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.util.lang.Pair;
 import consulo.versionControlSystem.FilePath;
-import consulo.virtualFileSystem.status.FileStatus;
 import consulo.versionControlSystem.VcsDataKeys;
-import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ChangeGoToChangePopupAction;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.virtualFileSystem.status.FileStatus;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -92,7 +93,7 @@ public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
   }
 
   private static class MyDiffRequestChain extends UserDataHolderBase implements DiffRequestChain, GoToChangePopupBuilder.Chain {
-    @jakarta.annotation.Nullable
+    @Nullable
     private final Project myProject;
     @Nonnull
     private final Label myBefore;
@@ -103,11 +104,11 @@ public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
 
     private int myIndex;
 
-    public MyDiffRequestChain(@jakarta.annotation.Nullable Project project,
+    public MyDiffRequestChain(@Nullable Project project,
                               @Nonnull Iterable<Pair<FilePath, FileStatus>> iterable,
                               @Nonnull Label before,
                               @Nonnull Label after,
-                              @jakarta.annotation.Nullable FilePath filePath) {
+                              @Nullable FilePath filePath) {
       myProject = project;
       myBefore = before;
       myAfter = after;
@@ -207,7 +208,7 @@ public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
             content2 = contentFactory.createFromBytes(myProject, bytes2, myFilePath);
           }
 
-          String title = DiffRequestFactoryImpl.getContentTitle(myFilePath);
+          String title = DiffRequestFactoryEx.getInstanceEx().getContentTitle(myFilePath);
           return new SimpleDiffRequest(title, content1, content2, "Before update", "After update");
         }
         catch (IOException e) {

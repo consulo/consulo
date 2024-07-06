@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.language.editor.CommonDataKeys;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
+import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;

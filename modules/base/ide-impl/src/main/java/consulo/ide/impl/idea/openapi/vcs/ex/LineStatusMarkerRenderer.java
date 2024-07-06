@@ -20,8 +20,9 @@ import consulo.codeEditor.markup.*;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
+import consulo.diff.DiffColors;
+import consulo.diff.impl.internal.util.DiffImplUtil;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.diff.DiffColors;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.JBUIScale;
@@ -29,15 +30,13 @@ import consulo.ui.ex.awt.paint.RectanglePainter2D;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.function.PairConsumer;
 import consulo.versionControlSystem.VcsBundle;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.function.Function;
-
-import static consulo.ide.impl.idea.diff.util.DiffDrawUtil.lineToY;
 
 public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
   @Nonnull
@@ -169,7 +168,8 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
 
         if (line != -1) {
           paintRect(graphics2D, gutterColor, borderColor, x - 1, y, endX + 2, endY);
-        } else {
+        }
+        else {
           paintRect(graphics2D, gutterColor, borderColor, x, y, endX, endY);
         }
       }
@@ -186,8 +186,8 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
         for (Range.InnerRange innerRange : innerRanges) {
           if (innerRange.getType() == Range.DELETED) continue;
 
-          int start = lineToY(editor, innerRange.getLine1());
-          int end = lineToY(editor, innerRange.getLine2());
+          int start = DiffImplUtil.lineToY(editor, innerRange.getLine1());
+          int end = DiffImplUtil.lineToY(editor, innerRange.getLine2());
 
           paintRect(graphics2D, getGutterColor(innerRange, editor), null, x, start, endX, end);
         }
@@ -197,7 +197,7 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
         for (Range.InnerRange innerRange : innerRanges) {
           if (innerRange.getType() != Range.DELETED) continue;
 
-          int start = lineToY(editor, innerRange.getLine1());
+          int start = DiffImplUtil.lineToY(editor, innerRange.getLine1());
 
           paintTriangle(graphics2D, editor, getGutterColor(innerRange, editor), borderColor, x, endX, start);
         }
@@ -229,8 +229,8 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
     EditorGutterComponentEx gutter = ((EditorEx)editor).getGutterComponentEx();
     int x = r.x + JBUI.scale(1); // leave 1px for brace highlighters
     int endX = gutter.getWhitespaceSeparatorOffset();
-    int y = lineToY(editor, line1);
-    int endY = lineToY(editor, line2);
+    int y = DiffImplUtil.lineToY(editor, line1);
+    int endY = DiffImplUtil.lineToY(editor, line2);
     // new ui
     if (Boolean.TRUE) {
       x = gutter.getLineMarkerFreePaintersAreaOffset() + 1; // leave 1px for brace highlighters

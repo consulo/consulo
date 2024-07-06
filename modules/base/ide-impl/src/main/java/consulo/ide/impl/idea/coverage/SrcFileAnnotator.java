@@ -42,7 +42,7 @@ import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ide.impl.idea.ui.EditorNotificationPanel;
 import java.util.function.Function;
 import consulo.language.editor.CodeInsightBundle;
-import consulo.language.impl.internal.psi.LoadTextUtil;
+import consulo.virtualFileSystem.internal.LoadTextUtil;
 import consulo.language.psi.PsiFile;
 import consulo.localHistory.FileRevisionTimestampComparator;
 import consulo.localHistory.LocalHistory;

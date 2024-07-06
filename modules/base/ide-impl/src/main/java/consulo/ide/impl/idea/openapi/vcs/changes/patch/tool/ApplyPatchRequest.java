@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.openapi.vcs.changes.patch.AppliedTextPatch;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-interface ApplyPatchRequest {
+public interface ApplyPatchRequest {
   @Nonnull
   DocumentContent getResultContent();
 

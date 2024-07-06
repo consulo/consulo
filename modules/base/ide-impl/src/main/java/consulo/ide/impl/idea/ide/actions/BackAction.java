@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
+import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;

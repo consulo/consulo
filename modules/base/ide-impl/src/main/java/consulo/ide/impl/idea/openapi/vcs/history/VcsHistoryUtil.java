@@ -15,35 +15,33 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.history;
 
-import consulo.ide.impl.idea.diff.DiffContentFactoryEx;
-import consulo.diff.DiffManager;
-import consulo.ide.impl.idea.diff.DiffRequestFactoryImpl;
-import consulo.diff.content.DiffContent;
-import consulo.diff.request.DiffRequest;
-import consulo.diff.request.SimpleDiffRequest;
-import consulo.ide.impl.idea.diff.util.DiffUserDataKeysEx;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.colorScheme.EditorFontType;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
+import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.EditorFontType;
+import consulo.diff.DiffManager;
+import consulo.diff.content.DiffContent;
+import consulo.diff.internal.DiffContentFactoryEx;
+import consulo.diff.internal.DiffRequestFactoryEx;
+import consulo.diff.request.DiffRequest;
+import consulo.diff.request.SimpleDiffRequest;
+import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.project.util.WaitForProgressToShow;
+import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.Messages;
-import consulo.util.dataholder.Key;
+import consulo.util.io.CharsetToolkit;
 import consulo.util.lang.Pair;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsException;
-import consulo.util.io.CharsetToolkit;
+import consulo.versionControlSystem.diff.VcsDiffDataKeys;
 import consulo.versionControlSystem.history.VcsFileRevision;
 import consulo.versionControlSystem.history.VcsFileRevisionEx;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.encoding.EncodingManager;
 import consulo.virtualFileSystem.encoding.EncodingProjectManager;
-import consulo.project.util.WaitForProgressToShow;
-import consulo.ui.ex.awt.JBUI;
-import consulo.logging.Logger;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -51,8 +49,6 @@ import java.awt.*;
 import java.io.IOException;
 
 public class VcsHistoryUtil {
-  @Deprecated
-  public static Key<Pair<FilePath, VcsRevisionNumber>> REVISION_INFO_KEY = DiffUserDataKeysEx.REVISION_INFO;
 
   private static final Logger LOG = Logger.getInstance(VcsHistoryUtil.class);
 
@@ -103,10 +99,10 @@ public class VcsHistoryUtil {
 
     String title;
     if (path1 != null && path2 != null) {
-      title = DiffRequestFactoryImpl.getTitle(path1, path2, " -> ");
+      title = DiffRequestFactoryEx.getInstanceEx().getTitle(path1, path2, " -> ");
     }
     else {
-      title = DiffRequestFactoryImpl.getContentTitle(path);
+      title = DiffRequestFactoryEx.getInstanceEx().getContentTitle(path);
     }
 
     DiffContent diffContent1 = createContent(project, content1, revision1, path);
@@ -114,8 +110,8 @@ public class VcsHistoryUtil {
 
     final DiffRequest request = new SimpleDiffRequest(title, diffContent1, diffContent2, title1, title2);
 
-    diffContent1.putUserData(DiffUserDataKeysEx.REVISION_INFO, getRevisionInfo(revision1));
-    diffContent2.putUserData(DiffUserDataKeysEx.REVISION_INFO, getRevisionInfo(revision2));
+    diffContent1.putUserData(VcsDiffDataKeys.REVISION_INFO, getRevisionInfo(revision1));
+    diffContent2.putUserData(VcsDiffDataKeys.REVISION_INFO, getRevisionInfo(revision2));
 
     WaitForProgressToShow.runOrInvokeLaterAboveProgress(new Runnable() {
       public void run() {
@@ -124,7 +120,7 @@ public class VcsHistoryUtil {
     }, null, project);
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private static Pair<FilePath, VcsRevisionNumber> getRevisionInfo(@Nonnull VcsFileRevision revision) {
     if (revision instanceof VcsFileRevisionEx) {
       return Pair.create(((VcsFileRevisionEx)revision).getPath(), revision.getRevisionNumber());
@@ -132,7 +128,7 @@ public class VcsHistoryUtil {
     return null;
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private static FilePath getRevisionPath(@Nonnull VcsFileRevision revision) {
     if (revision instanceof VcsFileRevisionEx) {
       return ((VcsFileRevisionEx)revision).getPath();
@@ -152,7 +148,7 @@ public class VcsHistoryUtil {
   }
 
   public static String loadRevisionContentGuessEncoding(@Nonnull final VcsFileRevision revision, @Nullable final VirtualFile file,
-                                                        @jakarta.annotation.Nullable final Project project) throws VcsException, IOException {
+                                                        @Nullable final Project project) throws VcsException, IOException {
     final byte[] bytes = loadRevisionContent(revision);
     if (file != null) {
       return new String(bytes, file.getCharset());

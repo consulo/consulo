@@ -21,7 +21,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.ScrollingModel;
 import consulo.codeEditor.action.EditorActionHandler;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
+import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.project.Project;
 
 /**

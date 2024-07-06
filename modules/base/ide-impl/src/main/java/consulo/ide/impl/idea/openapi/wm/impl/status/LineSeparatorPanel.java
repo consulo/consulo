@@ -6,7 +6,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.dataContext.DataContext;
-import consulo.language.impl.internal.psi.LoadTextUtil;
+import consulo.virtualFileSystem.internal.LoadTextUtil;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;

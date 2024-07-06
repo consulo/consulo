@@ -10,7 +10,6 @@ import consulo.language.ast.FileASTNode;
 import consulo.language.ast.LighterAST;
 import consulo.language.ast.TreeBackedLighterAST;
 import consulo.language.file.LanguageFileType;
-import consulo.language.impl.internal.psi.LoadTextUtil;
 import consulo.language.psi.LanguageSubstitutors;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
@@ -26,10 +25,11 @@ import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-import org.jetbrains.annotations.TestOnly;
-
+import consulo.virtualFileSystem.internal.LoadTextUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.TestOnly;
+
 import java.io.IOException;
 import java.nio.charset.Charset;
 
@@ -120,19 +120,24 @@ public class FileContentImpl extends IndexedFileImpl implements PsiDependentFile
     FileType fileType = getFileTypeWithoutSubstitution();
     if (!(fileType instanceof LanguageFileType)) {
       throw new AssertionError("PSI can be created only for a file with LanguageFileType but actual is " +
-                               fileType.getClass() +
-                               "." +
-                               "\nPlease use a proper FileBasedIndexExtension#getInputFilter() implementation for the caller index");
+                                 fileType.getClass() +
+                                 "." +
+                                 "\nPlease use a proper FileBasedIndexExtension#getInputFilter() implementation for the caller index");
     }
     return createFileFromText(project, text, (LanguageFileType)fileType, myFile, myFileName);
   }
 
   @Nonnull
   @RequiredReadAction
-  public static PsiFile createFileFromText(@Nonnull Project project, @Nonnull CharSequence text, @Nonnull LanguageFileType fileType, @Nonnull VirtualFile file, @Nonnull String fileName) {
+  public static PsiFile createFileFromText(@Nonnull Project project,
+                                           @Nonnull CharSequence text,
+                                           @Nonnull LanguageFileType fileType,
+                                           @Nonnull VirtualFile file,
+                                           @Nonnull String fileName) {
     Language language = fileType.getLanguage();
     Language substitutedLanguage = LanguageSubstitutors.substituteLanguage(language, file, project);
-    LanguageVersion languageVersion = LanguageVersionResolver.forLanguage(substitutedLanguage).getLanguageVersion(substitutedLanguage, project, file);
+    LanguageVersion languageVersion =
+      LanguageVersionResolver.forLanguage(substitutedLanguage).getLanguageVersion(substitutedLanguage, project, file);
     PsiFile psiFile = PsiFileFactory.getInstance(project).createFileFromText(fileName, languageVersion, text, false, false, false, file);
     if (psiFile == null) {
       throw new IllegalStateException("psiFile is null. language = " + language.getID() + ", substitutedLanguage = " + substitutedLanguage.getID());

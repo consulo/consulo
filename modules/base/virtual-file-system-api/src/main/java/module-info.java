@@ -34,5 +34,6 @@ module consulo.virtual.file.system.api {
     consulo.compiler.impl,
     consulo.application.impl,
     consulo.test.impl,
+    consulo.diff.impl,
     consulo.language.impl;
 }

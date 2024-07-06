@@ -20,9 +20,9 @@ import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ContentRevision;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.status.FileStatus;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;

@@ -318,37 +318,37 @@ public class VcsUtil {
   }
 
   public static FilePath getFilePath(@Nonnull VirtualFile file) {
-    return VcsContextFactory.SERVICE.getInstance().createFilePathOn(file);
+    return VcsContextFactory.getInstance().createFilePathOn(file);
   }
 
   public static FilePath getFilePath(@Nonnull File file) {
-    return VcsContextFactory.SERVICE.getInstance().createFilePathOn(file);
+    return VcsContextFactory.getInstance().createFilePathOn(file);
   }
 
   public static FilePath getFilePath(@Nonnull String path, boolean isDirectory) {
-    return VcsContextFactory.SERVICE.getInstance().createFilePath(path, isDirectory);
+    return VcsContextFactory.getInstance().createFilePath(path, isDirectory);
   }
 
   public static FilePath getFilePathOnNonLocal(String path, boolean isDirectory) {
-    return VcsContextFactory.SERVICE.getInstance().createFilePathOnNonLocal(path, isDirectory);
+    return VcsContextFactory.getInstance().createFilePathOnNonLocal(path, isDirectory);
   }
 
   public static FilePath getFilePath(@Nonnull File file, boolean isDirectory) {
-    return VcsContextFactory.SERVICE.getInstance().createFilePathOn(file, isDirectory);
+    return VcsContextFactory.getInstance().createFilePathOn(file, isDirectory);
   }
 
   public static FilePath getFilePathForDeletedFile(@Nonnull String path, boolean isDirectory) {
-    return VcsContextFactory.SERVICE.getInstance().createFilePathOnDeleted(new File(path), isDirectory);
+    return VcsContextFactory.getInstance().createFilePathOnDeleted(new File(path), isDirectory);
   }
 
   @Nonnull
   public static FilePath getFilePath(@Nonnull VirtualFile parent, @Nonnull String name) {
-    return VcsContextFactory.SERVICE.getInstance().createFilePathOn(parent, name);
+    return VcsContextFactory.getInstance().createFilePathOn(parent, name);
   }
 
   @Nonnull
   public static FilePath getFilePath(@Nonnull VirtualFile parent, @Nonnull String fileName, boolean isDirectory) {
-    return VcsContextFactory.SERVICE.getInstance().createFilePath(parent, fileName, isDirectory);
+    return VcsContextFactory.getInstance().createFilePath(parent, fileName, isDirectory);
   }
 
   /**

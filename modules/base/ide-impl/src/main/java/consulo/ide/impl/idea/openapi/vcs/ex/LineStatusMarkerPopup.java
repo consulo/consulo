@@ -15,42 +15,38 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.ex;
 
-import consulo.ide.impl.idea.codeInsight.hint.EditorFragmentComponent;
-import consulo.language.editor.hint.HintManager;
-import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
-import consulo.ide.impl.idea.diff.comparison.ByWord;
-import consulo.diff.comparison.ComparisonPolicy;
-import consulo.diff.fragment.DiffFragment;
-import consulo.ide.impl.idea.diff.util.DiffDrawUtil;
-import consulo.ide.impl.idea.diff.util.DiffUtil;
-import consulo.ide.impl.idea.diff.util.TextDiffType;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorFactory;
-import consulo.codeEditor.LogicalPosition;
-import consulo.codeEditor.ScrollType;
-import consulo.ui.ex.action.ActionToolbar;
-import consulo.codeEditor.EditorEx;
-import consulo.language.editor.highlight.EditorHighlighterFactory;
-import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.document.FileDocumentManager;
-import consulo.document.Document;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.language.plain.PlainTextFileType;
 import consulo.application.internal.BackgroundTaskUtil;
 import consulo.application.util.registry.Registry;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.awt.HintHint;
-import consulo.language.editor.impl.internal.hint.HintListener;
-import consulo.ui.ex.JBColor;
-import consulo.ide.impl.idea.ui.LightweightHint;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.codeEditor.*;
+import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.diff.comparison.ByWord;
+import consulo.diff.comparison.ComparisonPolicy;
+import consulo.diff.fragment.DiffFragment;
+import consulo.diff.impl.internal.util.DiffImplUtil;
+import consulo.diff.util.TextDiffType;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.ide.impl.diff.DiffDrawUtil;
+import consulo.ide.impl.idea.codeInsight.hint.EditorFragmentComponent;
+import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
+import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.language.editor.highlight.EditorHighlighterFactory;
+import consulo.language.editor.hint.HintManager;
+import consulo.language.editor.impl.internal.hint.HintListener;
+import consulo.language.plain.PlainTextFileType;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.action.ActionToolbar;
+import consulo.ui.ex.awt.HintHint;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -60,8 +56,8 @@ import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.List;
 
-import static consulo.ide.impl.idea.diff.util.DiffUtil.getDiffType;
-import static consulo.ide.impl.idea.diff.util.DiffUtil.getLineCount;
+import static consulo.diff.impl.internal.util.DiffImplUtil.getDiffType;
+import static consulo.diff.impl.internal.util.DiffImplUtil.getLineCount;
 
 public abstract class LineStatusMarkerPopup {
   @Nonnull
@@ -185,12 +181,9 @@ public abstract class LineStatusMarkerPopup {
       highlighters.addAll(DiffDrawUtil.createInlineHighlighter(myEditor, currentStart, currentEnd, type));
     }
 
-    Disposer.register(parentDisposable, new Disposable() {
-      @Override
-      public void dispose() {
-        for (RangeHighlighter highlighter : highlighters) {
-          highlighter.dispose();
-        }
+    Disposer.register(parentDisposable, () -> {
+      for (RangeHighlighter highlighter : highlighters) {
+        highlighter.dispose();
       }
     });
   }
@@ -202,7 +195,7 @@ public abstract class LineStatusMarkerPopup {
     EditorEx uEditor = (EditorEx)EditorFactory.getInstance().createViewer(myTracker.getVcsDocument(), myTracker.getProject());
     uEditor.setColorsScheme(myEditor.getColorsScheme());
 
-    DiffUtil.setEditorCodeStyle(myTracker.getProject(), uEditor, fileType);
+    DiffImplUtil.setEditorCodeStyle(myTracker.getProject(), uEditor, fileType);
 
     EditorHighlighterFactory highlighterFactory = EditorHighlighterFactory.getInstance();
     uEditor.setHighlighter(highlighterFactory.createEditorHighlighter(myTracker.getProject(), getFileName(myTracker.getDocument())));

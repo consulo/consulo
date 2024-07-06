@@ -20,7 +20,7 @@ import consulo.dataContext.DataSink;
 import consulo.dataContext.TypeSafeDataProvider;
 import consulo.diff.DiffDialogHints;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.diff.util.DiffUserDataKeysEx;
+import consulo.diff.internal.DiffUserDataKeysEx;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.fileChooser.actions.VirtualFileDeleteProvider;
 import consulo.ide.impl.idea.openapi.vcs.changes.RemoteRevisionsCache;

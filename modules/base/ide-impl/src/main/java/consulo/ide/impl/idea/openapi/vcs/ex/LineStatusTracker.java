@@ -35,7 +35,7 @@ import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.List;
 
-import static consulo.ide.impl.idea.diff.util.DiffUtil.getLineCount;
+import static consulo.diff.impl.internal.util.DiffImplUtil.getLineCount;
 
 /**
  * @author irengrig

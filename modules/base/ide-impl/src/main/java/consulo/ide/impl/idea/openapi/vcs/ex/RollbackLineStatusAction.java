@@ -14,7 +14,7 @@ package consulo.ide.impl.idea.openapi.vcs.ex;
 
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.diff.util.DiffUtil;
+import consulo.diff.impl.internal.util.DiffImplUtil;
 import consulo.ide.impl.idea.openapi.vcs.impl.LineStatusTrackerManager;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -37,7 +37,7 @@ public class RollbackLineStatusAction extends DumbAwareAction {
       e.getPresentation().setEnabledAndVisible(false);
       return;
     }
-    if (DiffUtil.isDiffEditor(editor)) {
+    if (DiffImplUtil.isDiffEditor(editor)) {
       e.getPresentation().setEnabledAndVisible(false);
       return;
     }
@@ -86,7 +86,7 @@ public class RollbackLineStatusAction extends DumbAwareAction {
       return;
     }
 
-    doRollback(tracker, DiffUtil.getSelectedLines(editor));
+    doRollback(tracker, DiffImplUtil.getSelectedLines(editor));
   }
 
   @RequiredUIAccess
@@ -101,6 +101,6 @@ public class RollbackLineStatusAction extends DumbAwareAction {
 
   @RequiredUIAccess
   private static void execute(@Nonnull final LineStatusTracker tracker, @Nonnull final Runnable task) {
-    DiffUtil.executeWriteCommand(tracker.getDocument(), tracker.getProject(), VcsLocalize.commandNameRollbackChange().get(), task);
+    DiffImplUtil.executeWriteCommand(tracker.getDocument(), tracker.getProject(), VcsLocalize.commandNameRollbackChange().get(), task);
   }
 }

@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.codeEditor.EditorEx;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.IdeDocumentHistoryImpl;
+import consulo.fileEditor.history.PlaceInfo;
 
 import java.util.Objects;
 
@@ -25,9 +25,9 @@ import java.util.Objects;
  */
 public final class RecentLocationItem {
   private final EditorEx myEditor;
-  private final IdeDocumentHistoryImpl.PlaceInfo myInfo;
+  private final PlaceInfo myInfo;
 
-  public RecentLocationItem(EditorEx editor, IdeDocumentHistoryImpl.PlaceInfo info) {
+  public RecentLocationItem(EditorEx editor, PlaceInfo info) {
     myEditor = editor;
     myInfo = info;
   }
@@ -36,7 +36,7 @@ public final class RecentLocationItem {
     return myEditor;
   }
 
-  public IdeDocumentHistoryImpl.PlaceInfo getInfo() {
+  public PlaceInfo getInfo() {
     return myInfo;
   }
 

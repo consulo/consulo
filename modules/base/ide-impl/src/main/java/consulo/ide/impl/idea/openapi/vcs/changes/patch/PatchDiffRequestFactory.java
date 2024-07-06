@@ -18,20 +18,19 @@ package consulo.ide.impl.idea.openapi.vcs.changes.patch;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.diff.DiffContentFactory;
+import consulo.diff.DiffRequestFactory;
+import consulo.diff.InvalidDiffRequestException;
 import consulo.diff.chain.DiffRequestProducerException;
 import consulo.diff.content.DocumentContent;
+import consulo.diff.impl.internal.util.DiffImplUtil;
 import consulo.diff.merge.MergeRequest;
 import consulo.diff.merge.MergeResult;
 import consulo.diff.request.DiffRequest;
 import consulo.diff.request.SimpleDiffRequest;
 import consulo.document.Document;
-import consulo.ide.impl.idea.diff.DiffRequestFactory;
-import consulo.ide.impl.idea.diff.InvalidDiffRequestException;
-import consulo.ide.impl.idea.diff.util.DiffUtil;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.TextFilePatch;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.GenericPatchApplier;
 import consulo.ide.impl.idea.openapi.util.Getter;
-import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ChangeDiffRequestProducer;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.tool.ApplyPatchDiffRequest;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.tool.ApplyPatchMergeRequest;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -40,6 +39,7 @@ import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
 import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.change.diff.ChangeDiffRequestProducer;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -244,9 +244,9 @@ public class PatchDiffRequestFactory {
     @Nullable String patchTitle,
     @Nullable Consumer<MergeResult> callback
   ) throws InvalidDiffRequestException {
-    if (!DiffUtil.canMakeWritable(document)) {
+    if (!DiffImplUtil.canMakeWritable(document)) {
       throw new InvalidDiffRequestException(
-        "Output is read only" + (file != null ? " : '" + file.getPresentableUrl() +"'": "")
+        "Output is read only" + (file != null ? " : '" + file.getPresentableUrl() + "'" : "")
       );
     }
 
