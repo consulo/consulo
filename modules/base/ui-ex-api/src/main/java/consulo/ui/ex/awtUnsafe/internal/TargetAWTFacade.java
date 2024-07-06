@@ -79,6 +79,10 @@ public interface TargetAWTFacade {
   @Nonnull
   java.awt.Font to(@Nonnull Font font);
 
+  default java.awt.Image toAWTImage(@Nonnull Image image) {
+    throw new AbstractMethodError();
+  }
+
   default java.awt.Cursor to(Cursor cursor) {
     throw new AbstractMethodError();
   }

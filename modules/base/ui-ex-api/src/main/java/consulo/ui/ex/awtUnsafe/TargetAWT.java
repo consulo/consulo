@@ -25,7 +25,6 @@ import consulo.ui.cursor.Cursor;
 import consulo.ui.ex.awtUnsafe.internal.TargetAWTFacade;
 import consulo.ui.font.Font;
 import consulo.ui.image.Image;
-import consulo.ui.image.ImageKey;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.Contract;
@@ -141,5 +140,9 @@ public final class TargetAWT {
   @Nonnull
   public static java.awt.Font to(@Nonnull Font font) {
     return ourFacade.to(font);
+  }
+
+  public static java.awt.Image toAWTImage(@Nonnull Image image) {
+    return ourFacade.toAWTImage(image);
   }
 }

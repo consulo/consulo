@@ -18,9 +18,6 @@ package consulo.ide.impl.idea.notification.impl.actions;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ide.impl.idea.openapi.util.NotWorkingIconLoader;
-import consulo.localize.LocalizeValue;
-import consulo.util.lang.StringUtil;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationDisplayType;
@@ -34,6 +31,8 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.MessageDialogBuilder;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageKey;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -186,9 +185,7 @@ public class NotificationTestAction extends AnAction implements DumbAware {
     public Notification getNotification() {
       if (myNotification == null) {
         Image icon = null;
-        if (!StringUtil.isEmpty(myGroupId)) {
-          icon = (Image)NotWorkingIconLoader.findIcon(myGroupId);
-        }
+
         NotificationGroup displayId = mySticky ? TEST_STICKY_GROUP : TEST_GROUP;
         if (myToolwindow) {
           displayId = TEST_TOOLWINDOW_GROUP;
@@ -272,13 +269,13 @@ public class NotificationTestAction extends AnAction implements DumbAware {
     private class MyAnAction extends AnAction {
       private MyAnAction(@Nullable String text) {
         if (text != null) {
-          if (text.endsWith(".png")) {
-            Image icon = (Image)NotWorkingIconLoader.findIcon(text);
-            if (icon != null) {
-              getTemplatePresentation().setIcon(icon);
-              return;
-            }
+          try {
+            ImageKey imageKey = ImageKey.fromString(text, Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE);
+            getTemplatePresentation().setIcon(imageKey);
           }
+          catch (Exception ignored) {
+          }
+
           getTemplatePresentation().setText(text);
         }
       }

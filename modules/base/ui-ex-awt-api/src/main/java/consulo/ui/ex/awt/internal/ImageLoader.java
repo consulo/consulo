@@ -51,6 +51,7 @@ import static consulo.ui.ex.awt.JBUI.ScaleType.PIX_SCALE;
 import static consulo.ui.ex.awt.internal.ImageLoader.ImageDesc.Type.IMG;
 import static consulo.ui.ex.awt.internal.ImageLoader.ImageDesc.Type.SVG;
 
+@Deprecated
 public class ImageLoader implements Serializable {
   private static final Logger LOG = Logger.getInstance(ImageLoader.class);
 

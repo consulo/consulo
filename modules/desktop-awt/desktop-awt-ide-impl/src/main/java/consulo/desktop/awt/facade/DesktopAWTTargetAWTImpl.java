@@ -17,6 +17,7 @@ package consulo.desktop.awt.facade;
 
 import consulo.container.StartupError;
 import consulo.desktop.awt.ui.impl.DesktopFontImpl;
+import consulo.desktop.awt.ui.impl.image.DesktopAWTScalableImage;
 import consulo.desktop.awt.ui.impl.window.DummyWindow;
 import consulo.desktop.awt.ui.impl.window.WindowOverAWTWindow;
 import consulo.logging.Logger;
@@ -325,6 +326,11 @@ public class DesktopAWTTargetAWTImpl implements TargetAWTFacade {
 
     }
     throw new UnsupportedOperationException(cursor.toString());
+  }
+
+  @Override
+  public java.awt.Image toAWTImage(@Nonnull Image image) {
+    return new DesktopAWTScalableImage(image);
   }
 
   public static SimpleTextAttributes from(@Nonnull TextAttribute textAttribute) {

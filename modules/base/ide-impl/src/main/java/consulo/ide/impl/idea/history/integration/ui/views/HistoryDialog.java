@@ -38,7 +38,6 @@ import consulo.ide.impl.idea.history.integration.ui.models.RevisionProcessingPro
 import consulo.ide.impl.idea.history.utils.LocalHistoryLog;
 import consulo.ide.impl.idea.ide.actions.ShowFilePathAction;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
-import consulo.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.CreatePatchConfigurationPanel;
 import consulo.ide.impl.idea.ui.ExcludingTraversalPolicy;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -48,12 +47,13 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
-import consulo.ui.ex.awt.internal.ImageLoader;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.image.Image;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.Couple;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
@@ -97,7 +97,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
 
     setProject(project);
     setDimensionKey(getPropertiesKey());
-    setImage(ImageLoader.loadFromResource("/diff/Diff.png"));
+    setImage(TargetAWT.toAWTImage(PlatformIconGroup.diffDiff()));
     closeOnEsc();
 
     if (doInit) init();

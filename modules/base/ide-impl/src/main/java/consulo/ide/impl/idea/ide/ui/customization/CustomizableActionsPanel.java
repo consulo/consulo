@@ -25,12 +25,11 @@ import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickListsManager;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.ActionsTree;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.ActionsTreeUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapGroupImpl;
-import consulo.ide.impl.idea.openapi.util.NotWorkingIconLoader;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.packageDependencies.ui.TreeExpansionMonitor;
-import consulo.logging.Logger;
 import consulo.ide.localize.IdeLocalize;
+import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.internal.IdeFrameEx;
@@ -40,11 +39,11 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
-import consulo.ui.ex.awt.internal.ImageLoader;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.localize.KeyMapLocalize;
+import consulo.ui.image.Image;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
@@ -456,7 +455,7 @@ public class CustomizableActionsPanel implements Disposable {
       super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
       if (value instanceof DefaultMutableTreeNode) {
         Object userObject = ((DefaultMutableTreeNode)value).getUserObject();
-        consulo.ui.image.Image icon = null;
+        Image icon = null;
         if (userObject instanceof KeymapGroupImpl) {
           KeymapGroupImpl group = (KeymapGroupImpl)userObject;
           String name = group.getName();
@@ -469,7 +468,7 @@ public class CustomizableActionsPanel implements Disposable {
           String name = action != null ? action.getTemplatePresentation().getText() : null;
           setText(!StringUtil.isEmptyOrSpaces(name) ? name : actionId);
           if (action != null) {
-            consulo.ui.image.Image actionIcon = action.getTemplatePresentation().getIcon();
+            Image actionIcon = action.getTemplatePresentation().getIcon();
             if (actionIcon != null) {
               icon = actionIcon;
             }
@@ -479,7 +478,7 @@ public class CustomizableActionsPanel implements Disposable {
           String actionId = (String)((Pair)userObject).first;
           AnAction action = ActionManager.getInstance().getAction(actionId);
           setText(action != null ? action.getTemplatePresentation().getText() : actionId);
-          icon = (consulo.ui.image.Image)((Pair)userObject).second;
+          icon = (Image)((Pair)userObject).second;
         }
         else if (userObject instanceof AnSeparator) {
           setText("-------------");
@@ -534,14 +533,13 @@ public class CustomizableActionsPanel implements Disposable {
       if (StringUtil.isNotEmpty(path)) {
         Image image = null;
         try {
-          image = ImageLoader.loadFromStream(VfsUtil.convertToURL(VfsUtil.pathToUrl(path.replace(File.separatorChar, '/'))).openStream());
+          image = Image.fromUrl(VfsUtil.convertToURL(VfsUtil.pathToUrl(path.replace(File.separatorChar, '/'))));
         }
         catch (IOException e) {
           LOG.debug(e);
         }
-        Icon icon = new File(path).exists() ? NotWorkingIconLoader.getIcon(image) : null;
-        if (icon != null) {
-          if (icon.getIconWidth() > EmptyIcon.ICON_18.getIconWidth() || icon.getIconHeight() > EmptyIcon.ICON_18.getIconHeight()) {
+        if (image != null) {
+          if (image.getWidth() > Image.DEFAULT_ICON_SIZE || image.getHeight() > Image.DEFAULT_ICON_SIZE) {
             Messages.showErrorDialog(
               component,
               IdeLocalize.customIconValidationMessage().get(),
@@ -549,7 +547,7 @@ public class CustomizableActionsPanel implements Disposable {
             );
             return false;
           }
-          node.setUserObject(Pair.create(actionId, icon));
+          node.setUserObject(Pair.create(actionId, image));
           mySelectedSchema.addIconCustomization(actionId, path);
         }
       }
@@ -632,7 +630,7 @@ public class CustomizableActionsPanel implements Disposable {
         if (userObject instanceof Pair) {
           String actionId = (String)((Pair)userObject).first;
           final AnAction action = ActionManager.getInstance().getAction(actionId);
-          final consulo.ui.image.Image icon = (consulo.ui.image.Image)((Pair)userObject).second;
+          final Image icon = (Image)((Pair)userObject).second;
           action.getTemplatePresentation().setIcon(icon);
           action.setDefaultIcon(icon == null);
           editToolbarIcon(actionId, myNode);
@@ -731,7 +729,7 @@ public class CustomizableActionsPanel implements Disposable {
           if (userObject instanceof Pair) {
             String actionId = (String)((Pair)userObject).first;
             final AnAction action = actionManager.getAction(actionId);
-            consulo.ui.image.Image icon = (consulo.ui.image.Image)((Pair)userObject).second;
+            Image icon = (Image)((Pair)userObject).second;
             action.getTemplatePresentation().setIcon(icon);
             action.setDefaultIcon(icon == null);
             editToolbarIcon(actionId, mutableNode);

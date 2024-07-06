@@ -16,10 +16,12 @@
 package consulo.desktop.awt.internal.diff;
 
 import consulo.desktop.awt.internal.diff.util.AWTDiffUtil;
+import consulo.desktop.awt.ui.impl.image.DesktopAWTScalableImage;
 import consulo.diff.DiffDialogHints;
 import consulo.diff.DiffUserDataKeys;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.ui.WindowWrapperBuilder;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;
@@ -65,7 +67,7 @@ public abstract class DiffWindowBase {
               }
             })
             .build();
-    myWrapper.setImage(ImageLoader.loadFromResource("/diff/Diff.png"));
+    myWrapper.setImage(new DesktopAWTScalableImage(PlatformIconGroup.diffDiff()));
     Disposer.register(myWrapper, myProcessor);
 
     new DumbAwareAction() {

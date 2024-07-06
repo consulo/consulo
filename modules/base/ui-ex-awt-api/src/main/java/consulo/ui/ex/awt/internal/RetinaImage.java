@@ -14,6 +14,9 @@ import java.awt.image.ImageObserver;
  * @author Konstantin Bulenkov
  */
 public class RetinaImage { // [tav] todo: create HiDPIImage class
+  private static final Component ourComponent = new Component() {
+  };
+
 
   /**
    * Creates a Retina-aware wrapper over a raw image.
@@ -24,7 +27,7 @@ public class RetinaImage { // [tav] todo: create HiDPIImage class
    * @return the Retina-aware wrapper
    */
   public static Image createFrom(Image image) {
-    return createFrom(image, 2, ImageLoader.ourComponent);
+    return createFrom(image, 2, ourComponent);
   }
 
   /**

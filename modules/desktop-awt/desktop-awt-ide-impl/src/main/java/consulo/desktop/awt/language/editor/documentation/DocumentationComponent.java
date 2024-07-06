@@ -37,7 +37,6 @@ import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ide.impl.idea.ui.WidthBasedLayout;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupPositionManager;
-import consulo.ide.impl.idea.util.ArrayUtilRt;
 import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.documentation.*;
@@ -53,6 +52,7 @@ import consulo.module.content.ProjectRootManager;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntryWithTracking;
 import consulo.navigation.Navigatable;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.internal.WindowManagerEx;
@@ -67,7 +67,6 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.accessibility.ScreenReader;
-import consulo.ui.ex.awt.internal.ImageLoader;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awt.util.PopupUtil;
@@ -75,6 +74,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.util.LightDarkColorValue;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.io.Url;
 import consulo.util.io.Urls;
@@ -102,6 +102,7 @@ import java.awt.image.RenderedImage;
 import java.awt.image.renderable.RenderContext;
 import java.awt.image.renderable.RenderableImage;
 import java.awt.image.renderable.RenderableImageProducer;
+import java.io.IOException;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.net.MalformedURLException;
@@ -1115,7 +1116,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     }
     URL imageUrl = url;
     return Toolkit.getDefaultToolkit().createImage(new RenderableImageProducer(new RenderableImage() {
-      private Image myImage;
+      private consulo.ui.image.Image myImage;
       private boolean myImageLoaded;
 
       @Override
@@ -1130,7 +1131,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
       @Override
       public String[] getPropertyNames() {
-        return ArrayUtilRt.EMPTY_STRING_ARRAY;
+        return ArrayUtil.EMPTY_STRING_ARRAY;
       }
 
       @Override
@@ -1140,12 +1141,12 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
       @Override
       public float getWidth() {
-        return getImage().getWidth(null);
+        return getImage().getWidth();
       }
 
       @Override
       public float getHeight() {
-        return getImage().getHeight(null);
+        return getImage().getHeight();
       }
 
       @Override
@@ -1165,7 +1166,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
       @Override
       public RenderedImage createDefaultRendering() {
-        return (RenderedImage)getImage();
+        return (RenderedImage)TargetAWT.toAWTImage(getImage());
       }
 
       @Override
@@ -1173,10 +1174,19 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
         return createDefaultRendering();
       }
 
-      private Image getImage() {
+      private consulo.ui.image.Image getImage() {
         if (!myImageLoaded) {
-          Image image = ImageLoader.loadFromUrl(imageUrl);
-          myImage = ImageUtil.toBufferedImage(image != null ? image : ((ImageIcon)UIManager.getLookAndFeelDefaults().get("html.missingImage")).getImage());
+          consulo.ui.image.Image image = null;
+          try {
+            image = consulo.ui.image.Image.fromUrl(imageUrl);
+          }
+          catch (IOException e) {
+            LOG.warn(e);
+          }
+          if (image == null) {
+            image = PlatformIconGroup.actionsHelp();
+          }
+          myImage = image;
           myImageLoaded = true;
         }
         return myImage;
