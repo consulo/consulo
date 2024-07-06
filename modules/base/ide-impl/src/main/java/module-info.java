@@ -472,7 +472,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.diff;
   exports consulo.ide.impl.idea.openapi.diff.ex;
   exports consulo.ide.impl.idea.openapi.diff.impl;
-  exports consulo.ide.impl.idea.openapi.diff.impl.dir;
   exports consulo.ide.impl.idea.openapi.diff.impl.fragments;
   exports consulo.ide.impl.idea.openapi.diff.impl.highlighting;
   exports consulo.ide.impl.idea.openapi.diff.impl.patch;
