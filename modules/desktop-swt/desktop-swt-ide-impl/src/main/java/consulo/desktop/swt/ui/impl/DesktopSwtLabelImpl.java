@@ -16,6 +16,7 @@
 package consulo.desktop.swt.ui.impl;
 
 import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
 import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
@@ -31,6 +32,7 @@ import jakarta.annotation.Nullable;
  */
 public class DesktopSwtLabelImpl extends SWTComponentDelegate<org.eclipse.swt.widgets.Label> implements Label {
   private LocalizeValue myText = LocalizeValue.empty();
+  private Component myLabeledComponent;
 
   public DesktopSwtLabelImpl(LocalizeValue text) {
     myText = text;
@@ -78,5 +80,16 @@ public class DesktopSwtLabelImpl extends SWTComponentDelegate<org.eclipse.swt.wi
   @Override
   public Image getImage() {
     return null;
+  }
+
+  @Override
+  public void setTarget(@Nullable Component component) {
+    myLabeledComponent = component;
+  }
+
+  @Nullable
+  @Override
+  public Component getTarget() {
+    return myLabeledComponent;
   }
 }

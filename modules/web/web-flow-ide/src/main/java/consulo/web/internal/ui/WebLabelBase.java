@@ -16,6 +16,7 @@
 package consulo.web.internal.ui;
 
 import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
 import consulo.ui.Label;
 import consulo.ui.LabelOptions;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -31,6 +32,8 @@ import jakarta.annotation.Nullable;
  * @since 2019-02-19
  */
 public abstract class WebLabelBase<V extends VaadinLabelComponentBase> extends VaadinComponentDelegate<V> implements Label {
+  private Component myLabeledComponent;
+
   public WebLabelBase(LocalizeValue text, LabelOptions options) {
     setText(text);
     getVaadinComponent().setHorizontalAlignment(options.getHorizontalAlignment());
@@ -71,5 +74,16 @@ public abstract class WebLabelBase<V extends VaadinLabelComponentBase> extends V
   @Override
   public Image getImage() {
     return toVaadinComponent().getImage();
+  }
+
+  @Override
+  public void setTarget(@Nullable Component component) {
+    myLabeledComponent = component;
+  }
+
+  @Nullable
+  @Override
+  public Component getTarget() {
+    return myLabeledComponent;
   }
 }

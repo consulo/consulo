@@ -180,4 +180,15 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
   public ColorValue getForegroundColor() {
     return toAWTComponent().myForegroudColor;
   }
+
+  @Nullable
+  @Override
+  public Component getTarget() {
+    return TargetAWT.from(toAWTComponent().getLabelFor());
+  }
+
+  @Override
+  public void setTarget(@Nullable Component component) {
+    toAWTComponent().setLabelFor(TargetAWT.to(component));
+  }
 }

@@ -73,4 +73,9 @@ public interface Label extends Component, Mnemonicable {
 
   @Nullable
   Image getImage();
+
+  void setTarget(@Nullable Component component);
+
+  @Nullable
+  Component getTarget();
 }
