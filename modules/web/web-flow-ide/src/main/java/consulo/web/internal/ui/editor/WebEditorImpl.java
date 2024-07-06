@@ -78,6 +78,16 @@ public class WebEditorImpl extends CodeEditorBase {
       // TODO [VISTALL] fake
       return true;
     }
+
+    @Override
+    public void setFocusable(boolean focusable) {
+
+    }
+
+    @Override
+    public boolean isFocusable() {
+      return true;
+    }
   }
 
   private static final Key<Integer> ANNOTATION_ID = Key.create("annotation.id");

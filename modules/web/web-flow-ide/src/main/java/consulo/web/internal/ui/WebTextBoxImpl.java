@@ -92,4 +92,14 @@ public class WebTextBoxImpl extends VaadinComponentDelegate<WebTextBoxImpl.Vaadi
   public boolean hasFocus() {
     return true;
   }
+
+  @Override
+  public void setFocusable(boolean focusable) {
+
+  }
+
+  @Override
+  public boolean isFocusable() {
+    return true;
+  }
 }

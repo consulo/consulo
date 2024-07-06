@@ -31,6 +31,10 @@ public interface FocusableComponent extends Component {
 
   boolean hasFocus();
 
+  void setFocusable(boolean focusable);
+
+  boolean isFocusable();
+
   @Nonnull
   default Disposable addFocusListener(@Nonnull FocusListener listener) {
     return addListener(FocusListener.class, listener);

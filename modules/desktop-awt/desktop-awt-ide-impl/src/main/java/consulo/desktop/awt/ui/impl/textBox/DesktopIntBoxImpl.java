@@ -15,19 +15,18 @@
  */
 package consulo.desktop.awt.ui.impl.textBox;
 
-import consulo.ui.ex.awt.event.DocumentAdapter;
-import consulo.ui.ex.awt.JBTextField;
-import java.util.function.Function;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
+import consulo.desktop.awt.ui.impl.validableComponent.DocumentSwingValidator;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.IntBox;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.desktop.awt.ui.impl.validableComponent.DocumentSwingValidator;
+import consulo.ui.ex.awt.JBTextField;
+import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.event.DocumentEvent;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -35,6 +34,7 @@ import javax.swing.text.Document;
 import javax.swing.text.PlainDocument;
 import java.awt.*;
 import java.util.Objects;
+import java.util.function.Function;
 
 /**
  * @author VISTALL

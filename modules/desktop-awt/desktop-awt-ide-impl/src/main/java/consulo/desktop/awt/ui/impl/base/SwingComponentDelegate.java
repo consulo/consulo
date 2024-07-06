@@ -104,6 +104,14 @@ public class SwingComponentDelegate<T extends java.awt.Component> implements Com
     return toAWTComponent().hasFocus();
   }
 
+  public boolean isFocusable() {
+    return toAWTComponent().isFocusable();
+  }
+
+  public void setFocusable(boolean focusable) {
+    toAWTComponent().setFocusable(focusable);
+  }
+
   @Nonnull
   @Override
   @SuppressWarnings("deprecation")

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,34 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.ide.impl.ui;
 
-package consulo.ui.ex.awt;
-
-import consulo.annotation.DeprecationInfo;
 import consulo.application.ui.UISettings;
-
-import javax.swing.*;
+import consulo.ui.Component;
+import consulo.ui.FocusableComponent;
+import consulo.ui.Mnemonicable;
 
 /**
- *  @author dsl
- *
- *  @see consulo.ide.impl.ui.NonFocusableSetting
+ * @author VISTALL
+ * @since 06-Jul-24
  */
-@Deprecated
-@DeprecationInfo("see NonFocusableSetting")
-public class NonFocusableCheckBox extends JCheckBox {
-  public NonFocusableCheckBox(String text) {
-    super(text);
-    initFocusability();
-  }
-
-  public NonFocusableCheckBox() {
-    initFocusability();
-  }
-
-  private void initFocusability() {
+public class NonFocusableSetting {
+  public static <C extends Component & FocusableComponent & Mnemonicable> void initFocusability(C component) {
     if (!UISettings.getShadowInstance().DISABLE_MNEMONICS_IN_CONTROLS) { // Or that won't be keyboard accessible at all
-      setFocusable(false);
+      component.setFocusable(false);
     }
   }
 }

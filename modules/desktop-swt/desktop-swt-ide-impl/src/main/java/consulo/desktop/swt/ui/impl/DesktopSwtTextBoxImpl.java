@@ -68,6 +68,16 @@ public class DesktopSwtTextBoxImpl extends SWTComponentDelegate<Text> implements
     return false;
   }
 
+  @Override
+  public void setFocusable(boolean focusable) {
+
+  }
+
+  @Override
+  public boolean isFocusable() {
+    return true;
+  }
+
   @Nonnull
   @Override
   public Disposable addValidator(@Nonnull Validator<String> validator) {

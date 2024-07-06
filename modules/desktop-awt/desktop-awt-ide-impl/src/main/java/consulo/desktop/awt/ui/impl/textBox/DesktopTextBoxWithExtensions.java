@@ -374,6 +374,16 @@ public class DesktopTextBoxWithExtensions {
     }
 
     @Override
+    public void setFocusable(boolean focusable) {
+      myTextField.setFocusable(focusable);
+    }
+
+    @Override
+    public boolean isFocusable() {
+      return myTextField.isFocusable();
+    }
+
+    @Override
     public void setPlaceholder(@Nonnull LocalizeValue text) {
       myTextField.getEmptyText().setText(text.toString());
     }
