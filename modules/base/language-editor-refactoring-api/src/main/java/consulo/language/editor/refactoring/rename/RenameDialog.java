@@ -19,6 +19,7 @@ package consulo.language.editor.refactoring.rename;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.HelpManager;
+import consulo.application.ui.NonFocusableSetting;
 import consulo.codeEditor.Editor;
 import consulo.configurable.ConfigurationException;
 import consulo.dataContext.DataContext;
@@ -34,8 +35,10 @@ import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.CheckBox;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.NonFocusableCheckBox;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.usage.UsageViewUtil;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.Comparing;
@@ -56,8 +59,8 @@ public class RenameDialog extends RefactoringDialog {
 
   private JLabel myNameLabel;
   private NameSuggestionsField myNameSuggestionsField;
-  private JCheckBox myCbSearchInComments;
-  private JCheckBox myCbSearchTextOccurences;
+  private CheckBox myCbSearchInComments;
+  private CheckBox myCbSearchTextOccurences;
   private final JLabel myNewNamePrefix = new JLabel("");
   private final String myHelpID;
   @Nonnull
@@ -66,9 +69,10 @@ public class RenameDialog extends RefactoringDialog {
   private final Editor myEditor;
   private static final LocalizeValue REFACTORING_NAME = RefactoringLocalize.renameTitle();
   private NameSuggestionsField.DataChanged myNameChangedListener;
-  private final Map<AutomaticRenamerFactory, JCheckBox> myAutomaticRenamers = new HashMap<>();
+  private final Map<AutomaticRenamerFactory, CheckBox> myAutomaticRenamers = new HashMap<>();
   private String myOldName;
 
+  @RequiredUIAccess
   public RenameDialog(@Nonnull Project project, @Nonnull PsiElement psiElement, @Nullable PsiElement nameSuggestionContext, Editor editor) {
     super(project, true);
 
@@ -84,11 +88,11 @@ public class RenameDialog extends RefactoringDialog {
 
     myNameLabel.setText(XmlStringUtil.wrapInHtml(XmlStringUtil.escapeString(getLabelText(), false)));
     boolean toSearchInComments = isToSearchInCommentsForRename();
-    myCbSearchInComments.setSelected(toSearchInComments);
+    myCbSearchInComments.setValue(toSearchInComments);
 
     if (myCbSearchTextOccurences.isEnabled()) {
       boolean toSearchForTextOccurences = isToSearchForTextOccurencesForRename();
-      myCbSearchTextOccurences.setSelected(toSearchForTextOccurences);
+      myCbSearchTextOccurences.setValue(toSearchForTextOccurences);
     }
 
     if (!myProject.getApplication().isUnitTestMode()) validateButtons();
@@ -193,13 +197,14 @@ public class RenameDialog extends RefactoringDialog {
   }
 
   public boolean isSearchInComments() {
-    return myCbSearchInComments.isSelected();
+    return myCbSearchInComments.getValue();
   }
 
   public boolean isSearchInNonJavaFiles() {
-    return myCbSearchTextOccurences.isSelected();
+    return myCbSearchTextOccurences.getValue();
   }
 
+  @RequiredUIAccess
   @Override
   public JComponent getPreferredFocusedComponent() {
     return myNameSuggestionsField.getFocusableComponent();
@@ -211,11 +216,12 @@ public class RenameDialog extends RefactoringDialog {
   }
 
   @Override
+  @RequiredUIAccess
   protected JComponent createNorthPanel() {
     JPanel panel = new JPanel(new GridBagLayout());
     GridBagConstraints gbConstraints = new GridBagConstraints();
 
-    gbConstraints.insets = new Insets(0, 0, 4, 0);
+    gbConstraints.insets = JBUI.insetsBottom(4);
     gbConstraints.weighty = 0;
     gbConstraints.weightx = 1;
     gbConstraints.gridwidth = GridBagConstraints.REMAINDER;
@@ -223,7 +229,7 @@ public class RenameDialog extends RefactoringDialog {
     myNameLabel = new JLabel();
     panel.add(myNameLabel, gbConstraints);
 
-    gbConstraints.insets = new Insets(0, 0, 4, "".equals(myNewNamePrefix.getText()) ? 0 : 1);
+    gbConstraints.insets = JBUI.insets(0, 0, 4, "".equals(myNewNamePrefix.getText()) ? 0 : 1);
     gbConstraints.gridwidth = 1;
     gbConstraints.fill = GridBagConstraints.NONE;
     gbConstraints.weightx = 0;
@@ -231,7 +237,7 @@ public class RenameDialog extends RefactoringDialog {
     gbConstraints.anchor = GridBagConstraints.WEST;
     panel.add(myNewNamePrefix, gbConstraints);
 
-    gbConstraints.insets = new Insets(0, 0, 8, 0);
+    gbConstraints.insets = JBUI.insetsBottom(8);
     gbConstraints.gridwidth = 2;
     gbConstraints.fill = GridBagConstraints.BOTH;
     gbConstraints.weightx = 1;
@@ -244,48 +250,51 @@ public class RenameDialog extends RefactoringDialog {
     return panel;
   }
 
+  @RequiredUIAccess
   protected void createCheckboxes(JPanel panel, GridBagConstraints gbConstraints) {
-    gbConstraints.insets = new Insets(0, 0, 4, 0);
+    gbConstraints.insets = JBUI.insetsBottom(4);
     gbConstraints.gridwidth = 1;
     gbConstraints.gridx = 0;
     gbConstraints.weighty = 0;
     gbConstraints.weightx = 1;
     gbConstraints.fill = GridBagConstraints.BOTH;
-    myCbSearchInComments = new NonFocusableCheckBox();
-    myCbSearchInComments.setText(RefactoringLocalize.searchInCommentsAndStrings().get());
-    myCbSearchInComments.setSelected(true);
-    panel.add(myCbSearchInComments, gbConstraints);
+    myCbSearchInComments = CheckBox.create(RefactoringLocalize.searchInCommentsAndStrings());
+    NonFocusableSetting.initFocusability(myCbSearchInComments);
+    myCbSearchInComments.setValue(true);
+    panel.add(TargetAWT.to(myCbSearchInComments), gbConstraints);
 
-    gbConstraints.insets = new Insets(0, 0, 4, 0);
+    gbConstraints.insets = JBUI.insetsBottom(4);
     gbConstraints.gridwidth = GridBagConstraints.REMAINDER;
     gbConstraints.gridx = 1;
     gbConstraints.weightx = 1;
     gbConstraints.fill = GridBagConstraints.BOTH;
-    myCbSearchTextOccurences = new NonFocusableCheckBox();
-    myCbSearchTextOccurences.setText(RefactoringLocalize.searchForTextOccurrences().get());
-    myCbSearchTextOccurences.setSelected(true);
-    panel.add(myCbSearchTextOccurences, gbConstraints);
+    myCbSearchTextOccurences = CheckBox.create(RefactoringLocalize.searchForTextOccurrences());
+    NonFocusableSetting.initFocusability(myCbSearchTextOccurences);
+    myCbSearchTextOccurences.setValue(true);
+    panel.add(TargetAWT.to(myCbSearchTextOccurences), gbConstraints);
+
     if (!TextOccurrencesUtil.isSearchTextOccurencesEnabled(myPsiElement)) {
       myCbSearchTextOccurences.setEnabled(false);
-      myCbSearchTextOccurences.setSelected(false);
+      myCbSearchTextOccurences.setValue(false);
       myCbSearchTextOccurences.setVisible(false);
     }
 
-    for (AutomaticRenamerFactory factory : AutomaticRenamerFactory.EP_NAME.getExtensionList()) {
-      if (factory.isApplicable(myPsiElement) && factory.getOptionName() != null) {
-        gbConstraints.insets = new Insets(0, 0, 4, 0);
+    AutomaticRenamerFactory.EP_NAME.forEachExtensionSafe(factory -> {
+      LocalizeValue optionName = factory.getOptionName();
+      if (factory.isApplicable(myPsiElement) && optionName != null) {
+        gbConstraints.insets = JBUI.insetsBottom(4);
         gbConstraints.gridwidth = myAutomaticRenamers.size() % 2 == 0 ? 1 : GridBagConstraints.REMAINDER;
         gbConstraints.gridx = myAutomaticRenamers.size() % 2;
         gbConstraints.weightx = 1;
         gbConstraints.fill = GridBagConstraints.BOTH;
 
-        JCheckBox checkBox = new NonFocusableCheckBox();
-        checkBox.setText(factory.getOptionName());
-        checkBox.setSelected(factory.isEnabled());
-        panel.add(checkBox, gbConstraints);
+        CheckBox checkBox = CheckBox.create(optionName);
+        NonFocusableSetting.initFocusability(checkBox);
+        checkBox.setValue(factory.isEnabled());
+        panel.add(TargetAWT.to(checkBox), gbConstraints);
         myAutomaticRenamers.put(factory, checkBox);
       }
-    }
+    });
   }
 
   @Override
@@ -313,9 +322,10 @@ public class RenameDialog extends RefactoringDialog {
 
     final RenameProcessor processor = createRenameProcessor(newName);
 
-    for (Map.Entry<AutomaticRenamerFactory, JCheckBox> e: myAutomaticRenamers.entrySet()) {
-      e.getKey().setEnabled(e.getValue().isSelected());
-      if (e.getValue().isSelected()) {
+    for (Map.Entry<AutomaticRenamerFactory, CheckBox> e: myAutomaticRenamers.entrySet()) {
+      e.getKey().setEnabled(e.getValue().getValue());
+
+      if (e.getValue().getValue()) {
         processor.addRenamerFactory(e.getKey());
       }
     }
@@ -350,7 +360,7 @@ public class RenameDialog extends RefactoringDialog {
     return myNameSuggestionsField;
   }
 
-  public JCheckBox getCbSearchInComments() {
+  public CheckBox getCbSearchInComments() {
     return myCbSearchInComments;
   }
 }

@@ -20,6 +20,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import consulo.usage.UsageInfo;
 
 import jakarta.annotation.Nullable;
@@ -35,7 +36,7 @@ public interface AutomaticRenamerFactory {
   boolean isApplicable(PsiElement element);
 
   @Nullable
-  String getOptionName();
+  LocalizeValue getOptionName();
 
   boolean isEnabled();
 

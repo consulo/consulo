@@ -31,7 +31,6 @@ import jakarta.annotation.Nullable;
  * @since 2019-02-19
  */
 public class WebCheckBoxImpl extends WebBooleanValueComponentBase<WebCheckBoxImpl.Vaadin> implements CheckBox {
-
   public class Vaadin extends Checkbox implements FromVaadinComponentWrapper {
     private LocalizeValue myLabelText = LocalizeValue.empty();
 
@@ -77,5 +76,20 @@ public class WebCheckBoxImpl extends WebBooleanValueComponentBase<WebCheckBoxImp
     UIAccess.assertIsUIThread();
 
     toVaadinComponent().setLabelText(textValue);
+  }
+
+  @Override
+  public boolean hasFocus() {
+    return false;
+  }
+
+  @Override
+  public void setFocusable(boolean focusable) {
+
+  }
+
+  @Override
+  public boolean isFocusable() {
+    return true;
   }
 }
