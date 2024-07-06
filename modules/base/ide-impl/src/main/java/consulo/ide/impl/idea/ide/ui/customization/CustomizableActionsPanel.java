@@ -29,11 +29,14 @@ import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.packageDependencies.ui.TreeExpansionMonitor;
 import consulo.ide.localize.IdeLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.internal.WindowManagerEx;
+import consulo.ui.Button;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnSeparator;
@@ -44,6 +47,8 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.localize.KeyMapLocalize;
 import consulo.ui.image.Image;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.VerticalLayout;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
@@ -66,21 +71,22 @@ import java.util.*;
 public class CustomizableActionsPanel implements Disposable {
   private static final Logger LOG = Logger.getInstance(CustomizableActionsPanel.class);
 
-  private JButton myEditIconButton;
-  private JButton myRemoveActionButton;
-  private JButton myAddActionButton;
-  private JButton myMoveActionDownButton;
-  private JButton myMoveActionUpButton;
+  private Button myEditIconButton;
+  private Button myRemoveActionButton;
+  private Button myAddActionButton;
+  private Button myMoveActionDownButton;
+  private Button myMoveActionUpButton;
   private final JPanel myPanel;
   private final JTree myActionsTree;
-  private JButton myAddSeparatorButton;
+  private Button myAddSeparatorButton;
 
   private CustomActionsSchemaImpl mySelectedSchema;
 
-  private JButton myRestoreAllDefaultButton;
-  private JButton myRestoreDefaultButton;
+  private Button myRestoreAllDefaultButton;
+  private Button myRestoreDefaultButton;
   private final DefaultTreeModel myModel;
 
+  @RequiredUIAccess
   public CustomizableActionsPanel() {
     myPanel = new JPanel(new BorderLayout());
 
@@ -128,8 +134,8 @@ public class CustomizableActionsPanel implements Disposable {
       myRestoreDefaultButton.setEnabled(!findActionsUnderSelection().isEmpty());
     });
 
-    myAddActionButton = new JButton(IdeLocalize.buttonAddActionAfter().get());
-    myAddActionButton.addActionListener(e -> {
+    myAddActionButton = Button.create(IdeLocalize.buttonAddActionAfter());
+    myAddActionButton.addClickListener(e -> {
       final List<TreePath> expandedPaths = TreeUtil.collectExpandedPaths(myActionsTree);
       final TreePath selectionPath = myActionsTree.getLeadSelectionPath();
       if (selectionPath != null) {
@@ -155,8 +161,8 @@ public class CustomizableActionsPanel implements Disposable {
       TreeUtil.restoreExpandedPaths(myActionsTree, expandedPaths);
     });
 
-    myEditIconButton = new JButton(IdeLocalize.buttonEditActionIcon().get());
-    myEditIconButton.addActionListener(e -> {
+    myEditIconButton = Button.create(IdeLocalize.buttonEditActionIcon());
+    myEditIconButton.addClickListener(e -> {
       myRestoreAllDefaultButton.setEnabled(true);
       final List<TreePath> expandedPaths = TreeUtil.collectExpandedPaths(myActionsTree);
       final TreePath selectionPath = myActionsTree.getLeadSelectionPath();
@@ -170,8 +176,8 @@ public class CustomizableActionsPanel implements Disposable {
       TreeUtil.restoreExpandedPaths(myActionsTree, expandedPaths);
     });
 
-    myAddSeparatorButton = new JButton(IdeLocalize.buttonAddSeparator().get());
-    myAddSeparatorButton.addActionListener(e -> {
+    myAddSeparatorButton = Button.create(IdeLocalize.buttonAddSeparator());
+    myAddSeparatorButton.addClickListener(e -> {
       final List<TreePath> expandedPaths = TreeUtil.collectExpandedPaths(myActionsTree);
       final TreePath selectionPath = myActionsTree.getLeadSelectionPath();
       if (selectionPath != null) {
@@ -184,8 +190,8 @@ public class CustomizableActionsPanel implements Disposable {
       TreeUtil.restoreExpandedPaths(myActionsTree, expandedPaths);
     });
 
-    myRemoveActionButton = new JButton(IdeLocalize.buttonRemove().get());
-    myRemoveActionButton.addActionListener(e -> {
+    myRemoveActionButton = Button.create(IdeLocalize.buttonRemove());
+    myRemoveActionButton.addClickListener(e -> {
       final List<TreePath> expandedPaths = TreeUtil.collectExpandedPaths(myActionsTree);
       final TreePath[] selectionPath = myActionsTree.getSelectionPaths();
       if (selectionPath != null) {
@@ -199,8 +205,8 @@ public class CustomizableActionsPanel implements Disposable {
       TreeUtil.restoreExpandedPaths(myActionsTree, expandedPaths);
     });
 
-    myMoveActionUpButton = new JButton(IdeLocalize.buttonMoveUpU().get());
-    myMoveActionUpButton.addActionListener(e -> {
+    myMoveActionUpButton = Button.create(IdeLocalize.buttonMoveUpU());
+    myMoveActionUpButton.addClickListener(e -> {
       final List<TreePath> expandedPaths = TreeUtil.collectExpandedPaths(myActionsTree);
       final TreePath[] selectionPath = myActionsTree.getSelectionPaths();
       if (selectionPath != null) {
@@ -220,8 +226,8 @@ public class CustomizableActionsPanel implements Disposable {
       }
     });
 
-    myMoveActionDownButton = new JButton(IdeLocalize.buttonMoveDownD().get());
-    myMoveActionDownButton.addActionListener(e -> {
+    myMoveActionDownButton = Button.create(IdeLocalize.buttonMoveDownD());
+    myMoveActionDownButton.addClickListener(e -> {
       final List<TreePath> expandedPaths = TreeUtil.collectExpandedPaths(myActionsTree);
       final TreePath[] selectionPath = myActionsTree.getSelectionPaths();
       if (selectionPath != null) {
@@ -242,15 +248,15 @@ public class CustomizableActionsPanel implements Disposable {
       }
     });
 
-    myRestoreAllDefaultButton = new JButton("Restore All Defaults");
-    myRestoreAllDefaultButton.addActionListener(e -> {
+    myRestoreAllDefaultButton = Button.create(LocalizeValue.localizeTODO("Restore All Defaults"));
+    myRestoreAllDefaultButton.addClickListener(e -> {
       mySelectedSchema.copyFrom(new CustomActionsSchemaImpl(Application.get()));
       patchActionsTreeCorrespondingToSchema(root);
       myRestoreAllDefaultButton.setEnabled(false);
     });
 
-    myRestoreDefaultButton = new JButton("Restore Default");
-    myRestoreDefaultButton.addActionListener(e -> {
+    myRestoreDefaultButton = Button.create(LocalizeValue.localizeTODO("Restore Default"));
+    myRestoreDefaultButton.addClickListener(e -> {
       final List<ActionUrl> otherActions = new ArrayList<>(mySelectedSchema.getActions());
       otherActions.removeAll(findActionsUnderSelection());
       mySelectedSchema.copyFrom(new CustomActionsSchemaImpl(Application.get()));
@@ -267,11 +273,11 @@ public class CustomizableActionsPanel implements Disposable {
 
     TreeExpansionMonitor.install(myActionsTree);
 
-    BorderLayoutPanel rightPanel = new BorderLayoutPanel();
+    DockLayout rightPanel = DockLayout.create();
 
-    myPanel.add(rightPanel, BorderLayout.EAST);
+    myPanel.add(TargetAWT.to(rightPanel), BorderLayout.EAST);
 
-    JPanel topPanel = new JPanel(new VerticalFlowLayout());
+    VerticalLayout topPanel = VerticalLayout.create();
     topPanel.add(myAddActionButton);
     topPanel.add(myAddSeparatorButton);
     topPanel.add(myEditIconButton);
@@ -279,13 +285,13 @@ public class CustomizableActionsPanel implements Disposable {
     topPanel.add(myMoveActionUpButton);
     topPanel.add(myMoveActionDownButton);
 
-    rightPanel.addToTop(topPanel);
+    rightPanel.top(topPanel);
 
-    JPanel bottomPanel = new JPanel(new VerticalFlowLayout());
+    VerticalLayout bottomPanel = VerticalLayout.create();
     bottomPanel.add(myRestoreAllDefaultButton);
     bottomPanel.add(myRestoreDefaultButton);
 
-    rightPanel.addToBottom(bottomPanel);
+    rightPanel.bottom(bottomPanel);
 
     myPanel.add(ScrollPaneFactory.createScrollPane(myActionsTree), BorderLayout.CENTER);
 
