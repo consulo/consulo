@@ -10,6 +10,8 @@ final class DefaultLocalizeKey implements LocalizeKey {
   private final String myLocalizeId;
   private final String myKey;
 
+  private LocalizeValue myDefaultValue;
+
   public DefaultLocalizeKey(String localizeId, String key) {
     myLocalizeId = localizeId;
     myKey = key;
@@ -30,7 +32,14 @@ final class DefaultLocalizeKey implements LocalizeKey {
   @Nonnull
   @Override
   public LocalizeValue getValue() {
-    return new DefaultLocalizeValue(this);
+    LocalizeValue defaultValue = myDefaultValue;
+    if (defaultValue != null) {
+      return defaultValue;
+    }
+
+    defaultValue = new DefaultLocalizeValue(this);
+    myDefaultValue = defaultValue;
+    return defaultValue;
   }
 
   @Nonnull
