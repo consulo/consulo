@@ -1,9 +1,11 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.editor.annotation;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.language.ast.ASTNode;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import org.jetbrains.annotations.Contract;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -185,6 +187,7 @@ public interface AnnotationHolder {
 
   boolean isBatchMode();
 
+
   /**
    * Begin constructing a new annotation.
    * To finish construction and show the annotation on screen {@link AnnotationBuilder#create()} must be called.
@@ -198,8 +201,27 @@ public interface AnnotationHolder {
    */
   @Contract(pure = true)
   @Nonnull
-  default AnnotationBuilder newAnnotation(@Nonnull HighlightSeverity severity, @Nonnull String message) {
+  default AnnotationBuilder newAnnotation(@Nonnull HighlightSeverity severity, @Nonnull LocalizeValue message) {
     throw new IllegalStateException("Please do not override AnnotationHolder, use the standard provided one instead");
+  }
+
+  /**
+   * Begin constructing a new annotation.
+   * To finish construction and show the annotation on screen {@link AnnotationBuilder#create()} must be called.
+   * For example: <p>{@code holder.newAnnotation(HighlightSeverity.WARNING, "My warning message").create();}</p>
+   *
+   * @param severity The severity of the annotation.
+   * @param message  The message this annotation will show in the status bar and the tooltip.
+   * @apiNote The builder created by this method is already initialized by the current element, i.e. the psiElement currently visited by inspection
+   * visitor. You'll need to call {@link AnnotationBuilder#range(TextRange)} or similar method explicitly only if target element differs from current element.
+   * Please note, that the range in {@link AnnotationBuilder#range(TextRange)} must be inside the range of the current element.
+   */
+  @Contract(pure = true)
+  @Nonnull
+  @Deprecated
+  @DeprecationInfo("Use newAnnotation(HighlightSeverity, LocalizeValue)")
+  default AnnotationBuilder newAnnotation(@Nonnull HighlightSeverity severity, @Nonnull String message) {
+    return newAnnotation(severity, LocalizeValue.of(message));
   }
 
   /**

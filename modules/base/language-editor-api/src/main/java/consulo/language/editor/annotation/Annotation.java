@@ -29,6 +29,7 @@ import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.editor.inspection.ProblemHighlightType;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
+import consulo.localize.LocalizeValue;
 import org.jetbrains.annotations.NonNls;
 
 import jakarta.annotation.Nonnull;
@@ -48,7 +49,7 @@ public final class Annotation implements Segment {
   private final int myStartOffset;
   private final int myEndOffset;
   private final HighlightSeverity mySeverity;
-  private final String myMessage;
+  private final LocalizeValue myMessage;
 
   private ProblemHighlightType myHighlightType = ProblemHighlightType.GENERIC_ERROR_OR_WARNING;
   private TextAttributesKey myEnforcedAttributesKey;
@@ -56,7 +57,7 @@ public final class Annotation implements Segment {
 
   private List<QuickFixInfo> myQuickFixes = null;
   private Boolean myNeedsUpdateOnTyping = null;
-  private String myTooltip;
+  private LocalizeValue myTooltip = LocalizeValue.of();
   private boolean myAfterEndOfLine = false;
   private boolean myIsFileLevelAnnotation = false;
   private GutterIconRenderer myGutterIconRenderer;
@@ -95,7 +96,11 @@ public final class Annotation implements Segment {
    * @see AnnotationHolder#createWarningAnnotation
    * @see AnnotationHolder#createInfoAnnotation
    */
-  public Annotation(final int startOffset, final int endOffset, @Nonnull HighlightSeverity severity, final String message, String tooltip) {
+  public Annotation(final int startOffset,
+                    final int endOffset,
+                    @Nonnull HighlightSeverity severity,
+                    @Nonnull LocalizeValue message,
+                    @Nonnull LocalizeValue tooltip) {
     assert startOffset <= endOffset : startOffset + ":" + endOffset;
     assert startOffset >= 0 : "Start offset must not be negative: " + startOffset;
     myStartOffset = startOffset;
@@ -307,7 +312,8 @@ public final class Annotation implements Segment {
    *
    * @return the description of the annotation.
    */
-  public String getMessage() {
+  @Nonnull
+  public LocalizeValue getMessage() {
     return myMessage;
   }
 
@@ -316,7 +322,8 @@ public final class Annotation implements Segment {
    *
    * @return the tooltip for the annotation.
    */
-  public String getTooltip() {
+  @Nonnull
+  public LocalizeValue getTooltip() {
     return myTooltip;
   }
 
@@ -325,7 +332,7 @@ public final class Annotation implements Segment {
    *
    * @param tooltip the tooltip text.
    */
-  public void setTooltip(final String tooltip) {
+  public void setTooltip(@Nonnull LocalizeValue tooltip) {
     myTooltip = tooltip;
   }
 

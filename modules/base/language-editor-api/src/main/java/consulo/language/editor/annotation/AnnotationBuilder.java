@@ -1,6 +1,8 @@
 // Copyright 2000-2021 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.editor.annotation;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
@@ -13,6 +15,7 @@ import consulo.language.editor.inspection.ProblemHighlightType;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import org.jetbrains.annotations.Contract;
 
@@ -28,6 +31,7 @@ public interface AnnotationBuilder {
    */
   @Contract(pure = true)
   @Nonnull
+  @RequiredReadAction
   AnnotationBuilder range(@Nonnull TextRange range);
 
   /**
@@ -38,6 +42,7 @@ public interface AnnotationBuilder {
    */
   @Contract(pure = true)
   @Nonnull
+  @RequiredReadAction
   AnnotationBuilder range(@Nonnull ASTNode element);
 
   /**
@@ -48,6 +53,7 @@ public interface AnnotationBuilder {
    */
   @Contract(pure = true)
   @Nonnull
+  @RequiredReadAction
   AnnotationBuilder range(@Nonnull PsiElement element);
 
   /**
@@ -114,7 +120,19 @@ public interface AnnotationBuilder {
    */
   @Contract(pure = true)
   @Nonnull
-  AnnotationBuilder tooltip(@Nonnull String tooltip);
+  @Deprecated(forRemoval = true)
+  @DeprecationInfo("Use tooltip(LocalizeValue)")
+  default AnnotationBuilder tooltip(@Nonnull String tooltip) {
+    return tooltip(LocalizeValue.of(tooltip));
+  }
+
+  /**
+   * Specify tooltip for the annotation to popup on mouse hover.
+   * This is an intermediate method in the creating new annotation pipeline.
+   */
+  @Contract(pure = true)
+  @Nonnull
+  AnnotationBuilder tooltip(@Nonnull LocalizeValue tooltip);
 
   /**
    * Optimization method specifying whether the annotation should be re-calculated when the user types in it.
@@ -210,11 +228,13 @@ public interface AnnotationBuilder {
    * Finish creating new annotation.
    * Calling this method means you've completed your annotation, and it is ready to be shown on screen.
    */
+  @RequiredReadAction
   void create();
 
   /**
    * @deprecated Use {@link #create()} instead
    */
+  @RequiredReadAction
   @Deprecated(forRemoval = true)
   Annotation createAnnotation();
 }

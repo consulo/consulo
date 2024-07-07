@@ -9,6 +9,7 @@ import consulo.language.ast.ASTNode;
 import consulo.language.editor.annotation.*;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.Comparing;
@@ -17,11 +18,10 @@ import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.reflect.ReflectionUtil;
 import consulo.util.lang.xml.XmlStringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.Nls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Contract;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -192,6 +192,25 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
                                         @Nullable String tooltip,
                                         @Nullable Class<?> callerClass,
                                         @Nonnull String methodName) {
+    return doCreateAnnotation(severity,
+                              range,
+                              message == null ? LocalizeValue.of() : LocalizeValue.of(message),
+                              tooltip == null ? LocalizeValue.of() : LocalizeValue.of(tooltip),
+                              callerClass,
+                              methodName);
+  }
+
+  /**
+   * @deprecated this is an old way of creating annotations, via createXXXAnnotation(). please use newAnnotation() instead
+   */
+  @Nonnull
+  @Deprecated
+  private Annotation doCreateAnnotation(@Nonnull HighlightSeverity severity,
+                                        @Nonnull TextRange range,
+                                        @Nonnull LocalizeValue message,
+                                        @Nonnull LocalizeValue tooltip,
+                                        @Nullable Class<?> callerClass,
+                                        @Nonnull String methodName) {
     Annotation annotation = new Annotation(range.getStartOffset(), range.getEndOffset(), severity, message, tooltip);
     add(annotation);
     String callerInfo = callerClass == null ? "" : " (the call to which was found in " + callerClass + ")";
@@ -244,14 +263,14 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
 
   @Nonnull
   @Override
-  public AnnotationBuilder newAnnotation(@Nonnull HighlightSeverity severity, @Nonnull @Nls String message) {
+  public AnnotationBuilder newAnnotation(@Nonnull HighlightSeverity severity, @Nonnull LocalizeValue message) {
     return new B(this, severity, message, myCurrentElement, ObjectUtil.chooseNotNull(myCurrentAnnotator, myExternalAnnotator));
   }
 
   @Nonnull
   @Override
   public AnnotationBuilder newSilentAnnotation(@Nonnull HighlightSeverity severity) {
-    return new B(this, severity, null, myCurrentElement, ObjectUtil.chooseNotNull(myCurrentAnnotator, myExternalAnnotator));
+    return new B(this, severity, LocalizeValue.of(), myCurrentElement, ObjectUtil.chooseNotNull(myCurrentAnnotator, myExternalAnnotator));
   }
 
   public PsiElement myCurrentElement;

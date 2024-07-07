@@ -34,6 +34,7 @@ import consulo.language.editor.rawHighlight.*;
 import consulo.language.editor.util.HighlightTypeUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
@@ -442,8 +443,8 @@ public class HighlightInfoImpl implements HighlightInfo {
                                                    convertType(annotation),
                                                    annotation.getStartOffset(),
                                                    annotation.getEndOffset(),
-                                                   annotation.getMessage(),
-                                                   annotation.getTooltip(),
+                                                   annotation.getMessage() == LocalizeValue.of() ? null : annotation.getMessage().get(),
+                                                   annotation.getTooltip() == LocalizeValue.of() ? null : annotation.getTooltip().get(),
                                                    annotation.getSeverity(),
                                                    annotation.isAfterEndOfLine(),
                                                    annotation.needsUpdateOnTyping(),

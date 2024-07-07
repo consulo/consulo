@@ -1,8 +1,8 @@
 // Copyright 2000-2021 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.editor.impl.internal.highlight;
 
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.ApplicationProperties;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
@@ -20,26 +20,30 @@ import consulo.language.editor.inspection.ProblemHighlightType;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeManager;
+import consulo.localize.LocalizeValue;
 import consulo.util.lang.xml.XmlStringUtil;
-import org.jetbrains.annotations.Nls;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiFunction;
 
 class B implements AnnotationBuilder {
+  private static final BiFunction<LocalizeManager, String, String> TOOLTIP_ESCAPE = (localizeManager, message) ->
+    XmlStringUtil.wrapInHtml(XmlStringUtil.escapeString(message));
+
   @Nonnull
   private final AnnotationHolderImpl myHolder;
-  private final
-  @Nls
-  String message;
+  @Nonnull
+  private final LocalizeValue myMessage;
   @Nonnull
   private final PsiElement myCurrentElement;
   private final
   @Nonnull
   Object myCurrentAnnotator;
   @Nonnull
-  private final HighlightSeverity severity;
+  private final HighlightSeverity mySeverity;
   private TextRange range;
   private Boolean afterEndOfLine;
   private Boolean fileLevel;
@@ -49,25 +53,32 @@ class B implements AnnotationBuilder {
   private TextAttributesKey textAttributesKey;
   private ProblemHighlightType highlightType;
   private Boolean needsUpdateOnTyping;
-  private String tooltip;
+  private LocalizeValue myTooltip = LocalizeValue.of();
   private List<FixB> fixes;
   private boolean created;
   private final Throwable myDebugCreationPlace;
 
-  B(@Nonnull AnnotationHolderImpl holder, @Nonnull HighlightSeverity severity, @Nls String message, @Nonnull PsiElement currentElement, @Nonnull Object currentAnnotator) {
+  B(@Nonnull AnnotationHolderImpl holder,
+    @Nonnull HighlightSeverity severity,
+    @Nonnull LocalizeValue message,
+    @Nonnull PsiElement currentElement,
+    @Nonnull Object currentAnnotator) {
     myHolder = holder;
-    this.severity = severity;
-    this.message = message;
+    mySeverity = severity;
+    myMessage = message;
     myCurrentElement = currentElement;
     myCurrentAnnotator = currentAnnotator;
     holder.annotationBuilderCreated(this);
 
-    Application app = ApplicationManager.getApplication();
-    myDebugCreationPlace = app.isInternal() ? new Exception() : null;
+    myDebugCreationPlace = ApplicationProperties.isInSandbox() ? new Exception() : null;
   }
 
   private void assertNotSet(Object o, String description) {
-    if (o != null) {
+    assertNotSet(o, null, description);
+  }
+
+  private void assertNotSet(Object o, Object nullValue, String description) {
+    if (o != nullValue) {
       markNotAbandoned(); // it crashed, not abandoned
       throw new IllegalStateException(description + " was set already");
     }
@@ -137,9 +148,8 @@ class B implements AnnotationBuilder {
     }
 
     @Override
-    public
     @Nonnull
-    AnnotationBuilder registerFix() {
+    public AnnotationBuilder registerFix() {
       if (fixes == null) {
         fixes = new ArrayList<>();
       }
@@ -154,30 +164,27 @@ class B implements AnnotationBuilder {
   }
 
   @Override
-  public
   @Nonnull
-  AnnotationBuilder withFix(@Nonnull IntentionAction fix) {
+  public AnnotationBuilder withFix(@Nonnull IntentionAction fix) {
     return newFix(fix).registerFix();
   }
 
   @Override
-  public
   @Nonnull
-  FixBuilder newFix(@Nonnull IntentionAction fix) {
+  public FixBuilder newFix(@Nonnull IntentionAction fix) {
     return new FixB(fix);
   }
 
   @Override
-  public
   @Nonnull
-  FixBuilder newLocalQuickFix(@Nonnull LocalQuickFix fix, @Nonnull ProblemDescriptor problemDescriptor) {
+  public FixBuilder newLocalQuickFix(@Nonnull LocalQuickFix fix, @Nonnull ProblemDescriptor problemDescriptor) {
     return new FixB(new LocalQuickFixAsIntentionAdapter(fix, problemDescriptor));
   }
 
+  @RequiredReadAction
   @Override
-  public
   @Nonnull
-  AnnotationBuilder range(@Nonnull TextRange range) {
+  public AnnotationBuilder range(@Nonnull TextRange range) {
     assertNotSet(this.range, "range");
     TextRange currentElementRange = myCurrentElement.getTextRange();
     if (!currentElementRange.contains(range)) {
@@ -190,51 +197,47 @@ class B implements AnnotationBuilder {
     return this;
   }
 
+  @RequiredReadAction
   @Override
-  public
   @Nonnull
-  AnnotationBuilder range(@Nonnull ASTNode element) {
+  public AnnotationBuilder range(@Nonnull ASTNode element) {
+    return range(element.getTextRange());
+  }
+
+  @RequiredReadAction
+  @Override
+  @Nonnull
+  public AnnotationBuilder range(@Nonnull PsiElement element) {
     return range(element.getTextRange());
   }
 
   @Override
-  public
   @Nonnull
-  AnnotationBuilder range(@Nonnull PsiElement element) {
-    return range(element.getTextRange());
-  }
-
-  @Override
-  public
-  @Nonnull
-  AnnotationBuilder afterEndOfLine() {
+  public AnnotationBuilder afterEndOfLine() {
     assertNotSet(afterEndOfLine, "afterEndOfLine");
     afterEndOfLine = true;
     return this;
   }
 
   @Override
-  public
   @Nonnull
-  AnnotationBuilder fileLevel() {
+  public AnnotationBuilder fileLevel() {
     assertNotSet(fileLevel, "fileLevel");
     fileLevel = true;
     return this;
   }
 
   @Override
-  public
   @Nonnull
-  AnnotationBuilder gutterIconRenderer(@Nonnull GutterIconRenderer gutterIconRenderer) {
+  public AnnotationBuilder gutterIconRenderer(@Nonnull GutterIconRenderer gutterIconRenderer) {
     assertNotSet(this.gutterIconRenderer, "gutterIconRenderer");
     this.gutterIconRenderer = gutterIconRenderer;
     return this;
   }
 
   @Override
-  public
   @Nonnull
-  AnnotationBuilder problemGroup(@Nonnull ProblemGroup problemGroup) {
+  public AnnotationBuilder problemGroup(@Nonnull ProblemGroup problemGroup) {
     assertNotSet(this.problemGroup, "problemGroup");
     this.problemGroup = problemGroup;
     return this;
@@ -250,48 +253,44 @@ class B implements AnnotationBuilder {
   }
 
   @Override
-  public
   @Nonnull
-  AnnotationBuilder textAttributes(@Nonnull TextAttributesKey textAttributes) {
+  public AnnotationBuilder textAttributes(@Nonnull TextAttributesKey textAttributes) {
     assertNotSet(this.textAttributesKey, "textAttributes");
     this.textAttributesKey = textAttributes;
     return this;
   }
 
   @Override
-  public
   @Nonnull
-  AnnotationBuilder highlightType(@Nonnull ProblemHighlightType highlightType) {
+  public AnnotationBuilder highlightType(@Nonnull ProblemHighlightType highlightType) {
     assertNotSet(this.highlightType, "highlightType");
     this.highlightType = highlightType;
     return this;
   }
 
   @Override
-  public
   @Nonnull
-  AnnotationBuilder needsUpdateOnTyping() {
+  public AnnotationBuilder needsUpdateOnTyping() {
     return needsUpdateOnTyping(true);
   }
 
   @Override
-  public
   @Nonnull
-  AnnotationBuilder needsUpdateOnTyping(boolean value) {
+  public AnnotationBuilder needsUpdateOnTyping(boolean value) {
     assertNotSet(this.needsUpdateOnTyping, "needsUpdateOnTyping");
     this.needsUpdateOnTyping = value;
     return this;
   }
 
   @Override
-  public
   @Nonnull
-  AnnotationBuilder tooltip(@Nonnull String tooltip) {
-    assertNotSet(this.tooltip, "tooltip");
-    this.tooltip = tooltip;
+  public AnnotationBuilder tooltip(@Nonnull LocalizeValue tooltip) {
+    assertNotSet(myTooltip, LocalizeValue.of(), "tooltip");
+    myTooltip = tooltip;
     return this;
   }
 
+  @RequiredReadAction
   @Override
   public void create() {
     if (created) {
@@ -301,11 +300,13 @@ class B implements AnnotationBuilder {
     if (range == null) {
       range = myCurrentElement.getTextRange();
     }
-    if (tooltip == null && message != null) {
-      tooltip = XmlStringUtil.wrapInHtml(XmlStringUtil.escapeString(message));
+
+    if (myTooltip == LocalizeValue.of() && myMessage != LocalizeValue.of()) {
+      myTooltip = myMessage.map(TOOLTIP_ESCAPE);
     }
+
     //noinspection deprecation
-    Annotation annotation = new Annotation(range.getStartOffset(), range.getEndOffset(), severity, message, tooltip);
+    Annotation annotation = new Annotation(range.getStartOffset(), range.getEndOffset(), mySeverity, myMessage, myTooltip);
     if (needsUpdateOnTyping != null) {
       annotation.setNeedsUpdateOnTyping(needsUpdateOnTyping);
     }
@@ -351,7 +352,10 @@ class B implements AnnotationBuilder {
     myHolder.annotationCreatedFrom(this);
   }
 
-  private static <T extends IntentionAction & LocalQuickFix> void registerBatchFix(@Nonnull Annotation annotation, @Nonnull Object fix, @Nonnull TextRange range, HighlightDisplayKey key) {
+  private static <T extends IntentionAction & LocalQuickFix> void registerBatchFix(@Nonnull Annotation annotation,
+                                                                                   @Nonnull Object fix,
+                                                                                   @Nonnull TextRange range,
+                                                                                   HighlightDisplayKey key) {
     //noinspection unchecked
     annotation.registerBatchFix((T)fix, range, key);
   }
@@ -359,8 +363,8 @@ class B implements AnnotationBuilder {
   void assertAnnotationCreated() {
     if (!created) {
       throw new IllegalStateException(
-              "Abandoned AnnotationBuilder - its 'create()' method was never called: " + this + (myDebugCreationPlace == null ? "" : "\nSee cause for the AnnotationBuilder creation stacktrace"),
-              myDebugCreationPlace);
+        "Abandoned AnnotationBuilder - its 'create()' method was never called: " + this + (myDebugCreationPlace == null ? "" : "\nSee cause for the AnnotationBuilder creation stacktrace"),
+        myDebugCreationPlace);
     }
   }
 
@@ -373,33 +377,34 @@ class B implements AnnotationBuilder {
   @Override
   public String toString() {
     return "Builder{" +
-           "message='" +
-           message +
-           '\'' +
-           ", myCurrentElement=" +
-           myCurrentElement +
-           " (" +
-           myCurrentElement.getClass() +
-           ")" +
-           ", myCurrentAnnotator=" +
-           myCurrentAnnotator +
-           ", severity=" +
-           severity +
-           ", range=" +
-           (range == null ? "(implicit)" + myCurrentElement.getTextRange() : range) +
-           omitIfEmpty(afterEndOfLine, "afterEndOfLine") +
-           omitIfEmpty(fileLevel, "fileLevel") +
-           omitIfEmpty(gutterIconRenderer, "gutterIconRenderer") +
-           omitIfEmpty(problemGroup, "problemGroup") +
-           omitIfEmpty(enforcedAttributes, "enforcedAttributes") +
-           omitIfEmpty(textAttributesKey, "textAttributesKey") +
-           omitIfEmpty(highlightType, "highlightType") +
-           omitIfEmpty(needsUpdateOnTyping, "needsUpdateOnTyping") +
-           omitIfEmpty(tooltip, "tooltip") +
-           omitIfEmpty(fixes, "fixes") +
-           '}';
+      "message='" +
+      myMessage +
+      '\'' +
+      ", myCurrentElement=" +
+      myCurrentElement +
+      " (" +
+      myCurrentElement.getClass() +
+      ")" +
+      ", myCurrentAnnotator=" +
+      myCurrentAnnotator +
+      ", severity=" +
+      mySeverity +
+      ", range=" +
+      (range == null ? "(implicit)" + myCurrentElement.getTextRange() : range) +
+      omitIfEmpty(afterEndOfLine, "afterEndOfLine") +
+      omitIfEmpty(fileLevel, "fileLevel") +
+      omitIfEmpty(gutterIconRenderer, "gutterIconRenderer") +
+      omitIfEmpty(problemGroup, "problemGroup") +
+      omitIfEmpty(enforcedAttributes, "enforcedAttributes") +
+      omitIfEmpty(textAttributesKey, "textAttributesKey") +
+      omitIfEmpty(highlightType, "highlightType") +
+      omitIfEmpty(needsUpdateOnTyping, "needsUpdateOnTyping") +
+      omitIfEmpty(myTooltip, "tooltip") +
+      omitIfEmpty(fixes, "fixes") +
+      '}';
   }
 
+  @RequiredReadAction
   @Override
   @SuppressWarnings("removal")
   public Annotation createAnnotation() {
@@ -407,11 +412,13 @@ class B implements AnnotationBuilder {
     if (range == null) {
       range = myCurrentElement.getTextRange();
     }
-    if (tooltip == null && message != null) {
-      tooltip = XmlStringUtil.wrapInHtml(XmlStringUtil.escapeString(message));
+
+    if (myTooltip == LocalizeValue.of() && myMessage != LocalizeValue.of()) {
+      myTooltip = myMessage.map(TOOLTIP_ESCAPE);
     }
+
     //noinspection deprecation
-    Annotation annotation = new Annotation(range.getStartOffset(), range.getEndOffset(), severity, message, tooltip);
+    Annotation annotation = new Annotation(range.getStartOffset(), range.getEndOffset(), mySeverity, myMessage, myTooltip);
     if (needsUpdateOnTyping != null) {
       annotation.setNeedsUpdateOnTyping(needsUpdateOnTyping);
     }
