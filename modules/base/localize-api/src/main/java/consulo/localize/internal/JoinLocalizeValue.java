@@ -13,16 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.localize;
+package consulo.localize.internal;
 
+import consulo.localize.LocalizeManager;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 24/09/2021
  */
-final class JoinLocalizeValue extends BaseLocalizeValue {
-  JoinLocalizeValue(LocalizeValue[] values) {
+public final class JoinLocalizeValue extends BaseLocalizeValue {
+  public JoinLocalizeValue(LocalizeValue[] values) {
     super(values);
   }
 

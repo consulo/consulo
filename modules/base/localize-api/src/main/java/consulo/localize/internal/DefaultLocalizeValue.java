@@ -13,29 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.localize;
+package consulo.localize.internal;
 
+import consulo.localize.LocalizeKey;
+import consulo.localize.LocalizeManager;
 import jakarta.annotation.Nonnull;
-import java.util.function.BiFunction;
 
 /**
  * @author VISTALL
- * @since 2020-07-30
+ * @since 2020-05-20
  */
-final class MapLocalizeValue extends BaseLocalizeValue {
-  private final LocalizeValue myDelegate;
-  private final BiFunction<LocalizeManager, String, String> myMapper;
+public final class DefaultLocalizeValue extends BaseLocalizeValue {
+  private final LocalizeKey myLocalizeKey;
 
-  MapLocalizeValue(LocalizeValue delegate, BiFunction<LocalizeManager, String, String> mapper) {
-    super(ourEmptyArgs);
-    myDelegate = delegate;
-    myMapper = mapper;
+  public DefaultLocalizeValue(@Nonnull LocalizeKey localizeKey) {
+    this(localizeKey, ourEmptyArgs);
+  }
+
+  public DefaultLocalizeValue(@Nonnull LocalizeKey localizeKey, @Nonnull Object... args) {
+    super(args);
+    myLocalizeKey = localizeKey;
   }
 
   @Nonnull
   @Override
   protected String getUnformattedText(@Nonnull LocalizeManager localizeManager) {
-    String value = myDelegate.getValue();
-    return myMapper.apply(localizeManager, value);
+    return localizeManager.getUnformattedText(myLocalizeKey);
   }
 }

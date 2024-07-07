@@ -13,8 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.localize;
+package consulo.localize.internal;
 
+import consulo.localize.LocalizeManager;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 /**

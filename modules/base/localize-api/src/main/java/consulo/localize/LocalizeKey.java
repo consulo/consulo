@@ -15,6 +15,8 @@
  */
 package consulo.localize;
 
+import consulo.localize.internal.DefaultLocalizeKey;
+import consulo.localize.internal.EmptyLocalizeKey;
 import jakarta.annotation.Nonnull;
 import java.util.Locale;
 

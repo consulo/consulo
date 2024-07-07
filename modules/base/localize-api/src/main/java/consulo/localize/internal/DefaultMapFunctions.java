@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.localize;
+package consulo.localize.internal;
+
+import consulo.localize.LocalizeManager;
 
 import java.util.function.BiFunction;
 
@@ -21,8 +23,8 @@ import java.util.function.BiFunction;
  * @author VISTALL
  * @since 2020-07-30
  */
-class DefaultMapFunctions {
-  static final BiFunction<LocalizeManager, String, String> TO_UPPER_CASE = (localizeManager, s) -> s.toUpperCase(localizeManager.getLocale());
+public class DefaultMapFunctions {
+  public static final BiFunction<LocalizeManager, String, String> TO_UPPER_CASE = (localizeManager, s) -> s.toUpperCase(localizeManager.getLocale());
 
-  static final BiFunction<LocalizeManager, String, String> TO_LOWER_CASE = (localizeManager, s) -> s.toLowerCase(localizeManager.getLocale());
+  public static final BiFunction<LocalizeManager, String, String> TO_LOWER_CASE = (localizeManager, s) -> s.toLowerCase(localizeManager.getLocale());
 }

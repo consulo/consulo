@@ -13,16 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.localize;
+package consulo.localize.internal;
 
+import consulo.localize.LocalizeKey;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2020-05-20
  */
-final class EmptyLocalizeKey implements LocalizeKey {
-  static final EmptyLocalizeKey INSTANCE = new EmptyLocalizeKey();
+public final class EmptyLocalizeKey implements LocalizeKey {
+  public static final EmptyLocalizeKey INSTANCE = new EmptyLocalizeKey();
 
   @Nonnull
   @Override

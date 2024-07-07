@@ -13,23 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.localize;
+package consulo.localize.internal;
 
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
+
 import java.util.Objects;
 
 /**
  * @author VISTALL
  * @since 09-Nov-17
  */
-class SingleLocalizeValue implements LocalizeValue {
-  static final SingleLocalizeValue ourEmpty = new SingleLocalizeValue("");
-  static final SingleLocalizeValue ourSpace = new SingleLocalizeValue(" ");
-  static final SingleLocalizeValue ourColon = new SingleLocalizeValue(":");
+public class SingleLocalizeValue implements LocalizeValue {
+  public static final SingleLocalizeValue ourEmpty = new SingleLocalizeValue("");
+  public static final SingleLocalizeValue ourSpace = new SingleLocalizeValue(" ");
+  public static final SingleLocalizeValue ourColon = new SingleLocalizeValue(":");
 
   private final String myValue;
 
-  SingleLocalizeValue(String value) {
+  public SingleLocalizeValue(String value) {
     myValue = value;
   }
 

@@ -15,6 +15,10 @@
  */
 package consulo.localize;
 
+import consulo.localize.internal.DefaultMapFunctions;
+import consulo.localize.internal.JoinLocalizeValue;
+import consulo.localize.internal.MapLocalizeValue;
+import consulo.localize.internal.SingleLocalizeValue;
 import jakarta.annotation.Nonnull;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;

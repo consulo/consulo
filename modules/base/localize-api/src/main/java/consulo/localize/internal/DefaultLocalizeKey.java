@@ -1,12 +1,15 @@
-package consulo.localize;
+package consulo.localize.internal;
 
+import consulo.localize.LocalizeKey;
+import consulo.localize.LocalizeValue;
+import consulo.localize.internal.DefaultLocalizeValue;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2020-05-20
  */
-final class DefaultLocalizeKey implements LocalizeKey {
+public final class DefaultLocalizeKey implements LocalizeKey {
   private final String myLocalizeId;
   private final String myKey;
 
