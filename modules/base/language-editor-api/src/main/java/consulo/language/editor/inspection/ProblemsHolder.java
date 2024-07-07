@@ -16,21 +16,22 @@
 
 package consulo.language.editor.inspection;
 
-import consulo.component.util.localize.BundleBase;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
-import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.inspection.scheme.InspectionManager;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.psi.*;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.xml.XmlStringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.Nls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Nls;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -118,28 +119,20 @@ public class ProblemsHolder {
     registerProblem(descriptor);
   }
 
+  @RequiredReadAction
   public void registerProblem(@Nonnull PsiReference reference) {
-    registerProblem(reference, unresolvedReferenceMessage(reference), ProblemHighlightType.LIKE_UNKNOWN_SYMBOL);
+    registerProblem(reference, unresolvedReferenceMessage(reference).get(), ProblemHighlightType.LIKE_UNKNOWN_SYMBOL);
   }
 
   @Nonnull
-  public static String unresolvedReferenceMessage(@Nonnull PsiReference reference) {
-    String message;
-    if (reference instanceof EmptyResolveMessageProvider) {
-      String pattern = ((EmptyResolveMessageProvider)reference).getUnresolvedMessagePattern();
-      try {
-        message = BundleBase.format(pattern, reference.getCanonicalText()); // avoid double formatting
-      }
-      catch (IllegalArgumentException ex) {
-        // unresolvedMessage provided by third-party reference contains wrong format string (e.g. {}), tolerate it
-        message = pattern;
-        LOG.info(pattern);
-      }
+  @RequiredReadAction
+  public static LocalizeValue unresolvedReferenceMessage(@Nonnull PsiReference reference) {
+    if (reference instanceof EmptyResolveMessageProvider resolveMessageProvider) {
+      return resolveMessageProvider.buildUnresolvedMessaged(reference.getCanonicalText());
     }
     else {
-      message = CodeInsightBundle.message("error.cannot.resolve.default.message", reference.getCanonicalText());
+      return CodeInsightLocalize.errorCannotResolveDefaultMessage(reference.getCanonicalText());
     }
-    return message;
   }
 
   /**

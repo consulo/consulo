@@ -16,8 +16,7 @@
 
 package consulo.language.psi;
 
-import consulo.language.psi.PsiReference;
-
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -29,8 +28,7 @@ public interface EmptyResolveMessageProvider {
    * Returns custom unresolved message pattern. First, returned value is used as pattern in <code>MessageFormat.format()</code> call.
    * If the call fails, returned value is used as is.
    * @return pattern or message
-   * @see XmlHighlightVisitor#getErrorDescription()
    */
   @Nonnull
-  String getUnresolvedMessagePattern();
+  LocalizeValue buildUnresolvedMessaged(@Nonnull String referenceText);
 }

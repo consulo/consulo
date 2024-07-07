@@ -16,10 +16,12 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl.analysis.encoding;
 
 import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.psi.EmptyResolveMessageProvider;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementBuilder;
 import consulo.document.util.TextRange;
+import consulo.localize.LocalizeValue;
 import consulo.util.io.CharsetToolkit;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
@@ -113,10 +115,9 @@ public class EncodingReference implements PsiReference, EmptyResolveMessageProvi
     return false;
   }
 
-  @Override
   @Nonnull
-  public String getUnresolvedMessagePattern() {
-    //noinspection UnresolvedPropertyKey
-    return CodeInsightBundle.message("unknown.encoding.0");
+  @Override
+  public LocalizeValue buildUnresolvedMessaged(@Nonnull String referenceText) {
+    return CodeInsightLocalize.unknownEncoding0(referenceText);
   }
 }

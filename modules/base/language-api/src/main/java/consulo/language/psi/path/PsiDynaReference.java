@@ -19,6 +19,7 @@ package consulo.language.psi.path;
 import consulo.document.util.TextRange;
 import consulo.language.psi.*;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.util.collection.ArrayUtil;
 
 import jakarta.annotation.Nonnull;
@@ -190,16 +191,19 @@ public class PsiDynaReference<T extends PsiElement> extends PsiReferenceBase<T> 
 
   @Nonnull
   @Override
-  @SuppressWarnings({"UnresolvedPropertyKey"})
-  public String getUnresolvedMessagePattern() {
+  public LocalizeValue buildUnresolvedMessaged(@Nonnull String referenceText) {
     final PsiReference reference = chooseReference();
 
-    return reference instanceof EmptyResolveMessageProvider ? ((EmptyResolveMessageProvider)reference).getUnresolvedMessagePattern() : PsiBundle.message("cannot.resolve.symbol");
+    if (reference instanceof EmptyResolveMessageProvider emptyResolveMessageProvider) {
+      return emptyResolveMessageProvider.buildUnresolvedMessaged(referenceText);
+    }
+    else {
+      return LocalizeValue.localizeTODO(PsiBundle.message("cannot.resolve.symbol", referenceText));
+    }
   }
 
   @Override
   public String toString() {
-    //noinspection HardCodedStringLiteral
     return "PsiDynaReference containing " + myReferences.toString();
   }
 

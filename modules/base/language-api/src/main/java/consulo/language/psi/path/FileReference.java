@@ -23,6 +23,7 @@ import consulo.language.psi.*;
 import consulo.language.psi.resolve.PsiFileSystemItemProcessor;
 import consulo.language.psi.resolve.ResolveCache;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.project.Project;
@@ -35,9 +36,9 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.net.URI;
 import java.text.Normalizer;
 import java.util.ArrayList;
@@ -525,8 +526,14 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
 
   @Nonnull
   @Override
-  public String getUnresolvedMessagePattern() {
-    return LangBundle.message("error.cannot.resolve") + " " + (LangBundle.message(isLast() ? "terms.file" : "terms.directory")) + " '" + StringUtil.escapePattern(decode(getCanonicalText())) + "'";
+  public LocalizeValue buildUnresolvedMessaged(@Nonnull String referenceText) {
+    return LocalizeValue.localizeTODO(new StringBuilder().append(LangBundle.message("error.cannot.resolve"))
+                                                         .append(" ")
+                                                         .append(LangBundle.message(isLast() ? "terms.file" : "terms.directory"))
+                                                         .append(" '")
+                                                         .append(StringUtil.escapePattern(decode(getCanonicalText())))
+                                                         .append("'")
+                                                         .toString());
   }
 
   public final boolean isLast() {
