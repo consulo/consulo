@@ -22,8 +22,8 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
 import consulo.usage.UsageInfo;
+import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
 import java.util.Collection;
 
 /**
@@ -35,12 +35,17 @@ public interface AutomaticRenamerFactory {
 
   boolean isApplicable(PsiElement element);
 
-  @Nullable
-  LocalizeValue getOptionName();
+  @Nonnull
+  default LocalizeValue getOptionName() {
+    return LocalizeValue.of();
+  }
 
-  boolean isEnabled();
+  default boolean isEnabled() {
+    return true;
+  }
 
-  void setEnabled(boolean enabled);
+  default void setEnabled(boolean enabled) {
+  }
 
   AutomaticRenamer createRenamer(final PsiElement element, final String newName, final Collection<UsageInfo> usages);
 }

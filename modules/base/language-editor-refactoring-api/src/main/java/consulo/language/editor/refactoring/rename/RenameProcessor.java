@@ -31,6 +31,7 @@ import consulo.language.editor.refactoring.util.RelatedUsageInfo;
 import consulo.language.findUsage.DescriptiveNameUtil;
 import consulo.language.psi.*;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
@@ -313,7 +314,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
       }
 
       for (AutomaticRenamerFactory factory : AutomaticRenamerFactory.EP_NAME.getExtensionList()) {
-        if (factory.getOptionName() == null && factory.isApplicable(element)) {
+        if (factory.getOptionName() == LocalizeValue.of() && factory.isApplicable(element)) {
           myRenamers.add(factory.createRenamer(element, newName, usagesList));
         }
       }

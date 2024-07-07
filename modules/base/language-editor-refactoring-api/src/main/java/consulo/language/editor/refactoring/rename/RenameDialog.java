@@ -281,7 +281,7 @@ public class RenameDialog extends RefactoringDialog {
 
     AutomaticRenamerFactory.EP_NAME.forEachExtensionSafe(factory -> {
       LocalizeValue optionName = factory.getOptionName();
-      if (factory.isApplicable(myPsiElement) && optionName != null) {
+      if (factory.isApplicable(myPsiElement) && optionName != LocalizeValue.of()) {
         gbConstraints.insets = JBUI.insetsBottom(4);
         gbConstraints.gridwidth = myAutomaticRenamers.size() % 2 == 0 ? 1 : GridBagConstraints.REMAINDER;
         gbConstraints.gridx = myAutomaticRenamers.size() % 2;
