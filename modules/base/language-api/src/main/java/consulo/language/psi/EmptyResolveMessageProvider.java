@@ -30,5 +30,5 @@ public interface EmptyResolveMessageProvider {
    * @return pattern or message
    */
   @Nonnull
-  LocalizeValue buildUnresolvedMessaged(@Nonnull String referenceText);
+  LocalizeValue buildUnresolvedMessage(@Nonnull String referenceText);
 }

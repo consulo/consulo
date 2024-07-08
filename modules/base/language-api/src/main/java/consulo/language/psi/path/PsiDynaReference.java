@@ -191,11 +191,11 @@ public class PsiDynaReference<T extends PsiElement> extends PsiReferenceBase<T> 
 
   @Nonnull
   @Override
-  public LocalizeValue buildUnresolvedMessaged(@Nonnull String referenceText) {
+  public LocalizeValue buildUnresolvedMessage(@Nonnull String referenceText) {
     final PsiReference reference = chooseReference();
 
     if (reference instanceof EmptyResolveMessageProvider emptyResolveMessageProvider) {
-      return emptyResolveMessageProvider.buildUnresolvedMessaged(referenceText);
+      return emptyResolveMessageProvider.buildUnresolvedMessage(referenceText);
     }
     else {
       return LocalizeValue.localizeTODO(PsiBundle.message("cannot.resolve.symbol", referenceText));

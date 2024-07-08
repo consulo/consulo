@@ -60,7 +60,7 @@ public class InspectionEngine {
    * @param isOnTheFly
    * @param session
    * @param elements
-   * @param elementDialectIds
+   * * @param elementDialectIds
    * @param dialectIdsSpecifiedForTool null means all accepted
    * @return
    */

@@ -526,7 +526,7 @@ public class FileReference implements PsiFileReference, FileReferenceOwner, PsiP
 
   @Nonnull
   @Override
-  public LocalizeValue buildUnresolvedMessaged(@Nonnull String referenceText) {
+  public LocalizeValue buildUnresolvedMessage(@Nonnull String referenceText) {
     return LocalizeValue.localizeTODO(new StringBuilder().append(LangBundle.message("error.cannot.resolve"))
                                                          .append(" ")
                                                          .append(LangBundle.message(isLast() ? "terms.file" : "terms.directory"))

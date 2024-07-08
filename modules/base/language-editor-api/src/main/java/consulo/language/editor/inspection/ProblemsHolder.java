@@ -128,7 +128,7 @@ public class ProblemsHolder {
   @RequiredReadAction
   public static LocalizeValue unresolvedReferenceMessage(@Nonnull PsiReference reference) {
     if (reference instanceof EmptyResolveMessageProvider resolveMessageProvider) {
-      return resolveMessageProvider.buildUnresolvedMessaged(reference.getCanonicalText());
+      return resolveMessageProvider.buildUnresolvedMessage(reference.getCanonicalText());
     }
     else {
       return CodeInsightLocalize.errorCannotResolveDefaultMessage(reference.getCanonicalText());

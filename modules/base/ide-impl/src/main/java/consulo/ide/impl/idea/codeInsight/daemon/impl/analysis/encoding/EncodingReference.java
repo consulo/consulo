@@ -117,7 +117,7 @@ public class EncodingReference implements PsiReference, EmptyResolveMessageProvi
 
   @Nonnull
   @Override
-  public LocalizeValue buildUnresolvedMessaged(@Nonnull String referenceText) {
+  public LocalizeValue buildUnresolvedMessage(@Nonnull String referenceText) {
     return CodeInsightLocalize.unknownEncoding0(referenceText);
   }
 }
