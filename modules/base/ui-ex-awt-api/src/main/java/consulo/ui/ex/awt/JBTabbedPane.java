@@ -94,8 +94,8 @@ public class JBTabbedPane extends JTabbedPane implements HierarchyListener {
   }
 
   private void setInsets(Component component) {
-    if (component instanceof JComponent) {
-      UIUtil.addInsets((JComponent)component, getInsetsForTabComponent());
+    if (component instanceof JComponent && myTabComponentInsets != null) {
+      UIUtil.addInsets((JComponent)component, getTabComponentInsets());
     }
   }
 
