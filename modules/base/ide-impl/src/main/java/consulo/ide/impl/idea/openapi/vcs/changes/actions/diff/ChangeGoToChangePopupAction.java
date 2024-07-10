@@ -40,11 +40,10 @@ public abstract class ChangeGoToChangePopupAction<Chain extends DiffRequestChain
     Project project = e.getData(Project.KEY);
     if (project == null) project = ProjectManager.getInstance().getDefaultProject();
 
-    Ref<JBPopup> popup = new Ref<>();
-    ChangesBrowser cb = new MyChangesBrowser(project, getChanges(), getCurrentSelection(), popup);
+    Ref<JBPopup> popupRef = new Ref<>();
+    ChangesBrowser cb = new MyChangesBrowser(project, getChanges(), getCurrentSelection(), popupRef);
 
-    popup.set(
-      JBPopupFactory.getInstance()
+    JBPopup popup = JBPopupFactory.getInstance()
         .createComponentPopupBuilder(cb, cb.getPreferredFocusedComponent())
         .setResizable(true)
         .setModalContext(false)
@@ -56,10 +55,11 @@ public abstract class ChangeGoToChangePopupAction<Chain extends DiffRequestChain
         .setCancelKeyEnabled(true)
         .setCancelOnClickOutside(true)
         .setDimensionServiceKey(project, "Diff.GoToChangePopup", false)
-        .createPopup()
-    );
+        .createPopup();
 
-    return popup.get();
+    popupRef.set(popup);
+
+    return popup;
   }
 
   //

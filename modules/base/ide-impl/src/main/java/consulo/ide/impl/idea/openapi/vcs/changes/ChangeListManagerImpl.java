@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.concurrent.ApplicationConcurrency;
+import consulo.application.dumb.DumbAwareRunnable;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
@@ -293,7 +294,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     initializeForNewProject();
 
     final ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(myProject);
-    ((ProjectLevelVcsManagerImpl)vcsManager).addInitializationRequest(VcsInitObject.CHANGE_LIST_MANAGER, () -> {
+    ((ProjectLevelVcsManagerImpl)vcsManager).addInitializationRequest(VcsInitObject.CHANGE_LIST_MANAGER, (DumbAwareRunnable)() -> {
       myUpdater.initialized();
       broadcastStateAfterLoad();
       myProject.getMessageBus().connect().subscribe(VcsMappingListener.class, myVcsListener);
