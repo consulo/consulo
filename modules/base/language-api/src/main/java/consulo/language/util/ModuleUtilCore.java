@@ -17,9 +17,14 @@ package consulo.language.util;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AccessRule;
+import consulo.application.util.CachedValueProvider;
+import consulo.application.util.CachedValuesManager;
+import consulo.application.util.ParameterizedCachedValue;
+import consulo.application.util.ParameterizedCachedValueProvider;
 import consulo.application.util.function.Processor;
 import consulo.component.util.graph.Graph;
 import consulo.component.util.pointer.NamedPointer;
+import consulo.content.TestLikeContentFolderTypeProvider;
 import consulo.content.bundle.Sdk;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -41,16 +46,23 @@ import consulo.module.extension.ModuleExtensionWithSdk;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+
+import java.util.*;
 
 public class ModuleUtilCore {
   public static final Key<Module> KEY_MODULE = Key.create("Module");
+  private static final Key<ParameterizedCachedValue<Boolean, Project>> HAS_TEST_ROOTS_KEY = Key.create("HAS_TEST_ROOTS");
+  private static final ParameterizedCachedValueProvider<Boolean, Project> HAS_TEST_ROOTS_PROVIDER = project -> {
+    boolean hasTestRoots =
+      Arrays.stream(ModuleManager.getInstance(project).getModules())
+            .flatMap(module -> Arrays.stream(ModuleRootManager.getInstance(module).getContentEntries()))
+            .flatMap(entry -> Arrays.stream(entry.getFolders(it -> it instanceof TestLikeContentFolderTypeProvider)))
+            .findAny().isPresent();
+
+    return CachedValueProvider.Result.createSingleDependency(hasTestRoots, ProjectRootManager.getInstance(project));
+  };
 
   public static boolean projectContainsFile(final Project project, VirtualFile file, boolean isLibraryElement) {
     ProjectRootManager projectRootManager = ProjectRootManager.getInstance(project);
@@ -230,6 +242,11 @@ public class ModuleUtilCore {
   @RequiredReadAction
   public static NamedPointer<Module> createPointer(@Nonnull Project project, @Nonnull String name) {
     return ModulePointerManager.getInstance(project).create(name);
+  }
+
+  public static boolean hasTestSourceRoots(@Nonnull Project project) {
+    return CachedValuesManager.getManager(project)
+                              .getParameterizedCachedValue(project, HAS_TEST_ROOTS_KEY, HAS_TEST_ROOTS_PROVIDER, false, project);
   }
 
   public static boolean hasModuleExtension(@Nonnull ModulesProvider modulesProvider, @Nonnull Class<? extends ModuleExtension> clazz) {

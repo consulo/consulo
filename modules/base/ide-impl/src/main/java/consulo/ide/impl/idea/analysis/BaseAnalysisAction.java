@@ -23,6 +23,8 @@ import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
+import consulo.language.editor.ui.awt.scope.BaseAnalysisActionDialog;
+import consulo.language.editor.ui.scope.AnalysisUIOptions;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -34,10 +36,12 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.layout.VerticalLayout;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
@@ -59,6 +63,7 @@ public abstract class BaseAnalysisAction extends AnAction {
     myAnalysisNoon = analysisNoon;
   }
 
+  @RequiredUIAccess
   @Override
   public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
@@ -68,6 +73,7 @@ public abstract class BaseAnalysisAction extends AnAction {
     presentation.setEnabled(!dumbMode && getInspectionScope(dataContext) != null);
   }
 
+  @RequiredUIAccess
   @Override
   public void actionPerformed(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
@@ -92,9 +98,8 @@ public abstract class BaseAnalysisAction extends AnAction {
       element
     ) {
       @Override
-      @Nullable
-      protected JComponent getAdditionalActionSettings(final Project project) {
-        return BaseAnalysisAction.this.getAdditionalActionSettings(project, this);
+      protected void extendMainLayout(VerticalLayout layout, Project project) {
+        BaseAnalysisAction.this.extendMainLayout(this, layout, project);
       }
 
       @Override
@@ -115,7 +120,7 @@ public abstract class BaseAnalysisAction extends AnAction {
     }
     final int oldScopeType = uiOptions.SCOPE_TYPE;
     scope = dlg.getScope(uiOptions, scope, project, module);
-    if (!rememberScope){
+    if (!rememberScope) {
       uiOptions.SCOPE_TYPE = oldScopeType;
     }
     uiOptions.ANALYZE_TEST_SOURCES = dlg.isInspectTestSources();
@@ -206,9 +211,8 @@ public abstract class BaseAnalysisAction extends AnAction {
     return false;
   }
 
-  @Nullable
-  protected JComponent getAdditionalActionSettings(Project project, BaseAnalysisActionDialog dialog){
-    return null;
-  }
+  @RequiredUIAccess
+  protected void extendMainLayout(BaseAnalysisActionDialog dialog, VerticalLayout layout, Project project) {
 
+  }
 }

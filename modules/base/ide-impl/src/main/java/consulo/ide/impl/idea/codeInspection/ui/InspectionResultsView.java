@@ -31,7 +31,7 @@ import consulo.disposer.Disposable;
 import consulo.document.util.TextRange;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
-import consulo.ide.impl.idea.analysis.AnalysisUIOptions;
+import consulo.language.editor.ui.scope.AnalysisUIOptions;
 import consulo.ide.impl.idea.codeInspection.ex.EditInspectionToolsSettingsAction;
 import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextImpl;
 import consulo.ide.impl.idea.codeInspection.ex.InspectionRVContentProvider;
@@ -317,11 +317,11 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
     };
 
     DefaultActionGroup specialGroup = new DefaultActionGroup();
-    specialGroup.add(myGlobalInspectionContext.getUIOptions().createGroupBySeverityAction(this));
-    specialGroup.add(myGlobalInspectionContext.getUIOptions().createGroupByDirectoryAction(this));
-    specialGroup.add(myGlobalInspectionContext.getUIOptions().createFilterResolvedItemsAction(this));
-    specialGroup.add(myGlobalInspectionContext.getUIOptions().createShowOutdatedProblemsAction(this));
-    specialGroup.add(myGlobalInspectionContext.getUIOptions().createShowDiffOnlyAction(this));
+    specialGroup.add(myGlobalInspectionContext.getUIOptions().createGroupBySeverityAction(this::update));
+    specialGroup.add(myGlobalInspectionContext.getUIOptions().createGroupByDirectoryAction(this::update));
+    specialGroup.add(myGlobalInspectionContext.getUIOptions().createFilterResolvedItemsAction(this::update));
+    specialGroup.add(myGlobalInspectionContext.getUIOptions().createShowOutdatedProblemsAction(this::update));
+    specialGroup.add(myGlobalInspectionContext.getUIOptions().createShowDiffOnlyAction(this::update));
     specialGroup.add(new EditSettingsAction());
     specialGroup.add(new InvokeQuickFixAction(this));
     specialGroup.add(new InspectionsOptionsToolbarAction(this));

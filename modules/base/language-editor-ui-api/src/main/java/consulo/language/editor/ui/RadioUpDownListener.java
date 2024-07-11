@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.language.editor.refactoring.ui;
+package consulo.language.editor.ui;
 
 import consulo.application.ui.wm.IdeFocusManager;
 

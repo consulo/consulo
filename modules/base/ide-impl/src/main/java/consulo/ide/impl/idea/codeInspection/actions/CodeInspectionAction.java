@@ -18,30 +18,32 @@ package consulo.ide.impl.idea.codeInspection.actions;
 
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.analysis.BaseAnalysisAction;
-import consulo.ide.impl.idea.analysis.BaseAnalysisActionDialog;
 import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextImpl;
 import consulo.ide.impl.idea.codeInspection.ex.InspectionManagerEx;
 import consulo.ide.impl.idea.openapi.options.ex.SingleConfigurableEditor;
 import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
 import consulo.ide.impl.idea.profile.codeInspection.ui.ErrorsConfigurable;
 import consulo.ide.impl.idea.profile.codeInspection.ui.IDEInspectionToolsConfigurable;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.inspection.InspectionsBundle;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.inspection.scheme.*;
 import consulo.language.editor.scope.AnalysisScope;
+import consulo.language.editor.ui.awt.scope.BaseAnalysisActionDialog;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.ui.ComboBox;
+import consulo.ui.Hyperlink;
+import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.ComboboxWithBrowseButton;
-import consulo.ui.ex.awt.ListCellRendererWrapper;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.VerticalLayout;
+import consulo.ui.model.MutableListModel;
 import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
 
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Collection;
-import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CodeInspectionAction extends BaseAnalysisAction {
   private GlobalInspectionContextImpl myGlobalInspectionContext = null;
@@ -95,55 +97,58 @@ public class CodeInspectionAction extends BaseAnalysisAction {
     myGlobalInspectionContext = null;
   }
 
+  @RequiredUIAccess
   @Override
-  protected JComponent getAdditionalActionSettings(@Nonnull final Project project, final BaseAnalysisActionDialog dialog) {
-    final AdditionalPanel panel = new AdditionalPanel();
-    final InspectionManagerEx manager = (InspectionManagerEx)InspectionManager.getInstance(project);
-    final JComboBox profiles = panel.myBrowseProfilesCombo.getComboBox();
-    profiles.setRenderer(new ListCellRendererWrapper() {
-      @Override
-      public void customize(JList list, Object value, int index, boolean selected, boolean hasFocus) {
-        if (value instanceof Profile) {
-          Profile profile = (Profile)value;
-          setText(profile.getName());
-          setIcon(TargetAWT.to(PlatformIconGroup.generalGearplain()));
-        }
+  protected void extendMainLayout(BaseAnalysisActionDialog dialog, VerticalLayout layout, Project project) {
+    dialog.setAnalyzeInjectedCode(true);
+
+    MutableListModel<InspectionProfile> model = MutableListModel.of(List.of());
+    ComboBox<InspectionProfile> profiles = ComboBox.create(model);
+    profiles.setRender((render, index, profile) -> {
+      if (profile != null) {
+        render.append(profile.getName());
+        render.withIcon(PlatformIconGroup.generalGearplain());
       }
     });
+
+    DockLayout dockLayout = DockLayout.create();
+    dockLayout.left(Label.create(InspectionLocalize.inspectionProfileLabel()));
+    dockLayout.center(profiles);
+    layout.add(dockLayout);
+
+    final InspectionManagerEx manager = (InspectionManagerEx)InspectionManager.getInstance(project);
     final InspectionProfileManager profileManager = InspectionProfileManager.getInstance();
     final InspectionProjectProfileManager projectProfileManager = InspectionProjectProfileManager.getInstance(project);
-    reloadProfiles(profiles, profileManager, projectProfileManager, manager);
-    panel.myBrowseProfilesCombo.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        final IDEInspectionToolsConfigurable errorConfigurable = createConfigurable(projectProfileManager, profileManager);
-        final MySingleConfigurableEditor editor = new MySingleConfigurableEditor(project, errorConfigurable, manager);
-        errorConfigurable.selectProfile(((Profile)profiles.getSelectedItem()));
-        if (editor.showAndGet()) {
-          reloadProfiles(profiles, profileManager, projectProfileManager, manager);
-        }
-        else {
-          //if profile was disabled and cancel after apply was pressed
-          final InspectionProfile profile = (InspectionProfile)profiles.getSelectedItem();
-          final boolean canExecute = profile != null && profile.isExecutable(project);
-          dialog.setOKActionEnabled(canExecute);
-        }
+    reloadProfiles(profiles, model, profileManager, projectProfileManager, manager);
+
+    Hyperlink hyperlink = Hyperlink.create(IdeLocalize.buttonConfigureE().get(), event -> {
+      final IDEInspectionToolsConfigurable errorConfigurable = createConfigurable(projectProfileManager, profileManager);
+      final MySingleConfigurableEditor editor = new MySingleConfigurableEditor(project, errorConfigurable, manager);
+      errorConfigurable.selectProfile(profiles.getValue());
+      if (editor.showAndGet()) {
+        reloadProfiles(profiles, model, profileManager, projectProfileManager, manager);
       }
-    });
-    profiles.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        myExternalProfile = (InspectionProfile)profiles.getSelectedItem();
-        final boolean canExecute = myExternalProfile != null && myExternalProfile.isExecutable(project);
+      else {
+        //if profile was disabled and cancel after apply was pressed
+        final InspectionProfile profile = (InspectionProfile)profiles.getValue();
+        final boolean canExecute = profile != null && profile.isExecutable(project);
         dialog.setOKActionEnabled(canExecute);
-        if (canExecute) {
-          manager.setProfile(myExternalProfile.getName());
-        }
       }
     });
-    final InspectionProfile profile = (InspectionProfile)profiles.getSelectedItem();
+
+    dockLayout.right(hyperlink);
+
+    profiles.addValueListener(event -> {
+      myExternalProfile = profiles.getValue();
+      final boolean canExecute = myExternalProfile != null && myExternalProfile.isExecutable(project);
+      dialog.setOKActionEnabled(canExecute);
+      if (canExecute) {
+        manager.setProfile(myExternalProfile.getName());
+      }
+    });
+
+    final InspectionProfile profile = profiles.getValue();
     dialog.setOKActionEnabled(profile != null && profile.isExecutable(project));
-    return panel.myAdditionalPanel;
   }
 
   protected IDEInspectionToolsConfigurable createConfigurable(InspectionProjectProfileManager projectProfileManager,
@@ -151,29 +156,25 @@ public class CodeInspectionAction extends BaseAnalysisAction {
     return new IDEInspectionToolsConfigurable(projectProfileManager, profileManager);
   }
 
-  private void reloadProfiles(JComboBox profiles,
+  @RequiredUIAccess
+  private void reloadProfiles(ComboBox<InspectionProfile> profiles,
+                              MutableListModel<InspectionProfile> model,
                               InspectionProfileManager inspectionProfileManager,
                               InspectionProjectProfileManager inspectionProjectProfileManager,
                               InspectionManagerEx inspectionManager) {
     final InspectionProfile selectedProfile = getGlobalInspectionContext(inspectionManager.getProject()).getCurrentProfile();
-    final DefaultComboBoxModel model = (DefaultComboBoxModel)profiles.getModel();
-    model.removeAllElements();
-    fillModel(inspectionProfileManager, model);
-    fillModel(inspectionProjectProfileManager, model);
-    profiles.setSelectedItem(selectedProfile);
+
+    List<InspectionProfile> resultItems = new ArrayList<>();
+    fillModel(inspectionProfileManager, resultItems);
+    fillModel(inspectionProjectProfileManager, resultItems);
+    model.replaceAll(resultItems);
+    profiles.setValue(selectedProfile);
   }
 
-  private static void fillModel(final ProfileManager inspectionProfileManager, final DefaultComboBoxModel model) {
-    Collection<Profile> profiles = new TreeSet<Profile>(inspectionProfileManager.getProfiles());
-    for (Profile profile : profiles) {
-      model.addElement(profile);
+  private static void fillModel(final ProfileManager inspectionProfileManager, List<InspectionProfile> model) {
+    for (Profile profile : inspectionProfileManager.getProfiles()) {
+      model.add((InspectionProfile)profile);
     }
-  }
-
-
-  private static class AdditionalPanel {
-    public ComboboxWithBrowseButton myBrowseProfilesCombo;
-    public JPanel myAdditionalPanel;
   }
 
   private static class MySingleConfigurableEditor extends SingleConfigurableEditor {
@@ -190,8 +191,8 @@ public class CodeInspectionAction extends BaseAnalysisAction {
     @Override
     protected void doOKAction() {
       final Object o = ((ErrorsConfigurable)getConfigurable()).getSelectedObject();
-      if (o instanceof Profile) {
-        myManager.setProfile(((Profile)o).getName());
+      if (o instanceof InspectionProfile) {
+        myManager.setProfile(((InspectionProfile)o).getName());
       }
       super.doOKAction();
     }

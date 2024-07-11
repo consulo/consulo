@@ -6,6 +6,7 @@
 package consulo.ide.impl.idea.analysis;
 
 import consulo.application.progress.PerformInBackgroundOption;
+import consulo.language.editor.ui.scope.AnalysisUIOptions;
 import consulo.project.Project;
 
 public class PerformAnalysisInBackgroundOption implements PerformInBackgroundOption {

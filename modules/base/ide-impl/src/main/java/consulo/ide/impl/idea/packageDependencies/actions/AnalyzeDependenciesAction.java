@@ -16,58 +16,59 @@
 
 package consulo.ide.impl.idea.packageDependencies.actions;
 
+import consulo.ide.impl.idea.analysis.BaseAnalysisAction;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.editor.scope.AnalysisScopeBundle;
-import consulo.ide.impl.idea.analysis.BaseAnalysisAction;
-import consulo.ide.impl.idea.analysis.BaseAnalysisActionDialog;
+import consulo.language.editor.ui.awt.scope.BaseAnalysisActionDialog;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.CheckBox;
+import consulo.ui.IntBox;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.VerticalLayout;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class AnalyzeDependenciesAction extends BaseAnalysisAction {
-  private AnalyzeDependenciesSettingPanel myPanel;
+  private CheckBox myTransitiveCB;
+  private IntBox myDeepField;
 
   public AnalyzeDependenciesAction() {
     super(AnalysisScopeBundle.message("action.forward.dependency.analysis"), AnalysisScopeBundle.message("action.analysis.noun"));
-
   }
 
   @Override
-  protected void analyze(@Nonnull final Project project, AnalysisScope scope) {
-    new AnalyzeDependenciesHandler(project, scope, myPanel.myTransitiveCB.isSelected() ? ((SpinnerNumberModel)myPanel.myBorderChooser.getModel()).getNumber().intValue() : 0).analyze();
-    myPanel = null;
+  protected void analyze(@Nonnull final Project project, @Nonnull AnalysisScope scope) {
+    new AnalyzeDependenciesHandler(project,
+                                   scope,
+                                   myTransitiveCB.getValue() ? myDeepField.getValueOrError() : 0).analyze();
+
+    clear();
   }
 
+  @RequiredUIAccess
   @Override
-  @Nullable
-  protected JComponent getAdditionalActionSettings(final Project project, final BaseAnalysisActionDialog dialog) {
-    myPanel = new AnalyzeDependenciesSettingPanel();
-    myPanel.myTransitiveCB.setText("Show transitive dependencies. Do not travel deeper than");
-    myPanel.myTransitiveCB.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(final ActionEvent e) {
-        myPanel.myBorderChooser.setEnabled(myPanel.myTransitiveCB.isSelected());
-      }
-    });
-    myPanel.myBorderChooser.setModel(new SpinnerNumberModel(5, 0, Integer.MAX_VALUE, 1));
-    myPanel.myBorderChooser.setEnabled(myPanel.myTransitiveCB.isSelected());
-    return myPanel.myWholePanel;
+  protected void extendMainLayout(BaseAnalysisActionDialog dialog, VerticalLayout layout, Project project) {
+    DockLayout dockLayout = DockLayout.create();
+    layout.add(dockLayout);
+
+    dockLayout.left(
+      myTransitiveCB = CheckBox.create(LocalizeValue.localizeTODO("Show transitive dependencies. Do not travel deeper than")));
+
+    dockLayout.right(myDeepField = IntBox.create(5));
+
+    myDeepField.setEnabled(false);
+    myTransitiveCB.addValueListener(event -> myDeepField.setEnabled(event.getValue()));
   }
 
   @Override
   protected void canceled() {
     super.canceled();
-    myPanel = null;
+    clear();
   }
 
-  private static class AnalyzeDependenciesSettingPanel {
-    private JCheckBox myTransitiveCB;
-    private JPanel myWholePanel;
-    private JSpinner myBorderChooser;
+  private void clear() {
+    myTransitiveCB = null;
+    myDeepField = null;
   }
-
 }

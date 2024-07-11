@@ -17,12 +17,12 @@
 package consulo.ide.impl.idea.codeInspection.actions;
 
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.analysis.AnalysisUIOptions;
-import consulo.ide.impl.idea.analysis.BaseAnalysisActionDialog;
+import consulo.language.editor.ui.scope.AnalysisUIOptions;
 import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextImpl;
 import consulo.ide.impl.idea.codeInspection.ex.InspectionManagerEx;
 import consulo.language.editor.impl.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
+import consulo.language.editor.ui.awt.scope.BaseAnalysisActionDialog;
 import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;
@@ -79,9 +79,7 @@ public class RunInspectionIntention implements IntentionAction, HighPriorityActi
     final Module module = ModuleUtilCore.findModuleForPsiElement(file);
     AnalysisScope analysisScope = new AnalysisScope(file);
     final VirtualFile virtualFile = file.getVirtualFile();
-    if (file.isPhysical() || virtualFile == null || !virtualFile.isInLocalFileSystem()) {
-      analysisScope = new AnalysisScope(project);
-    }
+    if (file.isPhysical() || virtualFile == null || !virtualFile.isInLocalFileSystem()) analysisScope = new AnalysisScope(project);
     final BaseAnalysisActionDialog dlg = new BaseAnalysisActionDialog(
       AnalysisScopeLocalize.specifyAnalysisScope(InspectionLocalize.inspectionActionTitle()).get(),
       AnalysisScopeLocalize.analysisScopeTitle(InspectionLocalize.inspectionActionNoun()).get(),

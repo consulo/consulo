@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.analysis;
+package consulo.language.editor.ui.scope;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
@@ -24,8 +24,6 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.ide.ServiceManager;
-import consulo.ide.impl.idea.codeInspection.ui.InspectionResultsView;
 import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.project.Project;
@@ -47,7 +45,7 @@ import jakarta.inject.Singleton;
 @ServiceImpl
 public class AnalysisUIOptions implements PersistentStateComponent<AnalysisUIOptions> {
   public static AnalysisUIOptions getInstance(Project project) {
-    return ServiceManager.getService(project, AnalysisUIOptions.class);
+    return project.getInstance(AnalysisUIOptions.class);
   }
 
   public boolean AUTOSCROLL_TO_SOURCE = false;
@@ -55,6 +53,7 @@ public class AnalysisUIOptions implements PersistentStateComponent<AnalysisUIOpt
   public boolean GROUP_BY_SEVERITY = false;
   public boolean FILTER_RESOLVED_ITEMS = true;
   public boolean ANALYZE_TEST_SOURCES = true;
+  public boolean ANALYZE_INJECTED_CODE = true;
   public boolean SHOW_DIFF_WITH_PREVIOUS_RUN = false;
   public int SCOPE_TYPE = AnalysisScope.PROJECT;
   public String CUSTOM_SCOPE_NAME = "";
@@ -62,7 +61,7 @@ public class AnalysisUIOptions implements PersistentStateComponent<AnalysisUIOpt
   public boolean SHOW_ONLY_DIFF = false;
   public boolean SHOW_STRUCTURE = false;
 
-  public boolean ANALYSIS_IN_BACKGROUND = false;
+  public boolean ANALYSIS_IN_BACKGROUND = true;
 
   public AnalysisUIOptions() {
     myAutoScrollToSourceHandler = new AutoScrollToSourceHandler() {
@@ -93,7 +92,7 @@ public class AnalysisUIOptions implements PersistentStateComponent<AnalysisUIOpt
     return myAutoScrollToSourceHandler;
   }
 
-  public AnAction createGroupBySeverityAction(final InspectionResultsView view) {
+  public AnAction createGroupBySeverityAction(final Runnable updater) {
     return new ToggleAction(
       InspectionLocalize.inspectionActionGroupBySeverity(),
       InspectionLocalize.inspectionActionGroupBySeverityDescription(),
@@ -107,12 +106,12 @@ public class AnalysisUIOptions implements PersistentStateComponent<AnalysisUIOpt
       @Override
       public void setSelected(@Nonnull AnActionEvent e, boolean state) {
         GROUP_BY_SEVERITY = state;
-        view.update();
+        updater.run();
       }
     };
   }
 
-  public AnAction createFilterResolvedItemsAction(final InspectionResultsView view) {
+  public AnAction createFilterResolvedItemsAction(final Runnable updater) {
     return new ToggleAction(
       InspectionLocalize.inspectionFilterResolvedActionText(),
       InspectionLocalize.inspectionFilterResolvedActionText(),
@@ -126,12 +125,12 @@ public class AnalysisUIOptions implements PersistentStateComponent<AnalysisUIOpt
       @Override
       public void setSelected(@Nonnull AnActionEvent e, boolean state) {
         FILTER_RESOLVED_ITEMS = state;
-        view.update();
+        updater.run();
       }
     };
   }
 
-  public AnAction createShowOutdatedProblemsAction(final InspectionResultsView view) {
+  public AnAction createShowOutdatedProblemsAction(final Runnable updater) {
     return new ToggleAction(
       InspectionLocalize.inspectionFilterShowDiffActionText(),
       InspectionLocalize.inspectionFilterShowDiffActionText(),
@@ -148,12 +147,12 @@ public class AnalysisUIOptions implements PersistentStateComponent<AnalysisUIOpt
         if (!SHOW_DIFF_WITH_PREVIOUS_RUN) {
           SHOW_ONLY_DIFF = false;
         }
-        view.update();
+        updater.run();
       }
     };
   }
 
-  public AnAction createGroupByDirectoryAction(final InspectionResultsView view) {
+  public AnAction createGroupByDirectoryAction(final Runnable updater) {
     return new ToggleAction(
       InspectionLocalize.inspectionActionGroupByDirectory(),
       InspectionLocalize.inspectionActionGroupByDirectory(),
@@ -167,12 +166,12 @@ public class AnalysisUIOptions implements PersistentStateComponent<AnalysisUIOpt
       @Override
       public void setSelected(@Nonnull AnActionEvent e, boolean state) {
         SHOW_STRUCTURE = state;
-        view.update();
+        updater.run();
       }
     };
   }
 
-  public AnAction createShowDiffOnlyAction(final InspectionResultsView view) {
+  public AnAction createShowDiffOnlyAction(final Runnable updater) {
     return new ToggleAction(
       InspectionLocalize.inspectionFilterShowDiffOnlyActionText(),
       InspectionLocalize.inspectionFilterShowDiffOnlyActionText(),
@@ -186,7 +185,7 @@ public class AnalysisUIOptions implements PersistentStateComponent<AnalysisUIOpt
       @Override
       public void setSelected(@Nonnull AnActionEvent e, boolean state) {
         SHOW_ONLY_DIFF = state;
-        view.update();
+        updater.run();
       }
 
       @Override

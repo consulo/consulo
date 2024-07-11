@@ -22,7 +22,7 @@ import consulo.component.extension.Extensions;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.rename.inplace.MemberInplaceRenameHandler;
-import consulo.language.editor.refactoring.ui.RadioUpDownListener;
+import consulo.language.editor.ui.RadioUpDownListener;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;

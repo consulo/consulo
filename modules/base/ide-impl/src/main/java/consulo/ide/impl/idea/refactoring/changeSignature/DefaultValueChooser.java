@@ -19,7 +19,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.language.editor.refactoring.ui.RadioUpDownListener;
+import consulo.language.editor.ui.RadioUpDownListener;
 import consulo.language.editor.ui.awt.EditorTextField;
 
 import javax.swing.*;

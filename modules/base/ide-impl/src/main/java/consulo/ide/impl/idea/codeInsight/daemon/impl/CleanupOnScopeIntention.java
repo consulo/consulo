@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.ide.impl.idea.analysis.AnalysisUIOptions;
-import consulo.ide.impl.idea.analysis.BaseAnalysisActionDialog;
 import consulo.ide.impl.idea.codeInspection.actions.CleanupIntention;
+import consulo.language.editor.ui.scope.AnalysisUIOptions;
+import consulo.language.editor.ui.awt.scope.BaseAnalysisActionDialog;
 import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.editor.scope.localize.AnalysisScopeLocalize;

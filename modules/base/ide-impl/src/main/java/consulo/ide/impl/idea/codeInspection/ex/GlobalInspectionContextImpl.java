@@ -32,7 +32,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.analysis.AnalysisUIOptions;
+import consulo.language.editor.ui.scope.AnalysisUIOptions;
 import consulo.ide.impl.idea.analysis.PerformAnalysisInBackgroundOption;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.LocalInspectionsPass;
 import consulo.ide.impl.idea.codeInspection.ui.DefaultInspectionToolPresentation;
@@ -419,7 +419,7 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
         if (!file.isValid()) {
           return;
         }
-        inspectFile(file, inspectionManager, localTools, globalSimpleTools, map);
+        inspectFile(file, inspectionManager, localTools, globalSimpleTools, map, scope.isAnalyzeInjectedCode());
       })) {
         throw new ProcessCanceledException();
       }
@@ -467,7 +467,8 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
     @Nonnull final InspectionManager inspectionManager,
     @Nonnull List<Tools> localTools,
     @Nonnull List<Tools> globalSimpleTools,
-    @Nonnull final Map<String, InspectionToolWrapper> wrappersMap
+    @Nonnull final Map<String, InspectionToolWrapper> wrappersMap,
+    boolean inspectInjectedPsi
   ) {
     Document document = PsiDocumentManager.getInstance(getProject()).getDocument(file);
     if (document == null) return true;

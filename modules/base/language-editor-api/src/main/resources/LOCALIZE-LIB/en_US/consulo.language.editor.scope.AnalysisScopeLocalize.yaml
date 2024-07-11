@@ -192,3 +192,10 @@ update.module.tree.progress.text:
   text: Process module ''{0}'' cycles
 scope.virtual.files:
   text: selection
+scope.option.analyze.injected.code:
+  text: Inspect in&jected code
+scope.option.uncommitted.files:
+  text: "&Uncommitted files"
+scope.option.uncommitted.files.all.changelists.choice:
+  text: All
+

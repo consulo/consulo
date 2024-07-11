@@ -19,12 +19,13 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.component.extension.ExtensionInstance;
 import consulo.content.ContentFolderTypeProvider;
+import consulo.content.TestLikeContentFolderTypeProvider;
 import consulo.project.ProjectBundle;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.function.Supplier;
 
 /**
@@ -32,7 +33,7 @@ import java.util.function.Supplier;
  * @since 22:44/31.10.13
  */
 @ExtensionImpl
-public class TestResourceContentFolderTypeProvider extends ContentFolderTypeProvider {
+public class TestResourceContentFolderTypeProvider extends ContentFolderTypeProvider implements TestLikeContentFolderTypeProvider {
   private static final Supplier<TestResourceContentFolderTypeProvider> INSTANCE = ExtensionInstance.from(ContentFolderTypeProvider.class
   );
 

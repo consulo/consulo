@@ -1180,3 +1180,5 @@ assignment.to.itself.problem.descriptor:
   text: Variable ''{0}'' is assigned to itself
 assignment.to.declared.variable.problem.descriptor:
   text: Variable ''{0}'' is initialized with self assignment
+inspection.profile.label:
+  text: 'Inspection profile:'

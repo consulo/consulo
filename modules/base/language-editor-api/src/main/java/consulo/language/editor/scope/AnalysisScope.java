@@ -96,6 +96,7 @@ public class AnalysisScope {
   protected Set<VirtualFile> myFilesSet;    // set of files (not directories) this scope consists of. calculated in initFilesSet()
 
   protected boolean myIncludeTestSource = true;
+  private boolean myAnalyzeInjectedCode = true;
 
   public AnalysisScope(@Nonnull Project project) {
     myProject = project;
@@ -172,12 +173,19 @@ public class AnalysisScope {
     myScope = scope;
   }
 
-  public void setSearchInLibraries(final boolean searchInLibraries) {
+  public void setSearchInLibraries(boolean searchInLibraries) {
+    LOG.assertTrue(myFilesSet == null, "don't modify AnalysisScope after it has been used");
     mySearchInLibraries = searchInLibraries;
   }
 
-  public void setIncludeTestSource(final boolean includeTestSource) {
+  public void setIncludeTestSource(boolean includeTestSource) {
+    LOG.assertTrue(myFilesSet == null, "don't modify AnalysisScope after it has been used");
     myIncludeTestSource = includeTestSource;
+  }
+
+  public void setAnalyzeInjectedCode(boolean analyzeInjectedCode) {
+    LOG.assertTrue(myFilesSet == null, "don't modify AnalysisScope after it has been used");
+    myAnalyzeInjectedCode = analyzeInjectedCode;
   }
 
   @Nonnull
@@ -219,7 +227,7 @@ public class AnalysisScope {
   }
 
   private static String displayProjectRelativePath(@Nonnull VirtualFile virtualFile, @Nonnull Project project) {
-    return ProjectUtilCore.displayUrlRelativeToProject(virtualFile, virtualFile.getPresentableUrl(), project, false, false);
+    return ProjectUtilCore.displayUrlRelativeToProject(virtualFile, virtualFile.getPresentableUrl(), project, true, false);
   }
 
   public boolean contains(@Nonnull PsiElement psiElement) {
@@ -751,6 +759,10 @@ public class AnalysisScope {
 
   private static boolean isTestOnly(@Nonnull Module module) {
     return ModuleRootManager.getInstance(module).getSourceRootUrls(false).length == 0;
+  }
+
+  public boolean isAnalyzeInjectedCode() {
+    return myAnalyzeInjectedCode;
   }
 
   public boolean isIncludeTestSource() {
