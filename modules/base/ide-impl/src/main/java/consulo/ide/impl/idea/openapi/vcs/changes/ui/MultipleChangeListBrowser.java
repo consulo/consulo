@@ -29,6 +29,7 @@ import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.project.Project;
 import consulo.ui.Label;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.event.AnActionListener;
@@ -53,6 +54,7 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.List;
 import java.util.*;
 
