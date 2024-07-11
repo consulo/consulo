@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.openapi.command.impl;
 
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
@@ -38,6 +37,7 @@ import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.internal.ProjectEx;
 import consulo.project.ui.internal.WindowManagerEx;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.undoRedo.*;
 import consulo.undoRedo.event.CommandEvent;
@@ -91,7 +91,7 @@ public class UndoManagerImpl implements UndoManager, Disposable {
 
   @RequiredWriteAction
   public static boolean isRefresh() {
-    return ApplicationManager.getApplication().hasWriteAction(ExternalChangeAction.class);
+    return Application.get().hasWriteAction(ExternalChangeAction.class);
   }
 
   public static int getGlobalUndoLimit() {
@@ -214,7 +214,7 @@ public class UndoManagerImpl implements UndoManager, Disposable {
 
       if (recordOriginalReference && myProject != null) {
         Editor editor = null;
-        final Application application = ApplicationManager.getApplication();
+        final Application application = myProject.getApplication();
         if (application.isUnitTestMode() || application.isHeadlessEnvironment()) {
           editor = DataManager.getInstance().getDataContext().getData(Editor.KEY);
         }
@@ -284,15 +284,17 @@ public class UndoManagerImpl implements UndoManager, Disposable {
   }
 
   @Override
+  @RequiredUIAccess
   public void nonundoableActionPerformed(@Nonnull final DocumentReference ref, final boolean isGlobal) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    Application.get().assertIsDispatchThread();
     if (myProject != null && myProject.isDisposed()) return;
     undoableActionPerformed(new NonUndoableAction(ref, isGlobal));
   }
 
   @Override
+  @RequiredUIAccess
   public void undoableActionPerformed(@Nonnull UndoableAction action) {
-    ApplicationManager.getApplication().assertIsWriteThread();
+    Application.get().assertIsWriteThread();
     if (myProject != null && myProject.isDisposed()) return;
 
     if (myCurrentOperationState != OperationState.NONE) return;
@@ -343,8 +345,9 @@ public class UndoManagerImpl implements UndoManager, Disposable {
   }
 
   @Override
+  @RequiredUIAccess
   public void invalidateActionsFor(@Nonnull DocumentReference ref) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    Application.get().assertIsDispatchThread();
     myMerger.invalidateActionsFor(ref);
     if (myCurrentMerger != null) myCurrentMerger.invalidateActionsFor(ref);
     myUndoStacksHolder.invalidateActionsFor(ref);
@@ -352,19 +355,22 @@ public class UndoManagerImpl implements UndoManager, Disposable {
   }
 
   @Override
+  @RequiredUIAccess
   public void undo(@Nullable Object editor) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    Application.get().assertIsDispatchThread();
     LOG.assertTrue(isUndoAvailable(editor));
     undoOrRedo(editor, true);
   }
 
   @Override
+  @RequiredUIAccess
   public void redo(@Nullable Object editor) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    Application.get().assertIsDispatchThread();
     LOG.assertTrue(isRedoAvailable(editor));
     undoOrRedo(editor, false);
   }
 
+  @RequiredUIAccess
   private void undoOrRedo(final Object editor, final boolean isUndo) {
     myCurrentOperationState = isUndo ? OperationState.UNDO : OperationState.REDO;
 
@@ -401,17 +407,20 @@ public class UndoManagerImpl implements UndoManager, Disposable {
   }
 
   @Override
+  @RequiredUIAccess
   public boolean isUndoAvailable(@Nullable Object editor) {
     return isUndoOrRedoAvailable(editor, true);
   }
 
   @Override
+  @RequiredUIAccess
   public boolean isRedoAvailable(@Nullable Object editor) {
     return isUndoOrRedoAvailable(editor, false);
   }
 
+  @RequiredUIAccess
   boolean isUndoOrRedoAvailable(@Nullable Object editor, boolean undo) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    Application.get().assertIsDispatchThread();
 
     Collection<DocumentReference> refs = getDocRefs(editor);
     return refs != null && isUndoOrRedoAvailable(refs, undo);
@@ -467,18 +476,21 @@ public class UndoManagerImpl implements UndoManager, Disposable {
 
   @Nonnull
   @Override
-  public Pair<String, String> getUndoActionNameAndDescription(Object editor) {
+  @RequiredUIAccess
+  public Couple<String> getUndoActionNameAndDescription(Object editor) {
     return getUndoOrRedoActionNameAndDescription(editor, true);
   }
 
   @Nonnull
   @Override
-  public Pair<String, String> getRedoActionNameAndDescription(Object editor) {
+  @RequiredUIAccess
+  public Couple<String> getRedoActionNameAndDescription(Object editor) {
     return getUndoOrRedoActionNameAndDescription(editor, false);
   }
 
   @Nonnull
-  private Pair<String, String> getUndoOrRedoActionNameAndDescription(Object editor, boolean undo) {
+  @RequiredUIAccess
+  private Couple<String> getUndoOrRedoActionNameAndDescription(Object editor, boolean undo) {
     String desc = isUndoOrRedoAvailable(editor, undo) ? doFormatAvailableUndoRedoAction(editor, undo) : null;
     if (desc == null) desc = "";
     String shortActionName = StringUtil.first(desc, 30, true);
@@ -489,7 +501,7 @@ public class UndoManagerImpl implements UndoManager, Disposable {
         : ActionLocalize.actionRedoDescriptionEmpty().get();
     }
 
-    return Pair.create(
+    return Couple.of(
       (undo ? ActionLocalize.actionUndoText(shortActionName) : ActionLocalize.actionRedoText(shortActionName)).get().trim(),
       (undo ? ActionLocalize.actionUndoDescription(desc) : ActionLocalize.actionRedoDescription(desc)).get().trim()
     );

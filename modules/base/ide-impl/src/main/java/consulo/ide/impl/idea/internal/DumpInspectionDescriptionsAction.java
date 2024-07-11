@@ -16,8 +16,6 @@
 package consulo.ide.impl.idea.internal;
 
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.impl.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.language.editor.inspection.scheme.InspectionProfile;
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;
@@ -26,9 +24,12 @@ import consulo.logging.Logger;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.util.io.FileUtil;
 import consulo.util.io.ResourceUtil;
+import jakarta.annotation.Nonnull;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -36,6 +37,8 @@ import java.io.FileWriter;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Map;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
  * @author stathik
@@ -49,12 +52,13 @@ public class DumpInspectionDescriptionsAction extends AnAction implements DumbAw
   }
 
   @Override
-  public void actionPerformed(final AnActionEvent event) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull final AnActionEvent event) {
     final InspectionProfile profile = (InspectionProfile)InspectionProfileManager.getInstance().getRootProfile();
-    final InspectionToolWrapper[] tools = (InspectionToolWrapper[])profile.getInspectionTools(null);
+    final InspectionToolWrapper[] tools = profile.getInspectionTools(null);
 
-    final Collection<String> classes = ContainerUtil.newTreeSet();
-    final Map<String, Collection<String>> groups = ContainerUtil.newTreeMap();
+    final Collection<String> classes = new TreeSet<>();
+    final Map<String, Collection<String>> groups = new TreeMap<>();
 
     final String tempDirectory = FileUtil.getTempDirectory();
     final File descDirectory = new File(tempDirectory, "inspections");
@@ -68,27 +72,21 @@ public class DumpInspectionDescriptionsAction extends AnAction implements DumbAw
 
       final String group = getGroupName(toolWrapper);
       Collection<String> names = groups.get(group);
-      if (names == null) groups.put(group, (names = ContainerUtil.newTreeSet()));
+      if (names == null) groups.put(group, (names = new TreeSet<>()));
       names.add(toolWrapper.getShortName());
 
       final URL url = getDescriptionUrl(toolWrapper);
       if (url != null) {
-        doDump(new File(descDirectory, toolWrapper.getShortName() + ".html"), new Processor() {
-          @Override public void process(BufferedWriter writer) throws Exception {
-            writer.write(ResourceUtil.loadText(url));
-          }
-        });
+        doDump(new File(descDirectory, toolWrapper.getShortName() + ".html"), writer-> writer.write(ResourceUtil.loadText(url)));
       }
     }
     doNotify("Inspection descriptions dumped to\n" + descDirectory.getAbsolutePath());
 
     final File fqnListFile = new File(tempDirectory, "inspection_fqn_list.txt");
-    final boolean fqnOk = doDump(fqnListFile, new Processor() {
-      @Override public void process(BufferedWriter writer) throws Exception {
-        for (String name : classes) {
-          writer.write(name);
-          writer.newLine();
-        }
+    final boolean fqnOk = doDump(fqnListFile, writer-> {
+      for (String name : classes) {
+        writer.write(name);
+        writer.newLine();
       }
     });
     if (fqnOk) {
@@ -96,17 +94,15 @@ public class DumpInspectionDescriptionsAction extends AnAction implements DumbAw
     }
 
     final File groupsFile = new File(tempDirectory, "inspection_groups.txt");
-    final boolean groupsOk = doDump(groupsFile, new Processor() {
-      @Override public void process(BufferedWriter writer) throws Exception {
-        for (Map.Entry<String, Collection<String>> entry : groups.entrySet()) {
-          writer.write(entry.getKey());
-          writer.write(':');
+    final boolean groupsOk = doDump(groupsFile, writer-> {
+      for (Map.Entry<String, Collection<String>> entry : groups.entrySet()) {
+        writer.write(entry.getKey());
+        writer.write(':');
+        writer.newLine();
+        for (String name : entry.getValue()) {
+          writer.write("  ");
+          writer.write(name);
           writer.newLine();
-          for (String name : entry.getValue()) {
-            writer.write("  ");
-            writer.write(name);
-            writer.newLine();
-          }
         }
       }
     });
@@ -116,7 +112,8 @@ public class DumpInspectionDescriptionsAction extends AnAction implements DumbAw
   }
 
   private static Class getInspectionClass(final InspectionToolWrapper toolWrapper) {
-    return toolWrapper instanceof LocalInspectionToolWrapper ? ((LocalInspectionToolWrapper)toolWrapper).getTool().getClass() : toolWrapper.getClass();
+    return toolWrapper instanceof LocalInspectionToolWrapper localInspectionToolWrapper
+      ? localInspectionToolWrapper.getTool().getClass() : toolWrapper.getClass();
   }
 
   private static String getGroupName(final InspectionToolWrapper toolWrapper) {
@@ -133,15 +130,9 @@ public class DumpInspectionDescriptionsAction extends AnAction implements DumbAw
   }
 
   private static boolean doDump(final File file, final Processor processor) {
-    try {
-      final BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-      try {
-        processor.process(writer);
-        return true;
-      }
-      finally {
-        writer.close();
-      }
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+      processor.process(writer);
+      return true;
     }
     catch (Exception e) {
       LOG.error(e);

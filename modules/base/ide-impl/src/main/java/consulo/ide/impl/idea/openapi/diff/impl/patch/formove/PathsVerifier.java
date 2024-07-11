@@ -15,33 +15,37 @@
  */
 package consulo.ide.impl.idea.openapi.diff.impl.patch.formove;
 
-import consulo.application.ApplicationManager;
+import consulo.application.util.function.ThrowableComputable;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.BinaryFilePatch;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.FilePatch;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.TextFilePatch;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.ApplyFilePatchBase;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.ApplyFilePatchFactory;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.ApplyTextFilePatch;
-import consulo.versionControlSystem.*;
-import consulo.versionControlSystem.localize.VcsLocalize;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeChooser;
-import consulo.project.Project;
-import consulo.util.lang.Comparing;
-import consulo.util.lang.Pair;
-import consulo.application.util.function.ThrowableComputable;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.util.lang.StringUtil;
-import consulo.ide.impl.idea.openapi.vcs.*;
+import consulo.ide.impl.idea.openapi.vcs.CalledInAwt;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.RelativePathCalculator;
 import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelvedBinaryFilePatch;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
+import consulo.versionControlSystem.AbstractVcsHelper;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.VcsShowConfirmationOption;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.util.VcsUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.fileType.UnknownFileType;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -129,7 +133,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
 
   @CalledInAwt
   public List<FilePatch> nonWriteActionPreCheck() {
-    List<FilePatch> failedToApply = ContainerUtil.newArrayList();
+    List<FilePatch> failedToApply = new ArrayList<>();
     myDelayedPrecheckContext = new DelayedPrecheckContext(myProject);
     for (FilePatch patch : myPatches) {
       final CheckPath checker = getChecker(patch);
@@ -150,7 +154,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
   }
 
   public List<FilePatch> execute() {
-    List<FilePatch> failedPatches = ContainerUtil.newArrayList();
+    List<FilePatch> failedPatches = new ArrayList<>();
     try {
       final List<CheckPath> checkers = new ArrayList<>(myPatches.size());
       for (FilePatch patch : myPatches) {
@@ -201,8 +205,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
     List<Pair<VirtualFile, ApplyTextFilePatch>> failedTextPatches =
       ContainerUtil.findAll(myTextPatches, textPatch -> {
         final VirtualFile file = textPatch.getFirst();
-        if (file.isDirectory()) return false;
-        return !isFileTypeOk(file);
+        return !file.isDirectory() && !isFileTypeOk(file);
       });
     myTextPatches.removeAll(failedTextPatches);
     return ContainerUtil.map(
@@ -240,6 +243,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
       super(path);
     }
 
+    @Override
     protected boolean precheck(final VirtualFile beforeFile, final VirtualFile afterFile, DelayedPrecheckContext context) {
       if (beforeFile == null) {
         context.addSkip(myBaseMapper.getPath(myPatch, myBeforeName), myPatch);
@@ -247,6 +251,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
       return true;
     }
 
+    @Override
     protected boolean check() throws IOException {
       final VirtualFile beforeFile = myBaseMapper.getFile(myPatch, myBeforeName);
       if (! checkExistsAndValid(beforeFile, myBeforeName)) {
@@ -267,6 +272,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
       super(path);
     }
 
+    @Override
     protected boolean precheck(final VirtualFile beforeFile, final VirtualFile afterFile, DelayedPrecheckContext context) {
       if (afterFile != null) {
         context.addOverrideExisting(myPatch, VcsUtil.getFilePath(afterFile));
@@ -274,6 +280,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
       return true;
     }
 
+    @Override
     public boolean check() throws IOException {
       final String[] pieces = RelativePathCalculator.split(myAfterName);
       final VirtualFile parent = makeSureParentPathExists(pieces);
@@ -306,6 +313,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
     }
 
     // before exists; after does not exist
+    @Override
     protected boolean precheck(
       final VirtualFile beforeFile,
       final VirtualFile afterFile,
@@ -319,6 +327,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
       return (beforeFile != null) && (afterFile == null);
     }
 
+    @Override
     public boolean check() throws IOException {
       final String[] pieces = RelativePathCalculator.split(myAfterName);
       final VirtualFile afterFileParent = makeSureParentPathExists(pieces);
@@ -377,7 +386,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
     }
 
     protected boolean checkModificationValid(final VirtualFile file, final String name) {
-      if (ApplicationManager.getApplication().isUnitTestMode() && myIgnoreContentRootsCheck) return true;
+      if (myProject.getApplication().isUnitTestMode() && myIgnoreContentRootsCheck) return true;
       // security check to avoid overwriting system files with a patch
       if ((file == null) || (!inContent(file)) || (myVcsManager.getVcsRootFor(file) == null)) {
         setErrorMessage("File to patch found outside content root: " + name);
@@ -396,8 +405,8 @@ public class PathsVerifier<BinaryType extends FilePatch> {
   }
 
   private void addPatch(final FilePatch patch, final VirtualFile file) {
-    if (patch instanceof TextFilePatch) {
-      myTextPatches.add(Pair.create(file, ApplyFilePatchFactory.create((TextFilePatch)patch)));
+    if (patch instanceof TextFilePatch textFilePatch) {
+      myTextPatches.add(Pair.create(file, ApplyFilePatchFactory.create(textFilePatch)));
     } else {
       final ApplyFilePatchBase<BinaryType> applyBinaryPatch =
         (ApplyFilePatchBase<BinaryType>)(
@@ -502,7 +511,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
     return file;*/
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private VirtualFile makeSureParentPathExists(final String[] pieces) throws IOException {
     VirtualFile child = myBaseDirectory;
 
@@ -540,16 +549,12 @@ public class PathsVerifier<BinaryType extends FilePatch> {
     return myWritableFiles;
   }
 
+  @RequiredUIAccess
   public void doMoveIfNeeded(final VirtualFile file) throws IOException {
     final MovedFileData movedFile = myMovedFiles.get(file);
     if (movedFile != null) {
       myBeforePaths.add(VcsUtil.getFilePath(file));
-      ApplicationManager.getApplication().runWriteAction(new ThrowableComputable<VirtualFile, IOException>() {
-        @Override
-        public VirtualFile compute() throws IOException {
-          return movedFile.doMove();
-        }
-      });
+      myProject.getApplication().runWriteAction((ThrowableComputable<VirtualFile, IOException>)() -> movedFile.doMove());
     }
   }
 
@@ -603,9 +608,10 @@ public class PathsVerifier<BinaryType extends FilePatch> {
       File newParentFile = VfsUtilCore.virtualToIoFile(myNewParent);
       File destFile = new File(newParentFile, tmpFileWithUniqueName.getName());
       while (destFile.exists()) {
-        destFile = new File(newParentFile,
-                            FileUtil.createTempFile(oldParent, FileUtil.getNameWithoutExtension(destFile.getName()), null, false)
-                                    .getName());
+        destFile = new File(
+          newParentFile,
+          FileUtil.createTempFile(oldParent, FileUtil.getNameWithoutExtension(destFile.getName()), null, false).getName()
+        );
       }
       myCurrent.rename(PatchApplier.class, destFile.getName());
       myCurrent.move(PatchApplier.class, myNewParent);
@@ -614,7 +620,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
   }
 
   public interface BaseMapper {
-    @jakarta.annotation.Nullable
+    @Nullable
     VirtualFile getFile(final FilePatch patch, final String path);
     FilePath getPath(final FilePatch patch, final String path);
   }

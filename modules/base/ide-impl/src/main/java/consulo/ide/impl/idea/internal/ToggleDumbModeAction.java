@@ -17,10 +17,10 @@ package consulo.ide.impl.idea.internal;
 
 import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressIndicator;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.DumbModeTask;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
@@ -34,13 +34,14 @@ public class ToggleDumbModeAction extends AnAction implements DumbAware {
   private volatile boolean myDumb = false;
 
   @Override
-  public void actionPerformed(final AnActionEvent e) {
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull final AnActionEvent e) {
     if (myDumb) {
       myDumb = false;
     }
     else {
       myDumb = true;
-      final Project project = e.getData(CommonDataKeys.PROJECT);
+      final Project project = e.getData(Project.KEY);
       if (project == null) return;
 
       DumbService.getInstance(project).queueTask(new DumbModeTask() {
@@ -56,15 +57,11 @@ public class ToggleDumbModeAction extends AnAction implements DumbAware {
   }
 
   @Override
+  @RequiredUIAccess
   public void update(final AnActionEvent e) {
     final Presentation presentation = e.getPresentation();
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     presentation.setEnabled(project != null && myDumb == DumbService.getInstance(project).isDumb());
-    if (myDumb) {
-      presentation.setText("Exit Dumb Mode");
-    }
-    else {
-      presentation.setText("Enter Dumb Mode");
-    }
+    presentation.setText(myDumb ? "Exit Dumb Mode" : "Enter Dumb Mode");
   }
 }

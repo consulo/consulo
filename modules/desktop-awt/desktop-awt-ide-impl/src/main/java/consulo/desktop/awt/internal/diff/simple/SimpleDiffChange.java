@@ -21,7 +21,6 @@ import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.ide.impl.diff.DiffDrawUtil;
 import consulo.diff.fragment.DiffFragment;
 import consulo.diff.fragment.LineFragment;
 import consulo.diff.impl.internal.util.DiffGutterRenderer;
@@ -30,8 +29,9 @@ import consulo.diff.util.Side;
 import consulo.diff.util.TextDiffType;
 import consulo.document.Document;
 import consulo.externalService.statistic.UsageTrigger;
-import consulo.language.editor.CommonDataKeys;
+import consulo.ide.impl.diff.DiffDrawUtil;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
@@ -57,9 +57,11 @@ public class SimpleDiffChange {
   private int[] myLineStartShifts = new int[2];
   private int[] myLineEndShifts = new int[2];
 
-  public SimpleDiffChange(@Nonnull SimpleDiffViewer viewer,
-                          @Nonnull LineFragment fragment,
-                          @Nullable LineFragment previousFragment) {
+  public SimpleDiffChange(
+    @Nonnull SimpleDiffViewer viewer,
+    @Nonnull LineFragment fragment,
+    @Nullable LineFragment previousFragment
+  ) {
     myViewer = viewer;
 
     myFragment = fragment;
@@ -68,7 +70,7 @@ public class SimpleDiffChange {
     installHighlighter(previousFragment);
   }
 
-  public void installHighlighter(@jakarta.annotation.Nullable LineFragment previousFragment) {
+  public void installHighlighter(@Nullable LineFragment previousFragment) {
     assert myHighlighters.isEmpty();
 
     if (myInnerFragments != null) {
@@ -111,7 +113,7 @@ public class SimpleDiffChange {
     }
   }
 
-  private void doInstallNonSquashedChangesSeparator(@jakarta.annotation.Nullable LineFragment previousFragment) {
+  private void doInstallNonSquashedChangesSeparator(@Nullable LineFragment previousFragment) {
     createNonSquashedChangesSeparator(previousFragment, Side.LEFT);
     createNonSquashedChangesSeparator(previousFragment, Side.RIGHT);
   }
@@ -231,10 +233,8 @@ public class SimpleDiffChange {
   private MyGutterOperation createOperation(@Nonnull Side side) {
     int offset = side.getStartOffset(myFragment);
     EditorEx editor = myViewer.getEditor(side);
-    RangeHighlighter highlighter = editor.getMarkupModel().addRangeHighlighter(offset, offset,
-                                                                               HighlighterLayer.ADDITIONAL_SYNTAX,
-                                                                               null,
-                                                                               HighlighterTargetArea.LINES_IN_RANGE);
+    RangeHighlighter highlighter = editor.getMarkupModel()
+      .addRangeHighlighter(offset, offset, HighlighterLayer.ADDITIONAL_SYNTAX, null, HighlighterTargetArea.LINES_IN_RANGE);
     return new MyGutterOperation(side, highlighter);
   }
 
@@ -268,7 +268,7 @@ public class SimpleDiffChange {
       return myCtrlPressed != myViewer.getModifierProvider().isCtrlPressed();
     }
 
-    @jakarta.annotation.Nullable
+    @Nullable
     public GutterIconRenderer createRenderer() {
       myCtrlPressed = myViewer.getModifierProvider().isCtrlPressed();
 
@@ -288,14 +288,12 @@ public class SimpleDiffChange {
     }
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private GutterIconRenderer createApplyRenderer(@Nonnull final Side side) {
-    return createIconRenderer(side, "Accept", DiffImplUtil.getArrowIcon(side), () -> {
-      myViewer.replaceChange(this, side);
-    });
+    return createIconRenderer(side, "Accept", DiffImplUtil.getArrowIcon(side), () -> myViewer.replaceChange(this, side));
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private GutterIconRenderer createAppendRenderer(@Nonnull final Side side) {
     return createIconRenderer(side, "Append", DiffImplUtil.getArrowDownIcon(side), () -> {
       UsageTrigger.trigger("diff.SimpleDiffChange.Append");
@@ -304,16 +302,19 @@ public class SimpleDiffChange {
   }
 
   @Nullable
-  private GutterIconRenderer createIconRenderer(@Nonnull final Side sourceSide,
-                                                @Nonnull final String tooltipText,
-                                                @Nonnull final Image icon,
-                                                @Nonnull final Runnable perform) {
+  private GutterIconRenderer createIconRenderer(
+    @Nonnull final Side sourceSide,
+    @Nonnull final String tooltipText,
+    @Nonnull final Image icon,
+    @Nonnull final Runnable perform
+  ) {
     if (!DiffImplUtil.isEditable(myViewer.getEditor(sourceSide.other()))) return null;
     return new DiffGutterRenderer(icon, tooltipText) {
       @Override
+      @RequiredUIAccess
       protected void performAction(AnActionEvent e) {
         if (!myIsValid) return;
-        final Project project = e.getData(CommonDataKeys.PROJECT);
+        final Project project = e.getData(Project.KEY);
         final Document document = myViewer.getEditor(sourceSide.other()).getDocument();
         DiffImplUtil.executeWriteCommand(document, project, "Replace change", perform);
       }

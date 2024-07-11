@@ -15,16 +15,16 @@
  */
 package consulo.ide.impl.idea.internal;
 
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
+import consulo.language.psi.search.FilenameIndex;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.search.FilenameIndex;
+import jakarta.annotation.Nonnull;
 
 import java.io.InputStream;
 import java.security.MessageDigest;
@@ -38,15 +38,12 @@ public class ShowImageDuplicatesAction extends AnAction {
   private static final List<String> IMAGE_EXTENSIONS = Arrays.asList("png", "jpg", "jpeg", "gif", "tiff", "bmp");
 
   @Override
-  public void actionPerformed(AnActionEvent e) {
-    final Project project = e == null ? null : e.getData(CommonDataKeys.PROJECT);
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
+    final Project project = e == null ? null : e.getData(Project.KEY);
     assert project != null;
-    ProgressManager.getInstance().runProcessWithProgressSynchronously(new Runnable() {
-      @Override
-      public void run() {
-        collectAndShowDuplicates(project);
-      }
-    }, "Gathering images", true, project);
+    ProgressManager.getInstance()
+      .runProcessWithProgressSynchronously(() -> collectAndShowDuplicates(project), "Gathering images", true, project);
   }
 
   private static void collectAndShowDuplicates(final Project project) {
@@ -54,13 +51,13 @@ public class ShowImageDuplicatesAction extends AnAction {
     if (indicator != null && !indicator.isCanceled()) {
       indicator.setText("Collecting project images...");
       indicator.setIndeterminate(false);
-      final List<VirtualFile> images = new ArrayList<VirtualFile>();
+      final List<VirtualFile> images = new ArrayList<>();
       for (String ext : IMAGE_EXTENSIONS) {
         images.addAll(FilenameIndex.getAllFilesByExt(project, ext));
       }
 
-      final Map<Long, Set<VirtualFile>> duplicates = new HashMap<Long, Set<VirtualFile>>();
-      final Map<Long, VirtualFile> all = new HashMap<Long, VirtualFile>();
+      final Map<Long, Set<VirtualFile>> duplicates = new HashMap<>();
+      final Map<Long, VirtualFile> all = new HashMap<>();
       for (int i = 0; i < images.size(); i++) {
         indicator.setFraction((double)(i + 1) / (double)images.size());
         final VirtualFile file = images.get(i);
@@ -68,7 +65,7 @@ public class ShowImageDuplicatesAction extends AnAction {
         final long length = file.getLength();
         if (all.containsKey(length)) {
           if (!duplicates.containsKey(length)) {
-            final HashSet<VirtualFile> files = new HashSet<VirtualFile>();
+            final HashSet<VirtualFile> files = new HashSet<>();
             files.add(all.get(length));
             duplicates.put(length, files);
           }
@@ -82,16 +79,18 @@ public class ShowImageDuplicatesAction extends AnAction {
     }
   }
 
-  private static void showResults(final Project project, final List<VirtualFile> images,
-                                  Map<Long, Set<VirtualFile>> duplicates,
-                                  Map<Long, VirtualFile> all) {
+  private static void showResults(
+    final Project project, final List<VirtualFile> images,
+    Map<Long, Set<VirtualFile>> duplicates,
+    Map<Long, VirtualFile> all
+  ) {
     final ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
     if (indicator == null || indicator.isCanceled()) return;
     indicator.setText("MD5 check");
 
     int count = 0;
     for (Set set : duplicates.values()) count+=set.size();
-    final Map<String, Set<VirtualFile>> realDuplicates = new HashMap<String, Set<VirtualFile>>();
+    final Map<String, Set<VirtualFile>> realDuplicates = new HashMap<>();
     int seek = 0;
     for (Set<VirtualFile> files : duplicates.values()) {
       for (VirtualFile file : files) {
@@ -102,7 +101,7 @@ public class ShowImageDuplicatesAction extends AnAction {
           if (realDuplicates.containsKey(md5)) {
             realDuplicates.get(md5).add(file);
           } else {
-            final HashSet<VirtualFile> set = new HashSet<VirtualFile>();
+            final HashSet<VirtualFile> set = new HashSet<>();
             set.add(file);
             realDuplicates.put(md5, set);
           }
@@ -112,7 +111,7 @@ public class ShowImageDuplicatesAction extends AnAction {
       }
     }
     count = 0;
-    for (String key : new ArrayList<String>(realDuplicates.keySet())) {
+    for (String key : new ArrayList<>(realDuplicates.keySet())) {
       final int size = realDuplicates.get(key).size();
       if (size == 1) {
         realDuplicates.remove(key);
@@ -121,18 +120,13 @@ public class ShowImageDuplicatesAction extends AnAction {
       }
     }
 
-    ApplicationManager.getApplication().invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        new ImageDuplicateResultsDialog(project, images, realDuplicates).show();
-      }
-    });
-
+    project.getApplication().invokeLater(() -> new ImageDuplicateResultsDialog(project, images, realDuplicates).show());
   }
 
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
-    e.getPresentation().setEnabledAndVisible((e == null ? null : e.getData(CommonDataKeys.PROJECT)) != null);
+    e.getPresentation().setEnabledAndVisible((e == null ? null : e.getData(Project.KEY)) != null);
   }
 
   public static byte[] createChecksum(InputStream fis) throws Exception {

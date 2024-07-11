@@ -29,6 +29,7 @@ import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.project.Project;
 import consulo.ui.Label;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.event.AnActionListener;
@@ -53,6 +54,7 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.List;
 import java.util.*;
 
@@ -67,7 +69,7 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
   @Nonnull
   private final EventDispatcher<SelectedListChangeListener> myDispatcher =
           EventDispatcher.create(SelectedListChangeListener.class);
-  @jakarta.annotation.Nullable
+  @Nullable
   private final Runnable myRebuildListListener;
   @Nonnull
   private final VcsConfiguration myVcsConfiguration;
@@ -77,15 +79,17 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
   private AnAction myMoveActionWithCustomShortcut;
 
   // todo terrible constructor
-  public MultipleChangeListBrowser(@Nonnull Project project,
-                                   @Nonnull List<? extends ChangeList> changeLists,
-                                   @Nonnull List<Object> changes,
-                                   @jakarta.annotation.Nullable ChangeList initialListSelection,
-                                   boolean capableOfExcludingChanges,
-                                   boolean highlightProblems,
-                                   @Nullable Runnable rebuildListListener,
-                                   @jakarta.annotation.Nullable Runnable inclusionListener,
-                                   boolean unversionedFilesEnabled) {
+  public MultipleChangeListBrowser(
+    @Nonnull Project project,
+    @Nonnull List<? extends ChangeList> changeLists,
+    @Nonnull List<Object> changes,
+    @Nullable ChangeList initialListSelection,
+    boolean capableOfExcludingChanges,
+    boolean highlightProblems,
+    @Nullable Runnable rebuildListListener,
+    @Nullable Runnable inclusionListener,
+    boolean unversionedFilesEnabled
+  ) {
     super(project, changes, capableOfExcludingChanges, highlightProblems, inclusionListener, ChangesBrowser.MyUseCase.LOCAL_CHANGES, null,
           Object.class);
     myRebuildListListener = rebuildListListener;
@@ -127,10 +131,12 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
   }
 
   @Override
-  protected void setInitialSelection(@Nonnull List<? extends ChangeList> changeLists,
-                                     @Nonnull List<Object> changes,
-                                     @jakarta.annotation.Nullable ChangeList initialListSelection) {
-    myAllChanges = ContainerUtil.newArrayList();
+  protected void setInitialSelection(
+    @Nonnull List<? extends ChangeList> changeLists,
+    @Nonnull List<Object> changes,
+    @Nullable ChangeList initialListSelection
+  ) {
+    myAllChanges = new ArrayList<>();
     mySelectedChangeList = initialListSelection;
 
     for (ChangeList list : changeLists) {
@@ -156,7 +162,7 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
     myDispatcher.addListener(listener);
   }
 
-  private void setSelectedList(@jakarta.annotation.Nullable ChangeList list) {
+  private void setSelectedList(@Nullable ChangeList list) {
     mySelectedChangeList = list;
     rebuildList();
     myDispatcher.getMulticaster().selectedListChanged();
@@ -181,7 +187,7 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
 
   @Nonnull
   private Collection<Change> getLocalChanges() {
-    Collection<Change> result = ContainerUtil.newArrayList();
+    Collection<Change> result = new ArrayList<>();
     ChangeListManager manager = ChangeListManager.getInstance(myProject);
 
     for (LocalChangeList list : manager.getChangeListsCopy()) {
@@ -203,9 +209,11 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
 
   @Nonnull
   @Override
-  protected DefaultTreeModel buildTreeModel(@Nonnull List<Object> objects,
-                                            @jakarta.annotation.Nullable ChangeNodeDecorator changeNodeDecorator,
-                                            boolean showFlatten) {
+  protected DefaultTreeModel buildTreeModel(
+    @Nonnull List<Object> objects,
+    @Nullable ChangeNodeDecorator changeNodeDecorator,
+    boolean showFlatten
+  ) {
     ChangeListManagerImpl manager = ChangeListManagerImpl.getInstanceImpl(myProject);
     TreeModelBuilder builder = new TreeModelBuilder(myProject, showFlatten);
 
@@ -220,7 +228,7 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
   @Nonnull
   @Override
   protected List<Object> getSelectedObjects(@Nonnull ChangesBrowserNode<Object> node) {
-    List<Object> result = ContainerUtil.newArrayList();
+    List<Object> result = new ArrayList<>();
 
     result.addAll(node.getAllChangesUnder());
     if (isShowUnversioned() && isUnderUnversioned(node)) {
@@ -230,7 +238,7 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
     return result;
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   @Override
   protected Object getLeadSelectedObject(@Nonnull ChangesBrowserNode node) {
     Object result = null;
@@ -254,8 +262,8 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
   @Override
   public List<VirtualFile> getIncludedUnversionedFiles() {
     return isShowUnversioned()
-           ? ContainerUtil.findAll(myViewer.getIncludedChanges(), VirtualFile.class)
-           : Collections.<VirtualFile>emptyList();
+      ? ContainerUtil.findAll(myViewer.getIncludedChanges(), VirtualFile.class)
+      : Collections.<VirtualFile>emptyList();
   }
 
   @Override
@@ -273,7 +281,7 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
     return result;
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private ChangesBrowserUnversionedFilesNode findUnversionedFilesNode() {
     //noinspection unchecked
     Enumeration<TreeNode> nodes = myViewer.getRoot().breadthFirstEnumeration();
@@ -284,7 +292,7 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
   @Nonnull
   @Override
   public List<Change> getSelectedChanges() {
-    Set<Change> changes = ContainerUtil.newLinkedHashSet();
+    Set<Change> changes = new LinkedHashSet<>();
     TreePath[] paths = myViewer.getSelectionPaths();
 
     if (paths != null) {
@@ -315,7 +323,8 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
 
     toolBarGroup.add(new AnAction("Refresh Changes", null, AllIcons.Actions.Refresh) {
       @Override
-      public void actionPerformed(AnActionEvent e) {
+      @RequiredUIAccess
+      public void actionPerformed(@Nonnull AnActionEvent e) {
         rebuildList();
       }
     });
@@ -347,12 +356,8 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
   protected void afterDiffRefresh() {
     rebuildList();
     setDataIsDirty(false);
-    ApplicationManager.getApplication().invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        IdeFocusManager.findInstance().requestFocus(myViewer.getPreferredFocusedComponent(), true);
-      }
-    });
+    myProject.getApplication()
+      .invokeLater(() -> IdeFocusManager.findInstance().requestFocus(myViewer.getPreferredFocusedComponent(), true));
   }
 
   @Override
@@ -363,27 +368,18 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
   }
 
   private void updateListsInChooser() {
-    Runnable runnable = new Runnable() {
-      public void run() {
-        myChangeListChooser.updateLists(ChangeListManager.getInstance(myProject).getChangeListsCopy());
-      }
-    };
+    Runnable runnable = () -> myChangeListChooser.updateLists(ChangeListManager.getInstance(myProject).getChangeListsCopy());
     if (SwingUtilities.isEventDispatchThread()) {
       runnable.run();
     }
     else {
-      ApplicationManager.getApplication().invokeLater(runnable, IdeaModalityState.stateForComponent(this));
+      myProject.getApplication().invokeLater(runnable, IdeaModalityState.stateForComponent(this));
     }
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private static ChangeList findDefaultList(@Nonnull List<? extends ChangeList> lists) {
-    return ContainerUtil.find(lists, new Condition<ChangeList>() {
-      @Override
-      public boolean value(@Nonnull ChangeList list) {
-        return list instanceof LocalChangeList && ((LocalChangeList)list).isDefault();
-      }
-    });
+    return ContainerUtil.find(lists, list -> list instanceof LocalChangeList localChangeList && localChangeList.isDefault());
   }
 
   private class ChangeListChooser extends JPanel {
@@ -405,11 +401,13 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
         }
       });
 
-      myChooser.addItemListener(e -> {
-        if (e.getStateChange() == ItemEvent.SELECTED) {
-          final LocalChangeList changeList = (LocalChangeList)myChooser.getSelectedItem();
-          setSelectedList(changeList);
-          myChooser.setToolTipText(changeList == null ? "" : (changeList.getName()));
+      myChooser.addItemListener(new ItemListener() {
+        public void itemStateChanged(ItemEvent e) {
+          if (e.getStateChange() == ItemEvent.SELECTED) {
+            final LocalChangeList changeList = (LocalChangeList)myChooser.getSelectedItem();
+            setSelectedList(changeList);
+            myChooser.setToolTipText(changeList == null ? "" : (changeList.getName()));
+          }
         }
       });
 

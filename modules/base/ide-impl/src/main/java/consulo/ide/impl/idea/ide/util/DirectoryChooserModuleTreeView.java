@@ -64,16 +64,14 @@ public class DirectoryChooserModuleTreeView implements DirectoryChooserView {
     myTree.setRootVisible(false);
     myTree.setShowsRootHandles(true);
     myTree.setCellRenderer(new MyTreeCellRenderer());
-    new TreeSpeedSearch(myTree, o -> {
-      final Object userObject = ((DefaultMutableTreeNode)o.getLastPathComponent()).getUserObject();
-      if (userObject instanceof Module) {
-        return ((Module)userObject).getName();
-      }
-      else {
-        if (userObject == null) return "";
-        return userObject.toString();
-      }
-    }, true);
+    new TreeSpeedSearch(
+      myTree,
+      o -> {
+        final Object userObject = ((DefaultMutableTreeNode)o.getLastPathComponent()).getUserObject();
+        return userObject instanceof Module module ? module.getName() : userObject == null ? "" : userObject.toString();
+      },
+      true
+    );
   }
 
   @Override
@@ -166,16 +164,18 @@ public class DirectoryChooserModuleTreeView implements DirectoryChooserView {
       public int compare(DefaultMutableTreeNode node1, DefaultMutableTreeNode node2) {
         final Object o1 = node1.getUserObject();
         final Object o2 = node2.getUserObject();
-        if (o1 instanceof Module && o2 instanceof Module) {
-          return ((Module)o1).getName().compareToIgnoreCase(((Module)o2).getName());
+        if (o1 instanceof Module module1 && o2 instanceof Module module2) {
+          return module1.getName().compareToIgnoreCase(module2.getName());
         }
         if (o1 instanceof ModuleGroup && o2 instanceof ModuleGroup) {
           return o1.toString().compareToIgnoreCase(o2.toString());
         }
-        if (o1 instanceof ModuleGroup) return -1;
-        if (o1 instanceof DirectoryChooser.ItemWrapper && o2 instanceof DirectoryChooser.ItemWrapper) {
-          final VirtualFile virtualFile1 = ((DirectoryChooser.ItemWrapper)o1).getDirectory().getVirtualFile();
-          final VirtualFile virtualFile2 = ((DirectoryChooser.ItemWrapper)o2).getDirectory().getVirtualFile();
+        if (o1 instanceof ModuleGroup) {
+          return -1;
+        }
+        if (o1 instanceof DirectoryChooser.ItemWrapper itemWrapper1 && o2 instanceof DirectoryChooser.ItemWrapper itemWrapper2) {
+          final VirtualFile virtualFile1 = itemWrapper1.getDirectory().getVirtualFile();
+          final VirtualFile virtualFile2 = itemWrapper2.getDirectory().getVirtualFile();
           return Comparing.compare(virtualFile1.getPath(), virtualFile2.getPath());
         }
         return 1;
@@ -212,7 +212,7 @@ public class DirectoryChooserModuleTreeView implements DirectoryChooserView {
     final TreePath selectionPath = myTree.getSelectionPath();
     if (selectionPath == null) return null;
     final DefaultMutableTreeNode node = (DefaultMutableTreeNode)selectionPath.getLastPathComponent();
-    return node.getUserObject() instanceof DirectoryChooser.ItemWrapper ? (DirectoryChooser.ItemWrapper)node.getUserObject() : null;
+    return node.getUserObject() instanceof DirectoryChooser.ItemWrapper itemWrapper ? itemWrapper : null;
   }
 
 
@@ -221,16 +221,17 @@ public class DirectoryChooserModuleTreeView implements DirectoryChooserView {
     @RequiredUIAccess
     public void customizeCellRenderer(JTree tree, Object nodeValue, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
       final Object value = ((DefaultMutableTreeNode)nodeValue).getUserObject();
-      if (value instanceof DirectoryChooser.ItemWrapper) {
-        DirectoryChooser.ItemWrapper wrapper = (DirectoryChooser.ItemWrapper)value;
+      if (value instanceof DirectoryChooser.ItemWrapper wrapper) {
         DirectoryChooser.PathFragment[] fragments = wrapper.getFragments();
         for (DirectoryChooser.PathFragment fragment : fragments) {
-          append(fragment.getText(), fragment.isCommon() ? SimpleTextAttributes.REGULAR_ATTRIBUTES : SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
+          append(
+            fragment.getText(),
+            fragment.isCommon() ? SimpleTextAttributes.REGULAR_ATTRIBUTES : SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES
+          );
         }
         setIcon(wrapper.getIcon());
       }
-      else if (value instanceof Module) {
-        final Module module = (Module)value;
+      else if (value instanceof Module module) {
         append(module.getName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
         setIcon(AllIcons.Nodes.Module);
       }

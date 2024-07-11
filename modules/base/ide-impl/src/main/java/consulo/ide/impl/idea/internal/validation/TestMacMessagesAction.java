@@ -15,17 +15,16 @@
  */
 package consulo.ide.impl.idea.internal.validation;
 
+import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 
+import consulo.ui.ex.awt.UIUtil;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * @author Konstantin Bulenkov
@@ -34,7 +33,7 @@ public class TestMacMessagesAction extends AnAction {
   static int num = 1;
   @Override
   public void actionPerformed(final AnActionEvent e) {
-    new DialogWrapper(e.getData(CommonDataKeys.PROJECT)) {
+    new DialogWrapper(e.getData(Project.KEY)) {
       {
         setScalableSize(500, 500);
         setTitle("Dialog 1");
@@ -45,31 +44,21 @@ public class TestMacMessagesAction extends AnAction {
       @Override
       protected JComponent createCenterPanel() {
         final JButton button = new JButton("Click me");
-        button.addActionListener(new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            new DialogWrapper(e.getData(CommonDataKeys.PROJECT)) {
-              {
-                setScalableSize(400, 400);
-                setTitle("Dialog 2");
-                init();
-              }
-              @Nullable
-              @Override
-              protected JComponent createCenterPanel() {
-                final JButton b = new JButton("Click me again " + num);
-                num++;
-                b.addActionListener(new ActionListener() {
-                  @Override
-                  public void actionPerformed(ActionEvent e) {
-                    Messages.showYesNoDialog(b, "Blah-blah", "Error", Messages.getQuestionIcon());
-                  }
-                });
-                return b;
-              }
-            }.show();
+        button.addActionListener(event -> new DialogWrapper(e.getData(Project.KEY)) {
+          {
+            setScalableSize(400, 400);
+            setTitle("Dialog 2");
+            init();
           }
-        });
+          @Nullable
+          @Override
+          protected JComponent createCenterPanel() {
+            final JButton b = new JButton("Click me again " + num);
+            num++;
+            b.addActionListener(e1 -> Messages.showYesNoDialog(b, "Blah-blah", "Error", UIUtil.getQuestionIcon()));
+            return b;
+          }
+        }.show());
         return button;
       }
     }.show();

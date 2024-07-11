@@ -16,22 +16,22 @@
 package consulo.ide.impl.idea.openapi.diff.impl.patch;
 
 import consulo.application.progress.ProgressManager;
+import consulo.ide.impl.idea.openapi.vcs.changes.SortByVcsRoots;
+import consulo.ide.impl.idea.util.containers.Convertor;
+import consulo.platform.Platform;
 import consulo.project.Project;
-import consulo.application.util.SystemInfo;
+import consulo.util.collection.MultiMap;
+import consulo.util.lang.BeforeAfter;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.VcsOutgoingChangesProvider;
 import consulo.versionControlSystem.change.BinaryContentRevision;
-import consulo.versionControlSystem.change.ChangesUtil;
-import consulo.versionControlSystem.root.VcsRoot;
-import consulo.ide.impl.idea.openapi.vcs.changes.*;
-import consulo.util.lang.BeforeAfter;
-import consulo.ide.impl.idea.util.containers.Convertor;
-import consulo.util.collection.MultiMap;
 import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.versionControlSystem.change.ContentRevision;
-
+import consulo.versionControlSystem.root.VcsRoot;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -44,16 +44,13 @@ public class IdeaTextPatchBuilder {
   }
 
   public static List<BeforeAfter<AirContentRevision>> revisionsConvertor(final Project project, final List<Change> changes) throws VcsException {
-    final List<BeforeAfter<AirContentRevision>> result = new ArrayList<BeforeAfter<AirContentRevision>>(changes.size());
+    final List<BeforeAfter<AirContentRevision>> result = new ArrayList<>(changes.size());
 
-    final Convertor<Change, FilePath> beforePrefferingConvertor = new Convertor<Change, FilePath>() {
-      @Override
-      public FilePath convert(Change o) {
-        final FilePath before = ChangesUtil.getBeforePath(o);
-        return before == null ? ChangesUtil.getAfterPath(o) : before;
-      }
+    final Convertor<Change, FilePath> beforePrefferingConvertor = o -> {
+      final FilePath before = ChangesUtil.getBeforePath(o);
+      return before == null ? ChangesUtil.getAfterPath(o) : before;
     };
-    final MultiMap<VcsRoot,Change> byRoots = new SortByVcsRoots<Change>(project, beforePrefferingConvertor).sort(changes);
+    final MultiMap<VcsRoot,Change> byRoots = new SortByVcsRoots<>(project, beforePrefferingConvertor).sort(changes);
 
     for (VcsRoot root : byRoots.keySet()) {
       final Collection<Change> rootChanges = byRoots.get(root);
@@ -68,8 +65,10 @@ public class IdeaTextPatchBuilder {
 
       for (Change change : basedOnLocal) {
         // dates are here instead of numbers
-        result.add(new BeforeAfter<AirContentRevision>(convertRevision(change.getBeforeRevision(), provider),
-                                                       convertRevision(change.getAfterRevision(), provider)));
+        result.add(new BeforeAfter<>(
+          convertRevision(change.getBeforeRevision(), provider),
+          convertRevision(change.getAfterRevision(), provider))
+        );
       }
     }
     return result;
@@ -77,7 +76,7 @@ public class IdeaTextPatchBuilder {
 
   private static void addConvertChanges(final Collection<Change> changes, final List<BeforeAfter<AirContentRevision>> result) {
     for (Change change : changes) {
-      result.add(new BeforeAfter<AirContentRevision>(convertRevisionToAir(change.getBeforeRevision()), convertRevisionToAir(change.getAfterRevision())));
+      result.add(new BeforeAfter<>(convertRevisionToAir(change.getBeforeRevision()), convertRevisionToAir(change.getAfterRevision())));
     }
   }
 
@@ -91,33 +90,35 @@ public class IdeaTextPatchBuilder {
                                            final boolean reversePatch, final boolean includeBaseText) throws VcsException {
     final Collection<BeforeAfter<AirContentRevision>> revisions;
     if (project != null) {
-      revisions = revisionsConvertor(project, new ArrayList<Change>(changes));
+      revisions = revisionsConvertor(project, new ArrayList<>(changes));
     } else {
-      revisions = new ArrayList<BeforeAfter<AirContentRevision>>(changes.size());
+      revisions = new ArrayList<>(changes.size());
       for (Change change : changes) {
-        revisions.add(new BeforeAfter<AirContentRevision>(convertRevisionToAir(change.getBeforeRevision()), convertRevisionToAir(change.getAfterRevision())));
+        revisions.add(new BeforeAfter<>(convertRevisionToAir(change.getBeforeRevision()), convertRevisionToAir(change.getAfterRevision())));
       }
     }
-    return TextPatchBuilder.buildPatch(revisions, basePath, reversePatch, SystemInfo.isFileSystemCaseSensitive, new Runnable() {
-      @Override
-      public void run() {
-        ProgressManager.checkCanceled();
-      }
-    }, includeBaseText);
+    return TextPatchBuilder.buildPatch(
+      revisions,
+      basePath,
+      reversePatch,
+      Platform.current().fs().isCaseSensitive(),
+      ProgressManager::checkCanceled,
+      includeBaseText
+    );
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private static AirContentRevision convertRevisionToAir(final ContentRevision cr) {
     return convertRevisionToAir(cr, null);
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private static AirContentRevision convertRevisionToAir(final ContentRevision cr, final Long ts) {
     if (cr == null) return null;
     final FilePath fp = cr.getFile();
     final StaticPathDescription description = new StaticPathDescription(fp.isDirectory(),
                                                                         ts == null ? fp.getIOFile().lastModified() : ts, fp.getPath());
-    if (cr instanceof BinaryContentRevision) {
+    if (cr instanceof BinaryContentRevision bcr) {
       return new AirContentRevision() {
         @Override
         public boolean isBinary() {
@@ -129,7 +130,7 @@ public class IdeaTextPatchBuilder {
         }
         @Override
         public byte[] getContentAsBytes() throws VcsException {
-          return ((BinaryContentRevision) cr).getBinaryContent();
+          return bcr.getBinaryContent();
         }
         @Override
         public String getRevisionNumber() {
@@ -178,8 +179,8 @@ public class IdeaTextPatchBuilder {
     }
   }
 
-  @jakarta.annotation.Nullable
-  private static AirContentRevision convertRevision(@jakarta.annotation.Nullable final ContentRevision cr, final VcsOutgoingChangesProvider provider) {
+  @Nullable
+  private static AirContentRevision convertRevision(@Nullable final ContentRevision cr, final VcsOutgoingChangesProvider provider) {
     if (cr == null) return null;
     final Date date = provider.getRevisionDate(cr.getRevisionNumber(), cr.getFile());
     final Long ts = date == null ? null : date.getTime();

@@ -26,8 +26,9 @@ import consulo.fileChooser.IdeaFileChooser;
 import consulo.language.editor.impl.internal.intention.IntentionManagerSettings;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.internal.intention.IntentionActionMetaData;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.lang.StringUtil;
@@ -47,14 +48,15 @@ public class DumpIntentionsAction extends AnAction implements DumbAware {
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
     final VirtualFile file =
-      IdeaFileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), e.getData(CommonDataKeys.PROJECT), null);
+      IdeaFileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), e.getData(Project.KEY), null);
     if (file != null) {
       final List<IntentionActionMetaData> list = IntentionManagerSettings.getInstance().getMetaData();
       final File root = VfsUtil.virtualToIoFile(file);
       Element el = new Element("root");
-      Map<String, Element> categoryMap = new HashMap<String, Element>();
+      Map<String, Element> categoryMap = new HashMap<>();
       for (IntentionActionMetaData metaData : list) {
 
         try {
@@ -80,7 +82,13 @@ public class DumpIntentionsAction extends AnAction implements DumbAware {
     }
   }
 
-  private static Element getCategoryElement(Map<String, Element> categoryMap, Element rootElement, IntentionActionMetaData metaData, String key, int idx) {
+  private static Element getCategoryElement(
+    Map<String, Element> categoryMap,
+    Element rootElement,
+    IntentionActionMetaData metaData,
+    String key,
+    int idx
+  ) {
     Element element = categoryMap.get(key);
     if (element == null) {
 
@@ -90,14 +98,21 @@ public class DumpIntentionsAction extends AnAction implements DumbAware {
       if (idx == 0) {
         rootElement.addContent(element);
       } else {
-        getCategoryElement(categoryMap, rootElement, metaData, StringUtil.join(metaData.myCategory, 0, metaData.myCategory.length - 1, "."), idx - 1).addContent(element);
+        getCategoryElement(
+          categoryMap,
+          rootElement,
+          metaData,
+          StringUtil.join(metaData.myCategory, 0, metaData.myCategory.length - 1, "."),
+          idx - 1
+        ).addContent(element);
       }
     }
     return element;
   }
 
   @Override
+  @RequiredUIAccess
   public void update(final AnActionEvent e) {
-    e.getPresentation().setEnabled(e.getData(CommonDataKeys.PROJECT) != null);
+    e.getPresentation().setEnabled(e.getData(Project.KEY) != null);
   }
 }

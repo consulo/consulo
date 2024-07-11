@@ -1,15 +1,14 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.actionSystem.impl;
 
-import consulo.language.editor.CommonDataKeys;
 import consulo.annotation.DeprecationInfo;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.internal.BuilderDataContext;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,7 +41,7 @@ public final class SimpleDataContext extends BuilderDataContext implements DataC
 
   @Nonnull
   public static DataContext getProjectContext(@Nonnull Project project) {
-    return getSimpleContext(CommonDataKeys.PROJECT, project);
+    return getSimpleContext(Project.KEY, project);
   }
 
   @Nonnull

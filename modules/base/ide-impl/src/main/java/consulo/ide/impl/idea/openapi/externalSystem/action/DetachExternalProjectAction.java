@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.openapi.externalSystem.action;
 
 import consulo.application.AllIcons;
+import consulo.externalSystem.localize.ExternalSystemLocalize;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.externalSystem.model.ExternalSystemDataKeys;
@@ -28,10 +29,11 @@ import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemUtil;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import jakarta.annotation.Nonnull;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -42,8 +44,8 @@ import java.util.List;
 public class DetachExternalProjectAction extends AnAction implements DumbAware {
 
   public DetachExternalProjectAction() {
-    getTemplatePresentation().setText(ExternalSystemBundle.message("action.detach.external.project.text", "external"));
-    getTemplatePresentation().setDescription(ExternalSystemBundle.message("action.detach.external.project.description"));
+    getTemplatePresentation().setTextValue(ExternalSystemLocalize.actionDetachExternalProjectText("external"));
+    getTemplatePresentation().setDescriptionValue(ExternalSystemLocalize.actionDetachExternalProjectDescription());
     getTemplatePresentation().setIcon(AllIcons.General.Remove);
   }
 
@@ -83,7 +85,7 @@ public class DetachExternalProjectAction extends AnAction implements DumbAware {
 
     // Process orphan modules.
     String externalSystemIdAsString = info.externalSystemId.toString();
-    List<Module> orphanModules = ContainerUtilRt.newArrayList();
+    List<Module> orphanModules = new ArrayList<>();
     for (Module module : ModuleManager.getInstance(info.ideProject).getModules()) {
       String systemId = ExternalSystemApiUtil.getExtensionSystemOption(module, ExternalSystemConstants.EXTERNAL_SYSTEM_ID_KEY);
       if (!externalSystemIdAsString.equals(systemId)) {

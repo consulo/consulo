@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.diff.impl.patch;
 
+import consulo.application.util.diff.FilesTooBigForDiffException;
 import consulo.ide.impl.idea.openapi.diff.ex.DiffFragment;
 import consulo.ide.impl.idea.openapi.diff.impl.ComparisonPolicy;
 import consulo.ide.impl.idea.openapi.diff.impl.fragments.LineFragment;
@@ -23,13 +24,12 @@ import consulo.ide.impl.idea.openapi.diff.impl.processing.DiffFragmentsProcessor
 import consulo.ide.impl.idea.openapi.diff.impl.processing.DiffPolicy;
 import consulo.ide.impl.idea.openapi.diff.impl.string.DiffString;
 import consulo.ide.impl.idea.openapi.diff.impl.util.TextDiffTypeEnum;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.versionControlSystem.VcsException;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.BeforeAfter;
-import consulo.application.util.diff.FilesTooBigForDiffException;
-import org.jetbrains.annotations.NonNls;
+import consulo.versionControlSystem.VcsException;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
