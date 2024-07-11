@@ -24,7 +24,6 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
-import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
@@ -50,7 +49,7 @@ public class UnindentSelectionAction extends EditorAction {
     @RequiredWriteAction
     @Override
     public void executeWriteAction(Editor editor, DataContext dataContext) {
-      Project project = dataContext.getData(CommonDataKeys.PROJECT);
+      Project project = dataContext.getData(Project.KEY);
       unindentSelection(editor, project);
     }
 
@@ -63,21 +62,21 @@ public class UnindentSelectionAction extends EditorAction {
   private static void unindentSelection(Editor editor, Project project) {
     int oldSelectionStart = editor.getSelectionModel().getSelectionStart();
     int oldSelectionEnd = editor.getSelectionModel().getSelectionEnd();
-    if(!editor.getSelectionModel().hasSelection()) {
+    if (!editor.getSelectionModel().hasSelection()) {
       oldSelectionStart = editor.getCaretModel().getOffset();
       oldSelectionEnd = oldSelectionStart;
     }
 
     Document document = editor.getDocument();
     int startIndex = document.getLineNumber(oldSelectionStart);
-    if(startIndex == -1) {
+    if (startIndex == -1) {
       startIndex = document.getLineCount() - 1;
     }
     int endIndex = document.getLineNumber(oldSelectionEnd);
-    if(endIndex > 0 && document.getLineStartOffset(endIndex) == oldSelectionEnd && endIndex > startIndex) {
+    if (endIndex > 0 && document.getLineStartOffset(endIndex) == oldSelectionEnd && endIndex > startIndex) {
       endIndex --;
     }
-    if(endIndex == -1) {
+    if (endIndex == -1) {
       endIndex = document.getLineCount() - 1;
     }
 

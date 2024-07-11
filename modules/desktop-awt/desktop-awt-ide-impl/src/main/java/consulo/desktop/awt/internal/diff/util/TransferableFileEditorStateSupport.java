@@ -37,19 +37,15 @@ import jakarta.annotation.Nullable;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 
 public class TransferableFileEditorStateSupport {
   @Nonnull
   private static final Key<Map<String, Map<String, String>>> TRANSFERABLE_FILE_EDITOR_STATE =
-          Key.create("Diff.TransferableFileEditorState");
+    Key.create("Diff.TransferableFileEditorState");
 
-  private static final Predicate<BinaryEditorHolder> IS_SUPPORTED = holder -> {
-    return getEditorState(holder.getEditor()) != null;
-  };
+  private static final Predicate<BinaryEditorHolder> IS_SUPPORTED = holder -> getEditorState(holder.getEditor()) != null;
 
   @Nonnull
   private final DiffSettingsHolder.DiffSettings mySettings;
@@ -57,9 +53,11 @@ public class TransferableFileEditorStateSupport {
   private final List<BinaryEditorHolder> myHolders;
   private final boolean mySupported;
 
-  public TransferableFileEditorStateSupport(@Nonnull DiffSettingsHolder.DiffSettings settings,
-                                            @Nonnull List<BinaryEditorHolder> holders,
-                                            @Nonnull Disposable disposable) {
+  public TransferableFileEditorStateSupport(
+    @Nonnull DiffSettingsHolder.DiffSettings settings,
+    @Nonnull List<BinaryEditorHolder> holders,
+    @Nonnull Disposable disposable
+  ) {
     mySettings = settings;
     myHolders = holders;
     mySupported = consulo.util.collection.ContainerUtil.or(myHolders, IS_SUPPORTED);
@@ -93,7 +91,7 @@ public class TransferableFileEditorStateSupport {
   public void updateContextHints(@Nonnull DiffRequest request, @Nonnull DiffContext context) {
     if (!isEnabled()) return;
 
-    Set<String> updated = ContainerUtil.newHashSet();
+    Set<String> updated = new HashSet<>();
 
     for (BinaryEditorHolder holder : myHolders) {
       TransferableFileEditorState state = getEditorState(holder.getEditor());
@@ -109,9 +107,11 @@ public class TransferableFileEditorStateSupport {
     return new ToggleSynchronousEditorStatesAction(this);
   }
 
-  private static void readContextData(@Nonnull DiffContext context,
-                                      @Nonnull FileEditor editor,
-                                      @Nonnull TransferableFileEditorState state) {
+  private static void readContextData(
+    @Nonnull DiffContext context,
+    @Nonnull FileEditor editor,
+    @Nonnull TransferableFileEditorState state
+  ) {
     Map<String, Map<String, String>> map = context.getUserData(TRANSFERABLE_FILE_EDITOR_STATE);
     Map<String, String> options = map != null ? map.get(state.getEditorId()) : null;
     if (options == null) return;
@@ -123,7 +123,7 @@ public class TransferableFileEditorStateSupport {
   private static void writeContextData(@Nonnull DiffContext context, @Nonnull TransferableFileEditorState state) {
     Map<String, Map<String, String>> map = context.getUserData(TRANSFERABLE_FILE_EDITOR_STATE);
     if (map == null) {
-      map = ContainerUtil.newHashMap();
+      map = new HashMap<>();
       context.putUserData(TRANSFERABLE_FILE_EDITOR_STATE, map);
     }
 
@@ -133,7 +133,7 @@ public class TransferableFileEditorStateSupport {
   @Nullable
   private static TransferableFileEditorState getEditorState(@Nonnull FileEditor editor) {
     FileEditorState state = editor.getState(FileEditorStateLevel.FULL);
-    return state instanceof TransferableFileEditorState ? (TransferableFileEditorState)state : null;
+    return state instanceof TransferableFileEditorState transferableFileEditorState ? transferableFileEditorState : null;
   }
 
   private class MySynchronizer implements PropertyChangeListener {
@@ -143,7 +143,7 @@ public class TransferableFileEditorStateSupport {
     private boolean myDuringUpdate = false;
 
     public MySynchronizer(@Nonnull List<BinaryEditorHolder> editors) {
-      myEditors = ContainerUtil.map(editors, holder -> holder.getEditor());
+      myEditors = ContainerUtil.map(editors, BinaryEditorHolder::getEditor);
     }
 
     public void install(@Nonnull Disposable disposable) {
@@ -153,12 +153,9 @@ public class TransferableFileEditorStateSupport {
         editor.addPropertyChangeListener(this);
       }
 
-      Disposer.register(disposable, new Disposable() {
-        @Override
-        public void dispose() {
-          for (FileEditor editor : myEditors) {
-            editor.removePropertyChangeListener(MySynchronizer.this);
-          }
+      Disposer.register(disposable, () -> {
+        for (FileEditor editor : myEditors) {
+          editor.removePropertyChangeListener(MySynchronizer.this);
         }
       });
     }

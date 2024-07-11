@@ -144,7 +144,7 @@ public class DiffIterableUtil {
 
   @Nonnull
   public static Iterable<Pair<Range, Boolean>> iterateAll(@Nonnull final DiffIterable iterable) {
-    return () -> new Iterator<Pair<Range, Boolean>>() {
+    return () -> new Iterator<>() {
       @Nonnull
       private final Iterator<Range> myChanges = iterable.changes();
       @Nonnull
@@ -358,9 +358,11 @@ public class DiffIterableUtil {
 
   @SuppressWarnings("unused")
   @Nonnull
-  public static <T> List<LineRangeData> extractDataRanges(@Nonnull List<T> objects1,
-                                                          @Nonnull List<T> objects2,
-                                                          @Nonnull DiffIterable iterable) {
+  public static <T> List<LineRangeData> extractDataRanges(
+    @Nonnull List<T> objects1,
+    @Nonnull List<T> objects2,
+    @Nonnull DiffIterable iterable
+  ) {
     List<LineRangeData> result = new ArrayList<>();
 
     for (Pair<Range, Boolean> pair : iterateAll(iterable)) {

@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.openapi.vcs.merge;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.diff.DiffManager;
 import consulo.diff.DiffRequestFactory;
 import consulo.diff.InvalidDiffRequestException;
@@ -25,18 +25,19 @@ import consulo.diff.merge.MergeRequest;
 import consulo.diff.merge.MergeResult;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.StoreReloadManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.table.ListTableModel;
 import consulo.ui.ex.awt.table.TableView;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.SmartList;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
 import consulo.versionControlSystem.VcsException;
@@ -127,8 +128,8 @@ public class MultipleFileMergeDialog extends DialogWrapper {
         return 10;
       }
     });
-    if (myProvider instanceof MergeProvider2) {
-      myMergeSession = ((MergeProvider2)myProvider).createMergeSession(files);
+    if (myProvider instanceof MergeProvider2 mergeProvider2) {
+      myMergeSession = mergeProvider2.createMergeSession(files);
       Collections.addAll(columns, myMergeSession.getMergeInfoColumns());
     }
     else {
@@ -205,6 +206,7 @@ public class MultipleFileMergeDialog extends DialogWrapper {
     return "MultipleFileMergeDialog";
   }
 
+  @RequiredUIAccess
   private void acceptRevision(final boolean isCurrent) {
     FileDocumentManager.getInstance().saveAllDocuments();
     final Collection<VirtualFile> files = myTable.getSelection();
@@ -214,27 +216,32 @@ public class MultipleFileMergeDialog extends DialogWrapper {
 
     for (final VirtualFile file : files) {
       final Ref<Exception> ex = new Ref<>();
-      ApplicationManager.getApplication().runWriteAction(() -> CommandProcessor.getInstance().executeCommand(myProject, () -> {
-        try {
-          if (!(myProvider instanceof MergeProvider2) || myMergeSession.canMerge(file)) {
-            if (!DiffImplUtil.makeWritable(myProject, file)) {
-              throw new IOException("File is read-only: " + file.getPresentableName());
+      Application.get().runWriteAction(() -> CommandProcessor.getInstance().executeCommand(
+        myProject,
+        () -> {
+          try {
+            if (!(myProvider instanceof MergeProvider2) || myMergeSession.canMerge(file)) {
+              if (!DiffImplUtil.makeWritable(myProject, file)) {
+                throw new IOException("File is read-only: " + file.getPresentableName());
+              }
+              MergeData data = myProvider.loadRevisions(file);
+              if (isCurrent) {
+                file.setBinaryContent(data.CURRENT);
+              }
+              else {
+                file.setBinaryContent(data.LAST);
+                checkMarkModifiedProject(file);
+              }
             }
-            MergeData data = myProvider.loadRevisions(file);
-            if (isCurrent) {
-              file.setBinaryContent(data.CURRENT);
-            }
-            else {
-              file.setBinaryContent(data.LAST);
-              checkMarkModifiedProject(file);
-            }
+            markFileProcessed(file, isCurrent ? MergeSession.Resolution.AcceptedYours : MergeSession.Resolution.AcceptedTheirs);
           }
-          markFileProcessed(file, isCurrent ? MergeSession.Resolution.AcceptedYours : MergeSession.Resolution.AcceptedTheirs);
-        }
-        catch (Exception e) {
-          ex.set(e);
-        }
-      }, "Accept " + (isCurrent ? "Yours" : "Theirs"), null));
+          catch (Exception e) {
+            ex.set(e);
+          }
+        },
+        "Accept " + (isCurrent ? "Yours" : "Theirs"),
+        null
+      ));
       if (!ex.isNull()) {
         //noinspection ThrowableResultOfMethodCallIgnored
         Messages.showErrorDialog(myRootPanel, "Error saving merged data: " + ex.get().getMessage());
@@ -272,6 +279,7 @@ public class MultipleFileMergeDialog extends DialogWrapper {
     }
   }
 
+  @RequiredUIAccess
   private void showMergeDialog() {
     DiffRequestFactory requestFactory = DiffRequestFactory.getInstance();
     Collection<VirtualFile> files = myTable.getSelection();
@@ -308,7 +316,7 @@ public class MultipleFileMergeDialog extends DialogWrapper {
         checkMarkModifiedProject(file);
 
         if (result != MergeResult.CANCEL) {
-          ApplicationManager.getApplication().runWriteAction(() -> markFileProcessed(file, getSessionResolution(result)));
+          Application.get().runWriteAction(() -> markFileProcessed(file, getSessionResolution(result)));
         }
       };
 
@@ -361,6 +369,7 @@ public class MultipleFileMergeDialog extends DialogWrapper {
   }
 
   @Override
+  @RequiredUIAccess
   public JComponent getPreferredFocusedComponent() {
     return myTable;
   }

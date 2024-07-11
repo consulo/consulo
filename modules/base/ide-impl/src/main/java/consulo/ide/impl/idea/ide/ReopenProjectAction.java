@@ -18,9 +18,7 @@ package consulo.ide.impl.idea.ide;
 import consulo.application.dumb.DumbAware;
 import consulo.application.util.UserHomeFileUtil;
 import consulo.ide.impl.idea.ide.impl.ProjectUtil;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
-import consulo.language.editor.CommonDataKeys;
 import consulo.module.content.layer.ModuleExtensionProvider;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
@@ -30,10 +28,12 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.BitUtil;
-
 import jakarta.annotation.Nonnull;
+
 import java.awt.event.InputEvent;
 import java.io.File;
 import java.util.List;
@@ -65,15 +65,21 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
     IdeEventQueueProxy.getInstance().closeAllPopups();
 
     final int modifiers = e.getModifiers();
-    final boolean forceOpenInNewFrame = BitUtil.isSet(modifiers, InputEvent.CTRL_MASK) || BitUtil.isSet(modifiers, InputEvent.SHIFT_MASK) || e.getPlace() == ActionPlaces.WELCOME_SCREEN;
+    final boolean forceOpenInNewFrame = BitUtil.isSet(modifiers, InputEvent.CTRL_MASK)
+      || BitUtil.isSet(modifiers, InputEvent.SHIFT_MASK)
+      || e.getPlace() == ActionPlaces.WELCOME_SCREEN;
 
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (!new File(myProjectPath).exists()) {
-      if (Messages.showDialog(project, "The path " +
-                                       FileUtil.toSystemDependentName(myProjectPath) +
-                                       " does not exist.\n" +
-                                       "If it is on a removable or network drive, please make sure that the drive is connected.", "Reopen Project", new String[]{"OK", "&Remove From List"}, 0,
-                              Messages.getErrorIcon()) == 1) {
+      int result = Messages.showDialog(project,
+        "The path " + FileUtil.toSystemDependentName(myProjectPath) + " does not exist.\n" +
+          "If it is on a removable or network drive, please make sure that the drive is connected.",
+        "Reopen Project",
+        new String[]{"OK", "&Remove From List"},
+        0,
+        UIUtil.getErrorIcon()
+      );
+      if (result == 1) {
         myIsRemoved = true;
         RecentProjectsManager.getInstance().removePath(myProjectPath);
       }

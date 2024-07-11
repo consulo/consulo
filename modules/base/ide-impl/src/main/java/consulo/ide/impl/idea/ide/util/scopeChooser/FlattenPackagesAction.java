@@ -21,44 +21,47 @@
 package consulo.ide.impl.idea.ide.util.scopeChooser;
 
 import consulo.application.AllIcons;
-import consulo.ide.IdeBundle;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.action.ToggleAction;
-import consulo.project.Project;
 import consulo.ide.impl.idea.packageDependencies.DependencyUISettings;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.psi.PsiPackageSupportProviders;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.ToggleAction;
+import jakarta.annotation.Nonnull;
 
 public final class FlattenPackagesAction extends ToggleAction {
   private final Runnable myUpdate;
 
   public FlattenPackagesAction(Runnable update) {
-    super(IdeBundle.message("action.flatten.packages"),
-          IdeBundle.message("action.flatten.packages"), AllIcons.ObjectBrowser.FlattenPackages);
+    super(
+      IdeLocalize.actionFlattenPackages(),
+      IdeLocalize.actionFlattenPackages(),
+      AllIcons.ObjectBrowser.FlattenPackages
+    );
     myUpdate = update;
   }
 
   @Override
   @RequiredUIAccess
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     super.update(e);
-    Project project = e.getData(CommonDataKeys.PROJECT);
-    if(project == null) {
+    Project project = e.getData(Project.KEY);
+    if (project == null) {
       return;
     }
-    if(!PsiPackageSupportProviders.isPackageSupported(project)) {
+    if (!PsiPackageSupportProviders.isPackageSupported(project)) {
       e.getPresentation().setVisible(false);
     }
   }
 
   @Override
-  public boolean isSelected(AnActionEvent event) {
+  public boolean isSelected(@Nonnull AnActionEvent event) {
     return DependencyUISettings.getInstance().UI_FLATTEN_PACKAGES;
   }
 
   @Override
-  public void setSelected(AnActionEvent event, boolean flag) {
+  public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
     DependencyUISettings.getInstance().UI_FLATTEN_PACKAGES = flag;
     myUpdate.run();
   }

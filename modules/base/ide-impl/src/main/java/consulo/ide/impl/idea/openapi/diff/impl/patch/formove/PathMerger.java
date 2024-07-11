@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.openapi.diff.impl.patch.formove;
 
 import consulo.application.util.SystemInfo;
+import consulo.platform.Platform;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.base.FilePathImpl;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.RelativePathCalculator;
@@ -112,7 +113,7 @@ public class PathMerger {
 
   @Nullable
   public static <T> T getBase(final FilePathMerger<T> merger, final String path) {
-    final boolean caseSensitive = SystemInfo.isFileSystemCaseSensitive;
+    final boolean caseSensitive = Platform.current().fs().isCaseSensitive();
     final String[] parts = path.replace("\\", "/").split("/");
     for (int i = parts.length - 1; i >=0; --i) {
       final String part = parts[i];
@@ -140,11 +141,13 @@ public class PathMerger {
       myCurrent = current;
     }
 
+    @Override
     public boolean up() {
       myCurrent = myCurrent.getParent();
       return myCurrent != null;
     }
 
+    @Override
     public boolean down(final String name) {
       VirtualFile nextChild = myCurrent.findChild(name);
       if (nextChild == null) {

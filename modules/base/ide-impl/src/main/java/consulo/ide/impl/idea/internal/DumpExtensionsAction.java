@@ -15,20 +15,19 @@
  */
 package consulo.ide.impl.idea.internal;
 
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.application.Application;
 import consulo.component.ComponentManager;
-import consulo.component.impl.internal.BaseComponentManager;
 import consulo.component.extension.ExtensionPoint;
+import consulo.component.impl.internal.BaseComponentManager;
+import consulo.configurable.Configurable;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
-import consulo.configurable.Configurable;
-import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
 import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +40,7 @@ public class DumpExtensionsAction extends DumbAwareAction {
   public void actionPerformed(@Nonnull AnActionEvent e) {
     List<BaseComponentManager> areas = new ArrayList<>();
     areas.add((BaseComponentManager)Application.get());
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     if (project != null) {
       areas.add((BaseComponentManager)project);
       final Module[] modules = ModuleManager.getInstance(project).getModules();

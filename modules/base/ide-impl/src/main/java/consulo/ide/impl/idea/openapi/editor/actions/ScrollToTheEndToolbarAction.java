@@ -16,14 +16,15 @@
 package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.application.AllIcons;
-import consulo.ui.ex.action.ActionsBundle;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.ToggleAction;
-import consulo.document.Document;
+import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
+import consulo.document.Document;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.application.dumb.DumbAware;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.ToggleAction;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -35,20 +36,20 @@ public class ScrollToTheEndToolbarAction extends ToggleAction implements DumbAwa
   public ScrollToTheEndToolbarAction(@Nonnull final Editor editor) {
     super();
     myEditor = editor;
-    final String message = ActionsBundle.message("action.EditorConsoleScrollToTheEnd.text");
-    getTemplatePresentation().setDescription(message);
-    getTemplatePresentation().setText(message);
+    final LocalizeValue message = ActionLocalize.actionEditorconsolescrolltotheendText();
+    getTemplatePresentation().setDescriptionValue(message);
+    getTemplatePresentation().setTextValue(message);
     getTemplatePresentation().setIcon(AllIcons.RunConfigurations.Scroll_down);
   }
 
   @Override
-  public boolean isSelected(AnActionEvent e) {
+  public boolean isSelected(@Nonnull AnActionEvent e) {
     Document document = myEditor.getDocument();
     return document.getLineCount() == 0 || document.getLineNumber(myEditor.getCaretModel().getOffset()) == document.getLineCount() - 1;
   }
 
   @Override
-  public void setSelected(AnActionEvent e, boolean state) {
+  public void setSelected(@Nonnull AnActionEvent e, boolean state) {
     if (state) {
       EditorUtil.scrollToTheEnd(myEditor);
     }

@@ -20,20 +20,16 @@ import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.util.SystemInfo;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNamePanel;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNamePopupComponent;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoClassModel2;
 import consulo.ide.impl.idea.openapi.project.ProjectUtil;
-import consulo.util.lang.Comparing;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.language.content.ContentFoldersSupportUtil;
 import consulo.ide.internal.DirectoryChooserDialog;
-import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.language.content.ContentFoldersSupportUtil;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -42,6 +38,7 @@ import consulo.language.util.ModuleUtilCore;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.module.content.layer.ContentFolder;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -50,12 +47,15 @@ import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.TabbedPaneWrapper;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -71,7 +71,7 @@ public class DirectoryChooser extends DialogWrapper implements DirectoryChooserD
   private final DirectoryChooserView myView;
   private boolean myFilterExisting;
   private PsiDirectory myDefaultSelection;
-  private List<ItemWrapper> myItems = new ArrayList<ItemWrapper>();
+  private List<ItemWrapper> myItems = new ArrayList<>();
   private PsiElement mySelection;
   private final TabbedPaneWrapper myTabbedPaneWrapper;
   private final ChooseByNamePanel myChooseByNamePanel;
@@ -165,8 +165,8 @@ public class DirectoryChooser extends DialogWrapper implements DirectoryChooserD
   }
 
   private void setSelection(Object element) {
-    if (element instanceof PsiElement) {
-      mySelection = (PsiElement)element;
+    if (element instanceof PsiElement psiElement) {
+      mySelection = psiElement;
     }
   }
 
@@ -196,7 +196,7 @@ public class DirectoryChooser extends DialogWrapper implements DirectoryChooserD
   }
 
   private void buildFragments() {
-    ArrayList<String[]> pathes = new ArrayList<String[]>();
+    ArrayList<String[]> pathes = new ArrayList<>();
     for (int i = 0; i < myView.getItemsSize(); i++) {
       ItemWrapper item = myView.getItemByIndex(i);
       pathes.add(ArrayUtil.toStringArray(FileUtil.splitPath(item.getPresentableUrl())));
@@ -250,7 +250,7 @@ public class DirectoryChooser extends DialogWrapper implements DirectoryChooserD
   }
 
   private static PathFragment[] createFragments(String head, String special, String tail) {
-    ArrayList<PathFragment> list = new ArrayList<PathFragment>(3);
+    ArrayList<PathFragment> list = new ArrayList<>(3);
     if (head != null) {
       if (special != null || tail != null) list.add(new PathFragment(head + File.separatorChar, true));
       else return new PathFragment[]{new PathFragment(head, true)};
@@ -300,7 +300,7 @@ public class DirectoryChooser extends DialogWrapper implements DirectoryChooserD
           commonFragment = path[index];
           continue;
         }
-        if (!Comparing.strEqual(commonFragment, path[index], SystemInfo.isFileSystemCaseSensitive)) return null;
+        if (!Comparing.strEqual(commonFragment, path[index], Platform.current().fs().isCaseSensitive())) return null;
       }
       return commonFragment;
     }
@@ -342,10 +342,10 @@ public class DirectoryChooser extends DialogWrapper implements DirectoryChooserD
         List<ContentFolder> contentFolders = ModuleUtilCore.getContentFolders(myDirectory.getProject());
         for (ContentFolder contentFolder : contentFolders) {
           VirtualFile file = contentFolder.getFile();
-          if(file == null) {
+          if (file == null) {
             continue;
           }
-          if(VfsUtil.isAncestor(file, virtualFile, false)) {
+          if (VfsUtil.isAncestor(file, virtualFile, false)) {
             return ContentFoldersSupportUtil.getContentFolderIcon(contentFolder.getType(), contentFolder.getProperties());
           }
         }
@@ -380,23 +380,26 @@ public class DirectoryChooser extends DialogWrapper implements DirectoryChooserD
         final PsiDirectory directory = getDirectory();
         final VirtualFile virtualFile = directory != null ? directory.getVirtualFile() : null;
         myRelativeToProjectPath = virtualFile != null
-               ? ProjectUtil.calcRelativeToProjectPath(virtualFile, directory.getProject(), true, false, true)
-               : getPresentableUrl();
+          ? ProjectUtil.calcRelativeToProjectPath(virtualFile, directory.getProject(), true, false, true)
+          : getPresentableUrl();
       }
       return myRelativeToProjectPath;
     }
   }
 
   @Override
+  @RequiredUIAccess
   public JComponent getPreferredFocusedComponent(){
     return myView.getComponent();
   }
 
+  @Override
   @RequiredReadAction
   public void fillList(PsiDirectory[] directories, @Nullable PsiDirectory defaultSelection, Project project, String postfixToShow) {
     fillList(directories, defaultSelection, project, postfixToShow, null);
   }
 
+  @Override
   @RequiredReadAction
   public void fillList(PsiDirectory[] directories, @Nullable PsiDirectory defaultSelection, Project project, Map<PsiDirectory,String> postfixes) {
     fillList(directories, defaultSelection, project, null, postfixes);
@@ -414,7 +417,7 @@ public class DirectoryChooser extends DialogWrapper implements DirectoryChooserD
       }
     }
     int selectionIndex = -1;
-    for(int i = 0; i < directories.length; i++){
+    for (int i = 0; i < directories.length; i++){
       PsiDirectory directory = directories[i];
       if (directory.equals(defaultSelection)) {
         selectionIndex = i;
@@ -441,7 +444,7 @@ public class DirectoryChooser extends DialogWrapper implements DirectoryChooserD
     }
 
     int existingIdx = 0;
-    for(int i = 0; i < directories.length; i++){
+    for (int i = 0; i < directories.length; i++){
       PsiDirectory directory = directories[i];
       final String postfixForDirectory;
       if (postfixes == null) {
@@ -510,6 +513,7 @@ public class DirectoryChooser extends DialogWrapper implements DirectoryChooserD
     setOKActionEnabled(myView.getSelectedItem() != null);
   }
 
+  @Override
   @Nullable
   public PsiDirectory getSelectedDirectory() {
     if (mySelection != null) {
@@ -545,18 +549,20 @@ public class DirectoryChooser extends DialogWrapper implements DirectoryChooserD
 
   private class FilterExistentAction extends ToggleAction {
     public FilterExistentAction() {
-      super(RefactoringBundle.message("directory.chooser.hide.non.existent.checkBox.text"),
-            UIUtil.removeMnemonic(RefactoringBundle.message("directory.chooser.hide.non.existent.checkBox.text")),
-            AllIcons.General.Filter);
+      super(
+        RefactoringLocalize.directoryChooserHideNonExistentCheckboxText().get(),
+        UIUtil.removeMnemonic(RefactoringLocalize.directoryChooserHideNonExistentCheckboxText().get()),
+        AllIcons.General.Filter
+      );
     }
 
     @Override
-    public boolean isSelected(AnActionEvent e) {
+    public boolean isSelected(@Nonnull AnActionEvent e) {
       return myFilterExisting;
     }
 
     @Override
-    public void setSelected(AnActionEvent e, boolean state) {
+    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
       myFilterExisting = state;
       final ItemWrapper selectedItem = myView.getSelectedItem();
       PsiDirectory directory = selectedItem != null ? selectedItem.getDirectory() : null;

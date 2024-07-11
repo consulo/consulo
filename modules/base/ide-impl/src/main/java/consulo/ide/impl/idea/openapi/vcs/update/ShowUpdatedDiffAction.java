@@ -30,9 +30,8 @@ import consulo.diff.internal.DiffRequestFactoryEx;
 import consulo.diff.request.DiffRequest;
 import consulo.diff.request.SimpleDiffRequest;
 import consulo.ide.impl.idea.diff.actions.impl.GoToChangePopupBuilder;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ChangeGoToChangePopupAction;
-import consulo.language.editor.CommonDataKeys;
 import consulo.localHistory.ByteContent;
 import consulo.localHistory.Label;
 import consulo.project.Project;
@@ -67,7 +66,7 @@ public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
   }
 
   private boolean isVisible(final DataContext dc) {
-    final Project project = dc.getData(CommonDataKeys.PROJECT);
+    final Project project = dc.getData(Project.KEY);
     return (project != null) && (dc.getData(VcsDataKeys.LABEL_BEFORE) != null) && (dc.getData(VcsDataKeys.LABEL_AFTER) != null);
   }
 
@@ -82,7 +81,7 @@ public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
     final DataContext dc = e.getDataContext();
     if ((!isVisible(dc)) || (!isEnabled(dc))) return;
 
-    final Project project = dc.getData(CommonDataKeys.PROJECT);
+    final Project project = dc.getData(Project.KEY);
     final Iterable<Pair<FilePath, FileStatus>> iterable = e.getRequiredData(VcsDataKeys.UPDATE_VIEW_FILES_ITERABLE);
     final Label before = (Label)e.getRequiredData(VcsDataKeys.LABEL_BEFORE);
     final Label after = (Label)e.getRequiredData(VcsDataKeys.LABEL_AFTER);
@@ -104,11 +103,13 @@ public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
 
     private int myIndex;
 
-    public MyDiffRequestChain(@Nullable Project project,
-                              @Nonnull Iterable<Pair<FilePath, FileStatus>> iterable,
-                              @Nonnull Label before,
-                              @Nonnull Label after,
-                              @Nullable FilePath filePath) {
+    public MyDiffRequestChain(
+      @Nullable Project project,
+      @Nonnull Iterable<Pair<FilePath, FileStatus>> iterable,
+      @Nonnull Label before,
+      @Nonnull Label after,
+      @Nullable FilePath filePath
+    ) {
       myProject = project;
       myBefore = before;
       myAfter = after;
@@ -140,7 +141,7 @@ public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
     @Nonnull
     @Override
     public AnAction createGoToChangeAction(@Nonnull Consumer<Integer> onSelected) {
-      return new ChangeGoToChangePopupAction.Fake<MyDiffRequestChain>(this, myIndex, onSelected) {
+      return new ChangeGoToChangePopupAction.Fake<>(this, myIndex, onSelected) {
         @Nonnull
         @Override
         protected FilePath getFilePath(int index) {

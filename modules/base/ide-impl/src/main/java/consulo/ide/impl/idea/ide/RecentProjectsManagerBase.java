@@ -17,16 +17,10 @@ package consulo.ide.impl.idea.ide;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.persist.PersistentStateComponent;
-import consulo.project.impl.internal.store.ProjectStoreImpl;
 import consulo.ide.impl.idea.ide.impl.ProjectUtil;
-import consulo.util.lang.Comparing;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.wm.impl.SystemDock;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.module.Module;
@@ -36,17 +30,23 @@ import consulo.module.content.layer.ModuleExtensionProvider;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.module.extension.ModuleExtension;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerAdapter;
 import consulo.project.event.ProjectManagerListener;
+import consulo.project.impl.internal.store.ProjectStoreImpl;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.util.collection.SmartList;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.util.*;
 
@@ -64,10 +64,10 @@ public class RecentProjectsManagerBase extends RecentProjectsManager implements 
   public static class State {
     public List<String> recentPaths = new SmartList<>();
     public List<String> openPaths = new SmartList<>();
-    public Map<String, String> names = ContainerUtil.newLinkedHashMap();
+    public Map<String, String> names = new LinkedHashMap<>();
     public List<ProjectGroup> groups = new SmartList<>();
     public String lastPath;
-    public Map<String, RecentProjectMetaInfo> additionalInfo = ContainerUtil.newLinkedHashMap();
+    public Map<String, RecentProjectMetaInfo> additionalInfo = new LinkedHashMap<>();
 
     public String lastProjectLocation;
 
@@ -138,7 +138,7 @@ public class RecentProjectsManagerBase extends RecentProjectsManager implements 
   private static void removePathFrom(List<String> items, String path) {
     for (Iterator<String> iterator = items.iterator(); iterator.hasNext(); ) {
       final String next = iterator.next();
-      if (SystemInfo.isFileSystemCaseSensitive ? path.equals(next) : path.equalsIgnoreCase(next)) {
+      if (Platform.current().fs().isCaseSensitive() ? path.equals(next) : path.equalsIgnoreCase(next)) {
         iterator.remove();
       }
     }
@@ -217,22 +217,19 @@ public class RecentProjectsManagerBase extends RecentProjectsManager implements 
 
     if (!isDuplicatesCacheUpdating) {
       isDuplicatesCacheUpdating = true; //assuming that this check happens only on EDT. So, no synchronised block or double-checked locking needed
-      ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
-        @Override
-        public void run() {
-          Set<String> names = ContainerUtil.newHashSet();
-          final HashSet<String> duplicates = ContainerUtil.newHashSet();
-          for (String path : ContainerUtil.union(openedPaths, recentPaths)) {
-            if (!names.add(RecentProjectsManagerBase.this.getProjectName(path))) {
-              duplicates.add(path);
-            }
+      Application.get().executeOnPooledThread((Runnable)() -> {
+        Set<String> names = new HashSet<>();
+        final HashSet<String> duplicates = new HashSet<>();
+        for (String path : ContainerUtil.union(openedPaths, recentPaths)) {
+          if (!names.add(RecentProjectsManagerBase.this.getProjectName(path))) {
+            duplicates.add(path);
           }
-          myDuplicatesCache = duplicates;
-          isDuplicatesCacheUpdating = false;
         }
+        myDuplicatesCache = duplicates;
+        isDuplicatesCacheUpdating = false;
       });
     }
-    return ContainerUtil.newHashSet();
+    return new HashSet<>();
   }
 
   @Override
@@ -263,7 +260,7 @@ public class RecentProjectsManagerBase extends RecentProjectsManager implements 
     if (useGroups) {
       final List<ProjectGroup> groups = new ArrayList<>(new ArrayList<>(myState.groups));
       final List<String> projectPaths = new ArrayList<>(paths);
-      Collections.sort(groups, new Comparator<ProjectGroup>() {
+      Collections.sort(groups, new Comparator<>() {
         @Override
         public int compare(ProjectGroup o1, ProjectGroup o2) {
           int ind1 = getGroupIndex(o1);
@@ -365,7 +362,7 @@ public class RecentProjectsManagerBase extends RecentProjectsManager implements 
         group.save(projects);
       }
       myState.additionalInfo.remove(path);
-      if(project != null) {
+      if (project != null) {
         myState.additionalInfo.put(path, RecentProjectMetaInfo.create(project));
       }
     }
@@ -395,7 +392,8 @@ public class RecentProjectsManagerBase extends RecentProjectsManager implements 
 
   private class MyProjectListener extends ProjectManagerAdapter {
     @Override
-    public void projectOpened(final Project project, UIAccess uiAccess) {
+    @RequiredReadAction
+    public void projectOpened(@Nonnull final Project project, @Nonnull UIAccess uiAccess) {
       String path = getProjectPath(project);
       if (path != null) {
         markPathRecent(path, project);
@@ -404,6 +402,7 @@ public class RecentProjectsManagerBase extends RecentProjectsManager implements 
 
       project.getMessageBus().connect().subscribe(ModuleRootListener.class, new ModuleRootListener() {
         @Override
+        @RequiredReadAction
         public void rootsChanged(ModuleRootEvent event) {
           updateProjectModuleExtensions(project);
         }
@@ -411,14 +410,15 @@ public class RecentProjectsManagerBase extends RecentProjectsManager implements 
     }
 
     @Override
-    public void projectClosing(Project project) {
+    public void projectClosing(@Nonnull Project project) {
       synchronized (myStateLock) {
         myState.names.put(getProjectPath(project), getProjectDisplayName(project));
       }
     }
 
     @Override
-    public void projectClosed(final Project project, UIAccess uiAccess) {
+    @RequiredReadAction
+    public void projectClosed(@Nonnull final Project project, @Nonnull UIAccess uiAccess) {
       Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
       if (openProjects.length > 0) {
         String path = getProjectPath(openProjects[openProjects.length - 1]);
@@ -436,6 +436,7 @@ public class RecentProjectsManagerBase extends RecentProjectsManager implements 
   }
 
   @Override
+  @RequiredReadAction
   public void updateProjectModuleExtensions(@Nonnull Project project) {
     String projectPath = getProjectPath(project);
     if (projectPath == null) {
@@ -451,6 +452,7 @@ public class RecentProjectsManagerBase extends RecentProjectsManager implements 
     return GeneralSettings.getInstance().isReopenLastProject() && getLastProjectPath() != null;
   }
 
+  @RequiredUIAccess
   public void doReopenLastProject() {
     GeneralSettings generalSettings = GeneralSettings.getInstance();
     if (generalSettings.isReopenLastProject()) {

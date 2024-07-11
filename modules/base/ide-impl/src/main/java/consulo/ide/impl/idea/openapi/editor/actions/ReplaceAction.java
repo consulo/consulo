@@ -24,26 +24,25 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
-import consulo.dataContext.DataManager;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
-import consulo.project.Project;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.find.FindUtil;
+import consulo.project.Project;
 
 public class ReplaceAction extends EditorAction {
   private static class Handler extends EditorActionHandler {
     @Override
     public void execute(Editor editor, DataContext dataContext) {
-      Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(CommonDataKeys.PROJECT);
+      Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(Project.KEY);
       FindUtil.replace(project, editor);
     }
 
     @Override
     public boolean isEnabled(Editor editor, DataContext dataContext) {
-      Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(CommonDataKeys.PROJECT);
+      Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(Project.KEY);
       return project != null;
     }
   }

@@ -20,7 +20,6 @@ import consulo.diff.util.LineRange;
 import consulo.undoRedo.BasicUndoableAction;
 import consulo.undoRedo.UndoManager;
 import consulo.undoRedo.UnexpectedUndoException;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.undoRedo.ApplicationUndoManager;
 import consulo.undoRedo.ProjectUndoManager;
@@ -32,6 +31,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.UndoConfirmationPolicy;
+import consulo.util.collection.SmartList;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.collection.primitive.ints.IntSet;
@@ -150,9 +150,7 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
     LOG.assertTrue(myBulkChangeUpdateDepth >= 0);
 
     if (myBulkChangeUpdateDepth == 0) {
-      myChangesToUpdate.forEach(index -> {
-        reinstallHighlighters(index);
-      });
+      myChangesToUpdate.forEach(index -> reinstallHighlighters(index));
       myChangesToUpdate.clear();
     }
   }
@@ -195,6 +193,7 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
 
   private class MyDocumentListener extends DocumentAdapter {
     @Override
+    @RequiredUIAccess
     public void beforeDocumentChange(DocumentEvent e) {
       if (isDisposed()) return;
       enterBulkChangeUpdateBlock();
@@ -204,7 +203,7 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
       LineRange lineRange = DiffImplUtil.getAffectedLineRange(e);
       int shift = DiffImplUtil.countLinesShift(e);
 
-      List<S> corruptedStates = ContainerUtil.newSmartList();
+      List<S> corruptedStates = new SmartList<>();
       for (int index = 0; index < getChangesCount(); index++) {
         S oldState = processDocumentChange(index, lineRange.start, lineRange.end, shift);
         if (oldState == null) continue;
@@ -221,18 +220,22 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
     }
 
     @Override
+    @RequiredUIAccess
     public void documentChanged(DocumentEvent e) {
       if (isDisposed()) return;
       exitBulkChangeUpdateBlock();
     }
   }
 
-  public void executeMergeCommand(@Nullable String commandName,
-                                  @Nullable String commandGroupId,
-                                  @Nonnull UndoConfirmationPolicy confirmationPolicy,
-                                  boolean underBulkUpdate,
-                                  @Nullable IntList affectedChanges,
-                                  @Nonnull Runnable task) {
+  @RequiredUIAccess
+  public void executeMergeCommand(
+    @Nullable String commandName,
+    @Nullable String commandGroupId,
+    @Nonnull UndoConfirmationPolicy confirmationPolicy,
+    boolean underBulkUpdate,
+    @Nullable IntList affectedChanges,
+    @Nonnull Runnable task
+  ) {
     IntList allAffectedChanges = affectedChanges != null ? collectAffectedChanges(affectedChanges) : null;
     DiffImplUtil.executeWriteCommand(myProject, myDocument, commandName, commandGroupId, confirmationPolicy, underBulkUpdate, () -> {
       LOG.assertTrue(!myInsideCommand);
@@ -255,15 +258,14 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
     });
   }
 
+  @RequiredUIAccess
   private void registerUndoRedo(boolean undo, @Nullable IntList affectedChanges) {
     if (myUndoManager == null) return;
 
     List<S> states;
     if (affectedChanges != null) {
       states = new ArrayList<>(affectedChanges.size());
-      affectedChanges.forEach((index) -> {
-        states.add(storeChangeState(index));
-      });
+      affectedChanges.forEach((index) -> states.add(storeChangeState(index)));
     }
     else {
       states = new ArrayList<>(getChangesCount());
@@ -290,17 +292,20 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
     }
 
     @Override
+    @RequiredUIAccess
     public final void undo() throws UnexpectedUndoException {
       MergeModelBase model = myModelRef.get();
       if (model != null && myUndo) restoreStates(model);
     }
 
     @Override
+    @RequiredUIAccess
     public final void redo() throws UnexpectedUndoException {
       MergeModelBase model = myModelRef.get();
       if (model != null && !myUndo) restoreStates(model);
     }
 
+    @RequiredUIAccess
     private void restoreStates(@Nonnull MergeModelBase model) {
       if (model.isDisposed()) return;
       if (model.getChangesCount() == 0) return;
@@ -355,13 +360,11 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
    * It could break order of changes if there are other changes that starts/ends at this line.
    * So we should check all other changes and shift them if necessary.
    */
-  private void moveChangesAfterInsertion(int index,
-                                         int newOutputStartLine,
-                                         int newOutputEndLine) {
+  @RequiredUIAccess
+  private void moveChangesAfterInsertion(int index, int newOutputStartLine, int newOutputEndLine) {
     LOG.assertTrue(isInsideCommand());
 
-    if (getLineStart(index) != newOutputStartLine ||
-        getLineEnd(index) != newOutputEndLine) {
+    if (getLineStart(index) != newOutputStartLine || getLineEnd(index) != newOutputEndLine) {
       setLineStart(index, newOutputStartLine);
       setLineEnd(index, newOutputEndLine);
       invalidateHighlighters(index);

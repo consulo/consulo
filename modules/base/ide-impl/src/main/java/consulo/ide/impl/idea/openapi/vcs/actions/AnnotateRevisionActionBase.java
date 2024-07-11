@@ -1,31 +1,32 @@
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.codeEditor.Editor;
-import consulo.fileEditor.FileEditorManager;
-import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
-import consulo.virtualFileSystem.internal.LoadTextUtil;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
+import consulo.application.util.diff.Diff;
+import consulo.application.util.diff.FilesTooBigForDiffException;
+import consulo.codeEditor.Editor;
+import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.image.Image;
 import consulo.util.lang.ref.Ref;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.AbstractVcsHelper;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.annotate.AnnotationProvider;
 import consulo.versionControlSystem.annotate.FileAnnotation;
 import consulo.versionControlSystem.history.VcsFileRevision;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.application.util.diff.Diff;
-import consulo.application.util.diff.FilesTooBigForDiffException;
-import consulo.ui.image.Image;
-
+import consulo.virtualFileSystem.internal.LoadTextUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -54,12 +55,15 @@ public abstract class AnnotateRevisionActionBase extends AnAction {
     return editor == null ? 0 : editor.getCaretModel().getLogicalPosition().line;
   }
 
+  @Override
+  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
     e.getPresentation().setEnabled(isEnabled(e));
   }
 
+  @RequiredUIAccess
   public boolean isEnabled(@Nonnull AnActionEvent e) {
-    if (e.getData(CommonDataKeys.PROJECT) == null) return false;
+    if (e.getData(Project.KEY) == null) return false;
 
     VcsFileRevision fileRevision = getFileRevision(e);
     if (fileRevision == null) return false;
@@ -73,12 +77,11 @@ public abstract class AnnotateRevisionActionBase extends AnAction {
     AnnotationProvider provider = vcs.getAnnotationProvider();
     if (provider == null || !provider.isAnnotationValid(fileRevision)) return false;
 
-    if (VcsAnnotateUtil.getBackgroundableLock(vcs.getProject(), file).isLocked()) return false;
-
-    return true;
+    return !VcsAnnotateUtil.getBackgroundableLock(vcs.getProject(), file).isLocked();
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull final AnActionEvent e) {
     final VcsFileRevision fileRevision = getFileRevision(e);
     final VirtualFile file = getFile(e);
@@ -103,7 +106,8 @@ public abstract class AnnotateRevisionActionBase extends AnAction {
     Semaphore semaphore = new Semaphore(0);
     AtomicBoolean shouldOpenEditorInSync = new AtomicBoolean(true);
 
-    ProgressManager.getInstance().run(new Task.Backgroundable(vcs.getProject(), VcsBundle.message("retrieving.annotations"), true) {
+    ProgressManager.getInstance().run(new Task.Backgroundable(vcs.getProject(), VcsLocalize.retrievingAnnotations().get(), true) {
+      @Override
       public void run(@Nonnull ProgressIndicator indicator) {
         try {
           FileAnnotation fileAnnotation = annotationProvider.annotate(file, fileRevision);
@@ -122,18 +126,20 @@ public abstract class AnnotateRevisionActionBase extends AnAction {
       }
 
       @Override
+      @RequiredUIAccess
       public void onFinished() {
         VcsAnnotateUtil.getBackgroundableLock(vcs.getProject(), file).unlock();
       }
 
       @Override
+      @RequiredUIAccess
       public void onSuccess() {
         if (!exceptionRef.isNull()) {
-          AbstractVcsHelper.getInstance((consulo.project.Project)myProject).showError(exceptionRef.get(), VcsBundle.message("operation.name.annotate"));
+          AbstractVcsHelper.getInstance((Project)myProject).showError(exceptionRef.get(), VcsLocalize.operationNameAnnotate().get());
         }
         if (fileAnnotationRef.isNull()) return;
 
-        AbstractVcsHelper.getInstance((consulo.project.Project)myProject).showAnnotation(fileAnnotationRef.get(), file, vcs, newLineRef.get());
+        AbstractVcsHelper.getInstance((Project)myProject).showAnnotation(fileAnnotationRef.get(), file, vcs, newLineRef.get());
       }
     });
 

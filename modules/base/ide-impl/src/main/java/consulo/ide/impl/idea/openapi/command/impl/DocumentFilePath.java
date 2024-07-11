@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.command.impl;
 
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.util.io.FileUtil;
 
 public class DocumentFilePath {
   private final String myPath;

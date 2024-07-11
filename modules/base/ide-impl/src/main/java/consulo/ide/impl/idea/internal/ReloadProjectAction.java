@@ -16,9 +16,9 @@
 
 package consulo.ide.impl.idea.internal;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
@@ -31,8 +31,9 @@ import jakarta.annotation.Nonnull;
  */
 public class ReloadProjectAction extends AnAction implements DumbAware {
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project != null) {
       ProjectManager.getInstance().reloadProject(project, UIAccess.current());
     }

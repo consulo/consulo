@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.action;
 
-import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.externalSystem.model.ExternalSystemDataKeys;
 import consulo.externalSystem.model.ProjectSystemId;
@@ -45,7 +44,7 @@ public class ExternalActionUtil {
       return MyInfo.EMPTY;
     }
 
-    Project ideProject = context.getData(CommonDataKeys.PROJECT);
+    Project ideProject = context.getData(Project.KEY);
     if (ideProject == null) {
       return MyInfo.EMPTY;
     }
@@ -54,32 +53,37 @@ public class ExternalActionUtil {
     ExternalProjectSettings externalProjectSettings = settings.getLinkedProjectSettings(externalProject.getPath());
     AbstractExternalSystemLocalSettings localSettings = ExternalSystemApiUtil.getLocalSettings(ideProject, externalSystemId);
 
-    return new MyInfo(externalProjectSettings == null ? null : settings,
-                      localSettings == null ? null : localSettings,
-                      externalProjectSettings == null ? null : externalProject,
-                      ideProject,
-                      externalSystemId);
+    return new MyInfo(
+      externalProjectSettings == null ? null : settings,
+      localSettings == null ? null : localSettings,
+      externalProjectSettings == null ? null : externalProject,
+      ideProject,
+      externalSystemId
+    );
   }
 
   public static class MyInfo {
 
     public static final MyInfo EMPTY = new MyInfo(null, null, null, null, null);
 
-    @jakarta.annotation.Nullable
+    @Nullable
     public final AbstractExternalSystemSettings<?, ?, ?> settings;
-    @Nullable public final AbstractExternalSystemLocalSettings  localSettings;
-    @jakarta.annotation.Nullable
-    public final ExternalProjectPojo                  externalProject;
-    @Nullable public final Project                              ideProject;
-    @jakarta.annotation.Nullable
-    public final ProjectSystemId                      externalSystemId;
+    @Nullable
+    public final AbstractExternalSystemLocalSettings localSettings;
+    @Nullable
+    public final ExternalProjectPojo externalProject;
+    @Nullable
+    public final Project ideProject;
+    @Nullable
+    public final ProjectSystemId externalSystemId;
 
-    MyInfo(@Nullable AbstractExternalSystemSettings<?, ?, ?> settings,
-           @Nullable AbstractExternalSystemLocalSettings localSettings,
-           @jakarta.annotation.Nullable ExternalProjectPojo externalProject,
-           @jakarta.annotation.Nullable Project ideProject,
-           @Nullable ProjectSystemId externalSystemId)
-    {
+    MyInfo(
+      @Nullable AbstractExternalSystemSettings<?, ?, ?> settings,
+      @Nullable AbstractExternalSystemLocalSettings localSettings,
+      @Nullable ExternalProjectPojo externalProject,
+      @Nullable Project ideProject,
+      @Nullable ProjectSystemId externalSystemId
+    ) {
       this.settings = settings;
       this.localSettings = localSettings;
       this.externalProject = externalProject;
@@ -88,4 +92,3 @@ public class ExternalActionUtil {
     }
   }
 }
-

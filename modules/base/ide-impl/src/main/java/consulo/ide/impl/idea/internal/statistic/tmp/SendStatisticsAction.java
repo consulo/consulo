@@ -17,13 +17,11 @@ package consulo.ide.impl.idea.internal.statistic.tmp;
 
 import consulo.ide.impl.idea.internal.statistic.persistence.UsageStatisticsPersistenceComponent;
 import consulo.ide.impl.idea.internal.statistic.updater.StatisticsSendManager;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import consulo.ui.Alerts;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -37,10 +35,10 @@ public class SendStatisticsAction extends DumbAwareAction {
     myStatisticsSendManager = statisticsSendManager;
   }
 
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     if (project == null) {
       return;
     }

@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
-import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
@@ -45,7 +44,7 @@ public class TextStartAction extends TextComponentEditorAction {
       scrollingModel.scrollToCaret(ScrollType.RELATIVE);
       scrollingModel.enableAnimation();
 
-      Project project = dataContext.getData(CommonDataKeys.PROJECT);
+      Project project = dataContext.getData(Project.KEY);
       if (project != null) {
         IdeDocumentHistory instance = IdeDocumentHistory.getInstance(project);
         if (instance != null) {

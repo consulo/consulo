@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.idea.internal.validation;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 
 /**
@@ -25,8 +25,9 @@ import consulo.project.Project;
  */
 public class TestDialogWithValidationAction extends AnAction {
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     if (project != null) {
       new ValidationTest(project).show();
     }

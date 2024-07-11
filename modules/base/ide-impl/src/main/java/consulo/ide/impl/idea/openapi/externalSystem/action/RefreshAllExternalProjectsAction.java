@@ -4,13 +4,13 @@ import consulo.application.dumb.DumbAware;
 import consulo.document.FileDocumentManager;
 import consulo.externalSystem.ExternalSystemBundle;
 import consulo.externalSystem.ExternalSystemManager;
+import consulo.externalSystem.localize.ExternalSystemLocalize;
 import consulo.externalSystem.model.ExternalSystemDataKeys;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.task.ExternalSystemTaskType;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.openapi.externalSystem.service.internal.ExternalSystemProcessingManager;
 import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -35,7 +35,7 @@ public class RefreshAllExternalProjectsAction extends AnAction implements DumbAw
 
   @Override
   public void update(AnActionEvent e) {
-    final Project project = e.getDataContext().getData(CommonDataKeys.PROJECT);
+    final Project project = e.getDataContext().getData(Project.KEY);
     if (project == null) {
       e.getPresentation().setEnabled(false);
       return;
@@ -48,8 +48,8 @@ public class RefreshAllExternalProjectsAction extends AnAction implements DumbAw
     }
 
     final String name = StringUtil.join(systemIds, projectSystemId -> projectSystemId.getReadableName().get(), ",");
-    e.getPresentation().setText(ExternalSystemBundle.message("action.refresh.all.projects.text", name));
-    e.getPresentation().setDescription(ExternalSystemBundle.message("action.refresh.all.projects.description", name));
+    e.getPresentation().setTextValue(ExternalSystemLocalize.actionRefreshAllProjectsText(name));
+    e.getPresentation().setDescriptionValue(ExternalSystemLocalize.actionRefreshAllProjectsDescription(name));
 
     ExternalSystemProcessingManager processingManager = ServiceManager.getService(ExternalSystemProcessingManager.class);
     e.getPresentation().setEnabled(!processingManager.hasTaskOfTypeInProgress(ExternalSystemTaskType.RESOLVE_PROJECT, project));
@@ -57,7 +57,7 @@ public class RefreshAllExternalProjectsAction extends AnAction implements DumbAw
 
   @Override
   public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getDataContext().getData(CommonDataKeys.PROJECT);
+    final Project project = e.getDataContext().getData(Project.KEY);
     if (project == null) {
       e.getPresentation().setEnabled(false);
       return;

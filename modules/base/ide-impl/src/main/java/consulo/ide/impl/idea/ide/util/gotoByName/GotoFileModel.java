@@ -9,7 +9,7 @@ import consulo.application.util.matcher.NameUtil;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.actions.GotoFileItemProvider;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.util.io.FileUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.util.lang.StringUtil;
 import consulo.project.ui.internal.WindowManagerEx;
@@ -39,7 +39,7 @@ public class GotoFileModel extends FilteringGotoByModel<FileType> implements Dum
 
   public GotoFileModel(@Nonnull Project project) {
     super(project, project.getApplication().getExtensionList(GotoFileContributor.class));
-    myMaxSize = ApplicationManager.getApplication().isUnitTestMode() ? Integer.MAX_VALUE : WindowManagerEx.getInstanceEx().getFrame(project).getSize().width;
+    myMaxSize = project.getApplication().isUnitTestMode() ? Integer.MAX_VALUE : WindowManagerEx.getInstanceEx().getFrame(project).getSize().width;
   }
 
   public boolean isSlashlessMatchingEnabled() {

@@ -2,7 +2,6 @@ package consulo.ide.impl.idea.openapi.externalSystem.action;
 
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ide.ServiceManager;
 import consulo.externalSystem.model.DataNode;
 import consulo.externalSystem.model.ExternalSystemDataKeys;
@@ -58,7 +57,7 @@ public class RefreshExternalProjectAction extends AnAction implements DumbAware,
       return;
     }
 
-    final Project project = e.getDataContext().getData(CommonDataKeys.PROJECT);
+    final Project project = e.getDataContext().getData(Project.KEY);
     if (project == null) {
       e.getPresentation().setEnabled(false);
       return;
