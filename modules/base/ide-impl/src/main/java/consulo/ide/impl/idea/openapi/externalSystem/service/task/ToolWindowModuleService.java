@@ -25,18 +25,16 @@ import consulo.externalSystem.model.project.ExternalProjectPojo;
 import consulo.externalSystem.model.project.ModuleData;
 import consulo.externalSystem.service.project.ProjectData;
 import consulo.externalSystem.setting.AbstractExternalSystemLocalSettings;
+import consulo.externalSystem.ui.awt.ExternalSystemTasksTreeModel;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.externalSystem.util.ExternalSystemConstants;
 import consulo.externalSystem.util.Order;
-import consulo.externalSystem.ui.awt.ExternalSystemTasksTreeModel;
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
 import consulo.project.Project;
-
 import jakarta.annotation.Nonnull;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import jakarta.annotation.Nullable;
+
+import java.util.*;
 import java.util.function.Function;
 
 /**
@@ -59,9 +57,11 @@ public class ToolWindowModuleService extends AbstractToolWindowService<ModuleDat
   }
 
   @Override
-  protected void processData(@Nonnull final Collection<DataNode<ModuleData>> nodes,
-                             @Nonnull Project project,
-                             @jakarta.annotation.Nullable final ExternalSystemTasksTreeModel model) {
+  protected void processData(
+    @Nonnull final Collection<DataNode<ModuleData>> nodes,
+    @Nonnull Project project,
+    @Nullable final ExternalSystemTasksTreeModel model
+  ) {
     if (nodes.isEmpty()) {
       return;
     }
@@ -70,7 +70,7 @@ public class ToolWindowModuleService extends AbstractToolWindowService<ModuleDat
     assert manager != null;
 
     final Map<DataNode<ProjectData>, List<DataNode<ModuleData>>> grouped = ExternalSystemApiUtil.groupBy(nodes, ProjectKeys.PROJECT);
-    Map<ExternalProjectPojo, Collection<ExternalProjectPojo>> data = ContainerUtilRt.newHashMap();
+    Map<ExternalProjectPojo, Collection<ExternalProjectPojo>> data = new HashMap<>();
     for (Map.Entry<DataNode<ProjectData>, List<DataNode<ModuleData>>> entry : grouped.entrySet()) {
       data.put(ExternalProjectPojo.from(entry.getKey().getData()), ContainerUtilRt.map2List(entry.getValue(), MAPPER));
     }
@@ -86,9 +86,11 @@ public class ToolWindowModuleService extends AbstractToolWindowService<ModuleDat
   }
 
   @Nonnull
-  private static Set<String> detectRenamedProjects(@Nonnull Map<ExternalProjectPojo, Collection<ExternalProjectPojo>> currentInfo,
-                                                   @Nonnull Map<ExternalProjectPojo, Collection<ExternalProjectPojo>> oldInfo) {
-    Map<String/* external config path */, String/* project name */> map = ContainerUtilRt.newHashMap();
+  private static Set<String> detectRenamedProjects(
+    @Nonnull Map<ExternalProjectPojo, Collection<ExternalProjectPojo>> currentInfo,
+    @Nonnull Map<ExternalProjectPojo, Collection<ExternalProjectPojo>> oldInfo
+  ) {
+    Map<String/* external config path */, String/* project name */> map = new HashMap<>();
     for (Map.Entry<ExternalProjectPojo, Collection<ExternalProjectPojo>> entry : currentInfo.entrySet()) {
       map.put(entry.getKey().getPath(), entry.getKey().getName());
       for (ExternalProjectPojo pojo : entry.getValue()) {
@@ -96,7 +98,7 @@ public class ToolWindowModuleService extends AbstractToolWindowService<ModuleDat
       }
     }
 
-    Set<String> result = ContainerUtilRt.newHashSet();
+    Set<String> result = new HashSet<>();
     for (Map.Entry<ExternalProjectPojo, Collection<ExternalProjectPojo>> entry : oldInfo.entrySet()) {
       String newName = map.get(entry.getKey().getPath());
       if (newName != null && !newName.equals(entry.getKey().getName())) {

@@ -89,7 +89,7 @@ public class ModuleWithDependenciesScopeImpl extends GlobalSearchScope implement
     if (!hasOption(MODULES)) en.withoutDepModules();
     if (!hasOption(TESTS)) en.productionOnly();
 
-    final LinkedHashSet<Module> modules = ContainerUtil.newLinkedHashSet();
+    final LinkedHashSet<Module> modules = new LinkedHashSet<>();
 
     en.forEach(each -> {
       if (each instanceof ModuleOrderEntry moduleOrderEntry) {
@@ -103,7 +103,7 @@ public class ModuleWithDependenciesScopeImpl extends GlobalSearchScope implement
 
     myModules = new HashSet<>(modules);
 
-    final LinkedHashSet<VirtualFile> roots = ContainerUtil.newLinkedHashSet();
+    final LinkedHashSet<VirtualFile> roots = new LinkedHashSet<>();
 
     if (hasOption(CONTENT)) {
       for (Module m : modules) {
@@ -117,10 +117,8 @@ public class ModuleWithDependenciesScopeImpl extends GlobalSearchScope implement
         @Nonnull
         @Override
         public OrderRootType apply(OrderEntry entry) {
-          if (entry instanceof ModuleOrderEntry || entry instanceof ModuleSourceOrderEntry) {
-            return SourcesOrderRootType.getInstance();
-          }
-          return BinariesOrderRootType.getInstance();
+          return entry instanceof ModuleOrderEntry || entry instanceof ModuleSourceOrderEntry
+            ? SourcesOrderRootType.getInstance() : BinariesOrderRootType.getInstance();
         }
       }).getRoots());
     }
@@ -167,13 +165,9 @@ public class ModuleWithDependenciesScopeImpl extends GlobalSearchScope implement
     if (hasOption(CONTENT)) {
       return myRoots.containsKey(myProjectFileIndex.getContentRootForFile(file));
     }
-    if(myProjectFileIndex.isInContent(file)) {
-      if(myRootsProcessor != null) {
-        if(myRootsProcessor.containsFile(myRoots, file)) {
-          return true;
-        }
-      }
-      if(myRoots.containsKey(myProjectFileIndex.getSourceRootForFile(file))) {
+    if (myProjectFileIndex.isInContent(file)) {
+      if (myRootsProcessor != null && myRootsProcessor.containsFile(myRoots, file)
+        || myRoots.containsKey(myProjectFileIndex.getSourceRootForFile(file))) {
         return true;
       }
     }

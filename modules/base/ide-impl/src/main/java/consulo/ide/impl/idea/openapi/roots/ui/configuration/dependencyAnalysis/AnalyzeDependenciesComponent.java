@@ -20,14 +20,13 @@ import consulo.component.messagebus.MessageBusConnection;
 import consulo.configurable.ConfigurationException;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
+import consulo.project.Project;
 import consulo.ui.ex.awt.action.ComboBoxAction;
 import consulo.ide.impl.idea.openapi.ui.NamedConfigurable;
 import consulo.ide.impl.idea.util.PathUtil;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.ui.ex.awt.MasterDetailsComponent;
 import consulo.ide.ui.OrderEntryAppearanceService;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.LangDataKeys;
 import consulo.module.Module;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
@@ -125,9 +124,16 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
   private void init() {
     myTree.setCellRenderer(new ColoredTreeCellRenderer() {
       @Override
-      public void customizeCellRenderer(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
-        if (value instanceof MyNode && !(value instanceof MyRootNode)) {
-          final MyNode node = (MyNode)value;
+      public void customizeCellRenderer(
+        @Nonnull JTree tree,
+        Object value,
+        boolean selected,
+        boolean expanded,
+        boolean leaf,
+        int row,
+        boolean hasFocus
+      ) {
+        if (value instanceof MyNode node && !(value instanceof MyRootNode)) {
           PathNode<?> n = (PathNode<?>)node.getUserObject();
           Consumer<ColoredTextContainer> a = n.getRender(selected, node.isDisplayInBold());
           a.accept(this);
@@ -250,19 +256,19 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
     @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {
-      final Module module = e.getData(LangDataKeys.MODULE);
+      final Module module = e.getData(Module.KEY);
       if (module == null) {
         return;
       }
       final ModuleDependenciesAnalyzer.OrderPathElement element = e.getData(ORDER_PATH_ELEMENT_KEY);
-      if (element != null && element instanceof ModuleDependenciesAnalyzer.OrderEntryPathElement) {
-        final ModuleDependenciesAnalyzer.OrderEntryPathElement o = (ModuleDependenciesAnalyzer.OrderEntryPathElement)element;
+      if (element != null && element instanceof ModuleDependenciesAnalyzer.OrderEntryPathElement o) {
         final OrderEntry entry = o.entry();
         final Module m = entry.getOwnerModule();
 
-        ShowSettingsUtil.getInstance().showProjectStructureDialog(m.getProject(), projectStructureSelector -> {
-          projectStructureSelector.selectOrderEntry(m, entry);
-        });
+        ShowSettingsUtil.getInstance().showProjectStructureDialog(
+          m.getProject(),
+          projectStructureSelector -> projectStructureSelector.selectOrderEntry(m, entry)
+        );
       }
     }
   }
@@ -326,21 +332,16 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
      */
     @Override
     public Object getData(@Nonnull @NonNls Key<?> dataId) {
-      if (CommonDataKeys.PROJECT == dataId) {
+      if (Project.KEY == dataId) {
         return myModule.getProject();
       }
-      if (LangDataKeys.MODULE == dataId) {
+      if (Module.KEY == dataId) {
         return myModule;
       }
       TreePath selectionPath = myExplanationTree.getSelectionPath();
       DefaultMutableTreeNode node = selectionPath == null ? null : (DefaultMutableTreeNode)selectionPath.getLastPathComponent();
       Object o = node == null ? null : node.getUserObject();
-      if (o instanceof ModuleDependenciesAnalyzer.OrderPathElement) {
-        if (ORDER_PATH_ELEMENT_KEY == dataId) {
-          return o;
-        }
-      }
-      return null;
+      return o instanceof ModuleDependenciesAnalyzer.OrderPathElement && ORDER_PATH_ELEMENT_KEY == dataId ? o : null;
     }
 
     /**
@@ -414,6 +415,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
      * {@inheritDoc}
      */
     @Override
+    @RequiredUIAccess
     public boolean isModified() {
       return false;
     }
@@ -422,6 +424,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
      * {@inheritDoc}
      */
     @Override
+    @RequiredUIAccess
     public void apply() throws ConfigurationException {
       // Do nothing
     }
@@ -430,6 +433,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
      * {@inheritDoc}
      */
     @Override
+    @RequiredUIAccess
     public void reset() {
       //Do nothing
     }
@@ -444,7 +448,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
     public abstract Consumer<ColoredTextContainer> getRender(boolean selected, boolean bold);
 
     /**
-     * @retrun the string cut so it would fit the banner (the prefix is dropped)
+     * @return the string cut so it would fit the banner (the prefix is dropped)
      */
     protected String suffixForBanner(String p) {
       if (p.length() > CUTOFF_LENGTH) {
@@ -454,7 +458,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
     }
 
     /**
-     * @retrun the string cut so it would fit the banner (the suffix is dropped)
+     * @return the string cut so it would fit the banner (the suffix is dropped)
      */
     protected String prefixForBanner(String p) {
       if (p.length() > CUTOFF_LENGTH) {
@@ -468,9 +472,16 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
    * Cell renderer for explanation tree
    */
   static class ExplanationTreeRenderer extends ColoredTreeCellRenderer {
-
     @Override
-    public void customizeCellRenderer(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+    public void customizeCellRenderer(
+      @Nonnull JTree tree,
+      Object value,
+      boolean selected,
+      boolean expanded,
+      boolean leaf,
+      int row,
+      boolean hasFocus
+    ) {
       DefaultMutableTreeNode n = (DefaultMutableTreeNode)value;
       final Object userObject = n.getUserObject();
       if (!(userObject instanceof ModuleDependenciesAnalyzer.OrderPathElement)) {
@@ -558,8 +569,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
      */
     @Override
     public Consumer<ColoredTextContainer> getRender(boolean selected, final boolean isBold) {
-      if (myExplanation.entry() instanceof ModuleSourceOrderEntry) {
-        ModuleSourceOrderEntry e = (ModuleSourceOrderEntry)myExplanation.entry();
+      if (myExplanation.entry() instanceof ModuleSourceOrderEntry e) {
         if (e.getOwnerModule() == myModule) {
           return component -> {
             component.setIcon(AllIcons.Nodes.Module);
@@ -578,8 +588,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
      */
     @Override
     public String getBannerSlogan() {
-      if (myExplanation.entry() instanceof ModuleSourceOrderEntry) {
-        ModuleSourceOrderEntry e = (ModuleSourceOrderEntry)myExplanation.entry();
+      if (myExplanation.entry() instanceof ModuleSourceOrderEntry e) {
         return prefixForBanner("Module " + e.getOwnerModule().getName());
       }
       else {
@@ -614,7 +623,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
      * {@inheritDoc}
      */
     @Override
-    public boolean isSelected(AnActionEvent e) {
+    public boolean isSelected(@Nonnull AnActionEvent e) {
       return mySettings.isSdkIncluded();
     }
 
@@ -622,7 +631,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
      * {@inheritDoc}
      */
     @Override
-    public void setSelected(AnActionEvent e, boolean state) {
+    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
       mySettings.setIncludeSdk(state);
       updateTree();
     }
@@ -643,7 +652,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
      * {@inheritDoc}
      */
     @Override
-    public boolean isSelected(AnActionEvent e) {
+    public boolean isSelected(@Nonnull AnActionEvent e) {
       return mySettings.isUrlMode();
     }
 
@@ -651,7 +660,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
      * {@inheritDoc}
      */
     @Override
-    public void setSelected(AnActionEvent e, boolean state) {
+    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
       mySettings.setUrlMode(state);
       updateTree();
     }
@@ -677,7 +686,8 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
         for (final ClasspathType classpathType : ClasspathType.values()) {
           myItems.addAction(new DumbAwareAction(classpathType.getDescription()) {
             @Override
-            public void actionPerformed(AnActionEvent e) {
+            @RequiredUIAccess
+            public void actionPerformed(@Nonnull AnActionEvent e) {
               mySettings.setRuntime(classpathType.isRuntime());
               mySettings.setTest(classpathType.isTest());
               updateTree();

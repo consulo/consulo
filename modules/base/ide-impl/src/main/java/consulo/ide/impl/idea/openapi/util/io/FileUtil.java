@@ -60,17 +60,18 @@ public class FileUtil extends FileUtilRt {
   public static final HashingStrategy<String> PATH_HASHING_STRATEGY = FilePathHashingStrategy.create();
   public static final HashingStrategy<CharSequence> PATH_CHAR_SEQUENCE_HASHING_STRATEGY = FilePathHashingStrategy.createForCharSequence();
 
-  public static final HashingStrategy<File> FILE_HASHING_STRATEGY = SystemInfo.isFileSystemCaseSensitive ? ContainerUtil.<File>canonicalStrategy() : new HashingStrategy<>() {
-    @Override
-    public int hashCode(File object) {
-      return fileHashCode(object);
-    }
+  public static final HashingStrategy<File> FILE_HASHING_STRATEGY =
+    Platform.current().fs().isCaseSensitive() ? ContainerUtil.<File>canonicalStrategy() : new HashingStrategy<>() {
+      @Override
+      public int hashCode(File object) {
+        return fileHashCode(object);
+      }
 
-    @Override
-    public boolean equals(File o1, File o2) {
-      return filesEqual(o1, o2);
-    }
-  };
+      @Override
+      public boolean equals(File o1, File o2) {
+        return filesEqual(o1, o2);
+      }
+    };
 
   private static final Logger LOG = Logger.getInstance(FileUtil.class);
 
@@ -90,7 +91,12 @@ public class FileUtil extends FileUtilRt {
   }
 
   @Nullable
-  public static String getRelativePath(@Nonnull String basePath, @Nonnull String filePath, final char separator, final boolean caseSensitive) {
+  public static String getRelativePath(
+    @Nonnull String basePath,
+    @Nonnull String filePath,
+    final char separator,
+    final boolean caseSensitive
+  ) {
     return FileUtilRt.getRelativePath(basePath, filePath, separator, caseSensitive);
   }
 
@@ -130,14 +136,14 @@ public class FileUtil extends FileUtilRt {
    * {@code ThreeState.NO} if ancestor is not a parent of the file at all.
    */
   @Nonnull
-  public static consulo.util.lang.ThreeState isAncestorThreeState(@Nonnull String ancestor, @Nonnull String file, boolean strict) {
+  public static ThreeState isAncestorThreeState(@Nonnull String ancestor, @Nonnull String file, boolean strict) {
     String ancestorPath = toCanonicalPath(ancestor);
     String filePath = toCanonicalPath(file);
-    return startsWith(filePath, ancestorPath, strict, SystemInfo.isFileSystemCaseSensitive, true);
+    return startsWith(filePath, ancestorPath, strict, Platform.current().fs().isCaseSensitive(), true);
   }
 
   public static boolean startsWith(@Nonnull String path, @Nonnull String start) {
-    return !ThreeState.NO.equals(startsWith(path, start, false, SystemInfo.isFileSystemCaseSensitive, false));
+    return !ThreeState.NO.equals(startsWith(path, start, false, Platform.current().fs().isCaseSensitive(), false));
   }
 
   public static boolean startsWith(@Nonnull String path, @Nonnull String start, boolean caseSensitive) {
@@ -176,7 +182,11 @@ public class FileUtil extends FileUtilRt {
   /**
    * @param removeProcessor parent, child
    */
-  public static <T> Collection<T> removeAncestors(final Collection<T> files, final Convertor<T, String> convertor, final PairProcessor<T, T> removeProcessor) {
+  public static <T> Collection<T> removeAncestors(
+    final Collection<T> files,
+    final Convertor<T, String> convertor,
+    final PairProcessor<T, T> removeProcessor
+  ) {
     if (files.isEmpty()) return files;
     final TreeMap<String, T> paths = new TreeMap<>();
     for (T file : files) {
@@ -357,19 +367,9 @@ public class FileUtil extends FileUtilRt {
   @SuppressWarnings("Duplicates")
   private static void performCopy(@Nonnull File fromFile, @Nonnull File toFile, final boolean syncTimestamp) throws IOException {
     if (filesEqual(fromFile, toFile)) return;
-    final FileOutputStream fos = openOutputStream(toFile);
 
-    try {
-      final FileInputStream fis = new FileInputStream(fromFile);
-      try {
-        copy(fis, fos);
-      }
-      finally {
-        fis.close();
-      }
-    }
-    finally {
-      fos.close();
+    try (FileOutputStream fos = openOutputStream(toFile); FileInputStream fis = new FileInputStream(fromFile)) {
+      copy(fis, fos);
     }
 
     if (syncTimestamp) {
@@ -463,7 +463,7 @@ public class FileUtil extends FileUtilRt {
   }
 
   public static void copyDir(@Nonnull File fromDir, @Nonnull File toDir, boolean copySystemFiles) throws IOException {
-    copyDir(fromDir, toDir, copySystemFiles ? null : (FileFilter)file -> !StringUtil.startsWithChar(file.getName(), '.'));
+    copyDir(fromDir, toDir, copySystemFiles ? null : file -> !StringUtil.startsWithChar(file.getName(), '.'));
   }
 
   public static void copyDir(@Nonnull File fromDir, @Nonnull File toDir, @Nullable final FileFilter filter) throws IOException {
@@ -538,7 +538,7 @@ public class FileUtil extends FileUtilRt {
    */
   @SuppressWarnings({"unused", "StringToUpperCaseOrToLowerCaseWithoutLocale"})
   public static String nameToCompare(@Nonnull String name) {
-    return (SystemInfo.isFileSystemCaseSensitive ? name : name.toLowerCase()).replace('\\', '/');
+    return (Platform.current().fs().isCaseSensitive() ? name : name.toLowerCase()).replace('\\', '/');
   }
 
   /**
@@ -690,7 +690,7 @@ public class FileUtil extends FileUtilRt {
 
   public static boolean rename(@Nonnull File source, @Nonnull String newName) throws IOException {
     File target = new File(source.getParent(), newName);
-    if (!SystemInfo.isFileSystemCaseSensitive && newName.equalsIgnoreCase(source.getName())) {
+    if (!Platform.current().fs().isCaseSensitive() && newName.equalsIgnoreCase(source.getName())) {
       File intermediate = createTempFile(source.getParentFile(), source.getName(), ".tmp", false, false);
       return source.renameTo(intermediate) && intermediate.renameTo(target);
     }
@@ -726,9 +726,7 @@ public class FileUtil extends FileUtilRt {
    */
   public static boolean namesEqual(@Nullable String name1, @Nullable String name2) {
     if (name1 == name2) return true;
-    if (name1 == null || name2 == null) return false;
-
-    return PATH_HASHING_STRATEGY.equals(name1, name2);
+    return !(name1 == null || name2 == null) && PATH_HASHING_STRATEGY.equals(name1, name2);
   }
 
   public static int compareFiles(@Nullable File file1, @Nullable File file2) {
@@ -738,7 +736,7 @@ public class FileUtil extends FileUtilRt {
   public static int comparePaths(@Nullable String path1, @Nullable String path2) {
     path1 = path1 == null ? null : toSystemIndependentName(path1);
     path2 = path2 == null ? null : toSystemIndependentName(path2);
-    return StringUtil.compare(path1, path2, !SystemInfo.isFileSystemCaseSensitive);
+    return StringUtil.compare(path1, path2, !Platform.current().fs().isCaseSensitive());
   }
 
   public static int fileHashCode(@Nullable File file) {
@@ -1022,7 +1020,11 @@ public class FileUtil extends FileUtilRt {
     return processFilesRecursively(root, processor, null);
   }
 
-  public static boolean processFilesRecursively(@Nonnull File root, @Nonnull Processor<File> processor, @Nullable final Processor<File> directoryFilter) {
+  public static boolean processFilesRecursively(
+    @Nonnull File root,
+    @Nonnull Processor<File> processor,
+    @Nullable final Processor<File> directoryFilter
+  ) {
     final LinkedList<File> queue = new LinkedList<>();
     queue.add(root);
     while (!queue.isEmpty()) {
@@ -1329,7 +1331,7 @@ public class FileUtil extends FileUtilRt {
    */
   @Nonnull
   public static Map<String, String> loadProperties(@Nonnull Reader reader) throws IOException {
-    final Map<String, String> map = ContainerUtil.newLinkedHashMap();
+    final Map<String, String> map = new LinkedHashMap<>();
 
     new Properties() {
       @Override

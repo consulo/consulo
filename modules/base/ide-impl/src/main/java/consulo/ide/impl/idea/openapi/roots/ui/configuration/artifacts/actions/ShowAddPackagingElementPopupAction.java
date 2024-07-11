@@ -15,18 +15,17 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.actions;
 
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ui.ex.popup.ListPopup;
 import consulo.compiler.artifact.element.PackagingElementFactory;
 import consulo.compiler.artifact.element.PackagingElementType;
+import consulo.dataContext.DataContext;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.ex.popup.ListPopup;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -40,15 +39,16 @@ public class ShowAddPackagingElementPopupAction extends DumbAwareAction {
     myArtifactEditor = artifactEditor;
   }
 
-  @RequiredUIAccess
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     final DefaultActionGroup group = new DefaultActionGroup();
-    for (PackagingElementType type : PackagingElementFactory.getInstance(e.getData(CommonDataKeys.PROJECT)).getAllElementTypes()) {
+    for (PackagingElementType type : PackagingElementFactory.getInstance(e.getData(Project.KEY)).getAllElementTypes()) {
       group.add(new AddNewPackagingElementAction((PackagingElementType<?>)type, myArtifactEditor));
     }
     final DataContext dataContext = e.getDataContext();
-    final ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup("Add", group, dataContext, JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false);
+    final ListPopup popup = JBPopupFactory.getInstance()
+      .createActionGroupPopup("Add", group, dataContext, JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false);
     popup.showInBestPositionFor(dataContext);
   }
 }

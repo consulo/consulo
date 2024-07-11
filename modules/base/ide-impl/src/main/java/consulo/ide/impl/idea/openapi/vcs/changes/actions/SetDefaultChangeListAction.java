@@ -24,36 +24,44 @@ package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
 import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
-import consulo.versionControlSystem.VcsBundle;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.LocalChangeList;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
+import consulo.versionControlSystem.localize.VcsLocalize;
 
 public class SetDefaultChangeListAction extends AnAction implements DumbAware {
   public SetDefaultChangeListAction() {
-    super(VcsBundle.message("changes.action.setdefaultchangelist.text"),
-          VcsBundle.message("changes.action.setdefaultchangelist.description"), AllIcons.Actions.Selectall);
+    super(
+      VcsLocalize.changesActionSetdefaultchangelistText(),
+      VcsLocalize.changesActionSetdefaultchangelistDescription(),
+      AllIcons.Actions.Selectall
+    );
   }
 
-
+  @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
     ChangeList[] lists = e.getData(VcsDataKeys.CHANGE_LISTS);
     final boolean visible =
-      lists != null && lists.length == 1 && lists[0] instanceof LocalChangeList && !((LocalChangeList)lists[0]).isDefault();
-    if (e.getPlace().equals(ActionPlaces.CHANGES_VIEW_POPUP))
+      lists != null && lists.length == 1 && lists[0] instanceof LocalChangeList localChangeList && !localChangeList.isDefault();
+    if (e.getPlace().equals(ActionPlaces.CHANGES_VIEW_POPUP)) {
       e.getPresentation().setVisible(visible);
-    else
+    }
+    else {
       e.getPresentation().setEnabled(visible);
+    }
   }
 
+  @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     final ChangeList[] lists = e.getData(VcsDataKeys.CHANGE_LISTS);
     assert lists != null;
     ChangeListManager.getInstance(project).setDefaultChangeList((LocalChangeList)lists[0]);

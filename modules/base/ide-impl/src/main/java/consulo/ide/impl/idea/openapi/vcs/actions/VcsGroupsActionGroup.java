@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.Presentation;
 import consulo.application.dumb.DumbAware;
@@ -32,8 +31,8 @@ public class VcsGroupsActionGroup extends DefaultActionGroup implements DumbAwar
   @Override
   public void update(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
-    Project project = e.getData(CommonDataKeys.PROJECT);
-    if(project != null) {
+    Project project = e.getData(Project.KEY);
+    if (project != null) {
       presentation.setTextValue(ProjectLevelVcsManager.getInstance(project).getConsolidatedVcsName());
     }
   }

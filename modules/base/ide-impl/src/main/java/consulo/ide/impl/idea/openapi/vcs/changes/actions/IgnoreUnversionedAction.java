@@ -24,8 +24,8 @@ package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowserBase;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.IgnoreUnversionedDialog;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.collection.Streams;
@@ -40,8 +40,10 @@ import static consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesListView.UNVER
 
 public class IgnoreUnversionedAction extends AnAction {
 
+  @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getRequiredData(CommonDataKeys.PROJECT);
+    Project project = e.getRequiredData(Project.KEY);
 
     if (!ChangeListManager.getInstance(project).isFreezedWithNotification(null)) {
       List<VirtualFile> files = e.getRequiredData(UNVERSIONED_FILES_DATA_KEY).collect(Collectors.toList());
@@ -56,7 +58,9 @@ public class IgnoreUnversionedAction extends AnAction {
     }
   }
 
+  @Override
+  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setEnabled(e.getData(CommonDataKeys.PROJECT) != null && !Streams.isEmpty(e.getData(UNVERSIONED_FILES_DATA_KEY)));
+    e.getPresentation().setEnabled(e.getData(Project.KEY) != null && !Streams.isEmpty(e.getData(UNVERSIONED_FILES_DATA_KEY)));
   }
 }

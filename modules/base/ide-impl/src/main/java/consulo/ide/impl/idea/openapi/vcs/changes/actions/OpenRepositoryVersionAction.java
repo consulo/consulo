@@ -20,16 +20,16 @@ import consulo.application.impl.internal.IdeaModalityState;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesBrowserUseCase;
 import consulo.ide.impl.idea.openapi.vcs.vfs.ContentRevisionVirtualFile;
-import consulo.language.editor.CommonDataKeys;
 import consulo.navigation.Navigatable;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ContentRevision;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 
 /**
@@ -37,14 +37,16 @@ import consulo.virtualFileSystem.VirtualFile;
  */                                                                            
 public class OpenRepositoryVersionAction extends AnAction implements DumbAware {
   public OpenRepositoryVersionAction() {
-    super(VcsBundle.message("open.repository.version.text"), VcsBundle.message("open.repository.version.description"), PlatformIconGroup.nodesPpweb());
+    super(VcsLocalize.openRepositoryVersionText(), VcsLocalize.openRepositoryVersionDescription(), PlatformIconGroup.nodesPpweb());
   }
 
+  @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     Change[] changes = e.getData(VcsDataKeys.SELECTED_CHANGES);
     assert changes != null;
-    for(Change change: changes) {
+    for (Change change: changes) {
       ContentRevision revision = change.getAfterRevision();
       if (revision == null || revision.getFile().isDirectory()) continue;
       VirtualFile vFile = ContentRevisionVirtualFile.create(revision);
@@ -53,17 +55,21 @@ public class OpenRepositoryVersionAction extends AnAction implements DumbAware {
     }
   }
 
+  @Override
+  @RequiredUIAccess
   public void update(final AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     Change[] changes = e.getData(VcsDataKeys.SELECTED_CHANGES);
-    e.getPresentation().setEnabled(project != null && changes != null &&
-                                   (! CommittedChangesBrowserUseCase.IN_AIR.equals(e.getDataContext().getData(CommittedChangesBrowserUseCase.DATA_KEY))) &&
-                                   hasValidChanges(changes) &&
-                                   IdeaModalityState.nonModal().equals(IdeaModalityState.current()));
+    e.getPresentation().setEnabled(
+      project != null && changes != null
+        && (!CommittedChangesBrowserUseCase.IN_AIR.equals(e.getDataContext().getData(CommittedChangesBrowserUseCase.DATA_KEY)))
+        && hasValidChanges(changes)
+        && IdeaModalityState.nonModal().equals(IdeaModalityState.current())
+    );
   }
 
   private static boolean hasValidChanges(final Change[] changes) {
-    for(Change c: changes) {
+    for (Change c: changes) {
       final ContentRevision contentRevision = c.getAfterRevision();
       if (contentRevision != null && !contentRevision.getFile().isDirectory()) {
         return true;

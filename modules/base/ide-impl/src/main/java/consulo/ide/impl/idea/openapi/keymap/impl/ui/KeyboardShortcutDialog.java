@@ -16,30 +16,23 @@
 package consulo.ide.impl.idea.openapi.keymap.impl.ui;
 
 
-import consulo.dataContext.DataManager;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.action.KeyboardShortcut;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickList;
 import consulo.application.HelpManager;
-import consulo.ui.ex.keymap.KeyMapBundle;
-import consulo.ui.ex.keymap.Keymap;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.project.Project;
-import consulo.ui.ex.awt.DialogWrapper;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
-import consulo.ui.ex.awt.IdeBorderFactory;
-import consulo.ui.ex.JBColor;
-import consulo.ui.ex.awt.ScrollPaneFactory;
+import consulo.dataContext.DataManager;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickList;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.project.Project;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.action.KeyboardShortcut;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.keymap.Keymap;
+import consulo.ui.ex.keymap.localize.KeyMapLocalize;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
@@ -56,9 +49,9 @@ public class KeyboardShortcutDialog extends DialogWrapper {
 
   public KeyboardShortcutDialog(Component component, String actionId, final QuickList[] quickLists) {
     super(component, true);
-    setTitle(KeyMapBundle.message("keyboard.shortcut.dialog.title"));
+    setTitle(KeyMapLocalize.keyboardShortcutDialogTitle());
     myActionId = actionId;
-    final Project project = DataManager.getInstance().getDataContext(component).getData(CommonDataKeys.PROJECT);
+    final Project project = DataManager.getInstance().getDataContext(component).getData(Project.KEY);
     myMainGroup = ActionsTreeUtil.createMainGroup(project, myKeymap, quickLists, null, false, null); //without current filter
     myEnableSecondKeystroke = new JCheckBox();
     UIUtil.applyStyle(UIUtil.ComponentStyle.SMALL, myEnableSecondKeystroke);
@@ -70,50 +63,63 @@ public class KeyboardShortcutDialog extends DialogWrapper {
     init();
   }
 
+  @Override
   @Nonnull
   protected Action[] createActions(){
     return new Action[]{getOKAction(),getCancelAction(),getHelpAction()};
   }
 
+  @Override
   protected JComponent createCenterPanel() {
     JPanel panel = new JPanel(new GridBagLayout());
 
     // First stroke
 
-    myFirstStrokePanel = new StrokePanel(KeyMapBundle.message("first.stroke.panel.title"));
+    myFirstStrokePanel = new StrokePanel(KeyMapLocalize.firstStrokePanelTitle().get());
     panel.add(
       myFirstStrokePanel,
-      new GridBagConstraints(0,0,2,1,1,0,GridBagConstraints.CENTER,GridBagConstraints.HORIZONTAL,new Insets(0,0,0,0),0,0)
+      new GridBagConstraints(
+        0,0,2,1,1,0,GridBagConstraints.CENTER,GridBagConstraints.HORIZONTAL,
+        JBUI.emptyInsets(),0,0
+      )
     );
 
     // Second stroke panel
 
     panel.add(
       myEnableSecondKeystroke,
-      new GridBagConstraints(0,1,1,1,0,0,GridBagConstraints.NORTHWEST,GridBagConstraints.NONE,new Insets(0,0,0,0),0,0)
+      new GridBagConstraints(
+        0,1,1,1,0,0,GridBagConstraints.NORTHWEST,GridBagConstraints.NONE,
+        JBUI.emptyInsets(),0,0
+      )
     );
 
-    mySecondStrokePanel = new StrokePanel(KeyMapBundle.message("second.stroke.panel.title"));
+    mySecondStrokePanel = new StrokePanel(KeyMapLocalize.secondStrokePanelTitle().get());
     panel.add(
       mySecondStrokePanel,
-      new GridBagConstraints(1,1,1,1,1,0,GridBagConstraints.NORTHWEST,GridBagConstraints.HORIZONTAL,new Insets(0,0,0,0),0,0)
+      new GridBagConstraints(
+        1,1,1,1,1,0,GridBagConstraints.NORTHWEST,GridBagConstraints.HORIZONTAL,
+        JBUI.emptyInsets(),0,0
+      )
     );
 
     // Shortcut preview
 
     JPanel previewPanel = new JPanel(new BorderLayout());
-    previewPanel.setBorder(IdeBorderFactory.createTitledBorder(KeyMapBundle.message("shortcut.preview.ide.border.factory.title"), true));
+    previewPanel.setBorder(IdeBorderFactory.createTitledBorder(KeyMapLocalize.shortcutPreviewIdeBorderFactoryTitle().get(), true));
     previewPanel.add(myKeystrokePreview);
     panel.add(
       previewPanel,
-      new GridBagConstraints(0,2,2,1,1,0,GridBagConstraints.CENTER,GridBagConstraints.HORIZONTAL,new Insets(0,0,0,0),0,0)
+      new GridBagConstraints(
+        0,2,2,1,1,0,GridBagConstraints.CENTER,GridBagConstraints.HORIZONTAL,
+        JBUI.emptyInsets(),0,0
+      )
     );
 
     // Conflicts
 
     JPanel conflictsPanel = new JPanel(new BorderLayout());
-    conflictsPanel.setBorder(IdeBorderFactory.createTitledBorder(KeyMapBundle.message("conflicts.ide.border.factory.title"),
-                                                                 true));
+    conflictsPanel.setBorder(IdeBorderFactory.createTitledBorder(KeyMapLocalize.conflictsIdeBorderFactoryTitle().get(), true));
     myConflictInfoArea.setEditable(false);
     myConflictInfoArea.setBackground(panel.getBackground());
     myConflictInfoArea.setLineWrap(true);
@@ -124,11 +130,13 @@ public class KeyboardShortcutDialog extends DialogWrapper {
     conflictsPanel.add(conflictInfoScroll);
     panel.add(
       conflictsPanel,
-      new GridBagConstraints(0,3,2,1,1,1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,new Insets(0,0,0,0),0,0)
+      new GridBagConstraints(
+        0,3,2,1,1,1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,
+        JBUI.emptyInsets(),0,0
+      )
     );
 
-    myEnableSecondKeystroke.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
+    myEnableSecondKeystroke.addActionListener(e -> {
         handleSecondKey();
         updateCurrentKeyStrokeInfo();
 
@@ -139,8 +147,7 @@ public class KeyboardShortcutDialog extends DialogWrapper {
         else {
           IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myFirstStrokePanel.getShortcutTextField());
         }
-      }
-    });
+      });
     return panel;
   }
 
@@ -181,12 +188,12 @@ public class KeyboardShortcutDialog extends DialogWrapper {
 
     String strokeText = getTextByKeyStroke(keyboardShortcut.getFirstKeyStroke());
     String suffixText = getTextByKeyStroke(keyboardShortcut.getSecondKeyStroke());
-    if(suffixText != null && suffixText.length() > 0) {
+    if (suffixText != null && suffixText.length() > 0) {
       strokeText += ',' + suffixText;
     }
     myKeystrokePreview.setText(strokeText);
 
-    StringBuffer buffer = new StringBuffer();
+    StringBuilder buffer = new StringBuilder();
 
     Map<String, ArrayList<KeyboardShortcut>> conflicts = myKeymap.getConflicts(myActionId, keyboardShortcut);
 
@@ -208,12 +215,12 @@ public class KeyboardShortcutDialog extends DialogWrapper {
 
     if (buffer.length() == 0) {
       myConflictInfoArea.setForeground(UIUtil.getTextAreaForeground());
-      myConflictInfoArea.setText(KeyMapBundle.message("no.conflict.info.message"));
+      myConflictInfoArea.setText(KeyMapLocalize.noConflictInfoMessage().get());
     }
     else {
       myConflictInfoArea.setForeground(JBColor.RED);
       if (loaded) {
-        myConflictInfoArea.setText(KeyMapBundle.message("assigned.to.info.message", buffer.toString()));
+        myConflictInfoArea.setText(KeyMapLocalize.assignedToInfoMessage(buffer.toString()).get());
       } else {
         myConflictInfoArea.setText("Assigned to " + buffer.toString() + " which is now not loaded but may be loaded later");
       }
@@ -234,12 +241,13 @@ public class KeyboardShortcutDialog extends DialogWrapper {
   }
 
   static String getTextByKeyStroke(KeyStroke keyStroke) {
-    if(keyStroke == null) {
+    if (keyStroke == null) {
       return "";
     }
     return KeymapUtil.getKeystrokeText(keyStroke);
   }
 
+  @Override
   protected void doHelpAction() {
     HelpManager.getInstance().invokeHelp("preferences.keymap.shortcut");
   }
@@ -252,6 +260,7 @@ public class KeyboardShortcutDialog extends DialogWrapper {
       setBorder(IdeBorderFactory.createTitledBorder(borderText, false));
 
       myShortcutTextField = new ShortcutTextField(){
+        @Override
         protected void updateCurrentKeyStrokeInfo() {
           KeyboardShortcutDialog.this.updateCurrentKeyStrokeInfo();
         }
@@ -263,6 +272,7 @@ public class KeyboardShortcutDialog extends DialogWrapper {
       return myShortcutTextField;
     }
 
+    @Override
     public void setEnabled(boolean state) {
       myShortcutTextField.setEnabled(state);
       repaint();

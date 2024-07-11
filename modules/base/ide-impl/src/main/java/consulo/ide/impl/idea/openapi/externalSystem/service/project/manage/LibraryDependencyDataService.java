@@ -17,34 +17,33 @@ package consulo.ide.impl.idea.openapi.externalSystem.service.project.manage;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.content.OrderRootType;
-import consulo.externalSystem.model.project.*;
-import consulo.externalSystem.service.project.ProjectData;
-import consulo.ide.impl.idea.openapi.roots.impl.libraries.ProjectLibraryTableImpl;
-import consulo.logging.Logger;
+import consulo.content.base.BinariesOrderRootType;
+import consulo.content.library.Library;
+import consulo.content.library.LibraryTable;
 import consulo.externalSystem.model.DataNode;
 import consulo.externalSystem.model.Key;
 import consulo.externalSystem.model.ProjectKeys;
-import consulo.ide.impl.idea.openapi.externalSystem.service.project.ProjectStructureHelper;
+import consulo.externalSystem.model.project.*;
+import consulo.externalSystem.service.project.ProjectData;
 import consulo.externalSystem.util.DisposeAwareProjectChange;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.externalSystem.util.ExternalSystemConstants;
 import consulo.externalSystem.util.Order;
+import consulo.ide.impl.idea.openapi.externalSystem.service.project.ProjectStructureHelper;
+import consulo.ide.impl.idea.openapi.roots.impl.libraries.ProjectLibraryTableImpl;
+import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
+import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
-import consulo.project.Project;
 import consulo.module.impl.internal.layer.orderEntry.ModuleLibraryOrderEntryImpl;
-import consulo.content.library.Library;
-import consulo.content.library.LibraryTable;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.BooleanFunction;
-import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.content.base.BinariesOrderRootType;
-
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
+
 import java.io.File;
 import java.util.*;
 
@@ -90,9 +89,11 @@ public class LibraryDependencyDataService extends AbstractDependencyDataService<
     }
   }
 
-  public void importData(@Nonnull final Collection<DataNode<LibraryDependencyData>> nodesToImport,
-                         @Nonnull final Module module,
-                         final boolean synchronous) {
+  public void importData(
+    @Nonnull final Collection<DataNode<LibraryDependencyData>> nodesToImport,
+    @Nonnull final Module module,
+    final boolean synchronous
+  ) {
     ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(module) {
       @RequiredUIAccess
       @Override
@@ -104,9 +105,9 @@ public class LibraryDependencyDataService extends AbstractDependencyDataService<
         // the given collection.
         // The trick is that we should perform module settings modification inside try/finally block against target root model.
         // That means that we need to prepare all necessary data, obtain a model and modify it as necessary.
-        Map<Set<String>/* library paths */, LibraryDependencyData> moduleLibrariesToImport = ContainerUtilRt.newHashMap();
-        Map<String/* library name + scope */, LibraryDependencyData> projectLibrariesToImport = ContainerUtilRt.newHashMap();
-        Set<LibraryDependencyData> toImport = ContainerUtilRt.newLinkedHashSet();
+        Map<Set<String>/* library paths */, LibraryDependencyData> moduleLibrariesToImport = new HashMap<>();
+        Map<String/* library name + scope */, LibraryDependencyData> projectLibrariesToImport = new HashMap<>();
+        Set<LibraryDependencyData> toImport = new LinkedHashSet<>();
 
         boolean hasUnresolved = false;
         for (DataNode<LibraryDependencyData> dependencyNode : nodesToImport) {
@@ -116,7 +117,7 @@ public class LibraryDependencyDataService extends AbstractDependencyDataService<
           switch (dependencyData.getLevel()) {
             case MODULE:
               if (!libraryData.isUnresolved()) {
-                Set<String> paths = ContainerUtilRt.newHashSet();
+                Set<String> paths = new HashSet<>();
                 for (String path : libraryData.getPaths(LibraryPathType.BINARY)) {
                   paths.add(ExternalSystemApiUtil.toCanonicalPath(path) + dependencyData.getScope().name());
                 }
@@ -149,11 +150,13 @@ public class LibraryDependencyDataService extends AbstractDependencyDataService<
     });
   }
 
-  private void importMissing(@Nonnull Set<LibraryDependencyData> toImport,
-                             @Nonnull ModifiableRootModel moduleRootModel,
-                             @Nonnull LibraryTable moduleLibraryTable,
-                             @Nonnull LibraryTable libraryTable,
-                             @Nonnull Module module) {
+  private void importMissing(
+    @Nonnull Set<LibraryDependencyData> toImport,
+    @Nonnull ModifiableRootModel moduleRootModel,
+    @Nonnull LibraryTable moduleLibraryTable,
+    @Nonnull LibraryTable libraryTable,
+    @Nonnull Module module
+  ) {
     for (final LibraryDependencyData dependencyData : toImport) {
       final LibraryData libraryData = dependencyData.getTarget();
       final String libraryName = libraryData.getInternalName();
@@ -186,29 +189,34 @@ public class LibraryDependencyDataService extends AbstractDependencyDataService<
     }
   }
 
-  private static void setLibraryScope(@Nonnull LibraryOrderEntry orderEntry,
-                                      @Nonnull Library lib,
-                                      @Nonnull Module module,
-                                      @Nonnull LibraryDependencyData dependencyData) {
+  private static void setLibraryScope(
+    @Nonnull LibraryOrderEntry orderEntry,
+    @Nonnull Library lib,
+    @Nonnull Module module,
+    @Nonnull LibraryDependencyData dependencyData
+  ) {
     LOG.info(String.format("Adding library dependency '%s' to module '%s'", lib.getName(), module.getName()));
     orderEntry.setExported(dependencyData.isExported());
     orderEntry.setScope(dependencyData.getScope());
-    LOG.info(String.format("Configuring library dependency '%s' of module '%s' to be%s exported and have scope %s",
-                           lib.getName(),
-                           module.getName(),
-                           dependencyData.isExported() ? " not" : "",
-                           dependencyData.getScope()));
+    LOG.info(String.format(
+      "Configuring library dependency '%s' of module '%s' to be%s exported and have scope %s",
+      lib.getName(),
+      module.getName(),
+      dependencyData.isExported() ? " not" : "",
+      dependencyData.getScope()
+    ));
   }
 
-  private static void filterUpToDateAndRemoveObsolete(@Nonnull Map<Set<String>, LibraryDependencyData> moduleLibrariesToImport,
-                                                      @Nonnull Map<String, LibraryDependencyData> projectLibrariesToImport,
-                                                      @Nonnull Set<LibraryDependencyData> toImport,
-                                                      @Nonnull ModifiableRootModel moduleRootModel,
-                                                      boolean hasUnresolvedLibraries) {
-    Set<String> moduleLibraryKey = ContainerUtilRt.newHashSet();
+  private static void filterUpToDateAndRemoveObsolete(
+    @Nonnull Map<Set<String>, LibraryDependencyData> moduleLibrariesToImport,
+    @Nonnull Map<String, LibraryDependencyData> projectLibrariesToImport,
+    @Nonnull Set<LibraryDependencyData> toImport,
+    @Nonnull ModifiableRootModel moduleRootModel,
+    boolean hasUnresolvedLibraries
+  ) {
+    Set<String> moduleLibraryKey = new HashSet<>();
     for (OrderEntry entry : moduleRootModel.getOrderEntries()) {
-      if (entry instanceof ModuleLibraryOrderEntryImpl) {
-        ModuleLibraryOrderEntryImpl moduleLibraryOrderEntry = (ModuleLibraryOrderEntryImpl)entry;
+      if (entry instanceof ModuleLibraryOrderEntryImpl moduleLibraryOrderEntry) {
         Library library = moduleLibraryOrderEntry.getLibrary();
         if (library == null) {
           LOG.warn("Skipping module-level library entry because it doesn't have backing Library object. Entry: " + entry);
@@ -227,8 +235,7 @@ public class LibraryDependencyDataService extends AbstractDependencyDataService<
           toImport.remove(existing);
         }
       }
-      else if (entry instanceof LibraryOrderEntry) {
-        final LibraryOrderEntry libraryOrderEntry = (LibraryOrderEntry)entry;
+      else if (entry instanceof LibraryOrderEntry libraryOrderEntry) {
         final String libraryName = libraryOrderEntry.getLibraryName();
         final LibraryDependencyData existing = projectLibrariesToImport.remove(libraryName + libraryOrderEntry.getScope().name());
         if (existing != null) {
@@ -243,9 +250,11 @@ public class LibraryDependencyDataService extends AbstractDependencyDataService<
     }
   }
 
-  private void importMissingProjectLibraries(@Nonnull Module module,
-                                             @Nonnull Collection<DataNode<LibraryDependencyData>> nodesToImport,
-                                             boolean synchronous) {
+  private void importMissingProjectLibraries(
+    @Nonnull Module module,
+    @Nonnull Collection<DataNode<LibraryDependencyData>> nodesToImport,
+    boolean synchronous
+  ) {
     LibraryTable libraryTable = ProjectLibraryTableImpl.getInstance(module.getProject());
     List<DataNode<LibraryData>> librariesToImport = ContainerUtilRt.newArrayList();
     for (DataNode<LibraryDependencyData> dataNode : nodesToImport) {
@@ -258,12 +267,7 @@ public class LibraryDependencyDataService extends AbstractDependencyDataService<
         DataNode<ProjectData> projectNode = dataNode.getDataNode(ProjectKeys.PROJECT);
         if (projectNode != null) {
           DataNode<LibraryData> libraryNode =
-            ExternalSystemApiUtil.find(projectNode, ProjectKeys.LIBRARY, new BooleanFunction<DataNode<LibraryData>>() {
-              @Override
-              public boolean fun(DataNode<LibraryData> node) {
-                return node.getData().equals(dependencyData.getTarget());
-              }
-            });
+            ExternalSystemApiUtil.find(projectNode, ProjectKeys.LIBRARY, node -> node.getData().equals(dependencyData.getTarget()));
           if (libraryNode != null) {
             librariesToImport.add(libraryNode);
           }

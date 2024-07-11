@@ -15,19 +15,20 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
+import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.openapi.editor.actions.ContentChooser;
-import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.versionControlSystem.CommitMessageI;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.checkin.CheckinProjectPanel;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.ui.Refreshable;
+import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -47,13 +48,14 @@ public class ShowMessageHistoryAction extends AnAction implements DumbAware {
   }
 
   @Override
-  public void update(AnActionEvent e) {
+  @RequiredUIAccess
+  public void update(@Nonnull AnActionEvent e) {
     super.update(e);
 
     final DataContext dc = e.getDataContext();
-    final Project project = dc.getData(CommonDataKeys.PROJECT);
+    final Project project = dc.getData(Project.KEY);
     Object panel = dc.getData(CheckinProjectPanel.PANEL_KEY);
-    if (! (panel instanceof CommitMessageI)) {
+    if (!(panel instanceof CommitMessageI)) {
       panel = dc.getData(VcsDataKeys.COMMIT_MESSAGE_CONTROL);
     }
 
@@ -69,38 +71,37 @@ public class ShowMessageHistoryAction extends AnAction implements DumbAware {
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    CommitMessageI commitMessageI;
     final DataContext dc = e.getDataContext();
-    final Project project = dc.getData(CommonDataKeys.PROJECT);
+    final Project project = dc.getData(Project.KEY);
     final Refreshable panel = dc.getData(CheckinProjectPanel.PANEL_KEY);
-    commitMessageI = (panel instanceof CommitMessageI) ? (CommitMessageI)panel : dc.getData(VcsDataKeys.COMMIT_MESSAGE_CONTROL);
+    CommitMessageI commitMessageI = panel instanceof CommitMessageI cmtMsgI ? cmtMsgI : dc.getData(VcsDataKeys.COMMIT_MESSAGE_CONTROL);
 
     if (commitMessageI != null && project != null) {
       final VcsConfiguration configuration = VcsConfiguration.getInstance(project);
 
-
       if (!configuration.getRecentMessages().isEmpty()) {
 
         final ContentChooser<String> contentChooser =
-                new ContentChooser<String>(project, VcsBundle.message("dialog.title.choose.commit.message.from.history"), false) {
-                  @Override
-                  protected void removeContentAt(final String content) {
-                    configuration.removeMessage(content);
-                  }
+          new ContentChooser<>(project, VcsLocalize.dialogTitleChooseCommitMessageFromHistory().get(), false) {
+            @Override
+            protected void removeContentAt(final String content) {
+              configuration.removeMessage(content);
+            }
 
-                  @Override
-                  protected String getStringRepresentationFor(final String content) {
-                    return content;
-                  }
+            @Override
+            protected String getStringRepresentationFor(final String content) {
+              return content;
+            }
 
-                  @Override
-                  protected List<String> getContents() {
-                    final List<String> recentMessages = configuration.getRecentMessages();
-                    Collections.reverse(recentMessages);
-                    return recentMessages;
-                  }
-                };
+            @Override
+            protected List<String> getContents() {
+              final List<String> recentMessages = configuration.getRecentMessages();
+              Collections.reverse(recentMessages);
+              return recentMessages;
+            }
+          };
 
         contentChooser.show();
 

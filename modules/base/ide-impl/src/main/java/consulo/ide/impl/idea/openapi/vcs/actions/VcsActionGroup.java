@@ -16,21 +16,24 @@
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
 import consulo.application.dumb.DumbAware;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author mike
  */
 public class VcsActionGroup extends DefaultActionGroup implements DumbAware {
-  public void update(AnActionEvent event) {
+  @Override
+  @RequiredUIAccess
+  public void update(@Nonnull AnActionEvent event) {
     super.update(event);
 
     Presentation presentation = event.getPresentation();
-    Project project = event.getDataContext().getData(CommonDataKeys.PROJECT);
+    Project project = event.getDataContext().getData(Project.KEY);
     if (project == null){
       presentation.setVisible(false);
       presentation.setEnabled(false);

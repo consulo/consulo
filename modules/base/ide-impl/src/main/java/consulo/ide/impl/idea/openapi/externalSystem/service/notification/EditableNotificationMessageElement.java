@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.ide.errorTreeView.*;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.navigation.Navigatable;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.awt.UIUtil;
@@ -41,6 +41,7 @@ import javax.swing.text.html.HTMLDocument;
 import javax.swing.tree.TreeCellEditor;
 import javax.swing.tree.TreePath;
 import java.awt.*;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -56,20 +57,21 @@ public class EditableNotificationMessageElement extends NotificationMessageEleme
   @Nonnull
   private final Map<String/*url*/, String/*link text to replace*/> disabledLinks;
 
-  public EditableNotificationMessageElement(@Nonnull Notification notification,
-                                            @Nonnull ErrorTreeElementKind kind,
-                                            @Nullable GroupingElement parent,
-                                            String[] message,
-                                            Navigatable navigatable,
-                                            String exportText, String rendererTextPrefix) {
+  public EditableNotificationMessageElement(
+    @Nonnull Notification notification,
+    @Nonnull ErrorTreeElementKind kind,
+    @Nullable GroupingElement parent,
+    String[] message,
+    Navigatable navigatable,
+    String exportText, String rendererTextPrefix
+  ) {
     super(kind, parent, message, navigatable, exportText, rendererTextPrefix);
     myNotification = notification;
-    disabledLinks = ContainerUtil.newHashMap();
+    disabledLinks = new HashMap<>();
     myRightTreeCellEditor = new MyCellEditor();
   }
 
-
-  public void addDisabledLink(@Nonnull String url, @jakarta.annotation.Nullable String text) {
+  public void addDisabledLink(@Nonnull String url, @Nullable String text) {
     disabledLinks.put(url, text);
   }
 
@@ -89,19 +91,16 @@ public class EditableNotificationMessageElement extends NotificationMessageEleme
   }
 
   private static void disableLink(@Nonnull final HyperlinkEvent event, @Nullable final String linkText) {
-    if (event.getSource() instanceof MyJEditorPane) {
-      UIUtil.invokeLaterIfNeeded(new Runnable() {
-        @Override
-        public void run() {
-          final MyJEditorPane editorPane = (MyJEditorPane)event.getSource();
-          editorPane.myElement.addDisabledLink(event.getDescription(), linkText);
-          editorPane.myElement.updateStyle(editorPane, null, null, true, false);
-        }
+    if (event.getSource() instanceof MyJEditorPane editorPane) {
+      UIUtil.invokeLaterIfNeeded(() -> {
+        editorPane.myElement.addDisabledLink(event.getDescription(), linkText);
+        editorPane.myElement.updateStyle(editorPane, null, null, true, false);
       });
     }
   }
 
-  protected void updateStyle(@Nonnull JEditorPane editorPane, @jakarta.annotation.Nullable JTree tree, Object value, boolean selected, boolean hasFocus) {
+  @Override
+  protected void updateStyle(@Nonnull JEditorPane editorPane, @Nullable JTree tree, Object value, boolean selected, boolean hasFocus) {
     super.updateStyle(editorPane, tree, value, selected, hasFocus);
 
     final HTMLDocument htmlDocument = (HTMLDocument)editorPane.getDocument();
@@ -112,7 +111,7 @@ public class EditableNotificationMessageElement extends NotificationMessageEleme
     while (iterator.isValid()) {
       boolean disabledLink = false;
       final AttributeSet attributes = iterator.getAttributes();
-      if (attributes instanceof SimpleAttributeSet) {
+      if (attributes instanceof SimpleAttributeSet simpleAttributeSet) {
         final Object attribute = attributes.getAttribute(HTML.Attribute.HREF);
         if (attribute instanceof String && disabledLinks.containsKey(attribute)) {
           disabledLink = true;
@@ -120,7 +119,7 @@ public class EditableNotificationMessageElement extends NotificationMessageEleme
           ////final String linkText = disabledLinks.get(attribute);
           //if (linkText != null) {
           //}
-          ((SimpleAttributeSet)attributes).removeAttribute(HTML.Attribute.HREF);
+          simpleAttributeSet.removeAttribute(HTML.Attribute.HREF);
         }
         if (attribute == null) {
           disabledLink = true;
@@ -185,8 +184,8 @@ public class EditableNotificationMessageElement extends NotificationMessageEleme
     }
 
     private class ActivatedHyperlinkListener implements HyperlinkListener {
-
       @Override
+      @RequiredUIAccess
       public void hyperlinkUpdate(HyperlinkEvent e) {
         if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
           final NotificationListener notificationListener = myNotification.getListener();

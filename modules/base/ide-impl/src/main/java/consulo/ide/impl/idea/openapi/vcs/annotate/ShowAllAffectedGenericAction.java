@@ -15,10 +15,10 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.annotate;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
@@ -30,6 +30,7 @@ import consulo.versionControlSystem.history.ShortVcsRevisionNumber;
 import consulo.versionControlSystem.history.VcsFileRevision;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.versionBrowser.ChangeBrowserSettings;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
@@ -57,17 +58,24 @@ public class ShowAllAffectedGenericAction extends AnAction {
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     if (project == null) return;
     final VcsKey vcsKey = e.getData(VcsDataKeys.VCS);
     if (vcsKey == null) return;
     final VcsFileRevision revision = e.getData(VcsDataKeys.VCS_FILE_REVISION);
     VirtualFile revisionVirtualFile = e.getData(VcsDataKeys.VCS_VIRTUAL_FILE);
     final Boolean isNonLocal = e.getData(VcsDataKeys.VCS_NON_LOCAL_HISTORY_SESSION);
-    if ((revision != null) && (revisionVirtualFile != null)) {
-      showSubmittedFiles(project, revision.getRevisionNumber(), revisionVirtualFile, vcsKey, revision.getChangedRepositoryPath(),
-                         Boolean.TRUE.equals(isNonLocal));
+    if (revision != null && revisionVirtualFile != null) {
+      showSubmittedFiles(
+        project,
+        revision.getRevisionNumber(),
+        revisionVirtualFile,
+        vcsKey,
+        revision.getChangedRepositoryPath(),
+        Boolean.TRUE.equals(isNonLocal)
+      );
     }
   }
 
@@ -81,13 +89,12 @@ public class ShowAllAffectedGenericAction extends AnAction {
     if (vcs == null) return;
     if (isNonLocal && ! canPresentNonLocal(project, vcsKey, virtualFile)) return;
 
-    final String title = VcsBundle.message("paths.affected.in.revision",
-                                           revision instanceof ShortVcsRevisionNumber
-                                               ? ((ShortVcsRevisionNumber) revision).toShortString()
-                                               :  revision.asString());
+    final LocalizeValue title = VcsLocalize.pathsAffectedInRevision(
+      revision instanceof ShortVcsRevisionNumber shortVcsRevisionNumber ? shortVcsRevisionNumber.toShortString() : revision.asString()
+    );
     final CommittedChangeList[] list = new CommittedChangeList[1];
     final VcsException[] exc = new VcsException[1];
-    Task.Backgroundable task = new Task.Backgroundable(project, title, true, BackgroundFromStartOption.getInstance()) {
+    Task.Backgroundable task = new Task.Backgroundable(project, title.get(), true, BackgroundFromStartOption.getInstance()) {
       @Override
       public void run(@Nonnull ProgressIndicator indicator) {
         try {
@@ -107,7 +114,6 @@ public class ShowAllAffectedGenericAction extends AnAction {
               if (changes != null && changes.size() == 1) {
                 list[0] = changes.get(0);
               }
-              return;
             }
             else {
               list[0] = getRemoteList(vcs, revision, virtualFile);
@@ -143,7 +149,7 @@ public class ShowAllAffectedGenericAction extends AnAction {
           Messages.showErrorDialog(project, failedText(virtualFile, revision), getTitle());
         }
         else {
-          instance.showChangesListBrowser(list[0], virtualFile, title);
+          instance.showChangesListBrowser(list[0], virtualFile, title.get());
         }
       }
     };
@@ -174,8 +180,9 @@ public class ShowAllAffectedGenericAction extends AnAction {
   }
 
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     final VcsKey vcsKey = e.getData(VcsDataKeys.VCS);
     if (project == null || vcsKey == null) {
       e.getPresentation().setEnabled(false);
@@ -192,7 +199,6 @@ public class ShowAllAffectedGenericAction extends AnAction {
     final AbstractVcs vcs = ProjectLevelVcsManager.getInstance(project).findVcsByName(key.getName());
     if (vcs == null) return false;
     final CommittedChangesProvider provider = vcs.getCommittedChangesProvider();
-    if (provider == null) return false;
-    return provider.getForNonLocal(file) != null;
+    return provider != null && provider.getForNonLocal(file) != null;
   }
 }

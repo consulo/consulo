@@ -31,8 +31,6 @@ import consulo.ide.impl.idea.ide.impl.TypeSafeDataProviderAdapter;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.actions.*;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.LibrarySourceItem;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.SourceItemsTree;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
 import consulo.ide.impl.idea.util.IconUtil;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.ui.awt.HintUtil;
@@ -44,6 +42,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.tree.DefaultTreeExpander;
 import consulo.util.dataholder.Key;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
@@ -432,7 +431,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
         String oldFileName = ArtifactUtil.suggestArtifactFileName(oldArtifactName);
         final String name = archivePackagingElement.getArchiveFileName();
         final String fileName = FileUtil.getNameWithoutExtension(name);
-        final String extension = FileUtilRt.getExtension(name);
+        final String extension = FileUtil.getExtension(name);
         if (fileName.equals(oldFileName) && extension.length() > 0) {
           myLayoutTreeComponent.editLayout(
             () -> archivePackagingElement.setArchiveFileName(

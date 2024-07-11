@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.document.FileDocumentManager;
@@ -39,27 +39,29 @@ public class RollbackDialogAction extends AnAction implements DumbAware {
     ActionUtil.copyFrom(this, IdeActions.CHANGES_VIEW_ROLLBACK);
   }
 
+  @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
     FileDocumentManager.getInstance().saveAllDocuments();
     Change[] changes = e.getData(VcsDataKeys.CHANGES);
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     final ChangesBrowserBase browser = e.getData(ChangesBrowserBase.DATA_KEY);
     if (browser != null) {
       browser.setDataIsDirty(true);
     }
-    RollbackChangesDialog.rollbackChanges(project, Arrays.asList(changes), true, new Runnable() {
-      public void run() {
-        if (browser != null) {
-          browser.rebuildList();
-          browser.setDataIsDirty(false);
-        }
+    RollbackChangesDialog.rollbackChanges(project, Arrays.asList(changes), true, () -> {
+      if (browser != null) {
+        browser.rebuildList();
+        browser.setDataIsDirty(false);
       }
     });
   }
 
+  @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
     Change[] changes = e.getData(VcsDataKeys.CHANGES);
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     boolean enabled = changes != null && project != null;
     e.getPresentation().setEnabled(enabled);
     if (enabled) {
@@ -67,6 +69,5 @@ public class RollbackDialogAction extends AnAction implements DumbAware {
       e.getPresentation().setText(operationName);
       e.getPresentation().setDescription(operationName + " selected changes");
     }
-
   }
 }

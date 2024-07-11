@@ -15,15 +15,15 @@
  */
 package consulo.ide.impl.idea.openapi.fileChooser.ex;
 
+import consulo.application.util.SystemInfo;
 import consulo.ide.impl.idea.execution.wsl.WSLUtil;
 import consulo.ide.impl.idea.openapi.fileChooser.FileElement;
-import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-
 import jakarta.annotation.Nonnull;
+
 import java.nio.file.FileSystems;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,12 +57,17 @@ public class RootFileElement extends FileElement {
   private static List<VirtualFile> getFileSystemRoots() {
     LocalFileSystem localFileSystem = LocalFileSystem.getInstance();
 
-    final List<VirtualFile> result = new ArrayList<>(StreamSupport.stream(FileSystems.getDefault().getRootDirectories().spliterator(), false).
-            map(root -> localFileSystem.findFileByPath(FileUtil.toSystemIndependentName(root.toString()))).
-            collect(Collectors.toList()));
+    final List<VirtualFile> result = new ArrayList<>(
+      StreamSupport.stream(FileSystems.getDefault().getRootDirectories().spliterator(), false)
+        .map(root -> localFileSystem.findFileByPath(FileUtil.toSystemIndependentName(root.toString())))
+        .collect(Collectors.toList())
+    );
 
     if (SystemInfo.isWin10OrNewer && Boolean.getBoolean("wsl.p9.show.roots.in.file.chooser")) {
-      final List<VirtualFile> wslRoots = ContainerUtil.mapNotNull(WSLUtil.getExistingUNCRoots(), root -> localFileSystem.findFileByPath(FileUtil.toSystemIndependentName(root.getAbsolutePath())));
+      final List<VirtualFile> wslRoots = ContainerUtil.mapNotNull(
+        WSLUtil.getExistingUNCRoots(),
+        root -> localFileSystem.findFileByPath(FileUtil.toSystemIndependentName(root.getAbsolutePath()))
+      );
       result.addAll(wslRoots);
     }
     return result;

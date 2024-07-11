@@ -26,18 +26,19 @@ import consulo.externalSystem.model.project.ModuleData;
 import consulo.externalSystem.model.task.TaskData;
 import consulo.externalSystem.service.project.ExternalConfigPathAware;
 import consulo.externalSystem.setting.AbstractExternalSystemLocalSettings;
+import consulo.externalSystem.ui.awt.ExternalSystemTasksTreeModel;
+import consulo.externalSystem.ui.awt.ExternalSystemUiUtil;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.externalSystem.util.ExternalSystemConstants;
 import consulo.externalSystem.util.Order;
-import consulo.externalSystem.ui.awt.ExternalSystemTasksTreeModel;
-import consulo.externalSystem.ui.awt.ExternalSystemUiUtil;
 import consulo.ide.impl.idea.util.NullableFunction;
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
 import consulo.project.Project;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -51,14 +52,9 @@ import java.util.function.Function;
 public class ToolWindowTaskService extends AbstractToolWindowService<TaskData> {
 
   @Nonnull
-  public static final Function<DataNode<TaskData>, ExternalTaskPojo> MAPPER = new Function<DataNode<TaskData>, ExternalTaskPojo>() {
-    @Override
-    public ExternalTaskPojo apply(DataNode<TaskData> node) {
-      return ExternalTaskPojo.from(node.getData());
-    }
-  };
+  public static final Function<DataNode<TaskData>, ExternalTaskPojo> MAPPER = node -> ExternalTaskPojo.from(node.getData());
 
-  public static final NullableFunction<DataNode<TaskData>, ExternalConfigPathAware> TASK_HOLDER_RETRIEVAL_STRATEGY = new NullableFunction<DataNode<TaskData>, ExternalConfigPathAware>() {
+  public static final NullableFunction<DataNode<TaskData>, ExternalConfigPathAware> TASK_HOLDER_RETRIEVAL_STRATEGY = new NullableFunction<>() {
     @Nullable
     @Override
     public ExternalConfigPathAware apply(DataNode<TaskData> node) {
@@ -83,7 +79,7 @@ public class ToolWindowTaskService extends AbstractToolWindowService<TaskData> {
     assert manager != null;
 
     Map<ExternalConfigPathAware, List<DataNode<TaskData>>> grouped = ExternalSystemApiUtil.groupBy(nodes, TASK_HOLDER_RETRIEVAL_STRATEGY);
-    Map<String, Collection<ExternalTaskPojo>> data = ContainerUtilRt.newHashMap();
+    Map<String, Collection<ExternalTaskPojo>> data = new HashMap<>();
     for (Map.Entry<ExternalConfigPathAware, List<DataNode<TaskData>>> entry : grouped.entrySet()) {
       data.put(entry.getKey().getLinkedExternalProjectPath(), ContainerUtilRt.map2List(entry.getValue(), MAPPER));
     }

@@ -23,8 +23,8 @@ import consulo.application.util.UniqueNameBuilder;
 import consulo.content.scope.SearchScope;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.UniqueVFilePathBuilder;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.io.FileUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.language.psi.PsiModificationTracker;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.search.FilenameIndex;
@@ -50,7 +50,7 @@ import java.util.concurrent.ConcurrentMap;
 public class UniqueVFilePathBuilderImpl extends UniqueVFilePathBuilder {
   @Nonnull
   @Override
-  public String getUniqueVirtualFilePath(Project project, VirtualFile file, SearchScope scope) {
+  public String getUniqueVirtualFilePath(@Nonnull Project project, @Nonnull VirtualFile file, @Nonnull SearchScope scope) {
     return getUniqueVirtualFilePath(project, file, false, scope);
   }
 
@@ -65,19 +65,35 @@ public class UniqueVFilePathBuilderImpl extends UniqueVFilePathBuilder {
     return getUniqueVirtualFilePath(project, vFile, true, GlobalSearchScope.projectScope(project));
   }
 
-  private static final Key<CachedValue<Map<SearchScope, Map<String, UniqueNameBuilder<VirtualFile>>>>> ourShortNameBuilderCacheKey = Key.create("project's.short.file.name.builder");
-  private static final Key<CachedValue<Map<SearchScope, Map<String, UniqueNameBuilder<VirtualFile>>>>> ourShortNameOpenedBuilderCacheKey = Key.create("project's.short.file.name.opened.builder");
+  private static final Key<CachedValue<Map<SearchScope, Map<String, UniqueNameBuilder<VirtualFile>>>>> ourShortNameBuilderCacheKey =
+    Key.create("project's.short.file.name.builder");
+  private static final Key<CachedValue<Map<SearchScope, Map<String, UniqueNameBuilder<VirtualFile>>>>> ourShortNameOpenedBuilderCacheKey =
+    Key.create("project's.short.file.name.opened.builder");
   private static final UniqueNameBuilder<VirtualFile> ourEmptyBuilder = new UniqueNameBuilder<>(null, null, -1);
 
-  private static String getUniqueVirtualFilePath(final Project project, VirtualFile file, final boolean skipNonOpenedFiles, SearchScope scope) {
-    Key<CachedValue<Map<SearchScope, Map<String, UniqueNameBuilder<VirtualFile>>>>> key = skipNonOpenedFiles ? ourShortNameOpenedBuilderCacheKey : ourShortNameBuilderCacheKey;
+  private static String getUniqueVirtualFilePath(
+    final Project project,
+    VirtualFile file,
+    final boolean skipNonOpenedFiles,
+    SearchScope scope
+  ) {
+    Key<CachedValue<Map<SearchScope, Map<String, UniqueNameBuilder<VirtualFile>>>>> key =
+      skipNonOpenedFiles ? ourShortNameOpenedBuilderCacheKey : ourShortNameBuilderCacheKey;
     CachedValue<Map<SearchScope, Map<String, UniqueNameBuilder<VirtualFile>>>> data = project.getUserData(key);
     if (data == null) {
-      project.putUserData(key, data = CachedValuesManager.getManager(project).createCachedValue(
-              () -> new CachedValueProvider.Result<Map<SearchScope, Map<String, UniqueNameBuilder<VirtualFile>>>>(new ConcurrentHashMap<>(2), PsiModificationTracker.MODIFICATION_COUNT,
-                                                                                                                  //ProjectRootModificationTracker.getInstance(project),
-                                                                                                                  //VirtualFileManager.VFS_STRUCTURE_MODIFICATIONS,
-                                                                                                                  FileEditorManagerImpl.OPEN_FILE_SET_MODIFICATION_COUNT), false));
+      project.putUserData(
+        key,
+        data = CachedValuesManager.getManager(project).createCachedValue(
+          () -> new CachedValueProvider.Result<Map<SearchScope, Map<String, UniqueNameBuilder<VirtualFile>>>>(
+            new ConcurrentHashMap<>(2),
+            PsiModificationTracker.MODIFICATION_COUNT,
+            //ProjectRootModificationTracker.getInstance(project),
+            //VirtualFileManager.VFS_STRUCTURE_MODIFICATIONS,
+            FileEditorManagerImpl.OPEN_FILE_SET_MODIFICATION_COUNT
+          ),
+          false
+        )
+      );
     }
 
     ConcurrentMap<SearchScope, Map<String, UniqueNameBuilder<VirtualFile>>> scope2ValueMap = (ConcurrentMap<SearchScope, Map<String, UniqueNameBuilder<VirtualFile>>>)data.getValue();
@@ -99,17 +115,22 @@ public class UniqueVFilePathBuilderImpl extends UniqueVFilePathBuilder {
     }
 
     if (uniqueNameBuilderForShortName != null && uniqueNameBuilderForShortName.contains(file)) {
-      if (file instanceof VirtualFilePathWrapper) {
-        return ((VirtualFilePathWrapper)file).getPresentablePath();
-      }
-      return uniqueNameBuilderForShortName.getShortPath(file);
+      return file instanceof VirtualFilePathWrapper virtualFilePathWrapper
+        ? virtualFilePathWrapper.getPresentablePath()
+        : uniqueNameBuilderForShortName.getShortPath(file);
     }
     return file.getName();
   }
 
   @Nullable
-  private static UniqueNameBuilder<VirtualFile> filesWithTheSameName(String fileName, Project project, boolean skipNonOpenedFiles, SearchScope scope) {
-    Collection<VirtualFile> filesWithSameName = skipNonOpenedFiles ? Collections.emptySet() : FilenameIndex.getVirtualFilesByName(project, fileName, scope);
+  private static UniqueNameBuilder<VirtualFile> filesWithTheSameName(
+    String fileName,
+    Project project,
+    boolean skipNonOpenedFiles,
+    SearchScope scope
+  ) {
+    Collection<VirtualFile> filesWithSameName =
+      skipNonOpenedFiles ? Collections.emptySet() : FilenameIndex.getVirtualFilesByName(project, fileName, scope);
     Set<VirtualFile> setOfFilesWithTheSameName = new HashSet<>(filesWithSameName);
     // add open files out of project scope
     for (VirtualFile openFile : FileEditorManager.getInstance(project).getOpenFiles()) {

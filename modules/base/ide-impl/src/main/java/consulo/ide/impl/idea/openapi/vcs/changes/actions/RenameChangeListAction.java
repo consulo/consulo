@@ -23,31 +23,36 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
 import consulo.application.dumb.DumbAware;
-import consulo.language.editor.CommonDataKeys;
+import consulo.ide.impl.idea.openapi.vcs.changes.ui.EditChangelistDialog;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.LocalChangeList;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.EditChangelistDialog;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
 
 public class RenameChangeListAction extends AnAction implements DumbAware {
-
+  @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
     ChangeList[] lists = e.getData(VcsDataKeys.CHANGE_LISTS);
     final boolean visible =
-      lists != null && lists.length == 1 && lists[0] instanceof LocalChangeList && !((LocalChangeList)lists[0]).isReadOnly();
-    if (e.getPlace().equals(ActionPlaces.CHANGES_VIEW_POPUP))
+      lists != null && lists.length == 1 && lists[0] instanceof LocalChangeList localChangeList && !localChangeList.isReadOnly();
+    if (e.getPlace().equals(ActionPlaces.CHANGES_VIEW_POPUP)) {
       e.getPresentation().setVisible(visible);
-    else
+    }
+    else {
       e.getPresentation().setEnabled(visible);
+    }
   }
 
+  @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     ChangeList[] lists = e.getData(VcsDataKeys.CHANGE_LISTS);
     assert lists != null;
     final LocalChangeList list = ChangeListManager.getInstance(project).findChangeList(lists[0].getName());

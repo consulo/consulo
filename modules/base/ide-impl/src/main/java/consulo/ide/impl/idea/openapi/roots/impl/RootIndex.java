@@ -25,11 +25,11 @@ import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.ModuleOrderEntry;
 import consulo.module.content.layer.orderEntry.ModuleSourceOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.util.collection.SmartList;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;
-import consulo.content.internal.LibraryEx;
 import consulo.content.library.Library;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
@@ -68,16 +68,16 @@ public class RootIndex {
     void cacheInfo(@Nonnull VirtualFile dir, @Nonnull DirectoryInfo info);
   }
 
-  private final Set<VirtualFile> myProjectExcludedRoots = ContainerUtil.newHashSet();
-  private final MultiMap<String, VirtualFile> myPackagePrefixRoots = new MultiMap<String, VirtualFile>() {
+  private final Set<VirtualFile> myProjectExcludedRoots = new HashSet<>();
+  private final MultiMap<String, VirtualFile> myPackagePrefixRoots = new MultiMap<>() {
     @Override
     protected Collection<VirtualFile> createCollection() {
-      return ContainerUtil.newLinkedHashSet();
+      return new LinkedHashSet<>();
     }
   };
 
-  private final Map<String, List<VirtualFile>> myDirectoriesByPackageNameCache = ContainerUtil.newConcurrentMap();
-  private final Set<String> myNonExistentPackages = ContainerUtil.newConcurrentSet();
+  private final Map<String, List<VirtualFile>> myDirectoriesByPackageNameCache = consulo.util.collection.ContainerUtil.newConcurrentMap();
+  private final Set<String> myNonExistentPackages = consulo.util.collection.ContainerUtil.newConcurrentSet();
   private final InfoCache myInfoCache;
   @Nonnull
   private final Project myProject;
@@ -220,24 +220,30 @@ public class RootIndex {
     }
 
     RootInfo rootInfo = buildRootInfo(myProject);
-    result = ContainerUtil.newHashMap();
+    result = new HashMap<>();
     Set<VirtualFile> allRoots = rootInfo.getAllRoots();
     for (VirtualFile file : allRoots) {
       List<VirtualFile> hierarchy = getHierarchy(file, allRoots, rootInfo);
-      result.put(file, hierarchy == null ? OrderEntry.EMPTY_ARRAY : calcOrderEntries(rootInfo, depEntries, libClassRootEntries, libSourceRootEntries, hierarchy));
+      result.put(
+        file,
+        hierarchy == null ? OrderEntry.EMPTY_ARRAY
+          : calcOrderEntries(rootInfo, depEntries, libClassRootEntries, libSourceRootEntries, hierarchy)
+      );
     }
     myOrderEntries = result;
     return result;
   }
 
-  private static OrderEntry[] calcOrderEntries(@Nonnull RootInfo info,
-                                               @Nonnull MultiMap<VirtualFile, OrderEntry> depEntries,
-                                               @Nonnull MultiMap<VirtualFile, OrderEntry> libClassRootEntries,
-                                               @Nonnull MultiMap<VirtualFile, OrderEntry> libSourceRootEntries,
-                                               @Nonnull List<VirtualFile> hierarchy) {
+  private static OrderEntry[] calcOrderEntries(
+    @Nonnull RootInfo info,
+    @Nonnull MultiMap<VirtualFile, OrderEntry> depEntries,
+    @Nonnull MultiMap<VirtualFile, OrderEntry> libClassRootEntries,
+    @Nonnull MultiMap<VirtualFile, OrderEntry> libSourceRootEntries,
+    @Nonnull List<VirtualFile> hierarchy
+  ) {
     @Nullable VirtualFile libraryClassRoot = info.findLibraryRootInfo(hierarchy, false);
     @Nullable VirtualFile librarySourceRoot = info.findLibraryRootInfo(hierarchy, true);
-    Set<OrderEntry> orderEntries = ContainerUtil.newLinkedHashSet();
+    Set<OrderEntry> orderEntries = new LinkedHashSet<>();
     orderEntries.addAll(info.getLibraryOrderEntries(hierarchy, libraryClassRoot, librarySourceRoot, libClassRootEntries, libSourceRootEntries));
     for (VirtualFile root : hierarchy) {
       orderEntries.addAll(depEntries.get(root));
@@ -325,7 +331,7 @@ public class RootIndex {
     if (result == null) {
       if (myNonExistentPackages.contains(packageName)) return EmptyQuery.getEmptyQuery();
 
-      result = ContainerUtil.newSmartList();
+      result = new SmartList<>();
 
       if (StringUtil.isNotEmpty(packageName) && !StringUtil.startsWithChar(packageName, '.')) {
         int i = packageName.lastIndexOf('.');
@@ -411,7 +417,7 @@ public class RootIndex {
 
   @Nullable
   private static List<VirtualFile> getHierarchy(VirtualFile dir, @Nonnull Set<VirtualFile> allRoots, @Nonnull RootInfo info) {
-    List<VirtualFile> hierarchy = ContainerUtil.newArrayList();
+    List<VirtualFile> hierarchy = new ArrayList<>();
     boolean hasContentRoots = false;
     while (dir != null) {
       hasContentRoots |= info.contentRootOf.get(dir) != null;
@@ -433,18 +439,18 @@ public class RootIndex {
   private static class RootInfo {
     // getDirectoriesByPackageName used to be in this order, some clients might rely on that
     @Nonnull
-    final LinkedHashSet<VirtualFile> classAndSourceRoots = ContainerUtil.newLinkedHashSet();
+    final LinkedHashSet<VirtualFile> classAndSourceRoots = new LinkedHashSet<>();
 
     @Nonnull
-    final Set<VirtualFile> libraryOrSdkSources = ContainerUtil.newHashSet();
+    final Set<VirtualFile> libraryOrSdkSources = new HashSet<>();
     @Nonnull
-    final Set<VirtualFile> libraryOrSdkClasses = ContainerUtil.newHashSet();
+    final Set<VirtualFile> libraryOrSdkClasses = new HashSet<>();
     @Nonnull
-    final Map<VirtualFile, Module> contentRootOf = ContainerUtil.newHashMap();
+    final Map<VirtualFile, Module> contentRootOf = new HashMap<>();
     @Nonnull
     final MultiMap<VirtualFile, Module> sourceRootOf = MultiMap.createSet();
     @Nonnull
-    final Map<VirtualFile, ContentFolder> contentFolders = ContainerUtil.newHashMap();
+    final Map<VirtualFile, ContentFolder> contentFolders = new HashMap<>();
     @Nonnull
     final MultiMap<VirtualFile, Library> excludedFromLibraries = MultiMap.createSmart();
     @Nonnull
@@ -452,15 +458,15 @@ public class RootIndex {
     @Nonnull
     final MultiMap<VirtualFile, Library> sourceOfLibraries = MultiMap.createSmart();
     @Nonnull
-    final Set<VirtualFile> excludedFromProject = ContainerUtil.newHashSet();
+    final Set<VirtualFile> excludedFromProject = new HashSet<>();
     @Nonnull
-    final Map<VirtualFile, Module> excludedFromModule = ContainerUtil.newHashMap();
+    final Map<VirtualFile, Module> excludedFromModule = new HashMap<>();
     @Nonnull
-    final Map<VirtualFile, String> packagePrefix = ContainerUtil.newHashMap();
+    final Map<VirtualFile, String> packagePrefix = new HashMap<>();
 
     @Nonnull
     Set<VirtualFile> getAllRoots() {
-      LinkedHashSet<VirtualFile> result = ContainerUtil.newLinkedHashSet();
+      LinkedHashSet<VirtualFile> result = new LinkedHashSet<>();
       result.addAll(classAndSourceRoots);
       result.addAll(contentRootOf.keySet());
       result.addAll(excludedFromLibraries.keySet());
@@ -502,20 +508,28 @@ public class RootIndex {
 
     @Nullable
     private VirtualFile findLibraryRootInfo(@Nonnull List<VirtualFile> hierarchy, boolean source) {
-      Set<Library> librariesToIgnore = ContainerUtil.newHashSet();
+      Set<Library> librariesToIgnore = new HashSet<>();
       for (VirtualFile root : hierarchy) {
         librariesToIgnore.addAll(excludedFromLibraries.get(root));
-        if (source && libraryOrSdkSources.contains(root) && (!sourceOfLibraries.containsKey(root) || !librariesToIgnore.containsAll(sourceOfLibraries.get(root)))) {
+        if (source && libraryOrSdkSources.contains(root) && (!sourceOfLibraries.containsKey(root)
+          || !librariesToIgnore.containsAll(sourceOfLibraries.get(root)))) {
           return root;
         }
-        else if (!source && libraryOrSdkClasses.contains(root) && (!classOfLibraries.containsKey(root) || !librariesToIgnore.containsAll(classOfLibraries.get(root)))) {
+        else if (!source && libraryOrSdkClasses.contains(root) && (!classOfLibraries.containsKey(root)
+          || !librariesToIgnore.containsAll(classOfLibraries.get(root)))) {
           return root;
         }
       }
       return null;
     }
 
-    private String calcPackagePrefix(@Nonnull VirtualFile root, @Nonnull List<VirtualFile> hierarchy, VirtualFile moduleContentRoot, VirtualFile libraryClassRoot, VirtualFile librarySourceRoot) {
+    private String calcPackagePrefix(
+      @Nonnull VirtualFile root,
+      @Nonnull List<VirtualFile> hierarchy,
+      VirtualFile moduleContentRoot,
+      VirtualFile libraryClassRoot,
+      VirtualFile librarySourceRoot
+    ) {
       VirtualFile packageRoot = findPackageRootInfo(hierarchy, moduleContentRoot, libraryClassRoot, librarySourceRoot);
       String prefix = packagePrefix.get(packageRoot);
       if (prefix != null && packageRoot != root) {
@@ -543,12 +557,14 @@ public class RootIndex {
     }
 
     @Nonnull
-    private LinkedHashSet<OrderEntry> getLibraryOrderEntries(@Nonnull List<VirtualFile> hierarchy,
-                                                             @Nullable VirtualFile libraryClassRoot,
-                                                             @Nullable VirtualFile librarySourceRoot,
-                                                             @Nonnull MultiMap<VirtualFile, OrderEntry> libClassRootEntries,
-                                                             @Nonnull MultiMap<VirtualFile, OrderEntry> libSourceRootEntries) {
-      LinkedHashSet<OrderEntry> orderEntries = ContainerUtil.newLinkedHashSet();
+    private LinkedHashSet<OrderEntry> getLibraryOrderEntries(
+      @Nonnull List<VirtualFile> hierarchy,
+      @Nullable VirtualFile libraryClassRoot,
+      @Nullable VirtualFile librarySourceRoot,
+      @Nonnull MultiMap<VirtualFile, OrderEntry> libClassRootEntries,
+      @Nonnull MultiMap<VirtualFile, OrderEntry> libSourceRootEntries
+    ) {
+      LinkedHashSet<OrderEntry> orderEntries = new LinkedHashSet<>();
       for (VirtualFile root : hierarchy) {
         if (root == libraryClassRoot && !sourceRootOf.containsKey(root)) {
           orderEntries.addAll(libClassRootEntries.get(root));

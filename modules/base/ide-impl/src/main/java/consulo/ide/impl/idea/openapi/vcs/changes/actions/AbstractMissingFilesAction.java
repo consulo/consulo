@@ -22,9 +22,9 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.application.progress.ProgressManager;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
@@ -42,6 +42,8 @@ import java.util.List;
 
 public abstract class AbstractMissingFilesAction extends AnAction implements DumbAware {
 
+  @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
     List<FilePath> files = e.getData(ChangesListView.MISSING_FILES_DATA_KEY);
     boolean enabled = files != null && !files.isEmpty();
@@ -49,31 +51,29 @@ public abstract class AbstractMissingFilesAction extends AnAction implements Dum
     e.getPresentation().setVisible(enabled);
   }
 
+  @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     final List<FilePath> files = e.getData(ChangesListView.MISSING_FILES_DATA_KEY);
     if (files == null) return;
 
     final ProgressManager progressManager = ProgressManager.getInstance();
-    final Runnable action = new Runnable() {
-      public void run() {
-        final List<VcsException> allExceptions = new ArrayList<VcsException>();
-        ChangesUtil.processFilePathsByVcs(project, files, new ChangesUtil.PerVcsProcessor<FilePath>() {
-          public void process(final AbstractVcs vcs, final List<FilePath> items) {
-            final List<VcsException> exceptions = processFiles(vcs, files);
-            if (exceptions != null) {
-              allExceptions.addAll(exceptions);
-            }
-          }
-        });
+    final Runnable action = () -> {
+      final List<VcsException> allExceptions = new ArrayList<>();
+      ChangesUtil.processFilePathsByVcs(project, files, (vcs, items) -> {
+        final List<VcsException> exceptions = processFiles(vcs, files);
+        if (exceptions != null) {
+          allExceptions.addAll(exceptions);
+        }
+      });
 
-        for (FilePath file : files) {
-          VcsDirtyScopeManager.getInstance(project).fileDirty(file);
-        }
-        ChangesViewManager.getInstance(project).scheduleRefresh();
-        if (allExceptions.size() > 0) {
-          AbstractVcsHelper.getInstance(project).showErrors(allExceptions, "VCS Errors");
-        }
+      for (FilePath file : files) {
+        VcsDirtyScopeManager.getInstance(project).fileDirty(file);
+      }
+      ChangesViewManager.getInstance(project).scheduleRefresh();
+      if (allExceptions.size() > 0) {
+        AbstractVcsHelper.getInstance(project).showErrors(allExceptions, "VCS Errors");
       }
     };
     if (synchronously()) {

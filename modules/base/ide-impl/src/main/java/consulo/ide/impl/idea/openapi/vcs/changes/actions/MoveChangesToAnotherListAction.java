@@ -27,6 +27,7 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -46,13 +47,10 @@ import jakarta.annotation.Nullable;
 
 import java.util.*;
 
-import static consulo.language.editor.CommonDataKeys.PROJECT;
-
 /**
  * @author max
  */
 public class MoveChangesToAnotherListAction extends AnAction implements DumbAware {
-
   public MoveChangesToAnotherListAction() {
     super(
       ActionLocalize.actionChangesviewMoveText(),
@@ -73,7 +71,7 @@ public class MoveChangesToAnotherListAction extends AnAction implements DumbAwar
   }
 
   protected boolean isEnabled(@Nonnull AnActionEvent e) {
-    Project project = e.getData(PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null || !ProjectLevelVcsManager.getInstance(project).hasActiveVcss()) {
       return false;
     }
@@ -84,10 +82,12 @@ public class MoveChangesToAnotherListAction extends AnAction implements DumbAwar
   }
 
   @Nonnull
-  private static List<Change> getChangesForSelectedFiles(@Nonnull Project project,
-                                                         @Nonnull VirtualFile[] selectedFiles,
-                                                         @Nonnull List<VirtualFile> unversionedFiles,
-                                                         @Nonnull List<VirtualFile> changedFiles) {
+  private static List<Change> getChangesForSelectedFiles(
+    @Nonnull Project project,
+    @Nonnull VirtualFile[] selectedFiles,
+    @Nonnull List<VirtualFile> unversionedFiles,
+    @Nonnull List<VirtualFile> changedFiles
+  ) {
     List<Change> changes = new ArrayList<>();
     ChangeListManager changeListManager = ChangeListManager.getInstance(project);
 
@@ -117,10 +117,12 @@ public class MoveChangesToAnotherListAction extends AnAction implements DumbAwar
     return changes;
   }
 
-  private static void addAllChangesUnderPath(@Nonnull ChangeListManager changeListManager,
-                                             @Nonnull FilePath file,
-                                             @Nonnull List<Change> changes,
-                                             @Nonnull List<VirtualFile> changedFiles) {
+  private static void addAllChangesUnderPath(
+    @Nonnull ChangeListManager changeListManager,
+    @Nonnull FilePath file,
+    @Nonnull List<Change> changes,
+    @Nonnull List<VirtualFile> changedFiles
+  ) {
     for (Change change : changeListManager.getChangesIn(file)) {
       changes.add(change);
 
@@ -131,17 +133,19 @@ public class MoveChangesToAnotherListAction extends AnAction implements DumbAwar
     }
   }
 
+  @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = e.getRequiredData(Project.KEY);
-    List<Change> changesList = ContainerUtil.newArrayList();
+    List<Change> changesList = new ArrayList<>();
 
     Change[] changes = e.getData(VcsDataKeys.CHANGES);
     if (changes != null) {
       ContainerUtil.addAll(changesList, changes);
     }
 
-    List<VirtualFile> unversionedFiles = ContainerUtil.newArrayList();
-    final List<VirtualFile> changedFiles = ContainerUtil.newArrayList();
+    List<VirtualFile> unversionedFiles = new ArrayList<>();
+    final List<VirtualFile> changedFiles = new ArrayList<>();
     VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
     if (files != null) {
       changesList.addAll(getChangesForSelectedFiles(project, files, unversionedFiles, changedFiles));
@@ -158,6 +162,7 @@ public class MoveChangesToAnotherListAction extends AnAction implements DumbAwar
     }
   }
 
+  @RequiredUIAccess
   private static void selectAndShowFile(@Nonnull final Project project, @Nonnull final VirtualFile file) {
     ToolWindow window = ToolWindowManager.getInstance(project).getToolWindow(VcsToolWindow.ID);
 
@@ -166,6 +171,7 @@ public class MoveChangesToAnotherListAction extends AnAction implements DumbAwar
     }
   }
 
+  @RequiredUIAccess
   public static boolean askAndMove(
     @Nonnull Project project,
     @Nonnull Collection<Change> changes,
@@ -188,6 +194,7 @@ public class MoveChangesToAnotherListAction extends AnAction implements DumbAwar
   }
 
   @Nullable
+  @RequiredUIAccess
   private static LocalChangeList askTargetList(@Nonnull Project project, @Nonnull Collection<Change> changes) {
     ChangeListManagerImpl listManager = ChangeListManagerImpl.getInstanceImpl(project);
     List<LocalChangeList> preferredLists = getPreferredLists(listManager.getChangeListsCopy(), changes);

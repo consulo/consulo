@@ -16,20 +16,21 @@
 
 package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 
-import consulo.project.ProjectBundle;
+import consulo.content.ContentFolderTypeProvider;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.ide.impl.idea.util.EventDispatcher;
+import consulo.ide.impl.roots.ui.configuration.ContentFolderPropertiesDialog;
+import consulo.language.content.LanguageContentFolderScopes;
 import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ContentFolder;
 import consulo.module.content.layer.ModifiableRootModel;
+import consulo.project.localize.ProjectLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.EventDispatcher;
-import consulo.language.content.LanguageContentFolderScopes;
-import consulo.content.ContentFolderTypeProvider;
-import consulo.ide.impl.roots.ui.configuration.ContentFolderPropertiesDialog;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.util.concurrent.AsyncResult;
-
+import consulo.util.io.FileUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -102,10 +103,14 @@ public abstract class ContentEntryEditor implements ContentRootPanel.ActionCallb
   protected abstract ModifiableRootModel getModel();
 
   @Override
+  @RequiredUIAccess
   public void deleteContentEntry() {
     final String path = FileUtil.toSystemDependentName(VfsUtilCore.urlToPath(myContentEntry.getUrl()));
-    final int answer = Messages.showYesNoDialog(ProjectBundle.message("module.paths.remove.content.prompt", path),
-                                                ProjectBundle.message("module.paths.remove.content.title"), Messages.getQuestionIcon());
+    final int answer = Messages.showYesNoDialog(
+      ProjectLocalize.modulePathsRemoveContentPrompt(path).get(),
+      ProjectLocalize.modulePathsRemoveContentTitle().get(),
+      UIUtil.getQuestionIcon()
+    );
     if (answer != 0) { // no
       return;
     }
@@ -126,7 +131,7 @@ public abstract class ContentEntryEditor implements ContentRootPanel.ActionCallb
   public void showChangeOptionsDialog(ContentEntry contentEntry, ContentFolder contentFolder) {
     ContentFolderPropertiesDialog c = new ContentFolderPropertiesDialog(getModel().getProject(), contentFolder);
     AsyncResult<Boolean> booleanAsyncResult = c.showAndGetOk();
-    if(booleanAsyncResult.getResult() == Boolean.TRUE) {
+    if (booleanAsyncResult.getResult() == Boolean.TRUE) {
       update();
     }
   }

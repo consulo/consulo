@@ -28,8 +28,8 @@ import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowserBase;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesListView;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -53,10 +53,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ScheduleForAdditionAction extends AnAction implements DumbAware {
-
+  @Override
+  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
     boolean enabled =
-      e.getData(CommonDataKeys.PROJECT) != null && !Streams.isEmpty(getUnversionedFiles(e, e.getData(CommonDataKeys.PROJECT)));
+      e.getData(Project.KEY) != null && !Streams.isEmpty(getUnversionedFiles(e, e.getData(Project.KEY)));
 
     e.getPresentation().setEnabled(enabled);
     if (ActionPlaces.ACTION_PLACE_VCS_QUICK_LIST_POPUP_ACTION.equals(e.getPlace()) || ActionPlaces.CHANGES_VIEW_POPUP.equals(e.getPlace())) {
@@ -64,17 +65,22 @@ public class ScheduleForAdditionAction extends AnAction implements DumbAware {
     }
   }
 
+  @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getRequiredData(CommonDataKeys.PROJECT);
+    Project project = e.getRequiredData(Project.KEY);
     List<VirtualFile> unversionedFiles = getUnversionedFiles(e, project).collect(Collectors.toList());
 
     addUnversioned(project, unversionedFiles, this::isStatusForAddition, e.getData(ChangesBrowserBase.DATA_KEY));
   }
 
-  public static boolean addUnversioned(@Nonnull Project project,
-                                       @Nonnull List<VirtualFile> files,
-                                       @Nonnull Condition<FileStatus> unversionedFileCondition,
-                                       @Nullable ChangesBrowserBase browser) {
+  @RequiredUIAccess
+  public static boolean addUnversioned(
+    @Nonnull Project project,
+    @Nonnull List<VirtualFile> files,
+    @Nonnull Condition<FileStatus> unversionedFileCondition,
+    @Nullable ChangesBrowserBase browser
+  ) {
     boolean result = true;
 
     if (!files.isEmpty()) {
