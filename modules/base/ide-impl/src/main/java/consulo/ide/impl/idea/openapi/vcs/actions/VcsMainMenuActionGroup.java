@@ -15,15 +15,13 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.ui.annotation.RequiredUIAccess;
-
 import jakarta.annotation.Nonnull;
 
 // from kotlin
@@ -31,13 +29,13 @@ public class VcsMainMenuActionGroup extends DefaultActionGroup implements DumbAw
   @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
-    if(project == null) {
+    Project project = e.getData(Project.KEY);
+    if (project == null) {
       return;
     }
 
     AbstractVcs vcs = ProjectLevelVcsManager.getInstance(project).getSingleVCS();
-    if(vcs != null) {
+    if (vcs != null) {
       e.getPresentation().setEnabledAndVisible(!vcs.isWithCustomMenu());
     }
   }

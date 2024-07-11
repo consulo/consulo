@@ -38,6 +38,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
@@ -104,8 +105,8 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
 
   @RequiredUIAccess
   private void createModules(@Nonnull final Collection<DataNode<ModuleData>> toCreate, @Nonnull final Project project) {
-    final Map<DataNode<ModuleData>, Module> moduleMappings = ContainerUtilRt.newHashMap();
-    ApplicationManager.getApplication().runWriteAction(new Runnable() {
+    final Map<DataNode<ModuleData>, Module> moduleMappings = new HashMap<>();
+    project.getApplication().runWriteAction(new Runnable() {
       @Override
       public void run() {
         final ModuleManager moduleManager = ModuleManager.getInstance(project);

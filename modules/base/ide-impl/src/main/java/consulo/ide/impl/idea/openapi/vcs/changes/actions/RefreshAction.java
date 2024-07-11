@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
 import consulo.application.dumb.DumbAware;
 import consulo.document.FileDocumentManager;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.versionControlSystem.change.ChangeListManager;
@@ -33,8 +33,10 @@ import jakarta.annotation.Nonnull;
  * @since 02.11.2006
  */
 public class RefreshAction extends AnAction implements DumbAware {
+  @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     if (project == null) return;
     doRefresh(project);
   }
@@ -45,14 +47,12 @@ public class RefreshAction extends AnAction implements DumbAware {
     FileDocumentManager.getInstance().saveAllDocuments();
     invokeCustomRefreshes(project);
 
-    VirtualFileManager.getInstance().asyncRefresh(new Runnable() {
-      public void run() {
+    VirtualFileManager.getInstance().asyncRefresh(() -> {
         // already called in EDT or under write action
         if (!project.isDisposed()) {
           VcsDirtyScopeManager.getInstance(project).markEverythingDirty();
         }
-      }
-    });
+      });
   }
 
   private static void invokeCustomRefreshes(@Nonnull Project project) {

@@ -31,10 +31,7 @@ import jakarta.inject.Inject;
 
 import jakarta.annotation.Nonnull;
 import java.io.File;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Denis Zhdanov
@@ -83,7 +80,7 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
 
   @Nonnull
   public Map<OrderRootType, Collection<File>> prepareLibraryFiles(@Nonnull LibraryData data) {
-    Map<OrderRootType, Collection<File>> result = ContainerUtilRt.newHashMap();
+    Map<OrderRootType, Collection<File>> result = new HashMap<>();
     for (LibraryPathType pathType : LibraryPathType.values()) {
       final Set<String> paths = data.getPaths(pathType);
       if (paths.isEmpty()) {
@@ -94,10 +91,12 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
     return result;
   }
 
-  public void importLibrary(@Nonnull final String libraryName,
-                            @Nonnull final Map<OrderRootType, Collection<File>> libraryFiles,
-                            @Nonnull final Project project,
-                            boolean synchronous) {
+  public void importLibrary(
+    @Nonnull final String libraryName,
+    @Nonnull final Map<OrderRootType, Collection<File>> libraryFiles,
+    @Nonnull final Project project,
+    boolean synchronous
+  ) {
     ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(project) {
       @RequiredUIAccess
       @Override
@@ -184,21 +183,23 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
     });
   }
 
-  public void syncPaths(@Nonnull final LibraryData externalLibrary,
-                        @Nonnull final Library ideLibrary,
-                        @Nonnull final Project project,
-                        boolean synchronous) {
+  public void syncPaths(
+    @Nonnull final LibraryData externalLibrary,
+    @Nonnull final Library ideLibrary,
+    @Nonnull final Project project,
+    boolean synchronous
+  ) {
     if (externalLibrary.isUnresolved()) {
       return;
     }
-    final Map<OrderRootType, Set<String>> toRemove = ContainerUtilRt.newHashMap();
-    final Map<OrderRootType, Set<String>> toAdd = ContainerUtilRt.newHashMap();
+    final Map<OrderRootType, Set<String>> toRemove = new HashMap<>();
+    final Map<OrderRootType, Set<String>> toAdd = new HashMap<>();
     for (LibraryPathType pathType : LibraryPathType.values()) {
       OrderRootType ideType = myLibraryPathTypeMapper.map(pathType);
       HashSet<String> toAddPerType = ContainerUtilRt.newHashSet(externalLibrary.getPaths(pathType));
       toAdd.put(ideType, toAddPerType);
 
-      HashSet<String> toRemovePerType = ContainerUtilRt.newHashSet();
+      HashSet<String> toRemovePerType = new HashSet<>();
       toRemove.put(ideType, toRemovePerType);
 
       for (VirtualFile ideFile : ideLibrary.getFiles(ideType)) {
@@ -224,7 +225,7 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
           }
 
           for (Map.Entry<OrderRootType, Set<String>> entry : toAdd.entrySet()) {
-            Map<OrderRootType, Collection<File>> roots = ContainerUtilRt.newHashMap();
+            Map<OrderRootType, Collection<File>> roots = new HashMap<>();
             roots.put(entry.getKey(), ContainerUtil.map(entry.getValue(), File::new));
             registerPaths(roots, model, externalLibrary.getInternalName());
           }

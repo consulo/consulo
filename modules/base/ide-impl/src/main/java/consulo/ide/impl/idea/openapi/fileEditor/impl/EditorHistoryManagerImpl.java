@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.openapi.fileEditor.impl;
 
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.dumb.DumbAwareRunnable;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.component.ProcessCanceledException;
@@ -33,25 +32,24 @@ import consulo.fileEditor.event.FileEditorManagerBeforeListener;
 import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ArrayUtil;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -236,7 +234,7 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentW
    * @return a set of valid files that are in the history, oldest first.
    */
   public LinkedHashSet<VirtualFile> getFileSet() {
-    LinkedHashSet<VirtualFile> result = ContainerUtil.newLinkedHashSet();
+    LinkedHashSet<VirtualFile> result = new LinkedHashSet<>();
     for (VirtualFile file : getFiles()) {
       // if the file occurs several times in the history, only its last occurrence counts
       result.remove(file);
@@ -275,6 +273,7 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentW
    * @throws IllegalArgumentException if <code>file</code>
    *                                  is <code>null</code>
    */
+  @Override
   public synchronized void removeFile(@Nonnull final VirtualFile file) {
     final HistoryEntry entry = getEntry(file);
     if (entry != null) {
@@ -327,7 +326,7 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentW
     // which is done via corresponding EditorProviders, those are not accessible before their
     // is initComponent() called
     final Element state = element.clone();
-    StartupManager.getInstance(myProject).runWhenProjectIsInitialized((DumbAwareRunnable)() -> {
+    StartupManager.getInstance(myProject).runWhenProjectIsInitialized(() -> {
       for (Element e : state.getChildren(HistoryEntry.TAG)) {
         try {
           addEntry(HistoryEntry.createHeavy(myProject, e));
@@ -392,6 +391,7 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentW
    */
   private final class MyEditorManagerListener extends FileEditorManagerAdapter {
     @Override
+    @RequiredUIAccess
     public void fileOpened(@Nonnull final FileEditorManager source, @Nonnull final VirtualFile file) {
       fileOpenedImpl(file, null, null);
     }

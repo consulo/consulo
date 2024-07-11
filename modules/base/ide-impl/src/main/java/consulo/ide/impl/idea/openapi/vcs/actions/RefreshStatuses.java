@@ -15,24 +15,28 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
+import consulo.application.dumb.DumbAware;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.project.Project;
-import consulo.application.dumb.DumbAware;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
 
 public class RefreshStatuses extends AnAction implements DumbAware {
+  @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    Project project = e.getDataContext().getData(CommonDataKeys.PROJECT);
+    Project project = e.getDataContext().getData(Project.KEY);
     if (project != null) {
       VcsDirtyScopeManager.getInstance(project).markEverythingDirty();
     }
   }
 
+  @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
-    final Project project = e.getDataContext().getData(CommonDataKeys.PROJECT);
+    final Project project = e.getDataContext().getData(Project.KEY);
     boolean isEnabled = project != null &&
         ProjectLevelVcsManager.getInstance(project).getAllActiveVcss().length > 0;
     e.getPresentation().setEnabled(isEnabled);

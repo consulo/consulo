@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.actions;
 
+import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.Presentation;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.SourceItemsTree;
@@ -78,12 +78,12 @@ public class ExtractIntoDefaultLocationAction extends PutIntoDefaultLocationActi
         ArtifactUtil.processElementsWithSubstitutions(elements, context, context.getArtifactType(), PackagingElementPath.EMPTY, new PackagingElementProcessor<PackagingElement<?>>() {
           @Override
           public boolean process(@Nonnull PackagingElement<?> element, @Nonnull PackagingElementPath path) {
-            if (element instanceof FileCopyPackagingElement) {
-              final VirtualFile file = ((FileCopyPackagingElement)element).findFile();
+            if (element instanceof FileCopyPackagingElement copyPackagingElement) {
+              final VirtualFile file = copyPackagingElement.findFile();
               if (file != null) {
                 final VirtualFile archiveRoot = ArchiveVfsUtil.getVirtualFileForArchive(file);
                 if (archiveRoot != null) {
-                  extracted.add(PackagingElementFactory.getInstance(e.getData(CommonDataKeys.PROJECT)).createExtractedDirectory(archiveRoot));
+                  extracted.add(PackagingElementFactory.getInstance(e.getData(Project.KEY)).createExtractedDirectory(archiveRoot));
                 }
               }
             }

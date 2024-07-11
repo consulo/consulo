@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.compiler.CompilerConfiguration;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.NonDefaultProjectConfigurable;
@@ -27,7 +27,6 @@ import consulo.configurable.internal.ConfigurableWeight;
 import consulo.disposer.Disposable;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.roots.ui.configuration.ProjectStructureElementConfigurable;
 import consulo.ide.setting.ProjectStructureSettingsUtil;
@@ -45,6 +44,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.FileChooserTextBoxBuilder;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.VerticalLayout;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
@@ -165,13 +165,13 @@ public class ProjectConfigurableGroup extends ProjectStructureElementConfigurabl
 
     getModulesConfigurator().setCompilerOutputUrl(getCompilerOutputUrl());
 
-    ApplicationManager.getApplication().runWriteAction(() -> {
+    Application.get().runWriteAction(() -> {
       // set the output path first so that handlers of RootsChanged event sent after JDK is set
       // would see the updated path
       String canonicalPath = myCompilerPathController.getValue();
       if (canonicalPath != null && canonicalPath.length() > 0) {
         try {
-          canonicalPath = FileUtil.resolveShortWindowsName(canonicalPath);
+          canonicalPath = consulo.ide.impl.idea.openapi.util.io.FileUtil.resolveShortWindowsName(canonicalPath);
         }
         catch (IOException e) {
           //file doesn't exist yet
@@ -209,7 +209,10 @@ public class ProjectConfigurableGroup extends ProjectStructureElementConfigurabl
   @SuppressWarnings({"SimplifiableIfStatement"})
   public boolean isModified() {
     final String compilerOutput = CompilerConfiguration.getInstance(myProject).getCompilerOutputUrl();
-    if (!Comparing.strEqual(FileUtil.toSystemIndependentName(VfsUtil.urlToPath(compilerOutput)), FileUtil.toSystemIndependentName(myCompilerPathController.getValue()))) {
+    if (!Comparing.strEqual(
+      FileUtil.toSystemIndependentName(VfsUtil.urlToPath(compilerOutput)),
+      FileUtil.toSystemIndependentName(myCompilerPathController.getValue())
+    )) {
       return true;
     }
     if (myProjectName != null) {

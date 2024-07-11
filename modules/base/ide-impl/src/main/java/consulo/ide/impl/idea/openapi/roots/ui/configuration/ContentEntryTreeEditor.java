@@ -32,18 +32,18 @@ import consulo.ide.impl.idea.openapi.fileChooser.tree.FileNode;
 import consulo.ide.impl.idea.openapi.fileChooser.tree.FileRenderer;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.ToggleFolderStateAction;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.language.content.ContentFoldersSupportUtil;
 import consulo.ide.setting.module.ModuleConfigurationState;
+import consulo.language.content.ContentFoldersSupportUtil;
 import consulo.language.content.LanguageContentFolderScopes;
 import consulo.language.psi.PsiPackageSupportProvider;
 import consulo.localize.LocalizeValue;
 import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ContentFolder;
 import consulo.module.extension.ModuleExtension;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
-import consulo.project.ProjectBundle;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionsBundle;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.awt.ScrollPaneFactory;
@@ -56,9 +56,9 @@ import consulo.util.dataholder.Key;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.ComparatorUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeCellRenderer;
@@ -77,7 +77,7 @@ public class ContentEntryTreeEditor {
   protected final Tree myTree;
   private FileSystemTreeImpl myFileSystemTree;
   private final JPanel myTreePanel;
-  private final DefaultMutableTreeNode EMPTY_TREE_ROOT = new DefaultMutableTreeNode(ProjectBundle.message("module.paths.empty.node"));
+  private final DefaultMutableTreeNode EMPTY_TREE_ROOT = new DefaultMutableTreeNode(ProjectLocalize.modulePathsEmptyNode().get());
   protected final DefaultActionGroup myEditingActionsGroup;
   private ContentEntryEditor myContentEntryEditor;
   private final MyContentEntryEditorListener myContentEntryEditorListener = new MyContentEntryEditorListener();
@@ -174,8 +174,8 @@ public class ContentEntryTreeEditor {
           protected void customize(SimpleColoredComponent renderer, Object value, boolean selected, boolean focused) {
             super.customize(renderer, value, selected, focused);
 
-            if (value instanceof FileNode) {
-              VirtualFile treeFile = ((FileNode)value).getFile();
+            if (value instanceof FileNode fileNode) {
+              VirtualFile treeFile = fileNode.getFile();
               if (treeFile != null && treeFile.isDirectory()) {
                 final ContentEntry contentEntry = getContentEntryEditor().getContentEntry();
                 renderer.setIcon(updateIcon(contentEntry, treeFile, renderer.getIcon()));
@@ -283,9 +283,11 @@ public class ContentEntryTreeEditor {
 
   private static class MyNewFolderAction extends NewFolderAction {
     private MyNewFolderAction() {
-      super(ActionsBundle.message("action.FileChooser.NewFolder.text"),
-            ActionsBundle.message("action.FileChooser.NewFolder.description"),
-            AllIcons.Actions.NewFolder);
+      super(
+        ActionLocalize.actionFilechooserNewfolderText(),
+        ActionLocalize.actionFilechooserNewfolderDescription(),
+        AllIcons.Actions.NewFolder
+      );
     }
   }
 

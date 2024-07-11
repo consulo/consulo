@@ -2658,7 +2658,7 @@ public class StringUtil extends StringUtilRt {
   @Nonnull
   @Contract(pure = true)
   public static List<Pair<String, Integer>> getWordsWithOffset(@Nonnull String s) {
-    List<Pair<String, Integer>> res = ContainerUtil.newArrayList();
+    List<Pair<String, Integer>> res = new ArrayList<>();
     s += " ";
     StringBuilder name = new StringBuilder();
     int startInd = -1;

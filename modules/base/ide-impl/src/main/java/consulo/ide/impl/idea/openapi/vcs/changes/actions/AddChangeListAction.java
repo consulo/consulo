@@ -23,7 +23,6 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
 import consulo.application.dumb.DumbAware;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.versionControlSystem.VcsDataKeys;
@@ -38,7 +37,7 @@ import consulo.ui.ex.action.AnActionEvent;
 
 public class AddChangeListAction extends AnAction implements DumbAware {
   public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     NewChangelistDialog dlg = new NewChangelistDialog(project);
     dlg.show();
     if (dlg.getExitCode() == DialogWrapper.OK_EXIT_CODE) {

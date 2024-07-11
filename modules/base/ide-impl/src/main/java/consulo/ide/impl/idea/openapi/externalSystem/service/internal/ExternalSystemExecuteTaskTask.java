@@ -24,13 +24,13 @@ import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.openapi.externalSystem.service.ExternalSystemFacadeManager;
 import consulo.ide.impl.idea.openapi.externalSystem.service.RemoteExternalSystemFacade;
 import consulo.ide.impl.idea.openapi.externalSystem.service.remote.RemoteExternalSystemTaskManager;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
 import consulo.process.cmd.ParametersListUtil;
 import consulo.project.Project;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
@@ -42,7 +42,7 @@ import java.util.function.Function;
 public class ExternalSystemExecuteTaskTask extends AbstractExternalSystemTask {
 
   @Nonnull
-  private static final Function<ExternalTaskPojo, String> MAPPER = task -> task.getName();
+  private static final Function<ExternalTaskPojo, String> MAPPER = ExternalTaskPojo::getName;
 
   @Nonnull
   private final List<ExternalTaskPojo> myTasksToExecute;
@@ -52,12 +52,14 @@ public class ExternalSystemExecuteTaskTask extends AbstractExternalSystemTask {
   private String myScriptParameters;
   @Nullable private final String myDebuggerSetup;
 
-  public ExternalSystemExecuteTaskTask(@Nonnull ProjectSystemId externalSystemId,
-                                       @Nonnull Project project,
-                                       @Nonnull List<ExternalTaskPojo> tasksToExecute,
-                                       @Nullable String vmOptions,
-                                       @Nullable String scriptParameters,
-                                       @Nullable String debuggerSetup) throws IllegalArgumentException {
+  public ExternalSystemExecuteTaskTask(
+    @Nonnull ProjectSystemId externalSystemId,
+    @Nonnull Project project,
+    @Nonnull List<ExternalTaskPojo> tasksToExecute,
+    @Nullable String vmOptions,
+    @Nullable String scriptParameters,
+    @Nullable String debuggerSetup
+  ) throws IllegalArgumentException {
     super(externalSystemId, ExternalSystemTaskType.EXECUTE_TASK, project, getLinkedExternalProjectPath(tasksToExecute));
     myTasksToExecute = tasksToExecute;
     myVmOptions = vmOptions;
@@ -94,9 +96,8 @@ public class ExternalSystemExecuteTaskTask extends AbstractExternalSystemTask {
   @Override
   protected void doExecute() throws Exception {
     final ExternalSystemFacadeManager manager = ServiceManager.getService(ExternalSystemFacadeManager.class);
-    ExternalSystemExecutionSettings settings = ExternalSystemApiUtil.getExecutionSettings(getIdeProject(),
-                                                                                          getExternalProjectPath(),
-                                                                                          getExternalSystemId());
+    ExternalSystemExecutionSettings settings =
+      ExternalSystemApiUtil.getExecutionSettings(getIdeProject(), getExternalProjectPath(), getExternalSystemId());
     RemoteExternalSystemFacade facade = manager.getFacade(getIdeProject(), getExternalProjectPath(), getExternalSystemId());
     RemoteExternalSystemTaskManager taskManager = facade.getTaskManager();
     List<String> taskNames = ContainerUtilRt.map2List(myTasksToExecute, MAPPER);
@@ -117,6 +118,6 @@ public class ExternalSystemExecuteTaskTask extends AbstractExternalSystemTask {
   }
 
   private static List<String> parseCmdParameters(@Nullable String cmdArgsLine) {
-    return cmdArgsLine != null ? ParametersListUtil.parse(cmdArgsLine) : ContainerUtil.<String>newArrayList();
+    return cmdArgsLine != null ? ParametersListUtil.parse(cmdArgsLine) : new ArrayList<>();
   }
 }

@@ -4,7 +4,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.util.concurrent.SequentialTaskExecutor;
 import consulo.disposer.Disposer;
@@ -24,7 +23,6 @@ import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.ide.errorTreeView.*;
 import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
@@ -33,6 +31,7 @@ import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.view.MessageView;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
@@ -49,9 +48,7 @@ import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -88,8 +85,8 @@ public class ExternalSystemNotificationManager {
   @Inject
   public ExternalSystemNotificationManager(@Nonnull final Project project) {
     myProject = project;
-    myNotifications = ContainerUtil.newArrayList();
-    initializedExternalSystem = ContainerUtil.newHashSet();
+    myNotifications = new ArrayList<>();
+    initializedExternalSystem = new HashSet<>();
     myMessageCounter = new MessageCounter();
   }
 
@@ -153,42 +150,40 @@ public class ExternalSystemNotificationManager {
   }
 
   public void showNotification(@Nonnull final ProjectSystemId externalSystemId, @Nonnull final NotificationData notificationData) {
-    myUpdater.execute(new Runnable() {
-      @Override
-      public void run() {
-        if (myProject.isDisposed()) return;
+    myUpdater.execute(() -> {
+      if (myProject.isDisposed()) return;
 
-        if (!initializedExternalSystem.contains(externalSystemId)) {
-          final Application app = ApplicationManager.getApplication();
-          Runnable action = () -> app.runWriteAction(() -> {
-            if (myProject.isDisposed()) return;
-            ExternalSystemUtil.ensureToolWindowContentInitialized(myProject, externalSystemId);
-            initializedExternalSystem.add(externalSystemId);
-          });
-          if (app.isDispatchThread()) {
-            action.run();
-          }
-          else {
-            app.invokeAndWait(action, IdeaModalityState.defaultModalityState());
-          }
-        }
-
-        final NotificationGroup group = ExternalSystemUtil.getToolWindowElement(
-                NotificationGroup.class, myProject, ExternalSystemDataKeys.NOTIFICATION_GROUP, externalSystemId);
-        if (group == null) return;
-
-        final Notification notification = group.createNotification(
-                notificationData.getTitle(), notificationData.getMessage(),
-                notificationData.getNotificationCategory().getNotificationType(), notificationData.getListener());
-
-        myNotifications.add(notification);
-
-        if (notificationData.isBalloonNotification()) {
-          applyNotification(notification);
+      if (!initializedExternalSystem.contains(externalSystemId)) {
+        final Application app = myProject.getApplication();
+        Runnable action = () -> app.runWriteAction(() -> {
+          if (myProject.isDisposed()) return;
+          ExternalSystemUtil.ensureToolWindowContentInitialized(myProject, externalSystemId);
+          initializedExternalSystem.add(externalSystemId);
+        });
+        if (app.isDispatchThread()) {
+          action.run();
         }
         else {
-          addMessage(notification, externalSystemId, notificationData);
+          app.invokeAndWait(action, IdeaModalityState.defaultModalityState());
         }
+      }
+
+      final NotificationGroup group = ExternalSystemUtil.getToolWindowElement(
+        NotificationGroup.class, myProject, ExternalSystemDataKeys.NOTIFICATION_GROUP, externalSystemId);
+      if (group == null) return;
+
+      final Notification notification = group.createNotification(
+        notificationData.getTitle(), notificationData.getMessage(),
+        notificationData.getNotificationCategory().getNotificationType(), notificationData.getListener()
+      );
+
+      myNotifications.add(notification);
+
+      if (notificationData.isBalloonNotification()) {
+        applyNotification(notification);
+      }
+      else {
+        addMessage(notification, externalSystemId, notificationData);
       }
     });
   }
@@ -329,12 +324,13 @@ public class ExternalSystemNotificationManager {
   }
 
   @Nonnull
+  @RequiredUIAccess
   public NewErrorTreeViewPanelImpl prepareMessagesView(
     @Nonnull final ProjectSystemId externalSystemId,
     @Nonnull final NotificationSource notificationSource,
     boolean activateView
   ) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    myProject.getApplication().assertIsDispatchThread();
 
     final NewErrorTreeViewPanelImpl errorTreeView;
     final String contentDisplayName = getContentDisplayName(notificationSource, externalSystemId);

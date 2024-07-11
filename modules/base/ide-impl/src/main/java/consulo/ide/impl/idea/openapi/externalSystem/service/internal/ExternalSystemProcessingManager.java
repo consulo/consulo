@@ -3,22 +3,22 @@ package consulo.ide.impl.idea.openapi.externalSystem.service.internal;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
+import consulo.disposer.Disposable;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.task.*;
 import consulo.ide.impl.idea.openapi.externalSystem.service.ExternalSystemFacadeManager;
 import consulo.ide.impl.idea.openapi.externalSystem.service.notification.ExternalSystemProgressNotificationManager;
-import consulo.project.Project;
-import consulo.ui.ex.awt.util.Alarm;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
-import consulo.disposer.Disposable;
+import consulo.project.Project;
+import consulo.ui.ex.awt.util.Alarm;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
@@ -56,20 +56,22 @@ public class ExternalSystemProcessingManager implements ExternalSystemTaskNotifi
   @Nonnull
   private final ConcurrentMap<ExternalSystemTaskId, ExternalSystemTask> myTasksDetails = ContainerUtil.newConcurrentMap();
   @Nonnull
-  private final Alarm                                     myAlarm           = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, this);
+  private final Alarm myAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, this);
 
   @Nonnull
-  private final ExternalSystemFacadeManager               myFacadeManager;
+  private final ExternalSystemFacadeManager myFacadeManager;
   @Nonnull
   private final ExternalSystemProgressNotificationManager myProgressNotificationManager;
 
   @Inject
-  public ExternalSystemProcessingManager(@Nonnull ExternalSystemFacadeManager facadeManager,
-                                         @Nonnull ExternalSystemProgressNotificationManager notificationManager)
+  public ExternalSystemProcessingManager(
+    @Nonnull ExternalSystemFacadeManager facadeManager,
+    @Nonnull ExternalSystemProgressNotificationManager notificationManager
+  )
   {
     myFacadeManager = facadeManager;
     myProgressNotificationManager = notificationManager;
-    if (ApplicationManager.getApplication().isUnitTestMode()) {
+    if (Application.get().isUnitTestMode()) {
       return;
     }
 
@@ -100,17 +102,17 @@ public class ExternalSystemProcessingManager implements ExternalSystemTaskNotifi
   }
 
   @Nullable
-  public ExternalSystemTask findTask(@Nonnull ExternalSystemTaskType type,
-                                     @Nonnull ProjectSystemId projectSystemId,
-                                     @Nonnull final String externalProjectPath) {
-    for(ExternalSystemTask task : myTasksDetails.values()) {
-      if(task instanceof AbstractExternalSystemTask) {
-        AbstractExternalSystemTask externalSystemTask = (AbstractExternalSystemTask)task;
-        if(externalSystemTask.getId().getType() == type &&
-           externalSystemTask.getExternalSystemId().getId().equals(projectSystemId.getId()) &&
-           externalSystemTask.getExternalProjectPath().equals(externalProjectPath)){
-          return task;
-        }
+  public ExternalSystemTask findTask(
+    @Nonnull ExternalSystemTaskType type,
+    @Nonnull ProjectSystemId projectSystemId,
+    @Nonnull final String externalProjectPath
+  ) {
+    for (ExternalSystemTask task : myTasksDetails.values()) {
+      if (task instanceof AbstractExternalSystemTask externalSystemTask
+        && externalSystemTask.getId().getType() == type
+        && externalSystemTask.getExternalSystemId().getId().equals(projectSystemId.getId())
+        && externalSystemTask.getExternalProjectPath().equals(externalProjectPath)) {
+        return task;
       }
     }
 
@@ -129,12 +131,7 @@ public class ExternalSystemProcessingManager implements ExternalSystemTaskNotifi
   public void onQueued(@Nonnull ExternalSystemTaskId id) {
     myTasksInProgress.put(id, System.currentTimeMillis() + TOO_LONG_EXECUTION_MS);
     if (myAlarm.getActiveRequestCount() <= 0) {
-      myAlarm.addRequest(new Runnable() {
-        @Override
-        public void run() {
-          update();
-        }
-      }, TOO_LONG_EXECUTION_MS);
+      myAlarm.addRequest(this::update, TOO_LONG_EXECUTION_MS);
     }
   }
 
@@ -171,7 +168,7 @@ public class ExternalSystemProcessingManager implements ExternalSystemTaskNotifi
 
   public void update() {
     long delay = TOO_LONG_EXECUTION_MS;
-    Map<ExternalSystemTaskId, Long> newState = ContainerUtilRt.newHashMap();
+    Map<ExternalSystemTaskId, Long> newState = new HashMap<>();
 
     Map<ExternalSystemTaskId, Long> currentState = ContainerUtilRt.newHashMap(myTasksInProgress);
     if (currentState.isEmpty()) {
@@ -197,12 +194,7 @@ public class ExternalSystemProcessingManager implements ExternalSystemTaskNotifi
 
     if (!newState.isEmpty()) {
       myAlarm.cancelAllRequests();
-      myAlarm.addRequest(new Runnable() {
-        @Override
-        public void run() {
-          update(); 
-        }
-      }, delay);
+      myAlarm.addRequest(this::update, delay);
     }
   }
 }

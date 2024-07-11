@@ -32,7 +32,6 @@ import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.language.content.LanguageContentFolderScopes;
 import consulo.content.ContentFolderTypeProvider;
@@ -41,6 +40,7 @@ import consulo.content.base.GeneratedContentFolderPropertyProvider;
 import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -93,7 +93,7 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
         final ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
         final ModifiableRootModel model = moduleRootManager.getModifiableModel();
         final ContentEntry[] contentEntries = model.getContentEntries();
-        final Map<String, ContentEntry> contentEntriesMap = ContainerUtilRt.newHashMap();
+        final Map<String, ContentEntry> contentEntriesMap = new HashMap<>();
         for (ContentEntry contentEntry : contentEntries) {
           contentEntriesMap.put(contentEntry.getUrl(), contentEntry);
         }

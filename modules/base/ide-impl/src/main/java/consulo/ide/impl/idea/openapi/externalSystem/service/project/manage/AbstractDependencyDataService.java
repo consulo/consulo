@@ -21,7 +21,6 @@ import consulo.externalSystem.util.DisposeAwareProjectChange;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.externalSystem.util.ExternalSystemConstants;
 import consulo.externalSystem.util.Order;
-import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.ModifiableRootModel;
@@ -32,7 +31,10 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import jakarta.annotation.Nonnull;
+
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -72,8 +74,8 @@ public abstract class AbstractDependencyDataService<E extends AbstractDependency
       // that's why we can't use target dependency object as is but need to get a reference to the current
       // entry object from the model instead.
       for (OrderEntry e : moduleRootModel.getOrderEntries()) {
-        if (e instanceof ExportableOrderEntry && e.getPresentableName().equals(entry.getPresentableName())) {
-          consumer.accept((ExportableOrderEntry)e);
+        if (e instanceof ExportableOrderEntry exportableOrderEntry && e.getPresentableName().equals(entry.getPresentableName())) {
+          consumer.accept(exportableOrderEntry);
           break;
         }
       }
@@ -97,11 +99,11 @@ public abstract class AbstractDependencyDataService<E extends AbstractDependency
 
   @Nonnull
   private static Map<Module, Collection<ExportableOrderEntry>> groupByModule(@Nonnull Collection<? extends ExportableOrderEntry> data) {
-    Map<Module, Collection<ExportableOrderEntry>> result = ContainerUtilRt.newHashMap();
+    Map<Module, Collection<ExportableOrderEntry>> result = new HashMap<>();
     for (ExportableOrderEntry entry : data) {
       Collection<ExportableOrderEntry> entries = result.get(entry.getOwnerModule());
       if (entries == null) {
-        result.put(entry.getOwnerModule(), entries = ContainerUtilRt.newArrayList());
+        result.put(entry.getOwnerModule(), entries = new ArrayList<>());
       }
       entries.add(entry);
     }

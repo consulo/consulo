@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.openapi.roots.impl;
 
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.event.ApplicationListener;
 import consulo.component.messagebus.MessageBusConnection;
@@ -24,7 +25,6 @@ import consulo.component.store.impl.internal.BatchUpdateListener;
 import consulo.content.OrderRootType;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.module.impl.scopes.ModuleScopeProviderImpl;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.indexing.FileBasedIndexImpl;
@@ -47,6 +47,7 @@ import consulo.project.DumbModeTask;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.content.WatchedRootsProvider;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
@@ -70,7 +71,7 @@ import java.util.Set;
 @ServiceImpl
 public class ProjectRootManagerComponent extends ProjectRootManagerImpl implements Disposable {
   private static final Logger LOG = Logger.getInstance(ProjectRootManagerComponent.class);
-  private static final boolean LOG_CACHES_UPDATE = ApplicationManager.getApplication().isInternal() && !ApplicationManager.getApplication().isUnitTestMode();
+  private static final boolean LOG_CACHES_UPDATE = Application.get().isInternal() && !Application.get().isUnitTestMode();
 
   private boolean myPointerChangesDetected = false;
   private int myInsideRefresh = 0;
@@ -118,14 +119,14 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
     };
 
     connection.subscribe(VirtualFilePointerListener.class, new MyVirtualFilePointerListener());
-    myDoLogCachesUpdate = ApplicationManager.getApplication().isInternal() && !ApplicationManager.getApplication().isUnitTestMode();
+    myDoLogCachesUpdate = project.getApplication().isInternal() && !project.getApplication().isUnitTestMode();
 
     connection.subscribe(BatchUpdateListener.class, handler);
   }
 
   public void projectOpened() {
     addRootsToWatch();
-    ApplicationManager.getApplication().addApplicationListener(new AppListener(), myProject);
+    myProject.getApplication().addApplicationListener(new AppListener(), myProject);
     myStartupActivityPerformed = true;
   }
 
@@ -153,7 +154,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
   }
 
   private void doUpdateOnRefresh() {
-    if (ApplicationManager.getApplication().isUnitTestMode() && (!myStartupActivityPerformed || myProject.isDisposed())) {
+    if (myProject.getApplication().isUnitTestMode() && (!myStartupActivityPerformed || myProject.isDisposed())) {
       return; // in test mode suppress addition to a queue unless project is properly initialized
     }
     if (myProject.isDefault()) {
@@ -283,7 +284,9 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
     if (myDoLogCachesUpdate) {
       LOG.debug(new Throwable("sync roots"));
     }
-    else if (!ApplicationManager.getApplication().isUnitTestMode()) LOG.info("project roots have changed");
+    else if (!myProject.getApplication().isUnitTestMode()) {
+      LOG.info("project roots have changed");
+    }
 
     DumbService dumbService = DumbService.getInstance(myProject);
     if (FileBasedIndex.getInstance() instanceof FileBasedIndexImpl) {
@@ -299,8 +302,8 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
     LocalFileSystem fs = LocalFileSystem.getInstance();
     for (String path : paths) {
       VirtualFile root = fs.findFileByPath(path);
-      if (root instanceof NewVirtualFile) {
-        ((NewVirtualFile)root).markDirtyRecursively();
+      if (root instanceof NewVirtualFile newVirtualFile) {
+        newVirtualFile.markDirtyRecursively();
       }
     }
   }
@@ -321,8 +324,8 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
     Module[] modules = ModuleManager.getInstance(myProject).getModules();
     for (Module module : modules) {
       ModuleScopeProvider scopeProvider = ModuleScopeProvider.getInstance(module);
-      if(scopeProvider instanceof ModuleScopeProviderImpl) {
-        ((ModuleScopeProviderImpl)scopeProvider).clearCache();
+      if (scopeProvider instanceof ModuleScopeProviderImpl moduleScopeProvider) {
+        moduleScopeProvider.clearCache();
       }
     }
   }

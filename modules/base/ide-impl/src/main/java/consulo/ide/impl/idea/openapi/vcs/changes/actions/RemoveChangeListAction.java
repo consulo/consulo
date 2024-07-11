@@ -21,8 +21,10 @@ import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.change.ChangeListManager;
@@ -65,7 +67,7 @@ public class RemoveChangeListAction extends AnAction implements DumbAware {
     if (project == null || lists == null || lists.length == 0) return false;
 
     int allChangeListsCount = ChangeListManager.getInstance(project).getChangeListsNumber();
-    for(ChangeList changeList: lists) {
+    for (ChangeList changeList : lists) {
       if (!(changeList instanceof LocalChangeList)) return false;
       LocalChangeList localChangeList = (LocalChangeList) changeList;
       if (localChangeList.isReadOnly()) return false;
@@ -88,6 +90,7 @@ public class RemoveChangeListAction extends AnAction implements DumbAware {
     });
   }
 
+  @RequiredUIAccess
   private static boolean askIfShouldRemoveChangeLists(@Nonnull List<? extends LocalChangeList> lists, Project project) {
     boolean activeChangelistSelected = lists.stream().anyMatch(LocalChangeList::isDefault);
     boolean haveNoChanges = lists.stream().allMatch(l -> l.getChanges().isEmpty());
@@ -105,10 +108,11 @@ public class RemoveChangeListAction extends AnAction implements DumbAware {
         project,
         message.get(),
         VcsLocalize.changesRemovechangelistWarningTitle().get(),
-        Messages.getQuestionIcon()
+        UIUtil.getQuestionIcon()
       );
   }
 
+  @RequiredUIAccess
   static boolean confirmActiveChangeListRemoval(@Nonnull Project project, @Nonnull List<? extends LocalChangeList> lists, boolean empty) {
     List<LocalChangeList> remainingLists = ChangeListManager.getInstance(project).getChangeListsCopy();
     remainingLists.removeAll(lists);
@@ -125,7 +129,7 @@ public class RemoveChangeListAction extends AnAction implements DumbAware {
       project,
       empty ? VcsLocalize.changesRemoveActiveEmptyPrompt().get() : VcsLocalize.changesRemoveActivePrompt().get(),
       VcsLocalize.changesRemoveActiveTitle().get(),
-      Messages.getQuestionIcon(),
+      UIUtil.getQuestionIcon(),
       remainingListsNames,
       remainingListsNames[0]
     );

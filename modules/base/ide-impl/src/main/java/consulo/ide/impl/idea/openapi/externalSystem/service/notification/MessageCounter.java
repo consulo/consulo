@@ -20,9 +20,9 @@ import consulo.externalSystem.service.notification.NotificationCategory;
 import consulo.externalSystem.service.notification.NotificationSource;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import gnu.trove.TObjectIntHashMap;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,44 +35,32 @@ public class MessageCounter {
 
   private final Map<ProjectSystemId, Map<String/* group */, Map<NotificationSource, TObjectIntHashMap<NotificationCategory>>>> map = new HashMap<>();
 
-  public synchronized void increment(@Nonnull String groupName,
-                                     @Nonnull NotificationSource source,
-                                     @Nonnull NotificationCategory category,
-                                     @Nonnull ProjectSystemId projectSystemId) {
-
-    final TObjectIntHashMap<NotificationCategory> counter =
-            ContainerUtil.getOrCreate(
-                    ContainerUtil.getOrCreate(
-                            ContainerUtil.getOrCreate(
-                                    map,
-                                    projectSystemId,
-                                    ContainerUtil.<String, Map<NotificationSource, TObjectIntHashMap<NotificationCategory>>>newHashMap()),
-                            groupName,
-                            ContainerUtil.<NotificationSource, TObjectIntHashMap<NotificationCategory>>newHashMap()
-                    ),
-                    source,
-                    new TObjectIntHashMap<NotificationCategory>()
-            );
+  public synchronized void increment(
+    @Nonnull String groupName,
+    @Nonnull NotificationSource source,
+    @Nonnull NotificationCategory category,
+    @Nonnull ProjectSystemId projectSystemId
+  ) {
+    final TObjectIntHashMap<NotificationCategory> counter = ContainerUtil.getOrCreate(
+      ContainerUtil.getOrCreate(ContainerUtil.getOrCreate(map, projectSystemId, new HashMap<>()), groupName, new HashMap<>()),
+      source,
+      new TObjectIntHashMap<>()
+    );
     if (!counter.increment(category)) counter.put(category, 1);
   }
 
-  public synchronized void remove(@Nullable final String groupName,
-                                  @Nonnull final NotificationSource notificationSource,
-                                  @Nonnull final ProjectSystemId projectSystemId) {
+  public synchronized void remove(
+    @Nullable final String groupName,
+    @Nonnull final NotificationSource notificationSource,
+    @Nonnull final ProjectSystemId projectSystemId
+  ) {
     final Map<String, Map<NotificationSource, TObjectIntHashMap<NotificationCategory>>> groupMap =
-            ContainerUtil.getOrCreate(
-                    map,
-                    projectSystemId,
-                    ContainerUtil.<String, Map<NotificationSource, TObjectIntHashMap<NotificationCategory>>>newHashMap());
+      ContainerUtil.getOrCreate(map, projectSystemId, new HashMap<>());
     if (groupName != null) {
       final TObjectIntHashMap<NotificationCategory> counter = ContainerUtil.getOrCreate(
-              ContainerUtil.getOrCreate(
-                      groupMap,
-                      groupName,
-                      ContainerUtil.<NotificationSource, TObjectIntHashMap<NotificationCategory>>newHashMap()
-              ),
-              notificationSource,
-              new TObjectIntHashMap<NotificationCategory>()
+        ContainerUtil.getOrCreate(groupMap, groupName, new HashMap<>()),
+        notificationSource,
+        new TObjectIntHashMap<>()
       );
       counter.clear();
     }
@@ -83,15 +71,18 @@ public class MessageCounter {
     }
   }
 
-  public synchronized int getCount(@Nullable final String groupName,
-                                   @Nonnull final NotificationSource notificationSource,
-                                   @Nullable final NotificationCategory notificationCategory,
-                                   @Nonnull final ProjectSystemId projectSystemId) {
+  public synchronized int getCount(
+    @Nullable final String groupName,
+    @Nonnull final NotificationSource notificationSource,
+    @Nullable final NotificationCategory notificationCategory,
+    @Nonnull final ProjectSystemId projectSystemId
+  ) {
     int count = 0;
     final Map<String, Map<NotificationSource, TObjectIntHashMap<NotificationCategory>>> groupMap = ContainerUtil.getOrElse(
-            map,
-            projectSystemId,
-            Collections.<String, Map<NotificationSource, TObjectIntHashMap<NotificationCategory>>>emptyMap());
+      map,
+      projectSystemId,
+      Collections.<String, Map<NotificationSource, TObjectIntHashMap<NotificationCategory>>>emptyMap()
+    );
 
     for (Map.Entry<String, Map<NotificationSource, TObjectIntHashMap<NotificationCategory>>> entry : groupMap.entrySet()) {
       if (groupName == null || groupName.equals(entry.getKey())) {

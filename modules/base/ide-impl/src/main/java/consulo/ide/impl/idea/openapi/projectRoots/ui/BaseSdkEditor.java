@@ -15,14 +15,13 @@
  */
 package consulo.ide.impl.idea.openapi.projectRoots.ui;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.content.OrderRootType;
 import consulo.content.bundle.*;
 import consulo.content.impl.internal.bundle.SdkImpl;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.ui.OrderRootTypeUIFactory;
 import consulo.ide.ui.PathEditor;
 import consulo.ide.ui.SdkPathEditor;
@@ -36,6 +35,7 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.style.StandardColors;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -264,7 +264,7 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
     for (SdkPathEditor pathEditor : myPathEditors.values()) {
       pathEditor.apply(sdkModificator);
     }
-    ApplicationManager.getApplication().runWriteAction(sdkModificator::commitChanges);
+    Application.get().runWriteAction(sdkModificator::commitChanges);
     final AdditionalDataConfigurable configurable = getAdditionalDataConfigurable();
     if (configurable != null) {
       configurable.apply();

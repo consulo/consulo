@@ -3,7 +3,6 @@ package consulo.ide.impl.idea.openapi.vcs.actions;
 
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ToolbarLabelAction;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.language.editor.CommonDataKeys;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -21,7 +20,7 @@ public class VcsToolbarLabelAction extends ToolbarLabelAction implements CustomC
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);
 
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     e.getPresentation().setVisible(project != null && ProjectLevelVcsManager.getInstance(project).hasActiveVcss());
     e.getPresentation().setTextValue(getConsolidatedVcsName(project));
   }

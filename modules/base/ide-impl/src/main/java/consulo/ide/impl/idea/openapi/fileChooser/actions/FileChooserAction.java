@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.fileChooser.actions;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ide.impl.idea.openapi.fileChooser.FileSystemTree;
@@ -26,16 +29,27 @@ public abstract class FileChooserAction extends AnAction implements DumbAware {
     setEnabledInModalContext(true);
   }
 
+  protected FileChooserAction(final LocalizeValue text, final LocalizeValue description, final Image icon) {
+    super(text, description, icon);
+    setEnabledInModalContext(true);
+  }
+
+  @Deprecated
+  @DeprecationInfo("Use constructor with LocalizeValue")
   protected FileChooserAction(final String text, final String description, final Image icon) {
     super(text, description, icon);
     setEnabledInModalContext(true);
   }
 
+  @Override
+  @RequiredUIAccess
   final public void actionPerformed(AnActionEvent e) {
     FileSystemTree tree = e.getData(FileSystemTree.DATA_KEY);
     actionPerformed(tree, e);
   }
 
+  @Override
+  @RequiredUIAccess
   final public void update(AnActionEvent e) {
     FileSystemTree tree = e.getData(FileSystemTree.DATA_KEY);
     if (tree != null) {

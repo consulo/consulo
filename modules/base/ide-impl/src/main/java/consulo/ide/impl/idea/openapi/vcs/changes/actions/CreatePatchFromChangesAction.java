@@ -16,24 +16,24 @@
 
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.application.progress.ProgressManager;
 import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
-import consulo.project.ProjectManager;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.versionControlSystem.VcsBundle;
-import consulo.versionControlSystem.VcsDataKeys;
-import consulo.versionControlSystem.VcsException;
-import consulo.ide.impl.idea.openapi.vcs.changes.*;
+import consulo.application.progress.ProgressManager;
+import consulo.ide.impl.idea.openapi.vcs.changes.CommitSessionContextAware;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.CreatePatchCommitExecutor;
 import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelvedChangeList;
 import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelvedChangesViewManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.SessionDialog;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.versionControlSystem.VcsDataKeys;
+import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.*;
+import consulo.versionControlSystem.localize.VcsLocalize;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,12 +44,17 @@ import java.util.List;
  */
 public class CreatePatchFromChangesAction extends AnAction implements DumbAware {
   public CreatePatchFromChangesAction() {
-    super(VcsBundle.message("action.name.create.patch.for.selected.revisions"),
-          VcsBundle.message("action.description.create.patch.for.selected.revisions"), PlatformIconGroup.filetypesPatch());
+    super(
+      VcsLocalize.actionNameCreatePatchForSelectedRevisions(),
+      VcsLocalize.actionDescriptionCreatePatchForSelectedRevisions(),
+      PlatformIconGroup.filetypesPatch()
+    );
   }
 
+  @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     final Change[] changes = e.getData(VcsDataKeys.CHANGES);
     if ((changes == null) || (changes.length == 0)) return;
     String commitMessage = null;
@@ -69,7 +74,7 @@ public class CreatePatchFromChangesAction extends AnAction implements DumbAware 
     if (commitMessage == null) {
       commitMessage = "";
     }
-    List<Change> changeCollection = new ArrayList<Change>();
+    List<Change> changeCollection = new ArrayList<>();
     Collections.addAll(changeCollection, changes);
     createPatch(project, commitMessage, changeCollection);
   }
@@ -78,14 +83,10 @@ public class CreatePatchFromChangesAction extends AnAction implements DumbAware 
     project = project == null ? ProjectManager.getInstance().getDefaultProject() : project;
     final CreatePatchCommitExecutor executor = new CreatePatchCommitExecutor(project);
     CommitSession commitSession = executor.createCommitSession();
-    if (commitSession instanceof CommitSessionContextAware) {
-      ((CommitSessionContextAware)commitSession).setContext(new CommitContext());
+    if (commitSession instanceof CommitSessionContextAware commitSessionContextAware) {
+      commitSessionContextAware.setContext(new CommitContext());
     }
-    DialogWrapper sessionDialog = new SessionDialog(executor.getActionText(),
-                                                    project,
-                                                    commitSession,
-                                                    changeCollection,
-                                                    commitMessage);
+    DialogWrapper sessionDialog = new SessionDialog(executor.getActionText(), project, commitSession, changeCollection, commitMessage);
     sessionDialog.show();
     if (!sessionDialog.isOK()) {
       return;
@@ -98,8 +99,9 @@ public class CreatePatchFromChangesAction extends AnAction implements DumbAware 
   private static void preloadContent(final Project project, final List<Change> changes) {
     // to avoid multiple progress dialogs, preload content under one progress
     ProgressManager.getInstance().runProcessWithProgressSynchronously(new Runnable() {
+      @Override
       public void run() {
-        for(Change change: changes) {
+        for (Change change: changes) {
           checkLoadContent(change.getBeforeRevision());
           checkLoadContent(change.getAfterRevision());
         }
@@ -116,9 +118,11 @@ public class CreatePatchFromChangesAction extends AnAction implements DumbAware 
           }
         }
       }
-    }, VcsBundle.message("create.patch.loading.content.progress"), true, project);
+    }, VcsLocalize.createPatchLoadingContentProgress().get(), true, project);
   }
 
+  @Override
+  @RequiredUIAccess
   public void update(final AnActionEvent e) {
     final Boolean haveSelectedChanges = e.getData(VcsDataKeys.HAVE_SELECTED_CHANGES);
     Change[] changes;
