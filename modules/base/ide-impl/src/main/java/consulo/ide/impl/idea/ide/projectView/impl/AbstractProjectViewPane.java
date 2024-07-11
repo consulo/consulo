@@ -3,9 +3,9 @@
 package consulo.ide.impl.idea.ide.projectView.impl;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.application.ApplicationManager;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.registry.Registry;
 import consulo.component.extension.ExtensionPointName;
@@ -21,6 +21,7 @@ import consulo.ide.impl.idea.ide.projectView.impl.nodes.ModuleGroupNode;
 import consulo.ide.impl.idea.ui.tree.project.ProjectFileNode;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.PsiCopyPasteManager;
 import consulo.language.editor.refactoring.move.MoveHandler;
@@ -32,7 +33,6 @@ import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
 import consulo.navigation.Navigatable;
-import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ui.view.ProjectView;
 import consulo.project.ui.view.ProjectViewPane;
@@ -411,14 +411,14 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     Object value = getValueFromNode(node);
     JBIterable<?> it = value instanceof PsiElement || value instanceof VirtualFile
       ? JBIterable.of(value)
-      : value instanceof Object[]
-      ? JBIterable.of((Object[])value)
+      : value instanceof Object[] objArr
+      ? JBIterable.of(objArr)
       : value instanceof Iterable
       ? JBIterable.from((Iterable<?>)value)
       : JBIterable.of(TreeUtil.getUserObject(node));
     return it
       .flatten(o -> o instanceof RootsProvider rootsProvider ? rootsProvider.getRoots() : Collections.singleton(o))
-      .map(o -> o instanceof VirtualFile ? PsiUtilCore.findFileSystemItem(myProject, (VirtualFile)o) : o)
+      .map(o -> o instanceof VirtualFile virtualFile ? PsiUtilCore.findFileSystemItem(myProject, virtualFile) : o)
       .filter(PsiElement.class)
       .filter(PsiElement::isValid)
       .toList();
@@ -434,6 +434,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
   }
 
   @Nullable
+  @RequiredReadAction
   protected Module getNodeModule(@Nullable final Object element) {
     if (element instanceof PsiElement psiElement) {
       return ModuleUtilCore.findModuleForPsiElement(psiElement);
@@ -611,7 +612,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
 
   @Nonnull
   public PsiDirectory[] getSelectedDirectories() {
-    List<PsiDirectory> directories = ContainerUtil.newArrayList();
+    List<PsiDirectory> directories = new ArrayList<>();
     for (PsiDirectoryNode node : getSelectedNodes(PsiDirectoryNode.class)) {
       PsiDirectory directory = node.getValue();
       if (directory != null) {
@@ -706,7 +707,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
   // Drag'n'Drop stuff
 
   protected void enableDnD() {
-    if (!ApplicationManager.getApplication().isHeadlessEnvironment()) {
+    if (!myProject.getApplication().isHeadlessEnvironment()) {
       myDropTarget = new ProjectViewDropTarget(myTree, myProject) {
         @Nullable
         @Override

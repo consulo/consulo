@@ -20,9 +20,9 @@ import consulo.bookmark.ui.view.FavoritesTreeNodeDescriptor;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeViewPanel;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -44,14 +44,14 @@ public class SendToFavoritesGroup extends ActionGroup {
     if (e == null) {
       return EMPTY_ARRAY;
     }
-    final Project project = e.getDataContext().getData(CommonDataKeys.PROJECT);
+    final Project project = e.getDataContext().getData(Project.KEY);
     final List<String> availableFavoritesLists = FavoritesManagerImpl.getInstance(project).getAvailableFavoritesListNames();
     availableFavoritesLists.remove(e.getDataContext().getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY));
     if (availableFavoritesLists.isEmpty()) {
       return new AnAction[]{new SendToNewFavoritesListAction()};
     }
 
-    List<AnAction> actions = new ArrayList<AnAction>();
+    List<AnAction> actions = new ArrayList<>();
 
     for (String list : availableFavoritesLists) {
       actions.add(new SendToFavoritesAction(list));
@@ -62,10 +62,13 @@ public class SendToFavoritesGroup extends ActionGroup {
   }
 
   @Override
-  public void update(AnActionEvent e) {
+  @RequiredUIAccess
+  public void update(@Nonnull AnActionEvent e) {
     super.update(e);
-    e.getPresentation().setVisible(SendToFavoritesAction.isEnabled(e)
-                                   && e.getDataContext().getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY) != null);
+    e.getPresentation().setVisible(
+      SendToFavoritesAction.isEnabled(e)
+        && e.getDataContext().getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY) != null
+    );
   }
 
   private static class SendToNewFavoritesListAction extends AnAction {
@@ -74,9 +77,10 @@ public class SendToFavoritesGroup extends ActionGroup {
     }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
       final DataContext dataContext = e.getDataContext();
-      Project project = e.getData(CommonDataKeys.PROJECT);
+      Project project = e.getData(Project.KEY);
       FavoritesTreeNodeDescriptor[] roots = dataContext.getData(FavoritesTreeViewPanel.CONTEXT_FAVORITES_ROOTS_DATA_KEY);
       String listName = dataContext.getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY);
 

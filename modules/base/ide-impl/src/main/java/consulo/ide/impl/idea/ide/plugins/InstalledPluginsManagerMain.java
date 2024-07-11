@@ -15,17 +15,16 @@
  */
 package consulo.ide.impl.idea.ide.plugins;
 
-import consulo.application.CommonBundle;
 import consulo.application.impl.internal.plugin.PluginsLoader;
 import consulo.container.impl.PluginDescriptorImpl;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginDescriptorStatus;
 import consulo.container.plugin.PluginId;
 import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.util.io.ZipUtil;
 import consulo.ide.impl.plugins.PluginsPanel;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.ActionGroup;
@@ -34,7 +33,9 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.StatusText;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ArrayUtil;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -101,7 +102,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
   @Nullable
   public static PluginDescriptor loadDescriptorFromArchive(final File file) throws IOException {
     PluginDescriptor descriptor = null;
-    final File outputDir = FileUtil.createTempDirectory("plugin", "");
+    final File outputDir = consulo.ide.impl.idea.openapi.util.io.FileUtil.createTempDirectory("plugin", "");
     try {
       ZipUtil.extract(file, outputDir, null);
       final File[] files = outputDir.listFiles();
@@ -115,7 +116,7 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
     return descriptor;
   }
 
-
+  @RequiredUIAccess
   public void checkInstalledPluginDependencies(PluginDescriptor pluginDescriptor) {
     final Set<PluginId> notInstalled = new HashSet<>();
     final Set<PluginId> disabledIds = new HashSet<>();
@@ -137,8 +138,10 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
         "Plugin " + pluginDescriptor.getName() + " depends on unknown plugin" + (notInstalled.size() > 1 ? "s " : " ") + StringUtil.join(
           notInstalled,
           PluginId::toString,
-          ", "),
-        CommonBundle.getWarningTitle());
+          ", "
+        ),
+        CommonLocalize.titleWarning().get()
+      );
     }
     if (!disabledIds.isEmpty()) {
       final Set<PluginDescriptor> dependencies = new HashSet<>();
@@ -157,9 +160,11 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
         disabledPluginsMessage.trim() +
         "?";
 
-      if (Messages.showOkCancelDialog(getMainPanel(), message, CommonBundle.getWarningTitle(), Messages.getWarningIcon()) == Messages.OK) {
-        ((InstalledPluginsTableModel)myPluginsModel).enableRows(dependencies.toArray(new PluginDescriptor[dependencies.size()]),
-                                                                Boolean.TRUE);
+      if (Messages.showOkCancelDialog(getMainPanel(), message, CommonLocalize.titleWarning().get(), UIUtil.getWarningIcon()) == Messages.OK) {
+        ((InstalledPluginsTableModel)myPluginsModel).enableRows(
+          dependencies.toArray(new PluginDescriptor[dependencies.size()]),
+          Boolean.TRUE
+        );
       }
     }
   }
@@ -167,7 +172,6 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
   @Override
   protected void propagateUpdates(List<PluginDescriptor> list) {
   }
-
 
   @Nonnull
   @Override

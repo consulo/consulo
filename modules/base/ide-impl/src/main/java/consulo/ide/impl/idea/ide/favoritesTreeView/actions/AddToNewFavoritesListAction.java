@@ -16,13 +16,14 @@
 
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
-import consulo.language.editor.CommonDataKeys;
 import consulo.localize.LocalizeValue;
 import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 
@@ -42,8 +43,9 @@ class AddToNewFavoritesListAction extends AnAction {
   }
 
   @Override
+  @RequiredReadAction
   public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     Collection<AbstractTreeNode> nodesToAdd = AddToFavoritesAction.getNodesToAdd(e.getDataContext(), true);
     if (nodesToAdd != null) {
       final String newName = AddNewFavoritesListAction.doAddNewFavoritesList(project);
@@ -54,6 +56,7 @@ class AddToNewFavoritesListAction extends AnAction {
   }
 
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
     e.getPresentation().setEnabled(AddToFavoritesAction.canCreateNodes(e));
   }

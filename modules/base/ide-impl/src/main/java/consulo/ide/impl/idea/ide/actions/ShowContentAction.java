@@ -15,9 +15,8 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.impl.idea.openapi.ui.ShadowAction;
 import consulo.application.dumb.DumbAware;
-import consulo.language.editor.CommonDataKeys;
+import consulo.ide.impl.idea.openapi.ui.ShadowAction;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -27,9 +26,9 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowContentUiType;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -52,9 +51,9 @@ public class ShowContentAction extends AnAction implements DumbAware {
   public void update(@Nonnull AnActionEvent e) {
     final ToolWindow window = getWindow(e);
     e.getPresentation().setEnabled(window != null && window.getContentManager().getContentCount() > 1);
-    e.getPresentation().setText(window == null || window.getContentUiType() == ToolWindowContentUiType.TABBED
-                                ? "Show List of Tabs"
-                                : "Show List of Views");
+    e.getPresentation().setText(
+      window == null || window.getContentUiType() == ToolWindowContentUiType.TABBED ? "Show List of Tabs" : "Show List of Views"
+    );
   }
 
   @RequiredUIAccess
@@ -64,10 +63,11 @@ public class ShowContentAction extends AnAction implements DumbAware {
   }
 
   @Nullable
+  @RequiredUIAccess
   private ToolWindow getWindow(AnActionEvent event) {
     if (myWindow != null) return myWindow;
 
-    Project project = event.getData(CommonDataKeys.PROJECT);
+    Project project = event.getData(Project.KEY);
     if (project == null) return null;
 
     ToolWindowManager manager = ToolWindowManager.getInstance(project);

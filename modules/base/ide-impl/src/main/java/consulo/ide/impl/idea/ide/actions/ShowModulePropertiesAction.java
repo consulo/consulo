@@ -15,18 +15,16 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.language.editor.CommonDataKeys;
+import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.editor.LangDataKeys;
 import consulo.module.Module;
-import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
@@ -43,7 +41,7 @@ public class ShowModulePropertiesAction extends AnAction {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     if (project == null) {
       return;
     }
@@ -58,7 +56,7 @@ public class ShowModulePropertiesAction extends AnAction {
   @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     final Module module = e.getData(LangDataKeys.MODULE_CONTEXT);
     e.getPresentation().setVisible(project != null && module != null);
   }

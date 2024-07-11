@@ -15,20 +15,20 @@
  */
 package consulo.ide.impl.idea.ide.errorTreeView.actions;
 
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.project.Project;
-import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.project.ui.view.MessageView;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.MessageCategory;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
-import consulo.project.ui.view.MessageView;
 import consulo.ui.ex.errorTreeView.ErrorTreeView;
-import consulo.ui.ex.MessageCategory;
+import consulo.ui.ex.toolWindow.ToolWindow;
 
 import javax.swing.*;
 
@@ -42,8 +42,10 @@ public abstract class TestErrorViewAction extends AnAction{
   private long myMillis = 0L;
   private int myMessageCount = 0;
 
+  @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) {
       return;
     }
@@ -52,6 +54,7 @@ public abstract class TestErrorViewAction extends AnAction{
     myMillis = 0L;
     myMessageCount = 0;
     new Thread() {
+      @Override
       public void run() {
         for (int idx = 0; idx < MESSAGE_COUNT; idx++) {
           addMessage(view, new String[] {"This is a warning test message" + idx + " line1", "This is a warning test message" + idx + " line2"}, MessageCategory.WARNING);
@@ -90,20 +93,22 @@ public abstract class TestErrorViewAction extends AnAction{
   }
 
   private void addMessage(final ErrorTreeView view, final String[] message, final int type) {
-    ApplicationManager.getApplication().invokeLater(new Runnable() {
-      public void run() {
+    Application.get().invokeLater(
+      () -> {
         final long start = System.currentTimeMillis();
         view.addMessage(type, message, null, -1, -1, null);
         final long duration = System.currentTimeMillis() - start;
         myMillis += duration;
         incMessageCount();
-      }
-    }, IdeaModalityState.nonModal());
+      },
+      IdeaModalityState.nonModal()
+    );
   }
 
   protected abstract ErrorTreeView createView(Project project);
   protected abstract String getContentName();
 
+  @RequiredUIAccess
   protected void openView(Project project, JComponent component) {
     final MessageView messageView = MessageView.getInstance(project);
     final Content content = ContentFactory.getInstance().createContent(component, getContentName(), true);
@@ -114,5 +119,4 @@ public abstract class TestErrorViewAction extends AnAction{
       toolWindow.activate(null);
     }
   }
-
 }

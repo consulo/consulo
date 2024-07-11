@@ -17,14 +17,13 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.dataContext.DataContext;
-import consulo.language.editor.LangDataKeys;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.Presentation;
-import consulo.logging.Logger;
-import consulo.project.ui.wm.ToolWindowId;
+import consulo.language.editor.refactoring.copy.CopyHandler;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
-import consulo.language.editor.refactoring.copy.CopyHandler;
+import consulo.logging.Logger;
+import consulo.project.ui.wm.ToolWindowId;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.Presentation;
 
 public class CloneElementAction extends CopyElementAction {
   private static final Logger LOG = Logger.getInstance(CloneElementAction.class);
@@ -45,7 +44,7 @@ public class CloneElementAction extends CopyElementAction {
   @Override
   protected void updateForToolWindow(String id, DataContext dataContext,Presentation presentation) {
     // work only with single selection
-    PsiElement[] elements = dataContext.getData(LangDataKeys.PSI_ELEMENT_ARRAY);
+    PsiElement[] elements = dataContext.getData(PsiElement.KEY_OF_ARRAY);
     presentation.setEnabled(elements != null && elements.length == 1 && CopyHandler.canClone(elements));
     presentation.setVisible(true);
     if (!ToolWindowId.COMMANDER.equals(id)) {

@@ -17,9 +17,9 @@
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
 import consulo.application.AllIcons;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 
@@ -37,16 +37,18 @@ class AddAllOpenFilesToNewFavoritesListAction extends AnAction {
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    final String newName = AddNewFavoritesListAction.doAddNewFavoritesList(e.getData(CommonDataKeys.PROJECT));
+    final String newName = AddNewFavoritesListAction.doAddNewFavoritesList(e.getData(Project.KEY));
     if (newName != null) {
       new AddAllOpenFilesToFavorites(newName).actionPerformed(e);
     }
   }
 
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) {
       e.getPresentation().setEnabled(false);
     }

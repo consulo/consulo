@@ -16,15 +16,16 @@
 
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
-import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.fileEditor.FileEditorManager;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.ArrayList;
 
@@ -41,8 +42,9 @@ public class AddAllOpenFilesToFavorites extends AnAction {
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     if (project == null) {
       return;
     }
@@ -55,8 +57,9 @@ public class AddAllOpenFilesToFavorites extends AnAction {
     }
   }
 
+  @RequiredReadAction
   static ArrayList<PsiFile> getFilesToAdd(Project project) {
-    ArrayList<PsiFile> result = new ArrayList<PsiFile>();
+    ArrayList<PsiFile> result = new ArrayList<>();
     final FileEditorManager editorManager = FileEditorManager.getInstance(project);
     final PsiManager psiManager = PsiManager.getInstance(project);
     final VirtualFile[] openFiles = editorManager.getOpenFiles();
@@ -71,8 +74,9 @@ public class AddAllOpenFilesToFavorites extends AnAction {
   }
 
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     if (project == null) {
       e.getPresentation().setEnabled(false);
       return;

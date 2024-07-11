@@ -15,11 +15,11 @@
  */
 package consulo.ide.impl.idea.ide.dnd;
 
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -62,7 +62,7 @@ public class LinuxDragAndDropSupport {
 
   @Nonnull
   private static List<File> getFiles(@Nullable final String transferData) {
-    final List<File> fileList = new ArrayList<File>();
+    final List<File> fileList = new ArrayList<>();
 
     if (transferData != null) {
       final String[] uriList = StringUtil.convertLineSeparators(transferData).split("\n");

@@ -17,27 +17,27 @@
 package consulo.ide.impl.idea.ide.projectView.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.TitledHandler;
-import consulo.dataContext.DataContext;
-import consulo.language.editor.LangDataKeys;
-import consulo.application.ApplicationManager;
-import consulo.undoRedo.CommandProcessor;
 import consulo.codeEditor.Editor;
+import consulo.dataContext.DataContext;
+import consulo.ide.impl.idea.ide.TitledHandler;
+import consulo.ide.localize.IdeLocalize;
+import consulo.language.editor.LangDataKeys;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
+import consulo.language.editor.refactoring.rename.RenameHandler;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.logging.Logger;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.ModuleWithNameAlreadyExistsException;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.InputValidator;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.ref.Ref;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.language.editor.refactoring.RefactoringBundle;
-import consulo.language.editor.refactoring.rename.RenameHandler;
-import consulo.logging.Logger;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -60,25 +60,30 @@ public class RenameModuleHandler implements RenameHandler, TitledHandler {
   }
 
   @Override
+  @RequiredUIAccess
   public void invoke(@Nonnull Project project, Editor editor, PsiFile file, DataContext dataContext) {
     LOG.assertTrue(false);
   }
 
   @Override
+  @RequiredUIAccess
   public void invoke(@Nonnull final Project project, @Nonnull PsiElement[] elements, @Nonnull DataContext dataContext) {
     final Module module = dataContext.getData(LangDataKeys.MODULE_CONTEXT);
     LOG.assertTrue(module != null);
-    Messages.showInputDialog(project,
-                             IdeBundle.message("prompt.enter.new.module.name"),
-                             IdeBundle.message("title.rename.module"),
-                             Messages.getQuestionIcon(),
-                             module.getName(),
-                             new MyInputValidator(project, module));
+    Messages.showInputDialog(
+      project,
+      IdeLocalize.promptEnterNewModuleName().get(),
+      IdeLocalize.titleRenameModule().get(),
+      UIUtil.getQuestionIcon(),
+      module.getName(),
+      new MyInputValidator(project, module)
+    );
   }
 
+  @Nonnull
   @Override
   public String getActionTitle() {
-    return RefactoringBundle.message("rename.module.title");
+    return RefactoringLocalize.renameModuleTitle().get();
   }
 
   private static class MyInputValidator implements InputValidator {
@@ -90,39 +95,40 @@ public class RenameModuleHandler implements RenameHandler, TitledHandler {
     }
 
     @Override
+    @RequiredUIAccess
     public boolean checkInput(String inputString) {
       return inputString != null && inputString.length() > 0;
     }
 
     @Override
+    @RequiredUIAccess
     public boolean canClose(final String inputString) {
       final String oldName = myModule.getName();
       final ModifiableModuleModel modifiableModel = renameModule(inputString);
       if (modifiableModel == null) return false;
       final Ref<Boolean> success = Ref.create(Boolean.TRUE);
-      CommandProcessor.getInstance().executeCommand(myProject, new Runnable() {
-        @Override
-        public void run() {
-          ApplicationManager.getApplication().runWriteAction(new Runnable() {
-            @Override
-            public void run() {
-              modifiableModel.commit();
-            }
-          });
-        }
-      }, IdeBundle.message("command.renaming.module", oldName), null);
-      return success.get().booleanValue();
+      CommandProcessor.getInstance().executeCommand(
+        myProject,
+        () -> myProject.getApplication().runWriteAction(() -> modifiableModel.commit()),
+        IdeLocalize.commandRenamingModule(oldName).get(),
+        null
+      );
+      return success.get();
     }
 
     @Nullable
+    @RequiredUIAccess
     private ModifiableModuleModel renameModule(String inputString) {
       final ModifiableModuleModel modifiableModel = ModuleManager.getInstance(myProject).getModifiableModel();
       try {
         modifiableModel.renameModule(myModule, inputString);
       }
       catch (ModuleWithNameAlreadyExistsException moduleWithNameAlreadyExists) {
-        Messages.showErrorDialog(myProject, IdeBundle.message("error.module.already.exists", inputString),
-                                 IdeBundle.message("title.rename.module"));
+        Messages.showErrorDialog(
+          myProject,
+          IdeLocalize.errorModuleAlreadyExists(inputString).get(),
+          IdeLocalize.titleRenameModule().get()
+        );
         return null;
       }
       return modifiableModel;

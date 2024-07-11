@@ -16,14 +16,15 @@
 
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
+import consulo.ide.localize.IdeLocalize;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.InputValidator;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.project.Project;
-import consulo.ui.ex.InputValidator;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 
 import java.util.List;
 
@@ -33,37 +34,45 @@ import java.util.List;
  */
 public class AddNewFavoritesListAction extends AnAction {
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     if (project != null) {
       doAddNewFavoritesList(project);
     }
   }
 
+  @RequiredUIAccess
   public static String doAddNewFavoritesList(final Project project) {
     final FavoritesManagerImpl favoritesManager = FavoritesManagerImpl.getInstance(project);
-    final String name = Messages.showInputDialog(project,
-                                                 IdeBundle.message("prompt.input.new.favorites.list.name"),
-                                                 IdeBundle.message("title.add.new.favorites.list"),
-                                                 Messages.getInformationIcon(),
-                                                 getUniqueName(project), new InputValidator() {
-      @Override
-      public boolean checkInput(String inputString) {
-        return inputString != null && inputString.trim().length() > 0;
-      }
-
-      @Override
-      public boolean canClose(String inputString) {
-        inputString = inputString.trim();
-        if (favoritesManager.getAvailableFavoritesListNames().contains(inputString)) {
-          Messages.showErrorDialog(project,
-                                   IdeBundle.message("error.favorites.list.already.exists", inputString.trim()),
-                                   IdeBundle.message("title.unable.to.add.favorites.list"));
-          return false;
+    final String name = Messages.showInputDialog(
+      project,
+      IdeLocalize.promptInputNewFavoritesListName().get(),
+      IdeLocalize.titleAddNewFavoritesList().get(),
+      UIUtil.getInformationIcon(),
+      getUniqueName(project),
+      new InputValidator() {
+        @Override
+        @RequiredUIAccess
+        public boolean checkInput(String inputString) {
+          return inputString != null && inputString.trim().length() > 0;
         }
-        return inputString.length() > 0;
+
+        @Override
+        @RequiredUIAccess
+        public boolean canClose(String inputString) {
+          inputString = inputString.trim();
+          if (favoritesManager.getAvailableFavoritesListNames().contains(inputString)) {
+            Messages.showErrorDialog(project,
+              IdeLocalize.errorFavoritesListAlreadyExists(inputString.trim()).get(),
+              IdeLocalize.titleUnableToAddFavoritesList().get()
+            );
+            return false;
+          }
+          return inputString.length() > 0;
+        }
       }
-    });
+    );
     if (name == null || name.length() == 0) return null;
     favoritesManager.createNewList(name);
     return name;
@@ -72,7 +81,7 @@ public class AddNewFavoritesListAction extends AnAction {
   private static String getUniqueName(Project project) {
     List<String> names = FavoritesManagerImpl.getInstance(project).getAvailableFavoritesListNames();
     for (int i = 0; ; i++) {
-      String newName = IdeBundle.message("favorites.list.unnamed", i > 0 ? i : "");
+      String newName = IdeLocalize.favoritesListUnnamed(i > 0 ? i : "").get();
       if (names.contains(newName)) continue;
       return newName;
     }
