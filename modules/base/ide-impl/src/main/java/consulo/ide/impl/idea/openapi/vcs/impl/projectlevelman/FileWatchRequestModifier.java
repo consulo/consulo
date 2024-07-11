@@ -16,18 +16,14 @@
 package consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman;
 
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.util.io.FileUtil;
 import consulo.versionControlSystem.VcsDirectoryMapping;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.logging.Logger;
 import consulo.util.collection.Maps;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-import static consulo.ide.impl.idea.util.containers.ContainerUtil.newHashMap;
 import static consulo.ide.impl.idea.util.containers.ContainerUtil.newLinkedList;
 
 /**
@@ -45,7 +41,7 @@ public class FileWatchRequestModifier implements Runnable {
     myLfs = localFileSystem;
     myProject = project;
     myNewMappings = newMappings;
-    myDirectoryMappingWatches = newHashMap();
+    myDirectoryMappingWatches = new HashMap<>();
   }
 
   @Override
@@ -66,7 +62,7 @@ public class FileWatchRequestModifier implements Runnable {
       }
     }
 
-    final Collection<LocalFileSystem.WatchRequest> toRemove = newLinkedList();
+    final Collection<LocalFileSystem.WatchRequest> toRemove = new LinkedList<>();
     for (VcsDirectoryMapping mapping : deleted) {
       if (mapping.isDefaultMapping()) continue;
       final LocalFileSystem.WatchRequest removed = myDirectoryMappingWatches.remove(mapping);

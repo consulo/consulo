@@ -20,7 +20,6 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.ide.impl.idea.util.continuation.*;
-import consulo.language.editor.CommonDataKeys;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -41,20 +40,21 @@ public class TestContinuationAction extends AnAction {
 
   @Override
   public void actionPerformed(final AnActionEvent e) {
-    final Project project = e.getDataContext().getData(CommonDataKeys.PROJECT);
+    final Project project = e.getDataContext().getData(Project.KEY);
     if (project == null) return;
 
     ProgressManager.getInstance().run(new Task.Backgroundable(project, "Test Continuation", true,
-                                                              new PerformInBackgroundOption() {
-                                                                @Override
-                                                                public boolean shouldStartInBackground() {
-                                                                  return false;
-                                                                }
+      new PerformInBackgroundOption() {
+        @Override
+        public boolean shouldStartInBackground() {
+          return false;
+        }
 
-                                                                @Override
-                                                                public void processSentToBackground() {
-                                                                }
-                                                              }) {
+        @Override
+        public void processSentToBackground() {
+        }
+      }
+    ) {
       @Override
       public void run(@Nonnull ProgressIndicator indicator) {
         final Continuation continuation = Continuation.createForCurrentProgress(project, true, e.getPresentation().getText());
@@ -124,8 +124,9 @@ public class TestContinuationAction extends AnAction {
   }
 
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
-    final Project project = e.getDataContext().getData(CommonDataKeys.PROJECT);
+    final Project project = e.getDataContext().getData(Project.KEY);
     e.getPresentation().setEnabled(project != null);
   }
 
@@ -135,6 +136,7 @@ public class TestContinuationAction extends AnAction {
     }
 
     @Override
+    @RequiredUIAccess
     public void run(ContinuationContext context) {
       Messages.showInfoMessage(getName(), "Result");
     }

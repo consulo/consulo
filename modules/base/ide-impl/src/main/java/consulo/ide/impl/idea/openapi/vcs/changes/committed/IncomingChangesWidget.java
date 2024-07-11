@@ -19,15 +19,15 @@ import consulo.application.AllIcons;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentManager;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.image.Image;
-import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -56,7 +56,7 @@ class IncomingChangesWidget implements StatusBarWidget, StatusBarWidget.IconPres
       clear();
     }
     else {
-      setChangesAvailable(VcsBundle.message("incoming.changes.indicator.tooltip", list.size()));
+      setChangesAvailable(VcsLocalize.incomingChangesIndicatorTooltip(list.size()).get());
     }
   }
 
@@ -86,19 +86,15 @@ class IncomingChangesWidget implements StatusBarWidget, StatusBarWidget.IconPres
   }
 
   @Override
+  @RequiredUIAccess
   public Consumer<MouseEvent> getClickConsumer() {
     return mouseEvent -> {
       if (myStatusBar != null) {
         DataContext dataContext = DataManager.getInstance().getDataContext((Component)myStatusBar);
-        final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+        final Project project = dataContext.getData(Project.KEY);
         if (project != null) {
           ToolWindow changesView = ToolWindowManager.getInstance(project).getToolWindow(ChangesViewContentManager.TOOLWINDOW_ID);
-          changesView.show(new Runnable() {
-            @Override
-            public void run() {
-              ChangesViewContentManager.getInstance(project).selectContent("Incoming");
-            }
-          });
+          changesView.show(() -> ChangesViewContentManager.getInstance(project).selectContent("Incoming"));
         }
       }
     };

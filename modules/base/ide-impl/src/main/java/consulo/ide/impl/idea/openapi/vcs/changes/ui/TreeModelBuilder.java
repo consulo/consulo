@@ -15,25 +15,25 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
-import consulo.project.Project;
-import consulo.util.lang.Comparing;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.versionControlSystem.FilePath;
-import consulo.versionControlSystem.change.*;
-import consulo.virtualFileSystem.status.FileStatus;
-import consulo.ide.impl.idea.openapi.vcs.changes.*;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.awt.SimpleColoredComponent;
-import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ide.impl.idea.openapi.vcs.changes.RemoteRevisionsCache;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.Convertor;
+import consulo.project.Project;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.SimpleColoredComponent;
+import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.util.collection.FactoryMap;
 import consulo.util.collection.MultiMap;
-import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.Comparing;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.util.VcsUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.status.FileStatus;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import java.io.File;
@@ -63,8 +63,8 @@ public class TreeModelBuilder {
     int sortWeightDiff = Comparing.compare(node1.getSortWeight(), node2.getSortWeight());
     if (sortWeightDiff != 0) return sortWeightDiff;
 
-    if (node1 instanceof Comparable && node1.getClass().equals(node2.getClass())) {
-      return ((Comparable)node1).compareTo(node2);
+    if (node1 instanceof Comparable comparable1 && node1.getClass().equals(node2.getClass())) {
+      return comparable1.compareTo(node2);
     }
     return node1.compareUserObjects(node2.getUserObject());
   };
@@ -243,8 +243,8 @@ public class TreeModelBuilder {
       // whether a folder does not matter
       final String path = file.getPath();
       final StaticFilePath pathKey = !FileUtil.isAbsolute(path) || VcsUtil.isPathRemote(path)
-                                     ? new StaticFilePath(false, path, null)
-                                     : new StaticFilePath(false, new File(file.getIOFile().getPath().replace('\\', '/')).getAbsolutePath(), file.getVirtualFile());
+        ? new StaticFilePath(false, path, null)
+        : new StaticFilePath(false, new File(file.getIOFile().getPath().replace('\\', '/')).getAbsolutePath(), file.getVirtualFile());
       ChangesBrowserNode oldNode = getFolderCache(subtreeRoot).get(pathKey.getKey());
       if (oldNode == null) {
         final ChangesBrowserNode node = ChangesBrowserNode.create(myProject, file);
@@ -369,20 +369,20 @@ public class TreeModelBuilder {
 
   @Nonnull
   private static StaticFilePath getKey(@Nonnull Object o) {
-    if (o instanceof Change) {
-      return staticFrom(ChangesUtil.getFilePath((Change)o));
+    if (o instanceof Change change) {
+      return staticFrom(ChangesUtil.getFilePath(change));
     }
-    else if (o instanceof VirtualFile) {
-      return staticFrom((VirtualFile)o);
+    else if (o instanceof VirtualFile virtualFile) {
+      return staticFrom(virtualFile);
     }
-    else if (o instanceof FilePath) {
-      return staticFrom((FilePath)o);
+    else if (o instanceof FilePath filePath) {
+      return staticFrom(filePath);
     }
-    else if (o instanceof ChangesBrowserLogicallyLockedFile) {
-      return staticFrom(((ChangesBrowserLogicallyLockedFile)o).getUserObject());
+    else if (o instanceof ChangesBrowserLogicallyLockedFile changesBrowserLogicallyLockedFile) {
+      return staticFrom(changesBrowserLogicallyLockedFile.getUserObject());
     }
-    else if (o instanceof LocallyDeletedChange) {
-      return staticFrom(((LocallyDeletedChange)o).getPath());
+    else if (o instanceof LocallyDeletedChange locallyDeletedChange) {
+      return staticFrom(locallyDeletedChange.getPath());
     }
 
     throw new IllegalArgumentException("Unknown type - " + o.getClass());
@@ -404,20 +404,20 @@ public class TreeModelBuilder {
 
   @Nonnull
   public static FilePath getPathForObject(@Nonnull Object o) {
-    if (o instanceof Change) {
-      return ChangesUtil.getFilePath((Change)o);
+    if (o instanceof Change change) {
+      return ChangesUtil.getFilePath(change);
     }
-    else if (o instanceof VirtualFile) {
-      return VcsUtil.getFilePath((VirtualFile)o);
+    else if (o instanceof VirtualFile virtualFile) {
+      return VcsUtil.getFilePath(virtualFile);
     }
-    else if (o instanceof FilePath) {
-      return (FilePath)o;
+    else if (o instanceof FilePath filePath) {
+      return filePath;
     }
-    else if (o instanceof ChangesBrowserLogicallyLockedFile) {
-      return VcsUtil.getFilePath(((ChangesBrowserLogicallyLockedFile)o).getUserObject());
+    else if (o instanceof ChangesBrowserLogicallyLockedFile changesBrowserLogicallyLockedFile) {
+      return VcsUtil.getFilePath(changesBrowserLogicallyLockedFile.getUserObject());
     }
-    else if (o instanceof LocallyDeletedChange) {
-      return ((LocallyDeletedChange)o).getPath();
+    else if (o instanceof LocallyDeletedChange locallyDeletedChange) {
+      return locallyDeletedChange.getPath();
     }
 
     throw new IllegalArgumentException("Unknown type - " + o.getClass());

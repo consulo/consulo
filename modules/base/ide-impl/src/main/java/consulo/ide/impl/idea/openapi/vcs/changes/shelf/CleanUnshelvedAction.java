@@ -15,19 +15,19 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.shelf;
 
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.action.Presentation;
-import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.Presentation;
 import jakarta.annotation.Nonnull;
 
 public class CleanUnshelvedAction extends DumbAwareAction {
-
   @Override
+  @RequiredUIAccess
   public void update(@Nonnull final AnActionEvent e) {
     super.update(e);
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     final Presentation presentation = e.getPresentation();
     if (project == null) {
       presentation.setEnabledAndVisible(false);
@@ -38,8 +38,9 @@ public class CleanUnshelvedAction extends DumbAwareAction {
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getRequiredData(CommonDataKeys.PROJECT);
+    final Project project = e.getRequiredData(Project.KEY);
     CleanUnshelvedFilterDialog dialog = new CleanUnshelvedFilterDialog(project);
     dialog.show();
     if (dialog.isOK()) {

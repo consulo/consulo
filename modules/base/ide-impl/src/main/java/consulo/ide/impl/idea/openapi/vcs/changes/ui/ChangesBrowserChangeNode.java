@@ -18,18 +18,17 @@ package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.application.AllIcons;
 import consulo.application.util.UserHomeFileUtil;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.TreeLinkMouseListener;
 import consulo.project.Project;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
+import consulo.util.io.FileUtil;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -118,6 +117,7 @@ public class ChangesBrowserChangeNode extends ChangesBrowserNode<Change> impleme
     }
   }
 
+  @Override
   public String getTooltip() {
     return getUserObject().getDescription();
   }
@@ -132,14 +132,14 @@ public class ChangesBrowserChangeNode extends ChangesBrowserNode<Change> impleme
     return FileUtil.toSystemDependentName(ChangesUtil.getFilePath(getUserObject()).getPath());
   }
 
+  @Override
   public int getSortWeight() {
     return CHANGE_SORT_WEIGHT;
   }
 
+  @Override
   public int compareUserObjects(final Object o2) {
-    if (o2 instanceof Change) {
-      return ChangesUtil.getFilePath(getUserObject()).getName().compareToIgnoreCase(ChangesUtil.getFilePath((Change)o2).getName());
-    }
-    return 0;
+    return o2 instanceof Change change
+      ? ChangesUtil.getFilePath(getUserObject()).getName().compareToIgnoreCase(ChangesUtil.getFilePath(change).getName()) : 0;
   }
 }

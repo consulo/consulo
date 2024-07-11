@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.checkout;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.application.dumb.DumbAware;
@@ -31,15 +31,18 @@ public class CheckoutAction extends AnAction implements DumbAware {
     myProvider = provider;
   }
 
+  @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     project = (project == null) ? ProjectManager.getInstance().getDefaultProject() : project;
     myProvider.doCheckout(project, ProjectLevelVcsManager.getInstance(project).getCompositeCheckoutListener());
   }
 
+  @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
     super.update(e);
     e.getPresentation().setText(myProvider.getVcsName(), true);
   }
-
 }

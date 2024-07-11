@@ -15,24 +15,25 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.shelf;
 
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.Presentation;
-import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
-import consulo.versionControlSystem.VcsBundle;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.versionControlSystem.localize.VcsLocalize;
 
 public class DeleteAlreadyUnshelvedAction extends AnAction {
   private final String myText;
 
   public DeleteAlreadyUnshelvedAction() {
-    myText = VcsBundle.message("delete.all.already.unshelved");
+    myText = VcsLocalize.deleteAllAlreadyUnshelved().get();
   }
 
   @Override
   public void update(final AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     final Presentation presentation = e.getPresentation();
     if (project == null) {
       presentation.setEnabled(false);
@@ -44,14 +45,18 @@ public class DeleteAlreadyUnshelvedAction extends AnAction {
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(final AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     if (project == null) {
       return;
     }
-    final int result = Messages
-      .showYesNoDialog(project, VcsBundle.message("delete.all.already.unshelved.confirmation"), myText,
-                       Messages.getWarningIcon());
+    final int result = Messages.showYesNoDialog(
+      project,
+      VcsLocalize.deleteAllAlreadyUnshelvedConfirmation().get(),
+      myText,
+      UIUtil.getWarningIcon()
+    );
     if (result == Messages.YES) {
       final ShelveChangesManager manager = ShelveChangesManager.getInstance(project);
       manager.clearRecycled();

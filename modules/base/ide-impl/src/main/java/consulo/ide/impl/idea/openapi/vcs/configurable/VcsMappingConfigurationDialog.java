@@ -16,28 +16,28 @@
 
 package consulo.ide.impl.idea.openapi.vcs.configurable;
 
-import consulo.fileChooser.FileChooserDescriptor;
-import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.configurable.ConfigurationException;
-import consulo.configurable.UnnamedConfigurable;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.configurable.ConfigurationException;
+import consulo.configurable.UnnamedConfigurable;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.ide.impl.idea.openapi.vcs.impl.DefaultVcsRootPolicy;
-import consulo.versionControlSystem.VcsDescriptor;
-import consulo.ui.ex.awt.*;
-import consulo.versionControlSystem.AbstractVcs;
-import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.versionControlSystem.VcsDirectoryMapping;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.continuation.ModalityIgnorantBackgroundableTask;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.*;
+import consulo.util.io.FileUtil;
+import consulo.versionControlSystem.AbstractVcs;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.VcsDescriptor;
+import consulo.versionControlSystem.VcsDirectoryMapping;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
@@ -70,19 +70,20 @@ public class VcsMappingConfigurationDialog extends DialogWrapper {
       myVcses.put(vcsDescriptor.getId(), vcsDescriptor);
     }
     myVCSComboBox.setModel(VcsDirectoryConfigurationPanel.buildVcsWrappersModel(project));
-    myDirectoryTextField.addActionListener(new MyBrowseFolderListener("Select Directory", "Select directory to map to a VCS",
-                                                                      myDirectoryTextField, project,
-                                                                      FileChooserDescriptorFactory.createSingleFolderDescriptor()));
+    myDirectoryTextField.addActionListener(new MyBrowseFolderListener(
+      "Select Directory",
+      "Select directory to map to a VCS",
+      myDirectoryTextField,
+      project,
+      FileChooserDescriptorFactory.createSingleFolderDescriptor()
+    ));
     myMappingCopy = new VcsDirectoryMapping("", "");
     setTitle(title);
     init();
-    myVCSComboBox.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        updateVcsConfigurable();
-      }
-    });
+    myVCSComboBox.addActionListener(e -> updateVcsConfigurable());
   }
 
+  @Override
   protected JComponent createCenterPanel() {
     return myPanel;
   }
@@ -112,6 +113,7 @@ public class VcsMappingConfigurationDialog extends DialogWrapper {
     return new VcsDirectoryMapping(directory, vcs, myMappingCopy.getRootSettings());
   }
 
+  @RequiredUIAccess
   private void updateVcsConfigurable() {
     if (myVcsConfigurable != null) {
       myVcsConfigurablePlaceholder.remove(myVcsConfigurableComponent);
@@ -133,12 +135,13 @@ public class VcsMappingConfigurationDialog extends DialogWrapper {
     pack();
   }
 
+  @RequiredUIAccess
   protected void doOKAction() {
     if (myVcsConfigurable != null) {
       try {
         myVcsConfigurable.apply();
       }
-      catch(ConfigurationException ex) {
+      catch (ConfigurationException ex) {
         Messages.showErrorDialog(myPanel, "Invalid VCS options: " + ex.getMessage());
       }
     }
@@ -151,12 +154,7 @@ public class VcsMappingConfigurationDialog extends DialogWrapper {
     myDirectoryRadioButton = new JRadioButton();
     bg.add(myProjectRadioButton);
     bg.add(myDirectoryRadioButton);
-    final ActionListener al = new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        myDirectoryTextField.setEnabled(myDirectoryRadioButton.isSelected());
-      }
-    };
+    final ActionListener al = e -> myDirectoryTextField.setEnabled(myDirectoryRadioButton.isSelected());
     myProjectRadioButton.addActionListener(al);
     myDirectoryRadioButton.addActionListener(al);
     myDirectoryRadioButton.setSelected(true);
@@ -177,9 +175,9 @@ public class VcsMappingConfigurationDialog extends DialogWrapper {
     protected VirtualFile getInitialFile() {
       // suggest project base dir only if nothing is typed in the component.
       String text = getComponentText();
-      if(text.length() == 0) {
+      if (text.length() == 0) {
         VirtualFile file = myProject.getBaseDir();
-        if(file != null) {
+        if (file != null) {
           return file;
         }
       }
@@ -197,14 +195,17 @@ public class VcsMappingConfigurationDialog extends DialogWrapper {
                   VcsDescriptor probableVcs = null;
 
                   @Override
+                  @RequiredUIAccess
                   protected void doInAwtIfFail(Exception e) {
                   }
 
                   @Override
+                  @RequiredUIAccess
                   protected void doInAwtIfCancel() {
                   }
 
                   @Override
+                  @RequiredUIAccess
                   protected void doInAwtIfSuccess() {
                     if (probableVcs != null) {
                       // todo none

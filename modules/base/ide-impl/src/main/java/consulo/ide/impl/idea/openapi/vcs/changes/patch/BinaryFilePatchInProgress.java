@@ -23,7 +23,7 @@ import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolder;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.util.io.FileUtil;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ContentRevision;
@@ -75,8 +75,7 @@ public class BinaryFilePatchInProgress extends AbstractFilePatchInProgress<Shelv
       @Nonnull
       @Override
       public String getName() {
-        final File file1 = new File(VfsUtilCore.virtualToIoFile(getBase()),
-                                    file.AFTER_PATH == null ? file.BEFORE_PATH : file.AFTER_PATH);
+        final File file1 = new File(VfsUtilCore.virtualToIoFile(getBase()), file.AFTER_PATH == null ? file.BEFORE_PATH : file.AFTER_PATH);
         return FileUtil.toSystemDependentName(file1.getPath());
       }
     };

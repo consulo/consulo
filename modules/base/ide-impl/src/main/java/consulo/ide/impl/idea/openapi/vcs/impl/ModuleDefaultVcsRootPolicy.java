@@ -17,38 +17,37 @@
 package consulo.ide.impl.idea.openapi.vcs.impl;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.AccessRule;
+import consulo.application.util.registry.Registry;
 import consulo.ide.ServiceManager;
+import consulo.ide.impl.idea.openapi.vcs.ex.ProjectLevelVcsManagerEx;
+import consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman.NewMappings;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.content.FileIndexFacade;
+import consulo.language.util.ModuleUtilCore;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
-import consulo.language.util.ModuleUtilCore;
-import consulo.project.Project;
-import consulo.language.content.FileIndexFacade;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectRootManager;
-import consulo.application.util.registry.Registry;
+import consulo.project.Project;
+import consulo.project.ProjectCoreUtil;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsDirectoryMapping;
-import consulo.ide.impl.idea.openapi.vcs.ex.ProjectLevelVcsManagerEx;
-import consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman.NewMappings;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.project.ProjectCoreUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.application.AccessRule;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static consulo.ide.impl.idea.util.containers.ContainerUtil.newHashSet;
 
 /**
  * @author yole
@@ -71,7 +70,7 @@ public class ModuleDefaultVcsRootPolicy extends DefaultVcsRootPolicy {
   @Override
   @Nonnull
   public Collection<VirtualFile> getDefaultVcsRoots(@Nonnull NewMappings mappingList, @Nonnull String vcsName) {
-    Set<VirtualFile> result = newHashSet();
+    Set<VirtualFile> result = new HashSet<>();
     final ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(myProject);
     if (myBaseDir != null && vcsName.equals(mappingList.getVcsFor(myBaseDir))) {
       final AbstractVcs vcsFor = vcsManager.getVcsFor(myBaseDir);
@@ -107,20 +106,17 @@ public class ModuleDefaultVcsRootPolicy extends DefaultVcsRootPolicy {
 
   @Override
   public boolean matchesDefaultMapping(@Nonnull final VirtualFile file, final Object matchContext) {
-    if (matchContext != null) {
-      return true;
-    }
-    return myBaseDir != null && VfsUtilCore.isAncestor(myBaseDir, file, false);
+    return matchContext != null || myBaseDir != null && VfsUtilCore.isAncestor(myBaseDir, file, false);
   }
 
   @Override
-  @jakarta.annotation.Nullable
+  @Nullable
   public Object getMatchContext(final VirtualFile file) {
     return ModuleUtilCore.findModuleForFile(file, myProject);
   }
 
   @Override
-  @jakarta.annotation.Nullable
+  @Nullable
   public VirtualFile getVcsRootFor(@Nonnull VirtualFile file) {
     FileIndexFacade indexFacade = ServiceManager.getService(myProject, FileIndexFacade.class);
     if (myBaseDir != null && indexFacade.isValidAncestor(myBaseDir, file)) {
@@ -151,7 +147,7 @@ public class ModuleDefaultVcsRootPolicy extends DefaultVcsRootPolicy {
   @Nonnull
   @Override
   public Collection<VirtualFile> getDirtyRoots() {
-    Collection<VirtualFile> dirtyRoots = newHashSet();
+    Collection<VirtualFile> dirtyRoots = new HashSet<>();
 
     if (ProjectCoreUtil.isDirectoryBased(myProject)) {
       VirtualFile ideaDir = ProjectCoreUtil.getDirectoryStoreFile(myProject);

@@ -24,15 +24,12 @@ import consulo.versionControlSystem.VcsDirectoryMapping;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import static consulo.util.lang.StringUtil.join;
 import static consulo.ide.impl.idea.util.containers.ContainerUtil.addAll;
-import static consulo.ide.impl.idea.util.containers.ContainerUtil.newArrayList;
+import static consulo.util.lang.StringUtil.join;
 import static consulo.versionControlSystem.util.VcsUtil.getFilePath;
 import static java.util.function.Function.identity;
 
@@ -86,7 +83,7 @@ public class RootsCalculator {
 
   @Nonnull
   private List<VirtualFile> getRootsFromMappings() {
-    List<VirtualFile> result = newArrayList();
+    List<VirtualFile> result = new ArrayList<>();
 
     for (VcsDirectoryMapping mapping : myPlManager.getDirectoryMappings(myVcs)) {
       if (mapping.isDefaultMapping()) {
@@ -108,7 +105,7 @@ public class RootsCalculator {
     return result;
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private RepositoryLocation getLocation(@Nonnull VirtualFile file) {
     return myLocationCache.getLocation(myVcs, getFilePath(file), false);
   }
