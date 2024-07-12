@@ -17,57 +17,21 @@ package consulo.ide.impl.idea.openapi.wm.impl;
 
 import consulo.application.ui.wm.FocusableFrame;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.logging.Logger;
+import consulo.awt.hacking.WindowHacking;
 
 import javax.swing.*;
 import java.awt.*;
-import java.lang.reflect.Method;
 
 /**
  * @author Denis Fokin
  */
 public class ModalityHelper {
-
-  private static final Logger LOG = Logger.getInstance(ModalityHelper.class);
-
-  private static Method isModalBlockedMethod = null;
-  private static Method  getModalBlockerMethod = null;
-
-  static {
-    Class [] noParams = new Class [] {};
-
-    try {
-      isModalBlockedMethod =  Window.class.getDeclaredMethod("isModalBlocked", noParams);
-      getModalBlockerMethod =  Window.class.getDeclaredMethod("getModalBlocker", noParams);
-      isModalBlockedMethod.setAccessible(true);
-      getModalBlockerMethod.setAccessible(true);
-    }
-    catch (NoSuchMethodException e) {
-      LOG.error(e);
-    }
-
+  public static boolean isModalBlocked(final Window window) {
+    return WindowHacking.isModalBlocked(window);
   }
 
-  public static boolean isModalBlocked (final Window window) {
-    boolean result = false;
-    try {
-      result = (Boolean)isModalBlockedMethod.invoke(window);
-    }
-    catch (Exception e) {
-      LOG.error(e);
-    }
-    return result;
-  }
-
-  public static JDialog getModalBlockerFor (final Window window) {
-    JDialog result = null;
-    try {
-      result = (JDialog)getModalBlockerMethod.invoke(window);
-    }
-    catch (Exception e) {
-      LOG.error(e);
-    }
-    return result;
+  public static JDialog getModalBlockerFor(final Window window) {
+    return WindowHacking.getModalBlockerFor(window);
   }
 
   public static JDialog getBlockerForFrame(final FocusableFrame ideFrame) {
