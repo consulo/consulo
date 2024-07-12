@@ -46,7 +46,7 @@ public class MacTopMenuInitializer {
   public static void installAutoUpdateMenu() {
     try {
       if (JnaLoader.isLoaded()) {
-        installAutoUpdateMenu0();
+        Foundation.executeOnMainThread(false, false, MacTopMenuInitializer::installAutoUpdateMenu0);
       }
     }
     catch (Throwable t) {
