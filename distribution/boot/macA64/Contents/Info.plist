@@ -24,7 +24,7 @@
       </dict>
     </array>
     <key>CFBundleExecutable</key>
-    <string>consulo-aarch64</string>
+    <string>consulo</string>
     <key>CFBundleIconFile</key>
     <string>consulo.icns</string>
     <key>CFBundleInfoDictionaryVersion</key>
@@ -58,7 +58,7 @@
     <key>LSRequiresNativeExecution</key>
     <string>YES</string>
     <key>LSMinimumSystemVersion</key>
-    <string>10.9</string>
+    <string>10.12</string>
       <key>CFBundleURLTypes</key>
       <array>
         <dict>
