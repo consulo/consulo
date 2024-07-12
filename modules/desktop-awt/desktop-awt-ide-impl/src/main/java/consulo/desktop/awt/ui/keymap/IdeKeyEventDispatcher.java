@@ -40,6 +40,7 @@ import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneEx;
 import consulo.ide.impl.idea.ui.ComponentWithMnemonics;
 import consulo.ide.impl.idea.ui.KeyStrokeAdapter;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.platform.Platform;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -61,7 +62,6 @@ import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.popup.*;
 import consulo.ui.ex.toolWindow.ToolWindowFloatingDecorator;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.lang.Pair;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -88,9 +88,6 @@ import java.util.concurrent.TimeUnit;
  * @author Vladimir Kondratyev
  */
 public final class IdeKeyEventDispatcher implements Disposable {
-  @NonNls
-  private static final String GET_CACHED_STROKE_METHOD_NAME = "getCachedStroke";
-
   private KeyStroke myFirstKeyStroke;
   /**
    * When we "dispatch" key event via keymap, i.e. when registered action has been executed

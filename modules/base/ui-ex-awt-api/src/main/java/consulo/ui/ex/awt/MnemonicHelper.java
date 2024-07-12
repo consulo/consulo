@@ -2,6 +2,7 @@
 package consulo.ui.ex.awt;
 
 import consulo.application.util.registry.Registry;
+import consulo.awt.hacking.AWTKeyStrokeHacking;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.ui.ex.action.ActionButtonComponent;
@@ -22,7 +23,6 @@ import java.awt.event.ContainerListener;
 import java.awt.event.InputEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.IntPredicate;
@@ -108,15 +108,11 @@ public class MnemonicHelper extends ComponentTreeWatcher {
   }
 
   private static KeyStroke getKeyStrokeWithoutCtrlModifier(KeyStroke stroke) {
-    try {
-      Method method = AWTKeyStroke.class.getDeclaredMethod("getCachedStroke", char.class, int.class, int.class, boolean.class);
-      method.setAccessible(true);
-      int modifiers = stroke.getModifiers() & ~InputEvent.CTRL_MASK & ~InputEvent.CTRL_DOWN_MASK;
-      return (KeyStroke)method.invoke(null, stroke.getKeyChar(), stroke.getKeyCode(), modifiers, stroke.isOnKeyRelease());
-    }
-    catch (Exception exception) {
-      throw new IllegalStateException(exception);
-    }
+    int modifiers = stroke.getModifiers() & ~InputEvent.CTRL_MASK & ~InputEvent.CTRL_DOWN_MASK;
+    return (KeyStroke)AWTKeyStrokeHacking.getCachedStroke(stroke.getKeyChar(),
+                                                          stroke.getKeyCode(),
+                                                          modifiers,
+                                                          stroke.isOnKeyRelease());
   }
 
   @Override
