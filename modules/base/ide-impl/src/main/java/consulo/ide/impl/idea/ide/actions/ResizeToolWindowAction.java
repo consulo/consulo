@@ -15,27 +15,29 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.application.dumb.DumbAware;
+import consulo.application.util.registry.Registry;
+import consulo.ide.impl.idea.openapi.ui.ShadowAction;
+import consulo.ide.impl.idea.openapi.wm.ToolWindowScrollable;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerAdapter;
-import consulo.ide.impl.idea.openapi.ui.ShadowAction;
-import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.openapi.wm.*;
-import consulo.ui.ex.internal.ToolWindowEx;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.project.ui.wm.*;
+import consulo.project.ui.wm.IdeFrameUtil;
+import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.ex.toolWindow.ToolWindowType;
 import consulo.ui.image.Image;
-
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -67,8 +69,9 @@ public abstract class ResizeToolWindowAction extends AnAction implements DumbAwa
   }
 
   @Override
+  @RequiredUIAccess
   public final void update(AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) {
       setDisabled(e);
       return;
@@ -78,7 +81,7 @@ public abstract class ResizeToolWindowAction extends AnAction implements DumbAwa
       myListenerInstalled = true;
       ProjectManager.getInstance().addProjectManagerListener(new ProjectManagerAdapter() {
         @Override
-        public void projectClosed(Project project, UIAccess uiAccess) {
+        public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
           setDisabled(null);
         }
       });
@@ -92,7 +95,7 @@ public abstract class ResizeToolWindowAction extends AnAction implements DumbAwa
 
     final Window windowAncestor = SwingUtilities.getWindowAncestor(owner);
     consulo.ui.Window uiWindow = TargetAWT.from(windowAncestor);
-    if(!IdeFrameUtil.isRootIdeFrameWindow(uiWindow)) {
+    if (!IdeFrameUtil.isRootIdeFrameWindow(uiWindow)) {
       setDisabled(e);
       return;
     }
@@ -138,7 +141,8 @@ public abstract class ResizeToolWindowAction extends AnAction implements DumbAwa
   protected abstract void update(AnActionEvent event, ToolWindow window, ToolWindowManager mgr);
 
   @Override
-  public final void actionPerformed(AnActionEvent e) {
+  @RequiredUIAccess
+  public final void actionPerformed(@Nonnull AnActionEvent e) {
     actionPerformed(e, myLastWindow, myLastManager);
   }
 
@@ -151,8 +155,7 @@ public abstract class ResizeToolWindowAction extends AnAction implements DumbAwa
     while (eachComponent != null) {
       if (!SwingUtilities.isDescendingFrom(eachComponent, wnd.getComponent())) break;
 
-      if (eachComponent instanceof ToolWindowScrollable) {
-        ToolWindowScrollable eachScrollable = (ToolWindowScrollable)eachComponent;
+      if (eachComponent instanceof ToolWindowScrollable eachScrollable) {
         if (isHorizontalStretchingOffered) {
           if (eachScrollable.isHorizontalScrollingNeeded()) {
             scrollable = eachScrollable;
@@ -314,19 +317,22 @@ public abstract class ResizeToolWindowAction extends AnAction implements DumbAwa
   }
 
   private class DefaultToolWindowScrollable implements ToolWindowScrollable {
-
+    @Override
     public boolean isHorizontalScrollingNeeded() {
       return true;
     }
 
+    @Override
     public int getNextHorizontalScroll() {
       return getReferenceSize().width * Registry.intValue("ide.windowSystem.hScrollChars");
     }
 
+    @Override
     public boolean isVerticalScrollingNeeded() {
       return true;
     }
 
+    @Override
     public int getNextVerticalScroll() {
       return getReferenceSize().height * Registry.intValue("ide.windowSystem.vScrollChars");
     }

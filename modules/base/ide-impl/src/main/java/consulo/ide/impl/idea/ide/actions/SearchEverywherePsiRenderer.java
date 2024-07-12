@@ -5,7 +5,7 @@ import consulo.application.util.UserHomeFileUtil;
 import consulo.component.util.Iconable;
 import consulo.fileEditor.VfsPresentationUtil;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoFileCellRenderer;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.util.io.FileUtil;
 import consulo.language.editor.ui.PsiElementListCellRenderer;
 import consulo.language.psi.*;
 import consulo.language.psi.util.SymbolPresentationUtil;
@@ -48,11 +48,12 @@ public class SearchEverywherePsiRenderer extends PsiElementListCellRenderer<PsiE
 
   @Override
   public String getElementText(PsiElement element) {
-    VirtualFile file = element instanceof PsiFile ? PsiUtilCore.getVirtualFile(element) : element instanceof VirtualFile ? (VirtualFile)element : null;
+    VirtualFile file = element instanceof PsiFile ? PsiUtilCore.getVirtualFile(element)
+      : element instanceof VirtualFile virtualFile ? virtualFile : null;
     if (file != null) {
       return VfsPresentationUtil.getPresentableNameForUI(element.getProject(), file);
     }
-    String name = element instanceof PsiNamedElement ? ((PsiNamedElement)element).getName() : null;
+    String name = element instanceof PsiNamedElement namedElement ? namedElement.getName() : null;
     return StringUtil.notNullize(name, "<unnamed>");
   }
 
@@ -73,10 +74,10 @@ public class SearchEverywherePsiRenderer extends PsiElementListCellRenderer<PsiE
       text = text.substring(1, text.length() - 1);
     }
 
-    if ((text.contains("/") || text.contains(File.separator)) && element instanceof PsiFileSystemItem) {
-      Project project = element.getProject();
+    if ((text.contains("/") || text.contains(File.separator)) && element instanceof PsiFileSystemItem fileSystemItem) {
+      Project project = fileSystemItem.getProject();
       String basePath = Optional.ofNullable(project.getBasePath()).map(FileUtil::toSystemDependentName).orElse(null);
-      VirtualFile file = ((PsiFileSystemItem)element).getVirtualFile();
+      VirtualFile file = fileSystemItem.getVirtualFile();
       if (file != null) {
         text = FileUtil.toSystemDependentName(text);
         String filePath = FileUtil.toSystemDependentName(file.getPath());

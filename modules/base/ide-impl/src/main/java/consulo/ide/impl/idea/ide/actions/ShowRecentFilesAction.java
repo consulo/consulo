@@ -20,13 +20,12 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.ide.IdeBundle;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.action.IdeActions;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ide.localize.IdeLocalize;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.IdeActions;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -37,12 +36,12 @@ public class ShowRecentFilesAction extends DumbAwareAction {
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     FeatureUsageTracker.getInstance().triggerFeatureUsed("navigation.recent.files");
-    Switcher.createAndShowSwitcher(e, IdeBundle.message("title.popup.recent.files"), IdeActions.ACTION_RECENT_FILES, false, true);
+    Switcher.createAndShowSwitcher(e, IdeLocalize.titlePopupRecentFiles().get(), IdeActions.ACTION_RECENT_FILES, false, true);
   }
 
   @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setEnabled(e.getData(CommonDataKeys.PROJECT) != null);
+    e.getPresentation().setEnabled(e.getData(Project.KEY) != null);
   }
 }

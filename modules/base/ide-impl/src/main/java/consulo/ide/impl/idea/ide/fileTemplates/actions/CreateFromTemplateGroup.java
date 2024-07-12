@@ -16,24 +16,23 @@
 
 package consulo.ide.impl.idea.ide.fileTemplates.actions;
 
-import consulo.ide.IdeView;
-import consulo.ide.action.CreateFromTemplateActionBase;
-import consulo.ide.impl.idea.ide.actions.EditFileTemplatesAction;
-import consulo.ide.impl.idea.ide.fileTemplates.ui.SelectTemplateDialog;
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
 import consulo.fileTemplate.FileTemplate;
 import consulo.fileTemplate.FileTemplateManager;
 import consulo.fileTemplate.impl.internal.FileTemplateImplUtil;
-import consulo.ide.IdeBundle;
-import consulo.language.editor.CommonDataKeys;
+import consulo.ide.IdeView;
+import consulo.ide.action.CreateFromTemplateActionBase;
+import consulo.ide.impl.idea.ide.actions.EditFileTemplatesAction;
+import consulo.ide.impl.idea.ide.fileTemplates.ui.SelectTemplateDialog;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.psi.PsiDirectory;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -43,7 +42,7 @@ public class CreateFromTemplateGroup extends ActionGroup implements DumbAware {
   @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent event) {
-    Project project = event.getData(CommonDataKeys.PROJECT);
+    Project project = event.getData(Project.KEY);
     Presentation presentation = event.getPresentation();
     if (project != null && !project.isDisposed()) {
       FileTemplate[] allTemplates = FileTemplateManager.getInstance(project).getAllTemplates();
@@ -62,7 +61,7 @@ public class CreateFromTemplateGroup extends ActionGroup implements DumbAware {
   @RequiredUIAccess
   public AnAction[] getChildren(@Nullable AnActionEvent e) {
     if (e == null) return EMPTY_ARRAY;
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null || project.isDisposed()) return EMPTY_ARRAY;
     FileTemplateManager manager = FileTemplateManager.getInstance(project);
     FileTemplate[] templates = manager.getAllTemplates();
@@ -99,11 +98,11 @@ public class CreateFromTemplateGroup extends ActionGroup implements DumbAware {
 
     if (!result.isEmpty()) {
       if (!showAll) {
-        result.add(new CreateFromTemplatesAction(IdeBundle.message("action.from.file.template")));
+        result.add(new CreateFromTemplatesAction(IdeLocalize.actionFromFileTemplate().get()));
       }
 
       result.add(AnSeparator.getInstance());
-      result.add(new EditFileTemplatesAction(IdeBundle.message("action.edit.file.templates")));
+      result.add(new EditFileTemplatesAction(IdeLocalize.actionEditFileTemplates().get()));
     }
 
     return result.toArray(new AnAction[result.size()]);
@@ -116,9 +115,8 @@ public class CreateFromTemplateGroup extends ActionGroup implements DumbAware {
     if (view == null) return false;
 
     PsiDirectory[] dirs = view.getDirectories();
-    if (dirs.length == 0) return false;
+    return dirs.length != 0 && FileTemplateImplUtil.canCreateFromTemplate(dirs, template);
 
-    return FileTemplateImplUtil.canCreateFromTemplate(dirs, template);
   }
 
   private static class CreateFromTemplatesAction extends CreateFromTemplateActionBase {
@@ -134,5 +132,4 @@ public class CreateFromTemplateGroup extends ActionGroup implements DumbAware {
       return dialog.getSelectedTemplate();
     }
   }
-
 }

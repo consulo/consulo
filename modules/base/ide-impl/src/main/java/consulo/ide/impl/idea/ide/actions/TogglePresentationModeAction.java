@@ -15,52 +15,55 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.impl.idea.ide.ui.LafManager;
+import consulo.application.dumb.DumbAware;
 import consulo.application.ui.UISettings;
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorFactory;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
-import consulo.codeEditor.EditorEx;
+import consulo.ide.impl.idea.ide.ui.LafManager;
+import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
-import consulo.util.concurrent.ActionCallback;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.project.ui.internal.IdeFrameEx;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
+import consulo.project.Project;
+import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.internal.ToolWindowLayout;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.project.ui.wm.IdeFrameUtil;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.project.ui.wm.IdeFrameUtil;
-
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.util.concurrent.ActionCallback;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 import java.awt.*;
 import java.util.Enumeration;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
  * @author Konstantin Bulenkov
  */
 public class TogglePresentationModeAction extends AnAction implements DumbAware {
-  private static final Map<Object, Object> ourSavedValues = ContainerUtil.newLinkedHashMap();
+  private static final Map<Object, Object> ourSavedValues = new LinkedHashMap<>();
   private static float ourSavedScaleFactor = JBUI.scale(1f);
   private static int ourSavedConsoleFontSize;
 
   @Override
+  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
     boolean selected = UISettings.getInstance().PRESENTATION_MODE;
     e.getPresentation().setText(selected ? "Exit Presentation Mode" : "Enter Presentation Mode");
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e){
     UISettings settings = UISettings.getInstance();
     Project project = e.getData(Project.KEY);
@@ -68,6 +71,7 @@ public class TogglePresentationModeAction extends AnAction implements DumbAware 
     setPresentationMode(project, !settings.PRESENTATION_MODE);
   }
 
+  @RequiredUIAccess
   public static void setPresentationMode(final Project project, final boolean inPresentation) {
     final UISettings settings = UISettings.getInstance();
     settings.PRESENTATION_MODE = inPresentation;
@@ -80,6 +84,7 @@ public class TogglePresentationModeAction extends AnAction implements DumbAware 
     callback.doWhenProcessed(() -> {
       tweakEditorAndFireUpdateUI(settings, inPresentation);
 
+      //noinspection RequiredXAction
       restoreToolWindows(project, layoutStored, inPresentation);
     });
   }
@@ -113,8 +118,8 @@ public class TogglePresentationModeAction extends AnAction implements DumbAware 
       globalScheme.setConsoleFontSize(ourSavedConsoleFontSize);
     }
     for (Editor editor : EditorFactory.getInstance().getAllEditors()) {
-      if (editor instanceof EditorEx) {
-        ((EditorEx)editor).setFontSize(fontSize);
+      if (editor instanceof EditorEx editorEx) {
+        editorEx.setFontSize(fontSize);
       }
     }
     UISettings.getInstance().fireUISettingsChanged();
@@ -128,8 +133,7 @@ public class TogglePresentationModeAction extends AnAction implements DumbAware 
     if (inPresentation) {
       while (keys.hasMoreElements()) {
         Object key = keys.nextElement();
-        if (key instanceof String) {
-          String name = (String)key;
+        if (key instanceof String name) {
           if (name.endsWith(".font")) {
             Font font = defaults.getFont(key);
             ourSavedValues.put(key, font);
@@ -144,12 +148,11 @@ public class TogglePresentationModeAction extends AnAction implements DumbAware 
       JBUI.setUserScaleFactor(scaleFactor);
       for (Object key : ourSavedValues.keySet()) {
         Object v = ourSavedValues.get(key);
-        if (v instanceof Font) {
-          Font font = (Font)v;
+        if (v instanceof Font font) {
           defaults.put(key, new FontUIResource(font.getName(), font.getStyle(), JBUI.scale(font.getSize())));
         }
-        else if (v instanceof Integer) {
-          defaults.put(key, JBUI.scale(((Integer)v).intValue()));
+        else if (v instanceof Integer i) {
+          defaults.put(key, JBUI.scale(i));
         }
       }
     }
@@ -162,6 +165,7 @@ public class TogglePresentationModeAction extends AnAction implements DumbAware 
     }
   }
 
+  @RequiredUIAccess
   private static boolean hideAllToolWindows(ToolWindowManagerEx manager) {
     // to clear windows stack
     manager.clearSideStack();
@@ -178,6 +182,7 @@ public class TogglePresentationModeAction extends AnAction implements DumbAware 
     return hasVisible;
   }
 
+  @RequiredUIAccess
   static boolean storeToolWindows(@Nullable Project project) {
     if (project == null) return false;
     ToolWindowManagerEx manager = ToolWindowManagerEx.getInstanceEx(project);
@@ -193,6 +198,7 @@ public class TogglePresentationModeAction extends AnAction implements DumbAware 
     return hasVisible;
   }
 
+  @RequiredUIAccess
   static void restoreToolWindows(Project project, boolean needsRestore, boolean inPresentation) {
     if (project == null || !needsRestore) return;
     ToolWindowManagerEx manager = ToolWindowManagerEx.getInstanceEx(project);

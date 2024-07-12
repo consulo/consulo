@@ -18,13 +18,12 @@ package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeViewPanel;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnSeparator;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -40,7 +39,7 @@ public class AddToFavoritesActionGroup extends ActionGroup {
   @Nonnull
   public AnAction[] getChildren(@Nullable AnActionEvent e) {
     if (e == null) return AnAction.EMPTY_ARRAY;
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     if (project == null) {
       return AnAction.EMPTY_ARRAY;
     }
@@ -61,7 +60,8 @@ public class AddToFavoritesActionGroup extends ActionGroup {
   }
 
   @Override
-  public void update(AnActionEvent e) {
+  @RequiredUIAccess
+  public void update(@Nonnull AnActionEvent e) {
     super.update(e);
     e.getPresentation().setVisible(AddToFavoritesAction.canCreateNodes(e));
   }

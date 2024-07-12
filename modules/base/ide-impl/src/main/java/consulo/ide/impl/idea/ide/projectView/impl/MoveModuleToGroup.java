@@ -19,23 +19,22 @@
  */
 package consulo.ide.impl.idea.ide.projectView.impl;
 
-import consulo.ide.IdeBundle;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.projectView.actions.MoveModulesToGroupAction;
 import consulo.ide.impl.idea.ide.projectView.actions.MoveModulesToSubGroupAction;
-import consulo.dataContext.DataContext;
-import consulo.language.editor.CommonDataKeys;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.LangDataKeys;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.ModuleGroup;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class MoveModuleToGroup extends ActionGroup {
@@ -47,9 +46,10 @@ public class MoveModuleToGroup extends ActionGroup {
   }
 
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e){
     final DataContext dataContext = e.getDataContext();
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Project project = dataContext.getData(Project.KEY);
     final Module[] modules = dataContext.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
     boolean active = project != null && modules != null && modules.length != 0;
     final Presentation presentation = e.getPresentation();
@@ -59,20 +59,18 @@ public class MoveModuleToGroup extends ActionGroup {
 
   @Override
   @Nonnull
+  @RequiredReadAction
   public AnAction[] getChildren(@Nullable AnActionEvent e) {
     if (e == null) return EMPTY_ARRAY;
 
-    List<ModuleGroup> children = new ArrayList<ModuleGroup>(myModuleGroup.childGroups(e.getDataContext()));
-    Collections.sort ( children, new Comparator<ModuleGroup>() {
-      @Override
-      public int compare(final ModuleGroup moduleGroup1, final ModuleGroup moduleGroup2) {
+    List<ModuleGroup> children = new ArrayList<>(myModuleGroup.childGroups(e.getDataContext()));
+    Collections.sort ( children, (moduleGroup1,moduleGroup2) -> {
         assert moduleGroup1.getGroupPath().length == moduleGroup2.getGroupPath().length;
         return moduleGroup1.toString().compareToIgnoreCase(moduleGroup2.toString());
-      }
-    });
+      });
 
-    List<AnAction> result = new ArrayList<AnAction>();
-    result.add(new MoveModulesToGroupAction(myModuleGroup, IdeBundle.message("action.move.module.to.this.group")));
+    List<AnAction> result = new ArrayList<>();
+    result.add(new MoveModulesToGroupAction(myModuleGroup, IdeLocalize.actionMoveModuleToThisGroup().get()));
     result.add(new MoveModulesToSubGroupAction(myModuleGroup));
      result.add(AnSeparator.getInstance());
     for (final ModuleGroup child : children) {

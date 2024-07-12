@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.ide.impl.dataRules;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataProvider;
-import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.dataContext.GetDataRule;
 import consulo.util.dataholder.Key;
@@ -30,7 +29,7 @@ public class PsiElementFromSelectionsRule implements GetDataRule<PsiElement[]> {
   @Nonnull
   @Override
   public Key<PsiElement[]> getKey() {
-    return LangDataKeys.PSI_ELEMENT_ARRAY;
+    return PsiElement.KEY_OF_ARRAY;
   }
 
   @Override
@@ -40,9 +39,12 @@ public class PsiElementFromSelectionsRule implements GetDataRule<PsiElement[]> {
       final PsiElement[] elements = new PsiElement[objects.length];
       for (int i = 0, objectsLength = objects.length; i < objectsLength; i++) {
         Object object = objects[i];
-        if (!(object instanceof PsiElement)) return null;
-        if (!((PsiElement)object).isValid()) return null;
-        elements[i] = (PsiElement)object;
+        if (object instanceof PsiElement element && element.isValid()) {
+          elements[i] = element;
+        }
+        else {
+          return null;
+        }
       }
 
       return elements;

@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -36,7 +35,7 @@ public class StartUseVcsAction extends AnAction implements DumbAware {
   @Override
   @RequiredUIAccess
   public void update(final AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     boolean enabled = isEnabled(project);
 
     final Presentation presentation = e.getPresentation();
@@ -46,7 +45,7 @@ public class StartUseVcsAction extends AnAction implements DumbAware {
   @Override
   @RequiredUIAccess
   public void actionPerformed(final AnActionEvent e) {
-    Project project = e.getRequiredData(CommonDataKeys.PROJECT);
+    Project project = e.getRequiredData(Project.KEY);
     if (!isEnabled(project)) {
       return;
     }

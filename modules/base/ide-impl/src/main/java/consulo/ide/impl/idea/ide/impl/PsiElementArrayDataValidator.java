@@ -17,10 +17,9 @@
 package consulo.ide.impl.idea.ide.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.language.editor.LangDataKeys;
-import consulo.util.dataholder.Key;
-import consulo.language.psi.PsiElement;
 import consulo.ide.impl.dataContext.DataValidators;
+import consulo.language.psi.PsiElement;
+import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -35,6 +34,6 @@ public class PsiElementArrayDataValidator extends DataValidators.ArrayValidator<
   @Nonnull
   @Override
   public Key<PsiElement[]> getKey() {
-    return LangDataKeys.PSI_ELEMENT_ARRAY;
+    return PsiElement.KEY_OF_ARRAY;
   }
 }

@@ -18,12 +18,10 @@ package consulo.ide.impl.idea.ide.ui.customization;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AllIcons;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.ActionsTreeUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapGroupImpl;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.logging.Logger;
 import consulo.project.ui.internal.IdeFrameEx;
@@ -31,6 +29,7 @@ import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.keymap.localize.KeyMapLocalize;
 import consulo.ui.image.Image;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.DefaultJDOMExternalizer;
@@ -135,7 +134,7 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, JDOMExterna
 
   public boolean isModified(CustomActionsSchemaImpl schema) {
     final ArrayList<ActionUrl> storedActions = schema.getActions();
-    if (ApplicationManager.getApplication().isUnitTestMode() && !storedActions.isEmpty()) {
+    if (Application.get().isUnitTestMode() && !storedActions.isEmpty()) {
       System.err.println("stored: " + storedActions.toString());
       System.err.println("actual: " + getActions().toString());
     }
@@ -174,7 +173,7 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, JDOMExterna
       url.readExternal((Element)groupElement);
       myActions.add(url);
     }
-    if (ApplicationManager.getApplication().isUnitTestMode()) {
+    if (Application.get().isUnitTestMode()) {
       System.err.println("read custom actions: " + myActions.toString());
     }
     readIcons(element);
@@ -244,8 +243,7 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, JDOMExterna
         if (url.getGroupPath().contains(text) || url.getGroupPath().contains(defaultGroupName)) {
           return true;
         }
-        if (url.getComponent() instanceof KeymapGroupImpl) {
-          final KeymapGroupImpl urlGroup = (KeymapGroupImpl)url.getComponent();
+        if (url.getComponent() instanceof KeymapGroupImpl urlGroup) {
           String id = urlGroup.getName() != null ? urlGroup.getName() : urlGroup.getId();
           if (id == null || id.equals(text) || id.equals(defaultGroupName)) {
             return true;
@@ -362,7 +360,7 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, JDOMExterna
 
     @Override
     public boolean equals(Object obj) {
-      return obj instanceof Pair && first.equals(((Pair)obj).first);
+      return obj instanceof Pair pair && first.equals(pair.first);
     }
   }
 

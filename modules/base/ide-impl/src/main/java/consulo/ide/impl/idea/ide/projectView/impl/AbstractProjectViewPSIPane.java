@@ -9,7 +9,6 @@ import consulo.colorScheme.TextAttributesKey;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.ide.PsiCopyPasteManagerImpl;
 import consulo.ide.impl.idea.ide.projectView.BaseProjectTreeBuilder;
 import consulo.ide.impl.idea.ide.ui.customization.CustomizationUtil;
 import consulo.ide.impl.idea.ui.stripe.ErrorStripe;
@@ -38,8 +37,8 @@ import consulo.ui.ex.update.Activatable;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -79,8 +78,7 @@ public abstract class AbstractProjectViewPSIPane extends AbstractProjectViewPane
       Disposer.register(this, new TreeUpdater<ErrorStripePainter>(painter, myComponent, myTree) {
         @Override
         protected void update(ErrorStripePainter painter, int index, Object object) {
-          if (object instanceof DefaultMutableTreeNode) {
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode)object;
+          if (object instanceof DefaultMutableTreeNode node) {
             object = node.getUserObject();
           }
           super.update(painter, index, getStripe(object, myTree.isExpanded(index)));
@@ -215,10 +213,10 @@ public abstract class AbstractProjectViewPSIPane extends AbstractProjectViewPane
   public AsyncResult<Void> selectCB(Object element, VirtualFile file, boolean requestFocus) {
     if (file != null) {
       AbstractTreeBuilder builder = getTreeBuilder();
-      if (builder instanceof BaseProjectTreeBuilder) {
+      if (builder instanceof BaseProjectTreeBuilder projectTreeBuilder) {
         beforeSelect().doWhenDone(() -> UIUtil.invokeLaterIfNeeded(() -> {
           if (!builder.isDisposed()) {
-            ((BaseProjectTreeBuilder)builder).selectAsync(element, file, requestFocus);
+            projectTreeBuilder.selectAsync(element, file, requestFocus);
           }
         }));
       }
@@ -263,9 +261,10 @@ public abstract class AbstractProjectViewPSIPane extends AbstractProjectViewPane
    * @return a non-null value if the corresponding node should be , or {@code null}
    */
   protected ErrorStripe getStripe(Object object, boolean expanded) {
-    if (expanded && object instanceof PsiDirectoryNode) return null;
-    if (object instanceof PresentableNodeDescriptor) {
-      PresentableNodeDescriptor node = (PresentableNodeDescriptor)object;
+    if (expanded && object instanceof PsiDirectoryNode) {
+      return null;
+    }
+    if (object instanceof PresentableNodeDescriptor node) {
       TextAttributesKey key = node.getPresentation().getTextAttributesKey();
       TextAttributes attributes = key == null ? null : EditorColorsManager.getInstance().getSchemeForCurrentUITheme().getAttributes(key);
       ColorValue color = attributes == null ? null : attributes.getErrorStripeColor();

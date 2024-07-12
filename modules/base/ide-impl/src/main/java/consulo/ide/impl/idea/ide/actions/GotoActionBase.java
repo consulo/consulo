@@ -26,7 +26,7 @@ import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.impl.idea.ide.actions.searcheverywhere.SearchEverywhereManager;
 import consulo.ide.impl.idea.ide.util.gotoByName.*;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
@@ -49,6 +49,8 @@ import javax.swing.event.DocumentEvent;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -59,11 +61,12 @@ public abstract class GotoActionBase extends AnAction {
   private static final Logger LOG = Logger.getInstance(GotoActionBase.class);
 
   protected static Class myInAction = null;
-  private static final Map<Class, Pair<String, Integer>> ourLastStrings = ContainerUtil.newHashMap();
-  private static final Map<Class, List<String>> ourHistory = ContainerUtil.newHashMap();
+  private static final Map<Class, Pair<String, Integer>> ourLastStrings = new HashMap<>();
+  private static final Map<Class, List<String>> ourHistory = new HashMap<>();
   private int myHistoryIndex = 0;
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     LOG.assertTrue(!getClass().equals(myInAction));
     try {
@@ -81,6 +84,7 @@ public abstract class GotoActionBase extends AnAction {
   protected abstract void gotoActionPerformed(AnActionEvent e);
 
   @Override
+  @RequiredUIAccess
   public void update(@Nonnull final AnActionEvent event) {
     final Presentation presentation = event.getPresentation();
     final DataContext dataContext = event.getDataContext();
@@ -149,8 +153,8 @@ public abstract class GotoActionBase extends AnAction {
 
     Project project = e == null ? null : e.getData(Project.KEY);
     final Component focusOwner = ProjectIdeFocusManager.getInstance(project).getFocusOwner();
-    if (focusOwner instanceof JComponent) {
-      final SpeedSearchSupply supply = SpeedSearchSupply.getSupply((JComponent)focusOwner);
+    if (focusOwner instanceof JComponent jComponent) {
+      final SpeedSearchSupply supply = SpeedSearchSupply.getSupply(jComponent);
       if (supply != null) {
         return Pair.create(supply.getEnteredPrefix(), 0);
       }
@@ -293,7 +297,7 @@ public abstract class GotoActionBase extends AnAction {
       private void updateHistory(@Nullable String text) {
         if (!StringUtil.isEmptyOrSpaces(text)) {
           List<String> history = ourHistory.get(myInAction);
-          if (history == null) history = ContainerUtil.newArrayList();
+          if (history == null) history = new ArrayList<>();
           if (!text.equals(ContainerUtil.getFirstItem(history))) {
             history.add(0, text);
           }
@@ -318,6 +322,7 @@ public abstract class GotoActionBase extends AnAction {
 
     abstract class HistoryAction extends DumbAwareAction {
       @Override
+      @RequiredUIAccess
       public void update(@Nonnull AnActionEvent e) {
         e.getPresentation().setEnabled(historyEnabled());
       }
@@ -335,6 +340,7 @@ public abstract class GotoActionBase extends AnAction {
 
     new HistoryAction() {
       @Override
+      @RequiredUIAccess
       public void actionPerformed(@Nonnull AnActionEvent e) {
         List<String> strings = ourHistory.get(myInAction);
         setText(strings);
@@ -345,6 +351,7 @@ public abstract class GotoActionBase extends AnAction {
 
     new HistoryAction() {
       @Override
+      @RequiredUIAccess
       public void actionPerformed(@Nonnull AnActionEvent e) {
         List<String> strings = ourHistory.get(myInAction);
         setText(strings);
@@ -357,10 +364,12 @@ public abstract class GotoActionBase extends AnAction {
     showInSearchEverywherePopup(searchProviderID, event, useEditorSelection, false);
   }
 
-  protected void showInSearchEverywherePopup(@Nonnull String searchProviderID,
-                                             @Nonnull AnActionEvent event,
-                                             boolean useEditorSelection,
-                                             boolean sendStatistics) {
+  protected void showInSearchEverywherePopup(
+    @Nonnull String searchProviderID,
+    @Nonnull AnActionEvent event,
+    boolean useEditorSelection,
+    boolean sendStatistics
+  ) {
     Project project = event.getData(Project.KEY);
     if (project == null) return;
     SearchEverywhereManager seManager = SearchEverywhereManager.getInstance(project);

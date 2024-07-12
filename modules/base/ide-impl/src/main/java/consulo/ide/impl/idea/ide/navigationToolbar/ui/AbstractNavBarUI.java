@@ -2,22 +2,23 @@
 package consulo.ide.impl.idea.ide.navigationToolbar.ui;
 
 import consulo.application.AllIcons;
+import consulo.application.ui.UISettings;
 import consulo.ide.impl.idea.ide.navigationToolbar.NavBarItem;
 import consulo.ide.impl.idea.ide.navigationToolbar.NavBarPanel;
-import consulo.application.ui.UISettings;
-import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.awt.paint.PaintUtil;
-import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.JBInsets;
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.paint.PaintUtil;
+import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
-
+import consulo.ui.style.StyleManager;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Path2D;
@@ -129,7 +130,7 @@ public abstract class AbstractNavBarUI implements NavBarUI {
 
     BufferedImage result = UIUtil.createImage(ctx, w, h, BufferedImage.TYPE_INT_ARGB, PaintUtil.RoundingMode.FLOOR);
 
-    Color defaultBg = UIUtil.isUnderDarcula() ? Gray._100 : JBColor.WHITE;
+    Color defaultBg = StyleManager.get().getCurrentStyle().isDark() ? Gray._100 : JBColor.WHITE;
     final Paint bg = floating ? defaultBg : null;
     final Color selection = UIUtil.getListSelectionBackground(true);
 

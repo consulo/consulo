@@ -23,8 +23,8 @@ import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
 import consulo.bookmark.Bookmark;
 import consulo.bookmark.BookmarkManager;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 
@@ -36,16 +36,18 @@ public abstract class GoToMnemonicBookmarkActionBase extends AnAction implements
   }
 
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Project project = dataContext.getData(Project.KEY);
     e.getPresentation().setEnabled(project != null);
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Project project = dataContext.getData(Project.KEY);
 
     final Bookmark bookmark = BookmarkManager.getInstance(project).findBookmarkForMnemonic((char)('0' + myNumber));
     if (bookmark != null) {

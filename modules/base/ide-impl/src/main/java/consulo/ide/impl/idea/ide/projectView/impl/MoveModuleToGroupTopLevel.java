@@ -19,16 +19,17 @@
  */
 package consulo.ide.impl.idea.ide.projectView.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.ide.impl.idea.ide.projectView.actions.MoveModulesOutsideGroupAction;
 import consulo.ide.impl.idea.ide.projectView.actions.MoveModulesToSubGroupAction;
 import consulo.dataContext.DataContext;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.ModuleGroup;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -41,9 +42,10 @@ import java.util.*;
 
 public class MoveModuleToGroupTopLevel extends ActionGroup {
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e){
     final DataContext dataContext = e.getDataContext();
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Project project = dataContext.getData(Project.KEY);
     final Module[] modules = dataContext.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
     boolean active = project != null && modules != null && modules.length != 0;
     e.getPresentation().setVisible(active);
@@ -51,14 +53,15 @@ public class MoveModuleToGroupTopLevel extends ActionGroup {
 
   @Override
   @Nonnull
+  @RequiredReadAction
   public AnAction[] getChildren(@Nullable AnActionEvent e) {
     if (e == null) {
       return EMPTY_ARRAY;
     }
-    List<String> topLevelGroupNames = new ArrayList<String> (getTopLevelGroupNames(e.getDataContext()));
+    List<String> topLevelGroupNames = new ArrayList<>(getTopLevelGroupNames(e.getDataContext()));
     Collections.sort ( topLevelGroupNames );
 
-    List<AnAction> result = new ArrayList<AnAction>();
+    List<AnAction> result = new ArrayList<>();
     result.add(new MoveModulesOutsideGroupAction());
     result.add(new MoveModulesToSubGroupAction(null));
     result.add(AnSeparator.getInstance());
@@ -68,8 +71,9 @@ public class MoveModuleToGroupTopLevel extends ActionGroup {
     return result.toArray(new AnAction[result.size()]);
   }
 
+  @RequiredReadAction
   private static Collection<String> getTopLevelGroupNames(final DataContext dataContext) {
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Project project = dataContext.getData(Project.KEY);
 
     final ModifiableModuleModel model = dataContext.getData(LangDataKeys.MODIFIABLE_MODULE_MODEL);
 
@@ -80,7 +84,7 @@ public class MoveModuleToGroupTopLevel extends ActionGroup {
       allModules = ModuleManager.getInstance(project).getModules();
     }
 
-    Set<String> topLevelGroupNames = new HashSet<String>();
+    Set<String> topLevelGroupNames = new HashSet<>();
     for (final Module child : allModules) {
       String[] group;
       if ( model != null ) {

@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.application.dumb.DumbAware;
 import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -28,16 +28,12 @@ import consulo.ui.ex.action.Presentation;
  * @author yole
  */
 public abstract class SplitterActionBase extends AnAction implements DumbAware {
+  @Override
+  @RequiredUIAccess
   public void update(final AnActionEvent event) {
-    final Project project = event.getData(CommonDataKeys.PROJECT);
+    final Project project = event.getData(Project.KEY);
     final Presentation presentation = event.getPresentation();
-    boolean enabled;
-    if (project == null) {
-      enabled = false;
-    }
-    else {
-      enabled = isActionEnabled(project);
-    }
+    boolean enabled = project != null && isActionEnabled(project);
     if (ActionPlaces.isPopupPlace(event.getPlace())) {
       presentation.setVisible(enabled);
     }

@@ -7,11 +7,9 @@ import consulo.dataContext.DataManager;
 import consulo.ide.impl.desktop.DesktopIdeFrameUtil;
 import consulo.ide.impl.idea.ui.LightweightHint;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
-import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
@@ -20,7 +18,6 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Consumer;
 
 /**
  * @author Konstantin Bulenkov
@@ -29,7 +26,7 @@ public class NavBarUpdateQueue extends MergingUpdateQueue {
   private final AtomicBoolean myModelUpdating = new AtomicBoolean(Boolean.FALSE);
   private final Alarm myUserActivityAlarm = new Alarm(this);
   private Runnable myRunWhenListRebuilt;
-  private final Runnable myUserActivityAlarmRunnable = () -> processUserActivity();
+  private final Runnable myUserActivityAlarmRunnable = this::processUserActivity;
 
   private final NavBarPanel myPanel;
 
@@ -37,7 +34,7 @@ public class NavBarUpdateQueue extends MergingUpdateQueue {
     super("NavBar", Registry.intValue("navBar.updateMergeTime"), true, panel, panel);
     myPanel = panel;
     setTrackUiActivity(true);
-    IdeEventQueueProxy.getInstance().addActivityListener(() -> restartRebuild(), panel);
+    IdeEventQueueProxy.getInstance().addActivityListener(this::restartRebuild, panel);
   }
 
   private void requestModelUpdate(@Nullable final DataContext context, final @Nullable Object object, boolean requeue) {
@@ -68,7 +65,7 @@ public class NavBarUpdateQueue extends MergingUpdateQueue {
     try {
       final NavBarModel model = myPanel.getModel();
       if (dataContext != null) {
-        if (dataContext.getData(CommonDataKeys.PROJECT) != myPanel.getProject() || myPanel.isNodePopupActive()) {
+        if (dataContext.getData(Project.KEY) != myPanel.getProject() || myPanel.isNodePopupActive()) {
           requestModelUpdate(null, myPanel.getContextObject(), true);
           return;
         }
@@ -118,11 +115,8 @@ public class NavBarUpdateQueue extends MergingUpdateQueue {
       }
       else {
         final Window window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
-        if (window instanceof Dialog) {
-          final Dialog dialog = (Dialog)window;
-          if (dialog.isModal() && !SwingUtilities.isDescendingFrom(myPanel, dialog)) {
-            return;
-          }
+        if (window instanceof Dialog dialog && dialog.isModal() && !SwingUtilities.isDescendingFrom(myPanel, dialog)) {
+          return;
         }
       }
 
@@ -200,7 +194,7 @@ public class NavBarUpdateQueue extends MergingUpdateQueue {
     myPanel.revalidate();
     myPanel.repaint();
 
-    queueAfterAll(() -> myPanel.scrollSelectionToVisible(), ID.SCROLL_TO_VISIBLE);
+    queueAfterAll(myPanel::scrollSelectionToVisible, ID.SCROLL_TO_VISIBLE);
   }
 
   private void queueRevalidate(@Nullable final Runnable after) {
@@ -209,7 +203,7 @@ public class NavBarUpdateQueue extends MergingUpdateQueue {
       protected void after() {
         final LightweightHint hint = myPanel.getHint();
         if (hint != null) {
-          myPanel.getHintContainerShowPoint().doWhenDone((Consumer<RelativePoint>)relativePoint -> {
+          myPanel.getHintContainerShowPoint().doWhenDone(relativePoint -> {
             hint.setSize(myPanel.getPreferredSize());
             hint.setLocation(relativePoint);
             if (after != null) {
