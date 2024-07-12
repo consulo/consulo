@@ -71,13 +71,13 @@ public class DuplicatesIndex extends FileBasedIndexExtension<Integer, IntList> {
       return false;
     }
     DuplicatesProfile duplicatesProfile = findDuplicatesProfile(file.getFileType());
-    if (duplicatesProfile instanceof LightDuplicateProfile) {
-      return ((LightDuplicateProfile)duplicatesProfile).acceptsFile(file);
+    if (duplicatesProfile instanceof LightDuplicateProfile lightDuplicateProfile) {
+      return lightDuplicateProfile.acceptsFile(file);
     }
     return duplicatesProfile != null;
   };
 
-  private final DataExternalizer<IntList> myValueExternalizer = new DataExternalizer<IntList>() {
+  private final DataExternalizer<IntList> myValueExternalizer = new DataExternalizer<>() {
     @Override
     public void save(@Nonnull DataOutput out, IntList list) throws IOException {
       if (list.size() == 2) {
@@ -108,7 +108,7 @@ public class DuplicatesIndex extends FileBasedIndexExtension<Integer, IntList> {
       capacityOrValue = -capacityOrValue;
       IntList list = IntLists.newArrayList(capacityOrValue);
       int prev = 0;
-      while(capacityOrValue > 0) {
+      while (capacityOrValue > 0) {
         int value = DataInputOutputUtil.readINT(in) + prev;
         list.add(value);
         prev = value;
@@ -131,11 +131,11 @@ public class DuplicatesIndex extends FileBasedIndexExtension<Integer, IntList> {
       try {
         PsiDependentFileContent fileContent = (PsiDependentFileContent)inputData;
 
-        if (profile instanceof LightDuplicateProfile && ourEnabledLightProfiles) {
+        if (profile instanceof LightDuplicateProfile lightDuplicateProfile && ourEnabledLightProfiles) {
           final Map<Integer, IntList> result = new HashMap<>();
           LighterAST ast = fileContent.getLighterAST();
 
-          ((LightDuplicateProfile)profile).process(ast, (hash, hash2, ast1, nodes) -> {
+          lightDuplicateProfile.process(ast, (hash, hash2, ast1, nodes) -> {
             IntList list = result.get(hash);
             if (list == null) {
               result.put(hash, list = IntLists.newArrayList(2));
@@ -162,9 +162,8 @@ public class DuplicatesIndex extends FileBasedIndexExtension<Integer, IntList> {
     if (!(fileType instanceof LanguageFileType)) return null;
     Language language = ((LanguageFileType)fileType).getLanguage();
     DuplicatesProfile profile = DuplicatesProfile.findProfileForLanguage(language);
-    return profile != null &&
-           (ourEnabledOldProfiles && profile.supportDuplicatesIndex() ||
-            profile instanceof LightDuplicateProfile) ? profile : null;
+    return profile != null
+      && (ourEnabledOldProfiles && profile.supportDuplicatesIndex() || profile instanceof LightDuplicateProfile) ? profile : null;
   }
 
   @Override
@@ -240,7 +239,7 @@ public class DuplicatesIndex extends FileBasedIndexExtension<Integer, IntList> {
   }
 
   static boolean isIndexedFragment(@Nullable PsiFragment frag, int cost, DuplicatesProfile profile, DuplocatorState duplocatorState) {
-    if(frag == null) return false;
+    if (frag == null) return false;
     return profile.shouldPutInIndex(frag, cost, duplocatorState);
   }
 

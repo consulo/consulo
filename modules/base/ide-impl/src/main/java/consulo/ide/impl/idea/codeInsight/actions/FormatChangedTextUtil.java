@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.codeInsight.actions;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.AccessRule;
@@ -39,6 +41,8 @@ import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nonnull;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
@@ -132,6 +136,7 @@ public class FormatChangedTextUtil {
    * @return <code>true</code> if any file that belongs to the given project has changes in comparison with VCS
    * <code>false</code> otherwise
    */
+  @RequiredWriteAction
   public static boolean hasChanges(@Nonnull final Project project) {
     ThrowableComputable<ModifiableModuleModel,RuntimeException> action = () -> ModuleManager.getInstance(project).getModifiableModel();
     final ModifiableModuleModel moduleModel = AccessRule.read(action);
@@ -152,7 +157,7 @@ public class FormatChangedTextUtil {
   @Nonnull
   public static List<PsiFile> getChangedFilesFromDirs(@Nonnull Project project, @Nonnull List<PsiDirectory> dirs) {
     ChangeListManager changeListManager = ChangeListManager.getInstance(project);
-    Collection<Change> changes = ContainerUtil.newArrayList();
+    Collection<Change> changes = new ArrayList<>();
 
     for (PsiDirectory dir : dirs) {
       changes.addAll(changeListManager.getChangesIn(dir.getVirtualFile()));
@@ -163,10 +168,11 @@ public class FormatChangedTextUtil {
 
   @Nonnull
   public static List<PsiFile> getChangedFiles(@Nonnull final Project project, @Nonnull Collection<Change> changes) {
-    Function<Change, PsiFile> changeToPsiFileMapper = new Function<Change, PsiFile>() {
+    Function<Change, PsiFile> changeToPsiFileMapper = new Function<>() {
       private PsiManager myPsiManager = PsiManager.getInstance(project);
 
       @Override
+      @RequiredReadAction
       public PsiFile apply(Change change) {
         VirtualFile vFile = change.getVirtualFile();
         return vFile != null ? myPsiManager.findFile(vFile) : null;

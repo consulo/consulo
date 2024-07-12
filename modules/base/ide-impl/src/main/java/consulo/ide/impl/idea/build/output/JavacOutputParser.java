@@ -8,8 +8,8 @@ import consulo.build.ui.impl.internal.event.FileMessageEventImpl;
 import consulo.build.ui.impl.internal.event.MessageEventImpl;
 import consulo.build.ui.localize.BuildLocalize;
 import consulo.compiler.CompilerManager;
-import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -169,7 +169,7 @@ public class JavacOutputParser implements BuildOutputParser {
 
   private boolean isRelatedFile(File file) {
     String filePath = file.getPath();
-    return ContainerUtil.exists(myFileExtensions, extension -> FileUtilRt.extensionEquals(filePath, extension));
+    return ContainerUtil.exists(myFileExtensions, extension -> FileUtil.extensionEquals(filePath, extension));
   }
 
   private static String amendNextInfoLinesIfNeeded(String str, BuildOutputInstantReader reader) {

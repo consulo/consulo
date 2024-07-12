@@ -16,31 +16,32 @@
 package consulo.ide.impl.idea.codeInsight.actions;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ApplicationManager;
 import consulo.application.util.diff.FilesTooBigForDiffException;
 import consulo.codeEditor.EditorFactory;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.editor.impl.EditorFactoryImpl;
-import consulo.versionControlSystem.VcsException;
-import consulo.versionControlSystem.change.Change;
-import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
-import consulo.versionControlSystem.change.ContentRevision;
 import consulo.ide.impl.idea.openapi.vcs.ex.LineStatusTracker;
 import consulo.ide.impl.idea.openapi.vcs.ex.Range;
 import consulo.ide.impl.idea.openapi.vcs.ex.RangesBuilder;
 import consulo.ide.impl.idea.openapi.vcs.impl.LineStatusTrackerManager;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
-import consulo.versionControlSystem.util.VcsUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.versionControlSystem.VcsException;
+import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.change.ChangeListManager;
+import consulo.versionControlSystem.change.ContentRevision;
+import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.List;
 
 @Singleton
@@ -57,7 +58,7 @@ public class VcsAwareFormatChangedTextUtil extends FormatChangedTextUtil {
       return cachedChangedLines;
     }
 
-    if (ApplicationManager.getApplication().isUnitTestMode()) {
+    if (project.getApplication().isUnitTestMode()) {
       CharSequence testContent = file.getUserData(TEST_REVISION_CONTENT);
       if (testContent != null) {
         return calculateChangedTextRanges(document, testContent);
@@ -73,11 +74,12 @@ public class VcsAwareFormatChangedTextUtil extends FormatChangedTextUtil {
     }
 
     String contentFromVcs = getRevisionedContentFrom(change);
-    return contentFromVcs != null ? calculateChangedTextRanges(document, contentFromVcs)
-                                  : ContainerUtil.<TextRange>emptyList();
+    return contentFromVcs != null
+      ? calculateChangedTextRanges(document, contentFromVcs)
+      : ContainerUtil.<TextRange>emptyList();
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private static String getRevisionedContentFrom(@Nonnull Change change) {
     ContentRevision revision = change.getBeforeRevision();
     if (revision == null) {
@@ -93,7 +95,7 @@ public class VcsAwareFormatChangedTextUtil extends FormatChangedTextUtil {
     }
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private static List<TextRange> getCachedChangedLines(@Nonnull Project project, @Nonnull Document document) {
     LineStatusTracker tracker = LineStatusTrackerManager.getInstance(project).getLineStatusTracker(document);
     if (tracker != null && tracker.isValid()) {
@@ -153,7 +155,7 @@ public class VcsAwareFormatChangedTextUtil extends FormatChangedTextUtil {
 
   @Nonnull
   private static List<TextRange> getChangedTextRanges(@Nonnull Document document, @Nonnull List<Range> changedRanges) {
-    List<TextRange> ranges = ContainerUtil.newArrayList();
+    List<TextRange> ranges = new ArrayList<>();
     for (Range range : changedRanges) {
       if (range.getType() != Range.DELETED) {
         int changeStartLine = range.getLine1();
@@ -175,10 +177,6 @@ public class VcsAwareFormatChangedTextUtil extends FormatChangedTextUtil {
 
     ChangeListManagerImpl changeListManager = ChangeListManagerImpl.getInstanceImpl(project);
     List<VirtualFile> unversionedFiles = changeListManager.getUnversionedFiles();
-    if (unversionedFiles.contains(file.getVirtualFile())) {
-      return true;
-    }
-
-    return false;
+    return unversionedFiles.contains(file.getVirtualFile());
   }
 }

@@ -28,7 +28,6 @@ import consulo.language.editor.impl.internal.template.TemplateManagerImpl;
 import consulo.language.editor.impl.internal.template.TemplateStateImpl;
 import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.language.Language;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.action.SmartEnterProcessor;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.util.PsiUtilBase;
@@ -61,7 +60,7 @@ public class SmartEnterAction extends EditorAction {
     @RequiredWriteAction
     @Override
     public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
-      Project project = dataContext.getData(CommonDataKeys.PROJECT);
+      Project project = dataContext.getData(Project.KEY);
       if (project == null || editor.isOneLineMode()) {
         plainEnter(editor, caret, dataContext);
         return;

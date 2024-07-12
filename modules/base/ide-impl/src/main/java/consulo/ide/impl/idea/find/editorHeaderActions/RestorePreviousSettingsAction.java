@@ -15,15 +15,15 @@
  */
 package consulo.ide.impl.idea.find.editorHeaderActions;
 
-import consulo.ide.impl.idea.find.EditorSearchSession;
+import consulo.application.dumb.DumbAware;
 import consulo.find.FindManager;
 import consulo.find.FindModel;
-import consulo.application.dumb.DumbAware;
-import consulo.language.editor.CommonDataKeys;
+import consulo.ide.impl.idea.find.EditorSearchSession;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
-
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 
@@ -36,18 +36,22 @@ import java.awt.event.KeyEvent;
  */
 public class RestorePreviousSettingsAction extends AnAction implements ShortcutProvider, DumbAware {
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     EditorSearchSession search = e.getData(EditorSearchSession.SESSION_KEY);
-    e.getPresentation().setEnabled(project != null && search != null && !project.isDisposed() &&
-                                   search.getTextInField().isEmpty() &&
-                                   FindManager.getInstance(project).getPreviousFindModel() != null);
+    e.getPresentation().setEnabled(
+      project != null && search != null && !project.isDisposed()
+        && search.getTextInField().isEmpty()
+        && FindManager.getInstance(project).getPreviousFindModel() != null
+    );
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
     FindModel findModel = e.getRequiredData(EditorSearchSession.SESSION_KEY).getFindModel();
-    findModel.copyFrom(FindManager.getInstance(e.getData(CommonDataKeys.PROJECT)).getPreviousFindModel());
+    findModel.copyFrom(FindManager.getInstance(e.getData(Project.KEY)).getPreviousFindModel());
   }
 
   @Nullable

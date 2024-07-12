@@ -4,7 +4,8 @@ package consulo.ide.impl.idea.find;
 
 import consulo.application.Application;
 import consulo.application.HelpManager;
-import consulo.application.localize.ApplicationLocalize;import consulo.application.ui.UISettings;
+import consulo.application.localize.ApplicationLocalize;
+import consulo.application.ui.UISettings;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.EditorFactoryEvent;
 import consulo.codeEditor.event.EditorFactoryListener;

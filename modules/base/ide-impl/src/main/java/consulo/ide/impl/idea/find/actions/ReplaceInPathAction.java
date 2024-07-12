@@ -17,20 +17,20 @@
 
 package consulo.ide.impl.idea.find.actions;
 
-import consulo.ide.impl.idea.find.replaceInProject.ReplaceInProjectManager;
 import consulo.dataContext.DataContext;
-import consulo.language.editor.CommonDataKeys;
+import consulo.ide.impl.idea.find.replaceInProject.ReplaceInProjectManager;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-
 import jakarta.annotation.Nonnull;
 
 public class ReplaceInPathAction extends AnAction {
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Project project = dataContext.getData(Project.KEY);
 
     ReplaceInProjectManager replaceManager = ReplaceInProjectManager.getInstance(project);
     if (!replaceManager.isEnabled()) {
@@ -42,6 +42,7 @@ public class ReplaceInPathAction extends AnAction {
   }
 
   @Override
+  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent event) {
     FindInPathAction.doUpdate(event);
   }

@@ -24,10 +24,7 @@ import gnu.trove.TIntHashSet;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -63,7 +60,7 @@ public class DocPreviewUtil {
    * There is a possible situation then that we have two replacements where one key is a simple name and another one is a fully qualified
    * one. We want to apply <code>'from fully qualified name'</code> replacement first then.
    */
-  private static final Comparator<String> REPLACEMENTS_COMPARATOR = new Comparator<String>() {
+  private static final Comparator<String> REPLACEMENTS_COMPARATOR = new Comparator<>() {
     @Override
     public int compare(@Nonnull String o1, @Nonnull String o2) {
       String shortName1 = extractShortName(o1);
@@ -109,11 +106,11 @@ public class DocPreviewUtil {
     }
 
     // Build links info.
-    Map<String/*qName*/, String/*address*/> links = ContainerUtilRt.newHashMap();
+    Map<String/*qName*/, String/*address*/> links = new HashMap<>();
     process(fullText, new LinksCollector(links));
     
     // Add derived names.
-    Map<String, String> toAdd = ContainerUtilRt.newHashMap();
+    Map<String, String> toAdd = new HashMap<>();
     for (Map.Entry<String, String> entry : links.entrySet()) {
       String shortName = parseShortName(entry.getKey());
       if (shortName != null) {
@@ -130,7 +127,7 @@ public class DocPreviewUtil {
     }
     
     // Apply links info to the header template.
-    List<TextRange> modifiedRanges = ContainerUtilRt.newArrayList();
+    List<TextRange> modifiedRanges = new ArrayList<>();
     List<String> sortedReplacements = ContainerUtilRt.newArrayList(links.keySet());
     Collections.sort(sortedReplacements, REPLACEMENTS_COMPARATOR);
     StringBuilder buffer = new StringBuilder(header);

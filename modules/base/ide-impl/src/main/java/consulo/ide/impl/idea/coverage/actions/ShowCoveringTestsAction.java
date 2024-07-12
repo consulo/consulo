@@ -4,17 +4,8 @@
  */
 package consulo.ide.impl.idea.coverage.actions;
 
-import consulo.language.editor.hint.HintManager;
-import consulo.ide.impl.idea.codeInsight.hint.ImplementationViewComponent;
-import consulo.ide.impl.idea.openapi.ui.PanelWithText;
-import consulo.localize.LocalizeValue;
-import consulo.util.lang.Comparing;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.util.lang.StringUtil;
 import com.intellij.rt.coverage.data.LineCoverage;
 import com.intellij.rt.coverage.data.LineData;
-import consulo.ide.impl.idea.ui.popup.NotLookupOrSearchCondition;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.application.AllIcons;
 import consulo.application.progress.ProgressManager;
 import consulo.codeEditor.Editor;
@@ -22,6 +13,11 @@ import consulo.dataContext.DataContext;
 import consulo.execution.coverage.CoverageDataManager;
 import consulo.execution.coverage.CoverageSuite;
 import consulo.execution.coverage.CoverageSuitesBundle;
+import consulo.ide.impl.idea.codeInsight.hint.ImplementationViewComponent;
+import consulo.ide.impl.idea.openapi.ui.PanelWithText;
+import consulo.ide.impl.idea.ui.popup.NotLookupOrSearchCondition;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.language.editor.hint.HintManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
 import consulo.logging.Logger;
@@ -32,6 +28,9 @@ import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 
 import javax.swing.*;
 import java.io.DataInputStream;
@@ -130,7 +129,7 @@ public class ShowCoveringTestsAction extends AnAction {
     for (int i = 0; i < traceSize; i++) {
       final String className = in.readUTF();
       final int linesSize = in.readInt();
-      for(int l = 0; l < linesSize; l++) {
+      for (int l = 0; l < linesSize; l++) {
         final int line = in.readInt();
         if (Comparing.strEqual(className, myClassFQName)) {
           if (myLineData.getLineNumber() == line) {

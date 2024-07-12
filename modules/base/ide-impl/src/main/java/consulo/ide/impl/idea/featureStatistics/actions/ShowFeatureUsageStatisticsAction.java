@@ -15,18 +15,24 @@
  */
 package consulo.ide.impl.idea.featureStatistics.actions;
 
+import consulo.application.dumb.DumbAware;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.application.dumb.DumbAware;
+import jakarta.annotation.Nonnull;
 
 public class ShowFeatureUsageStatisticsAction extends AnAction implements DumbAware {
-  public void actionPerformed(AnActionEvent e) {
-    new ShowFeatureUsageStatisticsDialog(e == null ? null : e.getData(CommonDataKeys.PROJECT)).show();
+  @Override
+  @RequiredUIAccess
+  public void actionPerformed(@Nonnull AnActionEvent e) {
+    new ShowFeatureUsageStatisticsDialog(e == null ? null : e.getData(Project.KEY)).show();
   }
 
-  public void update(AnActionEvent e) {
+  @Override
+  @RequiredUIAccess
+  public void update(@Nonnull AnActionEvent e) {
     super.update(e);
-    e.getPresentation().setEnabled((e == null ? null : e.getData(CommonDataKeys.PROJECT)) != null);
+    e.getPresentation().setEnabled((e == null ? null : e.getData(Project.KEY)) != null);
   }
 }

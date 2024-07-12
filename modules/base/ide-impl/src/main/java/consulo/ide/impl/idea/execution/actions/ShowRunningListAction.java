@@ -15,40 +15,39 @@
  */
 package consulo.ide.impl.idea.execution.actions;
 
-import consulo.execution.ExecutionBundle;
-import consulo.execution.executor.Executor;
-import consulo.process.KillableProcessHandler;
-import consulo.execution.impl.internal.ExecutionManagerImpl;
-import consulo.process.ProcessHandler;
-import consulo.execution.ui.RunContentDescriptor;
 import consulo.application.AllIcons;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
+import consulo.application.ui.wm.IdeFocusManager;
+import consulo.execution.executor.Executor;
+import consulo.execution.impl.internal.ExecutionManagerImpl;
+import consulo.execution.localize.ExecutionLocalize;
+import consulo.execution.ui.RunContentDescriptor;
+import consulo.process.KillableProcessHandler;
+import consulo.process.ProcessHandler;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
+import consulo.project.ui.internal.WindowManagerEx;
+import consulo.project.ui.wm.IdeFrame;
+import consulo.project.ui.wm.WindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.NonOpaquePanel;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.BalloonBuilder;
 import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.util.lang.function.Condition;
+import consulo.ui.image.Image;
 import consulo.util.lang.Pair;
-import consulo.util.lang.ref.Ref;
 import consulo.util.lang.Trinity;
-import consulo.application.ui.wm.IdeFocusManager;
-import consulo.project.ui.wm.IdeFrame;
-import consulo.project.ui.wm.WindowManager;
-import consulo.project.ui.internal.WindowManagerEx;
-import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.awt.NonOpaquePanel;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.util.lang.function.Condition;
+import consulo.util.lang.ref.Ref;
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -58,74 +57,73 @@ import java.util.Set;
 
 public class ShowRunningListAction extends AnAction {
   public ShowRunningListAction() {
-    super(ExecutionBundle.message("show.running.list.action.name"), ExecutionBundle.message("show.running.list.action.description"), null);
+    super(ExecutionLocalize.showRunningListActionName(), ExecutionLocalize.showRunningListActionDescription(), null);
   }
 
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull final AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     if (project == null || project.isDisposed()) return;
     final Ref<Pair<? extends JComponent, String>> stateRef = new Ref<>();
     final Ref<Balloon> balloonRef = new Ref<>();
 
     final Timer timer = UIUtil.createNamedTimer("runningLists", 250);
-    ActionListener actionListener = new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent actionEvent) {
-        Balloon balloon = balloonRef.get();
-        if (project.isDisposed() || (balloon != null && balloon.isDisposed())) {
-          timer.stop();
-          return;
-        }
-        ArrayList<Project> projects = new ArrayList<>(Arrays.asList(ProjectManager.getInstance().getOpenProjects()));
-        //List should begin with current project
-        projects.remove(project);
-        projects.add(0, project);
-        Pair<? extends JComponent, String> state = getCurrentState(projects);
+    ActionListener actionListener = actionEvent -> {
+      Balloon balloon = balloonRef.get();
+      if (project.isDisposed() || (balloon != null && balloon.isDisposed())) {
+        timer.stop();
+        return;
+      }
+      ArrayList<Project> projects = new ArrayList<>(Arrays.asList(ProjectManager.getInstance().getOpenProjects()));
+      //List should begin with current project
+      projects.remove(project);
+      projects.add(0, project);
+      Pair<? extends JComponent, String> state = getCurrentState(projects);
 
-        Pair<? extends JComponent, String> prevState = stateRef.get();
-        if (prevState != null && prevState.getSecond().equals(state.getSecond())) return;
-        stateRef.set(state);
+      Pair<? extends JComponent, String> prevState = stateRef.get();
+      if (prevState != null && prevState.getSecond().equals(state.getSecond())) return;
+      stateRef.set(state);
 
-        BalloonBuilder builder = JBPopupFactory.getInstance().createBalloonBuilder(state.getFirst());
-        builder.setShowCallout(false).setTitle(ExecutionBundle.message("show.running.list.balloon.title")).setBlockClicksThroughBalloon(true).setDialogMode(true).setHideOnKeyOutside(false);
-        IdeFrame frame = e.getDataContext().getData(IdeFrame.KEY);
-        if (frame == null) {
-          frame = WindowManagerEx.getInstance().getIdeFrame(project);
-        }
-        if (balloon != null) {
-          balloon.hide();
-        }
-        builder.setClickHandler(new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent e) {
-            if (e.getSource() instanceof MouseEvent) {
-              MouseEvent mouseEvent = (MouseEvent)e.getSource();
-              Component component = mouseEvent.getComponent();
-              component = SwingUtilities.getDeepestComponentAt(component, mouseEvent.getX(), mouseEvent.getY());
-              Object value = ((JComponent)component).getClientProperty(KEY);
-              if (value instanceof Trinity) {
-                Project aProject = (Project)((Trinity)value).first;
-                JFrame aFrame = WindowManager.getInstance().getFrame(aProject);
-                if (aFrame != null && !aFrame.isActive()) {
-                  IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> {
-                    IdeFocusManager.getGlobalInstance().requestFocus(aFrame, true);
-                  });
-                }
-                ExecutionManagerImpl.getInstance(aProject).getContentManager().
-                        toFrontRunContent((Executor)((Trinity)value).second, (RunContentDescriptor)((Trinity)value).third);
+      BalloonBuilder builder = JBPopupFactory.getInstance().createBalloonBuilder(state.getFirst())
+        .setShowCallout(false)
+        .setTitle(ExecutionLocalize.showRunningListBalloonTitle().get())
+        .setBlockClicksThroughBalloon(true)
+        .setDialogMode(true)
+        .setHideOnKeyOutside(false);
+      IdeFrame frame = e.getDataContext().getData(IdeFrame.KEY);
+      if (frame == null) {
+        frame = WindowManagerEx.getInstance().getIdeFrame(project);
+      }
+      if (balloon != null) {
+        balloon.hide();
+      }
+      builder.setClickHandler(
+        e1 -> {
+          if (e1.getSource() instanceof MouseEvent mouseEvent) {
+            Component component = mouseEvent.getComponent();
+            component = SwingUtilities.getDeepestComponentAt(component, mouseEvent.getX(), mouseEvent.getY());
+            Object value = ((JComponent)component).getClientProperty(KEY);
+            if (value instanceof Trinity trinity) {
+              Project aProject = (Project)trinity.first;
+              JFrame aFrame = WindowManager.getInstance().getFrame(aProject);
+              if (aFrame != null && !aFrame.isActive()) {
+                IdeFocusManager.getGlobalInstance()
+                  .doWhenFocusSettlesDown(() -> IdeFocusManager.getGlobalInstance().requestFocus(aFrame, true));
               }
+              ExecutionManagerImpl.getInstance(aProject).getContentManager()
+                .toFrontRunContent((Executor)trinity.second, (RunContentDescriptor)trinity.third);
             }
           }
-        }, false);
-        balloon = builder.createBalloon();
+        },
+        false
+      );
+      balloon = builder.createBalloon();
 
-        balloonRef.set(balloon);
-        JComponent component = frame.getComponent();
-        RelativePoint point = new RelativePoint(component, new Point(component.getWidth(), 0));
-        balloon.show(point, Balloon.Position.below);
-      }
+      balloonRef.set(balloon);
+      JComponent component = frame.getComponent();
+      RelativePoint point = new RelativePoint(component, new Point(component.getWidth(), 0));
+      balloon.show(point, Balloon.Position.below);
     };
     timer.addActionListener(actionListener);
     timer.setInitialDelay(0);
@@ -150,10 +148,16 @@ public class ShowRunningListAction extends AnAction {
       for (RunContentDescriptor descriptor : runningDescriptors) {
         Set<Executor> executors = executionManager.getExecutors(descriptor);
         for (Executor executor : executors) {
-          state.append(System.identityHashCode(descriptor.getAttachedContent())).append("@").append(System.identityHashCode(executor.getIcon())).append(";");
+          state.append(System.identityHashCode(descriptor.getAttachedContent()))
+            .append("@").append(System.identityHashCode(executor.getIcon())).append(";");
           ProcessHandler processHandler = descriptor.getProcessHandler();
-          consulo.ui.image.Image icon = (processHandler instanceof KillableProcessHandler && processHandler.isProcessTerminating()) ? AllIcons.Debugger.KillProcess : executor.getIcon();
-          JLabel label = new JLabel("<html><body><a href=\"\">" + descriptor.getDisplayName() + "</a></body></html>", TargetAWT.to(icon), SwingConstants.LEADING);
+          Image icon = (processHandler instanceof KillableProcessHandler && processHandler.isProcessTerminating())
+            ? AllIcons.Debugger.KillProcess : executor.getIcon();
+          JLabel label = new JLabel(
+            "<html><body><a href=\"\">" + descriptor.getDisplayName() + "</a></body></html>",
+            TargetAWT.to(icon),
+            SwingConstants.LEADING
+          );
           label.setIconTextGap(JBUI.scale(2));
           label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
           label.putClientProperty(KEY, Trinity.create(project, executor, descriptor));
@@ -163,11 +167,11 @@ public class ShowRunningListAction extends AnAction {
     }
     if (panel.getComponentCount() == 0) {
       panel.setBorder(JBUI.Borders.empty(10));
-      panel.add(new JLabel(ExecutionBundle.message("show.running.list.balloon.nothing"), SwingConstants.CENTER));
+      panel.add(new JLabel(ExecutionLocalize.showRunningListBalloonNothing().get(), SwingConstants.CENTER));
     }
     else {
       panel.setBorder(JBUI.Borders.empty(10, 10, 0, 10));
-      JLabel label = new JLabel(ExecutionBundle.message("show.running.list.balloon.hint"));
+      JLabel label = new JLabel(ExecutionLocalize.showRunningListBalloonHint().get());
       label.setFont(JBUI.Fonts.miniFont());
       panel.add(label);
     }
@@ -180,7 +184,8 @@ public class ShowRunningListAction extends AnAction {
   public void update(@Nonnull AnActionEvent e) {
     Project[] projects = ProjectManager.getInstance().getOpenProjects();
     for (Project project : projects) {
-      boolean enabled = project != null && !project.isDisposed() && !ExecutionManagerImpl.getInstance(project).getRunningDescriptors(Condition.TRUE).isEmpty();
+      boolean enabled = project != null && !project.isDisposed()
+        && !ExecutionManagerImpl.getInstance(project).getRunningDescriptors(Condition.TRUE).isEmpty();
       e.getPresentation().setEnabled(enabled);
       if (enabled) break;
     }

@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.formatting;
 
 import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.codeStyle.internal.LeafBlockWrapper;
 
 import java.util.*;
@@ -28,7 +27,7 @@ public class AlignmentCyclesDetector {
   private LeafBlockWrapper myOffsetResponsibleBlock;
   private int myBeforeTotalSpaces;
 
-  private Map<List<LeafBlockWrapper>, Set<Pair<Integer, Integer>>> map = ContainerUtil.newHashMap();
+  private Map<List<LeafBlockWrapper>, Set<Pair<Integer, Integer>>> map = new HashMap<>();
 
   public AlignmentCyclesDetector(int totalAlignmentsCount) {
     myTotalAlignmentsCount = totalAlignmentsCount;
