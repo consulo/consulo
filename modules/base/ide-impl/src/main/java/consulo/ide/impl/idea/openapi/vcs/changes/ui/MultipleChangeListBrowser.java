@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.dataContext.DataContext;

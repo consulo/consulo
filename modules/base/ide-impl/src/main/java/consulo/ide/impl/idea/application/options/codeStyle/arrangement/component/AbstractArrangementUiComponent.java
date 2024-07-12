@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.application.options.codeStyle.arrangement.componen
 import consulo.application.util.NotNullLazyValue;
 import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
 import consulo.language.codeStyle.arrangement.std.ArrangementUiComponent;
-import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
 import consulo.ui.ex.awt.GridBag;
 import consulo.ui.ex.awt.UIUtil;
 import jakarta.annotation.Nonnull;
@@ -29,6 +28,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -36,9 +36,8 @@ import java.util.Set;
  * @since 3/11/13 10:41 AM
  */
 public abstract class AbstractArrangementUiComponent implements ArrangementUiComponent {
-
   @Nonnull
-  private final NotNullLazyValue<JComponent> myComponent = new NotNullLazyValue<JComponent>() {
+  private final NotNullLazyValue<JComponent> myComponent = new NotNullLazyValue<>() {
     @Nonnull
     @Override
     protected JComponent compute() {
@@ -50,8 +49,8 @@ public abstract class AbstractArrangementUiComponent implements ArrangementUiCom
             Rectangle bounds = getBounds();
             myScreenBounds = new Rectangle(point.x, point.y, bounds.width, bounds.height);
           }
-          if (!myEnabled && g instanceof Graphics2D) {
-            ((Graphics2D)g).setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
+          if (!myEnabled && g instanceof Graphics2D g2d) {
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
           }
           super.paintComponent(g);
         }
@@ -86,7 +85,7 @@ public abstract class AbstractArrangementUiComponent implements ArrangementUiCom
   };
 
   @Nonnull
-  private final Set<ArrangementSettingsToken> myAvailableTokens = ContainerUtilRt.newHashSet();
+  private final Set<ArrangementSettingsToken> myAvailableTokens = new HashSet<>();
 
   @Nullable private Listener  myListener;
   @Nullable

@@ -16,15 +16,16 @@
 
 package consulo.ide.impl.idea.codeInsight.actions;
 
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.codeStyle.internal.CoreCodeStyleUtil;
 import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.refactoring.ImportOptimizer;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
 import consulo.module.Module;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.util.collection.SmartList;
 import consulo.util.lang.EmptyRunnable;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -38,28 +39,28 @@ import static consulo.ide.impl.idea.codeInsight.actions.OptimizeImportsProcessor
 import static consulo.ide.impl.idea.codeInsight.actions.OptimizeImportsProcessor.NotificationInfo.SOMETHING_CHANGED_WITHOUT_MESSAGE_NOTIFICATION;
 
 public class OptimizeImportsProcessor extends AbstractLayoutCodeProcessor {
-  private static final String PROGRESS_TEXT = CodeInsightBundle.message("progress.text.optimizing.imports");
   public static final String COMMAND_NAME = CodeInsightBundle.message("process.optimize.imports");
-  private final List<NotificationInfo> myOptimizerNotifications = ContainerUtil.newSmartList();
+  private final List<NotificationInfo> myOptimizerNotifications = new SmartList<>();
 
-  public OptimizeImportsProcessor(@jakarta.annotation.Nonnull Project project) {
-    super(project, COMMAND_NAME, PROGRESS_TEXT, false);
+  public OptimizeImportsProcessor(@Nonnull Project project) {
+    super(project, COMMAND_NAME, CodeInsightLocalize.progressTextOptimizingImports().get(), false);
   }
 
   public OptimizeImportsProcessor(@Nonnull Project project, Module module) {
-    super(project, module, COMMAND_NAME, PROGRESS_TEXT, false);
+    super(project, module, COMMAND_NAME, CodeInsightLocalize.progressTextOptimizingImports().get(), false);
   }
 
   public OptimizeImportsProcessor(@Nonnull Project project, PsiDirectory directory, boolean includeSubdirs) {
-    super(project, directory, includeSubdirs, PROGRESS_TEXT, COMMAND_NAME, false);
+    super(project, directory, includeSubdirs, CodeInsightLocalize.progressTextOptimizingImports().get(), COMMAND_NAME, false);
   }
 
   public OptimizeImportsProcessor(@Nonnull Project project, PsiDirectory directory, boolean includeSubdirs, boolean processOnlyVcsChangedFiles) {
-    super(project, directory, includeSubdirs, PROGRESS_TEXT, COMMAND_NAME, processOnlyVcsChangedFiles);
+    super(project, directory, includeSubdirs,
+      CodeInsightLocalize.progressTextOptimizingImports().get(), COMMAND_NAME, processOnlyVcsChangedFiles);
   }
 
   public OptimizeImportsProcessor(@Nonnull Project project, PsiFile file) {
-    super(project, file, PROGRESS_TEXT, COMMAND_NAME, false);
+    super(project, file, CodeInsightLocalize.progressTextOptimizingImports().get(), COMMAND_NAME, false);
   }
 
   public OptimizeImportsProcessor(@Nonnull Project project, PsiFile[] files, Runnable postRunnable) {
@@ -67,11 +68,11 @@ public class OptimizeImportsProcessor extends AbstractLayoutCodeProcessor {
   }
 
   public OptimizeImportsProcessor(@Nonnull Project project, PsiFile[] files, String commandName, Runnable postRunnable) {
-    super(project, files, PROGRESS_TEXT, commandName, postRunnable, false);
+    super(project, files, CodeInsightLocalize.progressTextOptimizingImports().get(), commandName, postRunnable, false);
   }
 
   public OptimizeImportsProcessor(@Nonnull AbstractLayoutCodeProcessor processor) {
-    super(processor, COMMAND_NAME, PROGRESS_TEXT);
+    super(processor, COMMAND_NAME, CodeInsightLocalize.progressTextOptimizingImports().get());
   }
 
   @Override
@@ -110,8 +111,8 @@ public class OptimizeImportsProcessor extends AbstractLayoutCodeProcessor {
   }
 
   private void retrieveAndStoreNotificationInfo(@Nonnull Runnable runnable) {
-    if (runnable instanceof ImportOptimizer.CollectingInfoRunnable) {
-      String optimizerMessage = ((ImportOptimizer.CollectingInfoRunnable)runnable).getUserNotificationInfo();
+    if (runnable instanceof ImportOptimizer.CollectingInfoRunnable collectingInfoRunnable) {
+      String optimizerMessage = collectingInfoRunnable.getUserNotificationInfo();
       myOptimizerNotifications.add(optimizerMessage != null ? new NotificationInfo(optimizerMessage) : NOTHING_CHANGED_NOTIFICATION);
     }
     else if (runnable == EmptyRunnable.getInstance()) {

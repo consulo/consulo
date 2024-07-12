@@ -15,27 +15,28 @@
  */
 package consulo.ide.impl.idea.dvcs.ui;
 
-import consulo.versionControlSystem.distributed.repository.AbstractRepositoryManager;
-import consulo.versionControlSystem.distributed.repository.Repository;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.versionControlSystem.distributed.repository.AbstractRepositoryManager;
+import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.versionControlSystem.log.CommitId;
 import consulo.versionControlSystem.log.Hash;
 import consulo.versionControlSystem.log.VcsLog;
-import consulo.versionControlSystem.log.VcsLogDataKeys;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 
 public abstract class VcsLogSingleCommitAction<Repo extends Repository> extends DumbAwareAction {
-
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = e.getRequiredData(Project.KEY);
-    VcsLog log = e.getRequiredData(VcsLogDataKeys.VCS_LOG);
+    VcsLog log = e.getRequiredData(VcsLog.KEY);
 
     CommitId commit = ContainerUtil.getFirstItem(log.getSelectedCommits());
     assert commit != null;
@@ -46,9 +47,10 @@ public abstract class VcsLogSingleCommitAction<Repo extends Repository> extends 
   }
 
   @Override
+    @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
     Project project = e.getData(Project.KEY);
-    VcsLog log = e.getData(VcsLogDataKeys.VCS_LOG);
+    VcsLog log = e.getData(VcsLog.KEY);
     if (project == null || log == null) {
       e.getPresentation().setEnabledAndVisible(false);
       return;
@@ -86,6 +88,6 @@ public abstract class VcsLogSingleCommitAction<Repo extends Repository> extends 
   @Nonnull
   protected abstract AbstractRepositoryManager<Repo> getRepositoryManager(@Nonnull Project project);
 
-  @jakarta.annotation.Nullable
+  @Nullable
   protected abstract Repo getRepositoryForRoot(@Nonnull Project project, @Nonnull VirtualFile root);
 }

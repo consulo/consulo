@@ -16,23 +16,24 @@
 
 package consulo.ide.impl.idea.execution.actions;
 
-import consulo.execution.ExecutionBundle;
 import consulo.execution.RunManager;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.action.ConfigurationContext;
 import consulo.execution.action.ConfigurationFromContext;
 import consulo.execution.configuration.RunConfiguration;
-import consulo.execution.internal.action.BaseRunConfigurationAction;
-import consulo.ide.impl.idea.execution.impl.RunDialog;
 import consulo.execution.impl.internal.configuration.RunManagerImpl;
+import consulo.execution.internal.action.BaseRunConfigurationAction;
+import consulo.execution.localize.ExecutionLocalize;
+import consulo.ide.impl.idea.execution.impl.RunDialog;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.Presentation;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.List;
 
 public class CreateAction extends BaseRunConfigurationAction {
   public CreateAction() {
-    super(ExecutionBundle.message("create.run.configuration.action.name"), null, null);
+    super(ExecutionLocalize.createRunConfigurationActionName(), LocalizeValue.empty(), null);
   }
 
   @Override
@@ -86,9 +87,9 @@ public class CreateAction extends BaseRunConfigurationAction {
 
     private String generateName(final String actionText) {
       switch(myType) {
-        case CREATE: return ExecutionBundle.message("create.run.configuration.for.item.action.name", actionText);
-        case SELECT: return ExecutionBundle.message("select.run.configuration.for.item.action.name", actionText);
-        default:  return ExecutionBundle.message("save.run.configuration.for.item.action.name", actionText);
+        case CREATE: return ExecutionLocalize.createRunConfigurationForItemActionName(actionText).get();
+        case SELECT: return ExecutionLocalize.selectRunConfigurationForItemActionName(actionText).get();
+        default:  return ExecutionLocalize.saveRunConfigurationForItemActionName(actionText).get();
       }
     }
 
@@ -140,18 +141,28 @@ public class CreateAction extends BaseRunConfigurationAction {
   private static class CreateAndEditPolicy extends CreatePolicy {
     @Override
     protected void updateText(final Presentation presentation, final String actionText) {
-      presentation.setText(actionText.length() > 0 ? ExecutionBundle.message("create.run.configuration.for.item.action.name", actionText) + "..."
-                                                   : ExecutionBundle.message("create.run.configuration.action.name"), false);
+      presentation.setText(
+        actionText.length() > 0
+          ? ExecutionLocalize.createRunConfigurationForItemActionName(actionText).get() + "..."
+          : ExecutionLocalize.createRunConfigurationActionName().get(),
+        false);
     }
 
     @Override
     public void perform(final ConfigurationContext context) {
       final RunnerAndConfigurationSettings configuration = context.getConfiguration();
-      if (RunDialog.editConfiguration(context.getProject(), configuration, ExecutionBundle.message("create.run.configuration.for.item.dialog.title", configuration.getName()))) {
+      if (RunDialog.editConfiguration(
+        context.getProject(),
+        configuration,
+        ExecutionLocalize.createRunConfigurationForItemDialogTitle(configuration.getName()).get()
+      )) {
         final RunManagerImpl runManager = (RunManagerImpl)context.getRunManager();
-        runManager.addConfiguration(configuration,
-                                    runManager.isConfigurationShared(configuration),
-                                    runManager.getBeforeRunTasks(configuration.getConfiguration()), false);
+        runManager.addConfiguration(
+          configuration,
+          runManager.isConfigurationShared(configuration),
+          runManager.getBeforeRunTasks(configuration.getConfiguration()),
+          false
+        );
         runManager.setSelectedConfiguration(configuration);
       }
     }

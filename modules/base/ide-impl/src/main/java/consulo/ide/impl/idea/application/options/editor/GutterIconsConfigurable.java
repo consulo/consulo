@@ -65,6 +65,7 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
   private List<GutterIconDescriptor> myDescriptors;
 
   @Nls
+  @Nonnull
   @Override
   public String getDisplayName() {
     return DISPLAY_NAME;
@@ -134,18 +135,18 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
     };
     myList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
     myList.setBorder(BorderFactory.createEmptyBorder());
-    new ListSpeedSearch(myList, o -> o instanceof JCheckBox ? ((JCheckBox)o).getText() : null);
+    new ListSpeedSearch(myList, o -> o instanceof JCheckBox checkBox ? checkBox.getText() : null);
     panel.add(ScrollPaneFactory.createScrollPane(myList), BorderLayout.CENTER);
 
     List<LineMarkerProvider> providers = Application.get().getExtensionList(LineMarkerProvider.class);
     Function<LineMarkerProvider, PluginDescriptor> function = provider -> {
       PluginDescriptor plugin = PluginManager.getPlugin(provider.getClass());
-      return provider instanceof LineMarkerProviderDescriptor && ((LineMarkerProviderDescriptor)provider).getName() != null
+      return provider instanceof LineMarkerProviderDescriptor lineMarkerProviderDescriptor && lineMarkerProviderDescriptor.getName() != null
         ? plugin : null;
     };
 
     MultiMap<PluginDescriptor, LineMarkerProvider> map = ContainerUtil.groupBy(providers, function);
-    Map<GutterIconDescriptor, PluginDescriptor> pluginDescriptorMap = ContainerUtil.newHashMap();
+    Map<GutterIconDescriptor, PluginDescriptor> pluginDescriptorMap = new HashMap<>();
     Set<String> ids = new HashSet<>();
     myDescriptors = new ArrayList<>();
     for (final PluginDescriptor descriptor : map.keySet()) {

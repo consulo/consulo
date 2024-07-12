@@ -22,15 +22,16 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.util.lang.function.Condition;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.xml.serializer.annotation.AbstractCollection;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.Tag;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -45,13 +46,13 @@ public class PushSettings implements PersistentStateComponent<PushSettings.State
   public static class State {
     @Tag("excluded-roots")
     @AbstractCollection(surroundWithTag = false, elementTag = "path")
-    public Set<String> EXCLUDED_ROOTS = ContainerUtil.newHashSet();
+    public Set<String> EXCLUDED_ROOTS = new HashSet<>();
     @AbstractCollection(surroundWithTag = false)
     @Tag("force-push-targets")
-    public List<ForcePushTargetInfo> FORCE_PUSH_TARGETS = ContainerUtil.newArrayList();
+    public List<ForcePushTargetInfo> FORCE_PUSH_TARGETS = new ArrayList<>();
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   @Override
   public State getState() {
     return myState;
@@ -73,12 +74,10 @@ public class PushSettings implements PersistentStateComponent<PushSettings.State
 
 
   public boolean containsForcePushTarget(@Nonnull final String remote, @Nonnull final String branch) {
-    return ContainerUtil.exists(myState.FORCE_PUSH_TARGETS, new Condition<ForcePushTargetInfo>() {
-      @Override
-      public boolean value(ForcePushTargetInfo info) {
-        return info.targetRemoteName.equals(remote) && info.targetBranchName.equals(branch);
-      }
-    });
+    return ContainerUtil.exists(
+      myState.FORCE_PUSH_TARGETS,
+      info -> info.targetRemoteName.equals(remote) && info.targetBranchName.equals(branch)
+    );
   }
 
   public void addForcePushTarget(@Nonnull String targetRemote, @Nonnull String targetBranch) {

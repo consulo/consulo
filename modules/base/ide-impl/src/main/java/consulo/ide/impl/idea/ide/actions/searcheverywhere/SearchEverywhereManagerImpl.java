@@ -2,16 +2,15 @@
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.ide.actions.GotoActionBase;
-import consulo.application.ApplicationManager;
 import consulo.application.util.registry.Registry;
 import consulo.disposer.Disposer;
-import consulo.language.editor.CommonDataKeys;
+import consulo.ide.impl.idea.ide.actions.GotoActionBase;
 import consulo.project.Project;
 import consulo.project.ui.ProjectWindowStateService;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.Coordinate2D;
 import consulo.ui.TextBox;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -23,11 +22,11 @@ import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -59,17 +58,20 @@ public class SearchEverywhereManagerImpl implements SearchEverywhereManager {
   }
 
   @Override
+  @RequiredUIAccess
   public void show(@Nonnull String contributorID, @Nullable String searchText, @Nonnull AnActionEvent initEvent) {
     if (isShown()) {
       throw new IllegalStateException("Method should cannot be called whe popup is shown");
     }
 
-    Project project = initEvent.getData(CommonDataKeys.PROJECT);
+    Project project = initEvent.getData(Project.KEY);
     Component contextComponent = initEvent.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
     List<SearchEverywhereContributor<?>> serviceContributors = Collections.EMPTY_LIST;
-    Arrays.asList(//new TopHitSEContributor(project, contextComponent, s -> mySearchEverywhereUI.getSearchField().setValue(s)),
-                  new RecentFilesSEContributor(project, GotoActionBase.getPsiContext(initEvent)),
-                  new RunConfigurationsSEContributor(project, contextComponent, () -> mySearchEverywhereUI.getSearchField().getValue()));
+    Arrays.asList(
+      //new TopHitSEContributor(project, contextComponent, s -> mySearchEverywhereUI.getSearchField().setValue(s)),
+      new RecentFilesSEContributor(project, GotoActionBase.getPsiContext(initEvent)),
+      new RunConfigurationsSEContributor(project, contextComponent, () -> mySearchEverywhereUI.getSearchField().getValue())
+    );
     List<SearchEverywhereContributor<?>> contributors = new ArrayList<>(serviceContributors);
     SearchEverywhereContributorFactory.EP_NAME.forEachExtensionSafe(factory -> {
       SearchEverywhereContributor contributor = factory.createContributor(initEvent);
@@ -215,7 +217,7 @@ public class SearchEverywhereManagerImpl implements SearchEverywhereManager {
         return;
       }
 
-      ApplicationManager.getApplication().invokeLater(() -> {
+      myProject.getApplication().invokeLater(() -> {
         if (myBalloon == null || myBalloon.isDisposed()) return;
 
         Dimension minSize = view.getMinimumSize();
@@ -276,6 +278,7 @@ public class SearchEverywhereManagerImpl implements SearchEverywhereManager {
     }
   }
 
+  @RequiredUIAccess
   private void showHistoryItem(boolean next) {
     if (!isShown()) {
       return;
@@ -328,13 +331,19 @@ public class SearchEverywhereManagerImpl implements SearchEverywhereManager {
     }
 
     public void saveText(@Nonnull String text, @Nonnull String contributorID) {
-      historyList.stream().filter(item -> text.equals(item.getSearchText()) && contributorID.equals(item.getContributorID())).findFirst().ifPresent(historyList::remove);
+      historyList.stream()
+        .filter(item -> text.equals(item.getSearchText()) && contributorID.equals(item.getContributorID()))
+        .findFirst()
+        .ifPresent(historyList::remove);
 
       historyList.add(new HistoryItem(text, contributorID));
 
       List<String> list = filteredHistory(item -> item.getContributorID().equals(contributorID));
       if (list.size() > HISTORY_LIMIT) {
-        historyList.stream().filter(item -> item.getContributorID().equals(contributorID)).findFirst().ifPresent(historyList::remove);
+        historyList.stream()
+          .filter(item -> item.getContributorID().equals(contributorID))
+          .findFirst()
+          .ifPresent(historyList::remove);
       }
     }
 
@@ -351,17 +360,21 @@ public class SearchEverywhereManagerImpl implements SearchEverywhereManager {
 
     @Nonnull
     private List<String> filteredHistory(Predicate<? super HistoryItem> predicate) {
-      return historyList.stream().filter(predicate).map(item -> item.getSearchText()).collect(distinctCollector);
+      return historyList.stream().filter(predicate).map(HistoryItem::getSearchText).collect(distinctCollector);
     }
 
-    private final static Collector<String, List<String>, List<String>> distinctCollector = Collector.of(() -> new ArrayList<>(), (lst, str) -> {
-      lst.remove(str);
-      lst.add(str);
-    }, (lst1, lst2) -> {
-      lst1.removeAll(lst2);
-      lst1.addAll(lst2);
-      return lst1;
-    });
+    private final static Collector<String, List<String>, List<String>> distinctCollector = Collector.of(
+      ArrayList::new,
+      (lst, str) -> {
+        lst.remove(str);
+        lst.add(str);
+      },
+      (lst1, lst2) -> {
+        lst1.removeAll(lst2);
+        lst1.addAll(lst2);
+        return lst1;
+      }
+    );
   }
 
   private static class HistoryIterator {

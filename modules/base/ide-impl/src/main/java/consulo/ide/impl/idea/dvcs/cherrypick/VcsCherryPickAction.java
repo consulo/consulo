@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.dvcs.cherrypick;
 
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.document.FileDocumentManager;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -28,40 +30,38 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.versionControlSystem.log.CommitId;
 import consulo.versionControlSystem.log.Hash;
 import consulo.versionControlSystem.log.VcsLog;
-import consulo.versionControlSystem.log.VcsLogDataKeys;
 import consulo.versionControlSystem.log.util.VcsLogUtil;
-import consulo.ide.impl.idea.dvcs.DvcsImplIcons;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class VcsCherryPickAction extends DumbAwareAction {
   private static final String NAME = "Cherry-Pick";
   private static final String SEVERAL_VCS_DESCRIPTION = "Selected commits are tracked by different vcses";
 
   public VcsCherryPickAction() {
-    super(NAME, null, DvcsImplIcons.CherryPick);
+    super(NAME, null, PlatformIconGroup.dvcsCherrypick());
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
     FileDocumentManager.getInstance().saveAllDocuments();
 
     Project project = e.getRequiredData(Project.KEY);
-    VcsLog log = e.getRequiredData(VcsLogDataKeys.VCS_LOG);
+    VcsLog log = e.getRequiredData(VcsLog.KEY);
 
     VcsCherryPickManager.getInstance(project).cherryPick(log);
   }
 
   @Override
+  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);
     e.getPresentation().setVisible(true);
 
-    final VcsLog log = e.getData(VcsLogDataKeys.VCS_LOG);
+    final VcsLog log = e.getData(VcsLog.KEY);
     Project project = e.getData(Project.KEY);
     if (project == null) {
       e.getPresentation().setEnabledAndVisible(false);
@@ -86,23 +86,25 @@ public class VcsCherryPickAction extends DumbAwareAction {
     String description = activeCherryPicker != null ? activeCherryPicker.getInfo(log, groupedByRoot) : SEVERAL_VCS_DESCRIPTION;
     e.getPresentation().setEnabled(description == null);
     e.getPresentation()
-            .setText(activeCherryPicker == null ? concatActionNamesForAllAvailable(cherryPickers) : activeCherryPicker.getActionTitle());
+      .setText(activeCherryPicker == null ? concatActionNamesForAllAvailable(cherryPickers) : activeCherryPicker.getActionTitle());
     e.getPresentation().setDescription(description == null ? "" : description);
   }
 
   @Nullable
-  private static VcsCherryPicker getActiveCherryPicker(@Nonnull List<VcsCherryPicker> cherryPickers,
-                                                       @Nonnull Collection<VirtualFile> roots) {
+  private static VcsCherryPicker getActiveCherryPicker(
+    @Nonnull List<VcsCherryPicker> cherryPickers,
+    @Nonnull Collection<VirtualFile> roots
+  ) {
     return ContainerUtil.find(cherryPickers, picker -> picker.canHandleForRoots(roots));
   }
 
   @Nonnull
   private static Map<VirtualFile, List<Hash>> groupByRoot(@Nonnull List<CommitId> details) {
-    Map<VirtualFile, List<Hash>> result = ContainerUtil.newHashMap();
+    Map<VirtualFile, List<Hash>> result = new HashMap<>();
     for (CommitId commit : details) {
       List<Hash> hashes = result.get(commit.getRoot());
       if (hashes == null) {
-        hashes = ContainerUtil.newArrayList();
+        hashes = new ArrayList<>();
         result.put(commit.getRoot(), hashes);
       }
       hashes.add(commit.getHash());
@@ -120,11 +122,11 @@ public class VcsCherryPickAction extends DumbAwareAction {
     if (project != null) {
       final ProjectLevelVcsManager projectLevelVcsManager = ProjectLevelVcsManager.getInstance(project);
       AbstractVcs[] vcss = projectLevelVcsManager.getAllActiveVcss();
-      return ContainerUtil.mapNotNull(vcss, vcs -> vcs != null ? VcsCherryPickManager.getInstance(project)
-              .getCherryPickerFor(vcs.getKeyInstanceMethod()) : null);
+      return ContainerUtil.mapNotNull(
+        vcss,
+        vcs -> vcs != null ? VcsCherryPickManager.getInstance(project).getCherryPickerFor(vcs.getKeyInstanceMethod()) : null
+      );
     }
     return ContainerUtil.emptyList();
   }
-
-
 }

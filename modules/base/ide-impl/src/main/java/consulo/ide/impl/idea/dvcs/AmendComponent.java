@@ -34,6 +34,7 @@ import consulo.versionControlSystem.util.VcsUtil;
 import consulo.logging.Logger;
 
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -61,21 +62,25 @@ public abstract class AmendComponent {
   @Nonnull
   private final String myPreviousMessage;
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private Map<VirtualFile, String> myMessagesForRoots;
-  @jakarta.annotation.Nullable
+  @Nullable
   private String myAmendedMessage;
 
-  public AmendComponent(@Nonnull Project project,
-                        @Nonnull RepositoryManager<? extends Repository> repoManager,
-                        @Nonnull CheckinProjectPanel panel) {
+  public AmendComponent(
+    @Nonnull Project project,
+    @Nonnull RepositoryManager<? extends Repository> repoManager,
+    @Nonnull CheckinProjectPanel panel
+  ) {
     this(project, repoManager, panel, DvcsBundle.message("commit.amend"));
   }
 
-  public AmendComponent(@Nonnull Project project,
-                        @Nonnull RepositoryManager<? extends Repository> repoManager,
-                        @Nonnull CheckinProjectPanel panel,
-                        @Nonnull String title) {
+  public AmendComponent(
+    @Nonnull Project project,
+    @Nonnull RepositoryManager<? extends Repository> repoManager,
+    @Nonnull CheckinProjectPanel panel,
+    @Nonnull String title
+  ) {
     myRepoManager = repoManager;
     myCheckinPanel = panel;
     myAmend = new NonFocusableCheckBox(title);
@@ -108,10 +113,10 @@ public abstract class AmendComponent {
     });
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private String constructAmendedMessage() {
     Set<VirtualFile> selectedRoots = getVcsRoots(getSelectedFilePaths()); // get only selected files
-    LinkedHashSet<String> messages = ContainerUtil.newLinkedHashSet();
+    LinkedHashSet<String> messages = new LinkedHashSet<>();
     if (myMessagesForRoots != null) {
       for (VirtualFile root : selectedRoots) {
         String message = myMessagesForRoots.get(root);
@@ -143,8 +148,11 @@ public abstract class AmendComponent {
                                                                                              "Reading Commit ReflectionMessage...", true, project);
     }
     catch (VcsException e) {
-      Messages.showErrorDialog(project, "Couldn't load commit message of the commit to amend.\n" + e.getMessage(),
-                               "Commit ReflectionMessage not Loaded");
+      Messages.showErrorDialog(
+        project,
+        "Couldn't load commit message of the commit to amend.\n" + e.getMessage(),
+        "Commit ReflectionMessage not Loaded"
+      );
       LOG.info(e);
     }
   }
@@ -156,7 +164,7 @@ public abstract class AmendComponent {
     }
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private Map<VirtualFile, String> getLastCommitMessages() throws VcsException {
     Map<VirtualFile, String> messagesForRoots = new HashMap<>();
     // load all vcs roots visible in the commit dialog (not only selected ones), to avoid another loading task if selection changes
@@ -184,7 +192,7 @@ public abstract class AmendComponent {
   @Nonnull
   protected abstract Set<VirtualFile> getVcsRoots(@Nonnull Collection<FilePath> files);
 
-  @jakarta.annotation.Nullable
+  @Nullable
   protected abstract String getLastCommitMessage(@Nonnull VirtualFile repo) throws VcsException;
 
   public boolean isAmend() {

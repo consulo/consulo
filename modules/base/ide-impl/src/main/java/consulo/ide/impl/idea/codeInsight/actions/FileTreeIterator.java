@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.actions;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;
@@ -23,19 +24,19 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
 public class FileTreeIterator {
-  private Queue<PsiFile> myCurrentFiles = new LinkedList<PsiFile>();
-  private Queue<PsiDirectory> myCurrentDirectories = new LinkedList<PsiDirectory>();
+  private Queue<PsiFile> myCurrentFiles = new LinkedList<>();
+  private Queue<PsiDirectory> myCurrentDirectories = new LinkedList<>();
 
   public FileTreeIterator(@Nonnull List<PsiFile> files) {
     myCurrentFiles.addAll(files);
   }
 
+  @RequiredReadAction
   public FileTreeIterator(@Nonnull Module module) {
     myCurrentDirectories.addAll(collectModuleDirectories(module));
     expandDirectoriesUntilFilesNotEmpty();
@@ -47,8 +48,9 @@ public class FileTreeIterator {
   }
 
   @Nonnull
+  @RequiredReadAction
   public static List<PsiDirectory> collectProjectDirectories(@Nonnull Project project) {
-    List<PsiDirectory> directories = ContainerUtil.newArrayList();
+    List<PsiDirectory> directories = new ArrayList<>();
 
     Module[] modules = ModuleManager.getInstance(project).getModules();
     for (Module module : modules) {
@@ -64,8 +66,8 @@ public class FileTreeIterator {
   }
 
   public FileTreeIterator(@Nonnull FileTreeIterator fileTreeIterator) {
-    myCurrentFiles = new LinkedList<PsiFile>(fileTreeIterator.myCurrentFiles);
-    myCurrentDirectories = new LinkedList<PsiDirectory>(fileTreeIterator.myCurrentDirectories);
+    myCurrentFiles = new LinkedList<>(fileTreeIterator.myCurrentFiles);
+    myCurrentDirectories = new LinkedList<>(fileTreeIterator.myCurrentDirectories);
   }
 
   @Nonnull
@@ -82,6 +84,7 @@ public class FileTreeIterator {
     return !myCurrentFiles.isEmpty();
   }
 
+  @RequiredReadAction
   private void expandDirectoriesUntilFilesNotEmpty() {
     while (myCurrentFiles.isEmpty() && !myCurrentDirectories.isEmpty()) {
       PsiDirectory dir = myCurrentDirectories.poll();
@@ -89,14 +92,16 @@ public class FileTreeIterator {
     }
   }
 
+  @RequiredReadAction
   private void expandDirectory(@Nonnull PsiDirectory dir) {
     Collections.addAll(myCurrentFiles, dir.getFiles());
     Collections.addAll(myCurrentDirectories, dir.getSubdirectories());
   }
 
   @Nonnull
+  @RequiredReadAction
   public static List<PsiDirectory> collectModuleDirectories(Module module) {
-    List<PsiDirectory> dirs = ContainerUtil.newArrayList();
+    List<PsiDirectory> dirs = new ArrayList<>();
 
     VirtualFile[] contentRoots = ModuleRootManager.getInstance(module).getContentRoots();
     for (VirtualFile root : contentRoots) {

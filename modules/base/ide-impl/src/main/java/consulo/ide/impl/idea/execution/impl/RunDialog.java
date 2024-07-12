@@ -17,10 +17,10 @@
 package consulo.ide.impl.idea.execution.impl;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.execution.ExecutionBundle;
 import consulo.execution.executor.Executor;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.application.HelpManager;
 import consulo.configurable.ConfigurationException;
@@ -29,6 +29,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nonnull;
@@ -85,11 +86,11 @@ public class RunDialog extends DialogWrapper implements RunConfigurable.RunDialo
 
   @Override
   protected void doOKAction(){
-    try{
+    try {
       myConfigurable.apply();
     }
-    catch(ConfigurationException e){
-      Messages.showMessageDialog(myProject, e.getMessage(), ExecutionBundle.message("invalid.data.dialog.title"), Messages.getErrorIcon());
+    catch (ConfigurationException e){
+      Messages.showMessageDialog(myProject, e.getMessage(), ExecutionLocalize.invalidDataDialogTitle().get(), UIUtil.getErrorIcon());
       return;
     }
     super.doOKAction();
@@ -136,7 +137,7 @@ public class RunDialog extends DialogWrapper implements RunConfigurable.RunDialo
 
   private class ApplyAction extends AbstractAction {
     public ApplyAction() {
-      super(ExecutionBundle.message("apply.action.name"));
+      super(ExecutionLocalize.applyActionName().get());
     }
 
     @Override
@@ -144,8 +145,8 @@ public class RunDialog extends DialogWrapper implements RunConfigurable.RunDialo
       try{
         myConfigurable.apply();
       }
-      catch(ConfigurationException e){
-        Messages.showMessageDialog(myProject, e.getMessage(), ExecutionBundle.message("invalid.data.dialog.title"), Messages.getErrorIcon());
+      catch (ConfigurationException e){
+        Messages.showMessageDialog(myProject, e.getMessage(), ExecutionLocalize.invalidDataDialogTitle().get(), UIUtil.getErrorIcon());
       }
     }
   }

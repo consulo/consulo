@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.find.impl;
 
 import consulo.find.FindManager;
 import consulo.ide.impl.idea.find.findUsages.FindUsagesManager;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.usage.ConfigurableUsageTarget;
 import consulo.ide.impl.idea.usages.impl.UsageViewImpl;
 import consulo.ui.ex.action.ActionGroup;
@@ -39,8 +39,9 @@ import java.util.List;
  */
 public class ShowRecentFindUsagesGroup extends ActionGroup {
   @Override
+  @RequiredUIAccess
   public void update(final AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     e.getPresentation().setEnabled(project != null);
     e.getPresentation().setVisible(project != null);
   }
@@ -49,16 +50,16 @@ public class ShowRecentFindUsagesGroup extends ActionGroup {
   @Nonnull
   public AnAction[] getChildren(@Nullable final AnActionEvent e) {
     if (e == null) return EMPTY_ARRAY;
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) return EMPTY_ARRAY;
     final FindUsagesManager findUsagesManager = ((FindManagerImpl)FindManager.getInstance(project)).getFindUsagesManager();
-    List<ConfigurableUsageTarget> history = new ArrayList<ConfigurableUsageTarget>(findUsagesManager.getHistory().getAll());
+    List<ConfigurableUsageTarget> history = new ArrayList<>(findUsagesManager.getHistory().getAll());
     Collections.reverse(history);
 
     String description =
             ActionManager.getInstance().getAction(UsageViewImpl.SHOW_RECENT_FIND_USAGES_ACTION_ID).getTemplatePresentation().getDescription();
 
-    List<AnAction> children = new ArrayList<AnAction>(history.size());
+    List<AnAction> children = new ArrayList<>(history.size());
     for (final ConfigurableUsageTarget usageTarget : history) {
       if (!usageTarget.isValid()) {
         continue;
@@ -66,7 +67,8 @@ public class ShowRecentFindUsagesGroup extends ActionGroup {
       String text = usageTarget.getLongDescriptiveName();
       AnAction action = new AnAction(text, description, null) {
         @Override
-        public void actionPerformed(final AnActionEvent e) {
+        @RequiredUIAccess
+        public void actionPerformed(@Nonnull final AnActionEvent e) {
           findUsagesManager.rerunAndRecallFromHistory(usageTarget);
         }
       };

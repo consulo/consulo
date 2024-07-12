@@ -103,8 +103,7 @@ public class CopyHandler extends EditorActionHandler implements ExtensionEditorA
     }
     final Transferable transferable = new TextBlockTransferable(escapedText != null ? escapedText : rawText, transferableDatas, escapedText != null ? new RawText(rawText) : null);
     CopyPasteManager.getInstance().setContents(transferable);
-    if (editor instanceof EditorEx) {
-      EditorEx ex = (EditorEx)editor;
+    if (editor instanceof EditorEx ex) {
       if (ex.isStickySelection()) {
         ex.setStickySelection(false);
       }

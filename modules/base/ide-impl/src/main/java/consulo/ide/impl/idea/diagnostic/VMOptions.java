@@ -18,9 +18,9 @@ package consulo.ide.impl.idea.diagnostic;
 import consulo.application.Application;
 import consulo.application.util.SystemInfo;
 import consulo.container.boot.ContainerPathManager;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.SystemProperties;
 import jakarta.annotation.Nonnull;
@@ -64,7 +64,7 @@ public class VMOptions {
       }
 
       try {
-        String content = FileUtil.loadFile(file);
+        String content = consulo.ide.impl.idea.openapi.util.io.FileUtil.loadFile(file);
         arguments = Collections.singletonList(content);
       }
       catch (IOException e) {
@@ -114,7 +114,7 @@ public class VMOptions {
     }
 
     try {
-      String content = file.exists() ? FileUtil.loadFile(file) : read();
+      String content = file.exists() ? consulo.ide.impl.idea.openapi.util.io.FileUtil.loadFile(file) : read();
 
       if (!StringUtil.isEmptyOrSpaces(content)) {
         Matcher m = pattern.matcher(content);
@@ -133,7 +133,7 @@ public class VMOptions {
       }
 
       if (file.exists()) {
-        FileUtil.setReadOnlyAttribute(file.getPath(), false);
+        consulo.ide.impl.idea.openapi.util.io.FileUtil.setReadOnlyAttribute(file.getPath(), false);
       }
       else {
         FileUtil.ensureExists(file.getParentFile());
@@ -151,12 +151,12 @@ public class VMOptions {
     try {
       File newFile = getWriteFile();
       if (newFile != null && newFile.exists()) {
-        return FileUtil.loadFile(newFile);
+        return consulo.ide.impl.idea.openapi.util.io.FileUtil.loadFile(newFile);
       }
 
       String vmOptionsFile = System.getProperty("jb.vmOptionsFile");
       if (vmOptionsFile != null) {
-        return FileUtil.loadFile(new File(vmOptionsFile));
+        return consulo.ide.impl.idea.openapi.util.io.FileUtil.loadFile(new File(vmOptionsFile));
       }
     }
     catch (IOException e) {

@@ -15,35 +15,32 @@
  */
 package consulo.ide.impl.idea.dvcs.push.ui;
 
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.application.util.function.Processor;
 import consulo.dataContext.DataProvider;
-import consulo.project.Project;
-import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.*;
-import consulo.ui.ex.awt.tree.CheckboxTree;
-import consulo.ui.ex.awt.tree.CheckedTreeNode;
-import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
-import consulo.util.lang.function.Condition;
-import consulo.util.dataholder.Key;
-import consulo.versionControlSystem.VcsDataKeys;
-import consulo.versionControlSystem.change.Change;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.TextRevisionNumber;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesTreeBrowser;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowser;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.EditSourceForDialogAction;
-import consulo.versionControlSystem.history.VcsRevisionNumber;
-import consulo.ide.impl.idea.ui.*;
+import consulo.ide.impl.idea.ui.AncestorListenerAdapter;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import java.util.function.Function;
-import consulo.application.util.function.Processor;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.ThreeStateCheckBox;
-import consulo.ui.ex.awt.tree.TreeUtil;
-import consulo.ui.ex.awt.internal.laf.WideSelectionTreeUI;
-import consulo.versionControlSystem.log.Hash;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogActionPlaces;
+import consulo.project.Project;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.internal.laf.WideSelectionTreeUI;
+import consulo.ui.ex.awt.tree.CheckboxTree;
+import consulo.ui.ex.awt.tree.CheckedTreeNode;
+import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
+import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.util.dataholder.Key;
+import consulo.versionControlSystem.VcsDataKeys;
+import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.history.VcsRevisionNumber;
+import consulo.versionControlSystem.log.Hash;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -53,10 +50,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.EventObject;
 import java.util.List;
+import java.util.*;
+import java.util.function.Function;
 
 public class PushLog extends JPanel implements DataProvider {
 
@@ -69,7 +65,7 @@ public class PushLog extends JPanel implements DataProvider {
   private final VcsCommitInfoBalloon myBalloon;
   private boolean myShouldRepaint = false;
   private boolean mySyncStrategy;
-  @jakarta.annotation.Nullable
+  @Nullable
   private String mySyncRenderedText;
   private final boolean myAllowSyncStrategy;
 
@@ -91,8 +87,8 @@ public class PushLog extends JPanel implements DataProvider {
 
       @Override
       protected void onNodeStateChanged(CheckedTreeNode node) {
-        if (node instanceof EditableTreeNode) {
-          ((EditableTreeNode)node).fireOnSelectionChange(node.isChecked());
+        if (node instanceof EditableTreeNode editableTreeNode) {
+          editableTreeNode.fireOnSelectionChange(node.isChecked());
         }
       }
 
@@ -106,10 +102,11 @@ public class PushLog extends JPanel implements DataProvider {
         if (node == null || (!(node instanceof DefaultMutableTreeNode))) {
           return "";
         }
-        if (node instanceof TooltipNode) {
+        if (node instanceof TooltipNode tooltipNode) {
           return KeymapUtil.createTooltipText(
-                  ((TooltipNode)node).getTooltip() +
-                  "<p style='font-style:italic;color:gray;'>Show commit details", quickDocAction) + "</p>";
+            tooltipNode.getTooltip() +
+              "<p style='font-style:italic;color:gray;'>Show commit details", quickDocAction
+          ) + "</p>";
         }
         return "";
       }
@@ -180,8 +177,8 @@ public class PushLog extends JPanel implements DataProvider {
       @Override
       public void editingCanceled(ChangeEvent e) {
         DefaultMutableTreeNode node = (DefaultMutableTreeNode)myTree.getLastSelectedPathComponent();
-        if (node != null && node instanceof EditableTreeNode) {
-          ((EditableTreeNode)node).fireOnCancel();
+        if (node != null && node instanceof EditableTreeNode editableTreeNode) {
+          editableTreeNode.fireOnCancel();
         }
         resetEditSync();
         myTree.firePropertyChange(PushLogTreeUtil.EDIT_MODE_PROP, true, false);
@@ -276,7 +273,7 @@ public class PushLog extends JPanel implements DataProvider {
     }
   }
 
-  private void restoreSelection(@jakarta.annotation.Nullable DefaultMutableTreeNode node) {
+  private void restoreSelection(@Nullable DefaultMutableTreeNode node) {
     if (node != null) {
       TreeUtil.selectNode(myTree, node);
     }
@@ -323,13 +320,13 @@ public class PushLog extends JPanel implements DataProvider {
 
   @Nonnull
   private static List<CommitNode> collectSelectedCommitNodes(@Nonnull List<DefaultMutableTreeNode> selectedNodes) {
-    List<CommitNode> nodes = ContainerUtil.newArrayList();
+    List<CommitNode> nodes = new ArrayList<>();
     for (DefaultMutableTreeNode node : selectedNodes) {
       if (node instanceof RepositoryNode) {
         nodes.addAll(getChildNodesByType(node, CommitNode.class, true));
       }
-      else if (node instanceof CommitNode && !nodes.contains(node)) {
-        nodes.add((CommitNode)node);
+      else if (node instanceof CommitNode commitNode && !nodes.contains(node)) {
+        nodes.add(commitNode);
       }
     }
     return nodes;
@@ -337,7 +334,7 @@ public class PushLog extends JPanel implements DataProvider {
 
   @Nonnull
   private static List<Change> collectChanges(@Nonnull List<CommitNode> commitNodes) {
-    List<Change> changes = ContainerUtil.newArrayList();
+    List<Change> changes = new ArrayList<>();
     for (CommitNode node : commitNodes) {
       changes.addAll(node.getUserObject().getChanges());
     }
@@ -346,7 +343,7 @@ public class PushLog extends JPanel implements DataProvider {
 
   @Nonnull
   private static <T> List<T> getChildNodesByType(@Nonnull DefaultMutableTreeNode node, Class<T> type, boolean reverseOrder) {
-    List<T> nodes = ContainerUtil.newArrayList();
+    List<T> nodes = new ArrayList<>();
     if (node.getChildCount() < 1) {
       return nodes;
     }
@@ -369,7 +366,7 @@ public class PushLog extends JPanel implements DataProvider {
 
   @Nonnull
   private static List<Integer> getSortedRows(@Nonnull int[] rows) {
-    List<Integer> sorted = ContainerUtil.newArrayList();
+    List<Integer> sorted = new ArrayList<>();
     for (int row : rows) {
       sorted.add(row);
     }
@@ -393,7 +390,7 @@ public class PushLog extends JPanel implements DataProvider {
   }
 
   // Make changes available for diff action; revisionNumber for create patch and copy revision number actions
-  @jakarta.annotation.Nullable
+  @Nullable
   @Override
   public Object getData(@Nonnull Key<?> dataId) {
     if (VcsDataKeys.CHANGES == dataId) {
@@ -422,12 +419,12 @@ public class PushLog extends JPanel implements DataProvider {
 
   @Nonnull
   private List<DefaultMutableTreeNode> getNodesForRows(@Nonnull List<Integer> rows) {
-    List<DefaultMutableTreeNode> nodes = ContainerUtil.newArrayList();
+    List<DefaultMutableTreeNode> nodes = new ArrayList<>();
     for (Integer row : rows) {
       TreePath path = myTree.getPathForRow(row);
       Object pathComponent = path == null ? null : path.getLastPathComponent();
-      if (pathComponent instanceof DefaultMutableTreeNode) {
-        nodes.add((DefaultMutableTreeNode)pathComponent);
+      if (pathComponent instanceof DefaultMutableTreeNode mutableTreeNode) {
+        nodes.add(mutableTreeNode);
       }
     }
     return nodes;
@@ -454,21 +451,16 @@ public class PushLog extends JPanel implements DataProvider {
     return super.processKeyBinding(ks, e, condition, pressed);
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private DefaultMutableTreeNode getFirstNodeToEdit() {
     // start edit last selected component if editable
-    if (myTree.getLastSelectedPathComponent() instanceof RepositoryNode) {
-      RepositoryNode selectedNode = ((RepositoryNode)myTree.getLastSelectedPathComponent());
+    if (myTree.getLastSelectedPathComponent() instanceof RepositoryNode repositoryNode) {
+      RepositoryNode selectedNode = repositoryNode;
       if (selectedNode.isEditableNow()) return selectedNode;
     }
     List<RepositoryNode> repositoryNodes = getChildNodesByType((DefaultMutableTreeNode)myTree.getModel().getRoot(),
                                                                RepositoryNode.class, false);
-    RepositoryNode editableNode = ContainerUtil.find(repositoryNodes, new Condition<RepositoryNode>() {
-      @Override
-      public boolean value(RepositoryNode repositoryNode) {
-        return repositoryNode.isEditableNow();
-      }
-    });
+    RepositoryNode editableNode = ContainerUtil.find(repositoryNodes, repositoryNode -> repositoryNode.isEditableNow());
     if (editableNode != null) {
       TreeUtil.selectNode(myTree, editableNode);
     }
@@ -570,9 +562,8 @@ public class PushLog extends JPanel implements DataProvider {
       myCheckbox.setBorder(null); //checkBox may have no border by default, but insets are not null,
       // it depends on LaF, OS and isItRenderedPane, see consulo.ide.impl.idea.ide.ui.laf.darcula.ui.DarculaCheckBoxBorder.
       // null border works as expected always.
-      if (value instanceof RepositoryNode) {
+      if (value instanceof RepositoryNode valueNode) {
         //todo simplify, remove instance of
-        RepositoryNode valueNode = (RepositoryNode)value;
         myCheckbox.setVisible(valueNode.isCheckboxVisible());
         if (valueNode.isChecked() && valueNode.isLoading()) {
           myCheckbox.setState(ThreeStateCheckBox.State.DONT_CARE);
@@ -584,9 +575,9 @@ public class PushLog extends JPanel implements DataProvider {
       Object userObject = ((DefaultMutableTreeNode)value).getUserObject();
       ColoredTreeCellRenderer renderer = getTextRenderer();
       if (value instanceof CustomRenderedTreeNode) {
-        if (tree.isEditing() && mySyncStrategy && value instanceof RepositoryNode) {
+        if (tree.isEditing() && mySyncStrategy && value instanceof RepositoryNode repositoryNode) {
           //sync rendering all editable fields
-          ((RepositoryNode)value).render(renderer, mySyncRenderedText);
+          repositoryNode.render(renderer, mySyncRenderedText);
         }
         else {
           ((CustomRenderedTreeNode)value).render(renderer);
@@ -612,14 +603,12 @@ public class PushLog extends JPanel implements DataProvider {
 
     @Override
     public boolean isCellEditable(EventObject anEvent) {
-      if (anEvent instanceof MouseEvent) {
-        MouseEvent me = ((MouseEvent)anEvent);
+      if (anEvent instanceof MouseEvent me) {
         final TreePath path = myTree.getClosestPathForLocation(me.getX(), me.getY());
         final int row = myTree.getRowForLocation(me.getX(), me.getY());
-        myTree.getCellRenderer().getTreeCellRendererComponent(myTree, path.getLastPathComponent(), false, false, true, row, true);
-        Object tag = me.getClickCount() >= 1
-                     ? PushLogTreeUtil.getTagAtForRenderer(myTreeCellRenderer, me)
-                     : null;
+        myTree.getCellRenderer()
+          .getTreeCellRendererComponent(myTree, path.getLastPathComponent(), false, false, true, row, true);
+        Object tag = me.getClickCount() >= 1 ? PushLogTreeUtil.getTagAtForRenderer(myTreeCellRenderer, me) : null;
         return tag instanceof VcsEditableComponent;
       }
       //if keyboard event - then anEvent will be null =( See BasicTreeUi
@@ -627,7 +616,7 @@ public class PushLog extends JPanel implements DataProvider {
       //there is no selection path if we start editing during initial validation//
       if (treePath == null) return true;
       Object treeNode = treePath.getLastPathComponent();
-      return treeNode instanceof EditableTreeNode && ((EditableTreeNode)treeNode).isEditableNow();
+      return treeNode instanceof EditableTreeNode editableTreeNode && editableTreeNode.isEditableNow();
     }
 
     public Object getCellEditorValue() {
@@ -692,7 +681,7 @@ public class PushLog extends JPanel implements DataProvider {
 
     final int myHeightToReduce;
 
-    public MyTreeViewPort(@jakarta.annotation.Nullable Component view, int heightToReduce) {
+    public MyTreeViewPort(@Nullable Component view, int heightToReduce) {
       super();
       setView(view);
       myHeightToReduce = heightToReduce;

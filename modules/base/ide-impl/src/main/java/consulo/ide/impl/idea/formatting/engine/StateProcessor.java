@@ -15,13 +15,12 @@
  */
 package consulo.ide.impl.idea.formatting.engine;
 
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-
+import java.util.ArrayList;
 import java.util.List;
 
 public class StateProcessor {
 
-  private final List<State> myStates = ContainerUtil.newArrayList();
+  private final List<State> myStates = new ArrayList<>();
   private State myCurrentState;
 
   public StateProcessor(State initial) {

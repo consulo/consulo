@@ -18,9 +18,12 @@ package consulo.ide.impl.idea.find.editorHeaderActions;
 import consulo.ide.impl.idea.find.EditorSearchSession;
 import consulo.application.AllIcons;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 
 import jakarta.annotation.Nullable;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class SelectAllAction extends OccurrenceAction {
@@ -29,6 +32,7 @@ public class SelectAllAction extends OccurrenceAction {
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
     EditorSearchSession search = e.getRequiredData(EditorSearchSession.SESSION_KEY);
     search.selectAllOccurrences();
@@ -38,7 +42,7 @@ public class SelectAllAction extends OccurrenceAction {
   @Nullable
   @Override
   public ShortcutSet getShortcut() {
-    List<Shortcut> shortcuts = ContainerUtil.newArrayList();
+    List<Shortcut> shortcuts = new ArrayList<>();
     AnAction selectAllOccurrences = ActionManager.getInstance().getAction(IdeActions.ACTION_SELECT_ALL_OCCURRENCES);
     if (selectAllOccurrences != null) {
       ContainerUtil.addAll(shortcuts, selectAllOccurrences.getShortcutSet().getShortcuts());

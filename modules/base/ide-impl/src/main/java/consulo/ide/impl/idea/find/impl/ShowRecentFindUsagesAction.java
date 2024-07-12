@@ -16,23 +16,23 @@
 
 package consulo.ide.impl.idea.find.impl;
 
-import consulo.find.FindBundle;
 import consulo.find.FindManager;
+import consulo.find.localize.FindLocalize;
 import consulo.ide.impl.idea.find.findUsages.FindUsagesManager;
 import consulo.navigation.ItemPresentation;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.project.Project;
+import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.PopupStep;
-import consulo.ui.ex.popup.BaseListPopupStep;
-import consulo.ui.ex.RelativePoint;
+import consulo.ui.image.Image;
 import consulo.usage.ConfigurableUsageTarget;
 import consulo.usage.UsageView;
-import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
+
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -44,18 +44,20 @@ import java.util.List;
  */
 public class ShowRecentFindUsagesAction extends AnAction {
   @Override
+  @RequiredUIAccess
   public void update(final AnActionEvent e) {
     UsageView usageView = e.getData(UsageView.USAGE_VIEW_KEY);
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     e.getPresentation().setEnabled(usageView != null && project != null);
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
     UsageView usageView = e.getData(UsageView.USAGE_VIEW_KEY);
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     final FindUsagesManager findUsagesManager = ((FindManagerImpl)FindManager.getInstance(project)).getFindUsagesManager();
-    List<ConfigurableUsageTarget> history = new ArrayList<ConfigurableUsageTarget>(findUsagesManager.getHistory().getAll());
+    List<ConfigurableUsageTarget> history = new ArrayList<>(findUsagesManager.getHistory().getAll());
 
     if (!history.isEmpty()) {
       // skip most recent find usage, it's under your nose
@@ -67,37 +69,31 @@ public class ShowRecentFindUsagesAction extends AnAction {
     }
 
     BaseListPopupStep<ConfigurableUsageTarget> step =
-            new BaseListPopupStep<ConfigurableUsageTarget>(FindBundle.message("recent.find.usages.action.title"), history) {
-              @Override
-              public Image getIconFor(final ConfigurableUsageTarget data) {
-                ItemPresentation presentation = data == null ? null : data.getPresentation();
-                return presentation == null ? null : presentation.getIcon();
-              }
+      new BaseListPopupStep<ConfigurableUsageTarget>(FindLocalize.recentFindUsagesActionTitle().get(), history) {
+        @Override
+        public Image getIconFor(final ConfigurableUsageTarget data) {
+          ItemPresentation presentation = data == null ? null : data.getPresentation();
+          return presentation == null ? null : presentation.getIcon();
+        }
 
-              @Override
-              @Nonnull
-              public String getTextFor(final ConfigurableUsageTarget data) {
-                if (data == null) {
-                  return FindBundle.message("recent.find.usages.action.nothing");
-                }
-                return data.getLongDescriptiveName();
-              }
+        @Override
+        @Nonnull
+        public String getTextFor(final ConfigurableUsageTarget data) {
+          return data == null ? FindLocalize.recentFindUsagesActionNothing().get() : data.getLongDescriptiveName();
+        }
 
-              @Override
-              public PopupStep onChosen(final ConfigurableUsageTarget selectedValue, final boolean finalChoice) {
-                return doFinalStep(new Runnable() {
-                  @Override
-                  public void run() {
-                    if (selectedValue != null) {
-                      findUsagesManager.rerunAndRecallFromHistory(selectedValue);
-                    }
-                  }
-                });
-              }
-            };
+        @Override
+        public PopupStep onChosen(final ConfigurableUsageTarget selectedValue, final boolean finalChoice) {
+          return doFinalStep(() -> {
+            if (selectedValue != null) {
+              findUsagesManager.rerunAndRecallFromHistory(selectedValue);
+            }
+          });
+        }
+      };
     RelativePoint point;
-    if (e.getInputEvent() instanceof MouseEvent) {
-      point = new RelativePoint((MouseEvent) e.getInputEvent());
+    if (e.getInputEvent() instanceof MouseEvent me) {
+      point = new RelativePoint(me);
     }
     else {
       point = new RelativePoint(usageView.getComponent(), new Point(4, 4));

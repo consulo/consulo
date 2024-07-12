@@ -15,19 +15,20 @@
  */
 package consulo.ide.impl.idea.execution.console;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.dumb.DumbAware;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.execution.ExecutionBundle;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.ui.console.*;
 import consulo.execution.ui.console.language.LanguageConsoleView;
 import consulo.ide.impl.idea.execution.actions.ClearConsoleAction;
 import consulo.ide.impl.idea.openapi.editor.actions.ScrollToTheEndToolbarAction;
 import consulo.ide.impl.idea.openapi.editor.actions.ToggleUseSoftWrapsToolbarAction;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessEvent;
@@ -264,11 +265,11 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
 
   @Override
   public void addChangeListener(@Nonnull ChangeListener listener, @Nonnull Disposable parent) {
-    if (myPrimaryConsoleView instanceof ObservableConsoleView) {
-      ((ObservableConsoleView)myPrimaryConsoleView).addChangeListener(listener, parent);
+    if (myPrimaryConsoleView instanceof ObservableConsoleView observableConsoleView) {
+      observableConsoleView.addChangeListener(listener, parent);
     }
-    if (mySecondaryConsoleView instanceof ObservableConsoleView) {
-      ((ObservableConsoleView)mySecondaryConsoleView).addChangeListener(listener, parent);
+    if (mySecondaryConsoleView instanceof ObservableConsoleView observableConsoleView) {
+      observableConsoleView.addChangeListener(listener, parent);
     }
   }
 
@@ -276,12 +277,7 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
   @Override
   public Object getData(@Nonnull Key<?> dataId) {
     final ConsoleView consoleView = getSubConsoleView(isPrimaryConsoleEnabled());
-    if (consoleView instanceof DataProvider) {
-      return ((DataProvider)consoleView).getData(dataId);
-    }
-    else {
-      return null;
-    }
+    return consoleView instanceof DataProvider dataProvider ? dataProvider.getData(dataId) : null;
   }
 
   @Nonnull
@@ -299,8 +295,8 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
       final AnAction action2 = ContainerUtil.find(actions2, action -> action1.getClass() == action.getClass() &&
                                                                       StringUtil.equals(action1.getTemplatePresentation().getText(),
                                                                                         action.getTemplatePresentation().getText()));
-      if (action2 instanceof ToggleUseSoftWrapsToolbarAction) {
-        return new MergedWrapTextAction(((ToggleUseSoftWrapsToolbarAction)action1), (ToggleUseSoftWrapsToolbarAction)action2);
+      if (action2 instanceof ToggleUseSoftWrapsToolbarAction toggleUseSoftWrapsToolbarAction2) {
+        return new MergedWrapTextAction(((ToggleUseSoftWrapsToolbarAction)action1), toggleUseSoftWrapsToolbarAction2);
       }
       else if (action2 instanceof ScrollToTheEndToolbarAction) {
         return new MergedToggleAction(((ToggleAction)action1), (ToggleAction)action2);
@@ -330,19 +326,19 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
   private class SwitchDuplexConsoleViewAction extends ToggleAction implements DumbAware {
 
     public SwitchDuplexConsoleViewAction() {
-      super(ExecutionBundle.message("run.configuration.show.command.line.action.name"), null, PlatformIconGroup.debuggerConsole());
+      super(ExecutionLocalize.runConfigurationShowCommandLineActionName(), LocalizeValue.empty(), PlatformIconGroup.debuggerConsole());
     }
 
     @Override
-    public boolean isSelected(final AnActionEvent event) {
+    public boolean isSelected(@Nonnull final AnActionEvent event) {
       return !isPrimaryConsoleEnabled();
     }
 
     @Override
-    public void setSelected(final AnActionEvent event, final boolean flag) {
+    public void setSelected(@Nonnull final AnActionEvent event, final boolean flag) {
       enableConsole(!flag);
       setStoredState(!flag);
-      ApplicationManager.getApplication().invokeLater(() -> update(event));
+      Application.get().invokeLater(() -> update(event));
     }
 
     @Override

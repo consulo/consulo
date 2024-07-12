@@ -19,7 +19,6 @@ package consulo.ide.impl.idea.codeInsight.completion;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.progress.ProgressManager;
 import consulo.component.ProcessCanceledException;
-import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers.FileInfoManager;
 import consulo.ide.navigation.ChooseByNameContributor;
@@ -44,6 +43,7 @@ import consulo.project.content.scope.ProjectAwareSearchScope;
 import consulo.project.content.scope.ProjectScopes;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.image.Image;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
@@ -167,15 +167,17 @@ public class FilePathCompletionContributor extends CompletionContributor {
     extend(CompletionType.BASIC, psiElement(), provider);
   }
 
-  private static boolean filenameMatchesPrefixOrType(final String fileName,
-                                                     final String prefix,
-                                                     final FileType[] suitableFileTypes,
-                                                     final int invocationCount) {
+  private static boolean filenameMatchesPrefixOrType(
+    final String fileName,
+    final String prefix,
+    final FileType[] suitableFileTypes,
+    final int invocationCount
+  ) {
     final boolean prefixMatched = prefix.length() == 0 || StringUtil.startsWithIgnoreCase(fileName, prefix);
     if (prefixMatched && (suitableFileTypes.length == 0 || invocationCount > 2)) return true;
 
     if (prefixMatched) {
-      final String extension = FileUtilRt.getExtension(fileName);
+      final String extension = FileUtil.getExtension(fileName);
       if (extension.length() == 0) return false;
 
       for (final FileType fileType : suitableFileTypes) {

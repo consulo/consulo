@@ -17,12 +17,12 @@ package consulo.ide.impl.idea.ide.actions.runAnything;
 
 import consulo.application.AllIcons;
 import consulo.application.util.UserHomeFileUtil;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.localize.IdeLocalize;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
-import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.image.Image;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;

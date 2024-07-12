@@ -15,33 +15,26 @@
  */
 package consulo.ide.impl.idea.codeInsight.hints.settings;
 
-import consulo.language.editor.inlay.InlayParameterHintsProvider;
-import consulo.ide.impl.idea.codeInsight.hints.filtering.MatcherConstructor;
-import consulo.language.Language;
-import consulo.document.Document;
 import consulo.codeEditor.EditorFactory;
+import consulo.document.Document;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
-import consulo.language.plain.PlainTextFileType;
-import consulo.ui.ex.awt.ComboBox;
-import consulo.ui.ex.awt.DialogWrapper;
 import consulo.document.util.TextRange;
-import consulo.util.lang.StringUtil;
-import consulo.ui.ex.awt.CollectionComboBoxModel;
+import consulo.ide.impl.idea.codeInsight.hints.filtering.MatcherConstructor;
+import consulo.language.Language;
+import consulo.language.editor.inlay.InlayParameterHintsProvider;
 import consulo.language.editor.ui.awt.EditorTextField;
-import consulo.ui.ex.awt.IdeBorderFactory;
-import consulo.ui.ex.awt.ListCellRendererWrapper;
-import consulo.ui.ex.awt.JBCheckBox;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-
+import consulo.language.plain.PlainTextFileType;
+import consulo.ui.ex.awt.*;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ParameterNameHintsConfigurable extends DialogWrapper {
@@ -69,7 +62,7 @@ public class ParameterNameHintsConfigurable extends DialogWrapper {
     myInitiallySelectedLanguage = selectedLanguage;
 
     myNewPreselectedItem = newPreselectedPattern;
-    myBlackLists = ContainerUtil.newHashMap();
+    myBlackLists = new HashMap<>();
 
     setTitle("Configure Parameter Name Hints");
     init();
@@ -83,10 +76,10 @@ public class ParameterNameHintsConfigurable extends DialogWrapper {
     String text = myEditorTextField.getText();
     List<String> rules = StringUtil.split(text, "\n");
     boolean hasAnyInvalid = rules
-            .stream()
-            .filter((e) -> !e.trim().isEmpty())
-            .map((s) -> MatcherConstructor.createMatcher(s))
-            .anyMatch((e) -> e == null);
+      .stream()
+      .filter((e) -> !e.trim().isEmpty())
+      .map(MatcherConstructor::createMatcher)
+      .anyMatch(Objects::isNull);
 
     getOKAction().setEnabled(!hasAnyInvalid);
   }
@@ -111,10 +104,10 @@ public class ParameterNameHintsConfigurable extends DialogWrapper {
 
   private static void storeBlackListDiff(@Nonnull Language language, @Nonnull String text) {
     Set<String> updatedBlackList = StringUtil
-            .split(text, "\n")
-            .stream()
-            .filter((e) -> !e.trim().isEmpty())
-            .collect(Collectors.toCollection(LinkedHashSet::new));
+      .split(text, "\n")
+      .stream()
+      .filter((e) -> !e.trim().isEmpty())
+      .collect(Collectors.toCollection(LinkedHashSet::new));
 
     InlayParameterHintsProvider provider = InlayParameterHintsProvider.forLanguage(language);
     Set<String> defaultBlackList = provider.getDefaultBlackList();
@@ -167,20 +160,17 @@ public class ParameterNameHintsConfigurable extends DialogWrapper {
       }
     });
 
-    myCurrentLanguageCombo.addItemListener(new ItemListener() {
-      @Override
-      public void itemStateChanged(ItemEvent e) {
-        Language language = (Language)e.getItem();
-        if (e.getStateChange() == ItemEvent.DESELECTED) {
-          myBlackLists.put(language, myEditorTextField.getText());
+    myCurrentLanguageCombo.addItemListener(e -> {
+      Language language = (Language)e.getItem();
+      if (e.getStateChange() == ItemEvent.DESELECTED) {
+        myBlackLists.put(language, myEditorTextField.getText());
+      }
+      else if (e.getStateChange() == ItemEvent.SELECTED) {
+        String text = myBlackLists.get(language);
+        if (text == null) {
+          text = getLanguageBlackList(language);
         }
-        else if (e.getStateChange() == ItemEvent.SELECTED) {
-          String text = myBlackLists.get(language);
-          if (text == null) {
-            text = getLanguageBlackList(language);
-          }
-          myEditorTextField.setText(text);
-        }
+        myEditorTextField.setText(text);
       }
     });
   }

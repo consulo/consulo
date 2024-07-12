@@ -1,27 +1,23 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.bigPopup;
 
-import consulo.execution.ExecutionUtil;
 import consulo.application.AllIcons;
-import consulo.ui.ex.awt.ElementsChooser;
+import consulo.application.dumb.DumbAware;
+import consulo.execution.ExecutionUtil;
+import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.ex.action.Toggleable;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
+import consulo.ui.ex.awt.ElementsChooser;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
 
@@ -40,7 +36,7 @@ public abstract class ShowFilterAction extends ToggleAction implements DumbAware
   @Override
   public void setSelected(@Nonnull final AnActionEvent e, final boolean state) {
     if (state) {
-      showPopup(e.getRequiredData(CommonDataKeys.PROJECT), e.getInputEvent().getComponent());
+      showPopup(e.getRequiredData(Project.KEY), e.getInputEvent().getComponent());
     }
     else {
       if (myFilterPopup != null && !myFilterPopup.isDisposed()) {
@@ -100,28 +96,13 @@ public abstract class ShowFilterAction extends ToggleAction implements DumbAware
     panel.add(chooser);
     JPanel buttons = new JPanel();
     JButton all = new JButton("All");
-    all.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(final ActionEvent e) {
-        chooser.setAllElementsMarked(true);
-      }
-    });
+    all.addActionListener(e -> chooser.setAllElementsMarked(true));
     buttons.add(all);
     JButton none = new JButton("None");
-    none.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(final ActionEvent e) {
-        chooser.setAllElementsMarked(false);
-      }
-    });
+    none.addActionListener(e -> chooser.setAllElementsMarked(false));
     buttons.add(none);
     JButton invert = new JButton("Invert");
-    invert.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(final ActionEvent e) {
-        chooser.invertSelection();
-      }
-    });
+    invert.addActionListener(e -> chooser.invertSelection());
     buttons.add(invert);
     panel.add(buttons);
     return panel;

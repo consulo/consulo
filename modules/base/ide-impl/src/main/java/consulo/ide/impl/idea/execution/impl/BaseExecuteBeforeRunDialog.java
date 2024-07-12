@@ -15,18 +15,22 @@
  */
 package consulo.ide.impl.idea.execution.impl;
 
-import consulo.execution.impl.internal.configuration.RunManagerImpl;
-import consulo.execution.internal.RunManagerEx;
-import consulo.execution.*;
+import consulo.execution.BeforeRunTask;
+import consulo.execution.BeforeRunTaskProvider;
+import consulo.execution.RunManager;
+import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.configuration.ConfigurationFactory;
 import consulo.execution.configuration.ConfigurationType;
 import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.impl.internal.configuration.RunManagerImpl;
+import consulo.execution.internal.RunManagerEx;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.ScrollPaneFactory;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.Tree;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.dataholder.Key;
@@ -56,7 +60,7 @@ public abstract class BaseExecuteBeforeRunDialog<T extends BeforeRunTask> extend
   @Override
   protected void init() {
     super.init();
-    setTitle(ExecutionBundle.message("execute.before.run.debug.dialog.title", getTargetDisplayString()));
+    setTitle(ExecutionLocalize.executeBeforeRunDebugDialogTitle(getTargetDisplayString()));
   }
 
   @Override
@@ -193,15 +197,13 @@ public abstract class BaseExecuteBeforeRunDialog<T extends BeforeRunTask> extend
       final Descriptor descriptor = (Descriptor)node.getUserObject();
       final boolean isChecked = descriptor.isChecked();
 
-      if (descriptor instanceof ConfigurationTypeDescriptor) {
-        ConfigurationTypeDescriptor typeDesc = (ConfigurationTypeDescriptor)descriptor;
+      if (descriptor instanceof ConfigurationTypeDescriptor typeDesc) {
         for (ConfigurationFactory factory : typeDesc.getConfigurationType().getConfigurationFactories()) {
           RunnerAndConfigurationSettings settings = runManager.getConfigurationTemplate(factory);
           update(settings.getConfiguration(), isChecked, runManager);
         }
       }
-      else if (descriptor instanceof ConfigurationDescriptor) {
-        ConfigurationDescriptor configDesc = (ConfigurationDescriptor)descriptor;
+      else if (descriptor instanceof ConfigurationDescriptor configDesc) {
         update(configDesc.getConfiguration(), isChecked, runManager);
       }
     }
@@ -327,16 +329,14 @@ public abstract class BaseExecuteBeforeRunDialog<T extends BeforeRunTask> extend
       myLabel.setForeground(foreground);
       myCheckbox.setEnabled(true);
 
-      if (descriptor instanceof ConfigurationTypeDescriptor) {
-        ConfigurationTypeDescriptor configurationTypeDescriptor = (ConfigurationTypeDescriptor)descriptor;
+      if (descriptor instanceof ConfigurationTypeDescriptor configurationTypeDescriptor) {
         myLabel.setFont(tree.getFont());
         myLabel.setText(configurationTypeDescriptor.getConfigurationType().getDisplayName().get());
         myLabel.setIcon(configurationTypeDescriptor.getIcon());
       }
-      else if (descriptor instanceof ConfigurationDescriptor) {
-        ConfigurationDescriptor configurationTypeDescriptor = (ConfigurationDescriptor)descriptor;
+      else if (descriptor instanceof ConfigurationDescriptor configurationDescriptor) {
         myLabel.setFont(tree.getFont());
-        myLabel.setText(configurationTypeDescriptor.getName());
+        myLabel.setText(configurationDescriptor.getName());
         myLabel.setIcon(null);
 
         if (((ConfigurationTypeDescriptor)((DefaultMutableTreeNode)node.getParent()).getUserObject()).isChecked()) {

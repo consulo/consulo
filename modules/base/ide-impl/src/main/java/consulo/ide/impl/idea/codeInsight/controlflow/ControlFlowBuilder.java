@@ -22,7 +22,6 @@ import consulo.util.lang.Pair;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementVisitor;
 import consulo.language.psi.util.PsiTreeUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -46,8 +45,8 @@ public class ControlFlowBuilder {
   public int instructionCount;
 
   public ControlFlowBuilder() {
-    instructions = ContainerUtil.newArrayList();
-    pending = ContainerUtil.newArrayList();
+    instructions = new ArrayList<>();
+    pending = new ArrayList<>();
     instructionCount = 0;
   }
 
@@ -210,7 +209,7 @@ public class ControlFlowBuilder {
 
   public void processPending(final PendingProcessor processor) {
     final List<Pair<PsiElement, Instruction>> pending = this.pending;
-    this.pending = new ArrayList<Pair<PsiElement, Instruction>>();
+    this.pending = new ArrayList<>();
     for (Pair<PsiElement, Instruction> pair : pending) {
       processor.process(pair.getFirst(), pair.getSecond());
     }

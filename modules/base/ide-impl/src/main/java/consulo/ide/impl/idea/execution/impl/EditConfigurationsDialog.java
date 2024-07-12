@@ -16,17 +16,17 @@
 
 package consulo.ide.impl.idea.execution.impl;
 
-import consulo.execution.ExecutionBundle;
 import consulo.execution.executor.Executor;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.ide.impl.idea.openapi.options.ex.WholeWestSingleConfigurableEditor;
 import consulo.project.Project;
 import consulo.ui.Size;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Splitter;
 import consulo.util.lang.Couple;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 
 public class EditConfigurationsDialog extends WholeWestSingleConfigurableEditor implements RunConfigurable.RunDialogBase {
@@ -35,7 +35,7 @@ public class EditConfigurationsDialog extends WholeWestSingleConfigurableEditor 
   public EditConfigurationsDialog(final Project project) {
     super(project, new RunConfigurable(project), "consulo.ide.impl.idea.execution.impl.EditConfigurationsDialog");
     getConfigurable().setRunDialog(this);
-    setTitle(ExecutionBundle.message("run.debug.dialog.title"));
+    setTitle(ExecutionLocalize.runDebugDialogTitle());
   }
 
   @Override
