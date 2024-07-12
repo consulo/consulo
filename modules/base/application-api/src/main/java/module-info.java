@@ -71,4 +71,6 @@ module consulo.application.api {
   exports consulo.application.util.logging;
   exports consulo.application.util.matcher;
   exports consulo.application.util.graph;
+
+  opens consulo.application.util.mac.foundation to com.sun.jna;
 }

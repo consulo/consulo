@@ -16,12 +16,14 @@
 package consulo.application.util.mac.foundation;
 
 import com.sun.jna.*;
+import consulo.util.jna.JnaLoader;
 import consulo.util.lang.StringUtil;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -33,17 +35,13 @@ import java.util.Map;
  */
 public class Foundation {
   private static final FoundationLibrary myFoundationLibrary;
+  private static final Function myObjcMsgSend;
 
   static {
-    // Set JNA to convert java.lang.String to char* using UTF-8, and match that with
-    // the way we tell CF to interpret our char*
-    // May be removed if we use toStringViaUTF16
-    System.setProperty("jna.encoding", "UTF8");
-
-    Map<String, Object> foundationOptions = new HashMap<String, Object>();
-    //foundationOptions.put(Library.OPTION_TYPE_MAPPER, FoundationTypeMapper.INSTANCE);
-
-    myFoundationLibrary = Native.load("Foundation", FoundationLibrary.class, foundationOptions);
+    assert JnaLoader.isLoaded() : "JNA library is not available";
+    myFoundationLibrary = Native.load("Foundation", FoundationLibrary.class, Map.of("jna.encoding", "UTF8"));
+    NativeLibrary nativeLibrary = ((Library.Handler)Proxy.getInvocationHandler(myFoundationLibrary)).getNativeLibrary();
+    myObjcMsgSend = nativeLibrary.getFunction("objc_msgSend");
   }
 
   static Callback ourRunnableCallback;
@@ -69,8 +67,20 @@ public class Foundation {
     return myFoundationLibrary.sel_registerName(s);
   }
 
+  @Nonnull
+  private static Object[] prepInvoke(ID id, Pointer selector, Object[] args) {
+    Object[] invokArgs = new Object[args.length + 2];
+    invokArgs[0] = id;
+    invokArgs[1] = selector;
+    System.arraycopy(args, 0, invokArgs, 2, args.length);
+    return invokArgs;
+  }
+
   public static ID invoke(final ID id, final Pointer selector, Object... args) {
-    return myFoundationLibrary.objc_msgSend(id, selector, args);
+    // objc_msgSend is called with the calling convention of the target method
+    // on x86_64 this does not make a difference, but arm64 uses a different calling convention for varargs
+    // it is therefore important to not call objc_msgSend as a vararg function
+    return new ID(myObjcMsgSend.invokeLong(prepInvoke(id, selector, args)));
   }
 
   public static ID invoke(final String cls, final String selector, Object... args) {
