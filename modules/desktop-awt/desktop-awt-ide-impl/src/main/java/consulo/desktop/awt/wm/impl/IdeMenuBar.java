@@ -15,35 +15,37 @@
  */
 package consulo.desktop.awt.wm.impl;
 
-import consulo.dataContext.DataManager;
-import consulo.desktop.awt.ui.IdeEventQueue;
+import consulo.application.Application;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
-import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
-import consulo.desktop.awt.action.ActionMenu;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.WeakTimerListener;
-import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.desktop.awt.action.ActionMenu;
+import consulo.desktop.awt.ui.IdeEventQueue;
+import consulo.desktop.awt.wm.impl.status.ClockPanel;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.project.ui.wm.IdeFrame;
+import consulo.ide.impl.dataContext.BaseDataManager;
+import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.WeakTimerListener;
 import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.internal.WindowManagerEx;
-import consulo.desktop.awt.wm.impl.status.ClockPanel;
-import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.project.ui.wm.IdeFrame;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.Gray;
-import consulo.ui.ex.awt.util.ScreenUtil;
-import consulo.ui.ex.awt.CustomLineBorder;
-import consulo.ui.ex.awt.Animator;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ide.impl.dataContext.BaseDataManager;
 import consulo.ui.ex.action.*;
-
+import consulo.ui.ex.awt.Animator;
+import consulo.ui.ex.awt.CustomLineBorder;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.ui.ex.awt.util.ScreenUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.style.StyleManager;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
@@ -103,8 +105,8 @@ public class IdeMenuBar extends JMenuBar implements Predicate<AWTEvent> {
   public IdeMenuBar(ActionManager actionManager, DataManager dataManager) {
     myActionManager = actionManager;
     myTimerListener = new MyTimerListener();
-    myVisibleActions = new ArrayList<AnAction>();
-    myNewVisibleActions = new ArrayList<AnAction>();
+    myVisibleActions = new ArrayList<>();
+    myNewVisibleActions = new ArrayList<>();
     myPresentationFactory = new MenuItemPresentationFactory();
     myDataManager = dataManager;
 
@@ -134,7 +136,7 @@ public class IdeMenuBar extends JMenuBar implements Predicate<AWTEvent> {
     }
 
     //fix for Darcula double border
-    if (myState == State.TEMPORARY_EXPANDED && UIUtil.isUnderDarcula()) {
+    if (myState == State.TEMPORARY_EXPANDED && StyleManager.get().getCurrentStyle().isDark()) {
       return new CustomLineBorder(Gray._75, 0, 0, 1, 0);
     }
 
@@ -188,14 +190,11 @@ public class IdeMenuBar extends JMenuBar implements Predicate<AWTEvent> {
       revalidate();
       repaint();
       //noinspection SSBasedInspection
-      SwingUtilities.invokeLater(new Runnable() {
-        @Override
-        public void run() {
-          JMenu menu = getMenu(getSelectionModel().getSelectedIndex());
-          if (menu.isPopupMenuVisible()) {
-            menu.setPopupMenuVisible(false);
-            menu.setPopupMenuVisible(true);
-          }
+      SwingUtilities.invokeLater(() -> {
+        JMenu menu = getMenu(getSelectionModel().getSelectedIndex());
+        if (menu.isPopupMenuVisible()) {
+          menu.setPopupMenuVisible(false);
+          menu.setPopupMenuVisible(true);
         }
       });
     }
@@ -204,10 +203,7 @@ public class IdeMenuBar extends JMenuBar implements Predicate<AWTEvent> {
 
   private boolean isActivated() {
     int index = getSelectionModel().getSelectedIndex();
-    if (index == -1) {
-      return false;
-    }
-    return getMenu(index).isPopupMenuVisible();
+    return index != -1 && getMenu(index).isPopupMenuVisible();
   }
 
   private void updateState() {
@@ -224,8 +220,8 @@ public class IdeMenuBar extends JMenuBar implements Predicate<AWTEvent> {
 
     IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
 
-    if (ideFrame instanceof IdeFrameEx) {
-      boolean fullScreen = ((IdeFrameEx)ideFrame).isInFullScreen();
+    if (ideFrame instanceof IdeFrameEx ideFrameEx) {
+      boolean fullScreen = ideFrameEx.isInFullScreen();
       if (fullScreen) {
         setState(State.COLLAPSING);
         restartAnimator();
@@ -273,6 +269,7 @@ public class IdeMenuBar extends JMenuBar implements Predicate<AWTEvent> {
   }
 
   @Override
+  @RequiredUIAccess
   public void addNotify() {
     super.addNotify();
 
@@ -280,15 +277,12 @@ public class IdeMenuBar extends JMenuBar implements Predicate<AWTEvent> {
 
     // Add updater for menus
     myActionManager.addTimerListener(1000, new WeakTimerListener(myTimerListener));
-    UISettingsListener UISettingsListener = new UISettingsListener() {
-      @Override
-      public void uiSettingsChanged(final UISettings source) {
-        updateMnemonicsVisibility();
-        myPresentationFactory.reset();
-      }
+    UISettingsListener UISettingsListener = source -> {
+      updateMnemonicsVisibility();
+      myPresentationFactory.reset();
     };
     UISettings.getInstance().addUISettingsListener(UISettingsListener, myDisposable);
-    Disposer.register(ApplicationManager.getApplication(), myDisposable);
+    Disposer.register(Application.get(), myDisposable);
     IdeEventQueue.getInstance().addDispatcher(this, myDisposable);
   }
 
@@ -305,8 +299,7 @@ public class IdeMenuBar extends JMenuBar implements Predicate<AWTEvent> {
 
   @Override
   public boolean test(AWTEvent e) {
-    if (e instanceof MouseEvent) {
-      MouseEvent mouseEvent = (MouseEvent)e;
+    if (e instanceof MouseEvent mouseEvent) {
       Component component = findActualComponent(mouseEvent);
 
       if (myState != State.EXPANDED /*&& !myState.isInProgress()*/) {
@@ -328,12 +321,13 @@ public class IdeMenuBar extends JMenuBar implements Predicate<AWTEvent> {
   @Nullable
   private Component findActualComponent(MouseEvent mouseEvent) {
     Component component = mouseEvent.getComponent();
-    if(component == null) {
+    if (component == null) {
       return null;
     }
 
     Component deepestComponent;
-    if (myState != State.EXPANDED && !myState.isInProgress() && contains(SwingUtilities.convertPoint(component, mouseEvent.getPoint(), this))) {
+    if (myState != State.EXPANDED && !myState.isInProgress()
+      && contains(SwingUtilities.convertPoint(component, mouseEvent.getPoint(), this))) {
       deepestComponent = this;
     }
     else {
@@ -345,6 +339,7 @@ public class IdeMenuBar extends JMenuBar implements Predicate<AWTEvent> {
     return component;
   }
 
+  @RequiredUIAccess
   void updateMenuActions() {
     myNewVisibleActions.clear();
 
@@ -400,6 +395,7 @@ public class IdeMenuBar extends JMenuBar implements Predicate<AWTEvent> {
     }
   }
 
+  @RequiredUIAccess
   private void expandActionGroup(final DataContext context, final List<AnAction> newVisibleActions, ActionManager actionManager) {
     final ActionGroup mainActionGroup = (ActionGroup)CustomActionsSchemaImpl.getInstance().getCorrectedAction(IdeActions.GROUP_MAIN_MENU);
     if (mainActionGroup == null) return;
@@ -431,11 +427,13 @@ public class IdeMenuBar extends JMenuBar implements Predicate<AWTEvent> {
     }
   }
 
+  @RequiredUIAccess
   public void disableUpdates() {
     myDisabled = true;
     updateMenuActions();
   }
 
+  @RequiredUIAccess
   public void enableUpdates() {
     myDisabled = false;
     updateMenuActions();
@@ -448,6 +446,7 @@ public class IdeMenuBar extends JMenuBar implements Predicate<AWTEvent> {
     }
 
     @Override
+    @RequiredUIAccess
     public void run() {
       if (!isShowing()) {
         return;
@@ -465,8 +464,8 @@ public class IdeMenuBar extends JMenuBar implements Predicate<AWTEvent> {
 
       // don't update toolbar if there is currently active modal dialog
       final Window window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
-      if (window instanceof Dialog) {
-        if (((Dialog)window).isModal()) {
+      if (window instanceof Dialog dialog) {
+        if (dialog.isModal()) {
           return;
         }
       }
@@ -535,15 +534,25 @@ public class IdeMenuBar extends JMenuBar implements Predicate<AWTEvent> {
     @Override
     public void mousePressed(MouseEvent e) {
       Component c = e.getComponent();
-      if (c instanceof IdeMenuBar) {
+      if (c instanceof IdeMenuBar ideMenuBar) {
         Dimension size = c.getSize();
-        Insets insets = ((IdeMenuBar)c).getInsets();
+        Insets insets = ideMenuBar.getInsets();
         Point p = e.getPoint();
         if (p.y < insets.top || p.y >= size.height - insets.bottom) {
-          Component item = ((IdeMenuBar)c).findComponentAt(p.x, size.height / 2);
+          Component item = ideMenuBar.findComponentAt(p.x, size.height / 2);
           if (item instanceof JMenuItem) {
             // re-target border clicks as a menu item ones
-            item.dispatchEvent(new MouseEvent(item, e.getID(), e.getWhen(), e.getModifiers(), 1, 1, e.getClickCount(), e.isPopupTrigger(), e.getButton()));
+            item.dispatchEvent(new MouseEvent(
+              item,
+              e.getID(),
+              e.getWhen(),
+              e.getModifiers(),
+              1,
+              1,
+              e.getClickCount(),
+              e.isPopupTrigger(),
+              e.getButton()
+            ));
             e.consume();
             return;
           }
@@ -557,19 +566,16 @@ public class IdeMenuBar extends JMenuBar implements Predicate<AWTEvent> {
   private static class MyExitFullScreenButton extends JButton {
     private MyExitFullScreenButton() {
       setFocusable(false);
-      addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          Window awtWindow = SwingUtilities.getWindowAncestor(MyExitFullScreenButton.this);
-          consulo.ui.Window uiWindow = TargetAWT.from(awtWindow);
-          if(uiWindow == null) {
-            return;
-          }
+      addActionListener(e -> {
+        Window awtWindow = SwingUtilities.getWindowAncestor(MyExitFullScreenButton.this);
+        consulo.ui.Window uiWindow = TargetAWT.from(awtWindow);
+        if (uiWindow == null) {
+          return;
+        }
 
-          IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
-          if (ideFrame instanceof IdeFrameEx) {
-            ((IdeFrameEx)ideFrame).toggleFullScreen(false);
-          }
+        IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
+        if (ideFrame instanceof IdeFrameEx ideFrameEx) {
+          ideFrameEx.toggleFullScreen(false);
         }
       });
       addMouseListener(new MouseAdapter() {

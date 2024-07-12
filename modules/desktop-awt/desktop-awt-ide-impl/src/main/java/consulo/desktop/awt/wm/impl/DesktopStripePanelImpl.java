@@ -17,6 +17,7 @@ package consulo.desktop.awt.wm.impl;
 
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.event.KeymapManagerListener;
 import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;
@@ -148,6 +149,7 @@ final class DesktopStripePanelImpl extends JPanel {
    * Invoked when enclosed frame is being shown.
    */
   @Override
+  @RequiredUIAccess
   public void addNotify() {
     super.addNotify();
     updatePresentation();
@@ -471,6 +473,7 @@ final class DesktopStripePanelImpl extends JPanel {
     return myPrefSize;
   }
 
+  @RequiredUIAccess
   void updatePresentation() {
     for (DesktopStripeButton button : myButtons) {
       button.updatePresentation();
@@ -488,13 +491,18 @@ final class DesktopStripePanelImpl extends JPanel {
     );
   }
 
+  @RequiredUIAccess
   public void finishDrop() {
     if (myLastLayoutData == null || !isDroppingButton()) return;
 
     final WindowInfoImpl info = myDragButton.getDecorator().getWindowInfo();
     myFinishingDrop = true;
-    myManager.setSideToolAndAnchor(info.getId(), ToolWindowAnchor.get(myAnchor), myLastLayoutData.dragInsertPosition,
-                                   myLastLayoutData.dragToSide);
+    myManager.setSideToolAndAnchor(
+      info.getId(),
+      ToolWindowAnchor.get(myAnchor),
+      myLastLayoutData.dragInsertPosition,
+      myLastLayoutData.dragToSide
+    );
 
     myManager.invokeLater(this::resetDrop);
   }
@@ -536,6 +544,7 @@ final class DesktopStripePanelImpl extends JPanel {
 
   private final class MyKeymapManagerListener implements KeymapManagerListener {
     @Override
+    @RequiredUIAccess
     public void activeKeymapChanged(final Keymap keymap) {
       updatePresentation();
     }
@@ -543,6 +552,7 @@ final class DesktopStripePanelImpl extends JPanel {
 
   private final class MyUISettingsListener implements UISettingsListener {
     @Override
+    @RequiredUIAccess
     public void uiSettingsChanged(UISettings source) {
       updatePresentation();
     }
@@ -575,7 +585,9 @@ final class DesktopStripePanelImpl extends JPanel {
       g.setColor(getBackground().brighter());
       g.fillRect(0, 0, getWidth(), getHeight());
     }
-    if (UIUtil.isUnderDarcula()) return;
+    if (StyleManager.get().getCurrentStyle().isDark()) {
+      return;
+    }
     ToolWindowAnchor anchor = getAnchor();
     g.setColor(new Color(255, 255, 255, 40));
     Rectangle r = getBounds();

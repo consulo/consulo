@@ -20,7 +20,7 @@
 package consulo.desktop.awt.welcomeScreen;
 
 import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.PowerSaveMode;
 import consulo.application.PowerSaveModeListener;
 import consulo.application.ui.wm.IdeFocusManager;
@@ -33,7 +33,6 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.*;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.ui.speedSearch.ListWithFilter;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
@@ -50,6 +49,7 @@ import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
 import consulo.ui.ex.awt.util.ListUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 
@@ -118,9 +118,7 @@ public class RecentProjectPanel {
 
     Collection<String> pathsToCheck = new HashSet<>();
     for (AnAction action : recentProjectActions) {
-      if (action instanceof ReopenProjectAction) {
-        final ReopenProjectAction item = (ReopenProjectAction)action;
-
+      if (action instanceof ReopenProjectAction item) {
         myPathShortener.addPath(item, item.getProjectPath());
 
         pathsToCheck.add(item.getProjectPath());
@@ -152,8 +150,8 @@ public class RecentProjectPanel {
             if (selection != null) {
               AnAction selectedAction = performSelectedAction(event, selection);
               // remove action from list if needed
-              if (selectedAction instanceof ReopenProjectAction) {
-                if (((ReopenProjectAction)selectedAction).isRemoved()) {
+              if (selectedAction instanceof ReopenProjectAction reopenProjectAction) {
+                if (reopenProjectAction.isRemoved()) {
                   ListUtil.removeSelectedItems(myList);
                 }
               }
@@ -184,7 +182,16 @@ public class RecentProjectPanel {
         List<AnAction> selection = myList.getSelectedValuesList();
 
         if (selection != null && !selection.isEmpty()) {
-          final int rc = Messages.showOkCancelDialog(myRootPanel, "Remove '" + StringUtil.join(selection, action -> action.getTemplatePresentation().getText(), "'\n'") + "' from recent projects list?", "Remove Recent Project", Messages.getQuestionIcon());
+          final int rc = Messages.showOkCancelDialog(
+            myRootPanel,
+            "Remove '" + StringUtil.join(
+              selection,
+              action -> action.getTemplatePresentation().getText(),
+              "'\n'"
+            ) + "' from recent projects list?",
+            "Remove Recent Project",
+            UIUtil.getQuestionIcon()
+          );
           if (rc == Messages.OK) {
             for (Object projectAction : selection) {
               removeRecentProjectElement(projectAction);
@@ -204,8 +211,7 @@ public class RecentProjectPanel {
     myScrollPane = ScrollPaneFactory.createScrollPane(myList, true);
 
     myTargetComponent = recentProjectActions.length == 0 ? myList : ListWithFilter.wrap(myList, myScrollPane, o -> {
-      if (o instanceof ReopenProjectAction) {
-        ReopenProjectAction item = (ReopenProjectAction)o;
+      if (o instanceof ReopenProjectAction item) {
         String home = Platform.current().user().homePath().toString();
         String path = item.getProjectPath();
         if (FileUtil.startsWith(path, home)) {
@@ -213,8 +219,8 @@ public class RecentProjectPanel {
         }
         return item.getProjectName() + " " + path;
       }
-      else if (o instanceof ProjectGroupActionGroup) {
-        return ((ProjectGroupActionGroup)o).getGroup().getName();
+      else if (o instanceof ProjectGroupActionGroup actionGroup) {
+        return actionGroup.getGroup().getName();
       }
       return o.toString();
     });
@@ -241,11 +247,11 @@ public class RecentProjectPanel {
 
   protected static void removeRecentProjectElement(Object element) {
     final RecentProjectsManager manager = RecentProjectsManager.getInstance();
-    if (element instanceof ReopenProjectAction) {
-      manager.removePath(((ReopenProjectAction)element).getProjectPath());
+    if (element instanceof ReopenProjectAction reopenProjectAction) {
+      manager.removePath(reopenProjectAction.getProjectPath());
     }
-    else if (element instanceof ProjectGroupActionGroup) {
-      final ProjectGroup group = ((ProjectGroupActionGroup)element).getGroup();
+    else if (element instanceof ProjectGroupActionGroup actionGroup) {
+      final ProjectGroup group = actionGroup.getGroup();
       for (String path : group.getProjects()) {
         manager.removePath(path);
       }
@@ -347,7 +353,7 @@ public class RecentProjectPanel {
 
       // this is debug for getCloseIconRect()
       //int i = getSelectedIndex();
-      //if(i == -1) {
+      //if (i == -1) {
       //  return;
       //}
       //g.setColor(Color.RED);
@@ -429,13 +435,11 @@ public class RecentProjectPanel {
 
       setBackground(back);
 
-      if (value instanceof ReopenProjectAction) {
-        ReopenProjectAction item = (ReopenProjectAction)value;
+      if (value instanceof ReopenProjectAction item) {
         myName.setText(getTitle2Text(item.getTemplatePresentation().getText(), myName, JBUI.scale(55)));
         myPath.setText(getTitle2Text(item.getProjectPath(), myPath, JBUI.scale(55)));
       }
-      else if (value instanceof ProjectGroupActionGroup) {
-        final ProjectGroupActionGroup group = (ProjectGroupActionGroup)value;
+      else if (value instanceof ProjectGroupActionGroup group) {
         myName.setText(group.getGroup().getName());
         myPath.setText("");
       }
@@ -506,7 +510,7 @@ public class RecentProjectPanel {
     FilePathChecker(Runnable callback, Collection<String> paths) {
       myCallback = callback;
       myPaths = paths;
-      MessageBusConnection connection = ApplicationManager.getApplication().getMessageBus().connect(this);
+      MessageBusConnection connection = Application.get().getMessageBus().connect(this);
       connection.subscribe(ApplicationActivationListener.class, this);
       connection.subscribe(PowerSaveModeListener.class, this);
       onAppStateChanged();
@@ -537,13 +541,13 @@ public class RecentProjectPanel {
 
     private void onAppStateChanged() {
       boolean settingsAreOK = !PowerSaveMode.isEnabled();
-      boolean everythingIsOK = settingsAreOK && ApplicationManager.getApplication().isActive();
+      boolean everythingIsOK = settingsAreOK && Application.get().isActive();
       if (myService == null && everythingIsOK) {
         myService = AppExecutorUtil.createBoundedScheduledExecutorService("CheckRecentProjectPaths Service", 2);
         for (String path : myPaths) {
           scheduleCheck(path, 0);
         }
-        ApplicationManager.getApplication().invokeLater(myCallback);
+        Application.get().invokeLater(myCallback);
       }
       if (myService != null && !everythingIsOK) {
         if (!settingsAreOK) {
@@ -553,7 +557,7 @@ public class RecentProjectPanel {
           myService.shutdown();
           myService = null;
         }
-        ApplicationManager.getApplication().invokeLater(myCallback);
+        Application.get().invokeLater(myCallback);
       }
     }
 
@@ -583,7 +587,7 @@ public class RecentProjectPanel {
           else {
             myInvalidPaths.add(path);
           }
-          ApplicationManager.getApplication().invokeLater(myCallback);
+          Application.get().invokeLater(myCallback);
         }
         scheduleCheck(path, Math.max(MIN_AUTO_UPDATE_MILLIS, 10 * (System.currentTimeMillis() - startTime)));
       }, delay, TimeUnit.MILLISECONDS);
