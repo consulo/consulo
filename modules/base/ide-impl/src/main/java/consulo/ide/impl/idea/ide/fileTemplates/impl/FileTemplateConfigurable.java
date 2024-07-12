@@ -31,7 +31,7 @@ import consulo.fileTemplate.FileTemplate;
 import consulo.fileTemplate.FileTemplateManager;
 import consulo.fileTemplate.impl.internal.UrlUtil;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeChooser;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.util.io.FileUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.language.ast.IElementType;
@@ -105,6 +105,7 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
     return myTemplate;
   }
 
+  @RequiredUIAccess
   public void setTemplate(FileTemplate template, URL defaultDescription) {
     myDefaultDescriptionUrl = defaultDescription;
     myTemplate = template;
@@ -348,7 +349,7 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
       return false;
     }
     final File tempFile = new File (FileUtil.getTempDirectory() + File.separator + filename);
-    return FileUtil.ensureCanCreateFile(tempFile);
+    return consulo.ide.impl.idea.openapi.util.io.FileUtil.ensureCanCreateFile(tempFile);
   }
 
   @RequiredUIAccess
@@ -461,7 +462,7 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
 
     @Override
     @Nonnull
-    public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
+    public TextAttributesKey[] getTokenHighlights(@Nonnull IElementType tokenType) {
       if (tokenType == FileTemplateTokenType.MACRO || tokenType == FileTemplateTokenType.DIRECTIVE) {
         return pack(TemplateColors.TEMPLATE_VARIABLE_ATTRIBUTES);
       }

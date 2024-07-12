@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.browsers;
 
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.CommonBundle;
 import consulo.application.progress.ProgressIndicator;
@@ -24,7 +25,6 @@ import consulo.application.util.SystemInfo;
 import consulo.container.boot.ContainerPathManager;
 import consulo.ide.impl.idea.ide.BrowserUtil;
 import consulo.ide.impl.idea.ide.GeneralSettings;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
@@ -40,11 +40,14 @@ import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.local.ExecUtil;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.OptionsDialog;
-import consulo.ui.ex.awt.internal.GuiUtils;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.util.io.FileUtil;
 import consulo.util.io.URLUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
@@ -117,11 +120,13 @@ public class BrowserLauncherAppless extends BrowserLauncher {
   }
 
   @Override
+  @RequiredUIAccess
   public void browse(@Nonnull File file) {
     browse(VfsUtil.toUri(file));
   }
 
   @Override
+  @RequiredUIAccess
   public void browse(@Nonnull URI uri) {
     LOG.debug("Launch browser: [" + uri + "]");
 
@@ -148,6 +153,7 @@ public class BrowserLauncherAppless extends BrowserLauncher {
     browseUsingPath(uri.toString(), settings.getBrowserPathOrDefault(), null, null, ArrayUtil.EMPTY_STRING_ARRAY);
   }
 
+  @RequiredUIAccess
   private void openOrBrowse(@Nonnull String url, boolean browse) {
     url = url.trim();
 
@@ -198,6 +204,7 @@ public class BrowserLauncherAppless extends BrowserLauncher {
   }
 
   @Nullable
+  @RequiredUIAccess
   private static String extractFiles(String url) {
     try {
       int sharpPos = url.indexOf('#');
@@ -267,7 +274,7 @@ public class BrowserLauncherAppless extends BrowserLauncher {
           }
         }
 
-        ApplicationManager.getApplication().invokeLater(() -> new Task.Backgroundable(null, "Extracting files...", true) {
+        Application.get().invokeLater(() -> new Task.Backgroundable(null, "Extracting files...", true) {
           @Override
           public void run(@Nonnull final ProgressIndicator indicator) {
             final int size = zipFile.size();
@@ -362,7 +369,7 @@ public class BrowserLauncherAppless extends BrowserLauncher {
       JLabel label = new JLabel(message);
 
       label.setIconTextGap(10);
-      label.setIcon(TargetAWT.to(Messages.getQuestionIcon()));
+      label.setIcon(TargetAWT.to(UIUtil.getQuestionIcon()));
 
       panel.add(label, BorderLayout.CENTER);
       panel.add(Box.createVerticalStrut(10), BorderLayout.SOUTH);
@@ -372,11 +379,13 @@ public class BrowserLauncherAppless extends BrowserLauncher {
   }
 
   @Override
+  @RequiredUIAccess
   public void browse(@Nonnull String url, @Nullable WebBrowser browser) {
     browse(url, browser, null);
   }
 
   @Override
+  @RequiredUIAccess
   public void browse(@Nonnull String url, @Nullable WebBrowser browser, @Nullable Project project) {
     WebBrowser effectiveBrowser = getEffectiveBrowser(browser);
 
@@ -393,6 +402,7 @@ public class BrowserLauncherAppless extends BrowserLauncher {
   }
 
   @Override
+  @RequiredUIAccess
   public boolean browseUsingPath(
     @Nullable final String url,
     @Nullable String browserPath,
@@ -408,6 +418,7 @@ public class BrowserLauncherAppless extends BrowserLauncher {
     return doLaunch(url, browserPath, browser, project, additionalParameters, launchTask);
   }
 
+  @RequiredUIAccess
   private boolean doLaunch(
     @Nullable String url,
     @Nullable String browserPath,
@@ -416,10 +427,7 @@ public class BrowserLauncherAppless extends BrowserLauncher {
     @Nonnull String[] additionalParameters,
     @Nullable Runnable launchTask
   ) {
-    if (!checkPath(browserPath, browser, project, launchTask)) {
-      return false;
-    }
-    return doLaunch(
+    return checkPath(browserPath, browser, project, launchTask) && doLaunch(
       url,
       BrowserUtil.getOpenBrowserCommand(browserPath, false),
       browser,
@@ -447,6 +455,7 @@ public class BrowserLauncherAppless extends BrowserLauncher {
     return false;
   }
 
+  @RequiredUIAccess
   private boolean doLaunch(
     @Nullable String url,
     @Nonnull List<String> command,

@@ -146,13 +146,14 @@ public class CustomizableActionsPanel implements Disposable {
           final Set<Object> toAdd = dlg.getTreeSelectedActionIds();
           if (toAdd == null) return;
           for (final Object o : toAdd) {
-            final ActionUrl url = new ActionUrl(ActionUrl.getGroupPath(new TreePath(node.getPath())), o, ActionUrl.ADDED, node.getParent().getIndex(node) + 1);
+            final ActionUrl url =
+              new ActionUrl(ActionUrl.getGroupPath(new TreePath(node.getPath())), o, ActionUrl.ADDED, node.getParent().getIndex(node) + 1);
             addCustomizedAction(url);
             ActionUrl.changePathInActionsTree(myActionsTree, url);
-            if (o instanceof String) {
+            if (o instanceof String s) {
               DefaultMutableTreeNode current = new DefaultMutableTreeNode(url.getComponent());
               current.setParent((DefaultMutableTreeNode)node.getParent());
-              editToolbarIcon((String)o, current);
+              editToolbarIcon(s, current);
             }
           }
           myModel.reload();
@@ -306,8 +307,8 @@ public class CustomizableActionsPanel implements Disposable {
         final ActionUrl selectedUrl = CustomizationUtil.getActionUrl(path, ActionUrl.MOVE);
         final ArrayList<String> selectedGroupPath = new ArrayList<>(selectedUrl.getGroupPath());
         final Object component = selectedUrl.getComponent();
-        if (component instanceof KeymapGroupImpl) {
-          selectedGroupPath.add(((KeymapGroupImpl)component).getName());
+        if (component instanceof KeymapGroupImpl keymapGroup) {
+          selectedGroupPath.add(keymapGroup.getName());
           for (ActionUrl action : mySelectedSchema.getActions()) {
             final ArrayList<String> groupPath = action.getGroupPath();
             final int idx = Collections.indexOfSubList(groupPath, selectedGroupPath);
@@ -326,13 +327,14 @@ public class CustomizableActionsPanel implements Disposable {
     myRestoreAllDefaultButton.setEnabled(true);
   }
 
+  @RequiredUIAccess
   private void editToolbarIcon(String actionId, DefaultMutableTreeNode node) {
     final AnAction anAction = ActionManager.getInstance().getAction(actionId);
     if (isToolbarAction(node) && anAction.getTemplatePresentation() != null && anAction.getTemplatePresentation().getIcon() == null) {
       final int exitCode = Messages.showOkCancelDialog(
         IdeLocalize.errorAddingActionWithoutIconToToolbar().get(),
         IdeLocalize.titleUnableToAddActionWithoutIconToToolbar().get(),
-        Messages.getInformationIcon()
+        UIUtil.getInformationIcon()
       );
       if (exitCode == Messages.OK) {
         mySelectedSchema.addIconCustomization(actionId, null);
@@ -459,17 +461,15 @@ public class CustomizableActionsPanel implements Disposable {
     @Override
     public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
       super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
-      if (value instanceof DefaultMutableTreeNode) {
-        Object userObject = ((DefaultMutableTreeNode)value).getUserObject();
+      if (value instanceof DefaultMutableTreeNode mutableTreeNode) {
+        Object userObject = mutableTreeNode.getUserObject();
         Image icon = null;
-        if (userObject instanceof KeymapGroupImpl) {
-          KeymapGroupImpl group = (KeymapGroupImpl)userObject;
+        if (userObject instanceof KeymapGroupImpl group) {
           String name = group.getName();
           setText(name != null ? name : group.getId());
           icon = ObjectUtil.notNull(group.getIcon(), AllIcons.Nodes.Folder);
         }
-        else if (userObject instanceof String) {
-          String actionId = (String)userObject;
+        else if (userObject instanceof String actionId) {
           AnAction action = ActionManager.getInstance().getAction(actionId);
           String name = action != null ? action.getTemplatePresentation().getText() : null;
           setText(!StringUtil.isEmptyOrSpaces(name) ? name : actionId);
@@ -480,17 +480,17 @@ public class CustomizableActionsPanel implements Disposable {
             }
           }
         }
-        else if (userObject instanceof Pair) {
-          String actionId = (String)((Pair)userObject).first;
+        else if (userObject instanceof Pair pair) {
+          String actionId = (String)pair.first;
           AnAction action = ActionManager.getInstance().getAction(actionId);
           setText(action != null ? action.getTemplatePresentation().getText() : actionId);
-          icon = (Image)((Pair)userObject).second;
+          icon = (Image)pair.second;
         }
         else if (userObject instanceof AnSeparator) {
           setText("-------------");
         }
-        else if (userObject instanceof QuickList) {
-          setText(((QuickList)userObject).getDisplayName());
+        else if (userObject instanceof QuickList quickList) {
+          setText(quickList.getDisplayName());
           icon = AllIcons.Actions.QuickList;
         }
         else {
@@ -511,16 +511,18 @@ public class CustomizableActionsPanel implements Disposable {
   }
 
   private static boolean isToolbarAction(DefaultMutableTreeNode node) {
-    return node.getParent() != null &&
-      ((DefaultMutableTreeNode)node.getParent()).getUserObject() instanceof KeymapGroupImpl &&
-      ((KeymapGroupImpl)((DefaultMutableTreeNode)node.getParent()).getUserObject()).getName().equals(KeyMapLocalize.mainToolbarTitle().get());
+    return node.getParent() instanceof DefaultMutableTreeNode parentNode
+      && parentNode.getUserObject() instanceof KeymapGroupImpl keymapGroup
+      && keymapGroup.getName().equals(KeyMapLocalize.mainToolbarTitle().get());
   }
 
   @Nullable
   private static String getActionId(DefaultMutableTreeNode node) {
-    return (String)(node.getUserObject() instanceof String ? node.getUserObject() : node.getUserObject() instanceof Pair ? ((Pair)node.getUserObject()).first : null);
+    Object userObject = node.getUserObject();
+    return userObject instanceof String actionId ? actionId : userObject instanceof Pair pair ? (String)pair.first : null;
   }
 
+  @RequiredUIAccess
   protected boolean doSetIcon(DefaultMutableTreeNode node, @Nullable String path, Component component) {
     if (StringUtil.isNotEmpty(path) && !new File(path).isFile()) {
       Messages.showErrorDialog(
@@ -627,16 +629,17 @@ public class CustomizableActionsPanel implements Disposable {
     }
 
     @Override
+    @RequiredUIAccess
     protected void doOKAction() {
       if (myNode != null) {
         if (!doSetIcon(myNode, myTextField.getText(), getContentPane())) {
           return;
         }
         final Object userObject = myNode.getUserObject();
-        if (userObject instanceof Pair) {
-          String actionId = (String)((Pair)userObject).first;
+        if (userObject instanceof Pair pair) {
+          String actionId = (String)pair.first;
           final AnAction action = ActionManager.getInstance().getAction(actionId);
-          final Image icon = (Image)((Pair)userObject).second;
+          final Image icon = (Image)pair.second;
           action.getTemplatePresentation().setIcon(icon);
           action.setDefaultIcon(icon == null);
           editToolbarIcon(actionId, myNode);
@@ -673,6 +676,7 @@ public class CustomizableActionsPanel implements Disposable {
     }
 
     @Override
+    @RequiredUIAccess
     protected JComponent createCenterPanel() {
       KeymapGroupImpl rootGroup =
         ActionsTreeUtil.createMainGroup(null, null, QuickListsManager.getInstance().getAllQuickLists());
@@ -726,16 +730,16 @@ public class CustomizableActionsPanel implements Disposable {
     }
 
     @Override
+    @RequiredUIAccess
     protected void doOKAction() {
       final ActionManager actionManager = ActionManager.getInstance();
       TreeUtil.traverseDepth((TreeNode)myModel.getRoot(), node -> {
-        if (node instanceof DefaultMutableTreeNode) {
-          final DefaultMutableTreeNode mutableNode = (DefaultMutableTreeNode)node;
+        if (node instanceof DefaultMutableTreeNode mutableNode) {
           final Object userObject = mutableNode.getUserObject();
-          if (userObject instanceof Pair) {
-            String actionId = (String)((Pair)userObject).first;
+          if (userObject instanceof Pair pair) {
+            String actionId = (String)pair.first;
             final AnAction action = actionManager.getAction(actionId);
-            Image icon = (Image)((Pair)userObject).second;
+            Image icon = (Image)pair.second;
             action.getTemplatePresentation().setIcon(icon);
             action.setDefaultIcon(icon == null);
             editToolbarIcon(actionId, mutableNode);
@@ -752,15 +756,18 @@ public class CustomizableActionsPanel implements Disposable {
       Object userObject = null;
       if (selectionPath != null) {
         userObject = ((DefaultMutableTreeNode)selectionPath.getLastPathComponent()).getUserObject();
-        if (userObject instanceof String) {
-          final AnAction action = actionManager.getAction((String)userObject);
+        if (userObject instanceof String actionId) {
+          final AnAction action = actionManager.getAction(actionId);
           if (action != null && action.getTemplatePresentation() != null && action.getTemplatePresentation().getIcon() != null) {
             mySetIconButton.setEnabled(true);
             return;
           }
         }
       }
-      mySetIconButton.setEnabled(myTextField.getText().length() != 0 && selectionPath != null && new DefaultMutableTreeNode(selectionPath).isLeaf() && !(userObject instanceof AnSeparator));
+      mySetIconButton.setEnabled(
+        myTextField.getText().length() != 0 && selectionPath != null && new DefaultMutableTreeNode(selectionPath).isLeaf()
+          && !(userObject instanceof AnSeparator)
+      );
     }
 
     @Nullable
@@ -771,8 +778,7 @@ public class CustomizableActionsPanel implements Disposable {
       Set<Object> actions = new HashSet<>();
       for (TreePath path : paths) {
         Object node = path.getLastPathComponent();
-        if (node instanceof DefaultMutableTreeNode) {
-          DefaultMutableTreeNode defNode = (DefaultMutableTreeNode)node;
+        if (node instanceof DefaultMutableTreeNode defNode) {
           Object userObject = defNode.getUserObject();
           actions.add(userObject);
         }

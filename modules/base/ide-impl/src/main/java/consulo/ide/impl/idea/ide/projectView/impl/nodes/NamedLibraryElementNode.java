@@ -22,28 +22,28 @@ import consulo.content.OrderRootType;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkUtil;
 import consulo.content.library.Library;
-import consulo.ide.IdeBundle;
-import consulo.project.ui.view.internal.node.NamedLibraryElement;
-import consulo.project.ui.view.tree.ProjectViewNode;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.ide.localize.IdeLocalize;
 import consulo.ide.setting.module.OrderEntryTypeEditor;
 import consulo.ide.ui.OrderEntryAppearanceService;
 import consulo.language.pom.NavigatableWithText;
 import consulo.module.content.layer.orderEntry.*;
 import consulo.project.Project;
+import consulo.project.ui.view.internal.node.NamedLibraryElement;
 import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.project.ui.view.tree.ProjectViewNode;
 import consulo.project.ui.view.tree.ViewSettings;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ColoredStringBuilder;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.ui.image.Image;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -100,10 +100,9 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
     presentation.setPresentableText(getValue().getName());
     final OrderEntry orderEntry = getValue().getOrderEntry();
 
-    if (orderEntry instanceof ModuleExtensionWithSdkOrderEntry) {
-      final ModuleExtensionWithSdkOrderEntry sdkOrderEntry = (ModuleExtensionWithSdkOrderEntry)orderEntry;
+    if (orderEntry instanceof ModuleExtensionWithSdkOrderEntry sdkOrderEntry) {
       final Sdk sdk = sdkOrderEntry.getSdk();
-      presentation.setIcon(SdkUtil.getIcon(((ModuleExtensionWithSdkOrderEntry)orderEntry).getSdk()));
+      presentation.setIcon(SdkUtil.getIcon(sdkOrderEntry.getSdk()));
       if (sdk != null) { //jdk not specified
         final String path = sdk.getHomePath();
         if (path != null) {
@@ -112,11 +111,11 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
       }
       presentation.setTooltip(null);
     }
-    else if (orderEntry instanceof LibraryOrderEntry) {
+    else if (orderEntry instanceof LibraryOrderEntry libraryOrderEntry) {
       presentation.setIcon(getIconForLibrary(orderEntry));
-      presentation.setTooltip(StringUtil.capitalize(IdeBundle.message("node.projectview.library", ((LibraryOrderEntry)orderEntry).getLibraryLevel())));
+      presentation.setTooltip(StringUtil.capitalize(IdeLocalize.nodeProjectviewLibrary(libraryOrderEntry.getLibraryLevel()).get()));
     }
-    else if(orderEntry instanceof OrderEntryWithTracking) {
+    else if (orderEntry instanceof OrderEntryWithTracking) {
       Consumer<ColoredTextContainer> renderForOrderEntry = OrderEntryAppearanceService.getInstance().getRenderForOrderEntry(orderEntry);
       ColoredStringBuilder builder = new ColoredStringBuilder();
       renderForOrderEntry.accept(builder);
@@ -127,8 +126,8 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
   }
 
   private static Image getIconForLibrary(OrderEntry orderEntry) {
-    if (orderEntry instanceof LibraryOrderEntry) {
-      Library library = ((LibraryOrderEntry)orderEntry).getLibrary();
+    if (orderEntry instanceof LibraryOrderEntry libraryOrderEntry) {
+      Library library = libraryOrderEntry.getLibrary();
       if (library != null) {
         return LibraryPresentationManager.getInstance().getNamedLibraryIcon(library, null);
       }

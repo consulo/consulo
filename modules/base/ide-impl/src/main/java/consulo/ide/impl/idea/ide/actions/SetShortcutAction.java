@@ -5,8 +5,8 @@ import consulo.ide.impl.idea.ide.actions.searcheverywhere.SearchEverywhereManage
 import consulo.ide.impl.idea.openapi.keymap.impl.ActionShortcutRestrictions;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapPanel;
 import consulo.application.dumb.DumbAware;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -29,8 +29,9 @@ public class SetShortcutAction extends AnAction implements DumbAware {
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     JBPopup seDialog = project == null ? null : project.getUserData(SearchEverywhereManager.SEARCH_EVERYWHERE_POPUP);
     if (seDialog == null) {
       return;
@@ -54,10 +55,11 @@ public class SetShortcutAction extends AnAction implements DumbAware {
   }
 
   @Override
+  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
 
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     JBPopup seDialog = project == null ? null : project.getUserData(SearchEverywhereManager.SEARCH_EVERYWHERE_POPUP);
     if (seDialog == null) {
       presentation.setEnabled(false);

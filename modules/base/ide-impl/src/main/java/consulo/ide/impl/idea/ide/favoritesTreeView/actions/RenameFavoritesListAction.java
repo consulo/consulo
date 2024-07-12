@@ -20,9 +20,9 @@ import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeViewPanel;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 
@@ -40,9 +40,10 @@ public class RenameFavoritesListAction extends AnAction implements DumbAware {
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     if (project == null) {
       return;
     }
@@ -53,9 +54,10 @@ public class RenameFavoritesListAction extends AnAction implements DumbAware {
   }
 
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) {
       e.getPresentation().setEnabled(false);
       return;

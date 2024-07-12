@@ -26,7 +26,6 @@ import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeUtil;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeViewPanel;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesViewTreeBuilder;
 import consulo.ide.impl.idea.util.IconUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ide.localize.IdeLocalize;
@@ -62,7 +61,7 @@ public class DeleteFromFavoritesAction extends AnAction implements DumbAware {
   @Override
   public void actionPerformed(AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     FavoritesViewTreeBuilder builder = dataContext.getData(FavoritesTreeViewPanel.FAVORITES_TREE_BUILDER_KEY);
     if (project == null || builder == null) {
       return;
@@ -82,7 +81,7 @@ public class DeleteFromFavoritesAction extends AnAction implements DumbAware {
     final DnDAwareTree tree = dataContext.getData(FavoritesTreeViewPanel.FAVORITES_TREE_KEY);
 
     assert roots != null && tree != null;
-    Map<String, List<AbstractTreeNode>> toRemove = new HashMap<String, List<AbstractTreeNode>>();
+    Map<String, List<AbstractTreeNode>> toRemove = new HashMap<>();
     for (FavoritesTreeNodeDescriptor root : roots) {
       final AbstractTreeNode node = root.getElement();
       if (node instanceof FavoritesListNode) {
@@ -93,7 +92,7 @@ public class DeleteFromFavoritesAction extends AnAction implements DumbAware {
         LOG.assertTrue(listNode != null);
         final String name = listNode.getName();
         if (!toRemove.containsKey(name)) {
-          toRemove.put(name, new ArrayList<AbstractTreeNode>());
+          toRemove.put(name, new ArrayList<>());
         }
         toRemove.get(name).add(node);
       }
@@ -109,7 +108,7 @@ public class DeleteFromFavoritesAction extends AnAction implements DumbAware {
   public void update(@Nonnull AnActionEvent e) {
     e.getPresentation().setText(getTemplatePresentation().getText());
     final DataContext dataContext = e.getDataContext();
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     FavoritesViewTreeBuilder builder = dataContext.getData(FavoritesTreeViewPanel.FAVORITES_TREE_BUILDER_KEY);
     if (project == null || builder == null) {
       e.getPresentation().setEnabled(false);
@@ -136,8 +135,7 @@ public class DeleteFromFavoritesAction extends AnAction implements DumbAware {
       return;
     }
     for (Object o : selection) {
-      if (o instanceof AbstractTreeNode) {
-        AbstractTreeNode node = (AbstractTreeNode)o;
+      if (o instanceof AbstractTreeNode node) {
         int deep = getDeep(node);
         if (deep != 2 && deep != 3) {//favorite list or it's nested "root"
           e.getPresentation().setEnabled(false);

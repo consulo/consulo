@@ -18,9 +18,9 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.application.dumb.DumbAware;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.ide.IdeBundle;
-import consulo.language.editor.CommonDataKeys;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
@@ -37,20 +37,26 @@ public abstract class SplitAction extends AnAction implements DumbAware {
     myOrientation = orientation;
   }
 
+  @Override
+  @RequiredUIAccess
   public void actionPerformed(final AnActionEvent event) {
-    final Project project = event.getData(CommonDataKeys.PROJECT);
+    final Project project = event.getData(Project.KEY);
     final FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
     final FileEditorWindow window = event.getData(FileEditorWindow.DATA_KEY);
 
     fileEditorManager.createSplitter(myOrientation, window);
   }
 
+  @Override
+  @RequiredUIAccess
   public void update(final AnActionEvent event) {
-    final Project project = event.getData(CommonDataKeys.PROJECT);
+    final Project project = event.getData(Project.KEY);
     final Presentation presentation = event.getPresentation();
-    presentation.setText (myOrientation == SwingConstants.VERTICAL
-                          ? IdeBundle.message("action.split.vertically")
-                          : IdeBundle.message("action.split.horizontally"));
+    presentation.setTextValue(
+      myOrientation == SwingConstants.VERTICAL
+        ? IdeLocalize.actionSplitVertically()
+        : IdeLocalize.actionSplitHorizontally()
+    );
     if (project == null) {
       presentation.setEnabled(false);
       return;

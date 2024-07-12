@@ -17,15 +17,15 @@
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
 import consulo.bookmark.ui.view.FavoritesListNode;
-import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
 import consulo.bookmark.ui.view.FavoritesTreeNodeDescriptor;
+import consulo.dataContext.DataContext;
+import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeViewPanel;
+import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
-import consulo.project.Project;
 
 import java.util.Collections;
 
@@ -42,9 +42,10 @@ public class SendToFavoritesAction extends AnAction {
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     final FavoritesManagerImpl favoritesManager = FavoritesManagerImpl.getInstance(project);
 
     FavoritesTreeNodeDescriptor[] roots = dataContext.getData(FavoritesTreeViewPanel.CONTEXT_FAVORITES_ROOTS_DATA_KEY);
@@ -70,14 +71,14 @@ public class SendToFavoritesAction extends AnAction {
     }
   }
 
-
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent e) {
     e.getPresentation().setEnabled(isEnabled(e));
   }
 
   static boolean isEnabled(AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) {
       return false;
     }
@@ -87,8 +88,9 @@ public class SendToFavoritesAction extends AnAction {
     }
     for (FavoritesTreeNodeDescriptor root : roots) {
       FavoritesTreeNodeDescriptor listNode = root.getFavoritesRoot();
-      if (listNode == null || listNode ==root || !(listNode.getElement() instanceof FavoritesListNode))
+      if (listNode == null || listNode ==root || !(listNode.getElement() instanceof FavoritesListNode)) {
         return false;
+      }
     }
     return true;
   }

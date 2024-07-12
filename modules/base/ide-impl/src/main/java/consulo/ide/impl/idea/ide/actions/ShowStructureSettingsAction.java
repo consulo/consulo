@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
@@ -28,7 +27,7 @@ public class ShowStructureSettingsAction extends AnAction implements DumbAware {
   @RequiredUIAccess
   @Override
   public void actionPerformed(AnActionEvent e) {
-    Project project = e.getDataContext().getData(CommonDataKeys.PROJECT);
+    Project project = e.getDataContext().getData(Project.KEY);
     if (project == null) {
       project = ProjectManager.getInstance().getDefaultProject();
     }

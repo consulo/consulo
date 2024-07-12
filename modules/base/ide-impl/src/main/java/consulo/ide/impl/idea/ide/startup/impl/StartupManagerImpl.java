@@ -3,14 +3,13 @@ package consulo.ide.impl.idea.ide.startup.impl;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.application.ApplicationBundle;
-import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.impl.internal.performance.PerformanceWatcher;
+import consulo.application.internal.BackgroundTaskUtil;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.progress.ProgressManager;
-import consulo.application.util.SystemInfo;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.registry.Registry;
 import consulo.component.ProcessCanceledException;
@@ -24,12 +23,12 @@ import consulo.ide.impl.idea.diagnostic.Activity;
 import consulo.ide.impl.idea.diagnostic.ActivityCategory;
 import consulo.ide.impl.idea.diagnostic.StartUpMeasurer;
 import consulo.ide.impl.idea.diagnostic.StartUpMeasurer.Phases;
-import consulo.application.internal.BackgroundTaskUtil;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.impl.local.FileWatcher;
 import consulo.ide.impl.idea.openapi.vfs.impl.local.LocalFileSystemImpl;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.content.ProjectRootManager;
+import consulo.platform.Platform;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.internal.StartupManagerEx;
@@ -41,16 +40,18 @@ import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.util.collection.SmartList;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.TimeoutUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
 import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.concurrent.ScheduledFuture;
@@ -259,6 +260,7 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
     DumbService dumbService = DumbService.getInstance(myProject);
     dumbService.runWhenSmart(new Runnable() {
       @Override
+      @RequiredUIAccess
       public void run() {
         app.assertIsDispatchThread();
 
@@ -311,14 +313,23 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
         return;
       }
 
-      boolean expected = SystemInfo.isFileSystemCaseSensitive;
-      boolean actual = FileUtil.isFileSystemCaseSensitive(path);
+      boolean expected = Platform.current().fs().isCaseSensitive();
+      boolean actual = consulo.ide.impl.idea.openapi.util.io.FileUtil.isFileSystemCaseSensitive(path);
       LOG.info(path + " case-sensitivity: expected=" + expected + " actual=" + actual);
       if (actual != expected) {
         int prefix = expected ? 1 : 0;  // IDE=true -> FS=false -> prefix='in'
-        String title = ApplicationBundle.message("fs.case.sensitivity.mismatch.title");
-        String text = ApplicationBundle.message("fs.case.sensitivity.mismatch.message", prefix);
-        Notifications.Bus.notify(new Notification(Notifications.SYSTEM_MESSAGES_GROUP, title, text, NotificationType.WARNING, NotificationListener.URL_OPENING_LISTENER), myProject);
+        LocalizeValue title = ApplicationLocalize.fsCaseSensitivityMismatchTitle();
+        LocalizeValue text = ApplicationLocalize.fsCaseSensitivityMismatchMessage(prefix);
+        Notifications.Bus.notify(
+          new Notification(
+            Notifications.SYSTEM_MESSAGES_GROUP,
+            title.get(),
+            text.get(),
+            NotificationType.WARNING,
+            NotificationListener.URL_OPENING_LISTENER
+          ),
+          myProject
+        );
       }
 
       //ProjectFsStatsCollector.caseSensitivity(myProject, actual);
@@ -362,8 +373,8 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
           }
         }
         if (!nonWatched.isEmpty()) {
-          String message = ApplicationBundle.message("watcher.non.watchable.project");
-          watcher.notifyOnFailure(message);
+          LocalizeValue message = ApplicationLocalize.watcherNonWatchableProject();
+          watcher.notifyOnFailure(message.get());
           LOG.info("unwatched roots: " + nonWatched);
           LOG.info("manual watches: " + manualWatchRoots);
           pctNonWatched = (int)(100.0 * nonWatched.size() / roots.length);
@@ -454,7 +465,7 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
 
   @Override
   public void runWhenProjectIsInitialized(@Nonnull StartupActivity startupActivity) {
-    final Application application = ApplicationManager.getApplication();
+    final Application application = myProject.getApplication();
     if (application == null) return;
 
     GuiUtils.invokeLaterIfNeeded(() -> {

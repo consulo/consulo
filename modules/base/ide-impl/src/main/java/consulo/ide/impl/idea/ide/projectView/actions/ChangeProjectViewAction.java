@@ -17,18 +17,19 @@
 package consulo.ide.impl.idea.ide.projectView.actions;
 
 import consulo.project.ui.view.ProjectView;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 
 public final class ChangeProjectViewAction extends AnAction {
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    Project project = e.getDataContext().getData(CommonDataKeys.PROJECT);
+    Project project = e.getDataContext().getData(Project.KEY);
     if (project == null) {
       return;
     }
@@ -37,9 +38,10 @@ public final class ChangeProjectViewAction extends AnAction {
   }
 
   @Override
+  @RequiredUIAccess
   public void update(AnActionEvent event){
     Presentation presentation = event.getPresentation();
-    Project project = event.getDataContext().getData(CommonDataKeys.PROJECT);
+    Project project = event.getDataContext().getData(Project.KEY);
     if (project == null){
       presentation.setEnabled(false);
       return;

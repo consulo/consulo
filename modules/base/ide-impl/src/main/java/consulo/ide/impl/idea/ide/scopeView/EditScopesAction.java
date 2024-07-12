@@ -21,13 +21,14 @@ import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.util.scopeChooser.ScopeChooserConfigurable;
 import consulo.ide.setting.ShowSettingsUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.view.ProjectView;
 import consulo.project.ui.view.ProjectViewPane;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import jakarta.annotation.Nonnull;
 
 /**
  * User: anna
@@ -41,27 +42,25 @@ public class EditScopesAction extends AnAction implements DumbAware {
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Project project = dataContext.getData(Project.KEY);
     LOG.assertTrue(project != null);
     final String scopeName = ProjectView.getInstance(project).getCurrentProjectViewPane().getSubId();
     LOG.assertTrue(scopeName != null);
     final ScopeChooserConfigurable scopeChooserConfigurable = new ScopeChooserConfigurable(project);
-    ShowSettingsUtil.getInstance().editConfigurable(project, scopeChooserConfigurable, new Runnable(){
-      @Override
-      public void run() {
-        scopeChooserConfigurable.selectNodeInTree(scopeName);
-      }
-    });
+    ShowSettingsUtil.getInstance()
+      .editConfigurable(project, scopeChooserConfigurable, () -> scopeChooserConfigurable.selectNodeInTree(scopeName));
   }
 
   @Override
-  public void update(AnActionEvent e) {
+  @RequiredUIAccess
+  public void update(@Nonnull AnActionEvent e) {
     super.update(e);
     e.getPresentation().setEnabled(false);
     final DataContext dataContext = e.getDataContext();
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Project project = dataContext.getData(Project.KEY);
     if (project != null) {
       final ProjectViewPane projectViewPane = ProjectView.getInstance(project).getCurrentProjectViewPane();
       if (projectViewPane != null) {
