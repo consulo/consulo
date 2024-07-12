@@ -34,7 +34,8 @@ public class SystemInfoRt {
   public static final boolean isLinux = _OS_NAME.startsWith("linux");
   public static final boolean isUnix = !isWindows;
 
-  public static final boolean isFileSystemCaseSensitive = isUnix || "true".equalsIgnoreCase(System.getProperty("consulo.case.sensitive.fs"));
+  public static final boolean isFileSystemCaseSensitive =
+    isUnix && !isMac || "true".equalsIgnoreCase(System.getProperty("idea.case.sensitive.fs"));
 
   public static final boolean IS_AT_LEAST_JAVA9 = isModularJava();
 

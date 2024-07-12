@@ -33,7 +33,7 @@ public class PlatformFileSystemImpl implements PlatformFileSystem {
 
   public PlatformFileSystemImpl(Platform platform, Map<String, String> jvmProperties) {
     PlatformOperatingSystem os = platform.os();
-    myIsFileSystemCaseSensitive = os.isUnix() || "true".equalsIgnoreCase(jvmProperties.get("consulo.case.sensitive.fs"));
+    myIsFileSystemCaseSensitive = os.isUnix() && !os.isMac() || "true".equalsIgnoreCase(jvmProperties.get("consulo.case.sensitive.fs"));
     myAreSymLinksSupported = os.isUnix() || os.isWindows() && os.asWindows().isWindows7OrNewer();
   }
 

@@ -31,5 +31,5 @@ public class OSInfo {
   public static final boolean isUnix = !isWindows;
 
   public static final boolean isFileSystemCaseSensitive =
-    isUnix || "true".equalsIgnoreCase(System.getProperty("consulo.case.sensitive.fs"));
+    isUnix && !isMac || "true".equalsIgnoreCase(System.getProperty("idea.case.sensitive.fs"));
 }

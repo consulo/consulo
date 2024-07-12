@@ -54,7 +54,8 @@ public class SystemInfo {
   public static final boolean isFreeBSD = _OS_NAME.startsWith("freebsd");
   public static final boolean isSolaris = _OS_NAME.startsWith("sunos");
 
-  public static final boolean isFileSystemCaseSensitive = isUnix || "true".equalsIgnoreCase(System.getProperty("consulo.case.sensitive.fs"));
+  public static final boolean isFileSystemCaseSensitive =
+    isUnix && !isMac || "true".equalsIgnoreCase(System.getProperty("consulo.case.sensitive.fs"));
 
   public static final boolean isAppleJvm = isAppleJvm();
   public static final boolean isOracleJvm = isOracleJvm();
