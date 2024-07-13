@@ -172,22 +172,27 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
   @Deprecated
   @DeprecationInfo("Use UISettingsListener.class")
   public void addUISettingsListener(UISettingsListener listener) {
-    ApplicationManager.getApplication().getMessageBus().connect().subscribe(UISettingsListener.class, listener);
+    Application.get().getMessageBus().connect().subscribe(UISettingsListener.class, listener);
   }
 
   @Deprecated
   @DeprecationInfo("Use UISettingsListener#TOPIC")
   public void addUISettingsListener(@Nonnull final UISettingsListener listener, @Nonnull Disposable parentDisposable) {
-    ApplicationManager.getApplication().getMessageBus().connect(parentDisposable).subscribe(UISettingsListener.class, listener);
+    Application.get().getMessageBus().connect(parentDisposable).subscribe(UISettingsListener.class, listener);
   }
 
   /**
    * Notifies all registered listeners that UI settings has been changed.
    */
   public void fireUISettingsChanged() {
+    long oldModCount = getModificationCount();
     incModificationCount();
-    notifyDispatcher();
-    ApplicationManager.getApplication().getMessageBus().syncPublisher(UISettingsListener.class).uiSettingsChanged(this);
+
+    // this is initial load - do not trigger ui update
+    if (oldModCount != 0) {
+      notifyDispatcher();
+      Application.get().getMessageBus().syncPublisher(UISettingsListener.class).uiSettingsChanged(this);
+    }
   }
 
   protected void notifyDispatcher() {
