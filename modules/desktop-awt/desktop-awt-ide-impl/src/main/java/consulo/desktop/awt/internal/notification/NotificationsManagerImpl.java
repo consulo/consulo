@@ -20,7 +20,6 @@ import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAwareRunnable;
 import consulo.application.ui.FrameStateManager;
-import consulo.application.util.SystemInfo;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.desktop.awt.uiOld.BalloonLayoutConfiguration;
 import consulo.desktop.awt.uiOld.BalloonLayoutData;
@@ -62,6 +61,7 @@ import consulo.ui.ex.popup.event.JBPopupAdapter;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.ui.style.StyleManager;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
@@ -73,7 +73,6 @@ import jakarta.inject.Singleton;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.plaf.UIResource;
 import javax.swing.text.*;
@@ -159,9 +158,8 @@ public class NotificationsManagerImpl extends NotificationsManager {
     Window window = findWindowForBalloon(project);
     if (window == null) {
       UIAccess uiAccess = UIAccess.current();
-      AppExecutorUtil.getAppScheduledExecutorService().schedule(() -> {
-        uiAccess.give(() -> showNotification(notification, project));
-      }, 1L, TimeUnit.SECONDS);
+      AppExecutorUtil.getAppScheduledExecutorService()
+        .schedule(() -> uiAccess.give(() -> showNotification(notification, project)), 1L, TimeUnit.SECONDS);
       return;
     }
 
@@ -209,12 +207,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
       case TOOL_WINDOW:
         NotificationType messageType = notification.getType();
         final NotificationListener notificationListener = notification.getListener();
-        HyperlinkListener listener = notificationListener == null ? null : new HyperlinkListener() {
-          @Override
-          public void hyperlinkUpdate(HyperlinkEvent e) {
-            notificationListener.hyperlinkUpdate(notification, e);
-          }
-        };
+        HyperlinkListener listener = notificationListener == null ? null : e -> notificationListener.hyperlinkUpdate(notification, e);
         assert toolWindowId != null;
         String msg = notification.getTitle();
         if (StringUtil.isNotEmpty(notification.getContent())) {
@@ -239,9 +232,11 @@ public class NotificationsManagerImpl extends NotificationsManager {
 
   @Nullable
   @RequiredUIAccess
-  private Balloon notifyByBalloon(@Nonnull final Notification notification,
-                                  @Nonnull final NotificationDisplayType displayType,
-                                  @Nullable final Project project) {
+  private Balloon notifyByBalloon(
+    @Nonnull final Notification notification,
+    @Nonnull final NotificationDisplayType displayType,
+    @Nullable final Project project
+  ) {
     IdeFrame ideFrame = findIdeFrameForBalloon(project);
     if (ideFrame != null) {
       BalloonLayout layout = ideFrame.getBalloonLayout();
@@ -278,16 +273,13 @@ public class NotificationsManagerImpl extends NotificationsManager {
       }
       ((BalloonImpl)balloon).startFadeoutTimer(0);
       if (NotificationDisplayType.BALLOON == displayType) {
-        FrameStateManager.getInstance().getApplicationActive().doWhenDone(new Runnable() {
-          @Override
-          public void run() {
-            if (balloon.isDisposed()) {
-              return;
-            }
+        FrameStateManager.getInstance().getApplicationActive().doWhenDone(() -> {
+          if (balloon.isDisposed()) {
+            return;
+          }
 
-            if (!sticky) {
-              ((BalloonImpl)balloon).startSmartFadeoutTimer(10000);
-            }
+          if (!sticky) {
+            ((BalloonImpl)balloon).startSmartFadeoutTimer(10000);
           }
         });
       }
@@ -307,7 +299,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
     }
     if (frame == null && project == null) {
       frame = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
-      while (frame instanceof DialogWrapperDialog && ((DialogWrapperDialog)frame).getDialogWrapper().isModalProgress()) {
+      while (frame instanceof DialogWrapperDialog dialog && dialog.getDialogWrapper().isModalProgress()) {
         frame = frame.getOwner();
       }
     }
@@ -324,12 +316,14 @@ public class NotificationsManagerImpl extends NotificationsManager {
 
   @Override
   @Nonnull
-  public Balloon createBalloon(@Nullable final JComponent windowComponent,
-                               @Nonnull final Notification notification,
-                               final boolean showCallout,
-                               final boolean hideOnClickOutside,
-                               @Nonnull Ref<Object> layoutDataRef,
-                               @Nonnull Disposable parentDisposable) {
+  public Balloon createBalloon(
+    @Nullable final JComponent windowComponent,
+    @Nonnull final Notification notification,
+    final boolean showCallout,
+    final boolean hideOnClickOutside,
+    @Nonnull Ref<Object> layoutDataRef,
+    @Nonnull Disposable parentDisposable
+  ) {
     final BalloonLayoutData layoutData = layoutDataRef.isNull() ? new BalloonLayoutData() : (BalloonLayoutData)layoutDataRef.get();
     if (layoutData.groupId == null) {
       layoutData.groupId = notification.getGroupId();
@@ -339,7 +333,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
       layoutData.groupId = null;
       layoutData.mergeData = null;
     }
-    layoutDataRef.set((BalloonLayoutData)layoutData);
+    layoutDataRef.set(layoutData);
 
     if (layoutData.textColor == null) {
       layoutData.textColor = JBColor.namedColor("Notification.foreground", DEFAULT_TEXT_COLOR);
@@ -354,7 +348,6 @@ public class NotificationsManagerImpl extends NotificationsManager {
 
     boolean actions = !notification.getActions().isEmpty();
     boolean showFullContent = layoutData.showFullContent || notification instanceof NotificationFullContent;
-
 
     final JEditorPane text = new JEditorPane() {
       @Override
@@ -546,19 +539,16 @@ public class NotificationsManagerImpl extends NotificationsManager {
           int x = getWidth() - width - JBUI.scale(5);
           int y = layoutData.configuration.topSpaceHeight;
 
-          int height = title instanceof JEditorPane ? getFirstLineHeight((JEditorPane)title) : title.getHeight();
+          int height = title instanceof JEditorPane jEditorPane ? getFirstLineHeight(jEditorPane) : title.getHeight();
 
           g.setColor(layoutData.fillColor);
           g.fillRect(x, y, width, height);
 
           width = layoutData.configuration.beforeGearSpace;
           x -= width;
-          ((Graphics2D)g).setPaint(new GradientPaint(x,
-                                                     y,
-                                                     ColorUtil.withAlpha(layoutData.fillColor, 0.2),
-                                                     x + width,
-                                                     y,
-                                                     layoutData.fillColor));
+          ((Graphics2D)g).setPaint(
+            new GradientPaint(x, y, ColorUtil.withAlpha(layoutData.fillColor, 0.2), x + width, y, layoutData.fillColor)
+          );
           g.fillRect(x, y, width, height);
         }
       }
@@ -684,17 +674,18 @@ public class NotificationsManagerImpl extends NotificationsManager {
   }
 
   @Nullable
-  private static JPanel createButtons(@Nonnull Notification notification,
-                                      @Nonnull final JPanel content,
-                                      @Nullable HyperlinkListener listener) {
-    if (notification instanceof NotificationActionProvider) {
+  private static JPanel createButtons(
+    @Nonnull Notification notification,
+    @Nonnull final JPanel content,
+    @Nullable HyperlinkListener listener
+  ) {
+    if (notification instanceof NotificationActionProvider provider) {
       JPanel buttons = new JPanel(new HorizontalLayout(5));
       buttons.setOpaque(false);
       content.add(BorderLayout.SOUTH, buttons);
 
       final Ref<JButton> defaultButton = new Ref<>();
 
-      NotificationActionProvider provider = (NotificationActionProvider)notification;
       for (NotificationActionProvider.Action action : provider.getActions(listener)) {
         JButton button = new JButton(action);
 
@@ -843,9 +834,9 @@ public class NotificationsManagerImpl extends NotificationsManager {
       for (Pair<Component, ?> p : myComponents) {
         Component component = p.first;
         Rectangle bounds;
-        if (p.second instanceof Insets) {
+        if (p.second instanceof Insets insets) {
           bounds = component.getBounds();
-          JBInsets.addTo(bounds, (Insets)p.second);
+          JBInsets.addTo(bounds, insets);
         }
         else {
           bounds = ((Function<Component, Rectangle>)p.second).apply(component);
@@ -1071,10 +1062,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
         return myTitleComponent;
       }
       if (myCenteredComponent != null) {
-        if (myCenteredComponent instanceof JScrollPane) {
-          return ((JScrollPane)myCenteredComponent).getViewport().getView();
-        }
-        return myCenteredComponent;
+        return myCenteredComponent instanceof JScrollPane jScrollPane ? jScrollPane.getViewport().getView() : myCenteredComponent;
       }
       return null;
     }
@@ -1255,11 +1243,11 @@ public class NotificationsManagerImpl extends NotificationsManager {
     }
 
     private void updateTitle() {
-      myTitle.setText(UIUtil.isUnderDarcula() ? myTitleTextD : myTitleTextR);
+      myTitle.setText(StyleManager.get().getCurrentStyle().isDark() ? myTitleTextD : myTitleTextR);
     }
 
     private void updateContent() {
-      myContent.setText(UIUtil.isUnderDarcula() ? myContentTextD : myContentTextR);
+      myContent.setText(StyleManager.get().getCurrentStyle().isDark() ? myContentTextD : myContentTextR);
     }
 
     @Override
