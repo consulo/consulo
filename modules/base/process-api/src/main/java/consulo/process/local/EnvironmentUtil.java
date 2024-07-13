@@ -1,7 +1,7 @@
 // Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.process.local;
 
-import consulo.container.boot.ContainerPathManager;
+import consulo.component.util.NativeFileLoader;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.platform.PlatformOperatingSystem;
@@ -11,11 +11,11 @@ import consulo.process.io.BaseOutputReader;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -186,9 +186,8 @@ public final class EnvironmentUtil {
    *
    * @see #getEnvironmentMap()
    */
-  public static
   @Nullable
-  String getValue(@Nonnull String name) {
+  public static String getValue(@Nonnull String name) {
     return getEnvironmentMap().get(name);
   }
 
@@ -245,10 +244,11 @@ public final class EnvironmentUtil {
 
     @Nonnull
     public final Map<String, String> readShellEnv(@Nullable Path file, @Nullable Map<String, String> additionalEnvironment) throws IOException {
-      String loader = Platform.current().os().isMac() ? "printenv" : "printenv.py";
-      Path reader = Path.of(ContainerPathManager.get().getBinPath(), loader);
+      Platform platform = Platform.current();
+      String fileName = platform.os().isMac() ? platform.mapExecutableName("printenv") : "printenv.py";
+      Path executablePath = NativeFileLoader.findExecutablePath(fileName);
 
-      Path envFile = Files.createTempFile("intellij-shell-env.", ".tmp");
+      Path envFile = Files.createTempFile("consulo-shell-env.", ".tmp");
       StringBuilder readerCmd = new StringBuilder();
       if (file != null) {
         if (!Files.exists(file)) {
@@ -257,7 +257,7 @@ public final class EnvironmentUtil {
         readerCmd.append(SHELL_SOURCE_COMMAND).append(" \"").append(file).append("\" && ");
       }
 
-      readerCmd.append("'").append(reader.toAbsolutePath()).append("' '").append(envFile.toAbsolutePath()).append("'");
+      readerCmd.append("'").append(executablePath.toAbsolutePath()).append("' '").append(envFile.toAbsolutePath()).append("'");
 
       try {
         List<String> command = getShellProcessCommand();

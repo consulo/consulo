@@ -20,7 +20,6 @@ import com.sun.jna.Pointer;
 import com.sun.jna.WString;
 import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.win32.StdCallLibrary;
-import consulo.application.Application;
 import consulo.application.ApplicationProperties;
 import consulo.component.util.NativeFileLoader;
 import consulo.container.boot.ContainerPathManager;
@@ -110,7 +109,7 @@ public class Restarter {
     final String[] argv = argv_ptr.getWideStringArray(0, argc.getValue());
     kernel32.LocalFree(argv_ptr);
 
-    String restarterExe = Platform.current().mapWindowsExecutable("restarter", "exe");
+    String restarterExe = Platform.current().mapAnyExecutableName("restarter");
     File restarterFilePath = NativeFileLoader.findExecutable(restarterExe);
 
     doScheduleRestart(restarterFilePath, ContainerPathManager.get().getAppHomeDirectory(), commands -> {
@@ -126,14 +125,6 @@ public class Restarter {
     TimeoutUtil.sleep(500);
   }
 
-  /**
-   * @return full path to consulo.exe or consulo64.exe
-   */
-  @Nonnull
-  public static String getExecutableOnWindows() {
-    return Platform.current().mapWindowsExecutable(Application.get().getName().toLowerCase().get(), "exe");
-  }
-
   private static void restartOnMac(@Nonnull final String... beforeRestart) throws IOException {
     File distributionDirectory = ContainerPathManager.get().getAppHomeDirectory();
 
@@ -142,7 +133,10 @@ public class Restarter {
       throw new IOException("Application bundle not found: " + appDirectory.getPath());
     }
 
-    doScheduleRestart(new File(ContainerPathManager.get().getBinPath(), "restarter"), appDirectory, commands -> {
+    String restarterExecutable = Platform.current().mapAnyExecutableName("restarter");
+    File restarterFilePath = NativeFileLoader.findExecutable(restarterExecutable);
+
+    doScheduleRestart(restarterFilePath, appDirectory, commands -> {
       Collections.addAll(commands, appDirectory.getPath());
       Collections.addAll(commands, beforeRestart);
     });

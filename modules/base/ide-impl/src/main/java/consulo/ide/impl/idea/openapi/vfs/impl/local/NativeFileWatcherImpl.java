@@ -2,12 +2,11 @@
 package consulo.ide.impl.idea.openapi.vfs.impl.local;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.component.util.NativeFileLoader;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
-import consulo.application.localize.ApplicationLocalize;
 import consulo.process.ProcessOutputTypes;
 import consulo.process.internal.OSProcessHandler;
 import consulo.process.io.BaseDataReader;
@@ -61,6 +60,11 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
   private volatile List<String> myFlatWatchRoots = Collections.emptyList();
   private final String[] myLastChangedPaths = new String[2];
   private int myLastChangedPathIndex;
+  private final Application myApplication;
+
+  public NativeFileWatcherImpl(Application application) {
+    myApplication = application;
+  }
 
   @Override
   public void initialize(@Nonnull ManagingFS managingFS, @Nonnull FileWatcherNotificationSink notificationSink) {
@@ -118,9 +122,7 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
    * Subclasses should override this method if they want to use custom logic to disable their file watcher.
    */
   protected boolean isDisabled() {
-    if (Boolean.getBoolean(PROPERTY_WATCHER_DISABLED)) return true;
-    Application app = ApplicationManager.getApplication();
-    return app.isCommandLine() || app.isUnitTestMode();
+    return Boolean.getBoolean(PROPERTY_WATCHER_DISABLED);
   }
 
   /**
@@ -193,7 +195,7 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
         catch (IOException ignore) {
         }
         if (!processHandler.waitFor(10)) {
-          ApplicationManager.getApplication().executeOnPooledThread(() -> {
+          myApplication.executeOnPooledThread(() -> {
             if (!processHandler.waitFor(500)) {
               LOG.warn("File watcher is still alive. Doing a force quit.");
               processHandler.destroyProcess();
@@ -209,7 +211,7 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
   private void setWatchRoots(List<String> recursive, List<String> flat, boolean restart) {
     if (myProcessHandler == null || myProcessHandler.isProcessTerminated()) return;
 
-    if (ApplicationManager.getApplication().isDisposeInProgress()) {
+    if (myApplication.isDisposeInProgress()) {
       recursive = flat = Collections.emptyList();
     }
 
@@ -468,9 +470,6 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
   @Override
   @TestOnly
   public void startup() throws IOException {
-    Application app = ApplicationManager.getApplication();
-    assert app != null && app.isUnitTestMode() : app;
-
     myIsShuttingDown = false;
     myStartAttemptCount.set(0);
     startupProcess(false);
@@ -479,9 +478,6 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
   @Override
   @TestOnly
   public void shutdown() throws InterruptedException {
-    Application app = ApplicationManager.getApplication();
-    assert app != null && app.isUnitTestMode() : app;
-
     MyProcessHandler processHandler = myProcessHandler;
     if (processHandler != null) {
       myIsShuttingDown = true;

@@ -71,11 +71,11 @@ public class FileWatcher {
   private volatile CanonicalPathMap myPathMap = new CanonicalPathMap();
   private volatile List<Collection<String>> myManualWatchRoots = Collections.emptyList();
 
-  FileWatcher(@Nonnull ManagingFS managingFS) {
+  FileWatcher(@Nonnull Application application, @Nonnull ManagingFS managingFS) {
     myManagingFS = managingFS;
     myNotificationSink = new MyFileWatcherNotificationSink();
     myWatchers =
-      new PluggableFileWatcher[]{new NativeFileWatcherImpl()}; //FIXME [VISTALL] this is dirty hack, due we don't allow change file watcher
+      new PluggableFileWatcher[]{new NativeFileWatcherImpl(application)};
 
     myFileWatcherExecutor.execute(() -> {
       try {
