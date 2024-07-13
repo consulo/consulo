@@ -21,6 +21,7 @@ import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ui.Coordinate2D;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -51,22 +52,22 @@ import static consulo.ui.ex.awt.speedSearch.SpeedSearchSupply.ENTERED_PREFIX_PRO
 public class RecentLocationsAction extends DumbAwareAction {
   public static final String RECENT_LOCATIONS_ACTION_ID = "RecentLocations";
   private static final String LOCATION_SETTINGS_KEY = "recent.locations.popup";
-  private static final int DEFAULT_WIDTH = JBUIScale.scale(700);
-  private static final int DEFAULT_HEIGHT = JBUIScale.scale(530);
-  private static final int MINIMUM_WIDTH = JBUIScale.scale(600);
-  private static final int MINIMUM_HEIGHT = JBUIScale.scale(450);
-  private static final Color SHORTCUT_FOREGROUND_COLOR = UIUtil.getContextHelpForeground();
-  public static final String SHORTCUT_HEX_COLOR = String.format(
-    "#%02x%02x%02x",
-    SHORTCUT_FOREGROUND_COLOR.getRed(),
-    SHORTCUT_FOREGROUND_COLOR.getGreen(),
-    SHORTCUT_FOREGROUND_COLOR.getBlue()
-  );
 
+  private static final JBValue.UIInteger DEFAULT_WIDTH = new JBValue.UIInteger(RECENT_LOCATIONS_ACTION_ID + ".defaultWidth", 700);
+  private static final JBValue.UIInteger DEFAULT_HEIGHT = new JBValue.UIInteger(RECENT_LOCATIONS_ACTION_ID + ".defaultHeight", 530);
+  private static final JBValue.UIInteger MINIMUM_WIDTH = new JBValue.UIInteger(RECENT_LOCATIONS_ACTION_ID + ".minWidth", 600);
+  private static final JBValue.UIInteger MINIMUM_HEIGHT = new JBValue.UIInteger(RECENT_LOCATIONS_ACTION_ID + ".minHeight", 450);
+
+  public static String getShortcutHexColor() {
+    Color color = UIUtil.getContextHelpForeground();
+    return String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
+  }
+
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     FeatureUsageTracker.getInstance().triggerFeatureUsed(RECENT_LOCATIONS_ACTION_ID);
-    Project project = e == null ? null : e.getData(Project.KEY);
+    Project project = e.getData(Project.KEY);
     if (project == null) {
       return;
     }
@@ -134,7 +135,7 @@ public class RecentLocationsAction extends DumbAwareAction {
       .setMovable(true)
       .setBorderColor(borderColor)
       .setDimensionServiceKey(project, LOCATION_SETTINGS_KEY, true)
-      .setMinSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT))
+      .setMinSize(new Dimension(MINIMUM_WIDTH.get(), MINIMUM_HEIGHT.get()))
       .setLocateWithinScreenBounds(false)
       .createPopup();
 
@@ -146,7 +147,7 @@ public class RecentLocationsAction extends DumbAwareAction {
     checkBox.addActionListener(e -> updateItems(model, listWithFilter, title, checkBox, popup));
 
     if (DimensionService.getInstance().getSize(LOCATION_SETTINGS_KEY, project) == null) {
-      popup.setSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
+      popup.setSize(new Dimension(DEFAULT_WIDTH.get(), DEFAULT_HEIGHT.get()));
     }
 
     list.addMouseListener(new MouseAdapter() {
@@ -209,7 +210,7 @@ public class RecentLocationsAction extends DumbAwareAction {
     String text = "<html>" +
       IdeLocalize.recentLocationsTitleText().get() +
       " <font color=\"" +
-      SHORTCUT_HEX_COLOR +
+      getShortcutHexColor() +
       "\">" +
       KeymapUtil.getShortcutsText(checkboxShortcutSet.getShortcuts()) +
       "</font>" +
@@ -334,10 +335,10 @@ public class RecentLocationsAction extends DumbAwareAction {
     });
 
     DumbAwareAction.create(e -> navigateToSelected(project, list, popup, navigationRef))
-      .registerCustomShortcutSet(CustomShortcutSet.fromString("ENTER"), listWithFilter, popup);
+                   .registerCustomShortcutSet(CustomShortcutSet.fromString("ENTER"), listWithFilter, popup);
 
     DumbAwareAction.create(e -> removePlaces(project, listWithFilter, list, data, checkBox.isSelected()))
-      .registerCustomShortcutSet(CustomShortcutSet.fromString("DELETE", "BACK_SPACE"), listWithFilter, popup);
+                   .registerCustomShortcutSet(CustomShortcutSet.fromString("DELETE", "BACK_SPACE"), listWithFilter, popup);
   }
 
   private static void removePlaces(
@@ -382,7 +383,7 @@ public class RecentLocationsAction extends DumbAwareAction {
     @Nonnull Ref<? super Boolean> navigationRef
   ) {
     ContainerUtil.reverse(list.getSelectedValuesList())
-      .forEach(item -> IdeDocumentHistory.getInstance(project).gotoPlaceInfo(item.getInfo()));
+                 .forEach(item -> IdeDocumentHistory.getInstance(project).gotoPlaceInfo(item.getInfo()));
 
     navigationRef.set(true);
     popup.closeOk(null);

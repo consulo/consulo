@@ -17,11 +17,11 @@ import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.fileEditor.EditorTabPresentationUtil;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.FileEditorWindow;
+import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.impl.VfsIconUtil;
 import consulo.ide.impl.idea.ide.util.gotoByName.QuickSearchComponent;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
-import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.EditorHistoryManagerImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.IdeDocumentHistoryImpl;
@@ -34,12 +34,12 @@ import consulo.ide.impl.idea.ui.speedSearch.NameFilteringListModel;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
-import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.wm.ToolWindowManager;
@@ -86,7 +86,6 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static consulo.ide.impl.idea.ide.actions.RecentLocationsAction.SHORTCUT_HEX_COLOR;
 import static consulo.ide.impl.idea.openapi.keymap.KeymapUtil.getActiveKeymapShortcuts;
 import static java.awt.event.KeyEvent.*;
 import static javax.swing.KeyStroke.getKeyStroke;
@@ -1344,7 +1343,7 @@ public class Switcher extends AnAction implements DumbAware {
       return "<html>" +
         IdeLocalize.recentFilesCheckboxLabel() +
         " <font color=\"" +
-        SHORTCUT_HEX_COLOR +
+        RecentLocationsAction.getShortcutHexColor() +
         "\">" +
         KeymapUtil.getShortcutsText(shortcuts.getShortcuts()) +
         "</font>" +
