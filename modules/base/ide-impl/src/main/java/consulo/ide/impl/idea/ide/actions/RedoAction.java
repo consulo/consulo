@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.undoRedo.UndoManager;
 import consulo.fileEditor.FileEditor;
-import consulo.util.lang.Pair;
+import consulo.util.lang.Couple;
 
 public class RedoAction extends UndoRedoAction {
   @Override
@@ -31,7 +31,7 @@ public class RedoAction extends UndoRedoAction {
   }
 
   @Override
-  protected Pair<String, String> getActionNameAndDescription(FileEditor editor, UndoManager undoManager) {
+  protected Couple<String> getActionNameAndDescription(FileEditor editor, UndoManager undoManager) {
     return undoManager.getRedoActionNameAndDescription(editor);
   }
 }

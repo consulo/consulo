@@ -16,18 +16,18 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.language.editor.PlatformDataKeys;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.UndoManager;
 import consulo.undoRedo.ApplicationUndoManager;
 import consulo.undoRedo.ProjectUndoManager;
 import consulo.dataContext.DataContext;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.TextEditor;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
-import consulo.util.lang.Pair;
+import consulo.util.lang.Couple;
 
 public abstract class UndoRedoAction extends DumbAwareAction {
   public UndoRedoAction() {
@@ -36,15 +36,17 @@ public abstract class UndoRedoAction extends DumbAwareAction {
 
   public void actionPerformed(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    FileEditor editor = e.getData(PlatformDataKeys.FILE_EDITOR);
+    FileEditor editor = e.getData(FileEditor.KEY);
     UndoManager undoManager = getUndoManager(editor, dataContext);
     perform(editor, undoManager);
   }
 
+  @Override
+  @RequiredUIAccess
   public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
-    FileEditor editor = event.getData(PlatformDataKeys.FILE_EDITOR);
+    FileEditor editor = event.getData(FileEditor.KEY);
 
     // do not allow global undo in dialogs
     if (editor == null) {
@@ -62,7 +64,7 @@ public abstract class UndoRedoAction extends DumbAwareAction {
     }
     presentation.setEnabled(isAvailable(editor, undoManager));
 
-    Pair<String, String> pair = getActionNameAndDescription(editor, undoManager);
+    Couple<String> pair = getActionNameAndDescription(editor, undoManager);
 
     presentation.setText(pair.first);
     presentation.setDescription(pair.second);
@@ -74,19 +76,12 @@ public abstract class UndoRedoAction extends DumbAwareAction {
   }
 
   private static Project getProject(FileEditor editor, DataContext dataContext) {
-    Project project;
-    if (editor instanceof TextEditor) {
-      project = ((TextEditor)editor).getEditor().getProject();
-    }
-    else {
-      project = dataContext.getData(CommonDataKeys.PROJECT);
-    }
-    return project;
+    return editor instanceof TextEditor textEditor ? textEditor.getEditor().getProject() : dataContext.getData(Project.KEY);
   }
 
   protected abstract void perform(FileEditor editor, UndoManager undoManager);
 
   protected abstract boolean isAvailable(FileEditor editor, UndoManager undoManager);
 
-  protected abstract consulo.util.lang.Pair<String, String> getActionNameAndDescription(FileEditor editor, UndoManager undoManager);
+  protected abstract Couple<String> getActionNameAndDescription(FileEditor editor, UndoManager undoManager);
 }
