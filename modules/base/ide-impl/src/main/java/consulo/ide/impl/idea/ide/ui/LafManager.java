@@ -18,11 +18,12 @@ package consulo.ide.impl.idea.ide.ui;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.ide.ServiceManager;
+import consulo.component.util.ModificationTracker;
 import consulo.disposer.Disposable;
+import consulo.ide.ServiceManager;
 import consulo.ui.style.Style;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.util.List;
 
@@ -31,35 +32,35 @@ import java.util.List;
  * Date: 17-May-2006
  */
 @ServiceAPI(ComponentScope.APPLICATION)
-public abstract class LafManager {
+public interface LafManager {
   @Nonnull
-  public static LafManager getInstance(){
+  public static LafManager getInstance() {
     return ServiceManager.getService(LafManager.class);
   }
 
   @Nonnull
-  public abstract List<Style> getStyles();
+  List<Style> getStyles();
 
-  public abstract void setCurrentStyle(@Nonnull Style style);
-
-  @Nonnull
-  public abstract Style getCurrentStyle();
+  void setCurrentStyle(@Nonnull Style style);
 
   @Nonnull
-  public abstract UIManager.LookAndFeelInfo[] getInstalledLookAndFeels();
+  Style getCurrentStyle();
 
   @Nonnull
-  public abstract UIManager.LookAndFeelInfo getCurrentLookAndFeel();
+  UIManager.LookAndFeelInfo[] getInstalledLookAndFeels();
 
-  public abstract void setCurrentLookAndFeel(@Nonnull UIManager.LookAndFeelInfo lookAndFeelInfo);
+  @Nonnull
+  UIManager.LookAndFeelInfo getCurrentLookAndFeel();
 
-  public abstract void updateUI();
+  void setCurrentLookAndFeel(@Nonnull UIManager.LookAndFeelInfo lookAndFeelInfo);
 
-  public abstract void repaintUI();
+  void updateUI();
 
-  public abstract void addLafManagerListener(LafManagerListener l);
+  void repaintUI();
 
-  public abstract void addLafManagerListener(LafManagerListener l, Disposable disposable);
+  void addLafManagerListener(LafManagerListener l);
 
-  public abstract void removeLafManagerListener(LafManagerListener l);
+  void addLafManagerListener(LafManagerListener l, Disposable disposable);
+
+  void removeLafManagerListener(LafManagerListener l);
 }

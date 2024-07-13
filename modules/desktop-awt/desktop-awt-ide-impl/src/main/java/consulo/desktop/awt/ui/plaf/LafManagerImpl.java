@@ -37,20 +37,18 @@ import consulo.desktop.awt.ui.plaf.intellij.IntelliJEditorTabsUI;
 import consulo.desktop.awt.ui.plaf.intellij.IntelliJLaf;
 import consulo.desktop.awt.ui.plaf.intellij.IntelliJLookAndFeelInfo;
 import consulo.desktop.awt.ui.plaf.mac.MacButtonlessScrollbarUI;
+import consulo.desktop.awt.uiOld.GTKPlusUIUtil;
 import consulo.disposer.Disposable;
 import consulo.ide.IdeBundle;
-import consulo.desktop.awt.uiOld.GTKPlusUIUtil;
 import consulo.ide.impl.idea.ide.ui.LafManager;
 import consulo.ide.impl.idea.ide.ui.LafManagerListener;
-import consulo.platform.Platform;
-import consulo.util.lang.Comparing;
-import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.localize.LocalizeManager;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
@@ -71,14 +69,16 @@ import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.impl.image.BaseIconLibraryManager;
 import consulo.ui.style.Style;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.status.FileStatusManager;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.plaf.UIResource;
@@ -101,7 +101,7 @@ import java.util.*;
 @State(name = "LafManager", storages = @Storage(value = "laf.xml", roamingType = RoamingType.PER_OS))
 @Singleton
 @ServiceImpl
-public final class LafManagerImpl extends LafManager implements Disposable, PersistentStateComponent<Element> {
+public final class LafManagerImpl implements LafManager, Disposable, PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance(LafManagerImpl.class);
 
   private static final String ELEMENT_LAF = "laf";
@@ -130,6 +130,8 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
   private final Map<UIManager.LookAndFeelInfo, HashMap<String, Object>> myStoredDefaults = new HashMap<>();
   private final LocalizeManager myLocalizeManager;
   private final IconLibraryManager myIconLibraryManager;
+
+  private boolean initialLoadState = true;
 
   @Inject
   LafManagerImpl() {
@@ -179,6 +181,8 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
 
   @Override
   public void afterLoadState() {
+    initialLoadState = false;
+
     if (myCurrentStyle != null) {
       final DesktopStyleImpl laf = findStyleByClassName(myCurrentStyle.getLookAndFeelInfo().getClassName());
       if (laf != null) {
@@ -251,8 +255,13 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
     }
 
     if (myCurrentStyle != null && !styleFromXml.equals(myCurrentStyle)) {
-      setCurrentStyle(styleFromXml, false, true, iconId);
-      updateUI();
+      boolean fire = !initialLoadState;
+      setCurrentStyle(styleFromXml, false, fire, iconId);
+
+      if (fire) {
+        // will be called #afterLoadState()
+        updateUI();
+      }
     }
 
     myCurrentStyle = styleFromXml;
@@ -402,7 +411,11 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
     }
     catch (Exception e) {
       LOG.error(e);
-      Messages.showMessageDialog(IdeBundle.message("error.cannot.set.look.and.feel", lookAndFeelInfo.getName(), e.getMessage()), CommonBundle.getErrorTitle(), Messages.getErrorIcon());
+      SwingUtilities.invokeLater(() -> {
+        Messages.showMessageDialog(IdeBundle.message("error.cannot.set.look.and.feel", lookAndFeelInfo.getName(), e.getMessage()),
+                                   CommonBundle.getErrorTitle(),
+                                   Messages.getErrorIcon());
+      });
     }
   }
 
