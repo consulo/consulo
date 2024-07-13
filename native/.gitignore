@@ -3,3 +3,4 @@ Debug/
 Release/
 DebugWin32/
 ARM64/
+build/
