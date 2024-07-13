@@ -23,11 +23,11 @@ import java.util.List;
  * Provides {@link Key Key} which can be used by actions to access data available in the VCS log.
  */
 public interface VcsLogDataKeys {
-  @Deprecated
+  @Deprecated(forRemoval = true)
   Key<VcsLog> VCS_LOG = VcsLog.KEY;
-  @Deprecated
+  @Deprecated(forRemoval = true)
   Key<VcsLogUi> VCS_LOG_UI = VcsLogUi.KEY;
-  @Deprecated
+  @Deprecated(forRemoval = true)
   Key<VcsLogDataProvider> VCS_LOG_DATA_PROVIDER = VcsLogDataProvider.KEY;
 
   Key<List<VcsRef>> VCS_LOG_BRANCHES = Key.create("Vcs.Log.Branches");

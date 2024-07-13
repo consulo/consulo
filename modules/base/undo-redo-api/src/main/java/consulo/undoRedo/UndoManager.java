@@ -18,8 +18,7 @@ package consulo.undoRedo;
 import consulo.document.Document;
 import consulo.document.DocumentReference;
 import consulo.util.dataholder.Key;
-import consulo.util.lang.Pair;
-
+import consulo.util.lang.Couple;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -66,13 +65,13 @@ public interface UndoManager {
    * @param editor instanceof FileEditor
    */
   @Nonnull
-  Pair<String, String> getUndoActionNameAndDescription(Object editor);
+  Couple<String> getUndoActionNameAndDescription(Object editor);
 
   /**
    * @param editor instanceof FileEditor
    */
   @Nonnull
-  Pair<String, String> getRedoActionNameAndDescription(Object editor);
+  Couple<String> getRedoActionNameAndDescription(Object editor);
 
   void invalidateActionsFor(@Nonnull DocumentReference ref);
 }
