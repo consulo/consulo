@@ -4,6 +4,7 @@ package consulo.ide.impl.idea.openapi.vfs.impl.local;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.component.util.NativeFileLoader;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.application.localize.ApplicationLocalize;
@@ -72,14 +73,13 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
       LOG.info("Native file watcher is disabled");
     }
     else if (myExecutable == PLATFORM_NOT_SUPPORTED) {
-      notifyOnFailure(ApplicationLocalize.watcherExeNotExists().get());
+      notifyOnFailure(ApplicationLocalize.watcherExeNotExists());
     }
     else if (!Files.exists(myExecutable)) {
-      notifyOnFailure(ApplicationLocalize.watcherExeNotFound().get());
+      notifyOnFailure(ApplicationLocalize.watcherExeNotFound());
     }
     else if (!Files.isExecutable(myExecutable)) {
-      String message = ApplicationLocalize.watcherExeNotExe(myExecutable).get();
-      notifyOnFailure(message);
+      notifyOnFailure(ApplicationLocalize.watcherExeNotExe(myExecutable));
     }
     else {
       try {
@@ -88,7 +88,7 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
       }
       catch (IOException e) {
         LOG.warn(e.getMessage());
-        notifyOnFailure(ApplicationLocalize.watcherFailedToStart().get());
+        notifyOnFailure(ApplicationLocalize.watcherFailedToStart());
       }
     }
   }
@@ -146,8 +146,8 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
 
   /* internal stuff */
 
-  private void notifyOnFailure(String cause) {
-    myNotificationSink.notifyUserOnFailure(cause);
+  private void notifyOnFailure(LocalizeValue cause) {
+    myNotificationSink.notifyUserOnFailure(cause.get());
   }
 
   private void startupProcess(boolean restart) throws IOException {
@@ -160,7 +160,7 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
     }
 
     if (myStartAttemptCount.incrementAndGet() > MAX_PROCESS_LAUNCH_ATTEMPT_COUNT) {
-      notifyOnFailure(ApplicationLocalize.watcherFailedToStart().get());
+      notifyOnFailure(ApplicationLocalize.watcherFailedToStart());
       return;
     }
 
@@ -355,7 +355,7 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
         }
 
         if (watcherOp == WatcherOp.GIVEUP) {
-          notifyOnFailure(ApplicationLocalize.watcherGaveUp().get());
+          notifyOnFailure(ApplicationLocalize.watcherGaveUp());
           myIsShuttingDown = true;
         }
         else if (watcherOp == WatcherOp.RESET) {
@@ -367,7 +367,7 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
       }
       else if (myLastOp == WatcherOp.MESSAGE) {
         LOG.warn(line);
-        notifyOnFailure(line);
+        notifyOnFailure(LocalizeValue.of(line));
         myLastOp = null;
       }
       else if (myLastOp == WatcherOp.REMAP || myLastOp == WatcherOp.UNWATCHEABLE) {
