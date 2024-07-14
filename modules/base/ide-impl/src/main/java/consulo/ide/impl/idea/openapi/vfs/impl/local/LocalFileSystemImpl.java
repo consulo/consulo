@@ -84,16 +84,16 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Re
   }
 
   @Inject
-  public LocalFileSystemImpl(@Nonnull Application app, @Nonnull ManagingFS managingFS) {
+  public LocalFileSystemImpl(@Nonnull Application application, @Nonnull ManagingFS managingFS) {
     myManagingFS = managingFS;
-    myWatcher = new FileWatcher(myManagingFS);
+    myWatcher = new FileWatcher(application, myManagingFS);
     if (myWatcher.isOperational()) {
       JobScheduler.getScheduler().scheduleWithFixedDelay(
-              () -> { if (!app.isDisposed()) storeRefreshStatusToFiles(); },
+              () -> { if (!application.isDisposed()) storeRefreshStatusToFiles(); },
               STATUS_UPDATE_PERIOD, STATUS_UPDATE_PERIOD, TimeUnit.MILLISECONDS);
     }
 
-    Disposer.register(app, myWatcher::dispose);
+    Disposer.register(application, myWatcher::dispose);
   }
 
   @Nonnull
