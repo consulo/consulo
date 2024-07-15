@@ -74,4 +74,6 @@ public interface UndoManager {
   Couple<String> getRedoActionNameAndDescription(Object editor);
 
   void invalidateActionsFor(@Nonnull DocumentReference ref);
+
+  boolean canMergeGroup(Object groupId, Object lastGroupId);
 }

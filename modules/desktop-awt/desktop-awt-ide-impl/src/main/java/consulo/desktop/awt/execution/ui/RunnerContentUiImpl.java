@@ -37,7 +37,7 @@ import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
 import consulo.ide.impl.idea.util.NotNullFunction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.ui.docking.BaseDockManager;
+import consulo.project.ui.wm.dock.BaseDockManager;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;

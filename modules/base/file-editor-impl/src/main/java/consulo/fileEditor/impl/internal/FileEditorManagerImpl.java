@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.fileEditor.impl;
+package consulo.fileEditor.impl.internal;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
@@ -23,7 +23,6 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.application.dumb.PossiblyDumbAware;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.application.ui.wm.ExpirableRunnable;
@@ -33,7 +32,6 @@ import consulo.application.util.function.ThrowableComputable;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.component.ProcessCanceledException;
-import consulo.component.impl.internal.messagebus.MessageListenerList;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.persist.PersistentStateComponentWithUIState;
 import consulo.component.persist.State;
@@ -50,16 +48,11 @@ import consulo.fileEditor.*;
 import consulo.fileEditor.event.FileEditorManagerBeforeListener;
 import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.event.FileEditorManagerListener;
-import consulo.fileEditor.impl.internal.FileEditorProviderManagerImpl;
-import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
-import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.fileEditor.text.TextEditorProvider;
-import consulo.ide.impl.fileEditor.FileEditorsSplittersBase;
 import consulo.fileEditor.history.IdeDocumentHistory;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ide.impl.idea.reference.SoftReference;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.ui.docking.BaseDockManager;
+import consulo.fileEditor.internal.FileEditorDockManager;
+import consulo.fileEditor.internal.FileEditorManagerEx;
+import consulo.fileEditor.localize.FileEditorLocalize;
+import consulo.fileEditor.text.TextEditorProvider;
 import consulo.language.file.event.FileTypeEvent;
 import consulo.language.file.event.FileTypeListener;
 import consulo.language.file.inject.VirtualFileWindow;
@@ -67,7 +60,6 @@ import consulo.logging.Logger;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.navigation.OpenFileDescriptor;
-import consulo.ide.localize.IdeLocalize;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
@@ -79,6 +71,7 @@ import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.project.ui.wm.dock.DockContainer;
 import consulo.project.ui.wm.dock.DockManager;
+import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
@@ -86,6 +79,7 @@ import consulo.ui.ex.ComponentContainer;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.undoRedo.CommandProcessor;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
@@ -95,6 +89,7 @@ import consulo.util.lang.NullUtils;
 import consulo.util.lang.Pair;
 import consulo.util.lang.Trinity;
 import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SoftReference;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
@@ -104,6 +99,7 @@ import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusListener;
 import consulo.virtualFileSystem.status.FileStatusManager;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import kava.beans.PropertyChangeEvent;
@@ -149,9 +145,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
   protected final DockManager myDockManager;
   private static final AtomicInteger ourOpenFilesSetModificationCount = new AtomicInteger();
 
-  static final ModificationTracker OPEN_FILE_SET_MODIFICATION_COUNT = ourOpenFilesSetModificationCount::get;
-
-  private final MessageListenerList<FileEditorManagerListener> myListenerList;
+  public static final ModificationTracker OPEN_FILE_SET_MODIFICATION_COUNT = ourOpenFilesSetModificationCount::get;
 
   public FileEditorManagerImpl(@Nonnull Application application,
                                @Nonnull ApplicationConcurrency applicationConcurrency,
@@ -159,7 +153,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
                                DockManager dockManager) {
     myProject = project;
     myDockManager = dockManager;
-    myListenerList = new MessageListenerList<>(myProject.getMessageBus(), FileEditorManagerListener.class);
 
     if (myProject.isDefault()) {
       return;
@@ -167,8 +160,10 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
 
     myQueue = new MergingQueue<>(applicationConcurrency, project, 50, this, Runnable::run);
 
+    final MessageBusConnection connection = project.getMessageBus().connect();
+
     if (FileEditorAssociateFinder.EP_NAME.hasAnyExtensions()) {
-      myListenerList.add(new FileEditorManagerListener() {
+      connection.subscribe(FileEditorManagerListener.class, new FileEditorManagerListener() {
         @Override
         public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
           FileEditorsSplitters splitters = getSplitters();
@@ -177,7 +172,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
       });
     }
 
-    final MessageBusConnection connection = project.getMessageBus().connect();
     connection.subscribe(DumbModeListener.class, new DumbModeListener() {
       @Override
       public void exitDumbMode() {
@@ -562,7 +556,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
           window.closeFile(file, true, transferFocus);
         }
       },
-      IdeLocalize.commandCloseActiveEditor().get(),
+      FileEditorLocalize.commandCloseActiveEditor().get(),
       null
     );
     removeSelectionRecord(file, window);
@@ -639,13 +633,13 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
       wndToOpenIn = splitters.getOrCreateCurrentWindow(file);
     }
 
-    UIAccess uiAccess = UIAccess.get();
+    UIAccess uiAccess = UIAccess.current();
     openAssociatedFile(uiAccess, file, wndToOpenIn, splitters);
     return openFileImpl2(uiAccess, wndToOpenIn, file, focusEditor);
   }
 
   public Pair<FileEditor[], FileEditorProvider[]> openFileInNewWindow(@Nonnull VirtualFile file) {
-    return ((BaseDockManager)DockManager.getInstance(getProject())).createNewDockContainerFor(file, this);
+    return ((FileEditorDockManager)DockManager.getInstance(getProject())).createNewDockContainerFor(file, this);
   }
 
   protected boolean isOpenInNewWindow() {
@@ -1165,7 +1159,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     for (FileEditorsSplitters each : getAllSplitters()) {
       openFiles.addAll(Arrays.asList(each.getOpenFiles()));
     }
-    return VfsUtilCore.toVirtualFileArray(openFiles);
+    return VirtualFileUtil.toVirtualFileArray(openFiles);
   }
 
   @Override
@@ -1179,7 +1173,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         selectedFiles.addAll(Arrays.asList(each.getSelectedFiles()));
       }
     }
-    return VfsUtilCore.toVirtualFileArray(selectedFiles);
+    return VirtualFileUtil.toVirtualFileArray(selectedFiles);
   }
 
   @Override
@@ -1353,18 +1347,8 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
   }
 
   @Override
-  public void addFileEditorManagerListener(@Nonnull final FileEditorManagerListener listener) {
-    myListenerList.add(listener);
-  }
-
-  @Override
   public void addFileEditorManagerListener(@Nonnull final FileEditorManagerListener listener, @Nonnull final Disposable parentDisposable) {
-    myListenerList.add(listener, parentDisposable);
-  }
-
-  @Override
-  public void removeFileEditorManagerListener(@Nonnull final FileEditorManagerListener listener) {
-    myListenerList.remove(listener);
+    myProject.getMessageBus().connect(parentDisposable).subscribe(FileEditorManagerListener.class, listener);
   }
 
   protected void projectOpened(@Nonnull MessageBusConnection connection) {
@@ -1581,7 +1565,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
       final VirtualFile file = e.getFile();
       final VirtualFile[] openFiles = getOpenFiles();
       for (int i = openFiles.length - 1; i >= 0; i--) {
-        if (VfsUtilCore.isAncestor(file, openFiles[i], false)) {
+        if (VirtualFileUtil.isAncestor(file, openFiles[i], false)) {
           closeFile(openFiles[i], true, true);
         }
       }
@@ -1622,7 +1606,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
       final VirtualFile file = e.getFile();
       final VirtualFile[] openFiles = getOpenFiles();
       for (final VirtualFile openFile : openFiles) {
-        if (VfsUtilCore.isAncestor(file, openFile, false)) {
+        if (VirtualFileUtil.isAncestor(file, openFile, false)) {
           updateFileName(openFile);
           updateFileBackgroundColor(openFile);
         }
@@ -1681,7 +1665,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
             LOG.debug("updating file status in tab for " + file.getPath());
           }
           updateFileStatus(file);
-        }, IdeaModalityState.nonModal(), myProject.getDisposed());
+        }, ModalityState.nonModal(), myProject.getDisposed());
       }
     }
 
@@ -1825,7 +1809,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     return getOpenFiles();
   }
 
-  void queueUpdateFile(@Nonnull final VirtualFile file) {
+  public void queueUpdateFile(@Nonnull final VirtualFile file) {
     myQueue.queue(() -> {
       if (isFileOpen(file)) {
         updateFileIconAsync(file);

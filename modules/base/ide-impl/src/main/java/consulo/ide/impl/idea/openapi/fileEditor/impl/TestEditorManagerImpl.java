@@ -462,15 +462,7 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
   }
 
   @Override
-  public void addFileEditorManagerListener(@Nonnull FileEditorManagerListener listener) {
-  }
-
-  @Override
   public void addFileEditorManagerListener(@Nonnull FileEditorManagerListener listener, @Nonnull Disposable parentDisposable) {
-  }
-
-  @Override
-  public void removeFileEditorManagerListener(@Nonnull FileEditorManagerListener listener) {
   }
 
   @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018 consulo.io
+ * Copyright 2013-2023 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.undoRedo;
+package consulo.fileEditor.impl.internal;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ServiceAPI;
-import consulo.application.Application;
+import consulo.project.ui.wm.dock.DockContainerFactory;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 2018-08-24
+ * @since 02/06/2023
  */
-@ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
-public interface ApplicationUndoManager extends UndoManager {
-  static UndoManager getInstance() {
-    return Application.get().getInstance(ApplicationUndoManager.class);
+public interface DockableEditorContainerFactory extends DockContainerFactory.Persistent {
+  String TYPE = "file-editors";
+
+  @Nonnull
+  @Override
+  default String getId() {
+    return TYPE;
   }
 }

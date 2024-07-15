@@ -190,7 +190,7 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
 
     redo.run();
     CommandProcessor.getInstance().executeCommand(project, () -> {
-      UndoManager undoManager = project == null ? ApplicationUndoManager.getGlobalInstance() : ProjectUndoManager.getInstance(project);
+      UndoManager undoManager = project == null ? ApplicationUndoManager.getInstance() : ProjectUndoManager.getInstance(project);
       undoManager.undoableActionPerformed(action);
     }, "Change encoding for '" + virtualFile.getName() + "'", null, UndoConfirmationPolicy.REQUEST_CONFIRMATION);
 

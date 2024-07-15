@@ -186,7 +186,7 @@ public class FileUndoProvider implements UndoProvider, BulkFileListener {
     if (myProject != null) {
       return (UndoManagerImpl)ProjectUndoManager.getInstance(myProject);
     }
-    return (UndoManagerImpl)ApplicationUndoManager.getGlobalInstance();
+    return (UndoManagerImpl)ApplicationUndoManager.getInstance();
   }
 
   private class MyUndoableAction extends GlobalUndoableAction {

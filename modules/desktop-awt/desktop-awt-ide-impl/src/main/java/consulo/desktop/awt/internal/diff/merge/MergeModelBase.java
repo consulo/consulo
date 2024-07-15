@@ -69,7 +69,7 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
   public MergeModelBase(@Nullable Project project, @Nonnull Document document) {
     myProject = project;
     myDocument = document;
-    myUndoManager = myProject != null ? ProjectUndoManager.getInstance(myProject) : ApplicationUndoManager.getGlobalInstance();
+    myUndoManager = myProject != null ? ProjectUndoManager.getInstance(myProject) : ApplicationUndoManager.getInstance();
 
     myDocument.addDocumentListener(new MyDocumentListener(), this);
   }

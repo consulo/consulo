@@ -1,5 +1,5 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.openapi.fileEditor.impl;
+package consulo.fileEditor.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ReadAction;
@@ -12,6 +12,8 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 import java.io.File;
 
@@ -20,6 +22,13 @@ import java.io.File;
  */
 @ExtensionImpl
 public class UniqueNameEditorTabTitleProvider implements EditorTabTitleProvider {
+  private final Provider<UniqueVFilePathBuilder> myUniqueVFilePathBuilder;
+
+  @Inject
+  public UniqueNameEditorTabTitleProvider(Provider<UniqueVFilePathBuilder> uniqueVFilePathBuilder) {
+    myUniqueVFilePathBuilder = uniqueVFilePathBuilder;
+  }
+
   @Override
   public String getEditorTabTitle(@Nonnull Project project, @Nonnull VirtualFile file) {
     UISettings uiSettings = UISettings.getInstanceOrNull();
@@ -27,11 +36,12 @@ public class UniqueNameEditorTabTitleProvider implements EditorTabTitleProvider 
       return null;
     }
 
+    UniqueVFilePathBuilder uniqueVFilePathBuilder = myUniqueVFilePathBuilder.get();
     // Even though this is a 'tab title provider' it is used also when tabs are not shown, namely for building IDE frame title.
     return ReadAction.compute(() -> {
       String uniqueName = uiSettings.getEditorTabPlacement() == UISettings.PLACEMENT_EDITOR_TAB_NONE
-        ? UniqueVFilePathBuilder.getInstance().getUniqueVirtualFilePath(project, file)
-        : UniqueVFilePathBuilder.getInstance().getUniqueVirtualFilePathWithinOpenedFileEditors(project, file);
+        ? uniqueVFilePathBuilder.getUniqueVirtualFilePath(project, file)
+        : uniqueVFilePathBuilder.getUniqueVirtualFilePathWithinOpenedFileEditors(project, file);
       uniqueName = getEditorTabText(uniqueName, File.separator, uiSettings.getHideKnownExtensionInTabs());
       return uniqueName.equals(file.getName()) ? null : uniqueName;
     });

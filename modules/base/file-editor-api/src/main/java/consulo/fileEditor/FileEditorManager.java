@@ -182,27 +182,10 @@ public abstract class FileEditorManager {
 
   public abstract void removeBottomComponent(@Nonnull final FileEditor editor, @Nonnull final JComponent component);
 
-
-  /**
-   * Adds specified <code>listener</code>
-   *
-   * @param listener listener to be added
-   * @deprecated Use MessageBus instead: see {@link FileEditorManagerListener#FILE_EDITOR_MANAGER}
-   */
-  public abstract void addFileEditorManagerListener(@Nonnull FileEditorManagerListener listener);
-
   /**
    * @deprecated Use {@link FileEditorManagerListener#FILE_EDITOR_MANAGER} instead
    */
   public abstract void addFileEditorManagerListener(@Nonnull FileEditorManagerListener listener, @Nonnull Disposable parentDisposable);
-
-  /**
-   * Removes specified <code>listener</code>
-   *
-   * @param listener listener to be removed
-   * @deprecated Use {@link FileEditorManagerListener#FILE_EDITOR_MANAGER} instead
-   */
-  public abstract void removeFileEditorManagerListener(@Nonnull FileEditorManagerListener listener);
 
   @Nonnull
   public abstract List<FileEditor> openEditor(@Nonnull OpenFileDescriptor descriptor, boolean focusEditor);

@@ -887,7 +887,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.ui.app;
   exports consulo.ide.impl.ui.app.impl.settings;
   exports consulo.ide.impl.ui.dialog.impl;
-  exports consulo.ide.impl.ui.docking;
   exports consulo.ide.impl.ui.docking.impl;
   exports consulo.ide.impl.ui.ex.impl.util;
   exports consulo.ide.impl.ui.impl;

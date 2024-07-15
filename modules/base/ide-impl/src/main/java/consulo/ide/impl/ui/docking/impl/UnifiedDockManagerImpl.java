@@ -20,17 +20,23 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.FileEditorProvider;
+import consulo.fileEditor.internal.FileEditorDockManager;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
+import consulo.project.ui.wm.dock.BaseDockManager;
 import consulo.project.ui.wm.dock.DockContainer;
 import consulo.project.ui.wm.dock.DockableContent;
 import consulo.project.ui.wm.dock.DragSession;
-import consulo.ide.impl.ui.docking.BaseDockManager;
+import consulo.util.lang.Pair;
+import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.awt.event.MouseEvent;
 
 /**
@@ -40,7 +46,7 @@ import java.awt.event.MouseEvent;
 @Singleton
 @State(name = "DockManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 @ServiceImpl(profiles = ComponentProfiles.UNIFIED)
-public class UnifiedDockManagerImpl extends BaseDockManager {
+public class UnifiedDockManagerImpl extends BaseDockManager implements FileEditorDockManager {
   @Inject
   public UnifiedDockManagerImpl(Project project) {
     super(project);
@@ -64,5 +70,12 @@ public class UnifiedDockManagerImpl extends BaseDockManager {
   @Override
   public String getDimensionKeyForFocus(@Nonnull String key) {
     return null;
+  }
+
+  @Nonnull
+  @Override
+  public Pair<FileEditor[], FileEditorProvider[]> createNewDockContainerFor(@Nonnull VirtualFile file,
+                                                                            @Nonnull FileEditorManager fileEditorManager) {
+    throw new UnsupportedOperationException();
   }
 }

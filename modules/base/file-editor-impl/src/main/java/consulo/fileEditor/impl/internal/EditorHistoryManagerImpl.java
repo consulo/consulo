@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.fileEditor.impl;
+package consulo.fileEditor.impl.internal;
 
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
@@ -32,7 +32,6 @@ import consulo.fileEditor.event.FileEditorManagerBeforeListener;
 import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -44,6 +43,7 @@ import consulo.util.lang.Pair;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
@@ -64,7 +64,7 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentW
   private final Project myProject;
 
   public static EditorHistoryManagerImpl getInstance(@Nonnull Project project) {
-    return (EditorHistoryManagerImpl) project.getComponent(EditorHistoryManager.class);
+    return (EditorHistoryManagerImpl)project.getInstance(EditorHistoryManager.class);
   }
 
   /**
@@ -107,7 +107,9 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentW
    * Makes file most recent one
    */
   @RequiredUIAccess
-  private void fileOpenedImpl(@Nonnull final VirtualFile file, @Nullable final FileEditor fallbackEditor, @Nullable FileEditorProvider fallbackProvider) {
+  private void fileOpenedImpl(@Nonnull final VirtualFile file,
+                              @Nullable final FileEditor fallbackEditor,
+                              @Nullable FileEditorProvider fallbackProvider) {
     myProject.getApplication().assertIsDispatchThread();
     // don't add files that cannot be found via VFM (light & etc.)
     if (VirtualFileManager.getInstance().findFileByUrl(file.getUrl()) == null) return;
@@ -160,7 +162,10 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentW
   }
 
   @RequiredUIAccess
-  private void updateHistoryEntry(@Nullable final VirtualFile file, @Nullable final FileEditor fallbackEditor, @Nullable FileEditorProvider fallbackProvider, final boolean changeEntryOrderOnly) {
+  private void updateHistoryEntry(@Nullable final VirtualFile file,
+                                  @Nullable final FileEditor fallbackEditor,
+                                  @Nullable FileEditorProvider fallbackProvider,
+                                  final boolean changeEntryOrderOnly) {
     if (file == null) {
       return;
     }
@@ -227,7 +232,7 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentW
       VirtualFile file = entry.getFile();
       if (file != null) result.add(file);
     }
-    return VfsUtilCore.toVirtualFileArray(result);
+    return VirtualFileUtil.toVirtualFileArray(result);
   }
 
   /**
@@ -310,6 +315,7 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentW
   /**
    * If total number of files in history more then <code>UISettings.RECENT_FILES_LIMIT</code>
    * then removes the oldest ones to fit the history to new size.
+   *
    * @param uiSettings
    */
   private synchronized void trimToSize(UISettings uiSettings) {

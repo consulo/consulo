@@ -13,13 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.command.impl;
+package consulo.fileEditor;
 
-import consulo.fileEditor.FileEditor;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.application.Application;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author max
  */
+@ServiceAPI(ComponentScope.APPLICATION)
 public interface CurrentEditorProvider {
+  @Nonnull
+  static CurrentEditorProvider getInstance() {
+    return Application.get().getInstance(CurrentEditorProvider.class);
+  }
+
   FileEditor getCurrentEditor();
 }

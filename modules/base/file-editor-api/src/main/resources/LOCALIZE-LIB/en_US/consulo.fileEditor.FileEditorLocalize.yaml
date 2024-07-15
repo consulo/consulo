@@ -1,0 +1,8 @@
+action.sort.alphabetically:
+  text: Sort Alphabetically
+file.structure.toggle.show.inherited:
+  text: '&Show inherited members'
+action.structureview.show.inherited:
+  text: Show Inherited
+command.close.active.editor:
+  text: Close Active Editor

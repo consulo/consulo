@@ -26,7 +26,7 @@ import consulo.disposer.Disposer;
 import consulo.fileEditor.*;
 import consulo.fileEditor.structureView.*;
 import consulo.ide.impl.idea.ide.structureView.newStructureView.StructureViewComponent;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
+import consulo.fileEditor.impl.internal.FileEditorManagerImpl;
 import consulo.ide.impl.idea.openapi.vfs.PersistentFSConstants;
 import consulo.language.content.ProjectRootsUtil;
 import consulo.language.editor.structureView.StructureViewComposite;

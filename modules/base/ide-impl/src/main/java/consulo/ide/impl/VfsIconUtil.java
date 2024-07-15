@@ -16,32 +16,32 @@
 package consulo.ide.impl;
 
 import consulo.application.AllIcons;
-import consulo.util.lang.BitUtil;
-import consulo.virtualFileSystem.VirtualFilePresentation;
-import consulo.project.Project;
 import consulo.component.util.Iconable;
-import consulo.virtualFileSystem.VFileProperty;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.WritingAccessProvider;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiManager;
-import consulo.ui.ex.IconDeferrer;
 import consulo.ide.impl.idea.util.AnyIconKey;
-import consulo.ide.impl.idea.util.NullableFunction;
 import consulo.language.icon.IconDescriptor;
 import consulo.language.icon.IconDescriptorUpdaters;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiManager;
+import consulo.project.Project;
+import consulo.ui.ex.IconDeferrer;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
-
+import consulo.util.lang.BitUtil;
+import consulo.virtualFileSystem.VFileProperty;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFilePresentation;
+import consulo.virtualFileSystem.WritingAccessProvider;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
+import java.util.function.Function;
 
 /**
  * @author VISTALL
  * @since 20-Nov-16.
  */
 public class VfsIconUtil {
-  private static final NullableFunction<AnyIconKey<VirtualFile>, Image> ourVirtualFileIconFunc = key -> {
+  private static final Function<AnyIconKey<VirtualFile>, Image> ourVirtualFileIconFunc = key -> {
     final VirtualFile file = key.getObject();
     final int flags = key.getFlags();
     Project project = key.getProject();
@@ -84,15 +84,15 @@ public class VfsIconUtil {
     Boolean was = project.getUserData(PROJECT_WAS_EVER_INITIALIZED);
     if (was == null) {
       if (project.isInitialized()) {
-        was = Boolean.valueOf(true);
+        was = Boolean.TRUE;
         project.putUserData(PROJECT_WAS_EVER_INITIALIZED, was);
       }
       else {
-        was = Boolean.valueOf(false);
+        was = Boolean.FALSE;
       }
     }
 
-    return was.booleanValue();
+    return was;
   }
 
   @Nullable
@@ -103,13 +103,5 @@ public class VfsIconUtil {
     }
 
     return IconDeferrer.getInstance().defer(icon, new AnyIconKey<>(file, project, flags), ourVirtualFileIconFunc);
-  }
-
-  @Nullable
-  public static Image getIconNoDefer(@Nonnull final VirtualFile file, @Iconable.IconFlags final int flags, @Nullable final Project project) {
-    if(project == null || !wasEverInitialized(project)) {
-      return VirtualFilePresentation.getIcon(file);
-    }
-    return ourVirtualFileIconFunc.apply(new AnyIconKey<>(file, project, flags));
   }
 }

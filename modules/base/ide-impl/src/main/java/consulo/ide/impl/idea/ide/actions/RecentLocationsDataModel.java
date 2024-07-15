@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.ide.impl.idea.codeInsight.breadcrumbs.FileBreadcrumbsCollector;
 import consulo.fileEditor.history.PlaceInfo;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.RecentPlacesListener;
+import consulo.fileEditor.history.RecentPlacesListener;
 import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerEx;
 import consulo.application.ui.UISettings;
 import consulo.language.editor.annotation.HighlightSeverity;
@@ -32,7 +32,7 @@ import consulo.codeEditor.LightHighlighterClient;
 import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.colorScheme.TextAttributes;
 import consulo.fileEditor.history.IdeDocumentHistory;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.IdeDocumentHistoryImpl;
+import consulo.fileEditor.impl.internal.IdeDocumentHistoryImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.EditorSettings;

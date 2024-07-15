@@ -29,7 +29,6 @@ import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDialog;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.fileChooser.PathChooserDialog;
-import consulo.ide.impl.VfsIconUtil;
 import consulo.ide.impl.fileChooser.FileChooserFactoryImpl;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.fileChooser.FileSystemTree;
@@ -59,6 +58,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -275,7 +275,8 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
     if (StringUtil.isEmptyOrSpaces(description)) return null;
 
     final JLabel label = new JLabel(description);
-    label.setBorder(BorderFactory.createCompoundBorder(new SideBorder(UIUtil.getPanelBackground().darker(), SideBorder.BOTTOM), JBUI.Borders.empty(0, 5, 10, 5)));
+    label.setBorder(BorderFactory.createCompoundBorder(new SideBorder(UIUtil.getPanelBackground().darker(), SideBorder.BOTTOM),
+                                                       JBUI.Borders.empty(0, 5, 10, 5)));
     return label;
   }
 
@@ -313,17 +314,20 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
     myPath.setRenderer(SimpleListCellRenderer.<String>create((label, value, index) -> {
       label.setText(value);
       VirtualFile file = LocalFileSystem.getInstance().findFileByIoFile(new File(value));
-      label.setIcon(file == null ? Image.empty(Image.DEFAULT_ICON_SIZE) : VfsIconUtil.getIcon(file, Iconable.ICON_FLAG_READ_STATUS, null));
+      label.setIcon(file == null ? Image.empty(Image.DEFAULT_ICON_SIZE) : VirtualFileManager.getInstance().getFileIcon(file,
+                                                                                                                       null,
+                                                                                                                       Iconable.ICON_FLAG_READ_STATUS));
     }));
 
-    myPathTextField = new FileTextFieldImpl.Vfs((JTextField)myPath.getEditor().getEditorComponent(), FileChooserFactoryImpl.getMacroMap(), getDisposable(),
-                                                new LocalFsFinder.FileChooserFilter(myChooserDescriptor, myFileSystemTree)) {
-      @Override
-      protected void onTextChanged(final String newValue) {
-        myUiUpdater.cancelAllUpdates();
-        updateTreeFromPath(newValue);
-      }
-    };
+    myPathTextField =
+      new FileTextFieldImpl.Vfs((JTextField)myPath.getEditor().getEditorComponent(), FileChooserFactoryImpl.getMacroMap(), getDisposable(),
+                                new LocalFsFinder.FileChooserFilter(myChooserDescriptor, myFileSystemTree)) {
+        @Override
+        protected void onTextChanged(final String newValue) {
+          myUiUpdater.cancelAllUpdates();
+          updateTreeFromPath(newValue);
+        }
+      };
     Disposer.register(myDisposable, myPathTextField);
 
     myNorthPanel = new JPanel(new BorderLayout());
@@ -346,12 +350,15 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
     hintLabel.setFont(JBUI.Fonts.smallFont());
     panel.add(hintLabel, BorderLayout.SOUTH);
 
-    ApplicationManager.getApplication().getMessageBus().connect(getDisposable()).subscribe(ApplicationActivationListener.class, new ApplicationActivationListener() {
-      @Override
-      public void applicationActivated(IdeFrame ideFrame) {
-        ((DesktopSaveAndSyncHandlerImpl)SaveAndSyncHandler.getInstance()).maybeRefresh(IdeaModalityState.current());
-      }
-    });
+    ApplicationManager.getApplication()
+                      .getMessageBus()
+                      .connect(getDisposable())
+                      .subscribe(ApplicationActivationListener.class, new ApplicationActivationListener() {
+                        @Override
+                        public void applicationActivated(IdeFrame ideFrame) {
+                          ((DesktopSaveAndSyncHandlerImpl)SaveAndSyncHandler.getInstance()).maybeRefresh(IdeaModalityState.current());
+                        }
+                      });
 
     return panel;
   }
@@ -616,7 +623,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
 
     myUiUpdater.queue(new Update("treeFromPath.1") {
       public void run() {
-        ApplicationManager.getApplication().executeOnPooledThread((Runnable) () -> {
+        ApplicationManager.getApplication().executeOnPooledThread((Runnable)() -> {
           final LocalFsFinder.VfsFile toFind = (LocalFsFinder.VfsFile)myPathTextField.getFile();
           if (toFind == null || !toFind.exists()) return;
 

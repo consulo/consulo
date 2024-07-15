@@ -21,7 +21,7 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.internal.FileEditorWithModifiedIcon;
 import consulo.ide.impl.idea.execution.impl.RunConfigurable;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
+import consulo.fileEditor.impl.internal.FileEditorManagerImpl;
 import consulo.project.Project;
 import consulo.project.internal.ProjectExListener;
 import consulo.ui.annotation.RequiredUIAccess;

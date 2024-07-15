@@ -5,7 +5,7 @@ import consulo.codeEditor.Editor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.text.TextEditorProvider;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
+import consulo.fileEditor.impl.internal.FileEditorManagerImpl;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.intention.IntentionActionWithOptions;
 import consulo.language.editor.internal.intention.IntentionActionProvider;

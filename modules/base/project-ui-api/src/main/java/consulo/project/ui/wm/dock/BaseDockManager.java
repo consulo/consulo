@@ -13,25 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.ui.docking;
+package consulo.project.ui.wm.dock;
 
 import consulo.component.persist.PersistentStateComponent;
 import consulo.disposer.Disposer;
-import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.FileEditorProvider;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.project.Project;
-import consulo.project.ui.wm.dock.DockContainer;
-import consulo.project.ui.wm.dock.DockContainerFactory;
-import consulo.project.ui.wm.dock.DockManager;
-import consulo.project.ui.wm.dock.DockableContent;
 import consulo.ui.Component;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.util.TraverseUtil;
 import consulo.util.collection.MutualMap;
-import consulo.util.lang.Pair;
-import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jdom.Element;
 
@@ -40,8 +30,6 @@ import java.util.*;
 /**
  * @author VISTALL
  * @since 2020-11-21
- * <p>
- * Internal - independent impl
  */
 public abstract class BaseDockManager implements DockManager, PersistentStateComponent<Element> {
   public interface DockWindow {
@@ -158,11 +146,6 @@ public abstract class BaseDockManager implements DockManager, PersistentStateCom
   }
 
   public void createNewDockContainerFor(DockableContent content, RelativePoint point) {
-    throw new UnsupportedOperationException("desktop impl only");
-  }
-
-  @Nonnull
-  public Pair<FileEditor[], FileEditorProvider[]> createNewDockContainerFor(@Nonnull VirtualFile file, @Nonnull FileEditorManagerImpl fileEditorManager) {
     throw new UnsupportedOperationException("desktop impl only");
   }
 }

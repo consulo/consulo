@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.fileEditor;
+package consulo.fileEditor.impl.internal;
 
 import consulo.application.AccessRule;
 import consulo.application.AccessToken;
@@ -23,8 +23,6 @@ import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.disposer.Disposable;
 import consulo.fileEditor.*;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -38,6 +36,7 @@ import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jdom.Element;
@@ -400,7 +399,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
         }
       }
     }
-    return VfsUtilCore.toVirtualFileArray(files);
+    return VirtualFileUtil.toVirtualFileArray(files);
   }
 
   @Override
@@ -413,7 +412,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
         files.add(file);
       }
     }
-    final VirtualFile[] virtualFiles = VfsUtilCore.toVirtualFileArray(files);
+    final VirtualFile[] virtualFiles = VirtualFileUtil.toVirtualFileArray(files);
     final VirtualFile currentFile = getCurrentFile();
     if (currentFile != null) {
       for (int i = 0; i != virtualFiles.length; ++i) {

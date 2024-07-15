@@ -4,6 +4,7 @@ package consulo.ide.impl.idea.openapi.command.impl;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.document.Document;
+import consulo.fileEditor.CurrentEditorProvider;
 import consulo.fileEditor.FileEditor;
 import consulo.ide.impl.idea.openapi.command.CommandToken;
 import consulo.project.Project;
@@ -56,7 +57,7 @@ public class CommandProcessorImpl extends CoreCommandProcessor {
     if (failed) {
       Project project = command.getProject();
       if (project != null) {
-        FileEditor editor = new FocusBasedCurrentEditorProvider().getCurrentEditor();
+        FileEditor editor = CurrentEditorProvider.getInstance().getCurrentEditor();
         final UndoManager undoManager = ProjectUndoManager.getInstance(project);
         if (undoManager.isUndoAvailable(editor)) {
           undoManager.undo(editor);
@@ -72,7 +73,7 @@ public class CommandProcessorImpl extends CoreCommandProcessor {
   }
 
   private static UndoManagerImpl getUndoManager(Project project) {
-    return (UndoManagerImpl)(project != null ? ProjectUndoManager.getInstance(project) : ApplicationUndoManager.getGlobalInstance());
+    return (UndoManagerImpl)(project != null ? ProjectUndoManager.getInstance(project) : ApplicationUndoManager.getInstance());
   }
 
   @Override

@@ -13,20 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.fileEditor;
+package consulo.fileEditor.impl.internal;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ui.UISettings;
 import consulo.component.util.Iconable;
 import consulo.fileEditor.*;
 import consulo.fileEditor.internal.FileEditorWithModifiedIcon;
-import consulo.ide.impl.VfsIconUtil;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -92,7 +91,7 @@ public abstract class FileEditorWindowBase implements FileEditorWindow {
       return UnknownFileType.INSTANCE.getIcon();
     }
 
-    final Image baseIcon = VfsIconUtil.getIconNoDefer(file, Iconable.ICON_FLAG_READ_STATUS, getManager().getProject());
+    final Image baseIcon = VirtualFileManager.getInstance().getFileIcon(file, getManager().getProject(), Iconable.ICON_FLAG_READ_STATUS);
     if (baseIcon == null) {
       return null;
     }

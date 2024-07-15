@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
 import com.google.common.collect.Lists;
 import consulo.fileEditor.FileEditorManager;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.EditorHistoryManagerImpl;
+import consulo.fileEditor.impl.internal.EditorHistoryManagerImpl;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
 import consulo.project.Project;

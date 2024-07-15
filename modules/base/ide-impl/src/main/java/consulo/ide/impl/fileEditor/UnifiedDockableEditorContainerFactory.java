@@ -16,7 +16,7 @@
 package consulo.ide.impl.fileEditor;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.DockableEditorContainerFactory;
+import consulo.fileEditor.impl.internal.DockableEditorContainerFactory;
 import consulo.project.ui.wm.dock.DockContainer;
 import consulo.project.ui.wm.dock.DockManager;
 import consulo.project.ui.wm.dock.DockableContent;

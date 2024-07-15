@@ -861,7 +861,7 @@ public class DiffImplUtil {
   }
 
   public static void putNonundoableOperation(@Nullable Project project, @Nonnull Document document) {
-    UndoManager undoManager = project != null ? ProjectUndoManager.getInstance(project) : ApplicationUndoManager.getGlobalInstance();
+    UndoManager undoManager = project != null ? ProjectUndoManager.getInstance(project) : ApplicationUndoManager.getInstance();
     if (undoManager != null) {
       DocumentReference ref = DocumentReferenceManager.getInstance().create(document);
       undoManager.nonundoableActionPerformed(ref, false);

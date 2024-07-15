@@ -24,10 +24,7 @@ import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.*;
-import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.FileEditorManager;
-import consulo.fileEditor.FileEditorStateLevel;
-import consulo.fileEditor.TextEditor;
+import consulo.fileEditor.*;
 import consulo.fileEditor.text.TextEditorProvider;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.internal.ExternalChangeAction;
@@ -128,7 +125,7 @@ public class UndoManagerImpl implements UndoManager, Disposable {
   }
 
   private void runStartupActivity() {
-    myEditorProvider = new FocusBasedCurrentEditorProvider();
+    myEditorProvider = CurrentEditorProvider.getInstance();
     myCommandProcessor.addCommandListener(new CommandListener() {
       private boolean myStarted;
 
@@ -342,6 +339,11 @@ public class UndoManagerImpl implements UndoManager, Disposable {
       refs.add(DocumentReferenceManager.getInstance().create(each));
     }
     myCurrentMerger.addAdditionalAffectedDocuments(refs);
+  }
+
+  @Override
+  public boolean canMergeGroup(Object groupId, Object lastGroupId) {
+    return CommandMerger.canMergeGroup(groupId, lastGroupId);
   }
 
   @Override

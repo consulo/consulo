@@ -31,7 +31,7 @@ import consulo.document.FileDocumentManager;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.event.FileEditorManagerAdapter;
 import consulo.fileEditor.event.FileEditorManagerListener;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
+import consulo.fileEditor.impl.internal.FileEditorManagerImpl;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.util.PathUtil;
 import consulo.ide.impl.idea.util.indexing.LightDirectoryIndex;

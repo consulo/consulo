@@ -1,5 +1,5 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.openapi.fileEditor.impl;
+package consulo.fileEditor.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
@@ -24,15 +24,12 @@ import consulo.document.event.DocumentEvent;
 import consulo.fileEditor.*;
 import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.event.FileEditorManagerListener;
+import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.fileEditor.history.PlaceInfo;
+import consulo.fileEditor.history.RecentPlacesListener;
 import consulo.fileEditor.history.SkipFromDocumentHistory;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.fileEditor.text.TextEditorProvider;
-import consulo.ide.impl.idea.openapi.command.impl.CommandMerger;
-import consulo.ide.impl.idea.openapi.command.impl.FocusBasedCurrentEditorProvider;
-import consulo.ide.impl.idea.openapi.editor.event.EditorEventListener;
-import consulo.fileEditor.history.IdeDocumentHistory;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.index.io.EnumeratorLongDescriptor;
 import consulo.index.io.EnumeratorStringDescriptor;
 import consulo.index.io.PersistentHashMap;
@@ -44,6 +41,7 @@ import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.util.ProjectUtil;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.SimpleColoredComponent;
+import consulo.undoRedo.ApplicationUndoManager;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.event.CommandEvent;
 import consulo.undoRedo.event.CommandListener;
@@ -54,6 +52,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileDeleteEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
@@ -280,7 +279,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
 
   @Nullable
   private static PlaceInfo getPlaceInfoFromFocus() {
-    FileEditor fileEditor = new FocusBasedCurrentEditorProvider().getCurrentEditor();
+    FileEditor fileEditor = CurrentEditorProvider.getInstance().getCurrentEditor();
     if (fileEditor instanceof TextEditor && fileEditor.isValid()) {
       VirtualFile file = fileEditor.getFile();
       if (file != null) {
@@ -296,7 +295,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
   }
 
   final void onCommandFinished(Project project, Object commandGroupId) {
-    if (!CommandMerger.canMergeGroup(commandGroupId, myLastGroupId)) myRegisteredBackPlaceInLastGroup = false;
+    if (!ApplicationUndoManager.getInstance().canMergeGroup(commandGroupId, myLastGroupId)) myRegisteredBackPlaceInLastGroup = false;
     myLastGroupId = commandGroupId;
 
     if (myCommandStartPlace != null && myCurrentCommandIsNavigation && myCurrentCommandHasMoves) {
@@ -370,7 +369,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
       }
     }
 
-    return VfsUtilCore.toVirtualFileArray(files);
+    return VirtualFileUtil.toVirtualFileArray(files);
   }
 
   public PersistentHashMap<String, Long> getRecentFilesTimestamps() {

@@ -25,16 +25,13 @@ import consulo.component.util.BusyObject;
 import consulo.desktop.awt.fileEditor.impl.DesktopAWTEditorTabbedContainer;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.disposer.Disposer;
-import consulo.fileEditor.DockableEditorTabbedContainer;
-import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.FileEditorProvider;
-import consulo.fileEditor.FileEditorWindow;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.DockableEditorContainerFactory;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
+import consulo.fileEditor.*;
+import consulo.fileEditor.impl.internal.FileEditorManagerImpl;
+import consulo.fileEditor.internal.FileEditorDockManager;
+import consulo.fileEditor.impl.internal.DockableEditorContainerFactory;
 import consulo.ide.impl.idea.ui.components.panels.VerticalBox;
 import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
 import consulo.ide.impl.idea.util.IconUtil;
-import consulo.ide.impl.ui.docking.BaseDockManager;
 import consulo.ide.impl.ui.popup.JWindowPopupFactory;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
@@ -42,6 +39,7 @@ import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.IdeRootPaneNorthExtension;
 import consulo.project.ui.wm.WindowManager;
+import consulo.project.ui.wm.dock.BaseDockManager;
 import consulo.project.ui.wm.dock.DockContainer;
 import consulo.project.ui.wm.dock.DockableContent;
 import consulo.project.ui.wm.dock.DragSession;
@@ -82,7 +80,7 @@ import java.util.function.Predicate;
 @Singleton
 @ServiceImpl
 @State(name = "DockManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
-public class DesktopDockManagerImpl extends BaseDockManager {
+public class DesktopDockManagerImpl extends BaseDockManager implements FileEditorDockManager {
   private final MutualMap<DockContainer, DockWindow> myWindows = new MutualMap<>();
 
   private MyDragSession myCurrentDragSession;
@@ -102,7 +100,7 @@ public class DesktopDockManagerImpl extends BaseDockManager {
   @Override
   public IdeFrame getIdeFrame(DockContainer container) {
     Component parent = UIUtil.findUltimateParent(container.getContainerComponent());
-    if(parent instanceof Window) {
+    if (parent instanceof Window) {
       consulo.ui.Window uiWindow = TargetAWT.from((Window)parent);
 
       return uiWindow.getUserData(IdeFrame.KEY);
@@ -373,7 +371,8 @@ public class DesktopDockManagerImpl extends BaseDockManager {
 
   @Override
   @Nonnull
-  public Pair<FileEditor[], FileEditorProvider[]> createNewDockContainerFor(@Nonnull VirtualFile file, @Nonnull FileEditorManagerImpl fileEditorManager) {
+  public Pair<FileEditor[], FileEditorProvider[]> createNewDockContainerFor(@Nonnull VirtualFile file,
+                                                                            @Nonnull FileEditorManager fileEditorManager) {
     DockContainer container = findFactory(DockableEditorContainerFactory.TYPE).createContainer(this, null);
     register(container);
 
@@ -381,8 +380,14 @@ public class DesktopDockManagerImpl extends BaseDockManager {
 
     window.show(true);
     final FileEditorWindow editorWindow = ((DockableEditorTabbedContainer)container).getSplitters().getOrCreateCurrentWindow(file);
-    final Pair<FileEditor[], FileEditorProvider[]> result = fileEditorManager.openFileImpl2(UIAccess.current(), editorWindow, file, true);
-    container.add(DesktopAWTEditorTabbedContainer.createDockableEditor(myProject, null, file, new Presentation(file.getName()), editorWindow), null);
+    final Pair<FileEditor[], FileEditorProvider[]> result =
+      ((FileEditorManagerImpl)fileEditorManager).openFileImpl2(UIAccess.current(), editorWindow, file, true);
+
+    container.add(DesktopAWTEditorTabbedContainer.createDockableEditor(myProject,
+                                                                       null,
+                                                                       file,
+                                                                       new Presentation(file.getName()),
+                                                                       editorWindow), null);
 
     SwingUtilities.invokeLater(() -> window.myUiContainer.setPreferredSize(null));
     return result;
@@ -471,7 +476,7 @@ public class DesktopDockManagerImpl extends BaseDockManager {
     private void updateNorthPanel() {
       if (ApplicationManager.getApplication().isUnitTestMode()) return;
       myNorthPanel.setVisible(
-              UISettings.getInstance().SHOW_NAVIGATION_BAR && !(myContainer instanceof DockContainer.Dialog) && !UISettings.getInstance().PRESENTATION_MODE);
+        UISettings.getInstance().SHOW_NAVIGATION_BAR && !(myContainer instanceof DockContainer.Dialog) && !UISettings.getInstance().PRESENTATION_MODE);
 
       IdeRootPaneNorthExtension[] extensions = IdeRootPaneNorthExtension.EP_NAME.getExtensions(myProject);
       HashSet<String> processedKeys = new HashSet<>();

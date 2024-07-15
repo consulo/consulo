@@ -13,24 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.command.impl;
+package consulo.desktop.awt.fileEditor.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.dataContext.DataManager;
-import consulo.application.Application;
+import consulo.fileEditor.CurrentEditorProvider;
 import consulo.fileEditor.FileEditor;
+import jakarta.inject.Singleton;
 
 import java.awt.*;
 
 /**
  * @author max
  */
+@Singleton
+@ServiceImpl
 public class FocusBasedCurrentEditorProvider implements CurrentEditorProvider {
   @Override
   public FileEditor getCurrentEditor() {
-    // TODO [VISTALL] not supported for now
-    if (!Application.get().isSwingApplication()) {
-      return null;
-    }
     // [kirillk] this is a hack, since much of editor-related code was written long before
     // own focus managenent in the platform, so this method should be strictly synchronous
     final Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();

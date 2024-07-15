@@ -9,4 +9,7 @@ module consulo.file.editor.impl {
   exports consulo.fileEditor.impl.internal to consulo.desktop.awt.ide.impl, consulo.ide.impl;
 
   opens consulo.fileEditor.impl.internal to consulo.util.xml.serializer;
+
+  // TODO remove in future
+  requires java.desktop;
 }

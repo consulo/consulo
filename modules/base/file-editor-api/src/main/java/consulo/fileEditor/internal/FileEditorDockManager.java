@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2023 consulo.io
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.fileEditor.impl;
+package consulo.fileEditor.internal;
 
-import consulo.project.ui.wm.dock.DockContainerFactory;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.FileEditorProvider;
+import consulo.util.lang.Pair;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 02/06/2023
+ * @since 15-Jul-24
  */
-public interface DockableEditorContainerFactory extends DockContainerFactory.Persistent {
-  String TYPE = "file-editors";
-
+public interface FileEditorDockManager {
   @Nonnull
-  @Override
-  default String getId() {
-    return TYPE;
-  }
+  Pair<FileEditor[], FileEditorProvider[]> createNewDockContainerFor(@Nonnull VirtualFile file,
+                                                                     @Nonnull FileEditorManager fileEditorManager);
 }

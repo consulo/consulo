@@ -45,7 +45,7 @@ public class ProxyUndoRedoAction extends DumbAwareAction {
   }
 
   public static void register(@Nullable Project project, @Nonnull Editor editor, @Nonnull JComponent component) {
-    UndoManager undoManager = project != null ? ProjectUndoManager.getInstance(project) : ApplicationUndoManager.getGlobalInstance();
+    UndoManager undoManager = project != null ? ProjectUndoManager.getInstance(project) : ApplicationUndoManager.getInstance();
     TextEditor textEditor = TextEditorProvider.getInstance().getTextEditor(editor);
     if (undoManager != null) {
       EmptyAction.setupAction(new ProxyUndoRedoAction(undoManager, textEditor, true), IdeActions.ACTION_UNDO, component);

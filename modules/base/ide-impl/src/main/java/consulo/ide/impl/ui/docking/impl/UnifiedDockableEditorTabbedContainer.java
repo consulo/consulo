@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.ui.docking.impl;
 
-import consulo.ide.impl.idea.openapi.fileEditor.impl.DockableEditorContainerFactory;
+import consulo.fileEditor.impl.internal.DockableEditorContainerFactory;
 import consulo.fileEditor.DockableEditorTabbedContainer;
 import consulo.disposer.Disposable;
 import consulo.fileEditor.FileEditorsSplitters;

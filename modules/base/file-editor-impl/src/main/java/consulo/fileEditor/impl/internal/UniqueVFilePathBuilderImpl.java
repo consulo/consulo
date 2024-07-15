@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.fileEditor.impl;
+package consulo.fileEditor.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.util.CachedValue;
@@ -23,20 +23,20 @@ import consulo.application.util.UniqueNameBuilder;
 import consulo.content.scope.SearchScope;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.UniqueVFilePathBuilder;
-import consulo.util.io.FileUtil;
-import consulo.util.collection.ContainerUtil;
 import consulo.language.psi.PsiModificationTracker;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.search.FilenameIndex;
 import consulo.project.Project;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Maps;
 import consulo.util.dataholder.Key;
+import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFilePathWrapper;
-import jakarta.inject.Singleton;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Singleton;
+
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -87,8 +87,6 @@ public class UniqueVFilePathBuilderImpl extends UniqueVFilePathBuilder {
           () -> new CachedValueProvider.Result<Map<SearchScope, Map<String, UniqueNameBuilder<VirtualFile>>>>(
             new ConcurrentHashMap<>(2),
             PsiModificationTracker.MODIFICATION_COUNT,
-            //ProjectRootModificationTracker.getInstance(project),
-            //VirtualFileManager.VFS_STRUCTURE_MODIFICATIONS,
             FileEditorManagerImpl.OPEN_FILE_SET_MODIFICATION_COUNT
           ),
           false
@@ -96,7 +94,8 @@ public class UniqueVFilePathBuilderImpl extends UniqueVFilePathBuilder {
       );
     }
 
-    ConcurrentMap<SearchScope, Map<String, UniqueNameBuilder<VirtualFile>>> scope2ValueMap = (ConcurrentMap<SearchScope, Map<String, UniqueNameBuilder<VirtualFile>>>)data.getValue();
+    ConcurrentMap<SearchScope, Map<String, UniqueNameBuilder<VirtualFile>>> scope2ValueMap =
+      (ConcurrentMap<SearchScope, Map<String, UniqueNameBuilder<VirtualFile>>>)data.getValue();
     Map<String, UniqueNameBuilder<VirtualFile>> valueMap = scope2ValueMap.get(scope);
     if (valueMap == null) {
       valueMap = Maps.cacheOrGet(scope2ValueMap, scope, ContainerUtil.createConcurrentSoftValueMap());

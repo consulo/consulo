@@ -1,10 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.openapi.fileEditor.impl;
+package consulo.fileEditor.impl.internal;
 
 /**
  * @author yole
  */
-//@ApiStatus.Internal
 public class FileEditorOpenOptions {
   private boolean myCurrentTab = false;
   private boolean myFocusEditor = false;

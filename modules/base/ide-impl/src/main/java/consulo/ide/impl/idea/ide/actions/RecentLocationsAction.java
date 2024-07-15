@@ -9,7 +9,7 @@ import consulo.codeEditor.EditorFactory;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.fileEditor.history.IdeDocumentHistory;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.IdeDocumentHistoryImpl;
+import consulo.fileEditor.impl.internal.IdeDocumentHistoryImpl;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.ui.CaptionPanel;
 import consulo.ide.impl.idea.ui.WindowMoveListener;

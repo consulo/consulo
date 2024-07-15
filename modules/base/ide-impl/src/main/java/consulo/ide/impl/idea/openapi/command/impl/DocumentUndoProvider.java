@@ -32,7 +32,7 @@ public final class DocumentUndoProvider implements EditorDocumentListener {
 
   @Nonnull
   private static UndoManagerImpl getUndoManager(@Nullable Project project) {
-    return (UndoManagerImpl)(project == null ? ApplicationUndoManager.getGlobalInstance() : ProjectUndoManager.getInstance(project));
+    return (UndoManagerImpl)(project == null ? ApplicationUndoManager.getInstance() : ProjectUndoManager.getInstance(project));
   }
 
   public static void startDocumentUndo(@Nullable Document doc) {
