@@ -107,7 +107,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
         final W[] windows = getWindows();
         for (int i = 0; i != windows.length; ++i) {
           for (VirtualFile file : windows[i].getFiles()) {
-            if (file.getName().equals(key.getName())) {
+            if (file.equals(key)) {
               windows[i].updateFileName(file, value.tabTitle(), value.tabTooltip());
             }
           }
