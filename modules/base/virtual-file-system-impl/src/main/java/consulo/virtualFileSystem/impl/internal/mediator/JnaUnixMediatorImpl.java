@@ -19,9 +19,9 @@ import com.sun.jna.Library;
 import com.sun.jna.Memory;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
-import consulo.application.util.SystemInfo;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.platform.PlatformOperatingSystem;
 import consulo.util.io.FileAttributes;
 import consulo.util.lang.SystemProperties;
 import consulo.virtualFileSystem.internal.FileSystemMediator;
@@ -66,15 +66,8 @@ public class JnaUnixMediatorImpl implements FileSystemMediator {
     int access(String path, int mode);
   }
 
-  private static final int[] LINUX_32 = {16, 44, 72, 24, 28};
   private static final int[] LINUX_64 = {24, 48, 88, 28, 32};
-  private static final int[] LNX_PPC32 = {16, 48, 80, 24, 28};
-  private static final int[] LNX_PPC64 = LINUX_64;
-  private static final int[] LINUX_ARM = LNX_PPC32;
-  private static final int[] BSD_32 = {8, 48, 32, 12, 16};
   private static final int[] BSD_64 = {8, 72, 40, 12, 16};
-  private static final int[] SUN_OS_32 = {20, 48, 64, 28, 32};
-  private static final int[] SUN_OS_64 = {16, 40, 64, 24, 28};
 
   private static final int STAT_VER = 1;
   private static final int OFF_MODE = 0;
@@ -89,34 +82,18 @@ public class JnaUnixMediatorImpl implements FileSystemMediator {
   private final int myGid;
   private final boolean myCoarseTs = SystemProperties.getBooleanProperty(COARSE_TIMESTAMP, false);
 
-  public JnaUnixMediatorImpl() throws Exception {
-    if (Platform.current().os().isLinux()) {
-      if ("arm".equals(Platform.current().os().arch())) {
-        if (SystemInfo.is32Bit) {
-          myOffsets = LINUX_ARM;
-        }
-        else {
-          throw new IllegalStateException("AArch64 architecture is not supported");
-        }
-      }
-      else if ("ppc".equals(Platform.current().os().arch())) {
-        myOffsets = SystemInfo.is32Bit ? LNX_PPC32 : LNX_PPC64;
-      }
-      else {
-        myOffsets = SystemInfo.is32Bit ? LINUX_32 : LINUX_64;
-      }
+  public JnaUnixMediatorImpl(PlatformOperatingSystem os) throws Exception {
+    if (os.isLinux()) {
+      myOffsets = LINUX_64;
     }
-    else if (Platform.current().os().isMac() | SystemInfo.isFreeBSD) {
-      myOffsets = SystemInfo.is32Bit ? BSD_32 : BSD_64;
-    }
-    else if (SystemInfo.isSolaris) {
-      myOffsets = SystemInfo.is32Bit ? SUN_OS_32 : SUN_OS_64;
+    else if (os.isMac() | os.isFreeBSD()) {
+      myOffsets = BSD_64;
     }
     else {
       throw new IllegalStateException("Unsupported OS/arch: " + Platform.current().os().name() + "/" + Platform.current().os().arch());
     }
 
-    myLibC = (LibC)Native.loadLibrary("c", LibC.class);
+    myLibC = Native.load("c", LibC.class);
     myUid = myLibC.getuid();
     myGid = myLibC.getgid();
   }
@@ -139,8 +116,8 @@ public class JnaUnixMediatorImpl implements FileSystemMediator {
     boolean isDirectory = (mode & LibC.S_IFMT) == LibC.S_IFDIR;
     boolean isSpecial = !isDirectory && (mode & LibC.S_IFMT) != LibC.S_IFREG;
     long size = buffer.getLong(myOffsets[OFF_SIZE]);
-    long mTime1 = SystemInfo.is32Bit ? buffer.getInt(myOffsets[OFF_TIME]) : buffer.getLong(myOffsets[OFF_TIME]);
-    long mTime2 = myCoarseTs ? 0 : SystemInfo.is32Bit ? buffer.getInt(myOffsets[OFF_TIME] + 4) : buffer.getLong(myOffsets[OFF_TIME] + 8);
+    long mTime1 = buffer.getLong(myOffsets[OFF_TIME]);
+    long mTime2 = myCoarseTs ? 0 : buffer.getLong(myOffsets[OFF_TIME] + 8);
     long mTime = mTime1 * 1000 + mTime2 / 1000000;
 
     boolean writable = ownFile(buffer) ? (mode & LibC.WRITE_MASK) != 0 : myLibC.access(path, LibC.W_OK) == 0;

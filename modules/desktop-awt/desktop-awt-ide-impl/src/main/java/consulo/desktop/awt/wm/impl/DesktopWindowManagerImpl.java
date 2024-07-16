@@ -801,10 +801,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     frameElement.setAttribute(Y_ATTR, Integer.toString(rectangle.y));
     frameElement.setAttribute(WIDTH_ATTR, Integer.toString(rectangle.width));
     frameElement.setAttribute(HEIGHT_ATTR, Integer.toString(rectangle.height));
-
-    if (!(ideFrame.isInFullScreen() && SystemInfo.isAppleJvm)) {
-      frameElement.setAttribute(EXTENDED_STATE_ATTR, Integer.toString(extendedState));
-    }
+    frameElement.setAttribute(EXTENDED_STATE_ATTR, Integer.toString(extendedState));
     return frameElement;
   }
 

@@ -52,16 +52,11 @@ public class SystemInfo {
   public static final boolean isLinux = _OS_NAME.startsWith("linux");
   public static final boolean isUnix = !isWindows;
   public static final boolean isFreeBSD = _OS_NAME.startsWith("freebsd");
-  public static final boolean isSolaris = _OS_NAME.startsWith("sunos");
 
   public static final boolean isFileSystemCaseSensitive =
     isUnix && !isMac || "true".equalsIgnoreCase(System.getProperty("consulo.case.sensitive.fs"));
 
-  public static final boolean isAppleJvm = isAppleJvm();
-  public static final boolean isOracleJvm = isOracleJvm();
   public static final boolean isJetBrainsJvm = isJetbrainsJvm() || isConsuloJvm();
-  public static final boolean isSunJvm = isSunJvm();
-  public static final boolean isIbmJvm = isIbmJvm();
 
   public static boolean isOsVersionAtLeast(@Nonnull String version) {
     return StringUtil.compareVersionNumbers(OS_VERSION, version) >= 0;
@@ -221,26 +216,6 @@ public class SystemInfo {
    */
   public static boolean isJavaVersionAtLeast(String v) {
     return StringUtil.compareVersionNumbers(JAVA_RUNTIME_VERSION, v) >= 0;
-  }
-
-  private static boolean isOracleJvm() {
-    final String vendor = SystemProperties.getJavaVmVendor();
-    return vendor != null && StringUtil.containsIgnoreCase(vendor, "Oracle");
-  }
-
-  private static boolean isSunJvm() {
-    final String vendor = SystemProperties.getJavaVmVendor();
-    return vendor != null && StringUtil.containsIgnoreCase(vendor, "Sun") && StringUtil.containsIgnoreCase(vendor, "Microsystems");
-  }
-
-  private static boolean isIbmJvm() {
-    final String vendor = SystemProperties.getJavaVmVendor();
-    return vendor != null && StringUtil.containsIgnoreCase(vendor, "IBM");
-  }
-
-  private static boolean isAppleJvm() {
-    final String vendor = SystemProperties.getJavaVmVendor();
-    return vendor != null && StringUtil.containsIgnoreCase(vendor, "Apple");
   }
 
   private static boolean isJetbrainsJvm() {

@@ -43,6 +43,7 @@ public class PlatformOperatingSystemImpl implements PlatformOperatingSystem {
   private final boolean isWindows;
   private final boolean isMac;
   private final boolean isLinux;
+  private final boolean isFreeBSD;
 
   public final boolean isXWindow;
   public final boolean isGNOME;
@@ -64,6 +65,7 @@ public class PlatformOperatingSystemImpl implements PlatformOperatingSystem {
     isWindows = osNameLowered.startsWith("windows");
     isMac = osNameLowered.startsWith("mac");
     isLinux = osNameLowered.startsWith("linux");
+    isFreeBSD = osNameLowered.startsWith("freebsd");
 
     isXWindow = !isWindows && !isMac;
     /* http://askubuntu.com/questions/72549/how-to-determine-which-window-manager-is-running/227669#227669 */
@@ -107,6 +109,11 @@ public class PlatformOperatingSystemImpl implements PlatformOperatingSystem {
     });
 
     return processInfos;
+  }
+
+  @Override
+  public boolean isFreeBSD() {
+    return isFreeBSD;
   }
 
   @Override

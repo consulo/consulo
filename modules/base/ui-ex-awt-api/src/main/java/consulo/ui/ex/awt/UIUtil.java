@@ -267,10 +267,6 @@ public class UIUtil {
     return dark ? DARCULA_GRAY_FILTER : DEFAULT_GRAY_FILTER;
   }
 
-  public static boolean isAppleRetina() {
-    return isRetina() && SystemInfo.isAppleJvm;
-  }
-
   @Nonnull
   public static JBIterable<Component> uiParents(@Nullable Component c, boolean strict) {
     return strict ? JBIterable.generate(c, COMPONENT_PARENT).skip(1) : JBIterable.generate(c, COMPONENT_PARENT);

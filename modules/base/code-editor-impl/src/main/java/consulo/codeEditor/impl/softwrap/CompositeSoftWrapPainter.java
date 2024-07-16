@@ -15,13 +15,12 @@
  */
 package consulo.codeEditor.impl.softwrap;
 
-import consulo.application.util.SystemInfo;
 import consulo.codeEditor.*;
 import consulo.codeEditor.impl.ColorProvider;
 import consulo.logging.Logger;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 import java.util.List;
 import java.util.*;
@@ -71,13 +70,10 @@ public class CompositeSoftWrapPainter implements SoftWrapPainter {
       }
     }
 
-    if (!SystemInfo.isAppleJvm) {
-      // these characters are known to take a very long time to render when Apple's JDK is used (for the default color scheme)
-      SYMBOLS.add(asMap(
-              asList(SoftWrapDrawingType.BEFORE_SOFT_WRAP_LINE_FEED, SoftWrapDrawingType.AFTER_SOFT_WRAP),
-              asList('\u2926', '\u2925'))
-      );
-    }
+    SYMBOLS.add(asMap(
+      asList(SoftWrapDrawingType.BEFORE_SOFT_WRAP_LINE_FEED, SoftWrapDrawingType.AFTER_SOFT_WRAP),
+      asList('\u2926', '\u2925'))
+    );
     SYMBOLS.add(asMap(
             asList(SoftWrapDrawingType.BEFORE_SOFT_WRAP_LINE_FEED, SoftWrapDrawingType.AFTER_SOFT_WRAP),
             asList('\u21B2',                   '\u21B3'))

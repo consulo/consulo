@@ -15,9 +15,10 @@
  */
 package consulo.virtualFileSystem.impl.internal.mediator;
 
-import consulo.application.util.SystemInfo;
 import consulo.logging.Logger;
+import consulo.platform.CpuArchitecture;
 import consulo.platform.Platform;
+import consulo.platform.PlatformOperatingSystem;
 import consulo.util.jna.JnaLoader;
 import consulo.virtualFileSystem.internal.FileSystemMediator;
 import jakarta.annotation.Nullable;
@@ -38,21 +39,23 @@ public class FileSystemMediatorOverride {
   @Nullable
   private static FileSystemMediator getMediator() {
     if (!Boolean.getBoolean(FORCE_USE_NIO2_KEY)) {
+      Platform platform = Platform.current();
+      PlatformOperatingSystem os = platform.os();
       try {
-        if ((Platform.current().os().isLinux() || Platform.current().os().isMac() || SystemInfo.isSolaris || SystemInfo.isFreeBSD) && JnaLoader.isLoaded()) {
-          return check(new JnaUnixMediatorImpl());
+        if ((os.isLinux() || os.isMac() || os.isFreeBSD()) && platform.jvm().arch() == CpuArchitecture.X86_64 && JnaLoader.isLoaded()) {
+          return check(os, new JnaUnixMediatorImpl(os));
         }
       }
       catch (Throwable t) {
-        LOG.warn("Failed to load filesystem access layer: " + Platform.current().os().name() + ", " + SystemInfo.JAVA_VERSION, t);
+        LOG.warn("Failed to load filesystem access layer: " + os.name() + ", " + platform.jvm().name(), t);
       }
     }
 
     return null;
   }
 
-  private static FileSystemMediator check(final FileSystemMediator mediator) throws Exception {
-    final String quickTestPath = Platform.current().os().isWindows() ? "C:\\" : "/";
+  private static FileSystemMediator check(PlatformOperatingSystem os, final FileSystemMediator mediator) throws Exception {
+    final String quickTestPath = os.isWindows() ? "C:\\" : "/";
     mediator.getAttributes(quickTestPath);
     return mediator;
   }

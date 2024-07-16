@@ -50,6 +50,8 @@ public interface PlatformOperatingSystem extends Platform.OperatingSystem {
 
   boolean isLinux();
 
+  boolean isFreeBSD();
+
   default boolean isUnix() {
     return !isWindows();
   }
