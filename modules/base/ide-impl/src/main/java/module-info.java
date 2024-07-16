@@ -301,7 +301,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.designer.propertyTable.editors;
   exports consulo.ide.impl.idea.designer.propertyTable.renderers;
   exports consulo.ide.impl.idea.diagnostic;
-  exports consulo.ide.impl.idea.diagnostic.errordialog;
   exports consulo.ide.impl.idea.dupLocator;
   exports consulo.ide.impl.idea.dupLocator.equivalence;
   exports consulo.ide.impl.idea.dupLocator.index;
@@ -917,4 +916,5 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.wm.statusBar to consulo.desktop.awt.ide.impl;
   exports consulo.ide.impl.idea.diff.actions.impl to consulo.desktop.awt.ide.impl;
   exports consulo.ide.impl.idea.diff.requests to consulo.desktop.awt.ide.impl;
+  exports consulo.ide.impl.idea.openapi.diagnostic to consulo.desktop.awt.ide.impl;
 }

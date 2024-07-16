@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.diagnostic;
+package consulo.desktop.awt.internal.errorDialog;
 
 import consulo.application.AllIcons;
 import consulo.application.Application;
@@ -37,20 +37,19 @@ import consulo.externalService.ExternalServiceConfiguration;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.dataContext.BaseDataManager;
 import consulo.ide.impl.desktop.DesktopIdeFrameUtil;
-import consulo.ide.impl.idea.diagnostic.errordialog.*;
+import consulo.ide.impl.idea.diagnostic.*;
 import consulo.ide.impl.idea.ide.plugins.PluginManager;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.diagnostic.ErrorReportSubmitter;
 import consulo.ide.impl.idea.openapi.diagnostic.SubmittedReportInfo;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.HeaderlessTabbedPane;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
+import consulo.ide.impl.internal.localize.DiagnosticLocalize;
 import consulo.logging.Logger;
 import consulo.logging.attachment.Attachment;
 import consulo.platform.Platform;
 import consulo.platform.base.localize.CommonLocalize;
-import consulo.ide.impl.internal.localize.DiagnosticLocalize;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.wm.IdeFrame;
@@ -60,6 +59,8 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.HyperlinkLabel;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.internal.LocalizeAction;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ThreeState;
 import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
@@ -140,7 +141,10 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
           myDevelopers[0] = DevelopersLoader.fetchDevelopers(indicator);
         }
         catch (IOException e) {
-          ReportMessages.GROUP.createNotification("Communication error", "Unable to load developers list from server.", NotificationType.WARNING, null).notify(null);
+          ReportMessages.GROUP.createNotification("Communication error",
+                                                  "Unable to load developers list from server.",
+                                                  NotificationType.WARNING,
+                                                  null).notify(null);
         }
       }
 
@@ -391,7 +395,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
 
     PluginDescriptor plugin = consulo.container.plugin.PluginManager.findPlugin(pluginId);
     final SimpleReference<Boolean> hasDependants = SimpleReference.create(false);
-    PluginValidator.checkDependants(plugin, PluginManager::getPlugin, pluginId1 -> {
+    PluginValidator.checkDependants(plugin, consulo.container.plugin.PluginManager::findPlugin, pluginId1 -> {
       if (PluginIds.isPlatformPlugin(pluginId1)) {
         return true;
       }
@@ -447,18 +451,18 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     final List<Attachment> includedAttachments;
     if (
       message instanceof LogMessageEx logMessageEx && !(
-        includedAttachments = ContainerUtil.filter(
-          logMessageEx.getAttachments(),
-          attachment -> attachment.isIncluded()
-        )
+        includedAttachments = ContainerUtil.filter(logMessageEx.getAttachments(), Attachment::isIncluded)
       ).isEmpty()
     ) {
       myAttachmentWarningPanel.setVisible(true);
       if (includedAttachments.size() == 1) {
-        myAttachmentWarningLabel.setHtmlText(DiagnosticLocalize.diagnosticErrorReportIncludeAttachmentWarning(includedAttachments.get(0).getName()).get());
+        myAttachmentWarningLabel.setHtmlText(DiagnosticLocalize.diagnosticErrorReportIncludeAttachmentWarning(includedAttachments.get(0)
+                                                                                                                                 .getName())
+                                                               .get());
       }
       else {
-        myAttachmentWarningLabel.setHtmlText(DiagnosticLocalize.diagnosticErrorReportIncludeAttachmentsWarning(includedAttachments.size()).get());
+        myAttachmentWarningLabel.setHtmlText(DiagnosticLocalize.diagnosticErrorReportIncludeAttachmentsWarning(includedAttachments.size())
+                                                               .get());
       }
     }
     else {
@@ -540,8 +544,8 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     String url = null;
     if (message.isSubmitted()) {
       final SubmittedReportInfo info = message.getSubmissionInfo();
-      url = getUrl(info);
-      appendSubmissionInformation(info, text, url);
+      url = SubmittedReportInfo.getUrl(info);
+      SubmittedReportInfo.appendSubmissionInformation(info, text, url);
       text.append(". ");
     }
     else if (message.isSubmitting()) {
@@ -552,31 +556,6 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     }
     myInfoLabel.setHtmlText(XmlStringUtil.wrapInHtml(text));
     myInfoLabel.setHyperlinkTarget(url);
-  }
-
-  public static void appendSubmissionInformation(SubmittedReportInfo info, StringBuilder out, @Nullable String url) {
-    if (info.getStatus() == SubmittedReportInfo.SubmissionStatus.FAILED) {
-      out.append(" ").append(DiagnosticLocalize.errorListMessageSubmissionFailed());
-    }
-    else {
-      if (info.getLinkText() != null) {
-        out.append(" ").append(DiagnosticLocalize.errorListMessageSubmittedAsLink(url, info.getLinkText()));
-        if (info.getStatus() == SubmittedReportInfo.SubmissionStatus.DUPLICATE) {
-          out.append(" ").append(DiagnosticLocalize.errorListMessageDuplicate());
-        }
-      }
-      else {
-        out.append(DiagnosticLocalize.errorListMessageSubmitted());
-      }
-    }
-  }
-
-  @Nullable
-  public static String getUrl(SubmittedReportInfo info) {
-    if (info.getStatus() == SubmittedReportInfo.SubmissionStatus.FAILED || info.getLinkText() == null) {
-      return null;
-    }
-    return info.getURL();
   }
 
   private void updateForeignPluginLabel(AbstractMessage message) {
@@ -603,7 +582,9 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
             myForeignPluginWarningLabel.setText(DiagnosticLocalize.errorDialogForeignPluginWarningText().get());
           }
           else {
-            myForeignPluginWarningLabel.setHyperlinkText(DiagnosticLocalize.errorDialogForeignPluginWarningTextVendor().get() + " ", contactInfo, ".");
+            myForeignPluginWarningLabel.setHyperlinkText(DiagnosticLocalize.errorDialogForeignPluginWarningTextVendor().get() + " ",
+                                                         contactInfo,
+                                                         ".");
             myForeignPluginWarningLabel.setHyperlinkTarget(contactInfo);
           }
         }
@@ -612,7 +593,8 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
             myForeignPluginWarningLabel.setText(DiagnosticLocalize.errorDialogForeignPluginWarningTextVendor().get() + " " + vendor + ".");
           }
           else {
-            myForeignPluginWarningLabel.setHyperlinkText(DiagnosticLocalize.errorDialogForeignPluginWarningTextVendor().get() + " " + vendor + " (", contactInfo, ").");
+            myForeignPluginWarningLabel.setHyperlinkText(DiagnosticLocalize.errorDialogForeignPluginWarningTextVendor()
+                                                                           .get() + " " + vendor + " (", contactInfo, ").");
             myForeignPluginWarningLabel.setHyperlinkTarget(contactInfo);
           }
         }
@@ -674,7 +656,8 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
 
       myDetailsTabForm.setAssigneeId(message == null ? 0 : message.getAssigneeId());
 
-      List<Attachment> attachments = message instanceof LogMessageEx ? ((LogMessageEx)message).getAttachments() : Collections.<Attachment>emptyList();
+      List<Attachment> attachments =
+        message instanceof LogMessageEx ? ((LogMessageEx)message).getAttachments() : Collections.<Attachment>emptyList();
       if (!attachments.isEmpty()) {
         if (myTabs.indexOfComponent(myAttachmentsTabForm.getContentPane()) == -1) {
           myTabs.addTab(DiagnosticLocalize.errorAttachmentsTabTitle().get(), myAttachmentsTabForm.getContentPane());
@@ -768,9 +751,14 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     return PluginExceptionUtil.findFirstPluginId(t);
   }
 
-  private class ClearFatalsAction extends AbstractAction {
+  private class ClearFatalsAction extends LocalizeAction {
     protected ClearFatalsAction() {
-      super(DiagnosticLocalize.errorDialogClearAction().get());
+      super(DiagnosticLocalize.errorDialogClearAction());
+    }
+
+    @Override
+    protected boolean withMnemonic() {
+      return true;
     }
 
     @Override
@@ -780,19 +768,14 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     }
 
     public void update() {
-      putValue(
-        NAME,
-        myMergedMessages.size() > 1
-          ? DiagnosticLocalize.errorDialogClearAllAction().get()
-          : DiagnosticLocalize.errorDialogClearAction().get()
-      );
+      setText(myMergedMessages.size() > 1 ? DiagnosticLocalize.errorDialogClearAllAction() : DiagnosticLocalize.errorDialogClearAction());
       setEnabled(!myMergedMessages.isEmpty());
     }
   }
 
-  private class BlameAction extends AbstractAction {
+  private class BlameAction extends LocalizeAction {
     protected BlameAction() {
-      super(DiagnosticLocalize.errorReportToConsuloAction().get());
+      super(DiagnosticLocalize.errorReportToConsuloAction());
     }
 
     @Override
@@ -933,7 +916,12 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     public void actionPerformed(ActionEvent e) {
       final DataContext dataContext = ((BaseDataManager)DataManager.getInstance()).getDataContextTest((Component)e.getSource());
 
-      AnActionEvent event = new AnActionEvent(null, dataContext, ActionPlaces.UNKNOWN, myAnalyze.getTemplatePresentation(), ActionManager.getInstance(), e.getModifiers());
+      AnActionEvent event = new AnActionEvent(null,
+                                              dataContext,
+                                              ActionPlaces.UNKNOWN,
+                                              myAnalyze.getTemplatePresentation(),
+                                              ActionManager.getInstance(),
+                                              e.getModifiers());
 
       final Project project = dataContext.getData(Project.KEY);
       if (project != null) {

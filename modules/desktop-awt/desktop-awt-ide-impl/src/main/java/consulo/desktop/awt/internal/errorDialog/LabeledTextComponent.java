@@ -1,4 +1,4 @@
-package consulo.ide.impl.idea.diagnostic.errordialog;
+package consulo.desktop.awt.internal.errorDialog;
 
 import consulo.ui.ex.awt.LabeledComponent;
 import consulo.ui.ex.awt.event.DocumentAdapter;

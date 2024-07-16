@@ -1,12 +1,11 @@
-package consulo.ide.impl.idea.diagnostic.errordialog;
+package consulo.desktop.awt.internal.errorDialog;
 
 import consulo.ide.impl.idea.diagnostic.Developer;
 import consulo.ide.impl.idea.diagnostic.DiagnosticBundle;
-import consulo.ide.impl.idea.diagnostic.IdeErrorsDialog;
 import consulo.ui.ex.awt.ComboboxSpeedSearch;
 import consulo.ui.ex.awt.IdeBorderFactory;
-import consulo.util.lang.ComparatorUtil;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.util.lang.ComparatorUtil;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;

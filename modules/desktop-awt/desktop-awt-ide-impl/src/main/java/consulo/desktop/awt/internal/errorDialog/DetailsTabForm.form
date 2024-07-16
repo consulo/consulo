@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="consulo.ide.impl.idea.diagnostic.errordialog.DetailsTabForm">
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="consulo.desktop.awt.internal.errorDialog.DetailsTabForm">
   <grid id="27dc6" binding="myContentPane" layout-manager="GridLayoutManager" row-count="4" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
@@ -10,7 +10,7 @@
       <size top="5" left="5" bottom="5" right="5"/>
     </border>
     <children>
-      <nested-form id="f040b" form-file="consulo/ide/impl/idea/diagnostic/errordialog/LabeledTextComponent.form" binding="myCommentsArea">
+      <nested-form id="f040b" form-file="consulo/desktop/awt/internal/errorDialog/LabeledTextComponent.form" binding="myCommentsArea">
         <constraints>
           <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
             <preferred-size width="-1" height="150"/>

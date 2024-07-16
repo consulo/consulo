@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.diagnostic;
 
+import consulo.ide.impl.internal.localize.DiagnosticLocalize;
 import jakarta.annotation.Nullable;
 
 /**
@@ -65,5 +66,30 @@ public class SubmittedReportInfo {
 
   public SubmissionStatus getStatus() {
     return myStatus;
+  }
+
+  @Nullable
+  public static String getUrl(SubmittedReportInfo info) {
+    if (info.getStatus() == SubmittedReportInfo.SubmissionStatus.FAILED || info.getLinkText() == null) {
+      return null;
+    }
+    return info.getURL();
+  }
+
+  public static void appendSubmissionInformation(SubmittedReportInfo info, StringBuilder out, @Nullable String url) {
+    if (info.getStatus() == SubmittedReportInfo.SubmissionStatus.FAILED) {
+      out.append(" ").append(DiagnosticLocalize.errorListMessageSubmissionFailed());
+    }
+    else {
+      if (info.getLinkText() != null) {
+        out.append(" ").append(DiagnosticLocalize.errorListMessageSubmittedAsLink(url, info.getLinkText()));
+        if (info.getStatus() == SubmittedReportInfo.SubmissionStatus.DUPLICATE) {
+          out.append(" ").append(DiagnosticLocalize.errorListMessageDuplicate());
+        }
+      }
+      else {
+        out.append(DiagnosticLocalize.errorListMessageSubmitted());
+      }
+    }
   }
 }

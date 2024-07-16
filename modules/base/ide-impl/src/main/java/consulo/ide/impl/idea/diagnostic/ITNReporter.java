@@ -144,9 +144,9 @@ public class ITNReporter extends ErrorReportSubmitter {
 
       application.invokeLater(() -> {
         StringBuilder text = new StringBuilder();
-        final String url = IdeErrorsDialog.getUrl(reportInfo);
+        final String url = SubmittedReportInfo.getUrl(reportInfo);
 
-        IdeErrorsDialog.appendSubmissionInformation(reportInfo, text, url);
+        SubmittedReportInfo.appendSubmissionInformation(reportInfo, text, url);
 
         text.append(".");
 

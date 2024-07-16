@@ -19,12 +19,12 @@ import consulo.container.boot.ContainerPathManager;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginDescriptorVersionValidator;
 import consulo.container.plugin.PluginId;
-import consulo.util.nodep.function.Condition;
-import consulo.util.nodep.function.Function;
 import consulo.util.nodep.io.FileUtilRt;
 
 import java.io.*;
 import java.util.*;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * @author VISTALL
@@ -142,13 +142,13 @@ public class PluginValidator {
     }
   }
 
-  public static void checkDependants(final PluginDescriptor pluginDescriptor, final Function<PluginId, PluginDescriptor> pluginId2Descriptor, final Condition<PluginId> check) {
-    checkDependants(pluginDescriptor, pluginId2Descriptor, check, new HashSet<PluginId>());
+  public static void checkDependants(final PluginDescriptor pluginDescriptor, final Function<PluginId, PluginDescriptor> pluginId2Descriptor, final Predicate<PluginId> check) {
+    checkDependants(pluginDescriptor, pluginId2Descriptor, check, new HashSet<>());
   }
 
   private static boolean checkDependants(final PluginDescriptor pluginDescriptor,
                                          final Function<PluginId, PluginDescriptor> pluginId2Descriptor,
-                                         final Condition<PluginId> check,
+                                         final Predicate<PluginId> check,
                                          final Set<PluginId> processed) {
     processed.add(pluginDescriptor.getPluginId());
     final PluginId[] dependentPluginIds = pluginDescriptor.getDependentPluginIds();
@@ -156,10 +156,10 @@ public class PluginValidator {
     for (final PluginId dependentPluginId : dependentPluginIds) {
       if (processed.contains(dependentPluginId)) continue;
       if (!optionalDependencies.contains(dependentPluginId)) {
-        if (!check.value(dependentPluginId)) {
+        if (!check.test(dependentPluginId)) {
           return false;
         }
-        final PluginDescriptor dependantPluginDescriptor = pluginId2Descriptor.fun(dependentPluginId);
+        final PluginDescriptor dependantPluginDescriptor = pluginId2Descriptor.apply(dependentPluginId);
         if (dependantPluginDescriptor != null && !checkDependants(dependantPluginDescriptor, pluginId2Descriptor, check, processed)) {
           return false;
         }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="consulo.ide.impl.idea.diagnostic.errordialog.AttachmentsTabForm">
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="consulo.desktop.awt.internal.errorDialog.AttachmentsTabForm">
   <grid id="27dc6" binding="myContentPane" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="5">
     <margin top="5" left="5" bottom="5" right="5"/>
     <constraints>
@@ -21,7 +21,7 @@
           </component>
         </children>
       </scrollpane>
-      <nested-form id="b822a" form-file="consulo/ide/impl/idea/diagnostic/errordialog/LabeledTextComponent.form" binding="myFileTextArea">
+      <nested-form id="b822a" form-file="consulo/desktop/awt/internal/errorDialog/LabeledTextComponent.form" binding="myFileTextArea">
         <constraints>
           <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>

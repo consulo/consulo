@@ -1,4 +1,4 @@
-package consulo.ide.impl.idea.diagnostic.errordialog;
+package consulo.desktop.awt.internal.errorDialog;
 
 import consulo.application.Application;
 import consulo.platform.Platform;

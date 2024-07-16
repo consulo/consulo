@@ -1,7 +1,6 @@
-package consulo.ide.impl.idea.diagnostic.errordialog;
+package consulo.desktop.awt.internal.errorDialog;
 
 import consulo.ide.impl.idea.diagnostic.DiagnosticBundle;
-import consulo.ide.impl.idea.diagnostic.IdeErrorsDialog;
 import consulo.ui.ex.awt.LabeledComponent;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.UIUtil;

@@ -3,6 +3,7 @@ package consulo.desktop.awt.internal.notification;
 
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
+import consulo.desktop.awt.internal.errorDialog.IdeErrorsDialog;
 import consulo.desktop.awt.uiOld.BalloonLayoutData;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.diagnostic.*;
