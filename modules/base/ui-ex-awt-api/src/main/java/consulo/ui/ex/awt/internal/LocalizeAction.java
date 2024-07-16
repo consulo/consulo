@@ -17,8 +17,9 @@ package consulo.ui.ex.awt.internal;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
-
+import consulo.ui.util.MnemonicInfo;
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 
 /**
@@ -26,7 +27,7 @@ import javax.swing.*;
  * @since 2020-05-21
  */
 public abstract class LocalizeAction extends AbstractAction {
-  private final LocalizeValue myLocalizeValue;
+  private LocalizeValue myTextValue;
 
   @Deprecated
   @DeprecationInfo("Use constructor with LocalizeValue")
@@ -35,17 +36,42 @@ public abstract class LocalizeAction extends AbstractAction {
   }
 
   protected LocalizeAction(LocalizeValue nameValue) {
-    myLocalizeValue = nameValue;
+    setText(nameValue);
+  }
+
+  public void setText(LocalizeValue text) {
+    myTextValue = text;
 
     updateName();
   }
 
   public void updateName() {
-    putValue(NAME, myLocalizeValue.getValue());
+    if (withMnemonic()) {
+      String textValue = myTextValue.get();
+      MnemonicInfo mnemonicInfo = MnemonicInfo.parse(textValue);
+      if (mnemonicInfo == null) {
+        putValue(NAME, textValue);
+      }
+      else {
+        putValue(NAME, mnemonicInfo.getText());
+
+        if (mnemonicInfo.getIndex() != -1) {
+          putValue(MNEMONIC_KEY, (int)mnemonicInfo.getKeyCode());
+          putValue(DISPLAYED_MNEMONIC_INDEX_KEY, mnemonicInfo.getIndex());
+        }
+      }
+    }
+    else {
+      putValue(NAME, myTextValue.getValue());
+    }
   }
 
   @Nonnull
-  public LocalizeValue getNameValue() {
-    return myLocalizeValue;
+  public LocalizeValue getTextValue() {
+    return myTextValue;
+  }
+
+  protected boolean withMnemonic() {
+    return false;
   }
 }
