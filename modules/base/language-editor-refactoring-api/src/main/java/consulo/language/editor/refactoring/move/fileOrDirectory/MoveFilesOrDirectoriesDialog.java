@@ -16,9 +16,9 @@
 
 package consulo.language.editor.refactoring.move.fileOrDirectory;
 
-import consulo.application.Application;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.HelpManager;
+import consulo.application.ui.NonFocusableSetting;
 import consulo.disposer.Disposer;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
@@ -36,12 +36,14 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.CheckBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RecentsManager;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.undoRedo.CommandProcessor;
 import jakarta.annotation.Nonnull;
@@ -53,8 +55,8 @@ import java.io.File;
 import java.util.List;
 
 public class MoveFilesOrDirectoriesDialog extends DialogWrapper {
-  @NonNls private static final String RECENT_KEYS = "MoveFile.RECENT_KEYS";
-  @NonNls private static final String MOVE_FILES_OPEN_IN_EDITOR = "MoveFile.OpenInEditor";
+  private static final String RECENT_KEYS = "MoveFile.RECENT_KEYS";
+  private static final String MOVE_FILES_OPEN_IN_EDITOR = "MoveFile.OpenInEditor";
 
 
   public interface Callback {
@@ -67,8 +69,8 @@ public class MoveFilesOrDirectoriesDialog extends DialogWrapper {
   private final Project myProject;
   private final Callback myCallback;
   private PsiDirectory myTargetDirectory;
-  private JCheckBox myCbSearchForReferences;
-  private JCheckBox myOpenInEditorCb;
+  private CheckBox myCbSearchForReferences;
+  private CheckBox myOpenInEditorCb;
 
   public MoveFilesOrDirectoriesDialog(Project project, Callback callback) {
     super(project, true);
@@ -84,6 +86,7 @@ public class MoveFilesOrDirectoriesDialog extends DialogWrapper {
     return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};
   }
 
+  @RequiredUIAccess
   @Override
   public JComponent getPreferredFocusedComponent() {
     return myTargetDirectoryField;
@@ -95,6 +98,7 @@ public class MoveFilesOrDirectoriesDialog extends DialogWrapper {
   }
 
   @Override
+  @RequiredUIAccess
   protected JComponent createNorthPanel() {
     myNameLabel = JBLabelDecorator.createJBLabelDecorator().setBold(true);
 
@@ -124,18 +128,20 @@ public class MoveFilesOrDirectoriesDialog extends DialogWrapper {
 
     String shortcutText = KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction(IdeActions.ACTION_CODE_COMPLETION));
 
-    myCbSearchForReferences = new NonFocusableCheckBox(RefactoringLocalize.searchForReferences().get());
-    myCbSearchForReferences.setSelected(RefactoringSettings.getInstance().MOVE_SEARCH_FOR_REFERENCES_FOR_FILE);
+    myCbSearchForReferences = CheckBox.create(RefactoringLocalize.searchForReferences());
+    myCbSearchForReferences.setValue(RefactoringSettings.getInstance().MOVE_SEARCH_FOR_REFERENCES_FOR_FILE);
+    NonFocusableSetting.initFocusability(myCbSearchForReferences);
 
-    myOpenInEditorCb = new NonFocusableCheckBox("Open moved files in editor");
-    myOpenInEditorCb.setSelected(isOpenInEditor());
+    myOpenInEditorCb = CheckBox.create(LocalizeValue.localizeTODO("Open moved files in editor"));
+    myOpenInEditorCb.setValue(isOpenInEditor());
+    NonFocusableSetting.initFocusability(myOpenInEditorCb);
 
     return FormBuilder.createFormBuilder().addComponent(myNameLabel)
-      .addLabeledComponent(RefactoringLocalize.moveFilesToDirectoryLabel().get(), myTargetDirectoryField, UIUtil.LARGE_VGAP)
-      .addTooltip(RefactoringLocalize.pathCompletionShortcut(shortcutText).get())
-      .addComponentToRightColumn(myCbSearchForReferences, UIUtil.LARGE_VGAP)
-      .addComponentToRightColumn(myOpenInEditorCb, UIUtil.LARGE_VGAP)
-      .getPanel();
+                      .addLabeledComponent(RefactoringLocalize.moveFilesToDirectoryLabel().get(), myTargetDirectoryField, UIUtil.LARGE_VGAP)
+                      .addTooltip(RefactoringLocalize.pathCompletionShortcut(shortcutText).get())
+                      .addComponentToRightColumn((JComponent)TargetAWT.to(myCbSearchForReferences), UIUtil.LARGE_VGAP)
+                      .addComponentToRightColumn((JComponent)TargetAWT.to(myOpenInEditorCb), UIUtil.LARGE_VGAP)
+                      .getPanel();
   }
 
   public void setData(PsiElement[] psiElements, PsiDirectory initialTargetDirectory, @NonNls String helpID) {
@@ -175,8 +181,7 @@ public class MoveFilesOrDirectoriesDialog extends DialogWrapper {
   }
 
   public static boolean isOpenInEditor() {
-    return !Application.get().isUnitTestMode()
-      && ApplicationPropertiesComponent.getInstance().getBoolean(MOVE_FILES_OPEN_IN_EDITOR, false);
+    return ApplicationPropertiesComponent.getInstance().getBoolean(MOVE_FILES_OPEN_IN_EDITOR, false);
   }
 
   private void validateOKButton() {
@@ -186,10 +191,10 @@ public class MoveFilesOrDirectoriesDialog extends DialogWrapper {
   @Override
   @RequiredUIAccess
   protected void doOKAction() {
-    ApplicationPropertiesComponent.getInstance().setValue(MOVE_FILES_OPEN_IN_EDITOR, myOpenInEditorCb.isSelected(), false);
+    ApplicationPropertiesComponent.getInstance().setValue(MOVE_FILES_OPEN_IN_EDITOR, myOpenInEditorCb.getValue(), false);
     //myTargetDirectoryField.getChildComponent().addCurrentTextToHistory();
     RecentsManager.getInstance(myProject).registerRecentEntry(RECENT_KEYS, myTargetDirectoryField.getChildComponent().getText());
-    RefactoringSettings.getInstance().MOVE_SEARCH_FOR_REFERENCES_FOR_FILE = myCbSearchForReferences.isSelected();
+    RefactoringSettings.getInstance().MOVE_SEARCH_FOR_REFERENCES_FOR_FILE = myCbSearchForReferences.getValue();
 
     if (DumbService.isDumb(myProject)) {
       Messages.showMessageDialog(myProject, "Move refactoring is not available while indexing is in progress", "Indexing", null);
