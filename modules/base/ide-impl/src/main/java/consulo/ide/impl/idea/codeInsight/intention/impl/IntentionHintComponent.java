@@ -373,8 +373,7 @@ public class IntentionHintComponent implements Disposable, ScrollAwareHint {
   }
 
   private void onMouseExit(final boolean small) {
-    Window ancestor = SwingUtilities.getWindowAncestor(myPopup.getContent());
-    if (ancestor == null) {
+    if (!myPopup.isVisible()) {
       myIconLabel.setIcon(TargetAWT.to(myInactiveIcon));
       myPanel.setBorder(small ? INACTIVE_BORDER_SMALL : INACTIVE_BORDER);
     }
