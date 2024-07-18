@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.openapi.vfs.newvfs.impl;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicImpl;
 import consulo.language.psi.PsiModificationTrackerListener;
+import consulo.virtualFileSystem.impl.internal.CachedFileType;
 
 @TopicImpl(ComponentScope.PROJECT)
 public class CachedFileTypeModificationListenerImpl implements PsiModificationTrackerListener {

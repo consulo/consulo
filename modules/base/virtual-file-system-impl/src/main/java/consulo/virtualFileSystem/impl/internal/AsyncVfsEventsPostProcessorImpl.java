@@ -13,27 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.vfs;
+package consulo.virtualFileSystem.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.component.ProcessCanceledException;
 import consulo.application.internal.BackgroundTaskUtil;
+import consulo.application.util.concurrent.QueueProcessor;
+import consulo.component.ProcessCanceledException;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.logging.Logger;
+import consulo.util.collection.Lists;
 import consulo.virtualFileSystem.event.AsyncVfsEventsListener;
 import consulo.virtualFileSystem.event.AsyncVfsEventsPostProcessor;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;
-import consulo.application.util.concurrent.QueueProcessor;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.logging.Logger;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * from kotlin
@@ -41,34 +40,14 @@ import java.util.Objects;
 @Singleton
 @ServiceImpl
 public class AsyncVfsEventsPostProcessorImpl implements AsyncVfsEventsPostProcessor, Disposable {
-  private static class ListenerAndDisposable {
-    private AsyncVfsEventsListener myListener;
-    private Disposable myDisposable;
-
-    private ListenerAndDisposable(AsyncVfsEventsListener listener, Disposable disposable) {
-      myListener = listener;
-      myDisposable = disposable;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
-      ListenerAndDisposable that = (ListenerAndDisposable)o;
-      return Objects.equals(myListener, that.myListener) && Objects.equals(myDisposable, that.myDisposable);
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(myListener, myDisposable);
-    }
+  private record ListenerAndDisposable(AsyncVfsEventsListener listener, Disposable disposable) {
   }
 
   private static final Logger LOG = Logger.getInstance(AsyncVfsEventsPostProcessorImpl.class);
 
   private QueueProcessor<List<? extends VFileEvent>> myQueue = new QueueProcessor<>(this::processEvents);
 
-  private List<ListenerAndDisposable> myListeners = ContainerUtil.<ListenerAndDisposable>createConcurrentList();
+  private List<ListenerAndDisposable> myListeners = Lists.newLockFreeCopyOnWriteList();
 
   @Inject
   public AsyncVfsEventsPostProcessorImpl(Application application) {
@@ -83,8 +62,8 @@ public class AsyncVfsEventsPostProcessorImpl implements AsyncVfsEventsPostProces
   private void processEvents(List<? extends VFileEvent> events) {
     for (ListenerAndDisposable listenerAndDisposable : myListeners) {
       try {
-        Disposable parentDisposable = listenerAndDisposable.myDisposable;
-        AsyncVfsEventsListener listener = listenerAndDisposable.myListener;
+        Disposable parentDisposable = listenerAndDisposable.disposable();
+        AsyncVfsEventsListener listener = listenerAndDisposable.listener();
 
         BackgroundTaskUtil.runUnderDisposeAwareIndicator(parentDisposable, () -> listener.filesChanged(events));
       }

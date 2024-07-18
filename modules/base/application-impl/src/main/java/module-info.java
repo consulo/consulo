@@ -11,7 +11,6 @@ module consulo.application.impl {
   requires transitive consulo.language.api;
   requires transitive consulo.process.api;
   requires transitive consulo.logging.api;
-  requires transitive consulo.virtual.file.system.impl;
   requires consulo.util.nodep;
   requires consulo.localize.impl;
   requires consulo.ui.impl;
@@ -46,6 +45,7 @@ module consulo.application.impl {
     consulo.test.impl,
     consulo.compiler.impl,
     consulo.desktop.ide.impl,
+    consulo.virtual.file.system.impl,
     consulo.desktop.swt.ide.impl;
 
   exports consulo.application.impl.internal.performance to consulo.ide.impl, consulo.proxy, consulo.desktop.awt.ide.impl;

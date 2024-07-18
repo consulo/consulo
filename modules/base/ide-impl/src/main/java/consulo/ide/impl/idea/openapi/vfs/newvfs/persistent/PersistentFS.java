@@ -1,7 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.vfs.newvfs.persistent;
 
-import consulo.ide.impl.idea.openapi.vfs.DiskQueryRelay;
+import consulo.virtualFileSystem.impl.internal.DiskQueryRelay;
 import consulo.util.io.FileAttributes;
 import consulo.virtualFileSystem.ManagingFS;
 import consulo.virtualFileSystem.NewVirtualFile;

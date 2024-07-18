@@ -51,6 +51,7 @@ module consulo.application.api {
     consulo.version.control.system.distributed.api,
     consulo.compiler.impl,
     consulo.logging.log4j2.impl,
+    consulo.virtual.file.system.impl,
     consulo.diff.impl;
 
   exports consulo.application.internal.util to

@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.openapi.vfs.impl.local;
 
 import consulo.application.Application;
-import consulo.ide.impl.idea.openapi.vfs.DiskQueryRelay;
+import consulo.virtualFileSystem.impl.internal.DiskQueryRelay;
 import consulo.ide.impl.idea.openapi.vfs.SafeWriteRequestor;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.VfsImplUtil;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.FakeVirtualFile;

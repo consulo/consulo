@@ -1,16 +1,15 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.openapi.vfs.newvfs.impl;
+package consulo.virtualFileSystem.impl.internal;
 
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.virtualFileSystem.fileType.FileType;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-//@ApiStatus.Internal
 public class CachedFileType {
-  private static final ConcurrentMap<FileType, CachedFileType> ourInterner = ContainerUtil.newConcurrentMap();
+  private static final ConcurrentMap<FileType, CachedFileType> ourInterner = new ConcurrentHashMap<>();
 
   @Nullable
   private FileType fileType;
@@ -20,11 +19,11 @@ public class CachedFileType {
   }
 
   @Nullable
-  FileType getUpToDateOrNull() {
+  public FileType getUpToDateOrNull() {
     return fileType;
   }
 
-  static CachedFileType forType(@Nonnull FileType fileType) {
+  public static CachedFileType forType(@Nonnull FileType fileType) {
     CachedFileType cached = ourInterner.get(fileType);
     return cached != null ? cached : computeSynchronized(fileType);
   }

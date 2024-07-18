@@ -783,7 +783,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.vcs.log.ui.tables;
   exports consulo.ide.impl.idea.vcs.log.util;
   exports consulo.ide.impl.idea.vcsUtil;
-  exports consulo.ide.impl.idea.vfs;
   exports consulo.ide.impl.idea.webcore.packaging;
   exports consulo.ide.impl.idea.xdebugger.impl;
   exports consulo.ide.impl.idea.xdebugger.impl.actions;

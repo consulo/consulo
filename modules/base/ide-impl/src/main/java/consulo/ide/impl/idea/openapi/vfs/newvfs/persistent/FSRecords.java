@@ -2,14 +2,13 @@
 package consulo.ide.impl.idea.openapi.vfs.newvfs.persistent;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.HeavyProcessLatch;
 import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.application.util.concurrent.SequentialTaskExecutor;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.container.boot.ContainerPathManager;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.CachedFileType;
+import consulo.virtualFileSystem.impl.internal.CachedFileType;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.FileNameCache;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.VirtualDirectoryImpl;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;

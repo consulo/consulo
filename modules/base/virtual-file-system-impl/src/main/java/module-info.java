@@ -5,6 +5,8 @@
 module consulo.virtual.file.system.impl {
   requires transitive consulo.virtual.file.system.api;
   requires transitive consulo.util.collection;
+  requires consulo.process.api;
+  requires consulo.application.impl;
 
   requires static com.sun.jna;
   requires static consulo.util.jna;

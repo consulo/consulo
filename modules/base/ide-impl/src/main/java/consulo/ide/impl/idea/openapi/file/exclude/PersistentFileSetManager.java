@@ -11,7 +11,7 @@ import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.VirtualFileWithId;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.CachedFileType;
+import consulo.virtualFileSystem.impl.internal.CachedFileType;
 import consulo.document.util.FileContentUtilCore;
 import org.jdom.Attribute;
 import org.jdom.Element;
