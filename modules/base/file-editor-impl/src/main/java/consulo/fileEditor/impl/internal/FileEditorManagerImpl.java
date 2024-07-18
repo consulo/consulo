@@ -1140,7 +1140,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     if (currentWindow != null) {
       final FileEditorWithProviderComposite selectedEditor = currentWindow.getSelectedEditor();
       if (selectedEditor != null && selectedEditor.getSelectedEditor() instanceof TextEditor textEditor) {
-        textEditor.getEditor();
+        return textEditor.getEditor();
       }
     }
 
