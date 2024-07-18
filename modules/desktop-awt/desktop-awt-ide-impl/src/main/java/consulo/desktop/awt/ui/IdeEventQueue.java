@@ -38,7 +38,6 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.disposer.util.DisposerUtil;
 import consulo.ide.ServiceManager;
-import consulo.ide.impl.idea.ide.AWTIdleHolder;
 import consulo.ide.impl.idea.ide.ApplicationActivationStateManager;
 import consulo.desktop.awt.ui.dnd.DnDManagerImpl;
 import consulo.ide.impl.idea.openapi.keymap.KeyboardSettingsExternalizable;

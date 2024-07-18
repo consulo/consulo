@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide;
+package consulo.desktop.awt.ui;
 
 import consulo.application.Application;
 import consulo.logging.Logger;
