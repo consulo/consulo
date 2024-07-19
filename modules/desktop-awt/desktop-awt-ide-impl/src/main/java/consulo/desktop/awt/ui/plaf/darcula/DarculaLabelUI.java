@@ -1,6 +1,8 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.ui.plaf.darcula;
 
+import consulo.desktop.awt.ui.AltPressListener;
+
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicGraphicsUtils;
@@ -26,6 +28,6 @@ public class DarculaLabelUI extends BasicLabelUI {
   }
 
   protected int getMnemonicIndex(JLabel l) {
-    return DarculaLaf.isAltPressed() ? l.getDisplayedMnemonicIndex() : -1;
+    return AltPressListener.isAltPressed() ? l.getDisplayedMnemonicIndex() : -1;
   }
 }

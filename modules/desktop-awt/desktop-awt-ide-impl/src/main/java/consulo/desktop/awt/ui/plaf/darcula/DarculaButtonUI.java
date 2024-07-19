@@ -2,6 +2,7 @@
 package consulo.desktop.awt.ui.plaf.darcula;
 
 import consulo.application.AllIcons;
+import consulo.desktop.awt.ui.AltPressListener;
 import consulo.platform.Platform;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;
@@ -166,7 +167,7 @@ public class DarculaButtonUI extends BasicButtonUI {
   }
 
   protected int getMnemonicIndex(AbstractButton b) {
-    return DarculaLaf.isAltPressed() ? b.getDisplayedMnemonicIndex() : -1;
+    return AltPressListener.isAltPressed() ? b.getDisplayedMnemonicIndex() : -1;
   }
 
   protected Color getButtonTextColor(AbstractButton button) {

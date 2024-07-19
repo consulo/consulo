@@ -1,14 +1,15 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.ui.plaf.darcula;
 
-import consulo.ui.ex.awt.util.ComponentUtil;
-import consulo.ui.ex.awt.JBUIScale;
+import consulo.desktop.awt.ui.AltPressListener;
 import consulo.ui.ex.awt.EmptyIcon;
 import consulo.ui.ex.awt.JBInsets;
-import consulo.ui.ex.awt.util.MacUIUtil;
+import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.ThreeStateCheckBox;
-
+import consulo.ui.ex.awt.util.ComponentUtil;
+import consulo.ui.ex.awt.util.MacUIUtil;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicGraphicsUtils;
@@ -146,7 +147,7 @@ public class DarculaCheckBoxUI extends MetalCheckBoxUI {
   }
 
   protected int getMnemonicIndex(AbstractButton b) {
-    return DarculaLaf.isAltPressed() ? b.getDisplayedMnemonicIndex() : -1;
+    return AltPressListener.isAltPressed() ? b.getDisplayedMnemonicIndex() : -1;
   }
 
   @Override

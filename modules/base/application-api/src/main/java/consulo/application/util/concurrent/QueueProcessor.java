@@ -41,6 +41,7 @@ import java.util.function.Consumer;
  */
 public class QueueProcessor<T> {
   private static final Logger LOG = Logger.getInstance(QueueProcessor.class);
+
   public static enum ThreadToUse {
     @Deprecated
     @DeprecationInfo("Use #UI")

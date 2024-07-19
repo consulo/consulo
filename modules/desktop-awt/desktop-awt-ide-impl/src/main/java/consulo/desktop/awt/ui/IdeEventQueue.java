@@ -48,6 +48,7 @@ import consulo.platform.Platform;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
+import consulo.proxy.EventDispatcher;
 import consulo.ui.ex.awt.JBPopupMenu;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.dnd.DnDManager;
@@ -122,7 +123,7 @@ public class IdeEventQueue extends EventQueue {
   private boolean myKeyboardBusy;
   private boolean myWinMetaPressed;
   private int myInputMethodLock;
-  private final consulo.proxy.EventDispatcher<PostEventHook> myPostEventListeners = consulo.proxy.EventDispatcher.create(PostEventHook.class);
+  private final EventDispatcher<PostEventHook> myPostEventListeners = EventDispatcher.create(PostEventHook.class);
 
   private final Map<AWTEvent, List<Runnable>> myRunnablesWaitingFocusChange = new LinkedHashMap<>();
 

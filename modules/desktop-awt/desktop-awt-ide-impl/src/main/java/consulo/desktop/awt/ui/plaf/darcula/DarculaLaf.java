@@ -345,10 +345,6 @@ public class DarculaLaf extends BaseLookAndFeel {
     }
   }
 
-  public static boolean isAltPressed() {
-    return false;
-  }
-
   @Override
   public String getName() {
     return NAME;
