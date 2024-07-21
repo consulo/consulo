@@ -53,7 +53,7 @@ inspection.can.be.final.option2:
 inspection.annotate.method.quickfix.name:
   text: Annotate method as ''@{0}''
 inspection.data.flow.display.name:
-  text: Constant conditions \& exceptions
+  text: Constant conditions & exceptions
 inspection.data.flow.nullable.quickfix.option:
   text: <html><body>Suggest @Nullable annotation for methods that may possibly return null and <br>report nullable values passed to non-annotated parameters</body></html>
 inspection.data.flow.true.asserts.option:
