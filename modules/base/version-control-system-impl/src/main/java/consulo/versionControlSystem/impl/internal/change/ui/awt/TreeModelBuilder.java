@@ -30,7 +30,7 @@ import consulo.versionControlSystem.impl.internal.change.RemoteRevisionsCache;
 import consulo.versionControlSystem.impl.internal.change.ui.ChangeListRemoteState;
 import consulo.versionControlSystem.impl.internal.change.ui.RemoteStatusChangeNodeDecorator;
 import consulo.versionControlSystem.impl.internal.change.ui.StaticFilePath;
-import consulo.versionControlSystem.impl.internal.change.ui.VirtualFileHierarchicalComparator;
+import consulo.versionControlSystem.change.VirtualFileHierarchicalComparator;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;

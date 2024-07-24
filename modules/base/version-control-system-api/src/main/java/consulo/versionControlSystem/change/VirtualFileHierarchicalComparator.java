@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.versionControlSystem.impl.internal.change.ui;
+package consulo.versionControlSystem.change;
 
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -30,13 +30,14 @@ public class VirtualFileHierarchicalComparator implements Comparator<VirtualFile
     return ourInstance;
   }
 
+  @Override
   public int compare(final VirtualFile vf1, final VirtualFile vf2) {
     final boolean isDir1 = vf1.isDirectory();
     final boolean isDir2 = vf2.isDirectory();
 
-    if ((! isDir1) && (! isDir2)) return 0;
-    if (isDir1 && (! isDir2)) return -1;
-    if ((! isDir1) && isDir2) return 1;
+    if ((!isDir1) && (!isDir2)) return 0;
+    if (isDir1 && (!isDir2)) return -1;
+    if ((!isDir1) && isDir2) return 1;
 
     final int diff = vf1.getPath().length() - vf2.getPath().length();
     return diff == 0 ? 0 : (diff < 0 ? -1 : 1);
