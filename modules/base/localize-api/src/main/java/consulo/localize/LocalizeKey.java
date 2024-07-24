@@ -36,6 +36,12 @@ public interface LocalizeKey {
   }
 
   @Nonnull
+  static LocalizeKey of(@Nonnull String localizeId, @Nonnull String key, int argumentsCount) {
+    // TODO [VISTALL] make optimization for future use on call #getValue()
+    return new DefaultLocalizeKey(localizeId, key.toLowerCase(Locale.ROOT));
+  }
+
+  @Nonnull
   String getLocalizeId();
 
   @Nonnull
