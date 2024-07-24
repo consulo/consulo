@@ -76,6 +76,7 @@ open module consulo.ide.impl {
   requires transitive consulo.util.xml.fast.reader;
   requires transitive consulo.language.copyright.api;
   requires consulo.project.impl;
+  requires consulo.project.ui.impl;
   requires consulo.external.service.impl;
   requires consulo.language.code.style.ui.api;
   requires consulo.http.impl;

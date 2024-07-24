@@ -17,6 +17,10 @@ package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.project.Project;
 import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangeNodeDecorator;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesBrowserNode;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesTreeList;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.TreeModelBuilder;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

@@ -36,7 +36,6 @@ import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.*;
 import consulo.ide.impl.idea.openapi.util.ZipperUpdater;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ChangeGoToChangePopupAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.*;
 import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelvedBinaryFilePatch;
@@ -61,12 +60,12 @@ import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.Couple;
 import consulo.util.lang.EmptyRunnable;
-import consulo.util.lang.Pair;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.versionControlSystem.change.LocalChangeList;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.*;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.util.ObjectsConvertor;
 import consulo.virtualFileSystem.VirtualFile;
@@ -1013,21 +1012,6 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
           }
         }
       }
-    }
-
-    @Override
-    public List<Pair<String, Stress>> stressPartsOfFileName(final Change change, final String parentPath) {
-      if (change instanceof AbstractFilePatchInProgress.PatchChange patchChange) {
-        final String basePath = patchChange.getPatchInProgress().getBase().getPath();
-        final String basePathCorrected = basePath.trim().replace('/', File.separatorChar);
-        if (parentPath.startsWith(basePathCorrected)) {
-          return Arrays.asList(
-            Pair.create(basePathCorrected, Stress.BOLD),
-            Pair.create(StringUtil.tail(parentPath, basePathCorrected.length()), Stress.PLAIN)
-          );
-        }
-      }
-      return null;
     }
 
     @Override

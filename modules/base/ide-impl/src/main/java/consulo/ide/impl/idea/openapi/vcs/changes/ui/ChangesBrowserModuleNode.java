@@ -19,6 +19,8 @@ package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 import consulo.application.AllIcons;
 import consulo.module.Module;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesBrowserNode;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesBrowserNodeRenderer;
 
 /**
  * @author yole

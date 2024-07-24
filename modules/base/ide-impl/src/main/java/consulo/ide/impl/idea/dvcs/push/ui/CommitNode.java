@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.dvcs.push.ui;
 import consulo.versionControlSystem.distributed.DvcsUtil;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.IssueLinkHtmlRenderer;
-import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.IssueLinkRenderer;
+import consulo.versionControlSystem.impl.internal.change.ui.issueLink.IssueLinkRenderer;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.versionControlSystem.log.VcsFullCommitDetails;

@@ -18,7 +18,7 @@ package consulo.ide.impl.psi.impl.source.resolve.reference;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.util.*;
 import consulo.ide.impl.idea.openapi.paths.GlobalPathReferenceProvider;
-import consulo.ide.impl.idea.openapi.vcs.IssueNavigationConfiguration;
+import consulo.versionControlSystem.IssueNavigationConfiguration;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.PsiReferenceProviderByType;

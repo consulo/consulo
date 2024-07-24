@@ -15,12 +15,12 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
+import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.project.Project;
+import consulo.util.collection.MultiMap;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.root.VcsRoot;
-import consulo.ide.impl.idea.util.containers.Convertor;
-import consulo.util.collection.MultiMap;
 
 import java.util.Collection;
 
@@ -37,12 +37,13 @@ public class SortByVcsRoots<T> {
   }
 
   public MultiMap<VcsRoot, T> sort(final Collection<T> in) {
-    final MultiMap<VcsRoot, T> result = new MultiMap<VcsRoot,T>();
+    final MultiMap<VcsRoot, T> result = new MultiMap<VcsRoot, T>();
     for (T t : in) {
       final VcsRoot root = myVcsManager.getVcsRootObjectFor(myConvertor.convert(t));
       if (root != null) {
         result.putValue(root, t);
-      } else {
+      }
+      else {
         result.putValue(ourFictiveValue, t);
       }
     }

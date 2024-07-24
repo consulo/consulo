@@ -36,7 +36,7 @@ import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
 import consulo.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ide.impl.idea.util.EditSourceOnEnterKeyHandler;
+import consulo.ui.ex.awt.tree.EditSourceOnEnterKeyHandler;
 import consulo.ide.impl.idea.util.concurrency.InvokerImpl;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.localize.LocalizeValue;

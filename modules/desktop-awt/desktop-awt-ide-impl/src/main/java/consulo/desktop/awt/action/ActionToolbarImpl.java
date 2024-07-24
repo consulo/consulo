@@ -15,7 +15,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.actionSystem.RightAlignedToolbarAction;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionUpdater;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.BasePresentationFactory;
+import consulo.ui.ex.action.BasePresentationFactory;
 import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;

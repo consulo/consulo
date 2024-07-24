@@ -44,7 +44,7 @@ import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.BufferedListConsumer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.ui.ConfirmationDialog;
+import consulo.versionControlSystem.impl.internal.ui.awt.ConfirmationDialog;
 import consulo.ide.impl.idea.vcs.history.VcsHistoryProviderEx;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -96,7 +96,7 @@ import java.util.List;
 import java.util.*;
 import java.util.function.Consumer;
 
-import static consulo.ide.impl.idea.util.ui.ConfirmationDialog.requestForConfirmation;
+import static consulo.versionControlSystem.impl.internal.ui.awt.ConfirmationDialog.requestForConfirmation;
 import static consulo.ui.ex.awt.Messages.getQuestionIcon;
 import static java.text.MessageFormat.format;
 

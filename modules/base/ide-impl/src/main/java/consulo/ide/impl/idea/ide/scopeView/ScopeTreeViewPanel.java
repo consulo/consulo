@@ -44,6 +44,7 @@ import consulo.ide.impl.idea.packageDependencies.DefaultScopesProvider;
 import consulo.ide.impl.idea.packageDependencies.ui.*;
 import consulo.ide.localize.IdeLocalize;
 import consulo.ide.util.DirectoryChooserUtil;
+import consulo.project.ui.view.tree.ApplicationFileColorManager;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.language.editor.refactoring.ui.CopyPasteDelegator;
@@ -115,10 +116,12 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
   private final IdeView myIdeView = new MyIdeView();
   private final MyPsiTreeChangeAdapter myPsiTreeChangeAdapter = new MyPsiTreeChangeAdapter();
 
+  private final ApplicationFileColorManager myApplicationFileColorManager;
+  
   private final DnDAwareTree myTree = new DnDAwareTree() {
     @Override
     public boolean isFileColorsEnabled() {
-      return ProjectViewTree.isFileColorsEnabledFor(this);
+      return ProjectViewTree.isFileColorsEnabledFor(myApplicationFileColorManager, this);
     }
 
     @Nullable
@@ -164,7 +167,11 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
       if (file != null) {
         final NamedScope currentScope = getCurrentScope();
         final PackageSet value = currentScope.getValue();
-        if (value != null && value.contains(virtualFile, myProject, NamedScopesHolder.getHolder(myProject, currentScope.getName(), myDependencyValidationManager))) {
+        if (value != null && value.contains(virtualFile,
+                                            myProject,
+                                            NamedScopesHolder.getHolder(myProject,
+                                                                        currentScope.getName(),
+                                                                        myDependencyValidationManager))) {
           if (!myBuilder.hasFileNode(virtualFile)) return;
           final PackageDependenciesNode node = myBuilder.getFileParentNode(virtualFile);
           final PackageDependenciesNode[] nodes = FileTreeModelBuilder.findNodeForPsiElement(node, file);
@@ -184,6 +191,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
 
   public ScopeTreeViewPanel(final Project project) {
     super(new BorderLayout());
+    myApplicationFileColorManager = ApplicationFileColorManager.getInstance();
     myUpdateQueue.setPassThrough(false);  // we don't want passthrough mode, even in unit tests
     myProject = project;
     initTree();
@@ -496,7 +504,13 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
   private class MyTreeCellRenderer extends ColoredTreeCellRenderer {
     @RequiredUIAccess
     @Override
-    public void customizeCellRenderer(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+    public void customizeCellRenderer(JTree tree,
+                                      Object value,
+                                      boolean selected,
+                                      boolean expanded,
+                                      boolean leaf,
+                                      int row,
+                                      boolean hasFocus) {
       Font font = UIUtil.getTreeFont();
       setFont(font.deriveFont(font.getSize() + JBUI.scale(1f)));
 
@@ -510,10 +524,12 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
         final SimpleTextAttributes regularAttributes = SimpleTextAttributes.REGULAR_ATTRIBUTES;
         TextAttributes textAttributes = TextAttributesUtil.toTextAttributes(regularAttributes);
         if (node instanceof BasePsiNode && ((BasePsiNode)node).isDeprecated()) {
-          textAttributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(CodeInsightColors.DEPRECATED_ATTRIBUTES).clone();
+          textAttributes =
+            EditorColorsManager.getInstance().getGlobalScheme().getAttributes(CodeInsightColors.DEPRECATED_ATTRIBUTES).clone();
         }
         final PsiElement psiElement = node.getPsiElement();
-        textAttributes.setForegroundColor(CopyPasteManager.getInstance().isCutElement(psiElement) ? CopyPasteManager.CUT_COLOR : node.getColor());
+        textAttributes.setForegroundColor(CopyPasteManager.getInstance()
+                                                          .isCutElement(psiElement) ? CopyPasteManager.CUT_COLOR : node.getColor());
         append(node.toString(), TextAttributesUtil.fromTextAttributes(textAttributes));
 
         String oldToString = toString();
@@ -705,7 +721,9 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
       if (!file.isValid() || !file.getViewProvider().isPhysical()) return;
       final PackageSet packageSet = scope.getValue();
       if (packageSet == null) return; //invalid scope selected
-      if (packageSet.contains(file.getVirtualFile(), file.getProject(), NamedScopesHolder.getHolder(myProject, scope.getName(), myDependencyValidationManager))) {
+      if (packageSet.contains(file.getVirtualFile(),
+                              file.getProject(),
+                              NamedScopesHolder.getHolder(myProject, scope.getName(), myDependencyValidationManager))) {
         reload(myBuilder.addFileNode(file));
       }
       else {
@@ -779,7 +797,8 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
         final PackageSet packageSet = getCurrentScope().getValue();
         final PsiFile psiFile = element.getContainingFile();
         if (packageSet == null) return;
-        final VirtualFile virtualFile = psiFile != null ? psiFile.getVirtualFile() : (element instanceof PsiDirectory ? ((PsiDirectory)element).getVirtualFile() : null);
+        final VirtualFile virtualFile =
+          psiFile != null ? psiFile.getVirtualFile() : (element instanceof PsiDirectory ? ((PsiDirectory)element).getVirtualFile() : null);
         if (virtualFile != null) {
           final ProjectView projectView = ProjectView.getInstance(myProject);
           final NamedScopesHolder holder = NamedScopesHolder.getHolder(myProject, CURRENT_SCOPE_NAME, myDependencyValidationManager);
@@ -897,7 +916,9 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
     }, scopeName);
   }
 
-  private void queueUpdate(final VirtualFile fileToRefresh, final Function<PsiFile, DefaultMutableTreeNode> rootToReloadGetter, final String scopeName) {
+  private void queueUpdate(final VirtualFile fileToRefresh,
+                           final Function<PsiFile, DefaultMutableTreeNode> rootToReloadGetter,
+                           final String scopeName) {
     if (myProject.isDisposed()) return;
     ProjectViewPane pane = ProjectView.getInstance(myProject).getCurrentProjectViewPane();
     if (pane == null || !ScopeViewPane.ID.equals(pane.getId()) || !scopeName.equals(pane.getSubId())) {

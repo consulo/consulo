@@ -35,7 +35,7 @@ import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangesViewManager;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesListView;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesListView;
 
 import java.util.ArrayList;
 import java.util.List;

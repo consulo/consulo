@@ -31,8 +31,8 @@ import consulo.ide.impl.idea.ide.dnd.TransferableWrapper;
 import consulo.ide.impl.idea.ide.hierarchy.actions.BrowseHierarchyActionBase;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewTree;
 import consulo.ide.impl.idea.ide.util.scopeChooser.EditScopesDialog;
-import consulo.ide.impl.idea.util.NullableFunction;
 import consulo.ide.localize.IdeLocalize;
+import consulo.project.ui.view.tree.ApplicationFileColorManager;
 import consulo.language.editor.PsiCopyPasteManager;
 import consulo.language.editor.hierarchy.HierarchyBrowser;
 import consulo.language.editor.hierarchy.HierarchyProvider;
@@ -70,6 +70,7 @@ import java.io.File;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.*;
+import java.util.function.Function;
 
 public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implements OccurenceNavigator {
   private static final Logger LOG = Logger.getInstance(HierarchyBrowserBaseEx.class);
@@ -217,8 +218,9 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
   protected abstract Key<?> getBrowserDataKey();
 
   protected final JTree createTree(boolean dndAware) {
+    ApplicationFileColorManager applicationFileColorManager = ApplicationFileColorManager.getInstance();
     final Tree tree;
-    final NullableFunction<Object, PsiElement> toPsiConverter = o -> {
+    final Function<Object, PsiElement> toPsiConverter = o -> {
       if (o instanceof HierarchyNodeDescriptor) {
         return ((HierarchyNodeDescriptor)o).getContainingFile();
       }
@@ -235,7 +237,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
         @Override
         public boolean isFileColorsEnabled() {
-          return ProjectViewTree.isFileColorsEnabledFor(this);
+          return ProjectViewTree.isFileColorsEnabledFor(applicationFileColorManager, this);
         }
 
         @Override
@@ -296,7 +298,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
         @Override
         public boolean isFileColorsEnabled() {
-          return ProjectViewTree.isFileColorsEnabledFor(this);
+          return ProjectViewTree.isFileColorsEnabledFor(applicationFileColorManager, this);
         }
 
         @Override

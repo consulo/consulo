@@ -31,7 +31,7 @@ import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ide.impl.idea.packageDependencies.*;
 import consulo.ide.impl.idea.packageDependencies.actions.AnalyzeDependenciesHandler;
 import consulo.ide.impl.idea.packageDependencies.actions.BackwardDependenciesHandler;
-import consulo.ide.impl.idea.ui.SmartExpander;
+import consulo.ui.ex.awt.tree.SmartExpander;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.editor.packageDependency.DependencyRule;

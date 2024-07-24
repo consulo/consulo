@@ -21,11 +21,11 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.language.editor.FileColorManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.project.Project;
+import consulo.project.ui.view.tree.ApplicationFileColorManager;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.style.StyleManager;
@@ -49,9 +49,8 @@ import java.util.*;
 @ServiceImpl
 @State(name = "FileColors", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 public class FileColorManagerImpl extends FileColorManager implements PersistentStateComponent<Element> {
-  public static final String FC_ENABLED = "FileColorsEnabled";
-  public static final String FC_TABS_ENABLED = "FileColorsForTabsEnabled";
-  public static final String FC_PROJECT_VIEW_ENABLED = "FileColorsForProjectViewEnabled";
+  @Nonnull
+  private final ApplicationFileColorManager myApplicationFileColorManager;
   private final Project myProject;
   private final FileColorsModel myModel;
   private FileColorSharedConfigurationManager mySharedConfigurationManager;
@@ -66,7 +65,8 @@ public class FileColorManagerImpl extends FileColorManager implements Persistent
     .build();
 
   @Inject
-  public FileColorManagerImpl(@Nonnull final Project project) {
+  public FileColorManagerImpl(@Nonnull ApplicationFileColorManager applicationFileColorManager, @Nonnull final Project project) {
+    myApplicationFileColorManager = applicationFileColorManager;
     myProject = project;
     myModel = new FileColorsModel(project);
   }
@@ -79,42 +79,30 @@ public class FileColorManagerImpl extends FileColorManager implements Persistent
 
   @Override
   public boolean isEnabled() {
-    return _isEnabled();
-  }
-
-  public static boolean _isEnabled() {
-    return PropertiesComponent.getInstance().getBoolean(FC_ENABLED, true);
+    return myApplicationFileColorManager.isEnabled();
   }
 
   @Override
   public void setEnabled(boolean enabled) {
-    PropertiesComponent.getInstance().setValue(FC_ENABLED, Boolean.toString(enabled));
+    myApplicationFileColorManager.setEnabled(enabled);
   }
 
   public void setEnabledForTabs(boolean enabled) {
-    PropertiesComponent.getInstance().setValue(FC_TABS_ENABLED, Boolean.toString(enabled));
+    myApplicationFileColorManager.setEnabledForTabs(enabled);
   }
 
   @Override
   public boolean isEnabledForTabs() {
-    return _isEnabledForTabs();
-  }
-
-  public static boolean _isEnabledForTabs() {
-    return PropertiesComponent.getInstance().getBoolean(FC_TABS_ENABLED, true);
+    return myApplicationFileColorManager.isEnabledForTabs();
   }
 
   @Override
   public boolean isEnabledForProjectView() {
-    return _isEnabledForProjectView();
+    return myApplicationFileColorManager.isEnabledForProjectView();
   }
 
-  public static boolean _isEnabledForProjectView() {
-    return PropertiesComponent.getInstance().getBoolean(FC_PROJECT_VIEW_ENABLED, true);
-  }
-
-  public static void setEnabledForProjectView(boolean enabled) {
-    PropertiesComponent.getInstance().setValue(FC_PROJECT_VIEW_ENABLED, Boolean.toString(enabled));
+  public void setEnabledForProjectView(boolean enabled) {
+    myApplicationFileColorManager.setEnabledForProjectView(enabled);
   }
 
   public Element getState(final boolean isProjectLevel) {
@@ -173,7 +161,6 @@ public class FileColorManagerImpl extends FileColorManager implements Persistent
       if (fileColor != null) return fileColor;
     }
 
-    //return FileEditorManager.getInstance(myProject).isFileOpen(vFile) && !UIUtil.isUnderDarcula() ? LightColors.SLIGHTLY_GREEN : null;
     return null;
   }
 

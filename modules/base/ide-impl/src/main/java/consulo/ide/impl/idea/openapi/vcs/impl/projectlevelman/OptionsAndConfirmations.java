@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman;
 
 import consulo.application.Application;
-import consulo.ide.impl.idea.openapi.vcs.VcsShowConfirmationOptionImpl;
-import consulo.ide.impl.idea.openapi.vcs.VcsShowOptionsSettingImpl;
+import consulo.versionControlSystem.internal.VcsShowConfirmationOptionImpl;
+import consulo.versionControlSystem.internal.VcsShowOptionsSettingImpl;
 import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.VcsConfiguration;

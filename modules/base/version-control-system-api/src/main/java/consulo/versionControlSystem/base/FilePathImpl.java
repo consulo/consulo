@@ -17,7 +17,6 @@ package consulo.versionControlSystem.base;
 
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.language.file.FileTypeManager;
 import consulo.project.Project;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
@@ -28,11 +27,12 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.encoding.EncodingManager;
 import consulo.virtualFileSystem.encoding.EncodingProjectManager;
 import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.nio.charset.Charset;
@@ -278,7 +278,7 @@ public class FilePathImpl implements FilePath {
 
   @Override
   public FileType getFileType() {
-    return myVirtualFile != null ? myVirtualFile.getFileType() : FileTypeManager.getInstance().getFileTypeByFileName(myFile.getName());
+    return myVirtualFile != null ? myVirtualFile.getFileType() : FileTypeRegistry.getInstance().getFileTypeByFileName(myFile.getName());
   }
 
   public static FilePathImpl create(VirtualFile file) {

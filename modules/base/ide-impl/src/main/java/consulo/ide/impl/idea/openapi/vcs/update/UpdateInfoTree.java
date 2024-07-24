@@ -30,8 +30,8 @@ import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesTreeB
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.RefreshIncomingChangesAction;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.ui.SelectionSaver;
-import consulo.ide.impl.idea.ui.SmartExpander;
-import consulo.ide.impl.idea.util.EditSourceOnEnterKeyHandler;
+import consulo.ui.ex.awt.tree.SmartExpander;
+import consulo.ui.ex.awt.tree.EditSourceOnEnterKeyHandler;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.localHistory.Label;
 import consulo.localize.LocalizeValue;

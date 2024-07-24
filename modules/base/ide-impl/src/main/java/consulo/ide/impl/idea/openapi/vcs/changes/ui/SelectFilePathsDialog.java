@@ -19,6 +19,8 @@ package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 import consulo.project.Project;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsShowConfirmationOption;
+import consulo.versionControlSystem.impl.internal.ui.awt.AbstractSelectFilesDialog;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesTreeList;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

@@ -20,7 +20,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.AccessRule;
 import consulo.application.util.registry.Registry;
 import consulo.ide.ServiceManager;
-import consulo.ide.impl.idea.openapi.vcs.ex.ProjectLevelVcsManagerEx;
+import consulo.versionControlSystem.internal.ProjectLevelVcsManagerEx;
 import consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman.NewMappings;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

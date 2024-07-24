@@ -1,7 +1,7 @@
 package consulo.ide.impl.idea.vcs.log.ui.render;
 
 import consulo.util.lang.StringUtil;
-import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.IssueLinkRenderer;
+import consulo.versionControlSystem.impl.internal.change.ui.issueLink.IssueLinkRenderer;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.awt.SimpleColoredRenderer;
 import consulo.ui.ex.SimpleTextAttributes;

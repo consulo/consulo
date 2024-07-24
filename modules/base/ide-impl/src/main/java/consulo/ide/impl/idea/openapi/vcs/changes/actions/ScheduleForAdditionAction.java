@@ -26,7 +26,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowserBase;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesListView;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesListView;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -41,6 +41,7 @@ import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.LocalChangeList;
+import consulo.versionControlSystem.internal.ChangesBrowserApi;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
@@ -71,7 +72,7 @@ public class ScheduleForAdditionAction extends AnAction implements DumbAware {
     Project project = e.getRequiredData(Project.KEY);
     List<VirtualFile> unversionedFiles = getUnversionedFiles(e, project).collect(Collectors.toList());
 
-    addUnversioned(project, unversionedFiles, this::isStatusForAddition, e.getData(ChangesBrowserBase.DATA_KEY));
+    addUnversioned(project, unversionedFiles, this::isStatusForAddition, (ChangesBrowserBase) e.getData(ChangesBrowserApi.DATA_KEY));
   }
 
   @RequiredUIAccess

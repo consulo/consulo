@@ -35,11 +35,11 @@ import consulo.disposer.Disposer;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.TextConsoleBuilderFactory;
 import consulo.ide.impl.idea.openapi.vcs.CalledInAwt;
-import consulo.ide.impl.idea.openapi.vcs.VcsShowConfirmationOptionImpl;
-import consulo.ide.impl.idea.openapi.vcs.VcsShowOptionsSettingImpl;
+import consulo.versionControlSystem.internal.VcsShowConfirmationOptionImpl;
+import consulo.versionControlSystem.internal.VcsShowOptionsSettingImpl;
 import consulo.ide.impl.idea.openapi.vcs.changes.VcsAnnotationLocalChangesListenerImpl;
 import consulo.ide.impl.idea.openapi.vcs.checkout.CompositeCheckoutListener;
-import consulo.ide.impl.idea.openapi.vcs.ex.ProjectLevelVcsManagerEx;
+import consulo.versionControlSystem.internal.ProjectLevelVcsManagerEx;
 import consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman.MappingsToRoots;
 import consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman.NewMappings;
 import consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman.OptionsAndConfirmations;
@@ -476,7 +476,6 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
 
   @CalledInAwt
   @Nullable
-  @Override
   public UpdateInfoTree showUpdateProjectInfo(UpdatedFiles updatedFiles, String displayActionName, ActionInfo actionInfo, boolean canceled) {
     if (!myProject.isOpen() || myProject.isDisposed()) return null;
     ContentManager contentManager = getContentManager();

@@ -26,7 +26,7 @@ import consulo.content.scope.*;
 import consulo.execution.ui.awt.RawCommandLineEditor;
 import consulo.ide.impl.idea.packageDependencies.DependencyUISettings;
 import consulo.ide.impl.idea.packageDependencies.ui.*;
-import consulo.ide.impl.idea.ui.SmartExpander;
+import consulo.ui.ex.awt.tree.SmartExpander;
 import consulo.ide.impl.psi.search.scope.packageSet.IntersectionPackageSet;
 import consulo.ide.impl.psi.search.scope.packageSet.UnionPackageSet;
 import consulo.localize.LocalizeValue;

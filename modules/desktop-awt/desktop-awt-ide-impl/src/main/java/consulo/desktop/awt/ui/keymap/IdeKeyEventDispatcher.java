@@ -31,7 +31,7 @@ import consulo.disposer.Disposer;
 import consulo.ide.impl.dataContext.BaseDataManager;
 import consulo.ide.impl.idea.openapi.actionSystem.ActionPromoter;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.BasePresentationFactory;
+import consulo.ui.ex.action.BasePresentationFactory;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.ActionProcessor;
 import consulo.ide.impl.idea.openapi.keymap.impl.KeyState;

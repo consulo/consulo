@@ -1594,4 +1594,13 @@ public class ContainerUtil {
     }
     return result.isEmpty() ? List.of() : result;
   }
+
+  @Contract(pure = true)
+  public static <T> int count(@Nonnull Iterable<T> iterable, @Nonnull Predicate<? super T> condition) {
+    int count = 0;
+    for (final T t : iterable) {
+      if (condition.test(t)) count++;
+    }
+    return count;
+  }
 }

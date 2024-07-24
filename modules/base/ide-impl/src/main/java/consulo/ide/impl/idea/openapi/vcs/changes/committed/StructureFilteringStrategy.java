@@ -16,9 +16,9 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
 import consulo.ide.impl.idea.openapi.util.BooleanGetter;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowserNode;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowserNodeRenderer;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.TreeModelBuilder;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesBrowserNode;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesBrowserNodeRenderer;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.TreeModelBuilder;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;

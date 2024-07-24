@@ -25,9 +25,10 @@ import consulo.configurable.Configurable;
 import consulo.content.scope.NamedScope;
 import consulo.ide.impl.idea.openapi.vcs.actions.AbstractVcsAction;
 import consulo.ide.impl.idea.openapi.vcs.actions.DescindingFilesFilter;
-import consulo.ide.impl.idea.openapi.vcs.changes.RemoteRevisionsCache;
+import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
+import consulo.versionControlSystem.impl.internal.change.RemoteRevisionsCache;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesCache;
-import consulo.ide.impl.idea.openapi.vcs.ex.ProjectLevelVcsManagerEx;
+import consulo.versionControlSystem.internal.ProjectLevelVcsManagerEx;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.vcs.ViewUpdateInfoNotification;
 import consulo.localHistory.Label;
@@ -302,7 +303,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction imple
     private final String LOCAL_HISTORY_ACTION = VcsLocalize.localHistoryUpdateFromVcs().get();
 
     private final Project myProject;
-    private final ProjectLevelVcsManagerEx myProjectLevelVcsManager;
+    private final ProjectLevelVcsManagerImpl myProjectLevelVcsManager;
     private UpdatedFiles myUpdatedFiles;
     private final FilePath[] myRoots;
     private final Map<AbstractVcs, Collection<FilePath>> myVcsToVirtualFiles;
@@ -321,7 +322,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction imple
     public Updater(final Project project, final FilePath[] roots, final Map<AbstractVcs, Collection<FilePath>> vcsToVirtualFiles) {
       super(project, getTemplatePresentation().getText(), true, VcsConfiguration.getInstance(project).getUpdateOption());
       myProject = project;
-      myProjectLevelVcsManager = ProjectLevelVcsManagerEx.getInstanceEx(project);
+      myProjectLevelVcsManager = (ProjectLevelVcsManagerImpl)ProjectLevelVcsManagerEx.getInstanceEx(project);
       myDirtyScopeManager = VcsDirtyScopeManager.getInstance(myProject);
       myRoots = roots;
       myVcsToVirtualFiles = vcsToVirtualFiles;

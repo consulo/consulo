@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.issueLinks;
 
 import consulo.project.Project;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.vcs.IssueNavigationConfiguration;
+import consulo.versionControlSystem.IssueNavigationConfiguration;
 import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.ide.impl.idea.xml.util.XmlTagUtilBase;
 import consulo.ui.ex.awt.UIUtil;

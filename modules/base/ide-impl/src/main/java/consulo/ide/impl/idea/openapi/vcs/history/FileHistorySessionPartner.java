@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs.history;
 
 import consulo.ide.impl.idea.openapi.vcs.*;
-import consulo.ide.impl.idea.openapi.vcs.ex.ProjectLevelVcsManagerEx;
+import consulo.versionControlSystem.internal.ProjectLevelVcsManagerEx;
 import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.ide.impl.idea.util.BufferedListConsumer;
 import consulo.ide.impl.idea.util.ContentUtilEx;

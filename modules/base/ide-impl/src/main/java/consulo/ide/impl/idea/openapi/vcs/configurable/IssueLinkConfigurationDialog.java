@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.configurable;
 
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ide.impl.idea.openapi.vcs.IssueNavigationLink;
+import consulo.versionControlSystem.IssueNavigationLink;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import jakarta.annotation.Nullable;
 

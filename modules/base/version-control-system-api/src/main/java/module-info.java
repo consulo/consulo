@@ -36,5 +36,7 @@ module consulo.version.control.system.api {
   exports consulo.versionControlSystem.update;
   exports consulo.versionControlSystem.root;
   exports consulo.versionControlSystem.util;
-  exports consulo.versionControlSystem.internal to consulo.ide.impl;
+  exports consulo.versionControlSystem.internal to consulo.ide.impl, consulo.version.control.system.impl;
+
+  opens consulo.versionControlSystem to consulo.util.xml.serializer;
 }

@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.impl.idea.openapi.actionSystem.impl.BasePresentationFactory;
+import consulo.ui.ex.action.BasePresentationFactory;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import jakarta.annotation.Nonnull;

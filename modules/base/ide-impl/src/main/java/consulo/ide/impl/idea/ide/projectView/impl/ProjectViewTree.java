@@ -2,27 +2,26 @@
 
 package consulo.ide.impl.idea.ide.projectView.impl;
 
-import consulo.ui.ex.awt.dnd.DnDAwareTree;
-import consulo.project.ui.view.tree.ProjectViewNode;
-import consulo.project.ui.view.tree.AbstractTreeNode;
-import consulo.ui.ex.tree.NodeDescriptor;
-import consulo.ui.ex.awt.tree.NodeRenderer;
 import consulo.application.ReadAction;
-import consulo.logging.Logger;
-import consulo.project.Project;
 import consulo.application.util.registry.Registry;
-import consulo.util.lang.ObjectUtil;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.fileEditor.VfsPresentationUtil;
+import consulo.ide.ui.popup.HintUpdateSupply;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiDirectoryContainer;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
-import consulo.ide.ui.popup.HintUpdateSupply;
-import consulo.ide.impl.idea.ui.tabs.FileColorManagerImpl;
-import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.project.ui.view.tree.ApplicationFileColorManager;
+import consulo.project.ui.view.tree.ProjectViewNode;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.awt.dnd.DnDAwareTree;
+import consulo.ui.ex.awt.tree.NodeRenderer;
+import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.util.lang.ObjectUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -39,12 +38,16 @@ import java.util.ArrayDeque;
 public class ProjectViewTree extends DnDAwareTree {
   private static final Logger LOG = Logger.getInstance(ProjectViewTree.class);
 
+  private final ApplicationFileColorManager myApplicationFileColorManager;
+
   protected ProjectViewTree(Project project, TreeModel model) {
     this(model);
   }
 
   public ProjectViewTree(TreeModel model) {
     super(model);
+
+    myApplicationFileColorManager = ApplicationFileColorManager.getInstance();
 
     final NodeRenderer cellRenderer = new NodeRenderer() {
       @Override
@@ -55,7 +58,13 @@ public class ProjectViewTree extends DnDAwareTree {
 
       @RequiredUIAccess
       @Override
-      public void customizeCellRenderer(@Nonnull JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+      public void customizeCellRenderer(@Nonnull JTree tree,
+                                        Object value,
+                                        boolean selected,
+                                        boolean expanded,
+                                        boolean leaf,
+                                        int row,
+                                        boolean hasFocus) {
         super.customizeCellRenderer(tree, value, selected, expanded, leaf, row, hasFocus);
         Object object = TreeUtil.getUserObject(value);
         //if (object instanceof ProjectViewNode && UISettings.getInstance().getShowInplaceComments()) {
@@ -116,19 +125,12 @@ public class ProjectViewTree extends DnDAwareTree {
 
   @Override
   public boolean isFileColorsEnabled() {
-    return isFileColorsEnabledFor(this);
+    return isFileColorsEnabledFor(myApplicationFileColorManager, this);
   }
 
-  public static boolean isFileColorsEnabledFor(JTree tree) {
-    boolean enabled = FileColorManagerImpl._isEnabled() && FileColorManagerImpl._isEnabledForProjectView();
-    boolean opaque = tree.isOpaque();
-    if (enabled && opaque) {
-      tree.setOpaque(false);
-    }
-    else if (!enabled && !opaque) {
-      tree.setOpaque(true);
-    }
-    return enabled;
+  @Deprecated
+  public static boolean isFileColorsEnabledFor(ApplicationFileColorManager applicationFileColorManager, JTree tree) {
+    return applicationFileColorManager.isFileColorsEnabledFor(tree::isOpaque, tree::setOpaque);
   }
 
   @Nullable

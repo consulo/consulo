@@ -15,18 +15,24 @@
  */
 package consulo.versionControlSystem.internal;
 
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.LocalChangeList;
-
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
+
 import java.util.Collection;
 import java.util.List;
 
 public abstract class ChangeListManagerEx extends ChangeListManager {
+  @Nonnull
+  public static ChangeListManagerEx getInstanceEx(Project project) {
+    return (ChangeListManagerEx)getInstance(project);
+  }
+
   @Nonnull
   public abstract Collection<LocalChangeList> getAffectedLists(@Nonnull Collection<? extends Change> changes);
 
@@ -34,7 +40,8 @@ public abstract class ChangeListManagerEx extends ChangeListManager {
   public abstract LocalChangeList getIdentityChangeList(@Nonnull Change change);
 
   @Nonnull
-  public abstract Collection<LocalChangeList> getInvolvedListsFilterChanges(@Nonnull Collection<Change> changes, @Nonnull List<Change> validChanges);
+  public abstract Collection<LocalChangeList> getInvolvedListsFilterChanges(@Nonnull Collection<Change> changes,
+                                                                            @Nonnull List<Change> validChanges);
 
   /**
    * Blocks modal dialogs that we don't want to popup during some process, for example, above the commit dialog.
@@ -53,4 +60,10 @@ public abstract class ChangeListManagerEx extends ChangeListManager {
   public abstract void freeze(@Nonnull String reason);
 
   public abstract void unfreeze();
+
+  @Nonnull
+  public abstract List<VirtualFile> getIgnoredFiles();
+
+  @Nonnull
+  public abstract List<VirtualFile> getUnversionedFiles();
 }

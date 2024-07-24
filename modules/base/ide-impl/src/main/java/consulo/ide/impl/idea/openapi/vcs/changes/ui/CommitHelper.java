@@ -30,7 +30,7 @@ import consulo.ide.impl.idea.openapi.vcs.changes.VetoSavingCommittingDocumentsAd
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.MoveChangesToAnotherListAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesCache;
 import consulo.ide.impl.idea.util.NullableFunction;
-import consulo.ide.impl.idea.util.ui.ConfirmationDialog;
+import consulo.versionControlSystem.impl.internal.ui.awt.ConfirmationDialog;
 import consulo.localHistory.LocalHistory;
 import consulo.localHistory.LocalHistoryAction;
 import consulo.logging.Logger;

@@ -41,7 +41,7 @@ import consulo.ide.impl.idea.codeInspection.ui.actions.InspectionsOptionsToolbar
 import consulo.ide.impl.idea.codeInspection.ui.actions.InvokeQuickFixAction;
 import consulo.ide.impl.idea.ide.OccurenceNavigatorSupport;
 import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
-import consulo.ide.impl.idea.ui.SmartExpander;
+import consulo.ui.ex.awt.tree.SmartExpander;
 import consulo.language.editor.highlight.HighlightManager;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
 import consulo.language.editor.inspection.CommonProblemDescriptor;

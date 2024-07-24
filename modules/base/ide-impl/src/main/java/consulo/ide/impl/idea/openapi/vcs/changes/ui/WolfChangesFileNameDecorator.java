@@ -17,6 +17,8 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.versionControlSystem.impl.internal.change.ui.ChangesFileNameDecorator;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesBrowserNodeRenderer;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.ui.ex.JBColor;

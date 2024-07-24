@@ -35,6 +35,7 @@ import consulo.ui.ex.awt.util.ListUtil;
 import consulo.util.lang.Comparing;
 import consulo.versionControlSystem.change.IgnoreSettingsType;
 import consulo.versionControlSystem.change.IgnoredFileBean;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.IgnoreUnversionedDialog;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Nls;

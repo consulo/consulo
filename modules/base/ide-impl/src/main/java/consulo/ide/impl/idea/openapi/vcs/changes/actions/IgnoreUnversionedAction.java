@@ -23,20 +23,21 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowserBase;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.IgnoreUnversionedDialog;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.IgnoreUnversionedDialog;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.collection.Streams;
 import consulo.versionControlSystem.change.ChangeListManager;
+import consulo.versionControlSystem.internal.ChangesBrowserApi;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesListView.UNVERSIONED_FILES_DATA_KEY;
+import static consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesListView.UNVERSIONED_FILES_DATA_KEY;
 
 public class IgnoreUnversionedAction extends AnAction {
 
@@ -47,7 +48,7 @@ public class IgnoreUnversionedAction extends AnAction {
 
     if (!ChangeListManager.getInstance(project).isFreezedWithNotification(null)) {
       List<VirtualFile> files = e.getRequiredData(UNVERSIONED_FILES_DATA_KEY).collect(Collectors.toList());
-      ChangesBrowserBase<?> browser = e.getData(ChangesBrowserBase.DATA_KEY);
+      ChangesBrowserBase<?> browser = (ChangesBrowserBase<?>)e.getData(ChangesBrowserApi.DATA_KEY);
       Runnable callback = browser == null ? null : () -> {
         browser.rebuildList();
         //noinspection unchecked

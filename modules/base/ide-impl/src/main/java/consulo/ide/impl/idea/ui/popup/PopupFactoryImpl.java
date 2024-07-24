@@ -14,7 +14,7 @@ import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionMenuUtil;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.BasePresentationFactory;
+import consulo.ui.ex.action.BasePresentationFactory;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ide.impl.idea.ui.popup.mock.MockConfirmation;

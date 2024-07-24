@@ -20,7 +20,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangesViewManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangeListChooser;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesListView;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesListView;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.platform.base.localize.ActionLocalize;

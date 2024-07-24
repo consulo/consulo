@@ -23,7 +23,7 @@ import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.wm.FocusManagerImpl;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.BasePresentationFactory;
+import consulo.ui.ex.action.BasePresentationFactory;
 import consulo.ide.impl.idea.openapi.keymap.impl.KeymapManagerImpl;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.MouseShortcutPanel;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;

@@ -20,7 +20,7 @@ import consulo.project.ui.notification.NotificationAction;
 import consulo.disposer.Disposable;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.ex.ProjectLevelVcsManagerEx;
+import consulo.versionControlSystem.internal.ProjectLevelVcsManagerEx;
 import consulo.ide.impl.idea.openapi.vcs.update.UpdateInfoTree;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;

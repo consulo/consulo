@@ -201,15 +201,15 @@ file.chooser.select.object.title:
 delete.dialog.title:
   text: Delete
 are.you.sure.you.want.to.delete.selected.folder.confirmation.message:
-  text: Are you sure you want to delete selected folder?
+  text: Are you sure you want to delete folder ''{0}''?
 are.you.sure.you.want.to.delete.selected.file.confirmation.message:
   text: Delete {0}?
 are.you.sure.you.want.to.delete.selected.files.and.directories.confirmation.message:
-  text: Are you sure you want to delete selected files and directories?
+  text: Are you sure you want to delete {0} selected files and directories?
 are.you.sure.you.want.to.delete.selected.folders.confirmation.message:
-  text: Are you sure you want to delete selected directories?
+  text: Are you sure you want to delete {0} selected directories?
 are.you.sure.you.want.to.delete.selected.files.and.files.confirmation.message:
-  text: Are you sure you want to delete selected files?
+  text: Are you sure you want to delete {0} selected files?
 create.new.folder.enter.new.folder.name.prompt.text:
   text: 'Enter a new folder name:'
 create.new.folder.folder.name.cannot.be.empty.error.message:

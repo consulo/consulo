@@ -30,7 +30,7 @@ import consulo.execution.debug.frame.XValueNode;
 import consulo.execution.debug.frame.XValuePlace;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.fileEditor.FileEditorManager;
-import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.TreeLinkMouseListener;
+import consulo.ui.ex.awt.tree.TreeLinkMouseListener;
 import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.ide.impl.idea.util.ui.TextTransferable;
 import consulo.ide.impl.idea.xdebugger.impl.ui.DebuggerUIUtil;

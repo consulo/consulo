@@ -23,7 +23,6 @@ import consulo.component.messagebus.MessageBusConnection;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionManagerImpl;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.BasePresentationFactory;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.project.ui.wm.IdeFrame;

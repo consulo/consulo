@@ -2,7 +2,7 @@
 package consulo.desktop.awt.action;
 
 import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.BasePresentationFactory;
+import consulo.ui.ex.action.BasePresentationFactory;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.WeakTimerListener;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;

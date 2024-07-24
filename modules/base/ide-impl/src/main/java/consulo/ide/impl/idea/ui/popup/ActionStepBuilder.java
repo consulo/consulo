@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.ui.popup;
 import consulo.application.AllIcons;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionGroupExpander;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.BasePresentationFactory;
+import consulo.ui.ex.action.BasePresentationFactory;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import consulo.util.lang.StringUtil;
 import consulo.localize.LocalizeValue;

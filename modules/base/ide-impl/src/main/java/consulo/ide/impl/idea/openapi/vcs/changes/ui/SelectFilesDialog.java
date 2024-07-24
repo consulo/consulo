@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.dataContext.DataSink;
-import consulo.ide.impl.idea.openapi.fileChooser.actions.VirtualFileDeleteProvider;
+import consulo.project.ui.impl.internal.VirtualFileDeleteProvider;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.VcsShowConfirmationOption;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.DeleteUnversionedFilesAction;
@@ -30,6 +30,11 @@ import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangeNodeDecorator;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.TreeModelBuilder;
+import consulo.versionControlSystem.impl.internal.ui.awt.AbstractSelectFilesDialog;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesBrowserNode;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesTreeList;
 import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nonnull;

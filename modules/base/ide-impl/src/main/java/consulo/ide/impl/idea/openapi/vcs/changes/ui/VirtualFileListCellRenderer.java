@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 import consulo.application.AllIcons;
 import consulo.project.Project;
 import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.TreeModelBuilder;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
 import consulo.versionControlSystem.change.Change;

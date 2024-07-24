@@ -28,6 +28,8 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.versionControlSystem.change.*;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangeNodeDecorator;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.TreeModelBuilder;
 import consulo.versionControlSystem.internal.ChangeListManagerEx;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nonnull;

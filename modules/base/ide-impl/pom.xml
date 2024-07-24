@@ -379,6 +379,11 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-project-ui-impl</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-virtual-file-watcher-api</artifactId>
       <version>${project.version}</version>
     </dependency>

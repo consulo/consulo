@@ -22,7 +22,7 @@ import consulo.desktop.awt.ui.keymap.IdeMouseEventDispatcher;
 import consulo.eawt.wrapper.GestureUtilitiesWrapper;
 import consulo.eawt.wrapper.event.PressureEventWrapper;
 import consulo.eawt.wrapper.event.PressureListenerWrapper;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.BasePresentationFactory;
+import consulo.ui.ex.action.BasePresentationFactory;
 import consulo.ide.impl.idea.openapi.keymap.impl.KeymapManagerImpl;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;

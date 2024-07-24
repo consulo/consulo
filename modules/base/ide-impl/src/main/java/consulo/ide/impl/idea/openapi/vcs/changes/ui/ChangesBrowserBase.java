@@ -19,11 +19,11 @@ import consulo.application.impl.internal.IdeaModalityState;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.TypeSafeDataProvider;
 import consulo.diff.DiffDialogHints;
-import consulo.disposer.Disposable;
 import consulo.diff.internal.DiffUserDataKeysEx;
+import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.ide.impl.idea.openapi.fileChooser.actions.VirtualFileDeleteProvider;
-import consulo.ide.impl.idea.openapi.vcs.changes.RemoteRevisionsCache;
+import consulo.project.ui.impl.internal.VirtualFileDeleteProvider;
+import consulo.versionControlSystem.impl.internal.change.RemoteRevisionsCache;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ShowDiffAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ShowDiffContext;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -41,6 +41,10 @@ import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.*;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangeNodeDecorator;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesBrowserNode;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesTreeList;
+import consulo.versionControlSystem.internal.ChangesBrowserApi;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -58,12 +62,12 @@ import java.util.List;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowserNode.UNVERSIONED_FILES_TAG;
-import static consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesListView.*;
 import static consulo.versionControlSystem.change.ChangesUtil.getAfterRevisionsFiles;
 import static consulo.versionControlSystem.change.ChangesUtil.getNavigatableArray;
+import static consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesBrowserNode.UNVERSIONED_FILES_TAG;
+import static consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesListView.*;
 
-public abstract class ChangesBrowserBase<T> extends JPanel implements TypeSafeDataProvider, Disposable {
+public abstract class ChangesBrowserBase<T> extends JPanel implements ChangesBrowserApi, TypeSafeDataProvider, Disposable {
   private static final Logger LOG = Logger.getInstance(ChangesBrowserBase.class);
 
   // for backgroundable rollback to mark
@@ -82,7 +86,7 @@ public abstract class ChangesBrowserBase<T> extends JPanel implements TypeSafeDa
 
   private JComponent myDiffBottomComponent;
 
-  public static Key<ChangesBrowserBase> DATA_KEY = Key.create("consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowser");
+  public static Key<ChangesBrowserApi> DATA_KEY = ChangesBrowserApi.DATA_KEY;
   private AnAction myDiffAction;
   private final VirtualFile myToSelect;
   @Nonnull
@@ -115,7 +119,7 @@ public abstract class ChangesBrowserBase<T> extends JPanel implements TypeSafeDa
     myToSelect = toSelect;
 
     ChangeNodeDecorator decorator =
-            ChangesBrowser.MyUseCase.LOCAL_CHANGES.equals(useCase) ? RemoteRevisionsCache.getInstance(myProject).getChangesNodeDecorator() : null;
+      ChangesBrowser.MyUseCase.LOCAL_CHANGES.equals(useCase) ? RemoteRevisionsCache.getInstance(myProject).getChangesNodeDecorator() : null;
 
     myViewer = new ChangesTreeList<>(myProject, changes, capableOfExcludingChanges, highlightProblems, inclusionListener, decorator) {
       @Override
@@ -460,8 +464,8 @@ public abstract class ChangesBrowserBase<T> extends JPanel implements TypeSafeDa
   @Nonnull
   protected Stream<VirtualFile> getSelectedFiles() {
     return Stream.concat(
-            getAfterRevisionsFiles(getSelectedChanges().stream()),
-            getVirtualFiles(myViewer.getSelectionPaths(), null)
+      getAfterRevisionsFiles(getSelectedChanges().stream()),
+      getVirtualFiles(myViewer.getSelectionPaths(), null)
     ).distinct();
   }
 

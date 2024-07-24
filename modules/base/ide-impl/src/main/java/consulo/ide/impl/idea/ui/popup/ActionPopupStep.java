@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.ui.popup;
 
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.BasePresentationFactory;
+import consulo.ui.ex.action.BasePresentationFactory;
 import consulo.ide.impl.idea.openapi.ui.popup.*;
 import consulo.ui.ex.action.*;
 import consulo.util.lang.function.Condition;

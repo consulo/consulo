@@ -27,7 +27,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.component.ProcessCanceledException;
 import consulo.document.FileDocumentManager;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesListView;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesListView;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.RollbackChangesDialog;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.RollbackProgressModifier;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;

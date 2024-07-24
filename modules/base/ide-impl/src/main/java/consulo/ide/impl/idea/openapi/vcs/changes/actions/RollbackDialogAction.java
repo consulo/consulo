@@ -15,19 +15,19 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
+import consulo.application.dumb.DumbAware;
+import consulo.document.FileDocumentManager;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.vcs.changes.ui.RollbackChangesDialog;
+import consulo.ide.impl.idea.vcsUtil.RollbackUtil;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.document.FileDocumentManager;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.Change;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowserBase;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.RollbackChangesDialog;
-import consulo.ide.impl.idea.vcsUtil.RollbackUtil;
+import consulo.versionControlSystem.internal.ChangesBrowserApi;
 
 import java.util.Arrays;
 
@@ -45,7 +45,7 @@ public class RollbackDialogAction extends AnAction implements DumbAware {
     FileDocumentManager.getInstance().saveAllDocuments();
     Change[] changes = e.getData(VcsDataKeys.CHANGES);
     Project project = e.getData(Project.KEY);
-    final ChangesBrowserBase browser = e.getData(ChangesBrowserBase.DATA_KEY);
+    final ChangesBrowserApi browser = e.getData(ChangesBrowserApi.DATA_KEY);
     if (browser != null) {
       browser.setDataIsDirty(true);
     }

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.fileChooser.actions;
 
+import consulo.project.ui.impl.internal.VirtualFileDeleteProvider;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.DeleteProvider;
 import consulo.ide.impl.idea.ide.actions.DeleteAction;

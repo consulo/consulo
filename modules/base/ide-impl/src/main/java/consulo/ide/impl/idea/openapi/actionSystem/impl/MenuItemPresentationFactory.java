@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.openapi.actionSystem.impl;
 
 import consulo.application.ui.UISettings;
+import consulo.ui.ex.action.BasePresentationFactory;
 import consulo.ui.ex.action.Presentation;
 
 /**

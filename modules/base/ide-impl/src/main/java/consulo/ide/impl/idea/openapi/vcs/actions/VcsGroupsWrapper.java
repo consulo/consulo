@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.BasePresentationFactory;
+import consulo.ui.ex.action.BasePresentationFactory;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.action.*;

@@ -7,7 +7,7 @@ import consulo.dataContext.DataSink;
 import consulo.dataContext.TypeSafeDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.TreeLinkMouseListener;
+import consulo.ui.ex.awt.tree.TreeLinkMouseListener;
 import consulo.ide.impl.idea.ui.TreeCopyProvider;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.navigation.Navigatable;

@@ -21,7 +21,7 @@ import consulo.application.ui.wm.IdeFocusManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
-import consulo.ide.impl.idea.openapi.vcs.changes.UnversionedViewDialog;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.UnversionedViewDialog;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.MoveChangesToAnotherListAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.RollbackDialogAction;
 import consulo.ide.impl.idea.util.EventDispatcher;
@@ -37,11 +37,14 @@ import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.function.Condition;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.*;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangeNodeDecorator;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesBrowserNode;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesBrowserUnversionedFilesNode;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.TreeModelBuilder;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -334,7 +337,6 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
     else {
       toolBarGroup.add(ActionManager.getInstance().getAction(IdeActions.MOVE_TO_ANOTHER_CHANGE_LIST));
     }
-    UnversionedViewDialog.registerUnversionedActionsShortcuts(DataManager.getInstance().getDataContext(this), myViewer);
     // We do not add "Delete" key shortcut for deleting unversioned files as this shortcut is already used to uncheck
     // checkboxes in the tree.
     myMoveActionWithCustomShortcut =

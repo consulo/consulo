@@ -27,7 +27,7 @@ import consulo.ide.impl.idea.ide.OccurenceNavigatorSupport;
 import consulo.ide.impl.idea.ide.TextCopyProvider;
 import consulo.ide.impl.idea.ide.actions.exclusion.ExclusionHandler;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.ide.impl.idea.ui.SmartExpander;
+import consulo.ui.ex.awt.tree.SmartExpander;
 import consulo.ide.impl.idea.usages.UsageDataUtil;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.impl.internal.psi.PsiDocumentManagerBase;

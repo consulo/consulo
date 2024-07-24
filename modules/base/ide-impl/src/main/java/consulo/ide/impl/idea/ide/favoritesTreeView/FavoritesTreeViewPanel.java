@@ -35,7 +35,7 @@ import consulo.ide.impl.idea.ide.ui.customization.CustomizationUtil;
 import consulo.ide.impl.idea.ide.util.DeleteHandler;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
 import consulo.util.collection.ArrayUtil;
-import consulo.ide.impl.idea.util.EditSourceOnEnterKeyHandler;
+import consulo.ui.ex.awt.tree.EditSourceOnEnterKeyHandler;
 import consulo.ide.util.DirectoryChooserUtil;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.refactoring.ui.CopyPasteDelegator;

@@ -16,12 +16,13 @@
 package consulo.ide.impl.idea.ui;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.util.EditSourceOnEnterKeyHandler;
+import consulo.ui.ex.awt.tree.EditSourceOnEnterKeyHandler;
 import consulo.ui.ex.awt.EditSourceOnDoubleClickHandler;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.speedSearch.ListSpeedSearch;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.table.JBTable;
+import consulo.ui.ex.awt.tree.SmartExpander;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.TreeUIHelper;
 import jakarta.inject.Singleton;

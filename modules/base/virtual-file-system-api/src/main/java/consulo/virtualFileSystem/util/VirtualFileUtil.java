@@ -778,4 +778,115 @@ public final class VirtualFileUtil {
     }
     return result != null ? result : List.of();
   }
+
+  /**
+   * Gets the array of common ancestors for passed files.
+   *
+   * @param files array of files
+   * @return array of common ancestors for passed files
+   */
+  @Nonnull
+  public static VirtualFile[] getCommonAncestors(@Nonnull VirtualFile[] files) {
+    // Separate files by first component in the path.
+    HashMap<VirtualFile, Set<VirtualFile>> map = new HashMap<>();
+    for (VirtualFile aFile : files) {
+      VirtualFile directory = aFile.isDirectory() ? aFile : aFile.getParent();
+      if (directory == null) return VirtualFile.EMPTY_ARRAY;
+      VirtualFile[] path = getPathComponents(directory);
+      Set<VirtualFile> filesSet;
+      final VirtualFile firstPart = path[0];
+      if (map.containsKey(firstPart)) {
+        filesSet = map.get(firstPart);
+      }
+      else {
+        filesSet = new HashSet<VirtualFile>();
+        map.put(firstPart, filesSet);
+      }
+      filesSet.add(directory);
+    }
+    // Find common ancestor for each set of files.
+    ArrayList<VirtualFile> ancestorsList = new ArrayList<VirtualFile>();
+    for (Set<VirtualFile> filesSet : map.values()) {
+      VirtualFile ancestor = null;
+      for (VirtualFile file : filesSet) {
+        if (ancestor == null) {
+          ancestor = file;
+          continue;
+        }
+        ancestor = getCommonAncestor(ancestor, file);
+        //assertTrue(ancestor != null);
+      }
+      ancestorsList.add(ancestor);
+      filesSet.clear();
+    }
+    return toVirtualFileArray(ancestorsList);
+  }
+
+  /**
+   * Gets the common ancestor for passed files, or {@code null} if the files do not have common ancestors.
+   */
+  @Nullable
+  public static VirtualFile getCommonAncestor(@Nonnull Collection<? extends VirtualFile> files) {
+    VirtualFile ancestor = null;
+    for (VirtualFile file : files) {
+      if (ancestor == null) {
+        ancestor = file;
+      }
+      else {
+        ancestor = getCommonAncestor(ancestor, file);
+        if (ancestor == null) return null;
+      }
+    }
+    return ancestor;
+  }
+
+  /**
+   * Gets the common ancestor for passed files, or null if the files do not have common ancestors.
+   *
+   * @param file1 fist file
+   * @param file2 second file
+   * @return common ancestor for the passed files. Returns <code>null</code> if
+   * the files do not have common ancestor
+   */
+  @Nullable
+  public static VirtualFile getCommonAncestor(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
+    if (!file1.getFileSystem().equals(file2.getFileSystem())) {
+      return null;
+    }
+
+    VirtualFile[] path1 = getPathComponents(file1);
+    VirtualFile[] path2 = getPathComponents(file2);
+
+    int lastEqualIdx = -1;
+    for (int i = 0; i < path1.length && i < path2.length; i++) {
+      if (path1[i].equals(path2[i])) {
+        lastEqualIdx = i;
+      }
+      else {
+        break;
+      }
+    }
+    return lastEqualIdx == -1 ? null : path1[lastEqualIdx];
+  }
+
+  /**
+   * Gets an array of files representing paths from root to the passed file.
+   *
+   * @param file the file
+   * @return virtual files which represents paths from root to the passed file
+   */
+  @Nonnull
+  static VirtualFile[] getPathComponents(@Nonnull VirtualFile file) {
+    ArrayList<VirtualFile> componentsList = new ArrayList<>();
+    while (file != null) {
+      componentsList.add(file);
+      file = file.getParent();
+    }
+    int size = componentsList.size();
+    VirtualFile[] components = new VirtualFile[size];
+    for (int i = 0; i < size; i++) {
+      components[i] = componentsList.get(size - i - 1);
+    }
+    return components;
+  }
 }

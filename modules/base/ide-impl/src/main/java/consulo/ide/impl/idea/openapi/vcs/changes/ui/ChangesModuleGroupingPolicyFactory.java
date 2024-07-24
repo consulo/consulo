@@ -18,6 +18,8 @@ package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.project.Project;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesGroupingPolicy;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesGroupingPolicyFactory;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 

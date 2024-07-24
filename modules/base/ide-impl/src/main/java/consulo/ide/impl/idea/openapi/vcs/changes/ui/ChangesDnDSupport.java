@@ -15,17 +15,18 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
-import consulo.ui.ex.awt.dnd.DnDAwareTree;
 import consulo.disposer.Disposable;
-import consulo.project.Project;
-import consulo.versionControlSystem.VcsBundle;
-import consulo.versionControlSystem.change.Change;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
-import consulo.ui.ex.awt.dnd.*;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.project.Project;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.RelativeRectangle;
+import consulo.ui.ex.awt.dnd.*;
 import consulo.ui.ex.awt.tree.Tree;
+import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangeListDragBean;
+import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesBrowserNode;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -35,10 +36,10 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowserNode.IGNORED_FILES_TAG;
-import static consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowserNode.UNVERSIONED_FILES_TAG;
-import static consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesListView.getChanges;
-import static consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesListView.getVirtualFiles;
+import static consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesBrowserNode.IGNORED_FILES_TAG;
+import static consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesBrowserNode.UNVERSIONED_FILES_TAG;
+import static consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesListView.getChanges;
+import static consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesListView.getVirtualFiles;
 import static java.util.stream.Collectors.toList;
 
 public class ChangesDnDSupport implements DnDDropHandler, DnDTargetChecker {
@@ -62,12 +63,12 @@ public class ChangesDnDSupport implements DnDDropHandler, DnDTargetChecker {
 
   private void install() {
     DnDSupport.createBuilder(myTree)
-            .setTargetChecker(this)
-            .setDropHandler(this)
-            .setImageProvider(this::createDraggedImage)
-            .setBeanProvider(this::createDragStartBean)
-            .setDisposableParent(myTree instanceof Disposable ? (Disposable)myTree : myProject)
-            .install();
+              .setTargetChecker(this)
+              .setDropHandler(this)
+              .setImageProvider(this::createDraggedImage)
+              .setBeanProvider(this::createDragStartBean)
+              .setDisposableParent(myTree instanceof Disposable ? (Disposable)myTree : myProject)
+              .install();
   }
 
   @Nonnull

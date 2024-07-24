@@ -135,7 +135,7 @@ public abstract class AbstractVcsHelper {
     return showMergeDialog(files, provider);
   }
 
-  public abstract void showFileHistory(@Nonnull VcsHistoryProvider historyProvider, @Nonnull FilePath path, @Nonnull AbstractVcs vcs, @jakarta.annotation.Nullable String repositoryPath);
+  public abstract void showFileHistory(@Nonnull VcsHistoryProvider historyProvider, @Nonnull FilePath path, @Nonnull AbstractVcs vcs, @Nullable String repositoryPath);
 
   public abstract void showFileHistory(@Nonnull VcsHistoryProvider historyProvider,
                                        @Nullable AnnotationProvider annotationProvider,
@@ -158,10 +158,10 @@ public abstract class AbstractVcsHelper {
                                                                final String singleFilePromptTemplate,
                                                                final VcsShowConfirmationOption confirmationOption);
 
-  @jakarta.annotation.Nullable
+  @Nullable
   public abstract Collection<FilePath> selectFilePathsToProcess(List<FilePath> files,
                                                                 final String title,
-                                                                @jakarta.annotation.Nullable final String prompt,
+                                                                @Nullable final String prompt,
                                                                 final String singleFileTitle,
                                                                 final String singleFilePromptTemplate,
                                                                 final VcsShowConfirmationOption confirmationOption);
@@ -169,7 +169,7 @@ public abstract class AbstractVcsHelper {
   @Nullable
   public Collection<FilePath> selectFilePathsToProcess(List<FilePath> files,
                                                        final String title,
-                                                       @jakarta.annotation.Nullable final String prompt,
+                                                       @Nullable final String prompt,
                                                        final String singleFileTitle,
                                                        final String singleFilePromptTemplate,
                                                        final VcsShowConfirmationOption confirmationOption,
@@ -191,7 +191,7 @@ public abstract class AbstractVcsHelper {
   public abstract boolean commitChanges(@Nonnull Collection<Change> changes,
                                         @Nonnull LocalChangeList initialChangeList,
                                         @Nonnull String commitMessage,
-                                        @jakarta.annotation.Nullable CommitResultHandler customResultHandler);
+                                        @Nullable CommitResultHandler customResultHandler);
 
   public abstract void loadAndShowCommittedChangesDetails(@Nonnull Project project,
                                                           @Nonnull VcsRevisionNumber revision,
