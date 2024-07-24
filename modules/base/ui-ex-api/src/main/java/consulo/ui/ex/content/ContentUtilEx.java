@@ -13,26 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util;
+package consulo.ui.ex.content;
 
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
+import consulo.application.ApplicationPropertiesComponent;
 import consulo.disposer.Disposable;
-import consulo.util.lang.Comparing;
-import consulo.ui.ex.content.ContentsUtil;
-import consulo.util.lang.function.Condition;
 import consulo.disposer.Disposer;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
-import consulo.ui.ex.content.Content;
-import consulo.ui.ex.content.ContentFactory;
-import consulo.ui.ex.content.ContentManager;
-import consulo.ui.ex.content.TabbedContent;
-import consulo.ide.impl.idea.ui.content.impl.TabbedContentImpl;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * @author Konstantin Bulenkov
@@ -53,7 +47,7 @@ public class ContentUtilEx extends ContentsUtil {
                                       @Nonnull String tabName,
                                       boolean select,
                                       @Nullable Disposable childDisposable) {
-    if (PropertiesComponent.getInstance().getBoolean(TabbedContent.SPLIT_PROPERTY_PREFIX + groupPrefix)) {
+    if (ApplicationPropertiesComponent.getInstance().getBoolean(TabbedContent.SPLIT_PROPERTY_PREFIX + groupPrefix)) {
       final Content content = ContentFactory.getInstance().createContent(contentComponent, getFullName(groupPrefix, tabName), true);
       content.putUserData(Content.TABBED_CONTENT_KEY, Boolean.TRUE);
       content.putUserData(Content.TAB_GROUP_NAME_KEY, groupPrefix);
@@ -77,7 +71,7 @@ public class ContentUtilEx extends ContentsUtil {
 
     if (tabbedContent == null) {
       final Disposable disposable = Disposable.newDisposable();
-      tabbedContent = new TabbedContentImpl(contentComponent, tabName, true, groupPrefix);
+      tabbedContent = ContentFactory.getInstance().createTabbedContent(contentComponent, tabName, true, groupPrefix);
       ContentsUtil.addOrReplaceContent(manager, tabbedContent, select);
       Disposer.register(tabbedContent, disposable);
     }
@@ -148,8 +142,8 @@ public class ContentUtilEx extends ContentsUtil {
    */
   public static boolean selectContent(@Nonnull ContentManager manager, @Nonnull final JComponent contentComponent, boolean requestFocus) {
     for (Content content : manager.getContents()) {
-      if (content instanceof TabbedContentImpl) {
-        boolean found = ((TabbedContentImpl)content).findAndSelectContent(contentComponent);
+      if (content instanceof TabbedContent tabbedContent) {
+        boolean found = tabbedContent.findAndSelectContent(contentComponent);
         if (found) {
           manager.setSelectedContent(content, requestFocus);
           return true;
@@ -168,17 +162,17 @@ public class ContentUtilEx extends ContentsUtil {
    * trying to find the first one which matches the given condition.
    */
   @Nullable
-  public static JComponent findContentComponent(@Nonnull ContentManager manager, @Nonnull Condition<JComponent> condition) {
+  public static JComponent findContentComponent(@Nonnull ContentManager manager, @Nonnull Predicate<JComponent> condition) {
     for (Content content : manager.getContents()) {
-      if (content instanceof TabbedContentImpl) {
-        List<Pair<String, JComponent>> tabs = ((TabbedContentImpl)content).getTabs();
+      if (content instanceof TabbedContent tabbedContent) {
+        List<Pair<String, JComponent>> tabs = tabbedContent.getTabs();
         for (Pair<String, JComponent> tab : tabs) {
-          if (condition.value(tab.second)) {
+          if (condition.test(tab.second)) {
             return tab.second;
           }
         }
       }
-      else if (condition.value(content.getComponent())) {
+      else if (condition.test(content.getComponent())) {
         return content.getComponent();
       }
     }

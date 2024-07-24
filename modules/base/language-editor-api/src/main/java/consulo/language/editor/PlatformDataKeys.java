@@ -80,7 +80,8 @@ public interface PlatformDataKeys extends CommonDataKeys {
 
   Key<Object> SELECTED_ITEM = Key.create("selectedItem");
   Key<Object[]> SELECTED_ITEMS = Key.create("selectedItems");
-  Key<ContentManager> CONTENT_MANAGER = Key.create("contentManager");
+  @Deprecated(forRemoval = true)
+  Key<ContentManager> CONTENT_MANAGER = ContentManager.KEY;
   @Deprecated(forRemoval = true)
   Key<ToolWindow> TOOL_WINDOW = ToolWindow.KEY;
   @Deprecated(forRemoval = true)

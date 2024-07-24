@@ -24,7 +24,7 @@ import consulo.ide.impl.idea.ide.actions.WindowAction;
 import consulo.ide.impl.idea.ide.ui.PopupLocationTracker;
 import consulo.ide.impl.idea.ide.ui.ScreenAreaConsumer;
 import consulo.ide.impl.idea.openapi.project.ProjectUtil;
-import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
+import consulo.project.ui.internal.ToolWindowManagerEx;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
 import consulo.ide.impl.idea.ui.*;
 import consulo.ide.impl.idea.ui.mac.touchbar.TouchBarsManager;

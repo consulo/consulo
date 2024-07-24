@@ -25,11 +25,14 @@ import consulo.component.ProcessCanceledException;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.change.ContentRevisionCache;
 import consulo.versionControlSystem.change.VcsAnnotationLocalChangesListener;
 import consulo.versionControlSystem.checkout.CheckoutProvider;
 import consulo.versionControlSystem.history.VcsHistoryCache;
 import consulo.versionControlSystem.root.VcsRoot;
+import consulo.versionControlSystem.ui.UpdateInfoTree;
+import consulo.versionControlSystem.update.ActionInfo;
 import consulo.versionControlSystem.update.UpdatedFiles;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -288,7 +291,9 @@ public abstract class ProjectLevelVcsManager {
 
   public abstract void iterateVcsRoot(final VirtualFile root, final Processor<FilePath> iterator);
 
-  public abstract void iterateVcsRoot(final VirtualFile root, final Processor<FilePath> iterator, @Nullable VirtualFileFilter directoryFilter);
+  public abstract void iterateVcsRoot(final VirtualFile root,
+                                      final Processor<FilePath> iterator,
+                                      @Nullable VirtualFileFilter directoryFilter);
 
   @Nullable
   public abstract AbstractVcs findVersioningVcs(VirtualFile file);
@@ -308,4 +313,11 @@ public abstract class ProjectLevelVcsManager {
 
   @Nonnull
   public abstract VcsShowSettingOption getOptions(VcsConfiguration.StandardOption option);
+
+  @RequiredUIAccess
+  @Nullable
+  public abstract UpdateInfoTree showUpdateProjectInfo(UpdatedFiles updatedFiles,
+                                                       String displayActionName,
+                                                       ActionInfo actionInfo,
+                                                       boolean canceled);
 }

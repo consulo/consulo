@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
+import consulo.project.ui.internal.ToolWindowManagerEx;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;

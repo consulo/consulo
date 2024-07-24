@@ -44,11 +44,11 @@ import consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman.MappingsToRoots;
 import consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman.NewMappings;
 import consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman.OptionsAndConfirmations;
 import consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman.ProjectLevelVcsManagerSerialization;
-import consulo.ide.impl.idea.openapi.vcs.update.UpdateInfoTree;
+import consulo.ide.impl.idea.openapi.vcs.update.UpdateInfoTreeImpl;
 import consulo.ide.impl.idea.openapi.vcs.update.UpdatedFilesListener;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ide.impl.idea.util.ContentUtilEx;
-import consulo.ide.impl.idea.vcs.ViewUpdateInfoNotification;
+import consulo.ui.ex.content.ContentUtilEx;
+import consulo.versionControlSystem.ui.ViewUpdateInfoNotification;
 import consulo.language.content.FileIndexFacade;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -467,22 +467,23 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
     return myOptionsAndConfirmations.getOrCreateCustomOption(vcsActionName, vcs);
   }
 
-  @CalledInAwt
+  @RequiredUIAccess
   @Override
   public void showProjectOperationInfo(final UpdatedFiles updatedFiles, String displayActionName) {
-    UpdateInfoTree tree = showUpdateProjectInfo(updatedFiles, displayActionName, ActionInfo.STATUS, false);
+    UpdateInfoTreeImpl tree = showUpdateProjectInfo(updatedFiles, displayActionName, ActionInfo.STATUS, false);
     if (tree != null) ViewUpdateInfoNotification.focusUpdateInfoTree(myProject, tree);
   }
 
-  @CalledInAwt
+  @Override
+  @RequiredUIAccess
   @Nullable
-  public UpdateInfoTree showUpdateProjectInfo(UpdatedFiles updatedFiles, String displayActionName, ActionInfo actionInfo, boolean canceled) {
+  public UpdateInfoTreeImpl showUpdateProjectInfo(UpdatedFiles updatedFiles, String displayActionName, ActionInfo actionInfo, boolean canceled) {
     if (!myProject.isOpen() || myProject.isDisposed()) return null;
     ContentManager contentManager = getContentManager();
     if (contentManager == null) {
       return null;  // content manager is made null during dispose; flag is set later
     }
-    final UpdateInfoTree updateInfoTree = new UpdateInfoTree(contentManager, myProject, updatedFiles, displayActionName, actionInfo);
+    final UpdateInfoTreeImpl updateInfoTree = new UpdateInfoTreeImpl(contentManager, myProject, updatedFiles, displayActionName, actionInfo);
     ContentUtilEx.addTabbedContent(contentManager, updateInfoTree, "Update Info", DateFormatUtil.formatDateTime(System.currentTimeMillis()), false, updateInfoTree);
     updateInfoTree.expandRootChildren();
     return updateInfoTree;

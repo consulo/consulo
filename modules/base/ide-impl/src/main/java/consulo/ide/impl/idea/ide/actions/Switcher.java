@@ -26,7 +26,7 @@ import consulo.fileEditor.impl.internal.EditorHistoryManagerImpl;
 import consulo.fileEditor.impl.internal.FileEditorManagerImpl;
 import consulo.fileEditor.impl.internal.IdeDocumentHistoryImpl;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
+import consulo.project.ui.internal.ToolWindowManagerEx;
 import consulo.ide.impl.idea.ui.CaptionPanel;
 import consulo.ide.impl.idea.ui.ListActions;
 import consulo.ide.impl.idea.ui.WindowMoveListener;

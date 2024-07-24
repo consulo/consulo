@@ -19,7 +19,7 @@ import consulo.ide.impl.idea.openapi.vcs.*;
 import consulo.versionControlSystem.internal.ProjectLevelVcsManagerEx;
 import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.ide.impl.idea.util.BufferedListConsumer;
-import consulo.ide.impl.idea.util.ContentUtilEx;
+import consulo.ui.ex.content.ContentUtilEx;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;

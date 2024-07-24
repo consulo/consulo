@@ -19,7 +19,7 @@ import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentManager;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowManager;
-import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
+import consulo.project.ui.internal.ToolWindowManagerEx;
 import consulo.project.ui.wm.ToolWindowManagerListener;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.event.ContentManagerAdapter;

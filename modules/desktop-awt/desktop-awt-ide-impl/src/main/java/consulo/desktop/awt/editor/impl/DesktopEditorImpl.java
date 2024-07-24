@@ -56,7 +56,7 @@ import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.platform.Platform;
 import consulo.util.lang.Comparing;
-import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
+import consulo.project.ui.internal.ToolWindowManagerEx;
 import consulo.ide.impl.idea.ui.LightweightHint;
 import consulo.ide.impl.idea.ui.mac.touchbar.TouchBarsManager;
 import consulo.ide.impl.idea.util.ArrayUtil;

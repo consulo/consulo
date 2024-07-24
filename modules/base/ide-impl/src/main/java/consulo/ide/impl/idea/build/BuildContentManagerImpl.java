@@ -14,7 +14,7 @@ import consulo.disposer.Disposer;
 import consulo.execution.ExecutionUtil;
 import consulo.execution.impl.internal.ui.BaseContentCloseListener;
 import consulo.execution.impl.internal.ui.RunContentManagerImpl;
-import consulo.ide.impl.idea.util.ContentUtilEx;
+import consulo.ui.ex.content.ContentUtilEx;
 import consulo.language.LangBundle;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
@@ -45,7 +45,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
-import static consulo.ide.impl.idea.util.ContentUtilEx.getFullName;
+import static consulo.ui.ex.content.ContentUtilEx.getFullName;
 
 /**
  * @author Vladislav.Soroka

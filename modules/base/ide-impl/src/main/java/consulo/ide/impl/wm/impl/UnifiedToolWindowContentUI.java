@@ -25,7 +25,7 @@ import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionManagerImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import consulo.ide.impl.idea.ui.content.tabs.PinToolwindowTabAction;
 import consulo.ide.impl.idea.ui.content.tabs.TabbedContentAction;
-import consulo.ide.impl.idea.util.ContentUtilEx;
+import consulo.ui.ex.content.ContentUtilEx;
 import consulo.ide.impl.wm.impl.layout.UnifiedComboContentLayout;
 import consulo.ide.impl.wm.impl.layout.UnifiedContentLayout;
 import consulo.ide.impl.wm.impl.layout.UnifiedTabContentLayout;

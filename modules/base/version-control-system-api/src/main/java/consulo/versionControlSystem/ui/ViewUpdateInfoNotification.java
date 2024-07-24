@@ -13,21 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.vcs;
+package consulo.versionControlSystem.ui;
 
+import consulo.disposer.Disposer;
+import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationAction;
-import consulo.disposer.Disposable;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.project.Project;
-import consulo.versionControlSystem.internal.ProjectLevelVcsManagerEx;
-import consulo.ide.impl.idea.openapi.vcs.update.UpdateInfoTree;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.content.ContentManager;
-import consulo.ide.impl.idea.util.ContentUtilEx;
-import consulo.disposer.Disposer;
-
+import consulo.ui.ex.content.ContentUtilEx;
+import consulo.versionControlSystem.internal.ProjectLevelVcsManagerEx;
 import jakarta.annotation.Nonnull;
 
 public class ViewUpdateInfoNotification extends NotificationAction {
@@ -36,28 +34,27 @@ public class ViewUpdateInfoNotification extends NotificationAction {
   @Nonnull
   private final UpdateInfoTree myTree;
 
-  public ViewUpdateInfoNotification(@Nonnull Project project, @Nonnull UpdateInfoTree updateInfoTree, @Nonnull String actionName,
+  public ViewUpdateInfoNotification(@Nonnull Project project,
+                                    @Nonnull UpdateInfoTree updateInfoTree,
+                                    @Nonnull String actionName,
                                     @Nonnull Notification notification) {
     super(actionName);
     myProject = project;
     myTree = updateInfoTree;
-    Disposer.register(updateInfoTree, new Disposable() {
-      @Override
-      public void dispose() {
-        notification.expire();
-      }
-    });
+    Disposer.register(updateInfoTree, notification::expire);
   }
 
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
     focusUpdateInfoTree(myProject, myTree);
   }
 
+  @RequiredUIAccess
   public static void focusUpdateInfoTree(@Nonnull Project project, @Nonnull UpdateInfoTree updateInfoTree) {
     ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.VCS).activate(() -> {
       ContentManager contentManager = ProjectLevelVcsManagerEx.getInstanceEx(project).getContentManager();
-      if (contentManager != null) ContentUtilEx.selectContent(contentManager, updateInfoTree, true);
+      if (contentManager != null) ContentUtilEx.selectContent(contentManager, updateInfoTree.getComponent(), true);
     }, true, true);
   }
 }

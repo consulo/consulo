@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.wm.ex;
+package consulo.project.ui.internal;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
-import consulo.project.ui.internal.ToolWindowLayout;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowFactory;
 import consulo.project.ui.wm.ToolWindowManager;

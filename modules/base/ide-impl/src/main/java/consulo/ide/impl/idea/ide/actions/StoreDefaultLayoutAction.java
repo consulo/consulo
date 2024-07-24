@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.project.Project;
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
+import consulo.project.ui.internal.ToolWindowManagerEx;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.internal.ToolWindowLayout;
 import consulo.ui.annotation.RequiredUIAccess;

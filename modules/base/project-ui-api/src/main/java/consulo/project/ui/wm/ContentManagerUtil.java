@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ui.content;
+package consulo.project.ui.wm;
 
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
+import consulo.project.ui.internal.ToolWindowManagerEx;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.internal.ToolWindowEx;
@@ -37,22 +36,22 @@ public class ContentManagerUtil {
       return null;
     }
 
-    ToolWindowManagerEx mgr=ToolWindowManagerEx.getInstanceEx(project);
+    ToolWindowManagerEx mgr = ToolWindowManagerEx.getInstanceEx(project);
 
     String id = mgr.getActiveToolWindowId();
     if (id == null && mgr.isEditorComponentActive()) {
       id = mgr.getLastActiveToolWindowId();
     }
-    if (id == null){
+    if (id == null) {
       return null;
     }
 
-    ToolWindowEx toolWindow = (ToolWindowEx) mgr.getToolWindow(id);
+    ToolWindowEx toolWindow = (ToolWindowEx)mgr.getToolWindow(id);
     if (requiresVisibleToolWindow && !toolWindow.isVisible()) {
       return null;
     }
 
-    final ContentManager fromContext = dataContext.getData(PlatformDataKeys.CONTENT_MANAGER);
+    final ContentManager fromContext = dataContext.getData(ContentManager.KEY);
     if (fromContext != null) return fromContext;
 
     return toolWindow != null ? toolWindow.getContentManager() : null;

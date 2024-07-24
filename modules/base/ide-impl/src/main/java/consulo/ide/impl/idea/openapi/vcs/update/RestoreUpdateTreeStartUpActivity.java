@@ -19,10 +19,10 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.openapi.project.ProjectReloadState;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesCache;
-import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
 import consulo.project.Project;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.internal.ProjectLevelVcsManagerEx;
 import consulo.versionControlSystem.update.ActionInfo;
@@ -38,9 +38,9 @@ public class RestoreUpdateTreeStartUpActivity implements PostStartupActivity, Du
     if (updateInfo != null && !updateInfo.isEmpty() && ProjectReloadState.getInstance(project).isAfterAutomaticReload()) {
       ActionInfo actionInfo = updateInfo.getActionInfo();
       if (actionInfo != null) {
-        ProjectLevelVcsManagerImpl instanceEx = (ProjectLevelVcsManagerImpl)ProjectLevelVcsManagerEx.getInstanceEx(project);
+        ProjectLevelVcsManager projectLevelVcsManager = ProjectLevelVcsManagerEx.getInstanceEx(project);
 
-        instanceEx.showUpdateProjectInfo(updateInfo.getFileInformation(),
+        projectLevelVcsManager.showUpdateProjectInfo(updateInfo.getFileInformation(),
                                          VcsBundle.message("action.display.name.update"),
                                          actionInfo,
                                          false);

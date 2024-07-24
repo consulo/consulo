@@ -30,7 +30,7 @@ import consulo.ui.ex.content.TabbedContent;
 import consulo.ide.impl.idea.ui.content.tabs.PinToolwindowTabAction;
 import consulo.ide.impl.idea.ui.content.tabs.TabbedContentAction;
 import consulo.ide.impl.idea.ui.popup.PopupState;
-import consulo.ide.impl.idea.util.ContentUtilEx;
+import consulo.ui.ex.content.ContentUtilEx;
 import consulo.ide.impl.wm.impl.ToolWindowContentUI;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.annotation.RequiredUIAccess;

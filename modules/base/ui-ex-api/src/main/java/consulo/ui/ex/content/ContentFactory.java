@@ -21,7 +21,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.component.ComponentManager;
 import consulo.ui.Component;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -50,8 +49,14 @@ public interface ContentFactory {
   // region AWT & Swing dependency
   @Nonnull
   @Deprecated
-  @DeprecationInfo("")
+  @DeprecationInfo("Use createUIContent")
   default Content createContent(javax.swing.JComponent component, String displayName, boolean isLockable) {
+    throw new AbstractMethodError();
+  }
+
+  @Nonnull
+  @Deprecated
+  default TabbedContent createTabbedContent(javax.swing.JComponent component, String displayName, boolean isPinnable, String titlePrefix) {
     throw new AbstractMethodError();
   }
   // endregion

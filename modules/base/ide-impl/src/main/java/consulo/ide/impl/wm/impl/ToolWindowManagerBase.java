@@ -26,7 +26,7 @@ import consulo.disposer.Disposer;
 import consulo.externalService.statistic.UsageTrigger;
 import consulo.fileEditor.FileEditorManager;
 import consulo.ide.impl.idea.ide.actions.ActivateToolWindowAction;
-import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
+import consulo.project.ui.internal.ToolWindowManagerEx;
 import consulo.ide.impl.idea.openapi.wm.impl.ToolWindowActiveStack;
 import consulo.ide.impl.idea.openapi.wm.impl.ToolWindowSideStack;
 import consulo.ide.impl.idea.util.EventDispatcher;

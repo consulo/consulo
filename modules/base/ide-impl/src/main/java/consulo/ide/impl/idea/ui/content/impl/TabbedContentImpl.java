@@ -15,11 +15,11 @@
  */
 package consulo.ide.impl.idea.ui.content.impl;
 
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.util.lang.Pair;
+import consulo.application.ApplicationPropertiesComponent;
 import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.content.ContentUtilEx;
 import consulo.ui.ex.content.TabbedContent;
-import consulo.ide.impl.idea.util.ContentUtilEx;
+import consulo.util.lang.Pair;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -32,7 +32,7 @@ import java.util.List;
  * @author Konstantin Bulenkov
  */
 public class TabbedContentImpl extends ContentImpl implements TabbedContent {
-  private final List<Pair<String, JComponent>> myTabs = new ArrayList<Pair<String, JComponent>>();
+  private final List<Pair<String, JComponent>> myTabs = new ArrayList<>();
   private String myPrefix;
 
   public TabbedContentImpl(JComponent component, String displayName, boolean isPinnable, String titlePrefix) {
@@ -104,6 +104,7 @@ public class TabbedContentImpl extends ContentImpl implements TabbedContent {
     setComponent(tab.second);
   }
 
+  @Override
   public boolean findAndSelectContent(@Nonnull JComponent contentComponent) {
     String tabName = findTabNameByComponent(contentComponent);
     if (tabName != null) {
@@ -132,6 +133,7 @@ public class TabbedContentImpl extends ContentImpl implements TabbedContent {
     return null;
   }
 
+  @Nonnull
   @Override
   public List<Pair<String, JComponent>> getTabs() {
     return Collections.unmodifiableList(myTabs);
@@ -149,12 +151,12 @@ public class TabbedContentImpl extends ContentImpl implements TabbedContent {
 
   @Override
   public void split() {
-    List<Pair<String, JComponent>> copy = new ArrayList<Pair<String, JComponent>>(myTabs);
+    List<Pair<String, JComponent>> copy = new ArrayList<>(myTabs);
     int selectedTab = ContentUtilEx.getSelectedTab(this);
     ContentManager manager = getManager();
     String prefix = getTitlePrefix();
     manager.removeContent(this, true);
-    PropertiesComponent.getInstance().setValue(SPLIT_PROPERTY_PREFIX + prefix, Boolean.TRUE.toString());
+    ApplicationPropertiesComponent.getInstance().setValue(SPLIT_PROPERTY_PREFIX + prefix, Boolean.TRUE.toString());
     for (int i = 0; i < copy.size(); i++) {
       final boolean select = i == selectedTab;
       final JComponent component = copy.get(i).second;

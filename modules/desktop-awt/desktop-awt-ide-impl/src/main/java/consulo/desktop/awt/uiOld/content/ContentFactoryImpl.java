@@ -20,13 +20,11 @@ import consulo.component.ComponentManager;
 import consulo.ide.impl.idea.ui.content.TabbedPaneContentUI;
 import consulo.ide.impl.idea.ui.content.impl.ContentImpl;
 import consulo.ide.impl.idea.ui.content.impl.DesktopContentManagerImpl;
+import consulo.ide.impl.idea.ui.content.impl.TabbedContentImpl;
 import consulo.project.Project;
 import consulo.ui.Component;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.ex.content.Content;
-import consulo.ui.ex.content.ContentFactory;
-import consulo.ui.ex.content.ContentManager;
-import consulo.ui.ex.content.ContentUI;
+import consulo.ui.ex.content.*;
 import jakarta.inject.Singleton;
 
 import jakarta.annotation.Nonnull;
@@ -65,5 +63,12 @@ public class ContentFactoryImpl implements ContentFactory {
   public ContentImpl createContent(javax.swing.JComponent component, String displayName, boolean isLockable) {
     return new ContentImpl(component, displayName, isLockable);
   }
+
+  @Nonnull
+  @Override
+  public TabbedContent createTabbedContent(javax.swing.JComponent component, String displayName, boolean isPinnable, String titlePrefix) {
+    return new TabbedContentImpl(component, displayName, isPinnable, titlePrefix);
+  }
+
   // endregion
 }

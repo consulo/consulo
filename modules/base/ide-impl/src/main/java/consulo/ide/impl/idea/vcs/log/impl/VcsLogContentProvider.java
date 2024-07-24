@@ -19,7 +19,7 @@ import consulo.component.messagebus.MessageBusConnection;
 import consulo.ide.impl.idea.openapi.vcs.CalledInAwt;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentProvider;
 import consulo.ui.ex.content.TabbedContent;
-import consulo.ide.impl.idea.util.ContentUtilEx;
+import consulo.ui.ex.content.ContentUtilEx;
 import consulo.ui.ex.content.ContentsUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogPanel;

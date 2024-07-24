@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
-import consulo.ide.impl.idea.util.ContentUtilEx;
+import consulo.ui.ex.content.ContentUtilEx;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogContentProvider;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;

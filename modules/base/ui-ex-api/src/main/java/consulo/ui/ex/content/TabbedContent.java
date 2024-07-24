@@ -61,4 +61,6 @@ public interface TabbedContent extends Content {
   void setTitlePrefix(String titlePrefix);
 
   void split();
+
+  boolean findAndSelectContent(@Nonnull JComponent contentComponent);
 }

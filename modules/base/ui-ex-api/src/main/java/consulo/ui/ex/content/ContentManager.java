@@ -24,11 +24,14 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.content.event.ContentManagerListener;
 import consulo.util.concurrent.AsyncResult;
 
+import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.List;
 
 public interface ContentManager extends Disposable, BusyObject {
+  Key<ContentManager> KEY = Key.create(ContentManager.class);
+
   boolean canCloseContents();
 
   void addContent(@Nonnull Content content);

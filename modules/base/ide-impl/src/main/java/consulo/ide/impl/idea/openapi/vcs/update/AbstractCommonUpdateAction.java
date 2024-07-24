@@ -30,7 +30,7 @@ import consulo.versionControlSystem.impl.internal.change.RemoteRevisionsCache;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesCache;
 import consulo.versionControlSystem.internal.ProjectLevelVcsManagerEx;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ide.impl.idea.vcs.ViewUpdateInfoNotification;
+import consulo.versionControlSystem.ui.ViewUpdateInfoNotification;
 import consulo.localHistory.Label;
 import consulo.localHistory.LocalHistory;
 import consulo.localHistory.LocalHistoryAction;
@@ -429,7 +429,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction imple
     }
 
     @Nonnull
-    private Notification prepareNotification(@Nonnull UpdateInfoTree tree, boolean someSessionWasCancelled) {
+    private Notification prepareNotification(@Nonnull UpdateInfoTreeImpl tree, boolean someSessionWasCancelled) {
       int allFiles = getUpdatedFilesCount();
 
       String title;
@@ -458,7 +458,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction imple
     }
 
     @Nullable
-    private String prepareScopeUpdatedText(@Nonnull UpdateInfoTree tree) {
+    private String prepareScopeUpdatedText(@Nonnull UpdateInfoTreeImpl tree) {
       String scopeText = null;
       NamedScope scopeFilter = tree.getFilterScope();
       if (scopeFilter != null) {
@@ -557,7 +557,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction imple
           VcsNotifier.getInstance(myProject).notify(STANDARD_NOTIFICATION.createNotification(content, type));
         }
         else if (!myUpdatedFiles.isEmpty()) {
-          final UpdateInfoTree tree = showUpdateTree(continueChainFinal && updateSuccess && noMerged, someSessionWasCancelled);
+          final UpdateInfoTreeImpl tree = showUpdateTree(continueChainFinal && updateSuccess && noMerged, someSessionWasCancelled);
           final CommittedChangesCache cache = CommittedChangesCache.getInstance(myProject);
           cache.processUpdatedFiles(myUpdatedFiles, tree::setChangeLists);
 
@@ -600,12 +600,12 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction imple
     }
 
     @Nonnull
-    private UpdateInfoTree showUpdateTree(final boolean willBeContinued, final boolean wasCanceled) {
+    private UpdateInfoTreeImpl showUpdateTree(final boolean willBeContinued, final boolean wasCanceled) {
       RestoreUpdateTree restoreUpdateTree = RestoreUpdateTree.getInstance(myProject);
       restoreUpdateTree.registerUpdateInformation(myUpdatedFiles, myActionInfo);
       final String text = getTemplatePresentation().getText() + ((willBeContinued || (myUpdateNumber > 1)) ? ("#" + myUpdateNumber) : "");
-      UpdateInfoTree updateInfoTree = notNull(myProjectLevelVcsManager.showUpdateProjectInfo(myUpdatedFiles, text, myActionInfo,
-                                                                                             wasCanceled));
+      UpdateInfoTreeImpl updateInfoTree = notNull(myProjectLevelVcsManager.showUpdateProjectInfo(myUpdatedFiles, text, myActionInfo,
+                                                                                                 wasCanceled));
       updateInfoTree.setBefore(myBefore);
       updateInfoTree.setAfter(myAfter);
       updateInfoTree.setCanGroupByChangeList(canGroupByChangelist(myVcsToVirtualFiles.keySet()));

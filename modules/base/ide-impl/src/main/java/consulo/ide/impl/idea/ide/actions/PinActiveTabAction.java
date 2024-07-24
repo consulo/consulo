@@ -19,7 +19,7 @@ import consulo.application.AllIcons;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ui.content.ContentManagerUtil;
+import consulo.project.ui.wm.ContentManagerUtil;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;

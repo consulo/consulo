@@ -53,6 +53,7 @@ import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.localize.VcsLocalize;
+import consulo.versionControlSystem.ui.UpdateInfoTree;
 import consulo.versionControlSystem.update.ActionInfo;
 import consulo.versionControlSystem.update.FileGroup;
 import consulo.versionControlSystem.update.UpdatedFiles;
@@ -76,7 +77,7 @@ import java.io.File;
 import java.util.List;
 import java.util.*;
 
-public class UpdateInfoTree extends PanelWithActionsAndCloseButton {
+public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implements UpdateInfoTree {
   private VirtualFile mySelectedFile;
   private FilePath mySelectedUrl;
   private final Tree myTree = new Tree();
@@ -106,15 +107,21 @@ public class UpdateInfoTree extends PanelWithActionsAndCloseButton {
   private Label myBefore;
   private Label myAfter;
 
-  public UpdateInfoTree(@Nonnull ContentManager contentManager, @Nonnull Project project, UpdatedFiles updatedFiles, String rootName, ActionInfo actionInfo) {
+  public UpdateInfoTreeImpl(@Nonnull ContentManager contentManager,
+                            @Nonnull Project project,
+                            UpdatedFiles updatedFiles,
+                            String rootName,
+                            ActionInfo actionInfo) {
     super(contentManager, "reference.versionControl.toolwindow.update");
     myActionInfo = actionInfo;
 
     myFileStatusListener = new FileStatusListener() {
+      @Override
       public void fileStatusesChanged() {
         myTree.repaint();
       }
 
+      @Override
       public void fileStatusChanged(@Nonnull VirtualFile virtualFile) {
         myTree.repaint();
       }
@@ -134,6 +141,12 @@ public class UpdateInfoTree extends PanelWithActionsAndCloseButton {
     myTreeIterable = new MyTreeIterable();
   }
 
+  @Override
+  public JComponent getComponent() {
+    return this;
+  }
+
+  @Override
   public void dispose() {
     Disposer.dispose(myRoot);
     if (myFileStatusListener != null) {
@@ -155,6 +168,7 @@ public class UpdateInfoTree extends PanelWithActionsAndCloseButton {
     }
   }
 
+  @Override
   protected void addActionsTo(DefaultActionGroup group) {
     group.add(new MyGroupByPackagesAction());
     group.add(new GroupByChangeListAction());
@@ -164,6 +178,7 @@ public class UpdateInfoTree extends PanelWithActionsAndCloseButton {
     group.add(ActionManager.getInstance().getAction(IdeActions.ACTION_SHOW_DIFF_COMMON));
   }
 
+  @Override
   protected JComponent createCenterPanel() {
     JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(myTree);
     scrollPane.setBorder(IdeBorderFactory.createBorder(SideBorder.LEFT));
@@ -287,10 +302,12 @@ public class UpdateInfoTree extends PanelWithActionsAndCloseButton {
       step();
     }
 
+    @Override
     public boolean hasNext() {
       return myNext != null;
     }
 
+    @Override
     public Pair<FilePath, FileStatus> next() {
       final FilePath result = myNext;
       final FileStatus status = myStatus;
