@@ -9,6 +9,7 @@ module consulo.version.control.system.api {
   requires transitive consulo.application.api;
   requires transitive consulo.project.api;
   requires transitive consulo.virtual.file.status.api;
+  requires transitive consulo.local.history.api;
 
   requires consulo.application.ui.api;
   requires consulo.code.editor.api;

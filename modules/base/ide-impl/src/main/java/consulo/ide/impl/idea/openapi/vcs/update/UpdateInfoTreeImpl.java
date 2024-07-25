@@ -30,8 +30,6 @@ import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesTreeB
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.RefreshIncomingChangesAction;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.ui.SelectionSaver;
-import consulo.ui.ex.awt.tree.SmartExpander;
-import consulo.ui.ex.awt.tree.EditSourceOnEnterKeyHandler;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.localHistory.Label;
 import consulo.localize.LocalizeValue;
@@ -42,9 +40,7 @@ import consulo.ui.ex.TreeExpander;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
-import consulo.ui.ex.awt.tree.DefaultTreeExpander;
-import consulo.ui.ex.awt.tree.Tree;
-import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.awt.tree.*;
 import consulo.ui.ex.content.ContentManager;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
@@ -66,7 +62,6 @@ import consulo.virtualFileSystem.status.FileStatusListener;
 import consulo.virtualFileSystem.status.FileStatusManager;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
@@ -96,9 +91,7 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
   private JLabel myLoadingChangeListsLabel;
   private List<CommittedChangeList> myCommittedChangeLists;
   private final JPanel myCenterPanel = new JPanel(new CardLayout());
-  @NonNls
   private static final String CARD_STATUS = "Status";
-  @NonNls
   private static final String CARD_CHANGES = "Changes";
   private CommittedChangesTreeBrowser myTreeBrowser;
   private final TreeExpander myTreeExpander;
@@ -489,10 +482,12 @@ public class UpdateInfoTreeImpl extends PanelWithActionsAndCloseButton implement
     }
   }
 
+  @Override
   public void setBefore(Label before) {
     myBefore = before;
   }
 
+  @Override
   public void setAfter(Label after) {
     myAfter = after;
   }

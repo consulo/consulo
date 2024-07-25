@@ -16,6 +16,7 @@
 package consulo.versionControlSystem.ui;
 
 import consulo.disposer.Disposable;
+import consulo.localHistory.Label;
 
 import javax.swing.*;
 
@@ -25,4 +26,8 @@ import javax.swing.*;
  */
 public interface UpdateInfoTree extends Disposable {
   JComponent getComponent();
+
+  void setBefore(Label before);
+
+  void setAfter(Label after);
 }
