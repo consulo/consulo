@@ -16,9 +16,11 @@
 package consulo.util.concurrent;
 
 import consulo.util.concurrent.internal.SameThreadExecutorService;
+import consulo.util.lang.function.ThrowableRunnable;
+import consulo.util.lang.function.ThrowableSupplier;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Contract;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -26,6 +28,7 @@ import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.Lock;
 
 /**
  * @author cdr
@@ -223,23 +226,23 @@ public class ConcurrencyUtil {
     };
   }
 
-  //public static <T, E extends Throwable> T withLock(@Nonnull Lock lock, @Nonnull ThrowableComputable<T, E> runnable) throws E {
-  //  lock.lock();
-  //  try {
-  //    return runnable.compute();
-  //  }
-  //  finally {
-  //    lock.unlock();
-  //  }
-  //}
-  //
-  //public static <E extends Throwable> void withLock(@Nonnull Lock lock, @Nonnull ThrowableRunnable<E> runnable) throws E {
-  //  lock.lock();
-  //  try {
-  //    runnable.run();
-  //  }
-  //  finally {
-  //    lock.unlock();
-  //  }
-  //}
+  public static <T, E extends Throwable> T withLock(@Nonnull Lock lock, @Nonnull ThrowableSupplier<T, E> runnable) throws E {
+    lock.lock();
+    try {
+      return runnable.get();
+    }
+    finally {
+      lock.unlock();
+    }
+  }
+
+  public static <E extends Throwable> void withLock(@Nonnull Lock lock, @Nonnull ThrowableRunnable<E> runnable) throws E {
+    lock.lock();
+    try {
+      runnable.run();
+    }
+    finally {
+      lock.unlock();
+    }
+  }
 }

@@ -19,13 +19,12 @@ package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 import consulo.project.Project;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsShowConfirmationOption;
-import consulo.versionControlSystem.impl.internal.ui.awt.AbstractSelectFilesDialog;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesTreeList;
+import consulo.versionControlSystem.impl.internal.ui.awt.AbstractSelectFilesDialog;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -50,8 +49,8 @@ public class SelectFilePathsDialog extends AbstractSelectFilesDialog<FilePath> {
     init();
   }
 
-  public Collection<FilePath> getSelectedFiles() {
-    return myFileList.getIncludedChanges();
+  public List<FilePath> getSelectedFiles() {
+    return List.copyOf(myFileList.getIncludedChanges());
   }
 
   @Nonnull

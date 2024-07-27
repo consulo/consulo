@@ -150,23 +150,23 @@ public abstract class AbstractVcsHelper {
    */
   public abstract void showRollbackChangesDialog(List<Change> changes);
 
-  @Nullable
-  public abstract Collection<VirtualFile> selectFilesToProcess(List<VirtualFile> files,
+  @Nonnull
+  public abstract List<VirtualFile> selectFilesToProcess(List<VirtualFile> files,
                                                                final String title,
                                                                @Nullable final String prompt,
                                                                final String singleFileTitle,
                                                                final String singleFilePromptTemplate,
                                                                final VcsShowConfirmationOption confirmationOption);
 
-  @Nullable
-  public abstract Collection<FilePath> selectFilePathsToProcess(List<FilePath> files,
+  @Nonnull
+  public abstract List<FilePath> selectFilePathsToProcess(List<FilePath> files,
                                                                 final String title,
                                                                 @Nullable final String prompt,
                                                                 final String singleFileTitle,
                                                                 final String singleFilePromptTemplate,
                                                                 final VcsShowConfirmationOption confirmationOption);
 
-  @Nullable
+  @Nonnull
   public Collection<FilePath> selectFilePathsToProcess(List<FilePath> files,
                                                        final String title,
                                                        @Nullable final String prompt,
@@ -177,8 +177,6 @@ public abstract class AbstractVcsHelper {
                                                        @Nullable String cancelActionName) {
     return selectFilePathsToProcess(files, title, prompt, singleFileTitle, singleFilePromptTemplate, confirmationOption);
   }
-
-  ;
 
 
   /**

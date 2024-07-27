@@ -18,6 +18,7 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.ChangeListManager;
+import consulo.versionControlSystem.change.VcsIgnoreManager;
 import consulo.versionControlSystem.internal.VcsRootErrorsFinder;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.LocalFileSystem;

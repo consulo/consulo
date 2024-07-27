@@ -18,11 +18,13 @@ package consulo.versionControlSystem.impl.internal.change;
 import consulo.project.Project;
 import consulo.util.lang.ObjectUtil;
 import consulo.versionControlSystem.AbstractVcs;
+import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.change.FileHolder;
 import consulo.versionControlSystem.change.IgnoredFilesHolder;
 import consulo.versionControlSystem.change.VcsIgnoredFilesHolder;
 import consulo.versionControlSystem.change.VcsModifiableDirtyScope;
+import consulo.versionControlSystem.root.VcsRoot;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -41,7 +43,7 @@ public class IgnoredFilesCompositeHolder implements IgnoredFilesHolder {
     super();
     myProject = project;
     myVcsIgnoredHolderMap = new HashMap<>();
-    myIdeIgnoredFilesHolder = new RecursiveFileHolder<>(myProject, HolderType.IGNORED);
+    myIdeIgnoredFilesHolder = new RecursiveFilePathHolderImpl(myProject, HolderType.IGNORED);
     myVcsManager = ProjectLevelVcsManager.getInstance(myProject);
   }
 
@@ -81,6 +83,11 @@ public class IgnoredFilesCompositeHolder implements IgnoredFilesHolder {
     myIdeIgnoredFilesHolder.addFile(file);
   }
 
+  @Override
+  public void addFile(FilePath filePath) {
+    myIdeIgnoredFilesHolder.addFile(filePath);
+  }
+
   public boolean isInUpdatingMode() {
     return myVcsIgnoredHolderMap.values()
                                 .stream()
@@ -94,6 +101,21 @@ public class IgnoredFilesCompositeHolder implements IgnoredFilesHolder {
     if (vcs == null) return false;
     final IgnoredFilesHolder ignoredFilesHolder = myVcsIgnoredHolderMap.get(vcs);
     return ignoredFilesHolder != null && ignoredFilesHolder.containsFile(file);
+  }
+
+  public boolean containsFile(FilePath file, VcsRoot vcsRoot) {
+    // TODO incorrect
+    VirtualFile root = myVcsManager.getVcsRootFor(file);
+    return containsFile(file, root);
+  }
+
+  @Override
+  public boolean containsFile(FilePath file, VirtualFile vcsRoot) {
+    if (myIdeIgnoredFilesHolder.containsFile(file, vcsRoot)) return true;
+    final AbstractVcs vcs = myVcsManager.getVcsFor(vcsRoot);
+    if (vcs == null) return false;
+    final IgnoredFilesHolder ignoredFilesHolder = myVcsIgnoredHolderMap.get(vcs);
+    return ignoredFilesHolder != null && ignoredFilesHolder.containsFile(file, vcsRoot);
   }
 
   @Override
@@ -114,7 +136,7 @@ public class IgnoredFilesCompositeHolder implements IgnoredFilesHolder {
     if (myVcsIgnoredHolderMap.containsKey(vcs)) return;
 
     IgnoredFilesHolder ignoredFilesHolder =
-      ObjectUtil.chooseNotNull(getHolderFromEP(vcs, myProject), new RecursiveFileHolder<>(myProject, HolderType.IGNORED));
+      ObjectUtil.chooseNotNull(getHolderFromEP(vcs, myProject), new RecursiveFilePathHolderImpl(myProject, HolderType.IGNORED));
     ignoredFilesHolder.notifyVcsStarted(vcs);
     myVcsIgnoredHolderMap.put(vcs, ignoredFilesHolder);
   }

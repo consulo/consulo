@@ -17,11 +17,11 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.versionControlSystem.FilePath;
-import consulo.project.Project;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.IgnoredFileProvider;
-
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 /**
 * @author VISTALL
@@ -29,8 +29,15 @@ import jakarta.annotation.Nonnull;
 */
 @ExtensionImpl(order = "last")
 public class DefaultIgnoredFileProvider implements IgnoredFileProvider {
+  private final Provider<ChangeListManager> myChangeListManager;
+
+  @Inject
+  public DefaultIgnoredFileProvider(Provider<ChangeListManager> changeListManager) {
+    myChangeListManager = changeListManager;
+  }
+
   @Override
-  public boolean isIgnoredFile(@Nonnull Project project, @Nonnull FilePath filePath) {
-    return ((ChangeListManagerImpl)ChangeListManager.getInstance(project)).getIgnoredFilesComponent().isIgnoredFile(filePath);
+  public boolean isIgnoredFilePath(@Nonnull FilePath filePath) {
+    return myChangeListManager.get().isIgnoredFile(filePath);
   }
 }

@@ -16,24 +16,23 @@
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.application.ApplicationManager;
-import consulo.application.util.function.Computable;
 import consulo.component.ProcessCanceledException;
 import consulo.ide.impl.idea.openapi.util.Getter;
+import consulo.language.file.FileTypeManager;
+import consulo.logging.Logger;
 import consulo.util.lang.ObjectUtil;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.VcsKey;
+import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.impl.internal.change.ChangeListWorker;
 import consulo.versionControlSystem.impl.internal.change.FileHolderComposite;
 import consulo.versionControlSystem.impl.internal.change.LogicallyLockedHolder;
 import consulo.versionControlSystem.impl.internal.change.SwitchedFileHolder;
 import consulo.versionControlSystem.util.VcsUtil;
-import consulo.language.file.FileTypeManager;
-import consulo.logging.Logger;
-import consulo.versionControlSystem.FilePath;
-import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.versionControlSystem.VcsKey;
-import consulo.versionControlSystem.change.*;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.util.function.Supplier;
 
@@ -124,12 +123,9 @@ class UpdatingChangeListBuilder implements ChangelistBuilder {
   }
 
   private boolean isIgnoredByVcs(final VirtualFile file) {
-    return ApplicationManager.getApplication().runReadAction(new Computable<Boolean>() {
-      @Override
-      public Boolean compute() {
-        checkIfDisposed();
-        return myVcsManager.isIgnored(file);
-      }
+    return ApplicationManager.getApplication().runReadAction((Supplier<Boolean>)() -> {
+      checkIfDisposed();
+      return myVcsManager.isIgnored(file);
     });
   }
 

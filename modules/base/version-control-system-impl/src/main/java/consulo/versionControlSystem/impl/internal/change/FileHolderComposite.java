@@ -31,7 +31,8 @@ public class FileHolderComposite implements FileHolder {
     myHolders = new HashMap<>();
     myHolders.put(FileHolder.HolderType.UNVERSIONED, new VirtualFileHolder(project, FileHolder.HolderType.UNVERSIONED));
     myHolders.put(FileHolder.HolderType.ROOT_SWITCH, new SwitchedFileHolder(project, HolderType.ROOT_SWITCH));
-    myHolders.put(FileHolder.HolderType.MODIFIED_WITHOUT_EDITING, new VirtualFileHolder(project, FileHolder.HolderType.MODIFIED_WITHOUT_EDITING));
+    myHolders.put(FileHolder.HolderType.MODIFIED_WITHOUT_EDITING,
+                  new VirtualFileHolder(project, FileHolder.HolderType.MODIFIED_WITHOUT_EDITING));
     myHolders.put(FileHolder.HolderType.IGNORED, new IgnoredFilesCompositeHolder(project));
     myHolders.put(FileHolder.HolderType.LOCKED, new VirtualFileHolder(project, FileHolder.HolderType.LOCKED));
     myHolders.put(FileHolder.HolderType.LOGICALLY_LOCKED, new LogicallyLockedHolder(project));
@@ -74,7 +75,7 @@ public class FileHolderComposite implements FileHolder {
   }
 
   public VirtualFileHolder getVFHolder(final HolderType type) {
-    return (VirtualFileHolder) myHolders.get(type);
+    return (VirtualFileHolder)myHolders.get(type);
   }
 
   @Override
@@ -82,13 +83,13 @@ public class FileHolderComposite implements FileHolder {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    final FileHolderComposite another = (FileHolderComposite) o;
+    final FileHolderComposite another = (FileHolderComposite)o;
     if (another.myHolders.size() != myHolders.size()) {
       return false;
     }
 
     for (Map.Entry<HolderType, FileHolder> entry : myHolders.entrySet()) {
-      if (! entry.getValue().equals(another.myHolders.get(entry.getKey()))) {
+      if (!entry.getValue().equals(another.myHolders.get(entry.getKey()))) {
         return false;
       }
     }
@@ -107,7 +108,7 @@ public class FileHolderComposite implements FileHolder {
   }
 
   public IgnoredFilesCompositeHolder getIgnoredFileHolder() {
-    return (IgnoredFilesCompositeHolder) myHolders.get(HolderType.IGNORED);
+    return (IgnoredFilesCompositeHolder)myHolders.get(HolderType.IGNORED);
   }
 
   @Override

@@ -18,20 +18,41 @@ package consulo.versionControlSystem.impl.internal.change;
 import consulo.project.Project;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.Pair;
+import consulo.versionControlSystem.FilePathComparator;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.change.FileHolder;
 import consulo.versionControlSystem.change.VcsDirtyScope;
+import consulo.versionControlSystem.change.VcsModifiableDirtyScope;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nullable;
+import jakarta.annotation.Nonnull;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.SortedMap;
+import java.util.*;
 
 // true = recursively, branch name
-public class SwitchedFileHolder extends RecursiveFileHolder<Pair<Boolean, String>> {
-  public SwitchedFileHolder(final Project project, final HolderType holderType) {
-    super(project, holderType);
+public class SwitchedFileHolder implements FileHolder {
+  private final Project myProject;
+  private final HolderType myHolderType;
+  private final ProjectLevelVcsManager myVcsManager;
+  private final TreeMap<VirtualFile, Pair<Boolean, String>> myMap; // true = recursively, branch name
+
+  public SwitchedFileHolder(final Project project, HolderType holderType) {
+    myProject = project;
+    myHolderType = holderType;
+    myVcsManager = ProjectLevelVcsManager.getInstance(project);
+    myMap = new TreeMap<>(FilePathComparator.getInstance());
+  }
+
+  @Override
+  public void cleanAll() {
+    myMap.clear();
+  }
+
+  @Override
+  public HolderType getType() {
+    return myHolderType;
   }
 
   @Override
@@ -42,7 +63,18 @@ public class SwitchedFileHolder extends RecursiveFileHolder<Pair<Boolean, String
   }
 
   @Override
-  protected boolean isFileDirty(final VcsDirtyScope scope, final VirtualFile file) {
+  public void cleanAndAdjustScope(VcsModifiableDirtyScope scope) {
+    if (myProject.isDisposed()) return;
+    final Iterator<VirtualFile> iterator = myMap.keySet().iterator();
+    while (iterator.hasNext()) {
+      final VirtualFile file = iterator.next();
+      if (isFileDirty(scope, file)) {
+        iterator.remove();
+      }
+    }
+  }
+
+  private boolean isFileDirty(final VcsDirtyScope scope, final VirtualFile file) {
     if (scope == null) return true;
     if (fileDropped(file)) return true;
     return scope.belongsTo(VcsUtil.getFilePath(file));
@@ -60,9 +92,22 @@ public class SwitchedFileHolder extends RecursiveFileHolder<Pair<Boolean, String
     return result;
   }
 
+  public boolean isEmpty() {
+    return myMap.isEmpty();
+  }
+
+  @Nonnull
+  public Collection<VirtualFile> values() {
+    return myMap.keySet();
+  }
+
   public void addFile(final VirtualFile file, final String branch, final boolean recursive) {
     // without optimization here
     myMap.put(file, new Pair<>(recursive, branch));
+  }
+
+  public void removeFile(@Nonnull final VirtualFile file) {
+    myMap.remove(file);
   }
 
   public synchronized MultiMap<String, VirtualFile> getBranchToFileMap() {
@@ -73,8 +118,7 @@ public class SwitchedFileHolder extends RecursiveFileHolder<Pair<Boolean, String
     return result;
   }
 
-  @Override
-  public synchronized boolean containsFile(final VirtualFile file) {
+  public synchronized boolean containsFile(@Nonnull final VirtualFile file) {
     final VirtualFile floor = myMap.floorKey(file);
     if (floor == null) return false;
     final SortedMap<VirtualFile, Pair<Boolean, String>> floorMap = myMap.headMap(floor, true);
@@ -99,4 +143,17 @@ public class SwitchedFileHolder extends RecursiveFileHolder<Pair<Boolean, String
     }
     return null;
   }
+
+  public boolean equals(final Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    final SwitchedFileHolder that = (SwitchedFileHolder)o;
+    return Objects.equals(myMap.entrySet(), that.myMap.entrySet());
+  }
+
+  public int hashCode() {
+    return myMap.hashCode();
+  }
+
 }

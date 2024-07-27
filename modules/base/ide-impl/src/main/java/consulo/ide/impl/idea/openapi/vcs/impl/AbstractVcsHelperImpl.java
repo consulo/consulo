@@ -168,15 +168,15 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
   }
 
   @Override
-  @Nullable
-  public Collection<VirtualFile> selectFilesToProcess(final List<VirtualFile> files,
+  @Nonnull
+  public List<VirtualFile> selectFilesToProcess(final List<VirtualFile> files,
                                                       final String title,
                                                       @Nullable final String prompt,
                                                       final String singleFileTitle,
                                                       final String singleFilePromptTemplate,
                                                       final VcsShowConfirmationOption confirmationOption) {
     if (files == null || files.isEmpty()) {
-      return null;
+      return List.of();
     }
 
     if (files.size() == 1 && singleFilePromptTemplate != null) {
@@ -187,7 +187,7 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
         filePrompt,
         singleFileTitle,
         Messages.getQuestionIcon()
-      ) ? files : null;
+      ) ? files : List.of();
     }
 
     SelectFilesDialog dlg =
@@ -207,12 +207,12 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
       }
       return result;
     }
-    return null;
+    return List.of();
   }
 
   @Override
-  @Nullable
-  public Collection<FilePath> selectFilePathsToProcess(List<FilePath> files,
+  @Nonnull
+  public List<FilePath> selectFilePathsToProcess(List<FilePath> files,
                                                        String title,
                                                        @Nullable String prompt,
                                                        String singleFileTitle,
@@ -225,7 +225,7 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
       if (requestForConfirmation(confirmationOption, myProject, filePrompt, singleFileTitle, getQuestionIcon(), okActionName, cancelActionName)) {
         return files;
       }
-      return null;
+      return List.of();
     }
 
     final SelectFilePathsDialog dlg = new SelectFilePathsDialog(myProject, files, prompt, confirmationOption, okActionName, cancelActionName, true);
@@ -233,12 +233,12 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
     if (!confirmationOption.isPersistent()) {
       dlg.setDoNotAskOption(null);
     }
-    return dlg.showAndGet() ? dlg.getSelectedFiles() : null;
+    return dlg.showAndGet() ? dlg.getSelectedFiles() : List.of();
   }
 
   @Override
-  @Nullable
-  public Collection<FilePath> selectFilePathsToProcess(
+  @Nonnull
+  public List<FilePath> selectFilePathsToProcess(
     final List<FilePath> files,
     final String title,
     @Nullable final String prompt,

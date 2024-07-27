@@ -23,12 +23,13 @@ import consulo.ui.ModalityState;
 import consulo.util.lang.ThreeState;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
-import org.jetbrains.annotations.TestOnly;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.TestOnly;
+
 import java.io.File;
 import java.util.Collection;
 import java.util.List;
@@ -188,7 +189,11 @@ public abstract class ChangeListManager {
 
   public abstract IgnoredFileBean[] getFilesToIgnore();
 
-  public abstract boolean isIgnoredFile(@Nonnull VirtualFile file);
+  public boolean isIgnoredFile(@Nonnull VirtualFile file) {
+    return isIgnoredFile(VcsUtil.getFilePath(file));
+  }
+
+  public abstract boolean isIgnoredFile(@Nonnull FilePath file);
 
   public abstract boolean isContainedInLocallyDeleted(final FilePath filePath);
 

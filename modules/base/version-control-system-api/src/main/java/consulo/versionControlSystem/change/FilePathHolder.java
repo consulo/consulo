@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,31 +15,16 @@
  */
 package consulo.versionControlSystem.change;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.versionControlSystem.FilePath;
-import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
-import java.util.Collection;
+import jakarta.annotation.Nonnull;
 
 /**
- * @author irengrig
- * Date: 2/10/11
- * Time: 4:54 PM
+ * @author VISTALL
+ * @since 27-Jul-24
  */
-public interface IgnoredFilesHolder extends FilePathHolder {
-  @Deprecated
-  default void addFile(VirtualFile file) {
-    addFile(VcsUtil.getFilePath(file));
-  }
+public interface FilePathHolder extends FileHolder {
+  void addFile(@Nonnull FilePath file);
 
-  void addFile(FilePath filePath);
-
-  @Deprecated
-  @DeprecationInfo("see consulo.versionControlSystem.change.FilePathHolder.containsFile")
-  boolean containsFile(VirtualFile file);
-
-  Collection<VirtualFile> values();
-
-  void cleanAndAdjustScope(VcsModifiableDirtyScope scope);
+  boolean containsFile(@Nonnull FilePath file, @Nonnull VirtualFile vcsRoot);
 }

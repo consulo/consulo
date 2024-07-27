@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.ReadAction;
 import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.application.dumb.DumbAwareRunnable;
 import consulo.application.impl.internal.IdeaModalityState;
@@ -76,6 +77,7 @@ import consulo.versionControlSystem.checkin.CheckinEnvironment;
 import consulo.versionControlSystem.impl.internal.change.*;
 import consulo.versionControlSystem.internal.ChangeListManagerEx;
 import consulo.versionControlSystem.localize.VcsLocalize;
+import consulo.versionControlSystem.root.VcsRoot;
 import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
@@ -127,7 +129,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
 
   private final List<CommitExecutor> myExecutors = new ArrayList<>();
 
-  private final IgnoredFilesComponent myIgnoredIdeaLevel;
+  private final IgnoredFilesComponent myIgnoredFilesComponent;
   private boolean myExcludedConvertedToIgnored;
   @Nonnull
   private volatile ProgressIndicator myUpdateChangesProgressIndicator = createProgressIndicator();
@@ -170,7 +172,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     myChangesViewManager = myProject.isDefault() ? new DummyChangesView(myProject) : ChangesViewManager.getInstance(myProject);
     myFileStatusManager = FileStatusManager.getInstance(myProject);
     myComposite = new FileHolderComposite(project);
-    myIgnoredIdeaLevel = new IgnoredFilesComponent(myProject, true);
+    myIgnoredFilesComponent = new IgnoredFilesComponent(myProject, true);
     myUpdater = new UpdateRequestsQueue(myProject, myScheduler, new ActualUpdater());
 
     myWorker = new ChangeListWorker(myProject, new MyChangesDeltaForwarder(myProject, myScheduler));
@@ -455,9 +457,9 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
             final Iterator<FilePath> filesIterator = modifier.getDirtyFilesIterator();
             while (filesIterator.hasNext()) {
               final FilePath dirtyFile = filesIterator.next();
-              if (dirtyFile.getVirtualFile() != null && isIgnoredFile(dirtyFile.getVirtualFile())) {
+              if (dirtyFile.getVirtualFile() != null && isIgnoredFile(dirtyFile)) {
                 filesIterator.remove();
-                fileHolder.addFile(dirtyFile.getVirtualFile());
+                fileHolder.addFile(dirtyFile);
                 refreshFiles.add(dirtyFile.getVirtualFile());
               }
             }
@@ -466,9 +468,9 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
               final Iterator<FilePath> dirIterator = modifier.getDirtyDirectoriesIterator(root);
               while (dirIterator.hasNext()) {
                 final FilePath dir = dirIterator.next();
-                if (dir.getVirtualFile() != null && isIgnoredFile(dir.getVirtualFile())) {
+                if (dir.getVirtualFile() != null && isIgnoredFile(dir)) {
                   dirIterator.remove();
-                  fileHolder.addFile(dir.getVirtualFile());
+                  fileHolder.addFile(dir);
                   refreshFiles.add(dir.getVirtualFile());
                 }
               }
@@ -892,6 +894,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     }
   }
 
+  @Override
   public boolean isContainedInLocallyDeleted(final FilePath filePath) {
     synchronized (myDataLock) {
       return myWorker.isContainedInLocallyDeleted(filePath);
@@ -1396,8 +1399,8 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     }
 
     synchronized (myDataLock) {
-      myIgnoredIdeaLevel.clear();
-      new ChangeListManagerSerialization(myIgnoredIdeaLevel, myWorker).readExternal(element);
+      myIgnoredFilesComponent.clear();
+      new ChangeListManagerSerialization(myIgnoredFilesComponent, myWorker).readExternal(element);
       if (!myWorker.isEmpty() && getDefaultChangeList() == null) {
         setDefaultChangeList(myWorker.getListsCopy().get(0));
       }
@@ -1417,7 +1420,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     final IgnoredFilesComponent ignoredFilesComponent;
     final ChangeListWorker worker;
     synchronized (myDataLock) {
-      ignoredFilesComponent = new IgnoredFilesComponent(myIgnoredIdeaLevel);
+      ignoredFilesComponent = new IgnoredFilesComponent(myIgnoredFilesComponent);
       worker = myWorker.copy();
     }
     ChangeListManagerSerialization.writeExternal(element, ignoredFilesComponent, worker);
@@ -1490,17 +1493,17 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
 
   @Override
   public void addFilesToIgnore(final IgnoredFileBean... filesToIgnore) {
-    myIgnoredIdeaLevel.add(filesToIgnore);
+    myIgnoredFilesComponent.add(filesToIgnore);
     scheduleUnversionedUpdate();
   }
 
   @Override
   public void addDirectoryToIgnoreImplicitly(@Nonnull String path) {
-    myIgnoredIdeaLevel.addIgnoredDirectoryImplicitly(path, myProject);
+    myIgnoredFilesComponent.addIgnoredDirectoryImplicitly(path, myProject);
   }
 
   public IgnoredFilesComponent getIgnoredFilesComponent() {
-    return myIgnoredIdeaLevel;
+    return myIgnoredFilesComponent;
   }
 
   private void scheduleUnversionedUpdate() {
@@ -1519,7 +1522,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
 
   @Override
   public void setFilesToIgnore(final IgnoredFileBean... filesToIgnore) {
-    myIgnoredIdeaLevel.set(filesToIgnore);
+    myIgnoredFilesComponent.set(filesToIgnore);
     scheduleUnversionedUpdate();
   }
 
@@ -1544,13 +1547,19 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
 
   @Override
   public IgnoredFileBean[] getFilesToIgnore() {
-    return myIgnoredIdeaLevel.getFilesToIgnore();
+    return myIgnoredFilesComponent.getFilesToIgnore();
   }
 
   @Override
-  public boolean isIgnoredFile(@Nonnull VirtualFile file) {
-    FilePath filePath = VcsUtil.getFilePath(file);
-    return ContainerUtil.exists(IgnoredFileProvider.IGNORE_FILE.getExtensionList(), it -> it.isIgnoredFile(myProject, filePath));
+  public boolean isIgnoredFile(@Nonnull FilePath filePath) {
+    VcsRoot vcsRoot = ProjectLevelVcsManager.getInstance(myProject).getVcsRootObjectFor(filePath);
+    if (vcsRoot == null) return false;
+
+    return ReadAction.compute(() -> {
+      synchronized (myDataLock) {
+        return myComposite.getIgnoredFileHolder().containsFile(filePath, vcsRoot);
+      }
+    });
   }
 
   @Override

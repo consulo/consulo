@@ -17,14 +17,10 @@ package consulo.versionControlSystem.change;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
-import consulo.project.Project;
 import consulo.versionControlSystem.FilePath;
 import jakarta.annotation.Nonnull;
 
-@ExtensionAPI(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.PROJECT)
 public interface IgnoredFileProvider {
-  ExtensionPointName<IgnoredFileProvider> IGNORE_FILE = ExtensionPointName.create(IgnoredFileProvider.class);
-
-  boolean isIgnoredFile(@Nonnull Project project, @Nonnull FilePath filePath);
+  boolean isIgnoredFilePath(@Nonnull FilePath filePath);
 }
