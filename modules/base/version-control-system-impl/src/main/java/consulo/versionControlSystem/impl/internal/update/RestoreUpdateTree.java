@@ -13,22 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.update;
+package consulo.versionControlSystem.impl.internal.update;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.*;
-import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.versionControlSystem.update.ActionInfo;
 import consulo.versionControlSystem.update.UpdatedFiles;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 @Singleton
 @State(name = "RestoreUpdateTree", storages = @Storage(value = StoragePathMacros.WORKSPACE_FILE, roamingType = RoamingType.DISABLED))
@@ -37,7 +35,7 @@ import jakarta.annotation.Nullable;
 public class RestoreUpdateTree implements PersistentStateComponent<Element> {
   @Nonnull
   public static RestoreUpdateTree getInstance(Project project) {
-    return ServiceManager.getService(project, RestoreUpdateTree.class);
+    return project.getInstance(RestoreUpdateTree.class);
   }
 
   private static final String UPDATE_INFO = "UpdateInfo";

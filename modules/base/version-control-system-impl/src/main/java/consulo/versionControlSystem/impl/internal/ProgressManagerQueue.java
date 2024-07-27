@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.vcs;
+package consulo.versionControlSystem.impl.internal;
 
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressManager;
@@ -73,12 +73,9 @@ public class ProgressManagerQueue {
       }
     }
     else {
-      ApplicationManager.getApplication().invokeLater(new Runnable() {
-        @Override
-        public void run() {
-          if (!myProject.isDisposed()) {
-            myProgressManager.run(myQueuePollTask);
-          }
+      ApplicationManager.getApplication().invokeLater(() -> {
+        if (!myProject.isDisposed()) {
+          myProgressManager.run(myQueuePollTask);
         }
       });
     }

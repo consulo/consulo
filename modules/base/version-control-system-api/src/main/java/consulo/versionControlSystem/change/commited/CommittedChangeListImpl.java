@@ -20,11 +20,12 @@
  * Date: 20.10.2006
  * Time: 17:18:38
  */
-package consulo.versionControlSystem.versionBrowser;
+package consulo.versionControlSystem.change.commited;
 
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.change.Change;
 
+import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;

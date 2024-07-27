@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vfs.impl.local;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
-import consulo.application.impl.internal.JobScheduler;
+import consulo.application.internal.JobScheduler;
 import consulo.disposer.Disposer;
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.VfsImplUtil;

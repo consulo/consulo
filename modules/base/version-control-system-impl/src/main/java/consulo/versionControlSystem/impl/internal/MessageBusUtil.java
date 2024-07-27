@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util;
+package consulo.versionControlSystem.impl.internal;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -28,13 +28,15 @@ import java.util.function.Consumer;
  * Date: 11/8/12
  * Time: 1:29 PM
  */
+@Deprecated
 public class MessageBusUtil {
   public static <T> void runOnSyncPublisher(final Project project, final Class<T> topic, final Consumer<T> listener) {
     final Application application = ApplicationManager.getApplication();
     final Runnable runnable = createPublisherRunnable(project, topic, listener);
     if (application.isDispatchThread()) {
       runnable.run();
-    } else {
+    }
+    else {
       application.runReadAction(runnable);
     }
   }
@@ -54,7 +56,8 @@ public class MessageBusUtil {
     final Runnable runnable = createPublisherRunnable(project, topic, listener);
     if (application.isDispatchThread()) {
       runnable.run();
-    } else {
+    }
+    else {
       application.invokeLater(runnable);
     }
   }

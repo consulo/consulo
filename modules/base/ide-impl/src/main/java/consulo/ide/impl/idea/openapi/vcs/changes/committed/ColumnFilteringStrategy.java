@@ -27,6 +27,7 @@ import consulo.versionControlSystem.CommittedChangesProvider;
 import consulo.versionControlSystem.change.commited.ChangeListFilteringStrategy;
 import consulo.versionControlSystem.change.commited.CommittedChangesFilterKey;
 import consulo.versionControlSystem.change.commited.CommittedChangesFilterPriority;
+import consulo.versionControlSystem.change.commited.ReceivedChangeList;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import jakarta.annotation.Nonnull;

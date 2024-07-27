@@ -47,6 +47,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.commited.*;
+import consulo.versionControlSystem.impl.internal.change.commited.CommittedChangesCache;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.versionBrowser.ChangeBrowserSettings;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;

@@ -21,7 +21,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.DialogBuilder;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ide.impl.idea.openapi.vcs.versionBrowser.DateFilterComponent;
+import consulo.versionControlSystem.impl.internal.ui.awt.DateFilterComponent;
 import consulo.application.util.DateFormatUtil;
 import consulo.versionControlSystem.log.VcsLogDateFilter;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogDateFilterImpl;

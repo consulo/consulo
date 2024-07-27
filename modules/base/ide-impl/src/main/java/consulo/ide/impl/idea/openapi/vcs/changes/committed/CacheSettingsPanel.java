@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 import consulo.configurable.ConfigurationException;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.versionControlSystem.impl.internal.change.commited.CommittedChangesCache;
 
 import javax.swing.*;
 

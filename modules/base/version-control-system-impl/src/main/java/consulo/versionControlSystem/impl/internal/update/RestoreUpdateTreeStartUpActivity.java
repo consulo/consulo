@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.update;
+package consulo.versionControlSystem.impl.internal.update;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.openapi.project.ProjectReloadState;
-import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesCache;
 import consulo.project.Project;
+import consulo.project.internal.ProjectReloadState;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.impl.internal.change.commited.CommittedChangesCache;
 import consulo.versionControlSystem.internal.ProjectLevelVcsManagerEx;
 import consulo.versionControlSystem.update.ActionInfo;
 import jakarta.annotation.Nonnull;

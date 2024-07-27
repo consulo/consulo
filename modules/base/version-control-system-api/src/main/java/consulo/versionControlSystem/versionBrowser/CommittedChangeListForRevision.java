@@ -16,6 +16,7 @@
 package consulo.versionControlSystem.versionBrowser;
 
 import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.change.commited.CommittedChangeListImpl;
 import consulo.versionControlSystem.history.LongRevisionNumber;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 

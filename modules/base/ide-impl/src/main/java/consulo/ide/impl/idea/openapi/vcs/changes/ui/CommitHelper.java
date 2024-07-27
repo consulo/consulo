@@ -28,7 +28,7 @@ import consulo.ide.impl.idea.ide.util.DelegatingProgressIndicator;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
 import consulo.ide.impl.idea.openapi.vcs.changes.VetoSavingCommittingDocumentsAdapter;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.MoveChangesToAnotherListAction;
-import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesCache;
+import consulo.versionControlSystem.impl.internal.change.commited.CommittedChangesCache;
 import consulo.ide.impl.idea.util.NullableFunction;
 import consulo.versionControlSystem.impl.internal.ui.awt.ConfirmationDialog;
 import consulo.localHistory.LocalHistory;

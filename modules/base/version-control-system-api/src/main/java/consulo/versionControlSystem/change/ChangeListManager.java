@@ -190,6 +190,8 @@ public abstract class ChangeListManager {
 
   public abstract boolean isIgnoredFile(@Nonnull VirtualFile file);
 
+  public abstract boolean isContainedInLocallyDeleted(final FilePath filePath);
+
   @Nullable
   public abstract String getSwitchedBranch(VirtualFile file);
 

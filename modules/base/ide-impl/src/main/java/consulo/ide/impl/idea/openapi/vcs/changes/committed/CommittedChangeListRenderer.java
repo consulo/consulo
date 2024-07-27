@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
 import consulo.application.util.DateFormatUtil;
+import consulo.versionControlSystem.change.commited.ReceivedChangeList;
 import consulo.versionControlSystem.impl.internal.change.ui.issueLink.IssueLinkRenderer;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;

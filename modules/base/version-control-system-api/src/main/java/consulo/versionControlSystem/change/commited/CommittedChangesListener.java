@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.changes.committed;
+package consulo.versionControlSystem.change.commited;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;

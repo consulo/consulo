@@ -5,7 +5,7 @@ package consulo.ide.impl.idea.codeInsight.completion;
 import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.dumb.IndexNotReadyException;
-import consulo.application.impl.internal.JobScheduler;
+import consulo.application.internal.JobScheduler;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.application.impl.internal.progress.ProgressWrapper;
 import consulo.application.progress.ProgressManager;

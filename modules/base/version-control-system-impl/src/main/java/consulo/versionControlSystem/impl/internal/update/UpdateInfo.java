@@ -13,28 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.update;
+package consulo.versionControlSystem.impl.internal.update;
 
+import consulo.application.util.DateFormatUtil;
 import consulo.project.Project;
 import consulo.util.lang.Clock;
-import consulo.util.xml.serializer.InvalidDataException;
-import consulo.util.xml.serializer.JDOMExternalizable;
-import consulo.util.xml.serializer.WriteExternalException;
 import consulo.versionControlSystem.VcsBundle;
-import consulo.application.util.DateFormatUtil;
 import consulo.versionControlSystem.update.ActionInfo;
 import consulo.versionControlSystem.update.UpdatedFiles;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
-public class UpdateInfo implements JDOMExternalizable {
+public class UpdateInfo {
   private final Project myProject;
   private UpdatedFiles myUpdatedFiles;
   private String myDate;
   private ActionInfo myActionInfo;
-  @NonNls private static final String DATE_ATTR = "date";
-  @NonNls private static final String FILE_INFO_ELEMENTS = "UpdatedFiles";
-  @NonNls private static final String ACTION_INFO_ATTRIBUTE_NAME = "ActionInfo";
+  private static final String DATE_ATTR = "date";
+  private static final String FILE_INFO_ELEMENTS = "UpdatedFiles";
+  private static final String ACTION_INFO_ATTRIBUTE_NAME = "ActionInfo";
 
   public UpdateInfo(Project project, UpdatedFiles updatedFiles, ActionInfo actionInfo) {
     myProject = project;
@@ -47,7 +43,7 @@ public class UpdateInfo implements JDOMExternalizable {
     myProject = project;
   }
 
-  public void writeExternal(Element element) throws WriteExternalException {
+  public void writeExternal(Element element) {
     if (myUpdatedFiles == null) return;
     element.setAttribute(DATE_ATTR, myDate);
     element.setAttribute(ACTION_INFO_ATTRIBUTE_NAME, myActionInfo.getActionName());
@@ -56,7 +52,7 @@ public class UpdateInfo implements JDOMExternalizable {
     element.addContent(filesElement);
   }
 
-  public void readExternal(Element element) throws InvalidDataException {
+  public void readExternal(Element element) {
     myDate = element.getAttributeValue(DATE_ATTR);
     Element fileInfoElement = element.getChild(FILE_INFO_ELEMENTS);
     if (fileInfoElement == null) return;

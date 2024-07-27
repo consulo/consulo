@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.changes.committed;
+package consulo.versionControlSystem.impl.internal.change.commited;
 
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressManager;
@@ -76,6 +76,7 @@ public class RepositoryLocationCache {
       myFilePath = filePath;
     }
 
+    @Override
     public void run() {
       final CommittedChangesProvider committedChangesProvider = myVcs.getCommittedChangesProvider();
       if (committedChangesProvider != null) {

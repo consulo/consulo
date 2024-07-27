@@ -25,7 +25,7 @@ import consulo.disposer.Disposer;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.openapi.ui.PanelWithActionsAndCloseButton;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesBrowserUseCase;
-import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesCache;
+import consulo.versionControlSystem.impl.internal.change.commited.CommittedChangesCache;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesTreeBrowser;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.RefreshIncomingChangesAction;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;

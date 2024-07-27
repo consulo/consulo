@@ -17,7 +17,7 @@ package consulo.desktop.awt.action;
 
 import consulo.application.Application;
 import consulo.application.CommonBundle;
-import consulo.application.impl.internal.JobScheduler;
+import consulo.application.internal.JobScheduler;
 import consulo.application.internal.ApplicationInfo;
 import consulo.application.util.DateFormatUtil;
 import consulo.container.plugin.PluginDescriptor;

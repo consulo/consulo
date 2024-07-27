@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.project;
+package consulo.versionControlSystem.change.commited;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ServiceAPI;
-import consulo.ide.ServiceManager;
-import consulo.project.Project;
+import consulo.annotation.component.TopicAPI;
 
-import jakarta.annotation.Nonnull;
+@TopicAPI(ComponentScope.PROJECT)
+public interface CommittedChangesReloadListener {
+  void itemsReloaded();
 
-@ServiceAPI(ComponentScope.PROJECT)
-public interface ProjectReloadState {
-  @Nonnull
-  static ProjectReloadState getInstance(Project project) {
-    return ServiceManager.getService(project, ProjectReloadState.class);
-  }
-
-  boolean isAfterAutomaticReload();
-
-  void onBeforeAutomaticProjectReload();
+  void emptyRefresh();
 }

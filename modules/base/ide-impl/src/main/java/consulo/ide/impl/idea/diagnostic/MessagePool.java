@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.diagnostic;
 
-import consulo.application.impl.internal.JobScheduler;
+import consulo.application.internal.JobScheduler;
 import consulo.application.util.logging.IdeaLoggingEvent;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 

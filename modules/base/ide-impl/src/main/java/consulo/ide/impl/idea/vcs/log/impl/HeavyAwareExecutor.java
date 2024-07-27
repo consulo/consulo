@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.vcs.log.impl;
 
-import consulo.application.impl.internal.JobScheduler;
+import consulo.application.internal.JobScheduler;
 import consulo.application.HeavyProcessLatch;
 import jakarta.annotation.Nonnull;
 

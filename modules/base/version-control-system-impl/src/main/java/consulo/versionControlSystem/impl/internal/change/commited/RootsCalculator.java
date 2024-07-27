@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.changes.committed;
+package consulo.versionControlSystem.impl.internal.change.commited;
 
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.util.collection.ContainerUtil;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.RepositoryLocation;
@@ -28,7 +29,6 @@ import jakarta.annotation.Nullable;
 
 import java.util.*;
 
-import static consulo.ide.impl.idea.util.containers.ContainerUtil.addAll;
 import static consulo.util.lang.StringUtil.join;
 import static consulo.versionControlSystem.util.VcsUtil.getFilePath;
 import static java.util.function.Function.identity;
@@ -57,7 +57,7 @@ public class RootsCalculator {
     LOG.debug("Collecting roots for " + myVcs);
     // TODO: It is not quite clear why using just ProjectLevelVcsManager.getRootsUnderVcs() is not sufficient
     List<VirtualFile> roots = getRootsFromMappings();
-    addAll(roots, myPlManager.getRootsUnderVcs(myVcs));
+    ContainerUtil.addAll(roots, myPlManager.getRootsUnderVcs(myVcs));
 
     logRoots("Candidates", roots);
 

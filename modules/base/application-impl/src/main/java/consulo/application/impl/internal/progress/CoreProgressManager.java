@@ -2,7 +2,7 @@
 package consulo.application.impl.internal.progress;
 
 import consulo.application.Application;
-import consulo.application.impl.internal.JobScheduler;
+import consulo.application.internal.JobScheduler;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.internal.ProgressIndicatorEx;
 import consulo.application.internal.ProgressManagerEx;

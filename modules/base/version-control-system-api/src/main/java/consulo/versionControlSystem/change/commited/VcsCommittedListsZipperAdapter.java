@@ -13,15 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.changes.committed;
+package consulo.versionControlSystem.change.commited;
 
-import consulo.versionControlSystem.RepositoryLocation;
-import consulo.versionControlSystem.change.Change;
-import consulo.versionControlSystem.change.commited.RepositoryLocationGroup;
-import consulo.versionControlSystem.change.commited.VcsCommittedListsZipper;
-import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.Pair;
+import consulo.versionControlSystem.RepositoryLocation;
+import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -40,6 +38,7 @@ public abstract class VcsCommittedListsZipperAdapter implements VcsCommittedList
     myGroupCreator = groupCreator;
   }
 
+  @Override
   public Pair<List<RepositoryLocationGroup>, List<RepositoryLocation>> groupLocations(final List<RepositoryLocation> in) {
     final List<RepositoryLocationGroup> groups = new ArrayList<RepositoryLocationGroup>();
     final List<RepositoryLocation> singles = new ArrayList<RepositoryLocation>();
@@ -62,9 +61,10 @@ public abstract class VcsCommittedListsZipperAdapter implements VcsCommittedList
       }
     }
 
-    return new Pair<List<RepositoryLocationGroup>, List<RepositoryLocation>>(groups, singles);
+    return Pair.create(groups, singles);
   }
 
+  @Override
   public CommittedChangeList zip(final RepositoryLocationGroup group, final List<CommittedChangeList> lists) {
     if (lists.size() == 1) {
       return lists.get(0);
@@ -82,6 +82,7 @@ public abstract class VcsCommittedListsZipperAdapter implements VcsCommittedList
     return result;
   }
 
+  @Override
   public long getNumber(final CommittedChangeList list) {
     return list.getNumber();
   }

@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.wm.impl.status;
 
-import consulo.application.impl.internal.JobScheduler;
+import consulo.application.internal.JobScheduler;
 import consulo.ui.ex.awt.UIUtil;
 
 import javax.swing.*;

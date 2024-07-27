@@ -17,14 +17,16 @@
 /*
  * @author max
  */
-package consulo.application.impl.internal;
+package consulo.application.internal;
 
-import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.Application;
-
+import consulo.application.concurrent.ApplicationConcurrency;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import jakarta.annotation.Nonnull;
+
 import java.util.concurrent.ScheduledExecutorService;
 
+@Deprecated
 public abstract class JobScheduler {
   /**
    * Returns application-wide instance of {@link ScheduledExecutorService} which is:
@@ -39,6 +41,7 @@ public abstract class JobScheduler {
    */
   @Nonnull
   public static ScheduledExecutorService getScheduler() {
-    return AppExecutorUtil.getAppScheduledExecutorService();
+    ApplicationConcurrency concurrency = Application.get().getInstance(ApplicationConcurrency.class);
+    return concurrency.getScheduledExecutorService();
   }
 }

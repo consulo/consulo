@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.util.ui;
 
-import consulo.application.impl.internal.JobScheduler;
+import consulo.application.internal.JobScheduler;
 import consulo.disposer.Disposable;
 import org.jetbrains.annotations.NonNls;
 

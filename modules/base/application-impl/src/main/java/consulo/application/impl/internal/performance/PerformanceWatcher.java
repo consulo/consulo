@@ -22,7 +22,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ApplicationProperties;
 import consulo.application.internal.ApplicationInfo;
-import consulo.application.impl.internal.JobScheduler;
+import consulo.application.internal.JobScheduler;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.impl.internal.concurent.AppScheduledExecutorService;
 import consulo.application.util.concurrent.ThreadDump;

@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.project.impl;
+package consulo.project.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.ide.impl.idea.openapi.project.ProjectReloadState;
+import consulo.project.internal.ProjectReloadState;
 import jakarta.inject.Singleton;
 
 import jakarta.annotation.Nullable;

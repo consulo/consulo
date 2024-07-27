@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.changes.committed;
+package consulo.versionControlSystem.impl.internal.change.commited;
 
 import consulo.versionControlSystem.change.commited.RepositoryLocationGroup;
 import consulo.versionControlSystem.change.commited.VcsCommittedListsZipper;
@@ -36,12 +36,12 @@ public class SimiliarListsZipper {
                              final VcsCommittedListsZipper zipper, final RepositoryLocationGroup group) {
     myZipper = zipper;
     myGroup = group;
-    myLists = new LinkedList<SubSequence<CommittedChangeList>>();
-    myResult = new ArrayList<CommittedChangeList>();
+    myLists = new LinkedList<>();
+    myResult = new ArrayList<>();
     
     for (List<CommittedChangeList> list : lists) {
       if (! list.isEmpty()) {
-        myLists.add(new SubSequence<CommittedChangeList>(list));
+        myLists.add(new SubSequence<>(list));
       }
     }
   }
@@ -85,8 +85,8 @@ public class SimiliarListsZipper {
         break;
       }
       if (removed == null) {
-        removed = new ArrayList<SubSequence<CommittedChangeList>>();
-        toBeZipped = new ArrayList<CommittedChangeList>();
+        removed = new ArrayList<>();
+        toBeZipped = new ArrayList<>();
       }
       iterator.remove();
       removed.add(sequence);

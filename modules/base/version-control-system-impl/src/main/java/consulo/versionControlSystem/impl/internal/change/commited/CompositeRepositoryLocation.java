@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.changes.committed;
+package consulo.versionControlSystem.impl.internal.change.commited;
 
 import consulo.versionControlSystem.CommittedChangesProvider;
 import consulo.versionControlSystem.RepositoryLocation;
@@ -35,6 +35,7 @@ class CompositeRepositoryLocation implements RepositoryLocation {
     return myProviderLocation.toString();
   }
 
+  @Override
   public String toPresentableString() {
     return myProviderLocation.toPresentableString();
   }
@@ -47,6 +48,7 @@ class CompositeRepositoryLocation implements RepositoryLocation {
     return myProviderLocation;
   }
 
+  @Override
   public String getKey() {
     return myProviderLocation.getKey();
   }

@@ -24,6 +24,7 @@ module consulo.project.api {
     consulo.application.impl,
     consulo.component.impl,
     consulo.version.control.system.api,
+    consulo.version.control.system.impl,
     consulo.project.impl,
     consulo.execution.impl;
 }

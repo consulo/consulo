@@ -38,6 +38,12 @@
       <version>${project.version}</version>
     </dependency>
 
+    <!--TODO remove in future-->
+    <dependency>
+      <groupId>consulo.internal</groupId>
+      <artifactId>microba</artifactId>
+    </dependency>
+    <!--TODO remove in future-->
     <dependency>
       <groupId>consulo.internal</groupId>
       <artifactId>forms_rt</artifactId>

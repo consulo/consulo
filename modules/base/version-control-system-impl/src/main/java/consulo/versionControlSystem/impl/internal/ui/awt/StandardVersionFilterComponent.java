@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.versionBrowser;
+package consulo.versionControlSystem.impl.internal.ui.awt;
 
-import consulo.versionControlSystem.VcsBundle;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.awt.IdeBorderFactory;
+import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.versionBrowser.ChangeBrowserSettings;
 import consulo.versionControlSystem.versionBrowser.ChangesBrowserSettingsEditor;
 

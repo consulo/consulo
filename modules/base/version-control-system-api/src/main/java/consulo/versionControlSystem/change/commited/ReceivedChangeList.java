@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.changes.committed;
+package consulo.versionControlSystem.change.commited;
 
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
-import consulo.versionControlSystem.versionBrowser.CommittedChangeListImpl;
 import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
@@ -82,7 +81,7 @@ public class ReceivedChangeList extends CommittedChangeListImpl {
     return myBaseList.hashCode();
   }
 
-  static CommittedChangeList unwrap(CommittedChangeList changeList) {
+  public static CommittedChangeList unwrap(CommittedChangeList changeList) {
     if (changeList instanceof ReceivedChangeList) {
       changeList = ((ReceivedChangeList) changeList).getBaseList();
     }

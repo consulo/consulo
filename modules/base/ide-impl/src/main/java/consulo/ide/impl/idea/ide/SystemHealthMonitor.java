@@ -24,7 +24,7 @@ import consulo.application.AccessRule;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ApplicationPropertiesComponent;
-import consulo.application.impl.internal.JobScheduler;
+import consulo.application.internal.JobScheduler;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.ui.RemoteDesktopService;
 import consulo.application.util.SystemInfo;

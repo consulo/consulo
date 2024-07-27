@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.changes.committed;
+package consulo.versionControlSystem.impl.internal.change.commited;
 
+import consulo.container.boot.ContainerPathManager;
 import consulo.project.Project;
 import consulo.versionControlSystem.*;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.NotNullFunction;
-import consulo.util.lang.function.PairProcessor;
-import consulo.container.boot.ContainerPathManager;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
+
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -32,10 +29,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BiPredicate;
+import java.util.function.Function;
 
 public class CachesHolder {
-  @NonNls private static final String VCS_CACHE_PATH = "vcsCache";
-  
+  private static final String VCS_CACHE_PATH = "vcsCache";
+
   private final Project myProject;
   private final Map<String, ChangesCacheFile> myCacheFiles;
   private final RepositoryLocationCache myLocationCache;
@@ -45,14 +44,14 @@ public class CachesHolder {
     myProject = project;
     myLocationCache = locationCache;
     myPlManager = ProjectLevelVcsManager.getInstance(myProject);
-    myCacheFiles = new ConcurrentHashMap<String, ChangesCacheFile>();
+    myCacheFiles = new ConcurrentHashMap<>();
   }
 
   public CachesHolder(final Project project, final RepositoryLocationCache locationCache, final ProjectLevelVcsManager manager) {
     myProject = project;
     myPlManager = manager;
     myLocationCache = locationCache;
-    myCacheFiles = new ConcurrentHashMap<String, ChangesCacheFile>();
+    myCacheFiles = new ConcurrentHashMap<>();
   }
 
   /**
@@ -63,7 +62,7 @@ public class CachesHolder {
     return calculator.getRoots();
   }
 
-  public void iterateAllRepositoryLocations(final PairProcessor<RepositoryLocation, AbstractVcs> locationProcessor) {
+  public void iterateAllRepositoryLocations(final BiPredicate<RepositoryLocation, AbstractVcs> locationProcessor) {
     final AbstractVcs[] vcses = myPlManager.getAllActiveVcss();
     for (AbstractVcs vcs : vcses) {
       final CommittedChangesProvider provider = vcs.getCommittedChangesProvider();
@@ -71,7 +70,7 @@ public class CachesHolder {
         final Map<VirtualFile, RepositoryLocation> map = getAllRootsUnderVcs(vcs);
         for (VirtualFile root : map.keySet()) {
           final RepositoryLocation location = map.get(root);
-          if (! Boolean.TRUE.equals(locationProcessor.process(location, vcs))) {
+          if (!locationProcessor.test(location, vcs)) {
             return;
           }
         }
@@ -79,7 +78,7 @@ public class CachesHolder {
     }
   }
 
-  public void iterateAllCaches(final NotNullFunction<ChangesCacheFile, Boolean> consumer) {
+  public void iterateAllCaches(final Function<ChangesCacheFile, Boolean> consumer) {
     final AbstractVcs[] vcses = myPlManager.getAllActiveVcss();
     for (AbstractVcs vcs : vcses) {
       final CommittedChangesProvider provider = vcs.getCommittedChangesProvider();
@@ -104,8 +103,8 @@ public class CachesHolder {
   }
 
   public List<ChangesCacheFile> getAllCaches() {
-    final List<ChangesCacheFile> result = new ArrayList<ChangesCacheFile>();
-    iterateAllCaches(new NotNullFunction<ChangesCacheFile, Boolean>() {
+    final List<ChangesCacheFile> result = new ArrayList<>();
+    iterateAllCaches(new Function<>() {
       @Nonnull
       public Boolean apply(final ChangesCacheFile changesCacheFile) {
         result.add(changesCacheFile);

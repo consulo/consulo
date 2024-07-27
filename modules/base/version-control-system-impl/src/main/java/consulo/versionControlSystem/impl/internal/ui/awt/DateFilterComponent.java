@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.openapi.vcs.versionBrowser;
+package consulo.versionControlSystem.impl.internal.ui.awt;
 
 import consulo.versionControlSystem.VcsBundle;
 import consulo.ui.ex.awt.IdeBorderFactory;

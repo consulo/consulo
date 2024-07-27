@@ -39,7 +39,7 @@ import consulo.ide.impl.idea.conversion.ConversionResult;
 import consulo.ide.impl.idea.conversion.ConversionService;
 import consulo.ide.impl.idea.ide.impl.ProjectUtil;
 import consulo.ide.impl.idea.ide.startup.impl.StartupManagerImpl;
-import consulo.ide.impl.idea.openapi.project.ProjectReloadState;
+import consulo.project.internal.ProjectReloadState;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.impl.ZipHandler;
 import consulo.ide.impl.idea.util.EventDispatcher;

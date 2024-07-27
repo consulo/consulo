@@ -24,6 +24,8 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBarWidgetsManager;
 import consulo.versionControlSystem.*;
+import consulo.versionControlSystem.change.commited.CommittedChangesListener;
+import consulo.versionControlSystem.impl.internal.change.commited.CommittedChangesCache;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;

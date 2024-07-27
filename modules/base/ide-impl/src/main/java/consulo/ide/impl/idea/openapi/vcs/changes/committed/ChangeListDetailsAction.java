@@ -27,6 +27,7 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.IssueLinkHtmlRenderer;
+import consulo.versionControlSystem.change.commited.ReceivedChangeList;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.ui.ex.awt.BrowserHyperlinkListener;

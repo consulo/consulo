@@ -32,6 +32,8 @@ import consulo.util.lang.Pair;
 import consulo.versionControlSystem.CachingCommittedChangesProvider;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.change.commited.CommittedChangesListener;
+import consulo.versionControlSystem.impl.internal.change.commited.CommittedChangesCache;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;

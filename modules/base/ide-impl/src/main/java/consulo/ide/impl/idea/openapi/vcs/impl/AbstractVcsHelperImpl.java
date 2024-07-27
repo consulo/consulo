@@ -44,6 +44,8 @@ import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.BufferedListConsumer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.versionControlSystem.impl.internal.change.commited.CommittedChangesCache;
+import consulo.versionControlSystem.impl.internal.change.commited.RepositoryLocationCache;
 import consulo.versionControlSystem.impl.internal.ui.awt.ConfirmationDialog;
 import consulo.ide.impl.idea.vcs.history.VcsHistoryProviderEx;
 import consulo.logging.Logger;
