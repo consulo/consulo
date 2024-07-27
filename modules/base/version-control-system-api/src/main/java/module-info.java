@@ -5,6 +5,8 @@
 module consulo.version.control.system.api {
   // TODO remove this in future
   requires java.desktop;
+  requires microba;
+  requires forms.rt;
 
   requires transitive consulo.application.api;
   requires transitive consulo.project.api;
@@ -37,6 +39,7 @@ module consulo.version.control.system.api {
   exports consulo.versionControlSystem.update;
   exports consulo.versionControlSystem.root;
   exports consulo.versionControlSystem.util;
+  exports consulo.versionControlSystem.versionBrowser.ui.awt;
   exports consulo.versionControlSystem.internal to consulo.ide.impl, consulo.version.control.system.impl;
 
   opens consulo.versionControlSystem to consulo.util.xml.serializer;

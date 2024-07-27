@@ -28,7 +28,7 @@ import consulo.versionControlSystem.change.commited.DecoratorManager;
 import consulo.versionControlSystem.change.commited.VcsCommittedListsZipper;
 import consulo.versionControlSystem.change.commited.VcsCommittedViewAuxiliary;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
-import consulo.versionControlSystem.impl.internal.ui.awt.DateFilterComponent;
+import consulo.versionControlSystem.versionBrowser.ui.awt.DateFilterComponent;
 import consulo.versionControlSystem.versionBrowser.ChangeBrowserSettings;
 import consulo.versionControlSystem.versionBrowser.ChangesBrowserSettingsEditor;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;

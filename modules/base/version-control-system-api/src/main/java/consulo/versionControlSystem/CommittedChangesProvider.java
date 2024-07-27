@@ -17,6 +17,7 @@
 package consulo.versionControlSystem;
 
 import consulo.application.util.function.AsynchConsumer;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.Pair;
 import consulo.versionControlSystem.change.commited.DecoratorManager;
 import consulo.versionControlSystem.change.commited.VcsCommittedListsZipper;
@@ -25,6 +26,7 @@ import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.versionControlSystem.versionBrowser.ChangeBrowserSettings;
 import consulo.versionControlSystem.versionBrowser.ChangesBrowserSettingsEditor;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
+import consulo.versionControlSystem.versionBrowser.ui.awt.SimpleStandardVersionFilterComponent;
 import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nonnull;
@@ -38,7 +40,12 @@ public interface CommittedChangesProvider<T extends CommittedChangeList, U exten
   @Nonnull
   U createDefaultSettings();
 
-  ChangesBrowserSettingsEditor<U> createFilterUI(final boolean showDateFilter);
+  @Nonnull
+  @RequiredUIAccess
+  @SuppressWarnings("unchecked")
+  default ChangesBrowserSettingsEditor<U> createFilterUI(final boolean showDateFilter) {
+    return (ChangesBrowserSettingsEditor<U>)new SimpleStandardVersionFilterComponent(showDateFilter);
+  }
 
   @Nullable
   RepositoryLocation getLocationFor(FilePath root);

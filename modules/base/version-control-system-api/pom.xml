@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?><!--
-  - Copyright 2013-2022 consulo.io
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  - Copyright 2013-2024 consulo.io
   -
   - Licensed under the Apache License, Version 2.0 (the "License");
   - you may not use this file except in compliance with the License.
@@ -89,6 +90,17 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>consulo-local-history-api</artifactId>
       <version>${project.version}</version>
+    </dependency>
+
+    <!--TODO remove in future-->
+    <dependency>
+      <groupId>consulo.internal</groupId>
+      <artifactId>microba</artifactId>
+    </dependency>
+    <!--TODO remove in future-->
+    <dependency>
+      <groupId>consulo.internal</groupId>
+      <artifactId>forms_rt</artifactId>
     </dependency>
   </dependencies>
 </project>
