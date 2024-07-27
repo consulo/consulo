@@ -173,7 +173,6 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
     myVcsFileListenerContextHelper = vcsFileListenerContextHelper;
     VcsListener vcsListener = () -> {
       myVcsHistoryCache.clear();
-      myVcsFileListenerContextHelper.possiblySwitchActivation(hasActiveVcss());
     };
     myExcludedIndex = excludedFileIndex;
     MessageBusConnection connection = myProject.getMessageBus().connect();
@@ -188,20 +187,6 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
   @Override
   public void afterLoadState() {
     myOptionsAndConfirmations.init(mySerialization::getInitOptionValue);
-  }
-
-  @Deprecated
-  @DeprecationInfo("Use own AllVcses impl, or use extension extender")
-  public void registerVcs(AbstractVcs vcs) {
-    // FIXME [VISTALL] nothing since this impl used only for tests
-    throw new UnsupportedOperationException();
-  }
-
-  @Deprecated
-  @DeprecationInfo("Use own AllVcses impl, or use extension extender")
-  public void unregisterVcs(@Nonnull AbstractVcs vcs) {
-    // FIXME [VISTALL] nothing since this impl used only for tests
-    throw new UnsupportedOperationException();
   }
 
   @Override

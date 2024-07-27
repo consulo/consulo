@@ -15,28 +15,25 @@
  */
 package consulo.ide.impl.idea.openapi.diff.impl.patch.formove;
 
-import consulo.project.Project;
 import consulo.application.util.registry.Registry;
+import consulo.versionControlSystem.impl.internal.change.SortByVcsRoots;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.ide.impl.idea.util.FilePathByPathComparator;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.util.collection.MultiMap;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
-import consulo.ide.impl.idea.openapi.vcs.changes.SortByVcsRoots;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.checkin.CheckinEnvironment;
 import consulo.versionControlSystem.internal.VcsFileListenerContextHelper;
 import consulo.versionControlSystem.root.VcsRoot;
 import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.FilePathByPathComparator;
-import consulo.util.lang.ObjectUtil;
-import consulo.application.util.function.Processor;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.containers.Convertor;
-import consulo.util.collection.MultiMap;
-import consulo.logging.Logger;
-
 import jakarta.annotation.Nonnull;
 
 import java.util.*;
+import java.util.function.Function;
 
 public class TriggerAdditionOrDeletion {
   private final Collection<FilePath> myExisting;
@@ -74,12 +71,12 @@ public class TriggerAdditionOrDeletion {
   public void prepare() {
     if (myExisting.isEmpty() && myDeleted.isEmpty()) return;
 
-    final SortByVcsRoots<FilePath> sortByVcsRoots = new SortByVcsRoots<>(myProject, new Convertor.IntoSelf<>());
+    final SortByVcsRoots<FilePath> sortByVcsRoots = new SortByVcsRoots<>(myProject, Function.identity());
 
-    if (! myExisting.isEmpty()) {
+    if (!myExisting.isEmpty()) {
       processAddition(sortByVcsRoots);
     }
-    if (! myDeleted.isEmpty()) {
+    if (!myDeleted.isEmpty()) {
       processDeletion(sortByVcsRoots);
     }
   }
@@ -116,17 +113,13 @@ public class TriggerAdditionOrDeletion {
         askUserIfNeeded(vcsRoot.getVcs(), (List<FilePath>)filePaths, VcsConfiguration.StandardConfirmation.ADD);
         myAffected.addAll(filePaths);
         final List<VirtualFile> virtualFiles = new ArrayList<>();
-        ContainerUtil.process(filePaths, new Processor<FilePath>() {
-          @Override
-          public boolean process(FilePath path) {
-            VirtualFile vf = path.getVirtualFile();
-            if (vf == null) {
-              incorrectFilePath.add(path);
-            }
-            else {
-              virtualFiles.add(vf);
-            }
-            return true;
+        filePaths.forEach(path -> {
+          VirtualFile vf = path.getVirtualFile();
+          if (vf == null) {
+            incorrectFilePath.add(path);
+          }
+          else {
+            virtualFiles.add(vf);
           }
         });
         //virtual files collection shouldn't contain 'null' vf
@@ -141,7 +134,7 @@ public class TriggerAdditionOrDeletion {
 
   private void notifyAndLogFiles(@Nonnull String topic, @Nonnull List<FilePath> incorrectFilePath) {
     String message = "The following " + StringUtil.pluralize("file", incorrectFilePath.size()) + " may be processed incorrectly by VCS.\n" +
-                     "Please check it manually: " + incorrectFilePath;
+      "Please check it manually: " + incorrectFilePath;
     LOG.warn(message);
     VcsNotifier.getInstance(myProject).notifyImportantWarning(topic, message);
   }
@@ -163,15 +156,13 @@ public class TriggerAdditionOrDeletion {
         final List<FilePath> toBeDeleted = new LinkedList<>();
         for (FilePath file : files) {
           final FilePath parent = file.getParentPath();
-          if ((takeDirs || (! file.isDirectory())) && parent != null && parent.getIOFile().exists()) {
+          if ((takeDirs || (!file.isDirectory())) && parent != null && parent.getIOFile().exists()) {
             toBeDeleted.add(file);
           }
         }
         if (toBeDeleted.isEmpty()) return;
-        if (! vcsRoot.getVcs().fileListenerIsSynchronous()) {
-          for (FilePath filePath : toBeDeleted) {
-            myVcsFileListenerContextHelper.ignoreDeleted(filePath);
-          }
+        if (!vcsRoot.getVcs().fileListenerIsSynchronous()) {
+          myVcsFileListenerContextHelper.ignoreDeleted(toBeDeleted);
         }
         myPreparedDeletion.put(vcsRoot, toBeDeleted);
       }
@@ -195,10 +186,11 @@ public class TriggerAdditionOrDeletion {
             adder.process(file);
           }
           toBeAdded = adder.getToBeAdded();
-        } else {
+        }
+        else {
           toBeAdded = new LinkedList<>();
           for (FilePath file : files) {
-            if (! file.isDirectory()) {
+            if (!file.isDirectory()) {
               toBeAdded.add(file);
             }
           }
@@ -207,17 +199,17 @@ public class TriggerAdditionOrDeletion {
           return;
         }
         Collections.sort(toBeAdded, FilePathByPathComparator.getInstance());
-        if (! vcsRoot.getVcs().fileListenerIsSynchronous()) {
-          for (FilePath filePath : toBeAdded) {
-            myVcsFileListenerContextHelper.ignoreAdded(filePath.getVirtualFile());
-          }
+        if (!vcsRoot.getVcs().fileListenerIsSynchronous()) {
+          myVcsFileListenerContextHelper.ignoreAdded(toBeAdded);
         }
         myPreparedAddition.put(vcsRoot, toBeAdded);
       }
     }
   }
 
-  private void askUserIfNeeded(final AbstractVcs vcs, @Nonnull  final List<FilePath> filePaths, @Nonnull VcsConfiguration.StandardConfirmation type) {
+  private void askUserIfNeeded(final AbstractVcs vcs,
+                               @Nonnull final List<FilePath> filePaths,
+                               @Nonnull VcsConfiguration.StandardConfirmation type) {
     if (mySilentAddDelete) return;
     final VcsShowConfirmationOption confirmationOption = myVcsManager.getStandardConfirmation(type, vcs);
     if (VcsShowConfirmationOption.Value.DO_NOTHING_SILENTLY.equals(confirmationOption.getValue())) {
@@ -227,15 +219,15 @@ public class TriggerAdditionOrDeletion {
       String operation = type == VcsConfiguration.StandardConfirmation.ADD ? "addition" : "deletion";
       String preposition = type == VcsConfiguration.StandardConfirmation.ADD ? " to " : " from ";
       final Collection<FilePath> files = myVcsHelper.selectFilePathsToProcess(filePaths, "Select files to " +
-                                                                                         StringUtil.decapitalize(type.getId()) +
-                                                                                         preposition +
-                                                                                         vcs.getDisplayName(), null,
+                                                                                StringUtil.decapitalize(type.getId()) +
+                                                                                preposition +
+                                                                                vcs.getDisplayName(), null,
                                                                               "Schedule for " + operation,
                                                                               "Do you want to schedule the following file for " +
-                                                                              operation +
-                                                                              preposition +
-                                                                              vcs.getDisplayName() +
-                                                                              "\n{0}", confirmationOption);
+                                                                                operation +
+                                                                                preposition +
+                                                                                vcs.getDisplayName() +
+                                                                                "\n{0}", confirmationOption);
       if (files == null) {
         filePaths.clear();
       }

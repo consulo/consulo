@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.changes;
+package consulo.versionControlSystem.impl.internal.change;
 
-import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.project.Project;
 import consulo.util.collection.MultiMap;
 import consulo.versionControlSystem.FilePath;
@@ -23,23 +22,24 @@ import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.root.VcsRoot;
 
 import java.util.Collection;
+import java.util.function.Function;
 
 public class SortByVcsRoots<T> {
   private final Project myProject;
-  private final Convertor<T, FilePath> myConvertor;
+  private final Function<T, FilePath> myConvertor;
   private ProjectLevelVcsManager myVcsManager;
   public static final VcsRoot ourFictiveValue = new VcsRoot(null, null);
 
-  public SortByVcsRoots(Project project, final Convertor<T, FilePath> convertor) {
+  public SortByVcsRoots(Project project, final Function<T, FilePath> convertor) {
     myProject = project;
     myVcsManager = ProjectLevelVcsManager.getInstance(project);
     myConvertor = convertor;
   }
 
   public MultiMap<VcsRoot, T> sort(final Collection<T> in) {
-    final MultiMap<VcsRoot, T> result = new MultiMap<VcsRoot, T>();
+    final MultiMap<VcsRoot, T> result = new MultiMap<>();
     for (T t : in) {
-      final VcsRoot root = myVcsManager.getVcsRootObjectFor(myConvertor.convert(t));
+      final VcsRoot root = myVcsManager.getVcsRootObjectFor(myConvertor.apply(t));
       if (root != null) {
         result.putValue(root, t);
       }

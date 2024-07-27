@@ -1,16 +1,16 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman;
+package consulo.versionControlSystem.impl.internal.util;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +29,7 @@ public final class FilePathMapping<T> {
   public void add(@Nonnull String filePath, @Nonnull T value) {
     String path = StringUtil.trimTrailing(filePath, '/');
     myPathMap.put(path, value);
-    myPathHashSet.add(pathHashCode(myCaseSensitive, path));
+    myPathHashSet.add(FilePathHashUtil.pathHashCode(myCaseSensitive, path));
   }
 
   public void remove(@Nonnull String filePath) {
@@ -70,7 +70,7 @@ public final class FilePathMapping<T> {
       int nextIndex = path.indexOf('/', index + 1);
       if (nextIndex == -1) nextIndex = path.length();
 
-      prefixHash = pathHashCode(myCaseSensitive, path, index, nextIndex, prefixHash);
+      prefixHash = FilePathHashUtil.pathHashCode(myCaseSensitive, path, index, nextIndex, prefixHash);
 
       if (myPathHashSet.contains(prefixHash)) {
         matches.add(nextIndex);
@@ -86,18 +86,5 @@ public final class FilePathMapping<T> {
     }
 
     return null;
-  }
-
-  private static int pathHashCode(boolean caseSensitive, @Nonnull String path) {
-    return pathHashCode(caseSensitive, path, 0, path.length(), 0);
-  }
-
-  private static int pathHashCode(boolean caseSensitive, @Nonnull String path, int offset1, int offset2, int prefixHash) {
-    if (caseSensitive) {
-      return StringUtil.stringHashCode(path, offset1, offset2, prefixHash);
-    }
-    else {
-      return StringUtil.stringHashCodeInsensitive(path, offset1, offset2, prefixHash);
-    }
   }
 }

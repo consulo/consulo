@@ -33,8 +33,8 @@ import java.util.stream.Collectors;
 @ServiceImpl
 public class AllVcsesImpl implements AllVcses, Disposable {
   private static final ExtensionPointCacheKey<VcsFactory, Map<String, VcsFactory>> BY_ID = ExtensionPointCacheKey.groupBy("BY_ID", VcsFactory::getId);
+  private static final Logger LOG = Logger.getInstance(AllVcsesImpl.class);
 
-  private final Logger LOG = Logger.getInstance(AllVcsesImpl.class);
   private final Map<String, AbstractVcs> myVcses;
 
   private final Object myLock;

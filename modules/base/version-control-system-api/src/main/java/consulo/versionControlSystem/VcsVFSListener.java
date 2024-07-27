@@ -37,9 +37,9 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.*;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.util.*;
 
@@ -131,7 +131,7 @@ public abstract class VcsVFSListener implements Disposable {
     LOG.debug("executeAdd. addedFiles: " + addedFiles);
     for (Iterator<VirtualFile> iterator = addedFiles.iterator(); iterator.hasNext(); ) {
       VirtualFile file = iterator.next();
-      if (myVcsFileListenerContextHelper.isAdditionIgnored(file)) {
+      if (myVcsFileListenerContextHelper.isAdditionIgnored(VcsUtil.getFilePath(file))) {
         iterator.remove();
       }
     }

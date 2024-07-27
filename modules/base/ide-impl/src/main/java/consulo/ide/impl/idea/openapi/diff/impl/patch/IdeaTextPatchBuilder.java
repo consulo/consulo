@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.diff.impl.patch;
 
 import consulo.application.progress.ProgressManager;
-import consulo.ide.impl.idea.openapi.vcs.changes.SortByVcsRoots;
+import consulo.versionControlSystem.impl.internal.change.SortByVcsRoots;
 import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.platform.Platform;
 import consulo.project.Project;
