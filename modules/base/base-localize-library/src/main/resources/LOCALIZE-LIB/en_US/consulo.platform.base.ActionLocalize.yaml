@@ -649,7 +649,7 @@ action.FindWordAtCaret.description:
 action.IncrementalSearch.text:
   text: Incrementa_l Search
 action.IncrementalSearch.description:
-  text: Start incremental search (searches string as you type), IntelliJ IDEA 6.0 implementation.
+  text: Start incremental search (searches string as you type)
 action.FindUsages.text:
   text: Find _Usages
 action.FindUsages.description:

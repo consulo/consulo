@@ -308,7 +308,7 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
 
     boolean canBePrebuilt = isPrebuilt(psiFile.getVirtualFile());
 
-    String msg = "PSI and index do not match.\nPlease report the problem to JetBrains with the files attached\n";
+    String msg = "PSI and index do not match.\nPlease report the problem with the files attached\n";
 
     if (canBePrebuilt) {
       msg += "This stub can have pre-built origin\n";
