@@ -16,22 +16,23 @@
 
 package consulo.ide.impl.idea.codeInspection.actions;
 
-import consulo.language.editor.scope.AnalysisScope;
+import consulo.codeEditor.Editor;
+import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
 import consulo.language.editor.FileModificationService;
-import consulo.language.editor.intention.IntentionAction;
-import consulo.language.editor.intention.LowPriorityAction;
+import consulo.language.editor.impl.inspection.GlobalInspectionContextBase;
+import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.scheme.InspectionProfile;
-import consulo.language.editor.inspection.InspectionsBundle;
-import consulo.language.editor.impl.inspection.GlobalInspectionContextBase;
-import consulo.codeEditor.Editor;
-import consulo.project.Project;
-import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
+import consulo.language.editor.intention.LowPriorityAction;
+import consulo.language.editor.intention.SyntheticIntentionAction;
+import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.project.Project;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
-public abstract class CleanupIntention implements IntentionAction, LowPriorityAction {
+public abstract class CleanupIntention implements SyntheticIntentionAction, LowPriorityAction {
 
   protected CleanupIntention() {}
 
@@ -53,7 +54,7 @@ public abstract class CleanupIntention implements IntentionAction, LowPriorityAc
     }
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   protected abstract AnalysisScope getScope(Project project, PsiFile file);
 
   @Override

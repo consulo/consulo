@@ -16,13 +16,12 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.ide.impl.idea.codeInspection.actions.CleanupIntention;
-import consulo.language.editor.ui.scope.AnalysisUIOptions;
-import consulo.language.editor.ui.awt.scope.BaseAnalysisActionDialog;
 import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
+import consulo.language.editor.ui.awt.scope.BaseAnalysisActionDialog;
+import consulo.language.editor.ui.scope.AnalysisUIOptions;
 import consulo.language.psi.PsiFile;
-import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -38,10 +37,10 @@ public class CleanupOnScopeIntention extends CleanupIntention {
   private CleanupOnScopeIntention() {}
 
   @Nullable
-  @Override
+  @Override                               
   @RequiredUIAccess
   protected AnalysisScope getScope(final Project project, final PsiFile file) {
-    final Module module = ModuleUtilCore.findModuleForPsiElement(file);
+    final Module module = file.getModule();
     AnalysisScope analysisScope = new AnalysisScope(file);
     final VirtualFile virtualFile = file.getVirtualFile();
     if (file.isPhysical() || virtualFile == null || !virtualFile.isInLocalFileSystem()) {
