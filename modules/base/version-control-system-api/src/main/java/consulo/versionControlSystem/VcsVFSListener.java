@@ -16,6 +16,7 @@
 
 package consulo.versionControlSystem;
 
+import consulo.annotation.UsedInPlugin;
 import consulo.application.Application;
 import consulo.application.CommonBundle;
 import consulo.application.ReadAction;
@@ -416,7 +417,8 @@ public abstract class VcsVFSListener implements Disposable {
   }
 
   protected void executeDelete() {
-    List<FilePath> deletedFiles = myProcessor.acquireDeletedFiles();
+    List<FilePath> deletedFiles = acquireDeletedFiles();
+
     LOG.debug("executeDelete ", deletedFiles);
 
     VcsShowConfirmationOption.Value removeOption = myRemoveOption.getValue();
@@ -428,6 +430,11 @@ public abstract class VcsVFSListener implements Disposable {
     if (filesToProcess.isEmpty()) return;
 
     performDeletion(filesToProcess);
+  }
+
+  @UsedInPlugin
+  protected final List<FilePath> acquireDeletedFiles() {
+    return myProcessor.acquireDeletedFiles();
   }
 
   /**
