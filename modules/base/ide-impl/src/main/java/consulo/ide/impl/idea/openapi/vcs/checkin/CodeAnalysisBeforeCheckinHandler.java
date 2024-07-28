@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.openapi.vcs.checkin;
 
+import consulo.application.Application;
 import consulo.application.CommonBundle;
 import consulo.ide.impl.idea.codeInsight.CodeSmellInfo;
 import consulo.language.editor.annotation.HighlightSeverity;
@@ -129,11 +130,15 @@ public class CodeAnalysisBeforeCheckinHandler extends CheckinHandler {
   public ReturnResult beforeCheckin(CommitExecutor executor, PairConsumer<Object, Object> additionalDataConsumer) {
     if (getSettings().CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT) {
       if (DumbService.getInstance(myProject).isDumb()) {
-        if (Messages.showOkCancelDialog(myProject,
-                                "Code analysis can't be performed while IntelliJ IDEA updates the indices in background.\n" +
-                                "You can commit the changes without running inspections, or you can wait until indices are built.",
-                                "Code analysis is not possible right now",
-                                "&Wait", "&Commit", null) == DialogWrapper.OK_EXIT_CODE) {
+        if (Messages.showOkCancelDialog(
+          myProject,
+            "Code analysis can't be performed while " + Application.get().getName() + " updates the indices in background.\n" +
+                "You can commit the changes without running inspections, or you can wait until indices are built.",
+            "Code analysis is not possible right now",
+            "&Wait",
+            "&Commit",
+            null
+        ) == DialogWrapper.OK_EXIT_CODE) {
           return ReturnResult.CANCEL;
         }
         return ReturnResult.COMMIT;
