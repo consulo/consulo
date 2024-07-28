@@ -17,9 +17,8 @@
 /*
  * @author max
  */
-package consulo.language.file.inject;
+package consulo.document;
 
-import consulo.document.Document;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import jakarta.annotation.Nonnull;

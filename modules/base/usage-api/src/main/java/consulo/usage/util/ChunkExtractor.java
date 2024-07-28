@@ -29,7 +29,7 @@ import consulo.codeEditor.DefaultLanguageHighlighterColors;
 import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighterFactory;
-import consulo.language.file.inject.DocumentWindow;
+import consulo.document.DocumentWindow;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.lexer.Lexer;
 import consulo.language.psi.PsiDocumentManager;

@@ -23,7 +23,7 @@ import consulo.component.util.ComponentUtil;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.language.file.FileViewProvider;
-import consulo.language.file.inject.DocumentWindow;
+import consulo.document.DocumentWindow;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiLanguageInjectionHost;

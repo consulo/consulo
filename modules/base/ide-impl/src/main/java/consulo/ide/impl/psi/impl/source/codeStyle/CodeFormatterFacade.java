@@ -26,7 +26,7 @@ import consulo.language.codeStyle.*;
 import consulo.language.editor.LanguageLineWrapPositionStrategy;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.file.FileViewProvider;
-import consulo.language.file.inject.DocumentWindow;
+import consulo.document.DocumentWindow;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.impl.psi.SourceTreeToPsiMap;
 import consulo.language.inject.InjectedLanguageManager;

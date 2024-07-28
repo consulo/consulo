@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.document.internal;
 
-/*
- * @author max
+/**
+ * @author VISTALL
+ * @since 28-Jul-24
  */
-package consulo.language.file.inject;
-
-import consulo.document.DocumentWindow;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileDelegate;
-import jakarta.annotation.Nonnull;
-
-public interface VirtualFileWindow extends VirtualFileDelegate {
-  @Override
-  @Nonnull
-  VirtualFile getDelegate();
-
-  @Nonnull
-  DocumentWindow getDocumentWindow();
-
-  boolean isValid();
+public final class RedBlackTreeVerifier {
+  public static boolean VERIFY;
 }

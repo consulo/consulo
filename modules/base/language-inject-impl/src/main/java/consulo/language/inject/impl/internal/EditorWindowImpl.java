@@ -5,9 +5,7 @@ package consulo.language.inject.impl.internal;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.*;
-import consulo.codeEditor.impl.MarkupModelWindow;
-import consulo.codeEditor.impl.util.EditorImplUtil;
-import consulo.codeEditor.RealEditor;
+import consulo.codeEditor.internal.MarkupModelWindow;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.codeEditor.util.EditorUtil;
 import consulo.colorScheme.EditorColorsManager;
@@ -17,11 +15,11 @@ import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
+import consulo.document.DocumentWindow;
 import consulo.language.editor.highlight.HighlighterFactory;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighterFactory;
 import consulo.language.editor.inject.EditorWindow;
-import consulo.language.file.inject.DocumentWindow;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
 import consulo.project.Project;
@@ -34,10 +32,10 @@ import consulo.ui.ex.PasteProvider;
 import consulo.util.collection.UnsafeWeakList;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.virtualFileSystem.VirtualFile;
-import kava.beans.PropertyChangeListener;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import kava.beans.PropertyChangeListener;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -626,7 +624,7 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
     if (offsetInLine > end - lineStartOffset) offsetInLine = end - lineStartOffset;
 
     CharSequence text = myDocumentWindow.getCharsSequence();
-    return EditorImplUtil.calcColumnNumber(this, text, lineStartOffset, lineStartOffset + offsetInLine);
+    return EditorUtil.calcColumnNumber(this, text, lineStartOffset, lineStartOffset + offsetInLine);
   }
 
   private int calcOffset(int col, int lineNumber, int lineStartOffset) {

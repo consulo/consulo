@@ -11,7 +11,7 @@ import consulo.colorScheme.TextAttributes;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
 import consulo.language.editor.inject.EditorWindow;
-import consulo.language.file.inject.DocumentWindow;
+import consulo.document.DocumentWindow;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;

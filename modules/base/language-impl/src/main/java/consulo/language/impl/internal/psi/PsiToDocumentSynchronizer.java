@@ -21,7 +21,7 @@ import consulo.component.messagebus.MessageBus;
 import consulo.document.Document;
 import consulo.document.internal.DocumentEx;
 import consulo.document.util.TextRange;
-import consulo.language.file.inject.DocumentWindow;
+import consulo.document.DocumentWindow;
 import consulo.language.impl.psi.ForeignLeafPsiElement;
 import consulo.language.psi.PsiFileEx;
 import consulo.language.psi.PsiElement;

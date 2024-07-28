@@ -33,7 +33,7 @@ import consulo.language.editor.highlight.BraceMatcher;
 import consulo.language.editor.highlight.NontrivialBraceMatcher;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.file.LanguageFileType;
-import consulo.language.file.inject.DocumentWindow;
+import consulo.document.DocumentWindow;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.parser.ParserDefinition;

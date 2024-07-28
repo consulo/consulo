@@ -2,18 +2,18 @@
 package consulo.document.impl;
 
 import consulo.application.ApplicationManager;
-import consulo.application.util.function.Processor;
 import consulo.document.MarkupIterator;
 import consulo.document.internal.RangeMarkerEx;
+import consulo.document.internal.RedBlackTreeVerifier;
 import consulo.logging.Logger;
 import consulo.util.collection.SmartList;
 import consulo.util.collection.primitive.longs.LongSet;
 import consulo.util.collection.primitive.longs.LongSets;
 import consulo.util.collection.util.WalkingState;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
 import java.lang.ref.ReferenceQueue;
@@ -82,12 +82,12 @@ public abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements Int
     }
 
     @Override
-    public boolean processAliveKeys(@Nonnull Processor<? super E> processor) {
+    public boolean processAliveKeys(@Nonnull Predicate<? super E> processor) {
       //noinspection ForLoopReplaceableByForEach
       for (int i = 0; i < intervals.size(); i++) {
         Supplier<E> interval = intervals.get(i);
         E key = interval.get();
-        if (key != null && !processor.process(key)) return false;
+        if (key != null && !processor.test(key)) return false;
       }
       return true;
     }
@@ -432,7 +432,7 @@ public abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements Int
   }
 
   @Override
-  public boolean processAll(@Nonnull Processor<? super T> processor) {
+  public boolean processAll(@Nonnull Predicate<? super T> processor) {
     try {
       l.readLock().lock();
       checkMax(true);
@@ -443,7 +443,7 @@ public abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements Int
     }
   }
 
-  private boolean process(@Nullable IntervalNode<T> root, final int modCountBefore, @Nonnull final Processor<? super T> processor) {
+  private boolean process(@Nullable IntervalNode<T> root, final int modCountBefore, @Nonnull final Predicate<? super T> processor) {
     if (root == null) return true;
 
     WalkingState.TreeGuide<IntervalNode<T>> guide = getGuide();
@@ -455,7 +455,7 @@ public abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements Int
   }
 
   @Override
-  public boolean processOverlappingWith(int start, int end, @Nonnull Processor<? super T> processor) {
+  public boolean processOverlappingWith(int start, int end, @Nonnull Predicate<? super T> processor) {
     try {
       l.readLock().lock();
       checkMax(true);
@@ -466,7 +466,7 @@ public abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements Int
     }
   }
 
-  private boolean processOverlappingWith(@Nullable IntervalNode<T> root, int start, int end, int modCountBefore, int deltaUpToRootExclusive, @Nonnull Processor<? super T> processor) {
+  private boolean processOverlappingWith(@Nullable IntervalNode<T> root, int start, int end, int modCountBefore, int deltaUpToRootExclusive, @Nonnull Predicate<? super T> processor) {
     if (root == null) {
       return true;
     }
@@ -494,7 +494,7 @@ public abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements Int
   }
 
   @Override
-  public boolean processOverlappingWithOutside(int start, int end, @Nonnull Processor<? super T> processor) {
+  public boolean processOverlappingWithOutside(int start, int end, @Nonnull Predicate<? super T> processor) {
     try {
       l.readLock().lock();
       checkMax(true);
@@ -505,7 +505,7 @@ public abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements Int
     }
   }
 
-  private boolean processOverlappingWithOutside(@Nullable IntervalNode<T> root, int start, int end, int modCountBefore, int deltaUpToRootExclusive, @Nonnull Processor<? super T> processor) {
+  private boolean processOverlappingWithOutside(@Nullable IntervalNode<T> root, int start, int end, int modCountBefore, int deltaUpToRootExclusive, @Nonnull Predicate<? super T> processor) {
     if (root == null) {
       return true;
     }
@@ -531,7 +531,7 @@ public abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements Int
 
 
   @Override
-  public boolean processContaining(int offset, @Nonnull Processor<? super T> processor) {
+  public boolean processContaining(int offset, @Nonnull Predicate<? super T> processor) {
     try {
       l.readLock().lock();
       checkMax(true);
@@ -542,7 +542,7 @@ public abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements Int
     }
   }
 
-  private boolean processContaining(@Nullable IntervalNode<T> root, int offset, int modCountBefore, int deltaUpToRootExclusive, @Nonnull Processor<? super T> processor) {
+  private boolean processContaining(@Nullable IntervalNode<T> root, int offset, int modCountBefore, int deltaUpToRootExclusive, @Nonnull Predicate<? super T> processor) {
     if (root == null) {
       return true;
     }
@@ -798,7 +798,7 @@ public abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements Int
 
   // returns true if all markers are valid
   boolean checkMax(boolean assertInvalid) {
-    return RedBlackTree.VERIFY && doCheckMax(assertInvalid);
+    return RedBlackTreeVerifier.VERIFY && doCheckMax(assertInvalid);
   }
 
   private boolean doCheckMax(boolean assertInvalid) {
@@ -915,7 +915,7 @@ public abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements Int
     if (root == null) return;
     //noinspection NumberEquality
     assert root.getTree() == this : root.getTree() + "; this: " + this;
-    if (!RedBlackTree.VERIFY) return;
+    if (!RedBlackTreeVerifier.VERIFY) return;
 
     if (assertInvalid) {
       assert !root.intervals.isEmpty();

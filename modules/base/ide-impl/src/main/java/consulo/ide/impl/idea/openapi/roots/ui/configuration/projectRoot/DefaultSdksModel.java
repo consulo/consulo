@@ -21,7 +21,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.configurable.ConfigurationException;
 import consulo.content.bundle.*;
-import consulo.content.impl.internal.bundle.SdkImpl;
+import consulo.application.content.impl.internal.bundle.SdkImpl;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ide.setting.bundle.SettingsSdksModel;

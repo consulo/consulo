@@ -16,7 +16,7 @@
 package consulo.module.impl.internal.layer.library;
 
 import consulo.component.ComponentManager;
-import consulo.content.impl.internal.library.LibraryOwner;
+import consulo.application.content.impl.internal.library.LibraryOwner;
 import consulo.module.impl.internal.layer.ModuleRootLayerImpl;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
 

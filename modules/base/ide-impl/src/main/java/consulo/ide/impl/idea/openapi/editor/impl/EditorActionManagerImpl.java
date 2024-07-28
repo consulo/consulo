@@ -25,7 +25,7 @@ import consulo.document.Document;
 import consulo.document.ReadOnlyFragmentModificationException;
 import consulo.document.ReadonlyFragmentModificationHandler;
 import consulo.document.impl.DocumentImpl;
-import consulo.language.file.inject.DocumentWindow;
+import consulo.document.DocumentWindow;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.awt.Messages;
 import jakarta.inject.Inject;

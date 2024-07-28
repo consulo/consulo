@@ -26,7 +26,7 @@ import jakarta.annotation.Nonnull;
  */
 public abstract class InternalEditorFactory extends EditorFactory {
   @Nonnull
-  public abstract Document createUnsafeDocument(String text, boolean allowInAWT);
+  public abstract Document createUnsafeDocument(CharSequence text, boolean allowInAWT);
 
   @Nonnull
   public abstract Document createDocument(boolean allowUpdatesWithoutWriteAction);

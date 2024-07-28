@@ -23,7 +23,7 @@ import consulo.ide.impl.psi.impl.source.PostprocessReformattingAspectImpl;
 import consulo.language.ast.ASTNode;
 import consulo.language.codeStyle.PostprocessReformattingAspect;
 import consulo.language.file.FileViewProvider;
-import consulo.language.file.inject.DocumentWindow;
+import consulo.document.DocumentWindow;
 import consulo.language.impl.internal.pom.PomAspectGuard;
 import consulo.language.impl.internal.psi.BooleanRunnable;
 import consulo.language.impl.internal.psi.DocumentCommitProcessor;

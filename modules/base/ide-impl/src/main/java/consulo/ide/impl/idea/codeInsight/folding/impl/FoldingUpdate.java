@@ -23,7 +23,7 @@ import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.file.FileViewProvider;
-import consulo.language.file.inject.DocumentWindow;
+import consulo.document.DocumentWindow;
 import consulo.language.psi.*;
 import consulo.application.util.CachedValue;
 import consulo.application.util.CachedValueProvider;

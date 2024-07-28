@@ -19,7 +19,7 @@ import consulo.application.ApplicationManager;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.MasterDetailsConfigurable;
-import consulo.content.impl.internal.library.LibraryImpl;
+import consulo.application.content.impl.internal.library.LibraryImpl;
 import consulo.content.internal.LibraryEx;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;

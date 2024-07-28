@@ -17,10 +17,11 @@ package consulo.codeEditor.impl;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.internal.MarkupModelWindow;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.document.Document;
 import consulo.document.internal.DocumentEx;
-import consulo.language.file.inject.DocumentWindow;
+import consulo.document.DocumentWindow;
 import consulo.project.Project;
 import consulo.util.collection.Maps;
 import consulo.util.dataholder.Key;

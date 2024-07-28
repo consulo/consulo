@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.content.impl.internal.bundle;
+package consulo.application.content.impl.internal.bundle;
 
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
@@ -24,6 +24,7 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
+import consulo.application.content.impl.internal.bundle.SdkImpl;
 import consulo.content.bundle.*;
 import consulo.content.bundle.event.SdkTableListener;
 import consulo.util.collection.SmartHashSet;

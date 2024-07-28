@@ -21,7 +21,7 @@ import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.MasterDetailsConfigurable;
 import consulo.content.bundle.*;
-import consulo.content.impl.internal.bundle.SdkImpl;
+import consulo.application.content.impl.internal.bundle.SdkImpl;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.SdkProjectStructureElement;

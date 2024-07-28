@@ -14,7 +14,7 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.impl.DocumentImpl;
 import consulo.language.editor.completion.*;
-import consulo.language.file.inject.DocumentWindow;
+import consulo.document.DocumentWindow;
 import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.psi.PsiFileEx;
 import consulo.language.inject.InjectedLanguageManager;

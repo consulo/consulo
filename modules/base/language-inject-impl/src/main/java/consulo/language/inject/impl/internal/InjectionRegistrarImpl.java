@@ -24,7 +24,7 @@ import consulo.language.ast.IElementType;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.highlight.EditorHighlighterProvider;
 import consulo.language.file.FileViewProvider;
-import consulo.language.file.inject.DocumentWindow;
+import consulo.document.DocumentWindow;
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.impl.DebugUtil;
 import consulo.language.impl.ast.FileElement;

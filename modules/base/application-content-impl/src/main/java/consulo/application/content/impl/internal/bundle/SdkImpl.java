@@ -1,5 +1,5 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.content.impl.internal.bundle;
+package consulo.application.content.impl.internal.bundle;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
@@ -8,8 +8,8 @@ import consulo.content.OrderRootType;
 import consulo.content.RootProvider;
 import consulo.content.RootProviderBase;
 import consulo.content.bundle.*;
-import consulo.content.impl.internal.GlobalLibraryRootListenerProvider;
-import consulo.content.impl.internal.RootsAsVirtualFilePointers;
+import consulo.content.internal.GlobalLibraryRootListenerProvider;
+import consulo.application.content.impl.internal.RootsAsVirtualFilePointers;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
@@ -51,7 +51,7 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, 
   private boolean myPredefined;
 
   @Deprecated
-  @DeprecationInfo("Prefe with Path parameter")
+  @DeprecationInfo("Prefer with Path parameter")
   public SdkImpl(SdkTable sdkTable, String name, SdkTypeId sdkType) {
     mySdkTable = sdkTable;
     mySdkType = sdkType;

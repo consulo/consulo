@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-package consulo.codeEditor.impl;
+package consulo.codeEditor.internal;
 
 import consulo.application.util.function.Processor;
 import consulo.codeEditor.markup.*;
 import consulo.colorScheme.TextAttributes;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
+import consulo.document.DocumentWindow;
 import consulo.document.MarkupIterator;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
-import consulo.language.file.inject.DocumentWindow;
 import consulo.util.dataholder.UserDataHolderBase;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.function.Consumer;
 
 /**

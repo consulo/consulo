@@ -15,22 +15,23 @@
  */
 package consulo.codeEditor.util;
 
+import consulo.application.util.Dumpable;
+import consulo.application.util.logging.LoggerUtil;
 import consulo.codeEditor.*;
 import consulo.colorScheme.TextAttributes;
 import consulo.document.Document;
 import consulo.document.util.DocumentUtil;
+import consulo.logging.Logger;
 import consulo.util.lang.Pair;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 import java.util.List;
 
-/**
- * @author VISTALL
- * @since 12-Mar-22
- */
 public class EditorUtil {
+  private static final Logger LOG = Logger.getInstance(EditorUtil.class);
+
   public static int calcRelativeCaretPosition(@Nonnull Editor editor) {
     int caretY = editor.getCaretModel().getVisualPosition().line * editor.getLineHeight();
     int viewAreaPosition = editor.getScrollingModel().getVisibleAreaOnScrollingFinished().y;
@@ -248,5 +249,74 @@ public class EditorUtil {
       }
     }
     return line;
+  }
+
+  public static int calcColumnNumber(@Nonnull Editor editor,
+                                     @Nonnull CharSequence text,
+                                     final int start,
+                                     final int offset) {
+    return calcColumnNumber(editor, text, start, offset, getTabSize(editor));
+  }
+
+  public static int calcColumnNumber(@Nullable Editor editor,
+                                     @Nonnull CharSequence text,
+                                     final int start,
+                                     final int offset,
+                                     final int tabSize) {
+    if (editor instanceof TextComponentEditor) {
+      return offset - start;
+    }
+    boolean useOptimization = true;
+    if (editor != null) {
+      SoftWrap softWrap = editor.getSoftWrapModel().getSoftWrap(start);
+      useOptimization = softWrap == null;
+    }
+    if (useOptimization) {
+      boolean hasNonTabs = false;
+      for (int i = start; i < offset; i++) {
+        if (text.charAt(i) == '\t') {
+          if (hasNonTabs) {
+            useOptimization = false;
+            break;
+          }
+        }
+        else {
+          hasNonTabs = true;
+        }
+      }
+    }
+
+    if (editor != null && useOptimization) {
+      Document document = editor.getDocument();
+      if (start < offset - 1 && document.getLineNumber(start) != document.getLineNumber(offset - 1)) {
+        String editorInfo = editor instanceof Dumpable ? ". Editor info: " + ((Dumpable)editor).dumpState() : "";
+        String documentInfo;
+        if (text instanceof Dumpable) {
+          documentInfo = ((Dumpable)text).dumpState();
+        }
+        else {
+          documentInfo = "Text holder class: " + text.getClass();
+        }
+        LoggerUtil.error(LOG,
+                         "detected incorrect offset -> column number calculation",
+                         "start: " + start + ", given offset: " + offset + ", given tab size: " + tabSize + ". " + documentInfo + editorInfo);
+      }
+    }
+
+    int shift = 0;
+    for (int i = start; i < offset; i++) {
+      char c = text.charAt(i);
+      if (c == '\t') {
+        shift += getTabLength(i + shift - start, tabSize) - 1;
+      }
+    }
+    return offset - start + shift;
+  }
+
+  private static int getTabLength(int colNumber, int tabSize) {
+    if (tabSize <= 0) {
+      tabSize = 1;
+    }
+    return tabSize - colNumber % tabSize;
   }
 }

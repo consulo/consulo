@@ -4,6 +4,7 @@ package consulo.codeEditor.impl;
 import consulo.application.ApplicationManager;
 import consulo.application.util.function.CommonProcessors;
 import consulo.codeEditor.FoldRegion;
+import consulo.codeEditor.internal.SweepProcessor;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.impl.RangeMarkerTree;

@@ -16,7 +16,7 @@
 package consulo.module.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.content.impl.internal.GlobalLibraryRootListenerProvider;
+import consulo.content.internal.GlobalLibraryRootListenerProvider;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
 import consulo.project.ProjectManager;

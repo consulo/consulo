@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries;
 
 import consulo.application.AllIcons;
 import consulo.content.OrderRootType;
-import consulo.content.impl.internal.library.LibraryImpl;
+import consulo.application.content.impl.internal.library.LibraryImpl;
 import consulo.content.internal.LibraryEx;
 import consulo.content.library.*;
 import consulo.ide.IdeBundle;

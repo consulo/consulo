@@ -15,11 +15,11 @@
  */
 package consulo.codeEditor.impl.util;
 
-import consulo.application.util.Dumpable;
 import consulo.application.util.logging.LoggerUtil;
 import consulo.codeEditor.*;
 import consulo.codeEditor.impl.ComplementaryFontsRegistry;
 import consulo.codeEditor.impl.FontInfo;
+import consulo.codeEditor.util.EditorUtil;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.document.Document;
 import consulo.document.impl.Interval;
@@ -27,10 +27,10 @@ import consulo.document.impl.TextRangeInterval;
 import consulo.logging.Logger;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import org.intellij.lang.annotations.JdkConstants;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
+import org.intellij.lang.annotations.JdkConstants;
+
 import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
@@ -196,76 +196,35 @@ public class EditorImplUtil {
     }
 
     CharSequence editorInfo = "editor's class: " +
-                              editor.getClass() +
-                              ", all soft wraps: " +
-                              editor.getSoftWrapModel().getSoftWrapsForRange(0, document.getTextLength()) +
-                              ", fold regions: " +
-                              Arrays.toString(editor.getFoldingModel().getAllFoldRegions());
+      editor.getClass() +
+      ", all soft wraps: " +
+      editor.getSoftWrapModel().getSoftWrapsForRange(0, document.getTextLength()) +
+      ", fold regions: " +
+      Arrays.toString(editor.getFoldingModel().getAllFoldRegions());
     LoggerUtil.error(LOG, "Can't calculate last visual column", String.format(
-            "Target visual line: %d, mapped logical line: %d, visual lines range for the mapped logical line: [%s]-[%s], soft wraps for " + "the target logical line: %s. Editor info: %s", line,
-            resultLogLine, resVisStart, resVisEnd, softWraps, editorInfo));
+      "Target visual line: %d, mapped logical line: %d, visual lines range for the mapped logical line: [%s]-[%s], soft wraps for " + "the target logical line: %s. Editor info: %s",
+      line,
+      resultLogLine,
+      resVisStart,
+      resVisEnd,
+      softWraps,
+      editorInfo));
 
     return resVisEnd.column;
   }
 
+  @Deprecated
   public static int calcColumnNumber(@Nonnull Editor editor, @Nonnull CharSequence text, int start, int offset) {
-    return calcColumnNumber(editor, text, start, offset, getTabSize(editor));
+    return EditorUtil.calcColumnNumber(editor, text, start, offset);
   }
 
-  public static int calcColumnNumber(@Nullable Editor editor, @Nonnull CharSequence text, final int start, final int offset, final int tabSize) {
-    if (editor instanceof TextComponentEditor) {
-      return offset - start;
-    }
-    boolean useOptimization = true;
-    if (editor != null) {
-      SoftWrap softWrap = editor.getSoftWrapModel().getSoftWrap(start);
-      useOptimization = softWrap == null;
-    }
-    if (useOptimization) {
-      boolean hasNonTabs = false;
-      for (int i = start; i < offset; i++) {
-        if (text.charAt(i) == '\t') {
-          if (hasNonTabs) {
-            useOptimization = false;
-            break;
-          }
-        }
-        else {
-          hasNonTabs = true;
-        }
-      }
-    }
-
-    if (editor != null && useOptimization) {
-      Document document = editor.getDocument();
-      if (start < offset - 1 && document.getLineNumber(start) != document.getLineNumber(offset - 1)) {
-        String editorInfo = editor instanceof Dumpable ? ". Editor info: " + ((Dumpable)editor).dumpState() : "";
-        String documentInfo;
-        if (text instanceof Dumpable) {
-          documentInfo = ((Dumpable)text).dumpState();
-        }
-        else {
-          documentInfo = "Text holder class: " + text.getClass();
-        }
-        LoggerUtil.error(LOG, "detected incorrect offset -> column number calculation", "start: " + start + ", given offset: " + offset + ", given tab size: " + tabSize + ". " + documentInfo + editorInfo);
-      }
-    }
-
-    int shift = 0;
-    for (int i = start; i < offset; i++) {
-      char c = text.charAt(i);
-      if (c == '\t') {
-        shift += getTabLength(i + shift - start, tabSize) - 1;
-      }
-    }
-    return offset - start + shift;
-  }
-
-  private static int getTabLength(int colNumber, int tabSize) {
-    if (tabSize <= 0) {
-      tabSize = 1;
-    }
-    return tabSize - colNumber % tabSize;
+  @Deprecated
+  public static int calcColumnNumber(@Nullable Editor editor,
+                                     @Nonnull CharSequence text,
+                                     final int start,
+                                     final int offset,
+                                     final int tabSize) {
+    return EditorUtil.calcColumnNumber(editor, text, start, offset, tabSize);
   }
 
   public static int textWidthInColumns(@Nonnull Editor editor, @Nonnull CharSequence text, int start, int end, int x) {
@@ -374,6 +333,9 @@ public class EditorImplUtil {
   @Nonnull
   public static FontInfo fontForChar(final char c, @JdkConstants.FontStyle int style, @Nonnull Editor editor) {
     EditorColorsScheme colorsScheme = editor.getColorsScheme();
-    return ComplementaryFontsRegistry.getFontAbleToDisplay(c, style, colorsScheme.getFontPreferences(), FontInfo.getFontRenderContext(editor.getContentComponent()));
+    return ComplementaryFontsRegistry.getFontAbleToDisplay(c,
+                                                           style,
+                                                           colorsScheme.getFontPreferences(),
+                                                           FontInfo.getFontRenderContext(editor.getContentComponent()));
   }
 }

@@ -11,7 +11,7 @@ import consulo.component.util.ModificationTracker;
 import consulo.disposer.Disposable;
 import consulo.document.util.TextRange;
 import consulo.language.editor.inject.EditorWindow;
-import consulo.language.file.inject.DocumentWindow;
+import consulo.document.DocumentWindow;
 import consulo.util.dataholder.Key;
 
 import jakarta.annotation.Nonnull;
@@ -63,7 +63,7 @@ class FoldingModelWindow implements FoldingModelEx, ModificationTracker {
 
   @Override
   public void removeFoldRegion(@Nonnull FoldRegion region) {
-    myDelegate.removeFoldRegion(((FoldingRegionWindow)region).getDelegate());
+    myDelegate.removeFoldRegion((FoldRegion)((FoldingRegionWindow)region).getDelegate());
   }
 
   @Override

@@ -5,15 +5,15 @@ package consulo.language.editor.impl.internal.highlight;
 import consulo.application.ApplicationManager;
 import consulo.application.util.function.Processor;
 import consulo.codeEditor.DocumentMarkupModel;
-import consulo.codeEditor.impl.SweepProcessor;
+import consulo.codeEditor.internal.SweepProcessor;
 import consulo.codeEditor.markup.*;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.event.DocumentEvent;
-import consulo.document.impl.RedBlackTree;
 import consulo.document.internal.DocumentEx;
+import consulo.document.internal.RedBlackTreeVerifier;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
 import consulo.language.editor.annotation.HighlightSeverity;
@@ -32,11 +32,12 @@ import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public class UpdateHighlightersUtilImpl {
 
@@ -138,7 +139,7 @@ public class UpdateHighlightersUtilImpl {
     final PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document);
     final DaemonCodeAnalyzerEx codeAnalyzer = DaemonCodeAnalyzerEx.getInstanceEx(project);
     final boolean[] changed = {false};
-    SweepProcessor.Generator<HighlightInfo> generator = (Processor<HighlightInfo> processor) -> ContainerUtil.process(infos, processor);
+    SweepProcessor.Generator<HighlightInfo> generator = (Predicate<HighlightInfo> processor) -> ContainerUtil.process(infos, processor);
     SweepProcessor.sweep(generator, (offset, i, atStart, overlappingIntervals) -> {
       if (!atStart) {
         return true;
@@ -363,7 +364,7 @@ public class UpdateHighlightersUtilImpl {
   }
 
   public static void assertMarkupConsistent(@Nonnull final MarkupModel markup, @Nonnull Project project) {
-    if (!RedBlackTree.VERIFY) {
+    if (!RedBlackTreeVerifier.VERIFY) {
       return;
     }
     Document document = markup.getDocument();

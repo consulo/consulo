@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.text.CharArrayCharSequence;
 import consulo.language.editor.highlight.EditorHighlighterFactory;
-import consulo.language.file.inject.DocumentWindow;
+import consulo.document.DocumentWindow;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
@@ -123,7 +123,7 @@ public abstract class EditorFactoryImpl extends InternalEditorFactory {
 
   @Nonnull
   @Override
-  public Document createUnsafeDocument(String text, boolean allowInAWT) {
+  public Document createUnsafeDocument(CharSequence text, boolean allowInAWT) {
     return new DocumentImpl(text, allowInAWT);
   }
 

@@ -18,7 +18,7 @@ import consulo.document.util.ProperTextRange;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.language.editor.inject.EditorWindow;
-import consulo.language.file.inject.DocumentWindow;
+import consulo.document.DocumentWindow;
 import consulo.language.impl.internal.psi.PsiManagerEx;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiFile;

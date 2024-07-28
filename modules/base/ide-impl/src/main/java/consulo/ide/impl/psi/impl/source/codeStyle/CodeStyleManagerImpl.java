@@ -29,7 +29,7 @@ import consulo.language.codeStyle.internal.CoreCodeStyleUtil;
 import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.file.FileViewProvider;
-import consulo.language.file.inject.DocumentWindow;
+import consulo.document.DocumentWindow;
 import consulo.language.impl.ast.RecursiveTreeElementWalkingVisitor;
 import consulo.language.impl.ast.TreeElement;
 import consulo.language.impl.file.MultiplePsiFilesPerDocumentFileViewProvider;

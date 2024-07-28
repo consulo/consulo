@@ -19,7 +19,7 @@ package consulo.language.codeStyle;
 import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.TokenType;
-import consulo.language.file.inject.DocumentWindow;
+import consulo.document.DocumentWindow;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.inject.InjectedLanguageManagerUtil;
 import consulo.language.psi.*;

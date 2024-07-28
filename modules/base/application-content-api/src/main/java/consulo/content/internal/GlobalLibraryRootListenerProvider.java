@@ -13,34 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.content.impl.internal.library;
+package consulo.content.internal;
 
-import consulo.application.Application;
-import consulo.component.ComponentManager;
-import consulo.content.impl.internal.GlobalLibraryRootListenerProvider;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
 
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 09-Apr-22
  */
-public interface LibraryOwner {
-  static LibraryOwner APPLICATION = new LibraryOwner() {
-    @Nonnull
-    @Override
-    public VirtualFilePointerListener getListener() {
-      return Application.get().getInstance(GlobalLibraryRootListenerProvider.class).getListener();
-    }
-  };
-
+@ServiceAPI(ComponentScope.APPLICATION)
+public interface GlobalLibraryRootListenerProvider {
   @Nonnull
   VirtualFilePointerListener getListener();
-
-  @Nullable
-  default ComponentManager getModule() {
-    return null;
-  }
 }

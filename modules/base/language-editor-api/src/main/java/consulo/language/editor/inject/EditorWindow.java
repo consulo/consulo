@@ -18,7 +18,7 @@ package consulo.language.editor.inject;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.InjectedEditor;
 import consulo.codeEditor.LogicalPosition;
-import consulo.language.file.inject.DocumentWindow;
+import consulo.document.DocumentWindow;
 import consulo.language.psi.PsiFile;
 import consulo.util.dataholder.UserDataHolderEx;
 

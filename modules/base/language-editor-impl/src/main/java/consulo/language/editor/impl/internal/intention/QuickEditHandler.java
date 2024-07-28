@@ -45,7 +45,7 @@ import consulo.language.editor.action.CopyPastePreProcessor;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.impl.intention.QuickEditAction;
 import consulo.language.editor.template.TemplateManager;
-import consulo.language.file.inject.DocumentWindow;
+import consulo.document.DocumentWindow;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.psi.FileContextUtil;
 import consulo.language.inject.InjectedLanguageManager;

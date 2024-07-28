@@ -5,6 +5,7 @@
 module consulo.code.editor.impl {
   // TODO remove in future this dependency
   requires java.desktop;
+  requires consulo.desktop.awt.hacking;
 
   requires transitive consulo.code.editor.api;
   requires transitive consulo.ui.ex.awt.api;
@@ -12,8 +13,6 @@ module consulo.code.editor.impl {
   requires transitive consulo.color.scheme.impl;
   requires transitive consulo.language.api;
   requires transitive consulo.language.code.style.api;
-
-  requires consulo.desktop.awt.hacking;
 
   exports consulo.codeEditor.impl to
           consulo.ide.impl,

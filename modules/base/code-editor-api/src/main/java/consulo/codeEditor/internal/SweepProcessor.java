@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.codeEditor.impl;
+package consulo.codeEditor.internal;
 
 import consulo.document.util.Segment;
-import consulo.application.util.function.Processor;
 import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.function.Predicate;
 
 @FunctionalInterface
 public interface SweepProcessor<T> {
@@ -66,6 +66,6 @@ public interface SweepProcessor<T> {
 
   @FunctionalInterface
   interface Generator<T> {
-    boolean generateInStartOffsetOrder(@Nonnull Processor<T> processor);
+    boolean generateInStartOffsetOrder(@Nonnull Predicate<T> processor);
   }
 }

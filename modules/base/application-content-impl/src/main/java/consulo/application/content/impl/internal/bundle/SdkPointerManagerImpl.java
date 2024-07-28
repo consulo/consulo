@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.content.impl.internal.bundle;
+package consulo.application.content.impl.internal.bundle;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;

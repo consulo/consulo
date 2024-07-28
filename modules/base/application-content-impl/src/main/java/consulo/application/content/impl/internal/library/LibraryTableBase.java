@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.content.impl.internal.library;
+package consulo.application.content.impl.internal.library;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.application.ApplicationManager;

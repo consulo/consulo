@@ -4,11 +4,9 @@ package consulo.language.inject.impl.internal;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.FoldingGroup;
-import consulo.codeEditor.impl.FoldRegionImpl;
 import consulo.document.internal.RangeMarkerEx;
 import consulo.language.editor.inject.EditorWindow;
-import consulo.language.file.inject.DocumentWindow;
-
+import consulo.document.DocumentWindow;
 import jakarta.annotation.Nonnull;
 
 public class FoldingRegionWindow extends RangeMarkerWindow implements FoldRegion {
@@ -54,8 +52,8 @@ public class FoldingRegionWindow extends RangeMarkerWindow implements FoldRegion
   }
 
   @Override
-  public FoldRegionImpl getDelegate() {
-    return (FoldRegionImpl)myHostRegion;
+  public RangeMarkerEx getDelegate() {
+    return (RangeMarkerEx)myHostRegion;
   }
 
   @Override

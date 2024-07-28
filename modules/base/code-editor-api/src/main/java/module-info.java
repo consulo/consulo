@@ -21,14 +21,15 @@ module consulo.code.editor.api {
   exports consulo.codeEditor.util;
 
   exports consulo.codeEditor.internal to consulo.ide.impl,
-          consulo.code.editor.impl,
-          consulo.language.inject.impl,
-          consulo.desktop.awt.ide.impl,
-          consulo.language.editor.api,
-          consulo.language.code.style.ui.api,
-          consulo.execution.api,
-          consulo.language.editor.refactoring.api,
-          consulo.language.editor.ui.api,
-          consulo.file.editor.api,
-          consulo.desktop.swt.ide.impl;
+    consulo.code.editor.impl,
+    consulo.language.inject.impl,
+    consulo.desktop.awt.ide.impl,
+    consulo.language.editor.api,
+    consulo.language.code.style.ui.api,
+    consulo.execution.api,
+    consulo.language.editor.refactoring.api,
+    consulo.language.editor.ui.api,
+    consulo.file.editor.api,
+    consulo.desktop.swt.ide.impl,
+    consulo.language.editor.impl;
 }

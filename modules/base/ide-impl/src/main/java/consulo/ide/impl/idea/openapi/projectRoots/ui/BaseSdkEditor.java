@@ -20,7 +20,7 @@ import consulo.configurable.ConfigurationException;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.content.OrderRootType;
 import consulo.content.bundle.*;
-import consulo.content.impl.internal.bundle.SdkImpl;
+import consulo.application.content.impl.internal.bundle.SdkImpl;
 import consulo.disposer.Disposable;
 import consulo.ide.ui.OrderRootTypeUIFactory;
 import consulo.ide.ui.PathEditor;

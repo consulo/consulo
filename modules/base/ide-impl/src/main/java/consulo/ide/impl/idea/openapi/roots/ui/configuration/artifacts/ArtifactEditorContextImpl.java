@@ -23,7 +23,7 @@ import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.ModuleRootModel;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.impl.internal.layer.orderEntry.ModuleLibraryOrderEntryImpl;
-import consulo.content.impl.internal.library.LibraryImpl;
+import consulo.application.content.impl.internal.library.LibraryImpl;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.module.ui.awt.ChooseModulesDialog;

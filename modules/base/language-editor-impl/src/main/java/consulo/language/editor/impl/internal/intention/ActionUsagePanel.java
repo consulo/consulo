@@ -22,9 +22,9 @@ import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
-import consulo.document.impl.DocumentImpUtil;
 import consulo.document.util.Segment;
 import consulo.language.editor.highlight.EditorHighlighterFactory;
+import consulo.undoRedo.util.UndoUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 
@@ -77,7 +77,7 @@ public class ActionUsagePanel extends JPanel implements Disposable {
     reinitViews();
     SwingUtilities.invokeLater(() -> {
       if (myEditor.isDisposed()) return;
-      DocumentImpUtil.writeInRunUndoTransparentAction(() -> configureByText(usageText, fileType));
+      UndoUtil.writeInRunUndoTransparentAction(() -> configureByText(usageText, fileType));
     });
   }
 

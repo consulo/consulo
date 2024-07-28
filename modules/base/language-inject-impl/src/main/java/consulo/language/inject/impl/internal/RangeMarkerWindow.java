@@ -2,7 +2,7 @@
 
 package consulo.language.inject.impl.internal;
 
-import consulo.language.file.inject.DocumentWindow;
+import consulo.document.DocumentWindow;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 import consulo.document.internal.RangeMarkerEx;

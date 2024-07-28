@@ -18,10 +18,12 @@ package consulo.language.editor.impl.internal.completion;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.document.impl.DocumentImpl;
+import consulo.codeEditor.EditorFactory;
+import consulo.codeEditor.internal.InternalEditorFactory;
+import consulo.document.Document;
+import consulo.document.DocumentWindow;
 import consulo.document.util.TextRange;
 import consulo.language.editor.completion.OffsetMap;
-import consulo.language.file.inject.DocumentWindow;
 import consulo.language.impl.ast.FileElement;
 import consulo.language.impl.internal.psi.ChangedPsiRangeUtil;
 import consulo.language.impl.internal.psi.diff.BlockSupport;
@@ -89,7 +91,9 @@ public class OffsetsInFile {
 
   @Nonnull
   public OffsetsInFile replaceInCopy(PsiFile fileCopy, int startOffset, int endOffset, String replacement) {
-    DocumentImpl tempDocument = new DocumentImpl(offsets.getDocument().getImmutableCharSequence(), true);
+    InternalEditorFactory editorFactory = (InternalEditorFactory)EditorFactory.getInstance();
+
+    Document tempDocument = editorFactory.createUnsafeDocument(offsets.getDocument().getImmutableCharSequence(), true);
 
     OffsetMap tempMap = offsets.copyOffsets(tempDocument);
 

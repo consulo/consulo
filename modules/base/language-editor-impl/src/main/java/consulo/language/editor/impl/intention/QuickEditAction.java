@@ -26,7 +26,7 @@ import consulo.language.editor.impl.internal.intention.QuickEditHandler;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.editor.intention.LowPriorityAction;
-import consulo.language.file.inject.DocumentWindow;
+import consulo.document.DocumentWindow;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.inject.impl.internal.PlaceImpl;

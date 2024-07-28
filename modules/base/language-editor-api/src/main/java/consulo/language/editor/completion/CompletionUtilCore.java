@@ -28,7 +28,7 @@ import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupValueWithPsiElement;
 import consulo.language.editor.internal.OffsetTranslator;
-import consulo.language.file.inject.DocumentWindow;
+import consulo.document.DocumentWindow;
 import consulo.language.pattern.CharPattern;
 import consulo.language.pattern.ElementPattern;
 import consulo.language.psi.*;
@@ -38,7 +38,6 @@ import consulo.logging.attachment.AttachmentFactory;
 import consulo.logging.attachment.RuntimeExceptionWithAttachments;
 import consulo.project.Project;
 import consulo.util.collection.UnmodifiableIterator;
-import org.jetbrains.annotations.NonNls;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;

@@ -20,7 +20,7 @@ import consulo.content.OrderRootType;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.base.DocumentationOrderRootType;
 import consulo.content.base.SourcesOrderRootType;
-import consulo.content.impl.internal.library.LibraryImpl;
+import consulo.application.content.impl.internal.library.LibraryImpl;
 import consulo.content.internal.LibraryEx;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;

@@ -15,19 +15,17 @@
  */
 package consulo.document.impl;
 
-import consulo.application.util.function.Processor;
+import consulo.document.internal.RedBlackTreeVerifier;
 import consulo.util.lang.BitUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
 
-
+// this "extends AtomicInteger" thing is for supporting modCounter.
+// I couldn't make it "volatile int" field because Unsafe.getAndAddInt is since jdk8 only, and "final AtomicInteger" field would be too many indirections
 public abstract class RedBlackTree<K> extends AtomicInteger {
-  // this "extends AtomicInteger" thing is for supporting modCounter.
-  // I couldn't make it "volatile int" field because Unsafe.getAndAddInt is since jdk8 only, and "final AtomicInteger" field would be too many indirections
-
-  public static boolean VERIFY;
   private static final int INDENT_STEP = 4;
   private int nodeSize; // number of nodes
   protected Node<K> root;
@@ -350,7 +348,7 @@ public abstract class RedBlackTree<K> extends AtomicInteger {
       this.parent = parent;
     }
 
-    public abstract boolean processAliveKeys(@Nonnull Processor<? super K> processor);
+    public abstract boolean processAliveKeys(@Nonnull Predicate<? super K> processor);
 
     public abstract boolean hasAliveKey(boolean purgeDead);
 
@@ -381,7 +379,7 @@ public abstract class RedBlackTree<K> extends AtomicInteger {
 
   void verifyProperties() {
     //if (true) return;
-    if (VERIFY) {
+    if (RedBlackTreeVerifier.VERIFY) {
       verifyProperty1(root);
       verifyProperty2(root);
       // Property 3 is implicit

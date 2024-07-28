@@ -21,7 +21,7 @@ import consulo.language.codeStyle.FormattingMode;
 import consulo.language.codeStyle.FormattingModel;
 import consulo.language.codeStyle.FormattingModelBuilder;
 import consulo.language.codeStyle.internal.CoreCodeStyleUtil;
-import consulo.language.file.inject.DocumentWindow;
+import consulo.document.DocumentWindow;
 import consulo.language.ast.ASTNode;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.document.Document;

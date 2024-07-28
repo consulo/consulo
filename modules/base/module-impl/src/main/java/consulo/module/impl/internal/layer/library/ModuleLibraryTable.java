@@ -16,7 +16,7 @@
 
 package consulo.module.impl.internal.layer.library;
 
-import consulo.content.impl.internal.library.LibraryTableBase;
+import consulo.application.content.impl.internal.library.LibraryTableBase;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.content.library.LibraryTablePresentation;
