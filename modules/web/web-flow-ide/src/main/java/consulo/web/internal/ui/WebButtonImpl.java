@@ -15,6 +15,7 @@
  */
 package consulo.web.internal.ui;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.Button;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -39,24 +40,30 @@ public class WebButtonImpl extends VaadinComponentDelegate<WebButtonImpl.Vaadin>
     }
   }
 
-  public WebButtonImpl(String text) {
-    toVaadinComponent().addClickListener(event -> {
+  private LocalizeValue myTextValue = LocalizeValue.empty();
+
+  public WebButtonImpl(LocalizeValue text) {
+    Vaadin component = toVaadinComponent();
+
+    component.addClickListener(event -> {
       getListenerDispatcher(ClickListener.class).clicked(new ClickEvent(this));
     });
 
-    setText(text);
+    myTextValue = text;
+    component.setText(text.get());
   }
 
   @Nonnull
   @Override
-  public String getText() {
-    return getVaadinComponent().getText();
+  public LocalizeValue getText() {
+    return myTextValue;
   }
 
   @RequiredUIAccess
   @Override
-  public void setText(@Nonnull String text) {
-    getVaadinComponent().setText(text);
+  public void setText(@Nonnull LocalizeValue text) {
+    myTextValue = text;
+    toVaadinComponent().setText(text.get());
   }
 
   @Nonnull

@@ -15,20 +15,20 @@
  */
 package consulo.desktop.awt.ui.impl;
 
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
+import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Button;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.ui.event.ClickEvent;
 import consulo.ui.event.ClickListener;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 
 /**
@@ -37,7 +37,7 @@ import javax.swing.*;
  */
 class DesktopButtonImpl extends SwingComponentDelegate<JButton> implements Button {
   class MyButton extends JButton implements FromSwingComponentWrapper {
-    private final LocalizeValue myTextValue;
+    private LocalizeValue myTextValue = LocalizeValue.empty();
 
     MyButton(LocalizeValue textValue) {
       super("");
@@ -81,14 +81,17 @@ class DesktopButtonImpl extends SwingComponentDelegate<JButton> implements Butto
 
   @Nonnull
   @Override
-  public String getText() {
-    return toAWTComponent().getText();
+  public LocalizeValue getText() {
+    MyButton button = (MyButton)toAWTComponent();
+    return button.myTextValue;
   }
 
   @RequiredUIAccess
   @Override
-  public void setText(@Nonnull String text) {
-    toAWTComponent().setText(text);
+  public void setText(@Nonnull LocalizeValue text) {
+    MyButton button = (MyButton)toAWTComponent();
+    button.myTextValue = text;
+    button.updateText();
   }
 
   @Nullable

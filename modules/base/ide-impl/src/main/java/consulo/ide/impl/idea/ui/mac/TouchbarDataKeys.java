@@ -23,12 +23,12 @@ public interface TouchbarDataKeys {
   }
 
   @Nonnull
-  static DlgButtonDesc putDialogButtonDescriptor(@Nonnull JButton button, int orderIndex) {
+  static DlgButtonDesc putDialogButtonDescriptor(@Nonnull JComponent button, int orderIndex) {
     return putDialogButtonDescriptor(button, orderIndex, false);
   }
 
   @Nonnull
-  static DlgButtonDesc putDialogButtonDescriptor(@Nonnull JButton button, int orderIndex, boolean isMainGroup) {
+  static DlgButtonDesc putDialogButtonDescriptor(@Nonnull JComponent button, int orderIndex, boolean isMainGroup) {
     DlgButtonDesc result = UIUtil.getClientProperty(button, DIALOG_BUTTON_DESCRIPTOR_KEY);
     if (result == null) UIUtil.putClientProperty(button, DIALOG_BUTTON_DESCRIPTOR_KEY, result = new DlgButtonDesc(orderIndex));
     result.setMainGroup(isMainGroup);

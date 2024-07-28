@@ -1,21 +1,21 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.wizard;
 
-import consulo.application.ApplicationManager;
 import consulo.application.HelpManager;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ide.impl.idea.ui.mac.TouchbarDataKeys;
+import consulo.ide.localize.IdeLocalize;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.platform.base.localize.CommonLocalize;
-import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
+import consulo.ui.Button;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
-import consulo.ui.style.StyleManager;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,16 +31,16 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
 
   protected int myCurrentStep;
   protected final ArrayList<T> mySteps;
-  private JButton myPreviousButton;
-  private JButton myNextButton;
-  private JButton myCancelButton;
+  private Button myPreviousButton;
+  private Button myNextButton;
+  private Button myCancelButton;
   private JButton myHelpButton;
   protected JPanel myContentPanel;
   protected TallImageComponent myIcon;
   private Component myCurrentStepComponent;
   private JBCardLayout.SwipeDirection myTransitionDirection = JBCardLayout.SwipeDirection.AUTO;
   private final Map<Component, String> myComponentToIdMap = new HashMap<>();
-  private final StepListener myStepListener = () -> updateStep();
+  private final StepListener myStepListener = this::updateStep;
 
   public AbstractWizard(final String title, final Component dialogParent) {
     super(dialogParent, true);
@@ -57,9 +57,9 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
   private void initWizard(final String title) {
     setTitle(title);
     myCurrentStep = 0;
-    myPreviousButton = new JButton(IdeLocalize.buttonWizardPrevious().get());
-    myNextButton = new JButton(IdeLocalize.buttonWizardNext().get());
-    myCancelButton = new JButton(CommonLocalize.buttonCancel().get());
+    myPreviousButton = Button.create(IdeLocalize.buttonWizardPrevious());
+    myNextButton = Button.create(IdeLocalize.buttonWizardNext());
+    myCancelButton = Button.create(CommonLocalize.buttonCancel());
     myHelpButton = new JButton(CommonLocalize.buttonHelp().get());
     myContentPanel = new JPanel(new JBCardLayout());
 
@@ -82,6 +82,7 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
   }
 
   @Override
+  @RequiredUIAccess
   protected JComponent createSouthPanel() {
     JPanel panel = new JPanel(new BorderLayout());
     panel.setBorder(BorderFactory.createEmptyBorder(8, 0, 0, 0));
@@ -91,27 +92,28 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
     if (Platform.current().os().isMac()) {
       panel.add(buttonPanel, BorderLayout.EAST);
       buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
-
-      if (!StyleManager.get().getCurrentStyle().isDark()) {
-        myHelpButton.putClientProperty("JButton.buttonType", "help");
-      }
+      myHelpButton.putClientProperty("JButton.buttonType", "help");
 
       int index = 0;
       JPanel leftPanel = new JPanel();
       leftPanel.add(myHelpButton);
       TouchbarDataKeys.putDialogButtonDescriptor(myHelpButton, index++);
-      leftPanel.add(myCancelButton);
-      TouchbarDataKeys.putDialogButtonDescriptor(myCancelButton, index++);
+      JComponent cancelButton = (JComponent)TargetAWT.to(myCancelButton);
+      leftPanel.add(cancelButton);
+      TouchbarDataKeys.putDialogButtonDescriptor(cancelButton, index++);
       panel.add(leftPanel, BorderLayout.WEST);
 
       if (mySteps.size() > 1) {
         buttonPanel.add(Box.createHorizontalStrut(5));
-        buttonPanel.add(myPreviousButton);
-        TouchbarDataKeys.putDialogButtonDescriptor(myPreviousButton, index++).setMainGroup(true);
+        JComponent prevButton = (JComponent)TargetAWT.to(myPreviousButton);
+        buttonPanel.add(prevButton);
+        TouchbarDataKeys.putDialogButtonDescriptor(prevButton, index++).setMainGroup(true);
       }
       buttonPanel.add(Box.createHorizontalStrut(5));
-      buttonPanel.add(myNextButton);
-      TouchbarDataKeys.putDialogButtonDescriptor(myNextButton, index++).setMainGroup(true).setDefault(true);
+
+      JComponent nextButton = (JComponent)TargetAWT.to(myNextButton);
+      buttonPanel.add(nextButton);
+      TouchbarDataKeys.putDialogButtonDescriptor(nextButton, index++).setMainGroup(true).setDefault(true);
     }
     else {
       panel.add(buttonPanel, BorderLayout.CENTER);
@@ -125,9 +127,9 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
 
       add(hGroup, vGroup, null, Box.createHorizontalGlue());
       if (mySteps.size() > 1) {
-        add(hGroup, vGroup, buttons, myPreviousButton);
+        add(hGroup, vGroup, buttons, TargetAWT.to(myPreviousButton));
       }
-      add(hGroup, vGroup, buttons, myNextButton, myCancelButton);
+      add(hGroup, vGroup, buttons, TargetAWT.to(myNextButton), TargetAWT.to(myCancelButton));
       add(hGroup, vGroup, buttons, myHelpButton);
 
       layout.setHorizontalGroup(hGroup);
@@ -136,8 +138,8 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
     }
 
     myPreviousButton.setEnabled(false);
-    myPreviousButton.addActionListener(e -> doPreviousAction());
-    myNextButton.addActionListener(e -> {
+    myPreviousButton.addClickListener(e -> doPreviousAction());
+    myNextButton.addClickListener(e -> {
       if (isLastStep()) {
         // Commit data of current step and perform OK action
         final Step currentStep = mySteps.get(myCurrentStep);
@@ -158,7 +160,7 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
       }
     });
 
-    myCancelButton.addActionListener(e -> doCancelAction());
+    myCancelButton.addClickListener(e -> doCancelAction());
     myHelpButton.addActionListener(e -> helpAction());
 
     return panel;
@@ -397,16 +399,17 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
     updateButtons();
 
     JComponent component = mySteps.get(getCurrentStep()).getPreferredFocusedComponent();
-    requestFocusTo(component != null ? component : myNextButton);
+    requestFocusTo(component != null ? component : TargetAWT.to(myNextButton));
   }
 
-  private static void requestFocusTo(final JComponent component) {
+  private static void requestFocusTo(final Component component) {
     UiNotifyConnector.doWhenFirstShown(component, () -> {
       final IdeFocusManager focusManager = IdeFocusManager.findInstanceByComponent(component);
       focusManager.requestFocus(component, false);
     });
   }
 
+  @RequiredUIAccess
   @Nullable
   @Override
   public JComponent getPreferredFocusedComponent() {
@@ -422,6 +425,7 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
     return isLastStep() && canGoNext();
   }
 
+  @RequiredUIAccess
   protected void updateButtons() {
     boolean lastStep = isLastStep();
     updateButtons(lastStep, lastStep ? canFinish() : canGoNext(), isFirstStep());
@@ -431,24 +435,23 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
     if (!mySteps.isEmpty() && getRootPane() != null) updateButtons();
   }
 
+  @RequiredUIAccess
   public void updateButtons(boolean lastStep, boolean canGoNext, boolean firstStep) {
     if (lastStep) {
       if (mySteps.size() > 1) {
-        myNextButton.setText(UIUtil.removeMnemonic(IdeLocalize.buttonFinish().get()));
-        myNextButton.setMnemonic('F');
+        myNextButton.setText(IdeLocalize.buttonFinish());
       }
       else {
-        myNextButton.setText(IdeLocalize.buttonOk().get());
+        myNextButton.setText(IdeLocalize.buttonOk());
       }
     }
     else {
-      myNextButton.setText(UIUtil.removeMnemonic(IdeLocalize.buttonWizardNext().get()));
-      myNextButton.setMnemonic('N');
+      myNextButton.setText(IdeLocalize.buttonWizardNext());
     }
     myNextButton.setEnabled(canGoNext);
 
-    if (myNextButton.isEnabled() && !ApplicationManager.getApplication().isUnitTestMode() && getRootPane() != null) {
-      getRootPane().setDefaultButton(myNextButton);
+    if (myNextButton.isEnabled() && getRootPane() != null) {
+      getRootPane().setDefaultButton((JButton)TargetAWT.to(myNextButton));
     }
 
     myPreviousButton.setEnabled(!firstStep);
@@ -462,11 +465,11 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
     return myCurrentStep == mySteps.size() - 1 || getCurrentStep() == getNextStep(getCurrentStep());
   }
 
-  protected JButton getNextButton() {
+  protected Button getNextButton() {
     return myNextButton;
   }
 
-  protected JButton getPreviousButton() {
+  protected Button getPreviousButton() {
     return myPreviousButton;
   }
 
@@ -474,16 +477,8 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
     return myHelpButton;
   }
 
-  public JButton getCancelButton() {
+  public Button getCancelButton() {
     return myCancelButton;
-  }
-
-  /**
-   * @deprecated unused
-   */
-  @Deprecated
-  protected JButton getFinishButton() {
-    return new JButton();
   }
 
   public Component getCurrentStepComponent() {
@@ -504,6 +499,5 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
   }
 
   @Nullable
-  @NonNls
   protected abstract String getHelpID();
 }

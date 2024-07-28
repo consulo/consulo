@@ -166,7 +166,7 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public Button _Components_button(LocalizeValue text) {
-    return new WebButtonImpl(text.get());
+    return new WebButtonImpl(text);
   }
 
   @Override

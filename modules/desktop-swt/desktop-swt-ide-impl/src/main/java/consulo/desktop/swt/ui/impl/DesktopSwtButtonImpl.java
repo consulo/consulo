@@ -29,15 +29,17 @@ import org.eclipse.swt.widgets.Composite;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import java.util.Objects;
+
 /**
  * @author VISTALL
  * @since 29/04/2021
  */
 public class DesktopSwtButtonImpl extends SWTComponentDelegate<org.eclipse.swt.widgets.Button> implements Button {
-  private LocalizeValue myText;
+  private LocalizeValue myText = LocalizeValue.of();
 
   public DesktopSwtButtonImpl(LocalizeValue text) {
-    myText = text;
+    myText = Objects.requireNonNull(text);
   }
 
   @Override
@@ -58,14 +60,14 @@ public class DesktopSwtButtonImpl extends SWTComponentDelegate<org.eclipse.swt.w
 
   @Nonnull
   @Override
-  public String getText() {
-    return myText.toString();
+  public LocalizeValue getText() {
+    return myText;
   }
 
   @RequiredUIAccess
   @Override
-  public void setText(@Nonnull String text) {
-    myText = LocalizeValue.of(text);
+  public void setText(@Nonnull LocalizeValue text) {
+    myText = text;
   }
 
   @Nullable

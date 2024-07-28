@@ -57,10 +57,10 @@ public interface Button extends Component {
   }
 
   @Nonnull
-  String getText();
+  LocalizeValue getText();
 
   @RequiredUIAccess
-  void setText(@Nonnull String text);
+  void setText(@Nonnull LocalizeValue text);
 
   @Nullable
   Image getIcon();
