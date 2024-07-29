@@ -837,6 +837,7 @@ public class ContainerUtil {
 
   @Nonnull
   @Contract(pure = true)
+  @Deprecated
   public static <T> ArrayList<T> newArrayList(@Nonnull Iterable<? extends T> elements) {
     if (elements instanceof Collection) {
       @SuppressWarnings("unchecked") Collection<? extends T> collection = (Collection<? extends T>)elements;
@@ -847,6 +848,7 @@ public class ContainerUtil {
 
   @Nonnull
   @Contract(pure = true)
+  @Deprecated
   public static <T> ArrayList<T> newArrayListWithCapacity(int size) {
     return new ArrayList<>(size);
   }

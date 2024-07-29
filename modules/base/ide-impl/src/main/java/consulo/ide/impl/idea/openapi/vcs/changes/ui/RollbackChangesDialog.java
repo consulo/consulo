@@ -18,15 +18,17 @@ package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 import consulo.application.impl.internal.LaterInvocator;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcsUtil.RollbackUtil;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
+import consulo.ui.CheckBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.util.collection.ContainerUtil;
 import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangeNodeDecorator;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.TreeModelBuilder;
@@ -47,14 +49,12 @@ import java.util.*;
 public class RollbackChangesDialog extends DialogWrapper {
   public static final String DELETE_LOCALLY_ADDED_FILES_KEY = "delete.locally.added.files";
   private final Project myProject;
-  private final boolean myRefreshSynchronously;
   private final Runnable myAfterVcsRefreshInAwt;
   private final ChangesBrowser myBrowser;
   private final boolean myInvokedFromModalContext;
-  private final JCheckBox myDeleteLocallyAddedFiles;
+  private final CheckBox myDeleteLocallyAddedFiles;
   private final ChangeInfoCalculator myInfoCalculator;
   private final CommitLegendPanel myCommitLegendPanel;
-  private Runnable myListChangeListener;
   private String myOperationName;
 
   @RequiredUIAccess
@@ -79,7 +79,7 @@ public class RollbackChangesDialog extends DialogWrapper {
     final Set<LocalChangeList> lists = new HashSet<>();
     lists.addAll(manager.getInvolvedListsFilterChanges(changes, validChanges));
 
-    new RollbackChangesDialog(project, ContainerUtil.newArrayList(lists), validChanges, refreshSynchronously, afterVcsRefreshInAwt).show();
+    new RollbackChangesDialog(project, new ArrayList<>(lists), validChanges, refreshSynchronously, afterVcsRefreshInAwt).show();
   }
 
   @RequiredUIAccess
@@ -104,6 +104,7 @@ public class RollbackChangesDialog extends DialogWrapper {
     );
   }
 
+  @RequiredUIAccess
   public RollbackChangesDialog(
     final Project project,
     final List<LocalChangeList> changeLists,
@@ -114,13 +115,12 @@ public class RollbackChangesDialog extends DialogWrapper {
     super(project, true);
 
     myProject = project;
-    myRefreshSynchronously = refreshSynchronously;
     myAfterVcsRefreshInAwt = afterVcsRefreshInAwt;
     myInvokedFromModalContext = LaterInvocator.isInModalContext();
 
     myInfoCalculator = new ChangeInfoCalculator();
     myCommitLegendPanel = new CommitLegendPanel(myInfoCalculator);
-    myListChangeListener = new Runnable() {
+    Runnable listChangeListener = new Runnable() {
       @Override
       public void run() {
         if (myBrowser != null) {
@@ -128,7 +128,7 @@ public class RollbackChangesDialog extends DialogWrapper {
           List<Change> allChanges = getAllChanges(changeLists);
           Collection<Change> includedChanges = myBrowser.getViewer().getIncludedChanges();
 
-          myInfoCalculator.update(allChanges, ContainerUtil.newArrayList(includedChanges));
+          myInfoCalculator.update(allChanges, new ArrayList<>(includedChanges));
           myCommitLegendPanel.update();
 
           boolean hasNewFiles = ContainerUtil.exists(includedChanges, change -> change.getType() == Change.Type.NEW);
@@ -137,7 +137,7 @@ public class RollbackChangesDialog extends DialogWrapper {
       }
     };
     myBrowser =
-            new ChangesBrowser(project, changeLists, changes, null, true, true, myListChangeListener, ChangesBrowser.MyUseCase.LOCAL_CHANGES,
+            new ChangesBrowser(project, changeLists, changes, null, true, true, listChangeListener, ChangesBrowser.MyUseCase.LOCAL_CHANGES,
                                null) {
               @Nonnull
               @Override
@@ -159,14 +159,14 @@ public class RollbackChangesDialog extends DialogWrapper {
     setCancelButtonText(CommonLocalize.buttonClose().get());
     myBrowser.setToggleActionTitle("&Include in " + myOperationName.toLowerCase());
 
-    myDeleteLocallyAddedFiles = new JCheckBox(VcsLocalize.changesCheckboxDeleteLocallyAddedFiles().get());
-    myDeleteLocallyAddedFiles.setSelected(PropertiesComponent.getInstance().isTrueValue(DELETE_LOCALLY_ADDED_FILES_KEY));
-    myDeleteLocallyAddedFiles.addActionListener(
-      e -> PropertiesComponent.getInstance().setValue(DELETE_LOCALLY_ADDED_FILES_KEY, myDeleteLocallyAddedFiles.isSelected())
+    myDeleteLocallyAddedFiles = CheckBox.create(VcsLocalize.changesCheckboxDeleteLocallyAddedFiles());
+    myDeleteLocallyAddedFiles.setValue(PropertiesComponent.getInstance().isTrueValue(DELETE_LOCALLY_ADDED_FILES_KEY));
+    myDeleteLocallyAddedFiles.addValueListener(
+      e -> PropertiesComponent.getInstance().setValue(DELETE_LOCALLY_ADDED_FILES_KEY, myDeleteLocallyAddedFiles.getValueOrError())
     );
 
     init();
-    myListChangeListener.run();
+    listChangeListener.run();
   }
 
   @Nonnull
@@ -189,7 +189,7 @@ public class RollbackChangesDialog extends DialogWrapper {
   protected void doOKAction() {
     super.doOKAction();
     RollbackWorker worker = new RollbackWorker(myProject, myOperationName, myInvokedFromModalContext);
-    worker.doRollback(myBrowser.getViewer().getIncludedChanges(), myDeleteLocallyAddedFiles.isSelected(),
+    worker.doRollback(myBrowser.getViewer().getIncludedChanges(), myDeleteLocallyAddedFiles.getValueOrError(),
       myAfterVcsRefreshInAwt, null
     );
   }
@@ -223,7 +223,7 @@ public class RollbackChangesDialog extends DialogWrapper {
     panel.add(commitLegendPanel, gb);
 
     ++gb.gridy;
-    panel.add(myDeleteLocallyAddedFiles, gb);
+    panel.add(TargetAWT.to(myDeleteLocallyAddedFiles), gb);
 
     return panel;
   }
