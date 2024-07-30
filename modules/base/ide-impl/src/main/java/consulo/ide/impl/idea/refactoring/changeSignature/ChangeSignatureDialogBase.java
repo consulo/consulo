@@ -34,6 +34,7 @@ import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.ui.RefactoringDialog;
 import consulo.language.editor.refactoring.ui.StringTableCellEditor;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
+import consulo.language.editor.refactoring.ui.DelegationPanel;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.language.file.LanguageFileType;
 import consulo.language.psi.PsiCodeFragment;
@@ -42,6 +43,7 @@ import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
@@ -51,6 +53,7 @@ import consulo.ui.ex.awt.table.TableView;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.TableUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.ImageEffects;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
@@ -217,14 +220,14 @@ public abstract class ChangeSignatureDialogBase<ParamInfo extends ParameterInfo,
 
     myNamePanel = new JPanel(new BorderLayout(0, 2));
     myNameField = new EditorTextField(myMethod.getName());
-    final JLabel nameLabel = new JLabel(RefactoringLocalize.changesignatureNamePrompt().get());
-    nameLabel.setLabelFor(myNameField);
+    final Label nameLabel = Label.create(RefactoringLocalize.changesignatureNamePrompt());
+    nameLabel.setTarget(TargetAWT.wrap(myNameField));
     myNameField.setEnabled(myMethod.canChangeName());
     if (myMethod.canChangeName()) {
       myNameField.addDocumentListener(mySignatureUpdater);
       myNameField.setPreferredWidth(200);
     }
-    myNamePanel.add(nameLabel, BorderLayout.NORTH);
+    myNamePanel.add(TargetAWT.to(nameLabel), BorderLayout.NORTH);
     myNamePanel.add(myNameField, BorderLayout.SOUTH);
 
     createVisibilityPanel();
@@ -241,12 +244,12 @@ public abstract class ChangeSignatureDialogBase<ParamInfo extends ParameterInfo,
     if (myMethod.canChangeReturnType() != MethodDescriptor.ReadWriteOption.None) {
       JPanel typePanel = new JPanel(new BorderLayout(0, 2));
       typePanel.setBorder(new EmptyBorder(0, 0, 0, 8));
-      final JLabel typeLabel = new JLabel(RefactoringLocalize.changesignatureReturnTypePrompt().get());
+      final Label typeLabel = Label.create(RefactoringLocalize.changesignatureReturnTypePrompt());
       myReturnTypeCodeFragment = createReturnTypeCodeFragment();
       final Document document = PsiDocumentManager.getInstance(myProject).getDocument(myReturnTypeCodeFragment);
       myReturnTypeField = createReturnTypeTextField(document);
       ((ComboBoxVisibilityPanel)myVisibilityPanel).registerUpDownActionsFor(myReturnTypeField);
-      typeLabel.setLabelFor(myReturnTypeField);
+      typeLabel.setTarget(TargetAWT.wrap(myReturnTypeField));
 
       if (myMethod.canChangeReturnType() == MethodDescriptor.ReadWriteOption.ReadWrite) {
         myReturnTypeField.setPreferredWidth(200);
@@ -256,7 +259,7 @@ public abstract class ChangeSignatureDialogBase<ParamInfo extends ParameterInfo,
         myReturnTypeField.setEnabled(false);
       }
 
-      typePanel.add(typeLabel, BorderLayout.NORTH);
+      typePanel.add(TargetAWT.to(typeLabel), BorderLayout.NORTH);
       typePanel.add(myReturnTypeField, BorderLayout.SOUTH);
       panel.add(typePanel, gbc);
       gbc.gridx++;
@@ -271,7 +274,8 @@ public abstract class ChangeSignatureDialogBase<ParamInfo extends ParameterInfo,
     return new EditorTextField(document, myProject, getFileType());
   }
 
-  private DelegationPanel createDelegationPanel() {
+  @RequiredUIAccess
+  protected DelegationPanel createDelegationPanel() {
     return new DelegationPanel() {
       @Override
       protected void stateModified() {
@@ -330,11 +334,12 @@ public abstract class ChangeSignatureDialogBase<ParamInfo extends ParameterInfo,
     return main;
   }
 
+  @RequiredUIAccess
   protected JComponent createOptionsPanel() {
     final JPanel panel = new JPanel(new BorderLayout());
     if (myAllowDelegation) {
       myDelegationPanel = createDelegationPanel();
-      panel.add(myDelegationPanel, BorderLayout.WEST);
+      panel.add(TargetAWT.to(myDelegationPanel.getComponent()), BorderLayout.WEST);
     }
 
     myPropagateParamChangesButton =
@@ -374,7 +379,6 @@ public abstract class ChangeSignatureDialogBase<ParamInfo extends ParameterInfo,
     myVisibilityPanel.addListener(mySignatureUpdater);
     return myVisibilityPanel;
   }
-
 
   @Nonnull
   protected List<Pair<String, JPanel>> createAdditionalPanels() {

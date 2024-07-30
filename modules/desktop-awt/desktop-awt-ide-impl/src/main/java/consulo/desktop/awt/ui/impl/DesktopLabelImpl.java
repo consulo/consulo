@@ -15,9 +15,10 @@
  */
 package consulo.desktop.awt.ui.impl;
 
-import consulo.ui.ex.awt.JBLabel;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
+import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
+import consulo.desktop.awt.ui.impl.util.AWTFocusAdapterAsFocusListener;
+import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.HorizontalAlignment;
@@ -25,12 +26,14 @@ import consulo.ui.Label;
 import consulo.ui.LabelOptions;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
-import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
+import consulo.ui.event.FocusListener;
+import consulo.ui.ex.awt.JBLabel;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.util.MnemonicInfo;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 
 /**
@@ -173,6 +176,14 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
   @Override
   public void setForegroundColor(ColorValue colorValue) {
     toAWTComponent().setForegroundColor(colorValue);
+  }
+
+  @Nonnull
+  @Override
+  public Disposable addFocusListener(@Nonnull FocusListener listener) {
+    AWTFocusAdapterAsFocusListener adapter = new AWTFocusAdapterAsFocusListener(this, listener);
+    toAWTComponent().addFocusListener(adapter);
+    return () -> toAWTComponent().removeFocusListener(adapter);
   }
 
   @Nullable
