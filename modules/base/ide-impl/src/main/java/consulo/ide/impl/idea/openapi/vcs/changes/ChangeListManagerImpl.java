@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ReadAction;
 import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.application.dumb.DumbAwareRunnable;
 import consulo.application.impl.internal.IdeaModalityState;
@@ -1555,11 +1554,9 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     VcsRoot vcsRoot = ProjectLevelVcsManager.getInstance(myProject).getVcsRootObjectFor(filePath);
     if (vcsRoot == null) return false;
 
-    return ReadAction.compute(() -> {
-      synchronized (myDataLock) {
-        return myComposite.getIgnoredFileHolder().containsFile(filePath, vcsRoot);
-      }
-    });
+    synchronized (myDataLock) {
+      return myComposite.getIgnoredFileHolder().containsFile(filePath, vcsRoot);
+    }
   }
 
   @Override
