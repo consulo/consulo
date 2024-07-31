@@ -22,41 +22,41 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class JumpData implements CoverageData {
-  private int myTrueHits;
-  private int myFalseHits;
+    private int myTrueHits;
+    private int myFalseHits;
 
-  public void touchTrueHit() {
-    myTrueHits++;
-  }
+    public void touchTrueHit() {
+        myTrueHits++;
+    }
 
-  public void touchFalseHit() {
-    myFalseHits++;
-  }
+    public void touchFalseHit() {
+        myFalseHits++;
+    }
 
-  public int getTrueHits() {
-    return myTrueHits;
-  }
+    public int getTrueHits() {
+        return myTrueHits;
+    }
 
-  public int getFalseHits() {
-    return myFalseHits;
-  }
+    public int getFalseHits() {
+        return myFalseHits;
+    }
 
-  public void save(final DataOutputStream os) throws IOException {
-    CoverageIOUtil.writeINT(os, myTrueHits);
-    CoverageIOUtil.writeINT(os, myFalseHits);
-  }
+    public void save(final DataOutputStream os) throws IOException {
+        CoverageIOUtil.writeINT(os, myTrueHits);
+        CoverageIOUtil.writeINT(os, myFalseHits);
+    }
 
-  public void merge(final CoverageData data) {
-    final JumpData jumpData = (JumpData)data;
-    myTrueHits += jumpData.myTrueHits;
-    myFalseHits += jumpData.myFalseHits;
-  }
+    public void merge(final CoverageData data) {
+        final JumpData jumpData = (JumpData)data;
+        myTrueHits += jumpData.myTrueHits;
+        myFalseHits += jumpData.myFalseHits;
+    }
 
-  public void setTrueHits(final int trueHits) {
-    myTrueHits = trueHits;
-  }
+    public void setTrueHits(final int trueHits) {
+        myTrueHits = trueHits;
+    }
 
-  public void setFalseHits(final int falseHits) {
-    myFalseHits = falseHits;
-  }
+    public void setFalseHits(final int falseHits) {
+        myFalseHits = falseHits;
+    }
 }

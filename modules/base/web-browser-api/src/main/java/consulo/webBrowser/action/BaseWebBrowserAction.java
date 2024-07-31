@@ -23,17 +23,17 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 final class BaseWebBrowserAction extends BaseOpenInBrowserAction {
-  private final WebBrowser browser;
+    private final WebBrowser browser;
 
-  public BaseWebBrowserAction(@Nonnull WebBrowser browser) {
-    super(browser);
+    public BaseWebBrowserAction(@Nonnull WebBrowser browser) {
+        super(browser);
 
-    this.browser = browser;
-  }
+        this.browser = browser;
+    }
 
-  @Nullable
-  @Override
-  protected WebBrowser getBrowser(@Nonnull AnActionEvent event) {
-    return WebBrowserManager.getInstance().isActive(browser) && browser.getPath() != null ? browser : null;
-  }
+    @Nullable
+    @Override
+    protected WebBrowser getBrowser(@Nonnull AnActionEvent event) {
+        return WebBrowserManager.getInstance().isActive(browser) && browser.getPath() != null ? browser : null;
+    }
 }

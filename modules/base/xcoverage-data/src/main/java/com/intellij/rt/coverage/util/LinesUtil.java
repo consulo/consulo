@@ -25,15 +25,15 @@ import java.util.Map;
  * @since 26-Feb-2010
  */
 public class LinesUtil {
-  public static LineData[] calcLineArray(final int maxLineNumber, final Map<Integer, LineData> lines) {
-    final LineData[] linesArray = new LineData[maxLineNumber + 1];
-    for (int line = 1; line <= maxLineNumber; line++) {
-      final LineData lineData = lines.get(line);
-      if (lineData != null) {
-        lineData.fillArrays();
-      }
-      linesArray[line] = lineData;
+    public static LineData[] calcLineArray(final int maxLineNumber, final Map<Integer, LineData> lines) {
+        final LineData[] linesArray = new LineData[maxLineNumber + 1];
+        for (int line = 1; line <= maxLineNumber; line++) {
+            final LineData lineData = lines.get(line);
+            if (lineData != null) {
+                lineData.fillArrays();
+            }
+            linesArray[line] = lineData;
+        }
+        return linesArray;
     }
-    return linesArray;
-  }
 }

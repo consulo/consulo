@@ -21,5 +21,5 @@ package com.intellij.rt.coverage.util;
  * @since 26-Feb-2010
  */
 public interface DictionaryLookup {
-  int getDictionaryIndex(String className);
+    int getDictionaryIndex(String className);
 }
