@@ -19,24 +19,25 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum EditorFontType {
-  PLAIN,
-  BOLD,
-  ITALIC,
-  BOLD_ITALIC,
-  CONSOLE_PLAIN,
-  CONSOLE_BOLD,
-  CONSOLE_ITALIC,
-  CONSOLE_BOLD_ITALIC;
+    PLAIN,
+    BOLD,
+    ITALIC,
+    BOLD_ITALIC,
+    CONSOLE_PLAIN,
+    CONSOLE_BOLD,
+    CONSOLE_ITALIC,
+    CONSOLE_BOLD_ITALIC;
 
-  private static final Map<EditorFontType, EditorFontType> ourConsoleTypes = new HashMap<>();
-  static {
-    ourConsoleTypes.put(PLAIN, CONSOLE_PLAIN);
-    ourConsoleTypes.put(ITALIC, CONSOLE_ITALIC);
-    ourConsoleTypes.put(BOLD_ITALIC, CONSOLE_BOLD_ITALIC);
-    ourConsoleTypes.put(BOLD, CONSOLE_BOLD);
-  }
+    private static final Map<EditorFontType, EditorFontType> ourConsoleTypes = new HashMap<>();
 
-  public static EditorFontType getConsoleType(EditorFontType fontType) {
-    return ourConsoleTypes.get(fontType);
-  }
+    static {
+        ourConsoleTypes.put(PLAIN, CONSOLE_PLAIN);
+        ourConsoleTypes.put(ITALIC, CONSOLE_ITALIC);
+        ourConsoleTypes.put(BOLD_ITALIC, CONSOLE_BOLD_ITALIC);
+        ourConsoleTypes.put(BOLD, CONSOLE_BOLD);
+    }
+
+    public static EditorFontType getConsoleType(EditorFontType fontType) {
+        return ourConsoleTypes.get(fontType);
+    }
 }

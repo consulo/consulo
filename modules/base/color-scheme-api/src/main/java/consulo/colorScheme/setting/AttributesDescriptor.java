@@ -28,43 +28,43 @@ import jakarta.annotation.Nonnull;
  * @see ColorAndFontDescriptorsProvider#getAttributeDescriptors()
  */
 public final class AttributesDescriptor {
-  private final TextAttributesKey myKey;
-  private final LocalizeValue myDisplayName;
+    private final TextAttributesKey myKey;
+    private final LocalizeValue myDisplayName;
 
-  @Deprecated
-  @DeprecationInfo("Use parameter with LocalizeValue")
-  public AttributesDescriptor(@Nonnull String displayName, @Nonnull TextAttributesKey key) {
-    this(LocalizeValue.of(displayName), key);
-  }
+    @Deprecated
+    @DeprecationInfo("Use parameter with LocalizeValue")
+    public AttributesDescriptor(@Nonnull String displayName, @Nonnull TextAttributesKey key) {
+        this(LocalizeValue.of(displayName), key);
+    }
 
-  /**
-   * Creates an attribute descriptor with the specified name and text attributes key.
-   *
-   * @param displayName the name of the attribute shown in the colors list.
-   * @param key         the attributes key for which the colors are specified.
-   */
-  public AttributesDescriptor(@Nonnull LocalizeValue displayName, @Nonnull TextAttributesKey key) {
-    myKey = key;
-    myDisplayName = displayName;
-  }
+    /**
+     * Creates an attribute descriptor with the specified name and text attributes key.
+     *
+     * @param displayName the name of the attribute shown in the colors list.
+     * @param key         the attributes key for which the colors are specified.
+     */
+    public AttributesDescriptor(@Nonnull LocalizeValue displayName, @Nonnull TextAttributesKey key) {
+        myKey = key;
+        myDisplayName = displayName;
+    }
 
-  /**
-   * Returns the attributes key for which the colors are specified.
-   *
-   * @return the attributes key.
-   */
-  @Nonnull
-  public TextAttributesKey getKey() {
-    return myKey;
-  }
+    /**
+     * Returns the attributes key for which the colors are specified.
+     *
+     * @return the attributes key.
+     */
+    @Nonnull
+    public TextAttributesKey getKey() {
+        return myKey;
+    }
 
-  /**
-   * Returns the name of the attribute shown in the colors list.
-   *
-   * @return the name of the attribute.
-   */
-  @Nonnull
-  public LocalizeValue getDisplayName() {
-    return myDisplayName;
-  }
+    /**
+     * Returns the name of the attribute shown in the colors list.
+     *
+     * @return the name of the attribute.
+     */
+    @Nonnull
+    public LocalizeValue getDisplayName() {
+        return myDisplayName;
+    }
 }

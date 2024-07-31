@@ -27,34 +27,34 @@ import jakarta.annotation.Nonnull;
  * @since 1/19/12 1:10 PM
  */
 public interface ColorAndFontDescriptors {
-  /**
-   * Returns the list of descriptors specifying the {@link TextAttributesKey} instances
-   * for which colors are specified in the page. For such attribute keys, the user can choose
-   * all highlighting attributes (font type, background color, foreground color, error stripe color and
-   * effects).
-   *
-   * @return the list of attribute descriptors.
-   */
-  @Nonnull
-  AttributesDescriptor[] getAttributeDescriptors();
+    /**
+     * Returns the list of descriptors specifying the {@link TextAttributesKey} instances
+     * for which colors are specified in the page. For such attribute keys, the user can choose
+     * all highlighting attributes (font type, background color, foreground color, error stripe color and
+     * effects).
+     *
+     * @return the list of attribute descriptors.
+     */
+    @Nonnull
+    AttributesDescriptor[] getAttributeDescriptors();
 
-  /**
-   * Returns the list of descriptors specifying the {@link EditorColorKey}
-   * instances for which colors are specified in the page. For such color keys, the user can
-   * choose only the background or foreground color.
-   *
-   * @return the list of color descriptors.
-   */
-  @Nonnull
-  default ColorDescriptor[] getColorDescriptors() {
-    return ColorDescriptor.EMPTY_ARRAY;
-  }
+    /**
+     * Returns the list of descriptors specifying the {@link EditorColorKey}
+     * instances for which colors are specified in the page. For such color keys, the user can
+     * choose only the background or foreground color.
+     *
+     * @return the list of color descriptors.
+     */
+    @Nonnull
+    default ColorDescriptor[] getColorDescriptors() {
+        return ColorDescriptor.EMPTY_ARRAY;
+    }
 
-  /**
-   * Returns the title of the page, shown as text in the dialog tab.
-   *
-   * @return the title of the custom page.
-   */
-  @Nonnull
-  String getDisplayName();
+    /**
+     * Returns the title of the page, shown as text in the dialog tab.
+     *
+     * @return the title of the custom page.
+     */
+    @Nonnull
+    String getDisplayName();
 }
