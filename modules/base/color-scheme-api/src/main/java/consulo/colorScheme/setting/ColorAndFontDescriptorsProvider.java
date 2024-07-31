@@ -20,12 +20,12 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 
 /**
- * Defines interface for extending set of text/color descriptors operated by color schemes. 
- * 
+ * Defines interface for extending set of text/color descriptors operated by color schemes.
+ *
  * @author Denis Zhdanov
  * @since 1/19/12 1:10 PM
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ColorAndFontDescriptorsProvider extends ColorAndFontDescriptors {
-  ExtensionPointName<ColorAndFontDescriptorsProvider> EP_NAME = ExtensionPointName.create(ColorAndFontDescriptorsProvider.class);
+    ExtensionPointName<ColorAndFontDescriptorsProvider> EP_NAME = ExtensionPointName.create(ColorAndFontDescriptorsProvider.class);
 }

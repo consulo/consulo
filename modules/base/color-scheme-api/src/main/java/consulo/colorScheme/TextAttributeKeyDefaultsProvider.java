@@ -20,5 +20,5 @@ import consulo.annotation.component.ServiceAPI;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface TextAttributeKeyDefaultsProvider {
-  TextAttributes getDefaultAttributes(TextAttributesKey key);
+    TextAttributes getDefaultAttributes(TextAttributesKey key);
 }

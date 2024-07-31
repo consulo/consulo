@@ -27,38 +27,38 @@ import jakarta.annotation.Nullable;
  * @since 26-Feb-22
  */
 public class EditorColorsUtil {
-  private EditorColorsUtil() {
-  }
-
-  /**
-   * @return the appropriate color scheme for UI other than text editor (QuickDoc, UsagesView, etc.)
-   * depending on the current LAF and current editor color scheme.
-   */
-  @Nonnull
-  public static EditorColorsScheme getGlobalOrDefaultColorScheme() {
-    return getColorSchemeForBackground(null);
-  }
-
-  @Nullable
-  public static ColorValue getGlobalOrDefaultColor(@Nonnull EditorColorKey colorKey) {
-    return getColorSchemeForBackground(null).getColor(colorKey);
-  }
-
-
-  /**
-   * @return the appropriate color scheme for UI other than text editor (QuickDoc, UsagesView, etc.)
-   * depending on the current LAF, current editor color scheme and background color.
-   */
-  public static EditorColorsScheme getColorSchemeForBackground(@Nullable ColorValue background) {
-    EditorColorsScheme globalScheme = EditorColorsManager.getInstance().getGlobalScheme();
-    boolean dark1 = background == null ? StyleManager.get().getCurrentStyle().isDark() : ColorValueUtil.isDark(background);
-    boolean dark2 = ColorValueUtil.isDark(globalScheme.getDefaultBackground());
-    if (dark1 != dark2) {
-      EditorColorsScheme scheme = EditorColorsManager.getInstance().getScheme(EditorColorsScheme.DEFAULT_SCHEME_NAME);
-      if (scheme != null) {
-        return scheme;
-      }
+    private EditorColorsUtil() {
     }
-    return globalScheme;
-  }
+
+    /**
+     * @return the appropriate color scheme for UI other than text editor (QuickDoc, UsagesView, etc.)
+     * depending on the current LAF and current editor color scheme.
+     */
+    @Nonnull
+    public static EditorColorsScheme getGlobalOrDefaultColorScheme() {
+        return getColorSchemeForBackground(null);
+    }
+
+    @Nullable
+    public static ColorValue getGlobalOrDefaultColor(@Nonnull EditorColorKey colorKey) {
+        return getColorSchemeForBackground(null).getColor(colorKey);
+    }
+
+
+    /**
+     * @return the appropriate color scheme for UI other than text editor (QuickDoc, UsagesView, etc.)
+     * depending on the current LAF, current editor color scheme and background color.
+     */
+    public static EditorColorsScheme getColorSchemeForBackground(@Nullable ColorValue background) {
+        EditorColorsScheme globalScheme = EditorColorsManager.getInstance().getGlobalScheme();
+        boolean dark1 = background == null ? StyleManager.get().getCurrentStyle().isDark() : ColorValueUtil.isDark(background);
+        boolean dark2 = ColorValueUtil.isDark(globalScheme.getDefaultBackground());
+        if (dark1 != dark2) {
+            EditorColorsScheme scheme = EditorColorsManager.getInstance().getScheme(EditorColorsScheme.DEFAULT_SCHEME_NAME);
+            if (scheme != null) {
+                return scheme;
+            }
+        }
+        return globalScheme;
+    }
 }

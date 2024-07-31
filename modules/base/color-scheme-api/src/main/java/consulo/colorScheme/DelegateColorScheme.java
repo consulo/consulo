@@ -15,12 +15,10 @@
  */
 package consulo.colorScheme;
 
-import consulo.colorScheme.*;
-import consulo.colorScheme.FontSize;
 import consulo.ui.color.ColorValue;
-import org.jdom.Element;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jdom.Element;
 
 import java.awt.*;
 import java.util.Map;
@@ -29,193 +27,192 @@ import java.util.Map;
  * User: spLeaner
  */
 public abstract class DelegateColorScheme implements EditorColorsScheme {
+    private EditorColorsScheme myDelegate;
 
-  private EditorColorsScheme myDelegate;
+    public DelegateColorScheme(@Nonnull final EditorColorsScheme delegate) {
+        myDelegate = delegate;
+    }
 
-  public DelegateColorScheme(@Nonnull final EditorColorsScheme delegate) {
-    myDelegate = delegate;
-  }
+    public EditorColorsScheme getDelegate() {
+        return myDelegate;
+    }
 
-  public EditorColorsScheme getDelegate() {
-    return myDelegate;
-  }
+    public void setDelegate(@Nonnull EditorColorsScheme delegate) {
+        myDelegate = delegate;
+    }
 
-  public void setDelegate(@Nonnull EditorColorsScheme delegate) {
-    myDelegate = delegate;
-  }
+    @Override
+    public void setName(String name) {
+        myDelegate.setName(name);
+    }
 
-  @Override
-  public void setName(String name) {
-    myDelegate.setName(name);
-  }
+    @Override
+    public TextAttributes getAttributes(TextAttributesKey key) {
+        return myDelegate.getAttributes(key);
+    }
 
-  @Override
-  public TextAttributes getAttributes(TextAttributesKey key) {
-    return myDelegate.getAttributes(key);
-  }
+    @Override
+    public void setAttributes(TextAttributesKey key, TextAttributes attributes) {
+        myDelegate.setAttributes(key, attributes);
+    }
 
-  @Override
-  public void setAttributes(TextAttributesKey key, TextAttributes attributes) {
-    myDelegate.setAttributes(key, attributes);
-  }
+    @Nonnull
+    @Override
+    public ColorValue getDefaultBackground() {
+        return myDelegate.getDefaultBackground();
+    }
 
-  @Nonnull
-  @Override
-  public ColorValue getDefaultBackground() {
-    return myDelegate.getDefaultBackground();
-  }
+    @Nonnull
+    @Override
+    public ColorValue getDefaultForeground() {
+        return myDelegate.getDefaultForeground();
+    }
 
-  @Nonnull
-  @Override
-  public ColorValue getDefaultForeground() {
-    return myDelegate.getDefaultForeground();
-  }
+    @Nullable
+    @Override
+    public ColorValue getColor(EditorColorKey key) {
+        return myDelegate.getColor(key);
+    }
 
-  @Nullable
-  @Override
-  public ColorValue getColor(EditorColorKey key) {
-    return myDelegate.getColor(key);
-  }
+    @Override
+    public void fillColors(Map<EditorColorKey, ColorValue> colors) {
+        myDelegate.fillColors(colors);
+    }
 
-  @Override
-  public void fillColors(Map<EditorColorKey, ColorValue> colors) {
-    myDelegate.fillColors(colors);
-  }
+    @Override
+    public void fillAttributes(@Nonnull Map<TextAttributesKey, TextAttributes> map) {
+        myDelegate.fillAttributes(map);
+    }
 
-  @Override
-  public void fillAttributes(@Nonnull Map<TextAttributesKey, TextAttributes> map) {
-    myDelegate.fillAttributes(map);
-  }
+    @Override
+    public void setColor(EditorColorKey key, @Nullable ColorValue color) {
+        myDelegate.setColor(key, color);
+    }
 
-  @Override
-  public void setColor(EditorColorKey key, @Nullable ColorValue color) {
-    myDelegate.setColor(key, color);
-  }
+    @Nonnull
+    @Override
+    public FontPreferences getFontPreferences() {
+        return myDelegate.getFontPreferences();
+    }
 
-  @Nonnull
-  @Override
-  public FontPreferences getFontPreferences() {
-    return myDelegate.getFontPreferences();
-  }
+    @Override
+    public void setFontPreferences(@Nonnull FontPreferences preferences) {
+        myDelegate.setFontPreferences(preferences);
+    }
 
-  @Override
-  public void setFontPreferences(@Nonnull FontPreferences preferences) {
-    myDelegate.setFontPreferences(preferences);
-  }
+    @Override
+    public int getEditorFontSize() {
+        return myDelegate.getEditorFontSize();
+    }
 
-  @Override
-  public int getEditorFontSize() {
-    return myDelegate.getEditorFontSize();
-  }
+    @Override
+    public int getEditorFontSize(boolean scale) {
+        return myDelegate.getEditorFontSize(scale);
+    }
 
-  @Override
-  public int getEditorFontSize(boolean scale) {
-    return myDelegate.getEditorFontSize(scale);
-  }
+    @Override
+    public void setEditorFontSize(int fontSize) {
+        myDelegate.setEditorFontSize(fontSize);
+    }
 
-  @Override
-  public void setEditorFontSize(int fontSize) {
-    myDelegate.setEditorFontSize(fontSize);
-  }
+    @Override
+    public FontSize getQuickDocFontSize() {
+        return myDelegate.getQuickDocFontSize();
+    }
 
-  @Override
-  public FontSize getQuickDocFontSize() {
-    return myDelegate.getQuickDocFontSize();
-  }
+    @Override
+    public void setQuickDocFontSize(@Nonnull FontSize fontSize) {
+        myDelegate.setQuickDocFontSize(fontSize);
+    }
 
-  @Override
-  public void setQuickDocFontSize(@Nonnull FontSize fontSize) {
-    myDelegate.setQuickDocFontSize(fontSize);
-  }
+    @Override
+    public String getEditorFontName() {
+        return myDelegate.getEditorFontName();
+    }
 
-  @Override
-  public String getEditorFontName() {
-    return myDelegate.getEditorFontName();
-  }
+    @Override
+    public void setEditorFontName(String fontName) {
+        myDelegate.setEditorFontName(fontName);
+    }
 
-  @Override
-  public void setEditorFontName(String fontName) {
-    myDelegate.setEditorFontName(fontName);
-  }
+    @Override
+    public Font getFont(EditorFontType key) {
+        return myDelegate.getFont(key);
+    }
 
-  @Override
-  public Font getFont(EditorFontType key) {
-    return myDelegate.getFont(key);
-  }
+    @Override
+    public void setFont(EditorFontType key, Font font) {
+        myDelegate.setFont(key, font);
+    }
 
-  @Override
-  public void setFont(EditorFontType key, Font font) {
-    myDelegate.setFont(key, font);
-  }
+    @Override
+    public float getLineSpacing() {
+        return myDelegate.getLineSpacing();
+    }
 
-  @Override
-  public float getLineSpacing() {
-    return myDelegate.getLineSpacing();
-  }
+    @Override
+    public void setLineSpacing(float lineSpacing) {
+        myDelegate.setLineSpacing(lineSpacing);
+    }
 
-  @Override
-  public void setLineSpacing(float lineSpacing) {
-    myDelegate.setLineSpacing(lineSpacing);
-  }
+    @Override
+    public void readExternal(Element element) {
+    }
 
-  @Override
-  public void readExternal(Element element) {
-  }
+    @Nonnull
+    @Override
+    public String getName() {
+        return myDelegate.getName();
+    }
 
-  @Nonnull
-  @Override
-  public String getName() {
-    return myDelegate.getName();
-  }
+    @Override
+    public EditorColorsScheme clone() {
+        return myDelegate.clone();
+    }
 
-  @Override
-  public EditorColorsScheme clone() {
-    return myDelegate.clone();
-  }
+    @Nonnull
+    @Override
+    public FontPreferences getConsoleFontPreferences() {
+        return myDelegate.getConsoleFontPreferences();
+    }
 
-  @Nonnull
-  @Override
-  public FontPreferences getConsoleFontPreferences() {
-    return myDelegate.getConsoleFontPreferences();
-  }
+    @Override
+    public void setConsoleFontPreferences(@Nonnull FontPreferences preferences) {
+        myDelegate.setConsoleFontPreferences(preferences);
+    }
 
-  @Override
-  public void setConsoleFontPreferences(@Nonnull FontPreferences preferences) {
-    myDelegate.setConsoleFontPreferences(preferences);
-  }
+    @Override
+    public String getConsoleFontName() {
+        return myDelegate.getConsoleFontName();
+    }
 
-  @Override
-  public String getConsoleFontName() {
-    return myDelegate.getConsoleFontName();
-  }
+    @Override
+    public void setConsoleFontName(String fontName) {
+        myDelegate.setConsoleFontName(fontName);
+    }
 
-  @Override
-  public void setConsoleFontName(String fontName) {
-    myDelegate.setConsoleFontName(fontName);
-  }
+    @Override
+    public int getConsoleFontSize() {
+        return myDelegate.getConsoleFontSize();
+    }
 
-  @Override
-  public int getConsoleFontSize() {
-    return myDelegate.getConsoleFontSize();
-  }
+    @Override
+    public int getConsoleFontSize(boolean scale) {
+        return myDelegate.getConsoleFontSize(scale);
+    }
 
-  @Override
-  public int getConsoleFontSize(boolean scale) {
-    return myDelegate.getConsoleFontSize(scale);
-  }
+    @Override
+    public void setConsoleFontSize(int fontSize) {
+        myDelegate.setConsoleFontSize(fontSize);
+    }
 
-  @Override
-  public void setConsoleFontSize(int fontSize) {
-    myDelegate.setConsoleFontSize(fontSize);
-  }
+    @Override
+    public float getConsoleLineSpacing() {
+        return myDelegate.getConsoleLineSpacing();
+    }
 
-  @Override
-  public float getConsoleLineSpacing() {
-    return myDelegate.getConsoleLineSpacing();
-  }
-
-  @Override
-  public void setConsoleLineSpacing(float lineSpacing) {
-    myDelegate.setConsoleLineSpacing(lineSpacing);
-  }
+    @Override
+    public void setConsoleLineSpacing(float lineSpacing) {
+        myDelegate.setConsoleLineSpacing(lineSpacing);
+    }
 }

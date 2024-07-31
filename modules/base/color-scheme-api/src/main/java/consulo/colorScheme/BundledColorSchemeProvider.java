@@ -26,6 +26,6 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface BundledColorSchemeProvider {
-  @Nonnull
-  String[] getColorSchemeFiles();
+    @Nonnull
+    String[] getColorSchemeFiles();
 }

@@ -23,6 +23,7 @@ import consulo.util.dataholder.Key;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -32,80 +33,80 @@ import java.util.function.Function;
  * @since 11/28/2020
  */
 public final class EditorColorKey implements ColorValue, Comparable<EditorColorKey> {
-  public static final Key<Function<EditorColorKey, ColorValue>> FUNCTION_KEY = Key.create("COLOR_KEY_FUNCTION");
+    public static final Key<Function<EditorColorKey, ColorValue>> FUNCTION_KEY = Key.create("COLOR_KEY_FUNCTION");
 
-  private static final Logger LOG = Logger.getInstance(EditorColorKey.class);
-  private static final Map<String, EditorColorKey> ourRegistry = new HashMap<>();
+    private static final Logger LOG = Logger.getInstance(EditorColorKey.class);
+    private static final Map<String, EditorColorKey> ourRegistry = new HashMap<>();
 
-  private final String myExternalName;
-  private ColorValue myDefaultColorValue;
+    private final String myExternalName;
+    private ColorValue myDefaultColorValue;
 
-  private EditorColorKey(String externalName) {
-    myExternalName = externalName;
-    if (ourRegistry.containsKey(myExternalName)) {
-      LOG.error("Key " + myExternalName + " already registered.");
-    }
-    else {
-      ourRegistry.put(myExternalName, this);
-    }
-  }
-
-  public static EditorColorKey find(@Nonnull String externalName) {
-    EditorColorKey key = ourRegistry.get(externalName);
-    return key != null ? key : new EditorColorKey(externalName);
-  }
-
-  @Override
-  @Nonnull
-  public String toString() {
-    return myExternalName;
-  }
-
-  @Nonnull
-  public String getExternalName() {
-    return myExternalName;
-  }
-
-  @Override
-  public int compareTo(EditorColorKey key) {
-    return myExternalName.compareTo(key.myExternalName);
-  }
-
-  @Nullable
-  public ColorValue getDefaultColorValue() {
-    return myDefaultColorValue;
-  }
-
-  public static EditorColorKey createColorKey(String externalName) {
-    return find(externalName);
-  }
-
-  public static EditorColorKey createColorKey(String externalName, ColorValue defaultColor) {
-    EditorColorKey key = ourRegistry.get(externalName);
-    if (key == null) {
-      key = find(externalName);
+    private EditorColorKey(String externalName) {
+        myExternalName = externalName;
+        if (ourRegistry.containsKey(myExternalName)) {
+            LOG.error("Key " + myExternalName + " already registered.");
+        }
+        else {
+            ourRegistry.put(myExternalName, this);
+        }
     }
 
-    if (key.getDefaultColorValue() == null) {
-      key.myDefaultColorValue = defaultColor;
-    }
-    return key;
-  }
-
-  @Nonnull
-  @Override
-  public RGBColor toRGB() {
-    EditorColorsScheme currentScheme = EditorColorsManager.getInstance().getCurrentScheme();
-
-    ColorValue color = currentScheme.getColor(this);
-    if (color != null) {
-      return color.toRGB();
+    public static EditorColorKey find(@Nonnull String externalName) {
+        EditorColorKey key = ourRegistry.get(externalName);
+        return key != null ? key : new EditorColorKey(externalName);
     }
 
-    if (myDefaultColorValue != null) {
-      return myDefaultColorValue.toRGB();
+    @Override
+    @Nonnull
+    public String toString() {
+        return myExternalName;
     }
 
-    return StandardColors.BLACK.toRGB();
-  }
+    @Nonnull
+    public String getExternalName() {
+        return myExternalName;
+    }
+
+    @Override
+    public int compareTo(EditorColorKey key) {
+        return myExternalName.compareTo(key.myExternalName);
+    }
+
+    @Nullable
+    public ColorValue getDefaultColorValue() {
+        return myDefaultColorValue;
+    }
+
+    public static EditorColorKey createColorKey(String externalName) {
+        return find(externalName);
+    }
+
+    public static EditorColorKey createColorKey(String externalName, ColorValue defaultColor) {
+        EditorColorKey key = ourRegistry.get(externalName);
+        if (key == null) {
+            key = find(externalName);
+        }
+
+        if (key.getDefaultColorValue() == null) {
+            key.myDefaultColorValue = defaultColor;
+        }
+        return key;
+    }
+
+    @Nonnull
+    @Override
+    public RGBColor toRGB() {
+        EditorColorsScheme currentScheme = EditorColorsManager.getInstance().getCurrentScheme();
+
+        ColorValue color = currentScheme.getColor(this);
+        if (color != null) {
+            return color.toRGB();
+        }
+
+        if (myDefaultColorValue != null) {
+            return myDefaultColorValue.toRGB();
+        }
+
+        return StandardColors.BLACK.toRGB();
+    }
 }

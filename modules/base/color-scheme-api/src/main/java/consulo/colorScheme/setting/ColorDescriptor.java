@@ -27,70 +27,70 @@ import jakarta.annotation.Nonnull;
  * @see ColorAndFontDescriptorsProvider#getColorDescriptors()
  */
 public final class ColorDescriptor {
-  public static final ColorDescriptor[] EMPTY_ARRAY = new ColorDescriptor[0];
+    public static final ColorDescriptor[] EMPTY_ARRAY = new ColorDescriptor[0];
 
-  public static enum Kind {
-    BACKGROUND,
-    FOREGROUND
-  }
+    public static enum Kind {
+        BACKGROUND,
+        FOREGROUND
+    }
 
-  private final Kind myKind;
-  private final LocalizeValue myDisplayName;
-  private final EditorColorKey myKey;
+    private final Kind myKind;
+    private final LocalizeValue myDisplayName;
+    private final EditorColorKey myKey;
 
-  /**
-   * Creates a color descriptor with the specified name and color key.
-   *
-   * @param displayName the name of the color shown in the colors list.
-   * @param key         the color key for which the color is specified.
-   * @param kind        the type of color corresponding to the color key (foreground or background).
-   */
-  @Deprecated
-  @DeprecationInfo("Use with parameter LocalizeValue")
-  public ColorDescriptor(String displayName, EditorColorKey key, Kind kind) {
-    this(LocalizeValue.of(displayName), key, kind);
-  }
+    /**
+     * Creates a color descriptor with the specified name and color key.
+     *
+     * @param displayName the name of the color shown in the colors list.
+     * @param key         the color key for which the color is specified.
+     * @param kind        the type of color corresponding to the color key (foreground or background).
+     */
+    @Deprecated
+    @DeprecationInfo("Use with parameter LocalizeValue")
+    public ColorDescriptor(String displayName, EditorColorKey key, Kind kind) {
+        this(LocalizeValue.of(displayName), key, kind);
+    }
 
-  /**
-   * Creates a color descriptor with the specified name and color key.
-   *
-   * @param displayName the name of the color shown in the colors list.
-   * @param key         the color key for which the color is specified.
-   * @param kind        the type of color corresponding to the color key (foreground or background).
-   */
-  public ColorDescriptor(@Nonnull LocalizeValue displayName, @Nonnull EditorColorKey key, @Nonnull Kind kind) {
-    myKind = kind;
-    myDisplayName = displayName;
-    myKey = key;
-  }
+    /**
+     * Creates a color descriptor with the specified name and color key.
+     *
+     * @param displayName the name of the color shown in the colors list.
+     * @param key         the color key for which the color is specified.
+     * @param kind        the type of color corresponding to the color key (foreground or background).
+     */
+    public ColorDescriptor(@Nonnull LocalizeValue displayName, @Nonnull EditorColorKey key, @Nonnull Kind kind) {
+        myKind = kind;
+        myDisplayName = displayName;
+        myKey = key;
+    }
 
-  /**
-   * Returns the type of color corresponding to the color key (foreground or background).
-   *
-   * @return the type of color.
-   */
-  @Nonnull
-  public Kind getKind() {
-    return myKind;
-  }
+    /**
+     * Returns the type of color corresponding to the color key (foreground or background).
+     *
+     * @return the type of color.
+     */
+    @Nonnull
+    public Kind getKind() {
+        return myKind;
+    }
 
-  /**
-   * Returns the name of the color shown in the colors list.
-   *
-   * @return the name of the color.
-   */
-  @Nonnull
-  public LocalizeValue getDisplayName() {
-    return myDisplayName;
-  }
+    /**
+     * Returns the name of the color shown in the colors list.
+     *
+     * @return the name of the color.
+     */
+    @Nonnull
+    public LocalizeValue getDisplayName() {
+        return myDisplayName;
+    }
 
-  /**
-   * Returns the color key for which the color is specified.
-   *
-   * @return the color key.
-   */
-  @Nonnull
-  public EditorColorKey getKey() {
-    return myKey;
-  }
+    /**
+     * Returns the color key for which the color is specified.
+     *
+     * @return the color key.
+     */
+    @Nonnull
+    public EditorColorKey getKey() {
+        return myKey;
+    }
 }
