@@ -92,4 +92,21 @@ public class DesktopSwtLabelImpl extends SWTComponentDelegate<org.eclipse.swt.wi
   public Component getTarget() {
     return myLabeledComponent;
   }
+
+  @Override
+  public boolean hasFocus() {
+//    org.eclipse.swt.widgets.Label swtComponent = toSWTComponent();
+//    return swtComponent != null && swtComponent.hasFocus();
+    return false;
+  }
+
+  @Override
+  public void setFocusable(boolean focusable) {
+
+  }
+
+  @Override
+  public boolean isFocusable() {
+    return true;
+  }
 }
