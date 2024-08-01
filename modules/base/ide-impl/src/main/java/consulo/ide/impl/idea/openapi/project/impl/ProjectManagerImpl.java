@@ -35,8 +35,6 @@ import consulo.container.impl.classloader.PluginLoadStatistics;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.FileDocumentManager;
-import consulo.ide.impl.idea.conversion.ConversionResult;
-import consulo.ide.impl.idea.conversion.ConversionService;
 import consulo.ide.impl.idea.ide.impl.ProjectUtil;
 import consulo.ide.impl.idea.ide.startup.impl.StartupManagerImpl;
 import consulo.project.internal.ProjectReloadState;
@@ -446,20 +444,8 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
   @Override
   public AsyncResult<Project> openProjectAsync(@Nonnull VirtualFile file, @Nonnull UIAccess uiAccess) {
     AsyncResult<Project> projectAsyncResult = AsyncResult.undefined();
-
-    AsyncResult<ConversionResult> preparingResult = AsyncResult.undefined();
-    String fp = toCanonicalName(file.getPath());
-
-    preparingResult.doWhenRejected(projectAsyncResult::reject);
-    preparingResult.doWhenDone(conversionResult -> tryInitProjectByPath(conversionResult, projectAsyncResult, file, uiAccess));
-
     Task.Backgroundable.queue(null, "Preparing project...", canCancelProjectLoading(), (indicator) -> {
-      final ConversionResult conversionResult = ConversionService.getInstance().convert(fp);
-      if (conversionResult.openingIsCanceled()) {
-        preparingResult.reject("conversion canceled");
-        return;
-      }
-      preparingResult.setDone(conversionResult);
+      tryInitProjectByPath(projectAsyncResult, file, uiAccess);
     });
     return projectAsyncResult;
   }
@@ -468,7 +454,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
   @Override
   public AsyncResult<Project> openProjectAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
     AsyncResult<Project> projectAsyncResult = AsyncResult.undefined();
-    loadProjectAsync((ProjectImpl)project, projectAsyncResult, false, ConversionResult.DUMMY, uiAccess);
+    loadProjectAsync((ProjectImpl)project, projectAsyncResult, false, uiAccess);
     return projectAsyncResult;
   }
 
@@ -549,8 +535,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
     return mainResult;
   }
 
-  private void tryInitProjectByPath(ConversionResult conversionResult,
-                                    AsyncResult<Project> projectAsyncResult,
+  private void tryInitProjectByPath(AsyncResult<Project> projectAsyncResult,
                                     VirtualFile path,
                                     UIAccess uiAccess) {
     final ProjectImpl project = createProject(null, toCanonicalName(path.getPath()), true);
@@ -563,13 +548,12 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
       }
     }
 
-    loadProjectAsync(project, projectAsyncResult, true, conversionResult, uiAccess);
+    loadProjectAsync(project, projectAsyncResult, true, uiAccess);
   }
 
   private void loadProjectAsync(final ProjectImpl project,
                                 AsyncResult<Project> projectAsyncResult,
                                 boolean init,
-                                ConversionResult conversionResult,
                                 UIAccess uiAccess) {
     Task.Backgroundable.queue(project, ProjectBundle.message("project.load.progress"), canCancelProjectLoading(), progressIndicator -> {
       progressIndicator.setIndeterminate(true);
@@ -584,8 +568,8 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
           initProjectAsync(project, null, progressIndicator);
         }
 
-        prepareModules(conversionResult, project, uiAccess, projectAsyncResult).doWhenDone(() -> {
-          prepareProjectWorkspace(conversionResult, project, uiAccess, projectAsyncResult);
+        prepareModules(project, uiAccess, projectAsyncResult).doWhenDone(() -> {
+          prepareProjectWorkspace(project, uiAccess, projectAsyncResult);
         });
       }
       catch (ProcessCanceledException e) {
@@ -599,8 +583,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
     });
   }
 
-  private AsyncResult<Void> prepareModules(ConversionResult conversionResult,
-                                           Project project,
+  private AsyncResult<Void> prepareModules(Project project,
                                            UIAccess uiAccess,
                                            AsyncResult<Project> projectAsyncResult) {
     AsyncResult<Void> result = AsyncResult.undefined();
@@ -625,16 +608,13 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
     return result;
   }
 
-  private void prepareProjectWorkspace(ConversionResult conversionResult,
-                                       Project project,
+  private void prepareProjectWorkspace(Project project,
                                        UIAccess uiAccess,
                                        AsyncResult<Project> projectAsyncResult) {
     Task.Backgroundable.queue(project, "Preparing workspace...", canCancelProjectLoading(), progressIndicator -> {
       progressIndicator.setIndeterminate(true);
 
       try {
-        StartupManager.getInstance(project).registerPostStartupActivity(() -> conversionResult.postStartupActivity(project));
-
         openProjectRequireBackgroundTask(project, uiAccess);
 
         projectAsyncResult.setDone(project);

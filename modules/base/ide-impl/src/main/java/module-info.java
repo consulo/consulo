@@ -292,7 +292,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.codeInspection.util;
   exports consulo.ide.impl.idea.codeStyle;
   exports consulo.ide.impl.idea.concurrency;
-  exports consulo.ide.impl.idea.conversion;
   exports consulo.ide.impl.idea.coverage;
   exports consulo.ide.impl.idea.coverage.actions;
   exports consulo.ide.impl.idea.coverage.view;
