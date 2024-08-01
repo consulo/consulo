@@ -16,21 +16,21 @@
 package consulo.language.lexer;
 
 class LexerPositionImpl implements LexerPosition {
-  private final int myOffset;
-  private final int myState;
+    private final int myOffset;
+    private final int myState;
 
-  public LexerPositionImpl(final int offset, final int state) {
-    myOffset = offset;
-    myState = state;
-  }
+    public LexerPositionImpl(final int offset, final int state) {
+        myOffset = offset;
+        myState = state;
+    }
 
-  @Override
-  public int getOffset() {
-    return myOffset;
-  }
+    @Override
+    public int getOffset() {
+        return myOffset;
+    }
 
-  @Override
-  public int getState() {
-    return myState;
-  }
+    @Override
+    public int getState() {
+        return myState;
+    }
 }

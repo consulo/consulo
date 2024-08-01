@@ -21,5 +21,5 @@ import consulo.language.ast.IElementType;
  * @author Anna Bulenkova
  */
 public interface MergeFunction {
-  IElementType merge(IElementType type, Lexer originalLexer);
+    IElementType merge(IElementType type, Lexer originalLexer);
 }

@@ -20,12 +20,12 @@ package consulo.language.lexer;
  */
 
 public interface LexerPosition {
-  /**
-   * Returns the current offset of the lexer.
-   *
-   * @return the lexer offset
-   */
-  int getOffset();
+    /**
+     * Returns the current offset of the lexer.
+     *
+     * @return the lexer offset
+     */
+    int getOffset();
 
-  int getState();
+    int getState();
 }

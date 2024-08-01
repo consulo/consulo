@@ -17,43 +17,44 @@ package consulo.util.dataholder;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Objects;
 
 public interface UserDataHolder {
-  @Nullable
-  <T> T getUserData(@Nonnull Key<T> key);
+    @Nullable
+    <T> T getUserData(@Nonnull Key<T> key);
 
-  <T> void putUserData(@Nonnull Key<T> key, @Nullable T value);
+    <T> void putUserData(@Nonnull Key<T> key, @Nullable T value);
 
-  /**
-   * @return written value
-   */
-  @Nonnull
-  default <T> T putUserDataIfAbsent(@Nonnull Key<T> key, @Nonnull T value) {
-    T oldValue = getUserData(key);
-    if (oldValue == null) {
-      putUserData(key, value);
-      return value;
-    }
-    else {
-      return oldValue;
-    }
-  }
-
-  /**
-   * Replaces (atomically) old value in the map with the new one
-   *
-   * @return true if old value got replaced, false otherwise
-   * @see ConcurrentMap#replace(Object, Object, Object)
-   */
-  default <T> boolean replace(@Nonnull Key<T> key, @Nullable T oldValue, @Nullable T newValue) {
-    T data = getUserData(key);
-
-    if (!Objects.equals(data, oldValue)) {
-      return false;
+    /**
+     * @return written value
+     */
+    @Nonnull
+    default <T> T putUserDataIfAbsent(@Nonnull Key<T> key, @Nonnull T value) {
+        T oldValue = getUserData(key);
+        if (oldValue == null) {
+            putUserData(key, value);
+            return value;
+        }
+        else {
+            return oldValue;
+        }
     }
 
-    putUserData(key, newValue);
-    return true;
-  }
+    /**
+     * Replaces (atomically) old value in the map with the new one
+     *
+     * @return true if old value got replaced, false otherwise
+     * @see ConcurrentMap#replace(Object, Object, Object)
+     */
+    default <T> boolean replace(@Nonnull Key<T> key, @Nullable T oldValue, @Nullable T newValue) {
+        T data = getUserData(key);
+
+        if (!Objects.equals(data, oldValue)) {
+            return false;
+        }
+
+        putUserData(key, newValue);
+        return true;
+    }
 }
