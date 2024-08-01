@@ -26,65 +26,65 @@ import consulo.webBrowser.*;
 import jakarta.annotation.Nullable;
 
 public class OpenFileInDefaultBrowserAction extends DumbAwareAction {
-  @Override
-  public void update(AnActionEvent e) {
-    Presentation presentation = e.getPresentation();
+    @Override
+    public void update(AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
 
-    Pair<OpenInBrowserRequest, WebBrowserUrlProvider> result = BaseOpenInBrowserAction.doUpdate(e);
-    if (result == null) {
-      return;
-    }
-
-    WebBrowserUrlProvider browserUrlProvider = result.second;
-    String text = getTemplatePresentation().getText();
-    String description = getTemplatePresentation().getDescription();
-    if (browserUrlProvider != null) {
-      String customDescription = browserUrlProvider.getOpenInBrowserActionDescription(result.first.getFile());
-      if (customDescription != null) {
-        description = customDescription;
-      }
-      if (WebFileFilter.isFileAllowed(result.first.getFile())) {
-        description += " (hold Shift to open URL of local file)";
-      }
-    }
-
-    presentation.setText(text);
-    presentation.setDescription(description);
-
-    WebBrowser browser = findUsingBrowser();
-    if (browser != null) {
-      presentation.setIcon(browser.getIcon());
-    }
-
-    if (ActionPlaces.isPopupPlace(e.getPlace())) {
-      presentation.setVisible(presentation.isEnabled());
-    }
-  }
-
-  @Nullable
-  private static WebBrowser findUsingBrowser() {
-    WebBrowserManager browserManager = WebBrowserManager.getInstance();
-    if (browserManager.getDefaultBrowserPolicy() == DefaultBrowserPolicy.FIRST) {
-      return browserManager.getFirstActiveBrowser();
-    }
-    else if (browserManager.getDefaultBrowserPolicy() == DefaultBrowserPolicy.ALTERNATIVE) {
-      String path = WebBrowserManager.getInstance().getAlternativeBrowserPath();
-      if (!StringUtil.isEmpty(path)) {
-        WebBrowser browser = browserManager.findBrowserById(path);
-        if (browser == null) {
-          for (WebBrowser item : browserManager.getActiveBrowsers()) {
-            if (path.equals(item.getPath())) {
-              return item;
-            }
-          }
+        Pair<OpenInBrowserRequest, WebBrowserUrlProvider> result = BaseOpenInBrowserAction.doUpdate(e);
+        if (result == null) {
+            return;
         }
-      }
-    }
-    return null;
-  }
 
-  @Override
-  public void actionPerformed(AnActionEvent e) {
-    BaseOpenInBrowserAction.open(e, findUsingBrowser());
-  }
+        WebBrowserUrlProvider browserUrlProvider = result.second;
+        String text = getTemplatePresentation().getText();
+        String description = getTemplatePresentation().getDescription();
+        if (browserUrlProvider != null) {
+            String customDescription = browserUrlProvider.getOpenInBrowserActionDescription(result.first.getFile());
+            if (customDescription != null) {
+                description = customDescription;
+            }
+            if (WebFileFilter.isFileAllowed(result.first.getFile())) {
+                description += " (hold Shift to open URL of local file)";
+            }
+        }
+
+        presentation.setText(text);
+        presentation.setDescription(description);
+
+        WebBrowser browser = findUsingBrowser();
+        if (browser != null) {
+            presentation.setIcon(browser.getIcon());
+        }
+
+        if (ActionPlaces.isPopupPlace(e.getPlace())) {
+            presentation.setVisible(presentation.isEnabled());
+        }
+    }
+
+    @Nullable
+    private static WebBrowser findUsingBrowser() {
+        WebBrowserManager browserManager = WebBrowserManager.getInstance();
+        if (browserManager.getDefaultBrowserPolicy() == DefaultBrowserPolicy.FIRST) {
+            return browserManager.getFirstActiveBrowser();
+        }
+        else if (browserManager.getDefaultBrowserPolicy() == DefaultBrowserPolicy.ALTERNATIVE) {
+            String path = WebBrowserManager.getInstance().getAlternativeBrowserPath();
+            if (!StringUtil.isEmpty(path)) {
+                WebBrowser browser = browserManager.findBrowserById(path);
+                if (browser == null) {
+                    for (WebBrowser item : browserManager.getActiveBrowsers()) {
+                        if (path.equals(item.getPath())) {
+                            return item;
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void actionPerformed(AnActionEvent e) {
+        BaseOpenInBrowserAction.open(e, findUsingBrowser());
+    }
 }
