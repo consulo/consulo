@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.changes;
+package consulo.versionControlSystem.impl.internal.change;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.project.Project;
@@ -28,22 +28,22 @@ import jakarta.inject.Inject;
  */
 @ExtensionImpl
 public class VcsDirtyScopeManagerVcsStartupActivity implements VcsStartupActivity {
-  private final Project myProject;
+    private final Project myProject;
 
-  @Inject
-  public VcsDirtyScopeManagerVcsStartupActivity(Project project) {
-    myProject = project;
-  }
+    @Inject
+    public VcsDirtyScopeManagerVcsStartupActivity(Project project) {
+        myProject = project;
+    }
 
-  @Override
-  public void runActivity() {
-    VcsDirtyScopeManagerImpl vcsDirtyScopeManager = (VcsDirtyScopeManagerImpl)VcsDirtyScopeManager.getInstance(myProject);
+    @Override
+    public void runActivity() {
+        VcsDirtyScopeManagerImpl vcsDirtyScopeManager = (VcsDirtyScopeManagerImpl) VcsDirtyScopeManager.getInstance(myProject);
 
-    vcsDirtyScopeManager.startListenForChanges();
-  }
+        vcsDirtyScopeManager.startListenForChanges();
+    }
 
-  @Override
-  public int getOrder() {
-    return VcsInitObject.DIRTY_SCOPE_MANAGER.getOrder();
-  }
+    @Override
+    public int getOrder() {
+        return VcsInitObject.DIRTY_SCOPE_MANAGER.getOrder();
+    }
 }

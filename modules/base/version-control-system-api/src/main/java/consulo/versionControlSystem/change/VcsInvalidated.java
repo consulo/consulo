@@ -15,37 +15,26 @@
  */
 package consulo.versionControlSystem.change;
 
+import consulo.util.collection.ContainerUtil;
+import consulo.util.concurrent.ActionCallback;
 import consulo.versionControlSystem.FilePath;
 
 import java.util.List;
 
-public class VcsInvalidated {
-  private final List<VcsDirtyScope> myScopes;
-  private final boolean myEverythingDirty;
-
-  public VcsInvalidated(final List<VcsDirtyScope> scopes, final boolean everythingDirty) {
-    myScopes = scopes;
-    myEverythingDirty = everythingDirty;
-  }
-
-  public List<VcsDirtyScope> getScopes() {
-    return myScopes;
-  }
-
-  public boolean isEverythingDirty() {
-    return myEverythingDirty;
-  }
-
-  public boolean isEmpty() {
-    return myScopes.isEmpty();
-  }
-
-  public boolean isFileDirty(final FilePath fp) {
-    if (myEverythingDirty) return true;
-
-    for (VcsDirtyScope scope : myScopes) {
-      if (scope.belongsTo(fp)) return true;
+public record VcsInvalidated(List<VcsModifiableDirtyScope> scopes, boolean isEverythingDirty, ActionCallback callback) {
+    public boolean isFileDirty(final FilePath fp) {
+        return isEverythingDirty() || ContainerUtil.any(scopes(), dirtyScope -> dirtyScope.belongsTo(fp));
     }
-    return false;
-  }
+
+    public boolean isEmpty() {
+        return scopes().isEmpty();
+    }
+
+    public void doWhenCanceled(Runnable task) {
+        callback().doWhenRejected(task);
+    }
+
+    public List<VcsModifiableDirtyScope> getScopes() {
+        return scopes();
+    }
 }

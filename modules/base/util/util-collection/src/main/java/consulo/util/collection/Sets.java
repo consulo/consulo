@@ -18,9 +18,10 @@ package consulo.util.collection;
 import consulo.util.collection.impl.CollectionFactory;
 import consulo.util.collection.impl.map.ConcurrentHashMap;
 import consulo.util.collection.impl.set.WeakHashSet;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.Contract;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
@@ -31,6 +32,13 @@ import java.util.Set;
  */
 public final class Sets {
   private static CollectionFactory ourFactory = CollectionFactory.get();
+
+  @Nonnull
+  @Contract(pure = true)
+  @SuppressWarnings("unchecked")
+  public static <T> Set<T> notNullize(@Nullable Set<T> set) {
+    return set == null ? Set.<T>of() : set;
+  }
 
   @Contract(value = " -> new", pure = true)
   @Nonnull

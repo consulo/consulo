@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.ZipperUpdater;
+import consulo.versionControlSystem.impl.internal.util.ZipperUpdater;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsKey;
 import consulo.versionControlSystem.change.BaseRevision;

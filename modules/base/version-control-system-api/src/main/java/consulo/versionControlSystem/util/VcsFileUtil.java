@@ -17,18 +17,22 @@ package consulo.versionControlSystem.util;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
+import consulo.application.util.SystemInfo;
 import consulo.platform.Platform;
 import consulo.project.Project;
+import consulo.util.collection.HashingStrategy;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.function.ThrowableConsumer;
 import consulo.util.lang.function.ThrowableFunction;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsException;
+import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.SystemIndependent;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -39,6 +43,13 @@ import java.util.List;
  * @author Kirill Likhodedov
  */
 public class VcsFileUtil {
+  /**
+   * @deprecated Use {@link ChangesUtil#CASE_SENSITIVE_FILE_PATH_HASHING_STRATEGY}
+   */
+  @Deprecated(forRemoval = true)
+  public static final HashingStrategy<FilePath> CASE_SENSITIVE_FILE_PATH_HASHING_STRATEGY =
+    ChangesUtil.CASE_SENSITIVE_FILE_PATH_HASHING_STRATEGY;
+
   /**
    * If multiple paths are specified on the command line, this limit is used to split paths into chunks.
    * The limit is less than OS limit to leave space to quoting, spaces, charset conversion, and commands arguments.
@@ -378,5 +389,20 @@ public class VcsFileUtil {
     }
 
     return null;
+  }
+
+  /**
+   * @see FileUtil#toCanonicalPath
+   */
+  public static boolean isAncestor(@Nonnull @SystemIndependent String ancestor, @Nonnull @SystemIndependent String path, boolean strict) {
+    return FileUtil.startsWith(path, ancestor, SystemInfo.isFileSystemCaseSensitive, strict);
+  }
+
+  public static boolean isAncestor(@Nonnull FilePath ancestor, @Nonnull FilePath path, boolean strict) {
+    return isAncestor(ancestor.getPath(), path.getPath(), strict);
+  }
+
+  public static boolean isAncestor(@Nonnull VirtualFile root, @Nonnull FilePath path) {
+    return isAncestor(root.getPath(), path.getPath(), false);
   }
 }

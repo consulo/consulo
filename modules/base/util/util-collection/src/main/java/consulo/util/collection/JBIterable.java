@@ -414,6 +414,11 @@ public abstract class JBIterable<E> implements Iterable<E> {
   }
 
   @Nonnull
+  public final JBIterable<E> filterNotNull() {
+    return filter(Objects::nonNull);
+  }
+
+  @Nonnull
   public final JBIterable<E> take(final int count) {
     return intercept(iterator -> JBIterator.from(iterator).take(count));
   }

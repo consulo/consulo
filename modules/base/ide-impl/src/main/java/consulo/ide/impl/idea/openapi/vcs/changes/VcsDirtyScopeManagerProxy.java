@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
-import consulo.versionControlSystem.change.VcsInvalidated;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -47,6 +46,7 @@ class VcsDirtyScopeManagerProxy extends VcsDirtyScopeManager {
     myDirs = new HashSet<>();
   }
 
+  @Override
   public void markEverythingDirty() {
     myEverythingDirty = true;
 
@@ -56,54 +56,50 @@ class VcsDirtyScopeManagerProxy extends VcsDirtyScopeManager {
     myFiles.clear();
   }
 
+  @Override
   public void fileDirty(@Nonnull final VirtualFile file) {
     myVFiles.add(file);
   }
 
+  @Override
   public void fileDirty(@Nonnull final FilePath file) {
     myFiles.add(file);
   }
 
-  public void dirDirtyRecursively(final VirtualFile dir, final boolean scheduleUpdate) {
-    myVDirs.add(dir);
-  }
-
+  @Override
   public void dirDirtyRecursively(final VirtualFile dir) {
     myVDirs.add(dir);
   }
 
+  @Override
   public void dirDirtyRecursively(final FilePath path) {
     myDirs.add(path);
   }
 
-  public VcsInvalidated retrieveScopes() {
-    throw new UnsupportedOperationException();
-  }
-
   @Nonnull
   @Override
-  public Collection<FilePath> whatFilesDirty(@Nonnull Collection<FilePath> files) {
+  public Collection<FilePath> whatFilesDirty(@Nonnull Collection<? extends FilePath> files) {
     throw new UnsupportedOperationException();
   }
 
-  public void filePathsDirty(@jakarta.annotation.Nullable final Collection<FilePath> filesDirty, @Nullable final Collection<FilePath> dirsRecursivelyDirty) {
+  @Override
+  public void filePathsDirty(@Nullable final Collection<? extends FilePath> filesDirty, @Nullable final Collection<? extends FilePath> dirsRecursivelyDirty) {
     if (filesDirty != null) {
       myFiles.addAll(filesDirty);
     }
     if (dirsRecursivelyDirty != null) {
       myDirs.addAll(dirsRecursivelyDirty);
     }
-    return;
   }
 
-  public void filesDirty(@Nullable final Collection<VirtualFile> filesDirty, @jakarta.annotation.Nullable final Collection<VirtualFile> dirsRecursivelyDirty) {
+  @Override
+  public void filesDirty(@Nullable final Collection<? extends VirtualFile> filesDirty, @Nullable final Collection<? extends VirtualFile> dirsRecursivelyDirty) {
     if (filesDirty != null) {
       myVFiles.addAll(filesDirty);
     }
     if (dirsRecursivelyDirty != null) {
       myVDirs.addAll(dirsRecursivelyDirty);
     }
-    return;
   }
 
   public void callRealManager(final VcsDirtyScopeManager manager) {
@@ -124,10 +120,5 @@ class VcsDirtyScopeManagerProxy extends VcsDirtyScopeManager {
     for (VirtualFile dir : myVDirs) {
       manager.dirDirtyRecursively(dir);
     }
-  }
-
-  @Override
-  public void changesProcessed() {
-    throw new UnsupportedOperationException();
   }
 }

@@ -66,4 +66,6 @@ public abstract class ChangeListManagerEx extends ChangeListManager {
 
   @Nonnull
   public abstract List<VirtualFile> getUnversionedFiles();
+
+  public abstract void scheduleUpdateImpl();
 }

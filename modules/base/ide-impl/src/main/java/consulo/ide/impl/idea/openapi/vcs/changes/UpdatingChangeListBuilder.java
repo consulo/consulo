@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.application.ApplicationManager;
 import consulo.component.ProcessCanceledException;
-import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.language.file.FileTypeManager;
 import consulo.logging.Logger;
 import consulo.util.lang.ObjectUtil;
@@ -41,7 +40,7 @@ class UpdatingChangeListBuilder implements ChangelistBuilder {
   private final ChangeListWorker myChangeListWorker;
   private final FileHolderComposite myComposite;
   // todo +-
-  private final Getter<Boolean> myDisposedGetter;
+  private final Supplier<Boolean> myDisposedGetter;
   private VcsDirtyScope myScope;
   private FoldersCutDownWorker myFoldersCutDownWorker;
   private final ChangeListManager myСhangeListManager;
@@ -51,7 +50,7 @@ class UpdatingChangeListBuilder implements ChangelistBuilder {
 
   UpdatingChangeListBuilder(final ChangeListWorker changeListWorker,
                             final FileHolderComposite composite,
-                            final Getter<Boolean> disposedGetter,
+                            final Supplier<Boolean> disposedGetter,
                             final ChangeListManager сhangeListManager,
                             final ChangeListManagerGate gate) {
     myChangeListWorker = changeListWorker;

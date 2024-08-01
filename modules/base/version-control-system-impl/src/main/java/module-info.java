@@ -25,6 +25,8 @@ module consulo.version.control.system.impl {
 
   opens consulo.versionControlSystem.impl.internal.change.commited to consulo.util.xml.serializer;
 
+  exports consulo.versionControlSystem.impl.internal.util to consulo.ide.impl, consulo.desktop.awt.ide.impl;
+
   // TODO remove in future
   requires java.desktop;
   requires forms.rt;

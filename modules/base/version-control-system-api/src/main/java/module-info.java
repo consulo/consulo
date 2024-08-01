@@ -42,5 +42,7 @@ module consulo.version.control.system.api {
   exports consulo.versionControlSystem.versionBrowser.ui.awt;
   exports consulo.versionControlSystem.internal to consulo.ide.impl, consulo.version.control.system.impl;
 
+  requires com.google.common;
+
   opens consulo.versionControlSystem to consulo.util.xml.serializer;
 }

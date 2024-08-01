@@ -1,10 +1,10 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.openapi.util;
+package consulo.versionControlSystem.impl.internal.util;
 
-import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.internal.BackgroundTaskUtil;
+import consulo.disposer.Disposable;
+import consulo.ui.ModalityState;
 import consulo.ui.ex.awt.util.Alarm;
 import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
@@ -70,10 +70,10 @@ public class ZipperUpdater {
         };
         if (Alarm.ThreadToUse.SWING_THREAD.equals(myThreadToUse)) {
           if (anyModality) {
-            myAlarm.addRequest(request, urgent ? 0 : myDelay, IdeaModalityState.any());
+            myAlarm.addRequest(request, urgent ? 0 : myDelay, ModalityState.any());
           }
           else if (!ApplicationManager.getApplication().isDispatchThread()) {
-            myAlarm.addRequest(request, urgent ? 0 : myDelay, IdeaModalityState.nonModal());
+            myAlarm.addRequest(request, urgent ? 0 : myDelay, ModalityState.nonModal());
           }
           else {
             myAlarm.addRequest(request, urgent ? 0 : myDelay);

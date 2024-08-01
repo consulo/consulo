@@ -17,7 +17,6 @@
 package consulo.versionControlSystem.change;
 
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.util.function.Processor;
 import consulo.project.Project;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
@@ -25,7 +24,7 @@ import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.Collection;
 import java.util.Set;
-import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * <p>The dirty scope for a version control system. The instance of this interface
@@ -43,7 +42,7 @@ public abstract class VcsDirtyScope {
    * dirty file or directory which is under this content root.
    * @see #getRecursivelyDirtyDirectories()
    * @see #getDirtyFiles()
-   * @see consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager#getVcsRootFor(FilePath)
+   * @see consulo.versionControlSystem.ProjectLevelVcsManager#getVcsRootFor(FilePath)
    */
   public abstract Collection<VirtualFile> getAffectedContentRoots();
 
@@ -84,17 +83,17 @@ public abstract class VcsDirtyScope {
    */
   public abstract Set<FilePath> getRecursivelyDirtyDirectories();
 
-  public abstract boolean isRecursivelyDirty(final VirtualFile vf);
-
   /**
    * Invoke the {@code iterator} for all files in the dirty scope.
    * For recursively dirty directories all children are processed.
    *
    * @param iterator an iterator to invoke
    */
-  public abstract void iterate(Processor<FilePath> iterator);
+  @Deprecated(forRemoval = true)
+  public abstract void iterate(Predicate<? super FilePath> iterator);
 
-  public abstract void iterateExistingInsideScope(Processor<VirtualFile> vf);
+  @Deprecated(forRemoval = true)
+  public abstract void iterateExistingInsideScope(Predicate<? super VirtualFile> vf);
 
   public abstract boolean isEmpty();
 
@@ -106,15 +105,7 @@ public abstract class VcsDirtyScope {
    */
   public abstract boolean belongsTo(final FilePath path);
 
-  public abstract boolean belongsTo(final FilePath path, final Consumer<AbstractVcs> vcsConsumer);
-
-  public Collection<VirtualFile> getAffectedContentRootsWithCheck() {
-    return getAffectedContentRoots();
-  }
-
-  public boolean wasEveryThingDirty() {
-    return false;
-  }
+  public abstract boolean wasEveryThingDirty();
 
   public void setWasEverythingDirty(boolean wasEverythingDirty) {
   }

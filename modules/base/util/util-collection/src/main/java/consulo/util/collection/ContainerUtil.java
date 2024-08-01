@@ -1502,6 +1502,15 @@ public class ContainerUtil {
     return true;
   }
 
+  public static <V> boolean any(Iterable<V> items, Predicate<? super V> predicate) {
+    for (V item : items) {
+      if (predicate.test(item)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   public static <K, V> boolean any(Map<K, V> map, java.util.function.Predicate<Map.Entry<K, V>> predicate) {
     if (map.isEmpty()) return false;
 

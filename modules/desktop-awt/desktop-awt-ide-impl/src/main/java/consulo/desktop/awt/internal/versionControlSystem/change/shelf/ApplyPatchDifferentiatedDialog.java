@@ -34,7 +34,7 @@ import consulo.fileChooser.IdeaFileChooser;
 import consulo.ide.impl.idea.diff.actions.impl.GoToChangePopupBuilder;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.*;
-import consulo.ide.impl.idea.openapi.util.ZipperUpdater;
+import consulo.versionControlSystem.impl.internal.util.ZipperUpdater;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ChangeGoToChangePopupAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.*;

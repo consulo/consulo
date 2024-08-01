@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.impl;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AccessRule;
 import consulo.application.impl.internal.IdeaModalityState;
@@ -35,6 +34,7 @@ import consulo.disposer.Disposer;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.TextConsoleBuilderFactory;
 import consulo.ide.impl.idea.openapi.vcs.CalledInAwt;
+import consulo.versionControlSystem.util.VcsRootIterator;
 import consulo.versionControlSystem.internal.VcsShowConfirmationOptionImpl;
 import consulo.versionControlSystem.internal.VcsShowOptionsSettingImpl;
 import consulo.ide.impl.idea.openapi.vcs.changes.VcsAnnotationLocalChangesListenerImpl;
@@ -173,12 +173,12 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
     myVcsFileListenerContextHelper = vcsFileListenerContextHelper;
     VcsListener vcsListener = () -> {
       myVcsHistoryCache.clear();
+      myContentRevisionCache.clearAll();
     };
     myExcludedIndex = excludedFileIndex;
     MessageBusConnection connection = myProject.getMessageBus().connect();
     connection.subscribe(VcsMappingListener.class, vcsListener);
     connection.subscribe(PluginVcsMappingListener.class, vcsListener);
-    connection.subscribe(UpdatedFilesListener.class, myContentRevisionCache::clearCurrent);
     myAnnotationLocalChangesListener = new VcsAnnotationLocalChangesListenerImpl(myProject, this);
 
     Disposer.register(this, myMappings);

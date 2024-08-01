@@ -21,9 +21,9 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 import consulo.versionControlSystem.FilePath;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collection;
 
 /**
@@ -34,61 +34,51 @@ import java.util.Collection;
  */
 @ServiceAPI(value = ComponentScope.PROJECT)
 public abstract class VcsDirtyScopeManager {
-  @Nonnull
-  public static VcsDirtyScopeManager getInstance(@Nonnull Project project) {
-    return project.getInstance(VcsDirtyScopeManager.class);
-  }
+    @Nonnull
+    public static VcsDirtyScopeManager getInstance(@Nonnull Project project) {
+        return project.getInstance(VcsDirtyScopeManager.class);
+    }
 
-  /**
-   * Requests an asynchronous file status update for all files in the project.
-   */
-  public abstract void markEverythingDirty();
+    /**
+     * Requests an asynchronous file status update for all files in the project.
+     */
+    public abstract void markEverythingDirty();
 
-  /**
-   * Requests an asynchronous file status update for the specified virtual file. Must be called from a read action.
-   *
-   * @param file the file for which the status update is requested.
-   */
-  public abstract void fileDirty(@Nonnull VirtualFile file);
+    /**
+     * Requests an asynchronous file status update for the specified virtual file. Must be called from a read action.
+     *
+     * @param file the file for which the status update is requested.
+     */
+    public abstract void fileDirty(@Nonnull VirtualFile file);
 
-  /**
-   * Requests an asynchronous file status update for the specified file path. Must be called from a read action.
-   *
-   * @param file the file path for which the status update is requested.
-   */
-  public abstract void fileDirty(@Nonnull FilePath file);
+    /**
+     * Requests an asynchronous file status update for the specified file path. Must be called from a read action.
+     *
+     * @param file the file path for which the status update is requested.
+     */
+    public abstract void fileDirty(@Nonnull FilePath file);
 
-  /**
-   * Requests an asynchronous file status update for all files under the specified directory.
-   *
-   * @param dir the directory for which the file status update is requested.
-   * @deprecated Use single-parameter version instead.
-   */
-  public abstract void dirDirtyRecursively(VirtualFile dir, final boolean scheduleUpdate);
+    /**
+     * Requests an asynchronous file status update for all files under the specified directory.
+     *
+     * @param dir the directory for which the file status update is requested.
+     */
+    public abstract void dirDirtyRecursively(@Nonnull VirtualFile dir);
 
-  /**
-   * Requests an asynchronous file status update for all files under the specified directory.
-   *
-   * @param dir the directory for which the file status update is requested.
-   */
-  public abstract void dirDirtyRecursively(VirtualFile dir);
+    public abstract void dirDirtyRecursively(@Nonnull FilePath path);
 
-  public abstract void dirDirtyRecursively(FilePath path);
+    @Nonnull
+    public abstract Collection<FilePath> whatFilesDirty(@Nonnull Collection<? extends FilePath> files);
 
-  public abstract VcsInvalidated retrieveScopes();
+    /**
+     * Requests an asynchronous file status update for all files specified and under the specified directories
+     */
+    public abstract void filePathsDirty(@Nullable final Collection<? extends FilePath> filesDirty,
+                                        @Nullable final Collection<? extends FilePath> dirsRecursivelyDirty);
 
-  public abstract void changesProcessed();
-
-  @Nonnull
-  public abstract Collection<FilePath> whatFilesDirty(@Nonnull Collection<FilePath> files);
-
-  /**
-   * Requests an asynchronous file status update for all files specified and under the specified directories
-   */
-  public abstract void filePathsDirty(@Nullable final Collection<FilePath> filesDirty, @Nullable final Collection<FilePath> dirsRecursivelyDirty);
-
-  /**
-   * Requests an asynchronous file status update for all files specified and under the specified directories
-   */
-  public abstract void filesDirty(@Nullable final Collection<VirtualFile> filesDirty, @Nullable final Collection<VirtualFile> dirsRecursivelyDirty);
+    /**
+     * Requests an asynchronous file status update for all files specified and under the specified directories
+     */
+    public abstract void filesDirty(@Nullable final Collection<? extends VirtualFile> filesDirty,
+                                    @Nullable final Collection<? extends VirtualFile> dirsRecursivelyDirty);
 }

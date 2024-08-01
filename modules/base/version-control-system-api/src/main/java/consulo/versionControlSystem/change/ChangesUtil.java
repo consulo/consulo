@@ -26,11 +26,9 @@ import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.JBIterable;
-import consulo.util.collection.Sets;
 import consulo.util.dataholder.Key;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.ObjectUtil;
-import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
@@ -47,7 +45,6 @@ import java.io.File;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -56,17 +53,24 @@ import static java.util.stream.Collectors.toList;
 public class ChangesUtil {
   private static final Key<Boolean> INTERNAL_OPERATION_KEY = Key.create("internal vcs operation");
 
-  public static final HashingStrategy<FilePath> FILE_PATH_BY_PATH_ONLY_HASHING_STRATEGY = new HashingStrategy<FilePath>() {
+  public static final HashingStrategy<FilePath> CASE_SENSITIVE_FILE_PATH_HASHING_STRATEGY = new HashingStrategy<>() {
     @Override
-    public int hashCode(@Nonnull FilePath path) {
-      return path.getPath().hashCode();
+    public int hashCode(@Nullable FilePath path) {
+      return path != null ? Objects.hash(path.getPath(), path.isDirectory()) : 0;
     }
 
     @Override
-    public boolean equals(@Nonnull FilePath path1, @Nonnull FilePath path2) {
-      return StringUtil.equals(path1.getPath(), path2.getPath());
+    public boolean equals(@Nullable FilePath path1, @Nullable FilePath path2) {
+      if (path1 == path2) return true;
+      if (path1 == null || path2 == null) return false;
+
+      return path1.isDirectory() == path2.isDirectory() && path1.getPath().equals(path2.getPath());
     }
   };
+
+  public static final Comparator<LocalChangeList> CHANGELIST_COMPARATOR =
+    Comparator.<LocalChangeList>comparingInt(list -> list.isDefault() ? -1 : 0)
+              .thenComparing(list -> list.getName(), String::compareToIgnoreCase);
 
   private ChangesUtil() {
   }
@@ -118,9 +122,28 @@ public class ChangesUtil {
 
   @Nonnull
   public static List<FilePath> getPaths(@Nonnull Collection<Change> changes) {
-    Set<FilePath> distinctPaths =
-      getAllPaths(changes.stream()).collect(toCollection(() -> Sets.newHashSet(FILE_PATH_BY_PATH_ONLY_HASHING_STRATEGY)));
-    return ContainerUtil.newArrayList(distinctPaths);
+    return iteratePaths(changes).toList();
+  }
+
+  @Nonnull
+  public static JBIterable<FilePath> iteratePaths(@Nonnull Iterable<? extends Change> changes) {
+    return JBIterable.from(changes).flatMap(ChangesUtil::iteratePathsCaseSensitive);
+  }
+
+  public static @Nonnull JBIterable<FilePath> iteratePathsCaseSensitive(@Nonnull Change change) {
+    FilePath beforePath = getBeforePath(change);
+    FilePath afterPath = getAfterPath(change);
+
+    if (equalsCaseSensitive(beforePath, afterPath)) {
+      return JBIterable.of(beforePath);
+    }
+    else {
+      return JBIterable.of(beforePath, afterPath).filterNotNull();
+    }
+  }
+
+  public static boolean equalsCaseSensitive(@Nullable FilePath path1, @Nullable FilePath path2) {
+    return CASE_SENSITIVE_FILE_PATH_HASHING_STRATEGY.equals(path1, path2);
   }
 
   @Nonnull
