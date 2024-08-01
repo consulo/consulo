@@ -28,16 +28,16 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface AdditionalTextAttributesProvider {
-  String THIS_CLASS_NAME = "___this___class___name";
+    String THIS_CLASS_NAME = "___this___class___name";
 
-  @Nonnull
-  String getColorSchemeName();
+    @Nonnull
+    String getColorSchemeName();
 
-  /**
-   * If method not implemented - used class as name with .xml extension
-   */
-  @Nonnull
-  default String getColorSchemeFile() {
-    return THIS_CLASS_NAME;
-  }
+    /**
+     * If method not implemented - used class as name with .xml extension
+     */
+    @Nonnull
+    default String getColorSchemeFile() {
+        return THIS_CLASS_NAME;
+    }
 }

@@ -23,5 +23,5 @@ import java.util.EventListener;
 
 @TopicAPI(ComponentScope.APPLICATION)
 public interface EditorColorsListener extends EventListener {
-  void globalSchemeChange(EditorColorsScheme scheme);
+    void globalSchemeChange(EditorColorsScheme scheme);
 }

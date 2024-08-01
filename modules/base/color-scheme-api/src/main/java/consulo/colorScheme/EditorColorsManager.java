@@ -23,63 +23,65 @@ import consulo.colorScheme.event.EditorColorsListener;
 import consulo.disposer.Disposable;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.Map;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class EditorColorsManager {
-  public static final String DEFAULT_SCHEME_NAME = "Default";
+    public static final String DEFAULT_SCHEME_NAME = "Default";
 
-  public static EditorColorsManager getInstance() {
-    return Application.get().getInstance(EditorColorsManager.class);
-  }
+    public static EditorColorsManager getInstance() {
+        return Application.get().getInstance(EditorColorsManager.class);
+    }
 
-  public abstract void addColorsScheme(@Nonnull EditorColorsScheme scheme);
+    public abstract void addColorsScheme(@Nonnull EditorColorsScheme scheme);
 
-  public abstract void removeAllSchemes();
+    public abstract void removeAllSchemes();
 
-  @Nonnull
-  public abstract EditorColorsScheme[] getAllSchemes();
+    @Nonnull
+    public abstract EditorColorsScheme[] getAllSchemes();
 
-  @Nonnull
-  public abstract Map<String, EditorColorsScheme> getBundledSchemes();
+    @Nonnull
+    public abstract Map<String, EditorColorsScheme> getBundledSchemes();
 
-  public abstract void setGlobalScheme(EditorColorsScheme scheme);
+    public abstract void setGlobalScheme(EditorColorsScheme scheme);
 
-  @Nonnull
-  public abstract EditorColorsScheme getGlobalScheme();
+    @Nonnull
+    public abstract EditorColorsScheme getGlobalScheme();
 
-  @Nonnull
-  public EditorColorsScheme getCurrentScheme() {
-    return getGlobalScheme();
-  }
+    @Nonnull
+    public EditorColorsScheme getCurrentScheme() {
+        return getGlobalScheme();
+    }
 
-  public abstract EditorColorsScheme getScheme(String schemeName);
+    public abstract EditorColorsScheme getScheme(String schemeName);
 
-  public abstract boolean isDefaultScheme(EditorColorsScheme scheme);
+    public abstract boolean isDefaultScheme(EditorColorsScheme scheme);
 
-  /**
-   * @deprecated use {@link EditorColorsListener.class} instead
-   */
-  @SuppressWarnings("MethodMayBeStatic")
-  @Deprecated
-  public final void addEditorColorsListener(@Nonnull EditorColorsListener listener) {
-    ApplicationManager.getApplication().getMessageBus().connect().subscribe(EditorColorsListener.class, listener);
-  }
+    /**
+     * @deprecated use {@link EditorColorsListener.class} instead
+     */
+    @SuppressWarnings("MethodMayBeStatic")
+    @Deprecated
+    public final void addEditorColorsListener(@Nonnull EditorColorsListener listener) {
+        ApplicationManager.getApplication().getMessageBus().connect().subscribe(EditorColorsListener.class, listener);
+    }
 
-  /**
-   * @deprecated use {@link EditorColorsListener.class} instead
-   */
-  @SuppressWarnings("MethodMayBeStatic")
-  @Deprecated
-  public final void addEditorColorsListener(@Nonnull EditorColorsListener listener, @Nonnull Disposable disposable) {
-    ApplicationManager.getApplication().getMessageBus().connect(disposable).subscribe(EditorColorsListener.class, listener);
-  }
+    /**
+     * @deprecated use {@link EditorColorsListener.class} instead
+     */
+    @SuppressWarnings("MethodMayBeStatic")
+    @Deprecated
+    public final void addEditorColorsListener(@Nonnull EditorColorsListener listener, @Nonnull Disposable disposable) {
+        ApplicationManager.getApplication().getMessageBus().connect(disposable).subscribe(EditorColorsListener.class, listener);
+    }
 
-  @Nonnull
-  public EditorColorsScheme getSchemeForCurrentUITheme() {
-    return getGlobalScheme();
-  }
+    @Nonnull
+    public EditorColorsScheme getSchemeForCurrentUITheme() {
+        return getGlobalScheme();
+    }
 
-  public abstract boolean isUseOnlyMonospacedFonts();
-  public abstract void setUseOnlyMonospacedFonts(boolean b);
+    public abstract boolean isUseOnlyMonospacedFonts();
+
+    public abstract void setUseOnlyMonospacedFonts(boolean b);
 }

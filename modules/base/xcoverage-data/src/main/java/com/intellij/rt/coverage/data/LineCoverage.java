@@ -20,7 +20,7 @@ package com.intellij.rt.coverage.data;
  * @author ven
  */
 public interface LineCoverage {
-  byte FULL = 2;
-  byte PARTIAL = 1;
-  byte NONE = 0;
+    byte FULL = 2;
+    byte PARTIAL = 1;
+    byte NONE = 0;
 }

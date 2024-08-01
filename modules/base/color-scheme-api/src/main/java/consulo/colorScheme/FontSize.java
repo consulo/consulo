@@ -16,6 +16,7 @@
 package consulo.colorScheme;
 
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import javax.swing.text.html.StyleSheet;
 
@@ -29,43 +30,43 @@ import javax.swing.text.html.StyleSheet;
  * @since 1/26/11 10:22 AM
  */
 public enum FontSize {
+    XX_SMALL(8),
+    X_SMALL(10),
+    SMALL(12),
+    MEDIUM(14),
+    LARGE(18),
+    X_LARGE(24),
+    XX_LARGE(36);
 
-  XX_SMALL(8),
-  X_SMALL(10),
-  SMALL(12),
-  MEDIUM(14),
-  LARGE(18),
-  X_LARGE(24),
-  XX_LARGE(36);
+    private final int mySize;
 
-  private final int mySize;
+    FontSize(int size) {
+        mySize = size;
+    }
 
-  FontSize(int size) {
-    mySize = size;
-  }
+    public int getSize() {
+        return mySize;
+    }
 
-  public int getSize() {
-    return mySize;
-  }
+    //public int getScaledSize() {
+    //  return JBUI.scaleFontSize(getSize());
+    //}
 
-  //public int getScaledSize() {
-  //  return JBUI.scaleFontSize(getSize());
-  //}
+    /**
+     * @return {@link FontSize} that is one unit large than the current one; current object if it already stands for a maximum size
+     */
+    @Nonnull
+    public FontSize larger() {
+        int i = ordinal();
+        return i >= values().length - 1 ? this : values()[i + 1];
+    }
 
-  /**
-   * @return {@link FontSize} that is one unit large than the current one; current object if it already stands for a maximum size
-   */
-  @Nonnull
-  public FontSize larger() {
-    int i = ordinal();
-    return i >= values().length - 1 ? this : values()[i + 1];
-  }
-
-  /**
-   * @return {@link FontSize} that is one unit smaller than the current one; current object if it already stands for a minimum size
-   */
-  @Nonnull
-  public FontSize smaller() {
-    int i = ordinal();
-    return i > 0 ? values()[i - 1] : this;
-  }}
+    /**
+     * @return {@link FontSize} that is one unit smaller than the current one; current object if it already stands for a minimum size
+     */
+    @Nonnull
+    public FontSize smaller() {
+        int i = ordinal();
+        return i > 0 ? values()[i - 1] : this;
+    }
+}

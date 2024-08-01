@@ -16,26 +16,27 @@
 package consulo.colorScheme;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.List;
 
 public interface ModifiableFontPreferences extends FontPreferences {
-  void clear();
+    void clear();
 
-  void clearFonts();
+    void clearFonts();
 
-  void setUseLigatures(boolean useLigatures);
+    void setUseLigatures(boolean useLigatures);
 
-  void addFontFamily(String family);
+    void addFontFamily(String family);
 
-  void register(String family, int size);
+    void register(String family, int size);
 
-  void setEffectiveFontFamilies(List<String> fontFamilies);
+    void setEffectiveFontFamilies(List<String> fontFamilies);
 
-  void setRealFontFamilies(List<String> fontFamilies);
+    void setRealFontFamilies(List<String> fontFamilies);
 
-  void setTemplateFontSize(int size);
+    void setTemplateFontSize(int size);
 
-  void resetFontSizes();
+    void resetFontSizes();
 
-  void setFontSize(@Nonnull String fontFamily, int size);
+    void setFontSize(@Nonnull String fontFamily, int size);
 }
