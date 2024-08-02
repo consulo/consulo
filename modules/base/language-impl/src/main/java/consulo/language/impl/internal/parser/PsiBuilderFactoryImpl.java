@@ -39,13 +39,21 @@ import jakarta.annotation.Nullable;
 public class PsiBuilderFactoryImpl extends PsiBuilderFactory {
   @Nonnull
   @Override
-  public PsiBuilder createBuilder(@Nonnull final Project project, @Nonnull final ASTNode chameleon, LanguageVersion languageVersion) {
+  public PsiBuilder createBuilder(
+    @Nonnull final Project project,
+    @Nonnull final ASTNode chameleon,
+    @Nonnull LanguageVersion languageVersion
+  ) {
     return createBuilder(project, chameleon, null, chameleon.getElementType().getLanguage(), languageVersion, chameleon.getChars());
   }
 
   @Nonnull
   @Override
-  public PsiBuilder createBuilder(@Nonnull final Project project, @Nonnull final LighterLazyParseableNode chameleon, LanguageVersion languageVersion) {
+  public PsiBuilder createBuilder(
+    @Nonnull final Project project,
+    @Nonnull final LighterLazyParseableNode chameleon,
+    @Nonnull LanguageVersion languageVersion
+  ) {
     final Language language = chameleon.getTokenType().getLanguage();
     ParserDefinition parserDefinition = ParserDefinition.forLanguage(language);
 

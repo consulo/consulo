@@ -96,8 +96,9 @@ public class PlainTextParserDefinition implements ParserDefinition {
     return PsiUtilCore.NULL_PSI_ELEMENT;
   }
 
+  @Nonnull
   @Override
-  public PsiFile createFile(FileViewProvider viewProvider) {
+  public PsiFile createFile(@Nonnull FileViewProvider viewProvider) {
     return new PsiPlainTextFileImpl(viewProvider);
   }
 }

@@ -22,7 +22,6 @@ package consulo.language.lexer;
 import consulo.language.ast.IElementType;
 
 public class StoppableLexerAdapter extends DelegateLexer {
-
     public interface StoppingCondition {
         boolean stopsAt(IElementType token, int start, int end);
     }
@@ -50,8 +49,8 @@ public class StoppableLexerAdapter extends DelegateLexer {
 
     public int getPrevTokenEnd() {
         Lexer delegate = getDelegate();
-        return delegate instanceof StoppableLexerAdapter
-            ? ((StoppableLexerAdapter)delegate).getPrevTokenEnd()
+        return delegate instanceof StoppableLexerAdapter stoppableLexerAdapter
+            ? stoppableLexerAdapter.getPrevTokenEnd()
             : ((FilterLexer)delegate).getPrevTokenEnd();
     }
 

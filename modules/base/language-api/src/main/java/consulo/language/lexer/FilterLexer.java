@@ -91,10 +91,9 @@ public class FilterLexer extends DelegateLexer {
             if (tokenType == null) {
                 break;
             }
-            if (myFilter == null || !myFilter.reject(tokenType)) {
-                if (myStateFilter == null || !myStateFilter[delegate.getState()]) {
-                    break;
-                }
+            if ((myFilter == null || !myFilter.reject(tokenType))
+                && (myStateFilter == null || !myStateFilter[delegate.getState()])) {
+                break;
             }
             delegate.advance();
         }

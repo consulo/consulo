@@ -62,8 +62,9 @@ public class SandParsingDefinition extends LanguageVersionableParserDefinition {
     return new ASTWrapperPsiElement(node);
   }
 
+  @Nonnull
   @Override
-  public PsiFile createFile(FileViewProvider viewProvider) {
+  public PsiFile createFile(@Nonnull FileViewProvider viewProvider) {
     return new SandFile(viewProvider);
   }
 }

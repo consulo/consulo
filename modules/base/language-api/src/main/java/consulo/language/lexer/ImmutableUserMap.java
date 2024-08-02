@@ -23,6 +23,7 @@ import jakarta.annotation.Nonnull;
  */
 public abstract class ImmutableUserMap {
     public static final ImmutableUserMap EMPTY = new ImmutableUserMap() {
+        @Override
         public <T> T get(@Nonnull final Key<T> key) {
             return null;
         }
