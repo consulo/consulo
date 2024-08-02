@@ -20,118 +20,128 @@ import consulo.language.ast.IElementType;
 import jakarta.annotation.Nonnull;
 
 public abstract class MergingLexerAdapterBase extends DelegateLexer {
-  private IElementType myTokenType;
-  private int myState;
-  private int myTokenStart;
+    private IElementType myTokenType;
+    private int myState;
+    private int myTokenStart;
 
-  public MergingLexerAdapterBase(final Lexer original){
-    super(original);
-  }
-
-  public abstract MergeFunction getMergeFunction();
-
-  @Override
-  public void start(@Nonnull final CharSequence buffer, final int startOffset, final int endOffset, final int initialState) {
-    super.start(buffer, startOffset, endOffset, initialState);
-    myTokenType = null;
-  }
-
-  @Override
-  public int getState(){
-    if (myTokenType == null) locateToken();
-    return myState;
-  }
-
-  @Override
-  public IElementType getTokenType(){
-    if (myTokenType == null) locateToken();
-    return myTokenType;
-  }
-
-  @Override
-  public int getTokenStart(){
-    if (myTokenType == null) locateToken();
-    return myTokenStart;
-  }
-
-  @Override
-  public int getTokenEnd(){
-    if (myTokenType == null) locateToken();
-    return super.getTokenStart();
-  }
-
-  @Override
-  public void advance(){
-    myTokenType = null;
-  }
-
-  private void locateToken(){
-    if (myTokenType == null){
-      Lexer orig = getDelegate();
-
-      myTokenType = orig.getTokenType();
-      myTokenStart = orig.getTokenStart();
-      myState = orig.getState();
-      if (myTokenType == null) return;
-      orig.advance();
-      myTokenType = getMergeFunction().merge(myTokenType, orig);
+    public MergingLexerAdapterBase(final Lexer original) {
+        super(original);
     }
-  }
 
-  public Lexer getOriginal() {
-    return getDelegate();
-  }
-
-  @Override
-  public void restore(@Nonnull LexerPosition position) {
-    MyLexerPosition pos = (MyLexerPosition)position;
-
-    getDelegate().restore(pos.getOriginalPosition());
-    myTokenType = pos.getType();
-    myTokenStart = pos.getOffset();
-    myState = pos.getOldState();
-  }
-
-  @Nonnull
-  @Override
-  public LexerPosition getCurrentPosition() {
-    return new MyLexerPosition(myTokenStart, myTokenType, getDelegate().getCurrentPosition(), myState);
-  }
-
-  private static class MyLexerPosition implements LexerPosition{
-    private final int myOffset;
-    private final IElementType myTokenType;
-    private final LexerPosition myOriginalPosition;
-    private final int myOldState;
-
-    public MyLexerPosition(final int offset, final IElementType tokenType, final LexerPosition originalPosition, int oldState) {
-      myOffset = offset;
-      myTokenType = tokenType;
-      myOriginalPosition = originalPosition;
-      myOldState = oldState;
-    }
+    public abstract MergeFunction getMergeFunction();
 
     @Override
-    public int getOffset() {
-      return myOffset;
+    public void start(@Nonnull final CharSequence buffer, final int startOffset, final int endOffset, final int initialState) {
+        super.start(buffer, startOffset, endOffset, initialState);
+        myTokenType = null;
     }
 
     @Override
     public int getState() {
-      return myOriginalPosition.getState();
+        if (myTokenType == null) {
+            locateToken();
+        }
+        return myState;
     }
 
-    public IElementType getType() {
-      return myTokenType;
+    @Override
+    public IElementType getTokenType() {
+        if (myTokenType == null) {
+            locateToken();
+        }
+        return myTokenType;
     }
 
-    public LexerPosition getOriginalPosition() {
-      return myOriginalPosition;
+    @Override
+    public int getTokenStart() {
+        if (myTokenType == null) {
+            locateToken();
+        }
+        return myTokenStart;
     }
 
-    public int getOldState() {
-      return myOldState;
+    @Override
+    public int getTokenEnd() {
+        if (myTokenType == null) {
+            locateToken();
+        }
+        return super.getTokenStart();
     }
-  }
+
+    @Override
+    public void advance() {
+        myTokenType = null;
+    }
+
+    private void locateToken() {
+        if (myTokenType == null) {
+            Lexer orig = getDelegate();
+
+            myTokenType = orig.getTokenType();
+            myTokenStart = orig.getTokenStart();
+            myState = orig.getState();
+            if (myTokenType == null) {
+                return;
+            }
+            orig.advance();
+            myTokenType = getMergeFunction().merge(myTokenType, orig);
+        }
+    }
+
+    public Lexer getOriginal() {
+        return getDelegate();
+    }
+
+    @Override
+    public void restore(@Nonnull LexerPosition position) {
+        MyLexerPosition pos = (MyLexerPosition)position;
+
+        getDelegate().restore(pos.getOriginalPosition());
+        myTokenType = pos.getType();
+        myTokenStart = pos.getOffset();
+        myState = pos.getOldState();
+    }
+
+    @Nonnull
+    @Override
+    public LexerPosition getCurrentPosition() {
+        return new MyLexerPosition(myTokenStart, myTokenType, getDelegate().getCurrentPosition(), myState);
+    }
+
+    private static class MyLexerPosition implements LexerPosition {
+        private final int myOffset;
+        private final IElementType myTokenType;
+        private final LexerPosition myOriginalPosition;
+        private final int myOldState;
+
+        public MyLexerPosition(final int offset, final IElementType tokenType, final LexerPosition originalPosition, int oldState) {
+            myOffset = offset;
+            myTokenType = tokenType;
+            myOriginalPosition = originalPosition;
+            myOldState = oldState;
+        }
+
+        @Override
+        public int getOffset() {
+            return myOffset;
+        }
+
+        @Override
+        public int getState() {
+            return myOriginalPosition.getState();
+        }
+
+        public IElementType getType() {
+            return myTokenType;
+        }
+
+        public LexerPosition getOriginalPosition() {
+            return myOriginalPosition;
+        }
+
+        public int getOldState() {
+            return myOldState;
+        }
+    }
 
 }

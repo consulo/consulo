@@ -18,6 +18,7 @@ package consulo.language.parser;
 import consulo.language.ast.IElementType;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.List;
 
 /**
@@ -28,38 +29,37 @@ import java.util.List;
  * @see PsiBuilder.Marker#setCustomEdgeTokenBinders(WhitespacesAndCommentsBinder, WhitespacesAndCommentsBinder)
  */
 public interface WhitespacesAndCommentsBinder {
-  /**
-   * Provides an ability for the processor to get a text of any of given tokens.
-   */
-  interface TokenTextGetter {
-    @Nonnull
-    CharSequence get(int i);
-  }
+    /**
+     * Provides an ability for the processor to get a text of any of given tokens.
+     */
+    interface TokenTextGetter {
+        @Nonnull
+        CharSequence get(int i);
+    }
 
-  /**
-   * Recursive binder is allowed to adjust nested elements positions.
-   */
-  interface RecursiveBinder extends WhitespacesAndCommentsBinder {
+    /**
+     * Recursive binder is allowed to adjust nested elements positions.
+     */
+    interface RecursiveBinder extends WhitespacesAndCommentsBinder {
+    }
 
-  }
-
-  /**
-   * <p>Analyzes whitespace and comment tokens at element's edge and returns element's edge position relative to these tokens.
-   * Value returned by left edge processor will be used as a pointer to a first token of element.
-   * Value returned by right edge processor will be used as a pointer to a token next of element's last token.
-   * <p/>
-   * <p>Example 1: if a processor for left edge wants to leave all whitespaces and comments out of element's scope
-   * (before it's start) it should return value of <code>tokens.size()</code> placing element's start pointer to a first
-   * token after series of whitespaces/comments.
-   * <p/>
-   * <p>Example 2: if a processor for right edge wants to leave all whitespaces and comments out of element's scope
-   * (after it's end) it should return value of <code>0</code> placing element's end pointer to a first
-   * whitespace or comment after element's end.
-   *
-   * @param tokens sequence of whitespace and comment tokens at the element's edge.
-   * @param atStreamEdge true if sequence of tokens is located at the beginning or the end of token stream.
-   * @param getter token text getter.
-   * @return position of element's edge relative to given tokens.
-   */
-  int getEdgePosition(List<IElementType> tokens, boolean atStreamEdge, TokenTextGetter getter);
+    /**
+     * <p>Analyzes whitespace and comment tokens at element's edge and returns element's edge position relative to these tokens.
+     * Value returned by left edge processor will be used as a pointer to a first token of element.
+     * Value returned by right edge processor will be used as a pointer to a token next of element's last token.
+     * <p/>
+     * <p>Example 1: if a processor for left edge wants to leave all whitespaces and comments out of element's scope
+     * (before it's start) it should return value of <code>tokens.size()</code> placing element's start pointer to a first
+     * token after series of whitespaces/comments.
+     * <p/>
+     * <p>Example 2: if a processor for right edge wants to leave all whitespaces and comments out of element's scope
+     * (after it's end) it should return value of <code>0</code> placing element's end pointer to a first
+     * whitespace or comment after element's end.
+     *
+     * @param tokens       sequence of whitespace and comment tokens at the element's edge.
+     * @param atStreamEdge true if sequence of tokens is located at the beginning or the end of token stream.
+     * @param getter       token text getter.
+     * @return position of element's edge relative to given tokens.
+     */
+    int getEdgePosition(List<IElementType> tokens, boolean atStreamEdge, TokenTextGetter getter);
 }

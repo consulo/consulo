@@ -21,13 +21,14 @@ import consulo.language.util.CharTable;
  * @author max
  */
 public class LexerUtil {
-  private LexerUtil() {}
+    private LexerUtil() {
+    }
 
-  public static CharSequence getTokenText(Lexer lexer) {
-    return lexer.getBufferSequence().subSequence(lexer.getTokenStart(), lexer.getTokenEnd());
-  }
+    public static CharSequence getTokenText(Lexer lexer) {
+        return lexer.getBufferSequence().subSequence(lexer.getTokenStart(), lexer.getTokenEnd());
+    }
 
-  public static CharSequence internToken(Lexer lexer, CharTable table) {
-    return table.intern(getTokenText(lexer));
-  }
+    public static CharSequence internToken(Lexer lexer, CharTable table) {
+        return table.intern(getTokenText(lexer));
+    }
 }

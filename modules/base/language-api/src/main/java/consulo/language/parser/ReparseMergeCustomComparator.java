@@ -26,6 +26,6 @@ import jakarta.annotation.Nonnull;
  * Comparator which called during reparse when merge algorithm is not sure what to merge
  */
 public interface ReparseMergeCustomComparator {
-  @Nonnull
-  ThreeState compare(@Nonnull ASTNode node, LighterASTNode lighterASTNode, FlyweightCapableTreeStructure<LighterASTNode> structure);
+    @Nonnull
+    ThreeState compare(@Nonnull ASTNode node, LighterASTNode lighterASTNode, FlyweightCapableTreeStructure<LighterASTNode> structure);
 }

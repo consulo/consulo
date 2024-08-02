@@ -22,5 +22,5 @@ package consulo.language.parser;
 import consulo.language.ast.IElementType;
 
 public interface WhitespaceSkippedCallback {
-  void onSkip(IElementType type, int start, int end);
+    void onSkip(IElementType type, int start, int end);
 }

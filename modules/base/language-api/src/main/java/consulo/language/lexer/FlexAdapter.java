@@ -26,81 +26,93 @@ import java.io.IOException;
 @Deprecated
 @DeprecationInfo(value = "Please regenerate lexer with new skeleton, avoid using IDEA jflex skeleton")
 public class FlexAdapter extends LexerBase {
-  private FlexLexer myFlex = null;
-  private IElementType myTokenType = null;
-  private CharSequence myText;
+    private FlexLexer myFlex = null;
+    private IElementType myTokenType = null;
+    private CharSequence myText;
 
-  private int myEnd;
-  private int myState;
+    private int myEnd;
+    private int myState;
 
-  public FlexAdapter(final FlexLexer flex) {
-    myFlex = flex;
-  }
-
-  public FlexLexer getFlex() {
-    return myFlex;
-  }
-
-  @Override
-  public void start(final CharSequence buffer, int startOffset, int endOffset, final int initialState) {
-    myText = buffer;
-    myEnd = endOffset;
-    myFlex.reset(myText, startOffset, endOffset, initialState);    
-    myTokenType = null;
-  }
-
-  @Override
-  public int getState() {
-    if (myTokenType == null) locateToken();
-    return myState;
-  }
-
-  @Override
-  public IElementType getTokenType() {
-    if (myTokenType == null) locateToken();
-    return myTokenType;
-  }
-
-  @Override
-  public int getTokenStart() {
-    if (myTokenType == null) locateToken();
-    return myFlex.getTokenStart();
-  }
-
-  @Override
-  public int getTokenEnd() {
-    if (myTokenType == null) locateToken();
-    return myFlex.getTokenEnd();
-  }
-
-  @Override
-  public void advance() {
-    if (myTokenType == null) locateToken();
-    myTokenType = null;
-  }
-
-  @Override
-  public CharSequence getBufferSequence() {
-    return myText;
-  }
-
-  @Override
-  public int getBufferEnd() {
-    return myEnd;
-  }
-
-  private void locateToken() {
-    if (myTokenType != null) return;
-    try {
-      myState = myFlex.yystate();
-      myTokenType = myFlex.advance();
+    public FlexAdapter(final FlexLexer flex) {
+        myFlex = flex;
     }
-    catch (IOException e) { /*Can't happen*/ }
-    catch (Error e) {
-      // add lexer class name to the error
-      final Error error = new Error(myFlex.getClass().getName() + ": " + e.getMessage());
-      error.setStackTrace(e.getStackTrace());
-      throw error;
+
+    public FlexLexer getFlex() {
+        return myFlex;
     }
-  }
+
+    @Override
+    public void start(final CharSequence buffer, int startOffset, int endOffset, final int initialState) {
+        myText = buffer;
+        myEnd = endOffset;
+        myFlex.reset(myText, startOffset, endOffset, initialState);
+        myTokenType = null;
+    }
+
+    @Override
+    public int getState() {
+        if (myTokenType == null) {
+            locateToken();
+        }
+        return myState;
+    }
+
+    @Override
+    public IElementType getTokenType() {
+        if (myTokenType == null) {
+            locateToken();
+        }
+        return myTokenType;
+    }
+
+    @Override
+    public int getTokenStart() {
+        if (myTokenType == null) {
+            locateToken();
+        }
+        return myFlex.getTokenStart();
+    }
+
+    @Override
+    public int getTokenEnd() {
+        if (myTokenType == null) {
+            locateToken();
+        }
+        return myFlex.getTokenEnd();
+    }
+
+    @Override
+    public void advance() {
+        if (myTokenType == null) {
+            locateToken();
+        }
+        myTokenType = null;
+    }
+
+    @Override
+    public CharSequence getBufferSequence() {
+        return myText;
+    }
+
+    @Override
+    public int getBufferEnd() {
+        return myEnd;
+    }
+
+    private void locateToken() {
+        if (myTokenType != null) {
+            return;
+        }
+        try {
+            myState = myFlex.yystate();
+            myTokenType = myFlex.advance();
+        }
+        catch (IOException e) { /*Can't happen*/ }
+        catch (Error e) {
+            // add lexer class name to the error
+            final Error error = new Error(myFlex.getClass().getName() + ": " + e.getMessage());
+            error.setStackTrace(e.getStackTrace());
+            throw error;
+        }
+    }
 }

@@ -26,15 +26,15 @@ import java.io.IOException;
 @Deprecated
 @DeprecationInfo(value = "Please regenerate lexer with new skeleton, avoid using IDEA jflex skeleton")
 public interface FlexLexer {
-  void yybegin(int state);
+    void yybegin(int state);
 
-  int yystate();
+    int yystate();
 
-  int getTokenStart();
+    int getTokenStart();
 
-  int getTokenEnd();
+    int getTokenEnd();
 
-  IElementType advance() throws IOException;
+    IElementType advance() throws IOException;
 
-  void reset(CharSequence buf, int start, int end, int initialState);
+    void reset(CharSequence buf, int start, int end, int initialState);
 }

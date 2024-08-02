@@ -28,18 +28,17 @@ import jakarta.annotation.Nonnull;
  * @see ParserDefinition#createParser(LanguageVersion)
  */
 public interface PsiParser {
-  /**
-   * Parses the contents of the specified PSI builder and returns an AST tree with the
-   * specified type of root element. The PSI builder contents is the entire file
-   * or (if chameleon tokens are used) the text of a chameleon token which needs to
-   * be reparsed.
-   *
-   *
-   * @param root    the type of the root element in the AST tree.
-   * @param builder the builder which is used to retrieve the original file tokens and build the AST tree.
-   * @param languageVersion
-   * @return the root of the resulting AST tree.
-   */
-  @Nonnull
-  ASTNode parse(@Nonnull IElementType root, @Nonnull PsiBuilder builder, @Nonnull LanguageVersion languageVersion);
+    /**
+     * Parses the contents of the specified PSI builder and returns an AST tree with the
+     * specified type of root element. The PSI builder contents is the entire file
+     * or (if chameleon tokens are used) the text of a chameleon token which needs to
+     * be reparsed.
+     *
+     * @param root            the type of the root element in the AST tree.
+     * @param builder         the builder which is used to retrieve the original file tokens and build the AST tree.
+     * @param languageVersion
+     * @return the root of the resulting AST tree.
+     */
+    @Nonnull
+    ASTNode parse(@Nonnull IElementType root, @Nonnull PsiBuilder builder, @Nonnull LanguageVersion languageVersion);
 }

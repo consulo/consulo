@@ -34,35 +34,49 @@ import jakarta.annotation.Nullable;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class PsiBuilderFactory {
-  public static PsiBuilderFactory getInstance() {
-    return Application.get().getInstance(PsiBuilderFactory.class);
-  }
+    public static PsiBuilderFactory getInstance() {
+        return Application.get().getInstance(PsiBuilderFactory.class);
+    }
 
-  @Nonnull
-  public abstract PsiBuilder createBuilder(@Nonnull Project project, @Nonnull ASTNode chameleon, @Nonnull LanguageVersion languageVersion);
+    @Nonnull
+    public abstract PsiBuilder createBuilder(
+        @Nonnull Project project,
+        @Nonnull ASTNode chameleon,
+        @Nonnull LanguageVersion languageVersion
+    );
 
-  @Nonnull
-  public abstract PsiBuilder createBuilder(@Nonnull Project project, @Nonnull LighterLazyParseableNode chameleon, @Nonnull LanguageVersion languageVersion);
+    @Nonnull
+    public abstract PsiBuilder createBuilder(
+        @Nonnull Project project,
+        @Nonnull LighterLazyParseableNode chameleon,
+        @Nonnull LanguageVersion languageVersion
+    );
 
-  @Nonnull
-  public abstract PsiBuilder createBuilder(@Nonnull Project project,
-                                           @Nonnull ASTNode chameleon,
-                                           @Nullable Lexer lexer,
-                                           @Nonnull Language lang,
-                                           @Nonnull LanguageVersion languageVersion,
-                                           @Nonnull CharSequence seq);
+    @Nonnull
+    public abstract PsiBuilder createBuilder(
+        @Nonnull Project project,
+        @Nonnull ASTNode chameleon,
+        @Nullable Lexer lexer,
+        @Nonnull Language lang,
+        @Nonnull LanguageVersion languageVersion,
+        @Nonnull CharSequence seq
+    );
 
-  @Nonnull
-  public abstract PsiBuilder createBuilder(@Nonnull Project project,
-                                           @Nonnull LighterLazyParseableNode chameleon,
-                                           @Nullable Lexer lexer,
-                                           @Nonnull Language lang,
-                                           @Nonnull LanguageVersion languageVersion,
-                                           @Nonnull CharSequence seq);
+    @Nonnull
+    public abstract PsiBuilder createBuilder(
+        @Nonnull Project project,
+        @Nonnull LighterLazyParseableNode chameleon,
+        @Nullable Lexer lexer,
+        @Nonnull Language lang,
+        @Nonnull LanguageVersion languageVersion,
+        @Nonnull CharSequence seq
+    );
 
-  @Nonnull
-  public abstract PsiBuilder createBuilder(@Nonnull ParserDefinition parserDefinition,
-                                           @Nonnull Lexer lexer,
-                                           @Nonnull LanguageVersion languageVersion,
-                                           @Nonnull CharSequence seq);
+    @Nonnull
+    public abstract PsiBuilder createBuilder(
+        @Nonnull ParserDefinition parserDefinition,
+        @Nonnull Lexer lexer,
+        @Nonnull LanguageVersion languageVersion,
+        @Nonnull CharSequence seq
+    );
 }
