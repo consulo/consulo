@@ -540,6 +540,10 @@
       <groupId>com.vaadin</groupId>
       <artifactId>vaadin-tabs-flow</artifactId>
     </dependency>
+    <dependency>
+      <groupId>it.unimi.dsi</groupId>
+      <artifactId>fastutil</artifactId>
+    </dependency>
   </dependencies>
 
   <build>

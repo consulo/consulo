@@ -1,10 +1,10 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
-package consulo.versionControlSystem.impl.internal.util;
+package consulo.versionControlSystem.internal;
 
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 
-final class FilePathHashUtil {
+public class FilePathHashUtil {
   public static int pathHashCode(boolean caseSensitive, @Nonnull String path) {
     return pathHashCode(caseSensitive, path, 0, path.length(), 0);
   }

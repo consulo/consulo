@@ -8,6 +8,7 @@ import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
 import consulo.util.lang.StringUtil;
+import consulo.versionControlSystem.internal.FilePathHashUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

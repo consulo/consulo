@@ -464,5 +464,9 @@
       <groupId>com.helger</groupId>
       <artifactId>ph-css</artifactId>
     </dependency>
+    <dependency>
+      <groupId>it.unimi.dsi</groupId>
+      <artifactId>fastutil</artifactId>
+    </dependency>
   </dependencies>
 </project>
