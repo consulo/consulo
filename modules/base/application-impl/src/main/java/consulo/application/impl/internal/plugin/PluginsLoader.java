@@ -523,7 +523,10 @@ public class PluginsLoader {
       }
 
       if (pluginDescriptor instanceof PluginDescriptorImpl) {
-        result.add((pluginDescriptor).getModuleLayer());
+          ModuleLayer moduleLayer = pluginDescriptor.getModuleLayer();
+          if (moduleLayer != null) {
+              result.add(moduleLayer);
+          }
       }
     }
     return result;
