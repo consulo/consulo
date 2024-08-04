@@ -448,10 +448,15 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
     @Nonnull
     @Override
     public AsyncResult<Project> openProjectAsync(@Nonnull VirtualFile file, @Nonnull UIAccess uiAccess) {
+        for (Project project : getOpenProjects()) {
+            if (ProjectUtil.isSameProject(file.getPath(), project)) {
+                uiAccess.give(() -> ProjectWindowFocuser.getInstance(project).focusProjectWindow(false));
+                return AsyncResult.rejected("Already Opened Project");
+            }
+        }
+
         AsyncResult<Project> projectAsyncResult = AsyncResult.undefined();
-        Task.Backgroundable.queue(null, "Preparing project...", canCancelProjectLoading(), (indicator) -> {
-            tryInitProjectByPath(projectAsyncResult, file, uiAccess);
-        });
+        initAndLoadProjectAsync(projectAsyncResult, file, uiAccess);
         return projectAsyncResult;
     }
 
@@ -540,18 +545,10 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
         return mainResult;
     }
 
-    private void tryInitProjectByPath(AsyncResult<Project> projectAsyncResult,
-                                      VirtualFile path,
-                                      UIAccess uiAccess) {
+    private void initAndLoadProjectAsync(AsyncResult<Project> projectAsyncResult,
+                                         VirtualFile path,
+                                         UIAccess uiAccess) {
         final ProjectImpl project = createProject(null, toCanonicalName(path.getPath()), true);
-
-        for (Project p : getOpenProjects()) {
-            if (ProjectUtil.isSameProject(path.getPath(), p)) {
-                uiAccess.give(() -> ProjectWindowFocuser.getInstance(project).focusProjectWindow(false));
-                closeAndDisposeAsync(project, uiAccess).doWhenProcessed(() -> projectAsyncResult.reject("Already opened project"));
-                return;
-            }
-        }
 
         loadProjectAsync(project, projectAsyncResult, true, uiAccess);
     }
@@ -560,7 +557,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
                                   AsyncResult<Project> projectAsyncResult,
                                   boolean init,
                                   UIAccess uiAccess) {
-        Task.Backgroundable.queue(project, ProjectLocalize.projectLoadProgress().get(), canCancelProjectLoading(), progressIndicator -> {
+        Task.Modal.queue(project, ProjectLocalize.projectLoadProgress().get(), canCancelProjectLoading(), progressIndicator -> {
             progressIndicator.setIndeterminate(true);
 
             try {
@@ -597,7 +594,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
                                              AsyncResult<Project> projectAsyncResult) {
         AsyncResult<Void> result = AsyncResult.undefined();
 
-        Task.Backgroundable.queue(project, "Loading modules...", canCancelProjectLoading(), indicator -> {
+        Task.Modal.queue(project, "Loading modules...", canCancelProjectLoading(), indicator -> {
             ModuleManagerComponent moduleManager = (ModuleManagerComponent) ModuleManager.getInstance(project);
 
             try {
@@ -620,7 +617,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
     private void prepareProjectWorkspace(Project project,
                                          UIAccess uiAccess,
                                          AsyncResult<Project> projectAsyncResult) {
-        Task.Backgroundable.queue(project, "Preparing workspace...", canCancelProjectLoading(), progressIndicator -> {
+        Task.Modal.queue(project, "Preparing workspace...", canCancelProjectLoading(), progressIndicator -> {
             progressIndicator.setIndeterminate(true);
 
             try {

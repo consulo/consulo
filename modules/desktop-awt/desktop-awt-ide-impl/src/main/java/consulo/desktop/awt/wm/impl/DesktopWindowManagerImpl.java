@@ -568,7 +568,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
   }
 
   public void showFrame() {
-    final DesktopIdeFrameImpl frame = new DesktopIdeFrameImpl(myActionManager, myDataManager, ApplicationManager.getApplication());
+    final DesktopIdeFrameImpl frame = new DesktopIdeFrameImpl(myActionManager, myDataManager, myApplication);
     myProject2Frame.put(null, frame);
 
     if (myFrameBounds == null || !ScreenUtil.isVisible(myFrameBounds)) { //avoid situations when IdeFrame is out of all screens
