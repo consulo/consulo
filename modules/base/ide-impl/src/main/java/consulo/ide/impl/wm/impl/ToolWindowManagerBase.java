@@ -207,6 +207,8 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
   protected void uninstallFocusWatcher(String id) {
   }
 
+  public abstract void initializeUI();
+
   @RequiredUIAccess
   protected abstract void initializeEditorComponent();
 
@@ -321,6 +323,18 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
         unregisterToolWindow(factory.getId());
       }
     }
+  }
+
+  @RequiredUIAccess
+  public void activateOnProjectOpening() {
+      for (ToolWindowFactory factory : myProject.getApplication().getExtensionPoint(ToolWindowFactory.class).getExtensionList()) {
+          if (factory.activateOnProjectOpening() && isToolWindowRegistered(factory.getId())) {
+              ToolWindow toolWindow = getToolWindow(factory.getId());
+              if (toolWindow != null && !toolWindow.isActive()) {
+                  toolWindow.activate(null);
+              }
+          }
+      }
   }
 
   public boolean isToolWindowRegistered(String id) {

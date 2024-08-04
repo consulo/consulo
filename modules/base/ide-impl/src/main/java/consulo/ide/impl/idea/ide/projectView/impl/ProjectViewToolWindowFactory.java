@@ -71,4 +71,9 @@ public class ProjectViewToolWindowFactory implements ToolWindowFactory, DumbAwar
   public LocalizeValue getDisplayName() {
     return LocalizeValue.localizeTODO("Project");
   }
+
+    @Override
+    public boolean activateOnProjectOpening() {
+        return true;
+    }
 }

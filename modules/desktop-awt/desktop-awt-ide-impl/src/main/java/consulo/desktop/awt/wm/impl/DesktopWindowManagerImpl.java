@@ -115,12 +115,14 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
   private Rectangle myFrameBounds;
   private int myFrameExtendedState;
   private final WindowAdapter myActivationListener;
-  private final DataManager myDataManager;
+    private final Application myApplication;
+    private final DataManager myDataManager;
   private final ActionManager myActionManager;
 
   @Inject
   public DesktopWindowManagerImpl(Application application, DataManager dataManager, ActionManager actionManager) {
-    myDataManager = dataManager;
+      myApplication = application;
+      myDataManager = dataManager;
     myActionManager = actionManager;
 
     myWindowWatcher = new DesktopWindowWatcher(application, dataManager);
@@ -603,7 +605,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
       jFrame = (JFrame)TargetAWT.to(ideFrame.getWindow());
     }
     else {
-      ideFrame = new DesktopIdeFrameImpl(myActionManager, myDataManager, ApplicationManager.getApplication());
+      ideFrame = new DesktopIdeFrameImpl(myActionManager, myDataManager, myApplication);
 
       jFrame = (JFrame)TargetAWT.to(ideFrame.getWindow());
 

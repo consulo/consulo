@@ -23,34 +23,33 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.fileEditor.FileEditorManager;
-import consulo.project.ui.internal.IdeFrameEx;
-import consulo.ui.ex.internal.ToolWindowEx;
-import consulo.project.ui.internal.WindowManagerEx;
-import consulo.project.ui.internal.WindowInfoImpl;
 import consulo.ide.impl.wm.impl.ToolWindowManagerBase;
 import consulo.ide.impl.wm.impl.UnifiedToolWindowImpl;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.event.ProjectManagerListener;
+import consulo.project.ui.internal.IdeFrameEx;
+import consulo.project.ui.internal.WindowInfoImpl;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.Component;
 import consulo.ui.Label;
 import consulo.ui.NotificationType;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.toolWindow.InternalDecoratorListener;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
 import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
 import consulo.ui.layout.DockLayout;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -60,198 +59,192 @@ import jakarta.annotation.Nullable;
 @ServiceImpl
 @State(name = ToolWindowManagerBase.ID, storages = @Storage(value = StoragePathMacros.WORKSPACE_FILE, roamingType = RoamingType.DISABLED))
 public class DesktopSwtToolWindowManagerImpl extends ToolWindowManagerBase {
-  private IdeFrameEx myFrame;
+    private IdeFrameEx myFrame;
 
-  @Inject
-  public DesktopSwtToolWindowManagerImpl(Project project, Provider<WindowManager> windowManager) {
-    super(project, windowManager);
+    @Inject
+    public DesktopSwtToolWindowManagerImpl(Project project, Provider<WindowManager> windowManager) {
+        super(project, windowManager);
 
-    if (project.isDefault()) {
-      return;
+        if (project.isDefault()) {
+            return;
+        }
+
+        MessageBusConnection busConnection = project.getMessageBus().connect();
+        busConnection.subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
+            @Override
+            public void projectClosed(Project project, UIAccess uiAccess) {
+                if (project == myProject) {
+                    DesktopSwtToolWindowManagerImpl.this.projectClosed();
+                }
+            }
+        });
     }
 
-    MessageBusConnection busConnection = project.getMessageBus().connect();
-    busConnection.subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
-      @Override
-      public void projectOpened(Project project, UIAccess uiAccess) {
-        if (project == myProject) {
-          uiAccess.giveAndWaitIfNeed(DesktopSwtToolWindowManagerImpl.this::projectOpened);
-        }
-      }
+    @Override
+    @RequiredUIAccess
+    public void initializeUI() {
+        WindowManagerEx windowManager = (WindowManagerEx) myWindowManager.get();
 
-      @Override
-      public void projectClosed(Project project, UIAccess uiAccess) {
-        if (project == myProject) {
-          DesktopSwtToolWindowManagerImpl.this.projectClosed();
-        }
-      }
-    });
-  }
+        myFrame = windowManager.getIdeFrame(myProject);
 
-  @RequiredUIAccess
-  private void projectOpened() {
-    WindowManagerEx windowManager = (WindowManagerEx)myWindowManager.get();
+        DesktopSwtToolWindowPanelImpl toolWindowPanel = new DesktopSwtToolWindowPanelImpl();
 
-    myFrame = windowManager.allocateFrame(myProject);
+        myToolWindowPanel = toolWindowPanel;
 
-    DesktopSwtToolWindowPanelImpl toolWindowPanel = new DesktopSwtToolWindowPanelImpl();
+        DesktopSwtRootPaneImpl rootPanel = ((DesktopSwtIdeFrameImpl) myFrame).getRootPanel();
 
-    myToolWindowPanel = toolWindowPanel;
+        rootPanel.setCenterComponent(toolWindowPanel.getComponent());
 
-    DesktopSwtRootPaneImpl rootPanel = ((DesktopSwtIdeFrameImpl)myFrame).getRootPanel();
+        ((DesktopSwtIdeFrameImpl) myFrame).show();
+    }
 
-    rootPanel.setCenterComponent(toolWindowPanel.getComponent());
+    private void projectClosed() {
+        WindowManagerEx windowManager = (WindowManagerEx) myWindowManager.get();
 
-    ((DesktopSwtIdeFrameImpl)myFrame).show();
-  }
+        windowManager.releaseFrame(myFrame);
 
-  private void projectClosed() {
-    WindowManagerEx windowManager = (WindowManagerEx)myWindowManager.get();
+        myFrame = null;
+    }
 
-    windowManager.releaseFrame(myFrame);
+    @RequiredUIAccess
+    @Override
+    protected void initializeEditorComponent() {
+        Component editorComponent = getEditorComponent(myProject);
 
-    myFrame = null;
-  }
+        setEditorComponent(editorComponent);
+    }
 
-  @RequiredUIAccess
-  @Override
-  protected void initializeEditorComponent() {
-    Component editorComponent = getEditorComponent(myProject);
+    private Component getEditorComponent(Project project) {
+        return FileEditorManager.getInstance(project).getUIComponent();
+    }
 
-    setEditorComponent(editorComponent);
-  }
+    @Override
+    @Nonnull
+    @RequiredUIAccess
+    protected Component createInitializingLabel() {
+        Label label = Label.create("Initializing...");
+        DockLayout dock = DockLayout.create();
+        dock.center(label);
+        return label;
+    }
 
-  private Component getEditorComponent(Project project) {
-    return FileEditorManager.getInstance(project).getUIComponent();
-  }
+    @RequiredUIAccess
+    @Override
+    protected void doWhenFirstShown(Object component, Runnable runnable) {
+        UIAccess.get().give(runnable);
+    }
 
-  @Override
-  @Nonnull
-  @RequiredUIAccess
-  protected Component createInitializingLabel() {
-    Label label = Label.create("Initializing...");
-    DockLayout dock = DockLayout.create();
-    dock.center(label);
-    return label;
-  }
+    @Nonnull
+    @Override
+    protected InternalDecoratorListener createInternalDecoratorListener() {
+        return new MyInternalDecoratorListenerBase() {
+            @Override
+            public void resized(@Nonnull ToolWindowInternalDecorator source) {
 
-  @RequiredUIAccess
-  @Override
-  protected void doWhenFirstShown(Object component, Runnable runnable) {
-    UIAccess.get().give(runnable);
-  }
+            }
+        };
+    }
 
-  @Nonnull
-  @Override
-  protected InternalDecoratorListener createInternalDecoratorListener() {
-    return new MyInternalDecoratorListenerBase() {
-      @Override
-      public void resized(@Nonnull ToolWindowInternalDecorator source) {
+    @Nonnull
+    @Override
+    protected ToolWindowStripeButton createStripeButton(ToolWindowInternalDecorator internalDecorator) {
+        return new DesktopSwtToolWindowStripeButtonImpl((DesktopSwtToolWindowInternalDecorator) internalDecorator, (DesktopSwtToolWindowPanelImpl) myToolWindowPanel);
+    }
 
-      }
-    };
-  }
+    @Nonnull
+    @Override
+    protected ToolWindowEx createToolWindow(String id, LocalizeValue displayName, boolean canCloseContent, @Nullable Object component, boolean shouldBeAvailable) {
+        return new UnifiedToolWindowImpl(this, id, displayName, canCloseContent, component, shouldBeAvailable);
+    }
 
-  @Nonnull
-  @Override
-  protected ToolWindowStripeButton createStripeButton(ToolWindowInternalDecorator internalDecorator) {
-    return new DesktopSwtToolWindowStripeButtonImpl((DesktopSwtToolWindowInternalDecorator)internalDecorator, (DesktopSwtToolWindowPanelImpl) myToolWindowPanel);
-  }
+    @Nonnull
+    @Override
+    protected ToolWindowInternalDecorator createInternalDecorator(Project project, @Nonnull WindowInfoImpl info, ToolWindowEx toolWindow, boolean dumbAware) {
+        return new DesktopSwtToolWindowInternalDecorator(project, info, (UnifiedToolWindowImpl) toolWindow, dumbAware);
+    }
 
-  @Nonnull
-  @Override
-  protected ToolWindowEx createToolWindow(String id, LocalizeValue displayName, boolean canCloseContent, @Nullable Object component, boolean shouldBeAvailable) {
-    return new UnifiedToolWindowImpl(this, id, displayName, canCloseContent, component, shouldBeAvailable);
-  }
+    @Override
+    public boolean isUnified() {
+        return true;
+    }
 
-  @Nonnull
-  @Override
-  protected ToolWindowInternalDecorator createInternalDecorator(Project project, @Nonnull WindowInfoImpl info, ToolWindowEx toolWindow, boolean dumbAware) {
-    return new DesktopSwtToolWindowInternalDecorator(project, info, (UnifiedToolWindowImpl)toolWindow, dumbAware);
-  }
+    @RequiredUIAccess
+    @Override
+    protected void requestFocusInToolWindow(String id, boolean forced) {
 
-  @Override
-  public boolean isUnified() {
-    return true;
-  }
+    }
 
-  @RequiredUIAccess
-  @Override
-  protected void requestFocusInToolWindow(String id, boolean forced) {
+    @RequiredUIAccess
+    @Override
+    protected void removeWindowedDecorator(WindowInfoImpl info) {
 
-  }
+    }
 
-  @RequiredUIAccess
-  @Override
-  protected void removeWindowedDecorator(WindowInfoImpl info) {
+    @RequiredUIAccess
+    @Override
+    protected void addFloatingDecorator(ToolWindowInternalDecorator internalDecorator, WindowInfoImpl toBeShownInfo) {
 
-  }
+    }
 
-  @RequiredUIAccess
-  @Override
-  protected void addFloatingDecorator(ToolWindowInternalDecorator internalDecorator, WindowInfoImpl toBeShownInfo) {
+    @RequiredUIAccess
+    @Override
+    protected void addWindowedDecorator(ToolWindowInternalDecorator internalDecorator, WindowInfoImpl toBeShownInfo) {
 
-  }
+    }
 
-  @RequiredUIAccess
-  @Override
-  protected void addWindowedDecorator(ToolWindowInternalDecorator internalDecorator, WindowInfoImpl toBeShownInfo) {
+    @RequiredUIAccess
+    @Override
+    protected void updateToolWindowsPane() {
 
-  }
+    }
 
-  @RequiredUIAccess
-  @Override
-  protected void updateToolWindowsPane() {
+    @RequiredUIAccess
+    @Nullable
+    @Override
+    public Element getStateFromUI() {
+        return new Element("state");
+    }
 
-  }
+    @RequiredWriteAction
+    @Nullable
+    @Override
+    public Element getState(Element element) {
+        return element;
+    }
 
-  @RequiredUIAccess
-  @Nullable
-  @Override
-  public Element getStateFromUI() {
-    return new Element("state");
-  }
+    @Override
+    public boolean canShowNotification(@Nonnull String toolWindowId) {
+        return false;
+    }
 
-  @RequiredWriteAction
-  @Nullable
-  @Override
-  public Element getState(Element element) {
-    return element;
-  }
+    @Override
+    public void activateEditorComponent() {
 
-  @Override
-  public boolean canShowNotification(@Nonnull String toolWindowId) {
-    return false;
-  }
+    }
 
-  @Override
-  public void activateEditorComponent() {
+    @Override
+    public boolean isEditorComponentActive() {
+        return false;
+    }
 
-  }
+    @Override
+    public void notifyByBalloon(@Nonnull String toolWindowId, @Nonnull NotificationType type, @Nonnull String htmlBody) {
 
-  @Override
-  public boolean isEditorComponentActive() {
-    return false;
-  }
+    }
 
-  @Override
-  public void notifyByBalloon(@Nonnull String toolWindowId, @Nonnull NotificationType type, @Nonnull String htmlBody) {
+    @Nullable
+    @Override
+    public Balloon getToolWindowBalloon(String id) {
+        return null;
+    }
 
-  }
+    @Override
+    public boolean isMaximized(@Nonnull ToolWindow wnd) {
+        return false;
+    }
 
-  @Nullable
-  @Override
-  public Balloon getToolWindowBalloon(String id) {
-    return null;
-  }
+    @Override
+    public void setMaximized(@Nonnull ToolWindow wnd, boolean maximized) {
 
-  @Override
-  public boolean isMaximized(@Nonnull ToolWindow wnd) {
-    return false;
-  }
-
-  @Override
-  public void setMaximized(@Nonnull ToolWindow wnd, boolean maximized) {
-
-  }
+    }
 }

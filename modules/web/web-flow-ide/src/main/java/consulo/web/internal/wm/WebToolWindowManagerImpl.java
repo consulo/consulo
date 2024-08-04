@@ -23,7 +23,6 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ide.impl.wm.impl.ToolWindowManagerBase;
 import consulo.ide.impl.wm.impl.UnifiedToolWindowImpl;
 import consulo.localize.LocalizeValue;
@@ -38,6 +37,7 @@ import consulo.ui.Label;
 import consulo.ui.NotificationType;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.toolWindow.InternalDecoratorListener;
 import consulo.ui.ex.toolWindow.ToolWindow;
@@ -63,198 +63,192 @@ import org.jdom.Element;
 @ServiceImpl
 @State(name = ToolWindowManagerBase.ID, storages = @Storage(value = StoragePathMacros.WORKSPACE_FILE, roamingType = RoamingType.DISABLED))
 public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
-  private IdeFrameEx myFrame;
+    private IdeFrameEx myFrame;
 
-  @Inject
-  public WebToolWindowManagerImpl(Project project, Provider<WindowManager> windowManager) {
-    super(project, windowManager);
+    @Inject
+    public WebToolWindowManagerImpl(Project project, Provider<WindowManager> windowManager) {
+        super(project, windowManager);
 
-    if (project.isDefault()) {
-      return;
+        if (project.isDefault()) {
+            return;
+        }
+
+        MessageBusConnection busConnection = project.getMessageBus().connect();
+        busConnection.subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
+            @Override
+            public void projectClosed(Project project, UIAccess uiAccess) {
+                if (project == myProject) {
+                    WebToolWindowManagerImpl.this.projectClosed();
+                }
+            }
+        });
     }
 
-    MessageBusConnection busConnection = project.getMessageBus().connect();
-    busConnection.subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
-      @Override
-      public void projectOpened(Project project, UIAccess uiAccess) {
-        if (project == myProject) {
-          uiAccess.giveAndWaitIfNeed(WebToolWindowManagerImpl.this::projectOpened);
-        }
-      }
+    @Override
+    @RequiredUIAccess
+    public void initializeUI() {
+        WindowManagerEx windowManager = (WindowManagerEx) myWindowManager.get();
 
-      @Override
-      public void projectClosed(Project project, UIAccess uiAccess) {
-        if (project == myProject) {
-          WebToolWindowManagerImpl.this.projectClosed();
-        }
-      }
-    });
-  }
+        myFrame = windowManager.getIdeFrame(myProject);
 
-  @RequiredUIAccess
-  private void projectOpened() {
-    WindowManagerEx windowManager = (WindowManagerEx)myWindowManager.get();
+        WebToolWindowPanelImpl toolWindowPanel = new WebToolWindowPanelImpl();
 
-    myFrame = windowManager.allocateFrame(myProject);
+        myToolWindowPanel = toolWindowPanel;
 
-    WebToolWindowPanelImpl toolWindowPanel = new WebToolWindowPanelImpl();
+        WebRootPaneImpl rootPanel = ((WebIdeFrameImpl) myFrame).getRootPanel();
 
-    myToolWindowPanel = toolWindowPanel;
+        rootPanel.setCenterComponent(toolWindowPanel);
 
-    WebRootPaneImpl rootPanel = ((WebIdeFrameImpl)myFrame).getRootPanel();
+        ((WebIdeFrameImpl) myFrame).show();
+    }
 
-    rootPanel.setCenterComponent(toolWindowPanel);
+    private void projectClosed() {
+        WindowManagerEx windowManager = (WindowManagerEx) myWindowManager.get();
 
-    ((WebIdeFrameImpl)myFrame).show();
-  }
+        windowManager.releaseFrame(myFrame);
 
-  private void projectClosed() {
-    WindowManagerEx windowManager = (WindowManagerEx)myWindowManager.get();
+        myFrame = null;
+    }
 
-    windowManager.releaseFrame(myFrame);
+    @RequiredUIAccess
+    @Override
+    protected void initializeEditorComponent() {
+        Component editorComponent = getEditorComponent(myProject);
 
-    myFrame = null;
-  }
+        setEditorComponent(editorComponent);
+    }
 
-  @RequiredUIAccess
-  @Override
-  protected void initializeEditorComponent() {
-    Component editorComponent = getEditorComponent(myProject);
+    private Component getEditorComponent(Project project) {
+        return FileEditorManagerEx.getInstanceEx(project).getUIComponent();
+    }
 
-    setEditorComponent(editorComponent);
-  }
+    @Override
+    @Nonnull
+    @RequiredUIAccess
+    protected Component createInitializingLabel() {
+        Label label = Label.create("Initializing...");
+        DockLayout dock = DockLayout.create();
+        dock.center(label);
+        return label;
+    }
 
-  private Component getEditorComponent(Project project) {
-    return FileEditorManagerEx.getInstanceEx(project).getUIComponent();
-  }
+    @RequiredUIAccess
+    @Override
+    protected void doWhenFirstShown(Object component, Runnable runnable) {
+        UIAccess.get().give(runnable);
+    }
 
-  @Override
-  @Nonnull
-  @RequiredUIAccess
-  protected Component createInitializingLabel() {
-    Label label = Label.create("Initializing...");
-    DockLayout dock = DockLayout.create();
-    dock.center(label);
-    return label;
-  }
+    @Nonnull
+    @Override
+    protected InternalDecoratorListener createInternalDecoratorListener() {
+        return new MyInternalDecoratorListenerBase() {
+            @Override
+            public void resized(@Nonnull ToolWindowInternalDecorator source) {
 
-  @RequiredUIAccess
-  @Override
-  protected void doWhenFirstShown(Object component, Runnable runnable) {
-    UIAccess.get().give(runnable);
-  }
+            }
+        };
+    }
 
-  @Nonnull
-  @Override
-  protected InternalDecoratorListener createInternalDecoratorListener() {
-    return new MyInternalDecoratorListenerBase() {
-      @Override
-      public void resized(@Nonnull ToolWindowInternalDecorator source) {
+    @Nonnull
+    @Override
+    protected ToolWindowStripeButton createStripeButton(ToolWindowInternalDecorator internalDecorator) {
+        return new WebToolWindowStripeButtonImpl((WebToolWindowInternalDecorator) internalDecorator, (WebToolWindowPanelImpl) myToolWindowPanel);
+    }
 
-      }
-    };
-  }
+    @Nonnull
+    @Override
+    protected ToolWindowEx createToolWindow(String id, LocalizeValue displayName, boolean canCloseContent, @Nullable Object component, boolean shouldBeAvailable) {
+        return new UnifiedToolWindowImpl(this, id, displayName, canCloseContent, component, shouldBeAvailable);
+    }
 
-  @Nonnull
-  @Override
-  protected ToolWindowStripeButton createStripeButton(ToolWindowInternalDecorator internalDecorator) {
-    return new WebToolWindowStripeButtonImpl((WebToolWindowInternalDecorator)internalDecorator, (WebToolWindowPanelImpl)myToolWindowPanel);
-  }
+    @Nonnull
+    @Override
+    protected ToolWindowInternalDecorator createInternalDecorator(Project project, @Nonnull WindowInfoImpl info, ToolWindowEx toolWindow, boolean dumbAware) {
+        return new WebToolWindowInternalDecorator(project, info, (UnifiedToolWindowImpl) toolWindow, dumbAware);
+    }
 
-  @Nonnull
-  @Override
-  protected ToolWindowEx createToolWindow(String id, LocalizeValue displayName, boolean canCloseContent, @Nullable Object component, boolean shouldBeAvailable) {
-    return new UnifiedToolWindowImpl(this, id, displayName, canCloseContent, component, shouldBeAvailable);
-  }
+    @Override
+    public boolean isUnified() {
+        return true;
+    }
 
-  @Nonnull
-  @Override
-  protected ToolWindowInternalDecorator createInternalDecorator(Project project, @Nonnull WindowInfoImpl info, ToolWindowEx toolWindow, boolean dumbAware) {
-    return new WebToolWindowInternalDecorator(project, info, (UnifiedToolWindowImpl)toolWindow, dumbAware);
-  }
+    @RequiredUIAccess
+    @Override
+    protected void requestFocusInToolWindow(String id, boolean forced) {
 
-  @Override
-  public boolean isUnified() {
-    return true;
-  }
+    }
 
-  @RequiredUIAccess
-  @Override
-  protected void requestFocusInToolWindow(String id, boolean forced) {
+    @RequiredUIAccess
+    @Override
+    protected void removeWindowedDecorator(WindowInfoImpl info) {
 
-  }
+    }
 
-  @RequiredUIAccess
-  @Override
-  protected void removeWindowedDecorator(WindowInfoImpl info) {
+    @RequiredUIAccess
+    @Override
+    protected void addFloatingDecorator(ToolWindowInternalDecorator internalDecorator, WindowInfoImpl toBeShownInfo) {
 
-  }
+    }
 
-  @RequiredUIAccess
-  @Override
-  protected void addFloatingDecorator(ToolWindowInternalDecorator internalDecorator, WindowInfoImpl toBeShownInfo) {
+    @RequiredUIAccess
+    @Override
+    protected void addWindowedDecorator(ToolWindowInternalDecorator internalDecorator, WindowInfoImpl toBeShownInfo) {
 
-  }
+    }
 
-  @RequiredUIAccess
-  @Override
-  protected void addWindowedDecorator(ToolWindowInternalDecorator internalDecorator, WindowInfoImpl toBeShownInfo) {
+    @RequiredUIAccess
+    @Override
+    protected void updateToolWindowsPane() {
 
-  }
+    }
 
-  @RequiredUIAccess
-  @Override
-  protected void updateToolWindowsPane() {
+    @RequiredUIAccess
+    @Nullable
+    @Override
+    public Element getStateFromUI() {
+        return new Element("state");
+    }
 
-  }
+    @RequiredWriteAction
+    @Nullable
+    @Override
+    public Element getState(Element element) {
+        return element;
+    }
 
-  @RequiredUIAccess
-  @Nullable
-  @Override
-  public Element getStateFromUI() {
-    return new Element("state");
-  }
+    @Override
+    public boolean canShowNotification(@Nonnull String toolWindowId) {
+        return false;
+    }
 
-  @RequiredWriteAction
-  @Nullable
-  @Override
-  public Element getState(Element element) {
-    return element;
-  }
+    @Override
+    public void activateEditorComponent() {
 
-  @Override
-  public boolean canShowNotification(@Nonnull String toolWindowId) {
-    return false;
-  }
+    }
 
-  @Override
-  public void activateEditorComponent() {
+    @Override
+    public boolean isEditorComponentActive() {
+        return false;
+    }
 
-  }
+    @Override
+    public void notifyByBalloon(@Nonnull String toolWindowId, @Nonnull NotificationType type, @Nonnull String htmlBody) {
 
-  @Override
-  public boolean isEditorComponentActive() {
-    return false;
-  }
+    }
 
-  @Override
-  public void notifyByBalloon(@Nonnull String toolWindowId, @Nonnull NotificationType type, @Nonnull String htmlBody) {
+    @Nullable
+    @Override
+    public Balloon getToolWindowBalloon(String id) {
+        return null;
+    }
 
-  }
+    @Override
+    public boolean isMaximized(@Nonnull ToolWindow wnd) {
+        return false;
+    }
 
-  @Nullable
-  @Override
-  public Balloon getToolWindowBalloon(String id) {
-    return null;
-  }
+    @Override
+    public void setMaximized(@Nonnull ToolWindow wnd, boolean maximized) {
 
-  @Override
-  public boolean isMaximized(@Nonnull ToolWindow wnd) {
-    return false;
-  }
-
-  @Override
-  public void setMaximized(@Nonnull ToolWindow wnd, boolean maximized) {
-
-  }
+    }
 }

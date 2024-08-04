@@ -30,19 +30,21 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl(id = "InitToolWindows", order = "first")
 public class InitToolWindowsActivity implements PostStartupActivity, DumbAware {
-  public InitToolWindowsActivity() {
-  }
+    public InitToolWindowsActivity() {
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
-    UIAccess.assetIsNotUIThread();
+    @RequiredUIAccess
+    @Override
+    public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+        UIAccess.assetIsNotUIThread();
 
-    ToolWindowManagerBase manager = (ToolWindowManagerBase)ToolWindowManager.getInstance(project);
+        ToolWindowManagerBase manager = (ToolWindowManagerBase) ToolWindowManager.getInstance(project);
 
-    uiAccess.giveAsync(manager::initializeEditorComponent)
+        uiAccess.giveAsync(manager::initializeUI)
+            .whenCompleteAsync((o, t) -> manager.initializeEditorComponent())
             .whenCompleteAsync((o, t) -> manager.registerToolWindowsFromBeans(uiAccess))
             .whenCompleteAsync((o, t) -> manager.postInitialize(), uiAccess)
-            .whenCompleteAsync((o, t) -> manager.connectModuleExtensionListener(), uiAccess);
-  }
+            .whenCompleteAsync((o, t) -> manager.connectModuleExtensionListener(), uiAccess)
+            .whenCompleteAsync((o, t) -> manager.activateOnProjectOpening(), uiAccess);
+    }
 }

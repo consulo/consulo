@@ -53,6 +53,10 @@ public interface ToolWindowFactory {
   @Nonnull
   LocalizeValue getDisplayName();
 
+  default boolean activateOnProjectOpening() {
+      return false;
+  }
+
   default boolean isSecondary() {
     return false;
   }
