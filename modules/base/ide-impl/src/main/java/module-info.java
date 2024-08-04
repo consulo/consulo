@@ -414,7 +414,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.ide.scratch;
   exports consulo.ide.impl.idea.ide.script;
   exports consulo.ide.impl.idea.ide.startup;
-  exports consulo.ide.impl.idea.ide.startup.impl;
   exports consulo.ide.impl.idea.ide.structureView.impl;
   exports consulo.ide.impl.idea.ide.structureView.newStructureView;
   exports consulo.ide.impl.idea.ide.todo;

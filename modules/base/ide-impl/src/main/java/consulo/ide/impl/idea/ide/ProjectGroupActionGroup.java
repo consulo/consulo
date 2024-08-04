@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide;
 
+import consulo.project.ProjectGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;

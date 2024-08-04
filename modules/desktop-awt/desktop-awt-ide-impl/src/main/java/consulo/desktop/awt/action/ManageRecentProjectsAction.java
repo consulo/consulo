@@ -18,7 +18,7 @@ package consulo.desktop.awt.action;
 import consulo.desktop.awt.welcomeScreen.NewRecentProjectPanel;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.ide.RecentProjectsManager;
+import consulo.project.internal.RecentProjectsManager;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;

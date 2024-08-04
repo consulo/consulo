@@ -38,7 +38,7 @@ import consulo.language.version.LanguageVersion;
 import consulo.logging.Logger;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.project.Project;
-import consulo.language.impl.internal.psi.SingleProjectHolder;
+import consulo.project.internal.SingleProjectHolder;
 import org.jetbrains.annotations.Contract;
 
 import jakarta.annotation.Nonnull;

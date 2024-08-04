@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide;
+package consulo.project.internal;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.ui.ex.action.AnAction;
-import consulo.ide.ServiceManager;
+import consulo.application.Application;
 import consulo.project.Project;
+import consulo.project.ProjectGroup;
+import consulo.ui.ex.action.AnAction;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -30,7 +31,7 @@ import java.util.List;
 public abstract class RecentProjectsManager {
   @Nonnull
   public static RecentProjectsManager getInstance() {
-    return ServiceManager.getService(RecentProjectsManager.class);
+    return Application.get().getInstance(RecentProjectsManager.class);
   }
 
   @Nullable

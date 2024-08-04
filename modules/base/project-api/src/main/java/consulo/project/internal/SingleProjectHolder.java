@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.project.internal;
 
-/*
- * @author max
+import consulo.project.Project;
+
+import jakarta.annotation.Nullable;
+
+/**
+ * @author VISTALL
+ * @since 19/01/2022
  */
-package consulo.application.impl.internal.progress;
+public class SingleProjectHolder {
+  /**
+   * @return the only open project if there is one, null if no or several projects are open
+   */
+  @Nullable
+  public static Project theOnlyOpenProject() {
+    return theProject;
+  }
 
-import jakarta.annotation.Nonnull;
-
-public interface NonCancelableSection {
-  void done();
-
-  @Nonnull
-  NonCancelableSection EMPTY = new NonCancelableSection() {
-    @Override
-    public void done() {
-      // do nothing
-    }
-  };
+  public static volatile Project theProject;
 }

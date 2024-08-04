@@ -25,32 +25,35 @@ import jakarta.annotation.Nullable;
 import java.util.function.Predicate;
 
 public abstract class ProjectManagerEx extends ProjectManager {
-  public static ProjectManagerEx getInstanceEx() {
-    return (ProjectManagerEx)ProjectManager.getInstance();
-  }
+    public static ProjectManagerEx getInstanceEx() {
+        return (ProjectManagerEx) ProjectManager.getInstance();
+    }
 
-  /**
-   * @param dirPath path to directory where .consulo directory is located
-   */
-  @Nullable
-  public abstract Project newProject(final String projectName, @Nonnull String dirPath, boolean useDefaultProjectSettings);
+    /**
+     * @param dirPath path to directory where .consulo directory is located
+     */
+    @Nullable
+    public abstract Project newProject(final String projectName, @Nonnull String dirPath, boolean useDefaultProjectSettings);
 
-  // returns true on success
-  @RequiredUIAccess
-  public abstract boolean closeAndDispose(@Nonnull Project project);
+    // returns true on success
+    @RequiredUIAccess
+    public abstract boolean closeAndDispose(@Nonnull Project project);
 
-  @Nullable
-  @Override
-  public Project createProject(String name, String path) {
-    return newProject(name, path, true);
-  }
+    @Nullable
+    @Override
+    public Project createProject(String name, String path) {
+        return newProject(name, path, true);
+    }
 
-  public abstract boolean canClose(Project project);
+    public abstract boolean canClose(Project project);
 
-  @Nonnull
-  public abstract Disposable registerCloseProjectVeto(@Nonnull Predicate<Project> projectVeto);
+    @RequiredUIAccess
+    public abstract boolean closeProject(@Nonnull final Project project, final boolean save, final boolean dispose, boolean checkCanClose);
 
-  @Nonnull
-  //@ApiStatus.Internal
-  public abstract String[] getAllExcludedUrls();
+    @Nonnull
+    public abstract Disposable registerCloseProjectVeto(@Nonnull Predicate<Project> projectVeto);
+
+    @Nonnull
+    //@ApiStatus.Internal
+    public abstract String[] getAllExcludedUrls();
 }

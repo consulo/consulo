@@ -16,8 +16,6 @@
 
 package consulo.ide.impl.idea.openapi.project;
 
-import org.jetbrains.annotations.NonNls;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -25,18 +23,18 @@ import java.awt.*;
  * @author peter
  */
 public class DumbUnawareHider extends JPanel {
-  @NonNls private static final String CONTENT = "content";
-  @NonNls private static final String EXCUSE = "excuse";
+    private static final String CONTENT = "content";
+    private static final String EXCUSE = "excuse";
 
-  public DumbUnawareHider(JComponent dumbUnawareContent) {
-    super(new CardLayout());
-    add(dumbUnawareContent, CONTENT);
-    final JLabel label = new JLabel("This view is not available until indices are built");
-    label.setHorizontalAlignment(SwingConstants.CENTER);
-    add(label, EXCUSE);
-  }
+    public DumbUnawareHider(JComponent dumbUnawareContent) {
+        super(new CardLayout());
+        add(dumbUnawareContent, CONTENT);
+        final JLabel label = new JLabel("This view is not available until indices are built");
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        add(label, EXCUSE);
+    }
 
-  public void setContentVisible(boolean show) {
-    ((CardLayout)getLayout()).show(this, show ? CONTENT : EXCUSE);
-  }
+    public void setContentVisible(boolean show) {
+        ((CardLayout) getLayout()).show(this, show ? CONTENT : EXCUSE);
+    }
 }

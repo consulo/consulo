@@ -20,7 +20,7 @@
 package consulo.ide.impl.idea.openapi.project;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.language.impl.internal.psi.SingleProjectHolder;
+import consulo.project.internal.SingleProjectHolder;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;

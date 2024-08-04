@@ -23,7 +23,7 @@ import consulo.fileChooser.PathChooserDialog;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.FileEditorProviderManager;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
-import consulo.ide.impl.idea.ide.impl.ProjectUtil;
+import consulo.project.impl.internal.ProjectImplUtil;
 import consulo.ide.impl.idea.openapi.fileChooser.FileElement;
 import consulo.ide.impl.idea.openapi.fileChooser.impl.FileChooserUtil;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider;
@@ -111,7 +111,7 @@ public class OpenFileAction extends AnAction implements DumbAware {
   private static void doOpenFile(@Nullable final Project project, @Nonnull final VirtualFile[] result) {
     for (final VirtualFile file : result) {
       if (file.isDirectory()) {
-        ProjectUtil.openAsync(file.getPath(), project, false, UIAccess.current()).doWhenDone(openedProject -> FileChooserUtil.setLastOpenedFile(openedProject, file));
+        ProjectImplUtil.openAsync(file.getPath(), project, false, UIAccess.current()).doWhenDone(openedProject -> FileChooserUtil.setLastOpenedFile(openedProject, file));
         return;
       }
 
@@ -123,7 +123,7 @@ public class OpenFileAction extends AnAction implements DumbAware {
           Messages.getQuestionIcon()
         );
         if (answer == 0) {
-          ProjectUtil.openAsync(
+          ProjectImplUtil.openAsync(
             file.getPath(),
             project,
             false,

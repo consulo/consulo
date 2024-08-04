@@ -19,7 +19,7 @@ import consulo.application.Application;
 import consulo.application.impl.internal.start.CommandLineArgs;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.container.impl.ShowErrorCaller;
-import consulo.ide.impl.idea.ide.impl.ProjectUtil;
+import consulo.project.impl.internal.ProjectImplUtil;
 import consulo.module.content.ProjectRootManager;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
@@ -68,7 +68,7 @@ public class CommandLineProcessor {
 
     UIAccess uiAccess = Application.get().getLastUIAccess();
     if (projectFile != null) {
-      return ProjectUtil.openAsync(projectFile.getPath(), null, true, uiAccess).doWhenDone(project -> {
+      return ProjectImplUtil.openAsync(projectFile.getPath(), null, true, uiAccess).doWhenDone(project -> {
         if (!FileUtil.filesEqual(projectFile, targetFile) && !targetFile.isDirectory()) {
           final VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(targetFile);
           if (virtualFile != null) {

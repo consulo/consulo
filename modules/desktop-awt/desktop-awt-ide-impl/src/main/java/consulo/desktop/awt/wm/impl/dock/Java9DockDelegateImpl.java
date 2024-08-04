@@ -16,7 +16,7 @@
 package consulo.desktop.awt.wm.impl.dock;
 
 import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.ide.RecentProjectsManager;
+import consulo.project.internal.RecentProjectsManager;
 import consulo.ide.impl.idea.ide.ReopenProjectAction;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;

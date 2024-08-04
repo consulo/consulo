@@ -79,8 +79,6 @@ public class BootstrapClassLoaderUtil {
 
     PluginHolderModificator.initialize(descriptors);
 
-    PluginLoadStatistics.initialize(false);
-
     for (PluginDescriptor pluginDescriptor : PluginHolderModificator.getPlugins()) {
       ServiceLoader<ContainerStartup> loader;
       ModuleLayer moduleLayer = pluginDescriptor.getModuleLayer();

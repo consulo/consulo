@@ -16,30 +16,28 @@
 package consulo.ide.impl.idea.dvcs.ui;
 
 import consulo.application.progress.ProgressManager;
+import consulo.application.ui.FrameStateManager;
+import consulo.application.ui.event.FrameStateListener;
 import consulo.application.util.UserHomeFileUtil;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.versionControlSystem.distributed.DvcsRememberedInputs;
-import consulo.application.ui.event.FrameStateListener;
-import consulo.application.ui.FrameStateManager;
-import consulo.ide.impl.idea.ide.impl.ProjectUtil;
-import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.language.editor.ui.awt.EditorComboBox;
 import consulo.project.Project;
+import consulo.project.util.ProjectUtil;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
+import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.distributed.DvcsBundle;
+import consulo.versionControlSystem.distributed.DvcsRememberedInputs;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -173,11 +171,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
 
     myDirectoryName.getDocument().addDocumentListener(updateOkButtonListener);
 
-    myTestButton.addActionListener(new ActionListener() {
-      public void actionPerformed(final ActionEvent e) {
-        test();
-      }
-    });
+    myTestButton.addActionListener(e -> test());
 
     setOKActionEnabled(false);
     myTestButton.setEnabled(false);

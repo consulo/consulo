@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs.checkout;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.ide.impl.ProjectUtil;
+import consulo.project.impl.internal.ProjectImplUtil;
 import consulo.project.internal.ProjectOpenProcessor;
 import consulo.project.internal.ProjectOpenProcessors;
 import consulo.project.Project;
@@ -45,7 +45,7 @@ public class ProjectImporterCheckoutListener implements PreCheckoutListener {
             int rc = Messages.showYesNoDialog(project, VcsBundle .message("checkout.open.project.prompt", files[0].getPath()),
                                               VcsBundle.message("checkout.title"), Messages.getQuestionIcon());
             if (rc == Messages.YES) {
-              ProjectUtil.openAsync(virtualFile.getPath(), project, false, UIAccess.current());
+              ProjectImplUtil.openAsync(virtualFile.getPath(), project, false, UIAccess.current());
             }
             return true;
           }

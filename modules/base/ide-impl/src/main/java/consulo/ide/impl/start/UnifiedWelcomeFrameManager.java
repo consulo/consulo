@@ -20,7 +20,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.application.FrameTitleUtil;
-import consulo.ide.impl.idea.ide.RecentProjectsManager;
+import consulo.project.internal.RecentProjectsManager;
 import consulo.ide.impl.idea.ide.ReopenProjectAction;
 import consulo.ide.impl.wm.impl.UnifiedWelcomeIdeFrame;
 import consulo.ide.setting.ShowSettingsUtil;

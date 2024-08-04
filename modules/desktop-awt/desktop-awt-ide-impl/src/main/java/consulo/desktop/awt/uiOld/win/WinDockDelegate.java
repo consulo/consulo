@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.uiOld.win;
 
-import consulo.ide.impl.idea.ide.RecentProjectsManager;
+import consulo.project.internal.RecentProjectsManager;
 import consulo.ide.impl.idea.ide.ReopenProjectAction;
 import consulo.application.Application;
 import consulo.application.ApplicationProperties;

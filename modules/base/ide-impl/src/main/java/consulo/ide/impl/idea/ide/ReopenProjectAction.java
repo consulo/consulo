@@ -17,10 +17,11 @@ package consulo.ide.impl.idea.ide;
 
 import consulo.application.dumb.DumbAware;
 import consulo.application.util.UserHomeFileUtil;
-import consulo.ide.impl.idea.ide.impl.ProjectUtil;
+import consulo.project.impl.internal.ProjectImplUtil;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.module.content.layer.ModuleExtensionProvider;
 import consulo.project.Project;
+import consulo.project.internal.RecentProjectsManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
@@ -86,7 +87,7 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
       return;
     }
 
-    ProjectUtil.openAsync(myProjectPath, project, forceOpenInNewFrame, UIAccess.current());
+    ProjectImplUtil.openAsync(myProjectPath, project, forceOpenInNewFrame, UIAccess.current());
   }
 
   public boolean isRemoved() {

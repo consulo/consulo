@@ -19,8 +19,12 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-
+import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.project.ui.wm.IdeFrame;
+import consulo.project.ui.wm.WindowManager;
+import consulo.ui.ex.AppIcon;
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 
 /**
@@ -28,18 +32,38 @@ import javax.swing.*;
  * @since 21-Jul-22
  */
 public class ProjectUIUtil {
-  @Nonnull
-  public static Project guessCurrentProject(JComponent component) {
-    Project project = null;
-    Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
-    if (openProjects.length > 0) project = openProjects[0];
-    if (project == null) {
-      DataContext dataContext = component == null ? DataManager.getInstance().getDataContext() : DataManager.getInstance().getDataContext(component);
-      project = dataContext.getData(Project.KEY);
+    public static void focusProjectWindow(final Project p, boolean executeIfAppInactive) {
+        JFrame f = WindowManager.getInstance().getFrame(p);
+        if (f == null) {
+            return;
+        }
+        
+        if (executeIfAppInactive) {
+            IdeFrame ideFrame = WindowManager.getInstance().getIdeFrame(p);
+            if (ideFrame != null) {
+                AppIcon.getInstance().requestFocus(ideFrame.getWindow());
+            }
+            f.toFront();
+        }
+        else {
+            ProjectIdeFocusManager.getInstance(p).requestFocus(f, true);
+        }
     }
-    if (project == null) {
-      project = ProjectManager.getInstance().getDefaultProject();
+
+    @Nonnull
+    public static Project guessCurrentProject(JComponent component) {
+        Project project = null;
+        Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
+        if (openProjects.length > 0) {
+            project = openProjects[0];
+        }
+        if (project == null) {
+            DataContext dataContext = component == null ? DataManager.getInstance().getDataContext() : DataManager.getInstance().getDataContext(component);
+            project = dataContext.getData(Project.KEY);
+        }
+        if (project == null) {
+            project = ProjectManager.getInstance().getDefaultProject();
+        }
+        return project;
     }
-    return project;
-  }
 }

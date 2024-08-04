@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.ide.actions.runAnything.activity;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.RecentProjectsManager;
+import consulo.project.internal.RecentProjectsManager;
 import consulo.ide.impl.idea.ide.ReopenProjectAction;
 import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingContext;
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItem;

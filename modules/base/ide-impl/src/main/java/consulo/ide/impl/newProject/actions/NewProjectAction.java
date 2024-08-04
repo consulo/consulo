@@ -16,7 +16,7 @@
 package consulo.ide.impl.newProject.actions;
 
 import consulo.application.CommonBundle;
-import consulo.ide.impl.idea.ide.RecentProjectsManager;
+import consulo.project.internal.RecentProjectsManager;
 import consulo.ide.localize.IdeLocalize;
 import consulo.ide.newModule.NewOrImportModuleUtil;
 import consulo.platform.base.localize.CommonLocalize;

@@ -27,7 +27,6 @@ import consulo.disposer.Disposer;
 import consulo.ide.impl.actionSystem.ex.TopApplicationMenuUtil;
 import consulo.ide.impl.application.FrameTitleUtil;
 import consulo.ide.impl.idea.ide.AppLifecycleListener;
-import consulo.ide.impl.idea.ide.impl.ProjectUtil;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.wm.impl.ProjectFrameBounds;
 import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetsActionGroup;
@@ -37,6 +36,7 @@ import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
+import consulo.project.internal.ProjectManagerEx;
 import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.wm.*;
 import consulo.ui.Rectangle2D;
@@ -362,7 +362,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
         final Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
         if (openProjects.length > 1 || openProjects.length == 1 && TopApplicationMenuUtil.isMacSystemMenu) {
           if (myProject != null && myProject.isOpen()) {
-            ProjectUtil.closeAndDispose(myProject);
+              ProjectManagerEx.getInstanceEx().closeAndDispose(myProject);
           }
           ApplicationManager.getApplication().getMessageBus().syncPublisher(AppLifecycleListener.class).projectFrameClosed();
           WelcomeFrame.showIfNoProjectOpened();

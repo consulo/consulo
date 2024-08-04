@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen;
 
-import consulo.ide.impl.idea.ide.ProjectGroup;
-import consulo.ide.impl.idea.ide.RecentProjectsManager;
+import consulo.project.ProjectGroup;
+import consulo.project.internal.RecentProjectsManager;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;

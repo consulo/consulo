@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide;
+package consulo.project;
 
 import consulo.util.lang.StringUtil;
-import java.util.HashSet;
 import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -64,7 +64,7 @@ public class ProjectGroup {
     save(projects);
   }
 
-  protected void save(List<String> projects) {
+  public void save(List<String> projects) {
     myProjectPaths = StringUtil.join(projects, File.pathSeparator);
   }
 

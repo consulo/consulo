@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.moduleImport;
 
-import consulo.ide.impl.idea.ide.impl.ProjectUtil;
+import consulo.project.impl.internal.ProjectImplUtil;
 import consulo.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -147,7 +147,7 @@ public class ImportProjectOpenProcessor extends ProjectOpenProcessor {
               ModuleImportProvider<ModuleImportContext> provider = pair.getSecond();
               AsyncResult<Project> importProjectAsync = NewOrImportModuleUtil.importProject(context, provider);
               importProjectAsync.doWhenDone((newProject) -> {
-                ProjectUtil.updateLastProjectLocation(expectedProjectPath);
+                ProjectImplUtil.updateLastProjectLocation(expectedProjectPath);
 
                 ProjectManager.getInstance().openProjectAsync(newProject, uiAccess).notify(projectResult);
               });

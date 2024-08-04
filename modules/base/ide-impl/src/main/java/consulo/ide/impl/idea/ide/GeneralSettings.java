@@ -37,218 +37,221 @@ import org.intellij.lang.annotations.MagicConstant;
 @ServiceImpl
 @State(name = "GeneralSettings", storages = @Storage("ide.general.xml"))
 public class GeneralSettings implements PersistentStateComponent<GeneralSettings> {
-  public static final String PROP_SUPPORT_SCREEN_READERS = "supportScreenReaders";
-  public static final String PROP_INACTIVE_TIMEOUT = "inactiveTimeout";
+    public static final String PROP_SUPPORT_SCREEN_READERS = "supportScreenReaders";
+    public static final String PROP_INACTIVE_TIMEOUT = "inactiveTimeout";
 
-  private String myBrowserPath;
+    private String myBrowserPath;
 
-  private boolean myShowTipsOnStartup = true;
-  private int myLastTip = 0;
-  private boolean mySupportScreenReaders = false;
-  private boolean myReopenLastProject = true;
-  private boolean mySyncOnFrameActivation = true;
-  private boolean mySaveOnFrameDeactivation = true;
-  private boolean myAutoSaveIfInactive = false;  // If true the IDEA automatically saves files if it is inactive for some seconds
-  private int myInactiveTimeout = 15; // Number of seconds of inactivity after which IDEA automatically saves all files
-  private boolean myUseSafeWrite = true;
-  private final PropertyChangeSupport myPropertyChangeSupport = new PropertyChangeSupport(this);
-  private boolean myUseDefaultBrowser = true;
-  private boolean myConfirmExtractFiles = true;
-  private boolean mySearchInBackground;
-  private boolean myConfirmExit = true;
-  private int myConfirmOpenNewProject = OPEN_PROJECT_ASK;
-  private ProcessCloseConfirmation myProcessCloseConfirmation = ProcessCloseConfirmation.ASK;
+    private boolean myShowTipsOnStartup = true;
+    private int myLastTip = 0;
+    private boolean mySupportScreenReaders = false;
+    private boolean myReopenLastProject = true;
+    private boolean mySyncOnFrameActivation = true;
+    private boolean mySaveOnFrameDeactivation = true;
+    private boolean myAutoSaveIfInactive = false;  // If true the IDEA automatically saves files if it is inactive for some seconds
+    private int myInactiveTimeout = 15; // Number of seconds of inactivity after which IDEA automatically saves all files
+    private boolean myUseSafeWrite = true;
+    private final PropertyChangeSupport myPropertyChangeSupport = new PropertyChangeSupport(this);
+    private boolean myUseDefaultBrowser = true;
+    private boolean myConfirmExtractFiles = true;
+    private boolean mySearchInBackground;
+    private boolean myConfirmExit = true;
+    private int myConfirmOpenNewProject = OPEN_PROJECT_ASK;
+    private ProcessCloseConfirmation myProcessCloseConfirmation = ProcessCloseConfirmation.ASK;
 
-  public static GeneralSettings getInstance() {
-    return ServiceManager.getService(GeneralSettings.class);
-  }
-
-  public void addPropertyChangeListener(PropertyChangeListener listener) {
-    myPropertyChangeSupport.addPropertyChangeListener(listener);
-  }
-
-  public void removePropertyChangeListener(PropertyChangeListener listener) {
-    myPropertyChangeSupport.removePropertyChangeListener(listener);
-  }
-
-  public String getBrowserPathOrDefault() {
-    if (!StringUtil.isEmpty(myBrowserPath)) {
-      return myBrowserPath;
+    public static GeneralSettings getInstance() {
+        return ServiceManager.getService(GeneralSettings.class);
     }
 
-    return BrowserUtil.getDefaultAlternativeBrowserPath();
-  }
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        myPropertyChangeSupport.addPropertyChangeListener(listener);
+    }
 
-  public String getBrowserPath() {
-    return myBrowserPath;
-  }
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        myPropertyChangeSupport.removePropertyChangeListener(listener);
+    }
 
-  public void setBrowserPath(String browserPath) {
-    myBrowserPath = browserPath;
-  }
+    public String getBrowserPathOrDefault() {
+        if (!StringUtil.isEmpty(myBrowserPath)) {
+            return myBrowserPath;
+        }
 
-  @Deprecated
-  public boolean showTipsOnStartup() {
-    return isShowTipsOnStartup();
-  }
+        return BrowserUtil.getDefaultAlternativeBrowserPath();
+    }
 
-  public boolean isShowTipsOnStartup() {
-    return myShowTipsOnStartup;
-  }
+    public String getBrowserPath() {
+        return myBrowserPath;
+    }
 
-  public void setShowTipsOnStartup(boolean b) {
-    myShowTipsOnStartup = b;
-  }
+    public void setBrowserPath(String browserPath) {
+        myBrowserPath = browserPath;
+    }
 
-  public int getLastTip() {
-    return myLastTip;
-  }
+    @Deprecated
+    public boolean showTipsOnStartup() {
+        return isShowTipsOnStartup();
+    }
 
-  public void setLastTip(int i) {
-    myLastTip = i;
-  }
+    public boolean isShowTipsOnStartup() {
+        return myShowTipsOnStartup;
+    }
 
-  public boolean isReopenLastProject() {
-    return myReopenLastProject;
-  }
+    public void setShowTipsOnStartup(boolean b) {
+        myShowTipsOnStartup = b;
+    }
 
-  public void setReopenLastProject(boolean reopenLastProject) {
-    myReopenLastProject = reopenLastProject;
-  }
+    public int getLastTip() {
+        return myLastTip;
+    }
 
-  public boolean isSyncOnFrameActivation() {
-    return mySyncOnFrameActivation;
-  }
+    public void setLastTip(int i) {
+        myLastTip = i;
+    }
 
-  public void setSyncOnFrameActivation(boolean syncOnFrameActivation) {
-    mySyncOnFrameActivation = syncOnFrameActivation;
-  }
+    public boolean isReopenLastProject() {
+        return myReopenLastProject;
+    }
 
-  public boolean isSupportScreenReaders() {
-    return mySupportScreenReaders;
-  }
+    public void setReopenLastProject(boolean reopenLastProject) {
+        myReopenLastProject = reopenLastProject;
+    }
 
-  public void setSupportScreenReaders(boolean enabled) {
-    boolean oldValue = mySupportScreenReaders;
-    mySupportScreenReaders = enabled;
-    myPropertyChangeSupport.firePropertyChange(PROP_SUPPORT_SCREEN_READERS, Boolean.valueOf(oldValue), Boolean.valueOf(enabled));
-  }
+    public boolean isSyncOnFrameActivation() {
+        return mySyncOnFrameActivation;
+    }
 
-  public ProcessCloseConfirmation getProcessCloseConfirmation() {
-    return myProcessCloseConfirmation;
-  }
+    public void setSyncOnFrameActivation(boolean syncOnFrameActivation) {
+        mySyncOnFrameActivation = syncOnFrameActivation;
+    }
 
-  public void setProcessCloseConfirmation(ProcessCloseConfirmation processCloseConfirmation) {
-    myProcessCloseConfirmation = processCloseConfirmation;
-  }
+    public boolean isSupportScreenReaders() {
+        return mySupportScreenReaders;
+    }
 
-  public boolean isSaveOnFrameDeactivation() {
-    return mySaveOnFrameDeactivation;
-  }
+    public void setSupportScreenReaders(boolean enabled) {
+        boolean oldValue = mySupportScreenReaders;
+        mySupportScreenReaders = enabled;
+        myPropertyChangeSupport.firePropertyChange(PROP_SUPPORT_SCREEN_READERS, Boolean.valueOf(oldValue), Boolean.valueOf(enabled));
+    }
 
-  public void setSaveOnFrameDeactivation(boolean saveOnFrameDeactivation) {
-    mySaveOnFrameDeactivation = saveOnFrameDeactivation;
-  }
+    public ProcessCloseConfirmation getProcessCloseConfirmation() {
+        return myProcessCloseConfirmation;
+    }
 
-  /**
-   * @return <code>true</code> if IDEA saves all files after "idle" timeout.
-   */
-  public boolean isAutoSaveIfInactive() {
-    return myAutoSaveIfInactive;
-  }
+    public void setProcessCloseConfirmation(ProcessCloseConfirmation processCloseConfirmation) {
+        myProcessCloseConfirmation = processCloseConfirmation;
+    }
 
-  public void setAutoSaveIfInactive(boolean autoSaveIfInactive) {
-    myAutoSaveIfInactive = autoSaveIfInactive;
-  }
+    public boolean isSaveOnFrameDeactivation() {
+        return mySaveOnFrameDeactivation;
+    }
 
-  /**
-   * @return timeout in seconds after which IDEA saves all files if there was no user activity.
-   * The method always return non positive (more then zero) value.
-   */
-  public int getInactiveTimeout() {
-    return myInactiveTimeout;
-  }
+    public void setSaveOnFrameDeactivation(boolean saveOnFrameDeactivation) {
+        mySaveOnFrameDeactivation = saveOnFrameDeactivation;
+    }
 
-  public void setInactiveTimeout(int inactiveTimeout) {
-    int oldInactiveTimeout = myInactiveTimeout;
+    /**
+     * @return <code>true</code> if IDEA saves all files after "idle" timeout.
+     */
+    public boolean isAutoSaveIfInactive() {
+        return myAutoSaveIfInactive;
+    }
 
-    myInactiveTimeout = inactiveTimeout;
-    myPropertyChangeSupport.firePropertyChange(PROP_INACTIVE_TIMEOUT, Integer.valueOf(oldInactiveTimeout), Integer.valueOf(inactiveTimeout));
-  }
+    public void setAutoSaveIfInactive(boolean autoSaveIfInactive) {
+        myAutoSaveIfInactive = autoSaveIfInactive;
+    }
 
-  public boolean isUseSafeWrite() {
-    return myUseSafeWrite;
-  }
+    /**
+     * @return timeout in seconds after which IDEA saves all files if there was no user activity.
+     * The method always return non positive (more then zero) value.
+     */
+    public int getInactiveTimeout() {
+        return myInactiveTimeout;
+    }
 
-  public void setUseSafeWrite(final boolean useSafeWrite) {
-    myUseSafeWrite = useSafeWrite;
-  }
+    public void setInactiveTimeout(int inactiveTimeout) {
+        int oldInactiveTimeout = myInactiveTimeout;
 
-  @Nullable
-  @Override
-  public GeneralSettings getState() {
-    return this;
-  }
+        myInactiveTimeout = inactiveTimeout;
+        myPropertyChangeSupport.firePropertyChange(PROP_INACTIVE_TIMEOUT, Integer.valueOf(oldInactiveTimeout), Integer.valueOf(inactiveTimeout));
+    }
 
-  @Override
-  public void loadState(GeneralSettings state) {
-    XmlSerializerUtil.copyBean(state, this);
-  }
+    public boolean isUseSafeWrite() {
+        return myUseSafeWrite;
+    }
 
-  public boolean isUseDefaultBrowser() {
-    return myUseDefaultBrowser;
-  }
+    public void setUseSafeWrite(final boolean useSafeWrite) {
+        myUseSafeWrite = useSafeWrite;
+    }
 
-  public void setUseDefaultBrowser(boolean value) {
-    myUseDefaultBrowser = value;
-  }
+    @Nullable
+    @Override
+    public GeneralSettings getState() {
+        return this;
+    }
 
-  public boolean isConfirmExtractFiles() {
-    return myConfirmExtractFiles;
-  }
+    @Override
+    public void loadState(GeneralSettings state) {
+        XmlSerializerUtil.copyBean(state, this);
+    }
 
-  public void setConfirmExtractFiles(boolean value) {
-    myConfirmExtractFiles = value;
-  }
+    public boolean isUseDefaultBrowser() {
+        return myUseDefaultBrowser;
+    }
 
-  public boolean isConfirmExit() {
-    return myConfirmExit;
-  }
+    public void setUseDefaultBrowser(boolean value) {
+        myUseDefaultBrowser = value;
+    }
 
-  public void setConfirmExit(boolean confirmExit) {
-    myConfirmExit = confirmExit;
-  }
+    public boolean isConfirmExtractFiles() {
+        return myConfirmExtractFiles;
+    }
 
-  @MagicConstant(intValues = {OPEN_PROJECT_ASK, OPEN_PROJECT_NEW_WINDOW, OPEN_PROJECT_SAME_WINDOW})
-  @interface OpenNewProjectOption {
-  }
+    public void setConfirmExtractFiles(boolean value) {
+        myConfirmExtractFiles = value;
+    }
 
-  /**
-   * @return <ul>
-   * <li>{@link GeneralSettings#OPEN_PROJECT_NEW_WINDOW} if new project should be opened in new window
-   * <li>{@link GeneralSettings#OPEN_PROJECT_SAME_WINDOW} if new project should be opened in same window
-   * <li>{@link GeneralSettings#OPEN_PROJECT_ASK} if a confirmation dialog should be shown
-   * </ul>
-   */
-  @OpenNewProjectOption
-  @OptionTag("confirmOpenNewProject2")
-  public int getConfirmOpenNewProject() {
-    return myConfirmOpenNewProject;
-  }
+    public boolean isConfirmExit() {
+        return myConfirmExit;
+    }
 
-  public void setConfirmOpenNewProject(@OpenNewProjectOption int confirmOpenNewProject) {
-    myConfirmOpenNewProject = confirmOpenNewProject;
-  }
+    public void setConfirmExit(boolean confirmExit) {
+        myConfirmExit = confirmExit;
+    }
 
-  public static final int OPEN_PROJECT_ASK = -1;
-  public static final int OPEN_PROJECT_NEW_WINDOW = 0;
-  public static final int OPEN_PROJECT_SAME_WINDOW = 1;
+    @MagicConstant(intValues = {OPEN_PROJECT_ASK, OPEN_PROJECT_NEW_WINDOW, OPEN_PROJECT_SAME_WINDOW})
+    @interface OpenNewProjectOption {
+    }
 
-  public boolean isSearchInBackground() {
-    return mySearchInBackground;
-  }
+    /**
+     * @return <ul>
+     * <li>{@link GeneralSettings#OPEN_PROJECT_NEW_WINDOW} if new project should be opened in new window
+     * <li>{@link GeneralSettings#OPEN_PROJECT_SAME_WINDOW} if new project should be opened in same window
+     * <li>{@link GeneralSettings#OPEN_PROJECT_ASK} if a confirmation dialog should be shown
+     * </ul>
+     */
+    @OpenNewProjectOption
+    @OptionTag("confirmOpenNewProject2")
+    public int getConfirmOpenNewProject() {
+        return myConfirmOpenNewProject;
+    }
 
-  public void setSearchInBackground(final boolean searchInBackground) {
-    mySearchInBackground = searchInBackground;
-  }
+    public void setConfirmOpenNewProject(@OpenNewProjectOption int confirmOpenNewProject) {
+        myConfirmOpenNewProject = confirmOpenNewProject;
+    }
+
+    @Deprecated
+    public static final int OPEN_PROJECT_ASK = -1;
+    @Deprecated
+    public static final int OPEN_PROJECT_NEW_WINDOW = 0;
+    @Deprecated
+    public static final int OPEN_PROJECT_SAME_WINDOW = 1;
+
+    public boolean isSearchInBackground() {
+        return mySearchInBackground;
+    }
+
+    public void setSearchInBackground(final boolean searchInBackground) {
+        mySearchInBackground = searchInBackground;
+    }
 }

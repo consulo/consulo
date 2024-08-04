@@ -18,7 +18,6 @@ package consulo.desktop.awt.startup;
 import com.google.gson.Gson;
 import consulo.application.Application;
 import consulo.application.ApplicationProperties;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.impl.internal.plugin.CompositeMessage;
 import consulo.application.impl.internal.plugin.PluginsInitializeInfo;
 import consulo.application.impl.internal.start.ApplicationStarter;
@@ -47,7 +46,7 @@ import consulo.desktop.awt.wm.impl.TopMenuInitializer;
 import consulo.externalService.statistic.UsageTrigger;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.CommandLineProcessor;
-import consulo.ide.impl.idea.ide.RecentProjectsManager;
+import consulo.project.internal.RecentProjectsManager;
 import consulo.ide.impl.idea.ide.RecentProjectsManagerBase;
 import consulo.ide.impl.idea.ide.plugins.PluginManagerMain;
 import consulo.ide.impl.idea.openapi.wm.impl.SystemDock;
@@ -159,8 +158,6 @@ public class DesktopApplicationStarter extends ApplicationStarter {
     appInitializeMark.run();
 
     stat.dump("Startup statistics", LOG::info);
-
-    dumpPluginClassStatistics();
 
     SwingUtilities.invokeLater(() -> {
       StartupProgress desktopSplash = mySplashRef.get();

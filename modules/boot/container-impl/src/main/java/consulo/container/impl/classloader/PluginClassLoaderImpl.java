@@ -185,10 +185,6 @@ public class PluginClassLoaderImpl extends UrlClassLoader implements PluginClass
       catch (IncompatibleClassChangeError | UnsupportedClassVersionError e) {
         throw new PluginException("While loading class " + name + ": " + e.getMessage(), e, getPluginId());
       }
-      if (c != null) {
-        PluginLoadStatistics.get().addPluginClass(getPluginId());
-      }
-
       return c;
     }
   }

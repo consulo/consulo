@@ -15,6 +15,7 @@
  */
 package consulo.application.impl.internal.progress;
 
+import consulo.application.internal.NonCancelableSection;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.StandardProgressIndicator;

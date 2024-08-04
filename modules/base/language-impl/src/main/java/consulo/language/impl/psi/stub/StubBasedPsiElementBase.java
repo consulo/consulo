@@ -30,7 +30,7 @@ import consulo.language.impl.ast.CompositeElement;
 import consulo.language.impl.ast.FileElement;
 import consulo.language.impl.ast.RecursiveTreeElementWalkingVisitor;
 import consulo.language.impl.ast.SharedImplUtil;
-import consulo.language.impl.internal.psi.SingleProjectHolder;
+import consulo.project.internal.SingleProjectHolder;
 import consulo.language.impl.internal.psi.SubstrateRef;
 import consulo.language.impl.internal.psi.SubstrateRefOwner;
 import consulo.language.impl.psi.ASTDelegatePsiElement;

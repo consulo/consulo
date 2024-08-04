@@ -37,6 +37,8 @@ import consulo.ide.impl.idea.ui.speedSearch.ListWithFilter;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.ProjectGroup;
+import consulo.project.internal.RecentProjectsManager;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.event.ApplicationActivationListener;
 import consulo.ui.annotation.RequiredUIAccess;

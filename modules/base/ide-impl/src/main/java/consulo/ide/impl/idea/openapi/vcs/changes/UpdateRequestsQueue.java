@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 import consulo.application.ApplicationManager;
 import consulo.application.HeavyProcessLatch;
 import consulo.application.util.Semaphore;
-import consulo.ide.impl.idea.ide.startup.impl.StartupManagerImpl;
+import consulo.project.impl.internal.StartupManagerImpl;
 import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.logging.Logger;
 import consulo.project.Project;

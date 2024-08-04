@@ -20,7 +20,7 @@ import consulo.application.Application;
 import consulo.application.util.registry.Registry;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.persist.PersistentStateComponent;
-import consulo.ide.impl.idea.ide.impl.ProjectUtil;
+import consulo.project.impl.internal.ProjectImplUtil;
 import consulo.ide.impl.idea.openapi.wm.impl.SystemDock;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.module.Module;
@@ -32,7 +32,9 @@ import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.module.extension.ModuleExtension;
 import consulo.platform.Platform;
 import consulo.project.Project;
+import consulo.project.ProjectGroup;
 import consulo.project.ProjectManager;
+import consulo.project.internal.RecentProjectsManager;
 import consulo.project.event.ProjectManagerAdapter;
 import consulo.project.event.ProjectManagerListener;
 import consulo.project.impl.internal.store.ProjectStoreImpl;
@@ -468,7 +470,7 @@ public class RecentProjectsManagerBase extends RecentProjectsManager implements 
 
       for (String openPath : openPaths) {
         if (isValidProjectPath(openPath)) {
-          ProjectUtil.openAsync(openPath, null, forceNewFrame, UIAccess.current());
+          ProjectImplUtil.openAsync(openPath, null, forceNewFrame, UIAccess.current());
         }
       }
     }

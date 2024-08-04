@@ -15,9 +15,9 @@
  */
 package consulo.desktop.awt.welcomeScreen;
 
-import consulo.ide.impl.idea.ide.ProjectGroup;
+import consulo.project.ProjectGroup;
 import consulo.ide.impl.idea.ide.ProjectGroupActionGroup;
-import consulo.ide.impl.idea.ide.RecentProjectsManager;
+import consulo.project.internal.RecentProjectsManager;
 import consulo.ide.impl.idea.ide.ReopenProjectAction;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;

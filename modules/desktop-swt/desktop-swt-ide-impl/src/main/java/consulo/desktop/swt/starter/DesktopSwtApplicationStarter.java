@@ -71,8 +71,6 @@ public class DesktopSwtApplicationStarter extends ApplicationStarter {
 
     stat.dump("Startup statistics", LOG::info);
 
-    dumpPluginClassStatistics();
-
     //SwingUtilities.invokeLater(() -> {
     //  StartupProgress desktopSplash = mySplashRef.get();
     //  if (desktopSplash != null) {

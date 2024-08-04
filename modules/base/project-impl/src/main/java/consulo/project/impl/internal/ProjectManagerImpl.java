@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.project.impl;
+package consulo.project.impl.internal;
 
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
@@ -21,7 +21,7 @@ import consulo.application.Application;
 import consulo.application.WriteAction;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.impl.internal.LaterInvocator;
-import consulo.application.impl.internal.progress.NonCancelableSection;
+import consulo.application.internal.NonCancelableSection;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.progress.Task;
@@ -31,17 +31,9 @@ import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.store.impl.internal.TrackingPathMacroSubstitutor;
 import consulo.component.store.impl.internal.storage.StorageUtil;
-import consulo.container.impl.classloader.PluginLoadStatistics;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.FileDocumentManager;
-import consulo.ide.impl.idea.ide.impl.ProjectUtil;
-import consulo.ide.impl.idea.ide.startup.impl.StartupManagerImpl;
-import consulo.project.internal.ProjectReloadState;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.vfs.impl.ZipHandler;
-import consulo.ide.impl.idea.util.EventDispatcher;
-import consulo.language.impl.internal.psi.SingleProjectHolder;
 import consulo.logging.Logger;
 import consulo.module.ModuleManager;
 import consulo.module.impl.internal.ModuleManagerComponent;
@@ -49,15 +41,18 @@ import consulo.module.impl.internal.ModuleManagerImpl;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.project.event.ProjectManagerListener;
-import consulo.project.impl.internal.ProjectImpl;
-import consulo.project.impl.internal.ProjectManagerImplMarker;
-import consulo.project.impl.internal.ProjectStorageUtil;
 import consulo.project.impl.internal.store.IProjectStore;
 import consulo.project.internal.ProjectManagerEx;
+import consulo.project.internal.ProjectReloadState;
+import consulo.project.internal.ProjectWindowFocuser;
+import consulo.project.internal.SingleProjectHolder;
+import consulo.project.localize.ProjectLocalize;
 import consulo.project.startup.StartupManager;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.notification.NotificationsManager;
 import consulo.project.ui.wm.WindowManager;
+import consulo.project.util.ProjectUtil;
+import consulo.proxy.EventDispatcher;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -66,6 +61,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.Lists;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.ShutDownTracker;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -141,7 +137,6 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
           listener.projectClosed(project, uiAccess);
         }
 
-        ZipHandler.clearFileAccessorCache();
         LaterInvocator.purgeExpiredItems();
       }
 
@@ -264,7 +259,6 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
     Long startTime = project.getUserData(ProjectImpl.CREATION_TIME);
     if (startTime != null) {
       LOG.info("Project opening took " + (currentTime - startTime) / 1000000 + " ms");
-      PluginLoadStatistics.get().dumpPluginClassStatistics(LOG::info);
     }
   }
 
@@ -308,7 +302,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
 
     String basePath = project.getBasePath();
 
-    closeAndDisposeAsync(project, uiAccess).doWhenDone(() -> ProjectUtil.openAsync(basePath, null, true, uiAccess));
+    closeAndDisposeAsync(project, uiAccess).doWhenDone(() -> ProjectImplUtil.openAsync(basePath, null, true, uiAccess));
   }
 
   @Override
@@ -541,8 +535,8 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
     final ProjectImpl project = createProject(null, toCanonicalName(path.getPath()), true);
 
     for (Project p : getOpenProjects()) {
-      if (consulo.project.util.ProjectUtil.isSameProject(path.getPath(), p)) {
-        uiAccess.give(() -> ProjectUtil.focusProjectWindow(p, false));
+      if (ProjectUtil.isSameProject(path.getPath(), p)) {
+        uiAccess.give(() -> ProjectWindowFocuser.getInstance(project).focusProjectWindow(false));
         closeAndDisposeAsync(project, uiAccess).doWhenProcessed(() -> projectAsyncResult.reject("Already opened project"));
         return;
       }
@@ -555,7 +549,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
                                 AsyncResult<Project> projectAsyncResult,
                                 boolean init,
                                 UIAccess uiAccess) {
-    Task.Backgroundable.queue(project, ProjectBundle.message("project.load.progress"), canCancelProjectLoading(), progressIndicator -> {
+    Task.Backgroundable.queue(project, ProjectLocalize.projectLoadProgress().get(), canCancelProjectLoading(), progressIndicator -> {
       progressIndicator.setIndeterminate(true);
 
       try {

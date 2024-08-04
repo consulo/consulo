@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2022 consulo.io
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.impl.internal.psi;
+package consulo.ide.impl.idea.openapi.vfs.impl;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.TopicImpl;
 import consulo.project.Project;
-
-import jakarta.annotation.Nullable;
+import consulo.project.event.ProjectManagerListener;
+import consulo.ui.UIAccess;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 19/01/2022
+ * @since 2024-08-04
  */
-public class SingleProjectHolder {
-  /**
-   * @return the only open project if there is one, null if no or several projects are open
-   */
-  @Nullable
-  public static Project theOnlyOpenProject() {
-    return theProject;
-  }
-
-  public static volatile Project theProject;
+@TopicImpl(ComponentScope.APPLICATION)
+public class ZipHandlerClear implements ProjectManagerListener {
+    @Override
+    public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+        ZipHandler.clearFileAccessorCache();
+    }
 }
