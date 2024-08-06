@@ -11,8 +11,6 @@ import consulo.document.FileDocumentManager;
 import consulo.document.event.FileDocumentManagerListener;
 import consulo.document.util.FileContentUtilCore;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileDocumentManagerImpl;
-import consulo.module.content.PushedFilePropertiesUpdater;
-import consulo.ide.impl.idea.openapi.roots.impl.PushedFilePropertiesUpdaterImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.file.FileTypeManager;
 import consulo.language.file.FileViewProvider;
@@ -30,21 +28,19 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.*;
 import consulo.virtualFileSystem.fileType.FileType;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiPredicate;
 
 @Singleton
@@ -60,50 +56,16 @@ public class PsiVFSListener implements BulkFileListener {
   private final Project myProject;
   private boolean myReportedUnloadedPsiChange;
 
-  private static final AtomicBoolean ourGlobalListenerInstalled = new AtomicBoolean(false);
-
   @Inject
-  public PsiVFSListener(@Nonnull Project project, Provider<ProjectFileIndex> fileIndex) {
+  public PsiVFSListener(@Nonnull Project project,
+                        @Nonnull FileTypeManager fileTypeManager,
+                        @Nonnull PsiManager psiManager,
+                        @Nonnull Provider<ProjectFileIndex> fileIndex) {
     myProject = project;
-    myFileTypeManager = FileTypeManager.getInstance();
+    myFileTypeManager = fileTypeManager;
     myFileIndex = fileIndex;
-    myManager = (PsiManagerImpl)PsiManager.getInstance(project);
+    myManager = (PsiManagerImpl) psiManager;
     myFileManager = (FileManagerImpl)myManager.getFileManager();
-  }
-
-  /**
-   * This code is implemented as static method (and not static constructor, as it was done before) to prevent installing listeners in Upsource
-   */
-  static void installGlobalListener() {
-    if (!ourGlobalListenerInstalled.compareAndSet(false, true)) {
-      return;
-    }
-
-    Application application = Application.get();
-    application.getMessageBus().connect().subscribe(BulkFileListener.class, new BulkFileListener() {
-      @Override
-      public void before(@Nonnull List<? extends VFileEvent> events) {
-        for (Project project : ProjectManager.getInstance().getOpenProjects()) {
-          project.getInstance(PsiVFSListener.class).before(events);
-        }
-      }
-
-      @Override
-      public void after(@Nonnull List<? extends VFileEvent> events) {
-        Project[] projects = ProjectManager.getInstance().getOpenProjects();
-        // let PushedFilePropertiesUpdater process all pending vfs events and update file properties before we issue PSI events
-        for (Project project : projects) {
-          PushedFilePropertiesUpdater updater = PushedFilePropertiesUpdater.getInstance(project);
-          // false in upsource
-          if (updater instanceof PushedFilePropertiesUpdaterImpl) {
-            ((PushedFilePropertiesUpdaterImpl)updater).processAfterVfsChanges(events);
-          }
-        }
-        for (Project project : projects) {
-          project.getInstance(PsiVFSListener.class).after(events);
-        }
-      }
-    });
   }
 
   @Nullable

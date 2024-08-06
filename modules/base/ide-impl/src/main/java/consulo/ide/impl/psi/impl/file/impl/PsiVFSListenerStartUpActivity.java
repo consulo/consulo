@@ -44,7 +44,5 @@ public class PsiVFSListenerStartUpActivity implements PostStartupActivity, DumbA
       }
     });
     connection.subscribe(FileDocumentManagerListener.class, psiVFSListener.new MyFileDocumentManagerAdapter());
-
-    PsiVFSListener.installGlobalListener();
   }
 }
