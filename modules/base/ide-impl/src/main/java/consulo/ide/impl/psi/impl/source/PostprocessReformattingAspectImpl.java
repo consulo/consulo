@@ -13,7 +13,7 @@ import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.document.util.TextRangeUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
-import consulo.ide.impl.psi.codeStyle.ExternalFormatProcessor;
+import consulo.language.codeStyle.ExternalFormatProcessor;
 import consulo.ide.impl.psi.impl.source.codeStyle.CodeFormatterFacade;
 import consulo.ide.impl.psi.impl.source.codeStyle.CodeStyleManagerImpl;
 import consulo.ide.impl.psi.impl.source.codeStyle.IndentHelperImpl;

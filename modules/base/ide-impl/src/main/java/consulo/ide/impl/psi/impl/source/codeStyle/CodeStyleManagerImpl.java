@@ -16,7 +16,7 @@ import consulo.ide.impl.idea.formatting.FormatterEx;
 import consulo.ide.impl.idea.formatting.FormatterImpl;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
-import consulo.ide.impl.psi.codeStyle.ExternalFormatProcessor;
+import consulo.language.codeStyle.ExternalFormatProcessor;
 import consulo.ide.impl.psi.codeStyle.IndentOld;
 import consulo.ide.impl.psi.impl.source.codeStyle.lineIndent.FormatterBasedIndentAdjuster;
 import consulo.language.CodeDocumentationAwareCommenter;
