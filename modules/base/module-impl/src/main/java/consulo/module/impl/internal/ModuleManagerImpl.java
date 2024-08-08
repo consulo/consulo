@@ -477,7 +477,8 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Persist
   @Nonnull
   public Module[] getModules() {
     if (!myReady) {
-      throw new IllegalArgumentException("Modules not initialized at current moment");
+      LOG.error("Modules not initialized at current moment");
+      return Module.EMPTY_ARRAY;
     }
 
     if (myModuleModel.myIsWritable) {
