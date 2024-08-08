@@ -227,8 +227,12 @@ public abstract class Task implements TaskInfo, Progressive {
             new Backgroundable(project, title, canBeCancelled, backgroundOption) {
                 @Override
                 public void run(@Nonnull ProgressIndicator indicator) {
-                    consumer.accept(indicator);
-                }
+                    try {
+                        consumer.accept(indicator);
+                    }
+                    catch (Throwable e) {
+                        LOG.error(e);
+                    }                }
             }.queue();
         }
 
@@ -241,7 +245,12 @@ public abstract class Task implements TaskInfo, Progressive {
             new Backgroundable(project, title, canBeCancelled, backgroundOption) {
                 @Override
                 public void run(@Nonnull ProgressIndicator indicator) {
-                    consumer.accept(indicator);
+                    try {
+                        consumer.accept(indicator);
+                    }
+                    catch (Throwable e) {
+                        LOG.error(e);
+                    }
                 }
 
                 @RequiredUIAccess
@@ -325,7 +334,12 @@ public abstract class Task implements TaskInfo, Progressive {
             new Modal(project, title, canBeCancelled) {
                 @Override
                 public void run(@Nonnull ProgressIndicator indicator) {
-                    consumer.accept(indicator);
+                    try {
+                        consumer.accept(indicator);
+                    }
+                    catch (Throwable e) {
+                        LOG.error(e);
+                    }
                 }
 
                 @RequiredUIAccess
