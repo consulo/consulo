@@ -61,8 +61,6 @@ public class DesktopSwtIdeFrameImpl implements IdeFrameEx, Disposable {
 
     myRootView.setStatusBar(myStatusBar);
 
-    StatusBarWidgetsManager.getInstance(myProject).updateAllWidgets(UIAccess.current());
-
     //com.vaadin.ui.Window vaadinWindow = (com.vaadin.ui.Window)TargetVaddin.to(myWindow);
     //WebFocusManagerImpl.register(vaadinWindow);
     //vaadinWindow.setWindowMode(WindowMode.MAXIMIZED);

@@ -40,7 +40,6 @@ import consulo.project.internal.ProjectManagerEx;
 import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.wm.*;
 import consulo.ui.Rectangle2D;
-import consulo.ui.UIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
@@ -468,7 +467,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
         project.getMessageBus().connect().subscribe(StatusBarInfo.class, myRootPane.getStatusBar());
       }
 
-      installDefaultProjectStatusBarWidgets(myProject);
+      installPopupForStatusBar();
     }
     else {
       if (myRootPane != null) { //already disposed
@@ -482,9 +481,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
     }
   }
 
-  private void installDefaultProjectStatusBarWidgets(@Nonnull final Project project) {
-    project.getInstance(StatusBarWidgetsManager.class).updateAllWidgets(UIAccess.current());
-    
+  private void installPopupForStatusBar() {
     JComponent component = Objects.requireNonNull(getStatusBar()).getComponent();
     PopupHandler.installPopupHandler(component, StatusBarWidgetsActionGroup.GROUP_ID, ActionPlaces.STATUS_BAR_PLACE);
   }

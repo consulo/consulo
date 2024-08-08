@@ -71,8 +71,6 @@ public class WebIdeFrameImpl implements IdeFrameEx, Disposable {
 
     myRootView.setStatusBar(myStatusBar);
 
-    StatusBarWidgetsManager.getInstance(myProject).updateAllWidgets(UIAccess.current());
-
     myRootView.update();
     
     myRootLayout.update(TargetVaddin.to(myRootView.getRootPanel().getComponent()));

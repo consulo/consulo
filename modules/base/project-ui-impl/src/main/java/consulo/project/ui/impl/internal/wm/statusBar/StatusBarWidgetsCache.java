@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.wm.impl.status.widget;
+package consulo.project.ui.impl.internal.wm.statusBar;
 
 import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.logging.Logger;

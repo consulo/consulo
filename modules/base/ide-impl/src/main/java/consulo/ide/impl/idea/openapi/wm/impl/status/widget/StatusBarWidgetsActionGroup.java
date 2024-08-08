@@ -4,6 +4,8 @@ package consulo.ide.impl.idea.openapi.wm.impl.status.widget;
 import consulo.ide.impl.idea.openapi.project.DumbAwareToggleAction;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
+import consulo.project.ui.impl.internal.wm.statusBar.StatusBarWidgetSettings;
+import consulo.project.ui.impl.internal.wm.statusBar.StatusBarWidgetsManagerImpl;
 import consulo.project.ui.internal.StatusBarEx;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidgetFactory;

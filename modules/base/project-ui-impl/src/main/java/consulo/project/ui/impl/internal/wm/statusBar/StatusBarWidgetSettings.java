@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.wm.impl.status.widget;
+package consulo.project.ui.impl.internal.wm.statusBar;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import consulo.ide.ServiceManager;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import jakarta.annotation.Nullable;
@@ -43,7 +43,7 @@ public class StatusBarWidgetSettings implements PersistentStateComponent<StatusB
   }
 
   public static StatusBarWidgetSettings getInstance() {
-    return ServiceManager.getService(StatusBarWidgetSettings.class);
+    return Application.get().getUnbindedInstance(StatusBarWidgetSettings.class);
   }
 
   private StatusBarState myState = new StatusBarState();
