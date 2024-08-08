@@ -43,7 +43,7 @@ public class StatusBarWidgetSettings implements PersistentStateComponent<StatusB
   }
 
   public static StatusBarWidgetSettings getInstance() {
-    return Application.get().getUnbindedInstance(StatusBarWidgetSettings.class);
+    return Application.get().getInstance(StatusBarWidgetSettings.class);
   }
 
   private StatusBarState myState = new StatusBarState();
