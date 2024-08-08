@@ -3,7 +3,6 @@ package consulo.ide.impl.idea.tasks.timeTracking;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ApplicationManager;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
@@ -12,7 +11,6 @@ import consulo.component.persist.StoragePathMacros;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.project.Project;
-import consulo.project.startup.StartupManager;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
@@ -35,14 +33,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-/**
- * User: Evgeny.Zakrevsky
- * Date: 11/19/12
- */
-
 @Singleton
-@State(name = "TimeTrackingManager", storages = {@Storage(StoragePathMacros.WORKSPACE_FILE)})
-@ServiceAPI(value = ComponentScope.PROJECT, lazy = false)
+@State(name = "TimeTrackingManager", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
+@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class TimeTrackingManager implements PersistentStateComponent<TimeTrackingManager.Config>, Disposable {
   public static TimeTrackingManager getInstance(Project project) {
@@ -65,7 +58,7 @@ public class TimeTrackingManager implements PersistentStateComponent<TimeTrackin
     myTaskManager = taskManager;
   }
 
-  private void startTimeTrackingTimer() {
+  public void startTimeTrackingTimer() {
     if (!myTimeTrackingTimer.isRunning()) {
       myTimeTrackingTimer.start();
     }
@@ -87,24 +80,16 @@ public class TimeTrackingManager implements PersistentStateComponent<TimeTrackin
         new TasksToolWindowFactory().createToolWindowContent(myProject, toolWindow);
       }
       final ToolWindow finalToolWindow = toolWindow;
-      ApplicationManager.getApplication().invokeLater(new Runnable() {
-        @Override
-        public void run() {
-          finalToolWindow.setAvailable(true, null);
-          finalToolWindow.show(null);
-          finalToolWindow.activate(null);
-        }
+        myProject.getApplication().invokeLater(() -> {
+        finalToolWindow.setAvailable(true, null);
+        finalToolWindow.show(null);
+        finalToolWindow.activate(null);
       });
     }
     else {
       if (toolWindow != null) {
         final ToolWindow finalToolWindow = toolWindow;
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            finalToolWindow.setAvailable(false, null);
-          }
-        });
+          myProject.getApplication().invokeLater(() -> finalToolWindow.setAvailable(false, null));
       }
     }
   }
@@ -139,16 +124,6 @@ public class TimeTrackingManager implements PersistentStateComponent<TimeTrackin
           }
         }
         myLastActiveTask = activeTask;
-      }
-    });
-    StartupManager.getInstance(myProject).registerStartupActivity(new Runnable() {
-      public void run() {
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            startTimeTrackingTimer();
-          }
-        });
       }
     });
 

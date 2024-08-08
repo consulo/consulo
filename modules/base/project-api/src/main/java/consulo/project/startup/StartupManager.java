@@ -15,15 +15,12 @@
  */
 package consulo.project.startup;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import consulo.annotation.DeprecationInfo;
-import consulo.ui.UIAccess;
-
 import jakarta.annotation.Nonnull;
-import java.util.function.Consumer;
 
 /**
  * Allows to register activities which are run during project loading.
@@ -106,49 +103,6 @@ public abstract class StartupManager {
     }
     else {
       registerPostStartupActivity((StartupActivity)(project, uiAccess) -> runnable.run());
-    }
-  }
-
-  @Deprecated
-  public final void registerPreStartupActivity(@Nonnull Consumer<UIAccess> consumer) {
-    if (consumer instanceof DumbAware) {
-      registerPreStartupActivity((StartupActivity.DumbAware)(project, uiAccess) -> consumer.accept(uiAccess));
-    }
-    else {
-      registerPreStartupActivity((StartupActivity)(project, uiAccess) -> consumer.accept(uiAccess));
-    }
-  }
-
-  /**
-   * Registers an activity which is performed during project load while the "Loading Project"
-   * progress bar is displayed. You may NOT access the PSI structures from the activity.
-   *
-   * @param consumer the activity to execute.
-   */
-  @Deprecated
-  public final void registerStartupActivity(@Nonnull Consumer<UIAccess> consumer) {
-    if (consumer instanceof DumbAware) {
-      registerStartupActivity((StartupActivity.DumbAware)(project, uiAccess) -> consumer.accept(uiAccess));
-    }
-    else {
-      registerStartupActivity((StartupActivity)(project, uiAccess) -> consumer.accept(uiAccess));
-    }
-  }
-
-  /**
-   * Registers an activity which is performed during project load after the "Loading Project"
-   * progress bar is displayed. You may access the PSI structures from the activity.
-   *
-   * @param runnable the activity to execute.
-   * @see PostStartupActivity
-   */
-  @Deprecated
-  public final void registerPostStartupActivity(@Nonnull Consumer<UIAccess> consumer) {
-    if (consumer instanceof DumbAware) {
-      registerStartupActivity((StartupActivity.DumbAware)(project, uiAccess) -> consumer.accept(uiAccess));
-    }
-    else {
-      registerStartupActivity((StartupActivity)(project, uiAccess) -> consumer.accept(uiAccess));
     }
   }
 
