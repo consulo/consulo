@@ -29,6 +29,7 @@ module consulo.language.api {
   exports consulo.language.plain.psi;
   exports consulo.language.plain.psi.stub.todo;
   exports consulo.language.icon;
+  exports consulo.language.localize;
   exports consulo.language.pattern;
   exports consulo.language.inject;
   exports consulo.language.pom;
