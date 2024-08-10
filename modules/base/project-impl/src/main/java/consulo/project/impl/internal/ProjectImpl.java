@@ -248,6 +248,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   public VirtualFile getWorkspaceFile() {
     return getStateStore().getWorkspaceFile();
   }
+
   @Override
   public void initNotLazyServices() {
     long start = System.currentTimeMillis();

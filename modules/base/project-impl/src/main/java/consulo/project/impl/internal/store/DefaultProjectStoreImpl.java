@@ -23,25 +23,22 @@ import consulo.component.store.impl.internal.*;
 import consulo.component.store.impl.internal.storage.StateStorage;
 import consulo.component.store.impl.internal.storage.StateStorage.SaveSession;
 import consulo.component.store.impl.internal.storage.StorageData;
-import consulo.component.store.impl.internal.storage.VfsFileBasedStorage;
 import consulo.component.store.impl.internal.storage.XmlElementStorage;
 import consulo.project.Project;
 import consulo.project.impl.internal.DefaultProjectImpl;
 import consulo.project.impl.internal.ProjectImpl;
 import consulo.project.macro.ProjectPathMacroManager;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.lang.Couple;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 @Singleton
@@ -126,12 +123,6 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
       @Override
       public StateStorage getStateStorage(@Nonnull String fileSpec, @Nonnull RoamingType roamingType) {
         return storage;
-      }
-
-      @Nonnull
-      @Override
-      public Couple<Collection<VfsFileBasedStorage>> getCachedFileStateStorages(@Nonnull Collection<String> changed, @Nonnull Collection<String> deleted) {
-        return new Couple<>(Collections.<VfsFileBasedStorage>emptyList(), Collections.<VfsFileBasedStorage>emptyList());
       }
 
       @Override

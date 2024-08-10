@@ -32,7 +32,7 @@ public class ProjectStateStorageManager extends StateStorageManagerImpl {
   private final Application myApplication;
 
   public ProjectStateStorageManager(Project project, TrackingPathMacroSubstitutor macroSubstitutor, PathMacrosService pathMacroManager) {
-    super(macroSubstitutor, ROOT_TAG_NAME, project, project::getMessageBus, ()-> pathMacroManager,StateStorageFacade.CONSULO_VFS);
+    super(macroSubstitutor, ROOT_TAG_NAME, project, project::getMessageBus, ()-> pathMacroManager, StateStorageFacade.CONSULO_VFS);
     myApplication = project.getApplication();
   }
 
