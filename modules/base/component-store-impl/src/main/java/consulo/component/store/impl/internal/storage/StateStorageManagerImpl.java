@@ -27,12 +27,12 @@ import consulo.component.store.impl.internal.StateStorageManager;
 import consulo.component.store.impl.internal.StreamProvider;
 import consulo.component.store.impl.internal.TrackingPathMacroSubstitutor;
 import consulo.component.store.impl.internal.storage.StateStorage.SaveSession;
+import consulo.component.store.impl.internal.storage.vfs.VfsFileBasedStorage;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.util.io.FileUtil;
 import consulo.util.io.PathUtil;
-import consulo.util.lang.Couple;
 import consulo.util.lang.StringUtil;
 import org.jdom.Element;
 

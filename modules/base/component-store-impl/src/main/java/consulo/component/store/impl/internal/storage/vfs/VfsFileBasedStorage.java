@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.component.store.impl.internal.storage;
+package consulo.component.store.impl.internal.storage.vfs;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -23,6 +23,7 @@ import consulo.component.store.impl.internal.PathMacrosService;
 import consulo.component.store.impl.internal.StorageNotificationService;
 import consulo.component.store.impl.internal.StreamProvider;
 import consulo.component.store.impl.internal.TrackingPathMacroSubstitutor;
+import consulo.component.store.impl.internal.storage.*;
 import consulo.disposer.Disposable;
 import consulo.platform.LineSeparator;
 import consulo.ui.NotificationType;

@@ -23,7 +23,7 @@ import consulo.component.persist.scheme.*;
 import consulo.component.store.impl.internal.StreamProvider;
 import consulo.component.store.impl.internal.storage.DirectoryStorageData;
 import consulo.component.store.impl.internal.storage.StorageUtil;
-import consulo.component.store.impl.internal.storage.VfsDirectoryBasedStorage;
+import consulo.component.store.impl.internal.storage.vfs.VfsDirectoryBasedStorage;
 import consulo.component.util.text.UniqueNameGenerator;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;

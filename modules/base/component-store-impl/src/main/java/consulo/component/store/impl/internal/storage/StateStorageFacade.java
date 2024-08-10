@@ -20,6 +20,10 @@ import consulo.component.persist.StateSplitterEx;
 import consulo.component.store.impl.internal.PathMacrosService;
 import consulo.component.store.impl.internal.StreamProvider;
 import consulo.component.store.impl.internal.TrackingPathMacroSubstitutor;
+import consulo.component.store.impl.internal.storage.io.IoDirectoryBasedStorage;
+import consulo.component.store.impl.internal.storage.io.IoFileBasedStorage;
+import consulo.component.store.impl.internal.storage.vfs.VfsDirectoryBasedStorage;
+import consulo.component.store.impl.internal.storage.vfs.VfsFileBasedStorage;
 import consulo.disposer.Disposable;
 
 import jakarta.annotation.Nonnull;

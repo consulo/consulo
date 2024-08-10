@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,88 +13,54 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.component.store.impl.internal.storage;
+package consulo.component.store.impl.internal.storage.io;
 
-import consulo.application.Application;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.component.persist.StateSplitterEx;
 import consulo.component.persist.Storage;
-import consulo.component.store.impl.internal.*;
+import consulo.component.store.impl.internal.DefaultStateSerializer;
+import consulo.component.store.impl.internal.PathMacrosService;
+import consulo.component.store.impl.internal.StateStorageException;
+import consulo.component.store.impl.internal.TrackingPathMacroSubstitutor;
+import consulo.component.store.impl.internal.storage.*;
 import consulo.disposer.Disposable;
 import consulo.util.collection.SmartHashSet;
 import consulo.util.interner.Interner;
+import consulo.util.io.FileUtil;
 import consulo.util.jdom.JDOMUtil;
 import consulo.util.jdom.interner.JDOMInterner;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.WriteExternalException;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.event.VirtualFileAdapter;
-import consulo.virtualFileSystem.event.VirtualFileEvent;
-import consulo.virtualFileSystem.internal.VirtualFileTracker;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
 /**
- * Directory storage - based on Consulo VFS
+ * @author VISTALL
+ * @since 2019-02-13
  */
-public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectoryStorageData> {
+public class IoDirectoryBasedStorage extends StateStorageBase<DirectoryStorageData> {
   private final File myDir;
-  private volatile VirtualFile myVirtualFile;
   private final StateSplitterEx mySplitter;
 
   private DirectoryStorageData myStorageData;
 
-  public VfsDirectoryBasedStorage(@Nullable TrackingPathMacroSubstitutor pathMacroSubstitutor,
-                                  @Nonnull String dir,
-                                  @Nonnull StateSplitterEx splitter,
-                                  @Nonnull Disposable parentDisposable,
-                                  @Nullable final StateStorageListener listener,
-                                  @Nonnull PathMacrosService pathMacrosService) {
+  public IoDirectoryBasedStorage(@Nullable TrackingPathMacroSubstitutor pathMacroSubstitutor,
+                                 @Nonnull String dir,
+                                 @Nonnull StateSplitterEx splitter,
+                                 @Nonnull Disposable parentDisposable,
+                                 @Nullable final StateStorageListener listener,
+                                 @Nonnull PathMacrosService pathMacrosService) {
     super(pathMacroSubstitutor, pathMacrosService);
 
     myDir = new File(dir);
     mySplitter = splitter;
-
-    VirtualFileTracker virtualFileTracker = Application.get().getInstance(VirtualFileTracker.class);
-    if (listener != null) {
-      virtualFileTracker.addTracker(LocalFileSystem.PROTOCOL_PREFIX + myDir.getAbsolutePath().replace(File.separatorChar, '/'), new VirtualFileAdapter() {
-        @Override
-        public void contentsChanged(@Nonnull VirtualFileEvent event) {
-          notifyIfNeed(event);
-        }
-
-        @Override
-        public void fileDeleted(@Nonnull VirtualFileEvent event) {
-          if (event.getFile().equals(myVirtualFile)) {
-            myVirtualFile = null;
-          }
-          notifyIfNeed(event);
-        }
-
-        @Override
-        public void fileCreated(@Nonnull VirtualFileEvent event) {
-          notifyIfNeed(event);
-        }
-
-        private void notifyIfNeed(@Nonnull VirtualFileEvent event) {
-          // storage directory will be removed if the only child was removed
-          if (event.getFile().isDirectory() || isStorageFile(event.getFile())) {
-            listener.storageFileChanged(event, VfsDirectoryBasedStorage.this);
-          }
-        }
-      }, false, parentDisposable);
-    }
   }
 
   @Override
@@ -121,30 +87,35 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
   @Nonnull
   private DirectoryStorageData loadState() {
     DirectoryStorageData storageData = new DirectoryStorageData();
-    loadFrom(storageData, getVirtualFile(), myPathMacroSubstitutor);
+    loadFrom(storageData, myDir, myPathMacroSubstitutor);
     return storageData;
   }
 
-  public void loadFrom(@Nonnull DirectoryStorageData data, @Nullable VirtualFile dir, @Nullable TrackingPathMacroSubstitutor pathMacroSubstitutor) {
+  public void loadFrom(@Nonnull DirectoryStorageData data, @Nullable File dir, @Nullable TrackingPathMacroSubstitutor pathMacroSubstitutor) {
     if (dir == null || !dir.exists()) {
       return;
     }
 
     Interner<String> interner = Interner.createStringInterner();
-    for (VirtualFile file : dir.getChildren()) {
+    File[] files = dir.listFiles();
+    if (files == null) {
+      return;
+    }
+
+    for (File file : files) {
       if (!isStorageFile(file)) {
         continue;
       }
 
       try {
-        Element element = JDOMUtil.loadDocument(file.contentsToByteArray()).getRootElement();
+        Element element = JDOMUtil.loadDocument(file).getRootElement();
         String name = StorageData.getComponentNameIfValid(element);
         if (name == null) {
           continue;
         }
 
         if (!element.getName().equals(StorageData.COMPONENT)) {
-          LOG.error("Incorrect root tag name (" + element.getName() + ") in " + file.getPresentableUrl());
+          LOG.error("Incorrect root tag name (" + element.getName() + ") in " + file.getPath());
           continue;
         }
 
@@ -162,23 +133,14 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
         data.setState(name, file.getName(), state);
       }
       catch (IOException | JDOMException e) {
-        LOG.info("Unable to load state: " + file.getPath(), e);
+        LOG.info("Unable to load state", e);
       }
     }
   }
 
-  public static boolean isStorageFile(@Nonnull VirtualFile file) {
+  public static boolean isStorageFile(@Nonnull File file) {
     // ignore system files like .DS_Store on Mac
-    return StringUtil.endsWithIgnoreCase(file.getNameSequence(), DirectoryStorageData.DEFAULT_EXT);
-  }
-
-  @Nullable
-  private VirtualFile getVirtualFile() {
-    VirtualFile virtualFile = myVirtualFile;
-    if (virtualFile == null) {
-      myVirtualFile = virtualFile = LocalFileSystem.getInstance().findFileByIoFile(myDir);
-    }
-    return virtualFile;
+    return StringUtil.endsWithIgnoreCase(file.getName(), DirectoryStorageData.DEFAULT_EXT);
   }
 
   @Override
@@ -198,44 +160,15 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
     return checkIsSavingDisabled() ? null : new MySaveSession(this, getStorageData());
   }
 
-  @Nonnull
-  public static VirtualFile createDir(@Nonnull File ioDir, @Nonnull Object requestor) {
-    //noinspection ResultOfMethodCallIgnored
-    ioDir.mkdirs();
-    String parentFile = ioDir.getParent();
-    VirtualFile parentVirtualFile = parentFile == null ? null : LocalFileSystem.getInstance().refreshAndFindFileByPath(parentFile.replace(File.separatorChar, '/'));
-    if (parentVirtualFile == null) {
-      throw new StateStorageException(parentFile + " not found");
-    }
-    return getFile(ioDir.getName(), parentVirtualFile, requestor);
-  }
-
-  @Nonnull
-  public static VirtualFile getFile(@Nonnull String fileName, @Nonnull VirtualFile parentVirtualFile, @Nonnull Object requestor) {
-    VirtualFile file = parentVirtualFile.findChild(fileName);
-    if (file != null) {
-      return file;
-    }
-
-    try {
-      return Application.get().runWriteAction((ThrowableComputable<VirtualFile, IOException>)() -> {
-        return parentVirtualFile.createChildData(requestor, fileName);
-      });
-    }
-    catch (IOException e) {
-      throw new StateStorageException(e);
-    }
-  }
-
   private static class MySaveSession implements SaveSession, ExternalizationSession {
-    private final VfsDirectoryBasedStorage storage;
+    private final IoDirectoryBasedStorage storage;
     private final DirectoryStorageData originalStorageData;
     private DirectoryStorageData copiedStorageData;
 
-    private final Set<String> dirtyFileNames = new SmartHashSet<String>();
-    private final Set<String> removedFileNames = new SmartHashSet<String>();
+    private final Set<String> dirtyFileNames = new SmartHashSet<>();
+    private final Set<String> removedFileNames = new SmartHashSet<>();
 
-    private MySaveSession(@Nonnull VfsDirectoryBasedStorage storage, @Nonnull DirectoryStorageData storageData) {
+    private MySaveSession(@Nonnull IoDirectoryBasedStorage storage, @Nonnull DirectoryStorageData storageData) {
       this.storage = storage;
       originalStorageData = storageData;
     }
@@ -293,11 +226,11 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
 
     @Override
     public void save(boolean force) {
-      VirtualFile dir = storage.getVirtualFile();
+      File dir = storage.myDir;
       if (copiedStorageData.isEmpty()) {
-        if (dir != null && dir.exists()) {
+        if (dir.exists()) {
           try {
-            StorageUtil.deleteFile(this, dir);
+            StorageUtil.deleteFile(dir);
           }
           catch (IOException e) {
             throw new StateStorageException(e);
@@ -307,9 +240,7 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
         return;
       }
 
-      if (dir == null || !dir.isValid()) {
-        dir = createDir(storage.myDir, this);
-      }
+      FileUtil.createDirectory(dir);
 
       if (!dirtyFileNames.isEmpty()) {
         saveStates(dir);
@@ -318,11 +249,10 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
         deleteFiles(dir);
       }
 
-      storage.myVirtualFile = dir;
       storage.myStorageData = copiedStorageData;
     }
 
-    private void saveStates(@Nonnull final VirtualFile dir) {
+    private void saveStates(@Nonnull final File dir) {
       final Element storeElement = new Element(StorageData.COMPONENT);
 
       for (final String componentName : copiedStorageData.getComponentNames()) {
@@ -340,15 +270,10 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
             storeElement.setAttribute(StorageData.NAME, componentName);
             storeElement.addContent(element);
 
-            byte[] byteOut;
-            VirtualFile file = getFile(fileName, dir, MySaveSession.this);
-            if (file.exists()) {
-              byteOut = StorageUtil.writeToBytes(storeElement);
-            }
-            else {
-              byteOut = StorageUtil.writeToBytes(storeElement);
-            }
-            StorageUtil.writeFile(null, MySaveSession.this, file, byteOut, null);
+            File childFile = new File(dir, fileName);
+            FileUtil.createParentDirs(childFile);
+            byte[] byteOut = StorageUtil.writeToBytes(storeElement, "\n");
+            StorageUtil.writeFile(childFile, byteOut, null);
           }
           catch (IOException e) {
             LOG.error(e);
@@ -360,26 +285,12 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
       }
     }
 
-    private void deleteFiles(@Nonnull VirtualFile dir) {
-      Application.get().runWriteAction(() -> {
-        for (VirtualFile file : dir.getChildren()) {
-          if (removedFileNames.contains(file.getName())) {
-            deleteFile(file, this);
-          }
+    private void deleteFiles(@Nonnull File dir) {
+      for (File file : dir.listFiles()) {
+        if (removedFileNames.contains(file.getName())) {
+          FileUtil.delete(file);
         }
-      });
-    }
-  }
-
-  public static void deleteFile(@Nonnull VirtualFile file, @Nonnull Object requestor) {
-    try {
-      file.delete(requestor);
-    }
-    catch (FileNotFoundException ignored) {
-      throw new ReadOnlyModificationException(VirtualFileUtil.virtualToIoFile(file));
-    }
-    catch (IOException e) {
-      throw new StateStorageException(e);
+      }
     }
   }
 }
