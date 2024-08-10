@@ -1,0 +1,160 @@
+java.terms.anonymous.class:
+    text: anonymous class
+java.terms.class:
+    text: class
+java.terms.package:
+    text: package
+java.terms.type.parameter:
+    text: type parameter
+java.terms.method:
+    text: method
+java.terms.field:
+    text: field
+java.terms.parameter:
+    text: parameter
+java.terms.variable:
+    text: variable
+java.terms.interface:
+    text: interface
+java.terms.exception:
+    text: exception
+java.terms.static.initializer:
+    text: static initializer
+java.terms.instance.initializer:
+    text: instance initializer
+java.terms.enum:
+    text: enum
+java.terms.annotation.interface:
+    text: '@interface'
+java.terms.label:
+    text: label
+java.terms.constructor:
+    text: constructor
+terms.directory:
+    text: directory
+terms.file:
+    text: file
+java.terms.of.anonymous.class:
+    text: '{0} of anonymous class'
+java.terms.of.interface:
+    text: '{0} of interface {1}'
+java.terms.of.enum:
+    text: '{0} of enum {1}'
+java.terms.of.annotation.type:
+    text: '{0} of annotation type {1}'
+java.terms.of.class:
+    text: '{0} of class {1}'
+java.terms.variable.of.method:
+    text: '{0} of {1}'
+java.terms.expression:
+    text: expression
+terms.property:
+    text: property
+unexpected.token:
+    text: Unexpected token
+unexpected.eof:
+    text: Unexpected end of file
+completion.no.suggestions:
+    text: No suggestions
+completion.quick.javadoc.ad:
+    text: Did you know that Quick Documentation View ({0}) works in completion lookups as well?
+completion.quick.implementations.ad:
+    text: Did you know that Quick Definition View ({0}) works in completion lookups as well?
+completion.dot.etc.ad:
+    text: Dot, semicolon and some other keys will also close this lookup and be inserted into editor
+completion.smart.enter.ad:
+    text: 'Use {0} to syntactically correct your code after completing (balance parentheses etc.)    '
+xml.terms.tag:
+    text: tag
+xml.terms.entity:
+    text: entity
+xml.terms.xml.tag:
+    text: XML tag
+xml.terms.attribute:
+    text: attribute
+xml.terms.attribute.value:
+    text: attribute value
+xml.terms.variable:
+    text: variable
+error.cannot.resolve:
+    text: Cannot resolve
+dialog.template.data.language.caption:
+    text: <html><body>Template data languages are the underlying languages in template files like those of FreeMarker/Velocity frameworks.<br>To change template data language settings {0} uses for a file, directory, or an entire project, click an item and then select a language from the Template Data Language list.<br><br>Note:<br>If not specified, files and directories inherit Template Data Language settings from parent.<br></body></html>
+template.data.language.configurable:
+    text: Template Data Languages
+template.data.language.configurable.tree.table.title:
+    text: Template data language
+template.data.language.override.warning.text:
+    text: There are template data languages specified for the subdirectories. Override them?
+template.data.language.override.warning.title:
+    text: Override Subdirectory Template Data Languages
+quickfix.change.template.data.language.text:
+    text: Change {0} template data language to...
+compacting.indices.title:
+    text: Compacting Indices
+color.name:
+    text: Color name:\&nbsp; {0}
+color.rgb:
+    text: Color RGB:\&nbsp; {0}
+color.preview:
+    text: '<table cellpadding=0 cellspacing=0 border=0><tr><td>Color preview:\&nbsp;</td><td style="background-color: #000000; padding: 1px">{0}</td></tr></table>'
+incorrect.name:
+    text: Incorrect name
+command.name.change.language:
+    text: Change Language
+indent.option.detected:
+    text: Detected
+indent.status.bar.tab:
+    text: Tab
+indent.status.bar.spaces:
+    text: '{0, choice, 1#{0} space|2#{0} spaces}'
+indent.status.bar.indent.tooltip:
+    text: 'Indent:'
+PerFileConfigurableBase.null.text:
+    text: <None>
+PerFileConfigurableBase.empty.text:
+    text: New Mapping $addShortcut
+PerFileConfigurableBase.mapping.title:
+    text: Mapping
+PerFileConfigurableBase.target.title:
+    text: Path
+PerFileConfigurableBase.project.mapping:
+    text: Project {0}
+PerFileConfigurableBase.label.project:
+    text: Project
+button.override:
+    text: Override
+button.do.not.override:
+    text: Do Not Override
+action.set.system.default.encoding.text:
+    text: <System Default>
+status.bar.text.reference.has.been.copied:
+    text: '{0} has been copied'
+popup.title.copy:
+    text: Copy
+tab.title.build.output:
+    text: Build Output
+build.event.title.build.issues:
+    text: Build Issues
+build.event.message.up.to.date:
+    text: UP-TO-DATE
+build.event.title.other.messages:
+    text: Other Messages
+build.tree.filters.show.succesful:
+    text: Show Successful Steps
+build.tree.filters.show.warnings:
+    text: Show Warnings
+action.filters.text:
+    text: Filters
+build.event.message.errors:
+    text: '{0} {0,choice, 1#error|2#errors}'
+build.event.message.warnings:
+    text: '{0} {0,choice, 1#warning|2#warnings}'
+build.event.message.with:
+    text: '{0} with {1}'
+tab.title.more:
+    text: '{0} and {1} More'
+hint.text.can.t.modify.decompiled.code:
+    text: Can't modify decompiled code
+hint.text.couldn.t.find.surround:
+    text: Couldn't find Surround With variants applicable to the current context

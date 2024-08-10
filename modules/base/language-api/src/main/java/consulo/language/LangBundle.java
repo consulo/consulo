@@ -16,7 +16,10 @@
 
 package consulo.language;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.component.util.localize.AbstractBundle;
+import consulo.language.localize.LanguageLocalize;
 import org.jetbrains.annotations.PropertyKey;
 
 import jakarta.annotation.Nonnull;
@@ -25,6 +28,9 @@ import java.util.function.Supplier;
 /**
  * @author yole
  */
+@Deprecated
+@DeprecationInfo("Use LanguageLocalize")
+@MigratedExtensionsTo(LanguageLocalize.class)
 public class LangBundle extends AbstractBundle{
   private static final LangBundle ourInstance = new LangBundle();
 
