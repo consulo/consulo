@@ -16,6 +16,7 @@
 package consulo.diff.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.diff.DiffContentFactory;
 import consulo.diff.DiffFilePath;
 import consulo.diff.InvalidDiffRequestException;
 import consulo.diff.content.DiffContent;
@@ -58,8 +59,8 @@ public class DiffRequestFactoryImpl implements DiffRequestFactoryEx {
   private final DiffFilePathFactory myDiffFilePathFactory;
 
   @Inject
-  public DiffRequestFactoryImpl(DiffContentFactoryEx contentFactory, DiffFilePathFactory diffFilePathFactory) {
-    myContentFactory = contentFactory;
+  public DiffRequestFactoryImpl(DiffContentFactory contentFactory, DiffFilePathFactory diffFilePathFactory) {
+    myContentFactory = (DiffContentFactoryEx) contentFactory;
     myDiffFilePathFactory = diffFilePathFactory;
   }
 
