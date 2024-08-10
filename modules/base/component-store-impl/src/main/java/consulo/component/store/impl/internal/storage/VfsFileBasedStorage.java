@@ -46,7 +46,7 @@ import java.util.Set;
 /**
  * File storage - based on Consulo VFS
  */
-public final class VfsFileBasedStorage extends XmlElementStorage {
+public final class VfsFileBasedStorage extends XmlElementStorage implements FileBasedStorage {
   private final String myFilePath;
   private final boolean myUseXmlProlog;
   private final File myFile;
@@ -156,6 +156,7 @@ public final class VfsFileBasedStorage extends XmlElementStorage {
     return myFile;
   }
 
+  @Override
   @Nonnull
   public String getFilePath() {
     return myFilePath;

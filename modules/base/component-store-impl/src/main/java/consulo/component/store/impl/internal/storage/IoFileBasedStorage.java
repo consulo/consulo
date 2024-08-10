@@ -44,7 +44,7 @@ import java.nio.charset.StandardCharsets;
  * @author VISTALL
  * @since 2019-02-13
  */
-public final class IoFileBasedStorage extends XmlElementStorage {
+public final class IoFileBasedStorage extends XmlElementStorage implements FileBasedStorage {
   private final String myFilePath;
   private final boolean myUseXmlProlog;
   private final File myFile;
@@ -125,6 +125,7 @@ public final class IoFileBasedStorage extends XmlElementStorage {
     return myFile;
   }
 
+  @Override
   @Nonnull
   public String getFilePath() {
     return myFilePath;

@@ -56,11 +56,8 @@ public abstract class XmlElementStorage extends StateStorageBase<StorageData> {
     myStreamProvider = myRoamingType == RoamingType.DISABLED ? null : streamProvider;
   }
 
-
-
   @Nullable
   protected abstract Element loadLocalData();
-
 
   @Nullable
   @Override

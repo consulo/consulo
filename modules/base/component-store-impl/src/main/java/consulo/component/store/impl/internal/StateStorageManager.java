@@ -18,11 +18,9 @@ package consulo.component.store.impl.internal;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.Storage;
 import consulo.component.store.impl.internal.storage.StateStorage;
-import consulo.component.store.impl.internal.storage.VfsFileBasedStorage;
-import consulo.util.lang.Couple;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -40,9 +38,6 @@ public interface StateStorageManager {
 
   @Nullable
   StateStorage getStateStorage(@Nonnull String fileSpec, @Nonnull RoamingType roamingType);
-
-  @Nonnull
-  Couple<Collection<VfsFileBasedStorage>> getCachedFileStateStorages(@Nonnull Collection<String> changed, @Nonnull Collection<String> deleted);
 
   @Nonnull
   Collection<String> getStorageFileNames();

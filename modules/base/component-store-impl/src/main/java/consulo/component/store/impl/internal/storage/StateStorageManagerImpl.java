@@ -178,18 +178,6 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
   }
 
   @Nonnull
-  @Override
-  public Couple<Collection<VfsFileBasedStorage>> getCachedFileStateStorages(@Nonnull Collection<String> changed, @Nonnull Collection<String> deleted) {
-    myStorageLock.lock();
-    try {
-      return Couple.of(getCachedFileStorages(changed), getCachedFileStorages(deleted));
-    }
-    finally {
-      myStorageLock.unlock();
-    }
-  }
-
-  @Nonnull
   private Collection<VfsFileBasedStorage> getCachedFileStorages(@Nonnull Collection<String> fileSpecs) {
     if (fileSpecs.isEmpty()) {
       return Collections.emptyList();
