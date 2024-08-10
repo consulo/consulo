@@ -39,16 +39,6 @@ public abstract class StartupManager {
     return project.getInstance(StartupManager.class);
   }
 
-  public abstract void registerPreStartupActivity(@Nonnull StartupActivity activity);
-
-  /**
-   * Registers an activity which is performed during project load while the "Loading Project"
-   * progress bar is displayed. You may NOT access the PSI structures from the activity.
-   *
-   * @param consumer the activity to execute.
-   */
-  public abstract void registerStartupActivity(@Nonnull StartupActivity activity);
-
   /**
    * Registers an activity which is performed during project load after the "Loading Project"
    * progress bar is displayed. You may access the PSI structures from the activity.
@@ -76,26 +66,6 @@ public abstract class StartupManager {
   public abstract boolean postStartupActivityPassed();
 
   // region Deprecated Staff
-  @Deprecated
-  public final void registerPreStartupActivity(@Nonnull Runnable runnable) {
-    if (runnable instanceof DumbAware) {
-      registerPreStartupActivity((StartupActivity.DumbAware)(project, uiAccess) -> runnable.run());
-    }
-    else {
-      registerPreStartupActivity((StartupActivity)(project, uiAccess) -> runnable.run());
-    }
-  }
-
-  @Deprecated
-  public final void registerStartupActivity(@Nonnull Runnable runnable) {
-    if (runnable instanceof DumbAware) {
-      registerStartupActivity((StartupActivity.DumbAware)(project, uiAccess) -> runnable.run());
-    }
-    else {
-      registerStartupActivity((StartupActivity)(project, uiAccess) -> runnable.run());
-    }
-  }
-
   @Deprecated
   public final void registerPostStartupActivity(@Nonnull Runnable runnable) {
     if (runnable instanceof DumbAware) {

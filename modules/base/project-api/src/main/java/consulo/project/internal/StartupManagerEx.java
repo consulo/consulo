@@ -22,9 +22,12 @@ import consulo.project.startup.StartupManager;
  * @author mike
  */
 public abstract class StartupManagerEx extends StartupManager {
-  public abstract boolean startupActivityPassed();
+    @Deprecated
+    public boolean startupActivityPassed() {
+        return true;
+    }
 
-  public static StartupManagerEx getInstanceEx(Project project) {
-    return (StartupManagerEx)getInstance(project);
-  }
+    public static StartupManagerEx getInstanceEx(Project project) {
+        return (StartupManagerEx) getInstance(project);
+    }
 }

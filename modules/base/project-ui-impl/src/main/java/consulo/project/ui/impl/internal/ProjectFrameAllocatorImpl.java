@@ -18,6 +18,7 @@ package consulo.project.ui.impl.internal;
 import consulo.annotation.component.ServiceImpl;
 import consulo.project.Project;
 import consulo.project.internal.ProjectFrameAllocator;
+import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.project.ui.wm.WindowManager;
@@ -49,5 +50,13 @@ public class ProjectFrameAllocatorImpl implements ProjectFrameAllocator {
         myWindowManager.allocateFrame(myProject);
         // force close welcome frame after frame allocating, since its project open
         myWelcomeFrameManager.closeFrame();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void initializeFrame() {
+        IdeFrameEx frame = myWindowManager.getIdeFrame(myProject);
+
+        frame.initialize();
     }
 }

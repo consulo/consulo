@@ -51,16 +51,10 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
 
     private final Object myLock = new Object();
 
-    private final Deque<StartupActivity> myPreStartupActivities = new ArrayDeque<>();
-    private final Deque<StartupActivity> myStartupActivities = new ArrayDeque<>();
-
     private final Deque<StartupActivity> myDumbAwarePostStartupActivities = new ArrayDeque<>();
     private final Deque<StartupActivity> myNotDumbAwarePostStartupActivities = new ArrayDeque<>();
     // guarded by this
     private boolean myPostStartupActivitiesPassed;
-
-    private volatile boolean myPreStartupActivitiesPassed;
-    private volatile boolean myStartupActivitiesPassed;
 
     @Nonnull
     private final Application myApplication;
@@ -78,28 +72,10 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
     }
 
     @Override
-    public void registerPreStartupActivity(@Nonnull StartupActivity runnable) {
-        checkNonDefaultProject();
-        LOG.assertTrue(!myPreStartupActivitiesPassed, "Registering pre startup activity that will never be run");
-        synchronized (myLock) {
-            myPreStartupActivities.add(runnable);
-        }
-    }
-
-    @Override
-    public void registerStartupActivity(@Nonnull StartupActivity runnable) {
-        checkNonDefaultProject();
-        LOG.assertTrue(!myStartupActivitiesPassed, "Registering startup activity that will never be run");
-        synchronized (myLock) {
-            myStartupActivities.add(runnable);
-        }
-    }
-
-    @Override
     public synchronized void registerPostStartupActivity(@Nonnull StartupActivity consumer) {
         checkNonDefaultProject();
         if (myPostStartupActivitiesPassed) {
-            LOG.error("Registering post-startup activity that will never be run:" + " disposed=" + myProject.isDisposed() + "; open=" + myProject.isOpen() + "; passed=" + myStartupActivitiesPassed);
+            LOG.error("Registering post-startup activity that will never be run:" + " disposed=" + myProject.isDisposed() + "; open=" + myProject.isOpen());
         }
 
         Deque<StartupActivity> list = DumbService.isDumbAware(consumer) ? myDumbAwarePostStartupActivities : myNotDumbAwarePostStartupActivities;
@@ -109,31 +85,8 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
     }
 
     @Override
-    public boolean startupActivityPassed() {
-        return myStartupActivitiesPassed;
-    }
-
-    @Override
     public synchronized boolean postStartupActivityPassed() {
         return myPostStartupActivitiesPassed;
-    }
-
-    @SuppressWarnings("SynchronizeOnThis")
-    public void runStartupActivities(UIAccess uiAccess) {
-        myApplication.runReadAction(() -> {
-            runActivities(uiAccess, myPreStartupActivities, StartUpMeasurer.Phases.PROJECT_PRE_STARTUP);
-
-            // to avoid atomicity issues if runWhenProjectIsInitialized() is run at the same time
-            synchronized (this) {
-                myPreStartupActivitiesPassed = true;
-            }
-
-            runActivities(uiAccess, myStartupActivities, StartUpMeasurer.Phases.PROJECT_STARTUP);
-
-            synchronized (this) {
-                myStartupActivitiesPassed = true;
-            }
-        });
     }
 
     public void runPostStartupActivitiesFromExtensions(UIAccess uiAccess) {
@@ -415,8 +368,6 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
     @TestOnly
     public synchronized void prepareForNextTest() {
         synchronized (myLock) {
-            myPreStartupActivities.clear();
-            myStartupActivities.clear();
             myDumbAwarePostStartupActivities.clear();
             myNotDumbAwarePostStartupActivities.clear();
         }
@@ -426,10 +377,8 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
     public synchronized void checkCleared() {
         try {
             synchronized (myLock) {
-                assert myStartupActivities.isEmpty() : "Activities: " + myStartupActivities;
                 assert myDumbAwarePostStartupActivities.isEmpty() : "DumbAware Post Activities: " + myDumbAwarePostStartupActivities;
                 assert myNotDumbAwarePostStartupActivities.isEmpty() : "Post Activities: " + myNotDumbAwarePostStartupActivities;
-                assert myPreStartupActivities.isEmpty() : "Pre Activities: " + myPreStartupActivities;
             }
         }
         finally {

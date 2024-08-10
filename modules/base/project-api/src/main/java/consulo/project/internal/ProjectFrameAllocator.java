@@ -27,4 +27,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 public interface ProjectFrameAllocator {
     @RequiredUIAccess
     void allocateFrame();
+
+    @RequiredUIAccess
+    void initializeFrame();
 }

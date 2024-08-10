@@ -640,7 +640,6 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
         myApplication.getMessageBus().syncPublisher(ProjectManagerListener.class).projectOpened(project, uiAccess);
 
         final StartupManagerImpl startupManager = (StartupManagerImpl) StartupManager.getInstance(project);
-        startupManager.runStartupActivities(uiAccess);
         startupManager.runPostStartupActivitiesFromExtensions(uiAccess);
 
         if (!project.isDisposed()) {

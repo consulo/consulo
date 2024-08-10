@@ -17,25 +17,23 @@ package consulo.ide.impl.idea.util.indexing;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.ide.ServiceManager;
 import consulo.application.progress.ProgressIndicator;
-import consulo.project.Project;
 import consulo.content.ContentIterator;
+import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
-
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class FileBasedIndexScanRunnableCollector {
-  public static FileBasedIndexScanRunnableCollector getInstance(@Nonnull Project project) {
-    return ServiceManager.getService(project, FileBasedIndexScanRunnableCollector.class);
-  }
+    public static FileBasedIndexScanRunnableCollector getInstance(@Nonnull Project project) {
+        return project.getInstance(FileBasedIndexScanRunnableCollector.class);
+    }
 
-  // Returns true if file should be indexed
-  public abstract boolean shouldCollect(@Nonnull final VirtualFile file);
+    // Returns true if file should be indexed
+    public abstract boolean shouldCollect(@Nonnull final VirtualFile file);
 
-  // Collect all roots for indexing
-  public abstract List<Runnable> collectScanRootRunnables(@Nonnull final ContentIterator processor, final ProgressIndicator indicator);
+    // Collect all roots for indexing
+    public abstract List<Runnable> collectScanRootRunnables(@Nonnull final ContentIterator processor, final ProgressIndicator indicator);
 }

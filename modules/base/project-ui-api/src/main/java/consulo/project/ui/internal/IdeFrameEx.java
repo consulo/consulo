@@ -15,6 +15,7 @@
  */
 package consulo.project.ui.internal;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.dataholder.Key;
 import consulo.project.ui.wm.IdeFrame;
@@ -41,5 +42,10 @@ public interface IdeFrameEx extends IdeFrame {
   }
 
   default void updateView() {
+  }
+
+  @RequiredUIAccess
+  default void initialize() {
+
   }
 }
