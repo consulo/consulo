@@ -22,10 +22,10 @@ import consulo.component.store.impl.internal.StreamProvider;
 import consulo.component.store.impl.internal.TrackingPathMacroSubstitutor;
 import consulo.component.store.impl.internal.storage.io.IoDirectoryBasedStorage;
 import consulo.component.store.impl.internal.storage.io.IoFileBasedStorage;
+import consulo.component.store.impl.internal.storage.nio.PathFileBasedStorage;
 import consulo.component.store.impl.internal.storage.vfs.VfsDirectoryBasedStorage;
 import consulo.component.store.impl.internal.storage.vfs.VfsFileBasedStorage;
 import consulo.disposer.Disposable;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -34,78 +34,105 @@ import jakarta.annotation.Nullable;
  * @since 2019-02-13
  */
 public enum StateStorageFacade {
-  JAVA_IO {
-    @Nonnull
-    @Override
-    public StateStorage createFileBasedStorage(@Nonnull String filePath,
-                                               @Nonnull String fileSpec,
-                                               @Nullable RoamingType roamingType,
-                                               @Nullable TrackingPathMacroSubstitutor pathMacroManager,
-                                               @Nonnull String rootElementName,
-                                               @Nonnull Disposable parentDisposable,
-                                               @Nullable StateStorageListener listener,
-                                               @Nullable StreamProvider streamProvider,
-                                               boolean useXmlProlog,
-                                               @Nonnull PathMacrosService pathMacrosService) {
-      return new IoFileBasedStorage(filePath, fileSpec, roamingType, pathMacroManager, rootElementName, parentDisposable, listener, streamProvider, useXmlProlog, pathMacrosService);
-    }
+    JAVA_IO {
+        @Nonnull
+        @Override
+        public StateStorage createFileBasedStorage(@Nonnull String filePath,
+                                                   @Nonnull String fileSpec,
+                                                   @Nullable RoamingType roamingType,
+                                                   @Nullable TrackingPathMacroSubstitutor pathMacroManager,
+                                                   @Nonnull String rootElementName,
+                                                   @Nonnull Disposable parentDisposable,
+                                                   @Nullable StateStorageListener listener,
+                                                   @Nullable StreamProvider streamProvider,
+                                                   boolean useXmlProlog,
+                                                   @Nonnull PathMacrosService pathMacrosService) {
+            return new IoFileBasedStorage(filePath, fileSpec, roamingType, pathMacroManager, rootElementName, parentDisposable, listener, streamProvider, useXmlProlog, pathMacrosService);
+        }
+
+        @Nonnull
+        @Override
+        public StateStorage createDirectoryBasedStorage(@Nullable TrackingPathMacroSubstitutor pathMacroSubstitutor,
+                                                        @Nonnull String dir,
+                                                        @Nonnull StateSplitterEx splitter,
+                                                        @Nonnull Disposable parentDisposable,
+                                                        @Nullable StateStorageListener listener,
+                                                        @Nonnull PathMacrosService pathMacrosService) {
+            return new IoDirectoryBasedStorage(pathMacroSubstitutor, dir, splitter, parentDisposable, listener, pathMacrosService);
+        }
+    },
+    JAVA_NIO {
+        @Nonnull
+        @Override
+        public StateStorage createFileBasedStorage(@Nonnull String filePath,
+                                                   @Nonnull String fileSpec,
+                                                   @Nullable RoamingType roamingType,
+                                                   @Nullable TrackingPathMacroSubstitutor pathMacroManager,
+                                                   @Nonnull String rootElementName,
+                                                   @Nonnull Disposable parentDisposable,
+                                                   @Nullable StateStorageListener listener,
+                                                   @Nullable StreamProvider streamProvider,
+                                                   boolean useXmlProlog,
+                                                   @Nonnull PathMacrosService pathMacrosService) {
+            return new PathFileBasedStorage(filePath, fileSpec, roamingType, pathMacroManager, rootElementName, parentDisposable, listener, streamProvider, useXmlProlog, pathMacrosService);
+        }
+
+        @Nonnull
+        @Override
+        public StateStorage createDirectoryBasedStorage(@Nullable TrackingPathMacroSubstitutor pathMacroSubstitutor,
+                                                        @Nonnull String dir,
+                                                        @Nonnull StateSplitterEx splitter,
+                                                        @Nonnull Disposable parentDisposable,
+                                                        @Nullable StateStorageListener listener,
+                                                        @Nonnull PathMacrosService pathMacrosService) {
+            return new IoDirectoryBasedStorage(pathMacroSubstitutor, dir, splitter, parentDisposable, listener, pathMacrosService);
+        }
+    },
+    CONSULO_VFS {
+        @Nonnull
+        @Override
+        public StateStorage createFileBasedStorage(@Nonnull String filePath,
+                                                   @Nonnull String fileSpec,
+                                                   @Nullable RoamingType roamingType,
+                                                   @Nullable TrackingPathMacroSubstitutor pathMacroManager,
+                                                   @Nonnull String rootElementName,
+                                                   @Nonnull Disposable parentDisposable,
+                                                   @Nullable StateStorageListener listener,
+                                                   @Nullable StreamProvider streamProvider,
+                                                   boolean useXmlProlog,
+                                                   @Nonnull PathMacrosService pathMacrosService) {
+            return new VfsFileBasedStorage(filePath, fileSpec, roamingType, pathMacroManager, rootElementName, parentDisposable, listener, streamProvider, useXmlProlog, pathMacrosService);
+        }
+
+        @Nonnull
+        @Override
+        public StateStorage createDirectoryBasedStorage(@Nullable TrackingPathMacroSubstitutor pathMacroSubstitutor,
+                                                        @Nonnull String dir,
+                                                        @Nonnull StateSplitterEx splitter,
+                                                        @Nonnull Disposable parentDisposable,
+                                                        @Nullable StateStorageListener listener,
+                                                        @Nonnull PathMacrosService pathMacrosService) {
+            return new VfsDirectoryBasedStorage(pathMacroSubstitutor, dir, splitter, parentDisposable, listener, pathMacrosService);
+        }
+    };
 
     @Nonnull
-    @Override
-    public StateStorage createDirectoryBasedStorage(@Nullable TrackingPathMacroSubstitutor pathMacroSubstitutor,
-                                                    @Nonnull String dir,
-                                                    @Nonnull StateSplitterEx splitter,
-                                                    @Nonnull Disposable parentDisposable,
-                                                    @Nullable StateStorageListener listener,
-                                                    @Nonnull PathMacrosService pathMacrosService) {
-      return new IoDirectoryBasedStorage(pathMacroSubstitutor, dir, splitter, parentDisposable, listener, pathMacrosService);
-    }
-  },
-  CONSULO_VFS {
-    @Nonnull
-    @Override
-    public StateStorage createFileBasedStorage(@Nonnull String filePath,
-                                               @Nonnull String fileSpec,
-                                               @Nullable RoamingType roamingType,
-                                               @Nullable TrackingPathMacroSubstitutor pathMacroManager,
-                                               @Nonnull String rootElementName,
-                                               @Nonnull Disposable parentDisposable,
-                                               @Nullable StateStorageListener listener,
-                                               @Nullable StreamProvider streamProvider,
-                                               boolean useXmlProlog,
-                                               @Nonnull PathMacrosService pathMacrosService) {
-      return new VfsFileBasedStorage(filePath, fileSpec, roamingType, pathMacroManager, rootElementName, parentDisposable, listener, streamProvider, useXmlProlog, pathMacrosService);
-    }
+    public abstract StateStorage createFileBasedStorage(@Nonnull String filePath,
+                                                        @Nonnull String fileSpec,
+                                                        @Nullable RoamingType roamingType,
+                                                        @Nullable TrackingPathMacroSubstitutor pathMacroManager,
+                                                        @Nonnull String rootElementName,
+                                                        @Nonnull Disposable parentDisposable,
+                                                        @Nullable StateStorageListener listener,
+                                                        @Nullable StreamProvider streamProvider,
+                                                        boolean useXmlProlog,
+                                                        @Nonnull PathMacrosService pathMacrosService);
 
     @Nonnull
-    @Override
-    public StateStorage createDirectoryBasedStorage(@Nullable TrackingPathMacroSubstitutor pathMacroSubstitutor,
-                                                    @Nonnull String dir,
-                                                    @Nonnull StateSplitterEx splitter,
-                                                    @Nonnull Disposable parentDisposable,
-                                                    @Nullable StateStorageListener listener,
-                                                    @Nonnull PathMacrosService pathMacrosService) {
-      return new VfsDirectoryBasedStorage(pathMacroSubstitutor, dir, splitter, parentDisposable, listener, pathMacrosService);
-    }
-  };
-
-  @Nonnull
-  public abstract StateStorage createFileBasedStorage(@Nonnull String filePath,
-                                                      @Nonnull String fileSpec,
-                                                      @Nullable RoamingType roamingType,
-                                                      @Nullable TrackingPathMacroSubstitutor pathMacroManager,
-                                                      @Nonnull String rootElementName,
-                                                      @Nonnull Disposable parentDisposable,
-                                                      @Nullable StateStorageListener listener,
-                                                      @Nullable StreamProvider streamProvider,
-                                                      boolean useXmlProlog,
-                                                      @Nonnull PathMacrosService pathMacrosService);
-
-  @Nonnull
-  public abstract StateStorage createDirectoryBasedStorage(@Nullable TrackingPathMacroSubstitutor pathMacroSubstitutor,
-                                                           @Nonnull String dir,
-                                                           @Nonnull StateSplitterEx splitter,
-                                                           @Nonnull Disposable parentDisposable,
-                                                           @Nullable StateStorageListener listener,
-                                                           @Nonnull PathMacrosService pathMacrosService);
+    public abstract StateStorage createDirectoryBasedStorage(@Nullable TrackingPathMacroSubstitutor pathMacroSubstitutor,
+                                                             @Nonnull String dir,
+                                                             @Nonnull StateSplitterEx splitter,
+                                                             @Nonnull Disposable parentDisposable,
+                                                             @Nullable StateStorageListener listener,
+                                                             @Nonnull PathMacrosService pathMacrosService);
 }

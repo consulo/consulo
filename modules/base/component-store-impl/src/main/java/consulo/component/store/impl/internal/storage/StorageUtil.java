@@ -53,7 +53,7 @@ import java.util.concurrent.CompletableFuture;
 public class StorageUtil {
   private static final Logger LOG = Logger.getInstance(StorageUtil.class);
 
-  private static final byte[] XML_PROLOG = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>".getBytes(StandardCharsets.UTF_8);
+    public static final byte[] XML_PROLOG = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>".getBytes(StandardCharsets.UTF_8);
 
   private StorageUtil() {
   }
