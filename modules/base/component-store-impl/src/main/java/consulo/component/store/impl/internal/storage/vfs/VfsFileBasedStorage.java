@@ -143,6 +143,7 @@ public final class VfsFileBasedStorage extends XmlElementStorage implements File
     return new StorageData(myRootElementName, myPathMacrosService);
   }
 
+  @Override
   @Nullable
   public VirtualFile getVirtualFile() {
     VirtualFile virtualFile = myCachedVirtualFile;

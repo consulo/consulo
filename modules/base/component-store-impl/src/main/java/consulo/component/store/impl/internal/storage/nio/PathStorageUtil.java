@@ -21,7 +21,9 @@ import consulo.platform.LineSeparator;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.AccessDeniedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -41,7 +43,7 @@ public class PathStorageUtil {
                 out.write(content);
             }
         }
-        catch (FileNotFoundException e) {
+        catch (AccessDeniedException e) {
             throw new ReadOnlyModificationException(file.toFile());
         }
     }

@@ -119,7 +119,7 @@ public class PathFileBasedStorage extends XmlElementStorage implements FileBased
             }
             else {
                 if (!Files.exists(myFile)) {
-                    Files.createDirectories(myFile);
+                    Files.createDirectories(myFile.getParent());
                 }
 
                 PathStorageUtil.writeFile(myFile, content, isUseXmlProlog() ? myLineSeparator : null);

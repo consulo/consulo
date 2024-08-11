@@ -22,6 +22,7 @@ import consulo.component.store.impl.internal.StreamProvider;
 import consulo.component.store.impl.internal.TrackingPathMacroSubstitutor;
 import consulo.component.store.impl.internal.storage.io.IoDirectoryBasedStorage;
 import consulo.component.store.impl.internal.storage.io.IoFileBasedStorage;
+import consulo.component.store.impl.internal.storage.nio.PathDirectoryBasedStorage;
 import consulo.component.store.impl.internal.storage.nio.PathFileBasedStorage;
 import consulo.component.store.impl.internal.storage.vfs.VfsDirectoryBasedStorage;
 import consulo.component.store.impl.internal.storage.vfs.VfsFileBasedStorage;
@@ -85,7 +86,7 @@ public enum StateStorageFacade {
                                                         @Nonnull Disposable parentDisposable,
                                                         @Nullable StateStorageListener listener,
                                                         @Nonnull PathMacrosService pathMacrosService) {
-            return new IoDirectoryBasedStorage(pathMacroSubstitutor, dir, splitter, parentDisposable, listener, pathMacrosService);
+            return new PathDirectoryBasedStorage(pathMacroSubstitutor, dir, splitter, parentDisposable, listener, pathMacrosService);
         }
     },
     CONSULO_VFS {
