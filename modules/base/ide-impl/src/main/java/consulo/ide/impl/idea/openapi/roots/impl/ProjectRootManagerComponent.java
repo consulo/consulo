@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.openapi.roots.impl;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.event.ApplicationListener;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.store.impl.internal.BatchUpdateListener;
@@ -80,7 +79,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
   private final boolean myDoLogCachesUpdate;
 
   @Inject
-  public ProjectRootManagerComponent(Project project) {
+  public ProjectRootManagerComponent(Project project, VirtualFileManager virtualFileManager) {
     super(project);
 
     MessageBusConnection connection = project.getMessageBus().connect(project);
@@ -96,12 +95,12 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
       }
     });
 
-    VirtualFileManager.getInstance().addVirtualFileManagerListener(new VirtualFileManagerListener() {
+    virtualFileManager.addVirtualFileManagerListener(new VirtualFileManagerListener() {
       @Override
       public void afterRefreshFinish(boolean asynchronous) {
         doUpdateOnRefresh();
       }
-    }, project);
+    }, this);
 
     BatchUpdateListener handler = new BatchUpdateListener() {
       @Override

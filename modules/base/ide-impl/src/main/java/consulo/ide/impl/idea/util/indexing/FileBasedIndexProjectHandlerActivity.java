@@ -19,8 +19,10 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.openapi.roots.impl.ProjectRootManagerComponent;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.logging.Logger;
+import consulo.module.content.ProjectRootManager;
 import consulo.module.content.PushedFilePropertiesUpdater;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -72,5 +74,9 @@ public class FileBasedIndexProjectHandlerActivity implements PostStartupActivity
                 }
             }
         });
+
+        ProjectRootManagerComponent component = (ProjectRootManagerComponent) ProjectRootManager.getInstance(project);
+
+        component.projectOpened();
     }
 }
