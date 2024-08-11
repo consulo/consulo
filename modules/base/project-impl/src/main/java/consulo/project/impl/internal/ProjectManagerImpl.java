@@ -34,6 +34,7 @@ import consulo.component.store.impl.internal.storage.StorageUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.FileDocumentManager;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.ModuleManager;
 import consulo.module.impl.internal.ModuleManagerComponent;
@@ -557,8 +558,8 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
                                   AsyncResult<Project> projectAsyncResult,
                                   boolean init,
                                   UIAccess uiAccess) {
-        Task.Modal.queue(project, ProjectLocalize.projectLoadProgress().get(), canCancelProjectLoading(), progressIndicator -> {
-            progressIndicator.setIndeterminate(true);
+        Task.Modal.queue(project, ProjectLocalize.projectLoadProgress().get(), canCancelProjectLoading(), indicator -> {
+            indicator.setIndeterminate(true);
 
             try {
                 if (!addToOpened(project)) {
@@ -571,56 +572,19 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
                 uiAccess.giveAndWait(projectFrameAllocator::allocateFrame);
 
                 if (init) {
-                    initProjectAsync(project, null, progressIndicator);
+                    initProjectAsync(project, null, indicator);
                 }
 
-                prepareModules(project, uiAccess, projectAsyncResult).doWhenDone(() -> {
-                    prepareProjectWorkspace(project, uiAccess, projectAsyncResult);
-                });
-            }
-            catch (ProcessCanceledException e) {
-                throw e;
-            }
-            catch (Throwable e) {
-                LOG.error(e);
+                indicator.setText("Loading modules...");
+                indicator.setText2Value(LocalizeValue.of());
 
-                projectAsyncResult.rejectWithThrowable(e);
-            }
-        });
-    }
+                ModuleManagerComponent moduleManager = (ModuleManagerComponent) ModuleManager.getInstance(project);
 
-    private AsyncResult<Void> prepareModules(Project project,
-                                             UIAccess uiAccess,
-                                             AsyncResult<Project> projectAsyncResult) {
-        AsyncResult<Void> result = AsyncResult.undefined();
+                moduleManager.loadModules(indicator).get();
 
-        Task.Modal.queue(project, "Loading modules...", canCancelProjectLoading(), indicator -> {
-            ModuleManagerComponent moduleManager = (ModuleManagerComponent) ModuleManager.getInstance(project);
+                indicator.setText("Preparing workspace...");
+                indicator.setText2Value(LocalizeValue.of());
 
-            try {
-                moduleManager.loadModules(indicator, result);
-            }
-            catch (ProcessCanceledException e) {
-                throw e;
-            }
-            catch (Throwable e) {
-                LOG.error(e);
-
-                result.rejectWithThrowable(e);
-                projectAsyncResult.rejectWithThrowable(e);
-            }
-        });
-
-        return result;
-    }
-
-    private void prepareProjectWorkspace(Project project,
-                                         UIAccess uiAccess,
-                                         AsyncResult<Project> projectAsyncResult) {
-        Task.Modal.queue(project, "Preparing workspace...", canCancelProjectLoading(), progressIndicator -> {
-            progressIndicator.setIndeterminate(true);
-
-            try {
                 openProjectRequireBackgroundTask(project, uiAccess);
 
                 projectAsyncResult.setDone(project);

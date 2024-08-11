@@ -30,11 +30,12 @@ import consulo.module.Module;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.project.Project;
-import consulo.util.concurrent.AsyncResult;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author yole
@@ -43,95 +44,96 @@ import jakarta.inject.Singleton;
 @Singleton
 @ServiceImpl
 public class ModuleManagerComponent extends ModuleManagerImpl {
-  public static final Logger LOG = Logger.getInstance(ModuleManagerComponent.class);
+    public static final Logger LOG = Logger.getInstance(ModuleManagerComponent.class);
 
-  @Nonnull
-  private final ProgressManager myProgressManager;
-  @Nonnull
-  private final MessageBusConnection myConnection;
-  @Nonnull
-  private final ComponentBinding myComponentBinding;
+    @Nonnull
+    private final ProgressManager myProgressManager;
+    @Nonnull
+    private final MessageBusConnection myConnection;
+    @Nonnull
+    private final ComponentBinding myComponentBinding;
 
-  @Inject
-  public ModuleManagerComponent(Project project, @Nonnull ProgressManager progressManager, @Nonnull ComponentBinding componentBinding) {
-    super(project);
-    myComponentBinding = componentBinding;
-    myConnection = myMessageBus.connect(project);
-    myProgressManager = progressManager;
+    @Inject
+    public ModuleManagerComponent(Project project, @Nonnull ProgressManager progressManager, @Nonnull ComponentBinding componentBinding) {
+        super(project);
+        myComponentBinding = componentBinding;
+        myConnection = myMessageBus.connect(project);
+        myProgressManager = progressManager;
 
-    myConnection.subscribe(ModuleRootListener.class, new ModuleRootListener() {
-      @Override
-      public void beforeRootsChange(ModuleRootEvent event) {
-        cleanCachedStuff();
-      }
+        myConnection.subscribe(ModuleRootListener.class, new ModuleRootListener() {
+            @Override
+            public void beforeRootsChange(ModuleRootEvent event) {
+                cleanCachedStuff();
+            }
 
-      @Override
-      public void rootsChanged(ModuleRootEvent event) {
-        cleanCachedStuff();
-      }
-    });
+            @Override
+            public void rootsChanged(ModuleRootEvent event) {
+                cleanCachedStuff();
+            }
+        });
 
-    if (project.isDefault()) {
-      myReady = true;
-    }
-  }
-
-  @Nonnull
-  @Override
-  protected ModuleEx createModule(@Nonnull String name, @Nullable String dirUrl, ProgressIndicator progressIndicator) {
-    return new ModuleImpl(name, dirUrl, myProject, myComponentBinding);
-  }
-
-  public void loadModules(@Nonnull ProgressIndicator indicator, AsyncResult<Void> result) {
-    StatCollector stat = new StatCollector();
-
-    stat.markWith("load modules", () -> loadModules(myModuleModel, indicator, true));
-
-    indicator.setIndeterminate(true);
-
-    AccessRule.writeAsync(() -> {
-      stat.markWith("fire modules add", () -> {
-        for (Module module : myModuleModel.myModules) {
-          fireModuleAdded(module);
+        if (project.isDefault()) {
+            myReady = true;
         }
-      });
+    }
 
-      myReady = true;
-      stat.dump("ModulesManager", LOG::info);
-    }).whenComplete((unused, throwable) -> result.setDone());
-  }
+    @Nonnull
+    @Override
+    protected ModuleEx createModule(@Nonnull String name, @Nullable String dirUrl, ProgressIndicator progressIndicator) {
+        return new ModuleImpl(name, dirUrl, myProject, myComponentBinding);
+    }
 
-  @Override
-  protected void fireModulesAdded() {
-    Runnable runnableWithProgress = () -> {
-      Application app = myProject.getApplication();
-      for (final Module module : myModuleModel.getModules()) {
-        final Runnable swingRunnable = () -> fireModuleAddedInWriteAction(module);
-        if (app.isDispatchThread() || app.isHeadlessEnvironment()) {
-          swingRunnable.run();
+    @Nonnull
+    public CompletableFuture<?> loadModules(@Nonnull ProgressIndicator indicator) {
+        StatCollector stat = new StatCollector();
+
+        stat.markWith("load modules", () -> loadModules(myModuleModel, indicator, true));
+
+        indicator.setIndeterminate(true);
+
+        return AccessRule.writeAsync(() -> {
+            stat.markWith("fire modules add", () -> {
+                for (Module module : myModuleModel.myModules) {
+                    fireModuleAdded(module);
+                }
+            });
+
+            myReady = true;
+            stat.dump("ModulesManager", LOG::info);
+        });
+    }
+
+    @Override
+    protected void fireModulesAdded() {
+        Runnable runnableWithProgress = () -> {
+            Application app = myProject.getApplication();
+            for (final Module module : myModuleModel.getModules()) {
+                final Runnable swingRunnable = () -> fireModuleAddedInWriteAction(module);
+                if (app.isDispatchThread() || app.isHeadlessEnvironment()) {
+                    swingRunnable.run();
+                }
+                else {
+                    ProgressIndicator pi = ProgressManager.getInstance().getProgressIndicator();
+                    app.invokeAndWait(swingRunnable, pi.getModalityState());
+                }
+            }
+        };
+
+        ProgressIndicator progressIndicator = myProgressManager.getProgressIndicator();
+        if (progressIndicator == null) {
+            myProgressManager.runProcessWithProgressSynchronously(runnableWithProgress, "Loading modules", false, myProject);
         }
         else {
-          ProgressIndicator pi = ProgressManager.getInstance().getProgressIndicator();
-          app.invokeAndWait(swingRunnable, pi.getModalityState());
+            runnableWithProgress.run();
         }
-      }
-    };
-
-    ProgressIndicator progressIndicator = myProgressManager.getProgressIndicator();
-    if (progressIndicator == null) {
-      myProgressManager.runProcessWithProgressSynchronously(runnableWithProgress, "Loading modules", false, myProject);
     }
-    else {
-      runnableWithProgress.run();
+
+    @Override
+    protected void doFirstModulesLoad() {
     }
-  }
 
-  @Override
-  protected void doFirstModulesLoad() {
-  }
-
-  @Override
-  protected void deliverPendingEvents() {
-    myConnection.deliverImmediately();
-  }
+    @Override
+    protected void deliverPendingEvents() {
+        myConnection.deliverImmediately();
+    }
 }
