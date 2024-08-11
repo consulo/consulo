@@ -54,31 +54,31 @@ public class FormBuilder {
     return new FormBuilder();
   }
 
-  public FormBuilder addLabeledComponent(@Nullable JComponent label, @Nonnull JComponent component) {
+  public FormBuilder addLabeledComponent(@Nullable Component label, @Nonnull Component component) {
     return addLabeledComponent(label, component, myVerticalGap, false);
   }
 
-  public FormBuilder addLabeledComponent(@Nullable JComponent label, @Nonnull JComponent component, final int topInset) {
+  public FormBuilder addLabeledComponent(@Nullable Component label, @Nonnull Component component, final int topInset) {
     return addLabeledComponent(label, component, topInset, false);
   }
 
-  public FormBuilder addLabeledComponent(@Nullable JComponent label, @Nonnull JComponent component, boolean labelOnTop) {
+  public FormBuilder addLabeledComponent(@Nullable JComponent label, @Nonnull Component component, boolean labelOnTop) {
     return addLabeledComponent(label, component, myVerticalGap, labelOnTop);
   }
 
-  public FormBuilder addLabeledComponent(@Nonnull String labelText, @Nonnull JComponent component) {
+  public FormBuilder addLabeledComponent(@Nonnull String labelText, @Nonnull Component component) {
     return addLabeledComponent(labelText, component, myVerticalGap, false);
   }
 
-  public FormBuilder addLabeledComponent(@Nonnull String labelText, @Nonnull JComponent component, final int topInset) {
+  public FormBuilder addLabeledComponent(@Nonnull String labelText, @Nonnull Component component, final int topInset) {
     return addLabeledComponent(labelText, component, topInset, false);
   }
 
-  public FormBuilder addLabeledComponent(@Nonnull String labelText, @Nonnull JComponent component, boolean labelOnTop) {
+  public FormBuilder addLabeledComponent(@Nonnull String labelText, @Nonnull Component component, boolean labelOnTop) {
     return addLabeledComponent(labelText, component, myVerticalGap, labelOnTop);
   }
 
-  public FormBuilder addLabeledComponent(@Nonnull String labelText, @Nonnull JComponent component, final int topInset, boolean labelOnTop) {
+  public FormBuilder addLabeledComponent(@Nonnull String labelText, @Nonnull Component component, final int topInset, boolean labelOnTop) {
     JLabel label = new JLabel(UIUtil.removeMnemonic(labelText));
     final int index = UIUtil.getDisplayMnemonicIndex(labelText);
     if (index != -1) {
@@ -89,11 +89,11 @@ public class FormBuilder {
     return addLabeledComponent(label, component, topInset, labelOnTop);
   }
 
-  public FormBuilder addComponent(@Nonnull JComponent component) {
+  public FormBuilder addComponent(@Nonnull Component component) {
     return addLabeledComponent((JLabel)null, component, myVerticalGap, false);
   }
 
-  public FormBuilder addComponent(@Nonnull JComponent component, final int topInset) {
+  public FormBuilder addComponent(@Nonnull Component component, final int topInset) {
     return addLabeledComponent((JLabel)null, component, topInset, false);
   }
 
@@ -116,15 +116,15 @@ public class FormBuilder {
     return addComponentToRightColumn(label, 1);
   }
 
-  public FormBuilder addComponentToRightColumn(@Nonnull final JComponent component) {
+  public FormBuilder addComponentToRightColumn(@Nonnull final Component component) {
     return addComponentToRightColumn(component, myVerticalGap);
   }
 
-  public FormBuilder addComponentToRightColumn(@Nonnull final JComponent component, final int topInset) {
+  public FormBuilder addComponentToRightColumn(@Nonnull final Component component, final int topInset) {
     return addLabeledComponent(new JLabel(), component, topInset);
   }
 
-  public FormBuilder addLabeledComponent(@Nullable JComponent label, @Nonnull JComponent component, int topInset, boolean labelOnTop) {
+  public FormBuilder addLabeledComponent(@Nullable Component label, @Nonnull Component component, int topInset, boolean labelOnTop) {
     GridBagConstraints c = new GridBagConstraints();
     topInset = myLineCount > 0 ? topInset : 0;
 
@@ -179,12 +179,12 @@ public class FormBuilder {
     return this;
   }
 
-  private  int getLabelAnchor(JComponent component, boolean honorAlignment) {
+  private  int getLabelAnchor(Component component, boolean honorAlignment) {
     if (component instanceof JScrollPane) return honorAlignment && myAlignLabelOnRight ? NORTHEAST : NORTHWEST;
     return honorAlignment && myAlignLabelOnRight ? EAST : WEST;
   }
 
-  private static int getFill(JComponent component) {
+  private static int getFill(Component component) {
     if (component instanceof JComboBox) {
       return NONE;
     }
@@ -197,7 +197,7 @@ public class FormBuilder {
     return HORIZONTAL;
   }
 
-  private static int getWeightY(JComponent component) {
+  private static int getWeightY(Component component) {
     if (component instanceof JScrollPane) return 1;
     return 0;
   }
