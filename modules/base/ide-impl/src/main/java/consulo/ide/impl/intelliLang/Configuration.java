@@ -43,6 +43,7 @@ import consulo.undoRedo.UndoableAction;
 import consulo.util.collection.MultiMap;
 import consulo.util.collection.MultiValuesMap;
 import consulo.util.lang.Comparing;
+import consulo.util.lang.ControlFlowException;
 import consulo.util.lang.Pair;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.PairProcessor;
@@ -200,8 +201,12 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
                 }
                 cfgList.add(load(inputStream));
             }
-            catch (Exception e) {
-                LOG.warn(e);
+            catch (Throwable t) {
+                if (t instanceof ControlFlowException) {
+                    throw ControlFlowException.rethrow(t);
+                }
+
+                LOG.warn(t);
             }
         });
 

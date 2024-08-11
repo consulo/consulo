@@ -44,8 +44,8 @@ public class ProjectInjectionConfiguration extends Configuration {
   private final Configuration myParentConfiguration;
 
   @Inject
-  public ProjectInjectionConfiguration() {
-    myParentConfiguration = getInstance();
+  public ProjectInjectionConfiguration(ApplicationInjectionConfiguration appConfiguration) {
+    myParentConfiguration = appConfiguration;
   }
 
   @Override
