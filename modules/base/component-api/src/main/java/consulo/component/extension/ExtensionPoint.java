@@ -147,7 +147,7 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
     return null;
   }
 
-  default void forEachExtensionSafe(@Nonnull Consumer<E> consumer) {
+  default void forEachExtensionSafe(@Nonnull Consumer<? super E> consumer) {
     processWithPluginDescriptor((value, pluginDescriptor) -> {
       try {
         consumer.accept(value);

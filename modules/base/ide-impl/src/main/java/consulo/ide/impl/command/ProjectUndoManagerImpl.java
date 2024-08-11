@@ -18,13 +18,15 @@ package consulo.ide.impl.command;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.command.impl.UndoManagerImpl;
 import consulo.project.Project;
-import consulo.project.internal.ProjectEx;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.ProjectUndoManager;
+import consulo.undoRedo.ProjectUndoProvider;
+import consulo.undoRedo.UndoProvider;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nullable;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -33,8 +35,13 @@ import jakarta.annotation.Nullable;
 @Singleton
 @ServiceImpl
 public class ProjectUndoManagerImpl extends UndoManagerImpl implements ProjectUndoManager {
-  @Inject
-  public ProjectUndoManagerImpl(@Nullable Project project, CommandProcessor commandProcessor) {
-    super((ProjectEx)project, commandProcessor);
-  }
+    @Inject
+    public ProjectUndoManagerImpl(@Nonnull Project project, CommandProcessor commandProcessor) {
+        super(project.getApplication(), project, commandProcessor);
+    }
+
+    @Override
+    protected void forEachProvider(@Nonnull Consumer<? super UndoProvider> consumer) {
+        myProject.getExtensionPoint(ProjectUndoProvider.class).forEachExtensionSafe(consumer);
+    }
 }

@@ -17,13 +17,13 @@ package consulo.ide.impl.idea.openapi.command.impl;
 
 import consulo.document.DocumentReference;
 import consulo.fileEditor.FileEditor;
-import consulo.language.file.light.LightVirtualFile;
 import consulo.undoRedo.BasicUndoableAction;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.undoRedo.UndoableAction;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.light.LightVirtualFileBase;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -195,7 +195,7 @@ public class CommandMerger {
   }
 
   private static boolean isVirtualDocumentChange(VirtualFile file) {
-    return file == null || file instanceof LightVirtualFile;
+    return file == null || file instanceof LightVirtualFileBase;
   }
 
   void undoOrRedo(FileEditor editor, boolean isUndo) {

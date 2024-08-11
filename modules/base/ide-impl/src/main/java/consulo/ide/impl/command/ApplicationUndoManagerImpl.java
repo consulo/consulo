@@ -16,12 +16,17 @@
 package consulo.ide.impl.command;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.undoRedo.CommandProcessor;
+import consulo.application.Application;
 import consulo.ide.impl.idea.openapi.command.impl.UndoManagerImpl;
 import consulo.undoRedo.ApplicationUndoManager;
-
+import consulo.undoRedo.ApplicationUndoProvider;
+import consulo.undoRedo.CommandProcessor;
+import consulo.undoRedo.UndoProvider;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -30,8 +35,13 @@ import jakarta.inject.Singleton;
 @Singleton
 @ServiceImpl
 public class ApplicationUndoManagerImpl extends UndoManagerImpl implements ApplicationUndoManager {
-  @Inject
-  public ApplicationUndoManagerImpl(CommandProcessor commandProcessor) {
-    super(commandProcessor);
-  }
+    @Inject
+    public ApplicationUndoManagerImpl(Application application, CommandProcessor commandProcessor) {
+        super(application, null, commandProcessor);
+    }
+
+    @Override
+    protected void forEachProvider(@Nonnull Consumer<? super UndoProvider> consumer) {
+        myApplication.getExtensionPoint(ApplicationUndoProvider.class).forEachExtensionSafe(consumer);
+    }
 }
