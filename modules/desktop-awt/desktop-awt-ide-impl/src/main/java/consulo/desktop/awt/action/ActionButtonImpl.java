@@ -491,7 +491,7 @@ public class ActionButtonImpl extends JComponent implements ActionButtonEx, Acce
   }
 
   @Override
-  public AnAction getAction() {
+  public AnAction getAnAction() {
     return myAction;
   }
 

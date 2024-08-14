@@ -15,9 +15,12 @@
  */
 package consulo.ui.ex.action;
 
+import jakarta.annotation.Nonnull;
+
 /**
  * @author Konstantin Bulenkov
  */
 public interface AnActionHolder {
-  AnAction getAction();
+    @Nonnull
+    AnAction getAnAction();
 }

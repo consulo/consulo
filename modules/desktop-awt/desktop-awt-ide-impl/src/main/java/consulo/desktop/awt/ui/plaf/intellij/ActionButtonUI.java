@@ -67,7 +67,7 @@ public class ActionButtonUI extends ComponentUI implements consulo.desktop.awt.a
   }
 
   private void paintTextButton(Graphics g, ActionButtonWithText c) {
-    AnAction action = c.getAction();
+    AnAction action = c.getAnAction();
 
     Icon icon = TargetAWT.to(c.getIcon());
     FontMetrics fm = c.getFontMetrics(c.getFont());
