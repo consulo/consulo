@@ -412,7 +412,12 @@
         <artifactId>commons-codec</artifactId>
         <version>1.15</version>
       </dependency>
-      <dependency>
+        <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf</artifactId>
+            <version>3.5.1</version>
+        </dependency>
+        <dependency>
         <groupId>io.netty</groupId>
         <artifactId>netty-common</artifactId>
         <version>${netty.version}</version>

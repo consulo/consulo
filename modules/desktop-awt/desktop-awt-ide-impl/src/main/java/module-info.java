@@ -11,6 +11,8 @@ open module consulo.desktop.awt.ide.impl {
   requires com.github.weisj.jsvg;
   requires com.google.gson;
 
+  requires com.formdev.flatlaf;
+
   requires io.netty.buffer;
   requires io.netty.codec;
   requires io.netty.codec.http;

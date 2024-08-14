@@ -1484,6 +1484,10 @@ public class UIUtil {
     return Platform.current().os().isMac() && (isUnderAquaLookAndFeel() || isUnderDarkBuildInLaf());
   }
 
+  public static boolean isUnderFlatLookAndFeel() {
+    return UIManager.getLookAndFeel().getName().startsWith("FlatLaf");
+  }
+
   @Deprecated
   @DeprecationInfo("macOS specific option")
   public static boolean isGraphite() {

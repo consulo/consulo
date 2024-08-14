@@ -101,7 +101,7 @@ public class DarculaLaf extends BaseLookAndFeel {
 
       LafManagerImplUtil.initInputMapDefaults(defaults);
       defaults.put(SupportTextBoxWithExpandActionExtender.class, SupportTextBoxWithExpandActionExtender.INSTANCE);
-      defaults.put(SupportTextBoxWithExtensionsExtender.class, SupportTextBoxWithExtensionsExtender.INSTANCE);
+      defaults.put(SupportTextBoxWithExtensionsExtender.class, SupportTextBoxWithExtensionsExtender.DEFAULT);
 
       initIdeaDefaults(defaults);
       patchStyledEditorKit(defaults);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.awt.ui.plaf.extend.textBox;
+package consulo.desktop.awt.ui.plaf.flatLaf;
 
-import consulo.desktop.awt.ui.impl.textBox.DesktopTextBoxWithExtensions;
-import consulo.ui.TextBoxWithExtensions;
+import com.formdev.flatlaf.FlatDarkLaf;
+import consulo.ui.ex.awt.BuildInLookAndFeel;
 
 /**
  * @author VISTALL
- * @since 2019-10-31
+ * @since 2024-08-13
  */
-public interface SupportTextBoxWithExtensionsExtender {
-    public static final SupportTextBoxWithExtensionsExtender DEFAULT = DesktopTextBoxWithExtensions.Supported::new;
-
-    public TextBoxWithExtensions create(String text);
+public class FlatDarkLaf2 extends FlatDarkLaf implements BuildInLookAndFeel {
+    @Override
+    public boolean isDark() {
+        return true;
+    }
 }
