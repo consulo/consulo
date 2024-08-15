@@ -27,6 +27,7 @@ import consulo.component.impl.internal.messagebus.MessageBusFactory;
 import consulo.component.impl.internal.messagebus.MessageBusImpl;
 import consulo.component.internal.inject.*;
 import consulo.component.messagebus.MessageBus;
+import consulo.component.util.PluginExceptionUtil;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.disposer.Disposable;
@@ -37,10 +38,10 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.MultiMap;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.ThreeState;
-import org.jetbrains.annotations.TestOnly;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.TestOnly;
+
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BooleanSupplier;
@@ -273,6 +274,9 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
           checkCanceledAndChangeProgress(progressIndicator, i, myNotLazyServices.size());
 
           getInstance(serviceClass); // init it
+        }
+        catch (Throwable t) {
+          PluginExceptionUtil.logPluginError(LOG, t.getMessage(), t, serviceClass);
         }
         finally {
           i++;
