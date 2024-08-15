@@ -257,19 +257,19 @@ public class PsiTreeUtil {
 
     @Nullable
     @RequiredReadAction
+    @SuppressWarnings("unchecked")
     public static <T extends PsiElement> T findChildOfType(@Nullable final PsiElement element, @Nonnull final Class<T> aClass) {
-        //noinspection unchecked
         return findChildOfAnyType(element, true, aClass);
     }
 
     @Nullable
     @RequiredReadAction
+    @SuppressWarnings("unchecked")
     public static <T extends PsiElement> T findChildOfType(
         @Nullable final PsiElement element,
         @Nonnull final Class<T> aClass,
         final boolean strict
     ) {
-        //noinspection unchecked
         return findChildOfAnyType(element, strict, aClass);
     }
 
@@ -305,6 +305,7 @@ public class PsiTreeUtil {
     @Contract("null, _, _ -> null")
     @RequiredReadAction
     @SafeVarargs
+    @SuppressWarnings("unchecked")
     public static <T extends PsiElement> T findChildOfAnyType(
         @Nullable final PsiElement element,
         final boolean strict,
@@ -318,7 +319,6 @@ public class PsiTreeUtil {
         };
 
         processElements(element, processor);
-        //noinspection unchecked
         return (T)processor.getFoundElement();
     }
 
@@ -362,13 +362,13 @@ public class PsiTreeUtil {
      */
     @Nullable
     @RequiredReadAction
+    @SuppressWarnings("unchecked")
     public static <T extends PsiElement> T getChildOfType(@Nullable PsiElement element, @Nonnull Class<T> aClass) {
         if (element == null) {
             return null;
         }
         for (PsiElement child = element.getFirstChild(); child != null; child = child.getNextSibling()) {
             if (aClass.isInstance(child)) {
-                //noinspection unchecked
                 return (T)child;
             }
         }
@@ -405,6 +405,7 @@ public class PsiTreeUtil {
 
     @Nullable
     @RequiredReadAction
+    @SuppressWarnings("unchecked")
     public static <T extends PsiElement> T[] getChildrenOfType(@Nullable PsiElement element, @Nonnull Class<T> aClass) {
         if (element == null) {
             return null;
@@ -416,7 +417,6 @@ public class PsiTreeUtil {
                 if (result == null) {
                     result = new ArrayList<>();
                 }
-                //noinspection unchecked
                 result.add((T)child);
             }
         }
@@ -425,6 +425,7 @@ public class PsiTreeUtil {
 
     @Nonnull
     @RequiredReadAction
+    @SuppressWarnings("unchecked")
     public static <T extends PsiElement> List<T> getChildrenOfTypeAsList(@Nullable PsiElement element, @Nonnull Class<T> aClass) {
         if (element == null) {
             return Collections.emptyList();
@@ -433,7 +434,6 @@ public class PsiTreeUtil {
         List<T> result = new ArrayList<>();
         for (PsiElement child = element.getFirstChild(); child != null; child = child.getNextSibling()) {
             if (aClass.isInstance(child)) {
-                //noinspection unchecked
                 result.add((T)child);
             }
         }
@@ -503,6 +503,7 @@ public class PsiTreeUtil {
     @Contract("null, _ -> null")
     @RequiredReadAction
     @SafeVarargs
+    @SuppressWarnings("unchecked")
     public static <T extends PsiElement> T getChildOfAnyType(@Nullable PsiElement element, @Nonnull Class<? extends T>... classes) {
         if (element == null) {
             return null;
@@ -510,7 +511,6 @@ public class PsiTreeUtil {
         for (PsiElement child = element.getFirstChild(); child != null; child = child.getNextSibling()) {
             for (Class<? extends T> aClass : classes) {
                 if (aClass.isInstance(child)) {
-                    //noinspection unchecked
                     return (T)child;
                 }
             }
@@ -521,13 +521,13 @@ public class PsiTreeUtil {
     @Nullable
     @Contract("null, _ -> null")
     @RequiredReadAction
+    @SuppressWarnings("unchecked")
     public static <T extends PsiElement> T getNextSiblingOfType(@Nullable PsiElement sibling, @Nonnull Class<T> aClass) {
         if (sibling == null) {
             return null;
         }
         for (PsiElement child = sibling.getNextSibling(); child != null; child = child.getNextSibling()) {
             if (aClass.isInstance(child)) {
-                //noinspection unchecked
                 return (T)child;
             }
         }
@@ -537,13 +537,13 @@ public class PsiTreeUtil {
     @Nullable
     @Contract("null, _ -> null")
     @RequiredReadAction
+    @SuppressWarnings("unchecked")
     public static <T extends PsiElement> T getPrevSiblingOfType(@Nullable PsiElement sibling, @Nonnull Class<T> aClass) {
         if (sibling == null) {
             return null;
         }
         for (PsiElement child = sibling.getPrevSibling(); child != null; child = child.getPrevSibling()) {
             if (aClass.isInstance(child)) {
-                //noinspection unchecked
                 return (T)child;
             }
         }
@@ -575,11 +575,11 @@ public class PsiTreeUtil {
 
     @Nullable
     @Contract("null -> null")
+    @SuppressWarnings("unchecked")
     public static PsiElement getStubOrPsiParent(@Nullable PsiElement element) {
         if (element instanceof StubBasedPsiElement elementStub) {
             StubElement stub = elementStub.getStub();
             if (stub != null) {
-                //noinspection unchecked
                 final StubElement parentStub = stub.getParentStub();
                 return parentStub != null ? parentStub.getPsi() : null;
             }
@@ -589,11 +589,11 @@ public class PsiTreeUtil {
 
     @Nullable
     @Contract("null, _ -> null")
+    @SuppressWarnings("unchecked")
     public static <E extends PsiElement> E getStubOrPsiParentOfType(@Nullable PsiElement element, @Nonnull Class<E> parentClass) {
         if (element instanceof StubBasedPsiElement elementStub) {
             StubElement stub = elementStub.getStub();
             if (stub != null) {
-                //noinspection unchecked
                 return (E)stub.getParentStubOfType(parentClass);
             }
         }
@@ -603,6 +603,7 @@ public class PsiTreeUtil {
     @Nullable
     @Contract("null, _, _, _ -> null")
     @SafeVarargs
+    @SuppressWarnings("unchecked")
     public static <T extends PsiElement> T getContextOfType(
         @Nullable PsiElement element,
         @Nonnull Class<T> aClass,
@@ -623,7 +624,6 @@ public class PsiTreeUtil {
             element = element.getContext();
         }
 
-        //noinspection unchecked
         return (T)element;
     }
 
@@ -646,6 +646,7 @@ public class PsiTreeUtil {
     @Nullable
     @Contract("null, _, _ -> null")
     @SafeVarargs
+    @SuppressWarnings("unchecked")
     public static <T extends PsiElement> T getContextOfType(
         @Nullable PsiElement element,
         boolean strict,
@@ -662,7 +663,6 @@ public class PsiTreeUtil {
             element = element.getContext();
         }
 
-        //noinspection unchecked
         return (T)element;
     }
 
@@ -673,6 +673,7 @@ public class PsiTreeUtil {
     }
 
     @Contract("null, _, _, _ -> null")
+    @SuppressWarnings("unchecked")
     public static <T extends PsiElement> T getParentOfType(
         @Nullable PsiElement element,
         @Nonnull Class<T> aClass,
@@ -692,7 +693,6 @@ public class PsiTreeUtil {
 
         while (element != null && (minStartOffset == -1 || element.getNode().getStartOffset() >= minStartOffset)) {
             if (aClass.isInstance(element)) {
-                //noinspection unchecked
                 return (T)element;
             }
             if (element instanceof PsiFile) {
@@ -707,6 +707,7 @@ public class PsiTreeUtil {
     @Nullable
     @Contract("null, _, _, _ -> null")
     @SafeVarargs
+    @SuppressWarnings("unchecked")
     public static <T extends PsiElement> T getParentOfType(
         @Nullable PsiElement element,
         @Nonnull Class<T> aClass,
@@ -730,10 +731,8 @@ public class PsiTreeUtil {
             element = element.getParent();
         }
 
-        //noinspection unchecked
         return (T)element;
     }
-
 
     @Nonnull
     public static <T extends PsiElement> List<T> collectParents(
@@ -792,6 +791,7 @@ public class PsiTreeUtil {
     @Nullable
     @Contract("null, _ -> null")
     @SafeVarargs
+    @SuppressWarnings("unchecked")
     public static <T extends PsiElement> T getNonStrictParentOfType(
         @Nullable final PsiElement element,
         @Nonnull final Class<? extends T>... classes
@@ -799,7 +799,6 @@ public class PsiTreeUtil {
         PsiElement run = element;
         while (run != null) {
             if (instanceOf(run, classes)) {
-                //noinspection unchecked
                 return (T)run;
             }
             if (run instanceof PsiFile) {
@@ -864,7 +863,6 @@ public class PsiTreeUtil {
         element.accept(new PsiRecursiveElementWalkingVisitor() {
             @Override
             public void visitElement(PsiElement element) {
-                //noinspection unchecked
                 if (processor.execute(element)) {
                     super.visitElement(element);
                 }
@@ -1428,6 +1426,7 @@ public class PsiTreeUtil {
      */
     @Contract("null, _ -> null; !null, _ -> !null")
     @RequiredReadAction
+    @SuppressWarnings("unchecked")
     public static <T extends PsiElement> T findSameElementInCopy(@Nullable T element, @Nonnull PsiFile copy) throws IllegalStateException {
         if (element == null) {
             return null;
@@ -1462,7 +1461,6 @@ public class PsiTreeUtil {
         if (!cur.getClass().equals(element.getClass())) {
             throw new IllegalStateException("File structure differs: " + cur.getClass() + " != " + element.getClass());
         }
-        //noinspection unchecked
         return (T)cur;
     }
 
