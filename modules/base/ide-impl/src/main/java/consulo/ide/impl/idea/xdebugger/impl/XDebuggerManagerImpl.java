@@ -61,6 +61,7 @@ import consulo.project.startup.StartupManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.image.Image;
+import consulo.util.collection.Lists;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.xml.serializer.annotation.Property;
@@ -82,7 +83,7 @@ import java.util.concurrent.atomic.AtomicReference;
 @State(name = "XDebuggerManager", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 @Singleton
 @ServiceImpl
-public class XDebuggerManagerImpl extends XDebuggerManager implements PersistentStateComponent<XDebuggerManagerImpl.XDebuggerState>, Disposable {
+public class XDebuggerManagerImpl implements XDebuggerManager, PersistentStateComponent<XDebuggerManagerImpl.XDebuggerState>, Disposable {
     private final class BreakpointPromoterEditorListener implements EditorMouseMotionListener, EditorMouseListener {
         private XSourcePositionImpl myLastPosition = null;
         private Image myLastIcon = null;
@@ -167,6 +168,7 @@ public class XDebuggerManagerImpl extends XDebuggerManager implements Persistent
 
 
     private final Project myProject;
+    private final EditorFactory myEditorFactory;
     private final XBreakpointManagerImpl myBreakpointManager;
     private final XDebuggerWatchesManager myWatchesManager;
     private final Map<ProcessHandler, XDebugSessionImpl> mySessions;
@@ -179,12 +181,15 @@ public class XDebuggerManagerImpl extends XDebuggerManager implements Persistent
                                 EditorFactory editorFactory,
                                 ApplicationConcurrency applicationConcurrency) {
         myProject = project;
+        myEditorFactory = editorFactory;
         myBreakpointManager = new XBreakpointManagerImpl(project, this, startupManager, applicationConcurrency);
         myWatchesManager = new XDebuggerWatchesManager();
         mySessions = new LinkedHashMap<>();
         myExecutionPointHighlighter = new ExecutionPointHighlighter(project);
+    }
 
-        MessageBusConnection messageBusConnection = project.getMessageBus().connect();
+    public void projectOpened() {
+        MessageBusConnection messageBusConnection = myProject.getMessageBus().connect();
         messageBusConnection.subscribe(FileDocumentManagerListener.class, new FileDocumentManagerListener() {
             @Override
             public void fileContentLoaded(@Nonnull VirtualFile file, @Nonnull Document document) {
@@ -202,7 +207,7 @@ public class XDebuggerManagerImpl extends XDebuggerManager implements Persistent
                 updateExecutionPoint(file, false);
             }
         });
-        myBreakpointManager.addBreakpointListener(new XBreakpointListener<XBreakpoint<?>>() {
+        myBreakpointManager.addBreakpointListener(new XBreakpointListener<>() {
             @Override
             public void breakpointChanged(@Nonnull XBreakpoint<?> breakpoint) {
                 if (!(breakpoint instanceof XLineBreakpoint)) {
@@ -247,7 +252,7 @@ public class XDebuggerManagerImpl extends XDebuggerManager implements Persistent
         });
 
         BreakpointPromoterEditorListener bpPromoter = new BreakpointPromoterEditorListener();
-        EditorEventMulticaster eventMulticaster = editorFactory.getEventMulticaster();
+        EditorEventMulticaster eventMulticaster = myEditorFactory.getEventMulticaster();
         eventMulticaster.addEditorMouseMotionListener(bpPromoter, this);
     }
 
@@ -259,7 +264,6 @@ public class XDebuggerManagerImpl extends XDebuggerManager implements Persistent
 
     @Override
     public void dispose() {
-
     }
 
     @Override
@@ -281,24 +285,6 @@ public class XDebuggerManagerImpl extends XDebuggerManager implements Persistent
     public XDebugSession startSession(@Nonnull ExecutionEnvironment environment,
                                       @Nonnull XDebugProcessStarter processStarter) throws ExecutionException {
         return startSession(environment.getContentToReuse(), processStarter, new XDebugSessionImpl(environment, this));
-    }
-
-    @Override
-    @Nonnull
-    public XDebugSession startSessionAndShowTab(@Nonnull String sessionName,
-                                                @Nullable RunContentDescriptor contentToReuse,
-                                                @Nonnull XDebugProcessStarter starter) throws ExecutionException {
-        return startSessionAndShowTab(sessionName, contentToReuse, false, starter);
-    }
-
-    @Nonnull
-    @Override
-    public XDebugSession startSessionAndShowTab(@Nonnull String sessionName,
-                                                @Nullable RunContentDescriptor contentToReuse,
-                                                boolean showToolWindowOnSuspendOnly,
-                                                @Nonnull XDebugProcessStarter starter)
-        throws ExecutionException {
-        return startSessionAndShowTab(sessionName, null, contentToReuse, showToolWindowOnSuspendOnly, starter);
     }
 
     @Nonnull
@@ -409,7 +395,7 @@ public class XDebuggerManagerImpl extends XDebuggerManager implements Persistent
                 list.add(processClass.cast(process));
             }
         }
-        return ContainerUtil.notNullize(list);
+        return Lists.notNullize(list);
     }
 
     @Override
