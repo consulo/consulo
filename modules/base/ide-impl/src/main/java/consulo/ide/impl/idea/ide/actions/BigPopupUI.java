@@ -51,7 +51,7 @@ public abstract class BigPopupUI extends BorderLayoutPanel implements Disposable
   protected abstract JPanel createTopLeftPanel();
 
   @Nonnull
-  protected abstract JPanel createSettingsPanel();
+  protected abstract JComponent createSettingsPanel();
 
   @Nonnull
   protected abstract String getInitialHint();
@@ -120,7 +120,7 @@ public abstract class BigPopupUI extends BorderLayoutPanel implements Disposable
     myResultsList = createList();
 
     JPanel topLeftPanel = createTopLeftPanel();
-    JPanel settingsPanel = createSettingsPanel();
+    JComponent settingsPanel = createSettingsPanel();
     mySearchField = createSearchField();
     mySearchField.addBorders(BorderStyle.EMPTY, null, 4);
     (TargetAWT.to(mySearchField)).setFocusTraversalKeysEnabled(false);

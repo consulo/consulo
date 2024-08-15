@@ -69,7 +69,7 @@ public class ActionButtonUI extends ComponentUI implements consulo.desktop.awt.a
   private void paintTextButton(Graphics g, ActionButtonWithText c) {
     AnAction action = c.getAnAction();
 
-    Icon icon = TargetAWT.to(c.getIcon());
+    Icon icon = TargetAWT.to(c.getIconImage());
     FontMetrics fm = c.getFontMetrics(c.getFont());
     Rectangle viewRect = new Rectangle(c.getSize());
     Insets i = c.getInsets();
@@ -126,7 +126,7 @@ public class ActionButtonUI extends ComponentUI implements consulo.desktop.awt.a
     if(!c.isWithoutBorder()) {
       paintBorder(c, g, c.getSize(), state);
     }
-    paintIcon(g, c, TargetAWT.to(c.getIcon()));
+    paintIcon(g, c, TargetAWT.to(c.getIconImage()));
 
     if (c.shallPaintDownArrow()) {
       Container parent = c.getParent();

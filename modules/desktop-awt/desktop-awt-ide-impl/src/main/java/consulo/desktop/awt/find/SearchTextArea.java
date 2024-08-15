@@ -365,12 +365,12 @@ public class SearchTextArea extends JPanel implements PropertyChangeListener {
     }
 
     @Override
-    public Image getIcon() {
+    public Image getIconImage() {
       if (isEnabled() && isSelected()) {
         Image selectedIcon = myPresentation.getSelectedIcon();
         if (selectedIcon != null) return selectedIcon;
       }
-      return super.getIcon();
+      return super.getIconImage();
     }
   }
 }

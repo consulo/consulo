@@ -20,7 +20,6 @@ import consulo.application.Application;
 import consulo.application.PowerSaveMode;
 import consulo.application.impl.internal.performance.ActivityTracker;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.application.util.SystemInfo;
 import consulo.codeEditor.EditorBundle;
 import consulo.codeEditor.VisualPosition;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
@@ -302,15 +301,15 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
       super.updateUI();
       // first call from parent constructor
       if (myActionEmulator != null) {
-        myActionButtonUI = (ActionButtonUI)UIManager.getUI(myActionEmulator);
+     ///   myActionButtonUI = (ActionButtonUI)UIManager.getUI(myActionEmulator);
       }
     }
 
     @Override
     public void paint(Graphics g) {
       int state = mousePressed ? ActionButtonComponent.PUSHED : mouseHover ? ActionButtonComponent.POPPED : ActionButtonComponent.NORMAL;
-      myActionEmulator.setBounds(getBounds());
-      myActionButtonUI.paintBackground(myActionEmulator, g, getBounds().getSize(), state);
+     // myActionEmulator.setBounds(getBounds());
+     // myActionButtonUI.paintBackground(myActionEmulator, g, getBounds().getSize(), state);
 
       super.paint(g);
     }
@@ -832,7 +831,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
 
           @Override
           public Dimension getPreferredSize() {
-            Image icon = getIcon();
+            Image icon = getIconImage();
             Dimension size = new Dimension(icon.getWidth(), icon.getHeight());
 
             int minSize = getStatusIconSize();

@@ -60,7 +60,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
-public class ActionToolbarImpl extends JPanel implements ActionToolbarEx, QuickActionProvider, AlphaAnimated {
+public class ActionToolbarImpl extends JToolBar implements ActionToolbarEx, QuickActionProvider, AlphaAnimated {
   private static final Logger LOG = Logger.getInstance(ActionToolbarImpl.class);
 
   private static final String RIGHT_ALIGN_KEY = "RIGHT_ALIGN";
@@ -1021,7 +1021,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbarEx, QuickA
     for (int i = getComponentCount() - 1; i >= 0; i--) {
       final Component component = getComponent(i);
       if (component instanceof ActionButtonImpl button) {
-        button.setMinimumButtonSize(size);
+        button.setPreferredSize(JBUI.size(size.getWidth(), size.getHeight()));
       }
     }
     revalidate();

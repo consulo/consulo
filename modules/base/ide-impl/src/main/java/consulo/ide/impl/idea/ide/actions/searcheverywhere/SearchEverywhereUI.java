@@ -325,7 +325,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
   @Override
   @Nonnull
   @RequiredUIAccess
-  protected JPanel createSettingsPanel() {
+  protected JComponent createSettingsPanel() {
     DefaultActionGroup actionGroup = new DefaultActionGroup();
     actionGroup.addAction(new ActionGroup() {
       @Nonnull
@@ -345,7 +345,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
     JComponent toolbarComponent = myToolbar.getComponent();
     toolbarComponent.setOpaque(false);
     toolbarComponent.setBorder(JBUI.Borders.empty(2, 18, 2, 9));
-    return (JPanel)toolbarComponent;
+    return toolbarComponent;
   }
 
   @Nonnull
