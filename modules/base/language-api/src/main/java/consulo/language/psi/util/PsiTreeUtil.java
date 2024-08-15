@@ -847,8 +847,8 @@ public class PsiTreeUtil {
         if (element == null) {
             return true;
         }
+        // DummyHolders cannot be visited by walking visitors because children/parent relationship is broken there
         if (element instanceof PsiCompiledElement || !element.isPhysical()) {
-            // DummyHolders cannot be visited by walking visitors because children/parent relationship is broken there
             if (!processor.execute(element)) {
                 return false;
             }
