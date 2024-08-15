@@ -58,6 +58,7 @@ import consulo.process.ExecutionException;
 import consulo.process.ProcessHandler;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.image.Image;
 import consulo.util.collection.SmartList;
@@ -82,399 +83,406 @@ import java.util.concurrent.atomic.AtomicReference;
 @Singleton
 @ServiceImpl
 public class XDebuggerManagerImpl extends XDebuggerManager implements PersistentStateComponent<XDebuggerManagerImpl.XDebuggerState>, Disposable {
-  private final class BreakpointPromoterEditorListener implements EditorMouseMotionListener, EditorMouseListener {
-    private XSourcePositionImpl myLastPosition = null;
-    private Image myLastIcon = null;
+    private final class BreakpointPromoterEditorListener implements EditorMouseMotionListener, EditorMouseListener {
+        private XSourcePositionImpl myLastPosition = null;
+        private Image myLastIcon = null;
 
-    private final XDebuggerLineChangeHandler lineChangeHandler;
+        private final XDebuggerLineChangeHandler lineChangeHandler;
 
-    BreakpointPromoterEditorListener() {
-      lineChangeHandler = new XDebuggerLineChangeHandler((gutter, position, types) -> {
-        myLastIcon = ObjectUtil.doIfNotNull(ContainerUtil.getFirstItem(types), XBreakpointType::getEnabledIcon);
-        if (myLastIcon != null) {
-          updateActiveLineNumberIcon(gutter, myLastIcon, position.getLine());
+        BreakpointPromoterEditorListener() {
+            lineChangeHandler = new XDebuggerLineChangeHandler((gutter, position, types) -> {
+                myLastIcon = ObjectUtil.doIfNotNull(ContainerUtil.getFirstItem(types), XBreakpointType::getEnabledIcon);
+                if (myLastIcon != null) {
+                    updateActiveLineNumberIcon(gutter, myLastIcon, position.getLine());
+                }
+            });
         }
-      });
+
+        @RequiredUIAccess
+        @Override
+        public void mouseMoved(@Nonnull EditorMouseEvent e) {
+            if (!ShowBreakpointsOverLineNumbersAction.isSelected()) {
+                return;
+            }
+            Editor editor = e.getEditor();
+            if (editor.getProject() != myProject || editor.getEditorKind() != EditorKind.MAIN_EDITOR) {
+                return;
+            }
+            EditorGutter editorGutter = editor.getGutter();
+            if (editorGutter instanceof EditorGutterComponentEx gutter) {
+                if (e.getArea() == EditorMouseEventArea.LINE_NUMBERS_AREA && EditorUtil.isBreakPointsOnLineNumbers()) {
+                    int line = consulo.codeEditor.util.EditorUtil.yToLogicalLineNoCustomRenderers(editor, e.getMouseEvent().getY());
+                    Document document = editor.getDocument();
+                    if (DocumentUtil.isValidLine(line, document)) {
+                        XSourcePositionImpl position = XSourcePositionImpl.create(FileDocumentManager.getInstance().getFile(document), line);
+                        if (position != null) {
+                            if (myLastPosition == null || !myLastPosition.getFile().equals(position.getFile()) || myLastPosition.getLine() != line) {
+                                // drop an icon first and schedule the available types calculation
+                                clear(gutter);
+                                myLastPosition = position;
+                                lineChangeHandler.lineChanged(editor, position);
+                            }
+                            return;
+                        }
+                    }
+                }
+                if (myLastIcon != null) {
+                    clear(gutter);
+                    myLastPosition = null;
+                    lineChangeHandler.exitedGutter();
+                }
+            }
+        }
+
+        private void clear(EditorGutterComponentEx gutter) {
+            updateActiveLineNumberIcon(gutter, null, null);
+            myLastIcon = null;
+        }
+
+        private static void updateActiveLineNumberIcon(@Nonnull EditorGutterComponentEx gutter, @Nullable Image icon, @Nullable Integer line) {
+            JComponent component = gutter.getComponent();
+
+            if (component.getClientProperty("editor.gutter.context.menu") != null) {
+                return;
+            }
+            boolean requireRepaint = false;
+            if (component.getClientProperty("line.number.hover.icon") != icon) {
+                component.putClientProperty("line.number.hover.icon", icon);
+                component.putClientProperty("line.number.hover.icon.context.menu", icon == null ? null
+                    : ActionManager.getInstance().getAction("XDebugger.Hover.Breakpoint.Context.Menu"));
+                if (icon != null) {
+                    component.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Editor updates cursor on MouseMoved, set it explicitly
+                }
+                requireRepaint = true;
+            }
+            if (!Objects.equals(component.getClientProperty("active.line.number"), line)) {
+                component.putClientProperty("active.line.number", line);
+                requireRepaint = true;
+            }
+            if (requireRepaint) {
+                gutter.repaint();
+            }
+        }
+    }
+
+
+    private final Project myProject;
+    private final XBreakpointManagerImpl myBreakpointManager;
+    private final XDebuggerWatchesManager myWatchesManager;
+    private final Map<ProcessHandler, XDebugSessionImpl> mySessions;
+    private final ExecutionPointHighlighter myExecutionPointHighlighter;
+    private final AtomicReference<XDebugSessionImpl> myActiveSession = new AtomicReference<>();
+
+    @Inject
+    public XDebuggerManagerImpl(Project project,
+                                StartupManager startupManager,
+                                EditorFactory editorFactory,
+                                ApplicationConcurrency applicationConcurrency) {
+        myProject = project;
+        myBreakpointManager = new XBreakpointManagerImpl(project, this, startupManager, applicationConcurrency);
+        myWatchesManager = new XDebuggerWatchesManager();
+        mySessions = new LinkedHashMap<>();
+        myExecutionPointHighlighter = new ExecutionPointHighlighter(project);
+
+        MessageBusConnection messageBusConnection = project.getMessageBus().connect();
+        messageBusConnection.subscribe(FileDocumentManagerListener.class, new FileDocumentManagerListener() {
+            @Override
+            public void fileContentLoaded(@Nonnull VirtualFile file, @Nonnull Document document) {
+                updateExecutionPoint(file, true);
+            }
+
+            @Override
+            public void fileContentReloaded(@Nonnull VirtualFile file, @Nonnull Document document) {
+                updateExecutionPoint(file, true);
+            }
+        });
+        messageBusConnection.subscribe(FileEditorManagerListener.class, new FileEditorManagerListener() {
+            @Override
+            public void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
+                updateExecutionPoint(file, false);
+            }
+        });
+        myBreakpointManager.addBreakpointListener(new XBreakpointListener<XBreakpoint<?>>() {
+            @Override
+            public void breakpointChanged(@Nonnull XBreakpoint<?> breakpoint) {
+                if (!(breakpoint instanceof XLineBreakpoint)) {
+                    final XDebugSessionImpl session = getCurrentSession();
+                    if (session != null && breakpoint.equals(session.getActiveNonLineBreakpoint())) {
+                        final XBreakpointBase breakpointBase = (XBreakpointBase) breakpoint;
+                        breakpointBase.clearIcon();
+                        myExecutionPointHighlighter.updateGutterIcon(breakpointBase.createGutterIconRenderer());
+                    }
+                }
+            }
+
+            @Override
+            public void breakpointRemoved(@Nonnull XBreakpoint<?> breakpoint) {
+                XDebugSessionImpl session = getCurrentSession();
+                if (session != null && breakpoint == session.getActiveNonLineBreakpoint()) {
+                    myExecutionPointHighlighter.updateGutterIcon(null);
+                }
+            }
+        });
+
+        messageBusConnection.subscribe(RunContentWithExecutorListener.class, new RunContentWithExecutorListener() {
+            @Override
+            public void contentSelected(@Nullable RunContentDescriptor descriptor, @Nonnull Executor executor) {
+                if (descriptor != null && executor.equals(DefaultDebugExecutor.getDebugExecutorInstance())) {
+                    XDebugSessionImpl session = mySessions.get(descriptor.getProcessHandler());
+                    if (session != null) {
+                        session.activateSession();
+                    }
+                    else {
+                        setCurrentSession(null);
+                    }
+                }
+            }
+
+            @Override
+            public void contentRemoved(@Nullable RunContentDescriptor descriptor, @Nonnull Executor executor) {
+                if (descriptor != null && executor.equals(DefaultDebugExecutor.getDebugExecutorInstance())) {
+                    mySessions.remove(descriptor.getProcessHandler());
+                }
+            }
+        });
+
+        BreakpointPromoterEditorListener bpPromoter = new BreakpointPromoterEditorListener();
+        EditorEventMulticaster eventMulticaster = editorFactory.getEventMulticaster();
+        eventMulticaster.addEditorMouseMotionListener(bpPromoter, this);
+    }
+
+    private void updateExecutionPoint(@Nonnull VirtualFile file, boolean navigate) {
+        if (file.equals(myExecutionPointHighlighter.getCurrentFile())) {
+            myExecutionPointHighlighter.update(navigate);
+        }
     }
 
     @Override
-    public void mouseMoved(@Nonnull EditorMouseEvent e) {
-      if (!ShowBreakpointsOverLineNumbersAction.isSelected()) return;
-      Editor editor = e.getEditor();
-      if (editor.getProject() != myProject || editor.getEditorKind() != EditorKind.MAIN_EDITOR) return;
-      EditorGutter editorGutter = editor.getGutter();
-      if (editorGutter instanceof EditorGutterComponentEx gutter) {
-        if (e.getArea() == EditorMouseEventArea.LINE_NUMBERS_AREA && EditorUtil.isBreakPointsOnLineNumbers()) {
-          int line = consulo.codeEditor.util.EditorUtil.yToLogicalLineNoCustomRenderers(editor, e.getMouseEvent().getY());
-          Document document = editor.getDocument();
-          if (DocumentUtil.isValidLine(line, document)) {
-            XSourcePositionImpl position = XSourcePositionImpl.create(FileDocumentManager.getInstance().getFile(document), line);
-            if (position != null) {
-              if (myLastPosition == null || !myLastPosition.getFile().equals(position.getFile()) || myLastPosition.getLine() != line) {
-                // drop an icon first and schedule the available types calculation
-                clear(gutter);
-                myLastPosition = position;
-                lineChangeHandler.lineChanged(editor, position);
-              }
-              return;
-            }
-          }
-        }
-        if (myLastIcon != null) {
-          clear(gutter);
-          myLastPosition = null;
-          lineChangeHandler.exitedGutter();
-        }
-      }
+    public void dispose() {
+
     }
 
-    private void clear(EditorGutterComponentEx gutter) {
-      updateActiveLineNumberIcon(gutter, null, null);
-      myLastIcon = null;
+    @Override
+    @Nonnull
+    public XBreakpointManagerImpl getBreakpointManager() {
+        return myBreakpointManager;
     }
 
-    private static void updateActiveLineNumberIcon(@Nonnull EditorGutterComponentEx gutter, @Nullable Image icon, @Nullable Integer line) {
-      JComponent component = gutter.getComponent();
-
-      if (component.getClientProperty("editor.gutter.context.menu") != null) return;
-      boolean requireRepaint = false;
-      if (component.getClientProperty("line.number.hover.icon") != icon) {
-        component.putClientProperty("line.number.hover.icon", icon);
-        component.putClientProperty("line.number.hover.icon.context.menu", icon == null ? null
-          : ActionManager.getInstance().getAction("XDebugger.Hover.Breakpoint.Context.Menu"));
-        if (icon != null) {
-          component.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Editor updates cursor on MouseMoved, set it explicitly
-        }
-        requireRepaint = true;
-      }
-      if (!Objects.equals(component.getClientProperty("active.line.number"), line)) {
-        component.putClientProperty("active.line.number", line);
-        requireRepaint = true;
-      }
-      if (requireRepaint) {
-        gutter.repaint();
-      }
+    public XDebuggerWatchesManager getWatchesManager() {
+        return myWatchesManager;
     }
-  }
 
+    public Project getProject() {
+        return myProject;
+    }
 
-  private final Project myProject;
-  private final XBreakpointManagerImpl myBreakpointManager;
-  private final XDebuggerWatchesManager myWatchesManager;
-  private final Map<ProcessHandler, XDebugSessionImpl> mySessions;
-  private final ExecutionPointHighlighter myExecutionPointHighlighter;
-  private final AtomicReference<XDebugSessionImpl> myActiveSession = new AtomicReference<>();
+    @Override
+    @Nonnull
+    public XDebugSession startSession(@Nonnull ExecutionEnvironment environment,
+                                      @Nonnull XDebugProcessStarter processStarter) throws ExecutionException {
+        return startSession(environment.getContentToReuse(), processStarter, new XDebugSessionImpl(environment, this));
+    }
 
-  @Inject
-  public XDebuggerManagerImpl(Project project,
-                              StartupManager startupManager,
-                              EditorFactory editorFactory,
-                              ApplicationConcurrency applicationConcurrency) {
-    myProject = project;
-    myBreakpointManager = new XBreakpointManagerImpl(project, this, startupManager, applicationConcurrency);
-    myWatchesManager = new XDebuggerWatchesManager();
-    mySessions = new LinkedHashMap<>();
-    myExecutionPointHighlighter = new ExecutionPointHighlighter(project);
+    @Override
+    @Nonnull
+    public XDebugSession startSessionAndShowTab(@Nonnull String sessionName,
+                                                @Nullable RunContentDescriptor contentToReuse,
+                                                @Nonnull XDebugProcessStarter starter) throws ExecutionException {
+        return startSessionAndShowTab(sessionName, contentToReuse, false, starter);
+    }
 
-    MessageBusConnection messageBusConnection = project.getMessageBus().connect();
-    messageBusConnection.subscribe(FileDocumentManagerListener.class, new FileDocumentManagerListener() {
-      @Override
-      public void fileContentLoaded(@Nonnull VirtualFile file, @Nonnull Document document) {
-        updateExecutionPoint(file, true);
-      }
+    @Nonnull
+    @Override
+    public XDebugSession startSessionAndShowTab(@Nonnull String sessionName,
+                                                @Nullable RunContentDescriptor contentToReuse,
+                                                boolean showToolWindowOnSuspendOnly,
+                                                @Nonnull XDebugProcessStarter starter)
+        throws ExecutionException {
+        return startSessionAndShowTab(sessionName, null, contentToReuse, showToolWindowOnSuspendOnly, starter);
+    }
 
-      @Override
-      public void fileContentReloaded(@Nonnull VirtualFile file, @Nonnull Document document) {
-        updateExecutionPoint(file, true);
-      }
-    });
-    messageBusConnection.subscribe(FileEditorManagerListener.class, new FileEditorManagerListener() {
-      @Override
-      public void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
-        updateExecutionPoint(file, false);
-      }
-    });
-    myBreakpointManager.addBreakpointListener(new XBreakpointListener<XBreakpoint<?>>() {
-      @Override
-      public void breakpointChanged(@Nonnull XBreakpoint<?> breakpoint) {
-        if (!(breakpoint instanceof XLineBreakpoint)) {
-          final XDebugSessionImpl session = getCurrentSession();
-          if (session != null && breakpoint.equals(session.getActiveNonLineBreakpoint())) {
-            final XBreakpointBase breakpointBase = (XBreakpointBase)breakpoint;
-            breakpointBase.clearIcon();
-            myExecutionPointHighlighter.updateGutterIcon(breakpointBase.createGutterIconRenderer());
-          }
+    @Nonnull
+    @Override
+    public XDebugSession startSessionAndShowTab(@Nonnull String sessionName,
+                                                Image icon,
+                                                @Nullable RunContentDescriptor contentToReuse,
+                                                boolean showToolWindowOnSuspendOnly,
+                                                @Nonnull XDebugProcessStarter starter) throws ExecutionException {
+        XDebugSessionImpl session = startSession(contentToReuse,
+            starter,
+            new XDebugSessionImpl(null,
+                this,
+                sessionName,
+                icon,
+                showToolWindowOnSuspendOnly,
+                contentToReuse));
+
+        if (!showToolWindowOnSuspendOnly) {
+            session.showSessionTab();
         }
-      }
+        ProcessHandler handler = session.getDebugProcess().getProcessHandler();
+        handler.startNotify();
+        return session;
+    }
 
-      @Override
-      public void breakpointRemoved(@Nonnull XBreakpoint<?> breakpoint) {
-        XDebugSessionImpl session = getCurrentSession();
-        if (session != null && breakpoint == session.getActiveNonLineBreakpoint()) {
-          myExecutionPointHighlighter.updateGutterIcon(null);
-        }
-      }
-    });
+    private XDebugSessionImpl startSession(@Nullable RunContentDescriptor contentToReuse,
+                                           @Nonnull XDebugProcessStarter processStarter,
+                                           @Nonnull XDebugSessionImpl session) throws ExecutionException {
+        XDebugProcess process = processStarter.start(session);
+        myProject.getMessageBus().syncPublisher(XDebuggerManagerListener.class).processStarted(process);
 
-    messageBusConnection.subscribe(RunContentWithExecutorListener.class, new RunContentWithExecutorListener() {
-      @Override
-      public void contentSelected(@Nullable RunContentDescriptor descriptor, @Nonnull Executor executor) {
-        if (descriptor != null && executor.equals(DefaultDebugExecutor.getDebugExecutorInstance())) {
-          XDebugSessionImpl session = mySessions.get(descriptor.getProcessHandler());
-          if (session != null) {
+        // Perform custom configuration of session data for XDebugProcessConfiguratorStarter classes
+        if (processStarter instanceof XDebugProcessConfiguratorStarter) {
             session.activateSession();
-          }
-          else {
-            setCurrentSession(null);
-          }
+            ((XDebugProcessConfiguratorStarter) processStarter).configure(session.getSessionData());
         }
-      }
 
-      @Override
-      public void contentRemoved(@Nullable RunContentDescriptor descriptor, @Nonnull Executor executor) {
-        if (descriptor != null && executor.equals(DefaultDebugExecutor.getDebugExecutorInstance())) {
-          mySessions.remove(descriptor.getProcessHandler());
+        session.init(process, contentToReuse);
+
+        mySessions.put(session.getDebugProcess().getProcessHandler(), session);
+
+        return session;
+    }
+
+    public void removeSession(@Nonnull final XDebugSessionImpl session) {
+        XDebugSessionTab sessionTab = session.getSessionTab();
+        mySessions.remove(session.getDebugProcess().getProcessHandler());
+        if (sessionTab != null &&
+            !myProject.isDisposed() &&
+            !ApplicationManager.getApplication().isUnitTestMode() &&
+            XDebuggerSettingManagerImpl.getInstanceImpl().getGeneralSettings().isHideDebuggerOnProcessTermination()) {
+            ExecutionManager.getInstance(myProject)
+                .getContentManager()
+                .hideRunContent(DefaultDebugExecutor.getDebugExecutorInstance(), sessionTab.getRunContentDescriptor());
         }
-      }
-    });
-
-    BreakpointPromoterEditorListener bpPromoter = new BreakpointPromoterEditorListener();
-    EditorEventMulticaster eventMulticaster = editorFactory.getEventMulticaster();
-    eventMulticaster.addEditorMouseMotionListener(bpPromoter, this);
-  }
-
-  private void updateExecutionPoint(@Nonnull VirtualFile file, boolean navigate) {
-    if (file.equals(myExecutionPointHighlighter.getCurrentFile())) {
-      myExecutionPointHighlighter.update(navigate);
-    }
-  }
-
-  @Override
-  public void dispose() {
-
-  }
-
-  @Override
-  @Nonnull
-  public XBreakpointManagerImpl getBreakpointManager() {
-    return myBreakpointManager;
-  }
-
-  public XDebuggerWatchesManager getWatchesManager() {
-    return myWatchesManager;
-  }
-
-  public Project getProject() {
-    return myProject;
-  }
-
-  @Override
-  @Nonnull
-  public XDebugSession startSession(@Nonnull ExecutionEnvironment environment,
-                                    @Nonnull XDebugProcessStarter processStarter) throws ExecutionException {
-    return startSession(environment.getContentToReuse(), processStarter, new XDebugSessionImpl(environment, this));
-  }
-
-  @Override
-  @Nonnull
-  public XDebugSession startSessionAndShowTab(@Nonnull String sessionName,
-                                              @Nullable RunContentDescriptor contentToReuse,
-                                              @Nonnull XDebugProcessStarter starter) throws ExecutionException {
-    return startSessionAndShowTab(sessionName, contentToReuse, false, starter);
-  }
-
-  @Nonnull
-  @Override
-  public XDebugSession startSessionAndShowTab(@Nonnull String sessionName,
-                                              @Nullable RunContentDescriptor contentToReuse,
-                                              boolean showToolWindowOnSuspendOnly,
-                                              @Nonnull XDebugProcessStarter starter)
-    throws ExecutionException {
-    return startSessionAndShowTab(sessionName, null, contentToReuse, showToolWindowOnSuspendOnly, starter);
-  }
-
-  @Nonnull
-  @Override
-  public XDebugSession startSessionAndShowTab(@Nonnull String sessionName,
-                                              Image icon,
-                                              @Nullable RunContentDescriptor contentToReuse,
-                                              boolean showToolWindowOnSuspendOnly,
-                                              @Nonnull XDebugProcessStarter starter) throws ExecutionException {
-    XDebugSessionImpl session = startSession(contentToReuse,
-                                             starter,
-                                             new XDebugSessionImpl(null,
-                                                                   this,
-                                                                   sessionName,
-                                                                   icon,
-                                                                   showToolWindowOnSuspendOnly,
-                                                                   contentToReuse));
-
-    if (!showToolWindowOnSuspendOnly) {
-      session.showSessionTab();
-    }
-    ProcessHandler handler = session.getDebugProcess().getProcessHandler();
-    handler.startNotify();
-    return session;
-  }
-
-  private XDebugSessionImpl startSession(@Nullable RunContentDescriptor contentToReuse,
-                                         @Nonnull XDebugProcessStarter processStarter,
-                                         @Nonnull XDebugSessionImpl session) throws ExecutionException {
-    XDebugProcess process = processStarter.start(session);
-    myProject.getMessageBus().syncPublisher(XDebuggerManagerListener.class).processStarted(process);
-
-    // Perform custom configuration of session data for XDebugProcessConfiguratorStarter classes
-    if (processStarter instanceof XDebugProcessConfiguratorStarter) {
-      session.activateSession();
-      ((XDebugProcessConfiguratorStarter)processStarter).configure(session.getSessionData());
-    }
-
-    session.init(process, contentToReuse);
-
-    mySessions.put(session.getDebugProcess().getProcessHandler(), session);
-
-    return session;
-  }
-
-  public void removeSession(@Nonnull final XDebugSessionImpl session) {
-    XDebugSessionTab sessionTab = session.getSessionTab();
-    mySessions.remove(session.getDebugProcess().getProcessHandler());
-    if (sessionTab != null &&
-      !myProject.isDisposed() &&
-      !ApplicationManager.getApplication().isUnitTestMode() &&
-      XDebuggerSettingManagerImpl.getInstanceImpl().getGeneralSettings().isHideDebuggerOnProcessTermination()) {
-      ExecutionManager.getInstance(myProject)
-                      .getContentManager()
-                      .hideRunContent(DefaultDebugExecutor.getDebugExecutorInstance(), sessionTab.getRunContentDescriptor());
-    }
-    if (myActiveSession.compareAndSet(session, null)) {
-      onActiveSessionChanged();
-    }
-  }
-
-  void updateExecutionPoint(@Nullable XSourcePosition position, boolean nonTopFrame, @Nullable GutterIconRenderer gutterIconRenderer) {
-    if (position != null) {
-      myExecutionPointHighlighter.show(position, nonTopFrame, gutterIconRenderer);
-    }
-    else {
-      myExecutionPointHighlighter.hide();
-    }
-  }
-
-  private void onActiveSessionChanged() {
-    myBreakpointManager.getLineBreakpointManager().queueAllBreakpointsUpdate();
-    ApplicationManager.getApplication().invokeLater(() -> ValueLookupManager.getInstance(myProject).hideHint(), myProject.getDisposed());
-  }
-
-  @Override
-  @Nonnull
-  public XDebugSession[] getDebugSessions() {
-    final Collection<XDebugSessionImpl> sessions = mySessions.values();
-    return sessions.toArray(new XDebugSessionImpl[sessions.size()]);
-  }
-
-  @Override
-  @Nullable
-  public XDebugSession getDebugSession(@Nonnull ExecutionConsole executionConsole) {
-    for (final XDebugSessionImpl debuggerSession : mySessions.values()) {
-      XDebugSessionTab sessionTab = debuggerSession.getSessionTab();
-      if (sessionTab != null) {
-        RunContentDescriptor contentDescriptor = sessionTab.getRunContentDescriptor();
-        if (contentDescriptor != null && executionConsole == contentDescriptor.getExecutionConsole()) {
-          return debuggerSession;
+        if (myActiveSession.compareAndSet(session, null)) {
+            onActiveSessionChanged();
         }
-      }
     }
-    return null;
-  }
 
-  @Nonnull
-  @Override
-  public <T extends XDebugProcess> List<? extends T> getDebugProcesses(Class<T> processClass) {
-    List<T> list = null;
-    for (XDebugSessionImpl session : mySessions.values()) {
-      final XDebugProcess process = session.getDebugProcess();
-      if (processClass.isInstance(process)) {
-        if (list == null) {
-          list = new SmartList<>();
+    void updateExecutionPoint(@Nullable XSourcePosition position, boolean nonTopFrame, @Nullable GutterIconRenderer gutterIconRenderer) {
+        if (position != null) {
+            myExecutionPointHighlighter.show(position, nonTopFrame, gutterIconRenderer);
         }
-        list.add(processClass.cast(process));
-      }
-    }
-    return ContainerUtil.notNullize(list);
-  }
-
-  @Override
-  @Nullable
-  public XDebugSessionImpl getCurrentSession() {
-    return myActiveSession.get();
-  }
-
-  void setCurrentSession(@Nullable XDebugSessionImpl session) {
-    boolean sessionChanged = myActiveSession.getAndSet(session) != session;
-    if (sessionChanged) {
-      if (session != null) {
-        XDebugSessionTab tab = session.getSessionTab();
-        if (tab != null) {
-          tab.select();
+        else {
+            myExecutionPointHighlighter.hide();
         }
-      }
-      else {
-        myExecutionPointHighlighter.hide();
-      }
-      onActiveSessionChanged();
-    }
-  }
-
-  @Override
-  public XDebuggerState getState() {
-    return new XDebuggerState(myBreakpointManager.getState(), myWatchesManager.getState());
-  }
-
-  public boolean isFullLineHighlighter() {
-    return myExecutionPointHighlighter.isFullLineHighlighter();
-  }
-
-  @Override
-  public void loadState(final XDebuggerState state) {
-    myBreakpointManager.loadState(state.myBreakpointManagerState);
-    myWatchesManager.loadState(state.myWatchesManagerState);
-  }
-
-  public void showExecutionPosition() {
-    myExecutionPointHighlighter.navigateTo();
-  }
-
-  @SuppressWarnings("UnusedDeclaration")
-  public static class XDebuggerState {
-    private XBreakpointManagerImpl.BreakpointManagerState myBreakpointManagerState;
-    private XDebuggerWatchesManager.WatchesManagerState myWatchesManagerState;
-
-    public XDebuggerState() {
     }
 
-    public XDebuggerState(final XBreakpointManagerImpl.BreakpointManagerState breakpointManagerState,
-                          XDebuggerWatchesManager.WatchesManagerState watchesManagerState) {
-      myBreakpointManagerState = breakpointManagerState;
-      myWatchesManagerState = watchesManagerState;
+    private void onActiveSessionChanged() {
+        myBreakpointManager.getLineBreakpointManager().queueAllBreakpointsUpdate();
+        ApplicationManager.getApplication().invokeLater(() -> ValueLookupManager.getInstance(myProject).hideHint(), myProject.getDisposed());
     }
 
-    @Property(surroundWithTag = false)
-    public XBreakpointManagerImpl.BreakpointManagerState getBreakpointManagerState() {
-      return myBreakpointManagerState;
+    @Override
+    @Nonnull
+    public XDebugSession[] getDebugSessions() {
+        final Collection<XDebugSessionImpl> sessions = mySessions.values();
+        return sessions.toArray(new XDebugSessionImpl[sessions.size()]);
     }
 
-    public void setBreakpointManagerState(final XBreakpointManagerImpl.BreakpointManagerState breakpointManagerState) {
-      myBreakpointManagerState = breakpointManagerState;
+    @Override
+    @Nullable
+    public XDebugSession getDebugSession(@Nonnull ExecutionConsole executionConsole) {
+        for (final XDebugSessionImpl debuggerSession : mySessions.values()) {
+            XDebugSessionTab sessionTab = debuggerSession.getSessionTab();
+            if (sessionTab != null) {
+                RunContentDescriptor contentDescriptor = sessionTab.getRunContentDescriptor();
+                if (contentDescriptor != null && executionConsole == contentDescriptor.getExecutionConsole()) {
+                    return debuggerSession;
+                }
+            }
+        }
+        return null;
     }
 
-    @Property(surroundWithTag = false)
-    public XDebuggerWatchesManager.WatchesManagerState getWatchesManagerState() {
-      return myWatchesManagerState;
+    @Nonnull
+    @Override
+    public <T extends XDebugProcess> List<? extends T> getDebugProcesses(Class<T> processClass) {
+        List<T> list = null;
+        for (XDebugSessionImpl session : mySessions.values()) {
+            final XDebugProcess process = session.getDebugProcess();
+            if (processClass.isInstance(process)) {
+                if (list == null) {
+                    list = new SmartList<>();
+                }
+                list.add(processClass.cast(process));
+            }
+        }
+        return ContainerUtil.notNullize(list);
     }
 
-    public void setWatchesManagerState(XDebuggerWatchesManager.WatchesManagerState watchesManagerState) {
-      myWatchesManagerState = watchesManagerState;
+    @Override
+    @Nullable
+    public XDebugSessionImpl getCurrentSession() {
+        return myActiveSession.get();
     }
-  }
+
+    void setCurrentSession(@Nullable XDebugSessionImpl session) {
+        boolean sessionChanged = myActiveSession.getAndSet(session) != session;
+        if (sessionChanged) {
+            if (session != null) {
+                XDebugSessionTab tab = session.getSessionTab();
+                if (tab != null) {
+                    tab.select();
+                }
+            }
+            else {
+                myExecutionPointHighlighter.hide();
+            }
+            onActiveSessionChanged();
+        }
+    }
+
+    @Override
+    public XDebuggerState getState() {
+        return new XDebuggerState(myBreakpointManager.getState(), myWatchesManager.getState());
+    }
+
+    public boolean isFullLineHighlighter() {
+        return myExecutionPointHighlighter.isFullLineHighlighter();
+    }
+
+    @Override
+    public void loadState(final XDebuggerState state) {
+        myBreakpointManager.loadState(state.myBreakpointManagerState);
+        myWatchesManager.loadState(state.myWatchesManagerState);
+    }
+
+    public void showExecutionPosition() {
+        myExecutionPointHighlighter.navigateTo();
+    }
+
+    @SuppressWarnings("UnusedDeclaration")
+    public static class XDebuggerState {
+        private XBreakpointManagerImpl.BreakpointManagerState myBreakpointManagerState;
+        private XDebuggerWatchesManager.WatchesManagerState myWatchesManagerState;
+
+        public XDebuggerState() {
+        }
+
+        public XDebuggerState(final XBreakpointManagerImpl.BreakpointManagerState breakpointManagerState,
+                              XDebuggerWatchesManager.WatchesManagerState watchesManagerState) {
+            myBreakpointManagerState = breakpointManagerState;
+            myWatchesManagerState = watchesManagerState;
+        }
+
+        @Property(surroundWithTag = false)
+        public XBreakpointManagerImpl.BreakpointManagerState getBreakpointManagerState() {
+            return myBreakpointManagerState;
+        }
+
+        public void setBreakpointManagerState(final XBreakpointManagerImpl.BreakpointManagerState breakpointManagerState) {
+            myBreakpointManagerState = breakpointManagerState;
+        }
+
+        @Property(surroundWithTag = false)
+        public XDebuggerWatchesManager.WatchesManagerState getWatchesManagerState() {
+            return myWatchesManagerState;
+        }
+
+        public void setWatchesManagerState(XDebuggerWatchesManager.WatchesManagerState watchesManagerState) {
+            myWatchesManagerState = watchesManagerState;
+        }
+    }
 }

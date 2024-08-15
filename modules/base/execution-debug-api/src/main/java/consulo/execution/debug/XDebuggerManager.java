@@ -25,9 +25,9 @@ import consulo.execution.ui.RunContentDescriptor;
 import consulo.process.ExecutionException;
 import consulo.project.Project;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 
 /**
@@ -36,69 +36,69 @@ import java.util.List;
 @ServiceAPI(value = ComponentScope.PROJECT, lazy = false)
 public abstract class XDebuggerManager {
 
-  public static XDebuggerManager getInstance(@Nonnull Project project) {
-    return project.getComponent(XDebuggerManager.class);
-  }
+    public static XDebuggerManager getInstance(@Nonnull Project project) {
+        return project.getInstance(XDebuggerManager.class);
+    }
 
-  @Nonnull
-  public abstract consulo.execution.debug.XBreakpointManager getBreakpointManager();
-
-
-  @Nonnull
-  public abstract consulo.execution.debug.XDebugSession[] getDebugSessions();
-
-  @Nullable
-  public abstract consulo.execution.debug.XDebugSession getDebugSession(@Nonnull ExecutionConsole executionConsole);
-
-  @Nonnull
-  public abstract <T extends consulo.execution.debug.XDebugProcess> List<? extends T> getDebugProcesses(Class<T> processClass);
-
-  @Nullable
-  public abstract consulo.execution.debug.XDebugSession getCurrentSession();
+    @Nonnull
+    public abstract XBreakpointManager getBreakpointManager();
 
 
-  /**
-   * Start a new debugging session and open 'Debug' tool window
-   *
-   * @param sessionName                 title of 'Debug' tool window
-   * @param icon                        icon of 'Debug' tool window
-   * @param showToolWindowOnSuspendOnly if {@code true} 'Debug' tool window won't be shown until debug process is suspended on a breakpoint
-   */
-  @Nonnull
-  public abstract consulo.execution.debug.XDebugSession startSessionAndShowTab(@Nonnull String sessionName,
-                                                                               @Nullable Image icon,
-                                                                               @Nullable RunContentDescriptor contentToReuse,
-                                                                               boolean showToolWindowOnSuspendOnly,
-                                                                               @Nonnull consulo.execution.debug.XDebugProcessStarter starter) throws ExecutionException;
+    @Nonnull
+    public abstract XDebugSession[] getDebugSessions();
+
+    @Nullable
+    public abstract XDebugSession getDebugSession(@Nonnull ExecutionConsole executionConsole);
+
+    @Nonnull
+    public abstract <T extends XDebugProcess> List<? extends T> getDebugProcesses(Class<T> processClass);
+
+    @Nullable
+    public abstract XDebugSession getCurrentSession();
 
 
-  /**
-   * Start a new debugging session. Use this method only if debugging is started by using standard 'Debug' action i.e. this methods is called
-   * from {@link ProgramRunner#execute} method. Otherwise use {@link #startSessionAndShowTab} method
-   */
-  @Nonnull
-  public abstract consulo.execution.debug.XDebugSession startSession(@Nonnull ExecutionEnvironment environment, @Nonnull consulo.execution.debug.XDebugProcessStarter processStarter)
-          throws ExecutionException;
+    /**
+     * Start a new debugging session and open 'Debug' tool window
+     *
+     * @param sessionName                 title of 'Debug' tool window
+     * @param icon                        icon of 'Debug' tool window
+     * @param showToolWindowOnSuspendOnly if {@code true} 'Debug' tool window won't be shown until debug process is suspended on a breakpoint
+     */
+    @Nonnull
+    public abstract XDebugSession startSessionAndShowTab(@Nonnull String sessionName,
+                                                         @Nullable Image icon,
+                                                         @Nullable RunContentDescriptor contentToReuse,
+                                                         boolean showToolWindowOnSuspendOnly,
+                                                         @Nonnull XDebugProcessStarter starter) throws ExecutionException;
 
-  /**
-   * Start a new debugging session and open 'Debug' tool window
-   *
-   * @param sessionName title of 'Debug' tool window
-   */
-  @Nonnull
-  public abstract consulo.execution.debug.XDebugSession startSessionAndShowTab(@Nonnull String sessionName,
-                                                                               @Nullable RunContentDescriptor contentToReuse,
-                                                                               @Nonnull consulo.execution.debug.XDebugProcessStarter starter) throws ExecutionException;
 
-  /**
-   * Start a new debugging session and open 'Debug' tool window
-   *
-   * @param sessionName                 title of 'Debug' tool window
-   * @param showToolWindowOnSuspendOnly if {@code true} 'Debug' tool window won't be shown until debug process is suspended on a breakpoint
-   */
-  @Nonnull
-  public abstract consulo.execution.debug.XDebugSession startSessionAndShowTab(@Nonnull String sessionName,
-                                                                               @Nullable RunContentDescriptor contentToReuse,
-                                                                               boolean showToolWindowOnSuspendOnly,
-                                                                               @Nonnull XDebugProcessStarter starter) throws ExecutionException;
+    /**
+     * Start a new debugging session. Use this method only if debugging is started by using standard 'Debug' action i.e. this methods is called
+     * from {@link ProgramRunner#execute} method. Otherwise use {@link #startSessionAndShowTab} method
+     */
+    @Nonnull
+    public abstract XDebugSession startSession(@Nonnull ExecutionEnvironment environment, @Nonnull XDebugProcessStarter processStarter)
+        throws ExecutionException;
+
+    /**
+     * Start a new debugging session and open 'Debug' tool window
+     *
+     * @param sessionName title of 'Debug' tool window
+     */
+    @Nonnull
+    public abstract XDebugSession startSessionAndShowTab(@Nonnull String sessionName,
+                                                         @Nullable RunContentDescriptor contentToReuse,
+                                                         @Nonnull XDebugProcessStarter starter) throws ExecutionException;
+
+    /**
+     * Start a new debugging session and open 'Debug' tool window
+     *
+     * @param sessionName                 title of 'Debug' tool window
+     * @param showToolWindowOnSuspendOnly if {@code true} 'Debug' tool window won't be shown until debug process is suspended on a breakpoint
+     */
+    @Nonnull
+    public abstract XDebugSession startSessionAndShowTab(@Nonnull String sessionName,
+                                                         @Nullable RunContentDescriptor contentToReuse,
+                                                         boolean showToolWindowOnSuspendOnly,
+                                                         @Nonnull XDebugProcessStarter starter) throws ExecutionException;
 }
