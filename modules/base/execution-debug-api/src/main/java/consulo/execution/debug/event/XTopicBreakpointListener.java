@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2017 JetBrains s.r.o.
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.execution.debug.event;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.TopicAPI;
 import consulo.execution.debug.breakpoint.XBreakpoint;
 import jakarta.annotation.Nonnull;
 
-import java.util.EventListener;
-
 /**
- * @author nik
+ * @author VISTALL
+ * @since 2024-08-16
  */
-public interface XBreakpointListener<B extends XBreakpoint<?>> extends EventListener {
-  default void breakpointAdded(@Nonnull B breakpoint) {
-  }
+@TopicAPI(ComponentScope.PROJECT)
+public interface XTopicBreakpointListener extends XBreakpointListener<XBreakpoint<?>> {
+    @Override
+    default void breakpointAdded(@Nonnull XBreakpoint<?> breakpoint) {
+    }
 
-  default void breakpointRemoved(@Nonnull B breakpoint) {
-  }
+    @Override
+    default void breakpointRemoved(@Nonnull XBreakpoint<?> breakpoint) {
+    }
 
-  default void breakpointChanged(@Nonnull B breakpoint) {
-  }
+    @Override
+    default void breakpointChanged(@Nonnull XBreakpoint<?> breakpoint) {
+    }
 }
