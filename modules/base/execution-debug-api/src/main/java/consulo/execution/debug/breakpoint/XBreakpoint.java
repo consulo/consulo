@@ -16,6 +16,7 @@
 
 package consulo.execution.debug.breakpoint;
 
+import consulo.execution.debug.XBreakpointManager;
 import consulo.execution.debug.XSourcePosition;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
@@ -89,4 +90,7 @@ public interface XBreakpoint<P extends XBreakpointProperties> extends UserDataHo
 
     @Nonnull
     Project getProject();
+
+    @Nonnull
+    XBreakpointManager getBreakpointManager();
 }
