@@ -15,6 +15,7 @@
  */
 package consulo.ui.ex.content;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.component.util.BusyObject;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
@@ -23,136 +24,142 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.content.event.ContentManagerListener;
 import consulo.util.concurrent.AsyncResult;
-
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 
 public interface ContentManager extends Disposable, BusyObject {
-  Key<ContentManager> KEY = Key.create(ContentManager.class);
+    Key<ContentManager> KEY = Key.create(ContentManager.class);
 
-  boolean canCloseContents();
+    boolean canCloseContents();
 
-  void addContent(@Nonnull Content content);
+    void addContent(@Nonnull Content content);
 
-  void addContent(@Nonnull Content content, final int order);
+    void addContent(@Nonnull Content content, final int order);
 
-  void addContent(@Nonnull Content content, Object constraints);
+    void addContent(@Nonnull Content content, Object constraints);
 
-  boolean removeContent(@Nonnull Content content, final boolean dispose);
+    boolean removeContent(@Nonnull Content content, final boolean dispose);
 
-  @Nonnull
-  AsyncResult<Void> removeContent(@Nonnull Content content, final boolean dispose, boolean trackFocus, boolean forcedFocus);
+    @Nonnull
+    AsyncResult<Void> removeContent(@Nonnull Content content, final boolean dispose, boolean trackFocus, boolean forcedFocus);
 
-  void setSelectedContent(@Nonnull Content content);
+    void setSelectedContent(@Nonnull Content content);
 
-  @Nonnull
-  AsyncResult<Void> setSelectedContentCB(@Nonnull Content content);
+    @Nonnull
+    AsyncResult<Void> setSelectedContentCB(@Nonnull Content content);
 
-  void setSelectedContent(@Nonnull Content content, boolean requestFocus);
+    void setSelectedContent(@Nonnull Content content, boolean requestFocus);
 
-  @Nonnull
-  AsyncResult<Void> setSelectedContentCB(@Nonnull Content content, boolean requestFocus);
+    @Nonnull
+    AsyncResult<Void> setSelectedContentCB(@Nonnull Content content, boolean requestFocus);
 
-  void setSelectedContent(@Nonnull Content content, boolean requestFocus, boolean forcedFocus);
+    void setSelectedContent(@Nonnull Content content, boolean requestFocus, boolean forcedFocus);
 
-  @Nonnull
-  AsyncResult<Void> setSelectedContentCB(@Nonnull Content content, boolean requestFocus, boolean forcedFocus);
+    @Nonnull
+    AsyncResult<Void> setSelectedContentCB(@Nonnull Content content, boolean requestFocus, boolean forcedFocus);
 
-  @Nonnull
-  AsyncResult<Void> setSelectedContent(@Nonnull Content content, boolean requestFocus, boolean forcedFocus, boolean implicit);
+    @Nonnull
+    AsyncResult<Void> setSelectedContent(@Nonnull Content content, boolean requestFocus, boolean forcedFocus, boolean implicit);
 
-  void addSelectedContent(@Nonnull Content content);
+    void addSelectedContent(@Nonnull Content content);
 
-  @Nullable
-  Content getSelectedContent();
+    @Nullable
+    Content getSelectedContent();
 
-  @Nonnull
-  Content[] getSelectedContents();
+    @Nonnull
+    Content[] getSelectedContents();
 
-  void removeAllContents(final boolean dispose);
+    void removeAllContents(final boolean dispose);
 
-  int getContentCount();
+    int getContentCount();
 
-  @Nonnull
-  Content[] getContents();
+    @Nonnull
+    Content[] getContents();
 
-  //TODO[anton,vova] is this method needed?
-  Content findContent(String displayName);
+    //TODO[anton,vova] is this method needed?
+    Content findContent(String displayName);
 
-  @Nullable
-  Content getContent(int index);
+    @Nullable
+    Content getContent(int index);
 
-  int getIndexOfContent(Content content);
+    int getIndexOfContent(Content content);
 
-  @Nonnull
-  String getCloseActionName();
+    @Nonnull
+    String getCloseActionName();
 
-  boolean canCloseAllContents();
+    boolean canCloseAllContents();
 
-  AsyncResult<Void> selectPreviousContent();
+    AsyncResult<Void> selectPreviousContent();
 
-  AsyncResult<Void> selectNextContent();
+    AsyncResult<Void> selectNextContent();
 
-  void addContentManagerListener(@Nonnull ContentManagerListener l);
+    void addContentManagerListener(@Nonnull ContentManagerListener l, @Nonnull Disposable disposable);
 
-  void removeContentManagerListener(@Nonnull ContentManagerListener l);
+    @Deprecated
+    @DeprecationInfo("Prefer addContentManagerListener with Disposable")
+    void addContentManagerListener(@Nonnull ContentManagerListener l);
 
-  /**
-   * Returns the localized name of the "Close All but This" action.
-   *
-   * @return the action name.
-   * @since 5.1
-   */
-  @Nonnull
-  String getCloseAllButThisActionName();
+    @Deprecated
+    @DeprecationInfo("Prefer addContentManagerListener with Disposable")
+    void removeContentManagerListener(@Nonnull ContentManagerListener l);
 
-  @Nonnull
-  String getPreviousContentActionName();
+    /**
+     * Returns the localized name of the "Close All but This" action.
+     *
+     * @return the action name.
+     * @since 5.1
+     */
+    @Nonnull
+    String getCloseAllButThisActionName();
 
-  @Nonnull
-  String getNextContentActionName();
+    @Nonnull
+    String getPreviousContentActionName();
 
-  List<AnAction> getAdditionalPopupActions(@Nonnull Content content);
+    @Nonnull
+    String getNextContentActionName();
 
-  void removeFromSelection(@Nonnull Content content);
+    List<AnAction> getAdditionalPopupActions(@Nonnull Content content);
 
-  boolean isSelected(@Nonnull Content content);
+    void removeFromSelection(@Nonnull Content content);
 
-  @Nonnull
-  AsyncResult<Void> requestFocus(@Nullable Content content, boolean forced);
+    boolean isSelected(@Nonnull Content content);
 
-  void addDataProvider(@Nonnull DataProvider provider);
+    @Nonnull
+    AsyncResult<Void> requestFocus(@Nullable Content content, boolean forced);
 
-  @Nonnull
-  default ContentFactory getFactory() {
-    return ContentFactory.getInstance();
-  }
+    void addDataProvider(@Nonnull DataProvider provider);
 
-  boolean isDisposed();
+    @Nonnull
+    default ContentFactory getFactory() {
+        return ContentFactory.getInstance();
+    }
 
-  boolean isSingleSelection();
+    boolean isDisposed();
 
-  default Content getContent(@Nonnull Component component) {
-    throw new AbstractMethodError();
-  }
+    boolean isSingleSelection();
 
-  @Nonnull
-  @RequiredUIAccess
-  default Component getUIComponent() {
-    throw new AbstractMethodError();
-  }
+    default Content getContent(@Nonnull Component component) {
+        throw new AbstractMethodError();
+    }
 
-  // TODO [VISTALL] awt & swing dependency
-  // region awt & swing dependency
-  @Nonnull
-  default javax.swing.JComponent getComponent() {
-    throw new AbstractMethodError();
-  }
+    @Nonnull
+    @RequiredUIAccess
+    default Component getUIComponent() {
+        throw new AbstractMethodError();
+    }
 
-  default Content getContent(javax.swing.JComponent component) {
-    throw new AbstractMethodError();
-  }
-  // endregion
+    // TODO [VISTALL] awt & swing dependency
+    // region awt & swing dependency
+    @Nonnull
+    default javax.swing.JComponent getComponent() {
+        throw new AbstractMethodError();
+    }
+
+    default Content getContent(javax.swing.JComponent component) {
+        throw new AbstractMethodError();
+    }
+    // endregion
 }
