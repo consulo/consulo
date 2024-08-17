@@ -20,7 +20,6 @@ import consulo.execution.debug.XSourcePosition;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolder;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -34,60 +33,60 @@ import jakarta.annotation.Nullable;
  */
 public interface XBreakpoint<P extends XBreakpointProperties> extends UserDataHolder {
 
-  boolean isEnabled();
+    boolean isEnabled();
 
-  void setEnabled(boolean enabled);
+    void setEnabled(boolean enabled);
 
-  @Nonnull
-  XBreakpointType<?, P> getType();
+    @Nonnull
+    XBreakpointType<?, P> getType();
 
-  P getProperties();
+    P getProperties();
 
-  @Nullable
-  XSourcePosition getSourcePosition();
+    @Nullable
+    XSourcePosition getSourcePosition();
 
-  @Nullable
-  Navigatable getNavigatable();
+    @Nullable
+    Navigatable getNavigatable();
 
-  @Nonnull
-  SuspendPolicy getSuspendPolicy();
+    @Nonnull
+    SuspendPolicy getSuspendPolicy();
 
-  void setSuspendPolicy(@Nonnull SuspendPolicy policy);
+    void setSuspendPolicy(@Nonnull SuspendPolicy policy);
 
-  boolean isLogMessage();
+    boolean isLogMessage();
 
-  void setLogMessage(boolean logMessage);
+    void setLogMessage(boolean logMessage);
 
-  /**
-   * @deprecated use {@link #getLogExpressionObject()} instead
-   */
-  @Deprecated
-  @Nullable
-  String getLogExpression();
+    /**
+     * @deprecated use {@link #getLogExpressionObject()} instead
+     */
+    @Deprecated
+    @Nullable
+    String getLogExpression();
 
-  void setLogExpression(@Nullable String expression);
+    void setLogExpression(@Nullable String expression);
 
-  @Nullable
-  XExpression getLogExpressionObject();
+    @Nullable
+    XExpression getLogExpressionObject();
 
-  void setLogExpressionObject(@Nullable XExpression expression);
+    void setLogExpressionObject(@Nullable XExpression expression);
 
-  /**
-   * @deprecated use {@link #getConditionExpression()} instead
-   */
-  @Deprecated
-  @Nullable
-  String getCondition();
+    /**
+     * @deprecated use {@link #getConditionExpression()} instead
+     */
+    @Deprecated
+    @Nullable
+    String getCondition();
 
-  void setCondition(@Nullable String condition);
+    void setCondition(@Nullable String condition);
 
-  @Nullable
-  XExpression getConditionExpression();
+    @Nullable
+    XExpression getConditionExpression();
 
-  void setConditionExpression(@Nullable XExpression condition);
+    void setConditionExpression(@Nullable XExpression condition);
 
-  long getTimeStamp();
+    long getTimeStamp();
 
-  @Nonnull
-  Project getProject();
+    @Nonnull
+    Project getProject();
 }

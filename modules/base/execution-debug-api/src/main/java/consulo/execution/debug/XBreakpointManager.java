@@ -82,6 +82,7 @@ public interface XBreakpointManager {
     <B extends XBreakpoint<P>, P extends XBreakpointProperties> void addBreakpointListener(@Nonnull XBreakpointType<B, P> type,
                                                                                            @Nonnull XBreakpointListener<B> listener,
                                                                                            Disposable parentDisposable);
+
     @Deprecated
     @DeprecationInfo("Use MessageBus for listeners")
     void addBreakpointListener(@Nonnull XBreakpointListener<XBreakpoint<?>> listener);
