@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.fileTypes.ex;
 
-import consulo.container.plugin.PluginExtensionPreview;
+import consulo.component.extension.preview.ExtensionPreview;
 import consulo.ide.impl.idea.ide.plugins.pluginsAdvertisement.PluginsAdvertiser;
 import consulo.application.ApplicationManager;
 import consulo.ide.impl.idea.openapi.fileTypes.*;
@@ -125,7 +125,7 @@ public class FileTypeChooser extends DialogWrapper {
     myList.setModel(model);
     myPattern.setModel(new CollectionComboBoxModel<>(ContainerUtil.map(patterns, FunctionUtil.<String>id()), patterns.get(0)));
 
-    PluginExtensionPreview fileFeatureForChecking = new PluginExtensionPreview(FileTypeFactory.class, fileName);
+    ExtensionPreview fileFeatureForChecking = ExtensionPreview.of(FileTypeFactory.class, fileName);
     myAllPlugins = PluginsAdvertiserHolder.getLoadedPluginDescriptors();
     myFeaturePlugins = PluginsAdvertiser.findImpl(myAllPlugins, fileFeatureForChecking);
 

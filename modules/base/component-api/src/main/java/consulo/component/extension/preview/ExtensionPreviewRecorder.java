@@ -18,16 +18,16 @@ package consulo.component.extension.preview;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionExtender;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.function.Consumer;
 
 /**
  * This API allow extract extension info which will be stored at plugin repository,
  * and any plugin can access it for suggesting installing new plugins.
- *
+ * <p>
  * This code will never call in IDE instance
- *
+ * <p>
  * This extension not allowed to extend via {@link ExtensionExtender}
  *
  * @author VISTALL
@@ -35,5 +35,5 @@ import java.util.function.Consumer;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ExtensionPreviewRecorder<T> {
-  void analyze(@Nonnull Consumer<ExtensionPreview<T>> recorder);
+    void analyze(@Nonnull Consumer<ExtensionPreview> recorder);
 }

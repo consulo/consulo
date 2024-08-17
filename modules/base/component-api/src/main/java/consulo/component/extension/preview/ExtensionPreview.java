@@ -17,43 +17,31 @@ package consulo.component.extension.preview;
 
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
-
 import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 22/01/2023
  */
-public final class ExtensionPreview<T> {
-  private final PluginId myApiPluginId;
-  private final String myApiClassName;
+public record ExtensionPreview(@Nonnull PluginId apiPluginId,
+                               @Nonnull String apiClassName,
+                               @Nonnull PluginId implPluginId,
+                               @Nonnull String implId) {
 
-  private final String myImplId;
-  private final PluginId myImplPluginId;
+    public static <T> ExtensionPreview of(@Nonnull Class<T> apiClass, @Nonnull String implId) {
+        return new ExtensionPreview(getPluginStrict(apiClass), apiClass.getName(), getPluginStrict(apiClass), implId);
+    }
 
-  public ExtensionPreview(@Nonnull Class<T> apiClass, @Nonnull String implId, @Nonnull T implClass) {
-    myApiPluginId = PluginManager.getPluginId(apiClass);
-    myApiClassName = apiClass.getName();
-    myImplId = implId;
-    myImplPluginId = PluginManager.getPluginId(implClass.getClass());
-  }
+    public static <T> ExtensionPreview of(@Nonnull Class<T> apiClass, @Nonnull String implId, @Nonnull T implClass) {
+        return new ExtensionPreview(getPluginStrict(apiClass), apiClass.getName(), getPluginStrict(implClass.getClass()), implId);
+    }
 
-  @Nonnull
-  public String getApiClassName() {
-    return myApiClassName;
-  }
-
-  @Nonnull
-  public String getImplId() {
-    return myImplId;
-  }
-
-  public PluginId getImplPluginId() {
-    return myImplPluginId;
-  }
-
-  @Nonnull
-  public PluginId getApiPluginId() {
-    return myApiPluginId;
-  }
+    @Nonnull
+    private static PluginId getPluginStrict(Class<?> clazz) {
+        PluginId pluginId = PluginManager.getPluginId(clazz);
+        if (pluginId == null) {
+            throw new IllegalArgumentException("No plugin for class " + clazz.getName());
+        }
+        return pluginId;
+    }
 }

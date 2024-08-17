@@ -16,8 +16,8 @@
 package consulo.virtualFileSystem.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.component.extension.preview.ExtensionPreview;
 import consulo.component.extension.preview.ExtensionPreviewAcceptor;
-import consulo.container.plugin.PluginExtensionPreview;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.fileType.FileNameMatcher;
 import consulo.virtualFileSystem.fileType.FileNameMatcherFactory;
@@ -42,9 +42,9 @@ public class FileTypeExtensionPreviewAcceptor implements ExtensionPreviewAccepto
   }
 
   @Override
-  public boolean accept(PluginExtensionPreview pluginPreview, PluginExtensionPreview featurePreview) {
-    FileNameMatcher matcher = createMatcher(pluginPreview.getImplId());
-    return matcher != null && matcher.acceptsCharSequence(featurePreview.getImplId());
+  public boolean accept(ExtensionPreview pluginPreview, ExtensionPreview featurePreview) {
+    FileNameMatcher matcher = createMatcher(pluginPreview.implId());
+    return matcher != null && matcher.acceptsCharSequence(featurePreview.implId());
   }
 
   /**

@@ -39,9 +39,9 @@ public class SdkTypeExtensionPreviewRecorder implements ExtensionPreviewRecorder
   }
 
   @Override
-  public void analyze(@Nonnull Consumer<ExtensionPreview<SdkType>> recorder) {
+  public void analyze(@Nonnull Consumer<ExtensionPreview> recorder) {
     myApplication.getExtensionPoint(SdkType.class).forEachExtensionSafe(it -> {
-      ExtensionPreview<SdkType> preview = new ExtensionPreview<>(SdkType.class, it.getId(), it);
+      ExtensionPreview preview = ExtensionPreview.of(SdkType.class, it.getId(), it);
       recorder.accept(preview);
     });
   }

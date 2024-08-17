@@ -17,7 +17,8 @@ package consulo.component.extension.preview;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.container.plugin.PluginExtensionPreview;
+
+import java.util.Objects;
 
 /**
  * By default - all extensions previews checks by simple equals ID check, but some extensions can provide own way for it
@@ -27,19 +28,22 @@ import consulo.container.plugin.PluginExtensionPreview;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ExtensionPreviewAcceptor<Api> {
-  static ExtensionPreviewAcceptor<Object> DEFAULT = new ExtensionPreviewAcceptor<Object>() {
-    @Override
-    public boolean accept(PluginExtensionPreview pluginPreview, PluginExtensionPreview featurePreview) {
-      return pluginPreview.equals(featurePreview);
-    }
+    static ExtensionPreviewAcceptor<Object> DEFAULT = new ExtensionPreviewAcceptor<>() {
+        @Override
+        public boolean accept(ExtensionPreview pluginPreview, ExtensionPreview featurePreview) {
+            return Objects.equals(pluginPreview.apiPluginId(), featurePreview.apiPluginId())
+                && Objects.equals(pluginPreview.apiClassName(), featurePreview.apiClassName())
+                // we don't check #implPluginId()
+                && Objects.equals(pluginPreview.implId(), featurePreview.implId());
+        }
 
-    @Override
-    public Class<Object> getApiClass() {
-      throw new UnsupportedOperationException();
-    }
-  };
+        @Override
+        public Class<Object> getApiClass() {
+            throw new UnsupportedOperationException();
+        }
+    };
 
-  boolean accept(PluginExtensionPreview pluginPreview, PluginExtensionPreview featurePreview);
+    boolean accept(ExtensionPreview pluginPreview, ExtensionPreview featurePreview);
 
-  Class<Api> getApiClass();
+    Class<Api> getApiClass();
 }

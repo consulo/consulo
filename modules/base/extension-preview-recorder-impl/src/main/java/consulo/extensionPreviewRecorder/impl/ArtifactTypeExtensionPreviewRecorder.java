@@ -39,9 +39,9 @@ public class ArtifactTypeExtensionPreviewRecorder implements ExtensionPreviewRec
   }
 
   @Override
-  public void analyze(@Nonnull Consumer<ExtensionPreview<ArtifactType>> recorder) {
+  public void analyze(@Nonnull Consumer<ExtensionPreview> recorder) {
     myApplication.getExtensionPoint(ArtifactType.class).forEachExtensionSafe(it -> {
-      ExtensionPreview<ArtifactType> preview = new ExtensionPreview<>(ArtifactType.class, it.getId(), it);
+      ExtensionPreview preview = ExtensionPreview.of(ArtifactType.class, it.getId(), it);
       recorder.accept(preview);
     });
   }

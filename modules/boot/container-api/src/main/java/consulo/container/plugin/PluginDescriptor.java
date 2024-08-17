@@ -81,8 +81,6 @@ public interface PluginDescriptor {
 
   String getDownloads();
 
-  List<PluginExtensionPreview> getExtensionPreviews();
-
   PluginPermissionDescriptor getPermissionDescriptor(PluginPermissionType permissionType);
 
   /**

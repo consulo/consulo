@@ -18,16 +18,16 @@ package consulo.project;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
+import consulo.component.extension.preview.ExtensionPreview;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.container.plugin.PluginExtensionPreview;
 import consulo.container.plugin.PluginId;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
-import jakarta.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -39,60 +39,72 @@ import java.util.Set;
 @ServiceImpl
 @State(name = "UnknownFeatures", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 public class UnknownFeaturesCollector implements PersistentStateComponent<Element> {
-  private static final String API_PLUGIN_ID = "apiPluginId";
-  private static final String API_CLASS_NAME = "apiClassName";
-  private static final String IMPL_ID = "implId";
+    private static final String API_PLUGIN_ID = "apiPluginId";
+    private static final String API_CLASS_NAME = "apiClassName";
+    private static final String IMPL_PLUGIN_ID = "implPluginId";
+    private static final String IMPL_ID = "implId";
 
-  private final Set<PluginExtensionPreview> myUnknownExtensions = new HashSet<>();
-  private final Set<PluginExtensionPreview> myIgnoredUnknownExtensions = new HashSet<>();
+    private final Set<ExtensionPreview> myUnknownExtensions = new HashSet<>();
+    private final Set<ExtensionPreview> myIgnoredUnknownExtensions = new HashSet<>();
 
-  public static UnknownFeaturesCollector getInstance(Project project) {
-    return project.getInstance(UnknownFeaturesCollector.class);
-  }
-
-  public void registerUnknownFeature(Class extensionClass, String implementationName) {
-    final PluginExtensionPreview extensionPreview = new PluginExtensionPreview(extensionClass, implementationName);
-    if (!isIgnored(extensionPreview)) {
-      myUnknownExtensions.add(extensionPreview);
+    public static UnknownFeaturesCollector getInstance(Project project) {
+        return project.getInstance(UnknownFeaturesCollector.class);
     }
-  }
 
-  public boolean isIgnored(PluginExtensionPreview feature) {
-    return myIgnoredUnknownExtensions.contains(feature);
-  }
-
-  public void ignoreFeature(PluginExtensionPreview feature) {
-    myIgnoredUnknownExtensions.add(feature);
-  }
-
-  public Set<PluginExtensionPreview> getUnknownExtensions() {
-    return myUnknownExtensions;
-  }
-
-  @Nullable
-  @Override
-  public Element getState() {
-    if (myIgnoredUnknownExtensions.isEmpty()) return null;
-
-    final Element ignored = new Element("ignoreExtensions");
-    for (PluginExtensionPreview feature : myIgnoredUnknownExtensions) {
-      final Element option = new Element("ignoreExtensions");
-      option.setAttribute(API_CLASS_NAME, feature.getApiClassName());
-      option.setAttribute(API_PLUGIN_ID, feature.getApiPluginId().getIdString());
-      option.setAttribute(IMPL_ID, feature.getImplId());
-      ignored.addContent(option);
+    public void registerUnknownFeature(Class<?> extensionClass, String implementationName) {
+        final ExtensionPreview extensionPreview = ExtensionPreview.of(extensionClass, implementationName);
+        if (!isIgnored(extensionPreview)) {
+            myUnknownExtensions.add(extensionPreview);
+        }
     }
-    return ignored;
-  }
 
-  @Override
-  public void loadState(Element state) {
-    myIgnoredUnknownExtensions.clear();
-    for (Element element : state.getChildren()) {
-      String apiPluginId = element.getAttributeValue(API_PLUGIN_ID);
-      String apiClassName = element.getAttributeValue(API_CLASS_NAME);
-      String implId = element.getAttributeValue(IMPL_ID);
-      myIgnoredUnknownExtensions.add(new PluginExtensionPreview(PluginId.getId(apiPluginId), apiClassName, implId));
+    public boolean isIgnored(ExtensionPreview feature) {
+        return myIgnoredUnknownExtensions.contains(feature);
     }
-  }
+
+    public void ignoreFeature(ExtensionPreview feature) {
+        myIgnoredUnknownExtensions.add(feature);
+    }
+
+    public Set<ExtensionPreview> getUnknownExtensions() {
+        return myUnknownExtensions;
+    }
+
+    @Nullable
+    @Override
+    public Element getState() {
+        if (myIgnoredUnknownExtensions.isEmpty()) {
+            return null;
+        }
+
+        final Element ignored = new Element("ignoreExtensions");
+        for (ExtensionPreview feature : myIgnoredUnknownExtensions) {
+            final Element option = new Element("ignoreExtensions");
+            option.setAttribute(API_PLUGIN_ID, feature.apiPluginId().getIdString());
+            option.setAttribute(API_CLASS_NAME, feature.apiClassName());
+            option.setAttribute(IMPL_PLUGIN_ID, feature.implPluginId().getIdString());
+            option.setAttribute(IMPL_ID, feature.implId());
+            ignored.addContent(option);
+        }
+        return ignored;
+    }
+
+    @Override
+    public void loadState(Element state) {
+        myIgnoredUnknownExtensions.clear();
+        for (Element element : state.getChildren()) {
+            String apiPluginIdStr = element.getAttributeValue(API_PLUGIN_ID);
+            String apiClassName = element.getAttributeValue(API_CLASS_NAME);
+            String implId = element.getAttributeValue(IMPL_ID);
+            String implPluginIdStr = element.getAttributeValue(IMPL_PLUGIN_ID);
+            if (implPluginIdStr == null) {
+                implPluginIdStr = apiPluginIdStr;
+            }
+
+            PluginId apiPluginId = PluginId.getId(apiPluginIdStr);
+            PluginId implPluginId = PluginId.getId(implPluginIdStr);
+
+            myIgnoredUnknownExtensions.add(new ExtensionPreview(apiPluginId, apiClassName, implPluginId, implId));
+        }
+    }
 }

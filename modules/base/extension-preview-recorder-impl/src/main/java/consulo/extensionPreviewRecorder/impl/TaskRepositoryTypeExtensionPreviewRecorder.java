@@ -39,9 +39,9 @@ public class TaskRepositoryTypeExtensionPreviewRecorder implements ExtensionPrev
   }
 
   @Override
-  public void analyze(@Nonnull Consumer<ExtensionPreview<TaskRepositoryType>> recorder) {
+  public void analyze(@Nonnull Consumer<ExtensionPreview> recorder) {
     myApplication.getExtensionPoint(TaskRepositoryType.class).forEachExtensionSafe(it -> {
-      ExtensionPreview<TaskRepositoryType> preview = new ExtensionPreview<>(TaskRepositoryType.class, it.getId(), it);
+      ExtensionPreview preview = ExtensionPreview.of(TaskRepositoryType.class, it.getId(), it);
       recorder.accept(preview);
     });
   }

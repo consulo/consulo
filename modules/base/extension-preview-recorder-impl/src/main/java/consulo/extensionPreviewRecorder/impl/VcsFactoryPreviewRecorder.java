@@ -21,9 +21,9 @@ import consulo.component.extension.preview.ExtensionPreviewRecorder;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.versionControlSystem.VcsFactory;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -32,20 +32,20 @@ import java.util.function.Consumer;
  */
 @ExtensionImpl
 public class VcsFactoryPreviewRecorder implements ExtensionPreviewRecorder<VcsFactory> {
-  private final ProjectManager myProjectManager;
+    private final ProjectManager myProjectManager;
 
-  @Inject
-  public VcsFactoryPreviewRecorder(ProjectManager projectManager) {
-    myProjectManager = projectManager;
-  }
+    @Inject
+    public VcsFactoryPreviewRecorder(ProjectManager projectManager) {
+        myProjectManager = projectManager;
+    }
 
-  @Override
-  public void analyze(@Nonnull Consumer<ExtensionPreview<VcsFactory>> recorder) {
-    Project project = myProjectManager.getDefaultProject();
+    @Override
+    public void analyze(@Nonnull Consumer<ExtensionPreview> recorder) {
+        Project project = myProjectManager.getDefaultProject();
 
-    project.getExtensionPoint(VcsFactory.class).forEachExtensionSafe(it -> {
-      ExtensionPreview<VcsFactory> preview = new ExtensionPreview<>(VcsFactory.class, it.getId(), it);
-      recorder.accept(preview);
-    });
-  }
+        project.getExtensionPoint(VcsFactory.class).forEachExtensionSafe(it -> {
+            ExtensionPreview preview = ExtensionPreview.of(VcsFactory.class, it.getId(), it);
+            recorder.accept(preview);
+        });
+    }
 }

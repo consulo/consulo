@@ -33,7 +33,7 @@ import java.util.*;
 /**
  * @author mike
  */
-public class PluginDescriptorImpl extends PluginDescriptorStub {
+public class PluginDescriptorImpl extends PluginDescriptorStub  {
   public static final PluginDescriptorImpl[] EMPTY_ARRAY = new PluginDescriptorImpl[0];
 
   private String myName;

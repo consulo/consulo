@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.ide.plugins.pluginsAdvertisement;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
+import consulo.component.extension.preview.ExtensionPreview;
 import consulo.container.plugin.PluginDescriptor;
-import consulo.container.plugin.PluginExtensionPreview;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
 import consulo.fileEditor.EditorNotificationBuilder;
@@ -85,7 +85,7 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
 
     if (myEnabledExtensions.contains(extension) || isIgnoredFile(file)) return null;
 
-    PluginExtensionPreview fileFeatureForChecking = new PluginExtensionPreview(FileTypeFactory.class, file.getName());
+    ExtensionPreview fileFeatureForChecking = ExtensionPreview.of(FileTypeFactory.class, file.getName());
 
     List<PluginDescriptor> allPlugins = PluginsAdvertiserHolder.getLoadedPluginDescriptors();
 
@@ -136,12 +136,12 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
     }
 
     builder.withAction(LocalizeValue.localizeTODO("Ignore by file name"), (i) -> {
-      myUnknownFeaturesCollector.ignoreFeature(new PluginExtensionPreview(FileTypeFactory.class, virtualFile.getName()));
+      myUnknownFeaturesCollector.ignoreFeature(ExtensionPreview.of(FileTypeFactory.class, virtualFile.getName()));
       myNotifications.updateAllNotifications();
     });
 
     builder.withAction(LocalizeValue.localizeTODO("Ignore by extension"), (i) -> {
-      myUnknownFeaturesCollector.ignoreFeature(new PluginExtensionPreview(FileTypeFactory.class, "*." + virtualFile.getExtension()));
+      myUnknownFeaturesCollector.ignoreFeature(ExtensionPreview.of(FileTypeFactory.class, "*." + virtualFile.getExtension()));
       myNotifications.updateAllNotifications();
     });
 
@@ -149,13 +149,13 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
   }
 
   private boolean isIgnoredFile(@Nonnull VirtualFile virtualFile) {
-    PluginExtensionPreview extension = new PluginExtensionPreview(FileTypeFactory.class, "*." + virtualFile.getExtension());
+    ExtensionPreview extension = ExtensionPreview.of(FileTypeFactory.class, "*." + virtualFile.getExtension());
 
     if(myUnknownFeaturesCollector.isIgnored(extension)) {
       return true;
     }
 
-    extension = new PluginExtensionPreview(FileTypeFactory.class, virtualFile.getName());
+    extension = ExtensionPreview.of(FileTypeFactory.class, virtualFile.getName());
     if(myUnknownFeaturesCollector.isIgnored(extension)) {
       return true;
     }

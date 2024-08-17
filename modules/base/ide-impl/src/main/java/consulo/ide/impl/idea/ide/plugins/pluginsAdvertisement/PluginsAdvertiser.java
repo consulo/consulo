@@ -19,9 +19,10 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.component.extension.ExtensionPoint;
+import consulo.component.extension.preview.ExtensionPreview;
 import consulo.component.extension.preview.ExtensionPreviewAcceptor;
+import consulo.component.internal.PluginDescritorWithExtensionPreview;
 import consulo.container.plugin.PluginDescriptor;
-import consulo.container.plugin.PluginExtensionPreview;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
 import consulo.externalService.update.UpdateSettings;
@@ -44,109 +45,113 @@ import java.util.*;
 
 @ExtensionImpl
 public class PluginsAdvertiser implements BackgroundStartupActivity, DumbAware {
-  private static final Logger LOG = Logger.getInstance(PluginsAdvertiser.class);
+    private static final Logger LOG = Logger.getInstance(PluginsAdvertiser.class);
 
-  public static NotificationGroup ourGroup = new NotificationGroup("Plugins Suggestion", NotificationDisplayType.STICKY_BALLOON, true);
+    public static NotificationGroup ourGroup = new NotificationGroup("Plugins Suggestion", NotificationDisplayType.STICKY_BALLOON, true);
 
-  @Override
-  public void runActivity(@Nonnull final Project project, @Nonnull UIAccess uiAccess) {
-    UpdateSettings updateSettings = UpdateSettings.getInstance();
-    if (!updateSettings.isEnable()) {
-      return;
+    @Override
+    public void runActivity(@Nonnull final Project project, @Nonnull UIAccess uiAccess) {
+        UpdateSettings updateSettings = UpdateSettings.getInstance();
+        if (!updateSettings.isEnable()) {
+            return;
+        }
+
+        PluginsAdvertiserHolder.initialize(pluginDescriptors -> {
+            UIUtil.invokeLaterIfNeeded(() -> {
+                if (!project.isDisposed()) {
+                    EditorNotifications.getInstance(project).updateAllNotifications();
+                }
+            });
+
+            if (project.isDisposed()) {
+                return;
+            }
+
+            final UnknownFeaturesCollector collectorSuggester = UnknownFeaturesCollector.getInstance(project);
+            final Set<ExtensionPreview> unknownExtensions = collectorSuggester.getUnknownExtensions();
+            if (unknownExtensions.isEmpty()) {
+                return;
+            }
+
+            final Set<PluginDescriptor> ids = new HashSet<>();
+            for (ExtensionPreview feature : unknownExtensions) {
+                final Set<PluginDescriptor> descriptors = findImpl(pluginDescriptors, feature);
+                //do not suggest to download disabled plugins
+                final Set<PluginId> disabledPlugins = PluginManager.getDisabledPlugins();
+                for (PluginDescriptor id : descriptors) {
+                    if (!disabledPlugins.contains(id.getPluginId())) {
+                        ids.add(id);
+                    }
+                }
+            }
+
+            if (ids.isEmpty()) {
+                return;
+            }
+
+            Notification notification =
+                ourGroup.createNotification("Features covered by non-installed plugins are detected.", NotificationType.INFORMATION);
+            notification.addAction(new NotificationAction("Install plugins...") {
+                @RequiredUIAccess
+                @Override
+                public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
+                    notification.expire();
+
+                    new PluginsAdvertiserDialog(project, pluginDescriptors, new ArrayList<>(ids)).showAsync();
+                }
+            });
+            notification.addAction(new NotificationAction("Ignore") {
+                @RequiredUIAccess
+                @Override
+                public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
+                    notification.expire();
+
+                    for (ExtensionPreview feature : unknownExtensions) {
+                        collectorSuggester.ignoreFeature(feature);
+                    }
+                }
+            });
+            notification.notify(project);
+        });
     }
 
-    PluginsAdvertiserHolder.initialize(pluginDescriptors -> {
-      UIUtil.invokeLaterIfNeeded(() -> {
-        if (!project.isDisposed()) {
-          EditorNotifications.getInstance(project).updateAllNotifications();
+    @Nonnull
+    public static Set<PluginDescriptor> findImpl(List<PluginDescriptor> descriptors, ExtensionPreview feature) {
+        ExtensionPreviewAcceptor<?> acceptor = findAcceptor(feature);
+
+        Set<PluginDescriptor> filter = new LinkedHashSet<>();
+        for (PluginDescriptor descriptor : descriptors) {
+            if (!(descriptor instanceof PluginDescritorWithExtensionPreview pluginDescritorWithExtensionPreview)) {
+                continue;
+            }
+
+            List<ExtensionPreview> extensionPreviews = pluginDescritorWithExtensionPreview.getExtensionPreviews();
+            if (extensionPreviews.isEmpty()) {
+                continue;
+            }
+
+            for (ExtensionPreview extensionPreview : extensionPreviews) {
+                try {
+                    if (acceptor.accept(extensionPreview, feature)) {
+                        filter.add(descriptor);
+                    }
+                }
+                catch (Exception e) {
+                    LOG.error(e);
+                }
+            }
         }
-      });
-
-      if (project.isDisposed()) {
-        return;
-      }
-
-      final UnknownFeaturesCollector collectorSuggester = UnknownFeaturesCollector.getInstance(project);
-      final Set<PluginExtensionPreview> unknownExtensions = collectorSuggester.getUnknownExtensions();
-      if (unknownExtensions.isEmpty()) {
-        return;
-      }
-
-      final Set<PluginDescriptor> ids = new HashSet<>();
-      for (PluginExtensionPreview feature : unknownExtensions) {
-        final Set<PluginDescriptor> descriptors = findImpl(pluginDescriptors, feature);
-        //do not suggest to download disabled plugins
-        final Set<PluginId> disabledPlugins = PluginManager.getDisabledPlugins();
-        for (PluginDescriptor id : descriptors) {
-          if (!disabledPlugins.contains(id.getPluginId())) {
-            ids.add(id);
-          }
-        }
-      }
-
-      if (ids.isEmpty()) {
-        return;
-      }
-
-      Notification notification =
-        ourGroup.createNotification("Features covered by non-installed plugins are detected.", NotificationType.INFORMATION);
-      notification.addAction(new NotificationAction("Install plugins...") {
-        @RequiredUIAccess
-        @Override
-        public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
-          notification.expire();
-
-          new PluginsAdvertiserDialog(project, pluginDescriptors, new ArrayList<>(ids)).showAsync();
-        }
-      });
-      notification.addAction(new NotificationAction("Ignore") {
-        @RequiredUIAccess
-        @Override
-        public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
-          notification.expire();
-
-          for (PluginExtensionPreview feature : unknownExtensions) {
-            collectorSuggester.ignoreFeature(feature);
-          }
-        }
-      });
-      notification.notify(project);
-    });
-  }
-
-  @Nonnull
-  public static Set<PluginDescriptor> findImpl(List<PluginDescriptor> descriptors, PluginExtensionPreview feature) {
-    ExtensionPreviewAcceptor<?> acceptor = findAcceptor(feature);
-
-    Set<PluginDescriptor> filter = new LinkedHashSet<>();
-    for (PluginDescriptor descriptor : descriptors) {
-      List<PluginExtensionPreview> extensionPreviews = descriptor.getExtensionPreviews();
-      if (extensionPreviews.isEmpty()) {
-        continue;
-      }
-
-      for (PluginExtensionPreview extensionPreview : extensionPreviews) {
-        try {
-          if (acceptor.accept(extensionPreview, feature)) {
-            filter.add(descriptor);
-          }
-        }
-        catch (Exception e) {
-          LOG.error(e);
-        }
-      }
+        return filter;
     }
-    return filter;
-  }
 
-  @Nonnull
-  private static ExtensionPreviewAcceptor<?> findAcceptor(PluginExtensionPreview feature) {
-    ExtensionPoint<ExtensionPreviewAcceptor> extensionPoint = Application.get().getExtensionPoint(ExtensionPreviewAcceptor.class);
+    @Nonnull
+    private static ExtensionPreviewAcceptor<?> findAcceptor(ExtensionPreview feature) {
+        ExtensionPoint<ExtensionPreviewAcceptor> extensionPoint = Application.get().getExtensionPoint(ExtensionPreviewAcceptor.class);
 
-    ExtensionPreviewAcceptor acceptor = extensionPoint.findFirstSafe(extensionPreviewAcceptor -> {
-      return Objects.equals(extensionPreviewAcceptor.getApiClass().getName(), feature.getApiClassName());
-    });
-    return ObjectUtil.notNull(acceptor, ExtensionPreviewAcceptor.DEFAULT);
-  }
+        ExtensionPreviewAcceptor acceptor = extensionPoint.findFirstSafe(extensionPreviewAcceptor -> {
+            return Objects.equals(extensionPreviewAcceptor.getApiClass().getName(), feature.apiClassName());
+        });
+        return ObjectUtil.notNull(acceptor, ExtensionPreviewAcceptor.DEFAULT);
+    }
 }
 
