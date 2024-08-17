@@ -15,70 +15,82 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.settings;
 
-import consulo.util.xml.serializer.annotation.Tag;
 import consulo.execution.debug.evaluation.EvaluationMode;
+import consulo.execution.debug.setting.XDebuggerSettingsManager;
+import consulo.util.xml.serializer.annotation.Tag;
 
 /**
  * @author egor
  */
 @Tag("general")
-public class XDebuggerGeneralSettings {
-  private EvaluationMode myEvaluationDialogMode = EvaluationMode.EXPRESSION;
-  private boolean myUnmuteOnStop = false;
+public class XDebuggerGeneralSettings implements XDebuggerSettingsManager.GeneralViewSettings {
+    private EvaluationMode myEvaluationDialogMode = EvaluationMode.EXPRESSION;
+    private boolean myUnmuteOnStop = false;
 
-  private boolean hideDebuggerOnProcessTermination;
-  private boolean myShowDebuggerOnBreakpoint = true;
-  private boolean myMayBringFrameToFrontOnBreakpoint = true;
-  private boolean myScrollToCenter = false;
+    private boolean hideDebuggerOnProcessTermination;
+    private boolean myShowDebuggerOnBreakpoint = true;
+    private boolean myMayBringFrameToFrontOnBreakpoint = true;
+    private boolean myScrollToCenter = false;
+    private boolean singleClickForDisablingBreakpoint = false;
 
-  @Tag("evaluation-dialog-mode")
-  public EvaluationMode getEvaluationDialogMode() {
-    return myEvaluationDialogMode;
-  }
+    @Tag("evaluation-dialog-mode")
+    public EvaluationMode getEvaluationDialogMode() {
+        return myEvaluationDialogMode;
+    }
 
-  public void setEvaluationDialogMode(EvaluationMode evaluationDialogMode) {
-    myEvaluationDialogMode = evaluationDialogMode;
-  }
+    public void setEvaluationDialogMode(EvaluationMode evaluationDialogMode) {
+        myEvaluationDialogMode = evaluationDialogMode;
+    }
 
-  @Tag("unmute-on-stop")
-  public boolean isUnmuteOnStop() {
-    return myUnmuteOnStop;
-  }
+    @Tag("unmute-on-stop")
+    public boolean isUnmuteOnStop() {
+        return myUnmuteOnStop;
+    }
 
-  public void setUnmuteOnStop(boolean unmuteOnStop) {
-    myUnmuteOnStop = unmuteOnStop;
-  }
+    public void setUnmuteOnStop(boolean unmuteOnStop) {
+        myUnmuteOnStop = unmuteOnStop;
+    }
 
-  public boolean isHideDebuggerOnProcessTermination() {
-    return hideDebuggerOnProcessTermination;
-  }
+    public boolean isHideDebuggerOnProcessTermination() {
+        return hideDebuggerOnProcessTermination;
+    }
 
-  public void setHideDebuggerOnProcessTermination(boolean hideDebuggerOnProcessTermination) {
-    this.hideDebuggerOnProcessTermination = hideDebuggerOnProcessTermination;
-  }
+    public void setHideDebuggerOnProcessTermination(boolean hideDebuggerOnProcessTermination) {
+        this.hideDebuggerOnProcessTermination = hideDebuggerOnProcessTermination;
+    }
 
-  public boolean isShowDebuggerOnBreakpoint() {
-    return myShowDebuggerOnBreakpoint;
-  }
+    public boolean isShowDebuggerOnBreakpoint() {
+        return myShowDebuggerOnBreakpoint;
+    }
 
-  public void setShowDebuggerOnBreakpoint(boolean showDebuggerOnBreakpoint) {
-    this.myShowDebuggerOnBreakpoint = showDebuggerOnBreakpoint;
-  }
+    public void setShowDebuggerOnBreakpoint(boolean showDebuggerOnBreakpoint) {
+        this.myShowDebuggerOnBreakpoint = showDebuggerOnBreakpoint;
+    }
 
-  public boolean isMayBringFrameToFrontOnBreakpoint() {
-    return myMayBringFrameToFrontOnBreakpoint;
-  }
+    public boolean isMayBringFrameToFrontOnBreakpoint() {
+        return myMayBringFrameToFrontOnBreakpoint;
+    }
 
-  public void setMayBringFrameToFrontOnBreakpoint(boolean mayBringFrameToFrontOnBreakpoint) {
-    myMayBringFrameToFrontOnBreakpoint = mayBringFrameToFrontOnBreakpoint;
-  }
+    public void setMayBringFrameToFrontOnBreakpoint(boolean mayBringFrameToFrontOnBreakpoint) {
+        myMayBringFrameToFrontOnBreakpoint = mayBringFrameToFrontOnBreakpoint;
+    }
 
-  @Tag("scroll-to-center")
-  public boolean isScrollToCenter() {
-    return myScrollToCenter;
-  }
+    @Tag("scroll-to-center")
+    public boolean isScrollToCenter() {
+        return myScrollToCenter;
+    }
 
-  public void setScrollToCenter(boolean scrollToCenter) {
-    myScrollToCenter = scrollToCenter;
-  }
+    public void setScrollToCenter(boolean scrollToCenter) {
+        myScrollToCenter = scrollToCenter;
+    }
+
+    @Override
+    @Tag("single-click-for-disabling-breakpoint")
+    public boolean isSingleClickForDisablingBreakpoint() {
+        return singleClickForDisablingBreakpoint;
+    }
+
+    public void setSingleClickForDisablingBreakpoint(boolean singleClickForDisablingBreakpoint) {
+        this.singleClickForDisablingBreakpoint = singleClickForDisablingBreakpoint;
+    }
 }

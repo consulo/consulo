@@ -26,6 +26,7 @@ import consulo.execution.debug.XDebuggerUtil;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.breakpoint.*;
 import consulo.execution.debug.localize.XDebuggerLocalize;
+import consulo.execution.debug.setting.XDebuggerSettingsManager;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.xdebugger.impl.DebuggerSupport;
 import consulo.ide.impl.idea.xdebugger.impl.XDebugSessionImpl;
@@ -516,7 +517,8 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
         @Override
         @Nullable
         public AnAction getClickAction() {
-            if (Registry.is("debugger.click.disable.breakpoints")) {
+            XDebuggerSettingsManager.GeneralViewSettings generalSettings = XDebuggerSettingsManager.getInstance().getGeneralSettings();
+            if (generalSettings.isSingleClickForDisablingBreakpoint()) {
                 return new ToggleBreakpointGutterIconAction(XBreakpointBase.this);
             }
             else {
@@ -527,11 +529,12 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
         @Override
         @Nullable
         public AnAction getMiddleButtonClickAction() {
-            if (!Registry.is("debugger.click.disable.breakpoints")) {
-                return new ToggleBreakpointGutterIconAction(XBreakpointBase.this);
+            XDebuggerSettingsManager.GeneralViewSettings generalSettings = XDebuggerSettingsManager.getInstance().getGeneralSettings();
+            if (generalSettings.isSingleClickForDisablingBreakpoint()) {
+                return new RemoveBreakpointGutterIconAction(XBreakpointBase.this);
             }
             else {
-                return new RemoveBreakpointGutterIconAction(XBreakpointBase.this);
+                return new ToggleBreakpointGutterIconAction(XBreakpointBase.this);
             }
         }
 

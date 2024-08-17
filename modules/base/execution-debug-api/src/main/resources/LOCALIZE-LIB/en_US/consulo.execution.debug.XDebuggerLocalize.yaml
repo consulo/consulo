@@ -256,6 +256,8 @@ setting.hide.window.label:
   text: Hide debug &window on process termination
 setting.focus.app.on.breakpoint.label:
   text: Focus application on breakpoint
+setting.single.click.for.disabling.breakpoint:
+  text: Single click for disabling breakpoint
 settings.show.window.label:
   text: Show &debug window on breakpoint
 showReferring.dialog.title:

@@ -44,6 +44,13 @@ public abstract class XDebuggerSettingsManager {
     boolean isValueTooltipAutoShowOnSelection();
   }
 
+  public interface GeneralViewSettings {
+      boolean isSingleClickForDisablingBreakpoint();
+  }
+
   @Nonnull
   public abstract DataViewSettings getDataViewSettings();
+
+  @Nonnull
+  public abstract GeneralViewSettings getGeneralSettings();
 }
