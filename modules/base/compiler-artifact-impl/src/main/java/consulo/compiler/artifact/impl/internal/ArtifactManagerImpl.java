@@ -34,7 +34,7 @@ import consulo.logging.Logger;
 import consulo.module.ProjectLoadingErrorsNotifier;
 import consulo.module.content.internal.ProjectRootManagerEx;
 import consulo.project.Project;
-import consulo.project.UnknownFeaturesCollector;
+import consulo.project.internal.UnknownFeaturesCollector;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
 import consulo.util.xml.serializer.SkipDefaultValuesSerializationFilters;
@@ -46,7 +46,6 @@ import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.*;
 
@@ -58,10 +57,9 @@ import java.util.*;
 @ServiceImpl
 public class ArtifactManagerImpl extends ArtifactManager implements Disposable, PersistentStateComponent<ArtifactManagerState> {
   private static final Logger LOG = Logger.getInstance(ArtifactManagerImpl.class);
-  @NonNls
   public static final String PACKAGING_ELEMENT_NAME = "element";
-  @NonNls
   public static final String TYPE_ID_ATTRIBUTE = "id";
+
   private final ArtifactManagerModel myModel;
   private final Project myProject;
   private final PackagingElementFactory myPackagingElementFactory;

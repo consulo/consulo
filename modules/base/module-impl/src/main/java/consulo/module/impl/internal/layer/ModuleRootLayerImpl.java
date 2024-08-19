@@ -39,7 +39,7 @@ import consulo.module.impl.internal.ProjectRootManagerImpl;
 import consulo.module.impl.internal.layer.library.ModuleLibraryTable;
 import consulo.module.impl.internal.layer.orderEntry.*;
 import consulo.project.Project;
-import consulo.project.UnknownFeaturesCollector;
+import consulo.project.internal.UnknownFeaturesCollector;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
@@ -47,10 +47,10 @@ import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import org.jdom.Element;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jdom.Element;
+
 import java.util.*;
 import java.util.function.Predicate;
 

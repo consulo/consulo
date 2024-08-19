@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.project;
+package consulo.project.impl.internal;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.extension.preview.ExtensionPreview;
 import consulo.component.persist.PersistentStateComponent;
@@ -24,6 +22,9 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.container.plugin.PluginId;
+import consulo.project.Project;
+import consulo.project.internal.UnknownFeaturesCollector;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -35,10 +36,9 @@ import java.util.Set;
  * User: anna
  */
 @Singleton
-@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 @State(name = "UnknownFeatures", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
-public class UnknownFeaturesCollector implements PersistentStateComponent<Element> {
+public class UnknownFeaturesCollectorImpl implements PersistentStateComponent<Element>, UnknownFeaturesCollector {
     private static final String API_PLUGIN_ID = "apiPluginId";
     private static final String API_CLASS_NAME = "apiClassName";
     private static final String IMPL_PLUGIN_ID = "implPluginId";
@@ -47,10 +47,11 @@ public class UnknownFeaturesCollector implements PersistentStateComponent<Elemen
     private final Set<ExtensionPreview> myUnknownExtensions = new HashSet<>();
     private final Set<ExtensionPreview> myIgnoredUnknownExtensions = new HashSet<>();
 
-    public static UnknownFeaturesCollector getInstance(Project project) {
-        return project.getInstance(UnknownFeaturesCollector.class);
+    public static UnknownFeaturesCollectorImpl getInstance(Project project) {
+        return project.getInstance(UnknownFeaturesCollectorImpl.class);
     }
 
+    @Override
     public void registerUnknownFeature(Class<?> extensionClass, String implementationName) {
         final ExtensionPreview extensionPreview = ExtensionPreview.of(extensionClass, implementationName);
         if (!isIgnored(extensionPreview)) {
@@ -58,14 +59,18 @@ public class UnknownFeaturesCollector implements PersistentStateComponent<Elemen
         }
     }
 
+    @Override
     public boolean isIgnored(ExtensionPreview feature) {
         return myIgnoredUnknownExtensions.contains(feature);
     }
 
+    @Override
     public void ignoreFeature(ExtensionPreview feature) {
         myIgnoredUnknownExtensions.add(feature);
     }
 
+    @Nonnull
+    @Override
     public Set<ExtensionPreview> getUnknownExtensions() {
         return myUnknownExtensions;
     }
