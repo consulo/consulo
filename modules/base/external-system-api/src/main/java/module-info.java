@@ -21,6 +21,7 @@ module consulo.external.system.api {
   opens consulo.externalSystem.setting to consulo.util.xml.serializer;
 
   exports consulo.externalSystem;
+  exports consulo.externalSystem.execution;
   exports consulo.externalSystem.model;
   exports consulo.externalSystem.model.execution;
   exports consulo.externalSystem.model.setting;
