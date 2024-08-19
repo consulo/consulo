@@ -16,41 +16,58 @@
 
 package consulo.module.impl.internal;
 
+import consulo.application.WriteAction;
 import consulo.module.ConfigurationErrorDescription;
 import consulo.module.ConfigurationErrorType;
+import consulo.module.ModifiableModuleModel;
+import consulo.module.Module;
 import consulo.project.ProjectBundle;
+import consulo.project.localize.ProjectLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 
 /**
  * @author nik
  */
 public class ModuleLoadingErrorDescription extends ConfigurationErrorDescription {
-  private static final ConfigurationErrorType INVALID_MODULE = new ConfigurationErrorType(ProjectBundle.message("element.kind.name.module"), false);
-  private final ModuleManagerImpl.ModuleLoadItem moduleLoadItem;
-  private final ModuleManagerImpl myModuleManager;
+    private static final ConfigurationErrorType INVALID_MODULE = new ConfigurationErrorType(ProjectBundle.message("element.kind.name.module"), false);
+    private final ModuleManagerImpl.ModuleLoadItem moduleLoadItem;
+    private final ModuleManagerImpl myModuleManager;
 
-  private ModuleLoadingErrorDescription(final String description, final ModuleManagerImpl.ModuleLoadItem modulePath, ModuleManagerImpl moduleManager,
-                                        final String elementName) {
-    super(elementName, description, INVALID_MODULE);
-    moduleLoadItem = modulePath;
-    myModuleManager = moduleManager;
-  }
+    private ModuleLoadingErrorDescription(String description,
+                                          ModuleManagerImpl.ModuleLoadItem modulePath,
+                                          ModuleManagerImpl moduleManager,
+                                          String elementName) {
+        super(elementName, description, INVALID_MODULE);
+        moduleLoadItem = modulePath;
+        myModuleManager = moduleManager;
+    }
 
-  public ModuleManagerImpl.ModuleLoadItem getModuleLoadItem() {
-    return moduleLoadItem;
-  }
+    public ModuleManagerImpl.ModuleLoadItem getModuleLoadItem() {
+        return moduleLoadItem;
+    }
 
-  @Override
-  public void ignoreInvalidElement() {
-    myModuleManager.removeFailedModulePath(moduleLoadItem);
-  }
+    @RequiredUIAccess
+    @Override
+    public void ignoreInvalidElement() {
+        ModifiableModuleModel modifiableModel = myModuleManager.getModifiableModel();
+        Module module = modifiableModel.findModuleByName(moduleLoadItem.getName());
+        if (module != null) {
+            modifiableModel.disposeModule(module);
+        }
 
-  @Override
-  public String getIgnoreConfirmationMessage() {
-    return ProjectBundle.message("module.remove.from.project.confirmation", getElementName());
-  }
+        WriteAction.run(modifiableModel::commit);
 
-  public static ModuleLoadingErrorDescription create(final String description, final ModuleManagerImpl.ModuleLoadItem loadItem,
-                                                     ModuleManagerImpl moduleManager) {
-    return new ModuleLoadingErrorDescription(description, loadItem, moduleManager, loadItem.getName());
-  }
+        myModuleManager.removeFailedModulePath(moduleLoadItem);
+    }
+
+    @Override
+    public String getIgnoreConfirmationMessage() {
+        return ProjectLocalize.moduleRemoveFromProjectConfirmation(getElementName()).get();
+    }
+
+    public static ModuleLoadingErrorDescription create(String description,
+                                                       ModuleManagerImpl.ModuleLoadItem loadItem,
+                                                       ModuleManagerImpl moduleManager) {
+        return new ModuleLoadingErrorDescription(description, loadItem, moduleManager, loadItem.getName());
+    }
 }

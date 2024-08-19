@@ -16,6 +16,8 @@
 
 package consulo.module;
 
+import consulo.ui.annotation.RequiredUIAccess;
+
 /**
  * @author nik
  */
@@ -42,6 +44,7 @@ public abstract class ConfigurationErrorDescription {
     return myDescription;
   }
 
+  @RequiredUIAccess
   public abstract void ignoreInvalidElement();
 
   public abstract String getIgnoreConfirmationMessage();
