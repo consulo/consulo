@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2022 consulo.io
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.plugins;
+package consulo.ide.impl.idea.ide.plugins.pluginsAdvertisement;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.updateSettings.impl.PlatformOrPluginUpdateChecker;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationGroupContributor;
 import jakarta.annotation.Nonnull;
@@ -25,13 +24,12 @@ import java.util.function.Consumer;
 
 /**
  * @author VISTALL
- * @since 08-Aug-22
+ * @since 2024-08-18
  */
 @ExtensionImpl
-public class PlatformOrPluginsNotificationGroupContributor implements NotificationGroupContributor {
-  @Override
-  public void contribute(@Nonnull Consumer<NotificationGroup> registrator) {
-    registrator.accept(PluginManagerMain.ourPluginsLifecycleGroup);
-    registrator.accept(PlatformOrPluginUpdateChecker.ourGroup);
-  }
+public class PluginAdvertiserNotificationGroupContributor implements NotificationGroupContributor {
+    @Override
+    public void contribute(@Nonnull Consumer<NotificationGroup> registrator) {
+        registrator.accept(PluginAdvertiserImpl.ourGroup);
+    }
 }

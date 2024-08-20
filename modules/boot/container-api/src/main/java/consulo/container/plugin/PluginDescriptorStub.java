@@ -169,11 +169,6 @@ public abstract class PluginDescriptorStub implements PluginDescriptor {
   }
 
   @Override
-  public List<PluginExtensionPreview> getExtensionPreviews() {
-    return Collections.emptyList();
-  }
-
-  @Override
   public boolean isBundled() {
     return false;
   }

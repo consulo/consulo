@@ -39,7 +39,7 @@ public class FileTypeFactoryExtensionPreviewRecorder implements ExtensionPreview
   }
 
   @Override
-  public void analyze(@Nonnull Consumer<ExtensionPreview<FileTypeFactory>> recorder) {
+  public void analyze(@Nonnull Consumer<ExtensionPreview> recorder) {
 
     myApplication.getExtensionPoint(FileTypeFactory.class).forEachExtensionSafe(it -> {
       PreviewFileTypeConsumerImpl consumer = new PreviewFileTypeConsumerImpl(it, recorder);

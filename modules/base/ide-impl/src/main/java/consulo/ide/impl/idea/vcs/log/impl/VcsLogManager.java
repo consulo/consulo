@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.vcs.log.impl;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.ServiceManager;
-import consulo.ide.impl.idea.openapi.vcs.CalledInAwt;
 import consulo.ide.impl.idea.vcs.log.data.*;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogColorManagerImpl;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogPanel;
@@ -26,6 +25,7 @@ import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.MultiMap;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.log.VcsLogFilter;
@@ -67,6 +67,7 @@ public class VcsLogManager implements Disposable {
     this(project, uiProperties, roots, true, null);
   }
 
+  @RequiredUIAccess
   public VcsLogManager(
     @Nonnull Project project,
     @Nonnull VcsLogTabsProperties uiProperties,
@@ -94,7 +95,7 @@ public class VcsLogManager implements Disposable {
     Disposer.register(project, this);
   }
 
-  @CalledInAwt
+  @RequiredUIAccess
   public void scheduleInitialization() {
     if (!myInitialized) {
       myInitialized = true;
@@ -102,7 +103,7 @@ public class VcsLogManager implements Disposable {
     }
   }
 
-  @CalledInAwt
+  @RequiredUIAccess
   public boolean isLogVisible() {
     return myPostponableRefresher.isLogVisible();
   }

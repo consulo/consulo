@@ -40,7 +40,7 @@ import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ProjectPropertiesComponent;
-import consulo.project.UnknownFeaturesCollector;
+import consulo.project.internal.UnknownFeaturesCollector;
 import consulo.ui.ex.IconDeferrer;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;

@@ -39,9 +39,9 @@ public class OrderRootTypeExtensionPreviewRecorder implements ExtensionPreviewRe
   }
 
   @Override
-  public void analyze(@Nonnull Consumer<ExtensionPreview<OrderRootType>> recorder) {
+  public void analyze(@Nonnull Consumer<ExtensionPreview> recorder) {
     myApplication.getExtensionPoint(OrderRootType.class).forEachExtensionSafe(it -> {
-      ExtensionPreview<OrderRootType> preview = new ExtensionPreview<>(OrderRootType.class, it.getId(), it);
+      ExtensionPreview preview = ExtensionPreview.of(OrderRootType.class, it.getId(), it);
       recorder.accept(preview);
     });
   }

@@ -32,40 +32,44 @@ import jakarta.annotation.Nonnull;
  * @since 10-Dec-16.
  */
 public class XDebuggerGeneralConfigurable extends SimpleConfigurableByProperties implements Configurable {
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  protected Component createLayout(PropertyBuilder propertyBuilder, @Nonnull Disposable uiDisposable) {
-    XDebuggerGeneralSettings settings = XDebuggerSettingManagerImpl.getInstanceImpl().getGeneralSettings();
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    protected Component createLayout(PropertyBuilder propertyBuilder, @Nonnull Disposable uiDisposable) {
+        XDebuggerGeneralSettings settings = XDebuggerSettingManagerImpl.getInstanceImpl().getGeneralSettings();
 
-    VerticalLayout layout = VerticalLayout.create();
-    CheckBox focusAppOnBreakpointCheckbox = CheckBox.create(XDebuggerLocalize.settingFocusAppOnBreakpointLabel());
-    layout.add(focusAppOnBreakpointCheckbox);
-    propertyBuilder.add(
-      focusAppOnBreakpointCheckbox,
-      settings::isMayBringFrameToFrontOnBreakpoint,
-      settings::setMayBringFrameToFrontOnBreakpoint
-    );
+        VerticalLayout layout = VerticalLayout.create();
+        CheckBox focusAppOnBreakpointCheckbox = CheckBox.create(XDebuggerLocalize.settingFocusAppOnBreakpointLabel());
+        layout.add(focusAppOnBreakpointCheckbox);
+        propertyBuilder.add(
+            focusAppOnBreakpointCheckbox,
+            settings::isMayBringFrameToFrontOnBreakpoint,
+            settings::setMayBringFrameToFrontOnBreakpoint
+        );
 
-    CheckBox showDebugWindowOnBreakpointCheckbox = CheckBox.create(XDebuggerLocalize.settingsShowWindowLabel());
-    layout.add(showDebugWindowOnBreakpointCheckbox);
-    propertyBuilder.add(
-      showDebugWindowOnBreakpointCheckbox,
-      settings::isShowDebuggerOnBreakpoint,
-      settings::setShowDebuggerOnBreakpoint
-    );
+        CheckBox showDebugWindowOnBreakpointCheckbox = CheckBox.create(XDebuggerLocalize.settingsShowWindowLabel());
+        layout.add(showDebugWindowOnBreakpointCheckbox);
+        propertyBuilder.add(
+            showDebugWindowOnBreakpointCheckbox,
+            settings::isShowDebuggerOnBreakpoint,
+            settings::setShowDebuggerOnBreakpoint
+        );
 
-    CheckBox hideWindowCheckBox = CheckBox.create(XDebuggerLocalize.settingHideWindowLabel());
-    layout.add(hideWindowCheckBox);
-    propertyBuilder.add(
-      hideWindowCheckBox,
-      settings::isHideDebuggerOnProcessTermination,
-      settings::setHideDebuggerOnProcessTermination
-    );
+        CheckBox hideWindowCheckBox = CheckBox.create(XDebuggerLocalize.settingHideWindowLabel());
+        layout.add(hideWindowCheckBox);
+        propertyBuilder.add(
+            hideWindowCheckBox,
+            settings::isHideDebuggerOnProcessTermination,
+            settings::setHideDebuggerOnProcessTermination
+        );
 
-    CheckBox scrollToCenterCheckbox = CheckBox.create(XDebuggerLocalize.settingsScrollToCenter());
-    layout.add(scrollToCenterCheckbox);
-    propertyBuilder.add(scrollToCenterCheckbox, settings::isScrollToCenter, settings::setScrollToCenter);
-    return layout;
-  }
+        CheckBox scrollToCenterCheckbox = CheckBox.create(XDebuggerLocalize.settingsScrollToCenter());
+        layout.add(scrollToCenterCheckbox);
+        propertyBuilder.add(scrollToCenterCheckbox, settings::isScrollToCenter, settings::setScrollToCenter);
+
+        CheckBox singleClickForBreakpointBox = CheckBox.create(XDebuggerLocalize.settingSingleClickForDisablingBreakpoint());
+        layout.add(singleClickForBreakpointBox);
+        propertyBuilder.add(singleClickForBreakpointBox, settings::isSingleClickForDisablingBreakpoint, settings::setSingleClickForDisablingBreakpoint);
+        return layout;
+    }
 }

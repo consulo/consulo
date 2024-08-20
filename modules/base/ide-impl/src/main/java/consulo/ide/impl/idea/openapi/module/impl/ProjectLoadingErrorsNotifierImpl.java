@@ -17,7 +17,6 @@
 package consulo.ide.impl.idea.openapi.module.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.module.ConfigurationErrorDescription;
 import consulo.module.ConfigurationErrorType;
 import consulo.module.ProjectLoadingErrorsNotifier;
@@ -29,14 +28,12 @@ import consulo.project.startup.StartupManager;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
-import consulo.project.ui.notification.event.NotificationListener;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import javax.swing.event.HyperlinkEvent;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -47,79 +44,81 @@ import java.util.List;
 @Singleton
 @ServiceImpl
 public class ProjectLoadingErrorsNotifierImpl extends ProjectLoadingErrorsNotifier {
-  private final MultiMap<ConfigurationErrorType, ConfigurationErrorDescription> myErrors = new MultiMap<ConfigurationErrorType, ConfigurationErrorDescription>();
-  private final Object myLock = new Object();
-  private final Project myProject;
+    private final MultiMap<ConfigurationErrorType, ConfigurationErrorDescription> myErrors = new MultiMap<ConfigurationErrorType, ConfigurationErrorDescription>();
+    private final Object myLock = new Object();
+    private final Project myProject;
 
-  @Inject
-  public ProjectLoadingErrorsNotifierImpl(Project project) {
-    myProject = project;
-  }
-
-  @Override
-  public void registerError(ConfigurationErrorDescription errorDescription) {
-    registerErrors(Collections.singletonList(errorDescription));
-  }
-
-  @Override
-  public void registerErrors(Collection<? extends ConfigurationErrorDescription> errorDescriptions) {
-    if (myProject.isDisposed() || myProject.isDefault() || errorDescriptions.isEmpty()) return;
-
-    boolean first;
-    synchronized (myLock) {
-      first = myErrors.isEmpty();
-      for (ConfigurationErrorDescription description : errorDescriptions) {
-        myErrors.putValue(description.getErrorType(), description);
-      }
+    @Inject
+    public ProjectLoadingErrorsNotifierImpl(Project project) {
+        myProject = project;
     }
-    if (myProject.isInitialized()) {
-      fireNotifications();
+
+    @Override
+    public void registerError(ConfigurationErrorDescription errorDescription) {
+        registerErrors(Collections.singletonList(errorDescription));
     }
-    else if (first) {
-      StartupManager.getInstance(myProject).registerPostStartupActivity(new Runnable() {
-        @Override
-        public void run() {
-          fireNotifications();
+
+    @Override
+    public void registerErrors(Collection<? extends ConfigurationErrorDescription> errorDescriptions) {
+        if (myProject.isDisposed() || myProject.isDefault() || errorDescriptions.isEmpty()) {
+            return;
         }
-      });
-    }
-  }
 
-  private void fireNotifications() {
-    final MultiMap<ConfigurationErrorType, ConfigurationErrorDescription> descriptionsMap = new MultiMap<ConfigurationErrorType, ConfigurationErrorDescription>();
-    synchronized (myLock) {
-      if (myErrors.isEmpty()) return;
-      descriptionsMap.putAllValues(myErrors);
-      myErrors.clear();
-    }
-
-    for (final ConfigurationErrorType type : descriptionsMap.keySet()) {
-      final Collection<ConfigurationErrorDescription> descriptions = descriptionsMap.get(type);
-      if (descriptions.isEmpty()) continue;
-
-      final String invalidElements = getInvalidElementsString(type, descriptions);
-      final String errorText = ProjectLocalize.errorMessageConfigurationCannotLoad() + " " + invalidElements + " <a href=\"\">Details...</a>";
-
-      Notifications.Bus.notify(new Notification(ProjectNotificationGroups.Project, "Error Loading Project", errorText, NotificationType.ERROR, new NotificationListener() {
-        @Override
-        public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
-          final List<ConfigurationErrorDescription> validDescriptions =
-            ContainerUtil.findAll(descriptions, errorDescription -> errorDescription.isValid());
-          RemoveInvalidElementsDialog.showDialog(myProject, CommonLocalize.titleError().get(), type, invalidElements, validDescriptions);
-
-          notification.expire();
+        boolean first;
+        synchronized (myLock) {
+            first = myErrors.isEmpty();
+            for (ConfigurationErrorDescription description : errorDescriptions) {
+                myErrors.putValue(description.getErrorType(), description);
+            }
         }
-      }), myProject);
+        if (myProject.isInitialized()) {
+            fireNotifications();
+        }
+        else if (first) {
+            StartupManager.getInstance(myProject).registerPostStartupActivity(new Runnable() {
+                @Override
+                public void run() {
+                    fireNotifications();
+                }
+            });
+        }
     }
 
-  }
+    private void fireNotifications() {
+        final MultiMap<ConfigurationErrorType, ConfigurationErrorDescription> descriptionsMap = new MultiMap<ConfigurationErrorType, ConfigurationErrorDescription>();
+        synchronized (myLock) {
+            if (myErrors.isEmpty()) {
+                return;
+            }
+            descriptionsMap.putAllValues(myErrors);
+            myErrors.clear();
+        }
 
-  private static String getInvalidElementsString(ConfigurationErrorType type, Collection<ConfigurationErrorDescription> descriptions) {
-    if (descriptions.size() == 1) {
-      final ConfigurationErrorDescription description = ContainerUtil.getFirstItem(descriptions);
-      return type.getElementKind() + " <b>" + description.getElementName() + "</b>";
+        for (final ConfigurationErrorType type : descriptionsMap.keySet()) {
+            final Collection<ConfigurationErrorDescription> descriptions = descriptionsMap.get(type);
+            if (descriptions.isEmpty()) {
+                continue;
+            }
+
+            final String invalidElements = getInvalidElementsString(type, descriptions);
+            final String errorText = ProjectLocalize.errorMessageConfigurationCannotLoad() + " " + invalidElements + " <a href=\"\">Details...</a>";
+
+            Notifications.Bus.notify(new Notification(ProjectNotificationGroups.Project, "Error Loading Project", errorText, NotificationType.ERROR, (notification, event) -> {
+                final List<ConfigurationErrorDescription> validDescriptions = ContainerUtil.findAll(descriptions, ConfigurationErrorDescription::isValid);
+                RemoveInvalidElementsDialog.showDialog(myProject, CommonLocalize.titleError().get(), type, invalidElements, validDescriptions);
+
+                notification.expire();
+            }), myProject);
+        }
+
     }
 
-    return descriptions.size() + " " + StringUtil.pluralize(type.getElementKind());
-  }
+    private static String getInvalidElementsString(ConfigurationErrorType type, Collection<ConfigurationErrorDescription> descriptions) {
+        if (descriptions.size() == 1) {
+            final ConfigurationErrorDescription description = ContainerUtil.getFirstItem(descriptions);
+            return type.getElementKind() + " <b>" + description.getElementName() + "</b>";
+        }
+
+        return descriptions.size() + " " + StringUtil.pluralize(type.getElementKind());
+    }
 }

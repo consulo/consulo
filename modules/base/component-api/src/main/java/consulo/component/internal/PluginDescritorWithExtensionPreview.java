@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.ex.content.event;
+package consulo.component.internal;
 
-import consulo.annotation.DeprecationInfo;
+import consulo.component.extension.preview.ExtensionPreview;
+import consulo.container.plugin.PluginDescriptor;
+import jakarta.annotation.Nonnull;
 
-@Deprecated
-@DeprecationInfo("Use ContentManagerListener")
-public class ContentManagerAdapter implements ContentManagerListener {
-  @Override
-  public void contentAdded(ContentManagerEvent event) {}
+import java.util.List;
 
-  @Override
-  public void contentRemoved(ContentManagerEvent event) {}
-
-  @Override
-  public void contentRemoveQuery(ContentManagerEvent event) {}
-
-  @Override
-  public void selectionChanged(ContentManagerEvent event) {}
+/**
+ * @author VISTALL
+ * @since 2024-08-17
+ */
+public interface PluginDescritorWithExtensionPreview extends PluginDescriptor {
+    @Nonnull
+    default List<ExtensionPreview> getExtensionPreviews() {
+        return List.of();
+    }
 }

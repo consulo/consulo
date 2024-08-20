@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.ex.content.event;
+package consulo.project;
 
-import consulo.annotation.DeprecationInfo;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
 
-@Deprecated
-@DeprecationInfo("Use ContentManagerListener")
-public class ContentManagerAdapter implements ContentManagerListener {
-  @Override
-  public void contentAdded(ContentManagerEvent event) {}
-
-  @Override
-  public void contentRemoved(ContentManagerEvent event) {}
-
-  @Override
-  public void contentRemoveQuery(ContentManagerEvent event) {}
-
-  @Override
-  public void selectionChanged(ContentManagerEvent event) {}
+/**
+ * @author VISTALL
+ * @since 2024-08-17
+ */
+@ServiceAPI(ComponentScope.PROJECT)
+public interface PluginAdvertiser {
+    void scheduleSuggestion();
 }

@@ -28,16 +28,16 @@ import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
 import consulo.externalService.impl.internal.update.PlatformOrPluginNode;
 import consulo.externalService.impl.internal.update.PlatformOrPluginUpdateResult;
+import consulo.externalService.impl.internal.update.UpdateSettingsImpl;
 import consulo.externalService.update.UpdateChannel;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.actions.SettingsEntryPointAction;
 import consulo.ide.impl.idea.ide.plugins.PluginManagerMain;
 import consulo.ide.impl.idea.ide.plugins.PluginNode;
 import consulo.ide.impl.idea.ide.plugins.RepositoryHelper;
+import consulo.ide.impl.idea.ide.plugins.pluginsAdvertisement.PluginAdvertiserRequester;
 import consulo.ide.impl.plugins.InstalledPluginsState;
 import consulo.ide.impl.plugins.PluginIconHolder;
-import consulo.ide.impl.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
-import consulo.externalService.impl.internal.update.UpdateSettingsImpl;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.CpuArchitecture;
@@ -343,7 +343,7 @@ public class PlatformOrPluginUpdateChecker {
     UpdateChannel channel = UpdateSettingsImpl.getInstance().getChannel();
     try {
       remotePlugins = RepositoryHelper.loadPluginsFromRepository(indicator, channel);
-      PluginsAdvertiserHolder.update(remotePlugins);
+      Application.get().getInstance(PluginAdvertiserRequester.class).update(remotePlugins);
     }
     catch (ProcessCanceledException e) {
       return PlatformOrPluginUpdateResult.CANCELED;

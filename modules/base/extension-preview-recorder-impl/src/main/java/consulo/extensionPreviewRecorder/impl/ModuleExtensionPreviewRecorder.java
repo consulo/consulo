@@ -39,9 +39,9 @@ public class ModuleExtensionPreviewRecorder implements ExtensionPreviewRecorder<
   }
 
   @Override
-  public void analyze(@Nonnull Consumer<ExtensionPreview<ModuleExtensionProvider>> recorder) {
+  public void analyze(@Nonnull Consumer<ExtensionPreview> recorder) {
     myApplication.getExtensionPoint(ModuleExtensionProvider.class).forEachExtensionSafe(it -> {
-      ExtensionPreview<ModuleExtensionProvider> preview = new ExtensionPreview<>(ModuleExtensionProvider.class, it.getId(), it);
+      ExtensionPreview preview = ExtensionPreview.of(ModuleExtensionProvider.class, it.getId(), it);
       recorder.accept(preview);
     });
   }

@@ -40,9 +40,9 @@ import java.util.function.Consumer;
  */
 public class PreviewFileTypeConsumerImpl implements FileTypeConsumer {
   private final FileTypeFactory myFileTypeFactory;
-  private final Consumer<ExtensionPreview<FileTypeFactory>> myRecorder;
+  private final Consumer<ExtensionPreview> myRecorder;
 
-  public PreviewFileTypeConsumerImpl(FileTypeFactory fileTypeFactory, Consumer<ExtensionPreview<FileTypeFactory>> recorder) {
+  public PreviewFileTypeConsumerImpl(FileTypeFactory fileTypeFactory, Consumer<ExtensionPreview> recorder) {
     myFileTypeFactory = fileTypeFactory;
     myRecorder = recorder;
   }
@@ -77,7 +77,7 @@ public class PreviewFileTypeConsumerImpl implements FileTypeConsumer {
       return;
     }
 
-    myRecorder.accept(new ExtensionPreview<>(FileTypeFactory.class, id, myFileTypeFactory));
+    myRecorder.accept(ExtensionPreview.of(FileTypeFactory.class, id, myFileTypeFactory));
   }
 
   @Nullable

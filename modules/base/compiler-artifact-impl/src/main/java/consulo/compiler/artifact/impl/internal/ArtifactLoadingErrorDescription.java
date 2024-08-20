@@ -20,6 +20,7 @@ import consulo.compiler.artifact.ArtifactManager;
 import consulo.compiler.artifact.ModifiableArtifactModel;
 import consulo.module.ConfigurationErrorDescription;
 import consulo.module.ConfigurationErrorType;
+import consulo.ui.annotation.RequiredUIAccess;
 
 /**
  * @author nik
@@ -36,6 +37,7 @@ public class ArtifactLoadingErrorDescription extends ConfigurationErrorDescripti
     myArtifact = artifact;
   }
 
+  @RequiredUIAccess
   @Override
   public void ignoreInvalidElement() {
     final ModifiableArtifactModel model = myArtifactManager.createModifiableModel();

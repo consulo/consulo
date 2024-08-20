@@ -39,9 +39,9 @@ public class ConfigurationTypeExtensionPreviewRecorder implements ExtensionPrevi
   }
 
   @Override
-  public void analyze(@Nonnull Consumer<ExtensionPreview<ConfigurationType>> recorder) {
+  public void analyze(@Nonnull Consumer<ExtensionPreview> recorder) {
     myApplication.getExtensionPoint(ConfigurationType.class).forEachExtensionSafe(it -> {
-      ExtensionPreview<ConfigurationType> preview = new ExtensionPreview<>(ConfigurationType.class, it.getId(), it);
+      ExtensionPreview preview = ExtensionPreview.of(ConfigurationType.class, it.getId(), it);
 
       recorder.accept(preview);
     });

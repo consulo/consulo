@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2023 consulo.io
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,27 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.component.extension.preview;
+package consulo.project;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionExtender;
+import consulo.component.extension.preview.ExtensionPreview;
 import jakarta.annotation.Nonnull;
 
+import java.util.Set;
 import java.util.function.Consumer;
 
 /**
- * This API allow extract extension info which will be stored at plugin repository,
- * and any plugin can access it for suggesting installing new plugins.
- * <p>
- * This code will never call in IDE instance
- * <p>
- * This extension not allowed to extend via {@link ExtensionExtender}
- *
  * @author VISTALL
- * @since 22/01/2023
+ * @since 2024-08-17
  */
-@ExtensionAPI(ComponentScope.APPLICATION)
-public interface ExtensionPreviewRecorder<T> {
-    void analyze(@Nonnull Consumer<ExtensionPreview> recorder);
+@ExtensionAPI(ComponentScope.PROJECT)
+public interface PluginAdvertiserExtension {
+    void extend(@Nonnull Consumer<ExtensionPreview> consumer);
+
+    @Nonnull
+    Set<Class<?>> acceptExtensionAPIs();
 }

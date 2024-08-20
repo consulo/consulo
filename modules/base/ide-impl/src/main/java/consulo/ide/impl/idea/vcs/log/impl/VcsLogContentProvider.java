@@ -16,24 +16,24 @@
 package consulo.ide.impl.idea.vcs.log.impl;
 
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.ide.impl.idea.openapi.vcs.CalledInAwt;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentProvider;
-import consulo.ui.ex.content.TabbedContent;
-import consulo.ui.ex.content.ContentUtilEx;
-import consulo.ui.ex.content.ContentsUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogPanel;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBPanel;
 import consulo.ui.ex.content.Content;
+import consulo.ui.ex.content.ContentUtilEx;
+import consulo.ui.ex.content.ContentsUtil;
+import consulo.ui.ex.content.TabbedContent;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.versionControlSystem.log.VcsLogFilter;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -76,7 +76,7 @@ public class VcsLogContentProvider implements ChangesViewContentProvider {
     }
   }
 
-  @CalledInAwt
+  @RequiredUIAccess
   private void addLogUi() {
     myContainer.add(myProjectLog.initMainLog(TAB_NAME), BorderLayout.CENTER);
   }
