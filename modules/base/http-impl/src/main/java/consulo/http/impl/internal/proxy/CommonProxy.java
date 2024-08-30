@@ -16,14 +16,14 @@
 package consulo.http.impl.internal.proxy;
 
 import consulo.application.Application;
-import consulo.application.CommonBundle;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.io.NetUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -113,14 +113,12 @@ public class CommonProxy extends ProxySelector {
 
     @Nullable
     public static String getMessageFromProps(Map<String, String> props) {
-        String message = null;
         for (Map.Entry<String, String> entry : props.entrySet()) {
             if (!StringUtil.isEmptyOrSpaces(entry.getValue())) {
-                message = CommonBundle.message("label.old.way.jvm.property.used", entry.getKey(), entry.getValue());
-                break;
+                return CommonLocalize.labelOldWayJvmPropertyUsed(entry.getKey(), entry.getValue()).get();
             }
         }
-        return message;
+        return null;
     }
 
     public static Map<String, String> getOldStyleProperties() {

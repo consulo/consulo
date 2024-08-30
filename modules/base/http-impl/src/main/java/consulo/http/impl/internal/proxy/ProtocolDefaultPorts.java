@@ -1,10 +1,8 @@
 package consulo.http.impl.internal.proxy;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 4/22/13
- * Time: 6:49 PM
+ * @author Irina.Chernushina
+ * @since 2013-04-22
  */
 public interface ProtocolDefaultPorts {
     int HTTP = 80;

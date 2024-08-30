@@ -20,7 +20,6 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.application.util.SystemInfo;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -33,6 +32,7 @@ import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.project.util.WaitForProgressToShow;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.Couple;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.lazy.LazyValue;
@@ -105,7 +105,7 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
     }
 
     public static HttpProxyManagerImpl getInstance() {
-        return (HttpProxyManagerImpl)ApplicationManager.getApplication().getInstance(HttpProxyManager.class);
+        return (HttpProxyManagerImpl)Application.get().getInstance(HttpProxyManager.class);
     }
 
     @Override
@@ -146,6 +146,7 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
     }
 
     @Nonnull
+    @Override
     public ProxySelector getOnlyBySettingsSelector() {
         return mySelector;
     }
@@ -255,7 +256,7 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
         final int port,
         final boolean remember
     ) {
-        if (ApplicationManager.getApplication().isUnitTestMode()) {
+        if (Application.get().isUnitTestMode()) {
             return myTestGenericAuthRunnable.get();
         }
 
@@ -299,13 +300,12 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
         }
 
         // do not try to show any dialogs if application is exiting
-        if (ApplicationManager.getApplication() == null
-            || ApplicationManager.getApplication().isDisposeInProgress()
-            || ApplicationManager.getApplication().isDisposed()) {
+        Application application = ApplicationManager.getApplication();
+        if (application == null || application.isDisposeInProgress() || application.isDisposed()) {
             return null;
         }
 
-        if (ApplicationManager.getApplication().isUnitTestMode()) {
+        if (application.isUnitTestMode()) {
             return myTestGenericAuthRunnable.get();
         }
         final PasswordAuthentication[] value = new PasswordAuthentication[1];
@@ -357,7 +357,7 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
             WaitForProgressToShow.runOrInvokeAndWaitAboveProgress(runnable);
         }
         else {
-            Application app = ApplicationManager.getApplication();
+            Application app = Application.get();
             app.invokeAndWait(runnable, app.getAnyModalityState());
         }
     }
@@ -375,8 +375,8 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
         catch (Throwable ignored) {
         }
         finally {
-            if (connection instanceof HttpURLConnection) {
-                ((HttpURLConnection)connection).disconnect();
+            if (connection instanceof HttpURLConnection httpURLConnection) {
+                httpURLConnection.disconnect();
             }
         }
     }
@@ -491,7 +491,7 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
     @SuppressWarnings({"deprecation", "unused"})
     public static List<Pair<String, String>> getJvmPropertiesList(boolean withAutodetection, @Nullable URI uri) {
         List<Pair<String, String>> properties = getInstance().getJvmProperties(withAutodetection, uri);
-        return properties.stream().map(p -> Pair.create(p.first, p.second)).collect(Collectors.toList());
+        return properties.stream().map(p -> Couple.of(p.first, p.second)).collect(Collectors.toList());
     }
 
     @Override
@@ -505,21 +505,21 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
         if (myState.USE_HTTP_PROXY) {
             boolean putCredentials = myState.KEEP_PROXY_PASSWORD && StringUtil.isNotEmpty(getProxyLogin());
             if (myState.PROXY_TYPE_IS_SOCKS) {
-                result.add(Pair.pair(JavaProxyProperty.SOCKS_HOST, myState.PROXY_HOST));
-                result.add(Pair.pair(JavaProxyProperty.SOCKS_PORT, String.valueOf(myState.PROXY_PORT)));
+                result.add(Couple.of(JavaProxyProperty.SOCKS_HOST, myState.PROXY_HOST));
+                result.add(Couple.of(JavaProxyProperty.SOCKS_PORT, String.valueOf(myState.PROXY_PORT)));
                 if (putCredentials) {
-                    result.add(Pair.pair(JavaProxyProperty.SOCKS_USERNAME, getProxyLogin()));
-                    result.add(Pair.pair(JavaProxyProperty.SOCKS_PASSWORD, getPlainProxyPassword()));
+                    result.add(Couple.of(JavaProxyProperty.SOCKS_USERNAME, getProxyLogin()));
+                    result.add(Couple.of(JavaProxyProperty.SOCKS_PASSWORD, getPlainProxyPassword()));
                 }
             }
             else {
-                result.add(Pair.pair(JavaProxyProperty.HTTP_HOST, myState.PROXY_HOST));
-                result.add(Pair.pair(JavaProxyProperty.HTTP_PORT, String.valueOf(myState.PROXY_PORT)));
-                result.add(Pair.pair(JavaProxyProperty.HTTPS_HOST, myState.PROXY_HOST));
-                result.add(Pair.pair(JavaProxyProperty.HTTPS_PORT, String.valueOf(myState.PROXY_PORT)));
+                result.add(Couple.of(JavaProxyProperty.HTTP_HOST, myState.PROXY_HOST));
+                result.add(Couple.of(JavaProxyProperty.HTTP_PORT, String.valueOf(myState.PROXY_PORT)));
+                result.add(Couple.of(JavaProxyProperty.HTTPS_HOST, myState.PROXY_HOST));
+                result.add(Couple.of(JavaProxyProperty.HTTPS_PORT, String.valueOf(myState.PROXY_PORT)));
                 if (putCredentials) {
-                    result.add(Pair.pair(JavaProxyProperty.HTTP_USERNAME, getProxyLogin()));
-                    result.add(Pair.pair(JavaProxyProperty.HTTP_PASSWORD, getPlainProxyPassword()));
+                    result.add(Couple.of(JavaProxyProperty.HTTP_USERNAME, getProxyLogin()));
+                    result.add(Couple.of(JavaProxyProperty.HTTP_PASSWORD, getPlainProxyPassword()));
                 }
             }
         }
@@ -531,17 +531,16 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
                 for (Proxy proxy : proxies) {
                     if (isRealProxy(proxy)) {
                         SocketAddress address = proxy.address();
-                        if (address instanceof InetSocketAddress) {
-                            InetSocketAddress inetSocketAddress = (InetSocketAddress)address;
+                        if (address instanceof InetSocketAddress inetSocketAddress) {
                             if (Proxy.Type.SOCKS.equals(proxy.type())) {
-                                result.add(Pair.pair(JavaProxyProperty.SOCKS_HOST, inetSocketAddress.getHostName()));
-                                result.add(Pair.pair(JavaProxyProperty.SOCKS_PORT, String.valueOf(inetSocketAddress.getPort())));
+                                result.add(Couple.of(JavaProxyProperty.SOCKS_HOST, inetSocketAddress.getHostName()));
+                                result.add(Couple.of(JavaProxyProperty.SOCKS_PORT, String.valueOf(inetSocketAddress.getPort())));
                             }
                             else {
-                                result.add(Pair.pair(JavaProxyProperty.HTTP_HOST, inetSocketAddress.getHostName()));
-                                result.add(Pair.pair(JavaProxyProperty.HTTP_PORT, String.valueOf(inetSocketAddress.getPort())));
-                                result.add(Pair.pair(JavaProxyProperty.HTTPS_HOST, inetSocketAddress.getHostName()));
-                                result.add(Pair.pair(JavaProxyProperty.HTTPS_PORT, String.valueOf(inetSocketAddress.getPort())));
+                                result.add(Couple.of(JavaProxyProperty.HTTP_HOST, inetSocketAddress.getHostName()));
+                                result.add(Couple.of(JavaProxyProperty.HTTP_PORT, String.valueOf(inetSocketAddress.getPort())));
+                                result.add(Couple.of(JavaProxyProperty.HTTPS_HOST, inetSocketAddress.getHostName()));
+                                result.add(Couple.of(JavaProxyProperty.HTTPS_PORT, String.valueOf(inetSocketAddress.getPort())));
                             }
                         }
                     }

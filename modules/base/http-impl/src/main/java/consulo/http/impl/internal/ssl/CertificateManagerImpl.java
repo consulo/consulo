@@ -2,7 +2,6 @@ package consulo.http.impl.internal.ssl;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.util.registry.Registry;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
@@ -25,6 +24,7 @@ import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 
 import javax.crypto.BadPaddingException;
 import javax.net.ssl.*;
+import java.awt.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -82,7 +82,7 @@ public class CertificateManagerImpl implements CertificateManager, PersistentSta
         new ConfirmingHostnameVerifier(SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
     /**
      * Used to check whether dialog is visible to prevent possible deadlock, e.g. when some external resource is loaded by
-     * {@link java.awt.MediaTracker}.
+     * {@link MediaTracker}.
      */
     static final long DIALOG_VISIBILITY_TIMEOUT = 5000; // ms
 
@@ -285,30 +285,27 @@ public class CertificateManagerImpl implements CertificateManager, PersistentSta
     }
 
     public static boolean showAcceptDialog(final @Nonnull Callable<? extends DialogWrapper> dialogFactory) {
-        Application app = ApplicationManager.getApplication();
         final CountDownLatch proceeded = new CountDownLatch(1);
         final AtomicBoolean accepted = new AtomicBoolean();
         final AtomicReference<DialogWrapper> dialogRef = new AtomicReference<DialogWrapper>();
-        Runnable showDialog = new Runnable() {
-            @Override
-            public void run() {
-                // skip if certificate was already rejected due to timeout or interrupt
-                if (proceeded.getCount() == 0) {
-                    return;
-                }
-                try {
-                    DialogWrapper dialog = dialogFactory.call();
-                    dialogRef.set(dialog);
-                    accepted.set(dialog.showAndGet());
-                }
-                catch (Exception e) {
-                    LOG.error(e);
-                }
-                finally {
-                    proceeded.countDown();
-                }
+        Runnable showDialog = () -> {
+            // skip if certificate was already rejected due to timeout or interrupt
+            if (proceeded.getCount() == 0) {
+                return;
+            }
+            try {
+                DialogWrapper dialog = dialogFactory.call();
+                dialogRef.set(dialog);
+                accepted.set(dialog.showAndGet());
+            }
+            catch (Exception e) {
+                LOG.error(e);
+            }
+            finally {
+                proceeded.countDown();
             }
         };
+        Application app = Application.get();
         if (app.isDispatchThread()) {
             showDialog.run();
         }
@@ -364,7 +361,7 @@ public class CertificateManagerImpl implements CertificateManager, PersistentSta
         @Tag("expired")
         @Property(surroundWithTag = false)
         @AbstractCollection(elementTag = "commonName")
-        public LinkedHashSet<String> BROKEN_CERTIFICATES = new LinkedHashSet<String>();
+        public LinkedHashSet<String> BROKEN_CERTIFICATES = new LinkedHashSet<>();
 
         /**
          * Do not show the dialog and accept untrusted certificates automatically.

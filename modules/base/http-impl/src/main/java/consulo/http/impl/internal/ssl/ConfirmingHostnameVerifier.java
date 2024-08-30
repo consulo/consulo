@@ -1,8 +1,7 @@
 package consulo.http.impl.internal.ssl;
 
-import consulo.ui.ex.awt.DialogWrapper;
-import org.apache.http.conn.ssl.X509HostnameVerifier;
 import jakarta.annotation.Nonnull;
+import org.apache.http.conn.ssl.X509HostnameVerifier;
 
 import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLSession;
@@ -11,7 +10,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
-import java.util.concurrent.Callable;
 
 /**
  * BrowserCompatibleHostnameVerifier has all final/package-private methods, so direct
@@ -84,12 +82,7 @@ class ConfirmingHostnameVerifier implements X509HostnameVerifier {
     }
 
     private static boolean accepted(final String host, final X509Certificate cert) {
-        return CertificateManagerImpl.showAcceptDialog(new Callable<DialogWrapper>() {
-            @Override
-            public DialogWrapper call() throws Exception {
-                return CertificateWarningDialog.createHostnameMismatchWarning(cert, host);
-            }
-        });
+        return CertificateManagerImpl.showAcceptDialog(() -> CertificateWarningDialog.createHostnameMismatchWarning(cert, host));
     }
 
     // Copied from httpclient 4.2 sources, read class level commentary for explanation.

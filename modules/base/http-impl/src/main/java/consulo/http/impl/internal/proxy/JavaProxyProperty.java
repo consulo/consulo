@@ -16,10 +16,8 @@
 package consulo.http.impl.internal.proxy;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 1/23/13
- * Time: 10:09 AM
+ * @author Irina.Chernushina
+ * @since 2013-01-23
  *
  * http://docs.oracle.com/javase/6/docs/technotes/guides/net/proxies.html
  * http://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html

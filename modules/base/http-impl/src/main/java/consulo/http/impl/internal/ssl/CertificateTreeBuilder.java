@@ -11,7 +11,6 @@ import consulo.ui.ex.tree.PresentationData;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiMap;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -20,10 +19,8 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import java.security.cert.X509Certificate;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Function;
 
 import static consulo.http.impl.internal.ssl.CertificateWrapper.CommonField.COMMON_NAME;
 import static consulo.http.impl.internal.ssl.CertificateWrapper.CommonField.ORGANIZATION;
@@ -35,23 +32,26 @@ public class CertificateTreeBuilder extends AbstractTreeBuilder {
     private static final SimpleTextAttributes STRIKEOUT_ATTRIBUTES = new SimpleTextAttributes(SimpleTextAttributes.STYLE_STRIKEOUT, null);
     private static final RootDescriptor ROOT_DESCRIPTOR = new RootDescriptor();
 
-    private final MultiMap<String, CertificateWrapper> myCertificates = new MultiMap<String, CertificateWrapper>();
+    private final MultiMap<String, CertificateWrapper> myCertificates = new MultiMap<>();
 
     public CertificateTreeBuilder(@Nonnull Tree tree) {
-        init(tree, new DefaultTreeModel(new DefaultMutableTreeNode()), new MyTreeStructure(), new Comparator<NodeDescriptor>() {
-            @Override
-            public int compare(NodeDescriptor o1, NodeDescriptor o2) {
-                if (o1 instanceof OrganizationDescriptor && o2 instanceof OrganizationDescriptor) {
-                    return ((String)o1.getElement()).compareTo((String)o2.getElement());
+        init(
+            tree,
+            new DefaultTreeModel(new DefaultMutableTreeNode()),
+            new MyTreeStructure(),
+            (o1, o2) -> {
+                if (o1 instanceof OrganizationDescriptor od1 && o2 instanceof OrganizationDescriptor od2) {
+                    return od1.getElement().compareTo(od2.getElement());
                 }
-                else if (o1 instanceof CertificateDescriptor && o2 instanceof CertificateDescriptor) {
-                    String cn1 = ((CertificateDescriptor)o1).getElement().getSubjectField(COMMON_NAME);
-                    String cn2 = ((CertificateDescriptor)o2).getElement().getSubjectField(COMMON_NAME);
+                else if (o1 instanceof CertificateDescriptor cd1 && o2 instanceof CertificateDescriptor cd2) {
+                    String cn1 = cd1.getElement().getSubjectField(COMMON_NAME);
+                    String cn2 = cd2.getElement().getSubjectField(COMMON_NAME);
                     return cn1.compareTo(cn2);
                 }
                 return 0;
-            }
-        }, true);
+            },
+            true
+        );
         initRootNode();
     }
 
@@ -62,12 +62,8 @@ public class CertificateTreeBuilder extends AbstractTreeBuilder {
         }
         // expand organization nodes at the same time
         //initRootNode();
-        queueUpdateFrom(RootDescriptor.ROOT, true).doWhenDone(new Runnable() {
-            @Override
-            public void run() {
-                CertificateTreeBuilder.this.expandAll(null);
-            }
-        });
+        queueUpdateFrom(RootDescriptor.ROOT, true)
+            .doWhenDone(() -> CertificateTreeBuilder.this.expandAll(null));
     }
 
     public void addCertificate(@Nonnull X509Certificate certificate) {
@@ -86,10 +82,7 @@ public class CertificateTreeBuilder extends AbstractTreeBuilder {
     }
 
     public List<X509Certificate> getCertificates() {
-        return ContainerUtil.map(
-            myCertificates.values(),
-            (Function<CertificateWrapper, X509Certificate>)wrapper -> wrapper.getCertificate()
-        );
+        return ContainerUtil.map(myCertificates.values(), CertificateWrapper::getCertificate);
     }
 
     public boolean isEmpty() {
@@ -138,15 +131,12 @@ public class CertificateTreeBuilder extends AbstractTreeBuilder {
     }
 
     private static List<X509Certificate> extract(Collection<CertificateWrapper> wrappers) {
-        return ContainerUtil.map(wrappers, wrapper -> wrapper.getCertificate());
+        return ContainerUtil.map(wrappers, CertificateWrapper::getCertificate);
     }
 
     @Override
     protected Object transformElement(Object object) {
-        if (object instanceof CertificateWrapper) {
-            return ((CertificateWrapper)object).getCertificate();
-        }
-        return object;
+        return object instanceof CertificateWrapper certificateWrapper ? certificateWrapper.getCertificate() : object;
     }
 
     @Override
@@ -155,25 +145,27 @@ public class CertificateTreeBuilder extends AbstractTreeBuilder {
     }
 
     class MyTreeStructure extends AbstractTreeStructure {
+        @Nonnull
         @Override
         public Object getRootElement() {
             return RootDescriptor.ROOT;
         }
 
+        @Nonnull
         @Override
-        public Object[] getChildElements(Object element) {
+        public Object[] getChildElements(@Nonnull Object element) {
             if (element == RootDescriptor.ROOT) {
                 return ArrayUtil.toStringArray(myCertificates.keySet());
             }
-            else if (element instanceof String) {
-                return ArrayUtil.toObjectArray(myCertificates.get((String)element));
+            else if (element instanceof String key) {
+                return ArrayUtil.toObjectArray(myCertificates.get(key));
             }
             return ArrayUtil.EMPTY_OBJECT_ARRAY;
         }
 
         @Nullable
         @Override
-        public Object getParentElement(Object element) {
+        public Object getParentElement(@Nonnull Object element) {
             if (element == RootDescriptor.ROOT) {
                 return null;
             }
@@ -185,12 +177,12 @@ public class CertificateTreeBuilder extends AbstractTreeBuilder {
 
         @Nonnull
         @Override
-        public NodeDescriptor createDescriptor(Object element, NodeDescriptor parentDescriptor) {
+        public NodeDescriptor createDescriptor(@Nonnull Object element, NodeDescriptor parentDescriptor) {
             if (element == RootDescriptor.ROOT) {
                 return ROOT_DESCRIPTOR;
             }
-            else if (element instanceof String) {
-                return new OrganizationDescriptor(parentDescriptor, (String)element);
+            else if (element instanceof String str) {
+                return new OrganizationDescriptor(parentDescriptor, str);
             }
             return new CertificateDescriptor(parentDescriptor, (CertificateWrapper)element);
         }

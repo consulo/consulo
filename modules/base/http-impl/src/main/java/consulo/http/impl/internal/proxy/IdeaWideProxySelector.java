@@ -36,13 +36,13 @@ import java.util.regex.Pattern;
 
 /**
  * @author Irina.Chernushina
- * @since 1/30/13
+ * @since 2013-01-30
  */
 public class IdeaWideProxySelector extends ProxySelector {
     private final static Logger LOG = Logger.getInstance(IdeaWideProxySelector.class);
 
     private final HttpProxyManagerImpl myHttpConfigurable;
-    private final AtomicReference<ProxySelector> myPacProxySelector = new AtomicReference<ProxySelector>();
+    private final AtomicReference<ProxySelector> myPacProxySelector = new AtomicReference<>();
 
     public IdeaWideProxySelector(HttpProxyManagerImpl configurable) {
         myHttpConfigurable = configurable;
@@ -137,7 +137,7 @@ public class IdeaWideProxySelector extends ProxySelector {
             return;
         }
 
-        final InetSocketAddress isa = sa instanceof InetSocketAddress ? (InetSocketAddress)sa : null;
+        final InetSocketAddress isa = sa instanceof InetSocketAddress inetSocketAddress ? inetSocketAddress : null;
         if (myHttpConfigurable.isHttpProxyEnabled() && isa != null
             && Comparing.equal(myHttpConfigurable.getProxyHost(), isa.getHostName())) {
             LOG.debug("connection failed message passed to http configurable");

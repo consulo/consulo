@@ -17,7 +17,7 @@ package consulo.http.impl.internal.proxy;
 
 /**
  * @author VISTALL
- * @since 23/01/2023
+ * @since 2023-01-23
  */
 public class HttpProxyManagerState {
     public boolean PROXY_TYPE_IS_SOCKS;

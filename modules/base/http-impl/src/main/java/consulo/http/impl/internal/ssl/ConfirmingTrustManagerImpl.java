@@ -1,12 +1,10 @@
 package consulo.http.impl.internal.ssl;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.http.ssl.ClientOnlyTrustManager;
 import consulo.http.ssl.ConfirmingTrustManager;
 import consulo.logging.Logger;
 import consulo.proxy.EventDispatcher;
-import consulo.ui.ex.awt.DialogWrapper;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.io.FileUtil;
 import consulo.util.io.StreamUtil;
@@ -28,7 +26,6 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -87,8 +84,8 @@ public class ConfirmingTrustManagerImpl implements ConfirmingTrustManager {
 
     private static X509TrustManager findX509TrustManager(TrustManager[] managers) {
         for (TrustManager manager : managers) {
-            if (manager instanceof X509TrustManager) {
-                return (X509TrustManager)manager;
+            if (manager instanceof X509TrustManager x509TrustManager) {
+                return x509TrustManager;
             }
         }
         return null;
@@ -99,12 +96,9 @@ public class ConfirmingTrustManagerImpl implements ConfirmingTrustManager {
         checkServerTrusted(certificates, s, true, true);
     }
 
-    public void checkServerTrusted(
-        final X509Certificate[] certificates,
-        String s,
-        boolean addToKeyStore,
-        boolean askUser
-    ) throws CertificateException {
+    @Override
+    public void checkServerTrusted(final X509Certificate[] certificates, String s, boolean addToKeyStore, boolean askUser)
+        throws CertificateException {
         try {
             mySystemManager.checkServerTrusted(certificates, s);
         }
@@ -124,7 +118,6 @@ public class ConfirmingTrustManagerImpl implements ConfirmingTrustManager {
     }
 
     private boolean confirmAndUpdate(final X509Certificate[] chain, boolean addToKeyStore, boolean askUser) {
-        Application app = ApplicationManager.getApplication();
         final X509Certificate endPoint = chain[0];
         // IDEA-123467 and IDEA-123335 workaround
         String threadClassName = StringUtil.notNullize(Thread.currentThread().getClass().getCanonicalName());
@@ -133,6 +126,7 @@ public class ConfirmingTrustManagerImpl implements ConfirmingTrustManager {
             return true;
         }
         CertificateManagerImpl.Config config = CertificateManagerImpl.getInstance().getState();
+        Application app = Application.get();
         if (app.isUnitTestMode() || app.isHeadlessEnvironment() || config.ACCEPT_AUTOMATICALLY) {
             LOG.debug("Certificate will be accepted automatically");
             if (addToKeyStore) {
@@ -140,12 +134,9 @@ public class ConfirmingTrustManagerImpl implements ConfirmingTrustManager {
             }
             return true;
         }
-        boolean accepted = askUser && CertificateManagerImpl.showAcceptDialog(new Callable<DialogWrapper>() {
-            @Override
-            public DialogWrapper call() throws Exception {
-                // TODO may be another kind of warning, if default trust store is missing
-                return CertificateWarningDialog.createUntrustedCertificateWarning(endPoint);
-            }
+        boolean accepted = askUser && CertificateManagerImpl.showAcceptDialog(() -> {
+            // TODO may be another kind of warning, if default trust store is missing
+            return CertificateWarningDialog.createUntrustedCertificateWarning(endPoint);
         });
         if (accepted) {
             LOG.info("Certificate was accepted by user");
@@ -358,7 +349,7 @@ public class ConfirmingTrustManagerImpl implements ConfirmingTrustManager {
         public List<X509Certificate> getCertificates() {
             myReadLock.lock();
             try {
-                List<X509Certificate> certificates = new ArrayList<X509Certificate>();
+                List<X509Certificate> certificates = new ArrayList<>();
                 for (String alias : Collections.list(myKeyStore.aliases())) {
                     certificates.add(getCertificate(alias));
                 }

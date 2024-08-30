@@ -1,9 +1,7 @@
 package consulo.http.impl.internal.ssl;
 
-import org.apache.commons.codec.digest.DigestUtils;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import javax.security.auth.x500.X500Principal;
 import java.security.cert.CertificateEncodingException;
@@ -18,7 +16,6 @@ import java.util.Map;
  */
 @SuppressWarnings("UnusedDeclaration")
 public class CertificateWrapper {
-    @NonNls
     public static final String NOT_AVAILABLE = "N/A";
 
     private final X509Certificate myCertificate;
@@ -152,7 +149,7 @@ public class CertificateWrapper {
 
     // E.g. CN=*.github.com,O=GitHub\, Inc.,L=San Francisco,ST=California,C=US
     private static Map<String, String> extractFields(X500Principal principal) {
-        Map<String, String> fields = new HashMap<String, String>();
+        Map<String, String> fields = new HashMap<>();
         for (String field : principal.getName().split("(?<!\\\\),")) {
             String[] parts = field.trim().split("=", 2);
             if (parts.length != 2) {
@@ -165,7 +162,7 @@ public class CertificateWrapper {
 
     @Override
     public final boolean equals(Object other) {
-        return other instanceof CertificateWrapper && myCertificate.equals(((CertificateWrapper)other).getCertificate());
+        return other instanceof CertificateWrapper certWrapper && myCertificate.equals(certWrapper.getCertificate());
     }
 
     @Override

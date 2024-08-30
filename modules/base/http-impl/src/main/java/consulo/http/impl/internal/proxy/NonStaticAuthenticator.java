@@ -21,10 +21,8 @@ import java.net.PasswordAuthentication;
 import java.net.URL;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 1/21/13
- * Time: 11:17 PM
+ * @author Irina.Chernushina
+ * @since 2013-01-21
  */
 public abstract class NonStaticAuthenticator {
     private String requestingHost;
