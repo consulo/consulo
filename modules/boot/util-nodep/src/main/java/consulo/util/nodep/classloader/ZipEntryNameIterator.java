@@ -25,19 +25,19 @@ import java.util.zip.ZipFile;
  * @since 09/01/2021
  */
 class ZipEntryNameIterator implements Iterator<String> {
-  private final Enumeration<? extends ZipEntry> myEntries;
+    private final Enumeration<? extends ZipEntry> myEntries;
 
-  ZipEntryNameIterator(ZipFile zipFile) {
-    myEntries = zipFile.entries();
-  }
+    ZipEntryNameIterator(ZipFile zipFile) {
+        myEntries = zipFile.entries();
+    }
 
-  @Override
-  public boolean hasNext() {
-    return myEntries.hasMoreElements();
-  }
+    @Override
+    public boolean hasNext() {
+        return myEntries.hasMoreElements();
+    }
 
-  @Override
-  public String next() {
-    return myEntries.nextElement().getName();
-  }
+    @Override
+    public String next() {
+        return myEntries.nextElement().getName();
+    }
 }

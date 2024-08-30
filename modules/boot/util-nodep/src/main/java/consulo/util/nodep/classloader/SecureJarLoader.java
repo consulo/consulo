@@ -12,6 +12,7 @@ import java.security.CodeSource;
 import java.security.Permissions;
 import java.security.ProtectionDomain;
 import java.util.Map;
+import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
@@ -21,8 +22,8 @@ class SecureJarLoader extends JarLoader {
   private ProtectionDomain myProtectionDomain;
   private final Object myProtectionDomainMonitor = new Object();
 
-  SecureJarLoader(URL url, int index, ClassPath configuration) throws IOException {
-    super(url, index, configuration);
+  SecureJarLoader(URL url, int index, ClassPath configuration, Set<String> fullJarIndex) throws IOException {
+    super(url, index, configuration, fullJarIndex);
   }
 
   @Override

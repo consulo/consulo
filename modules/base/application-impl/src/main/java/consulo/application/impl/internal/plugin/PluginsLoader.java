@@ -231,7 +231,7 @@ public class PluginsLoader {
             List<ModuleLayer> parentModuleLayer = getParentModuleLayer(idToDescriptorMap, dependentPluginIds);
 
             pluginDescriptor.setModuleLayer(Java9ModuleInitializer.initializeEtcModules(parentModuleLayer,
-                                                                                        pluginDescriptor.getClassPath(idToDescriptorMap.keySet()),
+                                                                                        pluginDescriptor.getClassPathFiles(idToDescriptorMap.keySet()),
                                                                                         pluginClassLoader));
           }
 

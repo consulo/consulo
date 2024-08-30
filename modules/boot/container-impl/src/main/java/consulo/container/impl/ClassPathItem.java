@@ -18,6 +18,7 @@ package consulo.container.impl;
 import consulo.container.plugin.PluginId;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -26,37 +27,43 @@ import java.util.Set;
  * @since 28-Aug-22
  */
 public class ClassPathItem {
-  private final List<ClassPathPluginSet> mySets;
-  private final File myPath;
+    private final List<ClassPathPluginSet> mySets;
+    private final Set<String> myIndex;
+    private final File myPath;
 
-  public ClassPathItem(File path, List<ClassPathPluginSet> pluginSets) {
-    myPath = path;
-    mySets = pluginSets;
-  }
-
-  public boolean accept(Set<PluginId> enabledPluginIds) {
-    if (mySets.isEmpty()) {
-      return true;
+    public ClassPathItem(File path, List<ClassPathPluginSet> pluginSets, Set<String> index) {
+        myPath = path;
+        mySets = pluginSets;
+        myIndex = index == null ? Collections.emptySet() : index;
     }
 
-    for (ClassPathPluginSet set : mySets) {
-      if (set.accept(enabledPluginIds)) {
-        return true;
-      }
+    public boolean accept(Set<PluginId> enabledPluginIds) {
+        if (mySets.isEmpty()) {
+            return true;
+        }
+
+        for (ClassPathPluginSet set : mySets) {
+            if (set.accept(enabledPluginIds)) {
+                return true;
+            }
+        }
+        return false;
     }
-    return false;
-  }
 
-  public File getPath() {
-    return myPath;
-  }
+    public File getPath() {
+        return myPath;
+    }
 
-  @Override
-  public String toString() {
-    final StringBuilder sb = new StringBuilder("ClassPathItem{");
-    sb.append("mySets=").append(mySets);
-    sb.append(", myPath=").append(myPath);
-    sb.append('}');
-    return sb.toString();
-  }
+    public Set<String> getIndex() {
+        return myIndex;
+    }
+
+    @Override
+    public String toString() {
+        return "ClassPathItem{" +
+            "mySets=" + mySets +
+            ", myIndex=" + myIndex +
+            ", myPath=" + myPath +
+            '}';
+    }
 }

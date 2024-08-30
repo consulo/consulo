@@ -35,7 +35,7 @@ abstract class Loader {
     return myIndex;
   }
 
-  boolean containsPath(String name) {
+  boolean containsPath(String resourcePath) {
     return true;
   }
 
