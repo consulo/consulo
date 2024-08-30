@@ -15,13 +15,19 @@
  */
 package consulo.process;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.component.util.localize.AbstractBundle;
+import consulo.process.localize.ProcessLocalize;
 import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author VISTALL
  * @since 05-Feb-22
  */
+@Deprecated
+@DeprecationInfo("Use ProcessLocalize")
+@MigratedExtensionsTo(ProcessLocalize.class)
 public class ProcessBundle extends AbstractBundle {
   private static final ProcessBundle ourInstance = new ProcessBundle();
   private static final String BUNDLE = "consulo.process.ProcessBundle";
