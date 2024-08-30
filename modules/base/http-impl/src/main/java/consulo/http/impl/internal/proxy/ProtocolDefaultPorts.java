@@ -7,6 +7,6 @@ package consulo.http.impl.internal.proxy;
  * Time: 6:49 PM
  */
 public interface ProtocolDefaultPorts {
-  int HTTP = 80;
-  int SSL = 443;
+    int HTTP = 80;
+    int SSL = 443;
 }
