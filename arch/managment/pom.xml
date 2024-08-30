@@ -973,7 +973,7 @@
       <plugin>
         <groupId>consulo.maven</groupId>
         <artifactId>notnull-maven-plugin</artifactId>
-        <version>2.2-SNAPSHOT</version>
+        <version>2.3-SNAPSHOT</version>
         <executions>
           <execution>
             <id>production</id>
