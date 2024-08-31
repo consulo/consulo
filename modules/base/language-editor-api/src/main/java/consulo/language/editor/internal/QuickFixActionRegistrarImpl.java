@@ -34,7 +34,7 @@ public class QuickFixActionRegistrarImpl implements QuickFixActionRegistrar {
   }
 
   @Override
-  public void register(@Nonnull TextRange fixRange, @Nonnull IntentionAction action, HighlightDisplayKey key) {
+  public void register(@Nullable TextRange fixRange, @Nonnull IntentionAction action, HighlightDisplayKey key) {
     QuickFixAction.registerQuickFixAction(myInfo, fixRange, action, key);
   }
 }

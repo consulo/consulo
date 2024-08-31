@@ -41,5 +41,5 @@ public interface QuickFixActionRegistrar {
     register(null, action, null);
   }
 
-  void register(TextRange fixRange, IntentionAction action, HighlightDisplayKey key);
+  void register(@Nullable TextRange fixRange, IntentionAction action, HighlightDisplayKey key);
 }
