@@ -16,21 +16,25 @@
 package consulo.process.local;
 
 import consulo.logging.Logger;
-import consulo.process.*;
+import consulo.process.ExecutionException;
+import consulo.process.KillableProcessHandler;
+import consulo.process.ProcessHandler;
+import consulo.process.ProcessOutputTypes;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
 import consulo.process.event.ProcessListener;
 import consulo.process.internal.CapturingProcessHandler;
+import consulo.process.localize.ProcessLocalize;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import java.io.File;
 import java.util.function.Predicate;
 
@@ -80,7 +84,7 @@ public final class ScriptRunnerUtil {
     });
     processHandler.startNotify();
     if (!processHandler.waitFor(timeout)) {
-      throw new ExecutionException(ProcessBundle.message("script.execution.timeout", String.valueOf(timeout / 1000)));
+      throw new ExecutionException(ProcessLocalize.scriptExecutionTimeout(String.valueOf(timeout / 1000)).get());
     }
     return outputBuilder.toString();
   }
@@ -142,7 +146,7 @@ public final class ScriptRunnerUtil {
 
     if (!processHandler.waitFor(timeout)) {
       LOG.warn("Process did not complete in " + timeout / 1000 + "s");
-      throw new ExecutionException(ProcessBundle.message("script.execution.timeout", String.valueOf(timeout / 1000)));
+      throw new ExecutionException(ProcessLocalize.scriptExecutionTimeout(String.valueOf(timeout / 1000)).get());
     }
     LOG.debug("script output: " + output.myFilteredOutput);
     return output;

@@ -1,0 +1,12 @@
+run.canceled.by.user.message:
+  text: Run canceled by user
+run.configuration.error.executable.not.specified:
+  text: Executable is not specified
+run.configuration.error.working.directory.does.not.exist:
+  text: Cannot start process, the working directory {0} does not exist
+run.configuration.error.working.directory.not.directory:
+  text: Cannot start process, the path specified for working directory is not a directory
+finished.with.exit.code.text.message:
+  text: Process finished with exit code {0}
+script.execution.timeout:
+  text: Script execution took more than {0} seconds.

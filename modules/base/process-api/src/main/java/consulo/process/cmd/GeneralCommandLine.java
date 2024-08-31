@@ -22,6 +22,7 @@ import consulo.platform.PlatformOperatingSystem;
 import consulo.process.*;
 import consulo.process.internal.SystemExecutableInfo;
 import consulo.process.local.EnvironmentUtil;
+import consulo.process.localize.ProcessLocalize;
 import consulo.util.collection.DelegateMap;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;
@@ -355,11 +356,12 @@ public class GeneralCommandLine implements UserDataHolder {
       return;
     }
     if (!Files.exists(myWorkingDirectory)) {
-      throw new ExecutionException(ProcessBundle.message("run.configuration.error.working.directory.does.not.exist",
-                                                         myWorkingDirectory.toAbsolutePath()));
+      throw new ExecutionException(
+          ProcessLocalize.runConfigurationErrorWorkingDirectoryDoesNotExist(myWorkingDirectory.toAbsolutePath()).get()
+      );
     }
     if (!Files.isDirectory(myWorkingDirectory)) {
-      throw new ExecutionException(ProcessBundle.message("run.configuration.error.working.directory.not.directory"));
+      throw new ExecutionException(ProcessLocalize.runConfigurationErrorWorkingDirectoryNotDirectory().get());
     }
   }
 
@@ -522,7 +524,7 @@ public class GeneralCommandLine implements UserDataHolder {
       checkWorkingDirectory();
 
       if (myExecutable == null) {
-        throw new ExecutionException(ProcessBundle.message("run.configuration.error.executable.not.specified"));
+        throw new ExecutionException(ProcessLocalize.runConfigurationErrorExecutableNotSpecified().get());
       }
 
       commands = CommandLineUtil.toCommandLine(myExecutable.toString(), myProgramParams.getList());
