@@ -47,204 +47,224 @@ import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 import java.util.function.Supplier;
 
 public abstract class ApplicationStarter {
-  private static final Logger LOG = Logger.getInstance(ApplicationStarter.class);
+    private static final Logger LOG = Logger.getInstance(ApplicationStarter.class);
 
-  private static ApplicationStarter ourInstance;
+    private static ApplicationStarter ourInstance;
 
-  public static ApplicationStarter getInstance() {
-    return ourInstance;
-  }
-
-  public static boolean isLoaded() {
-    return ApplicationStarterCore.isLoaded();
-  }
-
-  private final CommandLineArgs myArgs;
-  private boolean myPerformProjectLoad = true;
-
-  protected final SimpleReference<StartupProgress> mySplashRef = SimpleReference.create();
-
-  protected final Platform myPlatform;
-
-  protected PluginsInitializeInfo myPluginsInitializeInfo;
-
-  public ApplicationStarter(@Nonnull CommandLineArgs args, @Nonnull StatCollector stat) {
-    LOG.assertTrue(ourInstance == null);
-    //noinspection AssignmentToStaticFieldFromInstanceMethod
-    ourInstance = this;
-
-    myArgs = args;
-
-    myPlatform = Platform.current();
-
-    initializeEnviroment(false, args, stat);
-  }
-
-  @Nonnull
-  protected abstract Application createApplication(ComponentBinding componentBinding,
-                                                   boolean isHeadlessMode,
-                                                   SimpleReference<StartupProgress> splashRef,
-                                                   CommandLineArgs args);
-
-  protected abstract void main(StatCollector stat,
-                               Runnable appInitializeMark,
-                               ApplicationEx app,
-                               boolean newConfigFolder,
-                               @Nonnull CommandLineArgs args);
-
-  protected boolean needSetVersionChecker() {
-    return true;
-  }
-
-  @Nullable
-  public abstract StartupProgress createSplash(CommandLineArgs args);
-
-  protected void initializeEnviroment(boolean isHeadlessMode, CommandLineArgs args, StatCollector stat) {
-    StartupProgress splash = createSplash(args);
-    if (splash != null) {
-      mySplashRef.set(splash);
+    public static ApplicationStarter getInstance() {
+        return ourInstance;
     }
 
-    if (needSetVersionChecker()) {
-      PluginsLoader.setVersionChecker();
+    public static boolean isLoaded() {
+        return ApplicationStarterCore.isLoaded();
     }
 
-    myPluginsInitializeInfo = PluginsLoader.initPlugins(splash, isHeadlessMode);
+    private final CommandLineArgs myArgs;
+    private boolean myPerformProjectLoad = true;
 
-    StatCollector libraryStats = new StatCollector();
-    LocalizeManagerImpl localizeManager = (LocalizeManagerImpl)LocalizeManager.get();
-    BaseIconLibraryManager iconLibraryManager = (BaseIconLibraryManager)IconLibraryManager.get();
+    protected final SimpleReference<StartupProgress> mySplashRef = SimpleReference.create();
 
-    Map<String, List<String>> filesWithMarkers = new HashMap<>();
+    protected final Platform myPlatform;
 
-    InjectingBindingLoader injectingBindingLoader = new InjectingBindingLoader();
-    TopicBindingLoader topicBindingLoader = new TopicBindingLoader();
+    protected PluginsInitializeInfo myPluginsInitializeInfo;
 
-    libraryStats.markWith("injecting.binding.analyze", injectingBindingLoader::analyzeBindings);
-    libraryStats.markWith("topic.binding.analyze", topicBindingLoader::analyzeBindings);
+    public ApplicationStarter(@Nonnull CommandLineArgs args, @Nonnull StatCollector stat) {
+        LOG.assertTrue(ourInstance == null);
+        //noinspection AssignmentToStaticFieldFromInstanceMethod
+        ourInstance = this;
 
-    libraryStats.markWith("library.analyze", () -> analyzeLibraries(filesWithMarkers));
+        myArgs = args;
 
-    libraryStats.markWith("localize.initialize",
-                          () -> localizeManager.initialize(filesWithMarkers.get(LocalizeManagerImpl.LOCALIZE_DIRECTORY)));
-    libraryStats.markWith("icon.initialize",
-                          () -> iconLibraryManager.initialize(filesWithMarkers.get(BaseIconLibraryManager.ICON_DIRECTORY)));
+        myPlatform = Platform.current();
 
-    libraryStats.dump("Libraries", LOG::info);
+        initializeEnviroment(false, args, stat);
+    }
 
-    createApplication(new ComponentBinding(injectingBindingLoader, topicBindingLoader), isHeadlessMode, mySplashRef, args);
-  }
+    @Nonnull
+    protected abstract Application createApplication(ComponentBinding componentBinding,
+                                                     boolean isHeadlessMode,
+                                                     SimpleReference<StartupProgress> splashRef,
+                                                     CommandLineArgs args);
 
-  protected void analyzeLibraries(Map<String, List<String>> filesWithMarkers) {
-    PluginManager.forEachEnabledPlugin(pluginDescriptor -> {
-      searchMarkerInClassLoaderMarker(pluginDescriptor, filesWithMarkers, LocalizeManagerImpl.LOCALIZE_DIRECTORY);
-      searchMarkerInClassLoaderMarker(pluginDescriptor, filesWithMarkers, BaseIconLibraryManager.ICON_DIRECTORY);
-    });
-  }
+    protected abstract void main(StatCollector stat,
+                                 Runnable appInitializeMark,
+                                 ApplicationEx app,
+                                 boolean newConfigFolder,
+                                 @Nonnull CommandLineArgs args);
 
-  private void searchMarkerInClassLoaderMarker(PluginDescriptor pluginDescriptor,
-                                               Map<String, List<String>> filesWithMarkers,
-                                               String marker) {
+    protected boolean needSetVersionChecker() {
+        return true;
+    }
 
-    try {
-      ClassLoader classLoader = pluginDescriptor.getPluginClassLoader();
+    @Nullable
+    public abstract StartupProgress createSplash(CommandLineArgs args);
 
-      Enumeration<URL> ownResources = ((PluginClassLoader)classLoader).findOwnResources(marker);
-
-      while (ownResources.hasMoreElements()) {
-        URL url = ownResources.nextElement();
-
-        Pair<String, String> urlFileInfo = URLUtil.splitJarUrl(url.getFile());
-        if (urlFileInfo == null) {
-          continue;
+    protected void initializeEnviroment(boolean isHeadlessMode, CommandLineArgs args, StatCollector stat) {
+        StartupProgress splash = createSplash(args);
+        if (splash != null) {
+            mySplashRef.set(splash);
         }
 
-        filesWithMarkers.computeIfAbsent(marker, it -> new ArrayList<>()).add(urlFileInfo.getFirst());
-      }
-    }
-    catch (IOException e) {
-      LOG.error(e);
-    }
-  }
+        if (needSetVersionChecker()) {
+            PluginsLoader.setVersionChecker();
+        }
 
-  public void run(StatCollector stat, Runnable appInitalizeMark, boolean newConfigFolder) {
-    try {
-      ApplicationEx app = (ApplicationEx)Application.get();
-      app.load(ContainerPathManager.get().getOptionsPath());
+        myPluginsInitializeInfo = PluginsLoader.initPlugins(splash, isHeadlessMode);
 
-      boolean enableSecurityManager = EarlyAccessProgramManager.is(PluginPermissionEarlyAccessProgramDescriptor.class);
-      if (enableSecurityManager) {
-        ConsuloSecurityManagerEnabler.enableSecurityManager();
-      }
+        StatCollector libraryStats = new StatCollector();
+        LocalizeManagerImpl localizeManager = (LocalizeManagerImpl) LocalizeManager.get();
+        BaseIconLibraryManager iconLibraryManager = (BaseIconLibraryManager) IconLibraryManager.get();
 
-      main(stat, appInitalizeMark, app, newConfigFolder, myArgs);
+        Map<String, Set<String>> filesWithMarkers = new HashMap<>();
 
-      ApplicationStarterCore.ourLoaded = true;
-    }
-    catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-  }
+        InjectingBindingLoader injectingBindingLoader = new InjectingBindingLoader();
+        TopicBindingLoader topicBindingLoader = new TopicBindingLoader();
 
-  public boolean isPerformProjectLoad() {
-    return myPerformProjectLoad;
-  }
+        libraryStats.markWith("injecting.binding.analyze", injectingBindingLoader::analyzeBindings);
+        libraryStats.markWith("topic.binding.analyze", topicBindingLoader::analyzeBindings);
 
-  public void setPerformProjectLoad(boolean performProjectLoad) {
-    myPerformProjectLoad = performProjectLoad;
-  }
+        libraryStats.markWith("library.analyze", () -> analyzeLibraries(filesWithMarkers));
 
-  public static void installExceptionHandler(Supplier<Logger> logger) {
-    Thread.currentThread().setUncaughtExceptionHandler((t, e) -> processException(logger, e));
-  }
+        libraryStats.markWith("localize.initialize",
+            () -> localizeManager.initialize(filesWithMarkers.get(LocalizeManagerImpl.LOCALIZE_DIRECTORY)));
+        libraryStats.markWith("icon.initialize",
+            () -> iconLibraryManager.initialize(filesWithMarkers.get(BaseIconLibraryManager.ICON_DIRECTORY)));
 
-  public static void processException(Supplier<Logger> logger, Throwable t) {
-    StartupAbortedException se = null;
+        libraryStats.dump("Libraries", LOG::info);
 
-    if (t instanceof StartupAbortedException) {
-      se = (StartupAbortedException)t;
-    }
-    else if (t.getCause() instanceof StartupAbortedException) {
-      se = (StartupAbortedException)t.getCause();
-    }
-    else if (!ApplicationStarter.isLoaded()) {
-      se = new StartupAbortedException(t);
+        createApplication(new ComponentBinding(injectingBindingLoader, topicBindingLoader), isHeadlessMode, mySplashRef, args);
     }
 
-    if (se != null) {
-      if (se.logError()) {
+    protected void analyzeLibraries(Map<String, Set<String>> filesWithMarkers) {
+        PluginManager.forEachEnabledPlugin(pluginDescriptor -> {
+            searchMarkerInClassLoaderMarker(pluginDescriptor, filesWithMarkers, LocalizeManagerImpl.LOCALIZE_DIRECTORY);
+            searchMarkerInClassLoaderMarker(pluginDescriptor, filesWithMarkers, BaseIconLibraryManager.ICON_DIRECTORY);
+        });
+    }
+
+    private void searchMarkerInClassLoaderMarker(PluginDescriptor pluginDescriptor,
+                                                 Map<String, Set<String>> filesWithMarkers,
+                                                 String libraryDir) {
+        PluginClassLoader pluginClassLoader = (PluginClassLoader) pluginDescriptor.getPluginClassLoader();
+
         try {
-          if (LoggerFactoryInitializer.isInitialized() && !(t instanceof ControlFlowException)) {
+            Map<URL, Set<String>> urlsIndex = pluginClassLoader.getUrlsIndex();
+            if (urlsIndex != null) {
+                for (Map.Entry<URL, Set<String>> entry : urlsIndex.entrySet()) {
+                    URL fileUrl = entry.getKey();
+                    Set<String> index = entry.getValue();
+
+                    for (String classPath : index) {
+                        if (classPath.startsWith(libraryDir)) {
+                            File file = URLUtil.urlToFile(fileUrl);
+
+                            filesWithMarkers.computeIfAbsent(libraryDir, it -> new HashSet<>()).add(file.getPath());
+                            // we add file - stop checking
+                            break;
+                        }
+                    }
+                }
+            } else {
+                Enumeration<URL> ownResources = pluginClassLoader.findOwnResources(libraryDir);
+
+                while (ownResources.hasMoreElements()) {
+                    URL url = ownResources.nextElement();
+
+                    Pair<String, String> urlFileInfo = URLUtil.splitJarUrl(url.getFile());
+                    if (urlFileInfo == null) {
+                        continue;
+                    }
+
+                    filesWithMarkers.computeIfAbsent(libraryDir, it -> new HashSet<>()).add(urlFileInfo.getFirst());
+
+                    break;
+                }
+            }
+        }
+        catch (IOException e) {
+            LOG.error(e);
+        }
+    }
+
+    public void run(StatCollector stat, Runnable appInitalizeMark, boolean newConfigFolder) {
+        try {
+            ApplicationEx app = (ApplicationEx) Application.get();
+            app.load(ContainerPathManager.get().getOptionsPath());
+
+            boolean enableSecurityManager = EarlyAccessProgramManager.is(PluginPermissionEarlyAccessProgramDescriptor.class);
+            if (enableSecurityManager) {
+                ConsuloSecurityManagerEnabler.enableSecurityManager();
+            }
+
+            main(stat, appInitalizeMark, app, newConfigFolder, myArgs);
+
+            ApplicationStarterCore.ourLoaded = true;
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean isPerformProjectLoad() {
+        return myPerformProjectLoad;
+    }
+
+    public void setPerformProjectLoad(boolean performProjectLoad) {
+        myPerformProjectLoad = performProjectLoad;
+    }
+
+    public static void installExceptionHandler(Supplier<Logger> logger) {
+        Thread.currentThread().setUncaughtExceptionHandler((t, e) -> processException(logger, e));
+    }
+
+    public static void processException(Supplier<Logger> logger, Throwable t) {
+        StartupAbortedException se = null;
+
+        if (t instanceof StartupAbortedException) {
+            se = (StartupAbortedException) t;
+        }
+        else if (t.getCause() instanceof StartupAbortedException) {
+            se = (StartupAbortedException) t.getCause();
+        }
+        else if (!ApplicationStarter.isLoaded()) {
+            se = new StartupAbortedException(t);
+        }
+
+        if (se != null) {
+            if (se.logError()) {
+                try {
+                    if (LoggerFactoryInitializer.isInitialized() && !(t instanceof ControlFlowException)) {
+                        logger.get().error(t);
+                    }
+                }
+                catch (Throwable ignore) {
+                }
+
+                ShowErrorCaller.showErrorDialog("Start Failed", t.getMessage(), t);
+            }
+
+            System.exit(se.exitCode());
+        }
+
+        if (!(t instanceof ControlFlowException)) {
             logger.get().error(t);
-          }
         }
-        catch (Throwable ignore) {
+    }
+
+    @Nonnull
+    public static String getFrameClass() {
+        String name = ApplicationInfo.getInstance().getName().toLowerCase(Locale.ROOT);
+        String wmClass = StringUtil.replaceChar(name, ' ', '-');
+        if (ApplicationProperties.isInSandbox()) {
+            wmClass += "-sandbox";
         }
-
-        ShowErrorCaller.showErrorDialog("Start Failed", t.getMessage(), t);
-      }
-
-      System.exit(se.exitCode());
+        return wmClass;
     }
-
-    if (!(t instanceof ControlFlowException)) {
-      logger.get().error(t);
-    }
-  }
-
-  @Nonnull
-  public static String getFrameClass() {
-    String name = ApplicationInfo.getInstance().getName().toLowerCase(Locale.ROOT);
-    String wmClass = StringUtil.replaceChar(name, ' ', '-');
-    if (ApplicationProperties.isInSandbox()) {
-      wmClass += "-sandbox";
-    }
-    return wmClass;
-  }
 }

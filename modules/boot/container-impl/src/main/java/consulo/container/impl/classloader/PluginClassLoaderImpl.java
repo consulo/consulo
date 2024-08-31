@@ -30,6 +30,7 @@ public class PluginClassLoaderImpl extends UrlClassLoader implements PluginClass
         }
     }
 
+    private final Map<URL, Set<String>> myUrlsIndex;
     private final ClassLoader[] myParents;
     private final PluginDescriptor myPluginDescriptor;
     private final File myLibDirectory;
@@ -44,9 +45,15 @@ public class PluginClassLoaderImpl extends UrlClassLoader implements PluginClass
                 .urlsWithProtectionDomain(new HashSet<>(urls))
                 .allowLock()
                 .noPreload());
+        myUrlsIndex = urlsIndex;
         myParents = parents;
         myPluginDescriptor = pluginDescriptor;
         myLibDirectory = new File(myPluginDescriptor.getPath(), "lib");
+    }
+
+    @Override
+    public Map<URL, Set<String>> getUrlsIndex() {
+        return myUrlsIndex;
     }
 
     @Override

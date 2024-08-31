@@ -58,7 +58,7 @@ public class LocalizeManagerImpl extends LocalizeManager {
 
   private final AtomicLong myModificationCount = new AtomicLong();
 
-  public void initialize(@Nullable List<String> files) {
+  public void initialize(@Nullable Set<String> files) {
     if (myInitialized.compareAndSet(false, true)) {
       if(files == null) {
         return;

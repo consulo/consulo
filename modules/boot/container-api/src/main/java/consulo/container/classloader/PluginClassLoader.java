@@ -21,17 +21,21 @@ import consulo.container.plugin.PluginId;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author VISTALL
  * @since 2019-11-23
  */
 public interface PluginClassLoader {
-  PluginId getPluginId();
+    PluginId getPluginId();
 
-  PluginDescriptor getPluginDescriptor();
+    PluginDescriptor getPluginDescriptor();
 
-  boolean hasLoadedClass(String className);
+    boolean hasLoadedClass(String className);
 
-  Enumeration<URL> findOwnResources(String name) throws IOException;
+    Enumeration<URL> findOwnResources(String name) throws IOException;
+
+    Map<URL, Set<String>> getUrlsIndex();
 }

@@ -147,7 +147,7 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
   @Nonnull
   protected abstract BaseIconLibraryImpl createLibrary(@Nonnull String id);
 
-  public void initialize(@Nullable List<String> files) {
+  public void initialize(@Nullable Set<String> files) {
     if (myInitialized.compareAndSet(false, true)) {
       if (files == null) {
         return;
