@@ -17,20 +17,20 @@ package consulo.http.impl.internal.proxy;
 
 /**
  * @author VISTALL
- * @since 23/01/2023
+ * @since 2023-01-23
  */
 public class HttpProxyManagerState {
-  public boolean PROXY_TYPE_IS_SOCKS;
-  public boolean USE_HTTP_PROXY;
-  public boolean USE_PROXY_PAC;
+    public boolean PROXY_TYPE_IS_SOCKS;
+    public boolean USE_HTTP_PROXY;
+    public boolean USE_PROXY_PAC;
 
-  public volatile boolean PROXY_AUTHENTICATION;
-  public boolean KEEP_PROXY_PASSWORD;
-  public transient String LAST_ERROR;
+    public volatile boolean PROXY_AUTHENTICATION;
+    public boolean KEEP_PROXY_PASSWORD;
+    public transient String LAST_ERROR;
 
-  public String PROXY_HOST;
-  public int PROXY_PORT = 80;
-  public String PROXY_EXCEPTIONS;
-  public boolean USE_PAC_URL;
-  public String PAC_URL;
+    public String PROXY_HOST;
+    public int PROXY_PORT = 80;
+    public String PROXY_EXCEPTIONS;
+    public boolean USE_PAC_URL;
+    public String PAC_URL;
 }
