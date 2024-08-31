@@ -27,7 +27,7 @@ import java.util.List;
 
 /**
  * @author VISTALL
- * @since 28/11/2021
+ * @since 2021-11-28
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface WebBrowserManager extends ModificationTracker {

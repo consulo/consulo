@@ -22,7 +22,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 24-Apr-22
+ * @since 2022-04-24
  */
 public class WebBrowserBundle extends AbstractBundle {
     private static final String BUNDLE = "consulo.webBrowser.WebBrowserBundle";

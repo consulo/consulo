@@ -17,10 +17,10 @@ package consulo.webBrowser.action;
 
 import consulo.application.AllIcons;
 import consulo.component.util.ModificationTracker;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.webBrowser.WebBrowser;
 import consulo.webBrowser.WebBrowserManager;
-
 import jakarta.annotation.Nonnull;
 
 import java.util.List;
@@ -79,6 +79,7 @@ public abstract class OpenInBrowserBaseGroupAction extends ComputableActionGroup
         }
 
         @Override
+        @RequiredUIAccess
         public void update(@Nonnull AnActionEvent e) {
             e.getPresentation().setVisible(!WebBrowserManager.getInstance().getBrowsers().isEmpty());
         }

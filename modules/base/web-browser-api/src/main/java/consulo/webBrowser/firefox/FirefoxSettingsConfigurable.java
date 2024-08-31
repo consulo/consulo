@@ -19,6 +19,7 @@ import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.platform.Platform;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.TextFieldWithBrowseButton;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.util.io.FileUtil;
@@ -69,6 +70,7 @@ public class FirefoxSettingsConfigurable implements Configurable {
     public static FileChooserDescriptor createProfilesIniChooserDescriptor() {
         return new FileChooserDescriptor(true, false, false, false, false, false) {
             @Override
+            @RequiredUIAccess
             public boolean isFileSelectable(VirtualFile file) {
                 return file.getName().equals(FirefoxUtil.PROFILES_INI_FILE) && super.isFileSelectable(file);
             }
@@ -76,11 +78,13 @@ public class FirefoxSettingsConfigurable implements Configurable {
     }
 
     @Override
+    @RequiredUIAccess
     public JComponent createComponent() {
         return myMainPanel;
     }
 
     @Override
+    @RequiredUIAccess
     public boolean isModified() {
         return !Comparing.equal(mySettings.getProfile(), getConfiguredProfileName())
             || !Comparing.equal(mySettings.getProfilesIniPath(), getConfiguredProfileIniPath());
@@ -102,12 +106,14 @@ public class FirefoxSettingsConfigurable implements Configurable {
     }
 
     @Override
+    @RequiredUIAccess
     public void apply() throws ConfigurationException {
         mySettings.setProfile(getConfiguredProfileName());
         mySettings.setProfilesIniPath(getConfiguredProfileIniPath());
     }
 
     @Override
+    @RequiredUIAccess
     public void reset() {
         File defaultFile = FirefoxUtil.getDefaultProfileIniPath();
         myDefaultProfilesIniPath = defaultFile != null ? defaultFile.getAbsolutePath() : "";
@@ -139,6 +145,7 @@ public class FirefoxSettingsConfigurable implements Configurable {
     }
 
     @Override
+    @RequiredUIAccess
     public void disposeUIResources() {
     }
 

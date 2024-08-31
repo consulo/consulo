@@ -21,7 +21,6 @@ import consulo.util.collection.SmartList;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -35,7 +34,6 @@ import java.util.List;
  */
 public class FirefoxUtil {
     private static final Logger LOG = Logger.getInstance(FirefoxUtil.class);
-    @NonNls
     public static final String PROFILES_INI_FILE = "profiles.ini";
 
     private FirefoxUtil() {
@@ -103,7 +101,7 @@ public class FirefoxUtil {
             BufferedReader reader;
             reader = new BufferedReader(new FileReader(profilesFile));
             try {
-                final List<FirefoxProfile> profiles = new SmartList<FirefoxProfile>();
+                final List<FirefoxProfile> profiles = new SmartList<>();
                 boolean insideProfile = false;
                 String currentName = null;
                 String currentPath = null;
