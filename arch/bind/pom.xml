@@ -70,7 +70,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>consulo</groupId>
             <artifactId>consulo-annotation</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
