@@ -25,47 +25,48 @@ import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collection;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class WebBrowserUrlProvider {
-  public static final ExtensionPointName<WebBrowserUrlProvider> EP_NAME = ExtensionPointName.create(WebBrowserUrlProvider.class);
+    public static final ExtensionPointName<WebBrowserUrlProvider> EP_NAME = ExtensionPointName.create(WebBrowserUrlProvider.class);
 
-  /**
-   * Browser exceptions are printed in Error Dialog when user presses any browser button
-   */
-  public static class BrowserException extends Exception {
-    public BrowserException(final String message) {
-      super(message);
-    }
-  }
-
-  public boolean canHandleElement(@Nonnull OpenInBrowserRequest request) {
-    try {
-      Collection<Url> urls = getUrls(request);
-      if (!urls.isEmpty()) {
-        request.setResult(urls);
-        return true;
-      }
-    }
-    catch (BrowserException ignored) {
+    /**
+     * Browser exceptions are printed in Error Dialog when user presses any browser button
+     */
+    public static class BrowserException extends Exception {
+        public BrowserException(final String message) {
+            super(message);
+        }
     }
 
-    return false;
-  }
+    public boolean canHandleElement(@Nonnull OpenInBrowserRequest request) {
+        try {
+            Collection<Url> urls = getUrls(request);
+            if (!urls.isEmpty()) {
+                request.setResult(urls);
+                return true;
+            }
+        }
+        catch (BrowserException ignored) {
+        }
 
-  @Nullable
-  protected Url getUrl(@Nonnull OpenInBrowserRequest request, @Nonnull VirtualFile virtualFile) throws BrowserException {
-    return null;
-  }
+        return false;
+    }
 
-  @Nonnull
-  public Collection<Url> getUrls(@Nonnull OpenInBrowserRequest request) throws BrowserException {
-    return ContainerUtil.createMaybeSingletonList(getUrl(request, request.getVirtualFile()));
-  }
+    @Nullable
+    protected Url getUrl(@Nonnull OpenInBrowserRequest request, @Nonnull VirtualFile virtualFile) throws BrowserException {
+        return null;
+    }
 
-  @Nullable
-  public String getOpenInBrowserActionDescription(@Nonnull PsiFile file) {
-    return null;
-  }
+    @Nonnull
+    public Collection<Url> getUrls(@Nonnull OpenInBrowserRequest request) throws BrowserException {
+        return ContainerUtil.createMaybeSingletonList(getUrl(request, request.getVirtualFile()));
+    }
+
+    @Nullable
+    public String getOpenInBrowserActionDescription(@Nonnull PsiFile file) {
+        return null;
+    }
 }

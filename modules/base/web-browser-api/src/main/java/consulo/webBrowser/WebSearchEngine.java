@@ -20,24 +20,24 @@ package consulo.webBrowser;
  * @since 2019-02-20
  */
 public enum WebSearchEngine {
-  GOOGLE("Google", "https://www.google.com/search?q={0}"),
-  YANDEX("Yandex", "https://yandex.ru/search/?text={0}"),
-  BING("Bing", "https://www.bing.com/search?q={0}"),
-  DUCKDUCKGO("DuckDuckGo", "https://duckduckgo.com/?q={0}");
+    GOOGLE("Google", "https://www.google.com/search?q={0}"),
+    YANDEX("Yandex", "https://yandex.ru/search/?text={0}"),
+    BING("Bing", "https://www.bing.com/search?q={0}"),
+    DUCKDUCKGO("DuckDuckGo", "https://duckduckgo.com/?q={0}");
 
-  private String myPresentableName;
-  private String myUrlTemplate;
+    private String myPresentableName;
+    private String myUrlTemplate;
 
-  WebSearchEngine(String presentableName, String urlTemplate) {
-    myPresentableName = presentableName;
-    myUrlTemplate = urlTemplate;
-  }
+    WebSearchEngine(String presentableName, String urlTemplate) {
+        myPresentableName = presentableName;
+        myUrlTemplate = urlTemplate;
+    }
 
-  public String getPresentableName() {
-    return myPresentableName;
-  }
+    public String getPresentableName() {
+        return myPresentableName;
+    }
 
-  public String getUrlTemplate() {
-    return myUrlTemplate;
-  }
+    public String getUrlTemplate() {
+        return myUrlTemplate;
+    }
 }

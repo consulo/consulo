@@ -25,20 +25,20 @@ import jakarta.annotation.Nonnull;
  * @since 24-Apr-22
  */
 public class WebBrowserBundle extends AbstractBundle {
-  private static final String BUNDLE = "consulo.webBrowser.WebBrowserBundle";
-  private static final WebBrowserBundle INSTANCE = new WebBrowserBundle();
+    private static final String BUNDLE = "consulo.webBrowser.WebBrowserBundle";
+    private static final WebBrowserBundle INSTANCE = new WebBrowserBundle();
 
-  private WebBrowserBundle() {
-    super(BUNDLE);
-  }
+    private WebBrowserBundle() {
+        super(BUNDLE);
+    }
 
-  @Nonnull
-  public static String message(@Nonnull @PropertyKey(resourceBundle = BUNDLE) String key) {
-    return INSTANCE.getMessage(key);
-  }
+    @Nonnull
+    public static String message(@Nonnull @PropertyKey(resourceBundle = BUNDLE) String key) {
+        return INSTANCE.getMessage(key);
+    }
 
-  @Nonnull
-  public static String message(@Nonnull @PropertyKey(resourceBundle = BUNDLE) String key, @Nonnull Object... params) {
-    return INSTANCE.getMessage(key, params);
-  }
+    @Nonnull
+    public static String message(@Nonnull @PropertyKey(resourceBundle = BUNDLE) String key, @Nonnull Object... params) {
+        return INSTANCE.getMessage(key, params);
+    }
 }

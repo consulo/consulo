@@ -23,24 +23,27 @@ import consulo.util.io.Url;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collection;
 import java.util.Collections;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class WebBrowserService {
-  public static WebBrowserService getInstance() {
-    return Application.get().getInstance(WebBrowserService.class);
-  }
+    public static WebBrowserService getInstance() {
+        return Application.get().getInstance(WebBrowserService.class);
+    }
 
-  @Nonnull
-  public abstract Collection<Url> getUrlsToOpen(@Nonnull OpenInBrowserRequest request, boolean preferLocalUrl) throws WebBrowserUrlProvider.BrowserException;
+    @Nonnull
+    public abstract Collection<Url> getUrlsToOpen(@Nonnull OpenInBrowserRequest request, boolean preferLocalUrl)
+        throws WebBrowserUrlProvider.BrowserException;
 
-  @Nullable
-  public abstract WebBrowserUrlProvider getProvider(@Nonnull OpenInBrowserRequest request);
+    @Nullable
+    public abstract WebBrowserUrlProvider getProvider(@Nonnull OpenInBrowserRequest request);
 
-  @Nonnull
-  public Collection<Url> getUrlsToOpen(@Nonnull final PsiElement element, boolean preferLocalUrl) throws WebBrowserUrlProvider.BrowserException {
-    OpenInBrowserRequest request = OpenInBrowserRequest.create(element);
-    return request == null ? Collections.<Url>emptyList() : getUrlsToOpen(request, preferLocalUrl);
-  }
+    @Nonnull
+    public Collection<Url> getUrlsToOpen(@Nonnull final PsiElement element, boolean preferLocalUrl)
+        throws WebBrowserUrlProvider.BrowserException {
+        OpenInBrowserRequest request = OpenInBrowserRequest.create(element);
+        return request == null ? Collections.<Url>emptyList() : getUrlsToOpen(request, preferLocalUrl);
+    }
 }

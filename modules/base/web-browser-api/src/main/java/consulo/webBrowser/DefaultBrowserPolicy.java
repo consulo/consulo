@@ -16,7 +16,7 @@
 package consulo.webBrowser;
 
 public enum DefaultBrowserPolicy {
-  SYSTEM,
-  FIRST,
-  ALTERNATIVE
+    SYSTEM,
+    FIRST,
+    ALTERNATIVE
 }
