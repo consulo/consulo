@@ -17,13 +17,13 @@
 package consulo.execution;
 
 import consulo.process.ExecutionException;
-import consulo.process.ProcessBundle;
+import consulo.process.localize.ProcessLocalize;
 
 /**
  * @author nik
  */
 public class RunCanceledByUserException extends ExecutionException {
   public RunCanceledByUserException() {
-    super(ProcessBundle.message("run.canceled.by.user.message"));
+    super(ProcessLocalize.runCanceledByUserMessage().get());
   }
 }

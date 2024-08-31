@@ -32,42 +32,43 @@ import java.security.cert.X509Certificate;
  * @author Mikhail Golubev
  */
 public class CertificateUtil {
-  public static final String X509 = "X.509";
-  public static final String JKS = "JKS";
-  public static final String PKCS12 = "PKCS12";
-  public static final String PKIX = "PKIX";
-  public static final String TLS = "TLS";
+    public static final String X509 = "X.509";
+    public static final String JKS = "JKS";
+    public static final String PKCS12 = "PKCS12";
+    public static final String PKIX = "PKIX";
+    public static final String TLS = "TLS";
 
-  private static final CertificateFactory ourFactory = createFactory();
+    private static final CertificateFactory ourFactory = createFactory();
 
-  private static CertificateFactory createFactory() {
-    try {
-      return CertificateFactory.getInstance(X509);
+    private static CertificateFactory createFactory() {
+        try {
+            return CertificateFactory.getInstance(X509);
+        }
+        catch (CertificateException e) {
+            throw new RuntimeException("Can't initialize X.509 certificate factory", e);
+        }
     }
-    catch (CertificateException e) {
-      throw new RuntimeException("Can't initialize X.509 certificate factory", e);
-    }
-  }
 
-  private CertificateUtil() { }
-
-  @Nullable
-  public static X509Certificate loadX509Certificate(@Nonnull String path) {
-    try {
-      try (InputStream stream = new FileInputStream(path)) {
-        return (X509Certificate)ourFactory.generateCertificate(stream);
-      }
+    private CertificateUtil() {
     }
-    catch (Exception e) {
-      Logger.getInstance(CertificateUtil.class).error("Can't add certificate for path: " + path, e);
-      return null;
-    }
-  }
 
-  /**
-   * @return subjects common name, usually it's domain name pattern, e.g. *.github.com
-   */
-  public static String getCommonName(@Nonnull X509Certificate certificate) {
-    return new CertificateWrapper(certificate).getSubjectField(CertificateWrapper.CommonField.COMMON_NAME);
-  }
+    @Nullable
+    public static X509Certificate loadX509Certificate(@Nonnull String path) {
+        try {
+            try (InputStream stream = new FileInputStream(path)) {
+                return (X509Certificate)ourFactory.generateCertificate(stream);
+            }
+        }
+        catch (Exception e) {
+            Logger.getInstance(CertificateUtil.class).error("Can't add certificate for path: " + path, e);
+            return null;
+        }
+    }
+
+    /**
+     * @return subjects common name, usually it's domain name pattern, e.g. *.github.com
+     */
+    public static String getCommonName(@Nonnull X509Certificate certificate) {
+        return new CertificateWrapper(certificate).getSubjectField(CertificateWrapper.CommonField.COMMON_NAME);
+    }
 }
