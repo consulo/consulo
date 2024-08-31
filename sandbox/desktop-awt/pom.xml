@@ -37,12 +37,31 @@
     <build>
         <plugins>
             <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>${maven.assembly.plugin}</version>
+                <executions>
+                    <execution>
+                        <id>create-sandbox</id>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>src/assembly/sandbox.xml</descriptor>
+                            </descriptors>
+                            <attach>false</attach>
+                        </configuration>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>consulo.maven</groupId>
                 <artifactId>maven-consulo-plugin</artifactId>
                 <extensions>true</extensions>
                 <executions>
                     <execution>
-                        <phase>prepare-package</phase>
+                        <phase>package</phase>
                         <goals>
                             <goal>build-index</goal>
                         </goals>
@@ -59,25 +78,6 @@
                                 </pluginRoot>
                             </pluginRoots>
                         </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>${maven.assembly.plugin}</version>
-                <executions>
-                    <execution>
-                        <id>create-sandbox</id>
-                        <configuration>
-                            <descriptors>
-                                <descriptor>src/assembly/sandbox.xml</descriptor>
-                            </descriptors>
-                            <attach>false</attach>
-                        </configuration>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>
