@@ -28,7 +28,7 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.webBrowser.WebBrowserBundle;
+import consulo.webBrowser.localize.WebBrowserLocalize;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.Nls;
 
@@ -54,7 +54,7 @@ public class FirefoxSettingsConfigurable implements Configurable {
     public FirefoxSettingsConfigurable(FirefoxSettings settings) {
         mySettings = settings;
         myProfilesIniPathField.addBrowseFolderListener(
-            WebBrowserBundle.message("chooser.title.select.profiles.ini.file"),
+            WebBrowserLocalize.chooserTitleSelectProfilesIniFile().get(),
             null,
             null,
             PROFILES_INI_CHOOSER_DESCRIPTOR
@@ -152,6 +152,6 @@ public class FirefoxSettingsConfigurable implements Configurable {
     @Override
     @Nls
     public String getDisplayName() {
-        return WebBrowserBundle.message("display.name.firefox.settings");
+        return WebBrowserLocalize.displayNameFirefoxSettings().get();
     }
 }

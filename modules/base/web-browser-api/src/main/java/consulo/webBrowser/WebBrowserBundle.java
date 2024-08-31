@@ -15,7 +15,10 @@
  */
 package consulo.webBrowser;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.component.util.localize.AbstractBundle;
+import consulo.webBrowser.localize.WebBrowserLocalize;
 import org.jetbrains.annotations.PropertyKey;
 
 import jakarta.annotation.Nonnull;
@@ -24,6 +27,9 @@ import jakarta.annotation.Nonnull;
  * @author VISTALL
  * @since 2022-04-24
  */
+@Deprecated
+@DeprecationInfo("Use WebBrowserLocalize")
+@MigratedExtensionsTo(WebBrowserLocalize.class)
 public class WebBrowserBundle extends AbstractBundle {
     private static final String BUNDLE = "consulo.webBrowser.WebBrowserBundle";
     private static final WebBrowserBundle INSTANCE = new WebBrowserBundle();

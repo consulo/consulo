@@ -2,38 +2,40 @@ package consulo.webBrowser;
 
 import consulo.application.AllIcons;
 import consulo.component.util.Iconable;
+import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.ui.image.Image;
 import consulo.webBrowser.chrome.ChromeSettings;
 import consulo.webBrowser.firefox.FirefoxSettings;
+import consulo.webBrowser.localize.WebBrowserLocalize;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public enum BrowserFamily implements Iconable {
-    CHROME(WebBrowserBundle.message("browsers.chrome"), "chrome", "google-chrome", "Google Chrome", AllIcons.Xml.Browsers.Chrome16) {
+    CHROME(WebBrowserLocalize.browsersChrome(), "chrome", "google-chrome", "Google Chrome", AllIcons.Xml.Browsers.Chrome16) {
         @Override
         public BrowserSpecificSettings createBrowserSpecificSettings() {
             return new ChromeSettings();
         }
     },
-    FIREFOX(WebBrowserBundle.message("browsers.firefox"), "firefox", "firefox", "Firefox", AllIcons.Xml.Browsers.Firefox16) {
+    FIREFOX(WebBrowserLocalize.browsersFirefox(), "firefox", "firefox", "Firefox", AllIcons.Xml.Browsers.Firefox16) {
         @Override
         public BrowserSpecificSettings createBrowserSpecificSettings() {
             return new FirefoxSettings();
         }
     },
-    EXPLORER(WebBrowserBundle.message("browsers.explorer"), "iexplore", null, null, AllIcons.Xml.Browsers.Explorer16),
-    OPERA(WebBrowserBundle.message("browsers.opera"), "opera", "opera", "Opera", AllIcons.Xml.Browsers.Opera16),
-    SAFARI(WebBrowserBundle.message("browsers.safari"), "safari", null, "Safari", AllIcons.Xml.Browsers.Safari16);
+    EXPLORER(WebBrowserLocalize.browsersExplorer(), "iexplore", null, null, AllIcons.Xml.Browsers.Explorer16),
+    OPERA(WebBrowserLocalize.browsersOpera(), "opera", "opera", "Opera", AllIcons.Xml.Browsers.Opera16),
+    SAFARI(WebBrowserLocalize.browsersSafari(), "safari", null, "Safari", AllIcons.Xml.Browsers.Safari16);
 
-    private final String myName;
+    private final LocalizeValue myName;
     private final String myWindowsPath;
     private final String myUnixPath;
     private final String myMacPath;
     private final Image myIcon;
 
     BrowserFamily(
-        @Nonnull String name,
+        @Nonnull LocalizeValue name,
         @Nonnull final String windowsPath,
         @Nullable final String unixPath,
         @Nullable final String macPath,
@@ -65,7 +67,7 @@ public enum BrowserFamily implements Iconable {
     }
 
     public String getName() {
-        return myName;
+        return myName.get();
     }
 
     public Image getIcon() {
@@ -74,7 +76,7 @@ public enum BrowserFamily implements Iconable {
 
     @Override
     public String toString() {
-        return myName;
+        return myName.get();
     }
 
     @Override

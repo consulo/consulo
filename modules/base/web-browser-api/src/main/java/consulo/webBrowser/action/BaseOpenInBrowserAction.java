@@ -45,6 +45,7 @@ import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.light.LightVirtualFileBase;
 import consulo.webBrowser.*;
+import consulo.webBrowser.localize.WebBrowserLocalize;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -193,7 +194,7 @@ public abstract class BaseOpenInBrowserAction extends DumbAwareAction {
             }
         }
         catch (WebBrowserUrlProvider.BrowserException e1) {
-            Messages.showErrorDialog(e1.getMessage(), WebBrowserBundle.message("browser.error"));
+            Messages.showErrorDialog(e1.getMessage(), WebBrowserLocalize.browserError().get());
         }
         catch (Exception e1) {
             LOG.error(e1);
