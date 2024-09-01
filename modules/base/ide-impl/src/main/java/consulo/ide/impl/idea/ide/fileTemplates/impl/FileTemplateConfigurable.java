@@ -385,7 +385,7 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
     description = XmlStringUtil.stripHtml(description);
     description = description.replace("\n", "").replace("\r", "");
     description = XmlStringUtil.stripHtml(description);
-    description = description + "<hr> <font face=\"verdana\" size=\"-1\"><a href='http://velocity.apache.org/engine/devel/user-guide.html#Velocity_Template_Language_VTL:_An_Introduction'>\n" +
+    description = description + "<hr> <font face=\"verdana\" size=\"-1\"><a href='https://velocity.apache.org/engine/devel/user-guide.html#velocity-template-language-vtl-an-introduction'>\n" +
                   "Apache Velocity</a> template language is used</font>";
 
     myDescriptionComponent.setText(description);
