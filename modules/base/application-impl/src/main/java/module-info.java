@@ -12,7 +12,6 @@ module consulo.application.impl {
   requires transitive consulo.process.api;
   requires transitive consulo.logging.api;
   requires consulo.util.nodep;
-  requires consulo.localize.impl;
   requires consulo.ui.impl;
   requires consulo.container.impl;
 

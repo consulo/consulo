@@ -33,7 +33,7 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.container.util.StatCollector;
 import consulo.localize.LocalizeManager;
-import consulo.localize.impl.LocalizeManagerImpl;
+import consulo.localize.internal.LocalizeManagerEx;
 import consulo.logging.Logger;
 import consulo.logging.internal.LoggerFactoryInitializer;
 import consulo.platform.Platform;
@@ -119,7 +119,7 @@ public abstract class ApplicationStarter {
         myPluginsInitializeInfo = PluginsLoader.initPlugins(splash, isHeadlessMode);
 
         StatCollector libraryStats = new StatCollector();
-        LocalizeManagerImpl localizeManager = (LocalizeManagerImpl) LocalizeManager.get();
+        LocalizeManagerEx localizeManager = (LocalizeManagerEx) LocalizeManager.get();
         BaseIconLibraryManager iconLibraryManager = (BaseIconLibraryManager) IconLibraryManager.get();
 
         Map<String, Set<String>> filesWithMarkers = new HashMap<>();
@@ -132,8 +132,7 @@ public abstract class ApplicationStarter {
 
         libraryStats.markWith("library.analyze", () -> analyzeLibraries(filesWithMarkers));
 
-        libraryStats.markWith("localize.initialize",
-            () -> localizeManager.initialize(filesWithMarkers.get(LocalizeManagerImpl.LOCALIZE_DIRECTORY)));
+        libraryStats.markWith("localize.initialize", localizeManager::initialize);
         libraryStats.markWith("icon.initialize",
             () -> iconLibraryManager.initialize(filesWithMarkers.get(BaseIconLibraryManager.ICON_DIRECTORY)));
 
@@ -144,7 +143,6 @@ public abstract class ApplicationStarter {
 
     protected void analyzeLibraries(Map<String, Set<String>> filesWithMarkers) {
         PluginManager.forEachEnabledPlugin(pluginDescriptor -> {
-            searchMarkerInClassLoaderMarker(pluginDescriptor, filesWithMarkers, LocalizeManagerImpl.LOCALIZE_DIRECTORY);
             searchMarkerInClassLoaderMarker(pluginDescriptor, filesWithMarkers, BaseIconLibraryManager.ICON_DIRECTORY);
         });
     }
@@ -171,7 +169,8 @@ public abstract class ApplicationStarter {
                         }
                     }
                 }
-            } else {
+            }
+            else {
                 Enumeration<URL> ownResources = pluginClassLoader.findOwnResources(libraryDir);
 
                 while (ownResources.hasMoreElements()) {

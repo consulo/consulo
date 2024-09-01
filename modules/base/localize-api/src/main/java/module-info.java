@@ -11,4 +11,8 @@ module consulo.localize.api {
   exports consulo.localize;
 
   uses consulo.localize.LocalizeManager;
+
+  exports consulo.localize.internal to
+      consulo.localize.impl,
+      consulo.application.impl;
 }
