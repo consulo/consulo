@@ -89,7 +89,7 @@ public class Log4J2LoggerFactory implements LoggerFactory {
 
       ConfigurationSource source = new ConfigurationSource(new ByteArrayInputStream(text.getBytes(StandardCharsets.UTF_8)));
 
-      return Configurator.initialize(Log4J2LoggerFactory.class.getClassLoader(), source);
+      return Configurator.initialize(Application.class.getClassLoader(), source);
     }
     catch (Exception e) {
       ShowErrorCaller.showErrorDialog(Application.get().getName().get(), e.getMessage(), e);

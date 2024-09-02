@@ -7,6 +7,7 @@ import consulo.util.nodep.Pair;
 import consulo.util.nodep.io.FileUtilRt;
 import consulo.util.nodep.io.UnsyncByteArrayInputStream;
 import consulo.util.nodep.reference.SoftReference;
+import consulo.util.nodep.text.StringUtilRt;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,7 +36,6 @@ class JarLoader extends Loader {
     private final String myFilePath;
     private final ClassPath myConfiguration;
     private final URL myUrl;
-    private final Set<String> myFullJarIndex;
     private volatile SoftReference<JarFile> myZipFileSoftReference; // Used only when myConfiguration.myCanLockJars==true
     private volatile Map<Resource.Attribute, String> myAttributes;
     private volatile String myClassPathManifestAttribute;
@@ -45,12 +45,15 @@ class JarLoader extends Loader {
     private PreloadedJar myPreloadedJar;
     private final Object myJarLock = new Object();
 
+    private final Set<String> myFullJarIndex;
+    private volatile Set<String> myFullPackageIndex;
+
     private boolean myClosed;
 
     JarLoader(URL url, int index, ClassPath configuration, Set<String> fullJarIndex) throws IOException {
         super(new URL("jar", "", -1, url + "!/"), index);
         myFullJarIndex = fullJarIndex;
-
+     
         myFilePath = urlToFilePath(url);
         myConfiguration = configuration;
         myUrl = url;
@@ -100,6 +103,41 @@ class JarLoader extends Loader {
         }
 
         return true;
+    }
+
+    @Override
+    boolean containsPackage(String resourcePath) {
+        Set<String> set = fullPackageIndex();
+        if (set != null) {
+            return set.contains(resourcePath);
+        }
+
+        return true;
+    }
+
+    protected Set<String> fullPackageIndex() {
+        if (myFullJarIndex == null) {
+            return null;
+        }
+
+        Set<String> fullPackageIndex = myFullPackageIndex;
+        if (fullPackageIndex != null) {
+            return fullPackageIndex;
+        }
+
+        Set<String> result = new LinkedHashSet<>();
+        for (String path : myFullJarIndex) {
+            String packageName = StringUtilRt.getPackageName(path, '/');
+
+            if (StringUtilRt.isEmpty(packageName)) {
+                continue;
+            }
+
+            result.add(packageName);
+        }
+
+        myFullPackageIndex = result;
+        return result;
     }
 
     protected MemoryResource createMemoryResource(URL baseUrl,

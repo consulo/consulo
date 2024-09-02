@@ -32,13 +32,13 @@ public class ClassPath {
     private static final LoaderCollector ourLoaderCollector = new LoaderCollector();
     public static final String CLASSPATH_JAR_FILE_NAME_PREFIX = "classpath";
 
-    private final Deque<URL> myUrls = new ArrayDeque<URL>();
-    private final List<Loader> myLoaders = new ArrayList<Loader>();
+    private final Deque<URL> myUrls = new ArrayDeque<>();
+    private final List<Loader> myLoaders = new ArrayList<>();
 
     private volatile boolean myAllUrlsWereProcessed;
 
     private final AtomicInteger myLastLoaderProcessed = new AtomicInteger();
-    private final Map<URL, Loader> myLoadersMap = new HashMap<URL, Loader>();
+    private final Map<URL, Loader> myLoadersMap = new HashMap<>();
     private final ClasspathCache myCache = new ClasspathCache();
     private final Set<URL> myURLsWithProtectionDomain;
 
@@ -88,7 +88,8 @@ public class ClassPath {
             for (Set<String> value : urlsIndex.values()) {
                 myFullJarIndex.addAll(value);
             }
-        } else {
+        }
+        else {
             myFullJarIndex = null;
         }
 
@@ -195,6 +196,11 @@ public class ClassPath {
                     if (myCanUseCache) {
                         myAllUrlsWereProcessed = true;
                     }
+
+                    if (myUrlsIndex != null) {
+                        myAllUrlsWereProcessed = true;
+                    }
+
                     return null;
                 }
                 url = myUrls.pop();
@@ -216,7 +222,7 @@ public class ClassPath {
     }
 
     public List<URL> getBaseUrls() {
-        List<URL> result = new ArrayList<URL>();
+        List<URL> result = new ArrayList<>();
         for (Loader loader : myLoaders) {
             result.add(loader.getBaseURL());
         }
@@ -270,7 +276,7 @@ public class ClassPath {
                 String[] referencedJars = loadManifestClasspath(loader);
                 if (referencedJars != null) {
                     long s2 = ourLogTiming ? System.nanoTime() : 0;
-                    List<URL> urls = new ArrayList<URL>(referencedJars.length);
+                    List<URL> urls = new ArrayList<>(referencedJars.length);
                     for (String referencedJar : referencedJars) {
                         try {
                             urls.add(UrlClassLoader.internProtocol(new URI(referencedJar).toURL()));
@@ -326,6 +332,12 @@ public class ClassPath {
     }
 
     private class MyEnumeration implements Enumeration<URL> {
+        private static final int DEFAULT_IMPL = 0;
+        private static final int CACHE = 1;
+        private static final int FULL_INDEX = 2;
+
+        private int myType = DEFAULT_IMPL;
+
         private int myIndex;
         private Resource myRes;
         private final String myName;
@@ -338,7 +350,9 @@ public class ClassPath {
             List<Loader> loaders = null;
 
             if (myCanUseCache && myAllUrlsWereProcessed) {
-                Collection<Loader> loadersSet = new LinkedHashSet<Loader>();
+                myType = CACHE;
+
+                Collection<Loader> loadersSet = new LinkedHashSet<>();
                 myCache.iterateLoaders(name, ourLoaderCollector, loadersSet, this, myShortName);
 
                 if (name.endsWith("/")) {
@@ -348,7 +362,22 @@ public class ClassPath {
                     myCache.iterateLoaders(name + "/", ourLoaderCollector, loadersSet, this, myShortName);
                 }
 
-                loaders = new ArrayList<Loader>(loadersSet);
+                loaders = new ArrayList<>(loadersSet);
+            }
+
+            if (myUrlsIndex != null && myAllUrlsWereProcessed) {
+                myType = FULL_INDEX;
+
+                Collection<Loader> loadersSet = new LinkedHashSet<>();
+                Loader loader;
+                int i = 0;
+                while ((loader = getLoader(i++)) != null) {
+                    if (loader.containsPath(myName) || loader.containsPackage(myName)) {
+                        loadersSet.add(loader);
+                    }
+                }
+
+                loaders = new ArrayList<>(loadersSet);
             }
 
             myLoaders = loaders;
@@ -362,29 +391,43 @@ public class ClassPath {
             long started = startTiming();
             try {
                 Loader loader;
-                if (myLoaders != null) {
-                    while (myIndex < myLoaders.size()) {
-                        loader = myLoaders.get(myIndex++);
-                        if (!loader.containsName(myName, myShortName)) {
-                            myRes = null;
-                            continue;
+                switch (myType) {
+                    case DEFAULT_IMPL:
+                        while ((loader = getLoader(myIndex++)) != null) {
+                            if (myCanUseCache && !loader.containsName(myName, myShortName)) {
+                                myRes = null;
+                                continue;
+                            }
+
+                            myRes = loader.getResource(myName);
+                            if (myRes != null) {
+                                return true;
+                            }
                         }
-                        myRes = loader.getResource(myName);
-                        if (myRes != null) {
-                            return true;
+                        break;
+                    case CACHE:
+                        while (myIndex < myLoaders.size()) {
+                            loader = myLoaders.get(myIndex++);
+                            if (!loader.containsName(myName, myShortName)) {
+                                myRes = null;
+                                continue;
+                            }
+                            myRes = loader.getResource(myName);
+                            if (myRes != null) {
+                                return true;
+                            }
                         }
-                    }
-                }
-                else {
-                    while ((loader = getLoader(myIndex++)) != null) {
-                        if (myCanUseCache && !loader.containsName(myName, myShortName)) {
-                            continue;
+                        break;
+                    case FULL_INDEX:
+                        while (myIndex < myLoaders.size()) {
+                            loader = myLoaders.get(myIndex++);
+
+                            myRes = loader.getResource(myName);
+                            if (myRes != null) {
+                                return true;
+                            }
                         }
-                        myRes = loader.getResource(myName);
-                        if (myRes != null) {
-                            return true;
-                        }
-                    }
+                        break;
                 }
             }
             finally {
@@ -464,7 +507,7 @@ public class ClassPath {
     static final boolean ourLogTiming = Boolean.getBoolean("idea.print.classpath.timing");
     private static final AtomicLong ourTotalTime = new AtomicLong();
     private static final AtomicInteger ourTotalRequests = new AtomicInteger();
-    private static final ThreadLocal<Boolean> ourDoingTiming = new ThreadLocal<Boolean>();
+    private static final ThreadLocal<Boolean> ourDoingTiming = new ThreadLocal<>();
 
     private static long startTiming() {
         if (!ourLogTiming) {

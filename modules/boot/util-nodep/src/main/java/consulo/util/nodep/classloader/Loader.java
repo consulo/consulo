@@ -39,6 +39,10 @@ abstract class Loader {
     return true;
   }
 
+  boolean containsPackage(String resourcePath) {
+      return true;
+  }
+
   boolean containsName(String name, String shortName) {
     if (name == null || name.isEmpty()) return true;
     ClasspathCache.NameFilter filter = myLoadingFilter;
