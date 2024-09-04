@@ -16,76 +16,77 @@
 package consulo.fileTemplate.impl.internal;
 
 import consulo.logging.Logger;
-import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.IOException;
-import java.net.URL;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: 3/28/11
+ * Date: 3/28/11
  */
 public class DefaultTemplate {
-  private static final Logger LOG = Logger.getInstance(DefaultTemplate.class);
-  
-  private final String myName;
-  private final String myExtension;
-  private final URL myTemplateURL;
-  @Nullable 
-  private final URL myDescriptionURL;
-  private final String myText;
-  private final String myDescriptionText;
+    private static final Logger LOG = Logger.getInstance(DefaultTemplate.class);
 
-  public DefaultTemplate(@Nonnull String name, @Nonnull String extension, @Nonnull URL templateURL, @Nullable URL descriptionURL) {
-    myName = name;
-    myExtension = extension;
-    myTemplateURL = templateURL;
-    myDescriptionURL = descriptionURL;
-    myText = loadText(templateURL);
-    myDescriptionText = descriptionURL != null? loadText(descriptionURL) : "";
-  }
+    private final String myName;
+    private final String myExtension;
+    private final FileTemplateStreamProvider myTemplateURL;
+    @Nullable
+    private final FileTemplateStreamProvider myDescriptionURL;
+    private final String myText;
+    private final String myDescriptionText;
 
-  private static String loadText(URL url) {
-    String text = "";
-    try {
-      text = StringUtil.convertLineSeparators(UrlUtil.loadText(url));
+    public DefaultTemplate(@Nonnull String name,
+                           @Nonnull String extension,
+                           @Nonnull FileTemplateStreamProvider templateURL,
+                           @Nullable FileTemplateStreamProvider descriptionURL) {
+        myName = name;
+        myExtension = extension;
+        myTemplateURL = templateURL;
+        myDescriptionURL = descriptionURL;
+        myText = loadText(templateURL);
+        myDescriptionText = descriptionURL != null ? loadText(descriptionURL) : "";
     }
-    catch (IOException e) {
-      LOG.error(e);
+
+    private static String loadText(FileTemplateStreamProvider url) {
+        String text = "";
+        try {
+            text = url.loadText();
+        }
+        catch (IOException e) {
+            LOG.error(e);
+        }
+        return text;
     }
-    return text;
-  }
 
-  public String getName() {
-    return myName;
-  }
+    public String getName() {
+        return myName;
+    }
 
-  public String getQualifiedName() {
-    return FileTemplateBase.getQualifiedName(getName(), getExtension());
-  }
-  
-  public String getExtension() {
-    return myExtension;
-  }
+    public String getQualifiedName() {
+        return FileTemplateBase.getQualifiedName(getName(), getExtension());
+    }
 
-  public URL getTemplateURL() {
-    return myTemplateURL;
-  }
+    public String getExtension() {
+        return myExtension;
+    }
 
-  @Nullable
-  public URL getDescriptionURL() {
-    return myDescriptionURL;
-  }
-  
-  @Nonnull
-  public String getText() {
-    return myText;
-  }
+    public FileTemplateStreamProvider getTemplateURL() {
+        return myTemplateURL;
+    }
 
-  @Nonnull
-  public String getDescriptionText() {
-    return myDescriptionText;
-  }
+    @Nullable
+    public FileTemplateStreamProvider getDescriptionURL() {
+        return myDescriptionURL;
+    }
+
+    @Nonnull
+    public String getText() {
+        return myText;
+    }
+
+    @Nonnull
+    public String getDescriptionText() {
+        return myDescriptionText;
+    }
 }

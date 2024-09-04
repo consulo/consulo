@@ -30,10 +30,10 @@ import consulo.fileTemplate.FileTemplatesScheme;
 import consulo.fileTemplate.impl.internal.*;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeManagerEx;
 import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.file.FileTypeManager;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
-import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.impl.internal.ProjectStorageUtil;
@@ -47,7 +47,6 @@ import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -407,11 +406,13 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
     }
   }
 
-  public URL getDefaultTemplateDescription() {
+  @Nullable
+  public FileTemplateStreamProvider getDefaultTemplateDescription() {
     return myDefaultSettings.getDefaultTemplateDescription();
   }
 
-  public URL getDefaultIncludeDescription() {
+  @Nullable
+  public FileTemplateStreamProvider getDefaultIncludeDescription() {
     return myDefaultSettings.getDefaultIncludeDescription();
   }
 

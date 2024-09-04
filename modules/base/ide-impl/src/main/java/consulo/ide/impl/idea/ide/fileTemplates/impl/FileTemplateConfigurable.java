@@ -29,11 +29,10 @@ import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import consulo.fileTemplate.FileTemplate;
 import consulo.fileTemplate.FileTemplateManager;
-import consulo.fileTemplate.impl.internal.UrlUtil;
+import consulo.fileTemplate.impl.internal.FileTemplateStreamProvider;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeChooser;
-import consulo.util.io.FileUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import consulo.language.editor.highlight.*;
@@ -47,10 +46,11 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
 import consulo.logging.Logger;
-import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
+import consulo.util.collection.Lists;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
@@ -66,7 +66,6 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 
 /*
@@ -89,10 +88,10 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
   private JPanel myTopPanel;
   private JEditorPane myDescriptionComponent;
   private boolean myModified = false;
-  private URL myDefaultDescriptionUrl;
+  private FileTemplateStreamProvider myDefaultDescriptionUrl;
   private final Project myProject;
 
-  private final List<ChangeListener> myChangeListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+  private final List<ChangeListener> myChangeListeners = Lists.newLockFreeCopyOnWriteList();
   private Splitter mySplitter;
   private final FileType myVelocityFileType = FileTypeManager.getInstance().getFileTypeByExtension("ft");
   private float myProportion = 0.6f;
@@ -106,7 +105,7 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
   }
 
   @RequiredUIAccess
-  public void setTemplate(FileTemplate template, URL defaultDescription) {
+  public void setTemplate(FileTemplate template, @Nullable FileTemplateStreamProvider defaultDescription) {
     myDefaultDescriptionUrl = defaultDescription;
     myTemplate = template;
     if (myMainPanel != null) {
@@ -362,7 +361,7 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
 
     if ((description.length() == 0) && (myDefaultDescriptionUrl != null)) {
       try {
-        description = UrlUtil.loadText(myDefaultDescriptionUrl);
+          description = myDefaultDescriptionUrl.loadText();
       }
       catch (IOException e) {
         LOG.error(e);
