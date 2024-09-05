@@ -53,9 +53,9 @@ public class DesktopAWTContainerStartupImpl implements ContainerStartup {
 
     DesktopContainerPathManager pathManager = (DesktopContainerPathManager)ContainerPathManager.get();
 
-    pathManager.loadProperties();
+    stat.markWith("initialize.properties", pathManager::loadProperties);
 
-    StartupUtil.initializeLogger();
+    stat.markWith("initialize.logger", StartupUtil::initializeLogger);
 
     stat.markWith("fs.mediator.replace", () -> {
       //noinspection Convert2MethodRef
