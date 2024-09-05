@@ -42,78 +42,78 @@ import java.util.Map;
  */
 @SuppressWarnings("unused")
 public class DesktopAWTContainerStartupImpl implements ContainerStartup {
-  @Override
-  public void run(@Nonnull Map<String, Object> map) {
-    StatCollector stat = (StatCollector)map.get(ContainerStartup.STAT_COLLECTOR);
-    String[] args = (String[])map.get(ContainerStartup.ARGS);
+    @Override
+    public void run(@Nonnull Map<String, Object> map) {
+        StatCollector stat = (StatCollector) map.get(ContainerStartup.STAT_COLLECTOR);
+        String[] args = (String[]) map.get(ContainerStartup.ARGS);
 
-    Runnable appInitializeMark = stat.mark(StatCollector.APP_INITIALIZE);
+        Runnable appInitializeMark = stat.mark(StatCollector.APP_INITIALIZE);
 
-    IdeaForkJoinWorkerThreadFactory.setupForkJoinCommonPool();
+        IdeaForkJoinWorkerThreadFactory.setupForkJoinCommonPool();
 
-    DesktopContainerPathManager pathManager = (DesktopContainerPathManager)ContainerPathManager.get();
+        DesktopContainerPathManager pathManager = (DesktopContainerPathManager) ContainerPathManager.get();
 
-    stat.markWith("initialize.properties", pathManager::loadProperties);
+        stat.markWith("initialize.properties", pathManager::loadProperties);
 
-    stat.markWith("initialize.logger", StartupUtil::initializeLogger);
+        stat.markWith("initialize.logger", StartupUtil::initializeLogger);
 
-    stat.markWith("fs.mediator.replace", () -> {
-      //noinspection Convert2MethodRef
-      FileSystemMediatorOverride.replaceIfNeedMediator();
-    });
+        stat.markWith("fs.mediator.replace", () -> {
+            //noinspection Convert2MethodRef
+            FileSystemMediatorOverride.replaceIfNeedMediator();
+        });
 
-    stat.markWith("boot.hack.awt", () -> {
-      DesktopStartUIUtil.hackAWT();
-      DesktopStartUIUtil.initDefaultLAF();
-      DesktopStartUIUtil.initSystemFontData();
-    });
+        stat.markWith("boot.hack.awt", () -> {
+            DesktopStartUIUtil.hackAWT();
+            DesktopStartUIUtil.initDefaultLAF();
+            DesktopStartUIUtil.initSystemFontData();
+        });
 
-    Runnable runnable = () -> {
-      try {
-        start(stat, appInitializeMark, args);
-      }
-      catch (Throwable t) {
-        throw new StartupAbortedException(t);
-      }
-    };
+        Runnable runnable = () -> {
+            try {
+                start(stat, appInitializeMark, args);
+            }
+            catch (Throwable t) {
+                throw new StartupAbortedException(t);
+            }
+        };
 
-    new Thread(runnable, "Consulo Main Thread").start();
-  }
-
-  @Nonnull
-  @Override
-  public ContainerPathManager createPathManager(@Nonnull Map<String, Object> args) {
-    return new DesktopContainerPathManager();
-  }
-
-  @Override
-  public void destroy() {
-    // unused
-  }
-
-  private static void start(StatCollector stat, Runnable appInitalizeMark, String[] args) {
-    ApplicationStarter.installExceptionHandler(() -> Logger.getInstance(DesktopAWTContainerStartupImpl.class));
-
-    try {
-      StartupActionScriptManager.executeActionScript();
-    }
-    catch (IOException e) {
-      Logger.getInstance(DesktopAWTContainerStartupImpl.class).error(e);
-
-      ShowErrorCaller.showErrorDialog("Plugin Installation Error", e.getMessage(), e);
-      return;
+        new Thread(runnable, "Consulo Main Thread").start();
     }
 
-    // desktop locker use netty. it will throw error due log4j2 initialize
-    // see io.netty.channel.MultithreadEventLoopGroup.logger
-    // it will override logger, which is active only if app exists
-    // FIXME [VISTALL] see feac1737-76bf-4952-b770-d3f8d1978e59
-    // InternalLoggerFactory.setDefaultFactory(ApplicationInternalLoggerFactory.INSTANCE);
+    @Nonnull
+    @Override
+    public ContainerPathManager createPathManager(@Nonnull Map<String, Object> args) {
+        return new DesktopContainerPathManager();
+    }
 
-    StartupUtil.prepareAndStart(args, stat, DesktopImportantFolderLocker::new, (newConfigFolder, commandLineArgs) -> {
-      ApplicationStarter app = new DesktopApplicationStarter(commandLineArgs, stat);
+    @Override
+    public void destroy() {
+        // unused
+    }
 
-      AppExecutorUtil.getAppExecutorService().execute(() -> app.run(stat, appInitalizeMark, newConfigFolder));
-    });
-  }
+    private static void start(StatCollector stat, Runnable appInitalizeMark, String[] args) {
+        ApplicationStarter.installExceptionHandler(() -> Logger.getInstance(DesktopAWTContainerStartupImpl.class));
+
+        try {
+            StartupActionScriptManager.executeActionScript();
+        }
+        catch (IOException e) {
+            Logger.getInstance(DesktopAWTContainerStartupImpl.class).error(e);
+
+            ShowErrorCaller.showErrorDialog("Plugin Installation Error", e.getMessage(), e);
+            return;
+        }
+
+        // desktop locker use netty. it will throw error due log4j2 initialize
+        // see io.netty.channel.MultithreadEventLoopGroup.logger
+        // it will override logger, which is active only if app exists
+        // FIXME [VISTALL] see feac1737-76bf-4952-b770-d3f8d1978e59
+        // InternalLoggerFactory.setDefaultFactory(ApplicationInternalLoggerFactory.INSTANCE);
+
+        StartupUtil.prepareAndStart(args, stat, DesktopImportantFolderLocker::new, (newConfigFolder, commandLineArgs) -> {
+            ApplicationStarter app = new DesktopApplicationStarter(commandLineArgs, stat);
+
+            AppExecutorUtil.getAppExecutorService().execute(() -> app.run(stat, appInitalizeMark, newConfigFolder));
+        });
+    }
 }
