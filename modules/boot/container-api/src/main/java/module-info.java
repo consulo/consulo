@@ -14,7 +14,6 @@ module consulo.container.api {
         consulo.desktop.awt.bootstrap,
         consulo.desktop.swt.bootstrap,
         consulo.desktop.swt.ide.impl,
-        consulo.logging.log4j2.impl,
         consulo.desktop.awt.ide.impl,
         consulo.test.impl;
 

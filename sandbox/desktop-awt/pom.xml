@@ -32,6 +32,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.build.cache.enabled>false</maven.build.cache.enabled>
     </properties>
 
     <build>
@@ -85,19 +86,14 @@
     </build>
 
     <dependencies>
-        <!--log4j2-->
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>consulo-logging-log4j2-impl</artifactId>
+            <artifactId>consulo-logging-logback-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
         </dependency>
         <dependency>
             <groupId>jgraph</groupId>

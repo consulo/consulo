@@ -50,7 +50,7 @@ module consulo.application.api {
         consulo.builtin.web.server.impl,
         consulo.version.control.system.distributed.api,
         consulo.compiler.impl,
-        consulo.logging.log4j2.impl,
+        consulo.logging.logback.impl,
         consulo.virtual.file.system.impl,
         consulo.version.control.system.impl,
         consulo.diff.impl;

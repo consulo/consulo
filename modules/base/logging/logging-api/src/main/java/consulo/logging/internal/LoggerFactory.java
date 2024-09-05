@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,30 +16,21 @@
 package consulo.logging.internal;
 
 import consulo.logging.Logger;
-
 import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 2019-08-10
+ * @since 2024-09-05
  */
 public interface LoggerFactory {
-  static int HIGHT_PRIORITY = 100;
-  static int DEFAULT_PRIORITY = 1;
-  static int DISABLE_PRIORITY = -100;
+    @Nonnull
+    Logger getLoggerInstance(@Nonnull String category);
 
-  @Nonnull
-  Logger getLoggerInstance(@Nonnull String category);
+    @Nonnull
+    default Logger getLoggerInstance(@Nonnull Class<?> clazz) {
+        return getLoggerInstance(clazz.getName());
+    }
 
-  @Nonnull
-  default Logger getLoggerInstance(@Nonnull Class<?> clazz) {
-    return getLoggerInstance(clazz.getName());
-  }
-
-  default int getPriority() {
-    return DEFAULT_PRIORITY;
-  }
-
-  default void shutdown() {
-  }
+    default void shutdown() {
+    }
 }

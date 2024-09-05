@@ -18,9 +18,7 @@ package consulo.logging.internal;
 import jakarta.annotation.Nonnull;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.List;
 import java.util.ServiceLoader;
-import java.util.function.Function;
 
 /**
  * @author VISTALL
@@ -51,9 +49,13 @@ public class LoggerFactoryInitializer {
   }
 
   public static void initializeLogger(@Nonnull ClassLoader classLoader) {
-    ServiceLoader<LoggerFactory> factories = ServiceLoader.load(LoggerFactory.class, classLoader);
-    ServiceLoader.Provider<LoggerFactory> factory = factories.stream().sorted((o1, o2) -> o2.get().getPriority() - o1.get().getPriority()).findFirst().get();
-    LoggerFactoryInitializer.setFactory(factory.get());
+    ServiceLoader<LoggerFactoryProvider> factories = ServiceLoader.load(LoggerFactoryProvider.class, classLoader);
+    ServiceLoader.Provider<LoggerFactoryProvider> factory = factories
+        .stream()
+        .sorted((o1, o2) -> o2.get().getPriority() - o1.get().getPriority())
+        .findFirst()
+        .get();
+    LoggerFactoryInitializer.setFactory(factory.get().create());
   }
 
   public static boolean isInitialized() {

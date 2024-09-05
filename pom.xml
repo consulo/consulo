@@ -189,7 +189,7 @@
 
     <module>modules/base/logging/logging-api</module>
     <module>modules/base/logging/logging-slf4j-binding-impl</module>
-    <module>modules/base/logging/logging-log4j2-impl</module>
+    <module>modules/base/logging/logging-logback-impl</module>
   </modules>
 
   <properties>
