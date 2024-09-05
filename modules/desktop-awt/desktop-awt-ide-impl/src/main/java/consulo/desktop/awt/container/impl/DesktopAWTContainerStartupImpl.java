@@ -18,7 +18,6 @@ package consulo.desktop.awt.container.impl;
 import consulo.application.impl.internal.start.ApplicationStarter;
 import consulo.application.impl.internal.start.StartupAbortedException;
 import consulo.application.impl.internal.start.StartupUtil;
-import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.bootstrap.concurrent.IdeaForkJoinWorkerThreadFactory;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.boot.ContainerStartup;
@@ -32,6 +31,7 @@ import consulo.logging.Logger;
 import consulo.virtualFileSystem.impl.internal.mediator.FileSystemMediatorOverride;
 import jakarta.annotation.Nonnull;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.util.Map;
 
@@ -62,7 +62,7 @@ public class DesktopAWTContainerStartupImpl implements ContainerStartup {
             FileSystemMediatorOverride.replaceIfNeedMediator();
         });
 
-        stat.markWith("boot.hack.awt", () -> {
+        SwingUtilities.invokeLater(() -> {
             DesktopStartUIUtil.hackAWT();
             DesktopStartUIUtil.initDefaultLAF();
             DesktopStartUIUtil.initSystemFontData();
@@ -113,7 +113,7 @@ public class DesktopAWTContainerStartupImpl implements ContainerStartup {
         StartupUtil.prepareAndStart(args, stat, DesktopImportantFolderLocker::new, (newConfigFolder, commandLineArgs) -> {
             ApplicationStarter app = new DesktopApplicationStarter(commandLineArgs, stat);
 
-            AppExecutorUtil.getAppExecutorService().execute(() -> app.run(stat, appInitalizeMark, newConfigFolder));
+            app.run(stat, appInitalizeMark, newConfigFolder);
         });
     }
 }
