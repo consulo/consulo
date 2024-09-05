@@ -30,6 +30,7 @@ import consulo.component.messagebus.MessageBus;
 import consulo.component.util.PluginExceptionUtil;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
+import consulo.container.util.StatCollector;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
@@ -266,6 +267,8 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
 
             Object progressIndicator = initProgressIndicatorForLazyServices();
 
+            StatCollector stat = new StatCollector();
+
             int i = 1;
             for (Class<?> serviceClass : myNotLazyServices) {
                 try {
@@ -273,7 +276,7 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
 
                     checkCanceledAndChangeProgress(progressIndicator, i, myNotLazyServices.size());
 
-                    getInstance(serviceClass); // init it
+                    stat.markWith(serviceClass.getName(), () -> getInstance(serviceClass));  // init it
                 }
                 catch (Throwable t) {
                     PluginExceptionUtil.logPluginError(LOG, t.getMessage(), t, serviceClass);
@@ -282,6 +285,8 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
                     i++;
                 }
             }
+
+            stat.dump(getClass().getSimpleName() + " not lazy services initialize", LOG::info);
         }
         finally {
             myCurrentNotLazyServiceClass = null;
