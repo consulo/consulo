@@ -195,7 +195,14 @@ public abstract class ApplicationStarter {
     public void run(StatCollector stat, Runnable appInitalizeMark, boolean newConfigFolder) {
         try {
             ApplicationEx app = (ApplicationEx) Application.get();
-            app.load(ContainerPathManager.get().getOptionsPath());
+            stat.markWith("app.config.load", () -> {
+                try {
+                    app.load(ContainerPathManager.get().getOptionsPath());
+                }
+                catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
 
             boolean enableSecurityManager = EarlyAccessProgramManager.is(PluginPermissionEarlyAccessProgramDescriptor.class);
             if (enableSecurityManager) {

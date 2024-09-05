@@ -39,6 +39,7 @@ import consulo.desktop.awt.application.impl.DesktopApplicationImpl;
 import consulo.desktop.awt.startup.customize.FirstStartCustomizeUtil;
 import consulo.desktop.awt.startup.splash.DesktopSplash;
 import consulo.desktop.awt.ui.IdeEventQueue;
+import consulo.desktop.awt.ui.util.AppIconUtil;
 import consulo.desktop.awt.uiOld.DesktopAWTFontRegistry;
 import consulo.desktop.awt.wm.impl.DesktopWindowManagerImpl;
 import consulo.desktop.awt.wm.impl.MacTopMenuInitializer;
@@ -46,7 +47,6 @@ import consulo.desktop.awt.wm.impl.TopMenuInitializer;
 import consulo.externalService.statistic.UsageTrigger;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.CommandLineProcessor;
-import consulo.project.internal.RecentProjectsManager;
 import consulo.ide.impl.idea.ide.RecentProjectsManagerBase;
 import consulo.ide.impl.idea.ide.plugins.PluginManagerMain;
 import consulo.ide.impl.idea.openapi.wm.impl.SystemDock;
@@ -55,6 +55,7 @@ import consulo.ide.setting.ShowSettingsUtil;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.project.Project;
+import consulo.project.internal.RecentProjectsManager;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
@@ -64,7 +65,6 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.desktop.awt.ui.util.AppIconUtil;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
@@ -85,231 +85,231 @@ import java.util.concurrent.ForkJoinPool;
  * @since 2018-05-10
  */
 public class DesktopApplicationStarter extends ApplicationStarter {
-  private static final Logger LOG = Logger.getInstance(DesktopApplicationStarter.class);
+    private static final Logger LOG = Logger.getInstance(DesktopApplicationStarter.class);
 
-  public DesktopApplicationStarter(@Nonnull CommandLineArgs args, @Nonnull StatCollector stat) {
-    super(args, stat);
-  }
-
-  @Override
-  protected boolean needSetVersionChecker() {
-    // if inside sandbox - do not check plugin versions
-    return !Boolean.parseBoolean(myPlatform.jvm().getRuntimeProperty(ApplicationProperties.CONSULO_IN_SANDBOX));
-  }
-
-  @Nullable
-  @Override
-  public StartupProgress createSplash(CommandLineArgs args) {
-    if (!args.isNoSplash()) {
-      final SplashScreen splashScreen = getSplashScreen();
-      if (splashScreen == null) {
-        DesktopSplash splash = new DesktopSplash(false);
-        splash.show();
-        return splash;
-      }
-    }
-    return null;
-  }
-
-  @Nonnull
-  @Override
-  protected Application createApplication(ComponentBinding componentBinding, boolean isHeadlessMode, SimpleReference<StartupProgress> splashRef, CommandLineArgs args) {
-    return new DesktopApplicationImpl(componentBinding, isHeadlessMode, splashRef);
-  }
-
-  @Nullable
-  private SplashScreen getSplashScreen() {
-    try {
-      return SplashScreen.getSplashScreen();
-    }
-    catch (Throwable t) {
-      LOG.warn(t);
-      return null;
-    }
-  }
-
-  @Override
-  protected void initializeEnviroment(boolean isHeadlessMode, CommandLineArgs args, StatCollector stat) {
-    AWTExceptionHandler.register(); // do not crash AWT on exceptions
-  
-    System.setProperty("sun.awt.noerasebackground", "true");
-
-    invokeAtUIAndWait(IdeEventQueue::initialize);// replace system event queue
-
-    // execute it in parallel
-    ForkJoinPool.commonPool().execute(DesktopAWTFontRegistry::registerBundledFonts);
-
-    SwingUtilities.invokeLater(() -> {
-      if (myPlatform.os().isXWindow()) {
-        X11Hacking.updateFrameClass(ApplicationStarter.getFrameClass());
-      }
-    });
-
-    super.initializeEnviroment(isHeadlessMode, args, stat);
-
-    // wait until icon library loaded
-    stat.markWith("awt.update.window.icon", () -> AppIconUtil.updateWindowIcon(JOptionPane.getRootFrame()));
-  }
-
-  @Override
-  public void main(StatCollector stat, Runnable appInitializeMark, ApplicationEx app, boolean newConfigFolder, @Nonnull CommandLineArgs args) {
-    IdeEventQueue.getInstance().addIdleTimeCounterRequest();
-    
-    appInitializeMark.run();
-
-    stat.dump("Startup statistics", LOG::info);
-
-    SwingUtilities.invokeLater(() -> {
-      StartupProgress desktopSplash = mySplashRef.get();
-      if (desktopSplash != null) {
-        desktopSplash.dispose();
-        mySplashRef.set(null);
-      }
-    });
-
-    TopMenuInitializer.register(app);
-
-    if (myPlatform.os().isMac()) {
-      MacTopMenuInitializer.installAutoUpdateMenu();
-    }
-    else if (myPlatform.os().isWindows()) {
-      WindowsAutoRestartManager.register();
+    public DesktopApplicationStarter(@Nonnull CommandLineArgs args, @Nonnull StatCollector stat) {
+        super(args, stat);
     }
 
-    if (Boolean.getBoolean("consulo.first.start.testing") || newConfigFolder && !ApplicationProperties.isInSandbox()) {
-      SwingUtilities.invokeLater(() -> FirstStartCustomizeUtil.showDialog(true, Platform.current().user().darkTheme()));
+    @Override
+    protected boolean needSetVersionChecker() {
+        // if inside sandbox - do not check plugin versions
+        return !Boolean.parseBoolean(myPlatform.jvm().getRuntimeProperty(ApplicationProperties.CONSULO_IN_SANDBOX));
     }
-    else {
-      SystemDock.getInstance().updateMenu();
 
-      // Event queue should not be changed during initialization of application components.
-      // It also cannot be changed before initialization of application components because IdeEventQueue uses other
-      // application components. So it is proper to perform replacement only here.
-      DesktopWindowManagerImpl windowManager = (DesktopWindowManagerImpl)WindowManager.getInstance();
-      IdeEventQueue.getInstance().setWindowManager(windowManager);
+    @Nullable
+    @Override
+    public StartupProgress createSplash(CommandLineArgs args) {
+        if (!args.isNoSplash()) {
+            final SplashScreen splashScreen = getSplashScreen();
+            if (splashScreen == null) {
+                DesktopSplash splash = new DesktopSplash(false);
+                splash.show();
+                return splash;
+            }
+        }
+        return null;
+    }
 
-      RecentProjectsManagerBase recentProjectsManager = (RecentProjectsManagerBase)RecentProjectsManager.getInstance();
+    @Nonnull
+    @Override
+    protected Application createApplication(ComponentBinding componentBinding, boolean isHeadlessMode, SimpleReference<StartupProgress> splashRef, CommandLineArgs args) {
+        return new DesktopApplicationImpl(componentBinding, isHeadlessMode, splashRef);
+    }
 
-      if (recentProjectsManager.willReopenProjectOnStart() && !args.isNoRecentProjects()) {
-        SwingUtilities.invokeLater(windowManager::showFrame);
-      }
-      else {
-        SwingUtilities.invokeLater(() -> WelcomeFrameManager.getInstance().showFrame());
-      }
+    @Nullable
+    private SplashScreen getSplashScreen() {
+        try {
+            return SplashScreen.getSplashScreen();
+        }
+        catch (Throwable t) {
+            LOG.warn(t);
+            return null;
+        }
+    }
 
-      app.invokeLater(() -> {
-        if (!args.isNoRecentProjects()) {
-          AsyncResult<Project> projectFromCommandLine = AsyncResult.rejected();
+    @Override
+    protected void initializeEnviroment(boolean isHeadlessMode, CommandLineArgs args, StatCollector stat) {
+        AWTExceptionHandler.register(); // do not crash AWT on exceptions
 
-          if (isPerformProjectLoad()) {
-            projectFromCommandLine = CommandLineProcessor.processExternalCommandLine(args, null);
-          }
+        System.setProperty("sun.awt.noerasebackground", "true");
 
-          projectFromCommandLine.doWhenRejected(recentProjectsManager::doReopenLastProject);
+        invokeAtUIAndWait(IdeEventQueue::initialize);// replace system event queue
+
+        // execute it in parallel
+        ForkJoinPool.commonPool().execute(DesktopAWTFontRegistry::registerBundledFonts);
+
+        SwingUtilities.invokeLater(() -> {
+            if (myPlatform.os().isXWindow()) {
+                X11Hacking.updateFrameClass(ApplicationStarter.getFrameClass());
+            }
+        });
+
+        super.initializeEnviroment(isHeadlessMode, args, stat);
+
+        // wait until icon library loaded
+        stat.markWith("awt.update.window.icon", () -> AppIconUtil.updateWindowIcon(JOptionPane.getRootFrame()));
+    }
+
+    @Override
+    public void main(StatCollector stat, Runnable appInitializeMark, ApplicationEx app, boolean newConfigFolder, @Nonnull CommandLineArgs args) {
+        IdeEventQueue.getInstance().addIdleTimeCounterRequest();
+
+        appInitializeMark.run();
+
+        SwingUtilities.invokeLater(() -> {
+            StartupProgress desktopSplash = mySplashRef.get();
+            if (desktopSplash != null) {
+                desktopSplash.dispose();
+                mySplashRef.set(null);
+            }
+        });
+
+        TopMenuInitializer.register(app);
+
+        if (myPlatform.os().isMac()) {
+            MacTopMenuInitializer.installAutoUpdateMenu();
+        }
+        else if (myPlatform.os().isWindows()) {
+            ForkJoinPool.commonPool().execute(WindowsAutoRestartManager::register);
         }
 
-        if (args.getJson() != null) {
-          runJsonRequest(args.getJson());
+        if (Boolean.getBoolean("consulo.first.start.testing") || newConfigFolder && !ApplicationProperties.isInSandbox()) {
+            SwingUtilities.invokeLater(() -> FirstStartCustomizeUtil.showDialog(true, Platform.current().user().darkTheme()));
         }
+        else {
+            SystemDock.getInstance().updateMenu();
 
-        SwingUtilities.invokeLater(() -> reportPluginError(myPluginsInitializeInfo));
+            // Event queue should not be changed during initialization of application components.
+            // It also cannot be changed before initialization of application components because IdeEventQueue uses other
+            // application components. So it is proper to perform replacement only here.
+            DesktopWindowManagerImpl windowManager = (DesktopWindowManagerImpl) WindowManager.getInstance();
+            IdeEventQueue.getInstance().setWindowManager(windowManager);
 
-        UsageTrigger.trigger("consulo.app.started");
-      }, app.getNoneModalityState());
-    }
-  }
+            RecentProjectsManagerBase recentProjectsManager = (RecentProjectsManagerBase) RecentProjectsManager.getInstance();
 
-  @SuppressWarnings("unchecked")
-  private void runJsonRequest(String jsonFile) {
-    CommandLineJsonValue jsonValue = null;
-
-    try (Reader reader = Files.newBufferedReader(Paths.get(jsonFile))) {
-      jsonValue = new Gson().fromJson(reader, CommandLineJsonValue.class);
-    }
-    catch (Exception ignored) {
-    }
-
-    if (jsonValue == null) {
-      return;
-    }
-
-    HttpRequestHandler targetRequestHandler = null;
-    for (HttpRequestHandler requestHandler : HttpRequestHandler.EP_NAME.getExtensionList()) {
-      if (requestHandler instanceof JsonBaseRequestHandler) {
-        String apiUrl = ((JsonBaseRequestHandler)requestHandler).getApiUrl();
-
-        if (apiUrl.equals(jsonValue.url)) {
-          targetRequestHandler = requestHandler;
-          break;
-        }
-      }
-    }
-
-    if (targetRequestHandler == null) {
-      return;
-    }
-
-    if (targetRequestHandler instanceof JsonPostRequestHandler) {
-      if (jsonValue.body == null) {
-        return;
-      }
-
-      Class requestClass = ((JsonPostRequestHandler)targetRequestHandler).getRequestClass();
-      Object content = new Gson().fromJson(jsonValue.body, requestClass);
-      ((JsonPostRequestHandler)targetRequestHandler).handle(content);
-    }
-    else if (targetRequestHandler instanceof JsonGetRequestHandler) {
-      ((JsonGetRequestHandler)targetRequestHandler).handle();
-    }
-  }
-
-  static void reportPluginError(PluginsInitializeInfo info) {
-    java.util.List<CompositeMessage> pluginErrors = info.getPluginErrors();
-
-    Set<PluginId> plugins2Disable = info.getPlugins2Disable();
-    Set<PluginId> plugins2Enable = info.getPlugins2Enable();
-
-    if (pluginErrors != null) {
-      for (CompositeMessage pluginError : pluginErrors) {
-        String message = IdeBundle.message("title.plugin.notification.title");
-        Notifications.Bus.notify(new Notification(PluginManagerMain.ourPluginsLifecycleGroup, message, pluginError.toString(), NotificationType.ERROR, new NotificationListener() {
-          @RequiredUIAccess
-          @Override
-          public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
-            notification.expire();
-
-            String description = event.getDescription();
-            if (PluginsInitializeInfo.EDIT.equals(description)) {
-              IdeFrame ideFrame = WindowManagerEx.getInstanceEx().findFrameFor(null);
-              ShowSettingsUtil.getInstance().showSettingsDialog(ideFrame == null ? null : ideFrame.getProject(), PluginsConfigurable.ID, null);
-              return;
+            if (recentProjectsManager.willReopenProjectOnStart() && !args.isNoRecentProjects()) {
+                SwingUtilities.invokeLater(windowManager::showFrame);
+            }
+            else {
+                SwingUtilities.invokeLater(() -> WelcomeFrameManager.getInstance().showFrame());
             }
 
-            Set<PluginId> disabledPlugins = PluginManager.getDisabledPlugins();
-            if (plugins2Disable != null && PluginsInitializeInfo.DISABLE.equals(description)) {
-              for (PluginId pluginId : plugins2Disable) {
-                if (!disabledPlugins.contains(pluginId)) {
-                  disabledPlugins.add(pluginId);
+            app.invokeLater(() -> {
+                if (!args.isNoRecentProjects()) {
+                    AsyncResult<Project> projectFromCommandLine = AsyncResult.rejected();
+
+                    if (isPerformProjectLoad()) {
+                        projectFromCommandLine = CommandLineProcessor.processExternalCommandLine(args, null);
+                    }
+
+                    projectFromCommandLine.doWhenRejected(recentProjectsManager::doReopenLastProject);
                 }
-              }
+
+                if (args.getJson() != null) {
+                    runJsonRequest(args.getJson());
+                }
+
+                SwingUtilities.invokeLater(() -> reportPluginError(myPluginsInitializeInfo));
+
+                UsageTrigger.trigger("consulo.app.started");
+            }, app.getNoneModalityState());
+
+            stat.dump("Startup statistics", LOG::info);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void runJsonRequest(String jsonFile) {
+        CommandLineJsonValue jsonValue = null;
+
+        try (Reader reader = Files.newBufferedReader(Paths.get(jsonFile))) {
+            jsonValue = new Gson().fromJson(reader, CommandLineJsonValue.class);
+        }
+        catch (Exception ignored) {
+        }
+
+        if (jsonValue == null) {
+            return;
+        }
+
+        HttpRequestHandler targetRequestHandler = null;
+        for (HttpRequestHandler requestHandler : HttpRequestHandler.EP_NAME.getExtensionList()) {
+            if (requestHandler instanceof JsonBaseRequestHandler) {
+                String apiUrl = ((JsonBaseRequestHandler) requestHandler).getApiUrl();
+
+                if (apiUrl.equals(jsonValue.url)) {
+                    targetRequestHandler = requestHandler;
+                    break;
+                }
             }
-            else if (plugins2Enable != null && PluginsInitializeInfo.ENABLE.equals(description)) {
-              disabledPlugins.removeAll(plugins2Enable);
+        }
+
+        if (targetRequestHandler == null) {
+            return;
+        }
+
+        if (targetRequestHandler instanceof JsonPostRequestHandler) {
+            if (jsonValue.body == null) {
+                return;
             }
 
-            PluginManager.replaceDisabledPlugins(disabledPlugins);
-          }
-        }));
-      }
+            Class requestClass = ((JsonPostRequestHandler) targetRequestHandler).getRequestClass();
+            Object content = new Gson().fromJson(jsonValue.body, requestClass);
+            ((JsonPostRequestHandler) targetRequestHandler).handle(content);
+        }
+        else if (targetRequestHandler instanceof JsonGetRequestHandler) {
+            ((JsonGetRequestHandler) targetRequestHandler).handle();
+        }
     }
-  }
 
-  private static void invokeAtUIAndWait(@RequiredUIAccess Runnable runnable) {
-    try {
-      SwingUtilities.invokeAndWait(runnable);
+    static void reportPluginError(PluginsInitializeInfo info) {
+        java.util.List<CompositeMessage> pluginErrors = info.getPluginErrors();
+
+        Set<PluginId> plugins2Disable = info.getPlugins2Disable();
+        Set<PluginId> plugins2Enable = info.getPlugins2Enable();
+
+        if (pluginErrors != null) {
+            for (CompositeMessage pluginError : pluginErrors) {
+                String message = IdeBundle.message("title.plugin.notification.title");
+                Notifications.Bus.notify(new Notification(PluginManagerMain.ourPluginsLifecycleGroup, message, pluginError.toString(), NotificationType.ERROR, new NotificationListener() {
+                    @RequiredUIAccess
+                    @Override
+                    public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
+                        notification.expire();
+
+                        String description = event.getDescription();
+                        if (PluginsInitializeInfo.EDIT.equals(description)) {
+                            IdeFrame ideFrame = WindowManagerEx.getInstanceEx().findFrameFor(null);
+                            ShowSettingsUtil.getInstance().showSettingsDialog(ideFrame == null ? null : ideFrame.getProject(), PluginsConfigurable.ID, null);
+                            return;
+                        }
+
+                        Set<PluginId> disabledPlugins = PluginManager.getDisabledPlugins();
+                        if (plugins2Disable != null && PluginsInitializeInfo.DISABLE.equals(description)) {
+                            for (PluginId pluginId : plugins2Disable) {
+                                if (!disabledPlugins.contains(pluginId)) {
+                                    disabledPlugins.add(pluginId);
+                                }
+                            }
+                        }
+                        else if (plugins2Enable != null && PluginsInitializeInfo.ENABLE.equals(description)) {
+                            disabledPlugins.removeAll(plugins2Enable);
+                        }
+
+                        PluginManager.replaceDisabledPlugins(disabledPlugins);
+                    }
+                }));
+            }
+        }
     }
-    catch (InterruptedException | InvocationTargetException e) {
-      throw new RuntimeException(e);
+
+    private static void invokeAtUIAndWait(@RequiredUIAccess Runnable runnable) {
+        try {
+            SwingUtilities.invokeAndWait(runnable);
+        }
+        catch (InterruptedException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
     }
-  }
 }
