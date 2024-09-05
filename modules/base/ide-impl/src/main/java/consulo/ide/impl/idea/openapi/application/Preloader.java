@@ -18,26 +18,28 @@ package consulo.ide.impl.idea.openapi.application;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
+import consulo.application.HeavyProcessLatch;
 import consulo.application.concurrent.ApplicationConcurrency;
-import consulo.component.ProcessCanceledException;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressManager;
 import consulo.application.impl.internal.progress.AbstractProgressIndicatorBase;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
-import consulo.util.lang.TimeoutUtil;
-import consulo.application.HeavyProcessLatch;
+import consulo.application.internal.PreloadingActivity;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.component.ProcessCanceledException;
+import consulo.component.extension.ExtensionPoint;
 import consulo.container.util.StatCollector;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
-import jakarta.inject.Singleton;
-import consulo.util.concurrent.AsyncPromise;
-import consulo.util.concurrent.Promises;
-
+import consulo.util.lang.TimeoutUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -47,70 +49,87 @@ import java.util.concurrent.ExecutorService;
 @ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
 @ServiceImpl
 public class Preloader implements Disposable {
-  private static final Logger LOG = Logger.getInstance(Preloader.class);
-  private final ExecutorService myExecutor;
-  private final ProgressIndicator myIndicator = new ProgressIndicatorBase();
-  private final ProgressIndicator myWrappingIndicator = new AbstractProgressIndicatorBase() {
-    @Override
-    public void checkCanceled() {
-      checkHeavyProcessRunning();
-      myIndicator.checkCanceled();
+    private static final Logger LOG = Logger.getInstance(Preloader.class);
+    private final ExecutorService myExecutor;
+    private final ProgressIndicator myIndicator = new ProgressIndicatorBase();
+    private final ProgressIndicator myWrappingIndicator = new AbstractProgressIndicatorBase() {
+        @Override
+        public void checkCanceled() {
+            checkHeavyProcessRunning();
+            myIndicator.checkCanceled();
+        }
+
+        @Override
+        public boolean isCanceled() {
+            return myIndicator.isCanceled();
+        }
+    };
+
+    private static void checkHeavyProcessRunning() {
+        if (HeavyProcessLatch.INSTANCE.isRunning()) {
+            TimeoutUtil.sleep(1);
+        }
+    }
+
+    @Inject
+    public Preloader(@Nonnull Application application,
+                     @Nonnull ApplicationConcurrency applicationConcurrency,
+                     @Nonnull ProgressManager progressManager) {
+        myExecutor = applicationConcurrency.createSequentialApplicationPoolExecutor("Preloader pool");
+
+        // execute in new thread since, creating activity also eat time
+        myExecutor.execute(() -> {
+            StatCollector collector = new StatCollector();
+
+            Map<PreloadingActivity, CompletableFuture<?>> futures = new HashMap<>();
+
+            ExtensionPoint<PreloadingActivity> point = application.getExtensionPoint(PreloadingActivity.class);
+
+            // preinit all futures
+            point.forEachExtensionSafe(it -> futures.put(it, new CompletableFuture<>()));
+
+            CompletableFuture.allOf(futures.values().toArray(new CompletableFuture[0])).whenComplete((unused, throwable) -> {
+                collector.dump("Preload statistics", LOG::info);
+            });
+
+            point.forEachExtensionSafe(activity -> {
+                CompletableFuture<?> future = Objects.requireNonNull(futures.get(activity));
+
+                if (myIndicator.isCanceled()) {
+                    future.complete(null);
+                    return;
+                }
+
+                checkHeavyProcessRunning();
+
+                if (myIndicator.isCanceled()) {
+                    future.complete(null);
+                    return;
+                }
+
+                progressManager.runProcess(() -> {
+                    Runnable mark = collector.mark(activity.getClass().getName());
+                    try {
+                        activity.preload(myWrappingIndicator);
+                    }
+                    catch (ProcessCanceledException ignore) {
+                    }
+                    catch (Throwable e) {
+                        LOG.error(e);
+                    }
+                    finally {
+                        future.complete(null);
+
+                        mark.run();
+                    }
+                }, myIndicator);
+            });
+        });
     }
 
     @Override
-    public boolean isCanceled() {
-      return myIndicator.isCanceled();
+    public void dispose() {
+        myExecutor.shutdown();
+        myIndicator.cancel();
     }
-  };
-
-  private static void checkHeavyProcessRunning() {
-    if (HeavyProcessLatch.INSTANCE.isRunning()) {
-      TimeoutUtil.sleep(1);
-    }
-  }
-
-  @Inject
-  public Preloader(@Nonnull ApplicationConcurrency applicationConcurrency, @Nonnull ProgressManager progressManager) {
-    myExecutor = applicationConcurrency.createSequentialApplicationPoolExecutor("Preloader pool");
-
-    StatCollector collector = new StatCollector();
-
-    List<AsyncPromise<Void>> result = new ArrayList<>();
-    for (final PreloadingActivity activity : PreloadingActivity.EP_NAME.getExtensionList()) {
-      AsyncPromise<Void> promise = new AsyncPromise<>();
-      result.add(promise);
-
-      myExecutor.execute(() -> {
-        if (myIndicator.isCanceled()) return;
-
-        checkHeavyProcessRunning();
-        if (myIndicator.isCanceled()) return;
-
-        progressManager.runProcess(() -> {
-          Runnable mark = collector.mark(activity.getClass().getName());
-          try {
-            activity.preload(myWrappingIndicator);
-          }
-          catch (ProcessCanceledException ignore) {
-          }
-          catch (Throwable e) {
-            LOG.error(e);
-          }
-          finally {
-            mark.run();
-            promise.setResult(null);
-          }
-          LOG.info("Finished preloading " + activity);
-        }, myIndicator);
-      });
-    }
-
-    Promises.all(result).onSuccess(o -> collector.dump("Preload statistics", LOG::info));
-  }
-
-  @Override
-  public void dispose() {
-    myExecutor.shutdown();
-    myIndicator.cancel();
-  }
 }

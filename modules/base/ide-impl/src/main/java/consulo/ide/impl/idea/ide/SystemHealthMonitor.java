@@ -36,7 +36,7 @@ import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
 import consulo.ide.impl.idea.diagnostic.VMOptions;
 import consulo.ide.impl.idea.ide.plugins.UninstallPluginAction;
-import consulo.ide.impl.idea.openapi.application.PreloadingActivity;
+import consulo.application.internal.PreloadingActivity;
 import consulo.ide.impl.plugins.PluginActionListener;
 import consulo.ide.impl.updateSettings.impl.UpdateHistory;
 import consulo.localize.LocalizeValue;

@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.ide.actionMacro;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
+import consulo.application.internal.PreloadingActivity;
 import consulo.application.progress.ProgressIndicator;
-import consulo.ide.impl.idea.openapi.application.PreloadingActivity;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
@@ -27,11 +27,11 @@ import jakarta.inject.Inject;
  * @since 2024-09-05
  */
 @ExtensionImpl
-public class ActionManagerPreloader extends PreloadingActivity {
+public class ActionMacroPreloader extends PreloadingActivity {
     private final Application myApplication;
 
     @Inject
-    public ActionManagerPreloader(Application application) {
+    public ActionMacroPreloader(Application application) {
         myApplication = application;
     }
 

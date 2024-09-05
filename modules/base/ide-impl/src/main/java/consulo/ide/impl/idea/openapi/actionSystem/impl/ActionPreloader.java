@@ -16,21 +16,37 @@
 package consulo.ide.impl.idea.openapi.actionSystem.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ui.ex.action.ActionManager;
-import consulo.application.ApplicationManager;
-import consulo.ide.impl.idea.openapi.application.PreloadingActivity;
 import consulo.application.progress.ProgressIndicator;
+import consulo.application.internal.PreloadingActivity;
+import consulo.execution.executor.ExecutorRegistry;
+import consulo.execution.internal.ExecutorRegistryEx;
+import consulo.ui.ex.action.ActionManager;
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 
 /**
  * @author yole
  */
-@ExtensionImpl
+@ExtensionImpl(order = "after executorRegister")
 public class ActionPreloader extends PreloadingActivity {
-  @Override
-  public void preload(@Nonnull ProgressIndicator indicator) {
-    if (!ApplicationManager.getApplication().isUnitTestMode() && !ApplicationManager.getApplication().isHeadlessEnvironment()) {
-      ((ActionManagerImpl)ActionManager.getInstance()).preloadActions(indicator);
+    private final ActionManager myActionManager;
+    private final ExecutorRegistry myExecutorRegistry;
+
+    @Inject
+    public ActionPreloader(ActionManager actionManager, ExecutorRegistry executorRegistry) {
+        myActionManager = actionManager;
+        myExecutorRegistry = executorRegistry;
     }
-  }
+
+    @Override
+    public void preload(@Nonnull ProgressIndicator indicator) {
+        ActionManagerImpl actionManager = (ActionManagerImpl) myActionManager;
+
+        actionManager.loadActions();
+
+        // need it due its register actions
+        ((ExecutorRegistryEx) myExecutorRegistry).initExecuteActions();
+
+        actionManager.preloadActions(indicator);
+    }
 }

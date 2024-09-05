@@ -53,6 +53,7 @@ module consulo.application.api {
         consulo.logging.logback.impl,
         consulo.virtual.file.system.impl,
         consulo.version.control.system.impl,
+        consulo.execution.impl,
         consulo.diff.impl;
 
     exports consulo.application.internal.util to

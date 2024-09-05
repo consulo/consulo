@@ -22,7 +22,7 @@ import consulo.content.bundle.*;
 import consulo.application.content.impl.internal.bundle.SdkImpl;
 import consulo.application.content.impl.internal.bundle.SdkPointerManagerImpl;
 import consulo.application.content.impl.internal.bundle.SdkTableImpl;
-import consulo.ide.impl.idea.openapi.application.PreloadingActivity;
+import consulo.application.internal.PreloadingActivity;
 import consulo.ide.impl.idea.openapi.projectRoots.impl.SdkConfigurationUtil;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;

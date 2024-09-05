@@ -27,7 +27,7 @@ import jakarta.annotation.Nonnull;
 /**
  * @author spleaner
  */
-@ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
+@ServiceAPI(value = ComponentScope.APPLICATION)
 public abstract class ExecutorRegistry {
   public static ExecutorRegistry getInstance() {
     return ApplicationManager.getApplication().getInstance(ExecutorRegistry.class);
