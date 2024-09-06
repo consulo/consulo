@@ -21,7 +21,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
-
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -29,16 +29,14 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface RenameHandler extends RefactoringActionHandler {
-  ExtensionPointName<RenameHandler> EP_NAME = ExtensionPointName.create(RenameHandler.class);
+    ExtensionPointName<RenameHandler> EP_NAME = ExtensionPointName.create(RenameHandler.class);
 
-  // called during rename action update. should not perform any user interactions
-  boolean isAvailableOnDataContext(DataContext dataContext);
+    // called during rename action update. should not perform any user interactions
+    boolean isAvailableOnDataContext(DataContext dataContext);
 
-  // called on rename actionPerformed. Can obtain additional info from user
-  boolean isRenaming(DataContext dataContext);
+    // called on rename actionPerformed. Can obtain additional info from user
+    boolean isRenaming(DataContext dataContext);
 
-  @Nonnull
-  default String getActionTitle() {
-    return toString();
-  }
+    @Nonnull
+    LocalizeValue getActionTitleValue();
 }

@@ -55,190 +55,204 @@ import java.util.Arrays;
  * @author Jeka, dsl
  */
 public class PsiElementRenameHandler implements RenameHandler {
-  private static final Logger LOG = Logger.getInstance(PsiElementRenameHandler.class);
+    private static final Logger LOG = Logger.getInstance(PsiElementRenameHandler.class);
 
-  public static Key<String> DEFAULT_NAME = Key.create("DEFAULT_NAME");
+    public static Key<String> DEFAULT_NAME = Key.create("DEFAULT_NAME");
 
-  @Override
-  @RequiredUIAccess
-  public void invoke(@Nonnull Project project, Editor editor, PsiFile file, DataContext dataContext) {
-    PsiElement element = getElement(dataContext);
-    if (element == null) {
-      element = BaseRefactoringAction.getElementAtCaret(editor, file);
-    }
-
-    if (project.getApplication().isUnitTestMode()) {
-      final String newName = dataContext.getData(DEFAULT_NAME);
-      if (newName != null) {
-        rename(element, project, element, editor, newName);
-        return;
-      }
-    }
-
-    editor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
-    final PsiElement nameSuggestionContext =
-      InjectedLanguageManager.getInstance(element.getProject()).findElementAtNoCommit(file, editor.getCaretModel().getOffset());
-    invoke(element, project, nameSuggestionContext, editor);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, DataContext dataContext) {
-    PsiElement element = elements.length == 1 ? elements[0] : null;
-    if (element == null) element = getElement(dataContext);
-    LOG.assertTrue(element != null);
-    Editor editor = dataContext.getData(Editor.KEY);
-    if (project.getApplication().isUnitTestMode()) {
-      final String newName = dataContext.getData(DEFAULT_NAME);
-      LOG.assertTrue(newName != null);
-      rename(element, project, element, editor, newName);
-    }
-    else {
-      invoke(element, project, element, editor);
-    }
-  }
-
-  @RequiredUIAccess
-  public static void invoke(PsiElement element, Project project, PsiElement nameSuggestionContext, @Nullable Editor editor) {
-    if (element != null && !canRename(project, editor, element)) {
-      return;
-    }
-
-    VirtualFile contextFile = PsiUtilCore.getVirtualFile(nameSuggestionContext);
-
-    if (nameSuggestionContext != null && nameSuggestionContext.isPhysical() &&
-        (contextFile == null || !ScratchUtil.isScratch(contextFile) && !PsiManager.getInstance(project).isInProject(nameSuggestionContext))) {
-      final String message = "Selected element is used from non-project files. These usages won't be renamed. Proceed anyway?";
-      if (project.getApplication().isUnitTestMode()) throw new CommonRefactoringUtil.RefactoringErrorHintException(message);
-      int buttonPressed =
-        Messages.showYesNoDialog(project, message, RefactoringBundle.getCannotRefactorMessage(null), UIUtil.getWarningIcon());
-      if (buttonPressed != Messages.YES) {
-        return;
-      }
-    }
-
-    FeatureUsageTracker.getInstance().triggerFeatureUsed("refactoring.rename");
-
-    rename(element, project, nameSuggestionContext, editor);
-  }
-
-  @RequiredUIAccess
-  public static boolean canRename(Project project, Editor editor, PsiElement element)
-    throws CommonRefactoringUtil.RefactoringErrorHintException {
-    String message = renameabilityStatus(project, element);
-    if (StringUtil.isNotEmpty(message)) {
-      showErrorMessage(project, editor, message);
-      return false;
-    }
-    return true;
-  }
-
-  @Nullable
-  @RequiredReadAction
-  static String renameabilityStatus(Project project, PsiElement element) {
-    if (element == null) return "";
-
-    boolean hasRenameProcessor = RenamePsiElementProcessor.forElement(element) != RenamePsiElementProcessor.DEFAULT;
-    boolean hasWritableMetaData = element instanceof PsiMetaOwner metaOwner && metaOwner.getMetaData() instanceof PsiWritableMetaData;
-
-    if (!hasRenameProcessor && !hasWritableMetaData && !(element instanceof PsiNamedElement)) {
-      return RefactoringBundle.getCannotRefactorMessage(RefactoringLocalize.errorWrongCaretPositionSymbolToRename().get());
-    }
-
-    if (!PsiManager.getInstance(project).isInProject(element)) {
-      if (element.isPhysical()) {
-        VirtualFile virtualFile = PsiUtilCore.getVirtualFile(element);
-        if (!(virtualFile != null && RefactoringInternalHelper.getInstance().isWriteAccessAllowed(virtualFile, project))) {
-          LocalizeValue message = RefactoringLocalize.errorOutOfProjectElement(UsageViewUtil.getType(element));
-          return RefactoringBundle.getCannotRefactorMessage(message.get());
+    @Override
+    @RequiredUIAccess
+    public void invoke(@Nonnull Project project, Editor editor, PsiFile file, DataContext dataContext) {
+        PsiElement element = getElement(dataContext);
+        if (element == null) {
+            element = BaseRefactoringAction.getElementAtCaret(editor, file);
         }
-      }
 
-      if (!element.isWritable()) {
-        return RefactoringBundle.getCannotRefactorMessage(RefactoringLocalize.errorCannotBeRenamed().get());
-      }
+        if (project.getApplication().isUnitTestMode()) {
+            final String newName = dataContext.getData(DEFAULT_NAME);
+            if (newName != null) {
+                rename(element, project, element, editor, newName);
+                return;
+            }
+        }
+
+        editor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
+        final PsiElement nameSuggestionContext =
+            InjectedLanguageManager.getInstance(element.getProject()).findElementAtNoCommit(file, editor.getCaretModel().getOffset());
+        invoke(element, project, nameSuggestionContext, editor);
     }
 
-    if (InjectedLanguageManagerUtil.isInInjectedLanguagePrefixSuffix(element)) {
-      final LocalizeValue message = RefactoringLocalize.errorInInjectedLangPrefixSuffix(UsageViewUtil.getType(element));
-      return RefactoringBundle.getCannotRefactorMessage(message.get());
+    @Override
+    @RequiredUIAccess
+    public void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, DataContext dataContext) {
+        PsiElement element = elements.length == 1 ? elements[0] : null;
+        if (element == null) {
+            element = getElement(dataContext);
+        }
+        LOG.assertTrue(element != null);
+        Editor editor = dataContext.getData(Editor.KEY);
+        if (project.getApplication().isUnitTestMode()) {
+            final String newName = dataContext.getData(DEFAULT_NAME);
+            LOG.assertTrue(newName != null);
+            rename(element, project, element, editor, newName);
+        }
+        else {
+            invoke(element, project, element, editor);
+        }
     }
 
-    return null;
-  }
+    @RequiredUIAccess
+    public static void invoke(PsiElement element, Project project, PsiElement nameSuggestionContext, @Nullable Editor editor) {
+        if (element != null && !canRename(project, editor, element)) {
+            return;
+        }
 
-  @RequiredUIAccess
-  static void showErrorMessage(Project project, @Nullable Editor editor, String message) {
-    CommonRefactoringUtil.showErrorHint(project, editor, message, RefactoringLocalize.renameTitle().get(), null);
-  }
+        VirtualFile contextFile = PsiUtilCore.getVirtualFile(nameSuggestionContext);
 
-  @RequiredUIAccess
-  public static void rename(PsiElement element, final Project project, PsiElement nameSuggestionContext, Editor editor) {
-    rename(element, project, nameSuggestionContext, editor, null);
-  }
+        if (nameSuggestionContext != null && nameSuggestionContext.isPhysical() &&
+            (contextFile == null || !ScratchUtil.isScratch(contextFile) && !PsiManager.getInstance(project).isInProject(nameSuggestionContext))) {
+            final String message = "Selected element is used from non-project files. These usages won't be renamed. Proceed anyway?";
+            if (project.getApplication().isUnitTestMode()) {
+                throw new CommonRefactoringUtil.RefactoringErrorHintException(message);
+            }
+            int buttonPressed =
+                Messages.showYesNoDialog(project, message, RefactoringBundle.getCannotRefactorMessage(null), UIUtil.getWarningIcon());
+            if (buttonPressed != Messages.YES) {
+                return;
+            }
+        }
 
-  @RequiredUIAccess
-  public static void rename(
-    PsiElement element,
-    final Project project,
-    PsiElement nameSuggestionContext,
-    Editor editor,
-    String defaultName
-  ) {
-    RenamePsiElementProcessor processor = RenamePsiElementProcessor.forElement(element);
-    PsiElement substituted = processor.substituteElementToRename(element, editor);
-    if (substituted == null || !canRename(project, editor, substituted)) return;
+        FeatureUsageTracker.getInstance().triggerFeatureUsed("refactoring.rename");
 
-    RenameDialog dialog = processor.createRenameDialog(project, substituted, nameSuggestionContext, editor);
-
-    if (defaultName == null && project.getApplication().isUnitTestMode()) {
-      String[] strings = dialog.getSuggestedNames();
-      if (strings != null && strings.length > 0) {
-        Arrays.sort(strings);
-        defaultName = strings[0];
-      }
-      else {
-        defaultName = "undefined"; // need to avoid show dialog in test
-      }
+        rename(element, project, nameSuggestionContext, editor);
     }
 
-    if (defaultName != null) {
-      try {
-        dialog.performRename(defaultName);
-      }
-      finally {
-        dialog.close(DialogWrapper.CANCEL_EXIT_CODE); // to avoid dialog leak
-      }
+    @RequiredUIAccess
+    public static boolean canRename(Project project, Editor editor, PsiElement element)
+        throws CommonRefactoringUtil.RefactoringErrorHintException {
+        String message = renameabilityStatus(project, element);
+        if (StringUtil.isNotEmpty(message)) {
+            showErrorMessage(project, editor, message);
+            return false;
+        }
+        return true;
     }
-    else {
-      dialog.show();
+
+    @Nullable
+    @RequiredReadAction
+    static String renameabilityStatus(Project project, PsiElement element) {
+        if (element == null) {
+            return "";
+        }
+
+        boolean hasRenameProcessor = RenamePsiElementProcessor.forElement(element) != RenamePsiElementProcessor.DEFAULT;
+        boolean hasWritableMetaData = element instanceof PsiMetaOwner metaOwner && metaOwner.getMetaData() instanceof PsiWritableMetaData;
+
+        if (!hasRenameProcessor && !hasWritableMetaData && !(element instanceof PsiNamedElement)) {
+            return RefactoringBundle.getCannotRefactorMessage(RefactoringLocalize.errorWrongCaretPositionSymbolToRename().get());
+        }
+
+        if (!PsiManager.getInstance(project).isInProject(element)) {
+            if (element.isPhysical()) {
+                VirtualFile virtualFile = PsiUtilCore.getVirtualFile(element);
+                if (!(virtualFile != null && RefactoringInternalHelper.getInstance().isWriteAccessAllowed(virtualFile, project))) {
+                    LocalizeValue message = RefactoringLocalize.errorOutOfProjectElement(UsageViewUtil.getType(element));
+                    return RefactoringBundle.getCannotRefactorMessage(message.get());
+                }
+            }
+
+            if (!element.isWritable()) {
+                return RefactoringBundle.getCannotRefactorMessage(RefactoringLocalize.errorCannotBeRenamed().get());
+            }
+        }
+
+        if (InjectedLanguageManagerUtil.isInInjectedLanguagePrefixSuffix(element)) {
+            final LocalizeValue message = RefactoringLocalize.errorInInjectedLangPrefixSuffix(UsageViewUtil.getType(element));
+            return RefactoringBundle.getCannotRefactorMessage(message.get());
+        }
+
+        return null;
     }
-  }
 
-  @Override
-  @RequiredReadAction
-  public boolean isAvailableOnDataContext(DataContext dataContext) {
-    return !isVetoed(getElement(dataContext));
-  }
-
-  public static boolean isVetoed(PsiElement element) {
-    return element == null || element instanceof SyntheticElement
-      || VetoRenameCondition.EP.findFirstSafe(Application.get(), it -> it.isVetoed(element)) != null;
-  }
-
-  @Nullable
-  public static PsiElement getElement(final DataContext dataContext) {
-    PsiElement[] elementArray = BaseRefactoringAction.getPsiElementArray(dataContext);
-
-    if (elementArray.length != 1) {
-      return null;
+    @RequiredUIAccess
+    static void showErrorMessage(Project project, @Nullable Editor editor, String message) {
+        CommonRefactoringUtil.showErrorHint(project, editor, message, RefactoringLocalize.renameTitle().get(), null);
     }
-    return elementArray[0];
-  }
 
-  @Override
-  @RequiredReadAction
-  public boolean isRenaming(DataContext dataContext) {
-    return isAvailableOnDataContext(dataContext);
-  }
+    @RequiredUIAccess
+    public static void rename(PsiElement element, final Project project, PsiElement nameSuggestionContext, Editor editor) {
+        rename(element, project, nameSuggestionContext, editor, null);
+    }
+
+    @RequiredUIAccess
+    public static void rename(
+        PsiElement element,
+        final Project project,
+        PsiElement nameSuggestionContext,
+        Editor editor,
+        String defaultName
+    ) {
+        RenamePsiElementProcessor processor = RenamePsiElementProcessor.forElement(element);
+        PsiElement substituted = processor.substituteElementToRename(element, editor);
+        if (substituted == null || !canRename(project, editor, substituted)) {
+            return;
+        }
+
+        RenameDialog dialog = processor.createRenameDialog(project, substituted, nameSuggestionContext, editor);
+
+        if (defaultName == null && project.getApplication().isUnitTestMode()) {
+            String[] strings = dialog.getSuggestedNames();
+            if (strings != null && strings.length > 0) {
+                Arrays.sort(strings);
+                defaultName = strings[0];
+            }
+            else {
+                defaultName = "undefined"; // need to avoid show dialog in test
+            }
+        }
+
+        if (defaultName != null) {
+            try {
+                dialog.performRename(defaultName);
+            }
+            finally {
+                dialog.close(DialogWrapper.CANCEL_EXIT_CODE); // to avoid dialog leak
+            }
+        }
+        else {
+            dialog.show();
+        }
+    }
+
+    @Override
+    @RequiredReadAction
+    public boolean isAvailableOnDataContext(DataContext dataContext) {
+        return !isVetoed(getElement(dataContext));
+    }
+
+    public static boolean isVetoed(PsiElement element) {
+        return element == null || element instanceof SyntheticElement
+            || VetoRenameCondition.EP.findFirstSafe(Application.get(), it -> it.isVetoed(element)) != null;
+    }
+
+    @Nullable
+    public static PsiElement getElement(final DataContext dataContext) {
+        PsiElement[] elementArray = BaseRefactoringAction.getPsiElementArray(dataContext);
+
+        if (elementArray.length != 1) {
+            return null;
+        }
+        return elementArray[0];
+    }
+
+    @Override
+    @RequiredReadAction
+    public boolean isRenaming(DataContext dataContext) {
+        return isAvailableOnDataContext(dataContext);
+    }
+
+    @Nonnull
+    @Override
+    public LocalizeValue getActionTitleValue() {
+        return LocalizeValue.localizeTODO("Rename Element...");
+    }
 }

@@ -16,9 +16,13 @@
 
 package consulo.ide.impl.idea.ide;
 
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
+
 /**
  * @author yole
  */
 public interface TitledHandler {
-  String getActionTitle();
+    @Nonnull
+    LocalizeValue getActionTitleValue();
 }

@@ -20,6 +20,7 @@ import consulo.localize.internal.JoinLocalizeValue;
 import consulo.localize.internal.MapLocalizeValue;
 import consulo.localize.internal.SingleLocalizeValue;
 import jakarta.annotation.Nonnull;
+
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
@@ -28,72 +29,77 @@ import java.util.function.Supplier;
  * @since 2019-04-11
  */
 public interface LocalizeValue extends Supplier<String>, Comparable<LocalizeValue> {
-  @Nonnull
-  static LocalizeValue empty() {
-    return SingleLocalizeValue.ourEmpty;
-  }
-
-  @Nonnull
-  static LocalizeValue space() {
-    return SingleLocalizeValue.ourSpace;
-  }
-
-  @Nonnull
-  static LocalizeValue colon() {
-    return SingleLocalizeValue.ourColon;
-  }
-
-  @Nonnull
-  static LocalizeValue of() {
-    return empty();
-  }
-
-  @Nonnull
-  static LocalizeValue localizeTODO(@Nonnull String text) {
-    return of(text);
-  }
-
-  @Nonnull
-  static LocalizeValue of(@Nonnull String text) {
-    if(text.length() == 0) {
-      return of();
-    }
-    return new SingleLocalizeValue(text);
-  }
-
-  static LocalizeValue join(@Nonnull LocalizeValue... values) {
-    if(values.length == 0) {
-      return of();
+    @Nonnull
+    static LocalizeValue empty() {
+        return SingleLocalizeValue.ourEmpty;
     }
 
-    return new JoinLocalizeValue(values);
-  }
+    @Nonnull
+    static LocalizeValue space() {
+        return SingleLocalizeValue.ourSpace;
+    }
 
-  @Override
-  @Nonnull
-  default String get() {
-    return getValue();
-  }
+    @Nonnull
+    static LocalizeValue colon() {
+        return SingleLocalizeValue.ourColon;
+    }
 
-  @Nonnull
-  String getValue();
+    @Nonnull
+    static LocalizeValue of() {
+        return empty();
+    }
 
-  long getModificationCount();
+    @Nonnull
+    static LocalizeValue localizeTODO(@Nonnull String text) {
+        return of(text);
+    }
 
-  @Nonnull
-  default LocalizeValue map(@Nonnull BiFunction<LocalizeManager, String, String> mapper) {
-    return new MapLocalizeValue(this, mapper);
-  }
+    @Nonnull
+    static LocalizeValue of(@Nonnull String text) {
+        if (text.length() == 0) {
+            return of();
+        }
+        return new SingleLocalizeValue(text);
+    }
 
-  @Nonnull
-  default LocalizeValue toUpperCase() {
-    return map(DefaultMapFunctions.TO_UPPER_CASE);
-  }
+    static LocalizeValue join(@Nonnull LocalizeValue... values) {
+        if (values.length == 0) {
+            return of();
+        }
 
-  @Nonnull
-  default LocalizeValue toLowerCase() {
-    return map(DefaultMapFunctions.TO_LOWER_CASE);
-  }
+        return new JoinLocalizeValue(values);
+    }
 
-  int compareIgnoreCase(@Nonnull LocalizeValue other);
+    @Override
+    @Nonnull
+    default String get() {
+        return getValue();
+    }
+
+    @Nonnull
+    String getValue();
+
+    long getModificationCount();
+
+    @Nonnull
+    default LocalizeValue map(@Nonnull BiFunction<LocalizeManager, String, String> mapper) {
+        return new MapLocalizeValue(this, mapper);
+    }
+
+    @Nonnull
+    default LocalizeValue toUpperCase() {
+        return map(DefaultMapFunctions.TO_UPPER_CASE);
+    }
+
+    @Nonnull
+    default LocalizeValue toLowerCase() {
+        return map(DefaultMapFunctions.TO_LOWER_CASE);
+    }
+
+    @Nonnull
+    default LocalizeValue captilize() {
+        return map(DefaultMapFunctions.CAPTILIZE);
+    }
+
+    int compareIgnoreCase(@Nonnull LocalizeValue other);
 }

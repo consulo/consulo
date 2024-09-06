@@ -16,160 +16,174 @@
 
 package consulo.language.editor.refactoring.rename;
 
-import consulo.application.Application;
 import consulo.component.ProcessCanceledException;
-import consulo.component.extension.Extensions;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.rename.inplace.MemberInplaceRenameHandler;
 import consulo.language.editor.ui.RadioUpDownListener;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.RadioButton;
+import consulo.ui.ValueComponent;
+import consulo.ui.ValueGroup;
+import consulo.ui.ValueGroups;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.util.collection.ArrayUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.layout.LabeledLayout;
+import consulo.ui.layout.VerticalLayout;
 import consulo.util.dataholder.Key;
-import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
-import java.awt.event.ActionListener;
 import java.util.*;
 
 /**
  * @author dsl
  */
 public class RenameHandlerRegistry {
-  public static final Key<Boolean> SELECT_ALL = Key.create("rename.selectAll");
-  private final Set<RenameHandler> myHandlers  = new HashSet<>();
-  private static final RenameHandlerRegistry INSTANCE = new RenameHandlerRegistry();
-  private final PsiElementRenameHandler myDefaultElementRenameHandler;
+    public static final Key<Boolean> SELECT_ALL = Key.create("rename.selectAll");
+    private final Set<RenameHandler> myHandlers = new HashSet<>();
+    private static final RenameHandlerRegistry INSTANCE = new RenameHandlerRegistry();
+    private final PsiElementRenameHandler myDefaultElementRenameHandler;
 
-  public static RenameHandlerRegistry getInstance() {
-    return INSTANCE;
-  }
-
-  private RenameHandlerRegistry() {
-    // should be checked last
-    myDefaultElementRenameHandler = new PsiElementRenameHandler();
-  }
-
-  public boolean hasAvailableHandler(DataContext dataContext) {
-    for (RenameHandler renameHandler : Extensions.getExtensions(RenameHandler.EP_NAME)) {
-      if (renameHandler.isAvailableOnDataContext(dataContext)) return true;
+    public static RenameHandlerRegistry getInstance() {
+        return INSTANCE;
     }
-    for (RenameHandler renameHandler : myHandlers) {
-      if (renameHandler.isAvailableOnDataContext(dataContext)) return true;
-    }
-    return myDefaultElementRenameHandler.isAvailableOnDataContext(dataContext);
-  }
 
-  @Nullable
-  @RequiredUIAccess
-  public RenameHandler getRenameHandler(DataContext dataContext) {
-    final Map<String, RenameHandler> availableHandlers = new TreeMap<>();
-    for (RenameHandler renameHandler : Extensions.getExtensions(RenameHandler.EP_NAME)) {
-      if (renameHandler.isRenaming(dataContext)) {
-        if (Application.get().isUnitTestMode()) {
-          return renameHandler;
+    private RenameHandlerRegistry() {
+        // should be checked last
+        myDefaultElementRenameHandler = new PsiElementRenameHandler();
+    }
+
+    public boolean hasAvailableHandler(DataContext dataContext) {
+        for (RenameHandler renameHandler : RenameHandler.EP_NAME.getExtensionList()) {
+            if (renameHandler.isAvailableOnDataContext(dataContext)) {
+                return true;
+            }
         }
-        availableHandlers.put(getHandlerTitle(renameHandler), renameHandler);
-      }
-    }
-    for (RenameHandler renameHandler : myHandlers) {
-      if (renameHandler.isRenaming(dataContext)) {
-        if (Application.get().isUnitTestMode()) {
-          return renameHandler;
+        for (RenameHandler renameHandler : myHandlers) {
+            if (renameHandler.isAvailableOnDataContext(dataContext)) {
+                return true;
+            }
         }
-        availableHandlers.put(getHandlerTitle(renameHandler), renameHandler);
-      }
-    }
-    if (availableHandlers.size() == 1) return availableHandlers.values().iterator().next();
-    for (Iterator<Map.Entry<String, RenameHandler>> iterator = availableHandlers.entrySet().iterator(); iterator.hasNext(); ) {
-      Map.Entry<String, RenameHandler> entry = iterator.next();
-      if (entry.getValue() instanceof MemberInplaceRenameHandler) {
-        iterator.remove();
-        break;
-      }
-    }
-    if (availableHandlers.size() == 1) return availableHandlers.values().iterator().next();
-    if (availableHandlers.size() > 1) {
-      final String[] strings = ArrayUtil.toStringArray(availableHandlers.keySet());
-      final HandlersChooser chooser = new HandlersChooser(dataContext.getData(Project.KEY), strings);
-      chooser.show();
-      if (chooser.isOK()) {
-        return availableHandlers.get(chooser.getSelection());
-      }
-      throw new ProcessCanceledException();
-    }
-    return myDefaultElementRenameHandler.isRenaming(dataContext) ? myDefaultElementRenameHandler : null;
-  }
-
-  private static String getHandlerTitle(RenameHandler renameHandler) {
-    return StringUtil.capitalize((renameHandler).getActionTitle().toLowerCase());
-  }
-
-  /**
-   * @deprecated
-   * @see RenameHandler#EP_NAME
-   */
-  public void registerHandler(RenameHandler handler) {
-    myHandlers.add(handler);
-  }
-
-  private static class HandlersChooser extends DialogWrapper {
-    private final String[] myRenamers;
-    private String mySelection;
-    private final JRadioButton[] myRButtons;
-
-    protected HandlersChooser(Project project, String [] renamers) {
-      super(project);
-      myRenamers = renamers;
-      myRButtons = new JRadioButton[myRenamers.length];
-      mySelection = renamers[0];
-      setTitle(RefactoringLocalize.selectRefactoringTitle());
-      init();
+        return myDefaultElementRenameHandler.isAvailableOnDataContext(dataContext);
     }
 
-    @Override
-    protected JComponent createNorthPanel() {
-      final JPanel radioPanel = new JPanel();
-      radioPanel.setLayout(new BoxLayout(radioPanel, BoxLayout.Y_AXIS));
-      final JLabel descriptionLabel = new JLabel(RefactoringLocalize.whatWouldYouLikeToDo().get());
-      descriptionLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
-      radioPanel.add(descriptionLabel);
-      final ButtonGroup bg = new ButtonGroup();
-      boolean selected = true;
-      int rIdx = 0;
-      for (final String renamer : myRenamers) {
-        final JRadioButton rb = new JRadioButton(renamer, selected);
-        myRButtons[rIdx++] = rb;
-        final ActionListener listener = e -> {
-          if (rb.isSelected()) {
-            mySelection = renamer;
-          }
-        };
-        rb.addActionListener(listener);
-        selected = false;
-        bg.add(rb);
-        radioPanel.add(rb);
-      }
-      new RadioUpDownListener(myRButtons);
-      return radioPanel;
-    }
-
-    @Override
+    @Nullable
     @RequiredUIAccess
-    public JComponent getPreferredFocusedComponent() {
-      return myRButtons[0];
+    public RenameHandler getRenameHandler(DataContext dataContext) {
+        final Map<LocalizeValue, RenameHandler> availableHandlers = new TreeMap<>();
+        RenameHandler.EP_NAME.forEachExtensionSafe(renameHandler -> {
+            if (renameHandler.isRenaming(dataContext)) {
+                availableHandlers.put(getHandlerTitle(renameHandler), renameHandler);
+            }
+        });
+
+        for (RenameHandler renameHandler : myHandlers) {
+            if (renameHandler.isRenaming(dataContext)) {
+                availableHandlers.put(getHandlerTitle(renameHandler), renameHandler);
+            }
+        }
+
+        if (availableHandlers.size() == 1) {
+            return availableHandlers.values().iterator().next();
+        }
+
+        for (Iterator<Map.Entry<LocalizeValue, RenameHandler>> iterator = availableHandlers.entrySet().iterator(); iterator.hasNext(); ) {
+            Map.Entry<LocalizeValue, RenameHandler> entry = iterator.next();
+            if (entry.getValue() instanceof MemberInplaceRenameHandler) {
+                iterator.remove();
+                break;
+            }
+        }
+
+        if (availableHandlers.size() == 1) {
+            return availableHandlers.values().iterator().next();
+        }
+
+        if (availableHandlers.size() > 1) {
+            final LocalizeValue[] variants = availableHandlers.keySet().toArray(LocalizeValue[]::new);
+            final HandlersChooser chooser = new HandlersChooser(dataContext.getData(Project.KEY), variants);
+            chooser.show();
+            if (chooser.isOK()) {
+                return availableHandlers.get(chooser.getSelection());
+            }
+            throw new ProcessCanceledException();
+        }
+        return myDefaultElementRenameHandler.isRenaming(dataContext) ? myDefaultElementRenameHandler : null;
     }
 
-    public String getSelection() {
-      return mySelection;
+    @Nonnull
+    private static LocalizeValue getHandlerTitle(RenameHandler renameHandler) {
+        return renameHandler.getActionTitleValue().captilize();
     }
 
-    @Override
-    protected JComponent createCenterPanel() {
-      return null;
+    /**
+     * @see RenameHandler#EP_NAME
+     * @deprecated
+     */
+    public void registerHandler(RenameHandler handler) {
+        myHandlers.add(handler);
     }
-  }
+
+    private static class HandlersChooser extends DialogWrapper {
+        private final LocalizeValue[] myRenamers;
+        private LocalizeValue mySelection;
+        private final RadioButton[] myRButtons;
+
+        protected HandlersChooser(Project project, LocalizeValue[] renamers) {
+            super(project);
+            myRenamers = renamers;
+            myRButtons = new RadioButton[myRenamers.length];
+            mySelection = renamers[0];
+            setTitle(RefactoringLocalize.selectRefactoringTitle());
+            init();
+        }
+
+        @Override
+        @RequiredUIAccess
+        protected JComponent createNorthPanel() {
+            final VerticalLayout radioPanel = VerticalLayout.create();
+
+            ValueGroup<Boolean> bg = ValueGroups.boolGroup();
+            boolean selected = true;
+            int rIdx = 0;
+            for (final LocalizeValue renamer : myRenamers) {
+                final RadioButton rb = RadioButton.create(renamer, selected);
+                myRButtons[rIdx++] = rb;
+                final ValueComponent.ValueListener<Boolean> listener = e -> {
+                    if (rb.getValueOrError()) {
+                        mySelection = renamer;
+                    }
+                };
+                rb.addValueListener(listener);
+                selected = false;
+                bg.add(rb);
+                radioPanel.add(rb);
+            }
+
+            new RadioUpDownListener(Arrays.stream(myRButtons)
+                .map(radioButton -> (JRadioButton) TargetAWT.to(radioButton))
+                .toArray(JRadioButton[]::new));
+
+            return (JComponent) TargetAWT.to(LabeledLayout.create(RefactoringLocalize.whatWouldYouLikeToDo(), radioPanel));
+        }
+
+        @Override
+        @RequiredUIAccess
+        public JComponent getPreferredFocusedComponent() {
+            return (JComponent) TargetAWT.to(myRButtons[0]);
+        }
+
+        public LocalizeValue getSelection() {
+            return mySelection;
+        }
+
+        @Override
+        protected JComponent createCenterPanel() {
+            return null;
+        }
+    }
 }

@@ -99,7 +99,7 @@ public class DeleteAction extends AnAction implements DumbAware {
       }
     }
     if (provider instanceof TitledHandler titledHandler) {
-      presentation.setText(titledHandler.getActionTitle());
+      presentation.setTextValue(titledHandler.getActionTitleValue());
     }
     final boolean canDelete = provider != null && provider.canDeleteElement(dataContext);
     if (ActionPlaces.isPopupPlace(event.getPlace())) {

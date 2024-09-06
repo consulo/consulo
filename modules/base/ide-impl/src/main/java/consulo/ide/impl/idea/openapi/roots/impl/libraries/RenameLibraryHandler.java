@@ -20,11 +20,12 @@ import consulo.codeEditor.Editor;
 import consulo.content.library.Library;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.TitledHandler;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.refactoring.rename.RenameHandler;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
-import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.InputValidator;
@@ -40,103 +41,108 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionImpl
 public class RenameLibraryHandler implements RenameHandler, TitledHandler {
-  private static final Logger LOG = Logger.getInstance(RenameLibraryHandler.class);
+    private static final Logger LOG = Logger.getInstance(RenameLibraryHandler.class);
 
-  @Override
-  public boolean isAvailableOnDataContext(DataContext dataContext) {
-    Library library = dataContext.getData(Library.KEY);
-    return library != null;
-  }
-
-  @Override
-  public boolean isRenaming(DataContext dataContext) {
-    return isAvailableOnDataContext(dataContext);
-  }
-
-  @Override
-  public void invoke(@Nonnull Project project, Editor editor, PsiFile file, DataContext dataContext) {
-    LOG.assertTrue(false);
-  }
-
-  @Override
-  public void invoke(@Nonnull final Project project, @Nonnull PsiElement[] elements, @Nonnull DataContext dataContext) {
-    final Library library = dataContext.getData(Library.KEY);
-    LOG.assertTrue(library != null);
-    Messages.showInputDialog(project,
-      IdeLocalize.promptEnterNewLibraryName().get(),
-      IdeLocalize.titleRenameLibrary().get(),
-      UIUtil.getQuestionIcon(),
-      library.getName(),
-      new MyInputValidator(project, library)
-    );
-  }
-
-  @Nonnull
-  @Override
-  public String getActionTitle() {
-    return IdeLocalize.titleRenameLibrary().get();
-  }
-
-  private static class MyInputValidator implements InputValidator {
-    private final Project myProject;
-    private final Library myLibrary;
-    public MyInputValidator(Project project, Library library) {
-      myProject = project;
-      myLibrary = library;
+    @Override
+    public boolean isAvailableOnDataContext(DataContext dataContext) {
+        Library library = dataContext.getData(Library.KEY);
+        return library != null;
     }
 
     @Override
-    @RequiredUIAccess
-    public boolean checkInput(String inputString) {
-      return inputString != null && !inputString.isEmpty() && myLibrary.getTable().getLibraryByName(inputString) == null;
+    public boolean isRenaming(DataContext dataContext) {
+        return isAvailableOnDataContext(dataContext);
     }
 
+    @RequiredUIAccess
     @Override
+    public void invoke(@Nonnull Project project, Editor editor, PsiFile file, DataContext dataContext) {
+        LOG.assertTrue(false);
+    }
+
     @RequiredUIAccess
-    public boolean canClose(final String inputString) {
-      final String oldName = myLibrary.getName();
-      final Library.ModifiableModel modifiableModel = renameLibrary(inputString);
-      if (modifiableModel == null) return false;
-      final Ref<Boolean> success = Ref.create(Boolean.TRUE);
-      CommandProcessor.getInstance().executeCommand(
-        myProject,
-        new Runnable() {
-          @RequiredUIAccess
-          @Override
-          public void run() {
-            UndoableAction action = new BasicUndoableAction() {
-              @Override
-              public void undo() throws UnexpectedUndoException {
-                final Library.ModifiableModel modifiableModel = renameLibrary(oldName);
-                if (modifiableModel != null) {
-                  modifiableModel.commit();
-                }
-              }
-
-              @Override
-              public void redo() throws UnexpectedUndoException {
-                final Library.ModifiableModel modifiableModel = renameLibrary(inputString);
-                if (modifiableModel != null) {
-                  modifiableModel.commit();
-                }
-              }
-            };
-            ProjectUndoManager.getInstance(myProject).undoableActionPerformed(action);
-            myProject.getApplication().runWriteAction(() -> modifiableModel.commit());
-          }
-        },
-        IdeLocalize.commandRenamingModule(oldName).get(),
-        null
-      );
-      return success.get();
+    @Override
+    public void invoke(@Nonnull final Project project, @Nonnull PsiElement[] elements, @Nonnull DataContext dataContext) {
+        final Library library = dataContext.getData(Library.KEY);
+        LOG.assertTrue(library != null);
+        Messages.showInputDialog(project,
+            IdeLocalize.promptEnterNewLibraryName().get(),
+            IdeLocalize.titleRenameLibrary().get(),
+            UIUtil.getQuestionIcon(),
+            library.getName(),
+            new MyInputValidator(project, library)
+        );
     }
 
-    @Nullable
-    private Library.ModifiableModel renameLibrary(String inputString) {
-      final Library.ModifiableModel modifiableModel = myLibrary.getModifiableModel();
-      modifiableModel.setName(inputString);
-      return modifiableModel;
+    @Nonnull
+    @Override
+    public LocalizeValue getActionTitleValue() {
+        return IdeLocalize.titleRenameLibrary();
     }
-  }
+
+    private static class MyInputValidator implements InputValidator {
+        private final Project myProject;
+        private final Library myLibrary;
+
+        public MyInputValidator(Project project, Library library) {
+            myProject = project;
+            myLibrary = library;
+        }
+
+        @Override
+        @RequiredUIAccess
+        public boolean checkInput(String inputString) {
+            return inputString != null && !inputString.isEmpty() && myLibrary.getTable().getLibraryByName(inputString) == null;
+        }
+
+        @Override
+        @RequiredUIAccess
+        public boolean canClose(final String inputString) {
+            final String oldName = myLibrary.getName();
+            final Library.ModifiableModel modifiableModel = renameLibrary(inputString);
+            if (modifiableModel == null) {
+                return false;
+            }
+            final Ref<Boolean> success = Ref.create(Boolean.TRUE);
+            CommandProcessor.getInstance().executeCommand(
+                myProject,
+                new Runnable() {
+                    @RequiredUIAccess
+                    @Override
+                    public void run() {
+                        UndoableAction action = new BasicUndoableAction() {
+                            @Override
+                            public void undo() throws UnexpectedUndoException {
+                                final Library.ModifiableModel modifiableModel = renameLibrary(oldName);
+                                if (modifiableModel != null) {
+                                    modifiableModel.commit();
+                                }
+                            }
+
+                            @Override
+                            public void redo() throws UnexpectedUndoException {
+                                final Library.ModifiableModel modifiableModel = renameLibrary(inputString);
+                                if (modifiableModel != null) {
+                                    modifiableModel.commit();
+                                }
+                            }
+                        };
+                        ProjectUndoManager.getInstance(myProject).undoableActionPerformed(action);
+                        myProject.getApplication().runWriteAction(() -> modifiableModel.commit());
+                    }
+                },
+                IdeLocalize.commandRenamingModule(oldName).get(),
+                null
+            );
+            return success.get();
+        }
+
+        @Nullable
+        private Library.ModifiableModel renameLibrary(String inputString) {
+            final Library.ModifiableModel modifiableModel = myLibrary.getModifiableModel();
+            modifiableModel.setName(inputString);
+            return modifiableModel;
+        }
+    }
 
 }

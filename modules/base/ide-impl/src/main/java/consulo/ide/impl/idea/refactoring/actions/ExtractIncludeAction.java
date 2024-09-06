@@ -24,6 +24,7 @@ import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.language.editor.refactoring.RefactoringSupportProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 
@@ -54,11 +55,11 @@ public class ExtractIncludeAction extends BasePlatformRefactoringAction {
   public void update(@Nonnull final AnActionEvent e) {
     super.update(e);
     final RefactoringActionHandler handler = getHandler(e.getDataContext());
-    if (handler instanceof TitledHandler) {
-      e.getPresentation().setText(((TitledHandler) handler).getActionTitle());
+    if (handler instanceof TitledHandler titledHandler) {
+      e.getPresentation().setTextValue(titledHandler.getActionTitleValue());
     }
     else {
-      e.getPresentation().setText("Include File...");
+      e.getPresentation().setTextValue(LocalizeValue.localizeTODO("Include File..."));
     }
   }
 
