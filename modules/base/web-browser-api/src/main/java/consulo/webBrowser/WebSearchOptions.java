@@ -36,25 +36,25 @@ import jakarta.annotation.Nullable;
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class WebSearchOptions implements PersistentStateComponent<WebSearchOptions> {
-  private WebSearchEngine myEngine = WebSearchEngine.GOOGLE;
+    private WebSearchEngine myEngine = WebSearchEngine.GOOGLE;
 
-  @Nonnull
-  public WebSearchEngine getEngine() {
-    return myEngine;
-  }
+    @Nonnull
+    public WebSearchEngine getEngine() {
+        return myEngine;
+    }
 
-  public void setEngine(@Nonnull WebSearchEngine engine) {
-    myEngine = engine;
-  }
+    public void setEngine(@Nonnull WebSearchEngine engine) {
+        myEngine = engine;
+    }
 
-  @Nullable
-  @Override
-  public WebSearchOptions getState() {
-    return this;
-  }
+    @Nullable
+    @Override
+    public WebSearchOptions getState() {
+        return this;
+    }
 
-  @Override
-  public void loadState(WebSearchOptions state) {
-    myEngine = ObjectUtil.notNull(state.myEngine, WebSearchEngine.GOOGLE);
-  }
+    @Override
+    public void loadState(WebSearchOptions state) {
+        myEngine = ObjectUtil.notNull(state.myEngine, WebSearchEngine.GOOGLE);
+    }
 }

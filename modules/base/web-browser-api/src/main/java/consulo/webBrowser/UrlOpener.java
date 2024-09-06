@@ -25,8 +25,8 @@ import jakarta.annotation.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface UrlOpener {
-  ExtensionPointName<UrlOpener> EP_NAME = ExtensionPointName.create(UrlOpener.class);
+    ExtensionPointName<UrlOpener> EP_NAME = ExtensionPointName.create(UrlOpener.class);
 
-  boolean openUrl(@Nonnull WebBrowser browser, @Nonnull String url, @Nullable Project project);
+    boolean openUrl(@Nonnull WebBrowser browser, @Nonnull String url, @Nullable Project project);
 }
 

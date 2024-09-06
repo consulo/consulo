@@ -25,81 +25,82 @@ import consulo.webBrowser.BrowserSpecificSettings;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public final class FirefoxSettings extends BrowserSpecificSettings {
-  private String myProfilesIniPath;
-  private String myProfile;
+    private String myProfilesIniPath;
+    private String myProfile;
 
-  public FirefoxSettings() {
-  }
-
-  public FirefoxSettings(@Nullable String profilesIniPath, @Nullable String profile) {
-    myProfilesIniPath = StringUtil.nullize(profilesIniPath);
-    myProfile = StringUtil.nullize(profile);
-  }
-
-  @Nullable
-  @Tag("profiles-ini-path")
-  public String getProfilesIniPath() {
-    return myProfilesIniPath;
-  }
-
-  public void setProfilesIniPath(@Nullable String value) {
-    myProfilesIniPath = PathUtil.toSystemIndependentName(StringUtil.nullize(value));
-  }
-
-  @Nullable
-  @Tag("profile")
-  public String getProfile() {
-    return myProfile;
-  }
-
-  public void setProfile(@Nullable String value) {
-    myProfile = StringUtil.nullize(value);
-  }
-
-  @Nonnull
-  @Override
-  public Configurable createConfigurable() {
-    return new FirefoxSettingsConfigurable(this);
-  }
-
-  @Nullable
-  public File getProfilesIniFile() {
-    if (myProfilesIniPath != null) {
-      return new File(FileUtil.toSystemDependentName(myProfilesIniPath));
-    }
-    return FirefoxUtil.getDefaultProfileIniPath();
-  }
-
-  @Nonnull
-  @Override
-  public List<String> getAdditionalParameters() {
-    List<FirefoxProfile> profiles = FirefoxUtil.computeProfiles(getProfilesIniFile());
-    if (profiles.size() >= 2) {
-      FirefoxProfile profile = FirefoxUtil.findProfileByNameOrDefault(myProfile, profiles);
-      if (profile != null && !profile.isDefault()) {
-        return Arrays.asList("-P", profile.getName());
-      }
-    }
-    return Collections.emptyList();
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
+    public FirefoxSettings() {
     }
 
-    FirefoxSettings settings = (FirefoxSettings)o;
-    return Comparing.equal(myProfilesIniPath, settings.myProfilesIniPath) &&
-           Comparing.equal(myProfile, settings.myProfile);
-  }
+    public FirefoxSettings(@Nullable String profilesIniPath, @Nullable String profile) {
+        myProfilesIniPath = StringUtil.nullize(profilesIniPath);
+        myProfile = StringUtil.nullize(profile);
+    }
+
+    @Nullable
+    @Tag("profiles-ini-path")
+    public String getProfilesIniPath() {
+        return myProfilesIniPath;
+    }
+
+    public void setProfilesIniPath(@Nullable String value) {
+        myProfilesIniPath = PathUtil.toSystemIndependentName(StringUtil.nullize(value));
+    }
+
+    @Nullable
+    @Tag("profile")
+    public String getProfile() {
+        return myProfile;
+    }
+
+    public void setProfile(@Nullable String value) {
+        myProfile = StringUtil.nullize(value);
+    }
+
+    @Nonnull
+    @Override
+    public Configurable createConfigurable() {
+        return new FirefoxSettingsConfigurable(this);
+    }
+
+    @Nullable
+    public File getProfilesIniFile() {
+        if (myProfilesIniPath != null) {
+            return new File(FileUtil.toSystemDependentName(myProfilesIniPath));
+        }
+        return FirefoxUtil.getDefaultProfileIniPath();
+    }
+
+    @Nonnull
+    @Override
+    public List<String> getAdditionalParameters() {
+        List<FirefoxProfile> profiles = FirefoxUtil.computeProfiles(getProfilesIniFile());
+        if (profiles.size() >= 2) {
+            FirefoxProfile profile = FirefoxUtil.findProfileByNameOrDefault(myProfile, profiles);
+            if (profile != null && !profile.isDefault()) {
+                return Arrays.asList("-P", profile.getName());
+            }
+        }
+        return Collections.emptyList();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        FirefoxSettings settings = (FirefoxSettings)o;
+        return Comparing.equal(myProfilesIniPath, settings.myProfilesIniPath)
+            && Comparing.equal(myProfile, settings.myProfile);
+    }
 }

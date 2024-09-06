@@ -33,8 +33,6 @@ import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.Indenter;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.Nls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -103,12 +101,11 @@ public class ChromeSettingsConfigurable implements Configurable {
 
         String configuredPath = getConfiguredUserDataDirPath();
         String storedPath = mySettings.getUserDataDirectoryPath();
-        if (myDefaultUserDirPath.equals(configuredPath) && storedPath == null) {
-            return false;
+        return !(myDefaultUserDirPath.equals(configuredPath) && storedPath == null)
+            && !configuredPath.equals(storedPath);
         }
-        return !configuredPath.equals(storedPath);
-    }
 
+    @RequiredUIAccess
     private String getConfiguredUserDataDirPath() {
         return FileUtil.toSystemIndependentName(myUserDataDirBox.getValue());
     }
@@ -135,6 +132,7 @@ public class ChromeSettingsConfigurable implements Configurable {
         }
     }
 
+    @RequiredUIAccess
     public void enableRecommendedOptions() {
         if (!myUseCustomProfileCheckBox.getValue()) {
             myUseCustomProfileCheckBox.setValue(true);
@@ -157,7 +155,6 @@ public class ChromeSettingsConfigurable implements Configurable {
         myLayout = null;
     }
 
-    @Nls
     @Override
     public String getDisplayName() {
         return "Chrome Settings";

@@ -1,0 +1,20 @@
+browsers.explorer:
+    text: Internet Explorer
+browsers.safari:
+    text: Safari
+browsers.opera:
+    text: Opera
+browsers.firefox:
+    text: Firefox
+browsers.chrome:
+    text: Chrome
+display.name.firefox.settings:
+    text: Firefox Settings
+chooser.title.select.profiles.ini.file:
+    text: Select "profiles.ini" File
+label.text.path.to.profiles.ini:
+    text: 'Path to "profiles.ini":'
+label.text.profile:
+    text: 'Profile:'
+browser.error:
+    text: Browser Error

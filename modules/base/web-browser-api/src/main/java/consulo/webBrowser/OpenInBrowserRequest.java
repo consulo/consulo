@@ -8,59 +8,60 @@ import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collection;
 
 public abstract class OpenInBrowserRequest {
-  private Collection<Url> result;
-  protected PsiFile file;
+    private Collection<Url> result;
+    protected PsiFile file;
 
-  public OpenInBrowserRequest(@Nonnull PsiFile file) {
-    this.file = file;
-  }
-
-  public OpenInBrowserRequest() {
-  }
-
-  @Nullable
-  public static OpenInBrowserRequest create(@Nonnull final PsiElement element) {
-    PsiFile psiFile = element.isValid() ? element.getContainingFile() : null;
-    if (psiFile == null || psiFile.getVirtualFile() == null) {
-      return null;
+    public OpenInBrowserRequest(@Nonnull PsiFile file) {
+        this.file = file;
     }
 
-    return new OpenInBrowserRequest(psiFile) {
-      @Nonnull
-      @Override
-      public PsiElement getElement() {
-        return element;
-      }
-    };
-  }
+    public OpenInBrowserRequest() {
+    }
 
-  @Nonnull
-  public PsiFile getFile() {
-    return file;
-  }
+    @Nullable
+    public static OpenInBrowserRequest create(@Nonnull final PsiElement element) {
+        PsiFile psiFile = element.isValid() ? element.getContainingFile() : null;
+        if (psiFile == null || psiFile.getVirtualFile() == null) {
+            return null;
+        }
 
-  @Nonnull
-  public VirtualFile getVirtualFile() {
-    return file.getVirtualFile();
-  }
+        return new OpenInBrowserRequest(psiFile) {
+            @Nonnull
+            @Override
+            public PsiElement getElement() {
+                return element;
+            }
+        };
+    }
 
-  @Nonnull
-  public Project getProject() {
-    return file.getProject();
-  }
+    @Nonnull
+    public PsiFile getFile() {
+        return file;
+    }
 
-  @Nonnull
-  public abstract PsiElement getElement();
+    @Nonnull
+    public VirtualFile getVirtualFile() {
+        return file.getVirtualFile();
+    }
 
-  public void setResult(@Nonnull Collection<Url> result) {
-    this.result = result;
-  }
+    @Nonnull
+    public Project getProject() {
+        return file.getProject();
+    }
 
-  @Nullable
-  public Collection<Url> getResult() {
-    return result;
-  }
+    @Nonnull
+    public abstract PsiElement getElement();
+
+    public void setResult(@Nonnull Collection<Url> result) {
+        this.result = result;
+    }
+
+    @Nullable
+    public Collection<Url> getResult() {
+        return result;
+    }
 }

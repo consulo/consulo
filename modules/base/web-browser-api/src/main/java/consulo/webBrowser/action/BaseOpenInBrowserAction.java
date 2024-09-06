@@ -15,7 +15,8 @@
  */
 package consulo.webBrowser.action;
 
-import consulo.application.ApplicationManager;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.language.psi.PsiDocumentManager;
@@ -25,6 +26,7 @@ import consulo.language.psi.PsiManager;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -43,11 +45,12 @@ import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.light.LightVirtualFileBase;
 import consulo.webBrowser.*;
+import consulo.webBrowser.localize.WebBrowserLocalize;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
-import java.awt.event.InputEvent;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -67,7 +70,8 @@ public abstract class BaseOpenInBrowserAction extends DumbAwareAction {
     protected abstract WebBrowser getBrowser(@Nonnull AnActionEvent event);
 
     @Override
-    public final void update(AnActionEvent e) {
+    @RequiredUIAccess
+    public final void update(@Nonnull AnActionEvent e) {
         WebBrowser browser = getBrowser(e);
         if (browser == null) {
             e.getPresentation().setEnabledAndVisible(false);
@@ -99,7 +103,8 @@ public abstract class BaseOpenInBrowserAction extends DumbAwareAction {
     }
 
     @Override
-    public final void actionPerformed(AnActionEvent e) {
+    @RequiredUIAccess
+    public final void actionPerformed(@Nonnull AnActionEvent e) {
         WebBrowser browser = getBrowser(e);
         if (browser != null) {
             open(e, browser);
@@ -107,6 +112,7 @@ public abstract class BaseOpenInBrowserAction extends DumbAwareAction {
     }
 
     @Nullable
+    @RequiredReadAction
     public static OpenInBrowserRequest createRequest(@Nonnull DataContext context) {
         final Editor editor = context.getData(Editor.KEY);
         if (editor != null) {
@@ -122,6 +128,7 @@ public abstract class BaseOpenInBrowserAction extends DumbAwareAction {
 
                         @Nonnull
                         @Override
+                        @RequiredReadAction
                         public PsiElement getElement() {
                             if (element == null) {
                                 element = getFile().findElementAt(editor.getCaretModel().getOffset());
@@ -148,6 +155,7 @@ public abstract class BaseOpenInBrowserAction extends DumbAwareAction {
     }
 
     @Nullable
+    @RequiredReadAction
     public static Pair<OpenInBrowserRequest, WebBrowserUrlProvider> doUpdate(@Nonnull AnActionEvent event) {
         OpenInBrowserRequest request = createRequest(event.getDataContext());
         boolean applicable = false;
@@ -164,10 +172,12 @@ public abstract class BaseOpenInBrowserAction extends DumbAwareAction {
         return applicable ? Pair.create(request, provider) : null;
     }
 
+    @RequiredUIAccess
     public static void open(@Nonnull AnActionEvent event, @Nullable WebBrowser browser) {
-        open(createRequest(event.getDataContext()), (event.getModifiers() & InputEvent.SHIFT_MASK) != 0, browser);
+        open(createRequest(event.getDataContext()), (event.getModifiers() & Event.SHIFT_MASK) != 0, browser);
     }
 
+    @RequiredUIAccess
     public static void open(@Nullable final OpenInBrowserRequest request, boolean preferLocalUrl, @Nullable final WebBrowser browser) {
         if (request == null) {
             return;
@@ -177,13 +187,14 @@ public abstract class BaseOpenInBrowserAction extends DumbAwareAction {
             Collection<Url> urls = WebBrowserService.getInstance().getUrlsToOpen(request, preferLocalUrl);
             if (!urls.isEmpty()) {
                 chooseUrl(urls).doWhenDone(url -> {
-                    ApplicationManager.getApplication().saveAll();
+                    //noinspection RequiredXAction
+                    Application.get().saveAll();
                     BrowserLauncher.getInstance().browse(url.toExternalForm(), browser, request.getProject());
                 });
             }
         }
         catch (WebBrowserUrlProvider.BrowserException e1) {
-            Messages.showErrorDialog(e1.getMessage(), WebBrowserBundle.message("browser.error"));
+            Messages.showErrorDialog(e1.getMessage(), WebBrowserLocalize.browserError().get());
         }
         catch (Exception e1) {
             LOG.error(e1);

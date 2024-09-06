@@ -22,38 +22,39 @@ import consulo.component.util.ModificationTracker;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 
 /**
  * @author VISTALL
- * @since 28/11/2021
+ * @since 2021-11-28
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface WebBrowserManager extends ModificationTracker {
-  public static WebBrowserManager getInstance() {
-    return Application.get().getInstance(WebBrowserManager.class);
-  }
+    public static WebBrowserManager getInstance() {
+        return Application.get().getInstance(WebBrowserManager.class);
+    }
 
-  @Nonnull
-  List<WebBrowser> getBrowsers();
+    @Nonnull
+    List<WebBrowser> getBrowsers();
 
-  @Nonnull
-  List<WebBrowser> getActiveBrowsers();
+    @Nonnull
+    List<WebBrowser> getActiveBrowsers();
 
-  boolean isActive(@Nonnull WebBrowser webBrowser);
+    boolean isActive(@Nonnull WebBrowser webBrowser);
 
-  @Nonnull
-  DefaultBrowserPolicy getDefaultBrowserPolicy();
+    @Nonnull
+    DefaultBrowserPolicy getDefaultBrowserPolicy();
 
-  @Nullable
-  WebBrowser getFirstActiveBrowser();
+    @Nullable
+    WebBrowser getFirstActiveBrowser();
 
-  /**
-   * @param idOrFamilyName UUID or, due to backward compatibility, browser family name or JS debugger engine ID
-   */
-  @Nullable
-  WebBrowser findBrowserById(@Nullable String idOrFamilyName);
+    /**
+     * @param idOrFamilyName UUID or, due to backward compatibility, browser family name or JS debugger engine ID
+     */
+    @Nullable
+    WebBrowser findBrowserById(@Nullable String idOrFamilyName);
 
-  @Nonnull
-  String getAlternativeBrowserPath();
+    @Nonnull
+    String getAlternativeBrowserPath();
 }

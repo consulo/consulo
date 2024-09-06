@@ -21,7 +21,6 @@ import consulo.util.collection.SmartList;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -34,151 +33,151 @@ import java.util.List;
  * @author nik
  */
 public class FirefoxUtil {
-  private static final Logger LOG = Logger.getInstance(FirefoxUtil.class);
-  @NonNls public static final String PROFILES_INI_FILE = "profiles.ini";
+    private static final Logger LOG = Logger.getInstance(FirefoxUtil.class);
+    public static final String PROFILES_INI_FILE = "profiles.ini";
 
-  private FirefoxUtil() {
-  }
-
-  @Nullable
-  public static File getDefaultProfileIniPath() {
-    File[] roots = getProfilesDirs();
-    for (File profilesDir : roots) {
-      File profilesFile = new File(profilesDir, PROFILES_INI_FILE);
-      if (profilesFile.isFile()) {
-        return profilesFile;
-      }
+    private FirefoxUtil() {
     }
-    return null;
-  }
 
-  @Nullable
-  public static File getFirefoxExtensionsDir(FirefoxSettings settings) {
-    File profilesFile = settings.getProfilesIniFile();
-    if (profilesFile != null && profilesFile.exists()) {
-      List<FirefoxProfile> profiles = computeProfiles(profilesFile);
-      FirefoxProfile profile = findProfileByNameOrDefault(settings.getProfile(), profiles);
-      if (profile != null) {
-        File profileDir = profile.getProfileDirectory(profilesFile);
-        if (profileDir.isDirectory()) {
-          return new File(profileDir, "extensions");
+    @Nullable
+    public static File getDefaultProfileIniPath() {
+        File[] roots = getProfilesDirs();
+        for (File profilesDir : roots) {
+            File profilesFile = new File(profilesDir, PROFILES_INI_FILE);
+            if (profilesFile.isFile()) {
+                return profilesFile;
+            }
         }
-      }
-    }
-    return null;
-  }
-
-  @Nullable
-  public static FirefoxProfile findProfileByNameOrDefault(@Nullable String name, @Nonnull List<FirefoxProfile> profiles) {
-    for (FirefoxProfile profile : profiles) {
-      if (profile.getName().equals(name)) {
-        return profile;
-      }
-    }
-    return getDefaultProfile(profiles);
-  }
-
-  @Nullable
-  public static FirefoxProfile getDefaultProfile(List<FirefoxProfile> profiles) {
-    if (profiles.isEmpty()) {
-      return null;
+        return null;
     }
 
-    for (FirefoxProfile profile : profiles) {
-      if (profile.isDefault()) {
-        return profile;
-      }
-    }
-    return profiles.get(0);
-  }
-
-  @Nonnull
-  public static List<FirefoxProfile> computeProfiles(@Nullable File profilesFile) {
-    if (profilesFile == null || !profilesFile.isFile()) {
-      return Collections.emptyList();
-    }
-
-    try {
-      BufferedReader reader;
-      reader = new BufferedReader(new FileReader(profilesFile));
-      try {
-        final List<FirefoxProfile> profiles = new SmartList<FirefoxProfile>();
-        boolean insideProfile = false;
-        String currentName = null;
-        String currentPath = null;
-        boolean isDefault = false;
-        boolean isRelative = false;
-        boolean eof = false;
-        while (!eof) {
-          String line = reader.readLine();
-          if (line == null) {
-            eof = true;
-            line = "[]";
-          }
-          else {
-            line = line.trim();
-          }
-
-          if (line.startsWith("[") && line.endsWith("]")) {
-            if (!StringUtil.isEmpty(currentPath) && !StringUtil.isEmpty(currentName)) {
-              profiles.add(new FirefoxProfile(currentName, currentPath, isDefault, isRelative));
+    @Nullable
+    public static File getFirefoxExtensionsDir(FirefoxSettings settings) {
+        File profilesFile = settings.getProfilesIniFile();
+        if (profilesFile != null && profilesFile.exists()) {
+            List<FirefoxProfile> profiles = computeProfiles(profilesFile);
+            FirefoxProfile profile = findProfileByNameOrDefault(settings.getProfile(), profiles);
+            if (profile != null) {
+                File profileDir = profile.getProfileDirectory(profilesFile);
+                if (profileDir.isDirectory()) {
+                    return new File(profileDir, "extensions");
+                }
             }
-            currentName = null;
-            currentPath = null;
-            isDefault = false;
-            isRelative = false;
-            insideProfile = StringUtil.startsWithIgnoreCase(line, "[Profile");
-            continue;
-          }
-
-          final int i = line.indexOf('=');
-          if (i != -1 && insideProfile) {
-            String name = line.substring(0, i).trim();
-            String value = line.substring(i + 1).trim();
-            if (name.equalsIgnoreCase("path")) {
-              currentPath = value;
-            }
-            else if (name.equalsIgnoreCase("name")) {
-              currentName = value;
-            }
-            else if (name.equalsIgnoreCase("default") && value.equals("1")) {
-              isDefault = true;
-            }
-            else //noinspection SpellCheckingInspection
-              if (name.equalsIgnoreCase("isrelative") && value.equals("1")) {
-              isRelative = true;
-            }
-          }
         }
-        return profiles;
-      }
-      finally {
-        reader.close();
-      }
-    }
-    catch (IOException e) {
-      LOG.info(e);
-      return Collections.emptyList();
-    }
-  }
-
-  private static File[] getProfilesDirs() {
-    File userHome = Platform.current().user().homePath().toFile();
-    if (Platform.current().os().isMac()) {
-      return new File[] {
-        new File(userHome, "Library" + File.separator + "Mozilla" + File.separator + "Firefox"),
-        new File(userHome, "Library" + File.separator + "Application Support" + File.separator + "Firefox"),
-      };
-    }
-    if (Platform.current().os().isUnix()) {
-      return new File[] {new File(userHome, ".mozilla" + File.separator + "firefox")};
+        return null;
     }
 
-    String localPath = "Mozilla" + File.separator + "Firefox";
-    return new File[] {
-      new File(System.getenv("APPDATA"), localPath),
-      new File(userHome, "AppData" + File.separator + "Roaming" + File.separator + localPath),
-      new File(userHome, "Application Data" + File.separator + localPath)
-    };
-  }
+    @Nullable
+    public static FirefoxProfile findProfileByNameOrDefault(@Nullable String name, @Nonnull List<FirefoxProfile> profiles) {
+        for (FirefoxProfile profile : profiles) {
+            if (profile.getName().equals(name)) {
+                return profile;
+            }
+        }
+        return getDefaultProfile(profiles);
+    }
+
+    @Nullable
+    public static FirefoxProfile getDefaultProfile(List<FirefoxProfile> profiles) {
+        if (profiles.isEmpty()) {
+            return null;
+        }
+
+        for (FirefoxProfile profile : profiles) {
+            if (profile.isDefault()) {
+                return profile;
+            }
+        }
+        return profiles.get(0);
+    }
+
+    @Nonnull
+    public static List<FirefoxProfile> computeProfiles(@Nullable File profilesFile) {
+        if (profilesFile == null || !profilesFile.isFile()) {
+            return Collections.emptyList();
+        }
+
+        try {
+            BufferedReader reader;
+            reader = new BufferedReader(new FileReader(profilesFile));
+            try {
+                final List<FirefoxProfile> profiles = new SmartList<>();
+                boolean insideProfile = false;
+                String currentName = null;
+                String currentPath = null;
+                boolean isDefault = false;
+                boolean isRelative = false;
+                boolean eof = false;
+                while (!eof) {
+                    String line = reader.readLine();
+                    if (line == null) {
+                        eof = true;
+                        line = "[]";
+                    }
+                    else {
+                        line = line.trim();
+                    }
+
+                    if (line.startsWith("[") && line.endsWith("]")) {
+                        if (!StringUtil.isEmpty(currentPath) && !StringUtil.isEmpty(currentName)) {
+                            profiles.add(new FirefoxProfile(currentName, currentPath, isDefault, isRelative));
+                        }
+                        currentName = null;
+                        currentPath = null;
+                        isDefault = false;
+                        isRelative = false;
+                        insideProfile = StringUtil.startsWithIgnoreCase(line, "[Profile");
+                        continue;
+                    }
+
+                    final int i = line.indexOf('=');
+                    if (i != -1 && insideProfile) {
+                        String name = line.substring(0, i).trim();
+                        String value = line.substring(i + 1).trim();
+                        if (name.equalsIgnoreCase("path")) {
+                            currentPath = value;
+                        }
+                        else if (name.equalsIgnoreCase("name")) {
+                            currentName = value;
+                        }
+                        else if (name.equalsIgnoreCase("default") && value.equals("1")) {
+                            isDefault = true;
+                        }
+                        else //noinspection SpellCheckingInspection
+                            if (name.equalsIgnoreCase("isrelative") && value.equals("1")) {
+                                isRelative = true;
+                            }
+                    }
+                }
+                return profiles;
+            }
+            finally {
+                reader.close();
+            }
+        }
+        catch (IOException e) {
+            LOG.info(e);
+            return Collections.emptyList();
+        }
+    }
+
+    private static File[] getProfilesDirs() {
+        File userHome = Platform.current().user().homePath().toFile();
+        if (Platform.current().os().isMac()) {
+            return new File[]{
+                new File(userHome, "Library" + File.separator + "Mozilla" + File.separator + "Firefox"),
+                new File(userHome, "Library" + File.separator + "Application Support" + File.separator + "Firefox"),
+            };
+        }
+        if (Platform.current().os().isUnix()) {
+            return new File[]{new File(userHome, ".mozilla" + File.separator + "firefox")};
+        }
+
+        String localPath = "Mozilla" + File.separator + "Firefox";
+        return new File[]{
+            new File(System.getenv("APPDATA"), localPath),
+            new File(userHome, "AppData" + File.separator + "Roaming" + File.separator + localPath),
+            new File(userHome, "Application Data" + File.separator + localPath)
+        };
+    }
 }

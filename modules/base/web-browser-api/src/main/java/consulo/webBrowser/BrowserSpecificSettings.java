@@ -22,21 +22,21 @@ import java.util.Collections;
 import java.util.List;
 
 public abstract class BrowserSpecificSettings implements Cloneable {
-  @Nonnull
-  public abstract Configurable createConfigurable();
+    @Nonnull
+    public abstract Configurable createConfigurable();
 
-  @Nonnull
-  public List<String> getAdditionalParameters() {
-    return Collections.emptyList();
-  }
+    @Nonnull
+    public List<String> getAdditionalParameters() {
+        return Collections.emptyList();
+    }
 
-  @Override
-  public BrowserSpecificSettings clone() {
-    try {
-      return (BrowserSpecificSettings)super.clone();
+    @Override
+    public BrowserSpecificSettings clone() {
+        try {
+            return (BrowserSpecificSettings)super.clone();
+        }
+        catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
     }
-    catch (CloneNotSupportedException e) {
-      throw new RuntimeException(e);
-    }
-  }
 }

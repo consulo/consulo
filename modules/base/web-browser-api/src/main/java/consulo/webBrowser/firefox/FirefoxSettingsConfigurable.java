@@ -19,6 +19,7 @@ import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.platform.Platform;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.TextFieldWithBrowseButton;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.util.io.FileUtil;
@@ -27,7 +28,7 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.webBrowser.WebBrowserBundle;
+import consulo.webBrowser.localize.WebBrowserLocalize;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.Nls;
 
@@ -40,106 +41,117 @@ import java.util.List;
  * @author nik
  */
 public class FirefoxSettingsConfigurable implements Configurable {
-  private static final FileChooserDescriptor PROFILES_INI_CHOOSER_DESCRIPTOR = createProfilesIniChooserDescriptor();
+    private static final FileChooserDescriptor PROFILES_INI_CHOOSER_DESCRIPTOR = createProfilesIniChooserDescriptor();
 
-  private JPanel myMainPanel;
-  private JComboBox myProfileCombobox;
-  private TextFieldWithBrowseButton myProfilesIniPathField;
-  private final FirefoxSettings mySettings;
-  private String myLastProfilesIniPath;
-  private String myDefaultProfilesIniPath;
-  private String myDefaultProfile;
+    private JPanel myMainPanel;
+    private JComboBox myProfileCombobox;
+    private TextFieldWithBrowseButton myProfilesIniPathField;
+    private final FirefoxSettings mySettings;
+    private String myLastProfilesIniPath;
+    private String myDefaultProfilesIniPath;
+    private String myDefaultProfile;
 
-  public FirefoxSettingsConfigurable(FirefoxSettings settings) {
-    mySettings = settings;
-    myProfilesIniPathField.addBrowseFolderListener(WebBrowserBundle.message("chooser.title.select.profiles.ini.file"), null, null, PROFILES_INI_CHOOSER_DESCRIPTOR);
-    myProfilesIniPathField.getTextField().getDocument().addDocumentListener(new DocumentAdapter() {
-      @Override
-      protected void textChanged(DocumentEvent e) {
+    public FirefoxSettingsConfigurable(FirefoxSettings settings) {
+        mySettings = settings;
+        myProfilesIniPathField.addBrowseFolderListener(
+            WebBrowserLocalize.chooserTitleSelectProfilesIniFile().get(),
+            null,
+            null,
+            PROFILES_INI_CHOOSER_DESCRIPTOR
+        );
+        myProfilesIniPathField.getTextField().getDocument().addDocumentListener(new DocumentAdapter() {
+            @Override
+            protected void textChanged(DocumentEvent e) {
+                updateProfilesList();
+            }
+        });
+    }
+
+    public static FileChooserDescriptor createProfilesIniChooserDescriptor() {
+        return new FileChooserDescriptor(true, false, false, false, false, false) {
+            @Override
+            @RequiredUIAccess
+            public boolean isFileSelectable(VirtualFile file) {
+                return file.getName().equals(FirefoxUtil.PROFILES_INI_FILE) && super.isFileSelectable(file);
+            }
+        }.withShowHiddenFiles(Platform.current().os().isUnix());
+    }
+
+    @Override
+    @RequiredUIAccess
+    public JComponent createComponent() {
+        return myMainPanel;
+    }
+
+    @Override
+    @RequiredUIAccess
+    public boolean isModified() {
+        return !Comparing.equal(mySettings.getProfile(), getConfiguredProfileName())
+            || !Comparing.equal(mySettings.getProfilesIniPath(), getConfiguredProfileIniPath());
+    }
+
+    @Nullable
+    private String getConfiguredProfileIniPath() {
+        String path = PathUtil.toSystemIndependentName(StringUtil.nullize(myProfilesIniPathField.getText()));
+        return myDefaultProfilesIniPath.equals(path) ? null : path;
+    }
+
+    @Nullable
+    private String getConfiguredProfileName() {
+        final String selected = (String)myProfileCombobox.getSelectedItem();
+        if (Comparing.equal(myDefaultProfile, selected)) {
+            return null;
+        }
+        return selected;
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void apply() throws ConfigurationException {
+        mySettings.setProfile(getConfiguredProfileName());
+        mySettings.setProfilesIniPath(getConfiguredProfileIniPath());
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void reset() {
+        File defaultFile = FirefoxUtil.getDefaultProfileIniPath();
+        myDefaultProfilesIniPath = defaultFile != null ? defaultFile.getAbsolutePath() : "";
+
+        String path = mySettings.getProfilesIniPath();
+        myProfilesIniPathField.setText(path != null ? FileUtil.toSystemDependentName(path) : myDefaultProfilesIniPath);
         updateProfilesList();
-      }
-    });
-  }
-
-  public static FileChooserDescriptor createProfilesIniChooserDescriptor() {
-    return new FileChooserDescriptor(true, false, false, false, false, false) {
-      @Override
-      public boolean isFileSelectable(VirtualFile file) {
-        return file.getName().equals(FirefoxUtil.PROFILES_INI_FILE) && super.isFileSelectable(file);
-      }
-    }.withShowHiddenFiles(Platform.current().os().isUnix());
-  }
-
-  @Override
-  public JComponent createComponent() {
-    return myMainPanel;
-  }
-
-  @Override
-  public boolean isModified() {
-    return !Comparing.equal(mySettings.getProfile(), getConfiguredProfileName()) ||
-           !Comparing.equal(mySettings.getProfilesIniPath(), getConfiguredProfileIniPath());
-  }
-
-  @Nullable
-  private String getConfiguredProfileIniPath() {
-    String path = PathUtil.toSystemIndependentName(StringUtil.nullize(myProfilesIniPathField.getText()));
-    return myDefaultProfilesIniPath.equals(path) ? null : path;
-  }
-
-  @Nullable
-  private String getConfiguredProfileName() {
-    final String selected = (String)myProfileCombobox.getSelectedItem();
-    if (Comparing.equal(myDefaultProfile, selected)) {
-      return null;
-    }
-    return selected;
-  }
-
-  @Override
-  public void apply() throws ConfigurationException {
-    mySettings.setProfile(getConfiguredProfileName());
-    mySettings.setProfilesIniPath(getConfiguredProfileIniPath());
-  }
-
-  @Override
-  public void reset() {
-    File defaultFile = FirefoxUtil.getDefaultProfileIniPath();
-    myDefaultProfilesIniPath = defaultFile != null ? defaultFile.getAbsolutePath() : "";
-
-    String path = mySettings.getProfilesIniPath();
-    myProfilesIniPathField.setText(path != null ? FileUtil.toSystemDependentName(path) : myDefaultProfilesIniPath);
-    updateProfilesList();
-    myProfileCombobox.setSelectedItem(ObjectUtil.notNull(mySettings.getProfile(), myDefaultProfile));
-  }
-
-  private void updateProfilesList() {
-    final String profilesIniPath = myProfilesIniPathField.getText();
-    if (myLastProfilesIniPath != null && myLastProfilesIniPath.equals(profilesIniPath)) {
-      return;
+        myProfileCombobox.setSelectedItem(ObjectUtil.notNull(mySettings.getProfile(), myDefaultProfile));
     }
 
-    myProfileCombobox.removeAllItems();
-    final List<FirefoxProfile> profiles = FirefoxUtil.computeProfiles(new File(profilesIniPath));
-    final FirefoxProfile defaultProfile = FirefoxUtil.getDefaultProfile(profiles);
-    myDefaultProfile = defaultProfile != null ? defaultProfile.getName() : null;
-    for (FirefoxProfile profile : profiles) {
-      //noinspection unchecked
-      myProfileCombobox.addItem(profile.getName());
-    }
-    if (!profiles.isEmpty()) {
-      myProfileCombobox.setSelectedIndex(0);
-    }
-    myLastProfilesIniPath = profilesIniPath;
-  }
+    private void updateProfilesList() {
+        final String profilesIniPath = myProfilesIniPathField.getText();
+        if (myLastProfilesIniPath != null && myLastProfilesIniPath.equals(profilesIniPath)) {
+            return;
+        }
 
-  @Override
-  public void disposeUIResources() {
-  }
+        myProfileCombobox.removeAllItems();
+        final List<FirefoxProfile> profiles = FirefoxUtil.computeProfiles(new File(profilesIniPath));
+        final FirefoxProfile defaultProfile = FirefoxUtil.getDefaultProfile(profiles);
+        myDefaultProfile = defaultProfile != null ? defaultProfile.getName() : null;
+        for (FirefoxProfile profile : profiles) {
+            //noinspection unchecked
+            myProfileCombobox.addItem(profile.getName());
+        }
+        if (!profiles.isEmpty()) {
+            myProfileCombobox.setSelectedIndex(0);
+        }
+        myLastProfilesIniPath = profilesIniPath;
+    }
 
-  @Override
-  @Nls
-  public String getDisplayName() {
-    return WebBrowserBundle.message("display.name.firefox.settings");
-  }
+    @Override
+    @RequiredUIAccess
+    public void disposeUIResources() {
+    }
+
+    @Override
+    @Nls
+    public String getDisplayName() {
+        return WebBrowserLocalize.displayNameFirefoxSettings().get();
+    }
 }
