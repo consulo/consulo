@@ -37,6 +37,7 @@
                 <include>consulo:consulo-document-api</include>
                 <include>consulo:consulo-project-api</include>
                 <include>consulo:consulo-project-impl</include>
+                <include>consulo:consulo-logging-logback-impl</include>
                 <include>consulo:consulo-logging-slf4j-binding-impl</include>
                 <include>consulo:consulo-remote-servers-agent-rt</include>
                 <include>consulo:consulo-platform-api</include>
