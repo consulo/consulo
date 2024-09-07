@@ -15,6 +15,9 @@
  */
 package consulo.desktop.awt.startup;
 
+import com.formdev.flatlaf.ui.FlatNativeLinuxLibrary;
+import com.formdev.flatlaf.ui.FlatNativeMacLibrary;
+import com.formdev.flatlaf.ui.FlatNativeWindowsLibrary;
 import com.google.gson.Gson;
 import consulo.application.Application;
 import consulo.application.ApplicationProperties;
@@ -136,8 +139,17 @@ public class DesktopApplicationStarter extends ApplicationStarter {
 
         invokeAtUIAndWait(IdeEventQueue::initialize);// replace system event queue
 
+        ForkJoinPool pool = ForkJoinPool.commonPool();
+
         // execute it in parallel
-        ForkJoinPool.commonPool().execute(DesktopAWTFontRegistry::registerBundledFonts);
+        pool.execute(DesktopAWTFontRegistry::registerBundledFonts);
+
+        // preload all flat native libraries
+        pool.execute(() -> {
+            FlatNativeWindowsLibrary.isLoaded();
+//            FlatNativeMacLibrary.isLoaded();
+//            FlatNativeLinuxLibrary.isLoaded();
+        });
 
         SwingUtilities.invokeLater(() -> {
             if (myPlatform.os().isXWindow()) {
