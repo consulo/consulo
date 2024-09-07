@@ -434,7 +434,12 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
                 titleBuilder.append(fileTitle).append(title).append(addAppName ? applicationName : null);
             }
             else {
-                titleBuilder.append(title).append(fileTitle).append(applicationName);
+                titleBuilder.append(title).append(fileTitle);
+
+                // only append if title not equal app name
+                if (!Objects.equals(title, applicationName)) {
+                    titleBuilder.append(applicationName);
+                }
             }
 
             frame.setTitle(titleBuilder.sb.toString());
