@@ -196,11 +196,12 @@ public class DarculaLaf extends BaseLookAndFeel {
         }
         else {
             if (os.isWindows()) {
+                // windows11+ we don't change to windows classic view
                 if (os.asWindows().isWindows11OrNewer()) {
-                    osSuffix = "windows11";
+                    osSuffix = "windows";
                 }
                 else {
-                    osSuffix = "windows";
+                    osSuffix = "windows10";
                 }
             }
             else {
