@@ -22,6 +22,5 @@ import consulo.platform.PlatformOperatingSystem;
  * @since 25/04/2023
  */
 public interface MacOperatingSystem extends PlatformOperatingSystem {
-  @Override
   boolean isMacMojave();
 }

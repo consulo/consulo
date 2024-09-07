@@ -30,7 +30,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 25/04/2023
  */
-public interface PlatformOperatingSystem extends Platform.OperatingSystem {
+public interface PlatformOperatingSystem {
   @Nonnull
   Collection<ProcessInfo> processes();
 
@@ -89,45 +89,4 @@ public interface PlatformOperatingSystem extends Platform.OperatingSystem {
     String environmentVariable = getEnvironmentVariable(key);
     return environmentVariable == null ? defaultValue : environmentVariable;
   }
-
-  // region Windows stuff which was moved to WindowsOperationSystem
-
-  @Deprecated
-  @DeprecationInfo("Use MacOperatingSystem")
-  default boolean isMacMojave() {
-    return isMac() && asMac().isMacMojave();
-  }
-
-  @Deprecated
-  default boolean isWindows7OrNewer() {
-    return isWindows() && asWindows().isWindows7OrNewer();
-  }
-
-  @Deprecated
-  default boolean isWindows8OrNewer() {
-    return isWindows() && asWindows().isWindows8OrNewer();
-  }
-
-  @Deprecated
-  default boolean isWindows10OrNewer() {
-    return isWindows() && asWindows().isWindows10OrNewer();
-  }
-
-  @Deprecated
-  default boolean isWindows11OrNewer() {
-    return isWindows() && asWindows().isWindows11OrNewer();
-  }
-
-  @Nonnull
-  @Deprecated
-  default String getWindowsFileVersion(@Nonnull Path path) {
-    return asWindows().getWindowsFileVersion(path);
-  }
-
-  @Nonnull
-  @Deprecated
-  default String getWindowsFileVersion(@Nonnull Path path, int parts) {
-    return asWindows().getWindowsFileVersion(path, parts);
-  }
-  // endregion
 }

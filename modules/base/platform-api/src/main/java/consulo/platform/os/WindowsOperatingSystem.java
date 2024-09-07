@@ -32,19 +32,14 @@ public interface WindowsOperatingSystem extends PlatformOperatingSystem {
     return LineSeparator.CRLF;
   }
 
-  @Override
   boolean isWindows7OrNewer();
 
-  @Override
   boolean isWindows8OrNewer();
 
-  @Override
   boolean isWindows10OrNewer();
 
-  @Override
   boolean isWindows11OrNewer();
 
-  @Override
   @Nonnull
   default String getWindowsFileVersion(@Nonnull Path path) {
     // 1.1 - 2
@@ -53,7 +48,6 @@ public interface WindowsOperatingSystem extends PlatformOperatingSystem {
     return getWindowsFileVersion(path, 4);
   }
 
-  @Override
   @Nonnull
   String getWindowsFileVersion(@Nonnull Path path, int parts);
 }

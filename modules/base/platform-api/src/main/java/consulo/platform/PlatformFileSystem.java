@@ -26,17 +26,14 @@ import java.nio.file.Path;
  * @author VISTALL
  * @since 25/04/2023
  */
-public interface PlatformFileSystem extends Platform.FileSystem {
-  @Override
+public interface PlatformFileSystem {
   boolean isCaseSensitive();
 
-  @Override
   boolean areSymLinksSupported();
 
   /**
    * @return image filemanager image for file. If return null it will use default icon from IDE
    */
-  @Override
   @Nullable
   default Image getImage(@Nonnull File file) {
     return null;

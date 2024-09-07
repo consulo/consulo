@@ -23,7 +23,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 25/04/2023
  */
-public interface PlatformJvm extends Platform.Jvm {
+public interface PlatformJvm {
   @Nonnull
   String version();
 
