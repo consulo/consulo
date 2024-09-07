@@ -401,6 +401,8 @@ public class FlatTitlePane
         };
         button.setFocusable(false);
         button.setContentAreaFilled(false);
+        // override - not handle from UI
+        button.setRolloverEnabled(true);
         button.setBorder(BorderFactory.createEmptyBorder());
         button.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY, accessibleName);
         button.addActionListener(action);
