@@ -24,6 +24,7 @@ import consulo.project.internal.DefaultProjectFactory;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.IdeActions;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
@@ -31,7 +32,7 @@ import jakarta.inject.Inject;
  * @author VISTALL
  * @since 15/07/2021
  */
-@ActionImpl(id = "ShowUnifiedSettingsDialogAction", parents = @ActionParentRef(@ActionRef(id = "ToolsMenu")))
+@ActionImpl(id = "ShowUnifiedSettingsDialogAction", parents = @ActionParentRef(@ActionRef(id = IdeActions.TOOLS_MENU)))
 public class ShowUnifiedSettingsDialogAction extends DumbAwareAction {
   private final DefaultProjectFactory myDefaultProjectFactory;
 

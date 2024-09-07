@@ -2572,10 +2572,6 @@
       <action id="Vcs.Show.Shelf" class="consulo.ide.impl.idea.vcs.VcsShowShelfAction" text="Show Shelf"/>
     </group>
 
-    <group id="Internal" text="Internal Actions" internal="true" popup="true">
-      <add-to-group group-id="ToolsMenu" anchor="last"/>
-    </group>
-
     <group id="TodoMainGroup" text="TODO">
       <add-to-group group-id="Other.KeymapGroup"/>
       <group id="TodoViewGroupByGroup" class="consulo.ide.impl.idea.ide.todo.TodoPanel$GroupByActionGroup">

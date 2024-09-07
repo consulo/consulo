@@ -14,142 +14,152 @@
   - limitations under the License.
   -->
 <consulo-plugin>
-  <id>consulo.desktop.awt</id>
-  <name>Consulo [desktop] [AWT]</name>
+    <id>consulo.desktop.awt</id>
+    <name>Consulo [desktop] [AWT]</name>
 
-  <actions>
-    <group id="FileChooser">
-      <action id="FileChooser.TogglePathShowing" class="consulo.ide.impl.idea.openapi.fileChooser.actions.TogglePathShowingAction"/>
-    </group>
+    <actions>
+        <group id="FileChooser">
+            <action id="FileChooser.TogglePathShowing" class="consulo.ide.impl.idea.openapi.fileChooser.actions.TogglePathShowingAction"/>
+        </group>
 
-    <group id="Internal.Desktop" text="Internal Actions" internal="true" popup="false">
-      <group id="Internal.Errors" popup="true" text="Exceptions">
-        <action id="DropAnError" internal="true" class="consulo.ide.impl.idea.diagnostic.DropAnErrorAction"/>
-        <action id="DropAnErrorWithAttachments" internal="true" class="consulo.ide.impl.idea.diagnostic.DropAnErrorWithAttachmentsAction"/>
-        <action id="DropAnOutOfMemoryError" internal="true" class="consulo.ide.impl.idea.diagnostic.DropAnOutOfMemoryErrorAction"/>
-        <action id="DropAnOutOfPermGenMemoryError" internal="true"
-                class="consulo.ide.impl.idea.diagnostic.DropAnOutOfPermGenMemoryErrorAction"/>
-      </group>
-      <separator/>
-      <action internal="true" id="ReloadProjectAction" class="consulo.ide.impl.idea.internal.ReloadProjectAction"/>
-      <action internal="true" id="RestartInfo" class="consulo.ide.impl.idea.internal.RestartInfoAction" text="Restart Info"/>
-      <action id="DumbMode" internal="true" class="consulo.ide.impl.idea.internal.ToggleDumbModeAction" text="Dumb mode"/>
-      <action id="LaggingMode" internal="true" class="consulo.ide.impl.idea.internal.ToggleLaggingModeAction" text="Lagging mode"/>
-      <separator/>
-      <group id="Internal.UI" popup="true" text="UI">
-        <action id="NotificationTestAction" internal="true" class="consulo.ide.impl.idea.notification.impl.actions.NotificationTestAction"
-                text="Add Test Notification"/>
-        <action id="TestMessageBoxAction" internal="true" class="consulo.ide.impl.idea.diagnostic.TestMessageBoxAction"
-                text="Show Test Dialog"/>
-        <separator/>
+        <group id="Internal.UI.Desktop" text="UI">
+            <action id="NotificationTestAction" internal="true"
+                    class="consulo.ide.impl.idea.notification.impl.actions.NotificationTestAction"
+                    text="Add Test Notification"/>
+            <action id="TestMessageBoxAction" internal="true" class="consulo.ide.impl.idea.diagnostic.TestMessageBoxAction"
+                    text="Show Test Dialog"/>
+            <separator/>
 
-        <action id="UiInspector" internal="true" class="consulo.desktop.awt.action.UiInspectorAction" text="UI Inspector"/>
-        <action id="ShowSplash" internal="true" class="consulo.desktop.awt.uiOld.ShowSplashAction" text="Show Splash"/>
-        <action id="ShowGotItMessage" internal="true" class="consulo.ide.impl.actions.ShowGotItMessageAction" text="Show GotItMessage"/>
-        <action id="ValidationTest" internal="true" class="consulo.ide.impl.idea.internal.validation.TestDialogWithValidationAction"
-                text="Validation Dialog Test"/>
-        <action id="MacMessagesTest" internal="true" class="consulo.ide.impl.idea.internal.validation.TestMacMessagesAction"
-                text="Test Mac Messages"/>
-        <action id="TreeExpandAll" internal="true" class="consulo.ide.impl.idea.internal.tree.ExpandAll" text="Expand Tree"/>
-        <action id="UIDefaults" internal="true" class="consulo.ide.impl.idea.ui.ShowUIDefaultsAction" text="LaF Defaults"/>
-        <separator/>
-        <action id="AddTestProcessAction" internal="true" class="consulo.ide.impl.idea.openapi.wm.impl.status.AddTestProcessAction"
-                text="Add Test Process"/>
-        <action id="AddTestProcessActionIndefinte" internal="true"
-                class="consulo.ide.impl.idea.openapi.wm.impl.status.AddTestProcessActionIndefinite" text="Add Test Process Indefinite"/>
-        <separator/>
-        <action id="TestGestureAction" class="consulo.ide.impl.idea.openapi.keymap.impl.ui.TestGestureAction" text="Test Gesture Action"/>
-        <action id="TestDndAction" class="consulo.desktop.awt.action.TestDnd" text="Test Dnd"/>
-      </group>
-      <group id="TopAnomalies" internal="true" class="consulo.ide.impl.idea.internal.anomalies.TopAnomaliesAction" text="Top Anomalies"
-             popup="true"/>
-      <action id="ImageDuplicates" internal="true" class="consulo.ide.impl.idea.internal.ShowImageDuplicatesAction"
-              text="Find Image Duplicates"/>
-      <separator/>
-      <reference ref="MaintenanceGroup"/>
+            <action id="UiInspector" internal="true" class="consulo.desktop.awt.action.UiInspectorAction" text="UI Inspector"/>
+            <action id="ShowSplash" internal="true" class="consulo.desktop.awt.uiOld.ShowSplashAction" text="Show Splash"/>
+            <action id="ShowGotItMessage" internal="true" class="consulo.ide.impl.actions.ShowGotItMessageAction" text="Show GotItMessage"/>
+            <action id="ValidationTest" internal="true" class="consulo.ide.impl.idea.internal.validation.TestDialogWithValidationAction"
+                    text="Validation Dialog Test"/>
+            <action id="MacMessagesTest" internal="true" class="consulo.ide.impl.idea.internal.validation.TestMacMessagesAction"
+                    text="Test Mac Messages"/>
+            <action id="TreeExpandAll" internal="true" class="consulo.ide.impl.idea.internal.tree.ExpandAll" text="Expand Tree"/>
+            <action id="UIDefaults" internal="true" class="consulo.ide.impl.idea.ui.ShowUIDefaultsAction" text="LaF Defaults"/>
+            <separator/>
+            <action id="AddTestProcessAction" internal="true" class="consulo.ide.impl.idea.openapi.wm.impl.status.AddTestProcessAction"
+                    text="Add Test Process"/>
+            <action id="AddTestProcessActionIndefinte" internal="true"
+                    class="consulo.ide.impl.idea.openapi.wm.impl.status.AddTestProcessActionIndefinite" text="Add Test Process Indefinite"/>
+            <separator/>
+            <action id="TestGestureAction" class="consulo.ide.impl.idea.openapi.keymap.impl.ui.TestGestureAction"
+                    text="Test Gesture Action"/>
+            <action id="TestDndAction" class="consulo.desktop.awt.action.TestDnd" text="Test Dnd"/>
 
-      <action internal="true" id="SendStatistics" class="consulo.ide.impl.idea.internal.statistic.tmp.SendStatisticsAction"
-              text="Send statistics"/>
+            <add-to-group group-id="Internal.UI"/>.
+        </group>
 
-      <add-to-group group-id="Internal"/>
-    </group>
+        <group id="Internal.Desktop" text="Internal Actions" internal="true" popup="false">
+            <group id="Internal.Errors" popup="true" text="Exceptions">
+                <action id="DropAnError" internal="true" class="consulo.ide.impl.idea.diagnostic.DropAnErrorAction"/>
+                <action id="DropAnErrorWithAttachments" internal="true"
+                        class="consulo.ide.impl.idea.diagnostic.DropAnErrorWithAttachmentsAction"/>
+                <action id="DropAnOutOfMemoryError" internal="true" class="consulo.ide.impl.idea.diagnostic.DropAnOutOfMemoryErrorAction"/>
+                <action id="DropAnOutOfPermGenMemoryError" internal="true"
+                        class="consulo.ide.impl.idea.diagnostic.DropAnOutOfPermGenMemoryErrorAction"/>
+            </group>
+            <separator/>
+            <action internal="true" id="ReloadProjectAction" class="consulo.ide.impl.idea.internal.ReloadProjectAction"/>
+            <action internal="true" id="RestartInfo" class="consulo.ide.impl.idea.internal.RestartInfoAction" text="Restart Info"/>
+            <action id="DumbMode" internal="true" class="consulo.ide.impl.idea.internal.ToggleDumbModeAction" text="Dumb mode"/>
+            <action id="LaggingMode" internal="true" class="consulo.ide.impl.idea.internal.ToggleLaggingModeAction" text="Lagging mode"/>
+            <separator/>
 
-    <group id="Internal1" text="IDEA Internal Actions" internal="true">
-      <action internal="true" id="DecodeBytesAction" class="consulo.ide.impl.idea.internal.encodings.DecodeBytesAction"/>
-      <group id="Internal.Dump" text="Dump" internal="true" popup="true">
-        <action id="DumpExtensions" internal="true" text="Dump Extensions" class="consulo.ide.impl.idea.internal.DumpExtensionsAction"/>
-        <action id="DumpInspectionDescriptions" internal="true" class="consulo.ide.impl.idea.internal.DumpInspectionDescriptionsAction"/>
-        <action id="DumpIntentionsDescriptions" internal="true" class="consulo.ide.impl.idea.internal.DumpIntentionsAction"/>
-        <action id="DumpConfigurationTypes" internal="true" class="consulo.ide.impl.idea.internal.DumpConfigurationTypesAction"/>
-        <action id="DumpDirectoryIndex" internal="true" class="consulo.ide.impl.idea.internal.DumpDirectoryInfoAction"/>
-        <action id="ScanSourceCommentsAction" internal="true" class="consulo.ide.impl.idea.tools.ScanSourceCommentsAction"
-                text="Dump all comments in the project"/>
-      </group>
+            <reference ref="Internal.UI"/>
 
-      <separator/>
-      <group id="Internal.VFS" text="VFS" popup="true">
-        <action id="VirtualFileInfo" internal="true" class="consulo.ide.impl.idea.openapi.vfs.impl.local.VirtualFileInfoAction"/>
-        <action id="MarkFileDirty" internal="true" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.MarkFileDirtyAction"
-                text="Mark File Dirty"/>
-        <separator/>
-        <action id="CheckVfsSanity" internal="true" class="consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.CheckSanityAction"
-                text="Check VFS sanity"/>
-        <action id="LoadAllContent" internal="true" class="consulo.ide.impl.idea.internal.LoadAllContentsAction"
-                text="Load all files content"/>
-        <action id="LoadAllVFSContent" internal="true" class="consulo.ide.impl.idea.internal.LoadAllVfsStoredContentsAction"
-                text="Load all VFS stored files content"/>
-        <action id="ComputeVFStatistics" internal="true" class="consulo.ide.impl.idea.internal.ComputeVirtualFileNameStatAction"/>
-        <separator/>
-        <action internal="true" id="PruneEmptyDirectories" class="consulo.ide.impl.idea.ide.actions.PruneEmptyDirectoriesAction"
-                text="Prune Empty Directories"/>
-        <action internal="true" id="FixLineSeparators" class="consulo.ide.impl.idea.ide.actions.FixLineSeparatorsAction"
-                text="Fix Line Separators"/>
-      </group>
+            <group id="TopAnomalies" internal="true" class="consulo.ide.impl.idea.internal.anomalies.TopAnomaliesAction"
+                   text="Top Anomalies"
+                   popup="true"/>
+            <separator/>
+            <reference ref="MaintenanceGroup"/>
 
-      <separator/>
+            <action internal="true" id="SendStatistics" class="consulo.ide.impl.idea.internal.statistic.tmp.SendStatisticsAction"
+                    text="Send statistics"/>
 
-      <action internal="true" id="CompilerTest" class="consulo.ui.ex.action.EmptyAction"
-              text="Test Rebuild Performance"/>
-      <!--consulo.ide.impl.idea.compiler.impl.javaCompiler.api.CompilerPerfTestAction-->
+            <add-to-group group-id="Internal"/>
+        </group>
 
-      <add-to-group group-id="Internal" anchor="last"/>
-    </group>
+        <group id="Internal1" text="IDEA Internal Actions" internal="true">
+            <action internal="true" id="DecodeBytesAction" class="consulo.ide.impl.idea.internal.encodings.DecodeBytesAction"/>
+            <group id="Internal.Dump" text="Dump" internal="true" popup="true">
+                <action id="DumpExtensions" internal="true" text="Dump Extensions"
+                        class="consulo.ide.impl.idea.internal.DumpExtensionsAction"/>
+                <action id="DumpInspectionDescriptions" internal="true"
+                        class="consulo.ide.impl.idea.internal.DumpInspectionDescriptionsAction"/>
+                <action id="DumpIntentionsDescriptions" internal="true" class="consulo.ide.impl.idea.internal.DumpIntentionsAction"/>
+                <action id="DumpConfigurationTypes" internal="true" class="consulo.ide.impl.idea.internal.DumpConfigurationTypesAction"/>
+                <action id="DumpDirectoryIndex" internal="true" class="consulo.ide.impl.idea.internal.DumpDirectoryInfoAction"/>
+                <action id="ScanSourceCommentsAction" internal="true" class="consulo.ide.impl.idea.tools.ScanSourceCommentsAction"
+                        text="Dump all comments in the project"/>
+            </group>
 
-    <group popup="false">
-      <separator/>
-      <action class="consulo.desktop.awt.action.ManageRecentProjectsAction" id="ManageRecentProjects"/>
-      <add-to-group group-id="$LRU"/>
-    </group>
+            <separator/>
+            <group id="Internal.VFS" text="VFS" popup="true">
+                <action id="VirtualFileInfo" internal="true" class="consulo.ide.impl.idea.openapi.vfs.impl.local.VirtualFileInfoAction"/>
+                <action id="MarkFileDirty" internal="true" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.MarkFileDirtyAction"
+                        text="Mark File Dirty"/>
+                <separator/>
+                <action id="CheckVfsSanity" internal="true" class="consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.CheckSanityAction"
+                        text="Check VFS sanity"/>
+                <action id="LoadAllContent" internal="true" class="consulo.ide.impl.idea.internal.LoadAllContentsAction"
+                        text="Load all files content"/>
+                <action id="LoadAllVFSContent" internal="true" class="consulo.ide.impl.idea.internal.LoadAllVfsStoredContentsAction"
+                        text="Load all VFS stored files content"/>
+                <action id="ComputeVFStatistics" internal="true" class="consulo.ide.impl.idea.internal.ComputeVirtualFileNameStatAction"/>
+                <separator/>
+                <action internal="true" id="PruneEmptyDirectories" class="consulo.ide.impl.idea.ide.actions.PruneEmptyDirectoriesAction"
+                        text="Prune Empty Directories"/>
+                <action internal="true" id="FixLineSeparators" class="consulo.ide.impl.idea.ide.actions.FixLineSeparatorsAction"
+                        text="Fix Line Separators"/>
+            </group>
+
+            <separator/>
+
+            <action internal="true" id="CompilerTest" class="consulo.ui.ex.action.EmptyAction"
+                    text="Test Rebuild Performance"/>
+            <!--consulo.ide.impl.idea.compiler.impl.javaCompiler.api.CompilerPerfTestAction-->
+
+            <add-to-group group-id="Internal" anchor="last"/>
+        </group>
+
+        <group popup="false">
+            <separator/>
+            <action class="consulo.desktop.awt.action.ManageRecentProjectsAction" id="ManageRecentProjects"/>
+            <add-to-group group-id="$LRU"/>
+        </group>
 
 
-    <group id="DirDiffMenu">
-      <action id="DirDiffMenu.SetCopyToRight" class="consulo.desktop.awt.internal.diff.dir.action.popup.SetCopyToRight"
-              text="Set Copy to Right"
-              icon="consulo.platform.base.PlatformIconGroup@vcs.arrow_right"/>
-      <action id="DirDiffMenu.SetCopyToLeft" class="consulo.desktop.awt.internal.diff.dir.action.popup.SetCopyToLeft"
-              text="Set Copy to Left"
-              icon="consulo.platform.base.PlatformIconGroup@vcs.arrow_left"/>
-      <action id="DirDiffMenu.SetDelete" class="consulo.desktop.awt.internal.diff.dir.action.popup.SetDelete" text="Set Delete"
-              icon="consulo.platform.base.PlatformIconGroup@vcs.remove"/>
-      <action id="DirDiffMenu.SetNoOperation" class="consulo.desktop.awt.internal.diff.dir.action.popup.SetNoOperation"
-              text="Set Do Nothing"/>
-      <separator/>
-      <action id="DirDiffMenu.SetDefault" class="consulo.desktop.awt.internal.diff.dir.action.popup.SetDefault"
-              text="Set Default"/>
-      <action id="DirDiffMenu.WarnOnDeletion" class="consulo.desktop.awt.internal.diff.dir.action.popup.WarnOnDeletion"
-              text="Warn When Delete"/>
-      <separator/>
-      <action id="DirDiffMenu.EnableLeft" class="consulo.ui.ex.action.EmptyAction" text="Show new files on left side"
-              icon="consulo.platform.base.PlatformIconGroup@vcs.arrow_right"/>
-      <action id="DirDiffMenu.EnableRight" class="consulo.ui.ex.action.EmptyAction" text="Show new files on right side"
-              icon="consulo.platform.base.PlatformIconGroup@vcs.arrow_left"/>
-      <action id="DirDiffMenu.EnableEqual" class="consulo.ui.ex.action.EmptyAction" text="Show equal files"
-              icon="consulo.platform.base.PlatformIconGroup@vcs.equal"/>
-      <action id="DirDiffMenu.EnableNotEqual" class="consulo.ui.ex.action.EmptyAction" text="Show difference"
-              icon="consulo.platform.base.PlatformIconGroup@vcs.not_equal"/>
-      <separator/>
+        <group id="DirDiffMenu">
+            <action id="DirDiffMenu.SetCopyToRight" class="consulo.desktop.awt.internal.diff.dir.action.popup.SetCopyToRight"
+                    text="Set Copy to Right"
+                    icon="consulo.platform.base.PlatformIconGroup@vcs.arrow_right"/>
+            <action id="DirDiffMenu.SetCopyToLeft" class="consulo.desktop.awt.internal.diff.dir.action.popup.SetCopyToLeft"
+                    text="Set Copy to Left"
+                    icon="consulo.platform.base.PlatformIconGroup@vcs.arrow_left"/>
+            <action id="DirDiffMenu.SetDelete" class="consulo.desktop.awt.internal.diff.dir.action.popup.SetDelete" text="Set Delete"
+                    icon="consulo.platform.base.PlatformIconGroup@vcs.remove"/>
+            <action id="DirDiffMenu.SetNoOperation" class="consulo.desktop.awt.internal.diff.dir.action.popup.SetNoOperation"
+                    text="Set Do Nothing"/>
+            <separator/>
+            <action id="DirDiffMenu.SetDefault" class="consulo.desktop.awt.internal.diff.dir.action.popup.SetDefault"
+                    text="Set Default"/>
+            <action id="DirDiffMenu.WarnOnDeletion" class="consulo.desktop.awt.internal.diff.dir.action.popup.WarnOnDeletion"
+                    text="Warn When Delete"/>
+            <separator/>
+            <action id="DirDiffMenu.EnableLeft" class="consulo.ui.ex.action.EmptyAction" text="Show new files on left side"
+                    icon="consulo.platform.base.PlatformIconGroup@vcs.arrow_right"/>
+            <action id="DirDiffMenu.EnableRight" class="consulo.ui.ex.action.EmptyAction" text="Show new files on right side"
+                    icon="consulo.platform.base.PlatformIconGroup@vcs.arrow_left"/>
+            <action id="DirDiffMenu.EnableEqual" class="consulo.ui.ex.action.EmptyAction" text="Show equal files"
+                    icon="consulo.platform.base.PlatformIconGroup@vcs.equal"/>
+            <action id="DirDiffMenu.EnableNotEqual" class="consulo.ui.ex.action.EmptyAction" text="Show difference"
+                    icon="consulo.platform.base.PlatformIconGroup@vcs.not_equal"/>
+            <separator/>
 
-      <add-to-group group-id="Diff.KeymapGroup" anchor="last"/>
-    </group>
-  </actions>
+            <add-to-group group-id="Diff.KeymapGroup" anchor="last"/>
+        </group>
+    </actions>
 </consulo-plugin>

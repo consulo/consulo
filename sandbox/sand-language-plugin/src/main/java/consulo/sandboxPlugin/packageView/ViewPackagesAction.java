@@ -23,15 +23,15 @@ import consulo.repository.ui.RepositoryDialogFactory;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
-import jakarta.inject.Inject;
-
+import consulo.ui.ex.action.IdeActions;
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 
 /**
  * @author VISTALL
  * @since 30/05/2021
  */
-@ActionImpl(id = "ViewPackagesAction", parents = @ActionParentRef(@ActionRef(id = "ToolsMenu")))
+@ActionImpl(id = "ViewPackagesAction", parents = @ActionParentRef(@ActionRef(id = IdeActions.TOOLS_MENU)))
 public class ViewPackagesAction extends DumbAwareAction {
   private final SandPackageManagementService myManagementService;
 

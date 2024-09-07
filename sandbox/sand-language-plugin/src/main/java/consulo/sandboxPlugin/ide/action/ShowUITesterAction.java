@@ -22,6 +22,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.sandboxPlugin.ui.UITester;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.dialog.DialogService;
 import jakarta.inject.Inject;
 
@@ -31,7 +32,7 @@ import jakarta.annotation.Nonnull;
  * @author VISTALL
  * @since 2020-05-29
  */
-@ActionImpl(id = "ShowUITesterAction", parents = @ActionParentRef(@ActionRef(id = "ToolsMenu")))
+@ActionImpl(id = "ShowUITesterAction", parents = @ActionParentRef(@ActionRef(id = IdeActions.TOOLS_MENU)))
 public class ShowUITesterAction extends DumbAwareAction {
   private final DialogService myDialogService;
 
