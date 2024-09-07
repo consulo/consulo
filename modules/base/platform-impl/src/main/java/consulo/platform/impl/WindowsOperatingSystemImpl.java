@@ -81,7 +81,11 @@ public class WindowsOperatingSystemImpl extends PlatformOperatingSystemImpl impl
     // at jdk 17 windows 11 will return in os name, but at old versions of jdk that will be Windows 10
     try {
       boolean windows11OrLater = OS_NAME.contains("Windows 11");
-      if (isWindows10OrNewer() && !windows11OrLater) {
+      if (windows11OrLater) {
+          return true;
+      }
+
+      if (isWindows10OrNewer()) {
         WinNT.OSVERSIONINFO osversioninfo = new WinNT.OSVERSIONINFO();
         if (Kernel32.INSTANCE.GetVersionEx(osversioninfo)) {
           int dwBuildNumber = osversioninfo.dwBuildNumber.intValue();
