@@ -17,22 +17,29 @@
 package consulo.language.editor.impl.internal.template;
 
 import consulo.component.persist.scheme.CompoundScheme;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class TemplateGroup extends CompoundScheme<TemplateImpl> {
 
-  private final String myReplace;
+    private final String myReplace;
 
-  public TemplateGroup(final String name) {
-    this(name, null);
-  }
+    public TemplateGroup(final String name) {
+        this(name, null);
+    }
 
-  public TemplateGroup(String name, @Nullable String replace) {
-    super(name);
-    myReplace = replace;
-  }
+    public TemplateGroup(String name, @Nullable String replace) {
+        super(name);
+        myReplace = replace;
+    }
 
-  public String getReplace() {
-    return myReplace;
-  }
+    public String getReplace() {
+        return myReplace;
+    }
+
+    @Nonnull
+    @Override
+    protected CompoundScheme<TemplateImpl> createNewInstance(String name) {
+        return new TemplateGroup(name);
+    }
 }

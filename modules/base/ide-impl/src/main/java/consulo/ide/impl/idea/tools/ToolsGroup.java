@@ -17,21 +17,28 @@
 package consulo.ide.impl.idea.tools;
 
 import consulo.component.persist.scheme.CompoundScheme;
+import jakarta.annotation.Nonnull;
 
 public class ToolsGroup<T extends Tool> extends CompoundScheme<T> {
-  public ToolsGroup(final String name) {
-    super(name);
-  }
+    public ToolsGroup(final String name) {
+        super(name);
+    }
 
-  public void moveElementUp(final T tool) {
-    int index = getElements().indexOf(tool);
-    removeElement(tool);
-    insertElement(tool, index - 1);
-  }
+    public void moveElementUp(final T tool) {
+        int index = getElements().indexOf(tool);
+        removeElement(tool);
+        insertElement(tool, index - 1);
+    }
 
-  public void moveElementDown(final T tool) {
-    int index = getElements().indexOf(tool);
-    removeElement(tool);
-    insertElement(tool, index + 1);
-  }
+    public void moveElementDown(final T tool) {
+        int index = getElements().indexOf(tool);
+        removeElement(tool);
+        insertElement(tool, index + 1);
+    }
+
+    @Nonnull
+    @Override
+    protected CompoundScheme<T> createNewInstance(String name) {
+        return new ToolsGroup<>(name);
+    }
 }

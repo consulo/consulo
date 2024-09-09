@@ -16,11 +16,12 @@
 package consulo.component.persist.scheme;
 
 import consulo.logging.Logger;
-
 import jakarta.annotation.Nonnull;
 
-import java.lang.reflect.Constructor;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 
 public class CompoundScheme<T extends SchemeElement> implements ExternalizableScheme {
@@ -92,15 +93,9 @@ public class CompoundScheme<T extends SchemeElement> implements ExternalizableSc
     return result;
   }
 
-  private CompoundScheme createNewInstance(final String name) {
-    try {
-      Constructor<? extends CompoundScheme> constructor = getClass().getConstructor(String.class);
-      return constructor.newInstance(name);
-    }
-    catch (Exception e) {
-      LOG.error(e);
-      return null;
-    }
+  @Nonnull
+  protected CompoundScheme<T> createNewInstance(final String name) {
+      return new CompoundScheme<T>(name);
   }
 
   @Override
