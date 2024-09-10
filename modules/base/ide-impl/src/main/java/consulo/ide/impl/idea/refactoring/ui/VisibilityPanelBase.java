@@ -15,12 +15,15 @@
  */
 package consulo.ide.impl.idea.refactoring.ui;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
 
+@Deprecated
+@DeprecationInfo("See consulo.language.editor.ui.VisibilityPanelBase")
 public abstract class VisibilityPanelBase<V> extends JPanel {
 
   public final EventDispatcher<ChangeListener> myEventDispatcher = EventDispatcher.create(ChangeListener.class);
