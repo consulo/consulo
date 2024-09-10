@@ -453,6 +453,17 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
     private void loadDefaultLiveTemplates() {
         Application application = Application.get();
 
+//        application.getExtensionPoint(LiveTemplate.class).forEachExtensionSafe(liveTemplate -> {
+//            TemplateImpl template = addTemplate(liveTemplate.getAbbreviation(),
+//                liveTemplate.getValue(),
+//                groupName,
+//                liveTemplate.getDescription().get(), // TODO [VISTALL] support localize key
+//                shortcut,
+//                true,
+//                liveTemplate.getId());
+//
+//        });
+
         application.getExtensionPoint(DefaultLiveTemplatesProvider.class).forEachExtensionSafe(provider -> {
             try {
                 for (String defTemplate : provider.getDefaultLiveTemplateFiles()) {
