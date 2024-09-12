@@ -41,9 +41,7 @@ import consulo.project.event.DumbModeListener;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.TextBox;
 import consulo.ui.TextBoxWithExtensions;
-import consulo.ui.event.FocusEvent;
-import consulo.ui.event.FocusListener;
-import consulo.ui.event.KeyListener;
+import consulo.ui.event.details.KeyboardInputDetails;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.Alarm;
@@ -153,42 +151,38 @@ public class RunAnythingPopupUI extends BigPopupUI {
             }
         });
 
-        mySearchField.addFocusListener(new FocusListener() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                if (mySkipFocusGain) {
-                    mySkipFocusGain = false;
-                    return;
+        mySearchField.addFocusListener(event -> {
+            if (mySkipFocusGain) {
+                mySkipFocusGain = false;
+                return;
+            }
+            //mySearchField.setForeground(UIUtil.getLabelForeground());
+            mySearchField.setVisibleLength(SEARCH_FIELD_COLUMNS);
+            Application.get().invokeLater(() -> {
+                final JComponent parent = (JComponent) TargetAWT.to(mySearchField).getParent();
+                parent.revalidate();
+                parent.repaint();
+            });
+            rebuildList();
+        });
+
+        mySearchField.addBlurListener(event -> {
+            final ActionCallback result = new ActionCallback();
+            UIUtil.invokeLaterIfNeeded(() -> {
+                try {
+                    if (myCalcThread != null) {
+                        myCalcThread.cancel();
+                    }
+                    myAlarm.cancelAllRequests();
+
+                    Application.get().invokeLater(() -> ActionToolbarsHolder.updateAllToolbarsImmediately());
+
+                    searchFinishedHandler.run();
                 }
-                //mySearchField.setForeground(UIUtil.getLabelForeground());
-                mySearchField.setVisibleLength(SEARCH_FIELD_COLUMNS);
-                Application.get().invokeLater(() -> {
-                    final JComponent parent = (JComponent) TargetAWT.to(mySearchField).getParent();
-                    parent.revalidate();
-                    parent.repaint();
-                });
-                rebuildList();
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                final ActionCallback result = new ActionCallback();
-                UIUtil.invokeLaterIfNeeded(() -> {
-                    try {
-                        if (myCalcThread != null) {
-                            myCalcThread.cancel();
-                        }
-                        myAlarm.cancelAllRequests();
-
-                        Application.get().invokeLater(() -> ActionToolbarsHolder.updateAllToolbarsImmediately());
-
-                        searchFinishedHandler.run();
-                    }
-                    finally {
-                        result.setDone();
-                    }
-                });
-            }
+                finally {
+                    result.setDone();
+                }
+            });
         });
     }
 
@@ -438,40 +432,33 @@ public class RunAnythingPopupUI extends BigPopupUI {
 
         adjustMainListEmptyText(mySearchField);
 
-        // todo
-        mySearchField.addKeyListener(new KeyListener() {
-            @Override
-            public void keyPressed(consulo.ui.event.KeyEvent e) {
-                updateByModifierKeysEvent(e);
-            }
+        mySearchField.addKeyPressedListener(this::updateByModifierKeysEvent);
 
-            @Override
-            public void keyReleased(consulo.ui.event.KeyEvent e) {
-                updateByModifierKeysEvent(e);
-            }
-
-            private void updateByModifierKeysEvent(@Nonnull consulo.ui.event.KeyEvent e) {
-                LocalizeValue message;
-                if (e.withShift() && e.withAlt()) {
-                    message = IdeLocalize.runAnythingRunInContextDebugTitle();
-                }
-                else if (e.withShift()) {
-                    message = IdeLocalize.runAnythingRunDebugTitle();
-                }
-                else if (e.withAlt()) {
-                    message = IdeLocalize.runAnythingRunInContextTitle();
-                }
-                else {
-                    message = IdeLocalize.runAnythingRunAnythingTitle();
-                }
-                myTextFieldTitle.setText(message.get());
-                updateMatchedRunConfigurationStuff(e.withAlt());
-            }
-        });
+        mySearchField.addKeyReleasedListener(this::updateByModifierKeysEvent);
 
         initSearchField();
 
         mySearchField.setVisibleLength(SEARCH_FIELD_COLUMNS);
+    }
+
+    private void updateByModifierKeysEvent(@Nonnull consulo.ui.event.KeyEvent e) {
+        KeyboardInputDetails inputDetails = e.getInputDetails();
+        
+        LocalizeValue message;
+        if (inputDetails.withShift() && inputDetails.withAlt()) {
+            message = IdeLocalize.runAnythingRunInContextDebugTitle();
+        }
+        else if (inputDetails.withShift()) {
+            message = IdeLocalize.runAnythingRunDebugTitle();
+        }
+        else if (inputDetails.withAlt()) {
+            message = IdeLocalize.runAnythingRunInContextTitle();
+        }
+        else {
+            message = IdeLocalize.runAnythingRunAnythingTitle();
+        }
+        myTextFieldTitle.setText(message.get());
+        updateMatchedRunConfigurationStuff(inputDetails.withAlt());
     }
 
     public static void adjustEmptyText(

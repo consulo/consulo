@@ -17,17 +17,17 @@ package consulo.ide.impl.ui.app.impl.settings;
 
 import consulo.configurable.Configurable;
 import consulo.disposer.Disposable;
+import consulo.ide.impl.ui.app.WholeLeftWindowWrapper;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ide.impl.ui.app.WholeLeftWindowWrapper;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.ScrollableLayout;
 import consulo.util.lang.Couple;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Comparator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -38,105 +38,110 @@ import java.util.function.Function;
  * @since 25-Oct-17
  */
 public class UnifiedSettingsDialog extends WholeLeftWindowWrapper {
-  private static final Logger LOG = Logger.getInstance(UnifiedSettingsDialog.class);
+    private static final Logger LOG = Logger.getInstance(UnifiedSettingsDialog.class);
 
-  private final Map<Configurable, UnifiedConfigurableContext> myContexts = new ConcurrentHashMap<>();
+    private final Map<Configurable, UnifiedConfigurableContext> myContexts = new ConcurrentHashMap<>();
 
-  private Configurable[] myConfigurables;
+    private Configurable[] myConfigurables;
 
-  public UnifiedSettingsDialog(Configurable[] configurables) {
-    super("Settings");
-    myConfigurables = configurables;
-  }
-
-  @Nullable
-  @Override
-  protected Size getDefaultSize() {
-    return new Size(1028, 500);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void doOKAction() {
-    super.doOKAction();
-
-    for (Map.Entry<Configurable, UnifiedConfigurableContext> entry : myContexts.entrySet()) {
-      Configurable configurable = entry.getKey();
-      UnifiedConfigurableContext context = entry.getValue();
-
-      try {
-        configurable.apply();
-      }
-      catch (Exception e) {
-        e.printStackTrace();
-      }
-      finally {
-        configurable.disposeUIResources();
-      }
+    public UnifiedSettingsDialog(Configurable[] configurables) {
+        super("Settings");
+        myConfigurables = configurables;
     }
 
-    myContexts.clear();
-  }
+    @Nullable
+    @Override
+    protected Size getDefaultSize() {
+        return new Size(1028, 500);
+    }
 
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  protected Couple<Component> createComponents(Disposable uiDisposable) {
-    TreeModel<Configurable> configurableTreeModel = new TreeModel<>() {
-      @Override
-      public void buildChildren(@Nonnull Function<Configurable, TreeNode<Configurable>> nodeFactory, @Nullable Configurable parentValue) {
-        if (parentValue != null) {
-          if (parentValue instanceof Configurable.Composite) {
-            build(nodeFactory, ((Configurable.Composite)parentValue).getConfigurables());
-          }
+    @RequiredUIAccess
+    @Override
+    public void doOKAction() {
+        super.doOKAction();
+
+        for (Map.Entry<Configurable, UnifiedConfigurableContext> entry : myContexts.entrySet()) {
+            Configurable configurable = entry.getKey();
+            UnifiedConfigurableContext context = entry.getValue();
+
+            try {
+                configurable.apply();
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            finally {
+                configurable.disposeUIResources();
+            }
         }
-        else {
-          build(nodeFactory, myConfigurables);
-        }
-      }
 
-      @Nullable
-      @Override
-      public Comparator<TreeNode<Configurable>> getNodeComparator() {
-        return UnifiedConfigurableComparator.INSTANCE;
-      }
+        myContexts.clear();
+    }
 
-      private void build(@Nonnull Function<Configurable, TreeNode<Configurable>> nodeFactory, Configurable[] configurables) {
-        for (Configurable configurable : configurables) {
-          TreeNode<Configurable> node = nodeFactory.apply(configurable);
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    protected Couple<Component> createComponents(Disposable uiDisposable) {
+        TreeModel<Configurable> configurableTreeModel = new TreeModel<>() {
+            @Override
+            public void buildChildren(@Nonnull Function<Configurable, TreeNode<Configurable>> nodeFactory, @Nullable Configurable parentValue) {
+                if (parentValue != null) {
+                    if (parentValue instanceof Configurable.Composite) {
+                        build(nodeFactory, ((Configurable.Composite) parentValue).getConfigurables());
+                    }
+                }
+                else {
+                    build(nodeFactory, myConfigurables);
+                }
+            }
 
-          boolean b = configurable instanceof Configurable.Composite && ((Configurable.Composite)configurable).getConfigurables().length > 0;
-          node.setLeaf(!b);
+            @Nullable
+            @Override
+            public Comparator<TreeNode<Configurable>> getNodeComparator() {
+                return UnifiedConfigurableComparator.INSTANCE;
+            }
 
-          node.setRender((item, itemPresentation) -> itemPresentation.append(item.getDisplayName()));
-        }
-      }
-    };
+            private void build(@Nonnull Function<Configurable, TreeNode<Configurable>> nodeFactory, Configurable[] configurables) {
+                for (Configurable configurable : configurables) {
+                    TreeNode<Configurable> node = nodeFactory.apply(configurable);
 
-    Tree<Configurable> component = Tree.create(configurableTreeModel, uiDisposable);
+                    boolean b = configurable instanceof Configurable.Composite && ((Configurable.Composite) configurable).getConfigurables().length > 0;
+                    node.setLeaf(!b);
 
-    DockLayout rightPart = DockLayout.create();
-    rightPart.center(Label.create(LocalizeValue.localizeTODO("Select configurable")));
+                    node.setRender((item, itemPresentation) -> itemPresentation.append(item.getDisplayName()));
+                }
+            }
+        };
 
-    component.addSelectListener(node -> {
-      Configurable configurable = node.getValue();
+        Tree<Configurable> component = Tree.create(configurableTreeModel, uiDisposable);
 
-      UnifiedConfigurableContext context = myContexts.computeIfAbsent(configurable, c -> {
-        UnifiedConfigurableContext co = new UnifiedConfigurableContext(c);
-        try {
-          c.initialize();
-          c.reset();
-        }
-        catch (Throwable e) {
-          LOG.warn(e);
-        }
-        return co;
-      });
+        DockLayout rightPart = DockLayout.create();
+        rightPart.center(Label.create(LocalizeValue.localizeTODO("Select configurable")));
 
-      Component uiComponent = context.getComponent();
-      rightPart.center(uiComponent);
-    });
+        component.addSelectListener(node -> {
+            TreeNode<Configurable> value = node.getValue();
+            if (value == null) {
+                return;
+            }
+            
+            Configurable configurable = value.getValue();
 
-    return Couple.of(ScrollableLayout.create(component), rightPart);
-  }
+            UnifiedConfigurableContext context = myContexts.computeIfAbsent(configurable, c -> {
+                UnifiedConfigurableContext co = new UnifiedConfigurableContext(c);
+                try {
+                    c.initialize();
+                    c.reset();
+                }
+                catch (Throwable e) {
+                    LOG.warn(e);
+                }
+                return co;
+            });
+
+            Component uiComponent = context.getComponent();
+            rightPart.center(uiComponent);
+        });
+
+        return Couple.of(ScrollableLayout.create(component), rightPart);
+    }
 }

@@ -17,9 +17,11 @@ package consulo.ui;
 
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.ValueComponentEvent;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.EventListener;
 import java.util.Objects;
 
@@ -28,54 +30,32 @@ import java.util.Objects;
  * @since 13-Jun-16
  */
 public interface ValueComponent<V> extends Component {
-  class ValueEvent<V> {
-    private Component myComponent;
-    private V myValue;
-
-    public ValueEvent(Component component, V value) {
-      myComponent = component;
-      myValue = value;
+    @Nonnull
+    @SuppressWarnings("unchecked")
+    default Disposable addValueListener(@Nonnull ComponentEventListener<ValueComponent<V>, ValueComponentEvent<V>> valueListener) {
+        return addListener((Class)ValueComponentEvent.class, valueListener);
     }
 
-    public V getValue() {
-      return myValue;
+    @Nullable
+    V getValue();
+
+    @Nonnull
+    default V getValueOrError() {
+        return Objects.requireNonNull(getValue(), "value required");
     }
 
-    public Component getComponent() {
-      return myComponent;
-    }
-  }
-
-  interface ValueListener<V> extends EventListener {
     @RequiredUIAccess
-    void valueChanged(@Nonnull ValueEvent<V> event);
-  }
+    default void setValue(V value) {
+        setValue(value, true);
+    }
 
-  @Nonnull
-  default Disposable addValueListener(@Nonnull ValueComponent.ValueListener<V> valueListener) {
-    return addListener(ValueListener.class, valueListener);
-  }
+    @RequiredUIAccess
+    void setValue(V value, boolean fireListeners);
 
-  @Nullable
-  V getValue();
-
-  @Nonnull
-  default V getValueOrError() {
-    return Objects.requireNonNull(getValue(), "value required");
-  }
-
-  @RequiredUIAccess
-  default void setValue(V value) {
-    setValue(value, true);
-  }
-
-  @RequiredUIAccess
-  void setValue(V value, boolean fireListeners);
-
-  @RequiredUIAccess
-  @SuppressWarnings("unchecked")
-  default ValueComponent<V> withValue(@Nullable V value) {
-    setValue(value);
-    return this;
-  }
+    @RequiredUIAccess
+    @SuppressWarnings("unchecked")
+    default ValueComponent<V> withValue(@Nullable V value) {
+        setValue(value);
+        return this;
+    }
 }

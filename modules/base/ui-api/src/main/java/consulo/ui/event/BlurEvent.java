@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2020 consulo.io
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,15 @@
  */
 package consulo.ui.event;
 
+import consulo.ui.FocusableComponent;
 import jakarta.annotation.Nonnull;
-import java.util.EventListener;
 
 /**
  * @author VISTALL
- * @since 2020-11-21
+ * @since 2024-09-11
  */
-public interface ClickListener extends EventListener {
-  void clicked(@Nonnull ClickEvent event);
+public final class BlurEvent extends ComponentEvent<FocusableComponent> {
+    public BlurEvent(@Nonnull FocusableComponent component) {
+        super(component);
+    }
 }

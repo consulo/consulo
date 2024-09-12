@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2021 consulo.io
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,16 @@
  */
 package consulo.ui.event;
 
-import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.Component;
+import consulo.ui.event.details.KeyboardInputDetails;
 import jakarta.annotation.Nonnull;
-import java.util.EventListener;
 
 /**
  * @author VISTALL
- * @since 01/08/2021
+ * @since 2024-09-10
  */
-public interface DetachListener extends EventListener {
-  @RequiredUIAccess
-  void onDetach(@Nonnull DetachEvent detachEvent);
+public final class KeyReleasedEvent extends KeyEvent {
+    public KeyReleasedEvent(@Nonnull Component component, @Nonnull KeyboardInputDetails inputDetails) {
+        super(component, inputDetails);
+    }
 }

@@ -18,23 +18,18 @@ package consulo.ui.layout;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
+import consulo.ui.event.ComponentEventListener;
 import consulo.ui.internal.UIInternal;
 import consulo.ui.annotation.RequiredUIAccess;
 
+import consulo.ui.layout.event.FoldoutLayoutOpenedEvent;
 import jakarta.annotation.Nonnull;
-import java.util.EventListener;
 
 /**
  * @author VISTALL
  * @since 2020-05-29
  */
 public interface FoldoutLayout extends Layout {
-  @FunctionalInterface
-  static interface StateListener extends EventListener {
-    @RequiredUIAccess
-    void stateChanged(boolean state);
-  }
-
   @Nonnull
   static FoldoutLayout create(@Nonnull LocalizeValue titleValue, @Nonnull Component component) {
     return create(titleValue, component, true);
@@ -54,5 +49,7 @@ public interface FoldoutLayout extends Layout {
   FoldoutLayout setTitle(@Nonnull LocalizeValue title);
 
   @Nonnull
-  Disposable addStateListener(@Nonnull StateListener stateListener);
+  default Disposable addOpenedListener(@Nonnull ComponentEventListener<FoldoutLayout, FoldoutLayoutOpenedEvent> stateListener) {
+      return addListener(FoldoutLayoutOpenedEvent.class, stateListener);
+  }
 }

@@ -17,61 +17,61 @@ package consulo.ui;
 
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.WindowCloseEvent;
 import consulo.ui.internal.UIInternal;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import java.util.EventListener;
 
 /**
  * @author VISTALL
  * @since 14-Jun-16
  */
 public interface Window extends Component, Disposable {
-  static interface CloseListener extends EventListener {
+    @Nonnull
+    static Window create(@Nonnull String title, @Nonnull WindowOptions options) {
+        return UIInternal.get()._Window_create(title, options);
+    }
+
+    @Nullable
+    static Window getActiveWindow() {
+        return UIInternal.get()._Window_getActiveWindow();
+    }
+
+    @Nullable
+    static Window getFocusedWindow() {
+        return UIInternal.get()._Window_getFocusedWindow();
+    }
+
     @RequiredUIAccess
-    void onClose();
-  }
+    void setTitle(@Nonnull String title);
 
-  @Nonnull
-  static Window create(@Nonnull String title, @Nonnull WindowOptions options) {
-    return UIInternal.get()._Window_create(title, options);
-  }
+    @Nullable
+    @Override
+    Window getParent();
 
-  @Nullable
-  static Window getActiveWindow() {
-    return UIInternal.get()._Window_getActiveWindow();
-  }
+    @RequiredUIAccess
+    void setContent(@Nonnull Component content);
 
-  @Nullable
-  static Window getFocusedWindow() {
-    return UIInternal.get()._Window_getFocusedWindow();
-  }
+    @RequiredUIAccess
+    void setMenuBar(@Nullable MenuBar menuBar);
 
-  @RequiredUIAccess
-  void setTitle(@Nonnull String title);
+    /**
+     * not block current thread
+     */
+    @RequiredUIAccess
+    void show();
 
-  @Nullable
-  @Override
-  Window getParent();
+    /**
+     * Close and dispose resources. Window can't be opened second time
+     */
+    @RequiredUIAccess
+    void close();
 
-  @RequiredUIAccess
-  void setContent(@Nonnull Component content);
+    boolean isActive();
 
-  @RequiredUIAccess
-  void setMenuBar(@Nullable MenuBar menuBar);
-
-  /**
-   * not block current thread
-   */
-  @RequiredUIAccess
-  void show();
-
-  /**
-   * Close and dispose resources. Window can't be opened second time
-   */
-  @RequiredUIAccess
-  void close();
-
-  boolean isActive();
+    @Nonnull
+    default Disposable addCloseListener(@Nonnull ComponentEventListener<Window, WindowCloseEvent> listener) {
+        return addListener(WindowCloseEvent.class, listener);
+    }
 }

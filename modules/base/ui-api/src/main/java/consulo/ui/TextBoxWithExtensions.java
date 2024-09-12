@@ -15,12 +15,11 @@
  */
 package consulo.ui;
 
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.event.ClickListener;
+import consulo.ui.event.ClickEvent;
+import consulo.ui.event.ComponentEventListener;
 import consulo.ui.image.Image;
 import consulo.ui.internal.UIInternal;
 import consulo.util.lang.ObjectUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -29,66 +28,69 @@ import jakarta.annotation.Nullable;
  * @since 2019-10-31
  */
 public interface TextBoxWithExtensions extends TextBox {
-  public final class Extension {
-    private final boolean myLeft;
-    private final Image myIcon;
-    private final Image myHoveredIcon;
+    public final class Extension {
+        private final boolean myLeft;
+        private final Image myIcon;
+        private final Image myHoveredIcon;
 
-    private ClickListener myClickListener;
+        private ComponentEventListener<Component, ClickEvent> myClickListener;
 
-    public Extension(boolean left, @Nonnull Image icon, @Nullable Image hoveredIcon) {
-      this(left, icon, hoveredIcon, null);
-    }
+        public Extension(boolean left, @Nonnull Image icon, @Nullable Image hoveredIcon) {
+            this(left, icon, hoveredIcon, null);
+        }
 
-    public Extension(boolean left, @Nonnull Image icon, @Nullable Image hoveredIcon, @RequiredUIAccess @Nullable ClickListener clickListener) {
-      myLeft = left;
-      myIcon = icon;
-      myHoveredIcon = ObjectUtil.notNull(hoveredIcon, icon);
-      myClickListener = clickListener;
-    }
+        public Extension(boolean left,
+                         @Nonnull Image icon,
+                         @Nullable Image hoveredIcon,
+                         @Nullable ComponentEventListener<Component, ClickEvent> clickListener) {
+            myLeft = left;
+            myIcon = icon;
+            myHoveredIcon = ObjectUtil.notNull(hoveredIcon, icon);
+            myClickListener = clickListener;
+        }
 
-    @Nullable
-    public ClickListener getClickListener() {
-      return myClickListener;
-    }
+        @Nullable
+        public ComponentEventListener<Component, ClickEvent> getClickListener() {
+            return myClickListener;
+        }
 
-    public boolean isLeft() {
-      return myLeft;
+        public boolean isLeft() {
+            return myLeft;
+        }
+
+        @Nonnull
+        public Image getIcon() {
+            return myIcon;
+        }
+
+        @Nonnull
+        public Image getHoveredIcon() {
+            return myHoveredIcon;
+        }
     }
 
     @Nonnull
-    public Image getIcon() {
-      return myIcon;
+    static TextBoxWithExtensions create() {
+        return create(null);
     }
 
     @Nonnull
-    public Image getHoveredIcon() {
-      return myHoveredIcon;
+    static TextBoxWithExtensions create(@Nullable String text) {
+        return UIInternal.get()._Components_textBoxWithExtensions(text);
     }
-  }
 
-  @Nonnull
-  static TextBoxWithExtensions create() {
-    return create(null);
-  }
+    @Nonnull
+    TextBoxWithExtensions setExtensions(@Nonnull Extension... extensions);
 
-  @Nonnull
-  static TextBoxWithExtensions create(@Nullable String text) {
-    return UIInternal.get()._Components_textBoxWithExtensions(text);
-  }
+    @Nonnull
+    @Deprecated
+    default TextBoxWithExtensions addExtension(@Nonnull Extension extension) {
+        return addLastExtension(extension);
+    }
 
-  @Nonnull
-  TextBoxWithExtensions setExtensions(@Nonnull Extension... extensions);
+    @Nonnull
+    TextBoxWithExtensions addLastExtension(@Nonnull Extension extension);
 
-  @Nonnull
-  @Deprecated
-  default TextBoxWithExtensions addExtension(@Nonnull Extension extension) {
-    return addLastExtension(extension);
-  }
-
-  @Nonnull
-  TextBoxWithExtensions addLastExtension(@Nonnull Extension extension);
-
-  @Nonnull
-  TextBoxWithExtensions addFirstExtension(@Nonnull Extension extension);
+    @Nonnull
+    TextBoxWithExtensions addFirstExtension(@Nonnull Extension extension);
 }

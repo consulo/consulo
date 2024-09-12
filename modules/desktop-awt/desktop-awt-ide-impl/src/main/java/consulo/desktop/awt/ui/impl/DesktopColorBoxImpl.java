@@ -16,6 +16,7 @@
 package consulo.desktop.awt.ui.impl;
 
 import consulo.desktop.awt.uiOld.ColorPanel;
+import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.ui.ColorBox;
@@ -76,6 +77,6 @@ class DesktopColorBoxImpl extends SwingComponentDelegate<DesktopColorBoxImpl.MyC
   @RequiredUIAccess
   @SuppressWarnings("unchecked")
   private void fireListeners() {
-    getListenerDispatcher(ValueListener.class).valueChanged(new ValueEvent(this, getValue()));
+    getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(this, getValue()));
   }
 }

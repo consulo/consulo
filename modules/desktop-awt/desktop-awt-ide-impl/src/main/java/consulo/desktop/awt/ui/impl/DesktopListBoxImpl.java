@@ -15,14 +15,15 @@
  */
 package consulo.desktop.awt.ui.impl;
 
-import consulo.ui.ex.awt.JBList;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
+import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.disposer.Disposable;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
+import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.ValueComponentEvent;
+import consulo.ui.ex.awt.JBList;
 import consulo.ui.model.ListModel;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -30,64 +31,64 @@ import jakarta.annotation.Nonnull;
  * @since 12-Sep-17
  */
 class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements ListBox<E> {
-  class MyJBList<T> extends JBList<T> implements FromSwingComponentWrapper {
-    MyJBList(@Nonnull javax.swing.ListModel<T> dataModel) {
-      super(dataModel);
+    class MyJBList<T> extends JBList<T> implements FromSwingComponentWrapper {
+        MyJBList(@Nonnull javax.swing.ListModel<T> dataModel) {
+            super(dataModel);
+        }
+
+        @Nonnull
+        @Override
+        public Component toUIComponent() {
+            return DesktopListBoxImpl.this;
+        }
+    }
+
+    private TextItemRender<E> myRender = ListItemRenders.defaultRender();
+
+    private ListModel<E> myModel;
+
+    public DesktopListBoxImpl(ListModel<E> model) {
+        myModel = model;
+        DesktopComboBoxModelWrapper<E> wrapper = new DesktopComboBoxModelWrapper<>(model);
+
+        myComponent = new MyJBList<>(wrapper);
+        myComponent.setCellRenderer(new DesktopListRender<>(() -> myRender));
     }
 
     @Nonnull
     @Override
-    public Component toUIComponent() {
-      return DesktopListBoxImpl.this;
+    public ListModel<E> getListModel() {
+        return myModel;
     }
-  }
 
-  private TextItemRender<E> myRender = ListItemRenders.defaultRender();
+    @Override
+    public void setRender(@Nonnull TextItemRender<E> render) {
+        myRender = render;
+    }
 
-  private ListModel<E> myModel;
+    @Override
+    public void setValueByIndex(int index) {
+        myComponent.setSelectedIndex(index);
+    }
 
-  public DesktopListBoxImpl(ListModel<E> model) {
-    myModel = model;
-    DesktopComboBoxModelWrapper<E> wrapper = new DesktopComboBoxModelWrapper<>(model);
+    @RequiredUIAccess
+    @Override
+    public void setValue(E value, boolean fireListeners) {
+        myComponent.setSelectedValue(value, true);
+    }
 
-    myComponent = new MyJBList<>(wrapper);
-    myComponent.setCellRenderer(new DesktopListRender<>(() -> myRender));
-  }
+    @Nonnull
+    @Override
+    public Disposable addValueListener(@Nonnull ComponentEventListener<ValueComponent<E>, ValueComponentEvent<E>> valueListener) {
+        DesktopValueListenerAsListSelectionListener<E> listener = new DesktopValueListenerAsListSelectionListener<>(this, myComponent, valueListener);
+        myComponent.addListSelectionListener(listener);
+        return () -> myComponent.removeListSelectionListener(listener);
+    }
 
-  @Nonnull
-  @Override
-  public ListModel<E> getListModel() {
-    return myModel;
-  }
-
-  @Override
-  public void setRender(@Nonnull TextItemRender<E> render) {
-    myRender = render;
-  }
-
-  @Override
-  public void setValueByIndex(int index) {
-    myComponent.setSelectedIndex(index);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setValue(E value, boolean fireListeners) {
-    myComponent.setSelectedValue(value, true);
-  }
-
-  @Nonnull
-  @Override
-  public Disposable addValueListener(@Nonnull ValueComponent.ValueListener<E> valueListener) {
-    DesktopValueListenerAsListSelectionListener<E> listener = new DesktopValueListenerAsListSelectionListener<>(this, myComponent, valueListener);
-    myComponent.addListSelectionListener(listener);
-    return () -> myComponent.removeListSelectionListener(listener);
-  }
-
-  @SuppressWarnings("unchecked")
-  @Nonnull
-  @Override
-  public E getValue() {
-    return myComponent.getSelectedValue();
-  }
+    @SuppressWarnings("unchecked")
+    @Nonnull
+    @Override
+    public E getValue() {
+        return myComponent.getSelectedValue();
+    }
 }

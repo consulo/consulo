@@ -17,10 +17,10 @@ package consulo.ui;
 
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.event.HyperlinkListener;
+import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.image.Image;
 import consulo.ui.internal.UIInternal;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -35,7 +35,7 @@ public interface Hyperlink extends Component {
   }
 
   @Nonnull
-  static Hyperlink create(@Nonnull String text, @Nonnull @RequiredUIAccess HyperlinkListener listener) {
+  static Hyperlink create(@Nonnull String text, @Nonnull @RequiredUIAccess ComponentEventListener<Component, HyperlinkEvent> listener) {
     Hyperlink hyperlink = UIInternal.get()._Components_hyperlink(text);
     hyperlink.addHyperlinkListener(listener);
     return hyperlink;
@@ -53,7 +53,7 @@ public interface Hyperlink extends Component {
   Image getImage();
 
   @Nonnull
-  default Disposable addHyperlinkListener(@Nonnull HyperlinkListener hyperlinkListener) {
-    return addListener(HyperlinkListener.class, hyperlinkListener);
+  default Disposable addHyperlinkListener(@Nonnull ComponentEventListener<Component, HyperlinkEvent> hyperlinkListener) {
+    return addListener(HyperlinkEvent.class, hyperlinkListener);
   }
 }

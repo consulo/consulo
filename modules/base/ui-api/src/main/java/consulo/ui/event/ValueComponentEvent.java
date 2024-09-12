@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2021 consulo.io
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,32 +15,27 @@
  */
 package consulo.ui.event;
 
-import consulo.ui.Component;
+import consulo.ui.ValueComponent;
 import consulo.ui.event.details.InputDetails;
-import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 24/11/2021
+ * @since 2024-09-10
  */
-public final class HyperlinkEvent extends ComponentEvent<Component> {
-  @Nonnull
-  private final String myDescription;
+public final class ValueComponentEvent<V> extends ComponentEvent<ValueComponent<V>> {
+    private V myValue;
 
-  @Deprecated
-  public HyperlinkEvent(@Nonnull Component component, @Nonnull String description) {
-    super(component);
-    myDescription = description;
-  }
+    public ValueComponentEvent(ValueComponent<V> component, V value) {
+        this(component, value, null);
+    }
 
-  public HyperlinkEvent(@Nonnull Component component, @Nonnull String description, @Nullable InputDetails details) {
-    super(component, details);
-    myDescription = description;
-  }
+    public ValueComponentEvent(ValueComponent<V> component, V value, @Nullable InputDetails inputDetails) {
+        super(component, inputDetails);
+        myValue = value;
+    }
 
-  @Nonnull
-  public String getDescription() {
-    return myDescription;
-  }
+    public V getValue() {
+        return myValue;
+    }
 }

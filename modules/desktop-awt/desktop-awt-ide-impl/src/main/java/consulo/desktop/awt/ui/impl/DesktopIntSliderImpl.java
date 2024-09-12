@@ -16,13 +16,14 @@
 package consulo.desktop.awt.ui.impl;
 
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
+import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.ui.Component;
 import consulo.ui.IntSlider;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
-
+import consulo.ui.event.ValueComponentEvent;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 
 /**
@@ -30,48 +31,49 @@ import javax.swing.*;
  * @since 11/29/2020
  */
 public class DesktopIntSliderImpl extends SwingComponentDelegate<DesktopIntSliderImpl.MyJSlider> implements IntSlider {
-  public class MyJSlider extends JSlider implements FromSwingComponentWrapper {
-    public MyJSlider(int min, int max, int value) {
-      super(min, max, value);
+    public class MyJSlider extends JSlider implements FromSwingComponentWrapper {
+        public MyJSlider(int min, int max, int value) {
+            super(min, max, value);
+        }
+
+        @Nonnull
+        @Override
+        public Component toUIComponent() {
+            return DesktopIntSliderImpl.this;
+        }
     }
 
-    @Nonnull
+    public DesktopIntSliderImpl(int min, int max, int value) {
+        MyJSlider slider = new MyJSlider(min, max, value);
+        initialize(slider);
+        slider.addChangeListener(e -> fireListeners());
+    }
+
     @Override
-    public Component toUIComponent() {
-      return DesktopIntSliderImpl.this;
+    public void setRange(int min, int max) {
+        toAWTComponent().setMinimum(min);
+        toAWTComponent().setMaximum(max);
     }
-  }
 
-  public DesktopIntSliderImpl(int min, int max, int value) {
-    MyJSlider slider = new MyJSlider(min, max, value);
-    initialize(slider);
-    slider.addChangeListener(e -> fireListeners());
-  }
-
-  @Override
-  public void setRange(int min, int max) {
-    toAWTComponent().setMinimum(min);
-    toAWTComponent().setMaximum(max);
-  }
-
-  @Nullable
-  @Override
-  public Integer getValue() {
-    return toAWTComponent().getValue();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setValue(Integer value, boolean fireListeners) {
-    toAWTComponent().setValue(value);
-
-    if (fireListeners) {
-      fireListeners();
+    @Nullable
+    @Override
+    public Integer getValue() {
+        return toAWTComponent().getValue();
     }
-  }
 
-  @RequiredUIAccess
-  private void fireListeners() {
-    getListenerDispatcher(ValueListener.class).valueChanged(new ValueEvent(this, getValue()));
-  }
+    @RequiredUIAccess
+    @Override
+    public void setValue(Integer value, boolean fireListeners) {
+        toAWTComponent().setValue(value);
+
+        if (fireListeners) {
+            fireListeners();
+        }
+    }
+
+    @RequiredUIAccess
+    @SuppressWarnings("unchecked")
+    private void fireListeners() {
+        getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(this, getValue()));
+    }
 }

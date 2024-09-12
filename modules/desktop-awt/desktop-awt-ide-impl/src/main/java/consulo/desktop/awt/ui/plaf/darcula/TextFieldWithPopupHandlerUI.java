@@ -29,6 +29,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.LinkedHashMap;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 import static consulo.util.lang.StringUtil.isEmpty;
 import static consulo.ui.ex.awt.JBUI.scale;
@@ -470,14 +471,14 @@ public abstract class TextFieldWithPopupHandlerUI extends BasicTextFieldUI imple
     JTextComponent component = getComponent();
     if (component != null) {
       IconHolder result = getIconHolder(component, event.getX(), event.getY());
-      Runnable action = result == null ? null : result.extension.getActionOnClick();
+      Consumer<InputEvent> action = result == null ? null : result.extension.getActionOnClick();
       if (action == null) {
         setCursor(Cursor.TEXT_CURSOR);
       }
       else {
         setCursor(Cursor.HAND_CURSOR);
         if (run) {
-          action.run();
+          action.accept(event);
           event.consume();
         }
       }
@@ -580,10 +581,6 @@ public abstract class TextFieldWithPopupHandlerUI extends BasicTextFieldUI imple
       bounds.height = height;
       return true;
     }
-
-    public boolean isClickable() {
-      return null != extension.getActionOnClick();
-    }
   }
 
 
@@ -612,11 +609,11 @@ public abstract class TextFieldWithPopupHandlerUI extends BasicTextFieldUI imple
     }
 
     @Override
-    public Runnable getActionOnClick() {
+    public Consumer<InputEvent> getActionOnClick() {
       JTextComponent component = getComponent();
       Object property = component == null ? null : component.getClientProperty(POPUP);
       JPopupMenu popup = property instanceof JPopupMenu ? (JPopupMenu)property : null;
-      return popup == null ? null : () -> {
+      return popup == null ? null : (e) -> {
         Rectangle editor = getVisibleEditorRect();
         if (editor != null) popup.show(component, bounds.x, editor.y + editor.height);
       };
@@ -648,9 +645,9 @@ public abstract class TextFieldWithPopupHandlerUI extends BasicTextFieldUI imple
     }
 
     @Override
-    public Runnable getActionOnClick() {
+    public Consumer<InputEvent> getActionOnClick() {
       JTextComponent component = getComponent();
-      return component == null ? null : () -> {
+      return component == null ? null : (e) -> {
         component.setText(null);
         Object property = component.getClientProperty(ON_CLEAR);
         if (property instanceof ActionListener) {

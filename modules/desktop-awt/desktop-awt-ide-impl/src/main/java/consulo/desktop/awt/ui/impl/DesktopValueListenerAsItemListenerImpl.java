@@ -15,8 +15,10 @@
  */
 package consulo.desktop.awt.ui.impl;
 
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ValueComponent;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.ValueComponentEvent;
 
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -26,29 +28,31 @@ import java.awt.event.ItemListener;
  * @since 13-Jun-16
  */
 class DesktopValueListenerAsItemListenerImpl<E> implements ItemListener {
-  private final ValueComponent<E> myComponent;
-  private final ValueComponent.ValueListener<E> myValueListener;
-  private final boolean mySelectEvent;
+    private final ValueComponent<E> myComponent;
+    private final ComponentEventListener<ValueComponent<E>, ValueComponentEvent<E>> myValueListener;
+    private final boolean mySelectEvent;
 
-  public DesktopValueListenerAsItemListenerImpl(ValueComponent<E> component, ValueComponent.ValueListener<E> valueListener, boolean selectEvent) {
-    myComponent = component;
-    myValueListener = valueListener;
-    mySelectEvent = selectEvent;
-  }
+    public DesktopValueListenerAsItemListenerImpl(ValueComponent<E> component,
+                                                  ComponentEventListener<ValueComponent<E>, ValueComponentEvent<E>> valueListener,
+                                                  boolean selectEvent) {
+        myComponent = component;
+        myValueListener = valueListener;
+        mySelectEvent = selectEvent;
+    }
 
-  @RequiredUIAccess
-  @Override
-  @SuppressWarnings("unchecked")
-  public void itemStateChanged(ItemEvent e) {
-    if(mySelectEvent) {
-      if (e.getStateChange() == ItemEvent.SELECTED) {
-        myValueListener.valueChanged(new ValueComponent.ValueEvent<>(myComponent, myComponent.getValue()));
-      }
+    @RequiredUIAccess
+    @Override
+    @SuppressWarnings("unchecked")
+    public void itemStateChanged(ItemEvent e) {
+        if (mySelectEvent) {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                myValueListener.onEvent(new ValueComponentEvent<>(myComponent, myComponent.getValue()));
+            }
+        }
+        else {
+            if (e.getID() == ItemEvent.ITEM_STATE_CHANGED) {
+                myValueListener.onEvent(new ValueComponentEvent<>(myComponent, myComponent.getValue()));
+            }
+        }
     }
-    else {
-      if (e.getID() == ItemEvent.ITEM_STATE_CHANGED) {
-        myValueListener.valueChanged(new ValueComponent.ValueEvent<>(myComponent, myComponent.getValue()));
-      }
-    }
-  }
 }

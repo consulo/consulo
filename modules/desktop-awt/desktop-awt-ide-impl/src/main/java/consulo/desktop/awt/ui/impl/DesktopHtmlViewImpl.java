@@ -15,17 +15,17 @@
  */
 package consulo.desktop.awt.ui.impl;
 
-import consulo.ui.ex.awt.HyperlinkAdapter;
-import consulo.ui.ex.awt.JBHtmlEditorKit;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
+import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.ui.Component;
 import consulo.ui.HtmlView;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
-import consulo.ui.event.HyperlinkListener;
-
+import consulo.ui.event.ValueComponentEvent;
+import consulo.ui.ex.awt.HyperlinkAdapter;
+import consulo.ui.ex.awt.JBHtmlEditorKit;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 
@@ -43,8 +43,10 @@ public class DesktopHtmlViewImpl extends SwingComponentDelegate<DesktopHtmlViewI
 
       addHyperlinkListener(new HyperlinkAdapter() {
         @Override
+        @RequiredUIAccess
         protected void hyperlinkActivated(HyperlinkEvent e) {
-          getListenerDispatcher(HyperlinkListener.class).navigate(new consulo.ui.event.HyperlinkEvent(toUIComponent(), e.getDescription()));
+          getListenerDispatcher(consulo.ui.event.HyperlinkEvent.class)
+              .onEvent(new consulo.ui.event.HyperlinkEvent(toUIComponent(), e.getDescription()));
         }
       });
     }
@@ -90,6 +92,6 @@ public class DesktopHtmlViewImpl extends SwingComponentDelegate<DesktopHtmlViewI
   @SuppressWarnings("unchecked")
   @RequiredUIAccess
   private void fireListeners() {
-    getListenerDispatcher(ValueListener.class).valueChanged(new ValueEvent(this, toAWTComponent().getText()));
+    getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(this, toAWTComponent().getText()));
   }
 }

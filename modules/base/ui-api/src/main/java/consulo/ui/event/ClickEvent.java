@@ -26,7 +26,7 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 2020-11-21
  */
-public final class ClickEvent extends UIEvent<Component> {
+public final class ClickEvent extends ComponentEvent<Component> {
   @Deprecated
   @DeprecationInfo("Use constructor with InputDetails")
   public ClickEvent(@Nonnull Component component) {

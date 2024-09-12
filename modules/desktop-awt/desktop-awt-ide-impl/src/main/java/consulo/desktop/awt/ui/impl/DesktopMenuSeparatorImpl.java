@@ -23,13 +23,14 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
 import consulo.ui.color.ColorValue;
+import consulo.ui.event.ComponentEvent;
+import consulo.ui.event.ComponentEventListener;
 import consulo.ui.font.Font;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import java.util.EventListener;
+
 import java.util.function.Function;
 
 /**
@@ -37,102 +38,102 @@ import java.util.function.Function;
  * @since 2018-05-09
  */
 class DesktopMenuSeparatorImpl implements MenuSeparator {
-  public static final DesktopMenuSeparatorImpl INSTANCE = new DesktopMenuSeparatorImpl();
+    public static final DesktopMenuSeparatorImpl INSTANCE = new DesktopMenuSeparatorImpl();
 
-  @Nonnull
-  @Override
-  public String getText() {
-    return "";
-  }
+    @Nonnull
+    @Override
+    public String getText() {
+        return "";
+    }
 
-  @Override
-  public void setIcon(@Nullable Image icon) {
-    throw new UnsupportedOperationException();
-  }
+    @Override
+    public void setIcon(@Nullable Image icon) {
+        throw new UnsupportedOperationException();
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, ColorValue colorValue, int width) {
-    throw new UnsupportedOperationException();
-  }
+    @RequiredUIAccess
+    @Override
+    public void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, ColorValue colorValue, int width) {
+        throw new UnsupportedOperationException();
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void removeBorder(@Nonnull BorderPosition borderPosition) {
-    throw new UnsupportedOperationException();
-  }
+    @RequiredUIAccess
+    @Override
+    public void removeBorder(@Nonnull BorderPosition borderPosition) {
+        throw new UnsupportedOperationException();
+    }
 
-  @Override
-  public boolean isVisible() {
-    return true;
-  }
+    @Override
+    public boolean isVisible() {
+        return true;
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void setVisible(boolean value) {
-    throw new UnsupportedOperationException();
-  }
+    @RequiredUIAccess
+    @Override
+    public void setVisible(boolean value) {
+        throw new UnsupportedOperationException();
+    }
 
-  @Override
-  public boolean isEnabled() {
-    return true;
-  }
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void setEnabled(boolean value) {
-    throw new UnsupportedOperationException();
-  }
+    @RequiredUIAccess
+    @Override
+    public void setEnabled(boolean value) {
+        throw new UnsupportedOperationException();
+    }
 
-  @Nullable
-  @Override
-  public Component getParent() {
-    return null;
-  }
+    @Nullable
+    @Override
+    public Component getParent() {
+        return null;
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void setSize(@Nonnull Size size) {
-    throw new UnsupportedOperationException();
-  }
+    @RequiredUIAccess
+    @Override
+    public void setSize(@Nonnull Size size) {
+        throw new UnsupportedOperationException();
+    }
 
-  @Nonnull
-  @Override
-  public Disposable addUserDataProvider(@Nonnull Function<Key<?>, Object> function) {
-    throw new UnsupportedOperationException();
-  }
+    @Nonnull
+    @Override
+    public Disposable addUserDataProvider(@Nonnull Function<Key<?>, Object> function) {
+        throw new UnsupportedOperationException();
+    }
 
-  @Nonnull
-  @Override
-  public Font getFont() {
-    throw new UnsupportedOperationException();
-  }
+    @Nonnull
+    @Override
+    public Font getFont() {
+        throw new UnsupportedOperationException();
+    }
 
-  @Override
-  public void setFont(@Nonnull Font font) {
-    throw new UnsupportedOperationException();
-  }
+    @Override
+    public void setFont(@Nonnull Font font) {
+        throw new UnsupportedOperationException();
+    }
 
-  @Nonnull
-  @Override
-  public <T extends EventListener> T getListenerDispatcher(@Nonnull Class<T> eventClass) {
-    throw new UnsupportedOperationException();
-  }
+    @Nonnull
+    @Override
+    public <C extends Component, E extends ComponentEvent<C>> ComponentEventListener<C, E> getListenerDispatcher(@Nonnull Class<E> eventClass) {
+        throw new UnsupportedOperationException();
+    }
 
-  @Nonnull
-  @Override
-  public <T extends EventListener> Disposable addListener(@Nonnull Class<T> eventClass, @Nonnull T listener) {
-    throw new UnsupportedOperationException();
-  }
+    @Nonnull
+    @Override
+    public <C extends Component, E extends ComponentEvent<C>> Disposable addListener(@Nonnull Class<? extends E> eventClass, @Nonnull ComponentEventListener<C, E> listener) {
+        throw new UnsupportedOperationException();
+    }
 
-  @Nullable
-  @Override
-  public <T> T getUserData(@Nonnull Key<T> key) {
-    throw new UnsupportedOperationException();
-  }
+    @Nullable
+    @Override
+    public <T> T getUserData(@Nonnull Key<T> key) {
+        throw new UnsupportedOperationException();
+    }
 
-  @Override
-  public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
-    throw new UnsupportedOperationException();
-  }
+    @Override
+    public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
+        throw new UnsupportedOperationException();
+    }
 }

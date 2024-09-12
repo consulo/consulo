@@ -24,6 +24,8 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
 import consulo.ui.color.ColorValue;
+import consulo.ui.event.ComponentEvent;
+import consulo.ui.event.ComponentEventListener;
 import consulo.ui.font.Font;
 import consulo.ui.impl.UIDataObject;
 import consulo.util.dataholder.Key;
@@ -33,7 +35,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Widget;
 
-import java.util.EventListener;
 import java.util.function.Function;
 
 /**
@@ -41,175 +42,176 @@ import java.util.function.Function;
  * @since 29/04/2021
  */
 public abstract class SWTComponentDelegate<SWT extends Widget> implements Component {
-  public static final String UI_COMPONENT_KEY = "UI_COMPONENT_KEY";
+    public static final String UI_COMPONENT_KEY = "UI_COMPONENT_KEY";
 
-  protected Size mySize;
+    protected Size mySize;
 
-  protected UIDataObject myDataObject = new UIDataObject();
+    protected UIDataObject myDataObject = new UIDataObject();
 
-  protected SWT myComponent;
+    protected SWT myComponent;
 
-  private boolean myEnabled = true;
-  private boolean myVisible = true;
+    private boolean myEnabled = true;
+    private boolean myVisible = true;
 
-  public final void bind(Composite parent, Object layoutData) {
-    myComponent = createSWT(parent);
+    public final void bind(Composite parent, Object layoutData) {
+        myComponent = createSWT(parent);
 
-    if (myComponent instanceof Control control) {
-      control.setLayoutData(layoutData);
-      control.setEnabled(myEnabled);
-      control.setVisible(myVisible);
-      control.setData(UI_COMPONENT_KEY, this);
-      if (mySize != null) {
-        if (layoutData instanceof LayoutDataWithSize) {
-          ((LayoutDataWithSize)layoutData).setSize(mySize);
+        if (myComponent instanceof Control control) {
+            control.setLayoutData(layoutData);
+            control.setEnabled(myEnabled);
+            control.setVisible(myVisible);
+            control.setData(UI_COMPONENT_KEY, this);
+            if (mySize != null) {
+                if (layoutData instanceof LayoutDataWithSize) {
+                    ((LayoutDataWithSize) layoutData).setSize(mySize);
+                }
+            }
         }
-      }
-    }
-    
-    initialize(myComponent);
-  }
 
-  protected static int packScrollFlags(Composite parent, int flags) {
-    Object data = parent.getData(UI_COMPONENT_KEY);
-    if (data instanceof DesktopSwtScrollableLayoutImpl) {
-      flags |= org.eclipse.swt.SWT.V_SCROLL;
-      flags |= org.eclipse.swt.SWT.H_SCROLL;
-      return flags;
+        initialize(myComponent);
     }
 
-    return flags;
-  }
+    protected static int packScrollFlags(Composite parent, int flags) {
+        Object data = parent.getData(UI_COMPONENT_KEY);
+        if (data instanceof DesktopSwtScrollableLayoutImpl) {
+            flags |= org.eclipse.swt.SWT.V_SCROLL;
+            flags |= org.eclipse.swt.SWT.H_SCROLL;
+            return flags;
+        }
 
-  public SWT toSWTComponent() {
-    return myComponent;
-  }
-
-  protected abstract SWT createSWT(Composite parent);
-
-  protected void initialize(SWT component) {
-  }
-
-  public final Composite getComposite() {
-    if (myComponent instanceof Composite) {
-      return (Composite)myComponent;
+        return flags;
     }
 
-    throw new UnsupportedOperationException(getClass().getName());
-  }
-
-  public void setParent(@Nullable Component component) {
-    disposeSWT();
-  }
-
-  public void disposeSWT() {
-    if (myComponent != null) {
-      myComponent.dispose();
-      myComponent = null;
+    public SWT toSWTComponent() {
+        return myComponent;
     }
-  }
 
-  @RequiredUIAccess
-  @Override
-  public void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, @Nullable ColorValue colorValue, int width) {
+    protected abstract SWT createSWT(Composite parent);
 
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void removeBorder(@Nonnull BorderPosition borderPosition) {
-
-  }
-
-  @Override
-  public boolean isVisible() {
-    return myVisible;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setVisible(boolean value) {
-    myVisible = value;
-
-    if (myComponent instanceof Control control) {
-      control.setVisible(myVisible);
+    protected void initialize(SWT component) {
     }
-  }
 
-  @Override
-  public boolean isEnabled() {
-    return myEnabled;
-  }
+    public final Composite getComposite() {
+        if (myComponent instanceof Composite) {
+            return (Composite) myComponent;
+        }
 
-  @RequiredUIAccess
-  @Override
-  public void setEnabled(boolean value) {
-    myEnabled = value;
-
-    if(myComponent instanceof Control control) {
-      control.setEnabled(value);
+        throw new UnsupportedOperationException(getClass().getName());
     }
-  }
 
-  @Nullable
-  @Override
-  public Component getParent() {
-    return null;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setSize(@Nonnull Size size) {
-    mySize = size;
-
-    SWT swt = toSWTComponent();
-    if(swt instanceof Control control) {
-      Object layoutData = control.getLayoutData();
-      if (layoutData instanceof LayoutDataWithSize layoutDataWithSize) {
-        layoutDataWithSize.setSize(size);
-
-        control.getParent().requestLayout();
-      }
+    public void setParent(@Nullable Component component) {
+        disposeSWT();
     }
-  }
 
-  @Nonnull
-  @Override
-  public Disposable addUserDataProvider(@Nonnull Function<Key<?>, Object> function) {
-    return myDataObject.addUserDataProvider(function);
-  }
+    public void disposeSWT() {
+        if (myComponent != null) {
+            myComponent.dispose();
+            myComponent = null;
+        }
+    }
 
-  @Nonnull
-  @Override
-  public Font getFont() {
-    return null;
-  }
+    @RequiredUIAccess
+    @Override
+    public void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, @Nullable ColorValue colorValue, int width) {
 
-  @Override
-  public void setFont(@Nonnull Font font) {
+    }
 
-  }
+    @RequiredUIAccess
+    @Override
+    public void removeBorder(@Nonnull BorderPosition borderPosition) {
 
-  @Nonnull
-  @Override
-  public <T extends EventListener> T getListenerDispatcher(@Nonnull Class<T> eventClass) {
-    return myDataObject.getDispatcher(eventClass);
-  }
+    }
 
-  @Nonnull
-  @Override
-  public <T extends EventListener> Disposable addListener(@Nonnull Class<T> eventClass, @Nonnull T listener) {
-    return myDataObject.addListener(eventClass, listener);
-  }
+    @Override
+    public boolean isVisible() {
+        return myVisible;
+    }
 
-  @Nullable
-  @Override
-  public <T> T getUserData(@Nonnull Key<T> key) {
-    return myDataObject.getUserData(key);
-  }
+    @RequiredUIAccess
+    @Override
+    public void setVisible(boolean value) {
+        myVisible = value;
 
-  @Override
-  public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
-    myDataObject.putUserData(key, value);
-  }
+        if (myComponent instanceof Control control) {
+            control.setVisible(myVisible);
+        }
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return myEnabled;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setEnabled(boolean value) {
+        myEnabled = value;
+
+        if (myComponent instanceof Control control) {
+            control.setEnabled(value);
+        }
+    }
+
+    @Nullable
+    @Override
+    public Component getParent() {
+        return null;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setSize(@Nonnull Size size) {
+        mySize = size;
+
+        SWT swt = toSWTComponent();
+        if (swt instanceof Control control) {
+            Object layoutData = control.getLayoutData();
+            if (layoutData instanceof LayoutDataWithSize layoutDataWithSize) {
+                layoutDataWithSize.setSize(size);
+
+                control.getParent().requestLayout();
+            }
+        }
+    }
+
+    @Nonnull
+    @Override
+    public Disposable addUserDataProvider(@Nonnull Function<Key<?>, Object> function) {
+        return myDataObject.addUserDataProvider(function);
+    }
+
+    @Nonnull
+    @Override
+    public Font getFont() {
+        return null;
+    }
+
+    @Override
+    public void setFont(@Nonnull Font font) {
+
+    }
+
+    @Nonnull
+    @Override
+    public <C extends Component, E extends ComponentEvent<C>> ComponentEventListener<C, E> getListenerDispatcher(@Nonnull Class<E> eventClass) {
+        return myDataObject.getDispatcher(eventClass);
+    }
+
+    @Nonnull
+    @Override
+    public <C extends Component, E extends ComponentEvent<C>> Disposable addListener(@Nonnull Class<? extends E> eventClass,
+                                                                                     @Nonnull ComponentEventListener<C, E> listener) {
+        return myDataObject.addListener(eventClass, listener);
+    }
+
+    @Nullable
+    @Override
+    public <T> T getUserData(@Nonnull Key<T> key) {
+        return myDataObject.getUserData(key);
+    }
+
+    @Override
+    public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
+        myDataObject.putUserData(key, value);
+    }
 }

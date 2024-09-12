@@ -18,49 +18,53 @@ package consulo.fileEditor;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.Component;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
-import consulo.ui.event.UIEvent;
+import consulo.ui.event.ComponentEvent;
+import consulo.ui.event.ComponentEventListener;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
-import java.util.function.Consumer;
 
 /**
  * @author VISTALL
  * @since 18-Jul-22
  */
 public interface EditorNotificationBuilder {
-  @Nonnull
-  EditorNotificationBuilder withText(@Nonnull LocalizeValue text);
+    @Nonnull
+    EditorNotificationBuilder withText(@Nonnull LocalizeValue text);
 
-  @Nonnull
-  EditorNotificationBuilder withIcon(@Nonnull Image image);
+    @Nonnull
+    EditorNotificationBuilder withIcon(@Nonnull Image image);
 
-  @Nonnull
-  EditorNotificationBuilder withBackgroundColor(@Nonnull ColorValue color);
+    @Nonnull
+    EditorNotificationBuilder withBackgroundColor(@Nonnull ColorValue color);
 
-  @Nonnull
-  default EditorNotificationBuilder withAction(@Nonnull LocalizeValue actionText, @Nonnull @RequiredUIAccess Consumer<UIEvent<Component>> actionHandler) {
-    return withAction(actionText, LocalizeValue.of(), actionHandler);
-  }
+    @Nonnull
+    default EditorNotificationBuilder withAction(@Nonnull LocalizeValue actionText,
+                                                 @Nonnull ComponentEventListener<Component, ComponentEvent<Component>> action) {
+        return withAction(actionText, LocalizeValue.of(), action);
+    }
 
-  @Nonnull
-  EditorNotificationBuilder withAction(@Nonnull LocalizeValue actionText, @Nonnull LocalizeValue actionTooltipText, @Nonnull @RequiredUIAccess Consumer<UIEvent<Component>> actionHandler);
+    @Nonnull
+    EditorNotificationBuilder withAction(@Nonnull LocalizeValue actionText,
+                                         @Nonnull LocalizeValue actionTooltipText,
+                                         @Nonnull ComponentEventListener<Component, ComponentEvent<Component>> action);
 
-  @Nonnull
-  EditorNotificationBuilder withAction(@Nonnull LocalizeValue actionText, @Nonnull String actionRefId);
+    @Nonnull
+    EditorNotificationBuilder withAction(@Nonnull LocalizeValue actionText, @Nonnull String actionRefId);
 
-  @Nonnull
-  default EditorNotificationBuilder withGearAction(@Nonnull @RequiredUIAccess Consumer<UIEvent<Component>> action) {
-    return withGearAction(LocalizeValue.of(), PlatformIconGroup.generalGearplain(), action);
-  }
+    @Nonnull
+    default EditorNotificationBuilder withGearAction(@Nonnull ComponentEventListener<Component, ComponentEvent<Component>> action) {
+        return withGearAction(LocalizeValue.of(), PlatformIconGroup.generalGearplain(), action);
+    }
 
-  @Nonnull
-  default EditorNotificationBuilder withGearAction(@Nonnull LocalizeValue tooltipText, @Nonnull @RequiredUIAccess Consumer<UIEvent<Component>> action) {
-    return withGearAction(tooltipText, PlatformIconGroup.generalGearplain(), action);
-  }
+    @Nonnull
+    default EditorNotificationBuilder withGearAction(@Nonnull LocalizeValue tooltipText,
+                                                     @Nonnull ComponentEventListener<Component, ComponentEvent<Component>> action) {
+        return withGearAction(tooltipText, PlatformIconGroup.generalGearplain(), action);
+    }
 
-  @Nonnull
-  EditorNotificationBuilder withGearAction(@Nonnull LocalizeValue tooltipText, @Nonnull Image image, @Nonnull @RequiredUIAccess Consumer<UIEvent<Component>> action);
+    @Nonnull
+    EditorNotificationBuilder withGearAction(@Nonnull LocalizeValue tooltipText,
+                                             @Nonnull Image image,
+                                             @Nonnull ComponentEventListener<Component, ComponentEvent<Component>> action);
 }

@@ -17,10 +17,10 @@ package consulo.desktop.awt.ui.impl.textBox;
 
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.validableComponent.DocumentSwingValidator;
-import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.IntBox;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.ex.awt.JBTextField;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.util.lang.StringUtil;
@@ -41,113 +41,108 @@ import java.util.function.Function;
  * @since 2020-04-19
  */
 public class DesktopIntBoxImpl extends DocumentSwingValidator<Integer, JBTextField> implements IntBox {
-  private static class Listener extends DocumentAdapter {
-    private final DesktopIntBoxImpl myTextField;
-    private final Function<DocumentEvent, Integer> myPrevValueGetter;
+    private static class Listener extends DocumentAdapter {
+        private final DesktopIntBoxImpl myTextField;
+        private final Function<DocumentEvent, Integer> myPrevValueGetter;
 
-    public Listener(DesktopIntBoxImpl textField, Function<DocumentEvent, Integer> prevValueGetter) {
-      myTextField = textField;
-      myPrevValueGetter = prevValueGetter;
-    }
-
-    @Override
-    @RequiredUIAccess
-    protected void textChanged(DocumentEvent e) {
-      myTextField.valueChanged(myPrevValueGetter.apply(e));
-    }
-  }
-
-  class MyJBTextField extends JBTextField implements FromSwingComponentWrapper {
-
-    @Nonnull
-    @Override
-    public Component toUIComponent() {
-      return DesktopIntBoxImpl.this;
-    }
-
-    @Override
-    public void setText(String t) {
-      super.setText(t);
-    }
-  }
-
-  private Integer myMinValue;
-  private Integer myMaxValue;
-
-  public DesktopIntBoxImpl(int value) {
-    MyJBTextField field = new MyJBTextField();
-    field.setDocument(new PlainDocument() {
-      @Override
-      public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
-        char[] source = str.toCharArray();
-        char[] result = new char[source.length];
-        int j = 0;
-
-        for (int i = 0; i < result.length; i++) {
-          if (Character.isDigit(source[i])) {
-            result[j++] = source[i];
-          }
-          else {
-            Toolkit.getDefaultToolkit().beep();
-          }
+        public Listener(DesktopIntBoxImpl textField, Function<DocumentEvent, Integer> prevValueGetter) {
+            myTextField = textField;
+            myPrevValueGetter = prevValueGetter;
         }
-        super.insertString(offs, new String(result, 0, j), a);
-      }
-    }); field.setText("0");
 
-    TextFieldPlaceholderFunction.install(field);
-    initialize(field);
-    addDocumentListenerForValidator(field.getDocument());
-
-    field.getDocument().addDocumentListener(new Listener(this, this::getPrevValue));
-    setValue(value);
-  }
-
-  @Override
-  protected Integer getPrevValue(DocumentEvent e) {
-    Document document = e.getDocument();
-    String text = null;
-    try {
-      text = document.getText(0, document.getLength());
+        @Override
+        @RequiredUIAccess
+        protected void textChanged(DocumentEvent e) {
+            myTextField.valueChanged(myPrevValueGetter.apply(e));
+        }
     }
-    catch (BadLocationException e1) {
-      throw new IllegalArgumentException(e1);
+
+    class MyJBTextField extends JBTextField implements FromSwingComponentWrapper {
+
+        @Nonnull
+        @Override
+        public Component toUIComponent() {
+            return DesktopIntBoxImpl.this;
+        }
+
+        @Override
+        public void setText(String t) {
+            super.setText(t);
+        }
     }
-    return StringUtil.isEmpty(text) ? 0 : Integer.parseInt(text);
-  }
 
-  @Override
-  public void setRange(int min, int max) {
-    myMinValue = min;
-    myMaxValue = max;
-  }
+    private Integer myMinValue;
+    private Integer myMaxValue;
 
-  @Override
-  public void setPlaceholder(@Nullable String text) {
-    toAWTComponent().getEmptyText().setText(text);
-  }
+    public DesktopIntBoxImpl(int value) {
+        MyJBTextField field = new MyJBTextField();
+        field.setDocument(new PlainDocument() {
+            @Override
+            public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
+                char[] source = str.toCharArray();
+                char[] result = new char[source.length];
+                int j = 0;
 
-  @SuppressWarnings("unchecked")
-  @RequiredUIAccess
-  private void valueChanged(int value) {
-    dataObject().getDispatcher(ValueListener.class).valueChanged(new ValueEvent(this, value));
-  }
+                for (int i = 0; i < result.length; i++) {
+                    if (Character.isDigit(source[i])) {
+                        result[j++] = source[i];
+                    }
+                    else {
+                        Toolkit.getDefaultToolkit().beep();
+                    }
+                }
+                super.insertString(offs, new String(result, 0, j), a);
+            }
+        });
+        field.setText("0");
 
-  @Nonnull
-  @Override
-  public Disposable addValueListener(@Nonnull ValueListener<Integer> valueListener) {
-    return dataObject().addListener(ValueListener.class, valueListener);
-  }
+        TextFieldPlaceholderFunction.install(field);
+        initialize(field);
+        addDocumentListenerForValidator(field.getDocument());
 
-  @Override
-  public Integer getValue() {
-    String text = toAWTComponent().getText();
-    return StringUtil.isEmpty(text) ? 0 : Integer.parseInt(text);
-  }
+        field.getDocument().addDocumentListener(new Listener(this, this::getPrevValue));
+        setValue(value);
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void setValue(Integer value, boolean fireListeners) {
-    toAWTComponent().setText(String.valueOf(Objects.requireNonNull(value, "Value must be not null")));
-  }
+    @Override
+    protected Integer getPrevValue(DocumentEvent e) {
+        Document document = e.getDocument();
+        String text = null;
+        try {
+            text = document.getText(0, document.getLength());
+        }
+        catch (BadLocationException e1) {
+            throw new IllegalArgumentException(e1);
+        }
+        return StringUtil.isEmpty(text) ? 0 : Integer.parseInt(text);
+    }
+
+    @Override
+    public void setRange(int min, int max) {
+        myMinValue = min;
+        myMaxValue = max;
+    }
+
+    @Override
+    public void setPlaceholder(@Nullable String text) {
+        toAWTComponent().getEmptyText().setText(text);
+    }
+
+    @SuppressWarnings("unchecked")
+    @RequiredUIAccess
+    private void valueChanged(int value) {
+        dataObject().getDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(this, value));
+    }
+
+    @Override
+    public Integer getValue() {
+        String text = toAWTComponent().getText();
+        return StringUtil.isEmpty(text) ? 0 : Integer.parseInt(text);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setValue(Integer value, boolean fireListeners) {
+        toAWTComponent().setText(String.valueOf(Objects.requireNonNull(value, "Value must be not null")));
+    }
 }

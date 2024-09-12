@@ -16,9 +16,9 @@
 package consulo.ui;
 
 import consulo.disposer.Disposable;
-import consulo.ui.event.HyperlinkListener;
+import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.internal.UIInternal;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -44,7 +44,7 @@ public interface HtmlView extends Component, ValueComponent<String> {
   }
 
   @Nonnull
-  default Disposable addHyperlinkListener(@Nonnull HyperlinkListener hyperlinkListener) {
-    return addListener(HyperlinkListener.class, hyperlinkListener);
+  default Disposable addHyperlinkListener(@Nonnull ComponentEventListener<Component, HyperlinkEvent> hyperlinkListener) {
+    return addListener(HyperlinkEvent.class, hyperlinkListener);
   }
 }

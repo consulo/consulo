@@ -15,26 +15,27 @@
  */
 package consulo.desktop.awt.ui.impl;
 
-import consulo.ui.ex.awt.dnd.DnDAwareTree;
-import consulo.ui.ex.tree.PresentationData;
-import consulo.ui.ex.tree.AbstractTreeStructure;
-import consulo.ui.ex.tree.NodeDescriptor;
-import consulo.ui.ex.awt.tree.NodeRenderer;
-import consulo.ui.ex.tree.PresentableNodeDescriptor;
-import consulo.ui.ex.awt.tree.AsyncTreeModel;
-import consulo.ui.ex.awt.tree.StructureTreeModel;
-import consulo.ui.ex.awt.tree.TreeUtil;
-import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.facade.DesktopAWTTargetAWTImpl;
+import consulo.desktop.awt.facade.FromSwingComponentWrapper;
+import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.*;
-import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
+import consulo.ui.event.TreeSelectEvent;
+import consulo.ui.ex.awt.dnd.DnDAwareTree;
+import consulo.ui.ex.awt.tree.AsyncTreeModel;
+import consulo.ui.ex.awt.tree.NodeRenderer;
+import consulo.ui.ex.awt.tree.StructureTreeModel;
+import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.tree.AbstractTreeStructure;
+import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.ui.ex.tree.PresentableNodeDescriptor;
+import consulo.ui.ex.tree.PresentationData;
 import consulo.ui.image.Image;
 import consulo.util.lang.ObjectUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.tree.TreePath;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -229,7 +230,7 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
       if (object instanceof MyNodeDescriptor node) {
         MyTreeNodeImpl element = (MyTreeNodeImpl)node.getElement();
 
-        getListenerDispatcher(SelectListener.class).onSelected(element);
+        getListenerDispatcher(TreeSelectEvent.class).onEvent(new TreeSelectEvent<>(this, element));
       }
     });
   }

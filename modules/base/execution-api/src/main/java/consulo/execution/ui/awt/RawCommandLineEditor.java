@@ -15,6 +15,8 @@
  */
 package consulo.execution.ui.awt;
 
+import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.ex.awt.TextAccessor;
 import consulo.ui.ex.awt.Wrapper;
 import consulo.application.AllIcons;
@@ -74,7 +76,7 @@ public class RawCommandLineEditor extends Wrapper implements TextAccessor {
   //}
 
   @Nonnull
-  public Disposable addValueListener(@Nonnull ValueComponent.ValueListener<String> valueComponent) {
+  public Disposable addValueListener(@Nonnull ComponentEventListener<ValueComponent<String>, ValueComponentEvent<String>> valueComponent) {
     return myTextBoxWithExpandAction.addValueListener(valueComponent);
   }
 

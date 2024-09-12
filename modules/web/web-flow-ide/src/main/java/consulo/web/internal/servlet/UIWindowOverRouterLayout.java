@@ -26,6 +26,8 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
 import consulo.ui.color.ColorValue;
+import consulo.ui.event.ComponentEvent;
+import consulo.ui.event.ComponentEventListener;
 import consulo.ui.font.Font;
 import consulo.ui.font.FontManager;
 import consulo.util.dataholder.Key;
@@ -35,7 +37,6 @@ import consulo.web.internal.ui.base.TargetVaddin;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import java.util.EventListener;
 import java.util.function.Function;
 
 /**
@@ -43,131 +44,131 @@ import java.util.function.Function;
  * @since 11-Sep-17
  */
 class UIWindowOverRouterLayout extends UserDataHolderBase implements Window {
-  private final WebRootPaneImpl myRootPanel = new WebRootPaneImpl();
+    private final WebRootPaneImpl myRootPanel = new WebRootPaneImpl();
 
-  private Font myFont = FontManager.get().createFont("?", 12);
+    private Font myFont = FontManager.get().createFont("?", 12);
 
-  private boolean myDisposed;
+    private boolean myDisposed;
 
-  @RequiredUIAccess
-  public UIWindowOverRouterLayout(VaadinRootLayout routerLayout) {
-    routerLayout.add(TargetVaddin.to(myRootPanel.getComponent()));
-  }
-
-  @Override
-  public void dispose() {
-    myDisposed = true;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void addBorder(@Nonnull BorderPosition borderPosition, BorderStyle borderStyle, ColorValue colorValue, int width) {
-    throw new UnsupportedOperationException();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void removeBorder(@Nonnull BorderPosition borderPosition) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public boolean isVisible() {
-    return true;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setVisible(boolean value) {
-  }
-
-  @Override
-  public boolean isEnabled() {
-    return true;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setEnabled(boolean value) {
-  }
-
-  @Nullable
-  @Override
-  public Window getParent() {
-    return null;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setSize(@Nonnull Size size) {
-
-  }
-
-  @Nonnull
-  @Override
-  public Disposable addUserDataProvider(@Nonnull Function<Key<?>, Object> function) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Nonnull
-  @Override
-  public <T extends EventListener> T getListenerDispatcher(@Nonnull Class<T> eventClass) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Nonnull
-  @Override
-  public <T extends EventListener> Disposable addListener(@Nonnull Class<T> eventClass, @Nonnull T listener) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Nonnull
-  @Override
-  public Font getFont() {
-    return myFont;
-  }
-
-  @Override
-  public void setFont(@Nonnull Font font) {
-    myFont = font;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setTitle(@Nonnull String title) {
-    UI.getCurrent().getPage().setTitle(title);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setContent(@Nonnull Component content) {
-    if (myDisposed) {
-      throw new IllegalArgumentException("Already disposed");
+    @RequiredUIAccess
+    public UIWindowOverRouterLayout(VaadinRootLayout routerLayout) {
+        routerLayout.add(TargetVaddin.to(myRootPanel.getComponent()));
     }
 
-    myRootPanel.setCenterComponent(content);
-  }
+    @Override
+    public void dispose() {
+        myDisposed = true;
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void setMenuBar(@Nullable MenuBar menuBar) {
-    myRootPanel.setMenuBar(menuBar);
-  }
+    @RequiredUIAccess
+    @Override
+    public void addBorder(@Nonnull BorderPosition borderPosition, BorderStyle borderStyle, ColorValue colorValue, int width) {
+        throw new UnsupportedOperationException();
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void show() {
-    throw new UnsupportedOperationException();
-  }
+    @RequiredUIAccess
+    @Override
+    public void removeBorder(@Nonnull BorderPosition borderPosition) {
+        throw new UnsupportedOperationException();
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void close() {
-    Disposer.dispose(this);
-  }
+    @Override
+    public boolean isVisible() {
+        return true;
+    }
 
-  @Override
-  public boolean isActive() {
-    return true;
-  }
+    @RequiredUIAccess
+    @Override
+    public void setVisible(boolean value) {
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setEnabled(boolean value) {
+    }
+
+    @Nullable
+    @Override
+    public Window getParent() {
+        return null;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setSize(@Nonnull Size size) {
+
+    }
+
+    @Nonnull
+    @Override
+    public Disposable addUserDataProvider(@Nonnull Function<Key<?>, Object> function) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Nonnull
+    @Override
+    public <C extends Component, E extends ComponentEvent<C>> ComponentEventListener<C, E> getListenerDispatcher(@Nonnull Class<E> eventClass) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Nonnull
+    @Override
+    public <C extends Component, E extends ComponentEvent<C>> Disposable addListener(@Nonnull Class<? extends E> eventClass, @Nonnull ComponentEventListener<C, E> listener) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Nonnull
+    @Override
+    public Font getFont() {
+        return myFont;
+    }
+
+    @Override
+    public void setFont(@Nonnull Font font) {
+        myFont = font;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setTitle(@Nonnull String title) {
+        UI.getCurrent().getPage().setTitle(title);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setContent(@Nonnull Component content) {
+        if (myDisposed) {
+            throw new IllegalArgumentException("Already disposed");
+        }
+
+        myRootPanel.setCenterComponent(content);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setMenuBar(@Nullable MenuBar menuBar) {
+        myRootPanel.setMenuBar(menuBar);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void show() {
+        throw new UnsupportedOperationException();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void close() {
+        Disposer.dispose(this);
+    }
+
+    @Override
+    public boolean isActive() {
+        return true;
+    }
 }

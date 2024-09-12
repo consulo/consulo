@@ -23,7 +23,7 @@ import jakarta.annotation.Nonnull;
  * @author VISTALL
  * @since 2019-11-09
  */
-public final class FocusEvent extends UIEvent<FocusableComponent> {
+public final class FocusEvent extends ComponentEvent<FocusableComponent> {
   public FocusEvent(@Nonnull FocusableComponent component) {
     super(component);
   }

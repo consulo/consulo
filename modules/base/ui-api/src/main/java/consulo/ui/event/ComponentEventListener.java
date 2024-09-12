@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,18 @@
  */
 package consulo.ui.event;
 
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
+import jakarta.annotation.Nonnull;
+
 import java.util.EventListener;
 
 /**
  * @author VISTALL
- * @since 2019-11-09
+ * @since 2024-09-10
  */
-public interface FocusListener extends EventListener {
-  default void focusGained(FocusEvent e) {
-  }
-
-  default void focusLost(FocusEvent e) {
-  }
+@FunctionalInterface
+public interface ComponentEventListener<C extends Component, E extends ComponentEvent<C>> extends EventListener {
+    @RequiredUIAccess
+    void onEvent(@Nonnull E event);
 }

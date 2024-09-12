@@ -21,10 +21,7 @@ import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
 import consulo.ui.color.ColorValue;
 import consulo.ui.cursor.Cursor;
-import consulo.ui.event.AttachListener;
-import consulo.ui.event.ClickListener;
-import consulo.ui.event.DetachListener;
-import consulo.ui.event.KeyListener;
+import consulo.ui.event.*;
 import consulo.ui.font.Font;
 import consulo.ui.style.ComponentColors;
 import consulo.util.dataholder.Key;
@@ -32,7 +29,6 @@ import consulo.util.dataholder.UserDataHolder;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import java.util.EventListener;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -42,185 +38,191 @@ import java.util.function.Supplier;
  */
 public interface Component extends UserDataHolder {
 
-  @RequiredUIAccess
-  default void addBorder(@Nonnull BorderPosition borderPosition) {
-    addBorder(borderPosition, BorderStyle.LINE, ComponentColors.BORDER, 1);
-  }
-
-  @RequiredUIAccess
-  default void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle) {
-    addBorder(borderPosition, borderStyle, ComponentColors.BORDER, 1);
-  }
-
-  @RequiredUIAccess
-  default void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, @Nullable ColorValue colorKey) {
-    addBorder(borderPosition, borderStyle, colorKey, 1);
-  }
-
-  @RequiredUIAccess
-  default void addBorders(@Nonnull BorderStyle borderStyle, @Nullable ColorValue colorKey, int width) {
-    for (BorderPosition position : BorderPosition.values()) {
-      addBorder(position, borderStyle, colorKey, width);
+    @RequiredUIAccess
+    default void addBorder(@Nonnull BorderPosition borderPosition) {
+        addBorder(borderPosition, BorderStyle.LINE, ComponentColors.BORDER, 1);
     }
-  }
 
-  @RequiredUIAccess
-  default void addDefaultBorders() {
-    for (BorderPosition position : BorderPosition.values()) {
-      addBorder(position);
+    @RequiredUIAccess
+    default void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle) {
+        addBorder(borderPosition, borderStyle, ComponentColors.BORDER, 1);
     }
-  }
 
-  @RequiredUIAccess
-  default void addMirrorBorders(@Nonnull BorderStyle borderStyle, @Nullable ColorValue colorValue, int topBottom, int leftRight) {
-    if (topBottom > 0) {
-      addBorder(BorderPosition.TOP, borderStyle, colorValue, topBottom);
-      addBorder(BorderPosition.BOTTOM, borderStyle, colorValue, topBottom);
+    @RequiredUIAccess
+    default void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, @Nullable ColorValue colorKey) {
+        addBorder(borderPosition, borderStyle, colorKey, 1);
     }
-    if (leftRight > 0) {
-      addBorder(BorderPosition.LEFT, borderStyle, colorValue, leftRight);
-      addBorder(BorderPosition.RIGHT, borderStyle, colorValue, leftRight);
+
+    @RequiredUIAccess
+    default void addBorders(@Nonnull BorderStyle borderStyle, @Nullable ColorValue colorKey, int width) {
+        for (BorderPosition position : BorderPosition.values()) {
+            addBorder(position, borderStyle, colorKey, width);
+        }
     }
-  }
 
-  @RequiredUIAccess
-  default void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, int width) {
-    addBorder(borderPosition, borderStyle, null, width);
-  }
-
-  @RequiredUIAccess
-  void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, @Nullable ColorValue colorValue, int width);
-
-  @RequiredUIAccess
-  default void removeBorders() {
-    for (BorderPosition position : BorderPosition.values()) {
-      removeBorder(position);
+    @RequiredUIAccess
+    default void addDefaultBorders() {
+        for (BorderPosition position : BorderPosition.values()) {
+            addBorder(position);
+        }
     }
-  }
 
-  @RequiredUIAccess
-  void removeBorder(@Nonnull BorderPosition borderPosition);
+    @RequiredUIAccess
+    default void addMirrorBorders(@Nonnull BorderStyle borderStyle, @Nullable ColorValue colorValue, int topBottom, int leftRight) {
+        if (topBottom > 0) {
+            addBorder(BorderPosition.TOP, borderStyle, colorValue, topBottom);
+            addBorder(BorderPosition.BOTTOM, borderStyle, colorValue, topBottom);
+        }
+        if (leftRight > 0) {
+            addBorder(BorderPosition.LEFT, borderStyle, colorValue, leftRight);
+            addBorder(BorderPosition.RIGHT, borderStyle, colorValue, leftRight);
+        }
+    }
 
-  boolean isVisible();
+    @RequiredUIAccess
+    default void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, int width) {
+        addBorder(borderPosition, borderStyle, null, width);
+    }
 
-  @RequiredUIAccess
-  void setVisible(boolean value);
+    @RequiredUIAccess
+    void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, @Nullable ColorValue colorValue, int width);
 
-  @RequiredUIAccess
-  @Nonnull
-  default Component withVisible(boolean visible) {
-    setVisible(visible);
-    return this;
-  }
+    @RequiredUIAccess
+    default void removeBorders() {
+        for (BorderPosition position : BorderPosition.values()) {
+            removeBorder(position);
+        }
+    }
 
-  boolean isEnabled();
+    @RequiredUIAccess
+    void removeBorder(@Nonnull BorderPosition borderPosition);
 
-  @RequiredUIAccess
-  void setEnabled(boolean value);
+    boolean isVisible();
 
-  @RequiredUIAccess
-  default void setEnabledRecursive(boolean value) {
-    setEnabled(value);
-  }
+    @RequiredUIAccess
+    void setVisible(boolean value);
 
-  @RequiredUIAccess
-  default Component withEnabled(boolean enabled) {
-    setEnabled(enabled);
-    return this;
-  }
+    @RequiredUIAccess
+    @Nonnull
+    default Component withVisible(boolean visible) {
+        setVisible(visible);
+        return this;
+    }
 
-  @Nullable
-  Component getParent();
+    boolean isEnabled();
 
-  @RequiredUIAccess
-  void setSize(@Nonnull Size size);
+    @RequiredUIAccess
+    void setEnabled(boolean value);
 
-  @Nonnull
-  @RequiredUIAccess
-  default Component withSize(@Nonnull Size size) {
-    setSize(size);
-    return this;
-  }
+    @RequiredUIAccess
+    default void setEnabledRecursive(boolean value) {
+        setEnabled(value);
+    }
 
-  @Nonnull
-  default <T> Disposable addUserDataProvider(@Nonnull Key<T> key, @Nonnull Supplier<T> supplier) {
-    return addUserDataProvider(k -> k == key ? supplier.get() : null);
-  }
+    @RequiredUIAccess
+    default Component withEnabled(boolean enabled) {
+        setEnabled(enabled);
+        return this;
+    }
 
-  @Nonnull
-  Disposable addUserDataProvider(@Nonnull Function<Key<?>, Object> function);
+    @Nullable
+    Component getParent();
 
-  @Nonnull
-  Font getFont();
+    @RequiredUIAccess
+    void setSize(@Nonnull Size size);
 
-  void setFont(@Nonnull Font font);
+    @Nonnull
+    @RequiredUIAccess
+    default Component withSize(@Nonnull Size size) {
+        setSize(size);
+        return this;
+    }
 
-  @Nonnull
-  @RequiredUIAccess
-  default Component withFont(@Nonnull Font font) {
-    setFont(font);
-    return this;
-  }
+    @Nonnull
+    default <T> Disposable addUserDataProvider(@Nonnull Key<T> key, @Nonnull Supplier<T> supplier) {
+        return addUserDataProvider(k -> k == key ? supplier.get() : null);
+    }
 
-  @Nullable
-  default ColorValue getForegroundColor() {
-    throw new AbstractMethodError("not supported");
-  }
+    @Nonnull
+    Disposable addUserDataProvider(@Nonnull Function<Key<?>, Object> function);
 
-  default void setForegroundColor(@Nullable ColorValue foreground) {
-    throw new AbstractMethodError("not supported");
-  }
+    @Nonnull
+    Font getFont();
 
-  @Nonnull
-  default Component withForegroundColor(@Nullable ColorValue foreground) {
-    setForegroundColor(foreground);
-    return this;
-  }
+    void setFont(@Nonnull Font font);
 
-  @Nullable
-  default Cursor getCursor() {
-    throw new AbstractMethodError("not supported");
-  }
+    @Nonnull
+    @RequiredUIAccess
+    default Component withFont(@Nonnull Font font) {
+        setFont(font);
+        return this;
+    }
 
-  default void setCursor(@Nullable Cursor cursor) {
-    throw new AbstractMethodError("not supported");
-  }
+    @Nullable
+    default ColorValue getForegroundColor() {
+        throw new AbstractMethodError("not supported");
+    }
 
-  @Nonnull
-  default Component withCursor(@Nullable Cursor cursor) {
-    setCursor(cursor);
-    return this;
-  }
+    default void setForegroundColor(@Nullable ColorValue foreground) {
+        throw new AbstractMethodError("not supported");
+    }
 
-  /**
-   * @return runner for unregister listener
-   */
-  @Nonnull
-  <T extends EventListener> Disposable addListener(@Nonnull Class<T> eventClass, @RequiredUIAccess @Nonnull T listener);
+    @Nonnull
+    default Component withForegroundColor(@Nullable ColorValue foreground) {
+        setForegroundColor(foreground);
+        return this;
+    }
 
-  @Nonnull
-  <T extends EventListener> T getListenerDispatcher(@Nonnull Class<T> eventClass);
+    @Nullable
+    default Cursor getCursor() {
+        throw new AbstractMethodError("not supported");
+    }
 
-  @Nonnull
-  default Disposable addKeyListener(@Nonnull KeyListener keyListener) {
-    return addListener(KeyListener.class, keyListener);
-  }
+    default void setCursor(@Nullable Cursor cursor) {
+        throw new AbstractMethodError("not supported");
+    }
 
-  @Nonnull
-  default Disposable addAttachListener(@Nonnull AttachListener attachListener) {
-    return addListener(AttachListener.class, attachListener);
-  }
+    @Nonnull
+    default Component withCursor(@Nullable Cursor cursor) {
+        setCursor(cursor);
+        return this;
+    }
 
-  @Nonnull
-  default Disposable addDetachListener(@Nonnull DetachListener detachListener) {
-    return addListener(DetachListener.class, detachListener);
-  }
+    /**
+     * @return runner for unregister listener
+     */
+    @Nonnull
+    <C extends Component, E extends ComponentEvent<C>> Disposable addListener(@Nonnull Class<? extends E> eventClass,
+                                                                              @Nonnull ComponentEventListener<C, E> listener);
 
-  @Nonnull
-  default Disposable addClickListener(@RequiredUIAccess @Nonnull ClickListener clickListener) {
-    return addListener(ClickListener.class, clickListener);
-  }
+    @Nonnull
+    <C extends Component, E extends ComponentEvent<C>> ComponentEventListener<C, E> getListenerDispatcher(@Nonnull Class<E> eventClass);
 
-  default void forceRepaint() {
-  }
+    @Nonnull
+    default Disposable addKeyPressedListener(@Nonnull ComponentEventListener<Component, KeyPressedEvent> keyListener) {
+        return addListener(KeyPressedEvent.class, keyListener);
+    }
+
+    @Nonnull
+    default Disposable addKeyReleasedListener(@Nonnull ComponentEventListener<Component, KeyReleasedEvent> keyListener) {
+        return addListener(KeyReleasedEvent.class, keyListener);
+    }
+
+    @Nonnull
+    default Disposable addAttachListener(@Nonnull ComponentEventListener<Component, AttachEvent> attachListener) {
+        return addListener(AttachEvent.class, attachListener);
+    }
+
+    @Nonnull
+    default Disposable addDetachListener(@Nonnull ComponentEventListener<Component, DetachEvent> detachListener) {
+        return addListener(DetachEvent.class, detachListener);
+    }
+
+    @Nonnull
+    default Disposable addClickListener(@Nonnull ComponentEventListener<Component, ClickEvent> clickListener) {
+        return addListener(ClickEvent.class, clickListener);
+    }
+
+    default void forceRepaint() {
+    }
 }

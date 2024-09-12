@@ -22,7 +22,6 @@ import consulo.ui.Component;
 import consulo.ui.Hyperlink;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.HyperlinkEvent;
-import consulo.ui.event.HyperlinkListener;
 import consulo.ui.image.Image;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
@@ -46,7 +45,7 @@ public class WebHyperlinkImpl extends VaadinComponentDelegate<WebHyperlinkImpl.V
 
   public WebHyperlinkImpl() {
     toVaadinComponent().addClickListener(event -> {
-      getListenerDispatcher(HyperlinkListener.class).navigate(new HyperlinkEvent(this, ""));
+      getListenerDispatcher(HyperlinkEvent.class).onEvent(new HyperlinkEvent(this, ""));
     });
   }
 

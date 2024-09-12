@@ -16,12 +16,11 @@
 package consulo.ui;
 
 import consulo.disposer.Disposable;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.TreeSelectEvent;
 import consulo.ui.internal.UIInternal;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import java.util.EventListener;
 
 /**
  * @author VISTALL
@@ -38,18 +37,14 @@ public interface Tree<E> extends Component {
     return UIInternal.get()._Components_tree(rootValue, model, disposable);
   }
 
-  interface SelectListener<K> extends EventListener {
-    @RequiredUIAccess
-    void onSelected(TreeNode<K> node);
-  }
-
   @Nullable
   TreeNode<E> getSelectedNode();
 
   void expand(@Nonnull TreeNode<E> node);
 
   @Nonnull
-  default Disposable addSelectListener(@Nonnull @RequiredUIAccess SelectListener<E> listener) {
-    return addListener(SelectListener.class, listener);
+  @SuppressWarnings("unchecked")
+  default Disposable addSelectListener(@Nonnull ComponentEventListener<Tree<E>, TreeSelectEvent<E>> listener) {
+    return addListener((Class) TreeSelectEvent.class, listener);
   }
 }

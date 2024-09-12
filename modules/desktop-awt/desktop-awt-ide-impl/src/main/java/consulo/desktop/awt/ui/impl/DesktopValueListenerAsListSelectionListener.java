@@ -15,9 +15,11 @@
  */
 package consulo.desktop.awt.ui.impl;
 
-import consulo.ui.ex.awt.JBList;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ValueComponent;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.ValueComponentEvent;
+import consulo.ui.ex.awt.JBList;
 
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -27,30 +29,32 @@ import javax.swing.event.ListSelectionListener;
  * @since 12-Sep-17
  */
 class DesktopValueListenerAsListSelectionListener<E> implements ListSelectionListener {
-  private DesktopListBoxImpl<E> myBox;
-  private JBList<E> myDesktopListBox;
-  private ValueComponent.ValueListener<E> myValueListener;
+    private DesktopListBoxImpl<E> myBox;
+    private JBList<E> myDesktopListBox;
+    private ComponentEventListener<ValueComponent<E>, ValueComponentEvent<E>> myValueListener;
 
-  public DesktopValueListenerAsListSelectionListener(DesktopListBoxImpl<E> box, JBList<E> desktopListBox, ValueComponent.ValueListener<E> valueListener) {
-    myBox = box;
-    myDesktopListBox = desktopListBox;
-    myValueListener = valueListener;
-  }
+    public DesktopValueListenerAsListSelectionListener(DesktopListBoxImpl<E> box,
+                                                       JBList<E> desktopListBox,
+                                                       ComponentEventListener<ValueComponent<E>, ValueComponentEvent<E>> valueListener) {
+        myBox = box;
+        myDesktopListBox = desktopListBox;
+        myValueListener = valueListener;
+    }
 
-  @Override
-  public int hashCode() {
-    return myValueListener.hashCode();
-  }
+    @Override
+    public int hashCode() {
+        return myValueListener.hashCode();
+    }
 
-  @Override
-  public boolean equals(Object obj) {
-    return obj instanceof DesktopValueListenerAsListSelectionListener &&
-           ((DesktopValueListenerAsListSelectionListener)obj).myValueListener.equals(((DesktopValueListenerAsListSelectionListener)obj).myValueListener);
-  }
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof DesktopValueListenerAsListSelectionListener &&
+            ((DesktopValueListenerAsListSelectionListener) obj).myValueListener.equals(((DesktopValueListenerAsListSelectionListener) obj).myValueListener);
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void valueChanged(ListSelectionEvent e) {
-    myValueListener.valueChanged(new ValueComponent.ValueEvent<>(myBox, myDesktopListBox.getSelectedValue()));
-  }
+    @Override
+    @RequiredUIAccess
+    public void valueChanged(ListSelectionEvent e) {
+        myValueListener.onEvent(new ValueComponentEvent<>(myBox, myDesktopListBox.getSelectedValue()));
+    }
 }

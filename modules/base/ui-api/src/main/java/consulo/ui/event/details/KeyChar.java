@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2021 consulo.io
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.event;
+package consulo.ui.event.details;
 
-import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.internal.KeyCharImpl;
 import jakarta.annotation.Nonnull;
-import java.util.EventListener;
 
 /**
  * @author VISTALL
- * @since 01/08/2021
+ * @since 2024-09-12
  */
-public interface AttachListener extends EventListener {
-  @RequiredUIAccess
-  void onAttach(@Nonnull AttachEvent event);
+public interface KeyChar {
+    KeyChar ENTER = KeyChar.of('\n', "ENTER");
+
+    char key();
+
+    String name();
+
+    @Nonnull
+    static KeyChar of(char key) {
+        return new KeyCharImpl(key, Character.toString(key));
+    }
+
+    @Nonnull
+    static KeyChar of(char key, String name) {
+        return new KeyCharImpl(key, name);
+    }
 }

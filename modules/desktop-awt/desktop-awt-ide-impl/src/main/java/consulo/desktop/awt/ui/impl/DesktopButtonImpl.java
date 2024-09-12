@@ -23,7 +23,7 @@ import consulo.ui.Button;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ClickEvent;
-import consulo.ui.event.ClickListener;
+import consulo.ui.event.ComponentEventListener;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
@@ -36,73 +36,73 @@ import javax.swing.*;
  * @since 13-Sep-17
  */
 class DesktopButtonImpl extends SwingComponentDelegate<JButton> implements Button {
-  class MyButton extends JButton implements FromSwingComponentWrapper {
-    private LocalizeValue myTextValue = LocalizeValue.empty();
+    class MyButton extends JButton implements FromSwingComponentWrapper {
+        private LocalizeValue myTextValue = LocalizeValue.empty();
 
-    MyButton(LocalizeValue textValue) {
-      super("");
-      myTextValue = textValue;
+        MyButton(LocalizeValue textValue) {
+            super("");
+            myTextValue = textValue;
 
-      updateText();
+            updateText();
+        }
+
+        @Override
+        public void updateUI() {
+            super.updateUI();
+
+            // null if called from parent object before field initialize
+            if (myTextValue != null) {
+                updateText();
+            }
+        }
+
+        @Nonnull
+        @Override
+        public Component toUIComponent() {
+            return DesktopButtonImpl.this;
+        }
+
+        private void updateText() {
+            updateTextForButton(this, myTextValue);
+        }
     }
 
-    @Override
-    public void updateUI() {
-      super.updateUI();
+    public DesktopButtonImpl(LocalizeValue text) {
+        initialize(new MyButton(text));
 
-      // null if called from parent object before field initialize
-      if (myTextValue != null) {
-        updateText();
-      }
+        toAWTComponent().addActionListener(e -> getListenerDispatcher(ClickEvent.class).onEvent(new ClickEvent(this)));
     }
 
     @Nonnull
     @Override
-    public Component toUIComponent() {
-      return DesktopButtonImpl.this;
+    public Disposable addClickListener(@Nonnull ComponentEventListener<Component, ClickEvent> clickListener) {
+        return addListener(ClickEvent.class, clickListener);
     }
 
-    private void updateText() {
-      updateTextForButton(this, myTextValue);
+    @Nonnull
+    @Override
+    public LocalizeValue getText() {
+        MyButton button = (MyButton) toAWTComponent();
+        return button.myTextValue;
     }
-  }
 
-  public DesktopButtonImpl(LocalizeValue text) {
-    initialize(new MyButton(text));
+    @RequiredUIAccess
+    @Override
+    public void setText(@Nonnull LocalizeValue text) {
+        MyButton button = (MyButton) toAWTComponent();
+        button.myTextValue = text;
+        button.updateText();
+    }
 
-    toAWTComponent().addActionListener(e -> getListenerDispatcher(ClickListener.class).clicked(new ClickEvent(this)));
-  }
+    @Nullable
+    @Override
+    public Image getIcon() {
+        return TargetAWT.from(toAWTComponent().getIcon());
+    }
 
-  @Nonnull
-  @Override
-  public Disposable addClickListener(@Nonnull ClickListener clickListener) {
-    return addListener(ClickListener.class, clickListener);
-  }
-
-  @Nonnull
-  @Override
-  public LocalizeValue getText() {
-    MyButton button = (MyButton)toAWTComponent();
-    return button.myTextValue;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setText(@Nonnull LocalizeValue text) {
-    MyButton button = (MyButton)toAWTComponent();
-    button.myTextValue = text;
-    button.updateText();
-  }
-
-  @Nullable
-  @Override
-  public Image getIcon() {
-    return TargetAWT.from(toAWTComponent().getIcon());
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setIcon(@Nullable Image image) {
-    toAWTComponent().setIcon(TargetAWT.to(image));
-  }
+    @RequiredUIAccess
+    @Override
+    public void setIcon(@Nullable Image image) {
+        toAWTComponent().setIcon(TargetAWT.to(image));
+    }
 }

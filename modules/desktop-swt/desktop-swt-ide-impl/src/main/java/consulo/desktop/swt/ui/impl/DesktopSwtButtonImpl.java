@@ -19,15 +19,13 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.Button;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ClickEvent;
-import consulo.ui.event.ClickListener;
 import consulo.ui.image.Image;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 import java.util.Objects;
 
@@ -51,8 +49,9 @@ public class DesktopSwtButtonImpl extends SWTComponentDelegate<org.eclipse.swt.w
   protected void initialize(org.eclipse.swt.widgets.Button component) {
     component.addSelectionListener(new SelectionAdapter() {
       @Override
+      @RequiredUIAccess
       public void widgetSelected(SelectionEvent e) {
-        getListenerDispatcher(ClickListener.class).clicked(new ClickEvent(DesktopSwtButtonImpl.this));
+        getListenerDispatcher(ClickEvent.class).onEvent(new ClickEvent(DesktopSwtButtonImpl.this));
       }
     });
     component.setText(myText.get());

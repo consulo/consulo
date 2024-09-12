@@ -17,16 +17,16 @@ package consulo.desktop.awt.ui.impl;
 
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
+import consulo.desktop.awt.ui.impl.util.AWTFocusAdapterAsBlurListener;
 import consulo.desktop.awt.ui.impl.util.AWTFocusAdapterAsFocusListener;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
-import consulo.ui.Component;
-import consulo.ui.HorizontalAlignment;
-import consulo.ui.Label;
-import consulo.ui.LabelOptions;
+import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
-import consulo.ui.event.FocusListener;
+import consulo.ui.event.BlurEvent;
+import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.FocusEvent;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
@@ -41,165 +41,173 @@ import javax.swing.*;
  * @since 12-Jun-16
  */
 class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel> implements Label {
-  public class MyJLabel extends JBLabel implements FromSwingComponentWrapper {
-    private LocalizeValue myTextValue;
+    public class MyJLabel extends JBLabel implements FromSwingComponentWrapper {
+        private LocalizeValue myTextValue;
 
-    private HorizontalAlignment myHorizontalAlignment2 = HorizontalAlignment.LEFT;
+        private HorizontalAlignment myHorizontalAlignment2 = HorizontalAlignment.LEFT;
 
-    private ColorValue myForegroudColor;
+        private ColorValue myForegroudColor;
 
-    MyJLabel(@Nonnull LocalizeValue text, LabelOptions options) {
-      super("");
+        MyJLabel(@Nonnull LocalizeValue text, LabelOptions options) {
+            super("");
 
-      setHorizontalAlignment2(options.getHorizontalAlignment());
+            setHorizontalAlignment2(options.getHorizontalAlignment());
 
-      myTextValue = text;
+            myTextValue = text;
 
-      updateText();
+            updateText();
+        }
+
+        @Override
+        public void updateUI() {
+            super.updateUI();
+
+            updateText();
+        }
+
+        @Nonnull
+        @Override
+        public Component toUIComponent() {
+            return DesktopLabelImpl.this;
+        }
+
+        public void setForegroundColor(ColorValue foregroundColor) {
+            myForegroudColor = foregroundColor;
+
+            updateForegroundColor();
+        }
+
+        private void setHorizontalAlignment2(@Nonnull HorizontalAlignment horizontalAlignment) {
+            myHorizontalAlignment2 = horizontalAlignment;
+            switch (horizontalAlignment) {
+                case LEFT:
+                    setHorizontalAlignment(SwingConstants.LEFT);
+                    break;
+                case CENTER:
+                    setHorizontalAlignment(SwingConstants.CENTER);
+                    break;
+                case RIGHT:
+                    setHorizontalAlignment(SwingConstants.RIGHT);
+                    break;
+            }
+        }
+
+        public HorizontalAlignment getHorizontalAlignment2() {
+            return myHorizontalAlignment2;
+        }
+
+        @Nonnull
+        public LocalizeValue getTextValue() {
+            return myTextValue;
+        }
+
+        public void setTextValue(@Nonnull LocalizeValue textValue) {
+            myTextValue = textValue;
+        }
+
+        private void updateForegroundColor() {
+            if (myForegroudColor == null) {
+                setForeground(null);
+            }
+            else {
+                setForeground(TargetAWT.to(myForegroudColor));
+            }
+        }
+
+        private void updateText() {
+            if (myTextValue == null) {
+                return;
+            }
+
+            String text = myTextValue.getValue();
+            MnemonicInfo mnemonicInfo = MnemonicInfo.parse(text);
+            if (mnemonicInfo == null) {
+                setText(text);
+                setDisplayedMnemonicIndex(-1);
+                setDisplayedMnemonic(0);
+            }
+            else {
+                setText(mnemonicInfo.getText());
+                setDisplayedMnemonicIndex(mnemonicInfo.getIndex());
+                setDisplayedMnemonic(mnemonicInfo.getKeyCode());
+            }
+        }
+    }
+
+    public DesktopLabelImpl(LocalizeValue text, LabelOptions options) {
+        initialize(new MyJLabel(text, options));
     }
 
     @Override
-    public void updateUI() {
-      super.updateUI();
+    public void setImage(@Nullable Image icon) {
+        toAWTComponent().setIcon(TargetAWT.to(icon));
+    }
 
-      updateText();
+    @Nullable
+    @Override
+    public Image getImage() {
+        return TargetAWT.from(toAWTComponent().getIcon());
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setText(@Nonnull LocalizeValue text) {
+        toAWTComponent().setTextValue(text);
     }
 
     @Nonnull
     @Override
-    public Component toUIComponent() {
-      return DesktopLabelImpl.this;
+    public LocalizeValue getText() {
+        return toAWTComponent().getTextValue();
     }
 
-    public void setForegroundColor(ColorValue foregroundColor) {
-      myForegroudColor = foregroundColor;
-      
-      updateForegroundColor();
+    @Nullable
+    @Override
+    public String getTooltipText() {
+        return toAWTComponent().getToolTipText();
     }
 
-    private void setHorizontalAlignment2(@Nonnull HorizontalAlignment horizontalAlignment) {
-      myHorizontalAlignment2 = horizontalAlignment;
-      switch (horizontalAlignment) {
-        case LEFT:
-          setHorizontalAlignment(SwingConstants.LEFT);
-          break;
-        case CENTER:
-          setHorizontalAlignment(SwingConstants.CENTER);
-          break;
-        case RIGHT:
-          setHorizontalAlignment(SwingConstants.RIGHT);
-          break;
-      }
+    @Override
+    @RequiredUIAccess
+    public void setToolTipText(@Nullable String text) {
+        toAWTComponent().setToolTipText(text);
     }
 
-    public HorizontalAlignment getHorizontalAlignment2() {
-      return myHorizontalAlignment2;
+    @Override
+    public void setForegroundColor(ColorValue colorValue) {
+        toAWTComponent().setForegroundColor(colorValue);
     }
 
     @Nonnull
-    public LocalizeValue getTextValue() {
-      return myTextValue;
+    @Override
+    public Disposable addFocusListener(@Nonnull ComponentEventListener<FocusableComponent, FocusEvent> listener) {
+        AWTFocusAdapterAsFocusListener adapter = new AWTFocusAdapterAsFocusListener(this, listener);
+        toAWTComponent().addFocusListener(adapter);
+        return () -> toAWTComponent().removeFocusListener(adapter);
     }
 
-    public void setTextValue(@Nonnull LocalizeValue textValue) {
-      myTextValue = textValue;
+    @Nonnull
+    @Override
+    public Disposable addBlurListener(@Nonnull ComponentEventListener<FocusableComponent, BlurEvent> listener) {
+        AWTFocusAdapterAsBlurListener adapter = new AWTFocusAdapterAsBlurListener(this, listener);
+        toAWTComponent().addFocusListener(adapter);
+        return () -> toAWTComponent().removeFocusListener(adapter);
     }
 
-    private void updateForegroundColor() {
-      if(myForegroudColor == null) {
-        setForeground(null);
-      }
-      else {
-        setForeground(TargetAWT.to(myForegroudColor));
-      }
+    @Nullable
+    @Override
+    public ColorValue getForegroundColor() {
+        return toAWTComponent().myForegroudColor;
     }
 
-    private void updateText() {
-      if (myTextValue == null) {
-        return;
-      }
-
-      String text = myTextValue.getValue();
-      MnemonicInfo mnemonicInfo = MnemonicInfo.parse(text);
-      if (mnemonicInfo == null) {
-        setText(text);
-        setDisplayedMnemonicIndex(-1);
-        setDisplayedMnemonic(0);
-      }
-      else {
-        setText(mnemonicInfo.getText());
-        setDisplayedMnemonicIndex(mnemonicInfo.getIndex());
-        setDisplayedMnemonic(mnemonicInfo.getKeyCode());
-      }
+    @Nullable
+    @Override
+    public Component getTarget() {
+        return TargetAWT.from(toAWTComponent().getLabelFor());
     }
-  }
 
-  public DesktopLabelImpl(LocalizeValue text, LabelOptions options) {
-    initialize(new MyJLabel(text, options));
-  }
-
-  @Override
-  public void setImage(@Nullable Image icon) {
-    toAWTComponent().setIcon(TargetAWT.to(icon));
-  }
-
-  @Nullable
-  @Override
-  public Image getImage() {
-    return TargetAWT.from(toAWTComponent().getIcon());
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setText(@Nonnull LocalizeValue text) {
-    toAWTComponent().setTextValue(text);
-  }
-
-  @Nonnull
-  @Override
-  public LocalizeValue getText() {
-    return toAWTComponent().getTextValue();
-  }
-
-  @Nullable
-  @Override
-  public String getTooltipText() {
-    return toAWTComponent().getToolTipText();
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void setToolTipText(@Nullable String text) {
-    toAWTComponent().setToolTipText(text);
-  }
-
-  @Override
-  public void setForegroundColor(ColorValue colorValue) {
-    toAWTComponent().setForegroundColor(colorValue);
-  }
-
-  @Nonnull
-  @Override
-  public Disposable addFocusListener(@Nonnull FocusListener listener) {
-    AWTFocusAdapterAsFocusListener adapter = new AWTFocusAdapterAsFocusListener(this, listener);
-    toAWTComponent().addFocusListener(adapter);
-    return () -> toAWTComponent().removeFocusListener(adapter);
-  }
-
-  @Nullable
-  @Override
-  public ColorValue getForegroundColor() {
-    return toAWTComponent().myForegroudColor;
-  }
-
-  @Nullable
-  @Override
-  public Component getTarget() {
-    return TargetAWT.from(toAWTComponent().getLabelFor());
-  }
-
-  @Override
-  public void setTarget(@Nullable Component component) {
-    toAWTComponent().setLabelFor(TargetAWT.to(component));
-  }
+    @Override
+    public void setTarget(@Nullable Component component) {
+        toAWTComponent().setLabelFor(TargetAWT.to(component));
+    }
 }

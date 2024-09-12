@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,21 @@
  */
 package consulo.ui.event;
 
+import consulo.ui.Window;
+import consulo.ui.event.details.InputDetails;
 import jakarta.annotation.Nonnull;
-import java.util.EventListener;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 2019-10-31
+ * @since 2024-09-11
  */
-public interface KeyListener extends EventListener {
-  default void keyPressed(@Nonnull KeyEvent event) {
-  }
+public final class WindowCloseEvent extends ComponentEvent<Window> {
+    public WindowCloseEvent(@Nonnull Window component) {
+        super(component);
+    }
 
-  default void keyReleased(@Nonnull KeyEvent event) {
-  }
+    public WindowCloseEvent(@Nonnull Window component, @Nullable InputDetails inputDetails) {
+        super(component, inputDetails);
+    }
 }

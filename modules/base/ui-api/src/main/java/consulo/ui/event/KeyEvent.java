@@ -16,47 +16,21 @@
 package consulo.ui.event;
 
 import consulo.ui.Component;
-import consulo.util.lang.BitUtil;
-
+import consulo.ui.event.details.KeyboardInputDetails;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2019-10-31
  */
-public final class KeyEvent extends UIEvent<Component> {
-  public static final int K_ENTER = '\n';
+public sealed class KeyEvent extends ComponentEvent<Component> permits KeyPressedEvent, KeyReleasedEvent {
+    public KeyEvent(@Nonnull Component component, @Nonnull KeyboardInputDetails inputDetails) {
+        super(component, inputDetails);
+    }
 
-  public static final int M_SHIFT = 1 << 1;
-  public static final int M_CTRL = 1 << 2;
-  public static final int M_ALT = 1 << 3;
-
-  private final int myKeyCode;
-  private final int myModifiers;
-
-  public KeyEvent(@Nonnull Component component, int keyCode, int modifiers) {
-    super(component);
-    myKeyCode = keyCode;
-    myModifiers = modifiers;
-  }
-
-  public int getModifiers() {
-    return myModifiers;
-  }
-
-  public int getKeyCode() {
-    return myKeyCode;
-  }
-
-  public boolean withShift() {
-    return BitUtil.isSet(myModifiers, M_SHIFT);
-  }
-
-  public boolean withCtrl() {
-    return BitUtil.isSet(myModifiers, M_CTRL);
-  }
-
-  public boolean withAlt() {
-    return BitUtil.isSet(myModifiers, M_ALT);
-  }
+    @Nonnull
+    @Override
+    public KeyboardInputDetails getInputDetails() {
+        return (KeyboardInputDetails) super.getInputDetails();
+    }
 }

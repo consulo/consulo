@@ -31,6 +31,8 @@ import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
+import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.ex.FileChooserTextBoxBuilder;
 import consulo.ui.image.Image;
 import consulo.ui.layout.VerticalLayout;
@@ -54,276 +56,277 @@ import java.util.function.Predicate;
  * Time: 19:03:32
  */
 public class CompilerOutputsEditor extends ModuleElementsEditor {
-  private RadioButton myInheritCompilerOutput;
-  private RadioButton myPerModuleCompilerOutput;
+    private RadioButton myInheritCompilerOutput;
+    private RadioButton myPerModuleCompilerOutput;
 
-  private CheckBox myCbExcludeOutput;
+    private CheckBox myCbExcludeOutput;
 
-  private Map<ContentFolderTypeProvider, CommitableFieldPanel> myOutputFields = new LinkedHashMap<>();
+    private Map<ContentFolderTypeProvider, CommitableFieldPanel> myOutputFields = new LinkedHashMap<>();
 
-  private Predicate<ContentFolderTypeProvider> myFilter;
+    private Predicate<ContentFolderTypeProvider> myFilter;
 
-  protected CompilerOutputsEditor(final ModuleConfigurationState state) {
-    super(state);
-    myFilter = LanguageContentFolderScopes.productionAndTest();
-  }
+    protected CompilerOutputsEditor(final ModuleConfigurationState state) {
+        super(state);
+        myFilter = LanguageContentFolderScopes.productionAndTest();
+    }
 
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public Component createUIComponentImpl(@Nonnull Disposable parentUIDisposable) {
-    ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
-    myInheritCompilerOutput = RadioButton.create(ProjectLocalize.projectInheritCompileOutputPath());
-    myPerModuleCompilerOutput = RadioButton.create(ProjectLocalize.projectModuleCompileOutputPath());
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    public Component createUIComponentImpl(@Nonnull Disposable parentUIDisposable) {
+        ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
+        myInheritCompilerOutput = RadioButton.create(ProjectLocalize.projectInheritCompileOutputPath());
+        myPerModuleCompilerOutput = RadioButton.create(ProjectLocalize.projectModuleCompileOutputPath());
 
-    ValueGroups.boolGroup().add(myInheritCompilerOutput).add(myPerModuleCompilerOutput);
+        ValueGroups.boolGroup().add(myInheritCompilerOutput).add(myPerModuleCompilerOutput);
 
-    final ValueComponent.ValueListener<Boolean> listener = e -> enableCompilerSettings(!myInheritCompilerOutput.getValueOrError());
+        ComponentEventListener<ValueComponent<Boolean>, ValueComponentEvent<Boolean>> listener =
+            e -> enableCompilerSettings(!myInheritCompilerOutput.getValueOrError());
 
-    myInheritCompilerOutput.addValueListener(listener);
-    myPerModuleCompilerOutput.addValueListener(listener);
+        myInheritCompilerOutput.addValueListener(listener);
+        myPerModuleCompilerOutput.addValueListener(listener);
 
-    for (ContentFolderTypeProvider provider : ContentFolderTypeProvider.filter(myFilter)) {
-      CommitableFieldPanel panel = createOutputPathPanel(
-        "Select " + provider.getName() + " Output",
-        provider,
-        parentUIDisposable,
-        url -> {
-          if (moduleCompilerPathsManager.isInheritedCompilerOutput()) {
-            return;
-          }
-          moduleCompilerPathsManager.setCompilerOutputUrl(provider, url);
+        for (ContentFolderTypeProvider provider : ContentFolderTypeProvider.filter(myFilter)) {
+            CommitableFieldPanel panel = createOutputPathPanel(
+                "Select " + provider.getName() + " Output",
+                provider,
+                parentUIDisposable,
+                url -> {
+                    if (moduleCompilerPathsManager.isInheritedCompilerOutput()) {
+                        return;
+                    }
+                    moduleCompilerPathsManager.setCompilerOutputUrl(provider, url);
+                }
+            );
+
+            myOutputFields.put(provider, panel);
         }
-      );
 
-      myOutputFields.put(provider, panel);
+        myCbExcludeOutput = CheckBox.create(ProjectLocalize.modulePathsExcludeOutputCheckbox(), moduleCompilerPathsManager.isExcludeOutput());
+        myCbExcludeOutput.addValueListener(e -> moduleCompilerPathsManager.setExcludeOutput(myCbExcludeOutput.getValueOrError()));
+
+        VerticalLayout panel = VerticalLayout.create();
+        panel.add(myInheritCompilerOutput);
+        panel.add(myPerModuleCompilerOutput);
+
+        FormBuilder formBuilder = FormBuilder.create();
+        for (Map.Entry<ContentFolderTypeProvider, CommitableFieldPanel> entry : myOutputFields.entrySet()) {
+            CommitableFieldPanel value = entry.getValue();
+
+            formBuilder.addLabeled(value.getLabelComponent(), value.getComponent());
+        }
+
+        formBuilder.addBottom(myCbExcludeOutput);
+
+        Component bottom = formBuilder.build();
+        bottom.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, Image.DEFAULT_ICON_SIZE);
+        panel.add(bottom);
+
+        //// fill with data
+        updateOutputPathPresentation();
+        //
+        ////compiler settings
+        final boolean outputPathInherited = moduleCompilerPathsManager.isInheritedCompilerOutput();
+        myInheritCompilerOutput.setValue(outputPathInherited);
+        myPerModuleCompilerOutput.setValue(!outputPathInherited);
+        enableCompilerSettings(!outputPathInherited);
+
+        panel.addBorders(BorderStyle.EMPTY, null, 5);
+        return panel;
     }
 
-    myCbExcludeOutput = CheckBox.create(ProjectLocalize.modulePathsExcludeOutputCheckbox(), moduleCompilerPathsManager.isExcludeOutput());
-    myCbExcludeOutput.addValueListener(e -> moduleCompilerPathsManager.setExcludeOutput(myCbExcludeOutput.getValueOrError()));
+    @RequiredUIAccess
+    private void updateOutputPathPresentation() {
+        ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
+        if (moduleCompilerPathsManager.isInheritedCompilerOutput()) {
+            final String baseUrl = getState().getModulesConfigurator().getCompilerOutputUrl();
 
-    VerticalLayout panel = VerticalLayout.create();
-    panel.add(myInheritCompilerOutput);
-    panel.add(myPerModuleCompilerOutput);
-
-    FormBuilder formBuilder = FormBuilder.create();
-    for (Map.Entry<ContentFolderTypeProvider, CommitableFieldPanel> entry : myOutputFields.entrySet()) {
-      CommitableFieldPanel value = entry.getValue();
-
-      formBuilder.addLabeled(value.getLabelComponent(), value.getComponent());
-    }
-
-    formBuilder.addBottom(myCbExcludeOutput);
-
-    Component bottom = formBuilder.build();
-    bottom.addBorder(BorderPosition.LEFT, BorderStyle.EMPTY, Image.DEFAULT_ICON_SIZE);
-    panel.add(bottom);
-
-    //// fill with data
-    updateOutputPathPresentation();
-    //
-    ////compiler settings
-    final boolean outputPathInherited = moduleCompilerPathsManager.isInheritedCompilerOutput();
-    myInheritCompilerOutput.setValue(outputPathInherited);
-    myPerModuleCompilerOutput.setValue(!outputPathInherited);
-    enableCompilerSettings(!outputPathInherited);
-
-    panel.addBorders(BorderStyle.EMPTY, null, 5);
-    return panel;
-  }
-
-  @RequiredUIAccess
-  private void updateOutputPathPresentation() {
-    ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
-    if (moduleCompilerPathsManager.isInheritedCompilerOutput()) {
-      final String baseUrl = getState().getModulesConfigurator().getCompilerOutputUrl();
-
-      moduleCompileOutputChanged(baseUrl, getModule().getName());
-    }
-    else {
-      for (ContentFolderTypeProvider contentFolderTypeProvider : ContentFolderTypeProvider.filter(myFilter)) {
-        CommitableFieldPanel commitableFieldPanel = toField(contentFolderTypeProvider);
-
-        final VirtualFile compilerOutputPath = moduleCompilerPathsManager.getCompilerOutput(contentFolderTypeProvider);
-        if (compilerOutputPath != null) {
-          commitableFieldPanel.setValue(FileUtil.toSystemDependentName(compilerOutputPath.getPath()));
+            moduleCompileOutputChanged(baseUrl, getModule().getName());
         }
         else {
-          final String compilerOutputUrl = moduleCompilerPathsManager.getCompilerOutputUrl(contentFolderTypeProvider);
-          if (compilerOutputUrl != null) {
-            commitableFieldPanel.setValue(FileUtil.toSystemDependentName(VfsUtilCore.urlToPath(compilerOutputUrl)));
-          }
+            for (ContentFolderTypeProvider contentFolderTypeProvider : ContentFolderTypeProvider.filter(myFilter)) {
+                CommitableFieldPanel commitableFieldPanel = toField(contentFolderTypeProvider);
+
+                final VirtualFile compilerOutputPath = moduleCompilerPathsManager.getCompilerOutput(contentFolderTypeProvider);
+                if (compilerOutputPath != null) {
+                    commitableFieldPanel.setValue(FileUtil.toSystemDependentName(compilerOutputPath.getPath()));
+                }
+                else {
+                    final String compilerOutputUrl = moduleCompilerPathsManager.getCompilerOutputUrl(contentFolderTypeProvider);
+                    if (compilerOutputUrl != null) {
+                        commitableFieldPanel.setValue(FileUtil.toSystemDependentName(VfsUtilCore.urlToPath(compilerOutputUrl)));
+                    }
+                }
+            }
         }
-      }
-    }
-  }
-
-  @Nonnull
-  public Module getModule() {
-    return getModel().getModule();
-  }
-
-  @RequiredUIAccess
-  private void enableCompilerSettings(final boolean enabled) {
-    for (CommitableFieldPanel commitableFieldPanel : myOutputFields.values()) {
-      commitableFieldPanel.setEnabled(enabled);
     }
 
-    myCbExcludeOutput.setEnabled(enabled);
-    ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
-    moduleCompilerPathsManager.setInheritedCompilerOutput(!enabled);
-    updateOutputPathPresentation();
-  }
-
-  @RequiredUIAccess
-  private CommitableFieldPanel createOutputPathPanel(
-    String title,
-    ContentFolderTypeProvider provider,
-    Disposable parentUIDisposable,
-    Consumer<String> commitPathRunnable
-  ) {
-    FileChooserTextBoxBuilder builder = FileChooserTextBoxBuilder.create(myProject);
-    builder.dialogTitle(title);
-    builder.fileChooserDescriptor(FileChooserDescriptorFactory.createSingleFolderDescriptor());
-    builder.uiDisposable(parentUIDisposable);
-
-    FileChooserTextBoxBuilder.Controller controller = builder.build();
-
-    Label label = Label.create(LocalizeValue.localizeTODO(provider.getName() + " Output: "));
-    CommitableFieldPanel commitableFieldPanel = new CommitableFieldPanel(controller, label);
-    commitableFieldPanel.myCommitRunnable = () -> {
-      if (!getModel().isWritable()) {
-        return;
-      }
-      String url = commitableFieldPanel.getUrl();
-      commitPathRunnable.accept(url);
-    };
-    return commitableFieldPanel;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public boolean isModified() {
-    ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
-    if (myInheritCompilerOutput.getValueOrError() != moduleCompilerPathsManager.isInheritedCompilerOutput()) {
-      return true;
+    @Nonnull
+    public Module getModule() {
+        return getModel().getModule();
     }
-    for (ContentFolderTypeProvider contentFolderTypeProvider : ContentFolderTypeProvider.filter(LanguageContentFolderScopes.productionAndTest())) {
-      CommitableFieldPanel commitableFieldPanel = toField(contentFolderTypeProvider);
-      String compilerOutputUrl = moduleCompilerPathsManager.getCompilerOutputUrl(contentFolderTypeProvider);
 
-      String url = commitableFieldPanel.getUrl();
-      if (!Comparing.equal(compilerOutputUrl, url)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  private CommitableFieldPanel toField(ContentFolderTypeProvider contentFolderTypeProvider) {
-    return Objects.requireNonNull(myOutputFields.get(contentFolderTypeProvider));
-  }
-
-  @Override
-  public void saveData() {
-    for (CommitableFieldPanel panel : myOutputFields.values()) {
-      panel.commit();
-    }
-  }
-
-  @Override
-  public String getDisplayName() {
-    return ProjectLocalize.projectRootsPathTabTitle().get();
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void moduleStateChanged() {
-    ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
-    //if content enties tree was changed
-    myCbExcludeOutput.setValue(moduleCompilerPathsManager.isExcludeOutput());
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void moduleCompileOutputChanged(final String baseUrl, final String moduleName) {
-    if (myInheritCompilerOutput.getValueOrError()) {
-      if (baseUrl != null) {
-        for (Map.Entry<ContentFolderTypeProvider, CommitableFieldPanel> entry : myOutputFields.entrySet()) {
-          ContentFolderTypeProvider key = entry.getKey();
-          CommitableFieldPanel value = entry.getValue();
-
-          value.setValue(buildOutputUrl(key));
+    @RequiredUIAccess
+    private void enableCompilerSettings(final boolean enabled) {
+        for (CommitableFieldPanel commitableFieldPanel : myOutputFields.values()) {
+            commitableFieldPanel.setEnabled(enabled);
         }
-      }
-      else {
+
+        myCbExcludeOutput.setEnabled(enabled);
+        ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
+        moduleCompilerPathsManager.setInheritedCompilerOutput(!enabled);
+        updateOutputPathPresentation();
+    }
+
+    @RequiredUIAccess
+    private CommitableFieldPanel createOutputPathPanel(
+        String title,
+        ContentFolderTypeProvider provider,
+        Disposable parentUIDisposable,
+        Consumer<String> commitPathRunnable
+    ) {
+        FileChooserTextBoxBuilder builder = FileChooserTextBoxBuilder.create(myProject);
+        builder.dialogTitle(title);
+        builder.fileChooserDescriptor(FileChooserDescriptorFactory.createSingleFolderDescriptor());
+        builder.uiDisposable(parentUIDisposable);
+
+        FileChooserTextBoxBuilder.Controller controller = builder.build();
+
+        Label label = Label.create(LocalizeValue.localizeTODO(provider.getName() + " Output: "));
+        CommitableFieldPanel commitableFieldPanel = new CommitableFieldPanel(controller, label);
+        commitableFieldPanel.myCommitRunnable = () -> {
+            if (!getModel().isWritable()) {
+                return;
+            }
+            String url = commitableFieldPanel.getUrl();
+            commitPathRunnable.accept(url);
+        };
+        return commitableFieldPanel;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public boolean isModified() {
+        ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
+        if (myInheritCompilerOutput.getValueOrError() != moduleCompilerPathsManager.isInheritedCompilerOutput()) {
+            return true;
+        }
+        for (ContentFolderTypeProvider contentFolderTypeProvider : ContentFolderTypeProvider.filter(LanguageContentFolderScopes.productionAndTest())) {
+            CommitableFieldPanel commitableFieldPanel = toField(contentFolderTypeProvider);
+            String compilerOutputUrl = moduleCompilerPathsManager.getCompilerOutputUrl(contentFolderTypeProvider);
+
+            String url = commitableFieldPanel.getUrl();
+            if (!Comparing.equal(compilerOutputUrl, url)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private CommitableFieldPanel toField(ContentFolderTypeProvider contentFolderTypeProvider) {
+        return Objects.requireNonNull(myOutputFields.get(contentFolderTypeProvider));
+    }
+
+    @Override
+    public void saveData() {
         for (CommitableFieldPanel panel : myOutputFields.values()) {
-          panel.setValue("");
+            panel.commit();
         }
-      }
-    }
-  }
-
-  @Nonnull
-  private String buildOutputUrl(@Nonnull ContentFolderTypeProvider provider) {
-    ModulesConfigurator modulesConfigurator = getState().getModulesConfigurator();
-    String relativePathForProvider = modulesConfigurator.getCompilerOutputUrl() + "/" + ModuleCompilerPathsManager.getRelativePathForProvider(provider, getModule());
-    return FileUtil.toSystemDependentName(VfsUtilCore.urlToPath(relativePathForProvider));
-  }
-
-  private static class CommitableFieldPanel {
-    private final FileChooserTextBoxBuilder.Controller myController;
-    private final Label myLabel;
-
-    private Runnable myCommitRunnable;
-
-    public CommitableFieldPanel(FileChooserTextBoxBuilder.Controller controller, Label label) {
-      myController = controller;
-      myLabel = label;
     }
 
+    @Override
+    public String getDisplayName() {
+        return ProjectLocalize.projectRootsPathTabTitle().get();
+    }
+
+    @Override
     @RequiredUIAccess
-    public void setEnabled(boolean value) {
-      myLabel.setEnabled(value);
-      myController.getComponent().setEnabled(value);
+    public void moduleStateChanged() {
+        ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
+        //if content enties tree was changed
+        myCbExcludeOutput.setValue(moduleCompilerPathsManager.isExcludeOutput());
     }
 
+    @Override
     @RequiredUIAccess
-    public Component getComponent() {
-      return myController.getComponent();
-    }
+    public void moduleCompileOutputChanged(final String baseUrl, final String moduleName) {
+        if (myInheritCompilerOutput.getValueOrError()) {
+            if (baseUrl != null) {
+                for (Map.Entry<ContentFolderTypeProvider, CommitableFieldPanel> entry : myOutputFields.entrySet()) {
+                    ContentFolderTypeProvider key = entry.getKey();
+                    CommitableFieldPanel value = entry.getValue();
 
-    public Label getLabelComponent() {
-      return myLabel;
-    }
-
-    @RequiredUIAccess
-    public void setValue(String text) {
-      myController.setValue(text);
-    }
-
-    @Nullable
-    @RequiredUIAccess
-    public String getUrl() {
-      final String path = myController.getValue().trim();
-      if (path.length() == 0) {
-        return null;
-      }
-      else {
-        // should set only absolute paths
-        String canonicalPath;
-        try {
-          canonicalPath = consulo.ide.impl.idea.openapi.util.io.FileUtil.resolveShortWindowsName(path);
+                    value.setValue(buildOutputUrl(key));
+                }
+            }
+            else {
+                for (CommitableFieldPanel panel : myOutputFields.values()) {
+                    panel.setValue("");
+                }
+            }
         }
-        catch (IOException e) {
-          canonicalPath = path;
-        }
-        return VfsUtilCore.pathToUrl(FileUtil.toSystemIndependentName(canonicalPath));
-      }
     }
 
-    public void commit() {
-      myCommitRunnable.run();
+    @Nonnull
+    private String buildOutputUrl(@Nonnull ContentFolderTypeProvider provider) {
+        ModulesConfigurator modulesConfigurator = getState().getModulesConfigurator();
+        String relativePathForProvider = modulesConfigurator.getCompilerOutputUrl() + "/" + ModuleCompilerPathsManager.getRelativePathForProvider(provider, getModule());
+        return FileUtil.toSystemDependentName(VfsUtilCore.urlToPath(relativePathForProvider));
     }
-  }
+
+    private static class CommitableFieldPanel {
+        private final FileChooserTextBoxBuilder.Controller myController;
+        private final Label myLabel;
+
+        private Runnable myCommitRunnable;
+
+        public CommitableFieldPanel(FileChooserTextBoxBuilder.Controller controller, Label label) {
+            myController = controller;
+            myLabel = label;
+        }
+
+        @RequiredUIAccess
+        public void setEnabled(boolean value) {
+            myLabel.setEnabled(value);
+            myController.getComponent().setEnabled(value);
+        }
+
+        @RequiredUIAccess
+        public Component getComponent() {
+            return myController.getComponent();
+        }
+
+        public Label getLabelComponent() {
+            return myLabel;
+        }
+
+        @RequiredUIAccess
+        public void setValue(String text) {
+            myController.setValue(text);
+        }
+
+        @Nullable
+        @RequiredUIAccess
+        public String getUrl() {
+            final String path = myController.getValue().trim();
+            if (path.length() == 0) {
+                return null;
+            }
+            else {
+                // should set only absolute paths
+                String canonicalPath;
+                try {
+                    canonicalPath = consulo.ide.impl.idea.openapi.util.io.FileUtil.resolveShortWindowsName(path);
+                }
+                catch (IOException e) {
+                    canonicalPath = path;
+                }
+                return VfsUtilCore.pathToUrl(FileUtil.toSystemIndependentName(canonicalPath));
+            }
+        }
+
+        public void commit() {
+            myCommitRunnable.run();
+        }
+    }
 }

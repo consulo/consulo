@@ -16,10 +16,8 @@ import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.AncestorListener;
 import java.awt.*;
-import java.awt.event.ComponentListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static consulo.ide.impl.idea.openapi.keymap.KeymapUtil.createTooltipText;
@@ -189,8 +187,8 @@ public abstract class ExpandableSupport<Source extends JComponent> implements Ex
 
         @Override
         public void mousePressed(MouseEvent event) {
-          Runnable action = extension.getActionOnClick();
-          if (action != null) action.run();
+          Consumer<InputEvent> action = extension.getActionOnClick();
+          if (action != null) action.accept(event);
         }
       });
     }};

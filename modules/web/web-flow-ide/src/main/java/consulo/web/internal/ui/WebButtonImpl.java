@@ -20,7 +20,6 @@ import consulo.ui.Button;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ClickEvent;
-import consulo.ui.event.ClickListener;
 import consulo.ui.image.Image;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
@@ -46,7 +45,7 @@ public class WebButtonImpl extends VaadinComponentDelegate<WebButtonImpl.Vaadin>
     Vaadin component = toVaadinComponent();
 
     component.addClickListener(event -> {
-      getListenerDispatcher(ClickListener.class).clicked(new ClickEvent(this));
+      getListenerDispatcher(ClickEvent.class).onEvent(new ClickEvent(this));
     });
 
     myTextValue = text;
@@ -58,7 +57,7 @@ public class WebButtonImpl extends VaadinComponentDelegate<WebButtonImpl.Vaadin>
   public LocalizeValue getText() {
     return myTextValue;
   }
-
+                                                                                                     
   @RequiredUIAccess
   @Override
   public void setText(@Nonnull LocalizeValue text) {

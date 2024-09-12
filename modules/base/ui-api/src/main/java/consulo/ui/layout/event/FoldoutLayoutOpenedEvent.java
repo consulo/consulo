@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2021 consulo.io
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,34 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.event;
+package consulo.ui.layout.event;
 
-import consulo.ui.Component;
+import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.details.InputDetails;
+import consulo.ui.layout.FoldoutLayout;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 24/11/2021
+ * @since 2024-09-12
  */
-public final class HyperlinkEvent extends ComponentEvent<Component> {
-  @Nonnull
-  private final String myDescription;
+public final class FoldoutLayoutOpenedEvent extends ComponentEvent<FoldoutLayout> {
+    private final boolean myOpened;
 
-  @Deprecated
-  public HyperlinkEvent(@Nonnull Component component, @Nonnull String description) {
-    super(component);
-    myDescription = description;
-  }
+    public FoldoutLayoutOpenedEvent(@Nonnull FoldoutLayout component, boolean opened) {
+        this(component, null, opened);
+    }
 
-  public HyperlinkEvent(@Nonnull Component component, @Nonnull String description, @Nullable InputDetails details) {
-    super(component, details);
-    myDescription = description;
-  }
+    public FoldoutLayoutOpenedEvent(@Nonnull FoldoutLayout component, @Nullable InputDetails inputDetails, boolean opened) {
+        super(component, inputDetails);
+        myOpened = opened;
+    }
 
-  @Nonnull
-  public String getDescription() {
-    return myDescription;
-  }
+    public boolean isOpened() {
+        return myOpened;
+    }
 }

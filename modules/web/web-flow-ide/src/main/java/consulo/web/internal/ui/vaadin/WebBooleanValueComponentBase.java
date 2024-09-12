@@ -20,6 +20,7 @@ import com.vaadin.flow.component.HasValue;
 import consulo.ui.UIAccess;
 import consulo.ui.ValueComponent;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ValueComponentEvent;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import jakarta.annotation.Nullable;
@@ -29,38 +30,39 @@ import jakarta.annotation.Nullable;
  * @since 2019-02-19
  */
 public abstract class WebBooleanValueComponentBase<E extends Component & HasValue<?, Boolean> & FromVaadinComponentWrapper> extends VaadinComponentDelegate<E> implements ValueComponent<Boolean> {
-  public WebBooleanValueComponentBase(boolean value) {
-    getVaadinComponent().setValue(value);
-  }
-
-  @Nullable
-  @Override
-  public Boolean getValue() {
-    return getVaadinComponent().getValue();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setValue(Boolean value, boolean fireListeners) {
-    UIAccess.assertIsUIThread();
-
-    if (value == null) {
-      throw new IllegalArgumentException();
+    public WebBooleanValueComponentBase(boolean value) {
+        getVaadinComponent().setValue(value);
     }
 
-    if (getVaadinComponent().getValue() == value) {
-      return;
+    @Nullable
+    @Override
+    public Boolean getValue() {
+        return getVaadinComponent().getValue();
     }
 
-    setValueImpl(value, fireListeners);
-  }
+    @RequiredUIAccess
+    @Override
+    public void setValue(Boolean value, boolean fireListeners) {
+        UIAccess.assertIsUIThread();
 
-  @RequiredUIAccess
-  protected void setValueImpl(@Nullable Boolean value, boolean fireEvents) {
-    getVaadinComponent().setValue(value);
+        if (value == null) {
+            throw new IllegalArgumentException();
+        }
 
-    if (fireEvents) {
-      getListenerDispatcher(ValueListener.class).valueChanged(new ValueEvent<>(this, value));
+        if (getVaadinComponent().getValue() == value) {
+            return;
+        }
+
+        setValueImpl(value, fireListeners);
     }
-  }
+
+    @RequiredUIAccess
+    @SuppressWarnings("unchecked")
+    protected void setValueImpl(@Nullable Boolean value, boolean fireEvents) {
+        getVaadinComponent().setValue(value);
+
+        if (fireEvents) {
+            getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent<>(this, value));
+        }
+    }
 }

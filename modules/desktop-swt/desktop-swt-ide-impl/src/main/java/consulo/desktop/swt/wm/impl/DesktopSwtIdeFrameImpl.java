@@ -24,7 +24,6 @@ import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.wm.BalloonLayout;
 import consulo.project.ui.wm.IdeRootPaneNorthExtension;
 import consulo.project.ui.wm.StatusBar;
-import consulo.project.ui.wm.StatusBarWidgetsManager;
 import consulo.ui.Rectangle2D;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
@@ -65,9 +64,8 @@ public class DesktopSwtIdeFrameImpl implements IdeFrameEx, Disposable {
     //WebFocusManagerImpl.register(vaadinWindow);
     //vaadinWindow.setWindowMode(WindowMode.MAXIMIZED);
 
-    myWindow.addListener(Window.CloseListener.class, () -> {
+    myWindow.addCloseListener((e) -> {
       myWindow.close();
-
       ProjectManager.getInstance().closeAndDisposeAsync(myProject, UIAccess.current());
     });
 

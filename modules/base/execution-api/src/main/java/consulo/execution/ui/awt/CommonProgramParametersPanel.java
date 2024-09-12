@@ -27,6 +27,8 @@ import consulo.project.Project;
 import consulo.ui.TextBoxWithExtensions;
 import consulo.ui.ValueComponent;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.ex.FileChooserTextBoxBuilder;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -40,157 +42,165 @@ import java.awt.*;
 @Deprecated
 @DeprecationInfo("Use CommonProgramParametersLayout")
 public class CommonProgramParametersPanel extends JPanel implements PanelWithAnchor {
-  private LabeledComponent<RawCommandLineEditor> myProgramParametersComponent;
-  private LabeledComponent<JComponent> myWorkingDirectoryComponent;
-  private FileChooserTextBoxBuilder.Controller myWorkDirectoryBox;
-  private EnvironmentVariablesComponent myEnvVariablesComponent;
-  protected JComponent myAnchor;
+    private LabeledComponent<RawCommandLineEditor> myProgramParametersComponent;
+    private LabeledComponent<JComponent> myWorkingDirectoryComponent;
+    private FileChooserTextBoxBuilder.Controller myWorkDirectoryBox;
+    private EnvironmentVariablesComponent myEnvVariablesComponent;
+    protected JComponent myAnchor;
 
-  private Module myModuleContext = null;
-  private boolean myHasModuleMacro;
+    private Module myModuleContext = null;
+    private boolean myHasModuleMacro;
 
-  public CommonProgramParametersPanel() {
-    this(true);
-  }
-
-  public CommonProgramParametersPanel(boolean init) {
-    super();
-
-    setLayout(new VerticalFlowLayout(VerticalFlowLayout.MIDDLE, 0, 5, true, false));
-
-    if (init) {
-      init();
+    @RequiredUIAccess
+    public CommonProgramParametersPanel() {
+        this(true);
     }
-  }
 
-  protected void init() {
-    initComponents();
-    updateUI();
-    setupAnchor();
-  }
+    @RequiredUIAccess
+    public CommonProgramParametersPanel(boolean init) {
+        super();
 
-  protected void setupAnchor() {
-    myAnchor = UIUtil.mergeComponentsWithAnchor(myProgramParametersComponent, myWorkingDirectoryComponent, myEnvVariablesComponent);
-  }
+        setLayout(new VerticalFlowLayout(VerticalFlowLayout.MIDDLE, 0, 5, true, false));
 
-  @Nullable
-  protected Project getProject() {
-    return myModuleContext != null ? myModuleContext.getProject() : null;
-  }
+        if (init) {
+            init();
+        }
+    }
 
-  @RequiredUIAccess
-  protected void initComponents() {
-    myProgramParametersComponent = LabeledComponent.create(new RawCommandLineEditor(), ExecutionLocalize.runConfigurationProgramParameters().get());
+    @RequiredUIAccess
+    protected void init() {
+        initComponents();
+        updateUI();
+        setupAnchor();
+    }
 
-    FileChooserTextBoxBuilder workDirBuilder = FileChooserTextBoxBuilder.create(getProject())
-      .fileChooserDescriptor(FileChooserDescriptorFactory.createSingleFolderDescriptor())
-      .dialogTitle(ExecutionLocalize.selectWorkingDirectoryMessage())
-      .dialogDescription(LocalizeValue.of());
+    protected void setupAnchor() {
+        myAnchor = UIUtil.mergeComponentsWithAnchor(myProgramParametersComponent, myWorkingDirectoryComponent, myEnvVariablesComponent);
+    }
 
-    myWorkDirectoryBox = workDirBuilder.build();
-    myWorkDirectoryBox.getComponent().addFirstExtension(new TextBoxWithExtensions.Extension(
-      false,
-      PlatformIconGroup.generalInlinevariables(),
-      PlatformIconGroup.generalInlinevariableshover(),
-      event -> showMacroDialog()
-    ));
+    @Nullable
+    protected Project getProject() {
+        return myModuleContext != null ? myModuleContext.getProject() : null;
+    }
 
-    myWorkingDirectoryComponent = LabeledComponent.create(
-      (JComponent)TargetAWT.to(myWorkDirectoryBox.getComponent()),
-      ExecutionLocalize.runConfigurationWorkingDirectoryLabel().get()
-    );
-    myEnvVariablesComponent = new EnvironmentVariablesComponent();
+    @RequiredUIAccess
+    protected void initComponents() {
+        myProgramParametersComponent = LabeledComponent.create(new RawCommandLineEditor(), ExecutionLocalize.runConfigurationProgramParameters().get());
 
-    myEnvVariablesComponent.setLabelLocation(BorderLayout.WEST);
-    myProgramParametersComponent.setLabelLocation(BorderLayout.WEST);
-    myWorkingDirectoryComponent.setLabelLocation(BorderLayout.WEST);
+        FileChooserTextBoxBuilder workDirBuilder = FileChooserTextBoxBuilder.create(getProject())
+            .fileChooserDescriptor(FileChooserDescriptorFactory.createSingleFolderDescriptor())
+            .dialogTitle(ExecutionLocalize.selectWorkingDirectoryMessage())
+            .dialogDescription(LocalizeValue.of());
 
-    addComponents();
+        myWorkDirectoryBox = workDirBuilder.build();
+        myWorkDirectoryBox.getComponent().addFirstExtension(new TextBoxWithExtensions.Extension(
+            false,
+            PlatformIconGroup.generalInlinevariables(),
+            PlatformIconGroup.generalInlinevariableshover(),
+            event -> showMacroDialog()
+        ));
 
-    copyDialogCaption(myProgramParametersComponent);
-  }
+        myWorkingDirectoryComponent = LabeledComponent.create(
+            (JComponent) TargetAWT.to(myWorkDirectoryBox.getComponent()),
+            ExecutionLocalize.runConfigurationWorkingDirectoryLabel().get()
+        );
+        myEnvVariablesComponent = new EnvironmentVariablesComponent();
 
-  @RequiredUIAccess
-  private void showMacroDialog() {
-    MacroSelector.getInstance().select(getProject(), myModuleContext, macro -> myWorkDirectoryBox.setValue(macro.getDecoratedName()));
-  }
+        myEnvVariablesComponent.setLabelLocation(BorderLayout.WEST);
+        myProgramParametersComponent.setLabelLocation(BorderLayout.WEST);
+        myWorkingDirectoryComponent.setLabelLocation(BorderLayout.WEST);
 
-  protected void addComponents() {
-    add(myProgramParametersComponent);
-    add(myWorkingDirectoryComponent);
-    add(myEnvVariablesComponent);
-  }
+        addComponents();
 
-  protected void copyDialogCaption(final LabeledComponent<RawCommandLineEditor> component) {
-    final RawCommandLineEditor rawCommandLineEditor = component.getComponent();
-    rawCommandLineEditor.setDialogCaption(component.getRawText());
-    component.getLabel().setLabelFor(rawCommandLineEditor.getTextField());
-  }
+        copyDialogCaption(myProgramParametersComponent);
+    }
 
-  public void setProgramParametersLabel(String textWithMnemonic) {
-    myProgramParametersComponent.setText(textWithMnemonic);
-    copyDialogCaption(myProgramParametersComponent);
-  }
+    @RequiredUIAccess
+    private void showMacroDialog() {
+        MacroSelector.getInstance().select(getProject(), myModuleContext, macro -> myWorkDirectoryBox.setValue(macro.getDecoratedName()));
+    }
 
-  public void setProgramParameters(String params) {
-    myProgramParametersComponent.getComponent().setText(params);
-  }
+    protected void addComponents() {
+        add(myProgramParametersComponent);
+        add(myWorkingDirectoryComponent);
+        add(myEnvVariablesComponent);
+    }
 
-  public void addWorkingDirectoryListener(ValueComponent.ValueListener<String> onTextChange) {
-    myWorkDirectoryBox.getComponent().addValueListener(onTextChange);
-  }
+    protected void copyDialogCaption(final LabeledComponent<RawCommandLineEditor> component) {
+        final RawCommandLineEditor rawCommandLineEditor = component.getComponent();
+        rawCommandLineEditor.setDialogCaption(component.getRawText());
+        component.getLabel().setLabelFor(rawCommandLineEditor.getTextField());
+    }
 
-  public void setWorkingDirectory(String dir) {
-    myWorkDirectoryBox.setValue(dir);
-  }
+    public void setProgramParametersLabel(String textWithMnemonic) {
+        myProgramParametersComponent.setText(textWithMnemonic);
+        copyDialogCaption(myProgramParametersComponent);
+    }
 
-  public String getWorkingDirectory() {
-    return myWorkDirectoryBox.getValue();
-  }
+    public void setProgramParameters(String params) {
+        myProgramParametersComponent.getComponent().setText(params);
+    }
 
-  public void setModuleContext(Module moduleContext) {
-    myModuleContext = moduleContext;
-  }
+    @RequiredUIAccess
+    public void addWorkingDirectoryListener(ComponentEventListener<ValueComponent<String>, ValueComponentEvent<String>> onTextChange) {
+        myWorkDirectoryBox.getComponent().addValueListener(onTextChange);
+    }
 
-  public void setHasModuleMacro() {
-    myHasModuleMacro = true;
-  }
+    @RequiredUIAccess
+    public void setWorkingDirectory(String dir) {
+        myWorkDirectoryBox.setValue(dir);
+    }
 
-  public LabeledComponent<RawCommandLineEditor> getProgramParametersComponent() {
-    return myProgramParametersComponent;
-  }
+    @RequiredUIAccess
+    public String getWorkingDirectory() {
+        return myWorkDirectoryBox.getValue();
+    }
 
-  @Override
-  public JComponent getAnchor() {
-    return myAnchor;
-  }
+    public void setModuleContext(Module moduleContext) {
+        myModuleContext = moduleContext;
+    }
 
-  @Override
-  public void setAnchor(JComponent anchor) {
-    myAnchor = anchor;
-    myProgramParametersComponent.setAnchor(anchor);
-    myWorkingDirectoryComponent.setAnchor(anchor);
-    myEnvVariablesComponent.setAnchor(anchor);
-  }
+    public void setHasModuleMacro() {
+        myHasModuleMacro = true;
+    }
 
-  public void applyTo(CommonProgramRunConfigurationParameters configuration) {
-    configuration.setProgramParameters(fromTextField(myProgramParametersComponent.getComponent(), configuration));
-    configuration.setWorkingDirectory(myWorkDirectoryBox.getValue());
+    public LabeledComponent<RawCommandLineEditor> getProgramParametersComponent() {
+        return myProgramParametersComponent;
+    }
 
-    configuration.setEnvs(myEnvVariablesComponent.getEnvs());
-    configuration.setPassParentEnvs(myEnvVariablesComponent.isPassParentEnvs());
-  }
+    @Override
+    public JComponent getAnchor() {
+        return myAnchor;
+    }
 
-  @Nullable
-  protected String fromTextField(@Nonnull TextAccessor textAccessor, @Nonnull CommonProgramRunConfigurationParameters configuration) {
-    return textAccessor.getText();
-  }
+    @Override
+    public void setAnchor(JComponent anchor) {
+        myAnchor = anchor;
+        myProgramParametersComponent.setAnchor(anchor);
+        myWorkingDirectoryComponent.setAnchor(anchor);
+        myEnvVariablesComponent.setAnchor(anchor);
+    }
 
-  public void reset(CommonProgramRunConfigurationParameters configuration) {
-    setProgramParameters(configuration.getProgramParameters());
-    setWorkingDirectory(PathUtil.toSystemDependentName(configuration.getWorkingDirectory()));
+    @RequiredUIAccess
+    public void applyTo(CommonProgramRunConfigurationParameters configuration) {
+        configuration.setProgramParameters(fromTextField(myProgramParametersComponent.getComponent(), configuration));
+        configuration.setWorkingDirectory(myWorkDirectoryBox.getValue());
 
-    myEnvVariablesComponent.setEnvs(configuration.getEnvs());
-    myEnvVariablesComponent.setPassParentEnvs(configuration.isPassParentEnvs());
-  }
+        configuration.setEnvs(myEnvVariablesComponent.getEnvs());
+        configuration.setPassParentEnvs(myEnvVariablesComponent.isPassParentEnvs());
+    }
+
+    @Nullable
+    protected String fromTextField(@Nonnull TextAccessor textAccessor, @Nonnull CommonProgramRunConfigurationParameters configuration) {
+        return textAccessor.getText();
+    }
+
+    @RequiredUIAccess
+    public void reset(CommonProgramRunConfigurationParameters configuration) {
+        setProgramParameters(configuration.getProgramParameters());
+        setWorkingDirectory(PathUtil.toSystemDependentName(configuration.getWorkingDirectory()));
+
+        myEnvVariablesComponent.setEnvs(configuration.getEnvs());
+        myEnvVariablesComponent.setPassParentEnvs(configuration.isPassParentEnvs());
+    }
 }

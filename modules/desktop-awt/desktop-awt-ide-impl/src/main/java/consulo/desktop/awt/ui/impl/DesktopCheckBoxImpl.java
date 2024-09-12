@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl;
 
+import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.ex.awt.JBCheckBox;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.localize.LocalizeValue;
@@ -87,7 +88,7 @@ public class DesktopCheckBoxImpl extends SwingComponentDelegate<DesktopCheckBoxI
   @SuppressWarnings("unchecked")
   @RequiredUIAccess
   private void fireListeners() {
-    getListenerDispatcher(ValueListener.class).valueChanged(new ValueEvent(this, toAWTComponent().isSelected()));
+    getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(this, toAWTComponent().isSelected()));
   }
 
   @Nonnull

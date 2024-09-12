@@ -5,8 +5,10 @@ import consulo.ui.image.Image;
 
 import jakarta.annotation.Nonnull;
 
+import java.awt.event.InputEvent;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static consulo.ui.ex.awt.JBUI.scale;
 
@@ -51,7 +53,7 @@ public interface ExtendableTextComponent {
       return false;
     }
 
-    default Runnable getActionOnClick() {
+    default Consumer<InputEvent> getActionOnClick() {
       return null;
     }
 
@@ -76,8 +78,8 @@ public interface ExtendableTextComponent {
         }
 
         @Override
-        public Runnable getActionOnClick() {
-          return action;
+        public Consumer<InputEvent> getActionOnClick() {
+          return event -> action.run();
         }
       };
     }

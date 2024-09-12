@@ -15,18 +15,16 @@
  */
 package consulo.desktop.awt.ui.impl;
 
-import consulo.ui.ex.awt.LinkLabel;
-import consulo.ui.ex.awt.LinkListener;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
+import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.ui.Component;
 import consulo.ui.Hyperlink;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.ui.event.HyperlinkEvent;
-import consulo.ui.event.HyperlinkListener;
+import consulo.ui.ex.awt.LinkLabel;
+import consulo.ui.ex.awt.LinkListener;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -49,7 +47,7 @@ public class DesktopHyperlinkImpl extends SwingComponentDelegate<DesktopHyperlin
 
   public DesktopHyperlinkImpl(String text) {
     MyLinkLabel label = new MyLinkLabel(text, null, (aSource, aLinkData) -> {
-      getListenerDispatcher(HyperlinkListener.class).navigate(new HyperlinkEvent(this, ""));
+      getListenerDispatcher(HyperlinkEvent.class).onEvent(new HyperlinkEvent(this, ""));
     });
     initialize(label);
   }

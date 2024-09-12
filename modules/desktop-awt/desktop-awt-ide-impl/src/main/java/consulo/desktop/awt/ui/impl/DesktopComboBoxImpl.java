@@ -15,14 +15,15 @@
  */
 package consulo.desktop.awt.ui.impl;
 
-import consulo.ui.ex.awt.ComboBoxWithWidePopup;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
+import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.disposer.Disposable;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
+import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.ValueComponentEvent;
+import consulo.ui.ex.awt.ComboBoxWithWidePopup;
 import consulo.ui.model.ListModel;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -31,60 +32,60 @@ import jakarta.annotation.Nullable;
  * @since 12-Jun-16
  */
 public class DesktopComboBoxImpl<E> extends SwingComponentDelegate<ComboBoxWithWidePopup> implements ComboBox<E> {
-  class MyComboBoxWithWidePopup extends ComboBoxWithWidePopup implements FromSwingComponentWrapper {
+    class MyComboBoxWithWidePopup extends ComboBoxWithWidePopup implements FromSwingComponentWrapper {
+        @Nonnull
+        @Override
+        public Component toUIComponent() {
+            return DesktopComboBoxImpl.this;
+        }
+    }
+
+    private ListModel<E> myModel;
+    private TextItemRender<E> myRender = ListItemRenders.defaultRender();
+
+    public DesktopComboBoxImpl(ListModel<E> model) {
+        DesktopComboBoxModelWrapper wrapper = new DesktopComboBoxModelWrapper<>(model);
+        myModel = model;
+
+        myComponent = new MyComboBoxWithWidePopup();
+        myComponent.setModel(wrapper);
+        myComponent.setRenderer(new DesktopListRender<>(() -> myRender));
+    }
+
     @Nonnull
     @Override
-    public Component toUIComponent() {
-      return DesktopComboBoxImpl.this;
+    public ListModel<E> getListModel() {
+        return myModel;
     }
-  }
 
-  private ListModel<E> myModel;
-  private TextItemRender<E> myRender = ListItemRenders.defaultRender();
+    @Override
+    public void setRender(@Nonnull TextItemRender<E> render) {
+        myRender = render;
+    }
 
-  public DesktopComboBoxImpl(ListModel<E> model) {
-    DesktopComboBoxModelWrapper wrapper = new DesktopComboBoxModelWrapper<>(model);
-    myModel = model;
+    @Override
+    public void setValueByIndex(int index) {
+        myComponent.setSelectedIndex(index);
+    }
 
-    myComponent = new MyComboBoxWithWidePopup();
-    myComponent.setModel(wrapper);
-    myComponent.setRenderer(new DesktopListRender<>(() -> myRender));
-  }
+    @RequiredUIAccess
+    @Override
+    public void setValue(E value, boolean fireListeners) {
+        myComponent.setSelectedItem(value);
+    }
 
-  @Nonnull
-  @Override
-  public ListModel<E> getListModel() {
-    return myModel;
-  }
+    @Nonnull
+    @Override
+    public Disposable addValueListener(@Nonnull ComponentEventListener<ValueComponent<E>, ValueComponentEvent<E>> valueListener) {
+        DesktopValueListenerAsItemListenerImpl<E> listener = new DesktopValueListenerAsItemListenerImpl<>(this, valueListener, true);
+        myComponent.addItemListener(listener);
+        return () -> myComponent.removeItemListener(listener);
+    }
 
-  @Override
-  public void setRender(@Nonnull TextItemRender<E> render) {
-    myRender = render;
-  }
-
-  @Override
-  public void setValueByIndex(int index) {
-    myComponent.setSelectedIndex(index);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setValue(E value, boolean fireListeners) {
-    myComponent.setSelectedItem(value);
-  }
-
-  @Nonnull
-  @Override
-  public Disposable addValueListener(@Nonnull ValueComponent.ValueListener<E> valueListener) {
-    DesktopValueListenerAsItemListenerImpl<E> listener = new DesktopValueListenerAsItemListenerImpl<>(this, valueListener, true);
-    myComponent.addItemListener(listener);
-    return () -> myComponent.removeItemListener(listener);
-  }
-
-  @SuppressWarnings("unchecked")
-  @Nullable
-  @Override
-  public E getValue() {
-    return (E)myComponent.getSelectedItem();
-  }
+    @SuppressWarnings("unchecked")
+    @Nullable
+    @Override
+    public E getValue() {
+        return (E) myComponent.getSelectedItem();
+    }
 }

@@ -27,8 +27,6 @@ import consulo.ui.PseudoComponent;
 import consulo.ui.TextBox;
 import consulo.ui.TextBoxWithExtensions;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.event.ClickEvent;
-import consulo.ui.event.ClickListener;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
@@ -66,22 +64,17 @@ public final class FileChooserTextBoxBuilder {
         FileChooserFactory.getInstance().installFileCompletion(myTextBox, myFileChooserDescriptor, true, builder.myDisposable);
       }
 
-      myTextBox.addLastExtension(new TextBoxWithExtensions.Extension(false, PlatformIconGroup.nodesFolderopenedtransparent(), PlatformIconGroup.nodesFolderopened(), new ClickListener() {
-        @RequiredUIAccess
-        @Override
-        public void clicked(@Nonnull ClickEvent e) {
-          FileChooserDescriptor fileChooserDescriptor = (FileChooserDescriptor)myFileChooserDescriptor.clone();
+      myTextBox.addLastExtension(new TextBoxWithExtensions.Extension(false, PlatformIconGroup.nodesFolderopenedtransparent(), PlatformIconGroup.nodesFolderopened(), event -> {
+          FileChooserDescriptor fileChooserDescriptor = (FileChooserDescriptor) myFileChooserDescriptor.clone();
           fileChooserDescriptor.withTitleValue(builder.myDialogTitle);
           fileChooserDescriptor.withDescriptionValue(builder.myDialogDescription);
 
           String text = myAccessor.getValue(myTextBox);
 
           FileChooser.chooseFile(fileChooserDescriptor, myProject, mySelectedFileMapper.apply(text)).doWhenDone((f) -> {
-            myAccessor.setValue(myTextBox, f.getPresentableUrl());
+              myAccessor.setValue(myTextBox, f.getPresentableUrl());
           });
-        }
       }));
-
     }
 
     @RequiredUIAccess

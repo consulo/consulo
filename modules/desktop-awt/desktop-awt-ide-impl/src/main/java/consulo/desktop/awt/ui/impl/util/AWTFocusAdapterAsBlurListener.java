@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package consulo.desktop.awt.ui.impl.util;
 
 import consulo.ui.FocusableComponent;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.BlurEvent;
 import consulo.ui.event.ComponentEventListener;
 
 import java.awt.event.FocusAdapter;
@@ -24,21 +25,20 @@ import java.awt.event.FocusEvent;
 
 /**
  * @author VISTALL
- * @since 2019-11-09
+ * @since 2024-09-11
  */
-public class AWTFocusAdapterAsFocusListener extends FocusAdapter {
+public class AWTFocusAdapterAsBlurListener extends FocusAdapter {
     private final FocusableComponent myComponent;
-    private final ComponentEventListener<FocusableComponent, consulo.ui.event.FocusEvent> myFocusListener;
+    private final ComponentEventListener<FocusableComponent, BlurEvent> myBlurListener;
 
-    public AWTFocusAdapterAsFocusListener(FocusableComponent component,
-                                          ComponentEventListener<FocusableComponent, consulo.ui.event.FocusEvent> focusListener) {
+    public AWTFocusAdapterAsBlurListener(FocusableComponent component, ComponentEventListener<FocusableComponent, BlurEvent> blurListener) {
         myComponent = component;
-        myFocusListener = focusListener;
+        myBlurListener = blurListener;
     }
 
     @Override
     @RequiredUIAccess
-    public void focusGained(FocusEvent e) {
-        myFocusListener.onEvent(new consulo.ui.event.FocusEvent(myComponent));
+    public void focusLost(FocusEvent e) {
+        myBlurListener.onEvent(new BlurEvent(myComponent));
     }
 }

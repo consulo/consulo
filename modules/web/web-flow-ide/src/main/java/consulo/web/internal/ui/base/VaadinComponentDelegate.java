@@ -26,9 +26,9 @@ import consulo.ui.border.BorderStyle;
 import consulo.ui.color.ColorValue;
 import consulo.ui.cursor.Cursor;
 import consulo.ui.event.AttachEvent;
-import consulo.ui.event.AttachListener;
+import consulo.ui.event.ComponentEvent;
+import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.DetachEvent;
-import consulo.ui.event.DetachListener;
 import consulo.ui.font.Font;
 import consulo.ui.font.FontManager;
 import consulo.ui.impl.UIDataObject;
@@ -38,7 +38,6 @@ import consulo.web.internal.ui.vaadin.InitiableComponent;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import java.util.EventListener;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.function.Function;
@@ -48,195 +47,196 @@ import java.util.function.Function;
  * @since 2019-02-17
  */
 public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.component.Component & FromVaadinComponentWrapper> implements Component, DataObjectHolder, ToVaddinComponentWrapper {
-  private T myVaadinComponent;
+    private T myVaadinComponent;
 
-  private Font myFont = FontManager.get().createFont("?", 12);
+    private Font myFont = FontManager.get().createFont("?", 12);
 
-  private Cursor myCursor;
+    private Cursor myCursor;
 
-  public VaadinComponentDelegate(boolean noBody) {
-  }
-
-  private String myClassNamePrefix;
-
-  public VaadinComponentDelegate() {
-    String[] impls = NameUtilCore.splitNameIntoWords(getClass().getSimpleName().replace("Impl", ""));
-    myVaadinComponent = createVaadinComponent();
-
-    myClassNamePrefix = String.join("-", impls).toLowerCase(Locale.ROOT);
-    myVaadinComponent.addClassName(myClassNamePrefix);
-    myVaadinComponent.setId(getClass().getSimpleName() + "." + hashCode());
-
-    if (myVaadinComponent instanceof InitiableComponent initiableComponent) {
-      initiableComponent.init(myClassNamePrefix);
+    public VaadinComponentDelegate(boolean noBody) {
     }
 
-    myVaadinComponent.addAttachListener(event -> getListenerDispatcher(AttachListener.class).onAttach(new AttachEvent(this)));
-    myVaadinComponent.addDetachListener(event -> getListenerDispatcher(DetachListener.class).onDetach(new DetachEvent(this)));
-  }
+    private String myClassNamePrefix;
 
-  public String getClassNamePrefix() {
-    return myClassNamePrefix;
-  }
+    public VaadinComponentDelegate() {
+        String[] impls = NameUtilCore.splitNameIntoWords(getClass().getSimpleName().replace("Impl", ""));
+        myVaadinComponent = createVaadinComponent();
 
-  @Nonnull
-  public abstract T createVaadinComponent();
+        myClassNamePrefix = String.join("-", impls).toLowerCase(Locale.ROOT);
+        myVaadinComponent.addClassName(myClassNamePrefix);
+        myVaadinComponent.setId(getClass().getSimpleName() + "." + hashCode());
 
-  @Override
-  public void setFont(@Nonnull Font font) {
-    if (!(font instanceof WebFontImpl)) {
-      throw new IllegalArgumentException("not web font");
+        if (myVaadinComponent instanceof InitiableComponent initiableComponent) {
+            initiableComponent.init(myClassNamePrefix);
+        }
+
+        myVaadinComponent.addAttachListener(event -> getListenerDispatcher(AttachEvent.class).onEvent(new AttachEvent(this)));
+        myVaadinComponent.addDetachListener(event -> getListenerDispatcher(DetachEvent.class).onEvent(new DetachEvent(this)));
     }
 
-    myFont = font;
-  }
-
-  @Nonnull
-  @Override
-  public Font getFont() {
-    return myFont;
-  }
-
-  @Nonnull
-  protected T getVaadinComponent() {
-    return myVaadinComponent;
-  }
-
-  @Nonnull
-  @Override
-  public T toVaadinComponent() {
-    return myVaadinComponent;
-  }
-
-  @Override
-  @Nonnull
-  public UIDataObject dataObject() {
-    UIDataObject data = ComponentUtil.getData(myVaadinComponent, UIDataObject.class);
-    if (data == null) {
-      ComponentUtil.setData(myVaadinComponent, UIDataObject.class, data = new UIDataObject());
+    public String getClassNamePrefix() {
+        return myClassNamePrefix;
     }
-    return data;
-  }
 
-  @Nullable
-  @Override
-  public Component getParent() {
-    Optional<com.vaadin.flow.component.Component> parent = myVaadinComponent.getParent();
-    while (parent.isPresent()) {
-      com.vaadin.flow.component.Component component = parent.get();
-      if (component instanceof UI) {
+    @Nonnull
+    public abstract T createVaadinComponent();
+
+    @Override
+    public void setFont(@Nonnull Font font) {
+        if (!(font instanceof WebFontImpl)) {
+            throw new IllegalArgumentException("not web font");
+        }
+
+        myFont = font;
+    }
+
+    @Nonnull
+    @Override
+    public Font getFont() {
+        return myFont;
+    }
+
+    @Nonnull
+    protected T getVaadinComponent() {
+        return myVaadinComponent;
+    }
+
+    @Nonnull
+    @Override
+    public T toVaadinComponent() {
+        return myVaadinComponent;
+    }
+
+    @Override
+    @Nonnull
+    public UIDataObject dataObject() {
+        UIDataObject data = ComponentUtil.getData(myVaadinComponent, UIDataObject.class);
+        if (data == null) {
+            ComponentUtil.setData(myVaadinComponent, UIDataObject.class, data = new UIDataObject());
+        }
+        return data;
+    }
+
+    @Nullable
+    @Override
+    public Component getParent() {
+        Optional<com.vaadin.flow.component.Component> parent = myVaadinComponent.getParent();
+        while (parent.isPresent()) {
+            com.vaadin.flow.component.Component component = parent.get();
+            if (component instanceof UI) {
+                return null;
+            }
+
+            if (component instanceof FromVaadinComponentWrapper componentWrapper) {
+                return componentWrapper.toUIComponent();
+            }
+
+            parent = component.getParent();
+        }
+
         return null;
-      }
-
-      if (component instanceof FromVaadinComponentWrapper componentWrapper) {
-        return componentWrapper.toUIComponent();
-      }
-
-      parent = component.getParent();
-    }
-    
-    return null;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setSize(@Nonnull Size size) {
-    HasSize vaadinComponent = (HasSize)getVaadinComponent();
-    if (size.getHeight() == -1) {
-      vaadinComponent.setHeight(null);
-    }
-    else {
-      vaadinComponent.setHeight(size.getHeight(), Unit.PIXELS);
     }
 
-    if (size.getWidth() == -1) {
-      vaadinComponent.setWidth(null);
+    @RequiredUIAccess
+    @Override
+    public void setSize(@Nonnull Size size) {
+        HasSize vaadinComponent = (HasSize) getVaadinComponent();
+        if (size.getHeight() == -1) {
+            vaadinComponent.setHeight(null);
+        }
+        else {
+            vaadinComponent.setHeight(size.getHeight(), Unit.PIXELS);
+        }
+
+        if (size.getWidth() == -1) {
+            vaadinComponent.setWidth(null);
+        }
+        else {
+            vaadinComponent.setWidth(size.getWidth(), Unit.PIXELS);
+        }
+        // TODO vaadinComponent.markAsDirty();
     }
-    else {
-      vaadinComponent.setWidth(size.getWidth(), Unit.PIXELS);
+
+    @Override
+    public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
+        dataObject().putUserData(key, value);
     }
-    // TODO vaadinComponent.markAsDirty();
-  }
 
-  @Override
-  public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
-    dataObject().putUserData(key, value);
-  }
+    @Nullable
+    @Override
+    public <T> T getUserData(@Nonnull Key<T> key) {
+        return dataObject().getUserData(key);
+    }
 
-  @Nullable
-  @Override
-  public <T> T getUserData(@Nonnull Key<T> key) {
-    return dataObject().getUserData(key);
-  }
+    @Override
+    @Nonnull
+    public Disposable addUserDataProvider(@Nonnull Function<Key<?>, Object> function) {
+        return dataObject().addUserDataProvider(function);
+    }
 
-  @Override
-  @Nonnull
-  public Disposable addUserDataProvider(@Nonnull Function<Key<?>, Object> function) {
-    return dataObject().addUserDataProvider(function);
-  }
+    @Nonnull
+    @Override
+    public <C extends Component, E extends ComponentEvent<C>> Disposable addListener(@Nonnull Class<? extends E> eventClass,
+                                                                                     @Nonnull ComponentEventListener<C, E> listener) {
+        return dataObject().addListener(eventClass, listener);
+    }
 
-  @Nonnull
-  @Override
-  public <T extends EventListener> Disposable addListener(@Nonnull Class<T> eventClass, @Nonnull T listener) {
-    return dataObject().addListener(eventClass, listener);
-  }
+    @Nonnull
+    @Override
+    public <C extends Component, E extends ComponentEvent<C>> ComponentEventListener<C, E> getListenerDispatcher(@Nonnull Class<E> eventClass) {
+        return dataObject().getDispatcher(eventClass);
+    }
 
-  @Nonnull
-  @Override
-  public <T extends EventListener> T getListenerDispatcher(@Nonnull Class<T> eventClass) {
-    return dataObject().getDispatcher(eventClass);
-  }
+    @RequiredUIAccess
+    @Override
+    public void addBorder(@Nonnull BorderPosition borderPosition, BorderStyle borderStyle, ColorValue colorValue, int width) {
+        dataObject().addBorder(borderPosition, borderStyle, colorValue, width);
 
-  @RequiredUIAccess
-  @Override
-  public void addBorder(@Nonnull BorderPosition borderPosition, BorderStyle borderStyle, ColorValue colorValue, int width) {
-    dataObject().addBorder(borderPosition, borderStyle, colorValue, width);
+        bordersChanged();
+    }
 
-    bordersChanged();
-  }
+    @RequiredUIAccess
+    @Override
+    public void removeBorder(@Nonnull BorderPosition borderPosition) {
+        dataObject().removeBorder(borderPosition);
 
-  @RequiredUIAccess
-  @Override
-  public void removeBorder(@Nonnull BorderPosition borderPosition) {
-    dataObject().removeBorder(borderPosition);
+        bordersChanged();
+    }
 
-    bordersChanged();
-  }
+    @Override
+    public boolean isVisible() {
+        return myVaadinComponent.isVisible();
+    }
 
-  @Override
-  public boolean isVisible() {
-    return myVaadinComponent.isVisible();
-  }
+    @RequiredUIAccess
+    @Override
+    public void setVisible(boolean value) {
+        myVaadinComponent.setVisible(value);
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void setVisible(boolean value) {
-    myVaadinComponent.setVisible(value);
-  }
+    @Override
+    public boolean isEnabled() {
+        return ((HasEnabled) myVaadinComponent).isEnabled();
+    }
 
-  @Override
-  public boolean isEnabled() {
-    return ((HasEnabled)myVaadinComponent).isEnabled();
-  }
+    @RequiredUIAccess
+    @Override
+    public void setEnabled(boolean value) {
+        ((HasEnabled) myVaadinComponent).setEnabled(value);
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void setEnabled(boolean value) {
-    ((HasEnabled)myVaadinComponent).setEnabled(value);
-  }
+    @Override
+    public void setCursor(@Nullable Cursor cursor) {
+        myCursor = cursor;
+        // TODO CursorConverter.setCursor(toVaadinComponent(), cursor);
+    }
 
-  @Override
-  public void setCursor(@Nullable Cursor cursor) {
-    myCursor = cursor;
-    // TODO CursorConverter.setCursor(toVaadinComponent(), cursor);
-  }
+    @Nullable
+    @Override
+    public Cursor getCursor() {
+        return myCursor;
+    }
 
-  @Nullable
-  @Override
-  public Cursor getCursor() {
-    return myCursor;
-  }
-
-  public void bordersChanged() {
-  }
+    public void bordersChanged() {
+    }
 }

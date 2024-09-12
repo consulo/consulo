@@ -18,10 +18,10 @@ package consulo.ui;
 import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.event.ClickListener;
+import consulo.ui.event.ClickEvent;
+import consulo.ui.event.ComponentEventListener;
 import consulo.ui.image.Image;
 import consulo.ui.internal.UIInternal;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -39,8 +39,8 @@ public interface Button extends Component {
 
   @Nonnull
   @Deprecated
-  @DeprecationInfo("Use #create(LocalizeValue, ClickListener)")
-  static Button create(@Nonnull String text, @Nonnull @RequiredUIAccess ClickListener clickListener) {
+  @DeprecationInfo("Use #create(LocalizeValue, ComponentEventListener<Component, ClickEvent>)")
+  static Button create(@Nonnull String text, @Nonnull ComponentEventListener<Component, ClickEvent> clickListener) {
     return create(LocalizeValue.of(text), clickListener);
   }
 
@@ -50,7 +50,7 @@ public interface Button extends Component {
   }
 
   @Nonnull
-  static Button create(@Nonnull LocalizeValue text, @Nonnull @RequiredUIAccess ClickListener clickListener) {
+  static Button create(@Nonnull LocalizeValue text, @Nonnull ComponentEventListener<Component, ClickEvent> clickListener) {
     Button button = create(text);
     button.addClickListener(clickListener);
     return button;

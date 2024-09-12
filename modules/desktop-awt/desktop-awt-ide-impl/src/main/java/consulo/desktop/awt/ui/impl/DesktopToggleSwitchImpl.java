@@ -15,13 +15,13 @@
  */
 package consulo.desktop.awt.ui.impl;
 
-import consulo.desktop.awt.uiOld.components.OnOffButton;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
+import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
+import consulo.desktop.awt.uiOld.components.OnOffButton;
 import consulo.ui.Component;
 import consulo.ui.ToggleSwitch;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
-
+import consulo.ui.event.ValueComponentEvent;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -29,41 +29,41 @@ import jakarta.annotation.Nonnull;
  * @since 2020-11-26
  */
 public class DesktopToggleSwitchImpl extends SwingComponentDelegate<DesktopToggleSwitchImpl.MyOnOffButton> implements ToggleSwitch {
-  class MyOnOffButton extends OnOffButton implements FromSwingComponentWrapper {
+    class MyOnOffButton extends OnOffButton implements FromSwingComponentWrapper {
+        @Nonnull
+        @Override
+        public Component toUIComponent() {
+            return DesktopToggleSwitchImpl.this;
+        }
+    }
+
+    public DesktopToggleSwitchImpl(boolean enabled) {
+        MyOnOffButton component = new MyOnOffButton();
+        initialize(component);
+        component.setSelected(enabled);
+        component.addActionListener(e -> fireListeners());
+    }
+
     @Nonnull
     @Override
-    public Component toUIComponent() {
-      return DesktopToggleSwitchImpl.this;
+    public Boolean getValue() {
+        return toAWTComponent().isSelected();
     }
-  }
 
-  public DesktopToggleSwitchImpl(boolean enabled) {
-    MyOnOffButton component = new MyOnOffButton();
-    initialize(component);
-    component.setSelected(enabled);
-    component.addActionListener(e -> fireListeners());
-  }
+    @RequiredUIAccess
+    @Override
+    @SuppressWarnings("unchecked")
+    public void setValue(@Nonnull Boolean value, boolean fireListeners) {
+        toAWTComponent().setSelected(value);
 
-  @Nonnull
-  @Override
-  public Boolean getValue() {
-    return toAWTComponent().isSelected();
-  }
-
-  @RequiredUIAccess
-  @Override
-  @SuppressWarnings("unchecked")
-  public void setValue(@Nonnull Boolean value, boolean fireListeners) {
-    toAWTComponent().setSelected(value);
-
-    if(fireListeners) {
-      fireListeners();
+        if (fireListeners) {
+            fireListeners();
+        }
     }
-  }
 
-  @SuppressWarnings("unchecked")
-  @RequiredUIAccess
-  private void fireListeners() {
-    getListenerDispatcher(ValueListener.class).valueChanged(new ValueEvent(this, toAWTComponent().isSelected()));
-  }
+    @SuppressWarnings("unchecked")
+    @RequiredUIAccess
+    private void fireListeners() {
+        getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(this, toAWTComponent().isSelected()));
+    }
 }

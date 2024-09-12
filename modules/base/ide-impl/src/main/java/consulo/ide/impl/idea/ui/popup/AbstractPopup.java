@@ -24,7 +24,6 @@ import consulo.ide.impl.idea.ide.actions.WindowAction;
 import consulo.ide.impl.idea.ide.ui.PopupLocationTracker;
 import consulo.ide.impl.idea.ide.ui.ScreenAreaConsumer;
 import consulo.ide.impl.idea.openapi.project.ProjectUtil;
-import consulo.project.ui.internal.ToolWindowManagerEx;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
 import consulo.ide.impl.idea.ui.*;
 import consulo.ide.impl.idea.ui.mac.touchbar.TouchBarsManager;
@@ -33,13 +32,14 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.ui.ChildFocusWatcher;
 import consulo.ide.impl.idea.util.ui.ScrollUtil;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
-import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ui.ProjectWindowStateService;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.project.ui.internal.ToolWindowManagerEx;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.ToolWindowId;
@@ -47,7 +47,7 @@ import consulo.project.ui.wm.WindowManager;
 import consulo.ui.Coordinate2D;
 import consulo.ui.Position2D;
 import consulo.ui.Size;
-import consulo.ui.event.UIEvent;
+import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.ActiveComponent;
 import consulo.ui.ex.RelativePoint;
@@ -807,7 +807,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
   }
 
   @Override
-  public void showBy(@Nonnull UIEvent<? extends consulo.ui.Component> uiEvent) {
+  public void showBy(@Nonnull ComponentEvent<? extends consulo.ui.Component> uiEvent) {
     consulo.ui.Component component = uiEvent.getComponent();
     InputDetails inputDetails = uiEvent.getInputDetails();
     if (inputDetails != null) {

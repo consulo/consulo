@@ -18,16 +18,14 @@ package consulo.desktop.swt.ui.impl;
 import consulo.ui.Hyperlink;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.HyperlinkEvent;
-import consulo.ui.event.HyperlinkListener;
 import consulo.ui.image.Image;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Link;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -52,7 +50,7 @@ public class DesktopSwtHyperlinkImpl extends SWTComponentDelegate<Link> implemen
     component.addSelectionListener(new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
-        getListenerDispatcher(HyperlinkListener.class).navigate(new HyperlinkEvent(DesktopSwtHyperlinkImpl.this, ""));
+        getListenerDispatcher(HyperlinkEvent.class).onEvent(new HyperlinkEvent(DesktopSwtHyperlinkImpl.this, ""));
       }
     });
   }

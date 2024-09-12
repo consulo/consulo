@@ -19,6 +19,7 @@ import consulo.ui.Tree;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
 import consulo.ui.UIAccess;
+import consulo.ui.event.TreeSelectEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.widgets.Composite;
@@ -58,7 +59,7 @@ public class DesktopSwtTreeImpl<E> extends SWTComponentDelegate<org.eclipse.swt.
     tree.addSelectionListener(new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
-        getListenerDispatcher(SelectListener.class).onSelected(getSelectedNode());
+        getListenerDispatcher(TreeSelectEvent.class).onEvent(new TreeSelectEvent(DesktopSwtTreeImpl.this, getSelectedNode()));
       }
     });
 

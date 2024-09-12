@@ -23,7 +23,7 @@ import jakarta.annotation.Nonnull;
  * @author VISTALL
  * @since 01/08/2021
  */
-public class AttachEvent extends UIEvent<Component> {
+public final class AttachEvent extends ComponentEvent<Component> {
   public AttachEvent(@Nonnull Component component) {
     super(component);
   }

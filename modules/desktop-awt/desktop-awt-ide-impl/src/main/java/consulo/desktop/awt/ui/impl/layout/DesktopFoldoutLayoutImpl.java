@@ -15,17 +15,17 @@
  */
 package consulo.desktop.awt.ui.impl.layout;
 
-import consulo.ide.impl.idea.ui.HideableDecorator;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
-import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.ui.HideableDecorator;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.FoldoutLayout;
-
+import consulo.ui.layout.event.FoldoutLayoutOpenedEvent;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -105,8 +105,9 @@ public class DesktopFoldoutLayoutImpl extends DesktopLayoutBase<DesktopFoldoutLa
     toAWTComponent().setOn(state);
   }
 
+  @RequiredUIAccess
   private void fireStateListeners(boolean state) {
-    getListenerDispatcher(StateListener.class).stateChanged(state);
+    getListenerDispatcher(FoldoutLayoutOpenedEvent.class).onEvent(new FoldoutLayoutOpenedEvent(this, state));
   }
 
   @RequiredUIAccess
@@ -124,11 +125,5 @@ public class DesktopFoldoutLayoutImpl extends DesktopLayoutBase<DesktopFoldoutLa
     myTitleValue = title;
     toAWTComponent().updateTitle();
     return this;
-  }
-
-  @Nonnull
-  @Override
-  public Disposable addStateListener(@Nonnull StateListener stateListener) {
-    return addListener(StateListener.class, stateListener);
   }
 }

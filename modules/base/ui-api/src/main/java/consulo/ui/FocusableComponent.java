@@ -16,8 +16,9 @@
 package consulo.ui;
 
 import consulo.disposer.Disposable;
-import consulo.ui.event.FocusListener;
-
+import consulo.ui.event.BlurEvent;
+import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.FocusEvent;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -25,18 +26,23 @@ import jakarta.annotation.Nonnull;
  * @since 2019-11-09
  */
 public interface FocusableComponent extends Component {
-  static boolean hasFocus(@Nonnull Component component) {
-    return component instanceof FocusableComponent f && f.hasFocus();
-  }
+    static boolean hasFocus(@Nonnull Component component) {
+        return component instanceof FocusableComponent f && f.hasFocus();
+    }
 
-  boolean hasFocus();
+    boolean hasFocus();
 
-  void setFocusable(boolean focusable);
+    void setFocusable(boolean focusable);
 
-  boolean isFocusable();
+    boolean isFocusable();
 
-  @Nonnull
-  default Disposable addFocusListener(@Nonnull FocusListener listener) {
-    return addListener(FocusListener.class, listener);
-  }
+    @Nonnull
+    default Disposable addFocusListener(@Nonnull ComponentEventListener<FocusableComponent, FocusEvent> listener) {
+        return addListener(FocusEvent.class, listener);
+    }
+
+    @Nonnull
+    default Disposable addBlurListener(@Nonnull ComponentEventListener<FocusableComponent, BlurEvent> listener) {
+        return addListener(BlurEvent.class, listener);
+    }
 }

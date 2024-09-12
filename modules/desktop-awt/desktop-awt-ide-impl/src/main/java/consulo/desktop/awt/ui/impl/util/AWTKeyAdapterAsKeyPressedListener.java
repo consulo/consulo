@@ -15,30 +15,32 @@
  */
 package consulo.desktop.awt.ui.impl.util;
 
-import consulo.ui.FocusableComponent;
+import consulo.desktop.awt.ui.impl.event.DesktopAWTInputDetails;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.KeyPressedEvent;
+import consulo.ui.event.details.KeyboardInputDetails;
 
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 /**
  * @author VISTALL
- * @since 2019-11-09
+ * @since 2019-11-07
  */
-public class AWTFocusAdapterAsFocusListener extends FocusAdapter {
-    private final FocusableComponent myComponent;
-    private final ComponentEventListener<FocusableComponent, consulo.ui.event.FocusEvent> myFocusListener;
+public class AWTKeyAdapterAsKeyPressedListener extends KeyAdapter {
+    private final Component myComponent;
+    private final ComponentEventListener<Component, KeyPressedEvent> myKeyListener;
 
-    public AWTFocusAdapterAsFocusListener(FocusableComponent component,
-                                          ComponentEventListener<FocusableComponent, consulo.ui.event.FocusEvent> focusListener) {
+    public AWTKeyAdapterAsKeyPressedListener(Component component, ComponentEventListener<Component, KeyPressedEvent> keyListener) {
         myComponent = component;
-        myFocusListener = focusListener;
+        myKeyListener = keyListener;
     }
 
     @Override
     @RequiredUIAccess
-    public void focusGained(FocusEvent e) {
-        myFocusListener.onEvent(new consulo.ui.event.FocusEvent(myComponent));
+    public void keyPressed(KeyEvent e) {
+        myKeyListener.onEvent(new KeyPressedEvent(myComponent, (KeyboardInputDetails) DesktopAWTInputDetails.convert(e)));
     }
 }

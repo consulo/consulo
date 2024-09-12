@@ -23,11 +23,10 @@ import consulo.language.editor.refactoring.rename.inplace.MemberInplaceRenameHan
 import consulo.language.editor.ui.RadioUpDownListener;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.ui.RadioButton;
-import consulo.ui.ValueComponent;
-import consulo.ui.ValueGroup;
-import consulo.ui.ValueGroups;
+import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.LabeledLayout;
@@ -153,7 +152,7 @@ public class RenameHandlerRegistry {
             for (final LocalizeValue renamer : myRenamers) {
                 final RadioButton rb = RadioButton.create(renamer, selected);
                 myRButtons[rIdx++] = rb;
-                final ValueComponent.ValueListener<Boolean> listener = e -> {
+                ComponentEventListener<ValueComponent<Boolean>, ValueComponentEvent<Boolean>> listener = event -> {
                     if (rb.getValueOrError()) {
                         mySelection = renamer;
                     }

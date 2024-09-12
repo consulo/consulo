@@ -27,6 +27,7 @@ import consulo.ui.Tree;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.TreeSelectEvent;
 import consulo.util.collection.ContainerUtil;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
@@ -231,7 +232,7 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
         return;
       }
 
-      getListenerDispatcher(SelectListener.class).onSelected(value);
+      getListenerDispatcher(TreeSelectEvent.class).onEvent(new TreeSelectEvent(this, value));
     });
 
     vaadin.addItemDoubleClickListener(event -> {

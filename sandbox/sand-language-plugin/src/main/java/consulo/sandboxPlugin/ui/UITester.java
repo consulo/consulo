@@ -72,7 +72,7 @@ public class UITester {
       fold.add(Button.create(LocalizeValue.localizeTODO("Some &Button"), (e) -> Alerts.okError("Clicked!").showAsync()));
 
       FoldoutLayout layout = FoldoutLayout.create(LocalizeValue.of("Show Me"), fold);
-      layout.addStateListener(state -> Alerts.okInfo("State " + state).showAsync());
+      layout.addOpenedListener(it -> Alerts.okInfo("State " + it.isOpened()).showAsync());
 
       tabbedLayout.addTab("FoldoutLayout", layout);
 
