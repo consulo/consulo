@@ -523,7 +523,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.fileChooser.ex;
   exports consulo.ide.impl.idea.openapi.fileChooser.impl;
   exports consulo.ide.impl.idea.openapi.fileChooser.tree;
-  exports consulo.ide.impl.idea.openapi.fileEditor;
   exports consulo.ide.impl.idea.openapi.fileEditor.impl;
   exports consulo.ide.impl.idea.openapi.fileEditor.impl.http;
   exports consulo.ide.impl.idea.openapi.fileEditor.impl.tabActions;

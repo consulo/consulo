@@ -1,5 +1,5 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.openapi.fileEditor;
+package consulo.desktop.awt.fileEditor.impl.text;
 
 import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
 import consulo.application.AllIcons;
@@ -39,7 +39,7 @@ import java.util.Map;
  *
  * @author Konstantin Bulenkov
  */
-public class TextEditorWithPreview extends UserDataHolderBase implements FileEditor {
+public class TextEditorWithPreviewImpl extends UserDataHolderBase implements TextEditorWithPreview {
   protected final TextEditor myEditor;
   protected final FileEditor myPreview;
   @Nonnull
@@ -49,13 +49,13 @@ public class TextEditorWithPreview extends UserDataHolderBase implements FileEdi
   private SplitEditorToolbar myToolbarWrapper;
   private final String myName;
 
-  public TextEditorWithPreview(@Nonnull TextEditor editor, @Nonnull FileEditor preview, @Nonnull String editorName) {
+  public TextEditorWithPreviewImpl(@Nonnull TextEditor editor, @Nonnull FileEditor preview, @Nonnull String editorName) {
     myEditor = editor;
     myPreview = preview;
     myName = editorName;
   }
 
-  public TextEditorWithPreview(@Nonnull TextEditor editor, @Nonnull FileEditor preview) {
+  public TextEditorWithPreviewImpl(@Nonnull TextEditor editor, @Nonnull FileEditor preview) {
     this(editor, preview, "TextEditorWithPreview");
   }
 
@@ -185,7 +185,6 @@ public class TextEditorWithPreview extends UserDataHolderBase implements FileEdi
     return new MyFileEditorState(myLayout, myEditor.getState(level), myPreview.getState(level));
   }
 
-
   @Override
   public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener) {
     myEditor.addPropertyChangeListener(listener);
@@ -262,7 +261,7 @@ public class TextEditorWithPreview extends UserDataHolderBase implements FileEdi
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-      myDelegate.propertyChange(new PropertyChangeEvent(TextEditorWithPreview.this, evt.getPropertyName(), evt.getOldValue(), evt.getNewValue()));
+      myDelegate.propertyChange(new PropertyChangeEvent(TextEditorWithPreviewImpl.this, evt.getPropertyName(), evt.getOldValue(), evt.getNewValue()));
     }
   }
 
