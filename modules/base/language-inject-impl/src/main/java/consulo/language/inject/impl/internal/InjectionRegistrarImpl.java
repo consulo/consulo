@@ -98,6 +98,7 @@ class InjectionRegistrarImpl implements MultiHostRegistrar {
     return resultFiles == null && resultReferences == null ? null : new InjectionResult(myHostPsiFile, resultFiles, resultReferences);
   }
 
+  @Nonnull
   @Override
   public MultiHostRegistrar startInjecting(@Nonnull Language language) {
     return startInjecting(LanguageVersionUtil.findDefaultVersion(language));

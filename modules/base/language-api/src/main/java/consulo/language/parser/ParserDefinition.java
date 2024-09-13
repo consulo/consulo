@@ -15,25 +15,23 @@
  */
 package consulo.language.parser;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
-import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IFileElementType;
 import consulo.language.ast.TokenSet;
 import consulo.language.ast.TokenType;
-import consulo.language.extension.ByLanguageValue;
 import consulo.language.extension.LanguageExtension;
-import consulo.language.extension.LanguageOneToOne;
 import consulo.language.file.FileViewProvider;
+import consulo.language.internal.ParserDefinitionExtensionPoint;
 import consulo.language.lexer.Lexer;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.version.LanguageVersion;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -44,12 +42,16 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ParserDefinition extends LanguageExtension {
-    ExtensionPointCacheKey<ParserDefinition, ByLanguageValue<ParserDefinition>> KEY =
-        ExtensionPointCacheKey.create("ParserDefinition", LanguageOneToOne.build());
+    @Nullable
+    @Deprecated
+    @DeprecationInfo("prefer Application parameter")
+    static ParserDefinition forLanguage(@Nonnull Language language) {
+        return forLanguage(Application.get(), language);
+    }
 
     @Nullable
-    static ParserDefinition forLanguage(@Nonnull Language language) {
-        return Application.get().getExtensionPoint(ParserDefinition.class).getOrBuildCache(KEY).get(language);
+    static ParserDefinition forLanguage(@Nonnull Application application, @Nonnull Language language) {
+        return ParserDefinitionExtensionPoint.forLanguage(application, language);
     }
 
     /**

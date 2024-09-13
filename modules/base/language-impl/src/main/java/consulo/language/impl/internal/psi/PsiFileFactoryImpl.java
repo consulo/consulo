@@ -20,6 +20,7 @@
 package consulo.language.impl.internal.psi;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
@@ -59,11 +60,14 @@ import jakarta.inject.Singleton;
 @ServiceImpl
 public class PsiFileFactoryImpl extends PsiFileFactory {
   private static final Logger LOG = Logger.getInstance(PsiFileFactoryImpl.class);
+
+  private final Application myApplication;
   private final PsiManager myManager;
 
   @Inject
-  public PsiFileFactoryImpl(final PsiManager manager) {
-    myManager = manager;
+  public PsiFileFactoryImpl(Application application, final PsiManager manager) {
+      myApplication = application;
+      myManager = manager;
   }
 
   @Override
@@ -176,7 +180,7 @@ public class PsiFileFactoryImpl extends PsiFileFactory {
     if (viewProvider == null) viewProvider = new SingleRootFileViewProvider(myManager, virtualFile, physical);
 
     language = viewProvider.getBaseLanguage();
-    final ParserDefinition parserDefinition = ParserDefinition.forLanguage(language);
+    final ParserDefinition parserDefinition = ParserDefinition.forLanguage(myApplication, language);
     if (parserDefinition != null) {
       final PsiFile psiFile = viewProvider.getPsi(language);
       if (psiFile != null) {
@@ -201,7 +205,7 @@ public class PsiFileFactoryImpl extends PsiFileFactory {
                                     boolean markAsCopy) {
     final LightVirtualFile virtualFile = new LightVirtualFile(name, fileType, text, modificationStamp);
 
-    final ParserDefinition parserDefinition = ParserDefinition.forLanguage(language);
+    final ParserDefinition parserDefinition = ParserDefinition.forLanguage(myApplication, language);
     final FileViewProviderFactory factory = LanguageFileViewProviderFactory.forLanguage(language);
     FileViewProvider viewProvider = factory != null ? factory.createFileViewProvider(virtualFile, language, myManager, physical) : null;
     if (viewProvider == null) viewProvider = new SingleRootFileViewProvider(myManager, virtualFile, physical);
@@ -267,7 +271,7 @@ public class PsiFileFactoryImpl extends PsiFileFactory {
     final DummyHolder result = DummyHolderFactory.createHolder(myManager, language, context);
     final FileElement holder = result.getTreeElement();
 
-    final ParserDefinition parserDefinition = ParserDefinition.forLanguage(language);
+    final ParserDefinition parserDefinition = ParserDefinition.forLanguage(myApplication, language);
     if (parserDefinition == null) {
       throw new AssertionError("No parser definition for " + language);
     }
