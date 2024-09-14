@@ -9,7 +9,7 @@ import consulo.ui.ValidableComponent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
-import consulo.ui.event.details.KeyChar;
+import consulo.ui.event.details.KeyCode;
 import consulo.ui.event.details.KeyboardInputDetails;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.JBPanel;
@@ -101,9 +101,9 @@ public class NewItemSimplePopupPanel extends JBPanel implements Disposable {
         res.setPlaceholder(IdeBundle.message("action.create.new.class.name.field"));
         res.addKeyPressedListener(e -> {
             KeyboardInputDetails details = e.getInputDetails();
-            KeyChar keyChar = details.getKeyChar();
+            KeyCode keyCode = details.getKeyCode();
 
-            if (KeyChar.ENTER.equals(keyChar)) {
+            if (KeyCode.ENTER.equals(keyCode)) {
                 if (!myTextField.validate()) {
                     return;
                 }

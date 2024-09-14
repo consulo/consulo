@@ -237,6 +237,22 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
         return myCursor;
     }
 
+    public boolean hasFocus() {
+        return true;
+    }
+
+    public void focus() {
+
+    }
+
+    public void setFocusable(boolean focusable) {
+
+    }
+
+    public boolean isFocusable() {
+        return true;
+    }
+
     public void bordersChanged() {
     }
 }

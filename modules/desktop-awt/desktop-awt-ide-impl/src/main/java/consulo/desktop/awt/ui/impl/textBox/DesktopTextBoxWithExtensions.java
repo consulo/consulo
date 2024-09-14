@@ -401,6 +401,11 @@ public class DesktopTextBoxWithExtensions {
         }
 
         @Override
+        public void focus() {
+            myTextField.requestFocus();
+        }
+
+        @Override
         public boolean isFocusable() {
             return myTextField.isFocusable();
         }

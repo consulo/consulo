@@ -7,7 +7,7 @@ import consulo.language.editor.internal.ModelScopeItemPresenter;
 import consulo.language.editor.internal.ModelScopeItemView;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
-import consulo.language.editor.ui.RadioUpDownListener;
+import consulo.language.editor.ui.awt.RadioUpDownListener;
 import consulo.language.editor.ui.scope.AnalysisUIOptions;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.ModuleUtilCore;

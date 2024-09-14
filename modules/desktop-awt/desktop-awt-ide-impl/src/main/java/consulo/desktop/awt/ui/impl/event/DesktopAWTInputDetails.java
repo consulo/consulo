@@ -71,7 +71,7 @@ public class DesktopAWTInputDetails {
 
             Point locationOnScreen = component.getLocationOnScreen();
             Position2D posOnScreen = new Position2D(locationOnScreen.x, locationOnScreen.y);
-            return new KeyboardInputDetails(pos, posOnScreen, enumModifiers, KeyChar.of(keyEvent.getKeyChar()));
+            return new KeyboardInputDetails(pos, posOnScreen, enumModifiers, KeyCode.of(keyEvent.getKeyCode()));
         }
 
         throw new UnsupportedOperationException("unknown event " + event);

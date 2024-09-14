@@ -77,19 +77,4 @@ public class DesktopSwtCheckBoxImpl extends SWTComponentDelegate<Button> impleme
       myComponent.setText(myText.get());
     }
   }
-
-  @Override
-  public boolean hasFocus() {
-    return false;
-  }
-
-  @Override
-  public void setFocusable(boolean focusable) {
-
-  }
-
-  @Override
-  public boolean isFocusable() {
-    return true;
-  }
 }

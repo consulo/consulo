@@ -29,6 +29,8 @@ public class SandInlineOptionsDialog extends InlineOptionsWithSearchSettingsDial
     public SandInlineOptionsDialog(Project project, boolean canBeParent, PsiElement element) {
         super(project, canBeParent, element);
 
+        myInvokedOnReference = true;
+        
         init();
     }
 

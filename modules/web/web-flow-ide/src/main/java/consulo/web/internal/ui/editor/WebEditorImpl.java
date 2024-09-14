@@ -72,22 +72,6 @@ public class WebEditorImpl extends CodeEditorBase {
       vaadin.setComponent(this);
       return vaadin;
     }
-
-    @Override
-    public boolean hasFocus() {
-      // TODO [VISTALL] fake
-      return true;
-    }
-
-    @Override
-    public void setFocusable(boolean focusable) {
-
-    }
-
-    @Override
-    public boolean isFocusable() {
-      return true;
-    }
   }
 
   private static final Key<Integer> ANNOTATION_ID = Key.create("annotation.id");

@@ -35,72 +35,71 @@ import java.util.UUID;
  * @since 2019-02-19
  */
 public class WebRadioButtonImpl extends VaadinComponentDelegate<WebRadioButtonImpl.Vaadin> implements RadioButton {
+    public class Vaadin extends Div implements FromVaadinComponentWrapper {
+        private final Input myInput;
+        private final NativeLabel myLabel;
 
-  public class Vaadin extends Div implements FromVaadinComponentWrapper {
-    private final Input myInput;
-    private final NativeLabel myLabel;
+        public Vaadin() {
+            myInput = new Input();
+            myInput.setId(UUID.randomUUID().toString());
+            myInput.setType("radio");
+            myLabel = new NativeLabel();
+            myLabel.setFor(myInput);
 
-    public Vaadin() {
-      myInput = new Input();
-      myInput.setId(UUID.randomUUID().toString());
-      myInput.setType("radio");
-      myLabel = new NativeLabel();
-      myLabel.setFor(myInput);
+            add(myInput, myLabel);
+        }
 
-      add(myInput, myLabel);
+        @Nullable
+        @Override
+        public Component toUIComponent() {
+            return WebRadioButtonImpl.this;
+        }
+
+        public void setText(LocalizeValue text) {
+            myLabel.setText(text.getValue());
+        }
     }
 
-    @Nullable
+    private LocalizeValue myText = LocalizeValue.empty();
+
+    @RequiredUIAccess
+    public WebRadioButtonImpl(boolean selected, LocalizeValue text) {
+        setLabelText(text);
+        setValue(selected);
+    }
+
+    @Nonnull
     @Override
-    public Component toUIComponent() {
-      return WebRadioButtonImpl.this;
+    public Vaadin createVaadinComponent() {
+        return new Vaadin();
     }
 
-    public void setText(LocalizeValue text) {
-      myLabel.setText(text.getValue());
+    @Nonnull
+    @Override
+    public Boolean getValue() {
+        // TODO
+        return Boolean.FALSE;
     }
-  }
 
-  private LocalizeValue myText = LocalizeValue.empty();
+    @RequiredUIAccess
+    @Override
+    public void setValue(@Nonnull Boolean value, boolean fireListeners) {
+        // TODO
+    }
 
-  @RequiredUIAccess
-  public WebRadioButtonImpl(boolean selected, LocalizeValue text) {
-    setLabelText(text);
-    setValue(selected);
-  }
+    @Override
+    @Nonnull
+    public LocalizeValue getLabelText() {
+        return myText;
+    }
 
-  @Nonnull
-  @Override
-  public Vaadin createVaadinComponent() {
-    return new Vaadin();
-  }
+    @RequiredUIAccess
+    @Override
+    public void setLabelText(@Nonnull final LocalizeValue text) {
+        UIAccess.assertIsUIThread();
 
-  @Nonnull
-  @Override
-  public Boolean getValue() {
-    // TODO
-    return Boolean.FALSE;
-  }
+        myText = text;
 
-  @RequiredUIAccess
-  @Override
-  public void setValue(@Nonnull Boolean value, boolean fireListeners) {
-    // TODO
-  }
-
-  @Override
-  @Nonnull
-  public LocalizeValue getLabelText() {
-    return myText;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void setLabelText(@Nonnull final LocalizeValue text) {
-    UIAccess.assertIsUIThread();
-
-    myText = text;
-
-    getVaadinComponent().setText(text);
-  }
+        getVaadinComponent().setText(text);
+    }
 }

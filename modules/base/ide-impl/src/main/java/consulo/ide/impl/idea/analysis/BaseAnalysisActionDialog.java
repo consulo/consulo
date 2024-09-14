@@ -21,7 +21,7 @@ import consulo.disposer.Disposer;
 import consulo.find.FindSettings;
 import consulo.find.ui.ScopeChooserCombo;
 import consulo.language.editor.ui.scope.AnalysisUIOptions;
-import consulo.language.editor.ui.RadioUpDownListener;
+import consulo.language.editor.ui.awt.RadioUpDownListener;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
 import consulo.language.editor.util.PsiUtilBase;

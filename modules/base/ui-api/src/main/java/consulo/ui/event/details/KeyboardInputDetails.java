@@ -26,18 +26,18 @@ import java.util.EnumSet;
  */
 public class KeyboardInputDetails extends ModifiedInputDetails {
     @Nonnull
-    private final KeyChar myKeyChar;
+    private final KeyCode myKeyCode;
 
     public KeyboardInputDetails(@Nonnull Position2D position,
                                 @Nonnull Position2D positionOnScreen,
                                 @Nonnull EnumSet<Modifier> modifiers,
-                                @Nonnull KeyChar keyChar) {
+                                @Nonnull KeyCode keyCode) {
         super(position, positionOnScreen, modifiers);
-        myKeyChar = keyChar;
+        myKeyCode = keyCode;
     }
 
     @Nonnull
-    public KeyChar getKeyChar() {
-        return myKeyChar;
+    public KeyCode getKeyCode() {
+        return myKeyCode;
     }
 }

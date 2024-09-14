@@ -80,19 +80,4 @@ public class WebIntBoxImpl extends VaadinComponentDelegate<WebIntBoxImpl.Vaadin>
   public boolean validate() {
     return true;
   }
-
-  @Override
-  public boolean hasFocus() {
-    return true;
-  }
-
-  @Override
-  public void setFocusable(boolean focusable) {
-
-  }
-
-  @Override
-  public boolean isFocusable() {
-    return true;
-  }
 }

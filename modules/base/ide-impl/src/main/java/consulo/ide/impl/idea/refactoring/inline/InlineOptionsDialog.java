@@ -23,7 +23,7 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.search.PsiSearchHelper;
 import consulo.language.psi.search.ReferencesSearch;
 import consulo.language.editor.refactoring.ui.RefactoringDialog;
-import consulo.language.editor.ui.RadioUpDownListener;
+import consulo.language.editor.ui.awt.RadioUpDownListener;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

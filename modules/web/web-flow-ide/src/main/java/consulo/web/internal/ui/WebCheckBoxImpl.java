@@ -77,19 +77,4 @@ public class WebCheckBoxImpl extends WebBooleanValueComponentBase<WebCheckBoxImp
 
     toVaadinComponent().setLabelText(textValue);
   }
-
-  @Override
-  public boolean hasFocus() {
-    return false;
-  }
-
-  @Override
-  public void setFocusable(boolean focusable) {
-
-  }
-
-  @Override
-  public boolean isFocusable() {
-    return true;
-  }
 }

@@ -15,27 +15,31 @@
  */
 package consulo.ui.event.details;
 
-import consulo.ui.internal.KeyCharImpl;
+import consulo.ui.internal.KeyCodeImpl;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2024-09-12
  */
-public interface KeyChar {
-    KeyChar ENTER = KeyChar.of('\n', "ENTER");
+public interface KeyCode {
+    KeyCode ENTER = KeyCode.of('\n', "ENTER");
 
-    char key();
+    KeyCode UP = KeyCode.of(0x26, "VK_UP");
+
+    KeyCode DOWN = KeyCode.of(0x28, "VK_DOWN");
+
+    int key();
 
     String name();
 
     @Nonnull
-    static KeyChar of(char key) {
-        return new KeyCharImpl(key, Character.toString(key));
+    static KeyCode of(int key) {
+        return KeyCodeImpl.ourMap.computeIfAbsent(key, it -> new KeyCodeImpl(it, Character.toString(it)));
     }
 
     @Nonnull
-    static KeyChar of(char key, String name) {
-        return new KeyCharImpl(key, name);
+    static KeyCode of(int key, String name) {
+        return KeyCodeImpl.ourMap.computeIfAbsent(key, it -> new KeyCodeImpl(it, name));
     }
 }

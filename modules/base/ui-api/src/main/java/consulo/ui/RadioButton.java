@@ -26,7 +26,7 @@ import jakarta.annotation.Nonnull;
  * @author VISTALL
  * @since 14-Jun-16
  */
-public interface RadioButton extends ValueComponent<Boolean> {
+public interface RadioButton extends ValueComponent<Boolean>, FocusableComponent {
   @Nonnull
   @Deprecated
   @DeprecationInfo("Use with LocalizeValue parameter")

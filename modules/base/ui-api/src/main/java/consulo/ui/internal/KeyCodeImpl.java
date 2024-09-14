@@ -15,25 +15,29 @@
  */
 package consulo.ui.internal;
 
-import consulo.ui.event.details.KeyChar;
+import consulo.ui.event.details.KeyCode;
 
+import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author VISTALL
  * @since 2024-09-12
  */
-public class KeyCharImpl implements KeyChar {
-    private final char myKey;
+public class KeyCodeImpl implements KeyCode {
+    public static final Map<Integer, KeyCode> ourMap = new ConcurrentHashMap<>();
+
+    private final int myKey;
     private final String myName;
 
-    public KeyCharImpl(char key, String name) {
+    public KeyCodeImpl(int key, String name) {
         myKey = key;
         myName = name;
     }
 
     @Override
-    public char key() {
+    public int key() {
         return myKey;
     }
 
@@ -55,7 +59,7 @@ public class KeyCharImpl implements KeyChar {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        KeyCharImpl keyChar = (KeyCharImpl) o;
+        KeyCodeImpl keyChar = (KeyCodeImpl) o;
         return myKey == keyChar.myKey;
     }
 

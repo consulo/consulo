@@ -214,4 +214,19 @@ public abstract class SWTComponentDelegate<SWT extends Widget> implements Compon
     public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
         myDataObject.putUserData(key, value);
     }
+
+    public void focus() {
+    }
+
+    public boolean hasFocus() {
+        return false;
+    }
+
+    public void setFocusable(boolean focusable) {
+
+    }
+
+    public boolean isFocusable() {
+        return true;
+    }
 }

@@ -18,6 +18,7 @@ package consulo.language.editor.refactoring.inline;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressManager;
 import consulo.language.editor.refactoring.ui.RefactoringDialog;
+import consulo.ui.util.RadioUpDownListener;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNameIdentifierOwner;
 import consulo.language.psi.scope.GlobalSearchScope;
@@ -79,7 +80,7 @@ public abstract class InlineOptionsDialog extends RefactoringDialog implements I
         ValueGroup<Boolean> bg = ValueGroup.createBool();
         bg.add(myRbInlineAll);
         bg.add(myRbInlineThisOnly);
-       // TODO ! new RadioUpDownListener(myRbInlineAll, myRbInlineThisOnly);
+        RadioUpDownListener.registerListener(myRbInlineAll, myRbInlineThisOnly);
 
         myRbInlineThisOnly.setEnabled(myInvokedOnReference);
         final boolean writable = myElement.isWritable();

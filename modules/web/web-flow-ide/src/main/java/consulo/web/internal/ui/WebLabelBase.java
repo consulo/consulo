@@ -86,19 +86,4 @@ public abstract class WebLabelBase<V extends VaadinLabelComponentBase> extends V
   public Component getTarget() {
     return myLabeledComponent;
   }
-
-  @Override
-  public boolean hasFocus() {
-    return false;
-  }
-
-  @Override
-  public void setFocusable(boolean focusable) {
-
-  }
-
-  @Override
-  public boolean isFocusable() {
-    return true;
-  }
 }

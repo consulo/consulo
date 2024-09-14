@@ -32,6 +32,8 @@ public interface FocusableComponent extends Component {
 
     boolean hasFocus();
 
+    void focus();
+
     void setFocusable(boolean focusable);
 
     boolean isFocusable();

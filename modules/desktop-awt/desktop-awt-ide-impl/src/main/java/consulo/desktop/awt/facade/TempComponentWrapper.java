@@ -141,6 +141,11 @@ class TempComponentWrapper implements Component, ToSwingComponentWrapper, Focusa
     }
 
     @Override
+    public void focus() {
+        myComponent.requestFocus();
+    }
+
+    @Override
     public void setFocusable(boolean focusable) {
         myComponent.setFocusable(focusable);
     }

@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package consulo.language.editor.ui;
+package consulo.language.editor.ui.awt;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.ui.wm.IdeFocusManager;
 
 import javax.swing.*;
@@ -25,6 +26,8 @@ import java.awt.event.KeyEvent;
 /**
  * @author yole
 */
+@Deprecated
+@DeprecationInfo("Deprecated consulo.ui.util.RadioUpDownListener")
 public class RadioUpDownListener extends KeyAdapter {
   private final JRadioButton[] myRadioButtons;
 
