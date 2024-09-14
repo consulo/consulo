@@ -7,7 +7,6 @@ import consulo.language.editor.internal.ModelScopeItemPresenter;
 import consulo.language.editor.internal.ModelScopeItemView;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
-import consulo.language.editor.ui.awt.RadioUpDownListener;
 import consulo.language.editor.ui.scope.AnalysisUIOptions;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.ModuleUtilCore;
@@ -21,6 +20,7 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.VerticalLayout;
+import consulo.ui.util.RadioUpDownListener;
 import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -149,7 +149,7 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
     
     preselectButton();
 
-    new RadioUpDownListener(radioButtons.stream().map(radioButton -> (JRadioButton)TargetAWT.to(radioButton)).toArray(JRadioButton[]::new));
+    RadioUpDownListener.registerListener(radioButtons.toArray(RadioButton[]::new));
 
     return (JComponent)TargetAWT.to(layout);
   }

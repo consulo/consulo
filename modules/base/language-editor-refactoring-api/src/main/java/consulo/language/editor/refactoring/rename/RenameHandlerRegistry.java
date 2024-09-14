@@ -20,10 +20,12 @@ import consulo.component.ProcessCanceledException;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.rename.inplace.MemberInplaceRenameHandler;
-import consulo.language.editor.ui.awt.RadioUpDownListener;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.ui.*;
+import consulo.ui.RadioButton;
+import consulo.ui.ValueComponent;
+import consulo.ui.ValueGroup;
+import consulo.ui.ValueGroups;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.ValueComponentEvent;
@@ -31,6 +33,7 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.VerticalLayout;
+import consulo.ui.util.RadioUpDownListener;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -163,9 +166,7 @@ public class RenameHandlerRegistry {
                 radioPanel.add(rb);
             }
 
-            new RadioUpDownListener(Arrays.stream(myRButtons)
-                .map(radioButton -> (JRadioButton) TargetAWT.to(radioButton))
-                .toArray(JRadioButton[]::new));
+            RadioUpDownListener.registerListener(myRButtons);
 
             return (JComponent) TargetAWT.to(LabeledLayout.create(RefactoringLocalize.whatWouldYouLikeToDo(), radioPanel));
         }
