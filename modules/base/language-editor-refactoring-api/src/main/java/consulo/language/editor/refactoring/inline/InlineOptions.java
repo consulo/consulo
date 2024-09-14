@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.refactoring.inline;
+package consulo.language.editor.refactoring.inline;
 
 /**
  * @author dyoma
  */
-@Deprecated
 public interface InlineOptions {
-  boolean isInlineThisOnly();
-  void close(int exitCode);
+    boolean isInlineThisOnly();
 
-  boolean isPreviewUsages();
+    void close(int exitCode);
+
+    boolean isPreviewUsages();
 }

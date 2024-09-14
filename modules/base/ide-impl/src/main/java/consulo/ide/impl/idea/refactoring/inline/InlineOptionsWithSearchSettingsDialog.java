@@ -24,6 +24,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
+@Deprecated
 public abstract class InlineOptionsWithSearchSettingsDialog extends InlineOptionsDialog {
   protected JCheckBox myCbSearchInComments;
   protected JCheckBox myCbSearchTextOccurences;

@@ -30,6 +30,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
+@Deprecated
 public abstract class InlineOptionsDialog extends RefactoringDialog implements InlineOptions {
   protected JRadioButton myRbInlineAll;
   protected JRadioButton myRbInlineThisOnly;
