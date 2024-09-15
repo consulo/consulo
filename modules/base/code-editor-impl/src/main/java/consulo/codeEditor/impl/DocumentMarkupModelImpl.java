@@ -20,14 +20,14 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.internal.MarkupModelWindow;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.document.Document;
-import consulo.document.internal.DocumentEx;
 import consulo.document.DocumentWindow;
+import consulo.document.internal.DocumentEx;
 import consulo.project.Project;
 import consulo.util.collection.Maps;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -39,81 +39,81 @@ import java.util.concurrent.ConcurrentMap;
 @Deprecated
 @DeprecationInfo("Use DocumentMarkupModel")
 public class DocumentMarkupModelImpl {
-  private static final Key<MarkupModelEx> MARKUP_MODEL_KEY = Key.create("DocumentMarkupModel.MarkupModel");
-  private static final Key<ConcurrentMap<Project, MarkupModelImpl>> MARKUP_MODEL_MAP_KEY = Key.create("DocumentMarkupModel.MarkupModelMap");
+    private static final Key<MarkupModelEx> MARKUP_MODEL_KEY = Key.create("DocumentMarkupModel.MarkupModel");
+    private static final Key<ConcurrentMap<Project, MarkupModelImpl>> MARKUP_MODEL_MAP_KEY = Key.create("DocumentMarkupModel.MarkupModelMap");
 
-  private DocumentMarkupModelImpl() {
-  }
-
-  /**
-   * Returns the markup model for the specified project. A document can have multiple markup
-   * models for different projects if the file to which it corresponds belongs to multiple projects
-   * opened in different IDE frames at the same time.
-   *
-   * @param document the document for which the markup model is requested.
-   * @param project the project for which the markup model is requested, or null if the default markup
-   *                model is requested.
-   * @return the markup model instance.
-   * @see Editor#getMarkupModel()
-   */
-  @Nonnull
-  public static MarkupModelEx forDocument(@Nonnull Document document, @Nullable Project project, boolean create) {
-    if (document instanceof DocumentWindow) {
-      final Document delegate = ((DocumentWindow)document).getDelegate();
-      final MarkupModelEx baseMarkupModel = forDocument(delegate, project, true);
-      return new MarkupModelWindow(baseMarkupModel, (DocumentWindow) document);
+    private DocumentMarkupModelImpl() {
     }
 
-    if (project == null) {
-      MarkupModelEx markupModel = document.getUserData(MARKUP_MODEL_KEY);
-      if (create && markupModel == null) {
-        MarkupModelEx newModel = new MarkupModelImpl((DocumentEx)document);
-        if ((markupModel = document.putUserDataIfAbsent(MARKUP_MODEL_KEY, newModel)) != newModel) {
-          newModel.dispose();
+    /**
+     * Returns the markup model for the specified project. A document can have multiple markup
+     * models for different projects if the file to which it corresponds belongs to multiple projects
+     * opened in different IDE frames at the same time.
+     *
+     * @param document the document for which the markup model is requested.
+     * @param project  the project for which the markup model is requested, or null if the default markup
+     *                 model is requested.
+     * @return the markup model instance.
+     * @see Editor#getMarkupModel()
+     */
+    @Nonnull
+    public static MarkupModelEx forDocument(@Nonnull Document document, @Nullable Project project, boolean create) {
+        if (document instanceof DocumentWindow) {
+            final Document delegate = ((DocumentWindow) document).getDelegate();
+            final MarkupModelEx baseMarkupModel = forDocument(delegate, project, true);
+            return new MarkupModelWindow(baseMarkupModel, (DocumentWindow) document);
         }
-      }
 
-      if (markupModel == null) {
-        return new EmptyMarkupModel(document);
-      }
-      return markupModel;
-    }
+        if (project == null) {
+            MarkupModelEx markupModel = document.getUserData(MARKUP_MODEL_KEY);
+            if (create && markupModel == null) {
+                MarkupModelEx newModel = new MarkupModelImpl((DocumentEx) document);
+                if ((markupModel = document.putUserDataIfAbsent(MARKUP_MODEL_KEY, newModel)) != newModel) {
+                    newModel.dispose();
+                }
+            }
 
-    final DocumentMarkupModelManager documentMarkupModelManager =
+            if (markupModel == null) {
+                return new EmptyMarkupModel(document);
+            }
+            return markupModel;
+        }
+
+        final DocumentMarkupModelManager documentMarkupModelManager =
             project.isDisposed() ? null : DocumentMarkupModelManager.getInstance(project);
-    if (documentMarkupModelManager == null || documentMarkupModelManager.isDisposed() || project.isDisposed()) {
-      return new EmptyMarkupModel(document);
+        if (documentMarkupModelManager == null || documentMarkupModelManager.isDisposed() || project.isDisposed()) {
+            return new EmptyMarkupModel(document);
+        }
+
+        ConcurrentMap<Project, MarkupModelImpl> markupModelMap = getMarkupModelMap(document);
+
+        MarkupModelImpl model = markupModelMap.get(project);
+        if (create && model == null) {
+            MarkupModelImpl newModel = new MarkupModelImpl((DocumentEx) document);
+            if ((model = Maps.cacheOrGet(markupModelMap, project, newModel)) == newModel) {
+                documentMarkupModelManager.registerDocument(document);
+            }
+            else {
+                newModel.dispose();
+            }
+        }
+
+        return model;
     }
 
-    ConcurrentMap<Project, MarkupModelImpl> markupModelMap = getMarkupModelMap(document);
-
-    MarkupModelImpl model = markupModelMap.get(project);
-    if (create && model == null) {
-      MarkupModelImpl newModel = new MarkupModelImpl((DocumentEx)document);
-      if ((model = Maps.cacheOrGet(markupModelMap, project, newModel)) == newModel) {
-        documentMarkupModelManager.registerDocument(document);
-      }
-      else {
-        newModel.dispose();
-      }
+    private static ConcurrentMap<Project, MarkupModelImpl> getMarkupModelMap(@Nonnull Document document) {
+        ConcurrentMap<Project, MarkupModelImpl> markupModelMap = document.getUserData(MARKUP_MODEL_MAP_KEY);
+        if (markupModelMap == null) {
+            ConcurrentMap<Project, MarkupModelImpl> newMap = new ConcurrentHashMap<>();
+            markupModelMap = document.putUserDataIfAbsent(MARKUP_MODEL_MAP_KEY, newMap);
+        }
+        return markupModelMap;
     }
 
-    return model;
-  }
-
-  private static ConcurrentMap<Project, MarkupModelImpl> getMarkupModelMap(@Nonnull Document document) {
-    ConcurrentMap<Project, MarkupModelImpl> markupModelMap = document.getUserData(MARKUP_MODEL_MAP_KEY);
-    if (markupModelMap == null) {
-      ConcurrentMap<Project, MarkupModelImpl> newMap = new ConcurrentHashMap<>();
-      markupModelMap = document.putUserDataIfAbsent(MARKUP_MODEL_MAP_KEY, newMap);
+    static void removeMarkupModel(@Nonnull Document document, @Nonnull Project project) {
+        MarkupModelImpl removed = getMarkupModelMap(document).remove(project);
+        if (removed != null) {
+            removed.dispose();
+        }
     }
-    return markupModelMap;
-  }
-
-  static void removeMarkupModel(@Nonnull Document document, @Nonnull Project project) {
-    MarkupModelImpl removed = getMarkupModelMap(document).remove(project);
-    if (removed != null) {
-      removed.dispose();
-    }
-  }
 }
