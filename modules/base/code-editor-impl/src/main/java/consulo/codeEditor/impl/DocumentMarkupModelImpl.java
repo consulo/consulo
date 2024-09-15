@@ -48,7 +48,7 @@ public class DocumentMarkupModelImpl {
   /**
    * Returns the markup model for the specified project. A document can have multiple markup
    * models for different projects if the file to which it corresponds belongs to multiple projects
-   * opened in different IDEA frames at the same time.
+   * opened in different IDE frames at the same time.
    *
    * @param document the document for which the markup model is requested.
    * @param project the project for which the markup model is requested, or null if the default markup
@@ -56,6 +56,7 @@ public class DocumentMarkupModelImpl {
    * @return the markup model instance.
    * @see Editor#getMarkupModel()
    */
+  @Nonnull
   public static MarkupModelEx forDocument(@Nonnull Document document, @Nullable Project project, boolean create) {
     if (document instanceof DocumentWindow) {
       final Document delegate = ((DocumentWindow)document).getDelegate();
@@ -70,6 +71,10 @@ public class DocumentMarkupModelImpl {
         if ((markupModel = document.putUserDataIfAbsent(MARKUP_MODEL_KEY, newModel)) != newModel) {
           newModel.dispose();
         }
+      }
+
+      if (markupModel == null) {
+        return new EmptyMarkupModel(document);
       }
       return markupModel;
     }
