@@ -18,15 +18,16 @@ package consulo.language.editor.template.context;
 
 import consulo.annotation.component.ExtensionImpl;
 
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
  */
 @ExtensionImpl(id = "OTHER", order = "last")
-public class EverywhereContextType extends TemplateContextType {
+public class EverywhereContextType extends BaseTemplateContextType {
   public EverywhereContextType() {
-    super("OTHER", "Everywhere", null);
+    super("OTHER", LocalizeValue.localizeTODO("Everywhere"), null);
   }
 
   @Override

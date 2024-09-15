@@ -70,7 +70,7 @@ public class TemplateContext {
       }
       return false;
     }
-    return storedValue.booleanValue();
+    return storedValue;
   }
 
   private Boolean isEnabledBare(TemplateContextType contextType) {

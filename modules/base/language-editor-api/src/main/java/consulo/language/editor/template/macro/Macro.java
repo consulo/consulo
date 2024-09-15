@@ -18,15 +18,15 @@ package consulo.language.editor.template.macro;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.component.extension.ExtensionPointName;
+import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.template.Expression;
 import consulo.language.editor.template.ExpressionContext;
 import consulo.language.editor.template.Result;
 import consulo.language.editor.template.context.TemplateContextType;
-import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
 
 /**
  * A macro which can be used in live templates.

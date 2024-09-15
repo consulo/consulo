@@ -1,4 +1,18 @@
-// Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+/*
+ * Copyright 2013-2024 consulo.io
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package consulo.language.editor.template.context;
 
 import consulo.annotation.component.ComponentScope;
@@ -8,108 +22,73 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.document.Document;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.util.lang.lazy.ClearableLazyValue;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import java.util.function.Supplier;
 
 /**
  * Implement this class to describe some particular context that the user may associate with a live template, e.g., "Java String Start".
  * Contexts are available for the user in the Live Template management UI.
+ *
+ * @author VISTALL
+ * @see BaseTemplateContextType
+ * @since 2024-09-15
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
-public abstract class TemplateContextType {
-  public static final ExtensionPointName<TemplateContextType> EP_NAME = ExtensionPointName.create(TemplateContextType.class);
+public interface TemplateContextType {
+    public static final ExtensionPointName<TemplateContextType> EP_NAME = ExtensionPointName.create(TemplateContextType.class);
 
-  @Nonnull
-  private final String myContextId;
-  @Nonnull
-  private final String myPresentableName;
-  private final ClearableLazyValue<? extends TemplateContextType> myBaseContextType;
+    @Nonnull
+    LocalizeValue getPresentableName();
 
-  protected TemplateContextType(@Nonnull String id, @Nonnull String presentableName) {
-    this(id, presentableName, EverywhereContextType.class);
-  }
+    @Nonnull
+    String getContextId();
 
-  protected TemplateContextType(@Nonnull String id, @Nonnull String presentableName, @Nullable Class<? extends TemplateContextType> baseContextType) {
-    myContextId = id;
-    myPresentableName = presentableName;
-    myBaseContextType = ClearableLazyValue.nullable((Supplier<? extends TemplateContextType>)() -> baseContextType == null ? null : EP_NAME.findExtensionOrFail(baseContextType));
-  }
+    default boolean isInContext(@Nonnull TemplateActionContext templateActionContext) {
+        return isInContext(templateActionContext.getFile(), templateActionContext.getStartOffset());
+    }
 
-  /**
-   * @return context presentable name for templates editor
-   */
-  @Nonnull
-  public String getPresentableName() {
-    return myPresentableName;
-  }
+    default boolean isInContext(@Nonnull PsiFile file, int offset) {
+        throw new RuntimeException("Please, implement isInContext(TemplateActionContext) method and don't invoke this method directly");
+    }
 
-  /**
-   * @return unique ID to be used on configuration files to flag if this context is enabled for particular template
-   */
-  @Nonnull
-  public String getContextId() {
-    return myContextId;
-  }
+    /**
+     * @return whether an abbreviation of this context's template can be entered in editor
+     * and expanded from there by Insert Live Template action
+     */
+    default boolean isExpandableFromEditor() {
+        return true;
+    }
 
-  /**
-   * @deprecated use {@link #isInContext(TemplateActionContext)}
-   */
-  @Deprecated(forRemoval = true)
-  public boolean isInContext(@Nonnull PsiFile file, int offset) {
-    throw new RuntimeException("Please, implement isInContext(TemplateActionContext) method and don't invoke this method directly");
-  }
+    /**
+     * @return syntax highlighter that going to be used in live template editor for template with context type enabled. If several context
+     * types are enabled - first registered wins.
+     */
+    @Nullable
+    default SyntaxHighlighter createHighlighter() {
+        return null;
+    }
 
-  /**
-   * @return true iff this context type permits using template associated with it according to {@code templateActionContext}
-   */
-  public boolean isInContext(@Nonnull TemplateActionContext templateActionContext) {
-    return isInContext(templateActionContext.getFile(), templateActionContext.getStartOffset());
-  }
+    /**
+     * @return parent context type. Parent context serves two purposes:
+     * <ol>
+     * <li>Context types hierarchy shown as a tree in template editor</li>
+     * <li>When template applicability is computed, IDE finds all deepest applicable context types for the current {@link TemplateActionContext}
+     * and excludes checking of all of their parent contexts. Then, IDE checks that at least one of these deepest applicable contexts is
+     * enabled for the template.</li>
+     * </ol>
+     */
+    @Nullable
+    default TemplateContextType getBaseContextType() {
+        return null;
+    }
 
-  /**
-   * @return whether an abbreviation of this context's template can be entered in editor
-   * and expanded from there by Insert Live Template action
-   */
-  public boolean isExpandableFromEditor() {
-    return true;
-  }
-
-  /**
-   * @return syntax highlighter that going to be used in live template editor for template with context type enabled. If several context
-   * types are enabled - first registered wins.
-   */
-  @Nullable
-  public SyntaxHighlighter createHighlighter() {
-    return null;
-  }
-
-  /**
-   * @return parent context type. Parent context serves two purposes:
-   * <ol>
-   * <li>Context types hierarchy shown as a tree in template editor</li>
-   * <li>When template applicability is computed, IDE finds all deepest applicable context types for the current {@link TemplateActionContext}
-   * and excludes checking of all of their parent contexts. Then, IDE checks that at least one of these deepest applicable contexts is
-   * enabled for the template.</li>
-   * </ol>
-   */
-  @Nullable
-  public TemplateContextType getBaseContextType() {
-    return myBaseContextType.get();
-  }
-
-  public void clearCachedBaseContextType() {
-    myBaseContextType.clear();
-  }
-
-  /**
-   * @return document for live template editor. Used for live templates with this context type enabled. If several context types are enabled -
-   * first registered wins.
-   */
-  public Document createDocument(CharSequence text, Project project) {
-    return EditorFactory.getInstance().createDocument(text);
-  }
+    /**
+     * @return document for live template editor. Used for live templates with this context type enabled. If several context types are enabled -
+     * first registered wins.
+     */
+    default Document createDocument(CharSequence text, Project project) {
+        return EditorFactory.getInstance().createDocument(text);
+    }
 }

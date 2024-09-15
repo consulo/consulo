@@ -6,7 +6,6 @@ import consulo.codeEditor.EditorFactory;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.generation.PatternDescriptor;
 import consulo.language.editor.impl.internal.template.TemplateEditorUtil;
-import consulo.language.editor.internal.TemplateEx;
 import consulo.language.editor.template.Template;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -16,8 +15,8 @@ import consulo.ui.ex.awt.Splitter;
 import consulo.ui.ex.awt.tree.SimpleTree;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.util.collection.MultiMap;
-
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -121,10 +120,10 @@ public class GenerateByPatternDialog extends DialogWrapper {
   private void updateDetails(final PatternDescriptor descriptor) {
     ApplicationManager.getApplication().runWriteAction(() -> {
       final Template template = descriptor.getTemplate();
-      if (template instanceof TemplateEx) {
-        String text = ((TemplateEx)template).getString();
+      if (template instanceof Template) {
+        String text = template.getString();
         myEditor.getDocument().replaceString(0, myEditor.getDocument().getTextLength(), text);
-        TemplateEditorUtil.setHighlighter(myEditor, ((TemplateEx)template).getTemplateContext());
+        TemplateEditorUtil.setHighlighter(myEditor, template.getTemplateContext());
       } else {
         myEditor.getDocument().replaceString(0, myEditor.getDocument().getTextLength(), "");
       }

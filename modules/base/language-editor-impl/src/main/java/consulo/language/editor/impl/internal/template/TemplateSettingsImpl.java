@@ -18,18 +18,23 @@ package consulo.language.editor.impl.internal.template;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.component.ProcessCanceledException;
+import consulo.component.extension.ExtensionPoint;
 import consulo.component.persist.*;
 import consulo.component.persist.scheme.BaseSchemeProcessor;
 import consulo.component.persist.scheme.SchemeManager;
 import consulo.component.persist.scheme.SchemeManagerFactory;
+import consulo.component.util.PluginExceptionUtil;
 import consulo.component.util.localize.AbstractBundle;
 import consulo.container.classloader.PluginClassLoader;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.language.editor.internal.TemplateConstants;
 import consulo.language.editor.template.DefaultLiveTemplatesProvider;
+import consulo.language.editor.template.LiveTemplateContributor;
 import consulo.language.editor.template.Template;
 import consulo.language.editor.template.TemplateSettings;
+import consulo.language.editor.template.context.TemplateContextType;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.util.collection.MultiMap;
 import consulo.util.collection.SmartList;
@@ -70,7 +75,6 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
     public static final char ENTER_CHAR = TemplateConstants.ENTER_CHAR;
     public static final char DEFAULT_CHAR = TemplateConstants.DEFAULT_CHAR;
     public static final char CUSTOM_CHAR = TemplateConstants.CUSTOM_CHAR;
-    public static final char NONE_CHAR = TemplateConstants.NONE_CHAR;
 
     private static final String SPACE = "SPACE";
     private static final String TAB = "TAB";
@@ -82,32 +86,20 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
     private static final String DESCRIPTION = "description";
     private static final String SHORTCUT = "shortcut";
 
-    @NonNls
     private static final String VARIABLE = "variable";
-    @NonNls
     private static final String EXPRESSION = "expression";
-    @NonNls
     private static final String DEFAULT_VALUE = "defaultValue";
-    @NonNls
     private static final String ALWAYS_STOP_AT = "alwaysStopAt";
 
-    @NonNls
     private static final String CONTEXT = "context";
-    @NonNls
     private static final String TO_REFORMAT = "toReformat";
-    @NonNls
     private static final String TO_SHORTEN_FQ_NAMES = "toShortenFQNames";
-    @NonNls
     private static final String USE_STATIC_IMPORT = "useStaticImport";
 
-    @NonNls
     private static final String DEACTIVATED = "deactivated";
 
-    @NonNls
     private static final String RESOURCE_BUNDLE = "resource-bundle";
-    @NonNls
     private static final String KEY = "key";
-    @NonNls
     private static final String ID = "id";
 
     static final String TEMPLATES_DIR_PATH = StoragePathMacros.ROOT_CONFIG + "/templates";
@@ -204,7 +196,7 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
     private TemplateKey myLastSelectedTemplate;
 
     @Inject
-    public TemplateSettingsImpl(SchemeManagerFactory schemeManagerFactory) {
+    public TemplateSettingsImpl(Application application, SchemeManagerFactory schemeManagerFactory) {
         mySchemeManager = schemeManagerFactory.createSchemeManager(TEMPLATES_DIR_PATH, new BaseSchemeProcessor<TemplateGroup, TemplateGroup>() {
             @Override
             @Nullable
@@ -271,7 +263,7 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
             }
         }
 
-        loadDefaultLiveTemplates();
+        loadDefaultLiveTemplates(application);
     }
 
     public static TemplateSettingsImpl getInstanceImpl() {
@@ -428,7 +420,13 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
         }
     }
 
-    private TemplateImpl addTemplate(String key, String string, String group, String description, @Nullable String shortcut, boolean isDefault, final String id) {
+    private TemplateImpl addTemplate(String key,
+                                     String string,
+                                     String group,
+                                     String description,
+                                     @Nullable String shortcut,
+                                     boolean isDefault,
+                                     final String id) {
         TemplateImpl template = new TemplateImpl(key, string, group);
         template.setId(id);
         template.setDescription(description);
@@ -450,19 +448,91 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
         return template;
     }
 
-    private void loadDefaultLiveTemplates() {
-        Application application = Application.get();
+    private void loadDefaultLiveTemplates(Application application) {
+        ExtensionPoint<TemplateContextType> templateContextTypes = application.getExtensionPoint(TemplateContextType.class);
 
-//        application.getExtensionPoint(LiveTemplate.class).forEachExtensionSafe(liveTemplate -> {
-//            TemplateImpl template = addTemplate(liveTemplate.getAbbreviation(),
-//                liveTemplate.getValue(),
-//                groupName,
-//                liveTemplate.getDescription().get(), // TODO [VISTALL] support localize key
-//                shortcut,
-//                true,
-//                liveTemplate.getId());
-//
-//        });
+        application.getExtensionPoint(LiveTemplateContributor.class).forEachExtensionSafe(contributor -> {
+            String groupId = contributor.groupId();
+            LocalizeValue groupName = contributor.groupName();
+
+            TemplateGroup result = new TemplateGroup(groupName.get());   // TODO [VISTALL] support localize key
+
+            Map<String, TemplateImpl> created = new LinkedHashMap<>();
+
+            contributor.contribute((id, abbreviation, value, description) -> {
+                LiveTemplateContributorBuilder builder = new LiveTemplateContributorBuilder(groupId,
+                    groupName,
+                    id,
+                    abbreviation,
+                    value,
+                    description) {
+                    @Override
+                    public void close() {
+                        TemplateImpl template = registerTemplate(this, groupId, groupName);
+
+                        for (Map.Entry<Class<? extends TemplateContextType>, Boolean> entry : myStrictContextTypes.entrySet()) {
+                            Class<? extends TemplateContextType> strictContext = entry.getKey();
+                            Boolean state = entry.getValue();
+
+                            TemplateContextType extension = templateContextTypes.findExtension(strictContext);
+                            if (extension == null) {
+                                PluginExceptionUtil.logPluginError(LOG, "Can't find " + strictContext + " extension for live template " + id,
+                                    null,
+                                    contributor.getClass()
+                                );
+                                return;
+                            }
+
+                            template.getTemplateContext().setEnabled(extension, state);
+                        }
+
+                        for (Map.Entry<Class<? extends TemplateContextType>, Boolean> entry : myContextTypes.entrySet()) {
+                            Class<? extends TemplateContextType> contextTypeClass = entry.getKey();
+                            Boolean state = entry.getValue();
+
+                            templateContextTypes.forEachExtensionSafe(it -> {
+                                if (contextTypeClass.isInstance(it)) {
+                                    template.getTemplateContext().setEnabled(it, state);
+                                }
+                            });
+                        }
+
+                        TemplateImpl existing = getTemplate(template.getKey(), template.getGroupName());
+                        boolean defaultTemplateModified = myState.deletedKeys.contains(TemplateKey.keyOf(template))
+                            || myTemplatesById.containsKey(template.getId())
+                            || existing != null;
+
+                        if (!defaultTemplateModified) {
+                            created.put(template.getKey(), template);
+                        }
+
+                        if (existing != null) {
+                            existing.getTemplateContext().setDefaultContext(template.getTemplateContext());
+                        }
+                    }
+                };
+                return builder;
+            });
+
+            TemplateGroup existingScheme = mySchemeManager.findSchemeByName(result.getName());
+            if (existingScheme != null) {
+                result = existingScheme;
+            }
+
+            for (TemplateImpl template : created.values()) {
+                clearPreviouslyRegistered(template);
+
+                addTemplateImpl(template);
+
+                addTemplateById(template);
+
+                result.addElement(template);
+            }
+
+            if (existingScheme == null && !result.isEmpty()) {
+                mySchemeManager.addNewScheme(result, false);
+            }
+        });
 
         application.getExtensionPoint(DefaultLiveTemplatesProvider.class).forEachExtensionSafe(provider -> {
             try {
@@ -484,7 +554,22 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
                 LOG.error(e);
             }
         });
+    }
 
+    private TemplateImpl registerTemplate(LiveTemplateContributorBuilder builder, String groupId, LocalizeValue groupName) {
+        String groupNameText = groupName.getValue();   // TODO [VISTALL] support localize key
+        TemplateImpl template = new TemplateImpl(builder.getAbbreviation(), builder.getValue(), groupNameText);
+        template.setId(builder.getId());
+        template.setDescription(builder.getDescription().get());  // TODO [VISTALL] support localize key
+        template.setShortcutChar(builder.myShortcut);
+
+        for (LiveTemplateContributorBuilder.Variable variable : builder.getVariables()) {
+            template.addVariable(variable.name(), variable.expression(), variable.defaultValue(), variable.alwaysStopAt());
+        }
+
+        myDefaultTemplates.put(TemplateKey.keyOf(template), template);
+
+        return template;
     }
 
     private void readDefTemplate(DefaultLiveTemplatesProvider provider, String defTemplate, boolean registerTemplate) throws JDOMException, InvalidDataException, IOException {
@@ -617,8 +702,7 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
             template.setValue(TemplateImpl.Property.USE_STATIC_IMPORT_IF_POSSIBLE, Boolean.parseBoolean(useStaticImport));
         }
 
-        for (final Object o : element.getChildren(VARIABLE)) {
-            Element e = (Element) o;
+        for (final Element e : element.getChildren(VARIABLE)) {
             String variableName = e.getAttributeValue(NAME);
             String expression = e.getAttributeValue(EXPRESSION);
             String defaultValue = e.getAttributeValue(DEFAULT_VALUE);
@@ -738,8 +822,8 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
         return myState.deletedKeys;
     }
 
-    public void reset() {
+    public void reset(Application application) {
         myState.deletedKeys.clear();
-        loadDefaultLiveTemplates();
+        loadDefaultLiveTemplates(application);
     }
 }

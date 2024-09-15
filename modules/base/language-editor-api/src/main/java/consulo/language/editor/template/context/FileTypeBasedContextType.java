@@ -20,15 +20,16 @@ import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighterFactory;
 import consulo.language.file.LanguageFileType;
 
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author lesya
  */
-public abstract class FileTypeBasedContextType extends TemplateContextType {
+public abstract class FileTypeBasedContextType extends BaseTemplateContextType {
   private final LanguageFileType myFileType;
 
-  protected FileTypeBasedContextType(@Nonnull String id, @Nonnull String presentableName, @Nonnull LanguageFileType fileType) {
+  protected FileTypeBasedContextType(@Nonnull String id, @Nonnull LocalizeValue presentableName, @Nonnull LanguageFileType fileType) {
     super(id, presentableName);
     myFileType = fileType;
   }

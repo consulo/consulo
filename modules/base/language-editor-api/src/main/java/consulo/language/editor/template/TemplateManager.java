@@ -17,6 +17,7 @@
 package consulo.language.editor.template;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.codeEditor.Editor;
@@ -26,9 +27,9 @@ import consulo.language.editor.template.event.TemplateEditingListener;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.util.lang.function.PairProcessor;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -36,73 +37,75 @@ import java.util.function.BiPredicate;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class TemplateManager {
-  public static TemplateManager getInstance(Project project) {
-    return project.getInstance(TemplateManager.class);
-  }
+    public static TemplateManager getInstance(Project project) {
+        return project.getInstance(TemplateManager.class);
+    }
 
-  public abstract void startTemplate(@Nonnull Editor editor, @Nonnull Template template);
+    public abstract void startTemplate(@Nonnull Editor editor, @Nonnull Template template);
 
-  public abstract void startTemplate(@Nonnull Editor editor, String selectionString, @Nonnull Template template);
+    public abstract void startTemplate(@Nonnull Editor editor, String selectionString, @Nonnull Template template);
 
-  public abstract void startTemplate(@Nonnull Editor editor, @Nonnull Template template, TemplateEditingListener listener);
+    public abstract void startTemplate(@Nonnull Editor editor, @Nonnull Template template, TemplateEditingListener listener);
 
-  public abstract void startTemplate(@Nonnull final Editor editor,
-                                     @Nonnull final Template template,
-                                     boolean inSeparateCommand,
-                                     Map<String, String> predefinedVarValues,
-                                     @Nullable TemplateEditingListener listener);
+    public abstract void startTemplate(@Nonnull final Editor editor,
+                                       @Nonnull final Template template,
+                                       boolean inSeparateCommand,
+                                       Map<String, String> predefinedVarValues,
+                                       @Nullable TemplateEditingListener listener);
 
-  public abstract void startTemplate(@Nonnull Editor editor, @Nonnull Template template, TemplateEditingListener listener, final BiPredicate<String, String> callback);
+    public abstract void startTemplate(@Nonnull Editor editor, @Nonnull Template template, TemplateEditingListener listener, final BiPredicate<String, String> callback);
 
-  public abstract boolean startTemplate(@Nonnull Editor editor, char shortcutChar);
+    public abstract boolean startTemplate(@Nonnull Editor editor, char shortcutChar);
 
-  @Deprecated
-  @DeprecationInfo("use TemplateBuilderFactory")
-  public Template createTemplate(@Nonnull String key, String group) {
-    return TemplateBuilderFactory.getInstance().createRawTemplate(key, group);
-  }
+    @Deprecated
+    @DeprecationInfo("use TemplateBuilderFactory")
+    public Template createTemplate(@Nonnull String key, String group) {
+        return TemplateBuilderFactory.getInstance().createRawTemplate(key, group);
+    }
 
-  @Deprecated
-  @DeprecationInfo("use TemplateBuilderFactory")
-  public Template createTemplate(@Nonnull String key, String group, String text) {
-    return TemplateBuilderFactory.getInstance().createRawTemplate(key, group, text);
-  }
+    @Deprecated
+    @DeprecationInfo("use TemplateBuilderFactory")
+    public Template createTemplate(@Nonnull String key, String group, String text) {
+        return TemplateBuilderFactory.getInstance().createRawTemplate(key, group, text);
+    }
 
-  @Nullable
-  public abstract Template getActiveTemplate(@Nonnull Editor editor);
+    @Nullable
+    public abstract Template getActiveTemplate(@Nonnull Editor editor);
 
-  /**
-   * Finished a live template in the given editor, if it's present
-   *
-   * @return whether a live template was present
-   */
-  public abstract boolean finishTemplate(@Nonnull Editor editor);
+    /**
+     * Finished a live template in the given editor, if it's present
+     *
+     * @return whether a live template was present
+     */
+    public abstract boolean finishTemplate(@Nonnull Editor editor);
 
-  @Nullable
-  public abstract TemplateState getTemplateState(@Nonnull Editor editor);
+    @Nullable
+    public abstract TemplateState getTemplateState(@Nonnull Editor editor);
 
-  public abstract boolean isApplicable(Template template, Set<TemplateContextType> contextTypes);
+    public abstract boolean isApplicable(Template template, Set<TemplateContextType> contextTypes);
 
-  public abstract List<? extends Template> listApplicableTemplates(@Nonnull TemplateActionContext templateActionContext);
+    public abstract List<? extends Template> listApplicableTemplates(@Nonnull TemplateActionContext templateActionContext);
 
-  public abstract List<? extends Template> listApplicableTemplateWithInsertingDummyIdentifier(@Nonnull TemplateActionContext templateActionContext);
+    public abstract List<? extends Template> listApplicableTemplateWithInsertingDummyIdentifier(@Nonnull TemplateActionContext templateActionContext);
 
-  public abstract Set<TemplateContextType> getApplicableContextTypes(@Nonnull TemplateActionContext templateActionContext);
+    @RequiredReadAction
+    @Nonnull
+    public abstract Set<TemplateContextType> getApplicableContextTypes(@Nonnull TemplateActionContext templateActionContext);
 
-  public abstract Map<Template, String> findMatchingTemplates(final PsiFile file, Editor editor, @Nullable Character shortcutChar, TemplateSettings templateSettings);
+    public abstract Map<Template, String> findMatchingTemplates(final PsiFile file, Editor editor, @Nullable Character shortcutChar, TemplateSettings templateSettings);
 
-  @Nullable
-  public abstract Runnable startNonCustomTemplates(final Map<Template, String> template2argument, final Editor editor, @Nullable final PairProcessor<String, String> processor);
+    @Nullable
+    public abstract Runnable startNonCustomTemplates(final Map<Template, String> template2argument, final Editor editor, @Nullable final PairProcessor<String, String> processor);
 
-  public boolean isApplicable(Template template, @Nonnull TemplateActionContext templateActionContext) {
-    return isApplicable(template, getApplicableContextTypes(templateActionContext));
-  }
+    public boolean isApplicable(Template template, @Nonnull TemplateActionContext templateActionContext) {
+        return isApplicable(template, getApplicableContextTypes(templateActionContext));
+    }
 
-  /**
-   * @deprecated use {@link #isApplicable(Template, TemplateActionContext)}
-   */
-  @Deprecated(forRemoval = true)
-  public boolean isApplicable(PsiFile file, int offset, Template template) {
-    return isApplicable(template, TemplateActionContext.expanding(file, offset));
-  }
+    /**
+     * @deprecated use {@link #isApplicable(Template, TemplateActionContext)}
+     */
+    @Deprecated(forRemoval = true)
+    public boolean isApplicable(PsiFile file, int offset, Template template) {
+        return isApplicable(template, TemplateActionContext.expanding(file, offset));
+    }
 }

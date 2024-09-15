@@ -16,21 +16,22 @@
 
 package consulo.ide.impl.idea.codeInsight.template.impl;
 
-import consulo.application.CommonBundle;
-import consulo.language.editor.CodeInsightBundle;
-import consulo.language.editor.template.macro.Macro;
-import consulo.language.editor.template.context.TemplateContextType;
-import consulo.language.editor.template.macro.MacroFactory;
 import consulo.application.ApplicationManager;
-import consulo.language.editor.template.Variable;
-import consulo.undoRedo.CommandProcessor;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
+import consulo.application.CommonBundle;
 import consulo.application.HelpManager;
+import consulo.codeEditor.Editor;
+import consulo.document.Document;
+import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.template.Variable;
+import consulo.language.editor.template.context.BaseTemplateContextType;
+import consulo.language.editor.template.context.TemplateContextType;
+import consulo.language.editor.template.macro.Macro;
+import consulo.language.editor.template.macro.MacroFactory;
 import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.EditableModel;
 import consulo.ui.ex.awt.ToolbarDecorator;
 import consulo.ui.ex.awt.table.JBTable;
-import consulo.ui.ex.awt.EditableModel;
+import consulo.undoRedo.CommandProcessor;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -38,8 +39,8 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableModel;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 class EditVariableDialog extends DialogWrapper {
   private ArrayList<Variable> myVariables = new ArrayList<Variable>();

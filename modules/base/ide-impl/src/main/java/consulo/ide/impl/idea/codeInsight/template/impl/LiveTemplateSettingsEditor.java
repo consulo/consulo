@@ -42,6 +42,7 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.tree.CheckboxTree;
 import consulo.ui.ex.awt.tree.CheckedTreeNode;
@@ -316,10 +317,10 @@ public class LiveTemplateSettingsEditor extends JPanel {
         String oldPrefix = "";
         for (TemplateContextType type : getApplicableContexts()) {
           final TemplateContextType base = type.getBaseContextType();
-          String ownName = UIUtil.removeMnemonic(type.getPresentableName());
+          String ownName = type.getPresentableName().map(Presentation.NO_MNEMONIC).get();
           String prefix = "";
           if (base != null && !(base instanceof EverywhereContextType)) {
-            prefix = UIUtil.removeMnemonic(base.getPresentableName()) + ": ";
+            prefix = base.getPresentableName().map(Presentation.NO_MNEMONIC).get() + ": ";
             ownName = StringUtil.decapitalize(ownName);
           }
           if (type instanceof EverywhereContextType) {
@@ -434,7 +435,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
 
   private void addContextNode(MultiMap<TemplateContextType, TemplateContextType> hierarchy, CheckedTreeNode parent, TemplateContextType type) {
     final Collection<TemplateContextType> children = hierarchy.get(type);
-    final String name = UIUtil.removeMnemonic(type.getPresentableName());
+    final String name = type.getPresentableName().map(Presentation.NO_MNEMONIC).get();
     final CheckedTreeNode node = new CheckedTreeNode(Pair.create(children.isEmpty() ? type : null, name));
     parent.add(node);
 

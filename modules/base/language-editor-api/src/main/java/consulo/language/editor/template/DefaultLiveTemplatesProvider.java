@@ -16,6 +16,7 @@
 
 package consulo.language.editor.template;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 
@@ -25,6 +26,8 @@ import jakarta.annotation.Nullable;
 /**
  * @author yole
  */
+@Deprecated
+@DeprecationInfo("See LiveTemplateContributor")
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface DefaultLiveTemplatesProvider {
   @Nonnull
