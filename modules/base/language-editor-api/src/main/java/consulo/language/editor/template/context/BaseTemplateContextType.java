@@ -19,16 +19,16 @@ public abstract class BaseTemplateContextType implements TemplateContextType {
   private final String myContextId;
   @Nonnull
   private final LocalizeValue myPresentableName;
-  private final ClearableLazyValue<? extends BaseTemplateContextType> myBaseContextType;
+  private final ClearableLazyValue<? extends TemplateContextType> myBaseContextType;
 
   protected BaseTemplateContextType(@Nonnull String id, @Nonnull LocalizeValue presentableName) {
     this(id, presentableName, EverywhereContextType.class);
   }
 
-  protected BaseTemplateContextType(@Nonnull String id, @Nonnull LocalizeValue presentableName, @Nullable Class<? extends BaseTemplateContextType> baseContextType) {
+  protected BaseTemplateContextType(@Nonnull String id, @Nonnull LocalizeValue presentableName, @Nullable Class<? extends TemplateContextType> baseContextType) {
     myContextId = id;
     myPresentableName = presentableName;
-    myBaseContextType = ClearableLazyValue.nullable((Supplier<? extends BaseTemplateContextType>)() -> baseContextType == null ? null : EP_NAME.findExtensionOrFail(baseContextType));
+    myBaseContextType = ClearableLazyValue.nullable((Supplier<? extends TemplateContextType>)() -> baseContextType == null ? null : EP_NAME.findExtensionOrFail(baseContextType));
   }
 
   /**
@@ -77,7 +77,7 @@ public abstract class BaseTemplateContextType implements TemplateContextType {
    */
   @Override
   @Nullable
-  public BaseTemplateContextType getBaseContextType() {
+  public TemplateContextType getBaseContextType() {
     return myBaseContextType.get();
   }
 
