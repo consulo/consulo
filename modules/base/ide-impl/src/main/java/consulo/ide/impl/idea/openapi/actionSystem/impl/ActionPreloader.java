@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.openapi.actionSystem.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.progress.ProgressIndicator;
 import consulo.application.internal.PreloadingActivity;
+import consulo.application.progress.ProgressIndicator;
 import consulo.execution.executor.ExecutorRegistry;
 import consulo.execution.internal.ExecutorRegistryEx;
 import consulo.ui.ex.action.ActionManager;
@@ -42,11 +42,13 @@ public class ActionPreloader extends PreloadingActivity {
     public void preload(@Nonnull ProgressIndicator indicator) {
         ActionManagerImpl actionManager = (ActionManagerImpl) myActionManager;
 
-        actionManager.loadActions();
+        actionManager.underLock(() -> {
+            actionManager.loadActions();
 
-        // need it due its register actions
-        ((ExecutorRegistryEx) myExecutorRegistry).initExecuteActions();
+            // need it due its register actions
+            ((ExecutorRegistryEx) myExecutorRegistry).initExecuteActions();
 
-        actionManager.preloadActions(indicator);
+            actionManager.preloadActions(indicator);
+        });
     }
 }

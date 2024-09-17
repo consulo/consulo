@@ -160,6 +160,12 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         myKeymapManager = (KeymapManagerEx) keymapManager;
     }
 
+    public void underLock(Runnable runnable) {
+        synchronized (myLock) {
+            runnable.run();
+        }
+    }
+
     public void loadActions() {
         List<InjectingBindingActionStubBase> bindings = new ArrayList<>();
         List<Map.Entry<String, ActionRef>> shortcutRegisters = new ArrayList<>();
@@ -1377,11 +1383,12 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         }
     }
 
+    /**
+     * lock required !
+     */
     public void preloadActions(@Nonnull ProgressIndicator indicator) {
-        List<String> ids;
-        synchronized (myLock) {
-            ids = new ArrayList<>(myId2Action.keySet());
-        }
+        List<String> ids = new ArrayList<>(myId2Action.keySet());
+        
         for (String id : ids) {
             indicator.checkCanceled();
 
