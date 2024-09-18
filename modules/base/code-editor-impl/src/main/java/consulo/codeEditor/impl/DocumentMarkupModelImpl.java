@@ -98,6 +98,10 @@ public class DocumentMarkupModelImpl {
             }
         }
 
+        if (model == null) {
+            return new EmptyMarkupModel(document);
+        }
+
         return model;
     }
 
