@@ -163,19 +163,6 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
                 }
             }
         });
-
-        if (UIUtil.hasLeakingAppleListeners()) {
-            UIUtil.addAwtListener(new AWTEventListener() {
-                @Override
-                public void eventDispatched(AWTEvent event) {
-                    if (event.getID() == ContainerEvent.COMPONENT_ADDED) {
-                        if (((ContainerEvent) event).getChild() instanceof JViewport) {
-                            UIUtil.removeLeakingAppleListeners();
-                        }
-                    }
-                }
-            }, AWTEvent.CONTAINER_EVENT_MASK, application);
-        }
     }
 
     @Override
