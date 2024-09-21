@@ -577,7 +577,7 @@ public class RecentProjectPanel {
         final long startTime = System.currentTimeMillis();
         boolean pathIsValid;
         try {
-          pathIsValid = !RecentProjectsManagerBase.isFileSystemPath(path) || isPathAvailable(path);
+          pathIsValid = !RecentProjectsManagerImpl.isFileSystemPath(path) || isPathAvailable(path);
         }
         catch (Exception e) {
           pathIsValid = false;

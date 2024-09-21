@@ -22,7 +22,6 @@ import consulo.desktop.awt.ui.impl.window.JFrameAsUIWindow;
 import consulo.desktop.awt.ui.util.AppIconUtil;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
-import consulo.ide.impl.idea.ui.FrameState;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ui.internal.IdeFrameEx;
@@ -72,7 +71,6 @@ public class FrameWrapperPeerFactoryImpl implements FrameWrapperPeerFactory {
       toUIWindow().putUserData(IdeFrame.KEY, this);
       toUIWindow().addUserDataProvider(this::getData);
 
-      FrameState.setFrameStateListener(this);
       setGlassPane(new IdeGlassPaneImpl(getRootPane(), true));
 
       boolean setMenuOnFrame = Platform.current().os().isMac();

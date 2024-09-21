@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.ide.RecentProjectsManagerBase;
+import consulo.ide.impl.idea.ide.RecentProjectsManagerImpl;
 import consulo.platform.Platform;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.*;
@@ -36,11 +36,11 @@ public class RecentProjectsGroup extends ActionGroup implements DumbAware {
 
   @Nonnull
   public AnAction[] getChildren(@Nullable AnActionEvent e) {
-    return RecentProjectsManagerBase.getInstance().getRecentProjectsActions(true);
+    return RecentProjectsManagerImpl.getInstance().getRecentProjectsActions(true);
   }
 
   public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
-    presentation.setEnabled(RecentProjectsManagerBase.getInstance().getRecentProjectsActions(true).length > 0);
+    presentation.setEnabled(RecentProjectsManagerImpl.getInstance().getRecentProjectsActions(true).length > 0);
   }
 }

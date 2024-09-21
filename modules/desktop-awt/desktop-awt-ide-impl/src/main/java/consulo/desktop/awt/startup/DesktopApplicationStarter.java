@@ -15,8 +15,6 @@
  */
 package consulo.desktop.awt.startup;
 
-import com.formdev.flatlaf.ui.FlatNativeLinuxLibrary;
-import com.formdev.flatlaf.ui.FlatNativeMacLibrary;
 import com.formdev.flatlaf.ui.FlatNativeWindowsLibrary;
 import com.google.gson.Gson;
 import consulo.application.Application;
@@ -50,7 +48,7 @@ import consulo.desktop.awt.wm.impl.TopMenuInitializer;
 import consulo.externalService.statistic.UsageTrigger;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.CommandLineProcessor;
-import consulo.ide.impl.idea.ide.RecentProjectsManagerBase;
+import consulo.ide.impl.idea.ide.RecentProjectsManagerImpl;
 import consulo.ide.impl.idea.ide.plugins.PluginManagerMain;
 import consulo.ide.impl.idea.ide.ui.LafManager;
 import consulo.ide.impl.idea.openapi.wm.impl.SystemDock;
@@ -202,7 +200,7 @@ public class DesktopApplicationStarter extends ApplicationStarter {
             DesktopWindowManagerImpl windowManager = (DesktopWindowManagerImpl) WindowManager.getInstance();
             IdeEventQueue.getInstance().setWindowManager(windowManager);
 
-            RecentProjectsManagerBase recentProjectsManager = (RecentProjectsManagerBase) RecentProjectsManager.getInstance();
+            RecentProjectsManagerImpl recentProjectsManager = (RecentProjectsManagerImpl) RecentProjectsManager.getInstance();
 
             if (recentProjectsManager.willReopenProjectOnStart() && !args.isNoRecentProjects()) {
                 SwingUtilities.invokeLater(windowManager::showFrame);

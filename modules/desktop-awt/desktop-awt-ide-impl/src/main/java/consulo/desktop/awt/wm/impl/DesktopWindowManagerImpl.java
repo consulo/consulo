@@ -237,7 +237,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
         if (myAlphaModeSupported == null) {
             myAlphaModeSupported = calcAlphaModelSupported();
         }
-        return myAlphaModeSupported.booleanValue();
+        return myAlphaModeSupported;
     }
 
     private static boolean calcAlphaModelSupported() {
@@ -803,7 +803,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
 
     private int updateFrameBounds(JFrame frame, IdeFrameEx ideFrame) {
         int extendedState = frame.getExtendedState();
-        if (SystemInfo.isMacOSLion) {
+        if (Platform.current().os().isMac()) {
             extendedState = AWTAccessorHacking.getExtendedStateFromPeer(frame);
         }
         boolean isMaximized = extendedState == Frame.MAXIMIZED_BOTH || isFullScreenSupportedInCurrentOS() && ideFrame.isInFullScreen();
@@ -830,7 +830,9 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
 
     @Override
     public boolean isFullScreenSupportedInCurrentOS() {
-        return SystemInfo.isMacOSLion || Platform.current().os().isWindows() || Platform.current().os().isXWindow() && X11UiUtil.isFullScreenSupported();
+        return Platform.current().os().isMac()
+            || Platform.current().os().isWindows()
+            || Platform.current().os().isXWindow() && X11UiUtil.isFullScreenSupported();
     }
 
     @Override
