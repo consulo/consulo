@@ -75,19 +75,6 @@ public class FrameWrapperPeerFactoryImpl implements FrameWrapperPeerFactory {
 
       boolean setMenuOnFrame = Platform.current().os().isMac();
 
-      if (Platform.current().os().isLinux()) {
-        final String desktop = System.getenv("XDG_CURRENT_DESKTOP");
-        if ("Unity".equals(desktop) || "Unity:Unity7".equals(desktop)) {
-          try {
-            Class.forName("com.jarego.jayatana.Agent");
-            setMenuOnFrame = true;
-          }
-          catch (ClassNotFoundException e) {
-            // ignore
-          }
-        }
-      }
-
       if (setMenuOnFrame) {
         setJMenuBar(new IdeMenuBar(ActionManagerEx.getInstanceEx(), DataManager.getInstance()));
       }
