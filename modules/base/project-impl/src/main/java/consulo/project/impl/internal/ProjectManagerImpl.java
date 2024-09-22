@@ -78,7 +78,7 @@ import java.util.function.Predicate;
 
 @Singleton
 @ServiceImpl
-public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, ProjectManagerImplMarker {
+public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
     private static final Logger LOG = Logger.getInstance(ProjectManagerImpl.class);
 
     private static final Key<List<ProjectManagerListener>> LISTENERS_IN_PROJECT_KEY = Key.create("LISTENERS_IN_PROJECT_KEY");

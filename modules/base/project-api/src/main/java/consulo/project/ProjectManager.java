@@ -34,7 +34,7 @@ import jakarta.annotation.Nullable;
  * Provides project management.
  */
 @ServiceAPI(ComponentScope.APPLICATION)
-public abstract class ProjectManager {
+public interface ProjectManager {
 
   /**
    * Gets <code>ProjectManager</code> instance.
@@ -47,20 +47,20 @@ public abstract class ProjectManager {
   }
 
   @Nonnull
-  public abstract AsyncResult<Project> openProjectAsync(@Nonnull VirtualFile file, @Nonnull UIAccess uiAccess);
+  AsyncResult<Project> openProjectAsync(@Nonnull VirtualFile file, @Nonnull UIAccess uiAccess);
 
   @Nonnull
-  public abstract AsyncResult<Project> openProjectAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess);
+  AsyncResult<Project> openProjectAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess);
 
   @Nonnull
-  public AsyncResult<Void> closeAndDisposeAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+  default AsyncResult<Void> closeAndDisposeAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
     return closeAndDisposeAsync(project, uiAccess, true, true, true);
   }
 
-  public abstract boolean isProjectOpened(Project project);
+  boolean isProjectOpened(Project project);
 
   @Nonnull
-  public abstract AsyncResult<Void> closeAndDisposeAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess, boolean checkCanClose, boolean save, boolean dispose);
+  AsyncResult<Void> closeAndDisposeAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess, boolean checkCanClose, boolean save, boolean dispose);
 
   /**
    * Adds listener to the specified project.
@@ -68,7 +68,7 @@ public abstract class ProjectManager {
    * @param project  project to add listener to
    * @param listener listener to add
    */
-  public abstract void addProjectManagerListener(@Nonnull Project project, @Nonnull ProjectManagerListener listener);
+  void addProjectManagerListener(@Nonnull Project project, @Nonnull ProjectManagerListener listener);
 
   /**
    * Removes listener from the specified project.
@@ -76,7 +76,7 @@ public abstract class ProjectManager {
    * @param project  project to remove listener from
    * @param listener listener to remove
    */
-  public abstract void removeProjectManagerListener(@Nonnull Project project, @Nonnull ProjectManagerListener listener);
+  void removeProjectManagerListener(@Nonnull Project project, @Nonnull ProjectManagerListener listener);
 
   /**
    * Returns the list of currently opened projects.
@@ -84,7 +84,7 @@ public abstract class ProjectManager {
    * @return the array of currently opened projects.
    */
   @Nonnull
-  public abstract Project[] getOpenProjects();
+  Project[] getOpenProjects();
 
   /**
    * Returns the project which is used as a template for new projects. The template project
@@ -94,7 +94,7 @@ public abstract class ProjectManager {
    * @return the template project instance.
    */
   @Nonnull
-  public Project getDefaultProject() {
+  default Project getDefaultProject() {
     return DefaultProjectFactory.getInstance().getDefaultProject();
   }
 
@@ -105,14 +105,14 @@ public abstract class ProjectManager {
    * @return true if the project was closed successfully, false if the closing was disallowed by the close listeners.
    */
   @RequiredUIAccess
-  public abstract boolean closeProject(@Nonnull Project project);
+  boolean closeProject(@Nonnull Project project);
 
   /**
    * Asynchronously reloads the specified project.
    *
    * @param project the project to reload.
    */
-  public abstract void reloadProject(@Nonnull Project project, @Nonnull UIAccess uiAccess);
+  void reloadProject(@Nonnull Project project, @Nonnull UIAccess uiAccess);
 
   /**
    * Create new project in given location.
@@ -123,7 +123,7 @@ public abstract class ProjectManager {
    * @return newly crated project
    */
   @Nullable
-  public abstract Project createProject(String name, String path);
+  Project createProject(String name, String path);
 
   // region deprecated code
   /**
@@ -133,11 +133,11 @@ public abstract class ProjectManager {
    */
   @Deprecated
   @DeprecationInfo("Use ProjectManager#TOPIC")
-  public abstract void addProjectManagerListener(@Nonnull ProjectManagerListener listener);
+  void addProjectManagerListener(@Nonnull ProjectManagerListener listener);
 
   @Deprecated
   @DeprecationInfo("Use ProjectManager#TOPIC")
-  public abstract void addProjectManagerListener(@Nonnull ProjectManagerListener listener, @Nonnull Disposable parentDisposable);
+  void addProjectManagerListener(@Nonnull ProjectManagerListener listener, @Nonnull Disposable parentDisposable);
 
   /**
    * Removes global listener from all projects.
@@ -146,7 +146,7 @@ public abstract class ProjectManager {
    */
   @Deprecated
   @DeprecationInfo("Use ProjectManager#TOPIC")
-  public abstract void removeProjectManagerListener(@Nonnull ProjectManagerListener listener);
+  void removeProjectManagerListener(@Nonnull ProjectManagerListener listener);
   
   //endregion
 }

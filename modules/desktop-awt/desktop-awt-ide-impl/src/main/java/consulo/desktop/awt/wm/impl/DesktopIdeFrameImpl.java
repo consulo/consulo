@@ -18,7 +18,9 @@ package consulo.desktop.awt.wm.impl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.progress.Task;
 import consulo.application.util.SystemInfo;
+import consulo.awt.hacking.AWTAccessorHacking;
 import consulo.dataContext.DataManager;
 import consulo.desktop.awt.ui.impl.window.JFrameAsUIWindow;
 import consulo.desktop.awt.ui.util.AppIconUtil;
@@ -39,6 +41,7 @@ import consulo.project.internal.ProjectManagerEx;
 import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.wm.*;
 import consulo.ui.Rectangle2D;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.ActionManager;
@@ -371,21 +374,34 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
         myJFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         myJFrame.addWindowListener(new WindowAdapter() {
             @Override
+            @RequiredUIAccess
             public void windowClosing(@Nonnull final WindowEvent e) {
                 if (isTemporaryDisposed()) {
                     return;
                 }
 
-                final Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
+                ProjectManagerEx projectManager = (ProjectManagerEx) ProjectManager.getInstance();
+
+                final Project[] openProjects = projectManager.getOpenProjects();
                 if (openProjects.length > 1 || openProjects.length == 1 && TopApplicationMenuUtil.isMacSystemMenu) {
                     if (myProject != null && myProject.isOpen()) {
-                        ProjectManagerEx.getInstanceEx().closeAndDispose(myProject);
+                        projectManager.closeAndDispose(myProject);
                     }
-                    ApplicationManager.getApplication().getMessageBus().syncPublisher(AppLifecycleListener.class).projectFrameClosed();
-                    WelcomeFrame.showIfNoProjectOpened();
+
+                    Application.get().getMessageBus().syncPublisher(AppLifecycleListener.class).projectFrameClosed();
+
+                    WelcomeFrameManager.getInstance().showIfNoProjectOpened();
                 }
                 else {
-                    Application.get().exit();
+                    UIAccess uiAccess = UIAccess.current();
+
+                    Task.Modal.queue(myProject, "Closing Project...", false, indicator -> {
+                        for (Project project : openProjects) {
+                            projectManager.closeAndDisposeAsync(project, uiAccess).getResultSync();
+                        }
+                    }, () -> {
+                        Application.get().exit();
+                    });
                 }
             }
         });
@@ -548,6 +564,25 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
         return WindowManager.getInstance().isFullScreenSupportedInCurrentOS() &&
             project != null &&
             (SHOULD_OPEN_IN_FULL_SCREEN.get(project) == Boolean.TRUE || PropertiesComponent.getInstance(project).getBoolean(FULL_SCREEN));
+    }
+
+    @Nonnull
+    @Override
+    public IdeFrameState getFrameState() {
+        Window window = TargetAWT.to(getWindow());
+        if (!(window instanceof Frame frame)) {
+            return IdeFrameState.EMPTY;
+        }
+
+        int extendedState = frame.getExtendedState();
+        if (Platform.current().os().isMac()) {
+            extendedState = AWTAccessorHacking.getExtendedStateFromPeer(frame);
+        }
+
+        boolean isMaximized = extendedState == Frame.MAXIMIZED_BOTH;
+        boolean isFullScreen = isInFullScreen();
+        Rectangle bounds = frame.getBounds();
+        return new IdeFrameState(bounds.x, bounds.y, bounds.width, bounds.height, isMaximized, isFullScreen);
     }
 
     @Override

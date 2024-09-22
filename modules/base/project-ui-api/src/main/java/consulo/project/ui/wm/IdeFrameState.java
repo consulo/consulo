@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2023 consulo.io
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.project.impl.internal;
+package consulo.project.ui.wm;
 
 /**
- * TODO [VISTALL] remove after migration ProjectManagerImpl to this module
- *
  * @author VISTALL
- * @since 11/09/2023
+ * @since 2024-09-22
  */
-public interface ProjectManagerImplMarker {
+public record IdeFrameState(int x, int y, int width, int height, boolean maximized, boolean fullScreen) {
+    public static final IdeFrameState EMPTY = new IdeFrameState(0, 0, 0, 0, false, false);
 }

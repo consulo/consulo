@@ -27,7 +27,6 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.StoreReloadManager;
-import consulo.project.impl.internal.ProjectManagerImplMarker;
 import consulo.ui.Alerts;
 import consulo.util.collection.Sets;
 import consulo.virtualFileSystem.VirtualFile;
@@ -98,7 +97,7 @@ public class StoreReloadManagerImpl implements StoreReloadManager, Disposable {
   public void projectStorageFileChanged(@Nonnull VirtualFileEvent event, @Nonnull StateStorage storage, @Nonnull Project project) {
     VirtualFile file = event.getFile();
     
-    if (!StorageUtil.isChangedByStorageOrSaveSession(event) && !(event.getRequestor() instanceof ProjectManagerImplMarker)) {
+    if (!StorageUtil.isChangedByStorageOrSaveSession(event) && !(event.getRequestor() instanceof ProjectManager)) {
       registerProjectToReload(file, storage);
     }
   }

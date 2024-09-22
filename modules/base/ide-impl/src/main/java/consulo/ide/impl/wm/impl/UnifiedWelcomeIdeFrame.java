@@ -16,15 +16,16 @@
 package consulo.ide.impl.wm.impl;
 
 import consulo.project.Project;
-import consulo.project.ui.wm.IdeRootPaneNorthExtension;
-import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.wm.BalloonLayout;
-import consulo.ui.Window;
+import consulo.project.ui.wm.IdeFrameState;
+import consulo.project.ui.wm.IdeRootPaneNorthExtension;
+import consulo.project.ui.wm.StatusBar;
 import consulo.ui.Rectangle2D;
-
+import consulo.ui.Window;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 
 /**
@@ -32,55 +33,55 @@ import java.io.File;
  * @since 2018-12-29
  */
 public class UnifiedWelcomeIdeFrame implements IdeFrameEx {
-  private final Window myWindow;
-  private final Project myProject;
+    private final Window myWindow;
+    private final Project myProject;
 
-  public UnifiedWelcomeIdeFrame(Window window, Project project) {
-    myWindow = window;
-    myProject = project;
-  }
+    public UnifiedWelcomeIdeFrame(Window window, Project project) {
+        myWindow = window;
+        myProject = project;
+    }
 
-  @Nonnull
-  @Override
-  public Window getWindow() {
-    return myWindow;
-  }
+    @Nonnull
+    @Override
+    public Window getWindow() {
+        return myWindow;
+    }
 
-  @Override
-  public StatusBar getStatusBar() {
-    return null;
-  }
+    @Override
+    public StatusBar getStatusBar() {
+        return null;
+    }
 
-  @Nullable
-  @Override
-  public Rectangle2D suggestChildFrameBounds() {
-    return null;
-  }
+    @Nullable
+    @Override
+    public Rectangle2D suggestChildFrameBounds() {
+        return null;
+    }
 
-  @Nullable
-  @Override
-  public Project getProject() {
-    return myProject;
-  }
+    @Nullable
+    @Override
+    public Project getProject() {
+        return myProject;
+    }
 
-  @Override
-  public void setFrameTitle(String title) {
-    myWindow.setTitle(title);
-  }
+    @Override
+    public void setFrameTitle(String title) {
+        myWindow.setTitle(title);
+    }
 
-  @Override
-  public void setFileTitle(String fileTitle, File ioFile) {
-    myWindow.setTitle(fileTitle);
-  }
+    @Override
+    public void setFileTitle(String fileTitle, File ioFile) {
+        myWindow.setTitle(fileTitle);
+    }
 
-  @Override
-  public IdeRootPaneNorthExtension getNorthExtension(String key) {
-    return null;
-  }
+    @Override
+    public IdeRootPaneNorthExtension getNorthExtension(String key) {
+        return null;
+    }
 
-  @Nullable
-  @Override
-  public BalloonLayout getBalloonLayout() {
-    return null;
-  }
+    @Nullable
+    @Override
+    public BalloonLayout getBalloonLayout() {
+        return null;
+    }
 }

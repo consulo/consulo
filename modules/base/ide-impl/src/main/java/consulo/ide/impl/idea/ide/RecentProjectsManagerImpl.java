@@ -41,6 +41,9 @@ import consulo.project.event.ProjectManagerListener;
 import consulo.project.impl.internal.ProjectImplUtil;
 import consulo.project.impl.internal.store.ProjectStoreImpl;
 import consulo.project.internal.RecentProjectsManager;
+import consulo.project.ui.wm.IdeFrame;
+import consulo.project.ui.wm.IdeFrameState;
+import consulo.project.ui.wm.WindowManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -77,7 +80,9 @@ public class RecentProjectsManagerImpl extends RecentProjectsManager implements 
         public Map<String, String> names = new LinkedHashMap<>();
         public List<ProjectGroup> groups = new SmartList<>();
         public String lastPath;
+
         public Map<String, RecentProjectMetaInfo> additionalInfo = new LinkedHashMap<>();
+        public Map<String, IdeFrameState> frameStates = new LinkedHashMap<>();
 
         public String lastProjectLocation;
 
@@ -424,7 +429,17 @@ public class RecentProjectsManagerImpl extends RecentProjectsManager implements 
         @Override
         public void projectClosing(@Nonnull Project project) {
             synchronized (myStateLock) {
-                myState.names.put(getProjectPath(project), getProjectDisplayName(project));
+                String projectPath = getProjectPath(project);
+
+                myState.names.put(projectPath, getProjectDisplayName(project));
+
+                IdeFrame frame = WindowManager.getInstance().getIdeFrame(project);
+                if (frame != null) {
+                    IdeFrameState frameState = frame.getFrameState();
+                    if (!IdeFrameState.EMPTY.equals(frameState)) {
+                        myState.frameStates.put(projectPath, frameState);
+                    }
+                }
             }
         }
 

@@ -432,7 +432,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   @RequiredUIAccess
   @Override
   public void dispose() {
-    Application.get().assertIsDispatchThread();
+    assertIsDispatchThread();
 
     fireApplicationExiting();
 

@@ -19,36 +19,42 @@ import consulo.application.ui.wm.FocusableFrame;
 import consulo.project.Project;
 import consulo.ui.Rectangle2D;
 import consulo.util.dataholder.Key;
-
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 
 public interface IdeFrame extends FocusableFrame {
-  interface Child extends IdeFrame {
-    IdeFrame getParentFrame();
-  }
+    interface Child extends IdeFrame {
+        IdeFrame getParentFrame();
+    }
 
-  Key<IdeFrame> KEY = Key.create("IdeFrame");
+    @Nonnull
+    default IdeFrameState getFrameState() {
+        return IdeFrameState.EMPTY;
+    }
 
-  @Nullable
-  StatusBar getStatusBar();
+    Key<IdeFrame> KEY = Key.create("IdeFrame");
 
-  @Nullable
-  Rectangle2D suggestChildFrameBounds();
+    @Nullable
+    StatusBar getStatusBar();
 
-  @Nullable
-  Project getProject();
+    @Nullable
+    Rectangle2D suggestChildFrameBounds();
 
-  void setFrameTitle(String title);
+    @Nullable
+    Project getProject();
 
-  void setFileTitle(String fileTitle, File ioFile);
+    void setFrameTitle(String title);
 
-  IdeRootPaneNorthExtension getNorthExtension(String key);
+    void setFileTitle(String fileTitle, File ioFile);
 
-  @Nullable
-  BalloonLayout getBalloonLayout();
+    IdeRootPaneNorthExtension getNorthExtension(String key);
 
-  default boolean isInFullScreen() {
-    return false;
-  }
+    @Nullable
+    BalloonLayout getBalloonLayout();
+
+    default boolean isInFullScreen() {
+        return false;
+    }
 }

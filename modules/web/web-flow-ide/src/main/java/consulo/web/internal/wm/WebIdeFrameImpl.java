@@ -23,7 +23,6 @@ import consulo.project.Project;
 import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.wm.*;
 import consulo.ui.Rectangle2D;
-import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.web.application.WebApplication;
