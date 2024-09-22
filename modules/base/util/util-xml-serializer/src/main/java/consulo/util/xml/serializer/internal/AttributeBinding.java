@@ -13,14 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.util.xml.serializer;
+package consulo.util.xml.serializer.internal;
 
-import consulo.util.xml.serializer.BasePrimitiveBinding;
-import consulo.util.xml.serializer.MutableAccessor;
 import consulo.util.xml.serializer.SerializationFilter;
 import consulo.util.xml.serializer.annotation.Attribute;
-import consulo.util.xml.serializer.XmlSerializerImpl;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

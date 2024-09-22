@@ -30,7 +30,7 @@ import java.lang.annotation.Target;
  * @author nik
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD, ElementType.METHOD})
+@Target({ElementType.FIELD, ElementType.METHOD, ElementType.RECORD_COMPONENT})
 public @interface OptionTag {
   String value() default "";
 

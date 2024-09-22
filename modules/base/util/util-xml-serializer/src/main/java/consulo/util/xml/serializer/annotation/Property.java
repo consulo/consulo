@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
  * @author mike
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD, ElementType.TYPE, ElementType.METHOD})
+@Target({ElementType.FIELD, ElementType.TYPE, ElementType.METHOD, ElementType.RECORD_COMPONENT})
 public @interface Property {
   boolean surroundWithTag() default true;
 

@@ -15,6 +15,9 @@
  */
 package consulo.util.xml.serializer;
 
+import consulo.util.xml.serializer.internal.BeanBinding;
+import consulo.util.xml.serializer.internal.InternalReflectionUtil;
+import consulo.util.xml.serializer.internal.MutableAccessor;
 import jakarta.annotation.Nonnull;
 import java.util.List;
 

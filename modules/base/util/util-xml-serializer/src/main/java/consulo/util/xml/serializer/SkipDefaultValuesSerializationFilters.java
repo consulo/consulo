@@ -16,17 +16,17 @@
 package consulo.util.xml.serializer;
 
 import consulo.util.jdom.JDOMUtil;
-import consulo.util.lang.reflect.ReflectionUtil;
-import org.jdom.Element;
-
+import consulo.util.xml.serializer.internal.DefaultValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jdom.Element;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 public class SkipDefaultValuesSerializationFilters extends SerializationFilterBase {
-  private final Map<Class<?>, Object> myDefaultBeans = new HashMap<Class<?>, Object>();
+  private final Map<Class<?>, Object> myDefaultBeans = new HashMap<>();
 
   @Override
   protected boolean accepts(@Nonnull Accessor accessor, @Nonnull Object bean, @Nullable Object beanValue) {
@@ -44,7 +44,7 @@ public class SkipDefaultValuesSerializationFilters extends SerializationFilterBa
     Class<?> c = bean.getClass();
     Object o = myDefaultBeans.get(c);
     if (o == null) {
-      o = InternalReflectionUtil.newInstance(c);
+      o = DefaultValue.createDefaultInstance(c);
       configure(o);
 
       myDefaultBeans.put(c, o);

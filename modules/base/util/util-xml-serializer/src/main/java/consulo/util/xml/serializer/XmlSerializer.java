@@ -17,12 +17,15 @@
 package consulo.util.xml.serializer;
 
 import consulo.util.jdom.JDOMUtil;
+import consulo.util.xml.serializer.internal.BeanBinding;
+import consulo.util.xml.serializer.internal.Binding;
+import consulo.util.xml.serializer.internal.XmlSerializerImpl;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.net.URL;
@@ -101,7 +104,7 @@ public class XmlSerializer {
 
   public static void deserializeInto(@Nonnull Object bean, @Nonnull Element element, @Nullable Set<String> accessorNameTracker) {
     try {
-      ((BeanBinding)XmlSerializerImpl.getBinding(bean.getClass())).deserializeInto(bean, element, accessorNameTracker);
+      ((BeanBinding)XmlSerializerImpl.getBinding(bean.getClass())).deserializeIntoObject(bean, element, accessorNameTracker);
     }
     catch (XmlSerializationException e) {
       throw e;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.util.xml.serializer;
+package consulo.util.xml.serializer.internal;
 
 import jakarta.annotation.Nonnull;
 import java.lang.reflect.Constructor;
@@ -25,7 +25,7 @@ import java.lang.reflect.InvocationTargetException;
  *
  * Since reflection after java 9 can check by stack, we dont need export to util.lang
  */
-class InternalReflectionUtil {
+public class InternalReflectionUtil {
   @Nonnull
   public static <T> T newInstance(@Nonnull Class<? extends T> clazz) {
     try {

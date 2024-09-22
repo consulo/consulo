@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.util.xml.serializer;
+package consulo.util.xml.serializer.internal;
 
 import consulo.util.jdom.JDOMUtil;
+import consulo.util.xml.serializer.SerializationFilter;
 import consulo.util.xml.serializer.annotation.Tag;
 import org.jdom.Element;
 import org.jdom.Text;
@@ -96,7 +97,7 @@ class TagBinding extends BasePrimitiveBinding implements MultiNodeBinding {
   private void deserialize(Object o, @Nonnull List<Element> children) {
     assert myBinding != null;
     if (myBinding instanceof BeanBinding && myAccessor.isFinal()) {
-      ((BeanBinding)myBinding).deserializeInto(o, children.get(0), null);
+      ((BeanBinding)myBinding).deserializeIntoObject(o, children.get(0), null);
     }
     else {
       myAccessor.set(o, Binding.deserializeList(myBinding, myAccessor.read(o), children));

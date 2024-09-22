@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.util.xml.serializer;
+package consulo.util.xml.serializer.internal;
 
+import consulo.util.xml.serializer.*;
 import org.jdom.Element;
 
 import jakarta.annotation.Nonnull;
@@ -45,7 +46,7 @@ class AccessorBindingWrapper extends Binding implements MultiNodeBinding {
   public Object deserialize(Object context, @Nonnull Element element) {
     Object currentValue = myAccessor.read(context);
     if (myBinding instanceof BeanBinding && myAccessor.isFinal()) {
-      ((BeanBinding)myBinding).deserializeInto(currentValue, element, null);
+      ((BeanBinding)myBinding).deserializeIntoObject(currentValue, element, null);
     }
     else {
       Object deserializedValue = myBinding.deserialize(currentValue, element);
@@ -61,7 +62,7 @@ class AccessorBindingWrapper extends Binding implements MultiNodeBinding {
   public Object deserializeList(Object context, @Nonnull List<Element> elements) {
     Object currentValue = myAccessor.read(context);
     if (myBinding instanceof BeanBinding && myAccessor.isFinal()) {
-      ((BeanBinding)myBinding).deserializeInto(currentValue, elements.get(0), null);
+      ((BeanBinding)myBinding).deserializeIntoObject(currentValue, elements.get(0), null);
     }
     else {
       Object deserializedValue = Binding.deserializeList(myBinding, currentValue, elements);

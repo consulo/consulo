@@ -13,8 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.util.xml.serializer;
+package consulo.util.xml.serializer.internal;
 
+import consulo.util.xml.serializer.internal.AbstractCollectionBinding;
+import consulo.util.xml.serializer.internal.MutableAccessor;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.lang.reflect.Array;

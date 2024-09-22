@@ -16,6 +16,8 @@
 package consulo.util.xml.serializer;
 
 import consulo.util.lang.ThreeState;
+import consulo.util.xml.serializer.internal.BeanBinding;
+import consulo.util.xml.serializer.internal.XmlSerializerImpl;
 import org.jdom.Element;
 
 import jakarta.annotation.Nonnull;
@@ -64,7 +66,7 @@ public final class SmartSerializer {
     }
 
     BeanBinding beanBinding = getBinding(bean);
-    beanBinding.deserializeInto(bean, element, mySerializedAccessorNameTracker);
+    beanBinding.deserializeIntoObject(bean, element, mySerializedAccessorNameTracker);
 
     if (mySerializedAccessorNameTracker != null) {
       myOrderedBindings = beanBinding.computeBindingWeights(mySerializedAccessorNameTracker);

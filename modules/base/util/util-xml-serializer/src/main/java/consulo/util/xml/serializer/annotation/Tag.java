@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
  * @author mike
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD, ElementType.TYPE, ElementType.METHOD})
+@Target({ElementType.FIELD, ElementType.TYPE, ElementType.METHOD, ElementType.RECORD_COMPONENT})
 public @interface Tag {
   String value() default "";
   String textIfEmpty() default "";

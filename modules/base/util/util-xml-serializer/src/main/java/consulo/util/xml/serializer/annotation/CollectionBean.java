@@ -21,7 +21,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD, ElementType.METHOD})
+@Target({ElementType.FIELD, ElementType.METHOD, ElementType.RECORD_COMPONENT})
 /**
  * Can read serialized JDOMExternalizableStringList, but in any case will be written in this bean format.
  * It is useful for application-level config, but for project-level consider to use ConverterProvider.

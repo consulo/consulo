@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2020 consulo.io
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.util.xml.serializer;
+package consulo.util.xml.serializer.internal;
 
-/**
- * @author VISTALL
- * @since 2020-10-23
- * <p>
- * TODO [VISTALL] remove that hack
- */
-class AWTHacks {
-  public static boolean isRectangle(Class aClass) {
-    return "java.awt.Rectangle".equals(aClass.getName());
-  }
+import org.jdom.Element;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+
+import java.util.List;
+
+interface MultiNodeBinding {
+  @Nullable
+  Object deserializeList(Object context, @Nonnull List<Element> elements);
+
+  boolean isMulti();
 }

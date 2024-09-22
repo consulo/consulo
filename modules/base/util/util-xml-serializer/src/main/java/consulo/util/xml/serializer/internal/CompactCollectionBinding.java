@@ -13,9 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.util.xml.serializer;
+package consulo.util.xml.serializer.internal;
 
 import consulo.util.collection.ContainerUtil;
+import consulo.util.xml.serializer.Constants;
+import consulo.util.xml.serializer.SerializationFilter;
 import consulo.util.xml.serializer.annotation.CollectionBean;
 import org.jdom.Element;
 
