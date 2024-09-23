@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.moduleImport;
 
+import consulo.project.ProjectOpenContext;
 import consulo.project.impl.internal.ProjectImplUtil;
 import consulo.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
@@ -92,7 +93,7 @@ public class ImportProjectOpenProcessor extends ProjectOpenProcessor {
 
   @Nonnull
   @Override
-  public AsyncResult<Project> doOpenProjectAsync(@Nonnull VirtualFile virtualFile, @Nonnull UIAccess uiAccess) {
+  public AsyncResult<Project> doOpenProjectAsync(@Nonnull VirtualFile virtualFile, @Nonnull UIAccess uiAccess, @Nonnull ProjectOpenContext openContext) {
     File ioPath = VfsUtil.virtualToIoFile(virtualFile);
 
     List<ModuleImportProvider> targetProviders =
@@ -134,7 +135,7 @@ public class ImportProjectOpenProcessor extends ProjectOpenProcessor {
     askDialogResult.doWhenDone(threeState -> {
       switch (threeState) {
         case YES:
-          ProjectManager.getInstance().openProjectAsync(virtualFile, uiAccess).notify(projectResult);
+          ProjectManager.getInstance().openProjectAsync(virtualFile, uiAccess, openContext).notify(projectResult);
           break;
         case NO:
           uiAccess.give(() -> {
@@ -149,7 +150,7 @@ public class ImportProjectOpenProcessor extends ProjectOpenProcessor {
               importProjectAsync.doWhenDone((newProject) -> {
                 ProjectImplUtil.updateLastProjectLocation(expectedProjectPath);
 
-                ProjectManager.getInstance().openProjectAsync(newProject, uiAccess).notify(projectResult);
+                ProjectManager.getInstance().openProjectAsync(newProject, uiAccess, openContext).notify(projectResult);
               });
 
               importProjectAsync.doWhenRejected((Runnable)projectResult::setRejected);

@@ -13,16 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.project.ui.wm;
+package consulo.project;
 
-import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UnprotectedUserDataHolder;
 
 /**
  * @author VISTALL
- * @since 2024-09-22
+ * @since 2024-09-23
  */
-public record IdeFrameState(int x, int y, int width, int height, boolean maximized, boolean fullScreen) {
-    public static final Key<IdeFrameState> KEY = Key.create(IdeFrameState.class);
-
-    public static final IdeFrameState EMPTY = new IdeFrameState(0, 0, 0, 0, false, false);
+public class ProjectOpenContext extends UnprotectedUserDataHolder {
 }

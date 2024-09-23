@@ -17,11 +17,16 @@ package consulo.ide.impl.idea.ide;
 
 import consulo.application.dumb.DumbAware;
 import consulo.application.util.UserHomeFileUtil;
-import consulo.project.impl.internal.ProjectImplUtil;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
+import consulo.localize.LocalizeValue;
 import consulo.module.content.layer.ModuleExtensionProvider;
 import consulo.project.Project;
+import consulo.project.ProjectOpenContext;
+import consulo.project.impl.internal.ProjectImplUtil;
 import consulo.project.internal.RecentProjectsManager;
+import consulo.project.ui.wm.IdeFrame;
+import consulo.project.ui.wm.IdeFrameState;
+import consulo.project.ui.wm.WindowManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
@@ -34,6 +39,7 @@ import consulo.ui.image.Image;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.BitUtil;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.awt.event.InputEvent;
 import java.io.File;
@@ -43,83 +49,101 @@ import java.util.List;
  * @author yole
  */
 public class ReopenProjectAction extends AnAction implements DumbAware {
-  private final String myProjectPath;
-  private final String myProjectName;
-  private List<String> myExtensions;
-  private boolean myIsRemoved;
+    private final String myProjectPath;
+    private final String myProjectName;
+    private List<String> myExtensions;
+    @Nullable
+    private final IdeFrameState myFrameState;
+    private boolean myIsRemoved;
 
-  public ReopenProjectAction(final String projectPath, final String projectName, final String displayName, @Nonnull List<String> extensions) {
-    myProjectPath = projectPath;
-    myProjectName = projectName;
-    myExtensions = extensions;
+    public ReopenProjectAction(final String projectPath,
+                               final String projectName,
+                               final String displayName,
+                               @Nonnull List<String> extensions,
+                               @Nullable IdeFrameState frameState) {
+        myProjectPath = projectPath;
+        myProjectName = projectName;
+        myExtensions = extensions;
+        myFrameState = frameState;
 
-    final Presentation presentation = getTemplatePresentation();
-    String text = projectPath.equals(displayName) ? UserHomeFileUtil.getLocationRelativeToUserHome(projectPath) : displayName;
-    presentation.setText(text, false);
-    presentation.setDescription(projectPath);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    //Force move focus to IdeFrame
-    IdeEventQueueProxy.getInstance().closeAllPopups();
-
-    final int modifiers = e.getModifiers();
-    final boolean forceOpenInNewFrame = BitUtil.isSet(modifiers, InputEvent.CTRL_MASK)
-      || BitUtil.isSet(modifiers, InputEvent.SHIFT_MASK)
-      || e.getPlace() == ActionPlaces.WELCOME_SCREEN;
-
-    Project project = e.getData(Project.KEY);
-    if (!new File(myProjectPath).exists()) {
-      int result = Messages.showDialog(project,
-        "The path " + FileUtil.toSystemDependentName(myProjectPath) + " does not exist.\n" +
-          "If it is on a removable or network drive, please make sure that the drive is connected.",
-        "Reopen Project",
-        new String[]{"OK", "&Remove From List"},
-        0,
-        UIUtil.getErrorIcon()
-      );
-      if (result == 1) {
-        myIsRemoved = true;
-        RecentProjectsManager.getInstance().removePath(myProjectPath);
-      }
-      return;
+        final Presentation presentation = getTemplatePresentation();
+        String text = projectPath.equals(displayName) ? UserHomeFileUtil.getLocationRelativeToUserHome(projectPath) : displayName;
+        presentation.setTextValue(LocalizeValue.of(text).map(Presentation.NO_MNEMONIC));
+        presentation.setDescriptionValue(LocalizeValue.of(projectPath));
     }
 
-    ProjectImplUtil.openAsync(myProjectPath, project, forceOpenInNewFrame, UIAccess.current());
-  }
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        //Force move focus to IdeFrame
+        IdeEventQueueProxy.getInstance().closeAllPopups();
 
-  public boolean isRemoved() {
-    return myIsRemoved;
-  }
+        final int modifiers = e.getModifiers();
+        final boolean forceOpenInNewFrame = BitUtil.isSet(modifiers, InputEvent.CTRL_MASK)
+            || BitUtil.isSet(modifiers, InputEvent.SHIFT_MASK)
+            || ActionPlaces.WELCOME_SCREEN.equals(e.getPlace());
 
-  @Nonnull
-  public Image getExtensionIcon() {
-    List<String> extensions = getExtensions();
-    Image moduleMainIcon = Image.empty(16);
-    if (!extensions.isEmpty()) {
-      for (String extensionId : extensions) {
-        ModuleExtensionProvider provider = ModuleExtensionProvider.findProvider(extensionId);
-        if (provider != null) {
-          moduleMainIcon = provider.getIcon();
-          break;
+        Project project = e.getData(Project.KEY);
+        if (!new File(myProjectPath).exists()) {
+            int result = Messages.showDialog(project,
+                "The path " + FileUtil.toSystemDependentName(myProjectPath) + " does not exist.\n" +
+                    "If it is on a removable or network drive, please make sure that the drive is connected.",
+                "Reopen Project",
+                new String[]{"OK", "&Remove From List"},
+                0,
+                UIUtil.getErrorIcon()
+            );
+            if (result == 1) {
+                myIsRemoved = true;
+                RecentProjectsManager.getInstance().removePath(myProjectPath);
+            }
+            return;
         }
-      }
+
+        ProjectOpenContext context = new ProjectOpenContext();
+        if (myFrameState != null) {
+            context.putUserData(IdeFrameState.KEY, myFrameState);
+        } else {
+            IdeFrame ideFrame = WindowManager.getInstance().getIdeFrame(project);
+            if (ideFrame != null) {
+                IdeFrameState frameState = ideFrame.getFrameState();
+                context.putUserData(IdeFrameState.KEY, frameState);
+            }
+        }
+
+        ProjectImplUtil.openAsync(myProjectPath, project, forceOpenInNewFrame, UIAccess.current(), context);
     }
-    return moduleMainIcon;
-  }
 
-  @Nonnull
-  public List<String> getExtensions() {
-    return myExtensions;
-  }
+    public boolean isRemoved() {
+        return myIsRemoved;
+    }
 
-  public String getProjectPath() {
-    return myProjectPath;
-  }
+    @Nonnull
+    public Image getExtensionIcon() {
+        List<String> extensions = getExtensions();
+        Image moduleMainIcon = Image.empty(16);
+        if (!extensions.isEmpty()) {
+            for (String extensionId : extensions) {
+                ModuleExtensionProvider provider = ModuleExtensionProvider.findProvider(extensionId);
+                if (provider != null) {
+                    moduleMainIcon = provider.getIcon();
+                    break;
+                }
+            }
+        }
+        return moduleMainIcon;
+    }
 
-  public String getProjectName() {
-    return myProjectName;
-  }
+    @Nonnull
+    public List<String> getExtensions() {
+        return myExtensions;
+    }
+
+    public String getProjectPath() {
+        return myProjectPath;
+    }
+
+    public String getProjectName() {
+        return myProjectName;
+    }
 }

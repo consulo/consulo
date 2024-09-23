@@ -20,6 +20,7 @@
 package consulo.project.internal;
 
 import consulo.project.Project;
+import consulo.project.ProjectOpenContext;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
@@ -47,5 +48,7 @@ public abstract class ProjectOpenProcessor {
   public abstract boolean canOpenProject(@Nonnull File file);
 
   @Nonnull
-  public abstract AsyncResult<Project> doOpenProjectAsync(@Nonnull VirtualFile virtualFile, @Nonnull UIAccess uiAccess);
+  public abstract AsyncResult<Project> doOpenProjectAsync(@Nonnull VirtualFile virtualFile,
+                                                          @Nonnull UIAccess uiAccess,
+                                                          @Nonnull ProjectOpenContext context);
 }

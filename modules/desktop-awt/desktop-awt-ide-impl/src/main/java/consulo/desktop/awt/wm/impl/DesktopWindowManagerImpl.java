@@ -19,7 +19,6 @@ import com.sun.jna.platform.WindowUtils;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.util.SystemInfo;
-import consulo.awt.hacking.AWTAccessorHacking;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
@@ -29,7 +28,6 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.AppLifecycleListener;
 import consulo.ide.impl.idea.ide.GeneralSettings;
-import consulo.ide.impl.idea.openapi.wm.impl.ProjectFrameBounds;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
@@ -39,13 +37,12 @@ import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.internal.ToolWindowLayout;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.IdeFrame;
+import consulo.project.ui.wm.IdeFrameState;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.project.ui.wm.event.WindowManagerListener;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.awt.JBInsets;
-import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -58,9 +55,9 @@ import org.jdom.Element;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
+import java.awt.event.ComponentEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -76,23 +73,6 @@ import java.util.Set;
 public final class DesktopWindowManagerImpl extends WindowManagerEx implements PersistentStateComponent<Element>, Disposable {
     private static final Logger LOG = Logger.getInstance(DesktopWindowManagerImpl.class);
 
-    private static final String FOCUSED_WINDOW_PROPERTY_NAME = "focusedWindow";
-    private static final String X_ATTR = "x";
-    private static final String FRAME_ELEMENT = "frame";
-    private static final String Y_ATTR = "y";
-    private static final String WIDTH_ATTR = "width";
-    private static final String HEIGHT_ATTR = "height";
-    private static final String EXTENDED_STATE_ATTR = "extended-state";
-
-    static {
-        try {
-            System.loadLibrary("jawt");
-        }
-        catch (Throwable t) {
-            LOG.info("jawt failed to load", t);
-        }
-    }
-
     private Boolean myAlphaModeSupported = null;
 
     private final EventDispatcher<WindowManagerListener> myEventDispatcher = EventDispatcher.create(WindowManagerListener.class);
@@ -107,12 +87,6 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
 
     private final HashMap<Project, Set<JDialog>> myDialogsToDispose;
 
-    /**
-     * This members is needed to read frame's bounds from XML.
-     * <code>myFrameBounds</code> can be <code>null</code>.
-     */
-    private Rectangle myFrameBounds;
-    private int myFrameExtendedState;
     private final WindowAdapter myActivationListener;
     private final Application myApplication;
     private final DataManager myDataManager;
@@ -126,11 +100,10 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
 
         myWindowWatcher = new DesktopWindowWatcher(application, dataManager);
         final KeyboardFocusManager keyboardFocusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-        keyboardFocusManager.addPropertyChangeListener(FOCUSED_WINDOW_PROPERTY_NAME, myWindowWatcher);
+        keyboardFocusManager.addPropertyChangeListener("focusedWindow", myWindowWatcher);
         myLayout = new ToolWindowLayout();
         myProject2Frame = new HashMap<>();
         myDialogsToDispose = new HashMap<>();
-        myFrameExtendedState = Frame.NORMAL;
 
         myActivationListener = new WindowAdapter() {
             @Override
@@ -563,17 +536,8 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
         final DesktopIdeFrameImpl frame = new DesktopIdeFrameImpl(myActionManager, myDataManager, myApplication);
         myProject2Frame.put(null, frame);
 
-        if (myFrameBounds == null || !ScreenUtil.isVisible(myFrameBounds)) { //avoid situations when IdeFrame is out of all screens
-            myFrameBounds = ScreenUtil.getMainScreenBounds();
-            int xOff = myFrameBounds.width / 8;
-            int yOff = myFrameBounds.height / 8;
-            JBInsets.removeFrom(myFrameBounds, new Insets(yOff, xOff, yOff, xOff));
-        }
-
         JFrame jWindow = (JFrame) TargetAWT.to(frame.getWindow());
 
-        jWindow.setBounds(myFrameBounds);
-        jWindow.setExtendedState(myFrameExtendedState);
         jWindow.setVisible(true);
     }
 
@@ -584,7 +548,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     @RequiredUIAccess
     @Nonnull
     @Override
-    public final IdeFrameEx allocateFrame(@Nonnull final Project project) {
+    public final IdeFrameEx allocateFrame(@Nonnull final Project project, @Nullable IdeFrameState state) {
         LOG.assertTrue(!myProject2Frame.containsKey(project));
 
         JFrame jFrame;
@@ -601,28 +565,20 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
 
             jFrame = (JFrame) TargetAWT.to(ideFrame.getWindow());
 
-            final Rectangle bounds = ProjectFrameBounds.getInstance(project).getBounds();
+            if (state != null) {
+                jFrame.setBounds(new Rectangle(state.x(), state.y(), state.width(), state.height()));
 
-            if (bounds != null) {
-                myFrameBounds = bounds;
+                if (state.maximized()) {
+                    jFrame.setExtendedState(Frame.MAXIMIZED_BOTH);
+                }
             }
 
-            if (myFrameBounds != null) {
-                jFrame.setBounds(myFrameBounds);
-            }
             myProject2Frame.put(project, ideFrame);
             ideFrame.setProject(project);
-            jFrame.setExtendedState(myFrameExtendedState);
             jFrame.setVisible(true);
         }
 
         jFrame.addWindowListener(myActivationListener);
-        jFrame.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentMoved(@Nonnull ComponentEvent e) {
-                updateFrameBounds(jFrame, ideFrame);
-            }
-        });
         myEventDispatcher.getMulticaster().frameCreated(ideFrame);
 
         return ideFrame;
@@ -705,65 +661,16 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
 
     @Override
     public void loadState(Element state) {
-        final Element frameElement = state.getChild(FRAME_ELEMENT);
-        if (frameElement != null) {
-            myFrameBounds = loadFrameBounds(frameElement);
-            try {
-                myFrameExtendedState = Integer.parseInt(frameElement.getAttributeValue(EXTENDED_STATE_ATTR));
-                if ((myFrameExtendedState & Frame.ICONIFIED) > 0) {
-                    myFrameExtendedState = Frame.NORMAL;
-                }
-            }
-            catch (NumberFormatException ignored) {
-                myFrameExtendedState = Frame.NORMAL;
-            }
-        }
-
         final Element desktopElement = state.getChild(ToolWindowLayout.TAG);
         if (desktopElement != null) {
             myLayout.readExternal(desktopElement);
         }
     }
 
-    private static Rectangle loadFrameBounds(final Element frameElement) {
-        Rectangle bounds = new Rectangle();
-        try {
-            bounds.x = Integer.parseInt(frameElement.getAttributeValue(X_ATTR));
-        }
-        catch (NumberFormatException ignored) {
-            return null;
-        }
-        try {
-            bounds.y = Integer.parseInt(frameElement.getAttributeValue(Y_ATTR));
-        }
-        catch (NumberFormatException ignored) {
-            return null;
-        }
-        try {
-            bounds.width = Integer.parseInt(frameElement.getAttributeValue(WIDTH_ATTR));
-        }
-        catch (NumberFormatException ignored) {
-            return null;
-        }
-        try {
-            bounds.height = Integer.parseInt(frameElement.getAttributeValue(HEIGHT_ATTR));
-        }
-        catch (NumberFormatException ignored) {
-            return null;
-        }
-        return FrameBoundsConverter.convertFromDeviceSpace(bounds);
-    }
-
     @Nullable
     @Override
     public Element getState() {
-        Element frameState = getFrameState();
-        if (frameState == null) {
-            return null;
-        }
-
         Element state = new Element("state");
-        state.addContent(frameState);
 
         // Save default layout
         Element layoutElement = myLayout.writeExternal(ToolWindowLayout.TAG);
@@ -771,47 +678,6 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
             state.addContent(layoutElement);
         }
         return state;
-    }
-
-    private Element getFrameState() {
-        // Save frame bounds
-        final Project[] projects = ProjectManager.getInstance().getOpenProjects();
-        if (projects.length == 0) {
-            return null;
-        }
-
-        Project project = projects[0];
-        final IdeFrameEx ideFrame = getIdeFrame(project);
-        if (ideFrame == null) {
-            return null;
-        }
-
-        JFrame jWindow = (JFrame) TargetAWT.to(ideFrame.getWindow());
-
-        int extendedState = updateFrameBounds(jWindow, ideFrame);
-
-        Rectangle rectangle = FrameBoundsConverter.convertToDeviceSpace(jWindow.getGraphicsConfiguration(), myFrameBounds);
-
-        final Element frameElement = new Element(FRAME_ELEMENT);
-        frameElement.setAttribute(X_ATTR, Integer.toString(rectangle.x));
-        frameElement.setAttribute(Y_ATTR, Integer.toString(rectangle.y));
-        frameElement.setAttribute(WIDTH_ATTR, Integer.toString(rectangle.width));
-        frameElement.setAttribute(HEIGHT_ATTR, Integer.toString(rectangle.height));
-        frameElement.setAttribute(EXTENDED_STATE_ATTR, Integer.toString(extendedState));
-        return frameElement;
-    }
-
-    private int updateFrameBounds(JFrame frame, IdeFrameEx ideFrame) {
-        int extendedState = frame.getExtendedState();
-        if (Platform.current().os().isMac()) {
-            extendedState = AWTAccessorHacking.getExtendedStateFromPeer(frame);
-        }
-        boolean isMaximized = extendedState == Frame.MAXIMIZED_BOTH || isFullScreenSupportedInCurrentOS() && ideFrame.isInFullScreen();
-        boolean usePreviousBounds = isMaximized && myFrameBounds != null && frame.getBounds().contains(new Point((int) myFrameBounds.getCenterX(), (int) myFrameBounds.getCenterY()));
-        if (!usePreviousBounds) {
-            myFrameBounds = frame.getBounds();
-        }
-        return extendedState;
     }
 
     @Override
@@ -838,91 +704,5 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     @Override
     public boolean isFloatingMenuBarSupported() {
         return !Platform.current().os().isMac() && getInstance().isFullScreenSupportedInCurrentOS();
-    }
-
-    /**
-     * Converts the frame bounds b/w the user space (JRE-managed HiDPI mode) and the device space (IDE-managed HiDPI mode).
-     * See {@link UIUtil#isJreHiDPIEnabled()}
-     */
-    private static class FrameBoundsConverter {
-        /**
-         * @param bounds the bounds in the device space
-         * @return the bounds in the user space
-         */
-        public static Rectangle convertFromDeviceSpace(@Nonnull Rectangle bounds) {
-            Rectangle b = bounds.getBounds();
-            if (!shouldConvert()) {
-                return b;
-            }
-
-            try {
-                for (GraphicsDevice gd : GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()) {
-                    Rectangle devBounds = gd.getDefaultConfiguration().getBounds(); // in user space
-                    scaleUp(devBounds, gd.getDefaultConfiguration()); // to device space
-                    Rectangle2D.Float devBounds2D = new Rectangle2D.Float(devBounds.x, devBounds.y, devBounds.width, devBounds.height);
-                    Point2D.Float center2d = new Point2D.Float(b.x + b.width / 2, b.y + b.height / 2);
-                    if (devBounds2D.contains(center2d)) {
-                        scaleDown(b, gd.getDefaultConfiguration());
-                        break;
-                    }
-                }
-            }
-            catch (HeadlessException ignore) {
-            }
-            return b;
-        }
-
-        /**
-         * @param gc     the graphics config
-         * @param bounds the bounds in the user space
-         * @return the bounds in the device space
-         */
-        public static Rectangle convertToDeviceSpace(GraphicsConfiguration gc, @Nonnull Rectangle bounds) {
-            Rectangle b = bounds.getBounds();
-            if (!shouldConvert()) {
-                return b;
-            }
-
-            try {
-                scaleUp(b, gc);
-            }
-            catch (HeadlessException ignore) {
-            }
-            return b;
-        }
-
-        private static boolean shouldConvert() {
-            if (Platform.current().os().isLinux() || // JRE-managed HiDPI mode is not yet implemented (pending)
-                Platform.current().os().isMac())     // JRE-managed HiDPI mode is permanent
-            {
-                return false;
-            }
-            if (!UIUtil.isJreHiDPIEnabled()) {
-                return false; // device space equals user space
-            }
-            return true;
-        }
-
-        private static void scaleUp(@Nonnull Rectangle bounds, @Nonnull GraphicsConfiguration gc) {
-            scale(bounds, gc.getBounds(), JBUI.sysScale(gc));
-        }
-
-        private static void scaleDown(@Nonnull Rectangle bounds, @Nonnull GraphicsConfiguration gc) {
-            float scale = JBUI.sysScale(gc);
-            assert scale != 0;
-            scale(bounds, gc.getBounds(), 1 / scale);
-        }
-
-        private static void scale(@Nonnull Rectangle bounds, @Nonnull Rectangle deviceBounds, float scale) {
-            // On Windows, JB SDK transforms the screen bounds to the user space as follows:
-            // [x, y, width, height] -> [x, y, width / scale, height / scale]
-            // xy are not transformed in order to avoid overlapping of the screen bounds in multi-dpi env.
-
-            // scale the delta b/w xy and deviceBounds.xy
-            int x = (int) Math.floor(deviceBounds.x + (bounds.x - deviceBounds.x) * scale);
-            int y = (int) Math.floor(deviceBounds.y + (bounds.y - deviceBounds.y) * scale);
-
-            bounds.setBounds(x, y, (int) Math.ceil(bounds.width * scale), (int) Math.ceil(bounds.height * scale));
-        }
     }
 }

@@ -254,11 +254,9 @@ public class RecentProjectsManagerImpl extends RecentProjectsManager implements 
     @Override
     public AnAction[] getRecentProjectsActions(boolean forMainMenu, boolean useGroups) {
         final Set<String> paths;
-        final Map<String, RecentProjectMetaInfo> metaInfoMap;
         synchronized (myStateLock) {
             myState.validateRecentProjects();
             paths = new LinkedHashSet<>(myState.recentPaths);
-            metaInfoMap = new HashMap<>(myState.additionalInfo);
         }
 
         Set<String> openedPaths = new HashSet<>();
@@ -301,8 +299,7 @@ public class RecentProjectsManagerImpl extends RecentProjectsManager implements 
             for (ProjectGroup group : groups) {
                 final List<AnAction> children = new ArrayList<>();
                 for (String path : group.getProjects()) {
-                    RecentProjectMetaInfo metaInfo = metaInfoMap.get(path);
-                    final AnAction action = createOpenAction(path, metaInfo, duplicates);
+                    final AnAction action = createOpenAction(path, duplicates);
                     if (action != null) {
                         children.add(action);
 
@@ -321,9 +318,7 @@ public class RecentProjectsManagerImpl extends RecentProjectsManager implements 
         }
 
         for (final String path : paths) {
-            RecentProjectMetaInfo metaInfo = metaInfoMap.get(path);
-
-            final AnAction action = createOpenAction(path, metaInfo, duplicates);
+            final AnAction action = createOpenAction(path, duplicates);
             if (action != null) {
                 actions.add(action);
             }
@@ -337,17 +332,23 @@ public class RecentProjectsManagerImpl extends RecentProjectsManager implements 
     }
 
     @Nullable
-    private AnAction createOpenAction(String path, @Nullable RecentProjectMetaInfo metaInfo, Set<String> duplicates) {
+    private AnAction createOpenAction(String path, Set<String> duplicates) {
         String projectName = getProjectName(path);
         String displayName;
+        RecentProjectMetaInfo metaInfo;
+        IdeFrameState state;
+
         synchronized (myStateLock) {
             displayName = myState.names.get(path);
+            state = myState.frameStates.get(path);
+            metaInfo = myState.additionalInfo.get(path);
         }
+
         if (StringUtil.isEmptyOrSpaces(displayName)) {
             displayName = duplicates.contains(path) ? path : projectName;
         }
 
-        List<String> extensions = Collections.emptyList();
+        List<String> extensions = List.of();
         if (metaInfo != null) {
             extensions = new ArrayList<>(metaInfo.extensions);
         }
@@ -356,7 +357,7 @@ public class RecentProjectsManagerImpl extends RecentProjectsManager implements 
         // on USB-sticks or flash-cards, and it will be nice to have them in the list
         // when USB device or SD-card is mounted
         //if (new File(path).exists()) {
-        return new ReopenProjectAction(path, projectName, displayName, extensions);
+        return new ReopenProjectAction(path, projectName, displayName, extensions, state);
         //}
         //return null;
     }

@@ -17,12 +17,15 @@ package consulo.project.ui.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.project.Project;
+import consulo.project.ProjectOpenContext;
 import consulo.project.internal.ProjectFrameAllocator;
 import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.internal.WindowManagerEx;
+import consulo.project.ui.wm.IdeFrameState;
 import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -46,8 +49,11 @@ public class ProjectFrameAllocatorImpl implements ProjectFrameAllocator {
 
     @RequiredUIAccess
     @Override
-    public void allocateFrame() {
-        myWindowManager.allocateFrame(myProject);
+    public void allocateFrame(@Nonnull ProjectOpenContext context) {
+        IdeFrameState state = context.getUserData(IdeFrameState.KEY);
+
+        myWindowManager.allocateFrame(myProject, state);
+        
         // force close welcome frame after frame allocating, since its project open
         myWelcomeFrameManager.closeFrame();
     }

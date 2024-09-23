@@ -20,21 +20,22 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
+import consulo.ide.impl.wm.impl.UnifiedWindowManagerImpl;
 import consulo.project.Project;
+import consulo.project.ui.internal.IdeFrameEx;
+import consulo.project.ui.internal.ToolWindowLayout;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.IdeFrame;
+import consulo.project.ui.wm.IdeFrameState;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.event.WindowManagerListener;
-import consulo.project.ui.internal.IdeFrameEx;
-import consulo.project.ui.internal.WindowManagerEx;
-import consulo.project.ui.internal.ToolWindowLayout;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ide.impl.wm.impl.UnifiedWindowManagerImpl;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
@@ -142,7 +143,7 @@ public class WebWindowManagerImpl extends UnifiedWindowManagerImpl implements Pe
   @RequiredUIAccess
   @Nonnull
   @Override
-  public IdeFrameEx allocateFrame(@Nonnull Project project) {
+  public IdeFrameEx allocateFrame(@Nonnull Project project, @Nullable IdeFrameState state) {
     UIAccess.assertIsUIThread();
 
     WebIdeFrameImpl frame = new WebIdeFrameImpl(project);

@@ -41,6 +41,7 @@ import consulo.module.impl.internal.ModuleManagerComponent;
 import consulo.module.impl.internal.ModuleManagerImpl;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
+import consulo.project.ProjectOpenContext;
 import consulo.project.event.ProjectManagerListener;
 import consulo.project.impl.internal.store.IProjectStore;
 import consulo.project.internal.*;
@@ -448,7 +449,7 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
 
     @Nonnull
     @Override
-    public AsyncResult<Project> openProjectAsync(@Nonnull VirtualFile file, @Nonnull UIAccess uiAccess) {
+    public AsyncResult<Project> openProjectAsync(@Nonnull VirtualFile file, @Nonnull UIAccess uiAccess, @Nonnull ProjectOpenContext context) {
         for (Project project : getOpenProjects()) {
             if (ProjectUtil.isSameProject(file.getPath(), project)) {
                 uiAccess.give(() -> ProjectWindowFocuser.getInstance(project).focusProjectWindow(false));
@@ -457,15 +458,15 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
         }
 
         AsyncResult<Project> projectAsyncResult = AsyncResult.undefined();
-        initAndLoadProjectAsync(projectAsyncResult, file, uiAccess);
+        initAndLoadProjectAsync(projectAsyncResult, file, uiAccess, context);
         return projectAsyncResult;
     }
 
     @Nonnull
     @Override
-    public AsyncResult<Project> openProjectAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+    public AsyncResult<Project> openProjectAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess, @Nonnull ProjectOpenContext context) {
         AsyncResult<Project> projectAsyncResult = AsyncResult.undefined();
-        loadProjectAsync((ProjectImpl) project, projectAsyncResult, false, uiAccess);
+        loadProjectAsync((ProjectImpl) project, projectAsyncResult, false, uiAccess, context);
         return projectAsyncResult;
     }
 
@@ -548,16 +549,18 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
 
     private void initAndLoadProjectAsync(AsyncResult<Project> projectAsyncResult,
                                          VirtualFile path,
-                                         UIAccess uiAccess) {
+                                         UIAccess uiAccess,
+                                         ProjectOpenContext context) {
         final ProjectImpl project = createProject(null, toCanonicalName(path.getPath()), true);
 
-        loadProjectAsync(project, projectAsyncResult, true, uiAccess);
+        loadProjectAsync(project, projectAsyncResult, true, uiAccess, context);
     }
 
     private void loadProjectAsync(final ProjectImpl project,
                                   AsyncResult<Project> projectAsyncResult,
                                   boolean init,
-                                  UIAccess uiAccess) {
+                                  UIAccess uiAccess,
+                                  ProjectOpenContext context) {
         Task.Modal.queue(project, ProjectLocalize.projectLoadProgress().get(), canCancelProjectLoading(), indicator -> {
             indicator.setIndeterminate(true);
 
@@ -569,7 +572,7 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
 
                 ProjectFrameAllocator projectFrameAllocator = project.getInstance(ProjectFrameAllocator.class);
 
-                uiAccess.giveAndWait(projectFrameAllocator::allocateFrame);
+                uiAccess.giveAndWait(() -> projectFrameAllocator.allocateFrame(context));
 
                 if (init) {
                     initProjectAsync(project, null, indicator);

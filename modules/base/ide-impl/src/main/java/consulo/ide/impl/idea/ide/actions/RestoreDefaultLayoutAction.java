@@ -16,9 +16,9 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.application.dumb.DumbAware;
-import consulo.project.ui.internal.ToolWindowManagerEx;
 import consulo.project.Project;
 import consulo.project.ui.internal.ToolWindowLayout;
+import consulo.project.ui.internal.ToolWindowManagerEx;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -29,21 +29,21 @@ import consulo.ui.ex.action.Presentation;
  * @author Vladimir Kondratyev
  */
 public final class RestoreDefaultLayoutAction extends AnAction implements DumbAware {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    if (project == null) {
-      return;
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return;
+        }
+        ToolWindowLayout layout = WindowManagerEx.getInstanceEx().getLayout();
+        ToolWindowManagerEx.getInstanceEx(project).setLayout(layout);
     }
-    ToolWindowLayout layout=WindowManagerEx.getInstanceEx().getLayout();
-    ToolWindowManagerEx.getInstanceEx(project).setLayout(layout);
-  }
 
-  @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent event) {
-    Presentation presentation = event.getPresentation();
-    presentation.setEnabled(event.getData(Project.KEY) != null);
-  }
+    @Override
+    @RequiredUIAccess
+    public void update(AnActionEvent event) {
+        Presentation presentation = event.getPresentation();
+        presentation.setEnabled(event.getData(Project.KEY) != null);
+    }
 }

@@ -17,6 +17,7 @@ package consulo.project.ui.internal;
 
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
+import consulo.project.ui.wm.IdeFrameState;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.AppIcon;
@@ -57,7 +58,7 @@ public abstract class WindowManagerEx extends WindowManager {
 
   @Nonnull
   @RequiredUIAccess
-  public abstract IdeFrameEx allocateFrame(@Nonnull Project project);
+  public abstract IdeFrameEx allocateFrame(@Nonnull Project project, @Nullable IdeFrameState state);
 
   public abstract void releaseFrame(IdeFrameEx frame);
 
