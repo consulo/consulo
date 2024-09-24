@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 consulo.io
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@ package consulo.desktop.awt.startup.splash;
 
 /**
  * @author VISTALL
- * @since 11-May-17
+ * @since 2016-05-11
  */
 class Names {
     final static String[] ourEasterNames = {"VISTALL", "IJ_IDEA", ".WORMIX"};

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 package consulo.desktop.awt.startup.customize;
 
 import consulo.application.Application;
-import consulo.application.internal.ApplicationManagerEx;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.container.plugin.PluginDescriptor;
@@ -40,7 +39,7 @@ import java.util.Set;
 
 /**
  * @author VISTALL
- * @since 29.11.14
+ * @since 2014-11-29
  */
 public class CustomizeDownloadAndStartStepPanel extends AbstractCustomizeWizardStep {
     private static final Logger LOG = Logger.getInstance(CustomizeDownloadAndStartStepPanel.class);
@@ -88,7 +87,7 @@ public class CustomizeDownloadAndStartStepPanel extends AbstractCustomizeWizardS
         JButton button = new JButton(getStartName());
         button.addActionListener(e -> {
             myCustomizeIDEWizardDialog.close(DialogWrapper.CLOSE_EXIT_CODE);
-            ApplicationManagerEx.getApplicationEx().restart(true);
+            Application.get().restart(true);
         });
         return button;
     }

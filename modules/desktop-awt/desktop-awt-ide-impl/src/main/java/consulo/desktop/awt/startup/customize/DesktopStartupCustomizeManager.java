@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2021 consulo.io
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL
- * @since 09/01/2021
+ * @since 2021-09-01
  */
 @Singleton
 @ServiceImpl

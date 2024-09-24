@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ import java.util.*;
 
 /**
  * @author VISTALL
- * @since 29.11.14
+ * @since 2014-11-29
  */
 public class CustomizePluginTemplatesStepPanel extends AbstractCustomizeWizardStep {
     @Nonnull

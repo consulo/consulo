@@ -42,7 +42,7 @@ public class CustomizeIDEWizardDialog extends DialogWrapper implements ActionLis
     private final JButton myNextButton = new JButton("Next");
 
     private final JBCardLayout myCardLayout = new JBCardLayout();
-    protected final List<AbstractCustomizeWizardStep> mySteps = new ArrayList<AbstractCustomizeWizardStep>();
+    protected final List<AbstractCustomizeWizardStep> mySteps = new ArrayList<>();
     private final MultiMap<String, PluginDescriptor> myPluginDescriptors;
     private final Map<String, PluginTemplate> myPredefinedTemplateSets;
     private int myIndex = 0;
@@ -185,15 +185,17 @@ public class CustomizeIDEWizardDialog extends DialogWrapper implements ActionLis
     private void initCurrentStep(boolean forward) {
         final AbstractCustomizeWizardStep myCurrentStep = mySteps.get(myIndex);
         boolean disableBack = myCurrentStep.beforeShown(forward);
-        myCardLayout.swipe(myContentPanel, myCurrentStep.getTitle(), JBCardLayout.SwipeDirection.AUTO, new Runnable() {
-            @Override
-            public void run() {
+        myCardLayout.swipe(
+            myContentPanel,
+            myCurrentStep.getTitle(),
+            JBCardLayout.SwipeDirection.AUTO,
+            () -> {
                 Component component = myCurrentStep.getDefaultFocusedComponent();
                 if (component != null) {
                     IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(component);
                 }
             }
-        });
+        );
 
         myBackButton.setVisible(myIndex > 0);
         if (disableBack) {

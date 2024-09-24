@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ import java.util.zip.ZipInputStream;
 
 /**
  * @author VISTALL
- * @since 27.11.14
+ * @since 2014-11-27
  */
 public class FirstStartCustomizeUtil {
     private static final Logger LOG = Logger.getInstance(FirstStartCustomizeUtil.class);

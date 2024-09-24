@@ -18,6 +18,7 @@ package consulo.desktop.awt.startup.splash;
 import consulo.application.impl.internal.start.StartupProgress;
 import consulo.application.util.SystemInfo;
 import consulo.platform.Platform;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awt.JBUI;
 import consulo.application.ApplicationProperties;
@@ -44,7 +45,7 @@ public class DesktopSplash extends JDialogAsUIWindow implements StartupProgress 
         super(null, false);
 
         setUndecorated(true);
-        if (!(Platform.current().os().isLinux() && SystemInfo.isJavaVersionAtLeast(7))) {
+        if (!Platform.current().os().isLinux()) {
             setResizable(false);
         }
         setFocusableWindowState(false);
@@ -87,6 +88,7 @@ public class DesktopSplash extends JDialogAsUIWindow implements StartupProgress 
     }
 
     @Override
+    @RequiredUIAccess
     public void dispose() {
         stopAnimation();
         myLabel.dispose();

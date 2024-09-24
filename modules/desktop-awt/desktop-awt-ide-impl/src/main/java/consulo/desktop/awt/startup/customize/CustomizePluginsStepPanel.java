@@ -33,7 +33,6 @@ import java.awt.*;
 import java.util.*;
 
 public class CustomizePluginsStepPanel extends AbstractCustomizeWizardStep {
-
     private final MultiMap<String, PluginDescriptor> myPluginDescriptors;
     private final CustomizePluginTemplatesStepPanel myTemplateStepPanel;
     private final CheckedTreeNode myRoot;
@@ -89,24 +88,21 @@ public class CustomizePluginsStepPanel extends AbstractCustomizeWizardStep {
 
                 Object userObject = node.getUserObject();
                 if (userObject instanceof PluginDescriptor) {
-                    Set<String> deepDependencies = new HashSet<String>();
+                    Set<String> deepDependencies = new HashSet<>();
                     collectDeepDependencies(deepDependencies, (PluginDescriptor)userObject);
                     setupChecked(myRoot, deepDependencies, state);
                 }
                 repaint();
             }
         };
-        TreeUtil.sort(myRoot, new Comparator() {
-            @Override
-            public int compare(Object o1, Object o2) {
+        TreeUtil.sort(
+            myRoot,
+            (o1, o2) -> {
                 String stringValue1 = getValueOfNode(o1);
                 String stringValue2 = getValueOfNode(o2);
-                if (stringValue1 != null && stringValue2 != null) {
-                    return stringValue1.compareToIgnoreCase(stringValue2);
-                }
-                return 0;
+                return stringValue1 != null && stringValue2 != null ? stringValue1.compareToIgnoreCase(stringValue2) : 0;
             }
-        });
+        );
         checkboxTree.setRootVisible(false);
         TreeUtil.expandAll(checkboxTree);
         add(ScrollPaneFactory.createScrollPane(checkboxTree), BorderLayout.CENTER);
@@ -126,20 +122,12 @@ public class CustomizePluginsStepPanel extends AbstractCustomizeWizardStep {
     }
 
     private static String getValueOfNode(Object value) {
-        if (value instanceof CheckedTreeNode) {
-            Object userObject = ((DefaultMutableTreeNode)value).getUserObject();
-            if (!(userObject instanceof PluginDescriptor)) {
-                return null;
-            }
-
-            return ((PluginDescriptor)userObject).getName();
+        if (value instanceof CheckedTreeNode checkedTreeNode) {
+            Object userObject = checkedTreeNode.getUserObject();
+            return userObject instanceof PluginDescriptor pluginDescriptor ? pluginDescriptor.getName() : null;
         }
-        else if (value instanceof DefaultMutableTreeNode) {
-            Object userObject = ((DefaultMutableTreeNode)value).getUserObject();
-            if (!(userObject instanceof String)) {
-                return null;
-            }
-            return (String)userObject;
+        else if (value instanceof DefaultMutableTreeNode mutableTreeNode) {
+            return mutableTreeNode.getUserObject() instanceof String string ? string : null;
         }
         return null;
     }
@@ -157,8 +145,8 @@ public class CustomizePluginsStepPanel extends AbstractCustomizeWizardStep {
 
     private static void setupChecked(DefaultMutableTreeNode treeNode, Set<String> set, Boolean state) {
         Object userObject = treeNode.getUserObject();
-        if (userObject instanceof PluginDescriptor) {
-            String id = ((PluginDescriptor)userObject).getPluginId().getIdString();
+        if (userObject instanceof PluginDescriptor pluginDescriptor) {
+            String id = pluginDescriptor.getPluginId().getIdString();
             boolean contains = set.contains(id);
             if (state == null) {
                 ((CheckedTreeNode)treeNode).setChecked(contains);
@@ -184,11 +172,9 @@ public class CustomizePluginsStepPanel extends AbstractCustomizeWizardStep {
 
     private static void collect(DefaultMutableTreeNode treeNode, Set<PluginDescriptor> set) {
         Object userObject = treeNode.getUserObject();
-        if (userObject instanceof PluginDescriptor) {
+        if (userObject instanceof PluginDescriptor pluginDescriptor) {
             CheckedTreeNode checkedTreeNode = (CheckedTreeNode)treeNode;
             if (checkedTreeNode.isChecked()) {
-                PluginDescriptor pluginDescriptor = (PluginDescriptor)userObject;
-
                 PluginDescriptor idePlugin = PluginManager.findPlugin(pluginDescriptor.getPluginId());
                 if (idePlugin == null) {
                     set.add(pluginDescriptor);
