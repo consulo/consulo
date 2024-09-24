@@ -22,7 +22,7 @@ import com.google.gson.JsonElement;
  * @since 2020-11-13
  */
 public class CommandLineJsonValue {
-  public String url;
+    public String url;
 
-  public JsonElement body;
+    public JsonElement body;
 }

@@ -28,9 +28,9 @@ import jakarta.inject.Singleton;
 @Singleton
 @ServiceImpl
 public class DesktopStartupCustomizeManager implements StartupCustomizeManager {
-  @RequiredUIAccess
-  @Override
-  public void showAsync(boolean firstShow) {
-    FirstStartCustomizeUtil.showDialog(firstShow, StyleManager.get().getCurrentStyle().isDark());
-  }
+    @RequiredUIAccess
+    @Override
+    public void showAsync(boolean firstShow) {
+        FirstStartCustomizeUtil.showDialog(firstShow, StyleManager.get().getCurrentStyle().isDark());
+    }
 }

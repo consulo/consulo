@@ -53,163 +53,167 @@ import java.util.zip.ZipInputStream;
  * @since 27.11.14
  */
 public class FirstStartCustomizeUtil {
-  private static final Logger LOG = Logger.getInstance(FirstStartCustomizeUtil.class);
+    private static final Logger LOG = Logger.getInstance(FirstStartCustomizeUtil.class);
 
-  private static final String TEMPLATES_URL = "https://codeload.github.com/consulo/consulo-firststart-templates/zip/master";
+    private static final String TEMPLATES_URL = "https://codeload.github.com/consulo/consulo-firststart-templates/zip/master";
 
-  private static final int IMAGE_SIZE = 100;
+    private static final int IMAGE_SIZE = 100;
 
-  @RequiredUIAccess
-  public static void showDialog(boolean initLaf, boolean isDark) {
-    if (initLaf) {
-      initLaf(isDark);
+    @RequiredUIAccess
+    public static void showDialog(boolean initLaf, boolean isDark) {
+        if (initLaf) {
+            initLaf(isDark);
+        }
+
+        DialogWrapper downloadDialog = new DialogWrapper(false) {
+            {
+                setResizable(false);
+                pack();
+                init();
+            }
+
+            @Nullable
+            @Override
+            protected JComponent createSouthPanel() {
+                return null;
+            }
+
+            @Nullable
+            @Override
+            protected JComponent createCenterPanel() {
+                return new JLabel("Connecting to plugin repository");
+            }
+        };
+
+        Application.get().executeOnPooledThread(() -> {
+            MultiMap<String, PluginDescriptor> pluginDescriptors = new MultiMap<>();
+            Map<String, PluginTemplate> predefinedTemplateSets = new TreeMap<>();
+            try {
+                List<PluginDescriptor> ideaPluginDescriptors = RepositoryHelper.loadOnlyPluginsFromRepository(null,
+                    UpdateSettings.getInstance().getChannel(),
+                    EarlyAccessProgramManager.getInstance()
+                );
+                for (PluginDescriptor pluginDescriptor : ideaPluginDescriptors) {
+                    Set<String> tags = pluginDescriptor.getTags();
+                    if (tags.isEmpty()) {
+                        pluginDescriptors.putValue("unknown", pluginDescriptor);
+                    }
+                    else {
+                        for (String tag : tags) {
+                            pluginDescriptors.putValue(tag, pluginDescriptor);
+                        }
+                    }
+                }
+                loadPredefinedTemplateSets(predefinedTemplateSets);
+            }
+            catch (Exception e) {
+                LOG.warn(e);
+            }
+
+            UIUtil.invokeLaterIfNeeded(() -> {
+                downloadDialog.close(DialogWrapper.OK_EXIT_CODE);
+                new CustomizeIDEWizardDialog(isDark, pluginDescriptors, predefinedTemplateSets).show();
+            });
+        });
+        downloadDialog.showAsync();
     }
 
-    DialogWrapper downloadDialog = new DialogWrapper(false) {
-      {
-        setResizable(false);
-        pack();
-        init();
-      }
+    public static void loadPredefinedTemplateSets(Map<String, PluginTemplate> predefinedTemplateSets) {
+        String systemPath = ContainerPathManager.get().getSystemPath();
 
-      @Nullable
-      @Override
-      protected JComponent createSouthPanel() {
-        return null;
-      }
+        File customizeDir = new File(systemPath, "startCustomization");
 
-      @Nullable
-      @Override
-      protected JComponent createCenterPanel() {
-        return new JLabel("Connecting to plugin repository");
-      }
-    };
+        FileUtil.delete(customizeDir);
+        FileUtil.createDirectory(customizeDir);
 
-    Application.get().executeOnPooledThread(() -> {
-      MultiMap<String, PluginDescriptor> pluginDescriptors = new MultiMap<>();
-      Map<String, PluginTemplate> predefinedTemplateSets = new TreeMap<>();
-      try {
-        List<PluginDescriptor> ideaPluginDescriptors = RepositoryHelper.loadOnlyPluginsFromRepository(null, UpdateSettings.getInstance().getChannel(), EarlyAccessProgramManager.getInstance());
-        for (PluginDescriptor pluginDescriptor : ideaPluginDescriptors) {
-          Set<String> tags = pluginDescriptor.getTags();
-          if (tags.isEmpty()) {
-            pluginDescriptors.putValue("unknown", pluginDescriptor);
-          }
-          else {
-            for (String tag : tags) {
-              pluginDescriptors.putValue(tag, pluginDescriptor);
-            }
-          }
-        }
-        loadPredefinedTemplateSets(predefinedTemplateSets);
-      }
-      catch (Exception e) {
-        LOG.warn(e);
-      }
-
-      UIUtil.invokeLaterIfNeeded(() -> {
-        downloadDialog.close(DialogWrapper.OK_EXIT_CODE);
-        new CustomizeIDEWizardDialog(isDark, pluginDescriptors, predefinedTemplateSets).show();
-      });
-    });
-    downloadDialog.showAsync();
-  }
-
-  public static void loadPredefinedTemplateSets(Map<String, PluginTemplate> predefinedTemplateSets) {
-    String systemPath = ContainerPathManager.get().getSystemPath();
-
-    File customizeDir = new File(systemPath, "startCustomization");
-
-    FileUtil.delete(customizeDir);
-    FileUtil.createDirectory(customizeDir);
-
-    try {
-      File zipFile = new File(customizeDir, "remote.zip");
-
-      DownloadUtil.downloadContentToFile(null, TEMPLATES_URL, zipFile);
-
-      Map<String, byte[]> datas = new HashMap<>();
-      Map<String, URL> images = new HashMap<>();
-
-      try (ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(zipFile))) {
-        ZipEntry e;
-        while ((e = zipInputStream.getNextEntry()) != null) {
-          if (e.isDirectory()) {
-            continue;
-          }
-
-          boolean isSvg = false;
-          String name = e.getName();
-          if (name.endsWith(".xml") || (isSvg = name.endsWith(".svg"))) {
-            byte[] bytes = FileUtil.loadBytes(zipInputStream, (int)e.getSize());
-
-            String templateName = FileUtil.getNameWithoutExtension(onlyFileName(e));
-            if (isSvg) {
-              images.put(templateName, URLUtil.getJarEntryURL(zipFile, name.replace(" ", "%20")));
-            }
-            else {
-              datas.put(templateName, bytes);
-            }
-          }
-        }
-      }
-
-      for (Map.Entry<String, byte[]> entry : datas.entrySet()) {
         try {
-          String name = entry.getKey();
+            File zipFile = new File(customizeDir, "remote.zip");
 
-          Document document = JDOMUtil.loadDocument(new UnsyncByteArrayInputStream(entry.getValue()));
+            DownloadUtil.downloadContentToFile(null, TEMPLATES_URL, zipFile);
 
-          URL imageUrl = images.get(name);
+            Map<String, byte[]> datas = new HashMap<>();
+            Map<String, URL> images = new HashMap<>();
 
-          Image image = imageUrl == null ? Image.empty(IMAGE_SIZE) : ImageEffects.resize(Image.fromUrl(imageUrl), IMAGE_SIZE, IMAGE_SIZE);
+            try (ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(zipFile))) {
+                ZipEntry e;
+                while ((e = zipInputStream.getNextEntry()) != null) {
+                    if (e.isDirectory()) {
+                        continue;
+                    }
 
-          readPredefinePluginSet(document, name, image, predefinedTemplateSets);
+                    boolean isSvg = false;
+                    String name = e.getName();
+                    if (name.endsWith(".xml") || (isSvg = name.endsWith(".svg"))) {
+                        byte[] bytes = FileUtil.loadBytes(zipInputStream, (int)e.getSize());
+
+                        String templateName = FileUtil.getNameWithoutExtension(onlyFileName(e));
+                        if (isSvg) {
+                            images.put(templateName, URLUtil.getJarEntryURL(zipFile, name.replace(" ", "%20")));
+                        }
+                        else {
+                            datas.put(templateName, bytes);
+                        }
+                    }
+                }
+            }
+
+            for (Map.Entry<String, byte[]> entry : datas.entrySet()) {
+                try {
+                    String name = entry.getKey();
+
+                    Document document = JDOMUtil.loadDocument(new UnsyncByteArrayInputStream(entry.getValue()));
+
+                    URL imageUrl = images.get(name);
+
+                    Image image =
+                        imageUrl == null ? Image.empty(IMAGE_SIZE) : ImageEffects.resize(Image.fromUrl(imageUrl), IMAGE_SIZE, IMAGE_SIZE);
+
+                    readPredefinePluginSet(document, name, image, predefinedTemplateSets);
+                }
+                catch (Exception e) {
+                    LOG.warn(e);
+                }
+            }
         }
-        catch (Exception e) {
-          LOG.warn(e);
+        catch (IOException e) {
+            LOG.warn(e);
         }
-      }
     }
-    catch (IOException e) {
-      LOG.warn(e);
-    }
-  }
 
-  private static String onlyFileName(ZipEntry entry) {
-    String name = entry.getName();
-    int i = name.lastIndexOf('/');
-    if (i != -1) {
-      return name.substring(i + 1, name.length());
+    private static String onlyFileName(ZipEntry entry) {
+        String name = entry.getName();
+        int i = name.lastIndexOf('/');
+        if (i != -1) {
+            return name.substring(i + 1, name.length());
+        }
+        else {
+            return name;
+        }
     }
-    else {
-      return name;
-    }
-  }
 
-  private static void readPredefinePluginSet(Document document, String setName, Image image, Map<String, PluginTemplate> map) {
-    Set<String> pluginIds = new HashSet<>();
-    Element rootElement = document.getRootElement();
-    String description = rootElement.getChildTextTrim("description");
-    for (Element element : rootElement.getChildren("plugin")) {
-      String id = element.getAttributeValue("id");
-      if (id == null) {
-        continue;
-      }
+    private static void readPredefinePluginSet(Document document, String setName, Image image, Map<String, PluginTemplate> map) {
+        Set<String> pluginIds = new HashSet<>();
+        Element rootElement = document.getRootElement();
+        String description = rootElement.getChildTextTrim("description");
+        for (Element element : rootElement.getChildren("plugin")) {
+            String id = element.getAttributeValue("id");
+            if (id == null) {
+                continue;
+            }
 
-      pluginIds.add(id);
+            pluginIds.add(id);
+        }
+        int row = Integer.parseInt(rootElement.getAttributeValue("row", "0"));
+        int col = Integer.parseInt(rootElement.getAttributeValue("col", "0"));
+        PluginTemplate template = new PluginTemplate(pluginIds, description, image, row, col);
+        map.put(setName, template);
     }
-    int row = Integer.parseInt(rootElement.getAttributeValue("row", "0"));
-    int col = Integer.parseInt(rootElement.getAttributeValue("col", "0"));
-    PluginTemplate template = new PluginTemplate(pluginIds, description, image, row, col);
-    map.put(setName, template);
-  }
 
-  private static void initLaf(boolean isDark) {
-    try {
-      UIManager.setLookAndFeel(isDark ? new DarculaLaf() : new IntelliJLaf());
+    private static void initLaf(boolean isDark) {
+        try {
+            UIManager.setLookAndFeel(isDark ? new DarculaLaf() : new IntelliJLaf());
+        }
+        catch (Exception ignored) {
+        }
     }
-    catch (Exception ignored) {
-    }
-  }
 }

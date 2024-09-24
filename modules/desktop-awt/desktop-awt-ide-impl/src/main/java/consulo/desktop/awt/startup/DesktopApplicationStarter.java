@@ -115,7 +115,12 @@ public class DesktopApplicationStarter extends ApplicationStarter {
 
     @Nonnull
     @Override
-    protected Application createApplication(ComponentBinding componentBinding, boolean isHeadlessMode, SimpleReference<StartupProgress> splashRef, CommandLineArgs args) {
+    protected Application createApplication(
+        ComponentBinding componentBinding,
+        boolean isHeadlessMode,
+        SimpleReference<StartupProgress> splashRef,
+        CommandLineArgs args
+    ) {
         return new DesktopApplicationImpl(componentBinding, isHeadlessMode, splashRef);
     }
 
@@ -163,7 +168,13 @@ public class DesktopApplicationStarter extends ApplicationStarter {
     }
 
     @Override
-    public void main(StatCollector stat, Runnable appInitializeMark, ApplicationEx app, boolean newConfigFolder, @Nonnull CommandLineArgs args) {
+    public void main(
+        StatCollector stat,
+        Runnable appInitializeMark,
+        ApplicationEx app,
+        boolean newConfigFolder,
+        @Nonnull CommandLineArgs args
+    ) {
         IdeEventQueue.getInstance().addIdleTimeCounterRequest();
 
         appInitializeMark.run();
@@ -197,10 +208,10 @@ public class DesktopApplicationStarter extends ApplicationStarter {
             // Event queue should not be changed during initialization of application components.
             // It also cannot be changed before initialization of application components because IdeEventQueue uses other
             // application components. So it is proper to perform replacement only here.
-            DesktopWindowManagerImpl windowManager = (DesktopWindowManagerImpl) WindowManager.getInstance();
+            DesktopWindowManagerImpl windowManager = (DesktopWindowManagerImpl)WindowManager.getInstance();
             IdeEventQueue.getInstance().setWindowManager(windowManager);
 
-            RecentProjectsManagerImpl recentProjectsManager = (RecentProjectsManagerImpl) RecentProjectsManager.getInstance();
+            RecentProjectsManagerImpl recentProjectsManager = (RecentProjectsManagerImpl)RecentProjectsManager.getInstance();
 
             if (recentProjectsManager.willReopenProjectOnStart() && !args.isNoRecentProjects()) {
                 SwingUtilities.invokeLater(windowManager::showFrame);
@@ -250,7 +261,7 @@ public class DesktopApplicationStarter extends ApplicationStarter {
         HttpRequestHandler targetRequestHandler = null;
         for (HttpRequestHandler requestHandler : HttpRequestHandler.EP_NAME.getExtensionList()) {
             if (requestHandler instanceof JsonBaseRequestHandler) {
-                String apiUrl = ((JsonBaseRequestHandler) requestHandler).getApiUrl();
+                String apiUrl = ((JsonBaseRequestHandler)requestHandler).getApiUrl();
 
                 if (apiUrl.equals(jsonValue.url)) {
                     targetRequestHandler = requestHandler;
@@ -268,12 +279,12 @@ public class DesktopApplicationStarter extends ApplicationStarter {
                 return;
             }
 
-            Class requestClass = ((JsonPostRequestHandler) targetRequestHandler).getRequestClass();
+            Class requestClass = ((JsonPostRequestHandler)targetRequestHandler).getRequestClass();
             Object content = new Gson().fromJson(jsonValue.body, requestClass);
-            ((JsonPostRequestHandler) targetRequestHandler).handle(content);
+            ((JsonPostRequestHandler)targetRequestHandler).handle(content);
         }
         else if (targetRequestHandler instanceof JsonGetRequestHandler) {
-            ((JsonGetRequestHandler) targetRequestHandler).handle();
+            ((JsonGetRequestHandler)targetRequestHandler).handle();
         }
     }
 
@@ -286,34 +297,41 @@ public class DesktopApplicationStarter extends ApplicationStarter {
         if (pluginErrors != null) {
             for (CompositeMessage pluginError : pluginErrors) {
                 String message = IdeBundle.message("title.plugin.notification.title");
-                Notifications.Bus.notify(new Notification(PluginManagerMain.ourPluginsLifecycleGroup, message, pluginError.toString(), NotificationType.ERROR, new NotificationListener() {
-                    @RequiredUIAccess
-                    @Override
-                    public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
-                        notification.expire();
+                Notifications.Bus.notify(new Notification(
+                    PluginManagerMain.ourPluginsLifecycleGroup,
+                    message,
+                    pluginError.toString(),
+                    NotificationType.ERROR,
+                    new NotificationListener() {
+                        @RequiredUIAccess
+                        @Override
+                        public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
+                            notification.expire();
 
-                        String description = event.getDescription();
-                        if (PluginsInitializeInfo.EDIT.equals(description)) {
-                            IdeFrame ideFrame = WindowManagerEx.getInstanceEx().findFrameFor(null);
-                            ShowSettingsUtil.getInstance().showSettingsDialog(ideFrame == null ? null : ideFrame.getProject(), PluginsConfigurable.ID, null);
-                            return;
-                        }
+                            String description = event.getDescription();
+                            if (PluginsInitializeInfo.EDIT.equals(description)) {
+                                IdeFrame ideFrame = WindowManagerEx.getInstanceEx().findFrameFor(null);
+                                ShowSettingsUtil.getInstance()
+                                    .showSettingsDialog(ideFrame == null ? null : ideFrame.getProject(), PluginsConfigurable.ID, null);
+                                return;
+                            }
 
-                        Set<PluginId> disabledPlugins = PluginManager.getDisabledPlugins();
-                        if (plugins2Disable != null && PluginsInitializeInfo.DISABLE.equals(description)) {
-                            for (PluginId pluginId : plugins2Disable) {
-                                if (!disabledPlugins.contains(pluginId)) {
-                                    disabledPlugins.add(pluginId);
+                            Set<PluginId> disabledPlugins = PluginManager.getDisabledPlugins();
+                            if (plugins2Disable != null && PluginsInitializeInfo.DISABLE.equals(description)) {
+                                for (PluginId pluginId : plugins2Disable) {
+                                    if (!disabledPlugins.contains(pluginId)) {
+                                        disabledPlugins.add(pluginId);
+                                    }
                                 }
                             }
-                        }
-                        else if (plugins2Enable != null && PluginsInitializeInfo.ENABLE.equals(description)) {
-                            disabledPlugins.removeAll(plugins2Enable);
-                        }
+                            else if (plugins2Enable != null && PluginsInitializeInfo.ENABLE.equals(description)) {
+                                disabledPlugins.removeAll(plugins2Enable);
+                            }
 
-                        PluginManager.replaceDisabledPlugins(disabledPlugins);
+                            PluginManager.replaceDisabledPlugins(disabledPlugins);
+                        }
                     }
-                }));
+                ));
             }
         }
     }

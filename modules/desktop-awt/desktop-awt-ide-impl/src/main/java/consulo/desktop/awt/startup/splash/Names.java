@@ -20,15 +20,15 @@ package consulo.desktop.awt.startup.splash;
  * @since 11-May-17
  */
 class Names {
-  final static String[] ourEasterNames = {"VISTALL", "IJ_IDEA", ".WORMIX"};
+    final static String[] ourEasterNames = {"VISTALL", "IJ_IDEA", ".WORMIX"};
 
-  final static String ourName = "CONSULO";
+    final static String ourName = "CONSULO";
 
-  static {
-    for (String easterEgg : ourEasterNames) {
-      if (easterEgg.length() != ourName.length()) {
-        throw new IllegalArgumentException("bad text: " + easterEgg);
-      }
+    static {
+        for (String easterEgg : ourEasterNames) {
+            if (easterEgg.length() != ourName.length()) {
+                throw new IllegalArgumentException("bad text: " + easterEgg);
+            }
+        }
     }
-  }
 }
