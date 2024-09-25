@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,36 +17,36 @@ package consulo.desktop.awt.startup.splash;
 
 /**
  * @author VISTALL
- * @since 11-Dec-16.
+ * @since 2016-12-11
  */
 abstract class AlphabetDraw {
-  void horizonalTop(int[][] data, int fromY) {
-    horizontal(data, 1, fromY);
-  }
-
-  void horizonalDown(int[][] data, int fromY) {
-    horizontal(data, 5, fromY);
-  }
-
-  void horizontal(int[][] data, int x, int fromY) {
-    horizontal(data, x, fromY, 4);
-  }
-
-  void horizontal(int[][] data, int x, int fromY, int step) {
-    for (int i = fromY; i <= (fromY + step); i++) {
-      data[i][x] = 1;
+    void horizonalTop(int[][] data, int fromY) {
+        horizontal(data, 1, fromY);
     }
-  }
 
-  void vertical(int[][] data, int y) {
-    vertical(data, y, 1, 5);
-  }
-
-  void vertical(int[][] data, int y, int fromX, int toX) {
-    for (int i = fromX; i <= toX; i++) {
-      data[y][i] = 1;
+    void horizonalDown(int[][] data, int fromY) {
+        horizontal(data, 5, fromY);
     }
-  }
 
-  abstract void draw(int offset, int[][] data);
+    void horizontal(int[][] data, int x, int fromY) {
+        horizontal(data, x, fromY, 4);
+    }
+
+    void horizontal(int[][] data, int x, int fromY, int step) {
+        for (int i = fromY; i <= (fromY + step); i++) {
+            data[i][x] = 1;
+        }
+    }
+
+    void vertical(int[][] data, int y) {
+        vertical(data, y, 1, 5);
+    }
+
+    void vertical(int[][] data, int y, int fromX, int toX) {
+        for (int i = fromX; i <= toX; i++) {
+            data[y][i] = 1;
+        }
+    }
+
+    abstract void draw(int offset, int[][] data);
 }

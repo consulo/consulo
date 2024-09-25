@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,97 +26,98 @@ import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 
 /**
  * @author VISTALL
- * @since 29.11.14
+ * @since 2014-11-29
  */
 public class CustomizePluginTemplatesStepPanel extends AbstractCustomizeWizardStep {
-  @Nonnull
-  private final Map<String, PluginTemplate> myPredefinedTemplates;
-  @Nonnull
-  private Map<String, JCheckBox> mySetBoxes = new HashMap<>();
+    @Nonnull
+    private final Map<String, PluginTemplate> myPredefinedTemplates;
+    @Nonnull
+    private Map<String, JCheckBox> mySetBoxes = new HashMap<>();
 
-  public CustomizePluginTemplatesStepPanel(Map<String, PluginTemplate> predefinedTemplates) {
-    myPredefinedTemplates = predefinedTemplates;
-    setLayout(new BorderLayout());
+    public CustomizePluginTemplatesStepPanel(Map<String, PluginTemplate> predefinedTemplates) {
+        myPredefinedTemplates = predefinedTemplates;
+        setLayout(new BorderLayout());
 
-    JPanel panel = new JPanel(new GridBagLayout());
+        JPanel panel = new JPanel(new GridBagLayout());
 
-    for (Map.Entry<String, PluginTemplate> entry : predefinedTemplates.entrySet()) {
-      JCheckBox checkBox = new JCheckBox(entry.getKey());
-      checkBox.setFont(UIUtil.getLabelFont(UIUtil.FontSize.BIGGER));
-      checkBox.setOpaque(false);
+        for (Map.Entry<String, PluginTemplate> entry : predefinedTemplates.entrySet()) {
+            JCheckBox checkBox = new JCheckBox(entry.getKey());
+            checkBox.setFont(UIUtil.getLabelFont(UIUtil.FontSize.BIGGER));
+            checkBox.setOpaque(false);
 
-      mySetBoxes.put(entry.getKey(), checkBox);
+            mySetBoxes.put(entry.getKey(), checkBox);
 
-      JPanel buttonPanel = createBigButtonPanel(new GridBagLayout(), checkBox, true, () -> {
-      });
+            JPanel buttonPanel = createBigButtonPanel(new GridBagLayout(), checkBox, true, () -> {
+            });
 
-      buttonPanel.setBorder(JBUI.Borders.empty(10));
+            buttonPanel.setBorder(JBUI.Borders.empty(10));
 
-      PluginTemplate pluginTemplate = entry.getValue();
-      Image icon = pluginTemplate.getImage();
+            PluginTemplate pluginTemplate = entry.getValue();
+            Image icon = pluginTemplate.getImage();
 
-      GridBagConstraints constraints = new GridBagConstraints();
-      constraints.gridy = 0;
-      constraints.insets = JBUI.insets(10, 0);
-      buttonPanel.add(TargetAWT.to(ImageBox.create(icon)), constraints);
+            GridBagConstraints constraints = new GridBagConstraints();
+            constraints.gridy = 0;
+            constraints.insets = JBUI.insets(10, 0);
+            buttonPanel.add(TargetAWT.to(ImageBox.create(icon)), constraints);
 
-      constraints.gridy = 1;
-      buttonPanel.add(checkBox, constraints);
+            constraints.gridy = 1;
+            buttonPanel.add(checkBox, constraints);
 
-      JLabel descriptionLabel = new MultiLineLabel(StringUtil.notNullize(pluginTemplate.getDescription()));
-      descriptionLabel.setFont(UIUtil.getLabelFont(UIUtil.FontSize.SMALL));
-      descriptionLabel.setForeground(JBColor.gray);
+            JLabel descriptionLabel = new MultiLineLabel(StringUtil.notNullize(pluginTemplate.getDescription()));
+            descriptionLabel.setFont(UIUtil.getLabelFont(UIUtil.FontSize.SMALL));
+            descriptionLabel.setForeground(JBColor.gray);
 
-      constraints.gridy = 2;
-      buttonPanel.add(descriptionLabel, constraints);
+            constraints.gridy = 2;
+            buttonPanel.add(descriptionLabel, constraints);
 
-      GridBagConstraints buttonConstraints = new GridBagConstraints();
-      buttonConstraints.fill = GridBagConstraints.HORIZONTAL;
-      buttonConstraints.gridx = pluginTemplate.getCol();
-      buttonConstraints.gridy = pluginTemplate.getRow();
-      buttonConstraints.weightx = 1;
-      buttonConstraints.weighty = 1;
-      buttonConstraints.anchor = GridBagConstraints.NORTHWEST;
+            GridBagConstraints buttonConstraints = new GridBagConstraints();
+            buttonConstraints.fill = GridBagConstraints.HORIZONTAL;
+            buttonConstraints.gridx = pluginTemplate.getCol();
+            buttonConstraints.gridy = pluginTemplate.getRow();
+            buttonConstraints.weightx = 1;
+            buttonConstraints.weighty = 1;
+            buttonConstraints.anchor = GridBagConstraints.NORTHWEST;
 
-      panel.add(buttonPanel, buttonConstraints);
-    }
-
-    JScrollPane pane = ScrollPaneFactory.createScrollPane(panel);
-    pane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-    add(pane, BorderLayout.CENTER);
-  }
-
-  @Nonnull
-  public Set<String> getEnablePluginSet() {
-    Set<String> set = new HashSet<>();
-    for (Map.Entry<String, JCheckBox> entry : mySetBoxes.entrySet()) {
-        if(entry.getValue().isSelected()) {
-          PluginTemplate template = myPredefinedTemplates.get(entry.getKey());
-
-          set.addAll(template.getPluginIds());
+            panel.add(buttonPanel, buttonConstraints);
         }
+
+        JScrollPane pane = ScrollPaneFactory.createScrollPane(panel);
+        pane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        add(pane, BorderLayout.CENTER);
     }
-    return set;
-  }
 
-  @Override
-  protected String getTitle() {
-    return "Predefined Plugin Sets";
-  }
+    @Nonnull
+    public Set<String> getEnablePluginSet() {
+        Set<String> set = new HashSet<>();
+        for (Map.Entry<String, JCheckBox> entry : mySetBoxes.entrySet()) {
+            if (entry.getValue().isSelected()) {
+                PluginTemplate template = myPredefinedTemplates.get(entry.getKey());
 
-  @Override
-  protected String getHTMLHeader() {
-    return "<html><body><h2>Select predefined plugin sets</h2></body></html>";
-  }
+                set.addAll(template.getPluginIds());
+            }
+        }
+        return set;
+    }
 
-  @Override
-  protected String getHTMLFooter() {
-    return null;
-  }
+    @Override
+    protected String getTitle() {
+        return "Predefined Plugin Sets";
+    }
+
+    @Override
+    protected String getHTMLHeader() {
+        return "<html><body><h2>Select predefined plugin sets</h2></body></html>";
+    }
+
+    @Override
+    protected String getHTMLFooter() {
+        return null;
+    }
 }

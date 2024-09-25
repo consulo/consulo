@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2020 consulo.io
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import com.google.gson.JsonElement;
  * @since 2020-11-13
  */
 public class CommandLineJsonValue {
-  public String url;
+    public String url;
 
-  public JsonElement body;
+    public JsonElement body;
 }

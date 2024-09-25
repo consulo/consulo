@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018 consulo.io
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,14 +46,15 @@ import consulo.desktop.awt.wm.impl.DesktopWindowManagerImpl;
 import consulo.desktop.awt.wm.impl.MacTopMenuInitializer;
 import consulo.desktop.awt.wm.impl.TopMenuInitializer;
 import consulo.externalService.statistic.UsageTrigger;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.CommandLineProcessor;
 import consulo.ide.impl.idea.ide.RecentProjectsManagerImpl;
 import consulo.ide.impl.idea.ide.plugins.PluginManagerMain;
 import consulo.ide.impl.idea.ide.ui.LafManager;
 import consulo.ide.impl.idea.openapi.wm.impl.SystemDock;
 import consulo.ide.impl.plugins.PluginsConfigurable;
+import consulo.ide.localize.IdeLocalize;
 import consulo.ide.setting.ShowSettingsUtil;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.project.Project;
@@ -79,6 +80,7 @@ import java.io.Reader;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ForkJoinPool;
 
@@ -115,7 +117,12 @@ public class DesktopApplicationStarter extends ApplicationStarter {
 
     @Nonnull
     @Override
-    protected Application createApplication(ComponentBinding componentBinding, boolean isHeadlessMode, SimpleReference<StartupProgress> splashRef, CommandLineArgs args) {
+    protected Application createApplication(
+        ComponentBinding componentBinding,
+        boolean isHeadlessMode,
+        SimpleReference<StartupProgress> splashRef,
+        CommandLineArgs args
+    ) {
         return new DesktopApplicationImpl(componentBinding, isHeadlessMode, splashRef);
     }
 
@@ -163,7 +170,13 @@ public class DesktopApplicationStarter extends ApplicationStarter {
     }
 
     @Override
-    public void main(StatCollector stat, Runnable appInitializeMark, ApplicationEx app, boolean newConfigFolder, @Nonnull CommandLineArgs args) {
+    public void main(
+        StatCollector stat,
+        Runnable appInitializeMark,
+        ApplicationEx app,
+        boolean newConfigFolder,
+        @Nonnull CommandLineArgs args
+    ) {
         IdeEventQueue.getInstance().addIdleTimeCounterRequest();
 
         appInitializeMark.run();
@@ -197,10 +210,10 @@ public class DesktopApplicationStarter extends ApplicationStarter {
             // Event queue should not be changed during initialization of application components.
             // It also cannot be changed before initialization of application components because IdeEventQueue uses other
             // application components. So it is proper to perform replacement only here.
-            DesktopWindowManagerImpl windowManager = (DesktopWindowManagerImpl) WindowManager.getInstance();
+            DesktopWindowManagerImpl windowManager = (DesktopWindowManagerImpl)WindowManager.getInstance();
             IdeEventQueue.getInstance().setWindowManager(windowManager);
 
-            RecentProjectsManagerImpl recentProjectsManager = (RecentProjectsManagerImpl) RecentProjectsManager.getInstance();
+            RecentProjectsManagerImpl recentProjectsManager = (RecentProjectsManagerImpl)RecentProjectsManager.getInstance();
 
             if (recentProjectsManager.willReopenProjectOnStart() && !args.isNoRecentProjects()) {
                 SwingUtilities.invokeLater(windowManager::showFrame);
@@ -209,25 +222,28 @@ public class DesktopApplicationStarter extends ApplicationStarter {
                 SwingUtilities.invokeLater(() -> WelcomeFrameManager.getInstance().showFrame());
             }
 
-            app.invokeLater(() -> {
-                if (!args.isNoRecentProjects()) {
-                    AsyncResult<Project> projectFromCommandLine = AsyncResult.rejected();
+            app.invokeLater(
+                () -> {
+                    if (!args.isNoRecentProjects()) {
+                        AsyncResult<Project> projectFromCommandLine = AsyncResult.rejected();
 
-                    if (isPerformProjectLoad()) {
-                        projectFromCommandLine = CommandLineProcessor.processExternalCommandLine(args, null);
+                        if (isPerformProjectLoad()) {
+                            projectFromCommandLine = CommandLineProcessor.processExternalCommandLine(args, null);
+                        }
+
+                        projectFromCommandLine.doWhenRejected(recentProjectsManager::doReopenLastProject);
                     }
 
-                    projectFromCommandLine.doWhenRejected(recentProjectsManager::doReopenLastProject);
-                }
+                    if (args.getJson() != null) {
+                        runJsonRequest(args.getJson());
+                    }
 
-                if (args.getJson() != null) {
-                    runJsonRequest(args.getJson());
-                }
+                    SwingUtilities.invokeLater(() -> reportPluginError(myPluginsInitializeInfo));
 
-                SwingUtilities.invokeLater(() -> reportPluginError(myPluginsInitializeInfo));
-
-                UsageTrigger.trigger("consulo.app.started");
-            }, app.getNoneModalityState());
+                    UsageTrigger.trigger("consulo.app.started");
+                },
+                app.getNoneModalityState()
+            );
 
             stat.dump("Startup statistics", LOG::info);
         }
@@ -249,8 +265,8 @@ public class DesktopApplicationStarter extends ApplicationStarter {
 
         HttpRequestHandler targetRequestHandler = null;
         for (HttpRequestHandler requestHandler : HttpRequestHandler.EP_NAME.getExtensionList()) {
-            if (requestHandler instanceof JsonBaseRequestHandler) {
-                String apiUrl = ((JsonBaseRequestHandler) requestHandler).getApiUrl();
+            if (requestHandler instanceof JsonBaseRequestHandler jsonBaseRequestHandler) {
+                String apiUrl = jsonBaseRequestHandler.getApiUrl();
 
                 if (apiUrl.equals(jsonValue.url)) {
                     targetRequestHandler = requestHandler;
@@ -263,57 +279,64 @@ public class DesktopApplicationStarter extends ApplicationStarter {
             return;
         }
 
-        if (targetRequestHandler instanceof JsonPostRequestHandler) {
+        if (targetRequestHandler instanceof JsonPostRequestHandler jsonPostRequestHandler) {
             if (jsonValue.body == null) {
                 return;
             }
 
-            Class requestClass = ((JsonPostRequestHandler) targetRequestHandler).getRequestClass();
+            Class requestClass = jsonPostRequestHandler.getRequestClass();
             Object content = new Gson().fromJson(jsonValue.body, requestClass);
-            ((JsonPostRequestHandler) targetRequestHandler).handle(content);
+            jsonPostRequestHandler.handle(content);
         }
-        else if (targetRequestHandler instanceof JsonGetRequestHandler) {
-            ((JsonGetRequestHandler) targetRequestHandler).handle();
+        else if (targetRequestHandler instanceof JsonGetRequestHandler jsonGetRequestHandler) {
+            jsonGetRequestHandler.handle();
         }
     }
 
     static void reportPluginError(PluginsInitializeInfo info) {
-        java.util.List<CompositeMessage> pluginErrors = info.getPluginErrors();
+        List<CompositeMessage> pluginErrors = info.getPluginErrors();
 
         Set<PluginId> plugins2Disable = info.getPlugins2Disable();
         Set<PluginId> plugins2Enable = info.getPlugins2Enable();
 
         if (pluginErrors != null) {
             for (CompositeMessage pluginError : pluginErrors) {
-                String message = IdeBundle.message("title.plugin.notification.title");
-                Notifications.Bus.notify(new Notification(PluginManagerMain.ourPluginsLifecycleGroup, message, pluginError.toString(), NotificationType.ERROR, new NotificationListener() {
-                    @RequiredUIAccess
-                    @Override
-                    public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
-                        notification.expire();
+                LocalizeValue message = IdeLocalize.titlePluginNotificationTitle();
+                Notifications.Bus.notify(new Notification(
+                    PluginManagerMain.ourPluginsLifecycleGroup,
+                    message.get(),
+                    pluginError.toString(),
+                    NotificationType.ERROR,
+                    new NotificationListener() {
+                        @RequiredUIAccess
+                        @Override
+                        public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
+                            notification.expire();
 
-                        String description = event.getDescription();
-                        if (PluginsInitializeInfo.EDIT.equals(description)) {
-                            IdeFrame ideFrame = WindowManagerEx.getInstanceEx().findFrameFor(null);
-                            ShowSettingsUtil.getInstance().showSettingsDialog(ideFrame == null ? null : ideFrame.getProject(), PluginsConfigurable.ID, null);
-                            return;
-                        }
+                            String description = event.getDescription();
+                            if (PluginsInitializeInfo.EDIT.equals(description)) {
+                                IdeFrame ideFrame = WindowManagerEx.getInstanceEx().findFrameFor(null);
+                                ShowSettingsUtil.getInstance()
+                                    .showSettingsDialog(ideFrame == null ? null : ideFrame.getProject(), PluginsConfigurable.ID, null);
+                                return;
+                            }
 
-                        Set<PluginId> disabledPlugins = PluginManager.getDisabledPlugins();
-                        if (plugins2Disable != null && PluginsInitializeInfo.DISABLE.equals(description)) {
-                            for (PluginId pluginId : plugins2Disable) {
-                                if (!disabledPlugins.contains(pluginId)) {
-                                    disabledPlugins.add(pluginId);
+                            Set<PluginId> disabledPlugins = PluginManager.getDisabledPlugins();
+                            if (plugins2Disable != null && PluginsInitializeInfo.DISABLE.equals(description)) {
+                                for (PluginId pluginId : plugins2Disable) {
+                                    if (!disabledPlugins.contains(pluginId)) {
+                                        disabledPlugins.add(pluginId);
+                                    }
                                 }
                             }
-                        }
-                        else if (plugins2Enable != null && PluginsInitializeInfo.ENABLE.equals(description)) {
-                            disabledPlugins.removeAll(plugins2Enable);
-                        }
+                            else if (plugins2Enable != null && PluginsInitializeInfo.ENABLE.equals(description)) {
+                                disabledPlugins.removeAll(plugins2Enable);
+                            }
 
-                        PluginManager.replaceDisabledPlugins(disabledPlugins);
+                            PluginManager.replaceDisabledPlugins(disabledPlugins);
+                        }
                     }
-                }));
+                ));
             }
         }
     }
