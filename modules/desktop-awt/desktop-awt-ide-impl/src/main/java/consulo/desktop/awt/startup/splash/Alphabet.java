@@ -29,325 +29,238 @@ class Alphabet {
     final static Character[] alphabet;
 
     static {
-        validCharacters.put('A', new AlphabetDraw() {
-            @Override
-            void draw(int offset, int[][] data) {
-                vertical(data, offset);
-                vertical(data, offset + 4);
-                horizonalTop(data, offset);
-                horizontal(data, 3, offset);
-            }
-        });
+        validCharacters.put('A', new AlphabetDraw(
+            0b11111,
+            0b10001,
+            0b11111,
+            0b10001,
+            0b10001
+        ));
 
-        validCharacters.put('B', new AlphabetDraw() {
-            @Override
-            void draw(int offset, int[][] data) {
-                vertical(data, offset);
-                data[offset + 1][1] = 1;
-                data[offset + 2][1] = 1;
-                data[offset + 3][1] = 1;
-                data[offset + 3][2] = 1;
-                data[offset + 4][4] = 1;
-                horizontal(data, 3, offset);
-                horizonalDown(data, offset);
-            }
-        });
+        validCharacters.put('B', new AlphabetDraw(
+            0b11110,
+            0b10010,
+            0b11111,
+            0b10001,
+            0b11111
+        ));
 
-        validCharacters.put('C', new AlphabetDraw() {
-            @Override
-            void draw(int offset, int[][] data) {
-                vertical(data, offset);
-                horizonalTop(data, offset);
-                horizonalDown(data, offset);
-            }
-        });
+        validCharacters.put('C', new AlphabetDraw(
+            0b11111,
+            0b10000,
+            0b10000,
+            0b10000,
+            0b11111
+        ));
 
-        validCharacters.put('D', new AlphabetDraw() {
-            @Override
-            void draw(int offset, int[][] data) {
-                vertical(data, offset);
-                vertical(data, offset + 4, 2, 5);
-                horizontal(data, 1, offset, 3);
-                horizonalDown(data, offset);
-            }
-        });
+        validCharacters.put('D', new AlphabetDraw(
+            0b11110,
+            0b10001,
+            0b10001,
+            0b10001,
+            0b11111
+        ));
 
-        validCharacters.put('E', new AlphabetDraw() {
-            @Override
-            void draw(int offset, int[][] data) {
-                vertical(data, offset);
-                horizonalTop(data, offset);
-                horizontal(data, 3, offset);
-                horizonalDown(data, offset);
-            }
-        });
+        validCharacters.put('E', new AlphabetDraw(
+            0b11111,
+            0b10000,
+            0b11111,
+            0b10000,
+            0b11111
+        ));
 
-        validCharacters.put('F', new AlphabetDraw() {
-            @Override
-            void draw(int offset, int[][] data) {
-                vertical(data, offset);
-                horizonalTop(data, offset);
-                horizontal(data, 3, offset);
-            }
-        });
+        validCharacters.put('F', new AlphabetDraw(
+            0b11111,
+            0b10000,
+            0b11111,
+            0b10000,
+            0b10000
+        ));
 
-        validCharacters.put('O', new AlphabetDraw() {
-            @Override
-            void draw(int offset, int[][] data) {
-                vertical(data, offset);
-                vertical(data, offset + 4);
+        validCharacters.put('O', new AlphabetDraw(
+            0b11111,
+            0b10001,
+            0b10001,
+            0b10001,
+            0b11111
+        ));
 
-                horizonalTop(data, offset);
-                horizonalDown(data, offset);
-            }
-        });
+        validCharacters.put('N', new AlphabetDraw(
+            0b10001,
+            0b11001,
+            0b10101,
+            0b10011,
+            0b10001
+        ));
 
-        validCharacters.put('N', new AlphabetDraw() {
-            @Override
-            void draw(int offset, int[][] data) {
-                vertical(data, offset);
-                data[offset + 1][2] = 1;
-                data[offset + 2][3] = 1;
-                data[offset + 3][4] = 1;
-                vertical(data, offset + 4);
-            }
-        });
+        validCharacters.put('K', new AlphabetDraw(
+            0b10010,
+            0b10100,
+            0b11000,
+            0b10100,
+            0b10010
+        ));
 
-        validCharacters.put('K', new AlphabetDraw() {
-            @Override
-            void draw(int offset, int[][] data) {
-                vertical(data, offset);
-                data[offset + 3][1] = 1;
-                data[offset + 2][2] = 1;
-                data[offset + 1][3] = 1;
-                data[offset + 2][4] = 1;
-                data[offset + 3][5] = 1;
-            }
-        });
+        validCharacters.put('M', new AlphabetDraw(
+            0b10001,
+            0b11011,
+            0b10101,
+            0b10001,
+            0b10001
+        ));
 
-        validCharacters.put('M', new AlphabetDraw() {
-            @Override
-            void draw(int offset, int[][] data) {
-                vertical(data, offset);
-                data[offset + 1][2] = 1;
-                data[offset + 2][3] = 1;
-                data[offset + 3][2] = 1;
-                vertical(data, offset + 4);
-            }
-        });
+        validCharacters.put('P', new AlphabetDraw(
+            0b11111,
+            0b10001,
+            0b11111,
+            0b10000,
+            0b10000
+        ));
 
-        validCharacters.put('P', new AlphabetDraw() {
-            @Override
-            void draw(int offset, int[][] data) {
-                vertical(data, offset);
-                horizonalTop(data, offset);
-                horizontal(data, 3, offset);
-                data[offset + 4][2] = 1;
-            }
-        });
+        validCharacters.put('R', new AlphabetDraw(
+            0b11111,
+            0b10001,
+            0b11111,
+            0b10010,
+            0b10011
+        ));
 
-        validCharacters.put('R', new AlphabetDraw() {
-            @Override
-            void draw(int offset, int[][] data) {
-                vertical(data, offset);
-                horizonalTop(data, offset);
-                horizontal(data, 3, offset);
-                data[offset + 4][2] = 1;
-                data[offset + 3][4] = 1;
-                data[offset + 3][5] = 1;
-                data[offset + 4][5] = 1;
-            }
-        });
+        validCharacters.put('H', new AlphabetDraw(
+            0b10001,
+            0b10001,
+            0b11111,
+            0b10001,
+            0b10001
+        ));
 
-        validCharacters.put('H', new AlphabetDraw() {
-            @Override
-            void draw(int offset, int[][] data) {
-                vertical(data, offset);
-                horizontal(data, 3, offset);
-                vertical(data, offset + 4);
-            }
-        });
+        validCharacters.put('S', new AlphabetDraw(
+            0b11111,
+            0b10000,
+            0b11111,
+            0b00001,
+            0b11111
+        ));
 
-        validCharacters.put('S', new AlphabetDraw() {
-            @Override
-            void draw(int offset, int[][] data) {
-                horizonalTop(data, offset);
-                horizonalDown(data, offset);
-                horizontal(data, 3, offset);
-                data[offset][2] = 1;
-                data[offset + 4][4] = 1;
-            }
-        });
+        validCharacters.put('T', new AlphabetDraw(
+            0b11111,
+            0b00100,
+            0b00100,
+            0b00100,
+            0b00100
+        ));
 
-        validCharacters.put('T', new AlphabetDraw() {
-            @Override
-            void draw(int offset, int[][] data) {
-                horizonalTop(data, offset);
-                vertical(data, offset + 2);
-            }
-        });
+        validCharacters.put('I', new AlphabetDraw(
+            0b01110,
+            0b00100,
+            0b00100,
+            0b00100,
+            0b01110
+        ));
+        validCharacters.put('J', new AlphabetDraw(
+            0b11111,
+            0b00010,
+            0b00010,
+            0b10010,
+            0b11110
+        ));
 
-        validCharacters.put('I', new AlphabetDraw() {
-            @Override
-            void draw(int offset, int[][] data) {
-                data[offset + 1][1] = 1;
-                data[offset + 3][1] = 1;
-                vertical(data, offset + 2);
-                data[offset + 1][5] = 1;
-                data[offset + 3][5] = 1;
-            }
-        });
-        validCharacters.put('J', new AlphabetDraw() {
-            @Override
-            void draw(int offset, int[][] data) {
-                horizonalTop(data, offset);
-                vertical(data, offset + 3);
+        validCharacters.put('U', new AlphabetDraw(
+            0b10001,
+            0b10001,
+            0b10001,
+            0b10001,
+            0b11111
+        ));
 
-                data[offset][4] = 1;
-                data[offset][5] = 1;
-                data[offset + 1][5] = 1;
-                data[offset + 2][5] = 1;
-                data[offset + 3][5] = 1;
-            }
-        });
+        validCharacters.put('L', new AlphabetDraw(
+            0b10000,
+            0b10000,
+            0b10000,
+            0b10000,
+            0b11111
+        ));
 
-        validCharacters.put('U', new AlphabetDraw() {
-            @Override
-            void draw(int offset, int[][] data) {
-                horizonalDown(data, offset);
-                vertical(data, offset);
-                vertical(data, offset + 4);
-            }
-        });
+        validCharacters.put('Q', new AlphabetDraw(
+            0b11111,
+            0b10001,
+            0b10001,
+            0b10011,
+            0b11110
+        ));
 
-        validCharacters.put('L', new AlphabetDraw() {
-            @Override
-            void draw(int offset, int[][] data) {
-                vertical(data, offset);
-                horizonalDown(data, offset);
-            }
-        });
+        validCharacters.put('G', new AlphabetDraw(
+            0b11111,
+            0b10000,
+            0b10111,
+            0b10001,
+            0b11111
+        ));
 
-        validCharacters.put('Q', new AlphabetDraw() {
-            @Override
-            void draw(int offset, int[][] data) {
-                vertical(data, offset);
-                vertical(data, offset + 4);
+        validCharacters.put('Z', new AlphabetDraw(
+            0b11111,
+            0b00010,
+            0b00100,
+            0b01000,
+            0b11111
+        ));
 
-                horizonalTop(data, offset);
-                horizonalDown(data, offset);
+        validCharacters.put('Y', new AlphabetDraw(
+            0b10001,
+            0b10001,
+            0b11111,
+            0b00100,
+            0b00100
 
-                data[offset + 3][4] = 1;
-                data[offset + 4][5] = 0;
-            }
-        });
+        ));
 
-        validCharacters.put('G', new AlphabetDraw() {
-            @Override
-            void draw(int offset, int[][] data) {
-                vertical(data, offset);
-                vertical(data, offset + 4);
+        validCharacters.put('X', new AlphabetDraw(
+            0b10001,
+            0b01010,
+            0b00100,
+            0b01010,
+            0b10001
+        ));
 
-                horizonalTop(data, offset);
-                horizonalDown(data, offset);
+        validCharacters.put('V', new AlphabetDraw(
+            0b10001,
+            0b10001,
+            0b01010,
+            0b01010,
+            0b01110
+        ));
 
-                data[offset + 4][2] = 0;
-                data[offset + 2][3] = 1;
-                data[offset + 3][3] = 1;
-            }
-        });
+        validCharacters.put('W', new AlphabetDraw(
+            0b10001,
+            0b10001,
+            0b10101,
+            0b11011,
+            0b10001
+        ));
 
-        validCharacters.put('Z', new AlphabetDraw() {
-            @Override
-            void draw(int offset, int[][] data) {
-                horizonalTop(data, offset);
-                data[offset + 3][2] = 1;
-                data[offset + 2][3] = 1;
-                data[offset + 1][4] = 1;
-                horizonalDown(data, offset);
-            }
-        });
+        validCharacters.put('_', new AlphabetDraw(
+            0b00000,
+            0b00000,
+            0b00000,
+            0b00000,
+            0b11111
+        ));
 
-        validCharacters.put('Y', new AlphabetDraw() {
-            @Override
-            void draw(int offset, int[][] data) {
-                data[offset][1] = 1;
-                data[offset][2] = 1;
-                data[offset + 4][1] = 1;
-                data[offset + 4][2] = 1;
-                horizontal(data, 3, offset);
-                data[offset + 2][4] = 1;
-                data[offset + 2][5] = 1;
-            }
-        });
-
-        validCharacters.put('X', new AlphabetDraw() {
-            @Override
-            void draw(int offset, int[][] data) {
-                data[offset][1] = 1;
-                data[offset + 1][2] = 1;
-                data[offset + 2][3] = 1;
-                data[offset + 3][2] = 1;
-                data[offset + 4][1] = 1;
-                data[offset][5] = 1;
-                data[offset + 1][4] = 1;
-                data[offset + 3][4] = 1;
-                data[offset + 4][5] = 1;
-            }
-        });
-
-        validCharacters.put('V', new AlphabetDraw() {
-            @Override
-            void draw(int offset, int[][] data) {
-                horizonalDown(data, offset);
-                vertical(data, offset);
-                vertical(data, offset + 4);
-
-                data[offset][4] = 0;
-                data[offset + 1][4] = 1;
-                data[offset][5] = 0;
-                data[offset + 3][4] = 1;
-                data[offset + 4][4] = 0;
-                data[offset + 4][5] = 0;
-            }
-        });
-
-        validCharacters.put('W', new AlphabetDraw() {
-            @Override
-            void draw(int offset, int[][] data) {
-                vertical(data, offset);
-                data[offset + 1][4] = 1;
-                data[offset + 2][3] = 1;
-                data[offset + 3][4] = 1;
-                vertical(data, offset + 4);
-            }
-        });
-
-        validCharacters.put('_', new AlphabetDraw() {
-            @Override
-            void draw(int offset, int[][] data) {
-                horizonalDown(data, offset);
-            }
-        });
-
-        validCharacters.put('.', new AlphabetDraw() {
-            @Override
-            void draw(int offset, int[][] data) {
-                data[offset + 2][5] = 1;
-            }
-        });
+        validCharacters.put('.', new AlphabetDraw(
+            0b00000,
+            0b00000,
+            0b00000,
+            0b00000,
+            0b00100
+        ));
 
         // dummy
-        validCharacters.put(' ', new AlphabetDraw() {
-            @Override
-            void draw(int offset, int[][] data) {
-                vertical(data, offset);
-                vertical(data, offset + 1);
-                vertical(data, offset + 2);
-                vertical(data, offset + 3);
-                vertical(data, offset + 4);
-            }
-        });
+        validCharacters.put(' ', new AlphabetDraw(
+            0b11111,
+            0b11111,
+            0b11111,
+            0b11111,
+            0b11111
+        ));
 
         Set<Character> list = new TreeSet<>(validCharacters.keySet());
         list.remove('_');

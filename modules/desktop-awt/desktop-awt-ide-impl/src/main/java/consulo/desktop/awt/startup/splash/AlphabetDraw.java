@@ -19,34 +19,19 @@ package consulo.desktop.awt.startup.splash;
  * @author VISTALL
  * @since 2016-12-11
  */
-abstract class AlphabetDraw {
-    void horizonalTop(int[][] data, int fromY) {
-        horizontal(data, 1, fromY);
+public class AlphabetDraw {
+    private final int[] rows;
+
+    AlphabetDraw(int... rows) {
+        this.rows = rows;
     }
 
-    void horizonalDown(int[][] data, int fromY) {
-        horizontal(data, 5, fromY);
-    }
-
-    void horizontal(int[][] data, int x, int fromY) {
-        horizontal(data, x, fromY, 4);
-    }
-
-    void horizontal(int[][] data, int x, int fromY, int step) {
-        for (int i = fromY; i <= (fromY + step); i++) {
-            data[i][x] = 1;
+    void draw(int offset, int[][] data) {
+        for (int y = 0; y < rows.length; y++) {
+            int row = rows[y];
+            for (int x = 0; x < 5; x++) {
+                data[x + offset][y + 1] = (row >> (4 - x)) & 0x1;
+            }
         }
     }
-
-    void vertical(int[][] data, int y) {
-        vertical(data, y, 1, 5);
-    }
-
-    void vertical(int[][] data, int y, int fromX, int toX) {
-        for (int i = fromX; i <= toX; i++) {
-            data[y][i] = 1;
-        }
-    }
-
-    abstract void draw(int offset, int[][] data);
 }
