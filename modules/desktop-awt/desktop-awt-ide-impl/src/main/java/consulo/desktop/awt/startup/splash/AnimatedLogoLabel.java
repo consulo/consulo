@@ -43,7 +43,7 @@ public class AnimatedLogoLabel extends JComponent {
 
         private MyComponentUI(AnimatedLogoLabel animatedLogoLabel, boolean unstableScaling) {
             for (int i = 0; i < ourOffsets.length; i++) {
-                fillAtOffset(Alphabet.validCharacters, ' ', i, myEmptyData);
+                fillAtOffset(Alphabet.VALID_CHARACTERS, ' ', i, myEmptyData);
             }
 
             if (!unstableScaling) {
@@ -131,8 +131,8 @@ public class AnimatedLogoLabel extends JComponent {
         myAnimated = animated;
         myExecutorService = animated ? Executors.newSingleThreadScheduledExecutor() : null;
 
-        Map<Character, AlphabetDraw> characterDraws = Alphabet.validCharacters;
-        Character[] abc = Alphabet.alphabet;
+        Map<Character, AlphabetDraw> characterDraws = Alphabet.VALID_CHARACTERS;
+        Character[] abc = Alphabet.ALPHABET;
 
         char[] str = generateCharacters();
 
@@ -206,7 +206,7 @@ public class AnimatedLogoLabel extends JComponent {
 
     private char randomCharExcept(char exclude) {
         while (true) {
-            char c = Alphabet.alphabet[myRandom.nextInt(Alphabet.alphabet.length)];
+            char c = Alphabet.ALPHABET[myRandom.nextInt(Alphabet.ALPHABET.length)];
             if (c != exclude) {
                 return c;
             }

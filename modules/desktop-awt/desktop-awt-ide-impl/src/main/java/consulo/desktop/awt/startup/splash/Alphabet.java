@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.startup.splash;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -25,11 +26,13 @@ import java.util.TreeSet;
  * @since 2016-12-11
  */
 class Alphabet {
-    final static Map<Character, AlphabetDraw> validCharacters = new HashMap<>();
-    final static Character[] alphabet;
+    final static Map<Character, AlphabetDraw> VALID_CHARACTERS;
+    final static Character[] ALPHABET;
 
     static {
-        validCharacters.put('A', new AlphabetDraw(
+        Map<Character, AlphabetDraw> font = new HashMap<>();
+
+        font.put('A', new AlphabetDraw(
             0b11111,
             0b10001,
             0b11111,
@@ -37,7 +40,7 @@ class Alphabet {
             0b10001
         ));
 
-        validCharacters.put('B', new AlphabetDraw(
+        font.put('B', new AlphabetDraw(
             0b11110,
             0b10010,
             0b11111,
@@ -45,7 +48,7 @@ class Alphabet {
             0b11111
         ));
 
-        validCharacters.put('C', new AlphabetDraw(
+        font.put('C', new AlphabetDraw(
             0b11111,
             0b10000,
             0b10000,
@@ -53,7 +56,7 @@ class Alphabet {
             0b11111
         ));
 
-        validCharacters.put('D', new AlphabetDraw(
+        font.put('D', new AlphabetDraw(
             0b11110,
             0b10001,
             0b10001,
@@ -61,7 +64,7 @@ class Alphabet {
             0b11111
         ));
 
-        validCharacters.put('E', new AlphabetDraw(
+        font.put('E', new AlphabetDraw(
             0b11111,
             0b10000,
             0b11111,
@@ -69,7 +72,7 @@ class Alphabet {
             0b11111
         ));
 
-        validCharacters.put('F', new AlphabetDraw(
+        font.put('F', new AlphabetDraw(
             0b11111,
             0b10000,
             0b11111,
@@ -77,118 +80,7 @@ class Alphabet {
             0b10000
         ));
 
-        validCharacters.put('O', new AlphabetDraw(
-            0b11111,
-            0b10001,
-            0b10001,
-            0b10001,
-            0b11111
-        ));
-
-        validCharacters.put('N', new AlphabetDraw(
-            0b10001,
-            0b11001,
-            0b10101,
-            0b10011,
-            0b10001
-        ));
-
-        validCharacters.put('K', new AlphabetDraw(
-            0b10010,
-            0b10100,
-            0b11000,
-            0b10100,
-            0b10010
-        ));
-
-        validCharacters.put('M', new AlphabetDraw(
-            0b10001,
-            0b11011,
-            0b10101,
-            0b10001,
-            0b10001
-        ));
-
-        validCharacters.put('P', new AlphabetDraw(
-            0b11111,
-            0b10001,
-            0b11111,
-            0b10000,
-            0b10000
-        ));
-
-        validCharacters.put('R', new AlphabetDraw(
-            0b11111,
-            0b10001,
-            0b11111,
-            0b10010,
-            0b10011
-        ));
-
-        validCharacters.put('H', new AlphabetDraw(
-            0b10001,
-            0b10001,
-            0b11111,
-            0b10001,
-            0b10001
-        ));
-
-        validCharacters.put('S', new AlphabetDraw(
-            0b11111,
-            0b10000,
-            0b11111,
-            0b00001,
-            0b11111
-        ));
-
-        validCharacters.put('T', new AlphabetDraw(
-            0b11111,
-            0b00100,
-            0b00100,
-            0b00100,
-            0b00100
-        ));
-
-        validCharacters.put('I', new AlphabetDraw(
-            0b01110,
-            0b00100,
-            0b00100,
-            0b00100,
-            0b01110
-        ));
-        validCharacters.put('J', new AlphabetDraw(
-            0b11111,
-            0b00010,
-            0b00010,
-            0b10010,
-            0b11110
-        ));
-
-        validCharacters.put('U', new AlphabetDraw(
-            0b10001,
-            0b10001,
-            0b10001,
-            0b10001,
-            0b11111
-        ));
-
-        validCharacters.put('L', new AlphabetDraw(
-            0b10000,
-            0b10000,
-            0b10000,
-            0b10000,
-            0b11111
-        ));
-
-        validCharacters.put('Q', new AlphabetDraw(
-            0b11111,
-            0b10001,
-            0b10001,
-            0b10011,
-            0b11110
-        ));
-
-        validCharacters.put('G', new AlphabetDraw(
+        font.put('G', new AlphabetDraw(
             0b11111,
             0b10000,
             0b10111,
@@ -196,32 +88,119 @@ class Alphabet {
             0b11111
         ));
 
-        validCharacters.put('Z', new AlphabetDraw(
-            0b11111,
-            0b00010,
-            0b00100,
-            0b01000,
-            0b11111
-        ));
-
-        validCharacters.put('Y', new AlphabetDraw(
+        font.put('H', new AlphabetDraw(
             0b10001,
             0b10001,
             0b11111,
-            0b00100,
-            0b00100
-
-        ));
-
-        validCharacters.put('X', new AlphabetDraw(
             0b10001,
-            0b01010,
-            0b00100,
-            0b01010,
             0b10001
         ));
 
-        validCharacters.put('V', new AlphabetDraw(
+        font.put('I', new AlphabetDraw(
+            0b01110,
+            0b00100,
+            0b00100,
+            0b00100,
+            0b01110
+        ));
+
+        font.put('J', new AlphabetDraw(
+            0b11111,
+            0b00010,
+            0b00010,
+            0b10010,
+            0b11110
+        ));
+
+        font.put('K', new AlphabetDraw(
+            0b10010,
+            0b10100,
+            0b11000,
+            0b10100,
+            0b10010
+        ));
+
+        font.put('L', new AlphabetDraw(
+            0b10000,
+            0b10000,
+            0b10000,
+            0b10000,
+            0b11111
+        ));
+
+        font.put('M', new AlphabetDraw(
+            0b10001,
+            0b11011,
+            0b10101,
+            0b10001,
+            0b10001
+        ));
+
+        font.put('N', new AlphabetDraw(
+            0b10001,
+            0b11001,
+            0b10101,
+            0b10011,
+            0b10001
+        ));
+
+        font.put('O', new AlphabetDraw(
+            0b11111,
+            0b10001,
+            0b10001,
+            0b10001,
+            0b11111
+        ));
+
+        font.put('P', new AlphabetDraw(
+            0b11111,
+            0b10001,
+            0b11111,
+            0b10000,
+            0b10000
+        ));
+
+        font.put('Q', new AlphabetDraw(
+            0b11111,
+            0b10001,
+            0b10001,
+            0b10011,
+            0b11110
+        ));
+
+        font.put('R', new AlphabetDraw(
+            0b11111,
+            0b10001,
+            0b11111,
+            0b10010,
+            0b10011
+        ));
+
+        font.put('S', new AlphabetDraw(
+            0b11111,
+            0b10000,
+            0b11111,
+            0b00001,
+            0b11111
+        ));
+
+        font.put('T', new AlphabetDraw(
+            0b11111,
+            0b00100,
+            0b00100,
+            0b00100,
+            0b00100
+        ));
+
+        font.put('U', new AlphabetDraw(
+            0b10001,
+            0b10001,
+            0b10001,
+            0b10001,
+            0b11111
+        ));
+
+        font.put('V', new AlphabetDraw(
             0b10001,
             0b10001,
             0b01010,
@@ -229,7 +208,7 @@ class Alphabet {
             0b01110
         ));
 
-        validCharacters.put('W', new AlphabetDraw(
+        font.put('W', new AlphabetDraw(
             0b10001,
             0b10001,
             0b10101,
@@ -237,7 +216,34 @@ class Alphabet {
             0b10001
         ));
 
-        validCharacters.put('_', new AlphabetDraw(
+        font.put('X', new AlphabetDraw(
+            0b10001,
+            0b01010,
+            0b00100,
+            0b01010,
+            0b10001
+        ));
+
+        font.put('Y', new AlphabetDraw(
+            0b10001,
+            0b10001,
+            0b11111,
+            0b00100,
+            0b00100
+        ));
+
+        font.put('Z', new AlphabetDraw(
+            0b11111,
+            0b00010,
+            0b00100,
+            0b01000,
+            0b11111
+        ));
+
+        Set<Character> chars = new TreeSet<>(font.keySet());
+        ALPHABET = chars.toArray(new Character[chars.size()]);
+
+        font.put('_', new AlphabetDraw(
             0b00000,
             0b00000,
             0b00000,
@@ -245,7 +251,7 @@ class Alphabet {
             0b11111
         ));
 
-        validCharacters.put('.', new AlphabetDraw(
+        font.put('.', new AlphabetDraw(
             0b00000,
             0b00000,
             0b00000,
@@ -254,7 +260,7 @@ class Alphabet {
         ));
 
         // dummy
-        validCharacters.put(' ', new AlphabetDraw(
+        font.put(' ', new AlphabetDraw(
             0b11111,
             0b11111,
             0b11111,
@@ -262,10 +268,6 @@ class Alphabet {
             0b11111
         ));
 
-        Set<Character> list = new TreeSet<>(validCharacters.keySet());
-        list.remove('_');
-        list.remove('.');
-        list.remove(' ');
-        alphabet = list.toArray(new Character[list.size()]);
+        VALID_CHARACTERS = Collections.unmodifiableMap(font);
     }
 }
