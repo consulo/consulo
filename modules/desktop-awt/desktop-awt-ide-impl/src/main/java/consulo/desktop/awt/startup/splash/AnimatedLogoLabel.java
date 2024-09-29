@@ -43,7 +43,7 @@ public class AnimatedLogoLabel extends JComponent {
 
         private MyComponentUI(AnimatedLogoLabel animatedLogoLabel, boolean unstableScaling) {
             for (int i = 0; i < ourOffsets.length; i++) {
-                fillAtOffset(Alphabet.validCharacters, ' ', i, myEmptyData);
+                fillAtOffset(Alphabet.VALID_CHARACTERS, ' ', i, myEmptyData);
             }
 
             if (!unstableScaling) {
@@ -115,6 +115,7 @@ public class AnimatedLogoLabel extends JComponent {
 
     private final int myLetterHeight;
     private final boolean myAnimated;
+    private final Random myRandom = new Random();
 
     private boolean[] myStates = new boolean[Names.ourName.length()];
 
@@ -130,30 +131,10 @@ public class AnimatedLogoLabel extends JComponent {
         myAnimated = animated;
         myExecutorService = animated ? Executors.newSingleThreadScheduledExecutor() : null;
 
-        Random random = new Random();
-        Map<Character, AlphabetDraw> characterDraws = Alphabet.validCharacters;
-        Character[] abc = Alphabet.alphabet;
+        Map<Character, AlphabetDraw> characterDraws = Alphabet.VALID_CHARACTERS;
+        Character[] abc = Alphabet.ALPHABET;
 
-        char[] str;
-        if (myAnimated) {
-            if (random.nextInt(100_000) < 100) {
-                str = Names.ourEasterNames[random.nextInt(Names.ourEasterNames.length)].toCharArray();
-            }
-            else {
-                str = new char[Names.ourName.length()];
-                for (int i = 0; i < str.length; i++) {
-                    while (true) {
-                        str[i] = abc[random.nextInt(abc.length)];
-                        if (str[i] != Names.ourName.charAt(i)) {
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-        else {
-            str = Names.ourName.toCharArray();
-        }
+        char[] str = generateCharacters();
 
         for (int i = 0; i < ourOffsets.length; i++) {
             int offset = ourOffsets[i];
@@ -190,7 +171,7 @@ public class AnimatedLogoLabel extends JComponent {
                     else {
                         int randomIndex = -1;
                         while (true) {
-                            randomIndex = random.nextInt(abc.length);
+                            randomIndex = myRandom.nextInt(abc.length);
                             if (abc[randomIndex] != Names.ourName.charAt(letterPosition)) {
                                 break;
                             }
@@ -205,6 +186,31 @@ public class AnimatedLogoLabel extends JComponent {
         }
 
         setUI(new MyComponentUI(this, unstableScaling));
+    }
+
+    private char[] generateCharacters() {
+        if (!myAnimated) {
+            return Names.ourName.toCharArray();
+        }
+
+        if (myRandom.nextInt(100_000) < 100) {
+            return Names.ourEasterNames[myRandom.nextInt(Names.ourEasterNames.length)].toCharArray();
+        }
+
+        char[] str = new char[Names.ourName.length()];
+        for (int i = 0; i < str.length; i++) {
+            str[i] = randomCharExcept(Names.ourName.charAt(i));
+        }
+        return str;
+    }
+
+    private char randomCharExcept(char exclude) {
+        while (true) {
+            char c = Alphabet.ALPHABET[myRandom.nextInt(Alphabet.ALPHABET.length)];
+            if (c != exclude) {
+                return c;
+            }
+        }
     }
 
     private void repaintAll() {
