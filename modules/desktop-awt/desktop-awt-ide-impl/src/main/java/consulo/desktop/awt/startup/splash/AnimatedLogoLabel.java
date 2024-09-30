@@ -131,7 +131,7 @@ public class AnimatedLogoLabel extends JComponent {
         myAnimated = animated;
         myExecutorService = animated ? Executors.newSingleThreadScheduledExecutor() : null;
 
-        Map<Character, AlphabetDraw> characterDraws = Alphabet.VALID_CHARACTERS;
+        Map<Character, Glyph> characterDraws = Alphabet.VALID_CHARACTERS;
         Character[] abc = Alphabet.ALPHABET;
 
         char[] str = generateCharacters();
@@ -229,18 +229,12 @@ public class AnimatedLogoLabel extends JComponent {
         }
     }
 
-    private void fillAtOffset(Map<Character, AlphabetDraw> characterDraws, char c, int pos) {
+    private void fillAtOffset(Map<Character, Glyph> characterDraws, char c, int pos) {
         fillAtOffset(characterDraws, c, pos, myData);
     }
 
-    private static void fillAtOffset(Map<Character, AlphabetDraw> characterDraws, char c, int pos, int[][] data) {
+    private static void fillAtOffset(Map<Character, Glyph> characterDraws, char c, int pos, int[][] data) {
         int offset = ourOffsets[pos];
-        for (int i = 0; i < 5; i++) {
-            int[] ints = data[i + offset];
-            for (int j = 0; j < ints.length; j++) {
-                ints[j] = 0;
-            }
-        }
 
         characterDraws.get(c).draw(offset, data);
     }

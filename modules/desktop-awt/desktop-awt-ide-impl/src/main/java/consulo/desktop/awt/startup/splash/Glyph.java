@@ -17,13 +17,14 @@ package consulo.desktop.awt.startup.splash;
 
 /**
  * @author VISTALL
+ * @author UNV
  * @since 2016-12-11
  */
-public class AlphabetDraw {
+public class Glyph {
     private final int[] rows;
 
-    AlphabetDraw(int... rows) {
-        this.rows = rows;
+    Glyph(int row0, int row1, int row2, int row3, int row4) {
+        this.rows = new int[]{row0, row1, row2, row3, row4};
     }
 
     void draw(int offset, int[][] data) {
