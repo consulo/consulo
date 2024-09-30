@@ -50,8 +50,8 @@ public class DesktopSplash extends JDialogAsUIWindow implements StartupProgress 
         }
         setFocusableWindowState(false);
 
-        myLabel = new AnimatedLogoLabel(14, true, unstableScaling);
-        myLabel.setForeground(ApplicationProperties.isInSandbox() ? Color.WHITE : Color.BLACK);
+        Color foreground = ApplicationProperties.isInSandbox() ? Color.WHITE : Color.BLACK;
+        myLabel = new AnimatedLogoLabel(14, foreground, true, unstableScaling);
 
         Container contentPane = getContentPane();
         contentPane.setBackground(Color.LIGHT_GRAY);

@@ -77,19 +77,11 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel {
     JPanel panel = new JPanel(new BorderLayout());
     JPanel logoPanel = new JPanel(new BorderLayout());
     logoPanel.setBorder(JBUI.Borders.empty(53, 22, 45, 0));
-    AnimatedLogoLabel animatedLogoLabel = new AnimatedLogoLabel(8, false, true);
-    animatedLogoLabel.setForeground(MorphColor.ofWithoutCache(() -> {
-      if (ApplicationProperties.isInSandbox()) {
-        if (StyleManager.get().getCurrentStyle().isDark()) {
-          // FIXME [VISTALL] problem. darcula list background and panel background have same color
-          return JBColor.LIGHT_GRAY;
-        }
-        return JBColor.WHITE;
-      }
-      else {
-        return JBColor.GRAY;
-      }
-    }));
+    Color foreground = MorphColor.ofWithoutCache(() -> ApplicationProperties.isInSandbox()
+      ? StyleManager.get().getCurrentStyle().isDark() ? JBColor.LIGHT_GRAY : JBColor.WHITE
+      : JBColor.GRAY
+    );
+    AnimatedLogoLabel animatedLogoLabel = new AnimatedLogoLabel(8, foreground, false, true);
     logoPanel.add(animatedLogoLabel, BorderLayout.CENTER);
 
     panel.add(logoPanel, BorderLayout.NORTH);

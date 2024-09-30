@@ -21,17 +21,19 @@ package consulo.desktop.awt.startup.splash;
  * @since 2016-12-11
  */
 public class Glyph {
+    public static final int WIDTH = 5, HEIGHT = 5;
+
     private final int[] rows;
 
     Glyph(int row0, int row1, int row2, int row3, int row4) {
         this.rows = new int[]{row0, row1, row2, row3, row4};
     }
 
-    void draw(int offset, int[][] data) {
+    void draw(int dx, int dy, AnimatedLogoLabel canvas) {
         for (int y = 0; y < rows.length; y++) {
             int row = rows[y];
             for (int x = 0; x < 5; x++) {
-                data[x + offset][y + 1] = (row >> (4 - x)) & 0x1;
+                canvas.setPixel(x + dx, y + dy, ((row >> (4 - x)) & 0x1) > 0);
             }
         }
     }
