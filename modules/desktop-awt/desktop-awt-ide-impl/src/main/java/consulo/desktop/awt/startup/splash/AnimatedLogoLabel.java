@@ -16,7 +16,6 @@
 package consulo.desktop.awt.startup.splash;
 
 import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
@@ -36,16 +35,10 @@ import java.util.concurrent.TimeUnit;
  */
 public class AnimatedLogoLabel extends JComponent {
     private static class MyComponentUI extends ComponentUI {
-        private final int[][] myEmptyData = new int[43][7];
-
         private Dimension myFixedSizeScaled;
         private Integer myLetterHeightScaled;
 
         private MyComponentUI(AnimatedLogoLabel animatedLogoLabel, boolean unstableScaling) {
-            for (int i = 0; i < ourOffsets.length; i++) {
-                fillAtOffset(Alphabet.VALID_CHARACTERS, ' ', i, myEmptyData);
-            }
-
             if (!unstableScaling) {
                 myFixedSizeScaled = getPreferredSize(animatedLogoLabel);
                 myLetterHeightScaled = JBUI.scale(animatedLogoLabel.myLetterHeight);
@@ -76,32 +69,25 @@ public class AnimatedLogoLabel extends JComponent {
         }
 
         @Override
+        @SuppressWarnings("UndesirableClassUsage")
         public void paint(Graphics g, JComponent c) {
             AnimatedLogoLabel logoLabel = (AnimatedLogoLabel)c;
 
-            BufferedImage image = UIUtil.createImage(c.getWidth(), c.getHeight(), BufferedImage.TYPE_INT_ARGB);
-            Graphics graphics = image.getGraphics();
-            paint(graphics, logoLabel, myEmptyData, c.getBackground());
-            paint(graphics, logoLabel, logoLabel.myData, c.getForeground());
-            graphics.dispose();
-
-            g.drawImage(image, 0, 0, c.getWidth(), c.getHeight(), c);
-        }
-
-        private void paint(Graphics g, AnimatedLogoLabel c, int[][] data, Color color) {
+            int[][] data = logoLabel.myData;
+            int bg = c.getBackground().getRGB(), fg = c.getForeground().getRGB();
+            BufferedImage pixels = new BufferedImage(data.length, data[0].length, BufferedImage.TYPE_INT_RGB);
             for (int y = 0; y < data.length; y++) {
                 int[] ints = data[y];
 
                 for (int x = 0; x < ints.length; x++) {
                     int a = ints[x];
 
-                    if (a > 0) {
-                        int size = myLetterHeightScaled != null ? myLetterHeightScaled : JBUI.scale(c.myLetterHeight);
-                        g.setColor(color);
-                        g.fillRect(y * size, x * size, size, size);
-                    }
+                    int rgb = a > 0 ? fg : bg;
+                    pixels.setRGB(y, x, rgb);
                 }
             }
+
+            g.drawImage(pixels, 0, 0, c.getWidth(), c.getHeight(), c);
         }
     }
 
