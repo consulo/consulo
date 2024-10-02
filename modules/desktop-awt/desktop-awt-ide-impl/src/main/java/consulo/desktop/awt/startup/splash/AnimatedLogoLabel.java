@@ -16,14 +16,12 @@
 package consulo.desktop.awt.startup.splash;
 
 import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -36,19 +34,11 @@ import java.util.concurrent.TimeUnit;
  */
 public class AnimatedLogoLabel extends JComponent {
     private static class MyComponentUI extends ComponentUI {
-        private final int[][] myEmptyData = new int[43][7];
-
         private Dimension myFixedSizeScaled;
-        private Integer myLetterHeightScaled;
 
         private MyComponentUI(AnimatedLogoLabel animatedLogoLabel, boolean unstableScaling) {
-            for (int i = 0; i < ourOffsets.length; i++) {
-                fillAtOffset(Alphabet.VALID_CHARACTERS, ' ', i, myEmptyData);
-            }
-
             if (!unstableScaling) {
                 myFixedSizeScaled = getPreferredSize(animatedLogoLabel);
-                myLetterHeightScaled = JBUI.scale(animatedLogoLabel.myLetterHeight);
             }
         }
 
@@ -60,8 +50,8 @@ public class AnimatedLogoLabel extends JComponent {
 
             AnimatedLogoLabel logoLabel = (AnimatedLogoLabel)c;
             return new Dimension(
-                JBUI.scale(logoLabel.myData.length * logoLabel.myLetterHeight),
-                JBUI.scale(logoLabel.myData[0].length * logoLabel.myLetterHeight)
+                JBUI.scale(logoLabel.myPixels.getWidth() * logoLabel.myPixelSize),
+                JBUI.scale(logoLabel.myPixels.getHeight() * logoLabel.myPixelSize)
             );
         }
 
@@ -78,46 +68,29 @@ public class AnimatedLogoLabel extends JComponent {
         @Override
         public void paint(Graphics g, JComponent c) {
             AnimatedLogoLabel logoLabel = (AnimatedLogoLabel)c;
-
-            BufferedImage image = UIUtil.createImage(c.getWidth(), c.getHeight(), BufferedImage.TYPE_INT_ARGB);
-            Graphics graphics = image.getGraphics();
-            paint(graphics, logoLabel, myEmptyData, c.getBackground());
-            paint(graphics, logoLabel, logoLabel.myData, c.getForeground());
-            graphics.dispose();
-
-            g.drawImage(image, 0, 0, c.getWidth(), c.getHeight(), c);
-        }
-
-        private void paint(Graphics g, AnimatedLogoLabel c, int[][] data, Color color) {
-            for (int y = 0; y < data.length; y++) {
-                int[] ints = data[y];
-
-                for (int x = 0; x < ints.length; x++) {
-                    int a = ints[x];
-
-                    if (a > 0) {
-                        int size = myLetterHeightScaled != null ? myLetterHeightScaled : JBUI.scale(c.myLetterHeight);
-                        g.setColor(color);
-                        g.fillRect(y * size, x * size, size, size);
-                    }
-                }
-            }
+            g.drawImage(logoLabel.myPixels, 0, 0, c.getWidth(), c.getHeight(), c);
         }
     }
 
-    private static final int[] ourOffsets = new int[]{1, 7, 13, 19, 25, 31, 37};
+    private static final int N_LETTERS = Names.ourName.length();
+    private static final int PADDING = 1, LETTER_SPACING = 1;
 
-    private int[][] myData = new int[43][7];
+    @SuppressWarnings("UndesirableClassUsage")
+    private final BufferedImage myPixels = new BufferedImage(
+        PADDING + (Glyph.WIDTH + LETTER_SPACING) * N_LETTERS - LETTER_SPACING + PADDING,
+        PADDING + Glyph.HEIGHT + PADDING,
+        BufferedImage.TYPE_INT_ARGB
+    );
 
     private int myValue;
 
     private Runnable myTask;
 
-    private final int myLetterHeight;
+    private final int myPixelSize;
     private final boolean myAnimated;
     private final Random myRandom = new Random();
 
-    private boolean[] myStates = new boolean[Names.ourName.length()];
+    private boolean[] myLetterStabilized = new boolean[N_LETTERS];
 
     private Future<?> myFuture;
 
@@ -126,39 +99,37 @@ public class AnimatedLogoLabel extends JComponent {
     @Nullable
     private ScheduledExecutorService myExecutorService;
 
-    public AnimatedLogoLabel(int letterHeightInPixels, boolean animated, boolean unstableScaling) {
-        myLetterHeight = letterHeightInPixels;
+    public AnimatedLogoLabel(int pixelSize, Color foreground, boolean animated, boolean unstableScaling) {
+        setForeground(foreground);
+
+        myPixelSize = pixelSize;
         myAnimated = animated;
         myExecutorService = animated ? Executors.newSingleThreadScheduledExecutor() : null;
 
-        Map<Character, AlphabetDraw> characterDraws = Alphabet.VALID_CHARACTERS;
         Character[] abc = Alphabet.ALPHABET;
 
         char[] str = generateCharacters();
 
-        for (int i = 0; i < ourOffsets.length; i++) {
-            int offset = ourOffsets[i];
-            char c = str[i];
-            characterDraws.get(c).draw(offset, myData);
+        for (int i = 0; i < N_LETTERS; i++) {
+            fillAtOffset(str[i], i);
         }
 
         if (myAnimated) {
             myTask = () -> {
                 synchronized (lock) {
-                    float per = 100f / Names.ourName.length();
+                    float per = 100f / N_LETTERS;
 
                     boolean end = myValue >= 93;
                     int letterPosition = (int)(myValue / per);
 
                     if (end) {
-                        letterPosition = Names.ourName.length();
+                        letterPosition = N_LETTERS;
                     }
 
                     for (int i = 0; i < letterPosition; i++) {
-                        boolean state = myStates[i];
-                        if (!state) {
-                            myStates[i] = true;
-                            fillAtOffset(characterDraws, Names.ourName.charAt(i), i);
+                        if (!myLetterStabilized[i]) {
+                            myLetterStabilized[i] = true;
+                            fillAtOffset(Names.ourName.charAt(i), i);
                         }
                     }
 
@@ -177,7 +148,7 @@ public class AnimatedLogoLabel extends JComponent {
                             }
                         }
 
-                        fillAtOffset(characterDraws, abc[randomIndex], letterPosition);
+                        fillAtOffset(abc[randomIndex], letterPosition);
 
                         repaintAll();
                     }
@@ -186,6 +157,13 @@ public class AnimatedLogoLabel extends JComponent {
         }
 
         setUI(new MyComponentUI(this, unstableScaling));
+    }
+
+    public void setPixel(int x, int y, boolean foreground) {
+        Color color = foreground ? getForeground() : getBackground();
+        if (color != null) {
+            myPixels.setRGB(x, y, color.getRGB());
+        }
     }
 
     private char[] generateCharacters() {
@@ -197,8 +175,8 @@ public class AnimatedLogoLabel extends JComponent {
             return Names.ourEasterNames[myRandom.nextInt(Names.ourEasterNames.length)].toCharArray();
         }
 
-        char[] str = new char[Names.ourName.length()];
-        for (int i = 0; i < str.length; i++) {
+        char[] str = new char[N_LETTERS];
+        for (int i = 0; i < N_LETTERS; i++) {
             str[i] = randomCharExcept(Names.ourName.charAt(i));
         }
         return str;
@@ -229,20 +207,10 @@ public class AnimatedLogoLabel extends JComponent {
         }
     }
 
-    private void fillAtOffset(Map<Character, AlphabetDraw> characterDraws, char c, int pos) {
-        fillAtOffset(characterDraws, c, pos, myData);
-    }
+    private void fillAtOffset(char c, int pos) {
+        int dx = PADDING + (Glyph.WIDTH + LETTER_SPACING) * pos;
 
-    private static void fillAtOffset(Map<Character, AlphabetDraw> characterDraws, char c, int pos, int[][] data) {
-        int offset = ourOffsets[pos];
-        for (int i = 0; i < 5; i++) {
-            int[] ints = data[i + offset];
-            for (int j = 0; j < ints.length; j++) {
-                ints[j] = 0;
-            }
-        }
-
-        characterDraws.get(c).draw(offset, data);
+        Alphabet.VALID_CHARACTERS.get(c).draw(dx, 1, this);
     }
 
     public void setValue(int value) {

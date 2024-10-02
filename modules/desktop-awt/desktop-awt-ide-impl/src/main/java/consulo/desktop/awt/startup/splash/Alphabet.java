@@ -23,16 +23,17 @@ import java.util.TreeSet;
 
 /**
  * @author VISTALL
+ * @author UNV
  * @since 2016-12-11
  */
 class Alphabet {
-    final static Map<Character, AlphabetDraw> VALID_CHARACTERS;
+    final static Map<Character, Glyph> VALID_CHARACTERS;
     final static Character[] ALPHABET;
 
     static {
-        Map<Character, AlphabetDraw> font = new HashMap<>();
+        Map<Character, Glyph> font = new HashMap<>();
 
-        font.put('A', new AlphabetDraw(
+        font.put('A', new Glyph(
             0b11111,
             0b10001,
             0b11111,
@@ -40,7 +41,7 @@ class Alphabet {
             0b10001
         ));
 
-        font.put('B', new AlphabetDraw(
+        font.put('B', new Glyph(
             0b11110,
             0b10010,
             0b11111,
@@ -48,7 +49,7 @@ class Alphabet {
             0b11111
         ));
 
-        font.put('C', new AlphabetDraw(
+        font.put('C', new Glyph(
             0b11111,
             0b10000,
             0b10000,
@@ -56,7 +57,7 @@ class Alphabet {
             0b11111
         ));
 
-        font.put('D', new AlphabetDraw(
+        font.put('D', new Glyph(
             0b11110,
             0b10001,
             0b10001,
@@ -64,7 +65,7 @@ class Alphabet {
             0b11111
         ));
 
-        font.put('E', new AlphabetDraw(
+        font.put('E', new Glyph(
             0b11111,
             0b10000,
             0b11111,
@@ -72,7 +73,7 @@ class Alphabet {
             0b11111
         ));
 
-        font.put('F', new AlphabetDraw(
+        font.put('F', new Glyph(
             0b11111,
             0b10000,
             0b11111,
@@ -80,7 +81,7 @@ class Alphabet {
             0b10000
         ));
 
-        font.put('G', new AlphabetDraw(
+        font.put('G', new Glyph(
             0b11111,
             0b10000,
             0b10111,
@@ -88,7 +89,7 @@ class Alphabet {
             0b11111
         ));
 
-        font.put('H', new AlphabetDraw(
+        font.put('H', new Glyph(
             0b10001,
             0b10001,
             0b11111,
@@ -96,7 +97,7 @@ class Alphabet {
             0b10001
         ));
 
-        font.put('I', new AlphabetDraw(
+        font.put('I', new Glyph(
             0b01110,
             0b00100,
             0b00100,
@@ -104,7 +105,7 @@ class Alphabet {
             0b01110
         ));
 
-        font.put('J', new AlphabetDraw(
+        font.put('J', new Glyph(
             0b11111,
             0b00010,
             0b00010,
@@ -112,7 +113,7 @@ class Alphabet {
             0b11110
         ));
 
-        font.put('K', new AlphabetDraw(
+        font.put('K', new Glyph(
             0b10010,
             0b10100,
             0b11000,
@@ -120,7 +121,7 @@ class Alphabet {
             0b10010
         ));
 
-        font.put('L', new AlphabetDraw(
+        font.put('L', new Glyph(
             0b10000,
             0b10000,
             0b10000,
@@ -128,7 +129,7 @@ class Alphabet {
             0b11111
         ));
 
-        font.put('M', new AlphabetDraw(
+        font.put('M', new Glyph(
             0b10001,
             0b11011,
             0b10101,
@@ -136,7 +137,7 @@ class Alphabet {
             0b10001
         ));
 
-        font.put('N', new AlphabetDraw(
+        font.put('N', new Glyph(
             0b10001,
             0b11001,
             0b10101,
@@ -144,7 +145,7 @@ class Alphabet {
             0b10001
         ));
 
-        font.put('O', new AlphabetDraw(
+        font.put('O', new Glyph(
             0b11111,
             0b10001,
             0b10001,
@@ -152,7 +153,7 @@ class Alphabet {
             0b11111
         ));
 
-        font.put('P', new AlphabetDraw(
+        font.put('P', new Glyph(
             0b11111,
             0b10001,
             0b11111,
@@ -160,7 +161,7 @@ class Alphabet {
             0b10000
         ));
 
-        font.put('Q', new AlphabetDraw(
+        font.put('Q', new Glyph(
             0b11111,
             0b10001,
             0b10001,
@@ -168,7 +169,7 @@ class Alphabet {
             0b11110
         ));
 
-        font.put('R', new AlphabetDraw(
+        font.put('R', new Glyph(
             0b11111,
             0b10001,
             0b11111,
@@ -176,7 +177,7 @@ class Alphabet {
             0b10011
         ));
 
-        font.put('S', new AlphabetDraw(
+        font.put('S', new Glyph(
             0b11111,
             0b10000,
             0b11111,
@@ -184,7 +185,7 @@ class Alphabet {
             0b11111
         ));
 
-        font.put('T', new AlphabetDraw(
+        font.put('T', new Glyph(
             0b11111,
             0b00100,
             0b00100,
@@ -192,7 +193,7 @@ class Alphabet {
             0b00100
         ));
 
-        font.put('U', new AlphabetDraw(
+        font.put('U', new Glyph(
             0b10001,
             0b10001,
             0b10001,
@@ -200,7 +201,7 @@ class Alphabet {
             0b11111
         ));
 
-        font.put('V', new AlphabetDraw(
+        font.put('V', new Glyph(
             0b10001,
             0b10001,
             0b01010,
@@ -208,7 +209,7 @@ class Alphabet {
             0b01110
         ));
 
-        font.put('W', new AlphabetDraw(
+        font.put('W', new Glyph(
             0b10001,
             0b10001,
             0b10101,
@@ -216,7 +217,7 @@ class Alphabet {
             0b10001
         ));
 
-        font.put('X', new AlphabetDraw(
+        font.put('X', new Glyph(
             0b10001,
             0b01010,
             0b00100,
@@ -224,7 +225,7 @@ class Alphabet {
             0b10001
         ));
 
-        font.put('Y', new AlphabetDraw(
+        font.put('Y', new Glyph(
             0b10001,
             0b10001,
             0b11111,
@@ -232,7 +233,7 @@ class Alphabet {
             0b00100
         ));
 
-        font.put('Z', new AlphabetDraw(
+        font.put('Z', new Glyph(
             0b11111,
             0b00010,
             0b00100,
@@ -243,7 +244,7 @@ class Alphabet {
         Set<Character> chars = new TreeSet<>(font.keySet());
         ALPHABET = chars.toArray(new Character[chars.size()]);
 
-        font.put('_', new AlphabetDraw(
+        font.put('_', new Glyph(
             0b00000,
             0b00000,
             0b00000,
@@ -251,7 +252,7 @@ class Alphabet {
             0b11111
         ));
 
-        font.put('.', new AlphabetDraw(
+        font.put('.', new Glyph(
             0b00000,
             0b00000,
             0b00000,
@@ -260,7 +261,7 @@ class Alphabet {
         ));
 
         // dummy
-        font.put(' ', new AlphabetDraw(
+        font.put(' ', new Glyph(
             0b11111,
             0b11111,
             0b11111,
