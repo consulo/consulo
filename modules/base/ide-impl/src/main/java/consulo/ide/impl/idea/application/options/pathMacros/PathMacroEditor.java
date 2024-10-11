@@ -30,103 +30,112 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- *  @author dsl
+ * @author dsl
  */
 public class PathMacroEditor extends DialogWrapper {
-  private JTextField myNameField;
-  private JPanel myPanel;
-  private TextFieldWithBrowseButton myValueField;
-  private final Validator myValidator;
+    private JTextField myNameField;
+    private JPanel myPanel;
+    private TextFieldWithBrowseButton myValueField;
+    private final Validator myValidator;
 
-  public interface Validator {
-    boolean checkName(String name);
-    boolean isOK(String name, String value);
-  }
+    public interface Validator {
+        boolean checkName(String name);
 
-  public PathMacroEditor(String title, String macroName, String value, Validator validator) {
-    super(true);
-    setTitle(title);
-    myValidator = validator;
-    myNameField.setText(macroName);
-    DocumentListener documentListener = new DocumentAdapter() {
-      public void textChanged(DocumentEvent event) {
+        boolean isOK(String name, String value);
+    }
+
+    public PathMacroEditor(String title, String macroName, String value, Validator validator) {
+        super(true);
+        setTitle(title);
+        myValidator = validator;
+        myNameField.setText(macroName);
+        DocumentListener documentListener = new DocumentAdapter() {
+            public void textChanged(DocumentEvent event) {
+                updateControls();
+            }
+        };
+        myNameField.getDocument().addDocumentListener(documentListener);
+        myValueField.setText(value);
+        myValueField.addBrowseFolderListener(
+            null,
+            null,
+            null,
+            new FileChooserDescriptor(false, true, true, false, true, false),
+            new TextComponentAccessor<JTextField>() {
+                public String getText(JTextField component) {
+                    return component.getText();
+                }
+
+                public void setText(JTextField component, String text) {
+                    final int len = text.length();
+                    if (len > 0 && text.charAt(len - 1) == File.separatorChar) {
+                        text = text.substring(0, len - 1);
+                    }
+                    component.setText(text);
+                }
+            }
+        );
+        myValueField.getTextField().getDocument().addDocumentListener(documentListener);
+
+        init();
         updateControls();
-      }
-    };
-    myNameField.getDocument().addDocumentListener(documentListener);
-    myValueField.setText(value);
-    myValueField.addBrowseFolderListener(null, null, null, new FileChooserDescriptor(false, true, true, false, true, false), new TextComponentAccessor<JTextField>() {
-      public String getText(JTextField component) {
-        return component.getText();
-      }
+    }
 
-      public void setText(JTextField component, String text) {
-        final int len = text.length();
-        if (len > 0 && text.charAt(len - 1) == File.separatorChar) {
-          text = text.substring(0, len - 1);
+    public void setMacroNameEditable(boolean isEditable) {
+        myNameField.setEditable(isEditable);
+    }
+
+    private void updateControls() {
+        final boolean isNameOK = myValidator.checkName(myNameField.getText());
+        getOKAction().setEnabled(isNameOK);
+        if (isNameOK) {
+            final String text = myValueField.getText().trim();
+            getOKAction().setEnabled(text.length() > 0 && !"/".equals(text.trim()));
         }
-        component.setText(text);
-      }
-    });
-    myValueField.getTextField().getDocument().addDocumentListener(documentListener);
-
-    init();
-    updateControls();
-  }
-
-  public void setMacroNameEditable(boolean isEditable) {
-    myNameField.setEditable(isEditable);
-  }
-
-  private void updateControls() {
-    final boolean isNameOK = myValidator.checkName(myNameField.getText());
-    getOKAction().setEnabled(isNameOK);
-    if (isNameOK) {
-      final String text = myValueField.getText().trim();
-      getOKAction().setEnabled(text.length() > 0 && !"/".equals(text.trim()));
     }
-  }
 
-  public JComponent getPreferredFocusedComponent() {
-    return myNameField;
-  }
-
-  @Nonnull
-  protected Action[] createActions() {
-    return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};
-  }
-
-  protected void doHelpAction() {
-    HelpManager.getInstance().invokeHelp(PathMacroConfigurable.ID);
-  }
-
-  protected void doOKAction() {
-    if (!myValidator.isOK(getName(), getValue())) return;
-    super.doOKAction();
-  }
-
-  public String getName() {
-    return myNameField.getText().trim();
-  }
-
-  public String getValue() {
-    String path = myValueField.getText().trim();
-    File file = new File(path);
-    if (file.isAbsolute()) {
-      try {
-        return file.getCanonicalPath();
-      }
-      catch (IOException ignored) {
-      }
+    public JComponent getPreferredFocusedComponent() {
+        return myNameField;
     }
-    return path;
-  }
 
-  protected JComponent createNorthPanel() {
-    return myPanel;
-  }
+    @Nonnull
+    protected Action[] createActions() {
+        return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};
+    }
 
-  protected JComponent createCenterPanel() {
-    return null;
-  }
+    protected void doHelpAction() {
+        HelpManager.getInstance().invokeHelp(PathMacroConfigurable.ID);
+    }
+
+    protected void doOKAction() {
+        if (!myValidator.isOK(getName(), getValue())) {
+            return;
+        }
+        super.doOKAction();
+    }
+
+    public String getName() {
+        return myNameField.getText().trim();
+    }
+
+    public String getValue() {
+        String path = myValueField.getText().trim();
+        File file = new File(path);
+        if (file.isAbsolute()) {
+            try {
+                return file.getCanonicalPath();
+            }
+            catch (IOException ignored) {
+            }
+        }
+        return path;
+    }
+
+    protected JComponent createNorthPanel() {
+        return myPanel;
+    }
+
+    protected JComponent createCenterPanel() {
+        return null;
+    }
 }

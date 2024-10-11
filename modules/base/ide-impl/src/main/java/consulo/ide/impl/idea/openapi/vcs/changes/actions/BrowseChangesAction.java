@@ -35,57 +35,63 @@ import consulo.virtualFileSystem.VirtualFile;
  * @author yole
  */
 public class BrowseChangesAction extends AnAction implements DumbAware {
-  public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
-    VirtualFile vFile = e.getData(VirtualFile.KEY);
-    assert vFile != null;
-    AbstractVcs vcs = ProjectLevelVcsManager.getInstance(project).getVcsFor(vFile);
-    assert vcs != null;
-    final CommittedChangesProvider provider = vcs.getCommittedChangesProvider();
-    assert provider != null;
-    ChangeBrowserSettings settings = provider.createDefaultSettings();
-    CommittedChangesFilterDialog dlg = new CommittedChangesFilterDialog(project, provider.createFilterUI(true), settings);
-    dlg.show();
-    if (!dlg.isOK()) return;
+    public void actionPerformed(AnActionEvent e) {
+        final Project project = e.getData(Project.KEY);
+        VirtualFile vFile = e.getData(VirtualFile.KEY);
+        assert vFile != null;
+        AbstractVcs vcs = ProjectLevelVcsManager.getInstance(project).getVcsFor(vFile);
+        assert vcs != null;
+        final CommittedChangesProvider provider = vcs.getCommittedChangesProvider();
+        assert provider != null;
+        ChangeBrowserSettings settings = provider.createDefaultSettings();
+        CommittedChangesFilterDialog dlg = new CommittedChangesFilterDialog(project, provider.createFilterUI(true), settings);
+        dlg.show();
+        if (!dlg.isOK()) {
+            return;
+        }
 
-    int maxCount = 0;
-    if (!settings.isAnyFilterSpecified()) {
-      int rc = Messages.showYesNoCancelDialog(
-        project,
-        VcsLocalize.browseChangesNoFilterPrompt().get(),
-        VcsLocalize.browseChangesTitle().get(),
-        VcsLocalize.browseChangesShowRecentButton().get(),
-        VcsLocalize.browseChangesShowAllButton().get(),
-        CommonLocalize.buttonCancel().get(),
-        UIUtil.getQuestionIcon()
-      );
-      if (rc == 2) {
-        return;
-      }
-      if (rc == 0) {
-        maxCount = 50;
-      }
+        int maxCount = 0;
+        if (!settings.isAnyFilterSpecified()) {
+            int rc = Messages.showYesNoCancelDialog(
+                project,
+                VcsLocalize.browseChangesNoFilterPrompt().get(),
+                VcsLocalize.browseChangesTitle().get(),
+                VcsLocalize.browseChangesShowRecentButton().get(),
+                VcsLocalize.browseChangesShowAllButton().get(),
+                CommonLocalize.buttonCancel().get(),
+                UIUtil.getQuestionIcon()
+            );
+            if (rc == 2) {
+                return;
+            }
+            if (rc == 0) {
+                maxCount = 50;
+            }
+        }
+
+        AbstractVcsHelper.getInstance(project).openCommittedChangesTab(vcs, vFile, settings, maxCount, null);
     }
 
-    AbstractVcsHelper.getInstance(project).openCommittedChangesTab(vcs, vFile, settings, maxCount, null);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent e) {
-    e.getPresentation().setEnabled(isActionEnabled(e));
-  }
-
-  private static boolean isActionEnabled(final AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    if (project == null) return false;
-    VirtualFile vFile = e.getData(VirtualFile.KEY);
-    if (vFile == null) return false;
-    AbstractVcs vcs = ProjectLevelVcsManager.getInstance(project).getVcsFor(vFile);
-    if (vcs == null || vcs.getCommittedChangesProvider() == null || !vcs.allowsRemoteCalls(vFile)) {
-      return false;
+    @Override
+    @RequiredUIAccess
+    public void update(AnActionEvent e) {
+        e.getPresentation().setEnabled(isActionEnabled(e));
     }
-    FilePath filePath = VcsContextFactory.SERVICE.getInstance().createFilePathOn(vFile);
-    return AbstractVcs.fileInVcsByFileStatus(project, filePath);
-  }
+
+    private static boolean isActionEnabled(final AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return false;
+        }
+        VirtualFile vFile = e.getData(VirtualFile.KEY);
+        if (vFile == null) {
+            return false;
+        }
+        AbstractVcs vcs = ProjectLevelVcsManager.getInstance(project).getVcsFor(vFile);
+        if (vcs == null || vcs.getCommittedChangesProvider() == null || !vcs.allowsRemoteCalls(vFile)) {
+            return false;
+        }
+        FilePath filePath = VcsContextFactory.SERVICE.getInstance().createFilePathOn(vFile);
+        return AbstractVcs.fileInVcsByFileStatus(project, filePath);
+    }
 }

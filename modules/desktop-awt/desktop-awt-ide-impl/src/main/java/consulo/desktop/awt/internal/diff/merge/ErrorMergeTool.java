@@ -27,75 +27,77 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class ErrorMergeTool implements MergeTool {
-  public static final ErrorMergeTool INSTANCE = new ErrorMergeTool();
-
-  @Nonnull
-  @Override
-  public MergeViewer createComponent(@Nonnull MergeContext context, @Nonnull MergeRequest request) {
-    return new MyViewer(context, request);
-  }
-
-  @Override
-  public boolean canShow(@Nonnull MergeContext context, @Nonnull MergeRequest request) {
-    return true;
-  }
-
-  private static class MyViewer implements MergeViewer {
-    @Nonnull
-    private final MergeContext myMergeContext;
-    @Nonnull
-    private final MergeRequest myMergeRequest;
-
-    @Nonnull
-    private final JPanel myPanel;
-
-    public MyViewer(@Nonnull MergeContext context, @Nonnull MergeRequest request) {
-      myMergeContext = context;
-      myMergeRequest = request;
-
-      myPanel = new JPanel(new BorderLayout());
-      myPanel.add(createComponent(), BorderLayout.CENTER);
-    }
-
-    @Nonnull
-    private JComponent createComponent() {
-      return AWTDiffUtil.createMessagePanel("Can't show diff");
-    }
+    public static final ErrorMergeTool INSTANCE = new ErrorMergeTool();
 
     @Nonnull
     @Override
-    public JComponent getComponent() {
-      return myPanel;
+    public MergeViewer createComponent(@Nonnull MergeContext context, @Nonnull MergeRequest request) {
+        return new MyViewer(context, request);
     }
 
-    @jakarta.annotation.Nullable
     @Override
-    public JComponent getPreferredFocusedComponent() {
-      return null;
+    public boolean canShow(@Nonnull MergeContext context, @Nonnull MergeRequest request) {
+        return true;
     }
 
-    @Nonnull
-    @Override
-    public ToolbarComponents init() {
-      return new ToolbarComponents();
-    }
+    private static class MyViewer implements MergeViewer {
+        @Nonnull
+        private final MergeContext myMergeContext;
+        @Nonnull
+        private final MergeRequest myMergeRequest;
 
-    @jakarta.annotation.Nullable
-    @Override
-    public Action getResolveAction(@Nonnull final MergeResult result) {
-      if (result == MergeResult.RESOLVED) return null;
+        @Nonnull
+        private final JPanel myPanel;
 
-      String caption = MergeImplUtil.getResolveActionTitle(result, myMergeRequest, myMergeContext);
-      return new AbstractAction(caption) {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          myMergeContext.finishMerge(result);
+        public MyViewer(@Nonnull MergeContext context, @Nonnull MergeRequest request) {
+            myMergeContext = context;
+            myMergeRequest = request;
+
+            myPanel = new JPanel(new BorderLayout());
+            myPanel.add(createComponent(), BorderLayout.CENTER);
         }
-      };
-    }
 
-    @Override
-    public void dispose() {
+        @Nonnull
+        private JComponent createComponent() {
+            return AWTDiffUtil.createMessagePanel("Can't show diff");
+        }
+
+        @Nonnull
+        @Override
+        public JComponent getComponent() {
+            return myPanel;
+        }
+
+        @jakarta.annotation.Nullable
+        @Override
+        public JComponent getPreferredFocusedComponent() {
+            return null;
+        }
+
+        @Nonnull
+        @Override
+        public ToolbarComponents init() {
+            return new ToolbarComponents();
+        }
+
+        @jakarta.annotation.Nullable
+        @Override
+        public Action getResolveAction(@Nonnull final MergeResult result) {
+            if (result == MergeResult.RESOLVED) {
+                return null;
+            }
+
+            String caption = MergeImplUtil.getResolveActionTitle(result, myMergeRequest, myMergeContext);
+            return new AbstractAction(caption) {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    myMergeContext.finishMerge(result);
+                }
+            };
+        }
+
+        @Override
+        public void dispose() {
+        }
     }
-  }
 }

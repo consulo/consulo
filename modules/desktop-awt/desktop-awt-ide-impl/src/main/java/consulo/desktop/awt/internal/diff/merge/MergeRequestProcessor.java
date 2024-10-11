@@ -57,465 +57,488 @@ import java.util.function.BooleanSupplier;
 // idea - to keep in memory all viewers that were modified (so binary conflict is not the case and OOM shouldn't be too often)
 // suspend() / resume() methods for viewers? To not interfere with MergeRequest lifecycle: single request -> single viewer -> single applyResult()
 public abstract class MergeRequestProcessor implements Disposable {
-  private static final Logger LOG = Logger.getInstance(MergeRequestProcessor.class);
+    private static final Logger LOG = Logger.getInstance(MergeRequestProcessor.class);
+
+    private boolean myDisposed;
+
+    @Nullable
+    private final Project myProject;
+    @Nonnull
+    private final MergeContext myContext;
+
+    @Nonnull
+    private final List<MergeTool> myAvailableTools;
+
+    @Nonnull
+    private final JPanel myPanel;
+    @Nonnull
+    private final MyPanel myMainPanel;
+    @Nonnull
+    private final Wrapper myContentPanel;
+    @Nonnull
+    private final Wrapper myToolbarPanel;
+    @Nonnull
+    private final Wrapper myToolbarStatusPanel;
+
+    @Nonnull
+    private final MergeRequest myRequest;
+
+    @Nonnull
+    private MergeTool.MergeViewer myViewer;
+    @Nullable
+    private BooleanSupplier myCloseHandler;
+    @Nullable
+    private BottomActions myBottomActions;
+    private boolean myConflictResolved = false;
 
-  private boolean myDisposed;
-
-  @Nullable
-  private final Project myProject;
-  @Nonnull
-  private final MergeContext myContext;
-
-  @Nonnull
-  private final List<MergeTool> myAvailableTools;
-
-  @Nonnull
-  private final JPanel myPanel;
-  @Nonnull
-  private final MyPanel myMainPanel;
-  @Nonnull
-  private final Wrapper myContentPanel;
-  @Nonnull
-  private final Wrapper myToolbarPanel;
-  @Nonnull
-  private final Wrapper myToolbarStatusPanel;
-
-  @Nonnull
-  private final MergeRequest myRequest;
-
-  @Nonnull
-  private MergeTool.MergeViewer myViewer;
-  @Nullable
-  private BooleanSupplier myCloseHandler;
-  @Nullable
-  private BottomActions myBottomActions;
-  private boolean myConflictResolved = false;
-
-  @RequiredUIAccess
-  public MergeRequestProcessor(@Nullable Project project, @Nonnull MergeRequest request) {
-    myProject = project;
-    myRequest = request;
-
-    myContext = new MyDiffContext();
-    myContext.putUserData(DiffUserDataKeys.PLACE, DiffPlaces.MERGE);
-
-    myAvailableTools = DiffManagerEx.getInstanceEx().getMergeTools();
-
-    myMainPanel = new MyPanel();
-    myContentPanel = new Wrapper();
-    myToolbarPanel = new Wrapper();
-    myToolbarPanel.setFocusable(true);
-    myToolbarStatusPanel = new Wrapper();
-
-    myPanel = JBUI.Panels.simplePanel(myMainPanel);
-
-    JPanel topPanel = JBUI.Panels.simplePanel(myToolbarPanel).addToRight(myToolbarStatusPanel);
-
-    myMainPanel.add(topPanel, BorderLayout.NORTH);
-    myMainPanel.add(myContentPanel, BorderLayout.CENTER);
-
-    myMainPanel.setFocusTraversalPolicyProvider(true);
-    myMainPanel.setFocusTraversalPolicy(new MyFocusTraversalPolicy());
-
-    MergeTool.MergeViewer viewer;
-    try {
-      viewer = getFittedTool().createComponent(myContext, myRequest);
-    }
-    catch (Throwable e) {
-      LOG.error(e);
-      viewer = ErrorMergeTool.INSTANCE.createComponent(myContext, myRequest);
-    }
-
-    myViewer = viewer;
-    updateBottomActions();
-  }
-
-  //
-  // Update
-  //
-
-  @RequiredUIAccess
-  public void init() {
-    setTitle(myRequest.getTitle());
-    initViewer();
-  }
-
-  @RequiredUIAccess
-  private void initViewer() {
-    myContentPanel.setContent(myViewer.getComponent());
-
-    MergeTool.ToolbarComponents toolbarComponents = myViewer.init();
-
-    buildToolbar(toolbarComponents.toolbarActions);
-    myToolbarStatusPanel.setContent(toolbarComponents.statusPanel);
-    myCloseHandler = toolbarComponents.closeHandler;
-  }
-
-  @RequiredUIAccess
-  private void destroyViewer() {
-    Disposer.dispose(myViewer);
-
-    ActionUtil.clearActions(myMainPanel);
-
-    myContentPanel.setContent(null);
-    myToolbarPanel.setContent(null);
-    myToolbarStatusPanel.setContent(null);
-    myCloseHandler = null;
-    myBottomActions = null;
-  }
-
-  private void updateBottomActions() {
-    myBottomActions = new BottomActions();
-    myBottomActions.applyLeft = myViewer.getResolveAction(MergeResult.LEFT);
-    myBottomActions.applyRight = myViewer.getResolveAction(MergeResult.RIGHT);
-    myBottomActions.resolveAction = myViewer.getResolveAction(MergeResult.RESOLVED);
-    myBottomActions.cancelAction = myViewer.getResolveAction(MergeResult.CANCEL);
-  }
-
-  @Nonnull
-  protected DefaultActionGroup collectToolbarActions(@Nullable List<AnAction> viewerActions) {
-    DefaultActionGroup group = new DefaultActionGroup();
-
-    List<AnAction> navigationActions = ContainerUtil.<AnAction>list(new MyPrevDifferenceAction(), new MyNextDifferenceAction());
-    DiffImplUtil.addActionBlock(group, navigationActions);
-
-    DiffImplUtil.addActionBlock(group, viewerActions);
-
-    List<AnAction> requestContextActions = myRequest.getUserData(DiffUserDataKeys.CONTEXT_ACTIONS);
-    DiffImplUtil.addActionBlock(group, requestContextActions);
-
-    List<AnAction> contextActions = myContext.getUserData(DiffUserDataKeys.CONTEXT_ACTIONS);
-    DiffImplUtil.addActionBlock(group, contextActions);
-
-    return group;
-  }
-
-  protected void buildToolbar(@Nullable List<AnAction> viewerActions) {
-    ActionGroup group = collectToolbarActions(viewerActions);
-    ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.DIFF_TOOLBAR, group, true);
-
-    DataManager.registerDataProvider(toolbar.getComponent(), myMainPanel);
-    toolbar.setTargetComponent(toolbar.getComponent());
-
-    myToolbarPanel.setContent(toolbar.getComponent());
-    for (AnAction action : group.getChildren(null)) {
-      AWTDiffUtil.registerAction(action, myMainPanel);
-    }
-  }
-
-  @Nonnull
-  private MergeTool getFittedTool() {
-    for (MergeTool tool : myAvailableTools) {
-      try {
-        if (tool.canShow(myContext, myRequest)) return tool;
-      }
-      catch (Throwable e) {
-        LOG.error(e);
-      }
-    }
-
-    return ErrorMergeTool.INSTANCE;
-  }
-
-  private void setTitle(@Nullable String title) {
-    if (title == null) title = "Merge";
-    setWindowTitle(title);
-  }
-
-  @Override
-  public void dispose() {
-    if (myDisposed) return;
-    UIUtil.invokeLaterIfNeeded(() -> {
-      if (myDisposed) return;
-      myDisposed = true;
-
-      onDispose();
-
-      destroyViewer();
-    });
-  }
-
-  @RequiredUIAccess
-  private void applyRequestResult(@Nonnull MergeResult result) {
-    if (myConflictResolved) return;
-    myConflictResolved = true;
-    try {
-      myRequest.applyResult(result);
-    }
-    catch (Exception e) {
-      LOG.error(e);
-    }
-  }
-
-  @RequiredUIAccess
-  private void reopenWithTool(@Nonnull MergeTool tool) {
-    if (myConflictResolved) {
-      LOG.warn("Can't reopen with " + tool + " - conflict already resolved");
-      return;
-    }
-
-    if (!tool.canShow(myContext, myRequest)) {
-      LOG.warn("Can't reopen with " + tool + " - " + myRequest);
-      return;
-    }
-
-    MergeTool.MergeViewer newViewer;
-    try {
-      newViewer = tool.createComponent(myContext, myRequest);
-    }
-    catch (Throwable e) {
-      LOG.error(e);
-      return;
-    }
-
-    boolean wasFocused = isFocused();
-
-    destroyViewer();
-    myViewer = newViewer;
-    updateBottomActions();
-    rebuildSouthPanel();
-    initViewer();
-
-    if (wasFocused) requestFocusInternal();
-  }
-
-  //
-  // Abstract
-  //
-
-  @RequiredUIAccess
-  protected void onDispose() {
-    applyRequestResult(MergeResult.CANCEL);
-  }
-
-  protected void setWindowTitle(@Nonnull String title) {
-  }
-
-  protected abstract void rebuildSouthPanel();
-
-  public abstract void closeDialog();
-
-  @Nullable
-  public <T> T getContextUserData(@Nonnull Key<T> key) {
-    return myContext.getUserData(key);
-  }
-
-  public <T> void putContextUserData(@Nonnull Key<T> key, @Nullable T value) {
-    myContext.putUserData(key, value);
-  }
-
-  //
-  // Getters
-  //
-
-  @Nonnull
-  public JComponent getComponent() {
-    return myPanel;
-  }
-
-  @Nullable
-  public JComponent getPreferredFocusedComponent() {
-    JComponent component = myViewer.getPreferredFocusedComponent();
-    return component != null ? component : myToolbarPanel.getTargetComponent();
-  }
-
-  @Nullable
-  public Project getProject() {
-    return myProject;
-  }
-
-  @Nonnull
-  public MergeContext getContext() {
-    return myContext;
-  }
-
-  @RequiredUIAccess
-  public boolean checkCloseAction() {
-    return myConflictResolved || myCloseHandler == null || myCloseHandler.getAsBoolean();
-  }
-
-  @Nonnull
-  public BottomActions getBottomActions() {
-    return myBottomActions != null ? myBottomActions : new BottomActions();
-  }
-
-  @Nullable
-  public String getHelpId() {
-    return (String)myMainPanel.getData(HelpManager.HELP_ID);
-  }
-
-  //
-  // Misc
-  //
-
-  public boolean isFocused() {
-    return AWTDiffUtil.isFocusedComponent(myProject, myPanel);
-  }
-
-  public void requestFocus() {
-    AWTDiffUtil.requestFocus(myProject, getPreferredFocusedComponent());
-  }
-
-  protected void requestFocusInternal() {
-    JComponent component = getPreferredFocusedComponent();
-    if (component != null) component.requestFocusInWindow();
-  }
-
-  //
-  // Navigation
-  //
-
-  private static class MyNextDifferenceAction extends NextDifferenceAction {
-    @Override
     @RequiredUIAccess
-    public void update(@Nonnull AnActionEvent e) {
-      if (!ActionPlaces.DIFF_TOOLBAR.equals(e.getPlace())) {
-        e.getPresentation().setEnabled(true);
-        return;
-      }
+    public MergeRequestProcessor(@Nullable Project project, @Nonnull MergeRequest request) {
+        myProject = project;
+        myRequest = request;
 
-      PrevNextDifferenceIterable iterable = e.getData(DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE);
-      if (iterable != null && iterable.canGoNext()) {
-        e.getPresentation().setEnabled(true);
-        return;
-      }
+        myContext = new MyDiffContext();
+        myContext.putUserData(DiffUserDataKeys.PLACE, DiffPlaces.MERGE);
 
-      e.getPresentation().setEnabled(false);
+        myAvailableTools = DiffManagerEx.getInstanceEx().getMergeTools();
+
+        myMainPanel = new MyPanel();
+        myContentPanel = new Wrapper();
+        myToolbarPanel = new Wrapper();
+        myToolbarPanel.setFocusable(true);
+        myToolbarStatusPanel = new Wrapper();
+
+        myPanel = JBUI.Panels.simplePanel(myMainPanel);
+
+        JPanel topPanel = JBUI.Panels.simplePanel(myToolbarPanel).addToRight(myToolbarStatusPanel);
+
+        myMainPanel.add(topPanel, BorderLayout.NORTH);
+        myMainPanel.add(myContentPanel, BorderLayout.CENTER);
+
+        myMainPanel.setFocusTraversalPolicyProvider(true);
+        myMainPanel.setFocusTraversalPolicy(new MyFocusTraversalPolicy());
+
+        MergeTool.MergeViewer viewer;
+        try {
+            viewer = getFittedTool().createComponent(myContext, myRequest);
+        }
+        catch (Throwable e) {
+            LOG.error(e);
+            viewer = ErrorMergeTool.INSTANCE.createComponent(myContext, myRequest);
+        }
+
+        myViewer = viewer;
+        updateBottomActions();
+    }
+
+    //
+    // Update
+    //
+
+    @RequiredUIAccess
+    public void init() {
+        setTitle(myRequest.getTitle());
+        initViewer();
+    }
+
+    @RequiredUIAccess
+    private void initViewer() {
+        myContentPanel.setContent(myViewer.getComponent());
+
+        MergeTool.ToolbarComponents toolbarComponents = myViewer.init();
+
+        buildToolbar(toolbarComponents.toolbarActions);
+        myToolbarStatusPanel.setContent(toolbarComponents.statusPanel);
+        myCloseHandler = toolbarComponents.closeHandler;
+    }
+
+    @RequiredUIAccess
+    private void destroyViewer() {
+        Disposer.dispose(myViewer);
+
+        ActionUtil.clearActions(myMainPanel);
+
+        myContentPanel.setContent(null);
+        myToolbarPanel.setContent(null);
+        myToolbarStatusPanel.setContent(null);
+        myCloseHandler = null;
+        myBottomActions = null;
+    }
+
+    private void updateBottomActions() {
+        myBottomActions = new BottomActions();
+        myBottomActions.applyLeft = myViewer.getResolveAction(MergeResult.LEFT);
+        myBottomActions.applyRight = myViewer.getResolveAction(MergeResult.RIGHT);
+        myBottomActions.resolveAction = myViewer.getResolveAction(MergeResult.RESOLVED);
+        myBottomActions.cancelAction = myViewer.getResolveAction(MergeResult.CANCEL);
+    }
+
+    @Nonnull
+    protected DefaultActionGroup collectToolbarActions(@Nullable List<AnAction> viewerActions) {
+        DefaultActionGroup group = new DefaultActionGroup();
+
+        List<AnAction> navigationActions = ContainerUtil.<AnAction>list(new MyPrevDifferenceAction(), new MyNextDifferenceAction());
+        DiffImplUtil.addActionBlock(group, navigationActions);
+
+        DiffImplUtil.addActionBlock(group, viewerActions);
+
+        List<AnAction> requestContextActions = myRequest.getUserData(DiffUserDataKeys.CONTEXT_ACTIONS);
+        DiffImplUtil.addActionBlock(group, requestContextActions);
+
+        List<AnAction> contextActions = myContext.getUserData(DiffUserDataKeys.CONTEXT_ACTIONS);
+        DiffImplUtil.addActionBlock(group, contextActions);
+
+        return group;
+    }
+
+    protected void buildToolbar(@Nullable List<AnAction> viewerActions) {
+        ActionGroup group = collectToolbarActions(viewerActions);
+        ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.DIFF_TOOLBAR, group, true);
+
+        DataManager.registerDataProvider(toolbar.getComponent(), myMainPanel);
+        toolbar.setTargetComponent(toolbar.getComponent());
+
+        myToolbarPanel.setContent(toolbar.getComponent());
+        for (AnAction action : group.getChildren(null)) {
+            AWTDiffUtil.registerAction(action, myMainPanel);
+        }
+    }
+
+    @Nonnull
+    private MergeTool getFittedTool() {
+        for (MergeTool tool : myAvailableTools) {
+            try {
+                if (tool.canShow(myContext, myRequest)) {
+                    return tool;
+                }
+            }
+            catch (Throwable e) {
+                LOG.error(e);
+            }
+        }
+
+        return ErrorMergeTool.INSTANCE;
+    }
+
+    private void setTitle(@Nullable String title) {
+        if (title == null) {
+            title = "Merge";
+        }
+        setWindowTitle(title);
     }
 
     @Override
-    @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
-      PrevNextDifferenceIterable iterable = e.getData(DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE);
-      if (iterable != null && iterable.canGoNext()) {
-        iterable.goNext();
-      }
-    }
-  }
+    public void dispose() {
+        if (myDisposed) {
+            return;
+        }
+        UIUtil.invokeLaterIfNeeded(() -> {
+            if (myDisposed) {
+                return;
+            }
+            myDisposed = true;
 
-  private static class MyPrevDifferenceAction extends PrevDifferenceAction {
-    @Override
-    @RequiredUIAccess
-    public void update(@Nonnull AnActionEvent e) {
-      if (!ActionPlaces.DIFF_TOOLBAR.equals(e.getPlace())) {
-        e.getPresentation().setEnabled(true);
-        return;
-      }
+            onDispose();
 
-      PrevNextDifferenceIterable iterable = e.getData(DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE);
-      if (iterable != null && iterable.canGoPrev()) {
-        e.getPresentation().setEnabled(true);
-        return;
-      }
-
-      e.getPresentation().setEnabled(false);
+            destroyViewer();
+        });
     }
 
-    @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
-      PrevNextDifferenceIterable iterable = e.getData(DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE);
-      if (iterable != null && iterable.canGoPrev()) {
-        iterable.goPrev();
-      }
+    private void applyRequestResult(@Nonnull MergeResult result) {
+        if (myConflictResolved) {
+            return;
+        }
+        myConflictResolved = true;
+        try {
+            myRequest.applyResult(result);
+        }
+        catch (Exception e) {
+            LOG.error(e);
+        }
     }
-  }
 
-  //
-  // Helpers
-  //
+    @RequiredUIAccess
+    private void reopenWithTool(@Nonnull MergeTool tool) {
+        if (myConflictResolved) {
+            LOG.warn("Can't reopen with " + tool + " - conflict already resolved");
+            return;
+        }
 
-  private class MyPanel extends JPanel implements DataProvider {
-    public MyPanel() {
-      super(new BorderLayout());
+        if (!tool.canShow(myContext, myRequest)) {
+            LOG.warn("Can't reopen with " + tool + " - " + myRequest);
+            return;
+        }
+
+        MergeTool.MergeViewer newViewer;
+        try {
+            newViewer = tool.createComponent(myContext, myRequest);
+        }
+        catch (Throwable e) {
+            LOG.error(e);
+            return;
+        }
+
+        boolean wasFocused = isFocused();
+
+        destroyViewer();
+        myViewer = newViewer;
+        updateBottomActions();
+        rebuildSouthPanel();
+        initViewer();
+
+        if (wasFocused) {
+            requestFocusInternal();
+        }
+    }
+
+    //
+    // Abstract
+    //
+
+    @RequiredUIAccess
+    protected void onDispose() {
+        applyRequestResult(MergeResult.CANCEL);
+    }
+
+    protected void setWindowTitle(@Nonnull String title) {
+    }
+
+    protected abstract void rebuildSouthPanel();
+
+    public abstract void closeDialog();
+
+    @Nullable
+    public <T> T getContextUserData(@Nonnull Key<T> key) {
+        return myContext.getUserData(key);
+    }
+
+    public <T> void putContextUserData(@Nonnull Key<T> key, @Nullable T value) {
+        myContext.putUserData(key, value);
+    }
+
+    //
+    // Getters
+    //
+
+    @Nonnull
+    public JComponent getComponent() {
+        return myPanel;
     }
 
     @Nullable
-    @Override
-    public Object getData(@Nonnull Key<?> dataId) {
-      Object data;
-
-      DataProvider contentProvider = ((BaseDataManager)DataManager.getInstance()).getDataProviderEx(myContentPanel.getTargetComponent());
-      if (contentProvider != null) {
-        data = contentProvider.getData(dataId);
-        if (data != null) return data;
-      }
-
-      if (Project.KEY == dataId) {
-        return myProject;
-      }
-      else if (HelpManager.HELP_ID == dataId) {
-        if (myRequest.getUserData(DiffUserDataKeys.HELP_ID) != null) {
-          return myRequest.getUserData(DiffUserDataKeys.HELP_ID);
-        }
-        else {
-          return "procedures.vcWithIDEA.commonVcsOps.integrateDiffs.resolveConflict";
-        }
-      }
-
-      DataProvider requestProvider = myRequest.getUserData(DiffUserDataKeys.DATA_PROVIDER);
-      if (requestProvider != null) {
-        data = requestProvider.getData(dataId);
-        if (data != null) return data;
-      }
-
-      DataProvider contextProvider = myContext.getUserData(DiffUserDataKeys.DATA_PROVIDER);
-      if (contextProvider != null) {
-        data = contextProvider.getData(dataId);
-        if (data != null) return data;
-      }
-      return null;
+    public JComponent getPreferredFocusedComponent() {
+        JComponent component = myViewer.getPreferredFocusedComponent();
+        return component != null ? component : myToolbarPanel.getTargetComponent();
     }
-  }
 
-  private class MyFocusTraversalPolicy extends IdeFocusTraversalPolicy {
-    @Override
-    public final Component getDefaultComponent(final Container focusCycleRoot) {
-      JComponent component = MergeRequestProcessor.this.getPreferredFocusedComponent();
-      if (component == null) return null;
-      return IdeFocusTraversalPolicy.getPreferredFocusedComponent(component, this);
-    }
-  }
-
-  private class MyDiffContext extends MergeContextEx {
     @Nullable
-    @Override
     public Project getProject() {
-      return MergeRequestProcessor.this.getProject();
+        return myProject;
     }
 
-    @Override
+    @Nonnull
+    public MergeContext getContext() {
+        return myContext;
+    }
+
+    @RequiredUIAccess
+    public boolean checkCloseAction() {
+        return myConflictResolved || myCloseHandler == null || myCloseHandler.getAsBoolean();
+    }
+
+    @Nonnull
+    public BottomActions getBottomActions() {
+        return myBottomActions != null ? myBottomActions : new BottomActions();
+    }
+
+    @Nullable
+    public String getHelpId() {
+        return (String)myMainPanel.getData(HelpManager.HELP_ID);
+    }
+
+    //
+    // Misc
+    //
+
     public boolean isFocused() {
-      return MergeRequestProcessor.this.isFocused();
+        return AWTDiffUtil.isFocusedComponent(myProject, myPanel);
     }
 
-    @Override
     public void requestFocus() {
-      MergeRequestProcessor.this.requestFocusInternal();
+        AWTDiffUtil.requestFocus(myProject, getPreferredFocusedComponent());
     }
 
-    @Override
-    @RequiredUIAccess
-    public void finishMerge(@Nonnull MergeResult result) {
-      applyRequestResult(result);
-      MergeRequestProcessor.this.closeDialog();
+    protected void requestFocusInternal() {
+        JComponent component = getPreferredFocusedComponent();
+        if (component != null) {
+            component.requestFocusInWindow();
+        }
     }
 
-    @Override
-    @RequiredUIAccess
-    public void reopenWithTool(@Nonnull MergeTool tool) {
-      MergeRequestProcessor.this.reopenWithTool(tool);
-    }
-  }
+    //
+    // Navigation
+    //
 
-  public static class BottomActions {
-    @Nullable
-    public Action applyLeft;
-    @Nullable
-    public Action applyRight;
-    @Nullable
-    public Action resolveAction;
-    @Nullable
-    public Action cancelAction;
-  }
+    private static class MyNextDifferenceAction extends NextDifferenceAction {
+        @Override
+        @RequiredUIAccess
+        public void update(@Nonnull AnActionEvent e) {
+            if (!ActionPlaces.DIFF_TOOLBAR.equals(e.getPlace())) {
+                e.getPresentation().setEnabled(true);
+                return;
+            }
+
+            PrevNextDifferenceIterable iterable = e.getData(DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE);
+            if (iterable != null && iterable.canGoNext()) {
+                e.getPresentation().setEnabled(true);
+                return;
+            }
+
+            e.getPresentation().setEnabled(false);
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void actionPerformed(@Nonnull AnActionEvent e) {
+            PrevNextDifferenceIterable iterable = e.getData(DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE);
+            if (iterable != null && iterable.canGoNext()) {
+                iterable.goNext();
+            }
+        }
+    }
+
+    private static class MyPrevDifferenceAction extends PrevDifferenceAction {
+        @Override
+        @RequiredUIAccess
+        public void update(@Nonnull AnActionEvent e) {
+            if (!ActionPlaces.DIFF_TOOLBAR.equals(e.getPlace())) {
+                e.getPresentation().setEnabled(true);
+                return;
+            }
+
+            PrevNextDifferenceIterable iterable = e.getData(DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE);
+            if (iterable != null && iterable.canGoPrev()) {
+                e.getPresentation().setEnabled(true);
+                return;
+            }
+
+            e.getPresentation().setEnabled(false);
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void actionPerformed(@Nonnull AnActionEvent e) {
+            PrevNextDifferenceIterable iterable = e.getData(DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE);
+            if (iterable != null && iterable.canGoPrev()) {
+                iterable.goPrev();
+            }
+        }
+    }
+
+    //
+    // Helpers
+    //
+
+    private class MyPanel extends JPanel implements DataProvider {
+        public MyPanel() {
+            super(new BorderLayout());
+        }
+
+        @Nullable
+        @Override
+        public Object getData(@Nonnull Key<?> dataId) {
+            Object data;
+
+            DataProvider contentProvider =
+                ((BaseDataManager)DataManager.getInstance()).getDataProviderEx(myContentPanel.getTargetComponent());
+            if (contentProvider != null) {
+                data = contentProvider.getData(dataId);
+                if (data != null) {
+                    return data;
+                }
+            }
+
+            if (Project.KEY == dataId) {
+                return myProject;
+            }
+            else if (HelpManager.HELP_ID == dataId) {
+                if (myRequest.getUserData(DiffUserDataKeys.HELP_ID) != null) {
+                    return myRequest.getUserData(DiffUserDataKeys.HELP_ID);
+                }
+                else {
+                    return "procedures.vcWithIDEA.commonVcsOps.integrateDiffs.resolveConflict";
+                }
+            }
+
+            DataProvider requestProvider = myRequest.getUserData(DiffUserDataKeys.DATA_PROVIDER);
+            if (requestProvider != null) {
+                data = requestProvider.getData(dataId);
+                if (data != null) {
+                    return data;
+                }
+            }
+
+            DataProvider contextProvider = myContext.getUserData(DiffUserDataKeys.DATA_PROVIDER);
+            if (contextProvider != null) {
+                data = contextProvider.getData(dataId);
+                if (data != null) {
+                    return data;
+                }
+            }
+            return null;
+        }
+    }
+
+    private class MyFocusTraversalPolicy extends IdeFocusTraversalPolicy {
+        @Override
+        public final Component getDefaultComponent(final Container focusCycleRoot) {
+            JComponent component = MergeRequestProcessor.this.getPreferredFocusedComponent();
+            if (component == null) {
+                return null;
+            }
+            return IdeFocusTraversalPolicy.getPreferredFocusedComponent(component, this);
+        }
+    }
+
+    private class MyDiffContext extends MergeContextEx {
+        @Nullable
+        @Override
+        public Project getProject() {
+            return MergeRequestProcessor.this.getProject();
+        }
+
+        @Override
+        public boolean isFocused() {
+            return MergeRequestProcessor.this.isFocused();
+        }
+
+        @Override
+        public void requestFocus() {
+            MergeRequestProcessor.this.requestFocusInternal();
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void finishMerge(@Nonnull MergeResult result) {
+            applyRequestResult(result);
+            MergeRequestProcessor.this.closeDialog();
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void reopenWithTool(@Nonnull MergeTool tool) {
+            MergeRequestProcessor.this.reopenWithTool(tool);
+        }
+    }
+
+    public static class BottomActions {
+        @Nullable
+        public Action applyLeft;
+        @Nullable
+        public Action applyRight;
+        @Nullable
+        public Action resolveAction;
+        @Nullable
+        public Action cancelAction;
+    }
 }

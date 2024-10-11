@@ -21,78 +21,79 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nullable;
+
 import java.util.Collection;
 import java.util.Collections;
 
 public class VcsException extends Exception {
-  public static final VcsException[] EMPTY_ARRAY = new VcsException[0];
+    public static final VcsException[] EMPTY_ARRAY = new VcsException[0];
 
-  private VirtualFile myVirtualFile;
-  private Collection<String> myMessages;
-  private boolean isWarning = false;
+    private VirtualFile myVirtualFile;
+    private Collection<String> myMessages;
+    private boolean isWarning = false;
 
-  public VcsException(String message) {
-    super(message);
-    initMessage(message);
-  }
+    public VcsException(String message) {
+        super(message);
+        initMessage(message);
+    }
 
-  private void initMessage(final String message) {
-    String shownMessage = message == null ? VcsBundle.message("exception.text.unknown.error") : message;
-    myMessages = Collections.singleton(shownMessage);
-  }
+    private void initMessage(final String message) {
+        String shownMessage = message == null ? VcsBundle.message("exception.text.unknown.error") : message;
+        myMessages = Collections.singleton(shownMessage);
+    }
 
-  public VcsException(Throwable throwable, final boolean isWarning) {
-    this(getMessage(throwable), throwable);
-    this.isWarning = isWarning;
-  }
+    public VcsException(Throwable throwable, final boolean isWarning) {
+        this(getMessage(throwable), throwable);
+        this.isWarning = isWarning;
+    }
 
-  public VcsException(Throwable throwable) {
-    this(throwable, false);
-  }
+    public VcsException(Throwable throwable) {
+        this(throwable, false);
+    }
 
-  public VcsException(final String message, final Throwable cause) {
-    super(message, cause);
-    initMessage(message);
-  }
+    public VcsException(final String message, final Throwable cause) {
+        super(message, cause);
+        initMessage(message);
+    }
 
-  public VcsException(final String message, final boolean isWarning) {
-    this(message);
-    this.isWarning = isWarning;
-  }
+    public VcsException(final String message, final boolean isWarning) {
+        this(message);
+        this.isWarning = isWarning;
+    }
 
-  public VcsException(Collection<String> messages) {
-    myMessages = messages;
-  }
+    public VcsException(Collection<String> messages) {
+        myMessages = messages;
+    }
 
-  //todo: should be in constructor?
-  public void setVirtualFile(VirtualFile virtualFile) {
-    myVirtualFile = virtualFile;
-  }
+    //todo: should be in constructor?
+    public void setVirtualFile(VirtualFile virtualFile) {
+        myVirtualFile = virtualFile;
+    }
 
-  public VirtualFile getVirtualFile() {
-    return myVirtualFile;
-  }
+    public VirtualFile getVirtualFile() {
+        return myVirtualFile;
+    }
 
-  public String[] getMessages() {
-    return ArrayUtil.toStringArray(myMessages);
-  }
+    public String[] getMessages() {
+        return ArrayUtil.toStringArray(myMessages);
+    }
 
-  public VcsException setIsWarning(boolean warning) {
-    isWarning = warning;
-    return this;
-  }
+    public VcsException setIsWarning(boolean warning) {
+        isWarning = warning;
+        return this;
+    }
 
-  public boolean isWarning() {
-    return isWarning;
-  }
+    public boolean isWarning() {
+        return isWarning;
+    }
 
-  @Override
-  public String getMessage() {
-    return StringUtil.join(myMessages, ", ");
-  }
+    @Override
+    public String getMessage() {
+        return StringUtil.join(myMessages, ", ");
+    }
 
-  @Nullable
-  public static String getMessage(@Nullable Throwable throwable) {
-    return throwable != null ? ObjectUtil.chooseNotNull(throwable.getMessage(), throwable.getLocalizedMessage()) : null;
-  }
+    @Nullable
+    public static String getMessage(@Nullable Throwable throwable) {
+        return throwable != null ? ObjectUtil.chooseNotNull(throwable.getMessage(), throwable.getLocalizedMessage()) : null;
+    }
 }

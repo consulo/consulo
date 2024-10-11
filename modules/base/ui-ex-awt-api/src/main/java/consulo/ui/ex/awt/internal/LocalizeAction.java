@@ -27,51 +27,51 @@ import javax.swing.*;
  * @since 2020-05-21
  */
 public abstract class LocalizeAction extends AbstractAction {
-  private LocalizeValue myTextValue;
+    private LocalizeValue myTextValue;
 
-  @Deprecated
-  @DeprecationInfo("Use constructor with LocalizeValue")
-  protected LocalizeAction(String name) {
-    this(LocalizeValue.of(name));
-  }
+    @Deprecated
+    @DeprecationInfo("Use constructor with LocalizeValue")
+    protected LocalizeAction(String name) {
+        this(LocalizeValue.of(name));
+    }
 
-  protected LocalizeAction(LocalizeValue nameValue) {
-    setText(nameValue);
-  }
+    protected LocalizeAction(LocalizeValue nameValue) {
+        setText(nameValue);
+    }
 
-  public void setText(LocalizeValue text) {
-    myTextValue = text;
+    public void setText(LocalizeValue text) {
+        myTextValue = text;
 
-    updateName();
-  }
+        updateName();
+    }
 
-  public void updateName() {
-    if (withMnemonic()) {
-      String textValue = myTextValue.get();
-      MnemonicInfo mnemonicInfo = MnemonicInfo.parse(textValue);
-      if (mnemonicInfo == null) {
-        putValue(NAME, textValue);
-      }
-      else {
-        putValue(NAME, mnemonicInfo.getText());
+    public void updateName() {
+        if (withMnemonic()) {
+            String textValue = myTextValue.get();
+            MnemonicInfo mnemonicInfo = MnemonicInfo.parse(textValue);
+            if (mnemonicInfo == null) {
+                putValue(NAME, textValue);
+            }
+            else {
+                putValue(NAME, mnemonicInfo.getText());
 
-        if (mnemonicInfo.getIndex() != -1) {
-          putValue(MNEMONIC_KEY, (int)mnemonicInfo.getKeyCode());
-          putValue(DISPLAYED_MNEMONIC_INDEX_KEY, mnemonicInfo.getIndex());
+                if (mnemonicInfo.getIndex() != -1) {
+                    putValue(MNEMONIC_KEY, (int)mnemonicInfo.getKeyCode());
+                    putValue(DISPLAYED_MNEMONIC_INDEX_KEY, mnemonicInfo.getIndex());
+                }
+            }
         }
-      }
+        else {
+            putValue(NAME, myTextValue.getValue());
+        }
     }
-    else {
-      putValue(NAME, myTextValue.getValue());
+
+    @Nonnull
+    public LocalizeValue getTextValue() {
+        return myTextValue;
     }
-  }
 
-  @Nonnull
-  public LocalizeValue getTextValue() {
-    return myTextValue;
-  }
-
-  protected boolean withMnemonic() {
-    return false;
-  }
+    protected boolean withMnemonic() {
+        return false;
+    }
 }

@@ -40,106 +40,114 @@ import java.awt.event.ActionEvent;
 
 @ExtensionImpl
 public class ApplyPatchMergeTool implements MergeTool {
-  @Nonnull
-  @Override
-  public MergeViewer createComponent(@Nonnull MergeContext context, @Nonnull MergeRequest request) {
-    return new MyApplyPatchViewer(context, (ApplyPatchMergeRequest)request);
-  }
-
-  @Override
-  public boolean canShow(@Nonnull MergeContext context, @Nonnull MergeRequest request) {
-    return request instanceof ApplyPatchMergeRequest;
-  }
-
-  private static class MyApplyPatchViewer extends ApplyPatchViewer implements MergeViewer {
-    @Nonnull
-    private final MergeContext myMergeContext;
-    @Nonnull
-    private final ApplyPatchMergeRequest myMergeRequest;
-
-    public MyApplyPatchViewer(@Nonnull MergeContext context, @Nonnull ApplyPatchMergeRequest request) {
-      super(createWrapperDiffContext(context), request);
-      myMergeContext = context;
-      myMergeRequest = request;
-    }
-
-    @Nonnull
-    private static DiffContext createWrapperDiffContext(@Nonnull MergeContext mergeContext) {
-      return new MergeImplUtil.ProxyDiffContext(mergeContext);
-    }
-
     @Nonnull
     @Override
-    public ToolbarComponents init() {
-      initPatchViewer();
-
-      ToolbarComponents components = new ToolbarComponents();
-      components.statusPanel = getStatusPanel();
-      components.toolbarActions = createToolbarActions();
-
-      components.closeHandler = () -> MergeImplUtil.showExitWithoutApplyingChangesDialog(this, myMergeRequest, myMergeContext);
-      return components;
+    public MergeViewer createComponent(@Nonnull MergeContext context, @Nonnull MergeRequest request) {
+        return new MyApplyPatchViewer(context, (ApplyPatchMergeRequest)request);
     }
 
-    @Nullable
     @Override
-    public Action getResolveAction(@Nonnull final MergeResult result) {
-      if (result == MergeResult.LEFT || result == MergeResult.RIGHT) return null;
+    public boolean canShow(@Nonnull MergeContext context, @Nonnull MergeRequest request) {
+        return request instanceof ApplyPatchMergeRequest;
+    }
 
-      String caption = MergeImplUtil.getResolveActionTitle(result, myMergeRequest, myMergeContext);
-      return new AbstractAction(caption) {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          if (result == MergeResult.RESOLVED) {
-            int unresolved = getUnresolvedCount();
-            if (unresolved != 0 && Messages.showYesNoDialog(
-              getComponent().getRootPane(),
-              DiffLocalize.applyPatchPartiallyResolvedChangesConfirmationMessage(unresolved).get(),
-              DiffLocalize.applyPartiallyResolvedMergeDialogTitle().get(),
-              Messages.getQuestionIcon()
-            ) != Messages.YES) {
-              return;
-            }
-          }
+    private static class MyApplyPatchViewer extends ApplyPatchViewer implements MergeViewer {
+        @Nonnull
+        private final MergeContext myMergeContext;
+        @Nonnull
+        private final ApplyPatchMergeRequest myMergeRequest;
 
-          if (result == MergeResult.CANCEL &&
-              !MergeImplUtil.showExitWithoutApplyingChangesDialog(MyApplyPatchViewer.this, myMergeRequest, myMergeContext)) {
-            return;
-          }
-
-          myMergeContext.finishMerge(result);
+        public MyApplyPatchViewer(@Nonnull MergeContext context, @Nonnull ApplyPatchMergeRequest request) {
+            super(createWrapperDiffContext(context), request);
+            myMergeContext = context;
+            myMergeRequest = request;
         }
-      };
+
+        @Nonnull
+        private static DiffContext createWrapperDiffContext(@Nonnull MergeContext mergeContext) {
+            return new MergeImplUtil.ProxyDiffContext(mergeContext);
+        }
+
+        @Nonnull
+        @Override
+        public ToolbarComponents init() {
+            initPatchViewer();
+
+            ToolbarComponents components = new ToolbarComponents();
+            components.statusPanel = getStatusPanel();
+            components.toolbarActions = createToolbarActions();
+
+            components.closeHandler = () -> MergeImplUtil.showExitWithoutApplyingChangesDialog(this, myMergeRequest, myMergeContext);
+            return components;
+        }
+
+        @Nullable
+        @Override
+        public Action getResolveAction(@Nonnull final MergeResult result) {
+            if (result == MergeResult.LEFT || result == MergeResult.RIGHT) {
+                return null;
+            }
+
+            String caption = MergeImplUtil.getResolveActionTitle(result, myMergeRequest, myMergeContext);
+            return new AbstractAction(caption) {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (result == MergeResult.RESOLVED) {
+                        int unresolved = getUnresolvedCount();
+                        if (unresolved != 0 && Messages.showYesNoDialog(
+                            getComponent().getRootPane(),
+                            DiffLocalize.applyPatchPartiallyResolvedChangesConfirmationMessage(unresolved).get(),
+                            DiffLocalize.applyPartiallyResolvedMergeDialogTitle().get(),
+                            Messages.getQuestionIcon()
+                        ) != Messages.YES) {
+                            return;
+                        }
+                    }
+
+                    if (result == MergeResult.CANCEL &&
+                        !MergeImplUtil.showExitWithoutApplyingChangesDialog(MyApplyPatchViewer.this, myMergeRequest, myMergeContext)) {
+                        return;
+                    }
+
+                    myMergeContext.finishMerge(result);
+                }
+            };
+        }
+
+        private int getUnresolvedCount() {
+            int count = 0;
+            for (ApplyPatchChange change : getPatchChanges()) {
+                if (change.isResolved()) {
+                    continue;
+                }
+                count++;
+            }
+            return count;
+        }
+
+        @Override
+        protected void onChangeResolved() {
+            super.onChangeResolved();
+
+            if (!ContainerUtil.exists(getModelChanges(), (c) -> !c.isResolved())) {
+                ApplicationManager.getApplication().invokeLater(() -> {
+                    if (isDisposed()) {
+                        return;
+                    }
+
+                    JComponent component = getComponent();
+                    int yOffset = new RelativePoint(getResultEditor().getComponent(), new Point(0, JBUI.scale(5))).getPoint(component).y;
+                    RelativePoint point = new RelativePoint(component, new Point(component.getWidth() / 2, yOffset));
+
+                    LocalizeValue message = DiffLocalize.applyPatchAllChangesProcessedMessageText();
+                    AWTDiffUtil.showSuccessPopup(message.get(), point, this, () -> {
+                        if (isDisposed()) {
+                            return;
+                        }
+                        myMergeContext.finishMerge(MergeResult.RESOLVED);
+                    });
+                });
+            }
+        }
     }
-
-    private int getUnresolvedCount() {
-      int count = 0;
-      for (ApplyPatchChange change : getPatchChanges()) {
-        if (change.isResolved()) continue;
-        count++;
-      }
-      return count;
-    }
-
-    @Override
-    protected void onChangeResolved() {
-      super.onChangeResolved();
-
-      if (!ContainerUtil.exists(getModelChanges(), (c) -> !c.isResolved())) {
-        ApplicationManager.getApplication().invokeLater(() -> {
-          if (isDisposed()) return;
-
-          JComponent component = getComponent();
-          int yOffset = new RelativePoint(getResultEditor().getComponent(), new Point(0, JBUI.scale(5))).getPoint(component).y;
-          RelativePoint point = new RelativePoint(component, new Point(component.getWidth() / 2, yOffset));
-
-          LocalizeValue message = DiffLocalize.applyPatchAllChangesProcessedMessageText();
-          AWTDiffUtil.showSuccessPopup(message.get(), point, this, () -> {
-            if (isDisposed()) return;
-            myMergeContext.finishMerge(MergeResult.RESOLVED);
-          });
-        });
-      }
-    }
-  }
 }
