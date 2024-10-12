@@ -79,9 +79,9 @@ public class FileSearchEverywhereContributor extends AbstractGotoSEContributor {
 
   @Nonnull
   @Override
+  @SuppressWarnings("unchecked")
   public ListCellRenderer<Object> getElementsRenderer() {
-    //noinspection unchecked
-    return new SERenderer() {
+    return (ListCellRenderer)new SERenderer() {
       @Nonnull
       @Override
       protected ItemMatchers getItemMatchers(@Nonnull JList list, @Nonnull Object value) {

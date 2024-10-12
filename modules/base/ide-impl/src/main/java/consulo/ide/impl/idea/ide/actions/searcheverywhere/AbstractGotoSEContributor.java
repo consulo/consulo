@@ -361,9 +361,9 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
 
   @Nonnull
   @Override
+  @SuppressWarnings("unchecked")
   public ListCellRenderer<Object> getElementsRenderer() {
-    //noinspection unchecked
-    return new SERenderer();
+    return (ListCellRenderer)new SERenderer();
   }
 
   @Override
