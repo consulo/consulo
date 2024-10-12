@@ -20,6 +20,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.ide.impl.idea.util.continuation.*;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -30,8 +31,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author irengrig
- * Date: 4/7/11
- * Time: 7:06 PM
+ * @since 2011-04-07
  */
 public class TestContinuationAction extends AnAction {
     public TestContinuationAction() {
@@ -39,13 +39,17 @@ public class TestContinuationAction extends AnAction {
     }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(final AnActionEvent e) {
         final Project project = e.getDataContext().getData(Project.KEY);
         if (project == null) {
             return;
         }
 
-        ProgressManager.getInstance().run(new Task.Backgroundable(project, "Test Continuation", true,
+        ProgressManager.getInstance().run(new Task.Backgroundable(
+            project,
+            "Test Continuation",
+            true,
             new PerformInBackgroundOption() {
                 @Override
                 public boolean shouldStartInBackground() {
@@ -62,7 +66,9 @@ public class TestContinuationAction extends AnAction {
                 final Continuation continuation = Continuation.createForCurrentProgress(project, true, e.getPresentation().getText());
                 final ReportTask finalBlock = new ReportTask("I'm finally block!");
                 finalBlock.setHaveMagicCure(true);
-                continuation.run(new TaskDescriptor[]{new LongTaskDescriptor("First"), new ReportTask("First complete"),
+                continuation.run(
+                    new LongTaskDescriptor("First"),
+                    new ReportTask("First complete"),
                     new TaskDescriptor("Adding task", Where.POOLED) {
                         @Override
                         public void run(final ContinuationContext context) {
@@ -99,20 +105,21 @@ public class TestContinuationAction extends AnAction {
                             );*/
                         }
                     },
-                    new LongTaskDescriptor("Third"), new ReportTask("Third complete"),
-                    finalBlock});
+                    new LongTaskDescriptor("Third"),
+                    new ReportTask("Third complete"),
+                    finalBlock);
             }
 
             @RequiredUIAccess
             @Override
             public void onCancel() {
-                Messages.showInfoMessage("cancel!", myTitle);
+                Messages.showInfoMessage("cancel!", myTitle.get());
             }
 
             @RequiredUIAccess
             @Override
             public void onSuccess() {
-                Messages.showInfoMessage("success!", myTitle);
+                Messages.showInfoMessage("success!", myTitle.get());
             }
         });
     }
@@ -162,7 +169,7 @@ public class TestContinuationAction extends AnAction {
             catch (InterruptedException e) {
                 //
             }
-            pi.setText("");
+            pi.setTextValue(LocalizeValue.empty());
         }
     }
 }

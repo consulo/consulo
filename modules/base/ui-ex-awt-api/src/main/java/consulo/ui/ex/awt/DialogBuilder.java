@@ -15,19 +15,19 @@
  */
 package consulo.ui.ex.awt;
 
-import consulo.application.CommonBundle;
+import consulo.annotation.DeprecationInfo;
 import consulo.application.HelpManager;
 import consulo.component.ComponentManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.AsyncResult;
-import org.intellij.lang.annotations.MagicConstant;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.intellij.lang.annotations.MagicConstant;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,12 +39,11 @@ import java.util.ArrayList;
  * There is no need to create a subclass (which is needed in the DialogWrapper), which can be nice for simple dialogs.
  */
 public class DialogBuilder implements Disposable {
-    @NonNls
     public static final String REQUEST_FOCUS_ENABLED = "requestFocusEnabled";
 
     private JComponent myCenterPanel;
     private JComponent myNorthPanel;
-    private String myTitle;
+    private LocalizeValue myTitle;
     private JComponent myPreferedFocusComponent;
     private String myDimensionServiceKey;
     private ArrayList<ActionDescriptor> myActions = null;
@@ -52,10 +51,12 @@ public class DialogBuilder implements Disposable {
     private Runnable myCancelOperation = null;
     private Runnable myOkOperation = null;
 
+    @RequiredUIAccess
     public int show() {
         return showImpl(true).getExitCode();
     }
 
+    @RequiredUIAccess
     public boolean showAndGet() {
         return showImpl(true).isOK();
     }
@@ -66,6 +67,7 @@ public class DialogBuilder implements Disposable {
         return showAsync(true);
     }
 
+    @RequiredUIAccess
     public void showNotModal() {
         showImpl(false);
     }
@@ -88,6 +90,7 @@ public class DialogBuilder implements Disposable {
     public void dispose() {
     }
 
+    @RequiredUIAccess
     private AsyncResult<Void> showAsync(boolean isModal) {
         myDialogWrapper.setTitle(myTitle);
         myDialogWrapper.init();
@@ -95,6 +98,7 @@ public class DialogBuilder implements Disposable {
         return myDialogWrapper.showAsync();
     }
 
+    @RequiredUIAccess
     private MyDialogWrapper showImpl(boolean isModal) {
         myDialogWrapper.setTitle(myTitle);
         myDialogWrapper.init();
@@ -122,13 +126,27 @@ public class DialogBuilder implements Disposable {
         return this;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(@Nonnull LocalizeValue title) {
         myTitle = title;
     }
 
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public void setTitle(String title) {
+        myTitle = LocalizeValue.ofNullable(title);
+    }
+
+    @Nonnull
+    public DialogBuilder title(@Nonnull LocalizeValue title) {
+        myTitle = title;
+        return this;
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     @Nonnull
     public DialogBuilder title(@Nonnull String title) {
-        myTitle = title;
+        myTitle = LocalizeValue.of(title);
         return this;
     }
 
@@ -136,7 +154,7 @@ public class DialogBuilder implements Disposable {
         myPreferedFocusComponent = component;
     }
 
-    public void setDimensionServiceKey(@NonNls String dimensionServiceKey) {
+    public void setDimensionServiceKey(String dimensionServiceKey) {
         myDimensionServiceKey = dimensionServiceKey;
     }
 
@@ -184,7 +202,7 @@ public class DialogBuilder implements Disposable {
 
     public CustomizableAction addCloseButton() {
         CustomizableAction closeAction = addOkAction();
-        closeAction.setText(CommonBundle.getCloseButtonText());
+        closeAction.setText(CommonLocalize.buttonClose().get());
         return closeAction;
     }
 
@@ -200,6 +218,7 @@ public class DialogBuilder implements Disposable {
         return myDialogWrapper;
     }
 
+    @RequiredUIAccess
     public void showModal(boolean modal) {
         if (modal) {
             show();
@@ -209,7 +228,7 @@ public class DialogBuilder implements Disposable {
         }
     }
 
-    public void setHelpId(@NonNls String helpId) {
+    public void setHelpId(String helpId) {
         myDialogWrapper.setHelpId(helpId);
     }
 
@@ -269,7 +288,7 @@ public class DialogBuilder implements Disposable {
 
         protected DialogActionDescriptor(String name, int mnemonicChar) {
             myName = name;
-            myMnemonicChar = mnemonicChar == -1 ? null : Integer.valueOf(mnemonicChar);
+            myMnemonicChar = mnemonicChar == -1 ? null : mnemonicChar;
         }
 
         @Override
@@ -296,7 +315,7 @@ public class DialogBuilder implements Disposable {
         private final int myExitCode;
 
         public CloseDialogAction() {
-            this(CommonBundle.getCloseButtonText(), -1, DialogWrapper.CLOSE_EXIT_CODE);
+            this(CommonLocalize.buttonClose().get(), -1, DialogWrapper.CLOSE_EXIT_CODE);
         }
 
         public CloseDialogAction(String name, int mnemonicChar, int exitCode) {
@@ -400,15 +419,15 @@ public class DialogBuilder implements Disposable {
 
         @Override
         @Nonnull
-        public Action getOKAction() {
+        public LocalizeAction getOKAction() {
             return super.getOKAction();
-        } // Make it public
+        }
 
         @Override
         @Nonnull
-        public Action getCancelAction() {
+        public LocalizeAction getCancelAction() {
             return super.getCancelAction();
-        } // Make it public
+        }
 
         @Override
         protected JComponent createCenterPanel() {
@@ -427,6 +446,7 @@ public class DialogBuilder implements Disposable {
         }
 
         @Override
+        @RequiredUIAccess
         public JComponent getPreferredFocusedComponent() {
             if (myPreferedFocusComponent != null) {
                 return myPreferedFocusComponent;
@@ -455,9 +475,8 @@ public class DialogBuilder implements Disposable {
         @Override
         protected JButton createJButtonForAction(Action action) {
             JButton button = super.createJButtonForAction(action);
-            Object value = action.getValue(REQUEST_FOCUS_ENABLED);
-            if (value instanceof Boolean) {
-                button.setRequestFocusEnabled(((Boolean)value).booleanValue());
+            if (action.getValue(REQUEST_FOCUS_ENABLED) instanceof Boolean requestFocusEnabled) {
+                button.setRequestFocusEnabled(requestFocusEnabled);
             }
             return button;
         }
@@ -486,6 +505,7 @@ public class DialogBuilder implements Disposable {
         }
 
         @Override
+        @RequiredUIAccess
         protected void doHelpAction() {
             if (myHelpId == null) {
                 super.doHelpAction();

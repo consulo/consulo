@@ -19,6 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import jakarta.annotation.Nonnull;
@@ -41,9 +42,12 @@ public interface MergeTool {
 
     boolean canShow(@Nonnull MergeContext context, @Nonnull MergeRequest request);
 
+    record ActionRecord(@Nonnull LocalizeValue title, @Nonnull Runnable onActionPerformed) {
+    }
+
     /**
      * Merge viewer should call {@link MergeContext#finishMerge(MergeResult)} when processing is over.
-     *
+     * <p>
      * {@link MergeRequest#applyResult(MergeResult)} will be performed by the caller, so it shouldn't be called by MergeViewer directly.
      */
     interface MergeViewer extends Disposable {
@@ -61,7 +65,7 @@ public interface MergeTool {
          * return null if action is not available
          */
         @Nullable
-        Action getResolveAction(@Nonnull MergeResult result);
+        ActionRecord getResolveAction(@Nonnull MergeResult result);
 
         /**
          * Should be called after adding {@link #getComponent()} to the components hierarchy.

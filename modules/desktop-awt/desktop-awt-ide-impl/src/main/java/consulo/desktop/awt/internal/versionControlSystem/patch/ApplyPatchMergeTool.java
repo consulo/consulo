@@ -16,7 +16,7 @@
 package consulo.desktop.awt.internal.versionControlSystem.patch;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.desktop.awt.internal.diff.merge.MergeImplUtil;
 import consulo.desktop.awt.internal.diff.util.AWTDiffUtil;
 import consulo.diff.DiffContext;
@@ -27,21 +27,23 @@ import consulo.diff.merge.MergeResult;
 import consulo.diff.merge.MergeTool;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.tool.ApplyPatchMergeRequest;
 import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 
 @ExtensionImpl
 public class ApplyPatchMergeTool implements MergeTool {
     @Nonnull
     @Override
+    @RequiredUIAccess
     public MergeViewer createComponent(@Nonnull MergeContext context, @Nonnull MergeRequest request) {
         return new MyApplyPatchViewer(context, (ApplyPatchMergeRequest)request);
     }
@@ -70,6 +72,7 @@ public class ApplyPatchMergeTool implements MergeTool {
 
         @Nonnull
         @Override
+        @RequiredUIAccess
         public ToolbarComponents init() {
             initPatchViewer();
 
@@ -83,35 +86,34 @@ public class ApplyPatchMergeTool implements MergeTool {
 
         @Nullable
         @Override
-        public Action getResolveAction(@Nonnull final MergeResult result) {
+        public ActionRecord getResolveAction(@Nonnull final MergeResult result) {
             if (result == MergeResult.LEFT || result == MergeResult.RIGHT) {
                 return null;
             }
 
-            String caption = MergeImplUtil.getResolveActionTitle(result, myMergeRequest, myMergeContext);
-            return new AbstractAction(caption) {
-                @Override
-                public void actionPerformed(ActionEvent e) {
+            return new ActionRecord(
+                MergeImplUtil.getResolveActionTitle(result, myMergeRequest, myMergeContext),
+                () -> {
                     if (result == MergeResult.RESOLVED) {
                         int unresolved = getUnresolvedCount();
                         if (unresolved != 0 && Messages.showYesNoDialog(
                             getComponent().getRootPane(),
                             DiffLocalize.applyPatchPartiallyResolvedChangesConfirmationMessage(unresolved).get(),
                             DiffLocalize.applyPartiallyResolvedMergeDialogTitle().get(),
-                            Messages.getQuestionIcon()
+                            UIUtil.getQuestionIcon()
                         ) != Messages.YES) {
                             return;
                         }
                     }
 
-                    if (result == MergeResult.CANCEL &&
-                        !MergeImplUtil.showExitWithoutApplyingChangesDialog(MyApplyPatchViewer.this, myMergeRequest, myMergeContext)) {
+                    if (result == MergeResult.CANCEL
+                        && !MergeImplUtil.showExitWithoutApplyingChangesDialog(MyApplyPatchViewer.this, myMergeRequest, myMergeContext)) {
                         return;
                     }
 
                     myMergeContext.finishMerge(result);
                 }
-            };
+            );
         }
 
         private int getUnresolvedCount() {
@@ -129,23 +131,28 @@ public class ApplyPatchMergeTool implements MergeTool {
         protected void onChangeResolved() {
             super.onChangeResolved();
 
-            if (!ContainerUtil.exists(getModelChanges(), (c) -> !c.isResolved())) {
-                ApplicationManager.getApplication().invokeLater(() -> {
+            if (!ContainerUtil.exists(getModelChanges(), c -> !c.isResolved())) {
+                Application.get().invokeLater(() -> {
                     if (isDisposed()) {
                         return;
                     }
 
                     JComponent component = getComponent();
-                    int yOffset = new RelativePoint(getResultEditor().getComponent(), new Point(0, JBUI.scale(5))).getPoint(component).y;
+                    int yOffset =
+                        new RelativePoint(getResultEditor().getComponent(), new Point(0, JBUI.scale(5))).getPoint(component).y;
                     RelativePoint point = new RelativePoint(component, new Point(component.getWidth() / 2, yOffset));
 
                     LocalizeValue message = DiffLocalize.applyPatchAllChangesProcessedMessageText();
-                    AWTDiffUtil.showSuccessPopup(message.get(), point, this, () -> {
-                        if (isDisposed()) {
-                            return;
+                    AWTDiffUtil.showSuccessPopup(
+                        message.get(),
+                        point,
+                        this,
+                        () -> {
+                            if (!isDisposed()) {
+                                myMergeContext.finishMerge(MergeResult.RESOLVED);
+                            }
                         }
-                        myMergeContext.finishMerge(MergeResult.RESOLVED);
-                    });
+                    );
                 });
             }
         }

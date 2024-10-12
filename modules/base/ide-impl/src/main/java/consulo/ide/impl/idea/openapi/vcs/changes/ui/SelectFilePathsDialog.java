@@ -16,6 +16,8 @@
 
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsShowConfirmationOption;
@@ -33,6 +35,29 @@ import java.util.List;
 public class SelectFilePathsDialog extends AbstractSelectFilesDialog<FilePath> {
     private final ChangesTreeList<FilePath> myFileList;
 
+    public SelectFilePathsDialog(
+        final Project project,
+        List<FilePath> originalFiles,
+        final String prompt,
+        final VcsShowConfirmationOption confirmationOption,
+        @Nonnull LocalizeValue okActionName,
+        @Nonnull LocalizeValue cancelActionName,
+        boolean showDoNotAskOption
+    ) {
+        super(project, false, confirmationOption, prompt, showDoNotAskOption);
+        myFileList = new FilePathChangesTreeList(project, originalFiles, true, true, null, null);
+        if (okActionName != LocalizeValue.empty()) {
+            getOKAction().setText(okActionName);
+        }
+        if (cancelActionName != LocalizeValue.empty()) {
+            getCancelAction().setText(cancelActionName);
+        }
+        myFileList.setChangesToDisplay(originalFiles);
+        init();
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     public SelectFilePathsDialog(
         final Project project,
         List<FilePath> originalFiles,

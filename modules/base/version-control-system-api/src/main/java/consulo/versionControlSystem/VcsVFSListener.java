@@ -16,9 +16,9 @@
 
 package consulo.versionControlSystem;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.UsedInPlugin;
 import consulo.application.Application;
-import consulo.application.CommonBundle;
 import consulo.application.ReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
@@ -26,6 +26,7 @@ import consulo.application.progress.Task;
 import consulo.component.ProcessCanceledException;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
@@ -38,6 +39,7 @@ import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.VcsIgnoreManager;
 import consulo.versionControlSystem.internal.DiryFilesStateProcessor;
 import consulo.versionControlSystem.internal.VcsFileListenerContextHelper;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
@@ -46,10 +48,12 @@ import consulo.virtualFileSystem.status.FileStatus;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * @author yole
@@ -152,8 +156,10 @@ public abstract class VcsVFSListener implements Disposable {
             }
 
             /*
-             * Create file events cannot be filtered in afterVfsChange since VcsFileListenerContextHelper populated after actual file creation in PathsVerifier.CheckAdded.check
-             * So this commandFinished is the only way to get in sync with VcsFileListenerContextHelper to check if additions need to be filtered.
+             * Create file events cannot be filtered in afterVfsChange since VcsFileListenerContextHelper populated
+             * after actual file creation in PathsVerifier.CheckAdded.check
+             * So this commandFinished is the only way to get in sync with VcsFileListenerContextHelper
+             * to check if additions need to be filtered.
              */
             List<VFileEvent> afterEvents =
                 ContainerUtil.filter(myEventsToProcess, e -> !(e instanceof VFileCreateEvent) || myProcessor.allowedAddition(e));
@@ -172,7 +178,7 @@ public abstract class VcsVFSListener implements Disposable {
          * Assume, that it is a safe to do all processing in background even if "Add to VCS" dialog may appear during such processing.
          */
         private void processEventsInBackground(List<? extends VFileEvent> events) {
-            new Task.Backgroundable(myProject, VcsBundle.message("progress.title.version.control.processing.changed.files"), true) {
+            new Task.Backgroundable(myProject, VcsLocalize.progressTitleVersionControlProcessingChangedFiles(), true) {
                 @Override
                 public void run(@Nonnull ProgressIndicator indicator) {
                     try {
@@ -363,16 +369,22 @@ public abstract class VcsVFSListener implements Disposable {
 
     @Nonnull
     protected List<VirtualFile> selectFilesToAdd(@Nonnull List<VirtualFile> addFiles) {
-        return selectFilesForOption(myAddOption, addFiles, getAddTitle(), getSingleFileAddTitle(), getSingleFileAddPromptTemplate());
+        return selectFilesForOption(
+            myAddOption,
+            addFiles,
+            getAddTitleValue(),
+            getSingleFileAddTitleValue(),
+            getSingleFileAddPromptGenerator()
+        );
     }
 
     @Nonnull
     private List<VirtualFile> selectFilesForOption(
         @Nonnull VcsShowConfirmationOption option,
         @Nonnull List<VirtualFile> files,
-        String title,
-        String singleFileTitle,
-        String singleFilePromptTemplate
+        @Nonnull LocalizeValue title,
+        @Nonnull LocalizeValue singleFileTitle,
+        Function<Object, LocalizeValue> singleFilePromptGenerator
     ) {
         VcsShowConfirmationOption.Value optionValue = option.getValue();
         if (optionValue == VcsShowConfirmationOption.Value.DO_NOTHING_SILENTLY) {
@@ -391,7 +403,7 @@ public abstract class VcsVFSListener implements Disposable {
         AbstractVcsHelper helper = AbstractVcsHelper.getInstance(myProject);
         SimpleReference<Collection<VirtualFile>> ref = SimpleReference.create();
         application.invokeAndWait(
-            () -> ref.set(helper.selectFilesToProcess(files, title, null, singleFileTitle, singleFilePromptTemplate, option))
+            () -> ref.set(helper.selectFilesToProcess(files, title, null, singleFileTitle, singleFilePromptGenerator, option))
         );
         Collection<VirtualFile> selectedFiles = ref.get();
         return selectedFiles != null ? new ArrayList<>(selectedFiles) : List.of();
@@ -401,11 +413,11 @@ public abstract class VcsVFSListener implements Disposable {
     private List<FilePath> selectFilePathsForOption(
         @Nonnull VcsShowConfirmationOption option,
         @Nonnull List<FilePath> files,
-        String title,
-        String singleFileTitle,
-        String singleFilePromptTemplate,
-        @Nullable String okActionName,
-        @Nullable String cancelActionName
+        @Nonnull LocalizeValue title,
+        @Nonnull LocalizeValue singleFileTitle,
+        Function<Object, LocalizeValue> singleFilePromptGenerator,
+        @Nonnull LocalizeValue okActionName,
+        @Nonnull LocalizeValue cancelActionName
     ) {
         VcsShowConfirmationOption.Value optionValue = option.getValue();
         if (optionValue == VcsShowConfirmationOption.Value.DO_NOTHING_SILENTLY) {
@@ -428,7 +440,7 @@ public abstract class VcsVFSListener implements Disposable {
             title,
             null,
             singleFileTitle,
-            singleFilePromptTemplate,
+            singleFilePromptGenerator,
             option,
             okActionName,
             cancelActionName
@@ -473,14 +485,13 @@ public abstract class VcsVFSListener implements Disposable {
         return selectFilePathsForOption(
             myRemoveOption,
             deletedFiles,
-            getDeleteTitle(),
-            getSingleFileDeleteTitle(),
-            getSingleFileDeletePromptTemplate(),
-            CommonLocalize.buttonDelete().get(),
-            CommonBundle.getCancelButtonText()
+            getDeleteTitleValue(),
+            getSingleFileDeleteTitleValue(),
+            getSingleFileDeletePromptGenerator(),
+            CommonLocalize.buttonDelete(),
+            CommonLocalize.buttonCancel()
         );
     }
-
 
     /**
      * This is a very expensive operation and shall be avoided whenever possible.
@@ -515,19 +526,73 @@ public abstract class VcsVFSListener implements Disposable {
         return false;
     }
 
-    protected abstract String getAddTitle();
+    @Nonnull
+    protected LocalizeValue getAddTitleValue() {
+        return LocalizeValue.ofNullable(getAddTitle());
+    }
 
-    protected abstract String getSingleFileAddTitle();
+    @Deprecated
+    @DeprecationInfo("Use getAddTitleValue()")
+    protected String getAddTitle() {
+        return getAddTitleValue().get();
+    }
 
-    protected abstract String getSingleFileAddPromptTemplate();
+    @Nonnull
+    protected LocalizeValue getSingleFileAddTitleValue() {
+        return LocalizeValue.ofNullable(getSingleFileAddTitle());
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use getSingleFileAddTitleValue()")
+    protected String getSingleFileAddTitle() {
+        return getSingleFileAddTitleValue().get();
+    }
+
+    @Nonnull
+    protected Function<Object, LocalizeValue> getSingleFileAddPromptGenerator() {
+        return param -> LocalizeValue.of(MessageFormat.format(getSingleFileAddPromptTemplate(), param));
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use getSingleFileAddPromptTemplateValue()")
+    protected String getSingleFileAddPromptTemplate() {
+        return getSingleFileAddPromptGenerator().apply("{0}").get();
+    }
 
     protected abstract void performAdding(final Collection<VirtualFile> addedFiles, final Map<VirtualFile, VirtualFile> copyFromMap);
 
-    protected abstract String getDeleteTitle();
+    @Nonnull
+    protected LocalizeValue getDeleteTitleValue() {
+        return LocalizeValue.ofNullable(getDeleteTitle());
+    }
 
-    protected abstract String getSingleFileDeleteTitle();
+    @Deprecated
+    @DeprecationInfo("Use getDeleteTitleValue()")
+    protected String getDeleteTitle() {
+        return getDeleteTitleValue().get();
+    }
 
-    protected abstract String getSingleFileDeletePromptTemplate();
+    @Nonnull
+    protected LocalizeValue getSingleFileDeleteTitleValue() {
+        return LocalizeValue.ofNullable(getSingleFileDeleteTitle());
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use getSingleFileDeleteTitleValue()")
+    protected String getSingleFileDeleteTitle() {
+        return getSingleFileDeleteTitleValue().get();
+    }
+
+    @Nonnull
+    protected Function<Object, LocalizeValue> getSingleFileDeletePromptGenerator() {
+        return param -> LocalizeValue.of(MessageFormat.format(getSingleFileDeletePromptTemplate(), param));
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use getSingleFileDeletePromptGetter()")
+    protected String getSingleFileDeletePromptTemplate() {
+        return getSingleFileDeletePromptGenerator().apply("{0}").get();
+    }
 
     protected abstract void performDeletion(List<FilePath> filesToDelete);
 

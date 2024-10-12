@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -35,6 +36,8 @@ import consulo.virtualFileSystem.VirtualFile;
  * @author yole
  */
 public class BrowseChangesAction extends AnAction implements DumbAware {
+    @Override
+    @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         final Project project = e.getData(Project.KEY);
         VirtualFile vFile = e.getData(VirtualFile.KEY);
@@ -69,7 +72,7 @@ public class BrowseChangesAction extends AnAction implements DumbAware {
             }
         }
 
-        AbstractVcsHelper.getInstance(project).openCommittedChangesTab(vcs, vFile, settings, maxCount, null);
+        AbstractVcsHelper.getInstance(project).openCommittedChangesTab(vcs, vFile, settings, maxCount, LocalizeValue.empty());
     }
 
     @Override

@@ -20,7 +20,6 @@ import consulo.application.*;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.wm.ApplicationIdeFocusManager;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.awt.hacking.JComponentHacking;
 import consulo.component.ComponentManager;
@@ -59,7 +58,6 @@ import consulo.util.lang.TimeoutUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.intellij.lang.annotations.MagicConstant;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -88,15 +86,12 @@ public abstract class DialogWrapper {
         MODELESS;
 
         public Dialog.ModalityType toAwtModality() {
-            switch (this) {
-                case IDE:
-                    return Dialog.ModalityType.APPLICATION_MODAL;
-                case PROJECT:
-                    return Dialog.ModalityType.DOCUMENT_MODAL;
-                case MODELESS:
-                    return Dialog.ModalityType.MODELESS;
-            }
-            return null;
+            return switch (this) {
+                case IDE -> Dialog.ModalityType.APPLICATION_MODAL;
+                case PROJECT -> Dialog.ModalityType.DOCUMENT_MODAL;
+                case MODELESS -> Dialog.ModalityType.MODELESS;
+                default -> null;
+            };
         }
     }
 
@@ -126,13 +121,10 @@ public abstract class DialogWrapper {
      * default button for the dialog. It's true if you don't change this behaviour
      * of <code>createJButtonForAction(Action)</code> method.
      */
-    @NonNls
     public static final String DEFAULT_ACTION = "DefaultAction";
 
-    @NonNls
     public static final String FOCUSED_ACTION = "FocusedAction";
 
-    @NonNls
     private static final String NO_AUTORESIZE = "NoAutoResizeAndFit";
 
     private static final KeyStroke SHOW_OPTION_KEYSTROKE =
@@ -157,9 +149,9 @@ public abstract class DialogWrapper {
     private final boolean myCreateSouthSection;
     private boolean myCrossClosesWindow = true;
 
-    protected Action myOKAction;
-    protected Action myCancelAction;
-    protected Action myHelpAction;
+    protected LocalizeAction myOKAction;
+    protected LocalizeAction myCancelAction;
+    protected LocalizeAction myHelpAction;
     private final Map<Action, JButton> myButtonMap = new LinkedHashMap<>();
 
     private boolean myClosed = false;
@@ -180,6 +172,7 @@ public abstract class DialogWrapper {
     private List<ValidationInfo> myInfo = Collections.emptyList();
 
     protected final Disposable myDisposable = new Disposable() {
+        @Override
         public String toString() {
             return DialogWrapper.this.toString();
         }
@@ -195,7 +188,7 @@ public abstract class DialogWrapper {
     private ComponentAdapter myResizeListener;
 
     protected String getDoNotShowMessage() {
-        return CommonBundle.message("dialog.options.do.not.show");
+        return CommonLocalize.dialogOptionsDoNotShow().get();
     }
 
     public void setDoNotAskOption(@Nullable DoNotAskOption doNotAsk) {
@@ -373,6 +366,7 @@ public abstract class DialogWrapper {
      * is empty if no errors found.
      */
     @Nonnull
+    @RequiredUIAccess
     protected List<ValidationInfo> doValidateAll() {
         ValidationInfo vi = doValidate();
         return vi != null ? Collections.singletonList(vi) : Collections.EMPTY_LIST;
@@ -516,7 +510,7 @@ public abstract class DialogWrapper {
 
         JPanel panel = new JPanel(new BorderLayout());
         final JPanel lrButtonsPanel = new JPanel(new GridBagLayout());
-        final Insets insets = SystemInfo.isMacOSLeopard ? JBUI.emptyInsets() : JBUI.insetsTop(8);
+        final Insets insets = Platform.current().os().isMac() ? JBUI.emptyInsets() : JBUI.insetsTop(8);
 
         if (actions.length > 0 || leftSideActions.length > 0) {
             int gridX = 0;
@@ -659,8 +653,8 @@ public abstract class DialogWrapper {
             final List<Action> actionList = new ArrayList<>();
             for (Action action : actions) {
                 actionList.add(action);
-                if (action instanceof OptionAction) {
-                    final Action[] options = ((OptionAction)action).getOptions();
+                if (action instanceof OptionAction optionAction) {
+                    final Action[] options = optionAction.getOptions();
                     actionList.addAll(Arrays.asList(options));
                 }
             }
@@ -670,7 +664,7 @@ public abstract class DialogWrapper {
         }
 
         JPanel buttonsPanel =
-            new JPanel(new GridLayout(1, actions.length, SystemInfo.isMacOSLeopard ? 0 : 5, 0));
+            new JPanel(new GridLayout(1, actions.length, Platform.current().os().isMac() ? 0 : 5, 0));
         for (final Action action : actions) {
             JButton button = createJButtonForAction(action);
             final Object value = action.getValue(Action.MNEMONIC_KEY);
@@ -716,8 +710,8 @@ public abstract class DialogWrapper {
      */
     protected JButton createJButtonForAction(Action action) {
         JButton button;
-        if (action instanceof OptionAction && UISettings.getShadowInstance().ALLOW_MERGE_BUTTONS) {
-            final Action[] options = ((OptionAction)action).getOptions();
+        if (action instanceof OptionAction optionAction && UISettings.getShadowInstance().ALLOW_MERGE_BUTTONS) {
+            final Action[] options = optionAction.getOptions();
             button = new JBOptionButton(action, options);
             final JBOptionButton eachOptionsButton = (JBOptionButton)button;
             eachOptionsButton.setOkToProcessDefaultMnemonics(false);
@@ -737,7 +731,7 @@ public abstract class DialogWrapper {
                     new DumbAwareAction() {
                         @RequiredUIAccess
                         @Override
-                        public void actionPerformed(AnActionEvent e) {
+                        public void actionPerformed(@Nonnull AnActionEvent e) {
                             final JBOptionButton buttonToActivate = eachInfo.getButton();
                             buttonToActivate.showPopup(eachInfo.getAction(), true);
                         }
@@ -753,8 +747,8 @@ public abstract class DialogWrapper {
                     super.updateUI();
 
                     Action a = getAction();
-                    if (a instanceof LocalizeAction) {
-                        ((LocalizeAction)a).updateName();
+                    if (a instanceof LocalizeAction localizeAction) {
+                        localizeAction.updateName();
 
                         updateMnemonic(this, this.getText(), a);
                     }
@@ -910,14 +904,14 @@ public abstract class DialogWrapper {
     protected abstract JComponent createCenterPanel();
 
     /**
-     * @see java.awt.Window#toFront()
+     * @see Window#toFront()
      */
     public void toFront() {
         myPeer.toFront();
     }
 
     /**
-     * @see java.awt.Window#toBack()
+     * @see Window#toBack()
      */
     public void toBack() {
         myPeer.toBack();
@@ -1109,7 +1103,7 @@ public abstract class DialogWrapper {
      * By default "OK" and "Cancel" actions are returned. The "Help" action is automatically added if
      * {@link #getHelpId()} returns non-null value.
      * <p>
-     * Each action is represented by <code>JButton</code> created by {@link #createJButtonForAction(javax.swing.Action)}.
+     * Each action is represented by <code>JButton</code> created by {@link #createJButtonForAction(Action)}.
      * These buttons are then placed into {@link #createSouthPanel() south panel} of dialog.
      *
      * @return dialog actions
@@ -1144,7 +1138,7 @@ public abstract class DialogWrapper {
      * @see #doOKAction
      */
     @Nonnull
-    protected Action getOKAction() {
+    protected LocalizeAction getOKAction() {
         return myOKAction;
     }
 
@@ -1154,7 +1148,7 @@ public abstract class DialogWrapper {
      * @see #doCancelAction
      */
     @Nonnull
-    protected Action getCancelAction() {
+    protected LocalizeAction getCancelAction() {
         return myCancelAction;
     }
 
@@ -1164,7 +1158,7 @@ public abstract class DialogWrapper {
      * @see #doHelpAction
      */
     @Nonnull
-    protected Action getHelpAction() {
+    protected LocalizeAction getHelpAction() {
         return myHelpAction;
     }
 
@@ -1180,7 +1174,7 @@ public abstract class DialogWrapper {
      * Returns content pane
      *
      * @return content pane
-     * @see javax.swing.JDialog#getContentPane
+     * @see JDialog#getContentPane
      */
     public Container getContentPane() {
         assert myPeer != null;
@@ -1188,14 +1182,14 @@ public abstract class DialogWrapper {
     }
 
     /**
-     * @see javax.swing.JDialog#validate
+     * @see JDialog#validate
      */
     public void validate() {
         myPeer.validate();
     }
 
     /**
-     * @see javax.swing.JDialog#repaint
+     * @see JDialog#repaint
      */
     public void repaint() {
         myPeer.repaint();
@@ -1209,7 +1203,6 @@ public abstract class DialogWrapper {
      * @return dimension service key
      */
     @Nullable
-    @NonNls
     protected String getDimensionServiceKey() {
         return null;
     }
@@ -1261,7 +1254,7 @@ public abstract class DialogWrapper {
 
     /**
      * @return window owner
-     * @see java.awt.Window#getOwner
+     * @see Window#getOwner
      */
     public Window getOwner() {
         return myPeer.getOwner();
@@ -1277,7 +1270,7 @@ public abstract class DialogWrapper {
 
     /**
      * @return root pane
-     * @see javax.swing.JDialog#getRootPane
+     * @see JDialog#getRootPane
      */
     public JRootPane getRootPane() {
         return myPeer.getRootPane();
@@ -1285,7 +1278,7 @@ public abstract class DialogWrapper {
 
     /**
      * @return dialog size
-     * @see java.awt.Window#getSize
+     * @see Window#getSize
      */
     public Dimension getSize() {
         return myPeer.getSize();
@@ -1293,7 +1286,7 @@ public abstract class DialogWrapper {
 
     /**
      * @return dialog title
-     * @see java.awt.Dialog#getTitle
+     * @see Dialog#getTitle
      */
     public String getTitle() {
         return myPeer.getTitle();
@@ -1340,7 +1333,7 @@ public abstract class DialogWrapper {
         final AnAction toggleShowOptions = new DumbAwareAction() {
             @RequiredUIAccess
             @Override
-            public void actionPerformed(AnActionEvent e) {
+            public void actionPerformed(@Nonnull AnActionEvent e) {
                 expandNextOptionButton();
             }
         };
@@ -1412,16 +1405,16 @@ public abstract class DialogWrapper {
         new DumbAwareAction() {
             @RequiredUIAccess
             @Override
-            public void actionPerformed(AnActionEvent e) {
+            public void actionPerformed(@Nonnull AnActionEvent e) {
                 final Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-                if (owner instanceof JButton && owner.isEnabled()) {
-                    ((JButton)owner).doClick();
+                if (owner instanceof JButton button && owner.isEnabled()) {
+                    button.doClick();
                 }
             }
 
             @RequiredUIAccess
             @Override
-            public void update(AnActionEvent e) {
+            public void update(@Nonnull AnActionEvent e) {
                 final Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
                 e.getPresentation().setEnabled(owner instanceof JButton && owner.isEnabled());
             }
@@ -1472,6 +1465,7 @@ public abstract class DialogWrapper {
         if (getValidationThreadToUse() == Alarm.ThreadToUse.SWING_THREAD) {
             // null if headless
             JRootPane rootPane = getRootPane();
+            //noinspection deprecation
             myValidationAlarm.addRequest(
                 validateRequest,
                 myValidationDelay,
@@ -1504,7 +1498,7 @@ public abstract class DialogWrapper {
     }
 
     /**
-     * @see java.awt.Window#pack
+     * @see Window#pack
      */
     public void pack() {
         myPeer.pack();
@@ -1520,7 +1514,7 @@ public abstract class DialogWrapper {
      * @param alignment alignment of the buttons. Acceptable values are
      *                  <code>SwingConstants.CENTER</code> and <code>SwingConstants.RIGHT</code>.
      *                  The <code>SwingConstants.RIGHT</code> is the default value.
-     * @throws java.lang.IllegalArgumentException if <code>alignment</code> isn't acceptable
+     * @throws IllegalArgumentException if <code>alignment</code> isn't acceptable
      */
     public final void setButtonsAlignment(@MagicConstant(intValues = {SwingConstants.CENTER, SwingConstants.RIGHT}) int alignment) {
         if (SwingConstants.CENTER != alignment && SwingConstants.RIGHT != alignment) {
@@ -1567,8 +1561,8 @@ public abstract class DialogWrapper {
 
     /**
      * @param text action without mnemonic. If mnemonic is set, presentation would be shifted by one to the left
-     *             {@link javax.swing.AbstractButton#setText(java.lang.String)}
-     *             {@link javax.swing.AbstractButton#updateDisplayedMnemonicIndex(java.lang.String, int)}
+     *             {@link AbstractButton#setText(String)}
+     *             {@link AbstractButton#updateDisplayedMnemonicIndex(String, int)}
      */
     protected final void setOKButtonText(String text) {
         myOKAction.putValue(Action.NAME, text);
@@ -1594,6 +1588,7 @@ public abstract class DialogWrapper {
      * by {@link #getHelpId()}. If that method returns null,
      * a message box with message "no help available" is shown.
      */
+    @RequiredUIAccess
     protected void doHelpAction() {
         if (myHelpAction.isEnabled()) {
             String helpId = getHelpId();
@@ -1618,7 +1613,7 @@ public abstract class DialogWrapper {
 
     /**
      * @return <code>true</code> if and only if visible
-     * @see java.awt.Component#isVisible
+     * @see Component#isVisible
      */
     public boolean isVisible() {
         return myPeer.isVisible();
@@ -1626,7 +1621,7 @@ public abstract class DialogWrapper {
 
     /**
      * @return <code>true</code> if and only if showing
-     * @see java.awt.Window#isShowing
+     * @see Window#isShowing
      */
     public boolean isShowing() {
         return myPeer.isShowing();
@@ -1639,7 +1634,7 @@ public abstract class DialogWrapper {
     /**
      * @param width  width
      * @param height height
-     * @see javax.swing.JDialog#setSize
+     * @see JDialog#setSize
      */
     public void setSize(int width, int height) {
         myPeer.setSize(width, height);
@@ -1647,7 +1642,7 @@ public abstract class DialogWrapper {
 
     /**
      * @param title title
-     * @see javax.swing.JDialog#setTitle
+     * @see JDialog#setTitle
      */
     @Deprecated
     public void setTitle(String title) {
@@ -1656,14 +1651,14 @@ public abstract class DialogWrapper {
 
     /**
      * @param title title
-     * @see javax.swing.JDialog#setTitle
+     * @see JDialog#setTitle
      */
     public void setTitle(LocalizeValue title) {
         myPeer.setTitle(title.get());
     }
 
     /**
-     * @see javax.swing.JDialog#isResizable
+     * @see JDialog#isResizable
      */
     public void isResizable() {
         myPeer.isResizable();
@@ -1671,7 +1666,7 @@ public abstract class DialogWrapper {
 
     /**
      * @param resizable is resizable
-     * @see javax.swing.JDialog#setResizable
+     * @see JDialog#setResizable
      */
     public void setResizable(boolean resizable) {
         myPeer.setResizable(resizable);
@@ -1679,7 +1674,7 @@ public abstract class DialogWrapper {
 
     /**
      * @return dialog location
-     * @see javax.swing.JDialog#getLocation
+     * @see JDialog#getLocation
      */
     public Point getLocation() {
         return myPeer.getLocation();
@@ -1687,7 +1682,7 @@ public abstract class DialogWrapper {
 
     /**
      * @param p new dialog location
-     * @see javax.swing.JDialog#setLocation(Point)
+     * @see JDialog#setLocation(Point)
      */
     public void setLocation(Point p) {
         myPeer.setLocation(p);
@@ -1696,7 +1691,7 @@ public abstract class DialogWrapper {
     /**
      * @param x x
      * @param y y
-     * @see javax.swing.JDialog#setLocation(int, int)
+     * @see JDialog#setLocation(int, int)
      */
     public void setLocation(int x, int y) {
         myPeer.setLocation(x, y);
@@ -1769,7 +1764,6 @@ public abstract class DialogWrapper {
         return result;
     }
 
-    @NonNls
     private AsyncResult<Void> showInternal() {
         ensureEventDispatchThread();
 
@@ -1828,18 +1822,26 @@ public abstract class DialogWrapper {
         );
 
         if (myButtonMap != null) {
-            rootPane.registerKeyboardAction(new AbstractAction() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    focusPreviousButton();
-                }
-            }, KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-            rootPane.registerKeyboardAction(new AbstractAction() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    focusNextButton();
-                }
-            }, KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+            rootPane.registerKeyboardAction(
+                new AbstractAction() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        focusPreviousButton();
+                    }
+                },
+                KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0),
+                JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT
+            );
+            rootPane.registerKeyboardAction(
+                new AbstractAction() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        focusNextButton();
+                    }
+                },
+                KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0),
+                JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT
+            );
         }
 
         if (myYesAction != null) {
@@ -1861,8 +1863,7 @@ public abstract class DialogWrapper {
 
     private void registerForEveryKeyboardShortcut(ActionListener action, @Nonnull ShortcutSet shortcuts) {
         for (Shortcut shortcut : shortcuts.getShortcuts()) {
-            if (shortcut instanceof KeyboardShortcut) {
-                KeyboardShortcut ks = (KeyboardShortcut)shortcut;
+            if (shortcut instanceof KeyboardShortcut ks) {
                 KeyStroke first = ks.getFirstKeyStroke();
                 KeyStroke second = ks.getSecondKeyStroke();
                 if (second == null) {
@@ -1968,12 +1969,10 @@ public abstract class DialogWrapper {
          */
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (myClosed) {
+            if (myClosed || myPerformAction) {
                 return;
             }
-            if (myPerformAction) {
-                return;
-            }
+
             try {
                 myPerformAction = true;
                 doAction(e);
@@ -2000,6 +1999,7 @@ public abstract class DialogWrapper {
         }
 
         @Override
+        @RequiredUIAccess
         protected void doAction(ActionEvent e) {
             ValidationInfo info = doValidate();
             if (info != null) {
@@ -2060,6 +2060,7 @@ public abstract class DialogWrapper {
         }
 
         @Override
+        @RequiredUIAccess
         public void actionPerformed(ActionEvent e) {
             doHelpAction();
         }
@@ -2319,11 +2320,8 @@ public abstract class DialogWrapper {
             if (info.isEmpty()) {
                 return errors.isEmpty();
             }
-            else if (errors.size() == info.size()) {
-                return errors.equals(info.stream().map(i -> i.message).collect(Collectors.toList()));
-            }
             else {
-                return false;
+                return errors.size() == info.size() && errors.equals(info.stream().map(i -> i.message).collect(Collectors.toList()));
             }
         }
     }
@@ -2392,7 +2390,7 @@ public abstract class DialogWrapper {
 
             balloon.addListener(new JBPopupListener.Adapter() {
                 @Override
-                public void onClosed(LightweightWindowEvent event) {
+                public void onClosed(@Nonnull LightweightWindowEvent event) {
                     JRootPane rootPane = getRootPane();
                     if (rootPane != null) {
                         rootPane.removeComponentListener(rl);
@@ -2479,7 +2477,7 @@ public abstract class DialogWrapper {
             @Nonnull
             @Override
             public String getDoNotShowMessage() {
-                return CommonBundle.message("dialog.options.do.not.ask");
+                return CommonLocalize.dialogOptionsDoNotAsk().get();
             }
 
             @Override
@@ -2542,7 +2540,7 @@ public abstract class DialogWrapper {
 
         @Override
         public String getDoNotShowMessage() {
-            return CommonBundle.message("dialog.options.do.not.ask");
+            return CommonLocalize.dialogOptionsDoNotAsk().get();
         }
     }
 

@@ -15,22 +15,27 @@
  */
 package consulo.desktop.awt.internal.diff.merge;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.desktop.awt.internal.diff.util.AWTDiffUtil;
 import consulo.diff.merge.MergeContext;
 import consulo.diff.merge.MergeRequest;
 import consulo.diff.merge.MergeResult;
 import consulo.diff.merge.MergeTool;
+import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 
+@ExtensionImpl
 public class ErrorMergeTool implements MergeTool {
     public static final ErrorMergeTool INSTANCE = new ErrorMergeTool();
 
     @Nonnull
     @Override
+    @RequiredUIAccess
     public MergeViewer createComponent(@Nonnull MergeContext context, @Nonnull MergeRequest request) {
         return new MyViewer(context, request);
     }
@@ -68,7 +73,7 @@ public class ErrorMergeTool implements MergeTool {
             return myPanel;
         }
 
-        @jakarta.annotation.Nullable
+        @Nullable
         @Override
         public JComponent getPreferredFocusedComponent() {
             return null;
@@ -76,27 +81,24 @@ public class ErrorMergeTool implements MergeTool {
 
         @Nonnull
         @Override
+        @RequiredUIAccess
         public ToolbarComponents init() {
             return new ToolbarComponents();
         }
 
-        @jakarta.annotation.Nullable
+        @Nullable
         @Override
-        public Action getResolveAction(@Nonnull final MergeResult result) {
+        public ActionRecord getResolveAction(@Nonnull final MergeResult result) {
             if (result == MergeResult.RESOLVED) {
                 return null;
             }
 
-            String caption = MergeImplUtil.getResolveActionTitle(result, myMergeRequest, myMergeContext);
-            return new AbstractAction(caption) {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    myMergeContext.finishMerge(result);
-                }
-            };
+            LocalizeValue caption = MergeImplUtil.getResolveActionTitle(result, myMergeRequest, myMergeContext);
+            return new ActionRecord(caption, () -> myMergeContext.finishMerge(result));
         }
 
         @Override
+        @RequiredUIAccess
         public void dispose() {
         }
     }

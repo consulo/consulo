@@ -20,6 +20,7 @@ import consulo.localize.internal.JoinLocalizeValue;
 import consulo.localize.internal.MapLocalizeValue;
 import consulo.localize.internal.SingleLocalizeValue;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
@@ -56,18 +57,17 @@ public interface LocalizeValue extends Supplier<String>, Comparable<LocalizeValu
 
     @Nonnull
     static LocalizeValue of(@Nonnull String text) {
-        if (text.length() == 0) {
-            return of();
-        }
-        return new SingleLocalizeValue(text);
+        return text.isEmpty() ? of() : new SingleLocalizeValue(text);
     }
 
-    static LocalizeValue join(@Nonnull LocalizeValue... values) {
-        if (values.length == 0) {
-            return of();
-        }
+    @Nonnull
+    static LocalizeValue ofNullable(@Nullable String text) {
+        return text == null ? of() : of(text);
+    }
 
-        return new JoinLocalizeValue(values);
+    @Nonnull
+    static LocalizeValue join(@Nonnull LocalizeValue... values) {
+        return values.length == 0 ? of() : new JoinLocalizeValue(values);
     }
 
     @Override

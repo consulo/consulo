@@ -43,10 +43,12 @@ import consulo.ide.impl.idea.openapi.vcs.impl.CheckinHandlersManager;
 import consulo.ide.impl.idea.openapi.vcs.ui.CommitMessage;
 import consulo.ide.impl.idea.ui.SplitterWithSecondHideable;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.LocalizeAction;
 import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.util.dataholder.Key;
@@ -61,7 +63,6 @@ import consulo.versionControlSystem.ui.RefreshableOnComponent;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.awt.*;
@@ -102,7 +103,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
     @Nonnull
     private final List<CheckinHandler> myHandlers = new ArrayList<>();
     @Nonnull
-    private final String myActionName;
+    private final LocalizeValue myActionName;
     @Nonnull
     private final Project myProject;
     @Nonnull
@@ -275,6 +276,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
         commitChanges(project, changes, initialSelection, executor, comment);
     }
 
+    @RequiredUIAccess
     public static boolean commitChanges(
         final Project project,
         final Collection<Change> changes,
@@ -392,6 +394,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
         else {
             //noinspection unchecked
             boolean unversionedFilesEnabled = myShowVcsCommit && Registry.is("vcs.unversioned.files.in.commit");
+            @SuppressWarnings("unchecked")
             MultipleChangeListBrowser browser = new MultipleChangeListBrowser(
                 project,
                 changeLists,
@@ -430,7 +433,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
 
         myBrowser.setDiffBottomComponent(new DiffCommitMessageEditor(this));
 
-        myActionName = VcsLocalize.commitDialogTitle().get();
+        myActionName = VcsLocalize.commitDialogTitle();
 
         Box optionsBox = Box.createVerticalBox();
 
@@ -524,7 +527,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
 
         myOkActionText = actionName.replace(BundleBase.MNEMONIC, '&');
 
-        setTitle(myShowVcsCommit ? myActionName : trimEllipsis(myExecutors.get(0).getActionText()));
+        setTitle(myShowVcsCommit ? myActionName : LocalizeValue.localizeTODO(trimEllipsis(myExecutors.get(0).getActionText())));
 
         restoreState();
 
@@ -625,8 +628,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
         return myHelpId;
     }
 
-    private class CommitAction extends AbstractAction implements OptionAction {
-
+    private class CommitAction extends LocalizeAction implements OptionAction {
         private Action[] myOptions = new Action[0];
 
         private CommitAction() {
@@ -635,6 +637,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
         }
 
         @Override
+        @RequiredUIAccess
         public void actionPerformed(ActionEvent e) {
             doOKAction();
         }
@@ -694,7 +697,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
 
     @Nonnull
     @Override
-    protected Action getOKAction() {
+    protected LocalizeAction getOKAction() {
         return new CommitAction();
     }
 
@@ -1180,9 +1183,8 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
 
             @Override
             protected float getSplitterInitialProportion() {
-                float value =
-                    PropertiesComponent.getInstance()
-                        .getFloat(DETAILS_SPLITTER_PROPORTION_OPTION, DETAILS_SPLITTER_PROPORTION_OPTION_DEFAULT);
+                float value = PropertiesComponent.getInstance()
+                    .getFloat(DETAILS_SPLITTER_PROPORTION_OPTION, DETAILS_SPLITTER_PROPORTION_OPTION_DEFAULT);
                 return value <= 0.05 || value >= 0.95 ? DETAILS_SPLITTER_PROPORTION_OPTION_DEFAULT : value;
             }
         };
@@ -1191,8 +1193,9 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
     }
 
     private void initMainSplitter() {
-        mySplitter.setProportion(PropertiesComponent.getInstance()
-            .getFloat(SPLITTER_PROPORTION_OPTION, SPLITTER_PROPORTION_OPTION_DEFAULT));
+        mySplitter.setProportion(
+            PropertiesComponent.getInstance().getFloat(SPLITTER_PROPORTION_OPTION, SPLITTER_PROPORTION_OPTION_DEFAULT)
+        );
     }
 
     @Nonnull
@@ -1338,7 +1341,6 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
     }
 
     @Override
-    @NonNls
     protected String getDimensionServiceKey() {
         return "CommitChangelistDialog" + LAYOUT_VERSION;
     }
@@ -1401,7 +1403,9 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
         }
 
         public void updateEnabled(boolean hasDiffs) {
-            setEnabled(hasDiffs || (myCommitExecutor instanceof CommitExecutorBase) && !((CommitExecutorBase)myCommitExecutor).areChangesRequired());
+            setEnabled(
+                hasDiffs || myCommitExecutor instanceof CommitExecutorBase commitExecutorBase && !commitExecutorBase.areChangesRequired()
+            );
         }
     }
 

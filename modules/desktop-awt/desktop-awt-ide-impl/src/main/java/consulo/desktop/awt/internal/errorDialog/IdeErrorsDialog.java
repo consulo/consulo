@@ -42,7 +42,7 @@ import consulo.ide.impl.idea.ide.plugins.PluginManager;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.diagnostic.ErrorReportSubmitter;
 import consulo.ide.impl.idea.openapi.diagnostic.SubmittedReportInfo;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.ui.HeaderlessTabbedPane;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.ide.impl.internal.localize.DiagnosticLocalize;
@@ -59,7 +59,7 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.HyperlinkLabel;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.internal.LocalizeAction;
+import consulo.ui.ex.awt.LocalizeAction;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ThreeState;
 import consulo.util.lang.ref.SimpleReference;
@@ -239,7 +239,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
 
         @RequiredUIAccess
         @Override
-        public void actionPerformed(AnActionEvent e) {
+        public void actionPerformed(@Nonnull AnActionEvent e) {
             goForward();
         }
 
@@ -262,7 +262,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
 
         @RequiredUIAccess
         @Override
-        public void actionPerformed(AnActionEvent e) {
+        public void actionPerformed(@Nonnull AnActionEvent e) {
             goBack();
         }
 
@@ -391,6 +391,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
         updateControls();
     }
 
+    @RequiredUIAccess
     private void disablePlugin() {
         final PluginId pluginId = findFirstPluginId(getSelectedMessage().getThrowable());
         if (pluginId == null) {
@@ -666,7 +667,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
             myDetailsTabForm.setAssigneeId(message == null ? 0 : message.getAssigneeId());
 
             List<Attachment> attachments =
-                message instanceof LogMessageEx ? ((LogMessageEx)message).getAttachments() : Collections.<Attachment>emptyList();
+                message instanceof LogMessageEx logMessageEx ? logMessageEx.getAttachments() : Collections.<Attachment>emptyList();
             if (!attachments.isEmpty()) {
                 if (myTabs.indexOfComponent(myAttachmentsTabForm.getContentPane()) == -1) {
                     myTabs.addTab(DiagnosticLocalize.errorAttachmentsTabTitle().get(), myAttachmentsTabForm.getContentPane());
@@ -687,12 +688,9 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
 
     private static String getDetailsText(AbstractMessage message) {
         final Throwable throwable = message.getThrowable();
-        if (throwable instanceof MessagePool.TooManyErrorsException) {
-            return throwable.getMessage();
-        }
-        else {
-            return message.getMessage() + "\n" + message.getThrowableText();
-        }
+        return throwable instanceof MessagePool.TooManyErrorsException
+            ? throwable.getMessage()
+            : message.getMessage() + "\n" + message.getThrowableText();
     }
 
     private void rebuildHeaders() {
@@ -900,7 +898,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
 
     private static String getThrowableHashCode(Throwable exception) {
         try {
-            return md5(StringUtil.getThrowableText(exception), "stack-trace");
+            return md5(consulo.ide.impl.idea.openapi.util.text.StringUtil.getThrowableText(exception), "stack-trace");
         }
         catch (NoSuchAlgorithmException e) {
             LOG.error(e);
@@ -929,6 +927,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
         }
 
         @Override
+        @RequiredUIAccess
         public void actionPerformed(ActionEvent e) {
             final DataContext dataContext = ((BaseDataManager)DataManager.getInstance()).getDataContextTest((Component)e.getSource());
 

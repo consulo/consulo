@@ -48,7 +48,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFilePresentation;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -188,9 +187,9 @@ public class MultipleFileMergeDialog extends DialogWrapper {
 
     @Nonnull
     @Override
-    protected Action getCancelAction() {
-        Action action = super.getCancelAction();
-        action.putValue(Action.NAME, CommonLocalize.buttonClose().get());
+    protected LocalizeAction getCancelAction() {
+        LocalizeAction action = super.getCancelAction();
+        action.setText(CommonLocalize.buttonClose());
         return action;
     }
 
@@ -205,7 +204,6 @@ public class MultipleFileMergeDialog extends DialogWrapper {
     }
 
     @Override
-    @NonNls
     protected String getDimensionServiceKey() {
         return "MultipleFileMergeDialog";
     }
@@ -348,16 +346,12 @@ public class MultipleFileMergeDialog extends DialogWrapper {
 
     @Nonnull
     private static MergeSession.Resolution getSessionResolution(@Nonnull MergeResult result) {
-        switch (result) {
-            case LEFT:
-                return MergeSession.Resolution.AcceptedYours;
-            case RIGHT:
-                return MergeSession.Resolution.AcceptedTheirs;
-            case RESOLVED:
-                return MergeSession.Resolution.Merged;
-            default:
-                throw new IllegalArgumentException(result.name());
-        }
+        return switch (result) {
+            case LEFT -> MergeSession.Resolution.AcceptedYours;
+            case RIGHT -> MergeSession.Resolution.AcceptedTheirs;
+            case RESOLVED -> MergeSession.Resolution.Merged;
+            default -> throw new IllegalArgumentException(result.name());
+        };
     }
 
     private void checkMarkModifiedProject(@Nonnull VirtualFile file) {
@@ -366,6 +360,7 @@ public class MultipleFileMergeDialog extends DialogWrapper {
     private void createUIComponents() {
         Action mergeAction = new AbstractAction() {
             @Override
+            @RequiredUIAccess
             public void actionPerformed(@Nonnull ActionEvent e) {
                 showMergeDialog();
             }

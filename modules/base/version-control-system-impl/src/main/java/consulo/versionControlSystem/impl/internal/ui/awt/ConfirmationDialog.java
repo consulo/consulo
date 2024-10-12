@@ -15,21 +15,37 @@
  */
 package consulo.versionControlSystem.impl.internal.ui.awt;
 
-import consulo.application.CommonBundle;
+import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.OptionsMessageDialog;
-import consulo.versionControlSystem.VcsShowConfirmationOption;
 import consulo.ui.image.Image;
-
+import consulo.versionControlSystem.VcsShowConfirmationOption;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class ConfirmationDialog extends OptionsMessageDialog {
     private final VcsShowConfirmationOption myOption;
-    private String myDoNotShowAgainMessage;
-    private final String myOkActionName;
-    private final String myCancelActionName;
+    private LocalizeValue myDoNotShowAgainMessage;
+    private final LocalizeValue myOkActionName;
+    private final LocalizeValue myCancelActionName;
 
+    @RequiredUIAccess
+    public static boolean requestForConfirmation(
+        @Nonnull VcsShowConfirmationOption option,
+        @Nonnull Project project,
+        @Nonnull LocalizeValue message,
+        @Nonnull LocalizeValue title,
+        @Nullable Image icon
+    ) {
+        return requestForConfirmation(option, project, message, title, icon, CommonLocalize.buttonYes(), CommonLocalize.buttonNo());
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    @RequiredUIAccess
     public static boolean requestForConfirmation(
         @Nonnull VcsShowConfirmationOption option,
         @Nonnull Project project,
@@ -37,9 +53,43 @@ public class ConfirmationDialog extends OptionsMessageDialog {
         @Nonnull String title,
         @Nullable Image icon
     ) {
-        return requestForConfirmation(option, project, message, title, icon, null, null);
+        return requestForConfirmation(
+            option,
+            project,
+            message,
+            title,
+            icon,
+            CommonLocalize.buttonYes().get(),
+            CommonLocalize.buttonNo().get()
+        );
     }
 
+    @RequiredUIAccess
+    public static boolean requestForConfirmation(
+        @Nonnull VcsShowConfirmationOption option,
+        @Nonnull Project project,
+        @Nonnull LocalizeValue message,
+        @Nonnull LocalizeValue title,
+        @Nullable Image icon,
+        @Nonnull LocalizeValue okActionName,
+        @Nonnull LocalizeValue cancelActionName
+    ) {
+        if (option.getValue() == VcsShowConfirmationOption.Value.DO_NOTHING_SILENTLY) {
+            return false;
+        }
+        final ConfirmationDialog dialog = new ConfirmationDialog(project, message, title, icon, option, okActionName, cancelActionName);
+        if (!option.isPersistent()) {
+            dialog.setDoNotAskOption(null);
+        }
+        else {
+            dialog.setDoNotShowAgainMessage(CommonLocalize.dialogOptionsDoNotAsk());
+        }
+        return dialog.showAndGet();
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    @RequiredUIAccess
     public static boolean requestForConfirmation(
         @Nonnull VcsShowConfirmationOption option,
         @Nonnull Project project,
@@ -57,11 +107,23 @@ public class ConfirmationDialog extends OptionsMessageDialog {
             dialog.setDoNotAskOption(null);
         }
         else {
-            dialog.setDoNotShowAgainMessage(CommonBundle.message("dialog.options.do.not.ask"));
+            dialog.setDoNotShowAgainMessage(CommonLocalize.dialogOptionsDoNotAsk());
         }
         return dialog.showAndGet();
     }
 
+    public ConfirmationDialog(
+        Project project,
+        @Nonnull LocalizeValue message,
+        @Nonnull LocalizeValue title,
+        final Image icon,
+        final VcsShowConfirmationOption option
+    ) {
+        this(project, message, title, icon, option, CommonLocalize.buttonYes(), CommonLocalize.buttonNo());
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     public ConfirmationDialog(
         Project project,
         final String message,
@@ -69,9 +131,27 @@ public class ConfirmationDialog extends OptionsMessageDialog {
         final Image icon,
         final VcsShowConfirmationOption option
     ) {
-        this(project, message, title, icon, option, null, null);
+        this(project, message, title, icon, option, CommonLocalize.buttonYes().get(), CommonLocalize.buttonNo().get());
     }
 
+    public ConfirmationDialog(
+        Project project,
+        @Nonnull LocalizeValue message,
+        @Nonnull LocalizeValue title,
+        final Image icon,
+        final VcsShowConfirmationOption option,
+        @Nonnull LocalizeValue okActionName,
+        @Nonnull LocalizeValue cancelActionName
+    ) {
+        super(project, message, title, icon);
+        myOption = option;
+        myOkActionName = okActionName;
+        myCancelActionName = cancelActionName;
+        init();
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     public ConfirmationDialog(
         Project project,
         final String message,
@@ -83,30 +163,58 @@ public class ConfirmationDialog extends OptionsMessageDialog {
     ) {
         super(project, message, title, icon);
         myOption = option;
-        myOkActionName = okActionName != null ? okActionName : CommonBundle.getYesButtonText();
-        myCancelActionName = cancelActionName != null ? cancelActionName : CommonBundle.getNoButtonText();
+        myOkActionName = okActionName != null ? LocalizeValue.of(okActionName) : CommonLocalize.buttonYes();
+        myCancelActionName = cancelActionName != null ? LocalizeValue.of(cancelActionName) : CommonLocalize.buttonNo();
         init();
     }
 
-    public void setDoNotShowAgainMessage(final String doNotShowAgainMessage) {
+    public void setDoNotShowAgainMessage(@Nonnull LocalizeValue doNotShowAgainMessage) {
         myDoNotShowAgainMessage = doNotShowAgainMessage;
-        myCheckBoxDoNotShowDialog.setText(doNotShowAgainMessage);
+        myCheckBoxDoNotShowDialog.setText(doNotShowAgainMessage.get());
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public void setDoNotShowAgainMessage(final String doNotShowAgainMessage) {
+        setDoNotShowAgainMessage(LocalizeValue.ofNullable(doNotShowAgainMessage));
+    }
+
+    @Nonnull
+    //TODO: rename to getDoNotShowMessage() after deprecation removal
+    protected LocalizeValue getDoNotShowMessageValue() {
+        return myDoNotShowAgainMessage;
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use #getDoNotShowMessageValue()")
+    @Nonnull
+    @Override
+    protected String getDoNotShowMessage() {
+        return myDoNotShowAgainMessage == LocalizeValue.empty() ? super.getDoNotShowMessage() : myDoNotShowAgainMessage.get();
     }
 
     @Nonnull
     @Override
-    protected String getDoNotShowMessage() {
-        return myDoNotShowAgainMessage == null ? super.getDoNotShowMessage() : myDoNotShowAgainMessage;
+    //TODO: rename to getOkActionName() after deprecation removal
+    public LocalizeValue getOkActionValue() {
+        return myOkActionName;
+    }
+
+    @Nonnull
+    @Override
+    //TODO: rename to getCancelActionName() after deprecation removal
+    public LocalizeValue getCancelActionValue() {
+        return myCancelActionName;
     }
 
     @Override
     protected String getOkActionName() {
-        return myOkActionName;
+        return myOkActionName.get();
     }
 
     @Override
     protected String getCancelActionName() {
-        return myCancelActionName;
+        return myCancelActionName.get();
     }
 
     @Override
@@ -116,17 +224,11 @@ public class ConfirmationDialog extends OptionsMessageDialog {
 
     @Override
     protected void setToBeShown(boolean value, boolean onOk) {
-        final VcsShowConfirmationOption.Value optionValue;
-
-        if (value) {
-            optionValue = VcsShowConfirmationOption.Value.SHOW_CONFIRMATION;
-        }
-        else if (onOk) {
-            optionValue = VcsShowConfirmationOption.Value.DO_ACTION_SILENTLY;
-        }
-        else {
-            optionValue = VcsShowConfirmationOption.Value.DO_NOTHING_SILENTLY;
-        }
+        final VcsShowConfirmationOption.Value optionValue = value
+            ? VcsShowConfirmationOption.Value.SHOW_CONFIRMATION
+            : onOk
+            ? VcsShowConfirmationOption.Value.DO_ACTION_SILENTLY
+            : VcsShowConfirmationOption.Value.DO_NOTHING_SILENTLY;
 
         myOption.setValue(optionValue);
     }

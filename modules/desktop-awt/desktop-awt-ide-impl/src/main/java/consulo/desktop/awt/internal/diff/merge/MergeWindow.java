@@ -19,9 +19,12 @@ import consulo.desktop.awt.internal.diff.util.AWTDiffUtil;
 import consulo.diff.DiffUserDataKeys;
 import consulo.diff.merge.MergeRequest;
 import consulo.disposer.Disposer;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Wrapper;
+import consulo.ui.ex.awt.LocalizeAction;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
@@ -31,6 +34,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Arrays;
 import java.util.List;
 
 public class MergeWindow {
@@ -46,15 +50,17 @@ public class MergeWindow {
         myMergeRequest = mergeRequest;
     }
 
+    @RequiredUIAccess
     protected void init() {
         MergeRequestProcessor processor = new MergeRequestProcessor(myProject, myMergeRequest) {
             @Override
+            @RequiredUIAccess
             public void closeDialog() {
                 myWrapper.doCancelAction();
             }
 
             @Override
-            protected void setWindowTitle(@Nonnull String title) {
+            protected void setWindowTitle(@Nonnull LocalizeValue title) {
                 myWrapper.setTitle(title);
             }
 
@@ -68,6 +74,7 @@ public class MergeWindow {
         myWrapper.init();
     }
 
+    @RequiredUIAccess
     public void show() {
         init();
         myWrapper.show();
@@ -112,11 +119,12 @@ public class MergeWindow {
 
         @Nullable
         @Override
+        @RequiredUIAccess
         public JComponent getPreferredFocusedComponent() {
             return myProcessor.getPreferredFocusedComponent();
         }
 
-        @jakarta.annotation.Nullable
+        @Nullable
         @Override
         protected String getDimensionServiceKey() {
             return StringUtil.notNullize(myProcessor.getContextUserData(DiffUserDataKeys.DIALOG_GROUP_KEY), "MergeDialog");
@@ -124,26 +132,26 @@ public class MergeWindow {
 
         @Nonnull
         @Override
-        protected Action[] createActions() {
+        protected LocalizeAction[] createActions() {
             MergeRequestProcessor.BottomActions bottomActions = myProcessor.getBottomActions();
-            List<Action> actions = ContainerUtil.skipNulls(ContainerUtil.list(bottomActions.resolveAction, bottomActions.cancelAction));
+            List<LocalizeAction> actions = ContainerUtil.skipNulls(Arrays.asList(bottomActions.resolveAction, bottomActions.cancelAction));
             if (bottomActions.resolveAction != null) {
                 bottomActions.resolveAction.putValue(DialogWrapper.DEFAULT_ACTION, true);
             }
-            return actions.toArray(new Action[actions.size()]);
+            return actions.toArray(new LocalizeAction[actions.size()]);
         }
 
         @Nonnull
         @Override
-        protected Action[] createLeftSideActions() {
+        protected LocalizeAction[] createLeftSideActions() {
             MergeRequestProcessor.BottomActions bottomActions = myProcessor.getBottomActions();
-            List<Action> actions = ContainerUtil.skipNulls(ContainerUtil.list(bottomActions.applyLeft, bottomActions.applyRight));
-            return actions.toArray(new Action[actions.size()]);
+            List<LocalizeAction> actions = ContainerUtil.skipNulls(Arrays.asList(bottomActions.applyLeft, bottomActions.applyRight));
+            return actions.toArray(new LocalizeAction[actions.size()]);
         }
 
         @Nonnull
         @Override
-        protected Action getOKAction() {
+        protected LocalizeAction getOKAction() {
             MergeRequestProcessor.BottomActions bottomActions = myProcessor.getBottomActions();
             if (bottomActions.resolveAction != null) {
                 return bottomActions.resolveAction;
@@ -153,7 +161,7 @@ public class MergeWindow {
 
         @Nonnull
         @Override
-        protected Action getCancelAction() {
+        protected LocalizeAction getCancelAction() {
             MergeRequestProcessor.BottomActions bottomActions = myProcessor.getBottomActions();
             if (bottomActions.cancelAction != null) {
                 return bottomActions.cancelAction;
@@ -161,13 +169,14 @@ public class MergeWindow {
             return super.getCancelAction();
         }
 
-        @jakarta.annotation.Nullable
+        @Nullable
         @Override
         protected String getHelpId() {
             return myProcessor.getHelpId();
         }
 
         @Override
+        @RequiredUIAccess
         public void doCancelAction() {
             if (!myProcessor.checkCloseAction()) {
                 return;

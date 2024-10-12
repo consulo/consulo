@@ -15,18 +15,21 @@
  */
 package consulo.ide.impl.idea.dvcs.push.ui;
 
-import consulo.ide.impl.idea.dvcs.push.*;
+import consulo.ide.impl.idea.dvcs.push.PushController;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.OptionAction;
+import consulo.ui.ex.awt.ValidationInfo;
+import consulo.ui.ex.awt.LocalizeAction;
 import consulo.versionControlSystem.distributed.push.PushSupport;
 import consulo.versionControlSystem.distributed.push.PushTarget;
 import consulo.versionControlSystem.distributed.push.VcsPushOptionValue;
 import consulo.versionControlSystem.distributed.push.VcsPushOptionsPanel;
 import consulo.versionControlSystem.distributed.repository.Repository;
-import consulo.project.Project;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.OptionAction;
-import consulo.ui.ex.awt.ValidationInfo;
-import net.miginfocom.swing.MigLayout;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,14 +45,14 @@ public class VcsPushDialog extends DialogWrapper {
     private final PushController myController;
     private final Map<PushSupport, VcsPushOptionsPanel> myAdditionalPanels;
 
-    private Action myPushAction;
-    @jakarta.annotation.Nullable
+    private LocalizeAction myPushAction;
+    @Nullable
     private ForcePushAction myForcePushAction;
 
     public VcsPushDialog(
         @Nonnull Project project,
         @Nonnull List<? extends Repository> selectedRepositories,
-        @jakarta.annotation.Nullable Repository currentRepo
+        @Nullable Repository currentRepo
     ) {
         super(project);
         myController = new PushController(project, this, selectedRepositories, currentRepo);
@@ -80,8 +83,9 @@ public class VcsPushDialog extends DialogWrapper {
         return ID;
     }
 
-    @jakarta.annotation.Nullable
+    @Nullable
     @Override
+    @RequiredUIAccess
     protected ValidationInfo doValidate() {
         updateOkActions();
         return null;
@@ -95,7 +99,7 @@ public class VcsPushDialog extends DialogWrapper {
     @Override
     @Nonnull
     protected Action[] createActions() {
-        final List<Action> actions = new ArrayList<Action>();
+        final List<Action> actions = new ArrayList<>();
         myForcePushAction = new ForcePushAction();
         myForcePushAction.setEnabled(canForcePush());
         myPushAction = new ComplexPushAction(myForcePushAction);
@@ -114,15 +118,16 @@ public class VcsPushDialog extends DialogWrapper {
         return myController.isForcePushEnabled() && myController.getProhibitedTarget() == null && myController.isPushAllowed(true);
     }
 
-    @jakarta.annotation.Nullable
+    @Nullable
     @Override
+    @RequiredUIAccess
     public JComponent getPreferredFocusedComponent() {
         return myListPanel.getPreferredFocusedComponent();
     }
 
     @Nonnull
     @Override
-    protected Action getOKAction() {
+    protected LocalizeAction getOKAction() {
         return myPushAction;
     }
 
@@ -151,7 +156,7 @@ public class VcsPushDialog extends DialogWrapper {
         myPushAction.setEnabled(false);
     }
 
-    @jakarta.annotation.Nullable
+    @Nullable
     public VcsPushOptionValue getAdditionalOptionValue(@Nonnull PushSupport support) {
         VcsPushOptionsPanel panel = myAdditionalPanels.get(support);
         return panel == null ? null : panel.getValue();
@@ -163,6 +168,7 @@ public class VcsPushDialog extends DialogWrapper {
         }
 
         @Override
+        @RequiredUIAccess
         public void actionPerformed(ActionEvent e) {
             if (myController.ensureForcePushIsNeeded()) {
                 myController.push(true);
@@ -171,7 +177,7 @@ public class VcsPushDialog extends DialogWrapper {
         }
     }
 
-    private class ComplexPushAction extends AbstractAction implements OptionAction {
+    private class ComplexPushAction extends LocalizeAction implements OptionAction {
         private final Action[] myOptions;
 
         private ComplexPushAction(Action additionalAction) {

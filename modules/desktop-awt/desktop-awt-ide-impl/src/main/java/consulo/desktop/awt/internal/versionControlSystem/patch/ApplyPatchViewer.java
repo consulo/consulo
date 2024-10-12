@@ -50,9 +50,9 @@ import consulo.ide.impl.idea.openapi.vcs.changes.patch.AppliedTextPatch;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.tool.ApplyPatchRequest;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.tool.PatchChangeBuilder;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -62,14 +62,11 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.Iterator;
 import java.util.List;
+import java.util.*;
 
 class ApplyPatchViewer implements DataProvider, Disposable {
     public static final Logger LOG = Logger.getInstance(ApplyPatchViewer.class);
@@ -145,17 +142,17 @@ class ApplyPatchViewer implements DataProvider, Disposable {
         AWTDiffUtil.disableBlitting(myResultEditor);
         AWTDiffUtil.disableBlitting(myPatchEditor);
 
-        ((EditorMarkupModel)myResultEditor.getMarkupModel()).setErrorStripeVisible(false);
+        myResultEditor.getMarkupModel().setErrorStripeVisible(false);
         myResultEditor.setVerticalScrollbarOrientation(EditorEx.VERTICAL_SCROLLBAR_LEFT);
 
         myPatchEditor.getGutterComponentEx().setForceShowRightFreePaintersArea(true);
-        ((EditorMarkupModel)myPatchEditor.getMarkupModel()).setErrorStripeVisible(false);
+        myPatchEditor.getMarkupModel().setErrorStripeVisible(false);
 
-        List<TextEditorHolder> holders = ContainerUtil.list(myResultHolder, myPatchHolder);
-        List<EditorEx> editors = ContainerUtil.list(myResultEditor, myPatchEditor);
+        List<TextEditorHolder> holders = Arrays.asList(myResultHolder, myPatchHolder);
+        List<EditorEx> editors = Arrays.asList(myResultEditor, myPatchEditor);
         JComponent resultTitle = AWTDiffUtil.createTitle(myPatchRequest.getResultTitle());
         JComponent patchTitle = AWTDiffUtil.createTitle(myPatchRequest.getPatchTitle());
-        List<JComponent> titleComponents = AWTDiffUtil.createSyncHeightComponents(ContainerUtil.list(resultTitle, patchTitle));
+        List<JComponent> titleComponents = AWTDiffUtil.createSyncHeightComponents(Arrays.asList(resultTitle, patchTitle));
 
         myContentPanel = TwosideContentPanel.createFromHolders(holders);
         myContentPanel.setTitles(titleComponents);
@@ -217,6 +214,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
     }
 
     @Override
+    @RequiredUIAccess
     public void dispose() {
         if (myDisposed) {
             return;
@@ -290,7 +288,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
 
     @Nullable
     @Override
-    public Object getData(@Nonnull @NonNls Key<?> dataId) {
+    public Object getData(@Nonnull Key<?> dataId) {
         if (Project.KEY == dataId) {
             return myProject;
         }
@@ -315,14 +313,20 @@ class ApplyPatchViewer implements DataProvider, Disposable {
     // Impl
     //
 
+    @RequiredUIAccess
     protected void initPatchViewer() {
         final Document outputDocument = myResultEditor.getDocument();
-        DiffImplUtil.executeWriteCommand(outputDocument, myProject, "Init merge content", () -> {
-            outputDocument.setText(myPatchRequest.getLocalContent());
-            if (!isReadOnly()) {
-                DiffImplUtil.putNonundoableOperation(myProject, outputDocument);
+        DiffImplUtil.executeWriteCommand(
+            outputDocument,
+            myProject,
+            "Init merge content",
+            () -> {
+                outputDocument.setText(myPatchRequest.getLocalContent());
+                if (!isReadOnly()) {
+                    DiffImplUtil.putNonundoableOperation(myProject, outputDocument);
+                }
             }
-        });
+        );
 
         PatchChangeBuilder builder = new PatchChangeBuilder();
         builder.exec(myPatchRequest.getPatch().getHunks());
@@ -341,20 +345,23 @@ class ApplyPatchViewer implements DataProvider, Disposable {
 
         List<PatchChangeBuilder.Hunk> hunks = builder.getHunks();
 
-        int[] modelToPatchIndexes = DiffImplUtil.getSortedIndexes(hunks, (h1, h2) -> {
-            LineRange lines1 = h1.getAppliedToLines();
-            LineRange lines2 = h2.getAppliedToLines();
-            if (lines1 == null && lines2 == null) {
-                return 0;
+        int[] modelToPatchIndexes = DiffImplUtil.getSortedIndexes(
+            hunks,
+            (h1, h2) -> {
+                LineRange lines1 = h1.getAppliedToLines();
+                LineRange lines2 = h2.getAppliedToLines();
+                if (lines1 == null && lines2 == null) {
+                    return 0;
+                }
+                if (lines1 == null) {
+                    return -1;
+                }
+                if (lines2 == null) {
+                    return 1;
+                }
+                return lines1.start - lines2.start;
             }
-            if (lines1 == null) {
-                return -1;
-            }
-            if (lines2 == null) {
-                return 1;
-            }
-            return lines1.start - lines2.start;
-        });
+        );
         int[] patchToModelIndexes = DiffImplUtil.invertIndexes(modelToPatchIndexes);
 
         List<LineRange> modelRanges = new ArrayList<>();
@@ -443,6 +450,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
         myContentPanel.repaintDivider();
     }
 
+    @RequiredUIAccess
     public void executeCommand(@Nullable String commandName, @Nonnull final Runnable task) {
         myModel.executeMergeCommand(
             commandName,
@@ -460,6 +468,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
         }
 
         @Override
+        @RequiredUIAccess
         protected void reinstallHighlighters(int index) {
             ApplyPatchChange change = myModelChanges.get(index);
             change.reinstallHighlighters();
@@ -467,12 +476,14 @@ class ApplyPatchViewer implements DataProvider, Disposable {
 
         @Nonnull
         @Override
+        @RequiredUIAccess
         protected ApplyPatchChange.State storeChangeState(int index) {
             ApplyPatchChange change = myModelChanges.get(index);
             return change.storeState();
         }
 
         @Override
+        @RequiredUIAccess
         protected void restoreChangeState(@Nonnull ApplyPatchChange.State state) {
             super.restoreChangeState(state);
             ApplyPatchChange change = myModelChanges.get(state.myIndex);
@@ -492,6 +503,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
         myStatusPanel.update();
     }
 
+    @RequiredUIAccess
     public void markChangeResolved(@Nonnull ApplyPatchChange change) {
         if (change.isResolved()) {
             return;
@@ -502,6 +514,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
         onChangeResolved();
     }
 
+    @RequiredUIAccess
     public void replaceChange(@Nonnull ApplyPatchChange change) {
         LineRange resultRange = change.getResultRange();
         LineRange patchRange = change.getPatchInsertionRange();
@@ -532,6 +545,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
         }
 
         @Override
+        @RequiredUIAccess
         protected void apply(@Nonnull List<ApplyPatchChange> changes) {
             for (int i = changes.size() - 1; i >= 0; i--) {
                 replaceChange(changes.get(i));
@@ -556,6 +570,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
         }
 
         @Override
+        @RequiredUIAccess
         protected void apply(@Nonnull List<ApplyPatchChange> changes) {
             for (ApplyPatchChange change : changes) {
                 markChangeResolved(change);
@@ -581,7 +596,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
             Presentation presentation = e.getPresentation();
             Editor editor = e.getData(Editor.KEY);
 
-            Side side = Side.fromValue(ContainerUtil.list(myResultEditor, myPatchEditor), editor);
+            Side side = Side.fromValue(Arrays.asList(myResultEditor, myPatchEditor), editor);
             if (side == null) {
                 presentation.setEnabledAndVisible(false);
                 return;
@@ -592,9 +607,10 @@ class ApplyPatchViewer implements DataProvider, Disposable {
         }
 
         @Override
+        @RequiredUIAccess
         public void actionPerformed(@Nonnull final AnActionEvent e) {
             Editor editor = e.getData(Editor.KEY);
-            final Side side = Side.fromValue(ContainerUtil.list(myResultEditor, myPatchEditor), editor);
+            final Side side = Side.fromValue(Arrays.asList(myResultEditor, myPatchEditor), editor);
             if (editor == null || side == null) {
                 return;
             }
@@ -673,41 +689,41 @@ class ApplyPatchViewer implements DataProvider, Disposable {
         }
 
         @Override
+        @RequiredUIAccess
         public void update(AnActionEvent e) {
-            boolean enabled = ContainerUtil.exists(myModelChanges, c -> {
-                if (c.isResolved()) {
-                    return false;
-                }
-                if (c.getStatus() == AppliedTextPatch.HunkStatus.NOT_APPLIED) {
-                    return false;
-                }
-                return true;
-            });
+            boolean enabled = ContainerUtil.exists(
+                myModelChanges,
+                c -> !c.isResolved() && c.getStatus() != AppliedTextPatch.HunkStatus.NOT_APPLIED
+            );
             e.getPresentation().setEnabled(enabled);
         }
 
         @Override
-        public void actionPerformed(AnActionEvent e) {
+        @RequiredUIAccess
+        public void actionPerformed(@Nonnull AnActionEvent e) {
             List<ApplyPatchChange> changes = myModelChanges;
             if (changes.isEmpty()) {
                 return;
             }
 
-            executeCommand("Apply Non Conflicted Changes", () -> {
-                for (int i = changes.size() - 1; i >= 0; i--) {
-                    ApplyPatchChange change = changes.get(i);
-                    switch (change.getStatus()) {
-                        case ALREADY_APPLIED:
-                            markChangeResolved(change);
-                            break;
-                        case EXACTLY_APPLIED:
-                            replaceChange(change);
-                            break;
-                        case NOT_APPLIED:
-                            break;
+            executeCommand(
+                "Apply Non Conflicted Changes",
+                () -> {
+                    for (int i = changes.size() - 1; i >= 0; i--) {
+                        ApplyPatchChange change = changes.get(i);
+                        switch (change.getStatus()) {
+                            case ALREADY_APPLIED:
+                                markChangeResolved(change);
+                                break;
+                            case EXACTLY_APPLIED:
+                                replaceChange(change);
+                                break;
+                            case NOT_APPLIED:
+                                break;
+                        }
                     }
                 }
-            });
+            );
         }
     }
 
@@ -721,6 +737,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
         }
 
         @Override
+        @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
             EditorEx targetEditor = getCurrentSide().other().select(myResultEditor, myPatchEditor);
             AWTDiffUtil.requestFocus(myProject, targetEditor.getContentComponent());
@@ -744,7 +761,8 @@ class ApplyPatchViewer implements DataProvider, Disposable {
         }
 
         @Override
-        public void actionPerformed(AnActionEvent e) {
+        @RequiredUIAccess
+        public void actionPerformed(@Nonnull AnActionEvent e) {
             DocumentContent resultContent = myPatchRequest.getResultContent();
             DocumentContent localContent = DiffContentFactory.getInstance().create(myPatchRequest.getLocalContent(), resultContent);
 

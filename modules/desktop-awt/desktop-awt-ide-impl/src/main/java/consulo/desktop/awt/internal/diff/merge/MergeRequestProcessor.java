@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.internal.diff.merge;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.HelpManager;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
@@ -35,7 +36,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.dataContext.BaseDataManager;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -44,12 +45,15 @@ import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.Wrapper;
+import consulo.ui.ex.awt.LocalizeAction;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.BooleanSupplier;
 
@@ -166,17 +170,30 @@ public abstract class MergeRequestProcessor implements Disposable {
 
     private void updateBottomActions() {
         myBottomActions = new BottomActions();
-        myBottomActions.applyLeft = myViewer.getResolveAction(MergeResult.LEFT);
-        myBottomActions.applyRight = myViewer.getResolveAction(MergeResult.RIGHT);
-        myBottomActions.resolveAction = myViewer.getResolveAction(MergeResult.RESOLVED);
-        myBottomActions.cancelAction = myViewer.getResolveAction(MergeResult.CANCEL);
+        myBottomActions.applyLeft = createAction(myViewer.getResolveAction(MergeResult.LEFT));
+        myBottomActions.applyRight = createAction(myViewer.getResolveAction(MergeResult.RIGHT));
+        myBottomActions.resolveAction = createAction(myViewer.getResolveAction(MergeResult.RESOLVED));
+        myBottomActions.cancelAction = createAction(myViewer.getResolveAction(MergeResult.CANCEL));
+    }
+
+    private LocalizeAction createAction(MergeTool.ActionRecord actionRecord) {
+        if (actionRecord == null) {
+            return null;
+        }
+
+        return new LocalizeAction(actionRecord.title()) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                actionRecord.onActionPerformed().run();
+            }
+        };
     }
 
     @Nonnull
     protected DefaultActionGroup collectToolbarActions(@Nullable List<AnAction> viewerActions) {
         DefaultActionGroup group = new DefaultActionGroup();
 
-        List<AnAction> navigationActions = ContainerUtil.<AnAction>list(new MyPrevDifferenceAction(), new MyNextDifferenceAction());
+        List<AnAction> navigationActions = Arrays.asList(new MyPrevDifferenceAction(), new MyNextDifferenceAction());
         DiffImplUtil.addActionBlock(group, navigationActions);
 
         DiffImplUtil.addActionBlock(group, viewerActions);
@@ -220,10 +237,7 @@ public abstract class MergeRequestProcessor implements Disposable {
     }
 
     private void setTitle(@Nullable String title) {
-        if (title == null) {
-            title = "Merge";
-        }
-        setWindowTitle(title);
+        setWindowTitle(title == null ? "Merge" : title);
     }
 
     @Override
@@ -300,7 +314,14 @@ public abstract class MergeRequestProcessor implements Disposable {
         applyRequestResult(MergeResult.CANCEL);
     }
 
+    protected void setWindowTitle(@Nonnull LocalizeValue title) {
+        setWindowTitle(title.get());
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     protected void setWindowTitle(@Nonnull String title) {
+        setWindowTitle(LocalizeValue.of(title));
     }
 
     protected abstract void rebuildSouthPanel();
@@ -533,12 +554,12 @@ public abstract class MergeRequestProcessor implements Disposable {
 
     public static class BottomActions {
         @Nullable
-        public Action applyLeft;
+        public LocalizeAction applyLeft;
         @Nullable
-        public Action applyRight;
+        public LocalizeAction applyRight;
         @Nullable
-        public Action resolveAction;
+        public LocalizeAction resolveAction;
         @Nullable
-        public Action cancelAction;
+        public LocalizeAction cancelAction;
     }
 }

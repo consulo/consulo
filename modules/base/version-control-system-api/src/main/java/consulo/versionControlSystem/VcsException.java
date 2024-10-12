@@ -15,33 +15,39 @@
  */
 package consulo.versionControlSystem;
 
-import consulo.util.collection.ArrayUtil;
+import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
-
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class VcsException extends Exception {
     public static final VcsException[] EMPTY_ARRAY = new VcsException[0];
 
     private VirtualFile myVirtualFile;
-    private Collection<String> myMessages;
+    private Collection<LocalizeValue> myMessages;
     private boolean isWarning = false;
 
+    public VcsException(@Nonnull LocalizeValue message) {
+        super(message.get());
+        initMessage(message);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     public VcsException(String message) {
         super(message);
         initMessage(message);
     }
 
-    private void initMessage(final String message) {
-        String shownMessage = message == null ? VcsBundle.message("exception.text.unknown.error") : message;
-        myMessages = Collections.singleton(shownMessage);
-    }
-
+    @SuppressWarnings("deprecation")
     public VcsException(Throwable throwable, final boolean isWarning) {
         this(getMessage(throwable), throwable);
         this.isWarning = isWarning;
@@ -51,6 +57,13 @@ public class VcsException extends Exception {
         this(throwable, false);
     }
 
+    public VcsException(@Nonnull LocalizeValue message, final Throwable cause) {
+        super(message.get(), cause);
+        initMessage(message);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     public VcsException(final String message, final Throwable cause) {
         super(message, cause);
         initMessage(message);
@@ -61,8 +74,24 @@ public class VcsException extends Exception {
         this.isWarning = isWarning;
     }
 
+    public VcsException(@Nonnull List<LocalizeValue> messages) {
+        myMessages = List.copyOf(messages);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     public VcsException(Collection<String> messages) {
-        myMessages = messages;
+        myMessages = messages.stream()
+            .map(message -> message == null ? LocalizeValue.empty() : LocalizeValue.of(message))
+            .collect(Collectors.toList());
+    }
+
+    private void initMessage(@Nonnull LocalizeValue message) {
+        myMessages = List.of(message);
+    }
+
+    private void initMessage(final String message) {
+        myMessages = List.of(message == null ? VcsLocalize.exceptionTextUnknownError() : LocalizeValue.of(message));
     }
 
     //todo: should be in constructor?
@@ -75,7 +104,7 @@ public class VcsException extends Exception {
     }
 
     public String[] getMessages() {
-        return ArrayUtil.toStringArray(myMessages);
+        return myMessages.stream().map(LocalizeValue::get).toArray(String[]::new);
     }
 
     public VcsException setIsWarning(boolean warning) {

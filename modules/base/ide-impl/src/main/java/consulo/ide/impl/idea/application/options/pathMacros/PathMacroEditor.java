@@ -17,6 +17,8 @@ package consulo.ide.impl.idea.application.options.pathMacros;
 
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.application.HelpManager;
+import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.TextComponentAccessor;
 import consulo.ui.ex.awt.TextFieldWithBrowseButton;
@@ -50,6 +52,7 @@ public class PathMacroEditor extends DialogWrapper {
         myValidator = validator;
         myNameField.setText(macroName);
         DocumentListener documentListener = new DocumentAdapter() {
+            @Override
             public void textChanged(DocumentEvent event) {
                 updateControls();
             }
@@ -57,15 +60,17 @@ public class PathMacroEditor extends DialogWrapper {
         myNameField.getDocument().addDocumentListener(documentListener);
         myValueField.setText(value);
         myValueField.addBrowseFolderListener(
-            null,
-            null,
+            LocalizeValue.empty(),
+            LocalizeValue.empty(),
             null,
             new FileChooserDescriptor(false, true, true, false, true, false),
-            new TextComponentAccessor<JTextField>() {
+            new TextComponentAccessor<>() {
+                @Override
                 public String getText(JTextField component) {
                     return component.getText();
                 }
 
+                @Override
                 public void setText(JTextField component, String text) {
                     final int len = text.length();
                     if (len > 0 && text.charAt(len - 1) == File.separatorChar) {
@@ -94,19 +99,25 @@ public class PathMacroEditor extends DialogWrapper {
         }
     }
 
+    @Override
+    @RequiredUIAccess
     public JComponent getPreferredFocusedComponent() {
         return myNameField;
     }
 
     @Nonnull
+    @Override
     protected Action[] createActions() {
         return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};
     }
 
+    @Override
+    @RequiredUIAccess
     protected void doHelpAction() {
         HelpManager.getInstance().invokeHelp(PathMacroConfigurable.ID);
     }
 
+    @Override
     protected void doOKAction() {
         if (!myValidator.isOK(getName(), getValue())) {
             return;
@@ -131,10 +142,12 @@ public class PathMacroEditor extends DialogWrapper {
         return path;
     }
 
+    @Override
     protected JComponent createNorthPanel() {
         return myPanel;
     }
 
+    @Override
     protected JComponent createCenterPanel() {
         return null;
     }

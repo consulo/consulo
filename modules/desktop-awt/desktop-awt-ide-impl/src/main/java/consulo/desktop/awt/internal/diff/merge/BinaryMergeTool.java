@@ -15,6 +15,9 @@
  */
 package consulo.desktop.awt.internal.diff.merge;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.desktop.awt.internal.diff.BinaryEditorHolder;
+import consulo.desktop.awt.internal.diff.binary.ThreesideBinaryDiffViewer;
 import consulo.diff.DiffContext;
 import consulo.diff.FrameDiffTool;
 import consulo.diff.content.DiffContent;
@@ -23,22 +26,21 @@ import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.request.DiffRequest;
 import consulo.diff.request.SimpleDiffRequest;
 import consulo.disposer.Disposer;
-import consulo.desktop.awt.internal.diff.binary.ThreesideBinaryDiffViewer;
-import consulo.desktop.awt.internal.diff.BinaryEditorHolder;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.util.List;
 
+@ExtensionImpl
 public class BinaryMergeTool implements MergeTool {
     public static final BinaryMergeTool INSTANCE = new BinaryMergeTool();
 
     @Nonnull
     @Override
+    @RequiredUIAccess
     public MergeViewer createComponent(@Nonnull MergeContext context, @Nonnull MergeRequest request) {
         return new BinaryMergeViewer(context, (ThreesideMergeRequest)request);
     }
@@ -115,6 +117,7 @@ public class BinaryMergeTool implements MergeTool {
 
         @Nonnull
         @Override
+        @RequiredUIAccess
         public ToolbarComponents init() {
             ToolbarComponents components = new ToolbarComponents();
 
@@ -130,25 +133,25 @@ public class BinaryMergeTool implements MergeTool {
 
         @Nullable
         @Override
-        public Action getResolveAction(@Nonnull final MergeResult result) {
+        public ActionRecord getResolveAction(@Nonnull final MergeResult result) {
             if (result == MergeResult.RESOLVED) {
                 return null;
             }
 
-            String caption = MergeImplUtil.getResolveActionTitle(result, myMergeRequest, myMergeContext);
-            return new AbstractAction(caption) {
-                @Override
-                public void actionPerformed(ActionEvent e) {
+            return new ActionRecord(
+                MergeImplUtil.getResolveActionTitle(result, myMergeRequest, myMergeContext),
+                () -> {
                     if (result == MergeResult.CANCEL &&
                         !MergeImplUtil.showExitWithoutApplyingChangesDialog(BinaryMergeViewer.this, myMergeRequest, myMergeContext)) {
                         return;
                     }
                     myMergeContext.finishMerge(result);
                 }
-            };
+            );
         }
 
         @Override
+        @RequiredUIAccess
         public void dispose() {
             Disposer.dispose(myViewer);
         }

@@ -24,18 +24,21 @@ import consulo.diff.merge.MergeRequest;
 import consulo.diff.merge.MergeResult;
 import consulo.diff.merge.MergeTool.MergeViewer;
 import consulo.diff.util.ThreeSide;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
-import consulo.util.collection.ContainerUtil;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.LocalizeAction;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Couple;
 import consulo.util.lang.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -48,9 +51,10 @@ public class MergeImplUtil {
         @Nonnull MergeContext context,
         @Nonnull MergeViewer viewer
     ) {
-        String caption = getResolveActionTitle(result, request, context);
-        return new AbstractAction(caption) {
+        LocalizeValue caption = getResolveActionTitle(result, request, context);
+        return new LocalizeAction(caption) {
             @Override
+            @RequiredUIAccess
             public void actionPerformed(ActionEvent e) {
                 if (result == MergeResult.CANCEL && !showExitWithoutApplyingChangesDialog(viewer, request, context)) {
                     return;
@@ -61,22 +65,22 @@ public class MergeImplUtil {
     }
 
     @Nonnull
-    public static String getResolveActionTitle(@Nonnull MergeResult result, @Nonnull MergeRequest request, @Nonnull MergeContext context) {
+    public static LocalizeValue getResolveActionTitle(@Nonnull MergeResult result, @Nonnull MergeRequest request, @Nonnull MergeContext context) {
         Function<MergeResult, String> getter = DiffImplUtil.getUserData(request, context, DiffUserDataKeysEx.MERGE_ACTION_CAPTIONS);
         String message = getter != null ? getter.apply(result) : null;
         if (message != null) {
-            return message;
+            return LocalizeValue.localizeTODO(message);
         }
 
         switch (result) {
             case CANCEL:
-                return "Abort";
+                return LocalizeValue.localizeTODO("Abort");
             case LEFT:
-                return "Accept Left";
+                return LocalizeValue.localizeTODO("Accept Left");
             case RIGHT:
-                return "Accept Right";
+                return LocalizeValue.localizeTODO("Accept Right");
             case RESOLVED:
-                return "Apply";
+                return LocalizeValue.localizeTODO("Apply");
             default:
                 throw new IllegalArgumentException(result.toString());
         }
@@ -87,7 +91,7 @@ public class MergeImplUtil {
         String left = StringUtil.notNullize(ThreeSide.LEFT.select(mergeContentTitles), "Your Version");
         String base = StringUtil.notNullize(ThreeSide.BASE.select(mergeContentTitles), "Base Version");
         String right = StringUtil.notNullize(ThreeSide.RIGHT.select(mergeContentTitles), "Server Version");
-        return ContainerUtil.list(left, base, right);
+        return Arrays.asList(left, base, right);
     }
 
     public static class ProxyDiffContext extends DiffContext {
@@ -149,19 +153,19 @@ public class MergeImplUtil {
         @Nonnull MergeRequest request,
         @Nonnull MergeContext context
     ) {
-        String message = DiffLocalize.mergeDialogExitWithoutApplyingChangesConfirmationMessage().get();
-        String title = DiffLocalize.cancelVisualMergeDialogTitle().get();
+        LocalizeValue title = DiffLocalize.cancelVisualMergeDialogTitle();
+        LocalizeValue message = DiffLocalize.mergeDialogExitWithoutApplyingChangesConfirmationMessage();
         Couple<String> customMessage = DiffImplUtil.getUserData(request, context, DiffUserDataKeysEx.MERGE_CANCEL_MESSAGE);
         if (customMessage != null) {
-            title = customMessage.first;
-            message = customMessage.second;
+            title = LocalizeValue.localizeTODO(customMessage.first);
+            message = LocalizeValue.localizeTODO(customMessage.second);
         }
 
         return Messages.showYesNoDialog(
             component.getRootPane(),
-            message,
-            title,
-            Messages.getQuestionIcon()
+            message.get(),
+            title.get(),
+            UIUtil.getQuestionIcon()
         ) == Messages.YES;
     }
 }

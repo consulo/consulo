@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.execution.ui;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserFactory;
 import consulo.language.editor.LangDataKeys;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.macro.ModulePathMacroManager;
 import consulo.project.Project;
@@ -31,7 +32,6 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class MacroComboBoxWithBrowseButton extends ComponentWithBrowseButton<ComboBox<String>> implements TextAccessor {
     private Module module;
@@ -43,14 +43,21 @@ public class MacroComboBoxWithBrowseButton extends ComponentWithBrowseButton<Com
         ComboBox<String> combobox = getChildComponent();
         combobox.setEditable(true);
         descriptor.withShowHiddenFiles(true);
-        addActionListener(new BrowseFolderActionListener<ComboBox<String>>(null, null, this, project, descriptor, accessor) {
+        addActionListener(new BrowseFolderActionListener<ComboBox<String>>(
+            LocalizeValue.empty(),
+            LocalizeValue.empty(),
+            this,
+            project,
+            descriptor,
+            accessor
+        ) {
             private Module getModule() {
                 Module module = MacroComboBoxWithBrowseButton.this.module;
                 if (module == null) {
                     module = myFileChooserDescriptor.getUserData(LangDataKeys.MODULE_CONTEXT);
                 }
                 if (module == null) {
-                    module = myFileChooserDescriptor.getUserData(LangDataKeys.MODULE);
+                    module = myFileChooserDescriptor.getUserData(Module.KEY);
                 }
                 return module;
             }
@@ -83,17 +90,13 @@ public class MacroComboBoxWithBrowseButton extends ComponentWithBrowseButton<Com
             }
         });
         ComboBoxEditor editor = combobox.getEditor();
-        if (editor != null) {
-            Component component = editor.getEditorComponent();
-            if (component instanceof JTextField) {
-                FileChooserFactory.getInstance().installFileCompletion((JTextField)component, descriptor, true, null);
-            }
+        if (editor != null && editor.getEditorComponent() instanceof JTextField textField) {
+            FileChooserFactory.getInstance().installFileCompletion(textField, descriptor, true, null);
         }
     }
 
     private MacroComboBoxModel getModel() {
-        ComboBoxModel<String> model = getChildComponent().getModel();
-        return model instanceof MacroComboBoxModel ? (MacroComboBoxModel)model : null;
+        return getChildComponent().getModel() instanceof MacroComboBoxModel macroComboBoxModel ? macroComboBoxModel : null;
     }
 
     @Override
@@ -123,7 +126,7 @@ public class MacroComboBoxWithBrowseButton extends ComponentWithBrowseButton<Com
         }
     }
 
-    private final TextComponentAccessor<ComboBox<String>> accessor = new TextComponentAccessor<ComboBox<String>>() {
+    private final TextComponentAccessor<ComboBox<String>> accessor = new TextComponentAccessor<>() {
         @Override
         public String getText(ComboBox<String> component) {
             Object item = component == null ? null : component.getSelectedItem();

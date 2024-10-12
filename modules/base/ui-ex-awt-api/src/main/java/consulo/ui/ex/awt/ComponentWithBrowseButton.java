@@ -15,16 +15,17 @@
  */
 package consulo.ui.ex.awt;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.component.ComponentManager;
 import consulo.disposer.Disposable;
 import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -33,6 +34,7 @@ import consulo.ui.ex.awt.accessibility.ScreenReader;
 import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.util.KeymapUtil;
+import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.io.FileUtil;
@@ -71,8 +73,9 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
         }
         add(centerComponentVertically(myBrowseButton), BorderLayout.EAST);
 
-        myBrowseButton.setToolTipText(UIBundle.message("component.with.browse.button.browse.button.tooltip.text"));
+        myBrowseButton.setToolTipText(UILocalize.componentWithBrowseButtonBrowseButtonTooltipText().get());
         // FixedSizeButton isn't focusable but it should be selectable via keyboard.
+        //noinspection deprecation
         if (ApplicationManager.getApplication() != null) {  // avoid crash at design time
             new MyDoClickAction(myBrowseButton).registerShortcut(myComponent);
         }
@@ -132,6 +135,18 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
         myBrowseButton.removeActionListener(listener);
     }
 
+    public void addBrowseFolderListener(
+        @Nonnull LocalizeValue title,
+        @Nonnull LocalizeValue description,
+        @Nullable ComponentManager project,
+        FileChooserDescriptor fileChooserDescriptor,
+        TextComponentAccessor<Comp> accessor
+    ) {
+        addActionListener(new BrowseFolderActionListener<>(title, description, this, project, fileChooserDescriptor, accessor));
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     public void addBrowseFolderListener(
         @Nullable @Nls(capitalization = Nls.Capitalization.Title) String title,
         @Nullable @Nls(capitalization = Nls.Capitalization.Sentence) String description,
@@ -202,12 +217,14 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
         }
 
         @Override
+        @RequiredUIAccess
         public void update(AnActionEvent e) {
             e.getPresentation().setEnabled(myBrowseButton.isVisible() && myBrowseButton.isEnabled());
         }
 
         @Override
-        public void actionPerformed(AnActionEvent e) {
+        @RequiredUIAccess
+        public void actionPerformed(@Nonnull AnActionEvent e) {
             myBrowseButton.doClick();
         }
 
@@ -223,16 +240,16 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
     }
 
     public static class BrowseFolderActionListener<T extends JComponent> implements ActionListener {
-        private final String myTitle;
-        private final String myDescription;
+        private final LocalizeValue myTitle;
+        private final LocalizeValue myDescription;
         protected ComponentWithBrowseButton<T> myTextComponent;
         private final TextComponentAccessor<T> myAccessor;
         private ComponentManager myProject;
         protected final FileChooserDescriptor myFileChooserDescriptor;
 
         public BrowseFolderActionListener(
-            @Nullable @Nls(capitalization = Nls.Capitalization.Title) String title,
-            @Nullable @Nls(capitalization = Nls.Capitalization.Sentence) String description,
+            @Nonnull LocalizeValue title,
+            @Nonnull LocalizeValue description,
             ComponentWithBrowseButton<T> textField,
             @Nullable ComponentManager project,
             FileChooserDescriptor fileChooserDescriptor,
@@ -256,6 +273,26 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
             myAccessor = accessor;
         }
 
+        @Deprecated
+        @DeprecationInfo("Use variant with LocalizeValue")
+        public BrowseFolderActionListener(
+            @Nullable @Nls(capitalization = Nls.Capitalization.Title) String title,
+            @Nullable @Nls(capitalization = Nls.Capitalization.Sentence) String description,
+            ComponentWithBrowseButton<T> textField,
+            @Nullable ComponentManager project,
+            FileChooserDescriptor fileChooserDescriptor,
+            TextComponentAccessor<T> accessor
+        ) {
+            this(
+                title == null ? LocalizeValue.empty() : LocalizeValue.of(title),
+                description == null ? LocalizeValue.empty() : LocalizeValue.of(description),
+                textField,
+                project,
+                fileChooserDescriptor,
+                accessor
+            );
+        }
+
         @Nullable
         protected ComponentManager getProject() {
             return myProject;
@@ -269,13 +306,13 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
         @RequiredUIAccess
         public void actionPerformed(ActionEvent e) {
             FileChooserDescriptor fileChooserDescriptor = myFileChooserDescriptor;
-            if (myTitle != null || myDescription != null) {
+            if (myTitle != LocalizeValue.empty() || myDescription != LocalizeValue.empty()) {
                 fileChooserDescriptor = (FileChooserDescriptor)myFileChooserDescriptor.clone();
-                if (myTitle != null) {
-                    fileChooserDescriptor.setTitle(myTitle);
+                if (myTitle != LocalizeValue.empty()) {
+                    fileChooserDescriptor.withTitleValue(myTitle);
                 }
-                if (myDescription != null) {
-                    fileChooserDescriptor.setDescription(myDescription);
+                if (myDescription != LocalizeValue.empty()) {
+                    fileChooserDescriptor.withDescriptionValue(myDescription);
                 }
             }
 
@@ -346,9 +383,6 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
                 myCurrentEvent = null;
             }
         }
-        if (e.isConsumed()) {
-            return true;
-        }
-        return super.processKeyBinding(ks, e, condition, pressed);
+        return e.isConsumed() || super.processKeyBinding(ks, e, condition, pressed);
     }
 }
