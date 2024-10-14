@@ -1384,3 +1384,5 @@ error.required.plugin.disabled:
   text: 'Plugin "{0}" was not loaded: required plugin "{1}" is disabled.'
 message.duplicate.plugin.id:
   text: 'Duplicate plugin id:'
+task.button.cancel:
+  text: Cancel

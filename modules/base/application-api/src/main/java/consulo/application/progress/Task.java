@@ -17,8 +17,8 @@ package consulo.application.progress;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
-import consulo.application.CommonBundle;
 import consulo.application.EdtReplacementThread;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
 import consulo.localize.LocalizeValue;
@@ -59,8 +59,8 @@ public abstract class Task implements TaskInfo, Progressive {
     protected LocalizeValue myTitle;
     private final boolean myCanBeCancelled;
 
-    private LocalizeValue myCancelText = LocalizeValue.of(CommonBundle.message("button.cancel"));
-    private LocalizeValue myCancelTooltipText = LocalizeValue.of(CommonBundle.message("button.cancel"));
+    private LocalizeValue myCancelText = ApplicationLocalize.taskButtonCancel();
+    private LocalizeValue myCancelTooltipText = ApplicationLocalize.taskButtonCancel();
 
     public Task(
         @Nullable ComponentManager project,
