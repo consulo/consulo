@@ -1,28 +1,26 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.fileEditor.impl;
 
+import consulo.application.Application;
 import consulo.diff.DiffContentFactory;
 import consulo.diff.DiffManager;
 import consulo.diff.DiffRequestPanel;
+import consulo.diff.DiffUserDataKeys;
 import consulo.diff.content.DocumentContent;
 import consulo.diff.request.DiffRequest;
 import consulo.diff.request.SimpleDiffRequest;
-import consulo.diff.DiffUserDataKeys;
-import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.virtualFileSystem.internal.LoadTextUtil;
+import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
-import consulo.ui.ex.awt.DialogBuilder;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.Messages;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.localize.UILocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.VFileContentChangeEvent;
-import consulo.ui.ex.UIBundle;
-import consulo.ui.ex.awt.JBLabel;
-import consulo.logging.Logger;
-
+import consulo.virtualFileSystem.internal.LoadTextUtil;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -63,10 +61,11 @@ class MemoryDiskConflictResolver {
             LOG.info("  documentStamp:" + documentStamp);
             LOG.info("  oldFileStamp:" + oldFileStamp);
             if (myConflicts.isEmpty()) {
-                if (ApplicationManager.getApplication().isUnitTestMode()) {
+                Application application = Application.get();
+                if (application.isUnitTestMode()) {
                     myConflictAppeared = new Throwable();
                 }
-                ApplicationManager.getApplication().invokeLater(this::processConflicts);
+                application.invokeLater(this::processConflicts);
             }
             myConflicts.add(file);
         }
@@ -76,6 +75,7 @@ class MemoryDiskConflictResolver {
         return myConflicts.contains(file);
     }
 
+    @RequiredUIAccess
     private void processConflicts() {
         List<VirtualFile> conflicts = new ArrayList<>(myConflicts);
         myConflicts.clear();
@@ -89,6 +89,7 @@ class MemoryDiskConflictResolver {
         myConflictAppeared = null;
     }
 
+    @RequiredUIAccess
     boolean askReloadFromDisk(VirtualFile file, Document document) {
         if (myConflictAppeared != null) {
             Throwable trace = myConflictAppeared;
@@ -100,38 +101,44 @@ class MemoryDiskConflictResolver {
             );
         }
 
-        String message = UIBundle.message("file.cache.conflict.message.text", file.getPresentableUrl());
+        LocalizeValue message = UILocalize.fileCacheConflictMessageText(file.getPresentableUrl());
 
         DialogBuilder builder = new DialogBuilder();
-        builder.setCenterPanel(new JBLabel(message, Messages.getQuestionIcon(), SwingConstants.CENTER));
-        builder.addOkAction().setText(UIBundle.message("file.cache.conflict.load.fs.changes.button"));
-        builder.addCancelAction().setText(UIBundle.message("file.cache.conflict.keep.memory.changes.button"));
-        builder.addAction(new AbstractAction(UIBundle.message("file.cache.conflict.show.difference.button")) {
+        builder.setCenterPanel(new JBLabel(message.get(), UIUtil.getQuestionIcon(), SwingConstants.CENTER));
+        builder.addOkAction().setText(UILocalize.fileCacheConflictLoadFsChangesButton());
+        builder.addCancelAction().setText(UILocalize.fileCacheConflictKeepMemoryChangesButton());
+        builder.addAction(new LocalizeAction(UILocalize.fileCacheConflictShowDifferenceButton()) {
             @Override
+            @RequiredUIAccess
             public void actionPerformed(ActionEvent e) {
                 Project project = ProjectLocator.getInstance().guessProjectForFile(file);
                 String fsContent = LoadTextUtil.loadText(file).toString();
                 DocumentContent content1 = DiffContentFactory.getInstance().create(project, fsContent, file.getFileType());
                 DocumentContent content2 = DiffContentFactory.getInstance().create(project, document, file);
-                String title = UIBundle.message("file.cache.conflict.for.file.dialog.title", file.getPresentableUrl());
-                String title1 = UIBundle.message("file.cache.conflict.diff.content.file.system.content");
-                String title2 = UIBundle.message("file.cache.conflict.diff.content.memory.content");
-                DiffRequest request = new SimpleDiffRequest(title, content1, content2, title1, title2);
+                LocalizeValue title = UILocalize.fileCacheConflictForFileDialogTitle(file.getPresentableUrl());
+                LocalizeValue title1 = UILocalize.fileCacheConflictDiffContentFileSystemContent();
+                LocalizeValue title2 = UILocalize.fileCacheConflictDiffContentMemoryContent();
+
+                DiffRequest request = new SimpleDiffRequest(title.get(), content1, content2, title1.get(), title2.get());
                 request.putUserData(DiffUserDataKeys.GO_TO_SOURCE_DISABLE, true);
+
                 DialogBuilder diffBuilder = new DialogBuilder(project);
+
                 DiffRequestPanel diffPanel = DiffManager.getInstance().createRequestPanel(project, diffBuilder, diffBuilder.getWindow());
                 diffPanel.setRequest(request);
+
                 diffBuilder.setCenterPanel(diffPanel.getComponent());
                 diffBuilder.setDimensionServiceKey("FileDocumentManager.FileCacheConflict");
-                diffBuilder.addOkAction().setText(UIBundle.message("file.cache.conflict.save.changes.button"));
+                diffBuilder.addOkAction().setText(UILocalize.fileCacheConflictSaveChangesButton());
                 diffBuilder.addCancelAction();
                 diffBuilder.setTitle(title);
+
                 if (diffBuilder.show() == DialogWrapper.OK_EXIT_CODE) {
                     builder.getDialogWrapper().close(DialogWrapper.CANCEL_EXIT_CODE);
                 }
             }
         });
-        builder.setTitle(UIBundle.message("file.cache.conflict.dialog.title"));
+        builder.setTitle(UILocalize.fileCacheConflictDialogTitle());
         builder.setButtonsAlignment(SwingConstants.CENTER);
         builder.setHelpId("reference.dialogs.fileCacheConflict");
         return builder.show() == 0;

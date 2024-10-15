@@ -202,7 +202,7 @@ public class DialogBuilder implements Disposable {
 
     public CustomizableAction addCloseButton() {
         CustomizableAction closeAction = addOkAction();
-        closeAction.setText(CommonLocalize.buttonClose().get());
+        closeAction.setText(CommonLocalize.buttonClose());
         return closeAction;
     }
 
@@ -341,7 +341,7 @@ public class DialogBuilder implements Disposable {
     }
 
     public interface CustomizableAction {
-        void setText(String text);
+        void setText(LocalizeValue text);
     }
 
     public static class CustomActionDescriptor implements ActionDescriptor {
@@ -358,35 +358,35 @@ public class DialogBuilder implements Disposable {
     }
 
     private abstract static class BuiltinAction implements ActionDescriptor, CustomizableAction {
-        protected String myText = null;
+        protected LocalizeValue myText = null;
 
         @Override
-        public void setText(String text) {
+        public void setText(@Nonnull LocalizeValue text) {
             myText = text;
         }
 
         @Override
         public Action getAction(DialogWrapper dialogWrapper) {
-            Action builtinAction = getBuiltinAction((MyDialogWrapper)dialogWrapper);
-            if (myText != null) {
-                builtinAction.putValue(Action.NAME, myText);
+            LocalizeAction builtinAction = getBuiltinAction((MyDialogWrapper)dialogWrapper);
+            if (myText != LocalizeValue.empty()) {
+                builtinAction.setText(myText);
             }
             return builtinAction;
         }
 
-        protected abstract Action getBuiltinAction(MyDialogWrapper dialogWrapper);
+        protected abstract LocalizeAction getBuiltinAction(MyDialogWrapper dialogWrapper);
     }
 
     public static class OkActionDescriptor extends BuiltinAction {
         @Override
-        protected Action getBuiltinAction(MyDialogWrapper dialogWrapper) {
+        protected LocalizeAction getBuiltinAction(MyDialogWrapper dialogWrapper) {
             return dialogWrapper.getOKAction();
         }
     }
 
     public static class CancelActionDescriptor extends BuiltinAction {
         @Override
-        protected Action getBuiltinAction(MyDialogWrapper dialogWrapper) {
+        protected LocalizeAction getBuiltinAction(MyDialogWrapper dialogWrapper) {
             return dialogWrapper.getCancelAction();
         }
     }
