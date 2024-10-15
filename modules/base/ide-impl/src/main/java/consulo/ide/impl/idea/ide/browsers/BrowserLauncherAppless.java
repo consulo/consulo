@@ -358,7 +358,7 @@ public class BrowserLauncherAppless extends BrowserLauncher {
     @Override
     @Nonnull
     protected Action[] createActions() {
-      setOKButtonText(CommonLocalize.buttonYes().get());
+      setOKButtonText(CommonLocalize.buttonYes());
       return new Action[]{getOKAction(), getCancelAction()};
     }
 

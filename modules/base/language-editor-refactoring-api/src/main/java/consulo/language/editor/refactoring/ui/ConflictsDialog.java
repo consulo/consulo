@@ -83,7 +83,7 @@ public class ConflictsDialog extends DialogWrapper{
     myConflictDescriptions = ArrayUtil.toStringArray(conflicts);
     myElementConflictDescription = conflictDescriptions;
     setTitle(RefactoringLocalize.problemsDetectedTitle());
-    setOKButtonText(RefactoringLocalize.continueButton().get());
+    setOKButtonText(RefactoringLocalize.continueButton());
     setOKActionEnabled(alwaysShowOkButton || myDoRefactoringRunnable != null);
     init();
   }
@@ -101,7 +101,7 @@ public class ConflictsDialog extends DialogWrapper{
     myConflictDescriptions = conflictDescriptions;
     myCanShowConflictsInView = true;
     setTitle(RefactoringLocalize.problemsDetectedTitle());
-    setOKButtonText(RefactoringLocalize.continueButton().get());
+    setOKButtonText(RefactoringLocalize.continueButton());
     init();
   }
 

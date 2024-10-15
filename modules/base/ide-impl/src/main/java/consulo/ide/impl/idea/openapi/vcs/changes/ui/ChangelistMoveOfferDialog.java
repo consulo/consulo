@@ -41,25 +41,30 @@ public class ChangelistMoveOfferDialog extends OptionsDialog {
     init();
   }
 
+  @Override
   @Nonnull
   protected Action[] createActions() {
-    setOKButtonText(CommonLocalize.buttonYes().get());
-    setCancelButtonText(CommonLocalize.buttonNo().get());
+    setOKButtonText(CommonLocalize.buttonYes());
+    setCancelButtonText(CommonLocalize.buttonNo());
     return new Action[] {getOKAction(), getCancelAction()};
   }
 
+  @Override
   protected boolean isToBeShown() {
     return myConfig.OFFER_MOVE_TO_ANOTHER_CHANGELIST_ON_PARTIAL_COMMIT;
   }
 
+  @Override
   protected void setToBeShown(boolean value, boolean onOk) {
     myConfig.OFFER_MOVE_TO_ANOTHER_CHANGELIST_ON_PARTIAL_COMMIT = value;
   }
 
+  @Override
   protected boolean shouldSaveOptionsOnCancel() {
     return true;
   }
 
+  @Override
   protected JComponent createCenterPanel() {
     final JPanel panel = new JPanel(new BorderLayout());
     final JLabel label = new JLabel(VcsLocalize.changesCommitPartialOfferToMoveText().get());

@@ -1535,8 +1535,14 @@ public abstract class DialogWrapper {
         }
     }
 
+    @Deprecated
+    @DeprecationInfo("setCancelButtonText(LocalizeValue)")
     protected final void setCancelButtonText(String text) {
         myCancelAction.putValue(Action.NAME, text);
+    }
+
+    protected final void setCancelButtonText(@Nonnull LocalizeValue actionText) {
+        myCancelAction.setText(actionText);
     }
 
     public void setModal(boolean modal) {
@@ -1564,12 +1570,20 @@ public abstract class DialogWrapper {
      *             {@link AbstractButton#setText(String)}
      *             {@link AbstractButton#updateDisplayedMnemonicIndex(String, int)}
      */
+    @Deprecated
+    @DeprecationInfo("setOKButtonText(LocalizeValue)")
     protected final void setOKButtonText(String text) {
         myOKAction.putValue(Action.NAME, text);
     }
 
+    @Deprecated
+    @DeprecationInfo("setOKButtonText(LocalizeValue)")
     protected final void setOKButtonMnemonic(int c) {
         myOKAction.putValue(Action.MNEMONIC_KEY, c);
+    }
+
+    protected final void setOKButtonText(LocalizeValue actionText) {
+        myOKAction.setText(actionText);
     }
 
     /**

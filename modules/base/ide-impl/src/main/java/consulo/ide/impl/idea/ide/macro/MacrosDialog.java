@@ -53,7 +53,7 @@ public final class MacrosDialog extends DialogWrapper {
     super(project, true);
     MacroManager.getInstance().cacheMacrosPreview(SimpleDataContext.builder().add(Project.KEY, project).add(Module.KEY, module).build());
     setTitle(IdeLocalize.titleMacros());
-    setOKButtonText(IdeLocalize.buttonInsert().get());
+    setOKButtonText(IdeLocalize.buttonInsert());
 
     myMacrosModel = new DefaultListModel();
     myMacrosList = new JBList(myMacrosModel);

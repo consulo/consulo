@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.dvcs.push.ui;
 
 import consulo.ide.impl.idea.dvcs.push.PushController;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
@@ -61,8 +62,7 @@ public class VcsPushDialog extends DialogWrapper {
 
         init();
         updateOkActions();
-        setOKButtonText("Push");
-        setOKButtonMnemonic('P');
+        setOKButtonText(LocalizeValue.localizeTODO("&Push"));
         setTitle("Push Commits");
     }
 

@@ -23,10 +23,10 @@ package consulo.language.editor.refactoring.safeDelete;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.LocalizeAction;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.UIUtil;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,7 +41,7 @@ public class UnsafeUsagesDialog extends DialogWrapper {
     super(project, true);
     myConflictDescriptions = conflictDescriptions;
     setTitle(RefactoringLocalize.usagesDetected());
-    setOKButtonText(RefactoringLocalize.deleteAnywayButton().get());
+    setOKButtonText(RefactoringLocalize.deleteAnywayButton());
     init();
   }
 
@@ -66,7 +66,7 @@ public class UnsafeUsagesDialog extends DialogWrapper {
     panel.add(new JLabel(RefactoringLocalize.theFollowingProblemsWereFound().get()), BorderLayout.NORTH);
     panel.add(scrollPane, BorderLayout.CENTER);
 
-    @NonNls StringBuffer buf = new StringBuffer();
+    StringBuilder buf = new StringBuilder();
     for (String description : myConflictDescriptions) {
       buf.append(description);
       buf.append("<br><br>");
@@ -89,9 +89,9 @@ public class UnsafeUsagesDialog extends DialogWrapper {
   }
 */
 
-  private class CancelAction extends AbstractAction {
+  private class CancelAction extends LocalizeAction {
     public CancelAction() {
-      super(RefactoringLocalize.cancelButton().get());
+      super(RefactoringLocalize.cancelButton());
     }
 
     @Override
@@ -100,9 +100,9 @@ public class UnsafeUsagesDialog extends DialogWrapper {
     }
   }
 
-  private class ViewUsagesAction extends AbstractAction {
+  private class ViewUsagesAction extends LocalizeAction {
     public ViewUsagesAction() {
-      super(RefactoringLocalize.viewUsages().get());
+      super(RefactoringLocalize.viewUsages());
       putValue(DialogWrapper.DEFAULT_ACTION, Boolean.TRUE);
     }
 

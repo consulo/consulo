@@ -35,7 +35,7 @@ public class ExportToHTMLDialog extends DialogWrapper{
     super(project, true);
     myProject = project;
     myCanBeOpenInBrowser = canBeOpenInBrowser;
-    setOKButtonText(InspectionLocalize.inspectionExportSaveButton().get());
+    setOKButtonText(InspectionLocalize.inspectionExportSaveButton());
     setTitle(InspectionLocalize.inspectionExportDialogTitle());
     init();
   }

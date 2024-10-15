@@ -766,11 +766,6 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
         }
 
         @Override
-        protected boolean withMnemonic() {
-            return true;
-        }
-
-        @Override
         public void actionPerformed(ActionEvent e) {
             myMessagePool.clearFatals();
             doOKAction();

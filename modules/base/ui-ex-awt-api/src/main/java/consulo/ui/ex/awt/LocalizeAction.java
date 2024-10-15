@@ -72,6 +72,6 @@ public abstract class LocalizeAction extends AbstractAction {
     }
 
     protected boolean withMnemonic() {
-        return false;
+        return true;
     }
 }

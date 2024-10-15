@@ -121,7 +121,7 @@ public class ExportToFileUtil {
 
       setHorizontalStretch(1.5f);
       setTitle(IdeLocalize.titleExportPreview());
-      setOKButtonText(IdeLocalize.buttonSave().get());
+      setOKButtonText(IdeLocalize.buttonSave());
       init();
       try {
         myListener = e -> initText();

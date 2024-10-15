@@ -314,8 +314,8 @@ public class OptimizeImportsAction extends AnAction {
       myText = text;
       myContextHasChanges = hasChanges;
       myLastRunOptions = new LastRunReformatCodeOptionsProvider(PropertiesComponent.getInstance());
-      setOKButtonText(CodeInsightLocalize.reformatCodeAcceptButtonText().get());
-      setTitle(CodeInsightLocalize.processOptimizeImports().get());
+      setOKButtonText(CodeInsightLocalize.reformatCodeAcceptButtonText());
+      setTitle(CodeInsightLocalize.processOptimizeImports());
       init();
     }
 
