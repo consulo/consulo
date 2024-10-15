@@ -697,10 +697,6 @@ patch.apply.select.title:
   text: Select Patch File
 patch.apply.select.base.directory.title:
   text: Select Base Directory
-patch.apply.select.title:
-  text: Select Patch File
-patch.apply.select.base.directory.title:
-  text: Select Base Directory
 shelve.changes.action:
   text: Shelve Changes
 patch.apply.already.applied:
@@ -1166,5 +1162,29 @@ impl.vcs.initialization:
   text: VCS Initialization
 vcs.common.labels.vcs:
   text: 'VCS:'
+notification.title.vcs.name.repository.repositories.found:
+  text: '{0} {1, choice, 1#Repository|2#Repositories} Found'
+roots.the.following.directories.are.registered.as.vcs.roots.but.they.are.not:
+  text: 'The following directories are registered as VCS roots, but they are not:'
+label.relative.project.path.presentation:
+  text: <Project>/{0}
+roots.notification.title.invalid.vcs.root.choice.mapping.mappings:
+  text: Invalid VCS root {0, choice, 1#mapping|2#mappings}
+roots.notification.title.vcs.root.configuration.problems:
+  text: VCS root configuration problems
+roots.notification.title.vcs.name.integration.enabled:
+  text: '{0} Integration Enabled'
 vcs.generic.name.with.mnemonic:
   text: VC_S
+roots.notification.content.directory.registered.as.root.but.no.repositories.were.found.there:
+  text: The directory {0} is registered as a {1} root, but no {1} repositories were found there.
+action.NotificationAction.VcsRootProblemNotifier.text.configure:
+  text: Configure…
+action.NotificationAction.VcsRootProblemNotifier.text.enable.integration:
+  text: Enable Integration
+action.NotificationAction.VcsRootProblemNotifier.text.ignore:
+  text: Ignore
+scope.name.changelist.all.changed.files:
+  text: All Changed Files
+progress.title.version.control.processing.changed.files:
+  text: 'Version Control: Processing Changed Files'

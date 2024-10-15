@@ -15,6 +15,8 @@
  */
 package consulo.ui.ex.awt;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
 import consulo.ui.image.Image;
@@ -24,68 +26,77 @@ import javax.swing.*;
 import java.awt.*;
 
 public abstract class OptionsMessageDialog extends OptionsDialog {
-  private final String myMessage;
-  private final Image myIcon;
+    private final LocalizeValue myMessage;
+    private final Image myIcon;
 
-  protected OptionsMessageDialog(Project project,
-                                 final String message,
-                                 String title,
-                                 final Image icon) {
-    super(project);
-    myMessage = message;
-    myIcon = icon;
-    setTitle(title);
-    setButtonsAlignment(SwingUtilities.CENTER);
-  }
-
-  protected abstract String getOkActionName();
-
-  protected abstract String getCancelActionName();
-
-  @Override
-  @Nonnull
-  protected Action[] createActions() {
-    final Action okAction = getOKAction();
-    final Action cancelAction = getCancelAction();
-    assignMnemonic(getOkActionName(), okAction);
-    assignMnemonic(getCancelActionName(), cancelAction);
-    return new Action[]{okAction,cancelAction};
-  }
-
-  protected static void assignMnemonic(String option, Action action) {
-    action.putValue(Action.NAME, option);
-
-    int mnemoPos = option.indexOf("&");
-    if (mnemoPos >= 0 && mnemoPos < option.length() - 2) {
-      String mnemoChar = option.substring(mnemoPos + 1, mnemoPos + 2).trim();
-      if (mnemoChar.length() == 1) {
-        action.putValue(Action.MNEMONIC_KEY, (int)mnemoChar.charAt(0));
-      }
-    }
-  }
-
-  @Override
-  protected JComponent createNorthPanel() {
-    JPanel panel = new JPanel(new BorderLayout(15, 0));
-    if (myIcon != null) {
-      JLabel iconLabel = new JBLabel(myIcon);
-      Container container = new Container();
-      container.setLayout(new BorderLayout());
-      container.add(iconLabel, BorderLayout.NORTH);
-      panel.add(container, BorderLayout.WEST);
+    protected OptionsMessageDialog(Project project, @Nonnull LocalizeValue message, @Nonnull LocalizeValue title, final Image icon) {
+        super(project);
+        myMessage = message;
+        myIcon = icon;
+        setTitle(title);
+        setButtonsAlignment(SwingUtilities.CENTER);
     }
 
-    if (myMessage != null) {
-      JLabel textLabel = new JLabel(myMessage);
-      textLabel.setUI(new MultiLineLabelUI());
-      panel.add(textLabel, BorderLayout.CENTER);
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    protected OptionsMessageDialog(Project project, final String message, String title, final Image icon) {
+        this(project, LocalizeValue.ofNullable(message), LocalizeValue.ofNullable(title), icon);
     }
-    return panel;
-  }
 
-  @Override
-  protected JComponent createCenterPanel() {
-    return null;
-  }
+    @Nonnull
+    //TODO: rename to getOkActionName() after deprecation removal and make abstract
+    protected LocalizeValue getOkActionValue() {
+        return LocalizeValue.ofNullable(getOkActionName());
+    }
 
+    @Deprecated
+    @DeprecationInfo("Use #getOkActionValue()")
+    protected String getOkActionName() {
+        return getOkActionValue().get();
+    }
+
+    //TODO: rename to getCancelActionName() after deprecation removal and make abstract
+    protected LocalizeValue getCancelActionValue() {
+        return LocalizeValue.ofNullable(getCancelActionName());
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use #getCancelActionValue()")
+    protected String getCancelActionName() {
+        return getCancelActionValue().get();
+    }
+
+    @Override
+    @Nonnull
+    protected LocalizeAction[] createActions() {
+        LocalizeAction okAction = getOKAction();
+        LocalizeAction cancelAction = getCancelAction();
+        okAction.setText(getOkActionValue());
+        cancelAction.setText(getCancelActionValue());
+        return new LocalizeAction[]{okAction, cancelAction};
+    }
+
+    @Override
+    protected JComponent createNorthPanel() {
+        JPanel panel = new JPanel(new BorderLayout(15, 0));
+        if (myIcon != null) {
+            JLabel iconLabel = new JBLabel(myIcon);
+            Container container = new Container();
+            container.setLayout(new BorderLayout());
+            container.add(iconLabel, BorderLayout.NORTH);
+            panel.add(container, BorderLayout.WEST);
+        }
+
+        if (myMessage != null) {
+            JLabel textLabel = new JLabel(myMessage.get());
+            textLabel.setUI(new MultiLineLabelUI());
+            panel.add(textLabel, BorderLayout.CENTER);
+        }
+        return panel;
+    }
+
+    @Override
+    protected JComponent createCenterPanel() {
+        return null;
+    }
 }

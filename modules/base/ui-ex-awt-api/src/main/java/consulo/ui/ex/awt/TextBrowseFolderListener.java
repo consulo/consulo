@@ -18,6 +18,7 @@ package consulo.ui.ex.awt;
 import consulo.component.ComponentManager;
 import consulo.fileChooser.FileChooserDescriptor;
 
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import javax.swing.*;
@@ -28,7 +29,14 @@ public class TextBrowseFolderListener extends ComponentWithBrowseButton.BrowseFo
   }
 
   public TextBrowseFolderListener(@Nonnull FileChooserDescriptor fileChooserDescriptor, @Nullable ComponentManager project) {
-    super(null, null, null, project, fileChooserDescriptor, TextComponentAccessor.TEXT_FIELD_WHOLE_TEXT);
+    super(
+      LocalizeValue.empty(),
+      LocalizeValue.empty(), 
+      null,
+      project,
+      fileChooserDescriptor,
+      TextComponentAccessor.TEXT_FIELD_WHOLE_TEXT
+    );
   }
 
   void setOwnerComponent(@Nonnull TextFieldWithBrowseButton component) {

@@ -17,6 +17,7 @@ package consulo.ui.ex.awt;
 
 import consulo.component.ComponentManager;
 import consulo.fileChooser.FileChooserDescriptor;
+import consulo.localize.LocalizeValue;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,6 +46,12 @@ public class ComboboxWithBrowseButton extends ComponentWithBrowseButton<JComboBo
   }
 
   public void addBrowseFolderListener(ComponentManager project, FileChooserDescriptor descriptor) {
-    addBrowseFolderListener(null, null, project, descriptor, TextComponentAccessor.STRING_COMBOBOX_WHOLE_TEXT);
+    addBrowseFolderListener(
+      LocalizeValue.empty(),
+      LocalizeValue.empty(),
+      project,
+      descriptor,
+      TextComponentAccessor.STRING_COMBOBOX_WHOLE_TEXT
+    );
   }
 }

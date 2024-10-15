@@ -19,6 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import jakarta.annotation.Nonnull;
@@ -30,59 +31,64 @@ import java.util.function.BooleanSupplier;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface MergeTool {
-  ExtensionPointName<MergeTool> EP_NAME = ExtensionPointName.create(MergeTool.class);
-
-  /**
-   * Creates viewer for the given request. Clients should call {@link #canShow(MergeContext, MergeRequest)} first.
-   */
-  @RequiredUIAccess
-  @Nonnull
-  MergeViewer createComponent(@Nonnull MergeContext context, @Nonnull MergeRequest request);
-
-  boolean canShow(@Nonnull MergeContext context, @Nonnull MergeRequest request);
-
-  /**
-   * Merge viewer should call {@link MergeContext#finishMerge(MergeResult)} when processing is over.
-   *
-   * {@link MergeRequest#applyResult(MergeResult)} will be performed by the caller, so it shouldn't be called by MergeViewer directly.
-   */
-  interface MergeViewer extends Disposable {
-    @Nonnull
-    JComponent getComponent();
-
-    @Nullable
-    JComponent getPreferredFocusedComponent();
+    ExtensionPointName<MergeTool> EP_NAME = ExtensionPointName.create(MergeTool.class);
 
     /**
-     * @return Action that should be triggered on the corresponding action.
-     * <p/>
-     * Typical implementation can perform some checks and either call finishMerge(result) or do nothing
-     * <p/>
-     * return null if action is not available
+     * Creates viewer for the given request. Clients should call {@link #canShow(MergeContext, MergeRequest)} first.
      */
-    @Nullable
-    Action getResolveAction(@Nonnull MergeResult result);
-
-    /**
-     * Should be called after adding {@link #getComponent()} to the components hierarchy.
-     */
-    @Nonnull
     @RequiredUIAccess
-    ToolbarComponents init();
+    @Nonnull
+    MergeViewer createComponent(@Nonnull MergeContext context, @Nonnull MergeRequest request);
 
-    @Override
-    @RequiredUIAccess
-    void dispose();
-  }
+    boolean canShow(@Nonnull MergeContext context, @Nonnull MergeRequest request);
 
-  class ToolbarComponents {
-    @Nullable public List<AnAction> toolbarActions;
-    @Nullable
-    public JComponent statusPanel;
+    record ActionRecord(@Nonnull LocalizeValue title, @Nonnull Runnable onActionPerformed) {
+    }
 
     /**
-     * return false if merge window should be prevented from closing and canceling resolve.
+     * Merge viewer should call {@link MergeContext#finishMerge(MergeResult)} when processing is over.
+     * <p>
+     * {@link MergeRequest#applyResult(MergeResult)} will be performed by the caller, so it shouldn't be called by MergeViewer directly.
      */
-    @Nullable public BooleanSupplier closeHandler;
-  }
+    interface MergeViewer extends Disposable {
+        @Nonnull
+        JComponent getComponent();
+
+        @Nullable
+        JComponent getPreferredFocusedComponent();
+
+        /**
+         * @return Action that should be triggered on the corresponding action.
+         * <p/>
+         * Typical implementation can perform some checks and either call finishMerge(result) or do nothing
+         * <p/>
+         * return null if action is not available
+         */
+        @Nullable
+        ActionRecord getResolveAction(@Nonnull MergeResult result);
+
+        /**
+         * Should be called after adding {@link #getComponent()} to the components hierarchy.
+         */
+        @Nonnull
+        @RequiredUIAccess
+        ToolbarComponents init();
+
+        @Override
+        @RequiredUIAccess
+        void dispose();
+    }
+
+    class ToolbarComponents {
+        @Nullable
+        public List<AnAction> toolbarActions;
+        @Nullable
+        public JComponent statusPanel;
+
+        /**
+         * return false if merge window should be prevented from closing and canceling resolve.
+         */
+        @Nullable
+        public BooleanSupplier closeHandler;
+    }
 }

@@ -212,7 +212,13 @@ public class LanguageEditorPopupFactoryImpl implements LanguageEditorPopupFactor
       }
 
       @Override
-      public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+      public Component getListCellRendererComponent(
+        JList<? extends PsiElement> list,
+        PsiElement value,
+        int index,
+        boolean isSelected,
+        boolean cellHasFocus
+      ) {
         final JPanel component = (JPanel)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         if (!hasMnemonic.get()) return component;
 
@@ -286,7 +292,7 @@ public class LanguageEditorPopupFactoryImpl implements LanguageEditorPopupFactor
 
       @Override
       public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        final Component component = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+        final Component component = renderer.getListCellRendererComponent(list, (PsiElement)value, index, isSelected, cellHasFocus);
         final String separator = separators.get(value);
 
         if (separator != null) {

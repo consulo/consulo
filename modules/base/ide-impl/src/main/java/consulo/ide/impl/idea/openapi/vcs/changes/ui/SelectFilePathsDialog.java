@@ -16,6 +16,8 @@
 
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsShowConfirmationOption;
@@ -31,31 +33,59 @@ import java.util.List;
  * @author yole
  */
 public class SelectFilePathsDialog extends AbstractSelectFilesDialog<FilePath> {
+    private final ChangesTreeList<FilePath> myFileList;
 
-  private final ChangesTreeList<FilePath> myFileList;
-
-  public SelectFilePathsDialog(final Project project, List<FilePath> originalFiles, final String prompt,
-                               final VcsShowConfirmationOption confirmationOption,
-                               @Nullable String okActionName, @Nullable String cancelActionName, boolean showDoNotAskOption) {
-    super(project, false, confirmationOption, prompt, showDoNotAskOption);
-    myFileList = new FilePathChangesTreeList(project, originalFiles, true, true, null, null);
-    if (okActionName != null) {
-      getOKAction().putValue(Action.NAME, okActionName);
+    public SelectFilePathsDialog(
+        final Project project,
+        List<FilePath> originalFiles,
+        final String prompt,
+        final VcsShowConfirmationOption confirmationOption,
+        @Nonnull LocalizeValue okActionName,
+        @Nonnull LocalizeValue cancelActionName,
+        boolean showDoNotAskOption
+    ) {
+        super(project, false, confirmationOption, prompt, showDoNotAskOption);
+        myFileList = new FilePathChangesTreeList(project, originalFiles, true, true, null, null);
+        if (okActionName != LocalizeValue.empty()) {
+            getOKAction().setText(okActionName);
+        }
+        if (cancelActionName != LocalizeValue.empty()) {
+            getCancelAction().setText(cancelActionName);
+        }
+        myFileList.setChangesToDisplay(originalFiles);
+        init();
     }
-    if (cancelActionName != null) {
-      getCancelAction().putValue(Action.NAME, cancelActionName);
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public SelectFilePathsDialog(
+        final Project project,
+        List<FilePath> originalFiles,
+        final String prompt,
+        final VcsShowConfirmationOption confirmationOption,
+        @Nullable String okActionName,
+        @Nullable String cancelActionName,
+        boolean showDoNotAskOption
+    ) {
+        super(project, false, confirmationOption, prompt, showDoNotAskOption);
+        myFileList = new FilePathChangesTreeList(project, originalFiles, true, true, null, null);
+        if (okActionName != null) {
+            getOKAction().putValue(Action.NAME, okActionName);
+        }
+        if (cancelActionName != null) {
+            getCancelAction().putValue(Action.NAME, cancelActionName);
+        }
+        myFileList.setChangesToDisplay(originalFiles);
+        init();
     }
-    myFileList.setChangesToDisplay(originalFiles);
-    init();
-  }
 
-  public List<FilePath> getSelectedFiles() {
-    return List.copyOf(myFileList.getIncludedChanges());
-  }
+    public List<FilePath> getSelectedFiles() {
+        return List.copyOf(myFileList.getIncludedChanges());
+    }
 
-  @Nonnull
-  @Override
-  protected ChangesTreeList getFileList() {
-    return myFileList;
-  }
+    @Nonnull
+    @Override
+    protected ChangesTreeList getFileList() {
+        return myFileList;
+    }
 }

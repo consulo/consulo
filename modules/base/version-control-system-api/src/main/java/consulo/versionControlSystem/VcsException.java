@@ -15,84 +15,114 @@
  */
 package consulo.versionControlSystem;
 
-import consulo.util.collection.ArrayUtil;
+import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
-
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class VcsException extends Exception {
-  public static final VcsException[] EMPTY_ARRAY = new VcsException[0];
+    public static final VcsException[] EMPTY_ARRAY = new VcsException[0];
 
-  private VirtualFile myVirtualFile;
-  private Collection<String> myMessages;
-  private boolean isWarning = false;
+    private VirtualFile myVirtualFile;
+    private Collection<LocalizeValue> myMessages;
+    private boolean isWarning = false;
 
-  public VcsException(String message) {
-    super(message);
-    initMessage(message);
-  }
+    public VcsException(@Nonnull LocalizeValue message) {
+        super(message.get());
+        initMessage(message);
+    }
 
-  private void initMessage(final String message) {
-    String shownMessage = message == null ? VcsBundle.message("exception.text.unknown.error") : message;
-    myMessages = Collections.singleton(shownMessage);
-  }
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public VcsException(String message) {
+        super(message);
+        initMessage(message);
+    }
 
-  public VcsException(Throwable throwable, final boolean isWarning) {
-    this(getMessage(throwable), throwable);
-    this.isWarning = isWarning;
-  }
+    @SuppressWarnings("deprecation")
+    public VcsException(Throwable throwable, final boolean isWarning) {
+        this(getMessage(throwable), throwable);
+        this.isWarning = isWarning;
+    }
 
-  public VcsException(Throwable throwable) {
-    this(throwable, false);
-  }
+    public VcsException(Throwable throwable) {
+        this(throwable, false);
+    }
 
-  public VcsException(final String message, final Throwable cause) {
-    super(message, cause);
-    initMessage(message);
-  }
+    public VcsException(@Nonnull LocalizeValue message, final Throwable cause) {
+        super(message.get(), cause);
+        initMessage(message);
+    }
 
-  public VcsException(final String message, final boolean isWarning) {
-    this(message);
-    this.isWarning = isWarning;
-  }
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public VcsException(final String message, final Throwable cause) {
+        super(message, cause);
+        initMessage(message);
+    }
 
-  public VcsException(Collection<String> messages) {
-    myMessages = messages;
-  }
+    public VcsException(final String message, final boolean isWarning) {
+        this(message);
+        this.isWarning = isWarning;
+    }
 
-  //todo: should be in constructor?
-  public void setVirtualFile(VirtualFile virtualFile) {
-    myVirtualFile = virtualFile;
-  }
+    public VcsException(@Nonnull List<LocalizeValue> messages) {
+        myMessages = List.copyOf(messages);
+    }
 
-  public VirtualFile getVirtualFile() {
-    return myVirtualFile;
-  }
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public VcsException(Collection<String> messages) {
+        myMessages = messages.stream()
+            .map(message -> message == null ? LocalizeValue.empty() : LocalizeValue.of(message))
+            .collect(Collectors.toList());
+    }
 
-  public String[] getMessages() {
-    return ArrayUtil.toStringArray(myMessages);
-  }
+    private void initMessage(@Nonnull LocalizeValue message) {
+        myMessages = List.of(message);
+    }
 
-  public VcsException setIsWarning(boolean warning) {
-    isWarning = warning;
-    return this;
-  }
+    private void initMessage(final String message) {
+        myMessages = List.of(message == null ? VcsLocalize.exceptionTextUnknownError() : LocalizeValue.of(message));
+    }
 
-  public boolean isWarning() {
-    return isWarning;
-  }
+    //todo: should be in constructor?
+    public void setVirtualFile(VirtualFile virtualFile) {
+        myVirtualFile = virtualFile;
+    }
 
-  @Override
-  public String getMessage() {
-    return StringUtil.join(myMessages, ", ");
-  }
+    public VirtualFile getVirtualFile() {
+        return myVirtualFile;
+    }
 
-  @Nullable
-  public static String getMessage(@Nullable Throwable throwable) {
-    return throwable != null ? ObjectUtil.chooseNotNull(throwable.getMessage(), throwable.getLocalizedMessage()) : null;
-  }
+    public String[] getMessages() {
+        return myMessages.stream().map(LocalizeValue::get).toArray(String[]::new);
+    }
+
+    public VcsException setIsWarning(boolean warning) {
+        isWarning = warning;
+        return this;
+    }
+
+    public boolean isWarning() {
+        return isWarning;
+    }
+
+    @Override
+    public String getMessage() {
+        return StringUtil.join(myMessages, ", ");
+    }
+
+    @Nullable
+    public static String getMessage(@Nullable Throwable throwable) {
+        return throwable != null ? ObjectUtil.chooseNotNull(throwable.getMessage(), throwable.getLocalizedMessage()) : null;
+    }
 }

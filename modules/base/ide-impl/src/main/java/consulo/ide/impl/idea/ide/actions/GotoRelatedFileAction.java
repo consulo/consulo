@@ -152,7 +152,13 @@ public class GotoRelatedFileAction extends AnAction {
       }
 
       @Override
-      public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+      public Component getListCellRendererComponent(
+        JList<? extends PsiElement> list,
+        PsiElement value,
+        int index,
+        boolean isSelected,
+        boolean cellHasFocus
+      ) {
         final JPanel component = (JPanel)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         if (!hasMnemonic.get()) return component;
 
@@ -199,7 +205,7 @@ public class GotoRelatedFileAction extends AnAction {
       }
     }) {
     };
-    popup.getList().setCellRenderer(new PopupListElementRenderer(popup) {
+    popup.getList().setCellRenderer(new PopupListElementRenderer<PsiElement>(popup) {
       Map<Object, String> separators = new HashMap<>();
       {
         final ListModel model = popup.getList().getModel();
@@ -221,8 +227,15 @@ public class GotoRelatedFileAction extends AnAction {
           separators.remove(model.getElementAt(0));
         }
       }
+
       @Override
-      public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+      public Component getListCellRendererComponent(
+        JList<? extends PsiElement> list,
+        PsiElement value,
+        int index,
+        boolean isSelected,
+        boolean cellHasFocus
+      ) {
         final Component component = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         final String separator = separators.get(value);
 
