@@ -1,0 +1,82 @@
+attempt.to.modify.read.only.document.error.message:
+  text: Attempt to modify read-only document
+editing.read.only.file.hint:
+  text: File is read-only
+typing.in.editor.command.name:
+  text: Typing
+errors.panel.go.to.errors.first.radio:
+  text: Go to high priority problems only
+errors.panel.go.to.next.error.warning.radio:
+  text: Go to next problem
+customize.highlighting.level.menu.item:
+  text: Customize Highlighting Level
+move.caret.command.name:
+  text: Move caret
+guarded.block.modification.attempt.error.message:
+  text: Unable to perform an action since it changes read-only fragments of the current document
+guarded.block.modification.attempt.error.title:
+  text: Guarded Block Modification Attempt
+close.editor.annotations.action.name:
+  text: Close Annotations
+editor.annotations.action.group.name:
+  text: Annotations
+move.cursor.command.name:
+  text: Move Cursor
+paste.command.name:
+  text: Paste
+move.selection.command.name:
+  text: Move selection
+typing.command.name:
+  text: Typing
+hector.import.popup.checkbox:
+  text: Import &popup
+hector.highlighting.level.title:
+  text: Highlighting Level
+hector.none.slider.label:
+  text: None
+hector.syntax.slider.label:
+  text: Syntax
+hector.inspections.slider.label:
+  text: Inspections
+action.duplicate.selection:
+  text: '&Duplicate Selection'
+action.duplicate.line:
+  text: '&Duplicate Line'
+increase.editor.font:
+  text: Increase Font Size
+decrease.editor.font:
+  text: Decrease Font Size
+forced.soft.wrap.message:
+  text: This document contains very long lines. Soft wraps were forcibly enabled to improve editor performance.
+forced.soft.wrap.hide.message:
+  text: Hide notification
+forced.soft.wrap.dont.show.again.message:
+  text: Don't show again
+editor.notification.default.action.name:
+  text: Notification actions
+editor.notification.settings.option.name:
+  text: Settings...
+editor.open.file.progress:
+  text: Opening {0}
+editing.viewer.hint:
+  text: This view is read-only
+iw.show.import.tooltip:
+  text: Show Auto-Import Tooltip
+iw.compact.view:
+  text: Compact View
+iw.highlight.label:
+  text: 'Highlight:'
+iw.disable.powersave:
+  text: Disable power save mode
+iw.level.none:
+  text: None
+iw.level.errors:
+  text: Errors Only
+iw.level.all:
+  text: All Problems
+iw.open.problems.view:
+  text: Open Problems View
+iw.found.so.far.suffix:
+  text: found so far
+checkbox.show.editor.preview.popup:
+  text: Show editor preview tooltip
