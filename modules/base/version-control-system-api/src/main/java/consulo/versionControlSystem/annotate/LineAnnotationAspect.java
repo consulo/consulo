@@ -29,39 +29,40 @@ import jakarta.annotation.Nullable;
  * @see FileAnnotation#getAspects()
  */
 public interface LineAnnotationAspect {
-  String AUTHOR = VcsBundle.message("line.annotation.aspect.author");
-  String DATE = VcsBundle.message("line.annotation.aspect.date");
-  String REVISION = VcsBundle.message("line.annotation.aspect.revision");
-  /**
-   * Get annotation text for the specific line number
-   *
-   * @param line the line number to query
-   * @return the annotation text
-   */
-  String getValue(int line);
+    String AUTHOR = VcsBundle.message("line.annotation.aspect.author");
+    String DATE = VcsBundle.message("line.annotation.aspect.date");
+    String REVISION = VcsBundle.message("line.annotation.aspect.revision");
 
-  /**
-   * Used to show a tooltip for specific line or group of lines
-   *
-   * @param line the line number to query
-   * @return the tooltip text for the line
-   */
-  @Nullable
-  String getTooltipText(int line);
+    /**
+     * Get annotation text for the specific line number
+     *
+     * @param line the line number to query
+     * @return the annotation text
+     */
+    String getValue(int line);
 
-  /**
-   * Returns unique identifier, that will be used to show/hide some aspects
-   * If <code>null</code> this line aspect won't be configurable in annotation settings
-   *
-   * @return unique id
-   */
-  @Nullable
-  String getId();
+    /**
+     * Used to show a tooltip for specific line or group of lines
+     *
+     * @param line the line number to query
+     * @return the tooltip text for the line
+     */
+    @Nullable
+    String getTooltipText(int line);
 
-  /**
-   * Returns <code>true</code> if this aspect will be shown on Annotate action
-   *
-   * @return <code>true</code> if this aspect will be shown on Annotate action
-   */
-  boolean isShowByDefault();
+    /**
+     * Returns unique identifier, that will be used to show/hide some aspects
+     * If <code>null</code> this line aspect won't be configurable in annotation settings
+     *
+     * @return unique id
+     */
+    @Nullable
+    String getId();
+
+    /**
+     * Returns <code>true</code> if this aspect will be shown on Annotate action
+     *
+     * @return <code>true</code> if this aspect will be shown on Annotate action
+     */
+    boolean isShowByDefault();
 }

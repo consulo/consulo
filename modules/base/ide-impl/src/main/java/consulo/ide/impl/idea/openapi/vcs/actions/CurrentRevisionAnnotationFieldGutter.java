@@ -35,43 +35,45 @@ import java.util.function.Consumer;
  * @author Konstantin Bulenkov
  */
 class CurrentRevisionAnnotationFieldGutter extends AspectAnnotationFieldGutter implements Consumer<AnnotationSource> {
-  // merge source showing is turned on
-  private boolean myTurnedOn;
+    // merge source showing is turned on
+    private boolean myTurnedOn;
 
-  CurrentRevisionAnnotationFieldGutter(FileAnnotation annotation,
-                                       LineAnnotationAspect aspect,
-                                       TextAnnotationPresentation highlighting,
-                                       Couple<Map<VcsRevisionNumber, ColorValue>> colorScheme) {
-    super(annotation, aspect, highlighting, colorScheme);
-  }
-
-  @Override
-  public EditorColorKey getColor(int line, Editor editor) {
-    return AnnotationSource.LOCAL.getColor();
-  }
-
-  @Override
-  public String getLineText(int line, Editor editor) {
-    final String value = myAspect.getValue(line);
-    if (String.valueOf(myAnnotation.getLineRevisionNumber(line)).equals(value)) {
-      return "";
+    CurrentRevisionAnnotationFieldGutter(
+        FileAnnotation annotation,
+        LineAnnotationAspect aspect,
+        TextAnnotationPresentation highlighting,
+        Couple<Map<VcsRevisionNumber, ColorValue>> colorScheme
+    ) {
+        super(annotation, aspect, highlighting, colorScheme);
     }
-    // shown in merge sources mode
-    return myTurnedOn ? value : "";
-  }
 
-  @Override
-  public String getToolTip(int line, Editor editor) {
-    final String aspectTooltip = myAspect.getTooltipText(line);
-    if (aspectTooltip != null) {
-      return aspectTooltip;
+    @Override
+    public EditorColorKey getColor(int line, Editor editor) {
+        return AnnotationSource.LOCAL.getColor();
     }
-    final String text = getLineText(line, editor);
-    return ((text == null) || (text.length() == 0)) ? "" : VcsBundle.message("annotation.original.revision.text", text);
-  }
 
-  @Override
-  public void accept(final AnnotationSource annotationSource) {
-    myTurnedOn = annotationSource.showMerged();
-  }
+    @Override
+    public String getLineText(int line, Editor editor) {
+        final String value = myAspect.getValue(line);
+        if (String.valueOf(myAnnotation.getLineRevisionNumber(line)).equals(value)) {
+            return "";
+        }
+        // shown in merge sources mode
+        return myTurnedOn ? value : "";
+    }
+
+    @Override
+    public String getToolTip(int line, Editor editor) {
+        final String aspectTooltip = myAspect.getTooltipText(line);
+        if (aspectTooltip != null) {
+            return aspectTooltip;
+        }
+        final String text = getLineText(line, editor);
+        return ((text == null) || (text.length() == 0)) ? "" : VcsBundle.message("annotation.original.revision.text", text);
+    }
+
+    @Override
+    public void accept(final AnnotationSource annotationSource) {
+        myTurnedOn = annotationSource.showMerged();
+    }
 }

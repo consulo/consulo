@@ -25,64 +25,64 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public abstract class DiffGutterRenderer extends GutterIconRenderer {
-  @Nonnull
-  private final Image myIcon;
-  @Nullable
-  private final String myTooltip;
+    @Nonnull
+    private final Image myIcon;
+    @Nullable
+    private final String myTooltip;
 
-  public DiffGutterRenderer(@Nonnull Image icon, @Nullable String tooltip) {
-    myIcon = icon;
-    myTooltip = tooltip;
-  }
+    public DiffGutterRenderer(@Nonnull Image icon, @Nullable String tooltip) {
+        myIcon = icon;
+        myTooltip = tooltip;
+    }
 
-  @Nonnull
-  @Override
-  public Image getIcon() {
-    return myIcon;
-  }
+    @Nonnull
+    @Override
+    public Image getIcon() {
+        return myIcon;
+    }
 
-  @Nullable
-  @Override
-  public String getTooltipText() {
-    return myTooltip;
-  }
+    @Nullable
+    @Override
+    public String getTooltipText() {
+        return myTooltip;
+    }
 
-  @Override
-  public boolean isNavigateAction() {
-    return true;
-  }
+    @Override
+    public boolean isNavigateAction() {
+        return true;
+    }
 
-  @Override
-  public boolean isDumbAware() {
-    return true;
-  }
+    @Override
+    public boolean isDumbAware() {
+        return true;
+    }
 
-  @Nonnull
-  @Override
-  public Alignment getAlignment() {
-    return Alignment.LEFT;
-  }
+    @Nonnull
+    @Override
+    public Alignment getAlignment() {
+        return Alignment.LEFT;
+    }
 
-  @Nullable
-  @Override
-  public AnAction getClickAction() {
-    return new DumbAwareAction() {
-      @Override
-      public void actionPerformed(AnActionEvent e) {
-        performAction(e);
-      }
-    };
-  }
+    @Nullable
+    @Override
+    public AnAction getClickAction() {
+        return new DumbAwareAction() {
+            @Override
+            public void actionPerformed(AnActionEvent e) {
+                performAction(e);
+            }
+        };
+    }
 
-  @Override
-  public boolean equals(Object obj) {
-    return obj == this;
-  }
+    @Override
+    public boolean equals(Object obj) {
+        return obj == this;
+    }
 
-  @Override
-  public int hashCode() {
-    return System.identityHashCode(this);
-  }
+    @Override
+    public int hashCode() {
+        return System.identityHashCode(this);
+    }
 
-  protected abstract void performAction(AnActionEvent e);
+    protected abstract void performAction(AnActionEvent e);
 }

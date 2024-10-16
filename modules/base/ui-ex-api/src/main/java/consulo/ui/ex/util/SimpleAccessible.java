@@ -8,15 +8,15 @@ import jakarta.annotation.Nullable;
  * Provides a minimal accessible information about the object.
  */
 public interface SimpleAccessible {
-  /**
-   * Returns a human-readable string that designates the purpose of the object.
-   */
-  @Nonnull
-  String getAccessibleName();
+    /**
+     * Returns a human-readable string that designates the purpose of the object.
+     */
+    @Nonnull
+    String getAccessibleName();
 
-  /**
-   * Returns the tooltip text or null when the tooltip is not available
-   */
-  @Nullable
-  String getAccessibleTooltipText();
+    /**
+     * Returns the tooltip text or null when the tooltip is not available
+     */
+    @Nullable
+    String getAccessibleTooltipText();
 }

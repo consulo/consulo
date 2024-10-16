@@ -15,19 +15,19 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
-import consulo.ui.ex.action.AnAction;
 import consulo.codeEditor.Editor;
 import consulo.colorScheme.EditorColorKey;
 import consulo.colorScheme.EditorFontType;
+import consulo.ide.impl.idea.openapi.vcs.annotate.TextAnnotationPresentation;
+import consulo.ui.color.ColorValue;
+import consulo.ui.ex.action.AnAction;
 import consulo.util.lang.Couple;
 import consulo.versionControlSystem.annotate.FileAnnotation;
-import consulo.ide.impl.idea.openapi.vcs.annotate.TextAnnotationPresentation;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.versionControlSystem.util.VcsUtil;
-import consulo.ui.color.ColorValue;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 import java.util.List;
 import java.util.Map;
@@ -37,88 +37,96 @@ import java.util.Map;
  * @author Konstantin Bulenkov
  */
 public abstract class AnnotationFieldGutter implements ActiveAnnotationGutter {
-  @Nonnull
-  protected final FileAnnotation myAnnotation;
-  @Nonnull
-  private final TextAnnotationPresentation myPresentation;
-  @Nullable
-  private Couple<Map<VcsRevisionNumber, ColorValue>> myColorScheme;
+    @Nonnull
+    protected final FileAnnotation myAnnotation;
+    @Nonnull
+    private final TextAnnotationPresentation myPresentation;
+    @Nullable
+    private Couple<Map<VcsRevisionNumber, ColorValue>> myColorScheme;
 
-  AnnotationFieldGutter(@Nonnull FileAnnotation annotation,
-                        @Nonnull TextAnnotationPresentation presentation,
-                        @Nullable Couple<Map<VcsRevisionNumber, ColorValue>> colorScheme) {
-    myAnnotation = annotation;
-    myPresentation = presentation;
-    myColorScheme = colorScheme;
-  }
+    AnnotationFieldGutter(
+        @Nonnull FileAnnotation annotation,
+        @Nonnull TextAnnotationPresentation presentation,
+        @Nullable Couple<Map<VcsRevisionNumber, ColorValue>> colorScheme
+    ) {
+        myAnnotation = annotation;
+        myPresentation = presentation;
+        myColorScheme = colorScheme;
+    }
 
-  public boolean isGutterAction() {
-    return false;
-  }
+    public boolean isGutterAction() {
+        return false;
+    }
 
-  @Nullable
-  @Override
-  public String getToolTip(final int line, final Editor editor) {
-    return null;
-  }
+    @Nullable
+    @Override
+    public String getToolTip(final int line, final Editor editor) {
+        return null;
+    }
 
-  @Override
-  public void doAction(int line) {
-  }
+    @Override
+    public void doAction(int line) {
+    }
 
-  @Override
-  public Cursor getCursor(final int line) {
-    return Cursor.getDefaultCursor();
-  }
+    @Override
+    public Cursor getCursor(final int line) {
+        return Cursor.getDefaultCursor();
+    }
 
-  @Override
-  public EditorFontType getStyle(final int line, final Editor editor) {
-    return myPresentation.getFontType(line);
-  }
+    @Override
+    public EditorFontType getStyle(final int line, final Editor editor) {
+        return myPresentation.getFontType(line);
+    }
 
-  @Nullable
-  @Override
-  public EditorColorKey getColor(final int line, final Editor editor) {
-    return myPresentation.getColor(line);
-  }
+    @Nullable
+    @Override
+    public EditorColorKey getColor(final int line, final Editor editor) {
+        return myPresentation.getColor(line);
+    }
 
-  @Override
-  public List<AnAction> getPopupActions(int line, final Editor editor) {
-    return myPresentation.getActions(line);
-  }
+    @Override
+    public List<AnAction> getPopupActions(int line, final Editor editor) {
+        return myPresentation.getActions(line);
+    }
 
-  @Override
-  public void gutterClosed() {
-    myPresentation.gutterClosed();
-  }
+    @Override
+    public void gutterClosed() {
+        myPresentation.gutterClosed();
+    }
 
-  @Nullable
-  @Override
-  public ColorValue getBgColor(int line, Editor editor) {
-    if (myColorScheme == null) return null;
-    ColorMode type = ShowAnnotationColorsAction.getType();
-    Map<VcsRevisionNumber, ColorValue> colorMap = type == ColorMode.AUTHOR ? myColorScheme.second : myColorScheme.first;
-    if (colorMap == null || type == ColorMode.NONE) return null;
-    final VcsRevisionNumber number = myAnnotation.getLineRevisionNumber(line);
-    if (number == null) return null;
-    return colorMap.get(number);
-  }
+    @Nullable
+    @Override
+    public ColorValue getBgColor(int line, Editor editor) {
+        if (myColorScheme == null) {
+            return null;
+        }
+        ColorMode type = ShowAnnotationColorsAction.getType();
+        Map<VcsRevisionNumber, ColorValue> colorMap = type == ColorMode.AUTHOR ? myColorScheme.second : myColorScheme.first;
+        if (colorMap == null || type == ColorMode.NONE) {
+            return null;
+        }
+        final VcsRevisionNumber number = myAnnotation.getLineRevisionNumber(line);
+        if (number == null) {
+            return null;
+        }
+        return colorMap.get(number);
+    }
 
-  public boolean isShowByDefault() {
-    return true;
-  }
+    public boolean isShowByDefault() {
+        return true;
+    }
 
-  public boolean isAvailable() {
-    return VcsUtil.isAspectAvailableByDefault(getID(), isShowByDefault());
-  }
+    public boolean isAvailable() {
+        return VcsUtil.isAspectAvailableByDefault(getID(), isShowByDefault());
+    }
 
-  @Nullable
-  public String getID() {
-    return null;
-  }
+    @Nullable
+    public String getID() {
+        return null;
+    }
 
-  @Override
-  public int getLeftMargin() {
-    return 0;
-  }
+    @Override
+    public int getLeftMargin() {
+        return 0;
+    }
 }

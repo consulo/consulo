@@ -33,146 +33,154 @@ import java.util.List;
  * Author: msk
  */
 public abstract class RefactoringDialog extends DialogWrapper {
+    private Action myRefactorAction;
+    private Action myPreviewAction;
+    private boolean myCbPreviewResults;
+    protected final Project myProject;
 
-  private Action myRefactorAction;
-  private Action myPreviewAction;
-  private boolean myCbPreviewResults;
-  protected final Project myProject;
-
-  protected RefactoringDialog(@Nonnull Project project, boolean canBeParent) {
-    super (project, canBeParent);
-    myCbPreviewResults = true;
-    myProject = project;
-  }
-
-  public final boolean isPreviewUsages() {
-    return myCbPreviewResults;
-  }
-
-  public void setPreviewResults(boolean previewResults) {
-    myCbPreviewResults = previewResults;
-  }
-
-  @Override
-  protected void createDefaultActions() {
-    super.createDefaultActions ();
-    myRefactorAction = new RefactorAction();
-    myPreviewAction = new PreviewAction();
-  }
-
-  /**
-   * @return default implementation of "Refactor" action.
-   */
-  protected final Action getRefactorAction() {
-    return myRefactorAction;
-  }
-
-  /**
-   * @return default implementation of "Preview" action.
-   */
-  protected final Action getPreviewAction() {
-    return myPreviewAction;
-  }
-
-  protected abstract void doAction();
-
-  private void doPreviewAction () {
-    myCbPreviewResults = true;
-    doAction();
-  }
-
-  protected void doRefactorAction () {
-    myCbPreviewResults = false;
-    doAction();
-  }
-
-  protected final void closeOKAction() { super.doOKAction(); }
-
-  @Override
-  protected final void doOKAction() {
-    doAction();
-  }
-
-  protected boolean areButtonsValid () { return true; }
-
-  protected void canRun() throws ConfigurationException{
-    if (!areButtonsValid()) throw new ConfigurationException(null);
-  }
-
-  protected void validateButtons() {
-    boolean enabled = true;
-    try {
-      setErrorText(null);
-      canRun();
+    protected RefactoringDialog(@Nonnull Project project, boolean canBeParent) {
+        super(project, canBeParent);
+        myCbPreviewResults = true;
+        myProject = project;
     }
-    catch (ConfigurationException e) {
-      enabled = false;
-      setErrorText(e.getMessage());
+
+    public final boolean isPreviewUsages() {
+        return myCbPreviewResults;
     }
-    getPreviewAction().setEnabled(enabled);
-    getRefactorAction().setEnabled(enabled);
-  }
 
-  protected boolean hasHelpAction () {
-    return true;
-  }
-
-  protected boolean hasPreviewButton() {
-    return true;
-  }
-
-  @Override
-  @Nonnull
-  protected Action[] createActions() {
-    List<Action> actions = new ArrayList<>();
-    actions.add(getRefactorAction());
-    if (hasPreviewButton()) actions.add(getPreviewAction());
-    actions.add(getCancelAction());
-
-    if (hasHelpAction ())
-      actions.add(getHelpAction());
-
-    if (Platform.current().os().isMac()) {
-      Collections.reverse(actions);
-    }
-    return actions.toArray(new Action[actions.size()]);
-  }
-
-  protected Project getProject() {
-    return myProject;
-  }
-
-  private class RefactorAction extends AbstractAction {
-    public RefactorAction() {
-      putValue(Action.NAME, RefactoringLocalize.refactorButton().get());
-      putValue(DEFAULT_ACTION, Boolean.TRUE);
+    public void setPreviewResults(boolean previewResults) {
+        myCbPreviewResults = previewResults;
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-      doRefactorAction ();
+    protected void createDefaultActions() {
+        super.createDefaultActions();
+        myRefactorAction = new RefactorAction();
+        myPreviewAction = new PreviewAction();
     }
-  }
 
-  private class PreviewAction extends AbstractAction {
-    public PreviewAction() {
-      putValue(Action.NAME, RefactoringLocalize.previewButton().get());
+    /**
+     * @return default implementation of "Refactor" action.
+     */
+    protected final Action getRefactorAction() {
+        return myRefactorAction;
+    }
 
-      if (Platform.current().os().isMac()) {
-        putValue(FOCUSED_ACTION, Boolean.TRUE);
-      }
+    /**
+     * @return default implementation of "Preview" action.
+     */
+    protected final Action getPreviewAction() {
+        return myPreviewAction;
+    }
+
+    protected abstract void doAction();
+
+    private void doPreviewAction() {
+        myCbPreviewResults = true;
+        doAction();
+    }
+
+    protected void doRefactorAction() {
+        myCbPreviewResults = false;
+        doAction();
+    }
+
+    protected final void closeOKAction() {
+        super.doOKAction();
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-      doPreviewAction ();
+    protected final void doOKAction() {
+        doAction();
     }
-  }
 
-  protected void invokeRefactoring(BaseRefactoringProcessor processor) {
-    final Runnable prepareSuccessfulCallback = () -> close(DialogWrapper.OK_EXIT_CODE);
-    processor.setPrepareSuccessfulSwingThreadCallback(prepareSuccessfulCallback);
-    processor.setPreviewUsages(isPreviewUsages());
-    processor.run();
-  }
+    protected boolean areButtonsValid() {
+        return true;
+    }
+
+    protected void canRun() throws ConfigurationException {
+        if (!areButtonsValid()) {
+            throw new ConfigurationException(null);
+        }
+    }
+
+    protected void validateButtons() {
+        boolean enabled = true;
+        try {
+            setErrorText(null);
+            canRun();
+        }
+        catch (ConfigurationException e) {
+            enabled = false;
+            setErrorText(e.getMessage());
+        }
+        getPreviewAction().setEnabled(enabled);
+        getRefactorAction().setEnabled(enabled);
+    }
+
+    protected boolean hasHelpAction() {
+        return true;
+    }
+
+    protected boolean hasPreviewButton() {
+        return true;
+    }
+
+    @Override
+    @Nonnull
+    protected Action[] createActions() {
+        List<Action> actions = new ArrayList<>();
+        actions.add(getRefactorAction());
+        if (hasPreviewButton()) {
+            actions.add(getPreviewAction());
+        }
+        actions.add(getCancelAction());
+
+        if (hasHelpAction()) {
+            actions.add(getHelpAction());
+        }
+
+        if (Platform.current().os().isMac()) {
+            Collections.reverse(actions);
+        }
+        return actions.toArray(new Action[actions.size()]);
+    }
+
+    protected Project getProject() {
+        return myProject;
+    }
+
+    private class RefactorAction extends AbstractAction {
+        public RefactorAction() {
+            putValue(Action.NAME, RefactoringLocalize.refactorButton().get());
+            putValue(DEFAULT_ACTION, Boolean.TRUE);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            doRefactorAction();
+        }
+    }
+
+    private class PreviewAction extends AbstractAction {
+        public PreviewAction() {
+            putValue(Action.NAME, RefactoringLocalize.previewButton().get());
+
+            if (Platform.current().os().isMac()) {
+                putValue(FOCUSED_ACTION, Boolean.TRUE);
+            }
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            doPreviewAction();
+        }
+    }
+
+    protected void invokeRefactoring(BaseRefactoringProcessor processor) {
+        final Runnable prepareSuccessfulCallback = () -> close(DialogWrapper.OK_EXIT_CODE);
+        processor.setPrepareSuccessfulSwingThreadCallback(prepareSuccessfulCallback);
+        processor.setPreviewUsages(isPreviewUsages());
+        processor.run();
+    }
 }

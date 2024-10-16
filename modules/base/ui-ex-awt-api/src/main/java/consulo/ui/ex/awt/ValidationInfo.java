@@ -19,6 +19,7 @@ import consulo.util.lang.StringUtil;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 
 /**
@@ -28,59 +29,66 @@ import javax.swing.*;
  * @see DialogWrapper#doValidate()
  */
 public final class ValidationInfo {
-  @Nonnull
-  public final String message;
+    @Nonnull
+    public final String message;
 
-  @Nullable
-  public final JComponent component;
+    @Nullable
+    public final JComponent component;
 
-  public boolean okEnabled;
-  public boolean warning;
+    public boolean okEnabled;
+    public boolean warning;
 
-  /**
-   * Creates a validation error message associated with a specific component. The component will have an error icon drawn next to it,
-   * and will be focused when the user tries to close the dialog by pressing OK.
-   *
-   * @param message   the error message to display.
-   * @param component the component containing the invalid data.
-   */
-  public ValidationInfo(@Nonnull String message, @Nullable JComponent component) {
-    this.message = message;
-    this.component = component;
-  }
+    /**
+     * Creates a validation error message associated with a specific component. The component will have an error icon drawn next to it,
+     * and will be focused when the user tries to close the dialog by pressing OK.
+     *
+     * @param message   the error message to display.
+     * @param component the component containing the invalid data.
+     */
+    public ValidationInfo(@Nonnull String message, @Nullable JComponent component) {
+        this.message = message;
+        this.component = component;
+    }
 
-  /**
-   * Creates a validation error message not associated with a specific component.
-   *
-   * @param message the error message to display.
-   */
-  public ValidationInfo(@Nonnull String message) {
-    this(message, null);
-  }
+    /**
+     * Creates a validation error message not associated with a specific component.
+     *
+     * @param message the error message to display.
+     */
+    public ValidationInfo(@Nonnull String message) {
+        this(message, null);
+    }
 
-  public ValidationInfo withOKEnabled() {
-    okEnabled = true;
-    return this;
-  }
+    public ValidationInfo withOKEnabled() {
+        okEnabled = true;
+        return this;
+    }
 
-  public ValidationInfo asWarning() {
-    warning = true;
-    return this;
-  }
+    public ValidationInfo asWarning() {
+        warning = true;
+        return this;
+    }
 
-  public ValidationInfo forComponent(@Nullable JComponent component) {
-    ValidationInfo result = new ValidationInfo(message, component);
-    result.warning = warning;
-    result.okEnabled = okEnabled;
-    return result;
-  }
+    public ValidationInfo forComponent(@Nullable JComponent component) {
+        ValidationInfo result = new ValidationInfo(message, component);
+        result.warning = warning;
+        result.okEnabled = okEnabled;
+        return result;
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof ValidationInfo)) return false;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof ValidationInfo)) {
+            return false;
+        }
 
-    ValidationInfo that = (ValidationInfo)o;
-    return StringUtil.equals(this.message, that.message) && this.component == that.component && this.okEnabled == that.okEnabled && this.warning == that.warning;
-  }
+        ValidationInfo that = (ValidationInfo)o;
+        return StringUtil.equals(this.message, that.message)
+            && this.component == that.component
+            && this.okEnabled == that.okEnabled
+            && this.warning == that.warning;
+    }
 }

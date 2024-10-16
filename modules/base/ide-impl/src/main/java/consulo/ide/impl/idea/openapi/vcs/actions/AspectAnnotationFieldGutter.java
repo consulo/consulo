@@ -17,16 +17,16 @@ package consulo.ide.impl.idea.openapi.vcs.actions;
 
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorGutterAction;
+import consulo.ide.impl.idea.openapi.vcs.annotate.TextAnnotationPresentation;
+import consulo.ide.impl.idea.xml.util.XmlStringUtil;
+import consulo.ui.color.ColorValue;
 import consulo.util.lang.Couple;
 import consulo.versionControlSystem.annotate.FileAnnotation;
 import consulo.versionControlSystem.annotate.LineAnnotationAspect;
-import consulo.ide.impl.idea.openapi.vcs.annotate.TextAnnotationPresentation;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
-import consulo.ide.impl.idea.xml.util.XmlStringUtil;
-import consulo.ui.color.ColorValue;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 import java.util.Map;
 
@@ -35,62 +35,64 @@ import java.util.Map;
  * @author Konstantin Bulenkov
  */
 public class AspectAnnotationFieldGutter extends AnnotationFieldGutter {
-  @Nonnull
-  protected final LineAnnotationAspect myAspect;
-  private final boolean myIsGutterAction;
+    @Nonnull
+    protected final LineAnnotationAspect myAspect;
+    private final boolean myIsGutterAction;
 
-  public AspectAnnotationFieldGutter(@Nonnull FileAnnotation annotation,
-                                     @Nonnull LineAnnotationAspect aspect,
-                                     @Nonnull TextAnnotationPresentation presentation,
-                                     @Nullable Couple<Map<VcsRevisionNumber, ColorValue>> colorScheme) {
-    super(annotation, presentation, colorScheme);
-    myAspect = aspect;
-    myIsGutterAction = myAspect instanceof EditorGutterAction;
-  }
-
-  @Override
-  public boolean isGutterAction() {
-    return myIsGutterAction;
-  }
-
-  @Override
-  public String getLineText(int line, Editor editor) {
-    final String value = isAvailable() ? myAspect.getValue(line) : "";
-    if (myAspect.getId() == LineAnnotationAspect.AUTHOR) {
-      return ShortNameType.shorten(value, ShowShortenNames.getType());
+    public AspectAnnotationFieldGutter(
+        @Nonnull FileAnnotation annotation,
+        @Nonnull LineAnnotationAspect aspect,
+        @Nonnull TextAnnotationPresentation presentation,
+        @Nullable Couple<Map<VcsRevisionNumber, ColorValue>> colorScheme
+    ) {
+        super(annotation, presentation, colorScheme);
+        myAspect = aspect;
+        myIsGutterAction = myAspect instanceof EditorGutterAction;
     }
-    return value;
-  }
 
-  @Nullable
-  @Override
-  public String getToolTip(final int line, final Editor editor) {
-    return isAvailable() ? XmlStringUtil.escapeString(myAnnotation.getToolTip(line)) : null;
-  }
-
-  @Override
-  public void doAction(int line) {
-    if (myIsGutterAction) {
-      ((EditorGutterAction)myAspect).doAction(line);
+    @Override
+    public boolean isGutterAction() {
+        return myIsGutterAction;
     }
-  }
 
-  @Override
-  public Cursor getCursor(final int line) {
-    if (myIsGutterAction) {
-      return ((EditorGutterAction)myAspect).getCursor(line);
+    @Override
+    public String getLineText(int line, Editor editor) {
+        final String value = isAvailable() ? myAspect.getValue(line) : "";
+        if (myAspect.getId() == LineAnnotationAspect.AUTHOR) {
+            return ShortNameType.shorten(value, ShowShortenNames.getType());
+        }
+        return value;
     }
-    return super.getCursor(line);
-  }
 
-  @Override
-  public boolean isShowByDefault() {
-    return myAspect.isShowByDefault();
-  }
+    @Nullable
+    @Override
+    public String getToolTip(final int line, final Editor editor) {
+        return isAvailable() ? XmlStringUtil.escapeString(myAnnotation.getToolTip(line)) : null;
+    }
 
-  @Nullable
-  @Override
-  public String getID() {
-    return myAspect.getId();
-  }
+    @Override
+    public void doAction(int line) {
+        if (myIsGutterAction) {
+            ((EditorGutterAction)myAspect).doAction(line);
+        }
+    }
+
+    @Override
+    public Cursor getCursor(final int line) {
+        if (myIsGutterAction) {
+            return ((EditorGutterAction)myAspect).getCursor(line);
+        }
+        return super.getCursor(line);
+    }
+
+    @Override
+    public boolean isShowByDefault() {
+        return myAspect.isShowByDefault();
+    }
+
+    @Nullable
+    @Override
+    public String getID() {
+        return myAspect.getId();
+    }
 }

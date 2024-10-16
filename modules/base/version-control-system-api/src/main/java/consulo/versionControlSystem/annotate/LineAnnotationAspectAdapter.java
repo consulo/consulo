@@ -23,46 +23,46 @@ import java.awt.*;
  * @author Konstantin Bulenkov
  */
 public abstract class LineAnnotationAspectAdapter implements LineAnnotationAspect, EditorGutterAction {
-  private final String myId;
-  private final boolean myShowByDefault;
+    private final String myId;
+    private final boolean myShowByDefault;
 
-  protected LineAnnotationAspectAdapter() {
-    this(null, false);
-  }
+    protected LineAnnotationAspectAdapter() {
+        this(null, false);
+    }
 
-  protected LineAnnotationAspectAdapter(String id) {
-    this(id, false);
-  }
+    protected LineAnnotationAspectAdapter(String id) {
+        this(id, false);
+    }
 
-  public LineAnnotationAspectAdapter(String id, boolean showByDefault) {
-    myId = id;
-    myShowByDefault = showByDefault;
-  }
+    public LineAnnotationAspectAdapter(String id, boolean showByDefault) {
+        myId = id;
+        myShowByDefault = showByDefault;
+    }
 
-  @Override
-  public String getTooltipText(int lineNumber) {
-    return null;
-  }
+    @Override
+    public String getTooltipText(int lineNumber) {
+        return null;
+    }
 
-  @Override
-  public String getId() {
-    return myId;
-  }
+    @Override
+    public String getId() {
+        return myId;
+    }
 
-  @Override
-  public boolean isShowByDefault() {
-    return myShowByDefault;
-  }
+    @Override
+    public boolean isShowByDefault() {
+        return myShowByDefault;
+    }
 
-  @Override
-  public Cursor getCursor(final int lineNum) {
-    return Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
-  }
+    @Override
+    public Cursor getCursor(final int lineNum) {
+        return Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+    }
 
-  @Override
-  public void doAction(int lineNum) {
-    showAffectedPaths(lineNum);
-  }
+    @Override
+    public void doAction(int lineNum) {
+        showAffectedPaths(lineNum);
+    }
 
-  protected abstract void showAffectedPaths(int lineNum);
+    protected abstract void showAffectedPaths(int lineNum);
 }

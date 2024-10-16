@@ -8,20 +8,20 @@ import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 public class FindDialog {
-  /**
-   * @deprecated use {@link FindInProjectUtil#initFileFilter(JComboBox, JCheckBox)}
-   */
-  @Deprecated
-  public static void initFileFilter(@Nonnull final JComboBox<? super String> fileFilter, @Nonnull final JCheckBox useFileFilter) {
-    FindInProjectUtil.initFileFilter(fileFilter, useFileFilter);
-  }
+    /**
+     * @deprecated use {@link FindInProjectUtil#initFileFilter(JComboBox, JCheckBox)}
+     */
+    @Deprecated
+    public static void initFileFilter(@Nonnull final JComboBox<? super String> fileFilter, @Nonnull final JCheckBox useFileFilter) {
+        FindInProjectUtil.initFileFilter(fileFilter, useFileFilter);
+    }
 
-  /**
-   * @deprecated use {@link FindInProjectUtil#getPresentableName(FindModel.SearchContext)}
-   */
-  @Deprecated
-  public static String getPresentableName(@Nonnull FindModel.SearchContext searchContext) {
-    return FindInProjectUtil.getPresentableName(searchContext);
-  }
+    /**
+     * @deprecated use {@link FindInProjectUtil#getPresentableName(FindModel.SearchContext)}
+     */
+    @Deprecated
+    public static String getPresentableName(@Nonnull FindModel.SearchContext searchContext) {
+        return FindInProjectUtil.getPresentableName(searchContext);
+    }
 }
 
