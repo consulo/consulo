@@ -23,13 +23,14 @@ import consulo.colorScheme.TextAttributes;
 import consulo.diff.DiffColors;
 import consulo.diff.impl.internal.util.DiffImplUtil;
 import consulo.document.util.TextRange;
+import consulo.localize.LocalizeValue;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.paint.RectanglePainter2D;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.function.PairConsumer;
-import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -78,16 +79,16 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
     ) {
         return new LineStatusMarkerRenderer(range) {
             @Override
-            public boolean canDoAction(MouseEvent e) {
+            public boolean canDoAction(@Nonnull MouseEvent e) {
                 return popupBuilder != null && isInsideMarkerArea(e);
             }
 
             @Override
-            public void doAction(Editor editor, MouseEvent e) {
+            public void doAction(@Nonnull Editor editor, @Nonnull MouseEvent e) {
                 LineStatusMarkerPopup popup = popupBuilder != null ? popupBuilder.apply(editor) : null;
-              if (popup != null) {
-                popup.showHint(e);
-              }
+                if (popup != null) {
+                    popup.showHint(e);
+                }
             }
         };
     }
@@ -120,12 +121,12 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
             }
 
             @Override
-            public boolean canDoAction(MouseEvent e) {
+            public boolean canDoAction(@Nonnull MouseEvent e) {
                 return isInsideMarkerArea(e);
             }
 
             @Override
-            public void doAction(Editor editor, MouseEvent e) {
+            public void doAction(@Nonnull Editor editor, @Nonnull MouseEvent e) {
                 if (action != null) {
                     action.consume(editor, e);
                 }
@@ -144,24 +145,17 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
     }
 
     @Nonnull
-    private static String getTooltipText(@Nonnull Range range) {
+    private static LocalizeValue getTooltipText(@Nonnull Range range) {
         if (range.getLine1() == range.getLine2()) {
-            if (range.getVcsLine1() + 1 == range.getVcsLine2()) {
-                return VcsBundle.message("tooltip.text.line.before.deleted", range.getLine1() + 1);
-            }
-            else {
-                return VcsBundle.message(
-                    "tooltip.text.lines.before.deleted",
-                    range.getLine1() + 1,
-                    range.getVcsLine2() - range.getVcsLine1()
-                );
-            }
+            return range.getVcsLine1() + 1 == range.getVcsLine2()
+                ? VcsLocalize.tooltipTextLineBeforeDeleted(range.getLine1() + 1)
+                : VcsLocalize.tooltipTextLinesBeforeDeleted(range.getLine1() + 1, range.getVcsLine2() - range.getVcsLine1());
         }
         else if (range.getLine1() + 1 == range.getLine2()) {
-            return VcsBundle.message("tooltip.text.line.changed", range.getLine1() + 1);
+            return VcsLocalize.tooltipTextLineChanged(range.getLine1() + 1);
         }
         else {
-            return VcsBundle.message("tooltip.text.lines.changed", range.getLine1() + 1, range.getLine2());
+            return VcsLocalize.tooltipTextLinesChanged(range.getLine1() + 1, range.getLine2());
         }
     }
 
@@ -308,51 +302,35 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
     @Nullable
     private static ColorValue getGutterColor(@Nonnull Range.InnerRange range, @Nullable Editor editor) {
         final EditorColorsScheme scheme = getColorScheme(editor);
-        switch (range.getType()) {
-            case Range.INSERTED:
-                return scheme.getColor(EditorColors.ADDED_LINES_COLOR);
-            case Range.DELETED:
-                return scheme.getColor(EditorColors.DELETED_LINES_COLOR);
-            case Range.MODIFIED:
-                return scheme.getColor(EditorColors.MODIFIED_LINES_COLOR);
-            case Range.EQUAL:
-                return scheme.getColor(EditorColors.WHITESPACES_MODIFIED_LINES_COLOR);
-            default:
-                assert false;
-                return null;
-        }
+        return switch (range.getType()) {
+            case Range.INSERTED -> scheme.getColor(EditorColors.ADDED_LINES_COLOR);
+            case Range.DELETED -> scheme.getColor(EditorColors.DELETED_LINES_COLOR);
+            case Range.MODIFIED -> scheme.getColor(EditorColors.MODIFIED_LINES_COLOR);
+            case Range.EQUAL -> scheme.getColor(EditorColors.WHITESPACES_MODIFIED_LINES_COLOR);
+            default -> throw new AssertionError();
+        };
     }
 
     @Nullable
     private static ColorValue getErrorStripeColor(@Nonnull Range range, @Nullable Editor editor) {
         final EditorColorsScheme scheme = getColorScheme(editor);
-        switch (range.getType()) {
-            case Range.INSERTED:
-                return scheme.getAttributes(DiffColors.DIFF_INSERTED).getErrorStripeColor();
-            case Range.DELETED:
-                return scheme.getAttributes(DiffColors.DIFF_DELETED).getErrorStripeColor();
-            case Range.MODIFIED:
-                return scheme.getAttributes(DiffColors.DIFF_MODIFIED).getErrorStripeColor();
-            default:
-                assert false;
-                return null;
-        }
+        return switch (range.getType()) {
+            case Range.INSERTED -> scheme.getAttributes(DiffColors.DIFF_INSERTED).getErrorStripeColor();
+            case Range.DELETED -> scheme.getAttributes(DiffColors.DIFF_DELETED).getErrorStripeColor();
+            case Range.MODIFIED -> scheme.getAttributes(DiffColors.DIFF_MODIFIED).getErrorStripeColor();
+            default -> throw new AssertionError();
+        };
     }
 
     @Nullable
     private static ColorValue getGutterColor(@Nonnull Range range, @Nullable Editor editor) {
         final EditorColorsScheme scheme = getColorScheme(editor);
-        switch (range.getType()) {
-            case Range.INSERTED:
-                return scheme.getColor(EditorColors.ADDED_LINES_COLOR);
-            case Range.DELETED:
-                return scheme.getColor(EditorColors.DELETED_LINES_COLOR);
-            case Range.MODIFIED:
-                return scheme.getColor(EditorColors.MODIFIED_LINES_COLOR);
-            default:
-                assert false;
-                return null;
-        }
+        return switch (range.getType()) {
+            case Range.INSERTED -> scheme.getColor(EditorColors.ADDED_LINES_COLOR);
+            case Range.DELETED -> scheme.getColor(EditorColors.DELETED_LINES_COLOR);
+            case Range.MODIFIED -> scheme.getColor(EditorColors.MODIFIED_LINES_COLOR);
+            default -> throw new AssertionError();
+        };
     }
 
     @Nullable
@@ -370,11 +348,11 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
     //
 
     @Override
-    public boolean canDoAction(MouseEvent e) {
+    public boolean canDoAction(@Nonnull MouseEvent e) {
         return false;
     }
 
     @Override
-    public void doAction(Editor editor, MouseEvent e) {
+    public void doAction(@Nonnull Editor editor, @Nonnull MouseEvent e) {
     }
 }

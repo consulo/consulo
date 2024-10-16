@@ -15,12 +15,14 @@
  */
 package consulo.ui.ex.awt;
 
-import consulo.util.lang.StringUtil;
+import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
+import java.util.Objects;
 
 /**
  * Describes why the data entered in a DialogWrapper is invalid.
@@ -30,7 +32,7 @@ import javax.swing.*;
  */
 public final class ValidationInfo {
     @Nonnull
-    public final String message;
+    public final LocalizeValue message;
 
     @Nullable
     public final JComponent component;
@@ -45,9 +47,22 @@ public final class ValidationInfo {
      * @param message   the error message to display.
      * @param component the component containing the invalid data.
      */
-    public ValidationInfo(@Nonnull String message, @Nullable JComponent component) {
+    public ValidationInfo(@Nonnull LocalizeValue message, @Nullable JComponent component) {
         this.message = message;
         this.component = component;
+    }
+
+    /**
+     * Creates a validation error message associated with a specific component. The component will have an error icon drawn next to it,
+     * and will be focused when the user tries to close the dialog by pressing OK.
+     *
+     * @param message   the error message to display.
+     * @param component the component containing the invalid data.
+     */
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizaValue")
+    public ValidationInfo(@Nonnull String message, @Nullable JComponent component) {
+        this(LocalizeValue.of(message), component);
     }
 
     /**
@@ -55,6 +70,17 @@ public final class ValidationInfo {
      *
      * @param message the error message to display.
      */
+    public ValidationInfo(@Nonnull LocalizeValue message) {
+        this(message, null);
+    }
+
+    /**
+     * Creates a validation error message not associated with a specific component.
+     *
+     * @param message the error message to display.
+     */
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizaValue")
     public ValidationInfo(@Nonnull String message) {
         this(message, null);
     }
@@ -78,15 +104,9 @@ public final class ValidationInfo {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof ValidationInfo)) {
-            return false;
-        }
-
-        ValidationInfo that = (ValidationInfo)o;
-        return StringUtil.equals(this.message, that.message)
+        return this == o
+            || o instanceof ValidationInfo that
+            && Objects.equals(this.message, that.message)
             && this.component == that.component
             && this.okEnabled == that.okEnabled
             && this.warning == that.warning;

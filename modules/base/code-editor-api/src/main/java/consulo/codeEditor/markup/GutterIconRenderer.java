@@ -17,6 +17,7 @@ package consulo.codeEditor.markup;
 
 import consulo.application.dumb.DumbAware;
 import consulo.application.dumb.PossiblyDumbAware;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.image.Image;
@@ -62,12 +63,12 @@ public abstract class GutterIconRenderer implements GutterMark, PossiblyDumbAwar
     /**
      * Returns the text of the tooltip displayed when the mouse is over the icon.
      *
-     * @return the tooltip text, or null if no tooltip is required.
+     * @return the tooltip text, or empty if no tooltip is required.
      */
+    @Nonnull
     @Override
-    @Nullable
-    public String getTooltipText() {
-        return null;
+    public LocalizeValue getTooltipValue() {
+        return LocalizeValue.empty();
     }
 
     /**

@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.ui;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.JBCurrentTheme;
@@ -8,7 +9,6 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.application.util.registry.Registry;
-import consulo.util.lang.StringUtil;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.util.ComponentUtil;
 import consulo.ui.ex.awt.event.DocumentAdapter;
@@ -232,7 +232,7 @@ public class ComponentValidator {
                     component.repaint();
                 }
 
-                if (StringUtil.isNotEmpty(validationInfo.message)) {
+                if (validationInfo.message != LocalizeValue.empty()) {
                     popupBuilder = createPopupBuilder(
                         validationInfo,
                         tipComponent -> {
@@ -260,7 +260,11 @@ public class ComponentValidator {
         JEditorPane tipComponent = new JEditorPane();
         View v = BasicHTML.createHTMLView(tipComponent, String.format("<html>%s</html>", info.message));
         String text = v.getPreferredSpan(View.X_AXIS) > MAX_WIDTH.get()
-            ? String.format("<html><body><div width=%d>%s</div><body></html>", MAX_WIDTH.get(), trimMessage(info.message, tipComponent))
+            ? String.format(
+                "<html><body><div width=%d>%s</div><body></html>",
+                MAX_WIDTH.get(),
+                info.message.map((localizeManager, value) -> trimMessage(value, tipComponent))
+            )
             : String.format("<html><body><div>%s</div></body></html>", info.message);
 
         tipComponent.setContentType("text/html");

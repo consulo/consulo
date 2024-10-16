@@ -15,17 +15,18 @@
  */
 package consulo.desktop.awt.settings;
 
-import consulo.application.ApplicationManager;
-import consulo.application.CommonBundle;
+import consulo.application.Application;
 import consulo.application.HelpManager;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.configurable.ProjectStructureSelectorOverSettings;
 import consulo.ide.impl.configurable.ConfigurablePreselectStrategy;
+import consulo.ide.impl.configurable.ProjectStructureSelectorOverSettings;
 import consulo.ide.setting.ProjectStructureSelector;
 import consulo.ide.setting.Settings;
+import consulo.localize.LocalizeValue;
+import consulo.platform.Platform;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.Size;
@@ -84,7 +85,7 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
         myConfigurables = configurables;
         myPreselectStrategy = strategy;
 
-        setTitle(CommonBundle.settingsTitle());
+        setTitle(Platform.current().os().isMac() ? CommonLocalize.titleSettingsMac() : CommonLocalize.titleSettings());
 
         init();
     }
@@ -158,7 +159,7 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
 
         final Map<Configurable, ConfigurationException> errors = myEditor.getContext().getErrors();
         if (errors.size() == 0) {
-            setErrorText(null);
+            setErrorText(LocalizeValue.empty());
         }
         else {
             String text = "Changes were not applied because of an error";
@@ -190,6 +191,7 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
     }
 
     @Override
+    @RequiredUIAccess
     public void doOKAction() {
         myEditor.flushModifications();
 
@@ -202,7 +204,7 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
 
         saveCurrentConfigurable();
 
-        ApplicationManager.getApplication().saveAll();
+        Application.get().saveAll();
 
         super.doOKAction();
     }
@@ -242,6 +244,7 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
     }
 
     @Override
+    @RequiredUIAccess
     protected void doHelpAction() {
         final String topic = myEditor.getHelpTopic();
         HelpManager.getInstance().invokeHelp(topic);
@@ -271,6 +274,7 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
         }
 
         @Override
+        @RequiredUIAccess
         protected void doAction(ActionEvent e) {
             myEditor.apply();
             myEditor.repaint();

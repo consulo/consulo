@@ -15,7 +15,9 @@
  */
 package consulo.versionControlSystem.annotate;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.util.JBDateFormat;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
@@ -121,9 +123,18 @@ public abstract class FileAnnotation {
      * The tooltip that is shown over annotation.
      * Typically, this is a detailed info about related revision. ex: long revision number, commit message
      */
+    //TODO: rename into getToolTip() after deprecation deletion
+    @Nonnull
+    public abstract LocalizeValue getToolTipValue(int lineNumber);
+
+    /**
+     * The tooltip that is shown over annotation.
+     * Typically, this is a detailed info about related revision. ex: long revision number, commit message
+     */
+    @Deprecated
+    @DeprecationInfo("Use getToolTipValue(int)")
     @Nullable
     public abstract String getToolTip(int lineNumber);
-
     /**
      * @return last revision that modified this line.
      */
@@ -207,7 +218,6 @@ public abstract class FileAnnotation {
         return true;
     }
 
-
     @Nullable
     public CurrentFileRevisionProvider getCurrentFileRevisionProvider() {
         return createDefaultCurrentFileRevisionProvider(this);
@@ -274,7 +284,7 @@ public abstract class FileAnnotation {
             lineToRevision.add(map.get(annotation.getLineRevisionNumber(i)));
         }
 
-        return (lineNumber) -> {
+        return lineNumber -> {
             LOG.assertTrue(lineNumber >= 0 && lineNumber < lineToRevision.size());
             return lineToRevision.get(lineNumber);
         };
@@ -342,9 +352,8 @@ public abstract class FileAnnotation {
             return null;
         }
 
-        List<List<VcsRevisionNumber>> orderedRevisions = ContainerUtil.map(revisions, (revision) -> {
-            return Collections.singletonList(revision.getRevisionNumber());
-        });
+        List<List<VcsRevisionNumber>> orderedRevisions =
+            ContainerUtil.map(revisions, revision -> Collections.singletonList(revision.getRevisionNumber()));
 
         return () -> orderedRevisions;
     }

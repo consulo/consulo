@@ -27,14 +27,15 @@ import consulo.colorScheme.TextAttributes;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.RangeMarker;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.fileEditor.structureView.StructureViewModel;
 import consulo.fileEditor.structureView.TreeBasedStructureViewBuilder;
-import consulo.ide.IdeBundle;
-import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.structureView.PsiStructureViewFactory;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.NavigationItem;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -53,7 +54,6 @@ import consulo.util.lang.Couple;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -147,7 +147,7 @@ public class BookmarkImpl implements Bookmark {
     void addHighlighter() {
         Document document = FileDocumentManager.getInstance().getCachedDocument(getFile());
         if (document != null) {
-            createHighlighter((MarkupModelEx)DocumentMarkupModel.forDocument(document, myProject, true));
+            createHighlighter(DocumentMarkupModel.forDocument(document, myProject, true));
         }
     }
 
@@ -195,7 +195,7 @@ public class BookmarkImpl implements Bookmark {
         if (document == null) {
             return;
         }
-        MarkupModelEx markup = (MarkupModelEx)DocumentMarkupModel.forDocument(document, myProject, true);
+        MarkupModelEx markup = DocumentMarkupModel.forDocument(document, myProject, true);
         final Document markupDocument = markup.getDocument();
         if (markupDocument.getLineCount() <= line) {
             return;
@@ -209,7 +209,7 @@ public class BookmarkImpl implements Bookmark {
             endOffset,
             highlighter -> {
                 GutterMark renderer = highlighter.getGutterIconRenderer();
-                if (renderer instanceof MyGutterIconRenderer && ((MyGutterIconRenderer)renderer).myBookmark == BookmarkImpl.this) {
+                if (renderer instanceof MyGutterIconRenderer iconRenderer && iconRenderer.myBookmark == BookmarkImpl.this) {
                     found.set(highlighter);
                     return false;
                 }
@@ -261,10 +261,7 @@ public class BookmarkImpl implements Bookmark {
 
     @Override
     public boolean isValid() {
-        if (!getFile().isValid()) {
-            return false;
-        }
-        return myTarget.isValid();
+        return getFile().isValid() && myTarget.isValid();
     }
 
     @Override
@@ -284,7 +281,7 @@ public class BookmarkImpl implements Bookmark {
 
     @Override
     public int getLine() {
-        RangeMarker marker = ((OpenFileDescriptorImpl)myTarget).getRangeMarker();
+        RangeMarker marker = myTarget.getRangeMarker();
         if (marker != null && marker.isValid()) {
             Document document = marker.getDocument();
             return document.getLineNumber(marker.getStartOffset());
@@ -318,8 +315,8 @@ public class BookmarkImpl implements Bookmark {
         }
 
         StructureViewBuilder builder = PsiStructureViewFactory.createBuilderForFile(psiFile);
-        if (builder instanceof TreeBasedStructureViewBuilder) {
-            StructureViewModel model = ((TreeBasedStructureViewBuilder)builder).createStructureViewModel(null);
+        if (builder instanceof TreeBasedStructureViewBuilder viewBuilder) {
+            StructureViewModel model = viewBuilder.createStructureViewModel(null);
             Object element;
             try {
                 element = model.getCurrentEditorElement();
@@ -327,18 +324,18 @@ public class BookmarkImpl implements Bookmark {
             finally {
                 model.dispose();
             }
-            if (element instanceof NavigationItem) {
-                ItemPresentation presentation = ((NavigationItem)element).getPresentation();
+            if (element instanceof NavigationItem navItem) {
+                ItemPresentation presentation = navItem.getPresentation();
                 if (presentation != null) {
-                    presentableUrl = ((NavigationItem)element).getName() + " " + presentation.getLocationString();
+                    presentableUrl = navItem.getName() + " " + presentation.getLocationString();
                 }
             }
         }
 
-        return IdeBundle.message("bookmark.file.X.line.Y", presentableUrl, getLine() + 1);
+        return IdeLocalize.bookmarkFileXLineY(presentableUrl, getLine() + 1).get();
     }
 
-    private String getBookmarkTooltip() {
+    private LocalizeValue getBookmarkTooltip() {
         StringBuilder result = new StringBuilder("BookmarkImpl");
         if (myMnemonic != 0) {
             result.append(" ").append(myMnemonic);
@@ -347,7 +344,7 @@ public class BookmarkImpl implements Bookmark {
         if (description != null) {
             result.append(": ").append(description);
         }
-        return result.toString();
+        return LocalizeValue.of(result.toString());
     }
 
     private static class MyGutterIconRenderer extends GutterIconRenderer {
@@ -363,16 +360,17 @@ public class BookmarkImpl implements Bookmark {
             return myBookmark.getIcon(true);
         }
 
+        @Nonnull
         @Override
-        public String getTooltipText() {
+        public LocalizeValue getTooltipValue() {
             return myBookmark.getBookmarkTooltip();
         }
 
         @Override
         public boolean equals(Object obj) {
-            return obj instanceof MyGutterIconRenderer &&
-                Comparing.equal(getTooltipText(), ((MyGutterIconRenderer)obj).getTooltipText()) &&
-                Comparing.equal(getIcon(), ((MyGutterIconRenderer)obj).getIcon());
+            return obj instanceof MyGutterIconRenderer iconRenderer
+                && Comparing.equal(getTooltipValue(), iconRenderer.getTooltipValue())
+                && Comparing.equal(getIcon(), iconRenderer.getIcon());
         }
 
         @Override

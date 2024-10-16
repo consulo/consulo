@@ -11,6 +11,7 @@ import consulo.codeEditor.event.CaretEvent;
 import consulo.codeEditor.event.CaretListener;
 import consulo.codeEditor.markup.ActiveGutterRenderer;
 import consulo.codeEditor.markup.LineMarkerRenderer;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.dataContext.DataContext;
 import consulo.application.ui.wm.IdeFocusManager;
@@ -140,47 +141,55 @@ class AccessibleGutterLine extends JPanel {
 
         /* line numbers */
         if (myGutter.isLineNumbersShown()) {
-            addNewElement(new SimpleAccessible() {
-                @Nonnull
-                @Override
-                public String getAccessibleName() {
-                    return "line " + (myLogicalLineNum + 1);
-                }
+            addNewElement(
+                new SimpleAccessible() {
+                    @Nonnull
+                    @Override
+                    public LocalizeValue getAccessibleNameValue() {
+                        return LocalizeValue.localizeTODO("line " + (myLogicalLineNum + 1));
+                    }
 
-                @Override
-                public String getAccessibleTooltipText() {
-                    return null;
-                }
-            }, myGutter.getLineNumberAreaOffset(), 0, myGutter.getLineNumberAreaWidth(), lineHeight);
+                    @Nonnull
+                    @Override
+                    public LocalizeValue getAccessibleTooltipValue() {
+                        return LocalizeValue.empty();
+                    }
+                },
+                myGutter.getLineNumberAreaOffset(),
+                0,
+                myGutter.getLineNumberAreaWidth(),
+                lineHeight
+            );
         }
 
         /* annotations */
         if (myGutter.isAnnotationsShown()) {
             int x = myGutter.getAnnotationsAreaOffset();
             int width = 0;
-            String tooltipText = null;
+            LocalizeValue tooltipText = LocalizeValue.empty();
             StringBuilder buf = new StringBuilder("annotation: ");
             for (int i = 0; i < myGutter.myTextAnnotationGutters.size(); i++) {
                 TextAnnotationGutterProvider gutterProvider = myGutter.myTextAnnotationGutters.get(i);
-                if (tooltipText == null) {
-                    tooltipText = gutterProvider.getToolTip(myLogicalLineNum, editor); // [tav] todo: take first non-null?
+                if (tooltipText == LocalizeValue.empty()) {
+                    tooltipText = gutterProvider.getToolTipValue(myLogicalLineNum, editor); // [tav] todo: take first non-null?
                 }
                 int annotationSize = myGutter.myTextAnnotationGutterSizes.get(i);
                 buf.append(ObjectUtil.notNull(gutterProvider.getLineText(myLogicalLineNum, editor), ""));
                 width += annotationSize;
             }
             if (buf.length() > 0) {
-                String tt = tooltipText;
+                final LocalizeValue tt = tooltipText;
                 addNewElement(
                     new SimpleAccessible() {
                         @Nonnull
                         @Override
-                        public String getAccessibleName() {
-                            return buf.toString();
+                        public LocalizeValue getAccessibleNameValue() {
+                            return LocalizeValue.localizeTODO(buf.toString());
                         }
 
+                        @Nonnull
                         @Override
-                        public String getAccessibleTooltipText() {
+                        public LocalizeValue getAccessibleTooltipValue() {
                             return tt;
                         }
                     },
@@ -201,16 +210,17 @@ class AccessibleGutterLine extends JPanel {
                     new SimpleAccessible() {
                         @Nonnull
                         @Override
-                        public String getAccessibleName() {
-                            if (renderer instanceof SimpleAccessible) {
-                                return ((SimpleAccessible)renderer).getAccessibleName();
+                        public LocalizeValue getAccessibleNameValue() {
+                            if (renderer instanceof SimpleAccessible accessible) {
+                                return accessible.getAccessibleNameValue();
                             }
-                            return "icon: " + renderer.getClass().getSimpleName();
+                            return LocalizeValue.localizeTODO("icon: " + renderer.getClass().getSimpleName());
                         }
 
+                        @Nonnull
                         @Override
-                        public String getAccessibleTooltipText() {
-                            return renderer.getTooltipText();
+                        public LocalizeValue getAccessibleTooltipValue() {
+                            return renderer.getTooltipValue();
                         }
                     },
                     x,
@@ -254,13 +264,14 @@ class AccessibleGutterLine extends JPanel {
                 new SimpleAccessible() {
                     @Nonnull
                     @Override
-                    public String getAccessibleName() {
-                        return "empty";
+                    public LocalizeValue getAccessibleNameValue() {
+                        return LocalizeValue.localizeTODO("empty");
                     }
 
+                    @Nonnull
                     @Override
-                    public String getAccessibleTooltipText() {
-                        return null;
+                    public LocalizeValue getAccessibleTooltipValue() {
+                        return LocalizeValue.empty();
                     }
                 },
                 0,
@@ -397,7 +408,7 @@ class AccessibleGutterLine extends JPanel {
                 int y = pBounds.y + bounds.y + bounds.height / 2;
                 MouseEvent e =
                     new MouseEvent(myGutter, MouseEvent.MOUSE_MOVED, System.currentTimeMillis(), 0, x, y, 0, false, MouseEvent.BUTTON1);
-                myGutter.tooltipAvailable(myAccessible.getAccessibleTooltipText(), e, null);
+                myGutter.tooltipAvailable(myAccessible.getAccessibleTooltipValue(), e, null);
             }
         }
 

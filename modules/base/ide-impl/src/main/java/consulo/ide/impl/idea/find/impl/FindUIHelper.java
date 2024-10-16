@@ -18,13 +18,14 @@ package consulo.ide.impl.idea.find.impl;
 import consulo.codeEditor.Editor;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.find.FindBundle;
 import consulo.find.FindManager;
 import consulo.find.FindModel;
 import consulo.find.FindSettings;
+import consulo.find.localize.FindLocalize;
 import consulo.ide.impl.idea.find.FindUtil;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -132,6 +133,7 @@ public class FindUIHelper implements Disposable {
         myOkHandler = okHandler;
     }
 
+    @RequiredUIAccess
     public void showUI() {
         myUI = getOrCreateUI();
         myUI.showUI();
@@ -155,11 +157,9 @@ public class FindUIHelper implements Disposable {
 
         findSettings.setWholeWordsOnly(myModel.isWholeWordsOnly());
         boolean saveContextBetweenRestarts = false;
-        findSettings.setInStringLiteralsOnly(saveContextBetweenRestarts && myModel.isInStringLiteralsOnly());
-        findSettings.setInCommentsOnly(saveContextBetweenRestarts && myModel.isInCommentsOnly());
-        findSettings.setExceptComments(saveContextBetweenRestarts && myModel.isExceptComments());
-        findSettings.setExceptStringLiterals(saveContextBetweenRestarts && myModel.isExceptStringLiterals());
-        findSettings.setExceptCommentsAndLiterals(saveContextBetweenRestarts && myModel.isExceptCommentsAndStringLiterals());
+        if (saveContextBetweenRestarts) {
+            findSettings.setSearchContext(myModel.getSearchContext());
+        }
 
         findSettings.setRegularExpressions(myModel.isRegularExpressions());
         if (!myModel.isMultipleFiles()) {
@@ -186,10 +186,13 @@ public class FindUIHelper implements Disposable {
 
     public String getTitle() {
         if (myModel.isReplaceState()) {
-            return myModel.isMultipleFiles() ? FindBundle.message("find.replace.in.project.dialog.title") : FindBundle.message(
-                "find.replace.text.dialog.title");
+            return myModel.isMultipleFiles()
+                ? FindLocalize.findReplaceInProjectDialogTitle().get()
+                : FindLocalize.findReplaceTextDialogTitle().get();
         }
-        return myModel.isMultipleFiles() ? FindBundle.message("find.in.path.dialog.title") : FindBundle.message("find.text.dialog.title");
+        return myModel.isMultipleFiles()
+            ? FindLocalize.findInPathDialogTitle().get()
+            : FindLocalize.findTextDialogTitle().get();
     }
 
     public boolean isReplaceState() {

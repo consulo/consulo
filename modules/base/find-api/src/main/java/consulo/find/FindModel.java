@@ -26,6 +26,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -76,7 +77,7 @@ public class FindModel extends UserDataHolderBase implements Cloneable {
     private boolean isSearchHighlighters = false;
     private boolean isReplaceState = false;
     private boolean isWholeWordsOnly = false;
-    private SearchContext searchContext = SearchContext.ANY;
+    private FindSearchContext searchContext = FindSearchContext.ANY;
     private boolean isFromCursor = true;
     private boolean isForward = true;
     private boolean isGlobal = true;
@@ -180,108 +181,38 @@ public class FindModel extends UserDataHolderBase implements Cloneable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        FindModel findModel = (FindModel)o;
-
-        if (isCaseSensitive != findModel.isCaseSensitive) {
-            return false;
-        }
-        if (isCustomScope != findModel.isCustomScope) {
-            return false;
-        }
-        if (isFindAll != findModel.isFindAll) {
-            return false;
-        }
-        if (isFindAllEnabled != findModel.isFindAllEnabled) {
-            return false;
-        }
-        if (isForward != findModel.isForward) {
-            return false;
-        }
-        if (isFromCursor != findModel.isFromCursor) {
-            return false;
-        }
-        if (isGlobal != findModel.isGlobal) {
-            return false;
-        }
-        if (searchContext != findModel.searchContext) {
-            return false;
-        }
-
-        if (isMultiline != findModel.isMultiline) {
-            return false;
-        }
-        if (isMultipleFiles != findModel.isMultipleFiles) {
-            return false;
-        }
-        if (isOpenInNewTabEnabled != findModel.isOpenInNewTabEnabled) {
-            return false;
-        }
-        if (isOpenNewTab != findModel.isOpenNewTab) {
-            return false;
-        }
-        if (isOpenNewTabVisible != findModel.isOpenNewTabVisible) {
-            return false;
-        }
-        if (isPreserveCase != findModel.isPreserveCase) {
-            return false;
-        }
-        if (isProjectScope != findModel.isProjectScope) {
-            return false;
-        }
-        if (isPromptOnReplace != findModel.isPromptOnReplace) {
-            return false;
-        }
-        if (isRegularExpressions != findModel.isRegularExpressions) {
-            return false;
-        }
-        if (isReplaceAll != findModel.isReplaceAll) {
-            return false;
-        }
-        if (isReplaceState != findModel.isReplaceState) {
-            return false;
-        }
-        if (isSearchHighlighters != findModel.isSearchHighlighters) {
-            return false;
-        }
-        if (isWholeWordsOnly != findModel.isWholeWordsOnly) {
-            return false;
-        }
-        if (isWithSubdirectories != findModel.isWithSubdirectories) {
-            return false;
-        }
-        if (customScope != null ? !customScope.equals(findModel.customScope) : findModel.customScope != null) {
-            return false;
-        }
-        if (customScopeName != null ? !customScopeName.equals(findModel.customScopeName) : findModel.customScopeName != null) {
-            return false;
-        }
-        if (directoryName != null ? !directoryName.equals(findModel.directoryName) : findModel.directoryName != null) {
-            return false;
-        }
-        if (fileFilter != null ? !fileFilter.equals(findModel.fileFilter) : findModel.fileFilter != null) {
-            return false;
-        }
-        if (moduleName != null ? !moduleName.equals(findModel.moduleName) : findModel.moduleName != null) {
-            return false;
-        }
-        if (myStringToFind != null ? !myStringToFind.equals(findModel.myStringToFind) : findModel.myStringToFind != null) {
-            return false;
-        }
-        if (myStringToReplace != null ? !myStringToReplace.equals(findModel.myStringToReplace) : findModel.myStringToReplace != null) {
-            return false;
-        }
-        if (mySearchInProjectFiles != findModel.mySearchInProjectFiles) {
-            return false;
-        }
-
-        return true;
+        return this == o
+            || o instanceof FindModel findModel
+            && isCaseSensitive == findModel.isCaseSensitive
+            && isCustomScope == findModel.isCustomScope
+            && isFindAll == findModel.isFindAll
+            && isFindAllEnabled == findModel.isFindAllEnabled
+            && isForward == findModel.isForward
+            && isFromCursor == findModel.isFromCursor
+            && isGlobal == findModel.isGlobal
+            && searchContext == findModel.searchContext
+            && isMultiline == findModel.isMultiline
+            && isMultipleFiles == findModel.isMultipleFiles
+            && isOpenInNewTabEnabled == findModel.isOpenInNewTabEnabled
+            && isOpenNewTab == findModel.isOpenNewTab
+            && isOpenNewTabVisible == findModel.isOpenNewTabVisible
+            && isPreserveCase == findModel.isPreserveCase
+            && isProjectScope == findModel.isProjectScope
+            && isPromptOnReplace == findModel.isPromptOnReplace
+            && isRegularExpressions == findModel.isRegularExpressions
+            && isReplaceAll == findModel.isReplaceAll
+            && isReplaceState == findModel.isReplaceState
+            && isSearchHighlighters == findModel.isSearchHighlighters
+            && isWholeWordsOnly == findModel.isWholeWordsOnly
+            && isWithSubdirectories == findModel.isWithSubdirectories
+            && Objects.equals(customScope, findModel.customScope)
+            && Objects.equals(customScopeName, findModel.customScopeName)
+            && Objects.equals(directoryName, findModel.directoryName)
+            && Objects.equals(fileFilter, findModel.fileFilter)
+            && Objects.equals(moduleName, findModel.moduleName)
+            && Objects.equals(myStringToFind, findModel.myStringToFind)
+            && Objects.equals(myStringToReplace, findModel.myStringToReplace)
+            && mySearchInProjectFiles == findModel.mySearchInProjectFiles;
     }
 
     @Override
@@ -918,71 +849,16 @@ public class FindModel extends UserDataHolderBase implements Cloneable {
         }
     }
 
-    public enum SearchContext {
-        ANY,
-        IN_STRING_LITERALS,
-        IN_COMMENTS,
-        EXCEPT_STRING_LITERALS,
-        EXCEPT_COMMENTS,
-        EXCEPT_COMMENTS_AND_STRING_LITERALS
-    }
-
-    public boolean isInStringLiteralsOnly() {
-        return searchContext == SearchContext.IN_STRING_LITERALS;
-    }
-
-    public boolean isExceptComments() {
-        return searchContext == SearchContext.EXCEPT_COMMENTS;
-    }
-
-    public boolean isExceptStringLiterals() {
-        return searchContext == SearchContext.EXCEPT_STRING_LITERALS;
-    }
-
-    public boolean isInCommentsOnly() {
-        return searchContext == SearchContext.IN_COMMENTS;
-    }
-
-    public boolean isExceptCommentsAndStringLiterals() {
-        return searchContext == SearchContext.EXCEPT_COMMENTS_AND_STRING_LITERALS;
-    }
-
-    @Deprecated
-    public void setInCommentsOnly(boolean inCommentsOnly) {
-        doApplyContextChange(inCommentsOnly, SearchContext.IN_COMMENTS);
-    }
-
-    @Deprecated
-    public void setInStringLiteralsOnly(boolean inStringLiteralsOnly) {
-        doApplyContextChange(inStringLiteralsOnly, SearchContext.IN_STRING_LITERALS);
-    }
-
-    private void doApplyContextChange(boolean newOptionValue, SearchContext option) {
-        boolean changed = false;
-        if (newOptionValue) {
-            changed = searchContext != option;
-            searchContext = option;
-        }
-        else if (searchContext == option) { // do not reset unrelated value
-            changed = true;
-            searchContext = SearchContext.ANY;
-        }
-
-        if (changed) {
-            notifyObservers();
-        }
-    }
-
     @Nonnull
-    public SearchContext getSearchContext() {
+    public FindSearchContext getSearchContext() {
         return searchContext;
     }
 
-    public void setSearchContext(@Nonnull SearchContext _searchContext) {
+    public void setSearchContext(@Nonnull FindSearchContext _searchContext) {
         doSetContext(_searchContext);
     }
 
-    private void doSetContext(SearchContext newSearchContext) {
+    private void doSetContext(FindSearchContext newSearchContext) {
         boolean changed = newSearchContext != searchContext;
         searchContext = newSearchContext;
         if (changed) {

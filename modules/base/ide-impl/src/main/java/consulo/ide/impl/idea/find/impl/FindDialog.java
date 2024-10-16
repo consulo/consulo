@@ -2,7 +2,7 @@
 
 package consulo.ide.impl.idea.find.impl;
 
-import consulo.find.FindModel;
+import consulo.find.FindSearchContext;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -17,11 +17,11 @@ public class FindDialog {
     }
 
     /**
-     * @deprecated use {@link FindInProjectUtil#getPresentableName(FindModel.SearchContext)}
+     * @deprecated use {@link FindSearchContext#getName()}
      */
     @Deprecated
-    public static String getPresentableName(@Nonnull FindModel.SearchContext searchContext) {
-        return FindInProjectUtil.getPresentableName(searchContext);
+    public static String getPresentableName(@Nonnull FindSearchContext searchContext) {
+        return searchContext.getName().get();
     }
 }
 

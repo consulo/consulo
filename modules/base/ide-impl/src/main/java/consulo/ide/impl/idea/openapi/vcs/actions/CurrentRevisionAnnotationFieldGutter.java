@@ -17,14 +17,17 @@ package consulo.ide.impl.idea.openapi.vcs.actions;
 
 import consulo.codeEditor.Editor;
 import consulo.colorScheme.EditorColorKey;
+import consulo.ide.impl.idea.openapi.vcs.annotate.TextAnnotationPresentation;
+import consulo.localize.LocalizeValue;
+import consulo.ui.color.ColorValue;
 import consulo.util.lang.Couple;
-import consulo.versionControlSystem.VcsBundle;
+import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.annotate.AnnotationSource;
 import consulo.versionControlSystem.annotate.FileAnnotation;
 import consulo.versionControlSystem.annotate.LineAnnotationAspect;
-import consulo.ide.impl.idea.openapi.vcs.annotate.TextAnnotationPresentation;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
-import consulo.ui.color.ColorValue;
+import consulo.versionControlSystem.localize.VcsLocalize;
+import jakarta.annotation.Nonnull;
 
 import java.util.Map;
 import java.util.function.Consumer;
@@ -62,14 +65,15 @@ class CurrentRevisionAnnotationFieldGutter extends AspectAnnotationFieldGutter i
         return myTurnedOn ? value : "";
     }
 
+    @Nonnull
     @Override
-    public String getToolTip(int line, Editor editor) {
-        final String aspectTooltip = myAspect.getTooltipText(line);
-        if (aspectTooltip != null) {
+    public LocalizeValue getToolTipValue(int line, Editor editor) {
+        LocalizeValue aspectTooltip = myAspect.getTooltipValue(line);
+        if (aspectTooltip != LocalizeValue.empty()) {
             return aspectTooltip;
         }
         final String text = getLineText(line, editor);
-        return ((text == null) || (text.length() == 0)) ? "" : VcsBundle.message("annotation.original.revision.text", text);
+        return StringUtil.isEmpty(text) ? LocalizeValue.empty() : VcsLocalize.annotationOriginalRevisionText(text);
     }
 
     @Override

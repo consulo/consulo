@@ -3,7 +3,6 @@
 package consulo.desktop.awt.editor.impl;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.application.progress.EmptyProgressIndicator;
@@ -14,6 +13,7 @@ import consulo.application.util.registry.Registry;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.EditorMouseEventArea;
 import consulo.codeEditor.impl.*;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.codeEditor.markup.*;
 import consulo.colorScheme.EditorFontType;
 import consulo.colorScheme.TextAttributes;
@@ -40,11 +40,12 @@ import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.impl.internal.hint.TooltipGroup;
 import consulo.language.editor.impl.internal.hint.TooltipRenderer;
-import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.RelativePoint;
@@ -78,7 +79,6 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
@@ -162,7 +162,7 @@ class EditorGutterComponentImpl extends JComponent implements EditorGutterCompon
     final ArrayList<TextAnnotationGutterProvider> myTextAnnotationGutters = new ArrayList<>();
     private boolean myGapAfterAnnotations;
     private final Map<TextAnnotationGutterProvider, EditorGutterAction> myProviderToListener = new HashMap<>();
-    private String myLastGutterToolTip;
+    private LocalizeValue myLastGutterToolTip;
     @Nonnull
     private LineNumberConverter myLineNumberConverter = LineNumberConverter.DEFAULT;
     @Nullable
@@ -192,7 +192,7 @@ class EditorGutterComponentImpl extends JComponent implements EditorGutterCompon
 
     EditorGutterComponentImpl(@Nonnull DesktopEditorImpl editor) {
         myEditor = editor;
-        if (!ApplicationManager.getApplication().isHeadlessEnvironment()) {
+        if (!Application.get().isHeadlessEnvironment()) {
             installDnD();
         }
         setOpaque(true);
@@ -230,8 +230,8 @@ class EditorGutterComponentImpl extends JComponent implements EditorGutterCompon
     private void installDnD() {
         DnDSupport.createBuilder(this).setBeanProvider(info -> {
                 final GutterMark renderer = getGutterRenderer(info.getPoint());
-                if (renderer instanceof GutterIconRenderer && ((GutterIconRenderer)renderer).getDraggableObject() != null && (info.isCopy() || info
-                    .isMove())) {
+                if (renderer instanceof GutterIconRenderer gutterIconRenderer && gutterIconRenderer.getDraggableObject() != null
+                    && (info.isCopy() || info.isMove())) {
                     myDnDInProgress = true;
                     return new DnDDragStartBean(renderer);
                 }
@@ -411,9 +411,21 @@ class EditorGutterComponentImpl extends JComponent implements EditorGutterCompon
         myTextFgColors.clear();
         ColorValue defaultBackgroundColor = myEditor.getBackgroundColor();
         ColorValue defaultForegroundColor = myEditor.getColorsScheme().getDefaultForeground();
-        int startX =
-            myEditor.isInDistractionFreeMode() ? 0 : ExperimentalUI.isNewUI() ? getWhitespaceSeparatorOffset() + 1 : getWhitespaceSeparatorOffset();
-        IterationState state = new IterationState(myEditor, firstVisibleOffset, lastVisibleOffset, null, true, false, true, false);
+        int startX = myEditor.isInDistractionFreeMode()
+            ? 0
+            : ExperimentalUI.isNewUI()
+            ? getWhitespaceSeparatorOffset() + 1
+            : getWhitespaceSeparatorOffset();
+        IterationState state = new IterationState(
+            myEditor,
+            firstVisibleOffset,
+            lastVisibleOffset,
+            null,
+            true,
+            false,
+            true,
+            false
+        );
         while (!state.atEnd()) {
             drawEditorBackgroundForRange(
                 g,
@@ -764,7 +776,7 @@ class EditorGutterComponentImpl extends JComponent implements EditorGutterCompon
 
     @Nullable
     @Override
-    public Object getData(@Nonnull @NonNls Key dataId) {
+    public Object getData(@Nonnull Key dataId) {
         if (myEditor.isDisposed()) {
             return null;
         }
@@ -776,16 +788,10 @@ class EditorGutterComponentImpl extends JComponent implements EditorGutterCompon
             return myEditor;
         }
         if (EditorGutterComponentEx.LOGICAL_LINE_AT_CURSOR == dataId) {
-            if (myLastActionableClick == null) {
-                return null;
-            }
-            return myLastActionableClick.myLogicalLineAtCursor;
+            return myLastActionableClick == null ? null : myLastActionableClick.myLogicalLineAtCursor;
         }
         if (EditorGutterComponentEx.ICON_CENTER_POSITION == dataId) {
-            if (myLastActionableClick == null) {
-                return null;
-            }
-            return myLastActionableClick.myIconCenterPosition;
+            return myLastActionableClick == null ? null : myLastActionableClick.myIconCenterPosition;
         }
         return null;
     }
@@ -1737,16 +1743,16 @@ class EditorGutterComponentImpl extends JComponent implements EditorGutterCompon
         final GutterIconRenderer renderer = getGutterRenderer(e);
         if (renderer == null) {
             TextAnnotationGutterProvider provider = getProviderAtPoint(e.getPoint());
-            String toolTip = null;
+            LocalizeValue toolTip = LocalizeValue.empty();
             if (provider == null) {
                 ActiveGutterRenderer lineRenderer = getActiveRendererByMouseEvent(e);
                 if (lineRenderer != null) {
-                    toolTip = lineRenderer.getTooltipText();
+                    toolTip = lineRenderer.getTooltipValue();
                 }
             }
             else {
                 final int line = getLineNumAtPoint(e.getPoint());
-                toolTip = provider.getToolTip(line, myEditor);
+                toolTip = provider.getToolTipValue(line, myEditor);
                 if (!Comparing.equal(toolTip, myLastGutterToolTip)) {
                     TooltipController.getInstance().cancelTooltip(GUTTER_TOOLTIP_GROUP, e, true);
                     myLastGutterToolTip = toolTip;
@@ -1793,25 +1799,28 @@ class EditorGutterComponentImpl extends JComponent implements EditorGutterCompon
         myBackgroundIndicator.cancel();
         myBackgroundIndicator = new ProgressIndicatorBase();
         myBackgroundIndicator.setModalityProgress(null);
-        AtomicReference<String> tooltip = new AtomicReference<>();
-        ProgressManager.getInstance()
-            .runProcessWithProgressAsynchronously(new Task.Backgroundable(myEditor.getProject(), "Constructing Tooltip") {
+        AtomicReference<LocalizeValue> tooltip = new AtomicReference<>();
+        ProgressManager.getInstance().runProcessWithProgressAsynchronously(
+            new Task.Backgroundable(myEditor.getProject(), "Constructing Tooltip") {
                 @Override
                 public void run(@Nonnull ProgressIndicator indicator) {
-                    tooltip.set(ReadAction.compute(() -> renderer.getTooltipText()));
+                    tooltip.set(ReadAction.compute(renderer::getTooltipValue));
                 }
 
                 @Override
+                @RequiredUIAccess
                 public void onSuccess() {
                     tooltipAvailable(tooltip.get(), e, renderer);
                 }
-            }, myBackgroundIndicator);
+            },
+            myBackgroundIndicator
+        );
     }
 
-    void tooltipAvailable(@Nullable String toolTip, @Nonnull MouseEvent e, @Nullable GutterMark renderer) {
+    void tooltipAvailable(@Nonnull LocalizeValue toolTip, @Nonnull MouseEvent e, @Nullable GutterMark renderer) {
         myCalculatingInBackground = null;
         TooltipController controller = TooltipController.getInstance();
-        if (toolTip == null || toolTip.isEmpty() || myEditor.isDisposed()) {
+        if (toolTip == LocalizeValue.empty() || myEditor.isDisposed()) {
             controller.cancelTooltip(GUTTER_TOOLTIP_GROUP, e, false);
         }
         else {
@@ -1840,10 +1849,11 @@ class EditorGutterComponentImpl extends JComponent implements EditorGutterCompon
 
             RelativePoint showPoint = new RelativePoint(this, t.get());
 
-            TooltipRenderer tr =
-                myEditor.getMarkupModel().getErrorStripTooltipRendererProvider().calcTooltipRenderer(toolTip);
-            HintHint hint =
-                new HintHint(this, t.get()).setAwtTooltip(true).setPreferredPosition(ballPosition).setRequestFocus(ScreenReader.isActive());
+            TooltipRenderer tr = myEditor.getMarkupModel().getErrorStripTooltipRendererProvider().calcTooltipRenderer(toolTip.get());
+            HintHint hint = new HintHint(this, t.get())
+                .setAwtTooltip(true)
+                .setPreferredPosition(ballPosition)
+                .setRequestFocus(ScreenReader.isActive());
             if (myEditor.getComponent().getRootPane() != null) {
                 controller.showTooltipByMouseMove(myEditor, showPoint, tr, false, GUTTER_TOOLTIP_GROUP, hint);
             }
@@ -1855,12 +1865,16 @@ class EditorGutterComponentImpl extends JComponent implements EditorGutterCompon
         final Ref<Point> point = new Ref<>(e.getPoint());
         int line = myEditor.yToVisualLine(e.getY());
         List<GutterMark> row = getGutterRenderers(line);
-        processIconsRow(line, row, (x, y, r) -> {
-            if (renderer == r) {
-                Icon icon = scaleIcon(r.getIcon());
-                point.set(new Point(x + icon.getIconWidth() / 2, y + icon.getIconHeight() / 2));
+        processIconsRow(
+            line,
+            row,
+            (x, y, r) -> {
+                if (renderer == r) {
+                    Icon icon = scaleIcon(r.getIcon());
+                    point.set(new Point(x + icon.getIconWidth() / 2, y + icon.getIconHeight() / 2));
+                }
             }
-        });
+        );
         return point.get();
     }
 
@@ -1915,6 +1929,7 @@ class EditorGutterComponentImpl extends JComponent implements EditorGutterCompon
     }
 
     @Override
+    @RequiredUIAccess
     public void mouseClicked(MouseEvent e) {
         if (e.isPopupTrigger()) {
             invokePopup(e);
@@ -1967,6 +1982,7 @@ class EditorGutterComponentImpl extends JComponent implements EditorGutterCompon
     }
 
     @Override
+    @RequiredUIAccess
     public void mousePressed(MouseEvent e) {
         if (e.isPopupTrigger() || isPopupAction(e)) {
             invokePopup(e);
@@ -1982,6 +1998,7 @@ class EditorGutterComponentImpl extends JComponent implements EditorGutterCompon
     }
 
     @Override
+    @RequiredUIAccess
     public void mouseReleased(final MouseEvent e) {
         if (e.isPopupTrigger()) {
             invokePopup(e);
@@ -1991,10 +2008,9 @@ class EditorGutterComponentImpl extends JComponent implements EditorGutterCompon
         GutterIconRenderer renderer = getGutterRenderer(e);
         AnAction clickAction = null;
         if (renderer != null && e.getButton() < 4) {
-            clickAction = consulo.util.lang.BitUtil.isSet(
-                e.getModifiers(),
-                InputEvent.BUTTON2_MASK
-            ) ? renderer.getMiddleButtonClickAction() : renderer.getClickAction();
+            clickAction = consulo.util.lang.BitUtil.isSet(e.getModifiers(), InputEvent.BUTTON2_MASK)
+                ? renderer.getMiddleButtonClickAction()
+                : renderer.getClickAction();
         }
         if (clickAction != null) {
       /*PluginInfo pluginInfo = PluginInfoDetectorKt.getPluginInfo(renderer.getClass());
@@ -2043,6 +2059,7 @@ class EditorGutterComponentImpl extends JComponent implements EditorGutterCompon
         }
     }
 
+    @RequiredUIAccess
     private void performAction(@Nonnull AnAction action, @Nonnull InputEvent e, @Nonnull String place, @Nonnull DataContext context) {
         if (!checkDumbAware(action)) {
             notifyNotDumbAware();
@@ -2129,10 +2146,11 @@ class EditorGutterComponentImpl extends JComponent implements EditorGutterCompon
 
     private class CloseAnnotationsAction extends DumbAwareAction {
         CloseAnnotationsAction() {
-            super(EditorBundle.message("close.editor.annotations.action.name"));
+            super(CodeEditorLocalize.closeEditorAnnotationsActionName());
         }
 
         @Override
+        @RequiredUIAccess
         public void actionPerformed(@Nonnull AnActionEvent e) {
             closeAllAnnotations();
         }
@@ -2213,6 +2231,7 @@ class EditorGutterComponentImpl extends JComponent implements EditorGutterCompon
         return this;
     }
 
+    @RequiredUIAccess
     private void invokePopup(MouseEvent e) {
         int logicalLineAtCursor = EditorUtil.yPositionToLogicalLine(myEditor, e);
         myLastActionableClick = new ClickInfo(logicalLineAtCursor, getClickedIconCenter(e));
@@ -2235,7 +2254,7 @@ class EditorGutterComponentImpl extends JComponent implements EditorGutterCompon
                 }
             }
             if (!addActions.isEmpty()) {
-                DefaultActionGroup actionGroup = new DefaultActionGroup(EditorBundle.message("editor.annotations.action.group.name"), true);
+                DefaultActionGroup actionGroup = new DefaultActionGroup(CodeEditorLocalize.editorAnnotationsActionGroupName(), true);
                 for (AnAction addAction : addActions) {
                     actionGroup.add(addAction);
                 }

@@ -16,6 +16,7 @@
 
 package consulo.language.editor.gutter;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.codeEditor.CodeInsightColors;
 import consulo.codeEditor.markup.GutterIconRenderer;
@@ -29,6 +30,7 @@ import consulo.language.editor.Pass;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiElementPointer;
+import consulo.localize.LocalizeValue;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.image.Image;
@@ -41,6 +43,7 @@ import java.util.function.Function;
 
 public class LineMarkerInfo<T extends PsiElement> {
     @Nonnull
+    @RequiredReadAction
     public static LineMarkerInfo<PsiElement> createMethodSeparatorLineMarker(
         @Nonnull PsiElement startFrom,
         @Nonnull EditorColorsManager colorsManager
@@ -143,6 +146,15 @@ public class LineMarkerInfo<T extends PsiElement> {
         return new LineMarkerGutterIconRenderer<>(this);
     }
 
+    @Nonnull
+    public LocalizeValue getLineMarkerTooltipValue() {
+        if (myTooltipProvider == null) {
+            return LocalizeValue.empty();
+        }
+        T element = getElement();
+        return element == null || !element.isValid() ? LocalizeValue.empty() : LocalizeValue.ofNullable(myTooltipProvider.apply(element));
+    }
+
     @Nullable
     public String getLineMarkerTooltip() {
         if (myTooltipProvider == null) {
@@ -198,13 +210,14 @@ public class LineMarkerInfo<T extends PsiElement> {
             return myInfo.myNavigationHandler != null;
         }
 
+        @Nonnull
         @Override
-        public String getTooltipText() {
+        public LocalizeValue getTooltipValue() {
             try {
-                return myInfo.getLineMarkerTooltip();
+                return myInfo.getLineMarkerTooltipValue();
             }
             catch (IndexNotReadyException ignored) {
-                return null;
+                return LocalizeValue.empty();
             }
         }
 

@@ -18,6 +18,7 @@ package consulo.language.editor.refactoring.ui;
 import consulo.configurable.ConfigurationException;
 import consulo.language.editor.refactoring.BaseRefactoringProcessor;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
@@ -107,12 +108,12 @@ public abstract class RefactoringDialog extends DialogWrapper {
     protected void validateButtons() {
         boolean enabled = true;
         try {
-            setErrorText(null);
+            setErrorText(LocalizeValue.empty());
             canRun();
         }
         catch (ConfigurationException e) {
             enabled = false;
-            setErrorText(e.getMessage());
+            setErrorText(LocalizeValue.of(e.getMessage()));
         }
         getPreviewAction().setEnabled(enabled);
         getRefactorAction().setEnabled(enabled);

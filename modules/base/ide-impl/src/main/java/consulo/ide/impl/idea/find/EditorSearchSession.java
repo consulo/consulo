@@ -17,10 +17,7 @@ import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.execution.ui.console.ConsoleViewUtil;
-import consulo.find.FindBundle;
-import consulo.find.FindManager;
-import consulo.find.FindModel;
-import consulo.find.FindResult;
+import consulo.find.*;
 import consulo.ide.impl.idea.find.editorHeaderActions.*;
 import consulo.ide.impl.idea.find.impl.HelpID;
 import consulo.ide.impl.idea.find.impl.livePreview.LivePreviewController;
@@ -104,7 +101,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
                     .addSearchFieldActions(new RestorePreviousSettingsAction()).addPrimaryReplaceActions(new ReplaceAction(), new ReplaceAllAction(), new ExcludeAction())
                     .addExtraReplaceAction(new TogglePreserveCaseAction()).addReplaceFieldActions(new PrevOccurrenceAction(false), new NextOccurrenceAction(false)).withDataProvider(this)
                     .withCloseAction(this::close).withReplaceAction(this::replaceCurrent)
-                    .withSecondarySearchActionsIsModifiedGetter(() -> myFindModel.getSearchContext() != FindModel.SearchContext.ANY).build();
+                    .withSecondarySearchActionsIsModifiedGetter(() -> myFindModel.getSearchContext() != FindSearchContext.ANY).build();
 
     myComponent.addListener(this);
     new UiNotifyConnector(myComponent.getComponent(), new Activatable() {

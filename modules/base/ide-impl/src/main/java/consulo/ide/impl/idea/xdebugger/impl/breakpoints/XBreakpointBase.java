@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.xdebugger.impl.breakpoints;
 
 import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
-import consulo.application.util.registry.Registry;
 import consulo.codeEditor.markup.GutterDraggableObject;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.component.persist.ComponentSerializationUtil;
@@ -34,6 +33,7 @@ import consulo.ide.impl.idea.xdebugger.impl.XDebuggerSupport;
 import consulo.ide.impl.idea.xdebugger.impl.actions.EditBreakpointAction;
 import consulo.ide.impl.idea.xml.CommonXmlStrings;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.ui.ex.JBColor;
@@ -50,7 +50,6 @@ import consulo.util.xml.serializer.XmlSerializer;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.Collections;
 import java.util.List;
@@ -75,7 +74,12 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
     private XExpression myLogExpression;
     private volatile boolean myDisposed;
 
-    public XBreakpointBase(final XBreakpointType<Self, P> type, XBreakpointManagerImpl breakpointManager, final @Nullable P properties, final S state) {
+    public XBreakpointBase(
+        final XBreakpointType<Self, P> type,
+        XBreakpointManagerImpl breakpointManager,
+        final @Nullable P properties,
+        final S state
+    ) {
         myState = state;
         myType = type;
         myProperties = properties;
@@ -342,7 +346,7 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
 
     @Nonnull
     public String getDescription() {
-        @NonNls StringBuilder builder = new StringBuilder();
+        StringBuilder builder = new StringBuilder();
         builder.append(CommonXmlStrings.HTML_START).append(CommonXmlStrings.BODY_START);
         builder.append(XBreakpointUtil.getDisplayText(this));
 
@@ -503,8 +507,9 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public int compareTo(@Nonnull Self self) {
-        return myType.getBreakpointComparator().compare((Self) this, self);
+        return myType.getBreakpointComparator().compare((Self)this, self);
     }
 
     protected class BreakpointGutterIconRenderer extends GutterIconRenderer implements DumbAware {
@@ -560,10 +565,10 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
             return null;
         }
 
+        @Nonnull
         @Override
-        @Nullable
-        public String getTooltipText() {
-            return getDescription();
+        public LocalizeValue getTooltipValue() {
+            return LocalizeValue.localizeTODO(getDescription());
         }
 
         @Override
@@ -577,9 +582,9 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
 
         @Override
         public boolean equals(Object obj) {
-            return obj instanceof XLineBreakpointImpl.BreakpointGutterIconRenderer &&
-                getBreakpoint() == ((XLineBreakpointImpl.BreakpointGutterIconRenderer) obj).getBreakpoint() &&
-                Comparing.equal(getIcon(), ((XLineBreakpointImpl.BreakpointGutterIconRenderer) obj).getIcon());
+            return obj instanceof XLineBreakpointImpl.BreakpointGutterIconRenderer gutterIconRenderer
+                && getBreakpoint() == gutterIconRenderer.getBreakpoint()
+                && Comparing.equal(getIcon(), gutterIconRenderer.getIcon());
         }
 
         @Override

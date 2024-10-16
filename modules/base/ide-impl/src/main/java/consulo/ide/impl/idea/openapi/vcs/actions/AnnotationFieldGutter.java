@@ -19,6 +19,7 @@ import consulo.codeEditor.Editor;
 import consulo.colorScheme.EditorColorKey;
 import consulo.colorScheme.EditorFontType;
 import consulo.ide.impl.idea.openapi.vcs.annotate.TextAnnotationPresentation;
+import consulo.localize.LocalizeValue;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.action.AnAction;
 import consulo.util.lang.Couple;
@@ -58,10 +59,10 @@ public abstract class AnnotationFieldGutter implements ActiveAnnotationGutter {
         return false;
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    public String getToolTip(final int line, final Editor editor) {
-        return null;
+    public LocalizeValue getToolTipValue(int line, Editor editor) {
+        return LocalizeValue.empty();
     }
 
     @Override
@@ -69,23 +70,23 @@ public abstract class AnnotationFieldGutter implements ActiveAnnotationGutter {
     }
 
     @Override
-    public Cursor getCursor(final int line) {
+    public Cursor getCursor(int line) {
         return Cursor.getDefaultCursor();
     }
 
     @Override
-    public EditorFontType getStyle(final int line, final Editor editor) {
+    public EditorFontType getStyle(int line, Editor editor) {
         return myPresentation.getFontType(line);
     }
 
     @Nullable
     @Override
-    public EditorColorKey getColor(final int line, final Editor editor) {
+    public EditorColorKey getColor(int line, Editor editor) {
         return myPresentation.getColor(line);
     }
 
     @Override
-    public List<AnAction> getPopupActions(int line, final Editor editor) {
+    public List<AnAction> getPopupActions(int line, Editor editor) {
         return myPresentation.getActions(line);
     }
 

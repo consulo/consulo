@@ -15,29 +15,21 @@
  */
 package consulo.ide.impl.idea.dvcs.push.ui;
 
-import consulo.versionControlSystem.distributed.push.PushTarget;
-import consulo.versionControlSystem.distributed.push.PushTargetEditorListener;
-import consulo.versionControlSystem.distributed.push.PushTargetPanel;
 import consulo.ide.impl.idea.dvcs.push.RepositoryNodeListener;
-import consulo.ui.ex.awt.ValidationInfo;
-import consulo.ui.ex.awt.util.PopupUtil;
-import consulo.ui.ex.awt.JBCheckBox;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.project.Project;
 import consulo.ui.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.JBLabel;
-import consulo.ui.ex.awt.NonOpaquePanel;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
-
+import consulo.ui.ex.awt.util.PopupUtil;
+import consulo.versionControlSystem.distributed.push.PushTarget;
+import consulo.versionControlSystem.distributed.push.PushTargetPanel;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 
 public class RepositoryWithBranchPanel<T extends PushTarget> extends NonOpaquePanel {
@@ -62,12 +54,7 @@ public class RepositoryWithBranchPanel<T extends PushTarget> extends NonOpaquePa
         myRepositoryCheckbox.setFocusable(false);
         myRepositoryCheckbox.setOpaque(false);
         myRepositoryCheckbox.setBorder(null);
-        myRepositoryCheckbox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(@Nonnull ActionEvent e) {
-                fireOnSelectionChange(myRepositoryCheckbox.isSelected());
-            }
-        });
+        myRepositoryCheckbox.addActionListener(e -> fireOnSelectionChange(myRepositoryCheckbox.isSelected()));
         myRepositoryLabel = new JLabel(repoName);
         myLocalBranch = new JBLabel(sourceName);
         myArrowLabel = new JLabel(" " + UIUtil.rightArrow() + " ");
@@ -96,7 +83,7 @@ public class RepositoryWithBranchPanel<T extends PushTarget> extends NonOpaquePa
                 ValidationInfo error = myDestPushTargetPanelComponent.verify();
                 if (error != null) {
                     //noinspection ConstantConditions
-                    PopupUtil.showBalloonForComponent(error.component, error.message, NotificationType.WARNING, false, project);
+                    PopupUtil.showBalloonForComponent(error.component, error.message.get(), NotificationType.WARNING, false, project);
                 }
                 return error == null;
             }
@@ -166,13 +153,9 @@ public class RepositoryWithBranchPanel<T extends PushTarget> extends NonOpaquePa
 
     public void addRepoNodeListener(@Nonnull RepositoryNodeListener<T> listener) {
         myListeners.add(listener);
-        myDestPushTargetPanelComponent.addTargetEditorListener(new PushTargetEditorListener() {
-
-            @Override
-            public void onTargetInEditModeChanged(@Nonnull String value) {
-                for (RepositoryNodeListener listener : myListeners) {
-                    listener.onTargetInEditMode(value);
-                }
+        myDestPushTargetPanelComponent.addTargetEditorListener(value -> {
+            for (RepositoryNodeListener listener1 : myListeners) {
+                listener1.onTargetInEditMode(value);
             }
         });
     }
@@ -180,9 +163,9 @@ public class RepositoryWithBranchPanel<T extends PushTarget> extends NonOpaquePa
     public void fireOnChange() {
         myDestPushTargetPanelComponent.fireOnChange();
         T target = myDestPushTargetPanelComponent.getValue();
-      if (target == null) {
-        return;
-      }
+        if (target == null) {
+            return;
+        }
         for (RepositoryNodeListener<T> listener : myListeners) {
             listener.onTargetChanged(target);
         }

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.find.impl;
 
+import consulo.find.FindSearchContext;
 import consulo.find.FindManager;
 import consulo.find.FindModel;
 import consulo.find.FindResult;
@@ -120,12 +121,7 @@ public class FindResultUsageInfo extends UsageInfo {
 
         assert result.isStringFound();
 
-        if (myFindModel.isRegularExpressions()
-            || myFindModel.isInCommentsOnly()
-            || myFindModel.isInStringLiteralsOnly()
-            || myFindModel.isExceptStringLiterals()
-            || myFindModel.isExceptCommentsAndStringLiterals()
-            || myFindModel.isExceptComments()) {
+        if (myFindModel.isRegularExpressions() || myFindModel.getSearchContext() != FindSearchContext.ANY) {
             myAnchor = SmartPointerManager.getInstance(getProject()).createSmartPsiFileRangePointer(file, TextRange.from(offset, 0));
         }
     }

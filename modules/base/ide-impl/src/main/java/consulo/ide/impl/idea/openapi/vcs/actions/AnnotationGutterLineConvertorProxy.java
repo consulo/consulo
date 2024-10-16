@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.AnAction;
 import consulo.codeEditor.Editor;
 import consulo.colorScheme.EditorColorKey;
@@ -22,6 +23,7 @@ import consulo.colorScheme.EditorFontType;
 import consulo.ide.impl.idea.openapi.localVcs.UpToDateLineNumberProvider;
 import consulo.versionControlSystem.annotate.AnnotationSource;
 import consulo.ui.color.ColorValue;
+import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.List;
@@ -34,10 +36,7 @@ public class AnnotationGutterLineConvertorProxy implements ActiveAnnotationGutte
     private final UpToDateLineNumberProvider myGetUpToDateLineNumber;
     private final ActiveAnnotationGutter myDelegate;
 
-    public AnnotationGutterLineConvertorProxy(
-        final UpToDateLineNumberProvider getUpToDateLineNumber,
-        final ActiveAnnotationGutter delegate
-    ) {
+    public AnnotationGutterLineConvertorProxy(UpToDateLineNumberProvider getUpToDateLineNumber, ActiveAnnotationGutter delegate) {
         myGetUpToDateLineNumber = getUpToDateLineNumber;
         myDelegate = delegate;
     }
@@ -45,46 +44,38 @@ public class AnnotationGutterLineConvertorProxy implements ActiveAnnotationGutte
     @Override
     public String getLineText(int line, Editor editor) {
         int currentLine = myGetUpToDateLineNumber.getLineNumber(line);
-        if (currentLine == UpToDateLineNumberProvider.ABSENT_LINE_NUMBER) {
-            return "";
-        }
-        return myDelegate.getLineText(currentLine, editor);
+        return currentLine == UpToDateLineNumberProvider.ABSENT_LINE_NUMBER ? "" : myDelegate.getLineText(currentLine, editor);
     }
 
+    @Nonnull
     @Override
-    public String getToolTip(int line, Editor editor) {
+    public LocalizeValue getToolTipValue(int line, Editor editor) {
         int currentLine = myGetUpToDateLineNumber.getLineNumber(line);
-        if (currentLine == UpToDateLineNumberProvider.ABSENT_LINE_NUMBER) {
-            return "";
-        }
-        return myDelegate.getToolTip(currentLine, editor);
+        return currentLine == UpToDateLineNumberProvider.ABSENT_LINE_NUMBER
+            ? LocalizeValue.empty()
+            : myDelegate.getToolTipValue(currentLine, editor);
     }
 
     @Override
     public EditorFontType getStyle(int line, Editor editor) {
         int currentLine = myGetUpToDateLineNumber.getLineNumber(line);
-        if (currentLine == UpToDateLineNumberProvider.ABSENT_LINE_NUMBER) {
-            return EditorFontType.PLAIN;
-        }
-        return myDelegate.getStyle(currentLine, editor);
+        return currentLine == UpToDateLineNumberProvider.ABSENT_LINE_NUMBER
+            ? EditorFontType.PLAIN
+            : myDelegate.getStyle(currentLine, editor);
     }
 
     @Override
     public EditorColorKey getColor(int line, Editor editor) {
         int currentLine = myGetUpToDateLineNumber.getLineNumber(line);
-        if (currentLine == UpToDateLineNumberProvider.ABSENT_LINE_NUMBER) {
-            return AnnotationSource.LOCAL.getColor();
-        }
-        return myDelegate.getColor(currentLine, editor);
+        return currentLine == UpToDateLineNumberProvider.ABSENT_LINE_NUMBER
+            ? AnnotationSource.LOCAL.getColor()
+            : myDelegate.getColor(currentLine, editor);
     }
 
     @Override
     public ColorValue getBgColor(int line, Editor editor) {
         int currentLine = myGetUpToDateLineNumber.getLineNumber(line);
-        if (currentLine == UpToDateLineNumberProvider.ABSENT_LINE_NUMBER) {
-            return null;
-        }
-        return myDelegate.getBgColor(currentLine, editor);
+        return currentLine == UpToDateLineNumberProvider.ABSENT_LINE_NUMBER ? null : myDelegate.getBgColor(currentLine, editor);
     }
 
     @Override
@@ -100,18 +91,16 @@ public class AnnotationGutterLineConvertorProxy implements ActiveAnnotationGutte
     @Override
     public void doAction(int lineNum) {
         int currentLine = myGetUpToDateLineNumber.getLineNumber(lineNum);
-        if (currentLine == UpToDateLineNumberProvider.ABSENT_LINE_NUMBER) {
-            return;
+        if (currentLine != UpToDateLineNumberProvider.ABSENT_LINE_NUMBER) {
+            myDelegate.doAction(currentLine);
         }
-        myDelegate.doAction(currentLine);
     }
 
     @Override
     public Cursor getCursor(int lineNum) {
         int currentLine = myGetUpToDateLineNumber.getLineNumber(lineNum);
-        if (currentLine == UpToDateLineNumberProvider.ABSENT_LINE_NUMBER) {
-            return Cursor.getDefaultCursor();
-        }
-        return myDelegate.getCursor(currentLine);
+        return currentLine == UpToDateLineNumberProvider.ABSENT_LINE_NUMBER
+            ? Cursor.getDefaultCursor()
+            : myDelegate.getCursor(currentLine);
     }
 }

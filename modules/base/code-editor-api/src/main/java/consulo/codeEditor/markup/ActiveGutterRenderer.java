@@ -15,7 +15,9 @@
  */
 package consulo.codeEditor.markup;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.codeEditor.Editor;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.util.SimpleAccessible;
 
 import jakarta.annotation.Nonnull;
@@ -36,9 +38,23 @@ public interface ActiveGutterRenderer extends LineMarkerRenderer, SimpleAccessib
      *
      * @return the tooltip text, or null if no tooltip is required.
      */
+    //TODO: rename into getToolTip() after deprecation deletion
+    @Nonnull
+    default LocalizeValue getTooltipValue() {
+        return LocalizeValue.ofNullable(getTooltipText());
+    }
+
+    /**
+     * Returns the text of the tooltip displayed when the mouse is over the renderer area.
+     *
+     * @return the tooltip text, or null if no tooltip is required.
+     */
+    @Deprecated
+    @DeprecationInfo("Use getToolTipValue(int)")
     @Nullable
     default String getTooltipText() {
-        return null;
+        LocalizeValue tooltip = getTooltipValue();
+        return tooltip == LocalizeValue.empty() ? null : tooltip.get();
     }
 
     /**
@@ -64,14 +80,14 @@ public interface ActiveGutterRenderer extends LineMarkerRenderer, SimpleAccessib
 
     @Nonnull
     @Override
-    default String getAccessibleName() {
-        return "marker: unknown";
+    default LocalizeValue getAccessibleNameValue() {
+        return LocalizeValue.localizeTODO("marker: unknown");
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    default String getAccessibleTooltipText() {
-        return getTooltipText();
+    default LocalizeValue getAccessibleTooltipValue() {
+        return getTooltipValue();
     }
 
     /**

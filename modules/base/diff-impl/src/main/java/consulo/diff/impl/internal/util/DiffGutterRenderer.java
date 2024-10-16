@@ -15,6 +15,7 @@
  */
 package consulo.diff.impl.internal.util;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.codeEditor.markup.GutterIconRenderer;
@@ -27,12 +28,16 @@ import jakarta.annotation.Nullable;
 public abstract class DiffGutterRenderer extends GutterIconRenderer {
     @Nonnull
     private final Image myIcon;
-    @Nullable
-    private final String myTooltip;
+    @Nonnull
+    private final LocalizeValue myTooltip;
 
-    public DiffGutterRenderer(@Nonnull Image icon, @Nullable String tooltip) {
+    public DiffGutterRenderer(@Nonnull Image icon, @Nonnull LocalizeValue tooltip) {
         myIcon = icon;
         myTooltip = tooltip;
+    }
+
+    public DiffGutterRenderer(@Nonnull Image icon, @Nullable String tooltip) {
+        this(icon, LocalizeValue.ofNullable(tooltip));
     }
 
     @Nonnull
@@ -41,9 +46,9 @@ public abstract class DiffGutterRenderer extends GutterIconRenderer {
         return myIcon;
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    public String getTooltipText() {
+    public LocalizeValue getTooltipValue() {
         return myTooltip;
     }
 

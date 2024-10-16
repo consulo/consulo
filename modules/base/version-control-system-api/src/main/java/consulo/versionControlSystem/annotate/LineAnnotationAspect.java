@@ -15,9 +15,12 @@
  */
 package consulo.versionControlSystem.annotate;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.codeEditor.EditorGutterAction;
+import consulo.localize.LocalizeValue;
 import consulo.versionControlSystem.VcsBundle;
 
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
@@ -47,8 +50,25 @@ public interface LineAnnotationAspect {
      * @param line the line number to query
      * @return the tooltip text for the line
      */
+    //TODO: rename to getTooltipText() after deprecation removal
+    @Nonnull
+    default LocalizeValue getTooltipValue(int line) {
+        return LocalizeValue.ofNullable(getTooltipText(line));
+    }
+
+    /**
+     * Used to show a tooltip for specific line or group of lines
+     *
+     * @param line the line number to query
+     * @return the tooltip text for the line
+     */
+    @Deprecated
+    @DeprecationInfo("Use getTooltipValue(int)")
     @Nullable
-    String getTooltipText(int line);
+    default String getTooltipText(int line) {
+        LocalizeValue tooltipValue = getTooltipValue(line);
+        return tooltipValue == LocalizeValue.empty() ? null : tooltipValue.get();
+    }
 
     /**
      * Returns unique identifier, that will be used to show/hide some aspects

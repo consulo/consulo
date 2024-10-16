@@ -19,6 +19,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorGutterAction;
 import consulo.ide.impl.idea.openapi.vcs.annotate.TextAnnotationPresentation;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
+import consulo.localize.LocalizeValue;
 import consulo.ui.color.ColorValue;
 import consulo.util.lang.Couple;
 import consulo.versionControlSystem.annotate.FileAnnotation;
@@ -58,16 +59,15 @@ public class AspectAnnotationFieldGutter extends AnnotationFieldGutter {
     @Override
     public String getLineText(int line, Editor editor) {
         final String value = isAvailable() ? myAspect.getValue(line) : "";
-        if (myAspect.getId() == LineAnnotationAspect.AUTHOR) {
-            return ShortNameType.shorten(value, ShowShortenNames.getType());
-        }
-        return value;
+        return myAspect.getId() == LineAnnotationAspect.AUTHOR ? ShortNameType.shorten(value, ShowShortenNames.getType()) : value;
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    public String getToolTip(final int line, final Editor editor) {
-        return isAvailable() ? XmlStringUtil.escapeString(myAnnotation.getToolTip(line)) : null;
+    public LocalizeValue getToolTipValue(int line, Editor editor) {
+        return isAvailable()
+            ? myAnnotation.getToolTipValue(line).map((localizeManager, value) -> XmlStringUtil.escapeString(value))
+            : LocalizeValue.empty();
     }
 
     @Override
@@ -79,10 +79,7 @@ public class AspectAnnotationFieldGutter extends AnnotationFieldGutter {
 
     @Override
     public Cursor getCursor(final int line) {
-        if (myIsGutterAction) {
-            return ((EditorGutterAction)myAspect).getCursor(line);
-        }
-        return super.getCursor(line);
+        return myIsGutterAction ? ((EditorGutterAction)myAspect).getCursor(line) : super.getCursor(line);
     }
 
     @Override

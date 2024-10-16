@@ -3,6 +3,7 @@ package consulo.ide.impl.idea.unscramble;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
@@ -24,6 +25,7 @@ import consulo.ide.impl.idea.execution.impl.EditorHyperlinkSupport;
 import consulo.ide.impl.idea.openapi.vcs.annotate.ShowAllAffectedGenericAction;
 import consulo.ide.impl.idea.vcs.history.VcsHistoryProviderEx;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.navigation.OpenFileDescriptor;
 import consulo.project.Project;
@@ -105,7 +107,7 @@ public class AnnotateStackTraceAction extends DumbAwareAction {
                 MultiMap<VirtualFile, Integer> files2lines = new MultiMap<>();
                 Map<Integer, LastRevision> revisions = new HashMap<>();
 
-                ApplicationManager.getApplication().runReadAction(() -> {
+                Application.get().runReadAction(() -> {
                     for (int line = 0; line < myEditor.getDocument().getLineCount(); line++) {
                         indicator.checkCanceled();
                         VirtualFile file = getHyperlinkVirtualFile(myHyperlinks.findAllHyperlinksOnLine(line));
@@ -135,6 +137,7 @@ public class AnnotateStackTraceAction extends DumbAwareAction {
 
                     myUpdateQueue.queue(new Update("update") {
                         @Override
+                        @RequiredUIAccess
                         public void run() {
                             updateGutter(indicator, revisions);
                         }
@@ -142,7 +145,7 @@ public class AnnotateStackTraceAction extends DumbAwareAction {
                 });
 
                 // myUpdateQueue can be disposed before the last revisions are passed to the gutter
-                ApplicationManager.getApplication().invokeLater(() -> updateGutter(indicator, revisions));
+                Application.get().invokeLater(() -> updateGutter(indicator, revisions));
             }
 
             @RequiredUIAccess
@@ -217,11 +220,11 @@ public class AnnotateStackTraceAction extends DumbAwareAction {
             return null;
         }
         HyperlinkInfo info = EditorHyperlinkSupport.getHyperlinkInfo(key);
-        if (!(info instanceof FileHyperlinkInfo)) {
-            return null;
+        if (info instanceof FileHyperlinkInfo fileHyperlinkInfo) {
+            OpenFileDescriptor descriptor = fileHyperlinkInfo.getDescriptor();
+            return descriptor != null ? descriptor.getFile() : null;
         }
-        OpenFileDescriptor descriptor = ((FileHyperlinkInfo)info).getDescriptor();
-        return descriptor != null ? descriptor.getFile() : null;
+        return null;
     }
 
     private static class LastRevision {
@@ -331,14 +334,17 @@ public class AnnotateStackTraceAction extends DumbAwareAction {
             return "";
         }
 
+        @Nonnull
         @Override
-        public String getToolTip(int line, Editor editor) {
+        public LocalizeValue getToolTipValue(int line, Editor editor) {
             LastRevision revision = myRevisions.get(line);
             if (revision != null) {
-                return XmlStringUtil.escapeString(revision.getAuthor() + " " + DateFormatUtil.formatDateTime(revision.getDate()) + "\n" +
-                    VcsUtil.trimCommitMessageToSaneSize(revision.getMessage()));
+                return LocalizeValue.of(
+                    XmlStringUtil.escapeString(revision.getAuthor() + " " + DateFormatUtil.formatDateTime(revision.getDate()) + "\n" +
+                        VcsUtil.trimCommitMessageToSaneSize(revision.getMessage()))
+                );
             }
-            return null;
+            return LocalizeValue.empty();
         }
 
         @Override

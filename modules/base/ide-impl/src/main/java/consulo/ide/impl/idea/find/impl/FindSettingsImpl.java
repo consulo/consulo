@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.find.impl;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.*;
 import consulo.find.FindBundle;
+import consulo.find.FindSearchContext;
 import consulo.find.FindModel;
 import consulo.find.FindSettings;
 import consulo.util.lang.StringUtil;
@@ -28,7 +29,6 @@ import consulo.util.xml.serializer.annotation.Property;
 import consulo.util.xml.serializer.annotation.Tag;
 import consulo.util.xml.serializer.annotation.Transient;
 import jakarta.inject.Singleton;
-import org.jetbrains.annotations.NonNls;
 
 import jakarta.annotation.Nonnull;
 
@@ -39,17 +39,11 @@ import java.util.List;
 @State(name = "FindSettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/find.xml"), @Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml", deprecated = true)})
 @ServiceImpl
 public class FindSettingsImpl extends FindSettings implements PersistentStateComponent<FindSettingsImpl> {
-    @NonNls
     private static final String FIND_DIRECTION_FORWARD = "forward";
-    @NonNls
     private static final String FIND_DIRECTION_BACKWARD = "backward";
-    @NonNls
     private static final String FIND_ORIGIN_FROM_CURSOR = "from_cursor";
-    @NonNls
     private static final String FIND_ORIGIN_ENTIRE_SCOPE = "entire_scope";
-    @NonNls
     private static final String FIND_SCOPE_GLOBAL = "global";
-    @NonNls
     private static final String FIND_SCOPE_SELECTED = "selected";
 
     public FindSettingsImpl() {
@@ -94,6 +88,9 @@ public class FindSettingsImpl extends FindSettings implements PersistentStateCom
     public String FIND_CUSTOM_SCOPE = null;
 
     @SuppressWarnings({"WeakerAccess"})
+    public FindSearchContext SEARCH_CONTEXT = FindSearchContext.ANY;
+
+    @SuppressWarnings({"WeakerAccess"})
     public boolean CASE_SENSITIVE_SEARCH = false;
     @SuppressWarnings({"WeakerAccess"})
     public boolean LOCAL_CASE_SENSITIVE_SEARCH = false;
@@ -101,16 +98,6 @@ public class FindSettingsImpl extends FindSettings implements PersistentStateCom
     public boolean PRESERVE_CASE_REPLACE = false;
     @SuppressWarnings({"WeakerAccess"})
     public boolean WHOLE_WORDS_ONLY = false;
-    @SuppressWarnings({"WeakerAccess"})
-    public boolean COMMENTS_ONLY = false;
-    @SuppressWarnings({"WeakerAccess"})
-    public boolean STRING_LITERALS_ONLY = false;
-    @SuppressWarnings({"WeakerAccess"})
-    public boolean EXCEPT_COMMENTS = false;
-    @SuppressWarnings({"WeakerAccess"})
-    public boolean EXCEPT_COMMENTS_AND_STRING_LITERALS = false;
-    @SuppressWarnings({"WeakerAccess"})
-    public boolean EXCEPT_STRING_LITERALS = false;
     @SuppressWarnings({"WeakerAccess"})
     public boolean LOCAL_WHOLE_WORDS_ONLY = false;
     @SuppressWarnings({"WeakerAccess"})
@@ -279,16 +266,7 @@ public class FindSettingsImpl extends FindSettings implements PersistentStateCom
         model.setGlobal(isGlobal());
         model.setRegularExpressions(isRegularExpressions());
         model.setWholeWordsOnly(isWholeWordsOnly());
-        FindModel.SearchContext searchContext = isInCommentsOnly()
-            ? FindModel.SearchContext.IN_COMMENTS
-            : isInStringLiteralsOnly()
-            ? FindModel.SearchContext.IN_STRING_LITERALS
-            : isExceptComments()
-            ? FindModel.SearchContext.EXCEPT_COMMENTS
-            : isExceptStringLiterals()
-            ? FindModel.SearchContext.EXCEPT_STRING_LITERALS
-            : isExceptCommentsAndLiterals() ? FindModel.SearchContext.EXCEPT_COMMENTS_AND_STRING_LITERALS : FindModel.SearchContext.ANY;
-        model.setSearchContext(searchContext);
+        model.setSearchContext(getSearchContext());
         model.setWithSubdirectories(isWithSubdirectories());
         model.setFileFilter(FILE_MASK);
 
@@ -354,38 +332,8 @@ public class FindSettingsImpl extends FindSettings implements PersistentStateCom
     }
 
     @Override
-    public boolean isInStringLiteralsOnly() {
-        return STRING_LITERALS_ONLY;
-    }
-
-    @Override
-    public boolean isInCommentsOnly() {
-        return COMMENTS_ONLY;
-    }
-
-    @Override
-    public void setInCommentsOnly(boolean selected) {
-        COMMENTS_ONLY = selected;
-    }
-
-    @Override
-    public void setInStringLiteralsOnly(boolean selected) {
-        STRING_LITERALS_ONLY = selected;
-    }
-
-    @Override
     public void setCustomScope(final String SEARCH_SCOPE) {
         this.SEARCH_SCOPE = SEARCH_SCOPE;
-    }
-
-    @Override
-    public boolean isExceptComments() {
-        return EXCEPT_COMMENTS;
-    }
-
-    @Override
-    public void setExceptCommentsAndLiterals(boolean selected) {
-        EXCEPT_COMMENTS_AND_STRING_LITERALS = selected;
     }
 
     @Override
@@ -399,22 +347,12 @@ public class FindSettingsImpl extends FindSettings implements PersistentStateCom
     }
 
     @Override
-    public boolean isExceptCommentsAndLiterals() {
-        return EXCEPT_COMMENTS_AND_STRING_LITERALS;
+    public FindSearchContext getSearchContext() {
+        return SEARCH_CONTEXT;
     }
 
     @Override
-    public void setExceptComments(boolean selected) {
-        EXCEPT_COMMENTS = selected;
-    }
-
-    @Override
-    public boolean isExceptStringLiterals() {
-        return EXCEPT_STRING_LITERALS;
-    }
-
-    @Override
-    public void setExceptStringLiterals(boolean selected) {
-        EXCEPT_STRING_LITERALS = selected;
+    public void setSearchContext(FindSearchContext searchContext) {
+        this.SEARCH_CONTEXT = searchContext;
     }
 }

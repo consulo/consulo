@@ -23,8 +23,10 @@ import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.language.editor.ui.awt.EditorComboBox;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.util.ProjectUtil;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.util.lang.StringUtil;
@@ -33,7 +35,6 @@ import consulo.versionControlSystem.distributed.DvcsRememberedInputs;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -55,10 +56,10 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
 
     static {
         // TODO make real URL pattern
-        @NonNls final String ch = "[\\p{ASCII}&&[\\p{Graph}]&&[^@:/]]";
-        @NonNls final String host = ch + "+(?:\\." + ch + "+)*";
-        @NonNls final String path = "/?" + ch + "+(?:/" + ch + "+)*/?";
-        @NonNls final String all = "(?:" + ch + "+@)?" + host + ":" + path;
+        final String ch = "[\\p{ASCII}&&[\\p{Graph}]&&[^@:/]]";
+        final String host = ch + "+(?:\\." + ch + "+)*";
+        final String path = "/?" + ch + "+(?:/" + ch + "+)*/?";
+        final String all = "(?:" + ch + "+@)?" + host + ":" + path;
         SSH_URL_PATTERN = Pattern.compile(all);
     }
 
@@ -146,8 +147,8 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
         fcd.setHideIgnored(false);
         myParentDirectory.addActionListener(
             new ComponentWithBrowseButton.BrowseFolderActionListener<JTextField>(
-                fcd.getTitle(),
-                fcd.getDescription(),
+                fcd.getTitleValue(),
+                fcd.getDescriptionValue(),
                 myParentDirectory,
                 myProject,
                 fcd,
@@ -189,7 +190,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
         myTestButton.setEnabled(false);
     }
 
-    @NonNls
+    @RequiredUIAccess
     private void test() {
         myTestURL = getCurrentUrlText();
         TestResult testResult = ProgressManager.getInstance().runProcessWithProgressSynchronously(
@@ -229,7 +230,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
         if (!checkDestination()) {
             return;
         }
-        setErrorText(null);
+        setErrorText(LocalizeValue.empty());
         setOKActionEnabled(true);
     }
 
@@ -240,7 +241,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
      */
     private boolean checkDestination() {
         if (myParentDirectory.getText().length() == 0 || myDirectoryName.getText().length() == 0) {
-            setErrorText(null);
+            setErrorText(LocalizeValue.empty());
             setOKActionEnabled(false);
             return false;
         }
@@ -261,12 +262,12 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
     private boolean checkRepositoryURL() {
         String repository = getCurrentUrlText();
         if (repository.length() == 0) {
-            setErrorText(null);
+            setErrorText(LocalizeValue.empty());
             setOKActionEnabled(false);
             return false;
         }
         if (myTestResult != null && repository.equals(myTestURL)) {
-            if (!myTestResult.booleanValue()) {
+            if (!myTestResult) {
                 setErrorText(DvcsBundle.message("clone.test.failed.error"));
                 setOKActionEnabled(false);
                 return false;
@@ -373,10 +374,12 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
 
     @Nullable
     @Override
+    @RequiredUIAccess
     public JComponent getPreferredFocusedComponent() {
         return myRepositoryURL;
     }
 
+    @Override
     protected JComponent createCenterPanel() {
         return myRootPanel;
     }

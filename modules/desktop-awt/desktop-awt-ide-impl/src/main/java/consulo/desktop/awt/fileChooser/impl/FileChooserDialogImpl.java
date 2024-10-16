@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.fileChooser.impl;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.SaveAndSyncHandler;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.wm.IdeFocusManager;
@@ -39,6 +39,7 @@ import consulo.ide.impl.idea.openapi.fileChooser.impl.FileChooserUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.event.ApplicationActivationListener;
@@ -110,13 +111,14 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
         setTitle(getChooserTitle(descriptor));
     }
 
-    private static String getChooserTitle(final FileChooserDescriptor descriptor) {
-        final String title = descriptor.getTitle();
-        return title != null ? title : UILocalize.fileChooserDefaultTitle().get();
+    private static LocalizeValue getChooserTitle(final FileChooserDescriptor descriptor) {
+        final LocalizeValue title = descriptor.getTitleValue();
+        return title != LocalizeValue.empty() ? title : UILocalize.fileChooserDefaultTitle();
     }
 
     @Override
     @Nonnull
+    @RequiredUIAccess
     public VirtualFile[] choose(@Nullable final ComponentManager project, @Nonnull final VirtualFile... toSelect) {
         init();
         if ((myProject == null) && (project != null)) {
@@ -138,6 +140,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
     }
 
     @Override
+    @RequiredUIAccess
     public void choose(@Nullable VirtualFile toSelect, @Nonnull Consumer<List<VirtualFile>> callback) {
         init();
         restoreSelection(toSelect);
@@ -145,8 +148,8 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
         if (myChosenFiles.length > 0) {
             callback.accept(Arrays.asList(myChosenFiles));
         }
-        else if (callback instanceof IdeaFileChooser.FileChooserConsumer) {
-            ((IdeaFileChooser.FileChooserConsumer)callback).cancelled();
+        else if (callback instanceof IdeaFileChooser.FileChooserConsumer fileChooserConsumer) {
+            fileChooserConsumer.cancelled();
         }
     }
 
@@ -208,8 +211,9 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
         final VirtualFile file = FileChooserUtil.getFileToSelect(myChooserDescriptor, myProject, toSelect, lastOpenedFile);
 
         if (file != null && file.isValid()) {
-            myFileSystemTree.select(file, new Runnable() {
-                public void run() {
+            myFileSystemTree.select(
+                file,
+                () -> {
                     if (!file.equals(myFileSystemTree.getSelectedFile())) {
                         VirtualFile parent = file.getParent();
                         if (parent != null) {
@@ -220,7 +224,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
                         myFileSystemTree.expand(file, null);
                     }
                 }
-            });
+            );
         }
     }
 
@@ -270,6 +274,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
     }
 
     @Nullable
+    @Override
     protected final JComponent createTitlePane() {
         final String description = myChooserDescriptor.getDescription();
         if (StringUtil.isEmptyOrSpaces(description)) {
@@ -284,6 +289,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
         return label;
     }
 
+    @Override
     protected JComponent createCenterPanel() {
         JPanel panel = new MyPanel();
 
@@ -303,6 +309,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
         toolbarPanel.add(toolBar.getComponent(), BorderLayout.CENTER);
 
         myTextFieldAction = new TextFieldAction() {
+            @Override
             public void linkSelected(final LinkLabel aSource, final Object aLinkData) {
                 toggleShowTextField();
             }
@@ -360,15 +367,18 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
         hintLabel.setFont(JBUI.Fonts.smallFont());
         panel.add(hintLabel, BorderLayout.SOUTH);
 
-        ApplicationManager.getApplication()
+        Application.get()
             .getMessageBus()
             .connect(getDisposable())
-            .subscribe(ApplicationActivationListener.class, new ApplicationActivationListener() {
-                @Override
-                public void applicationActivated(IdeFrame ideFrame) {
-                    ((DesktopSaveAndSyncHandlerImpl)SaveAndSyncHandler.getInstance()).maybeRefresh(IdeaModalityState.current());
+            .subscribe(
+                ApplicationActivationListener.class,
+                new ApplicationActivationListener() {
+                    @Override
+                    public void applicationActivated(IdeFrame ideFrame) {
+                        ((DesktopSaveAndSyncHandlerImpl)SaveAndSyncHandler.getInstance()).maybeRefresh(IdeaModalityState.current());
+                    }
                 }
-            });
+            );
 
         return panel;
     }
@@ -378,6 +388,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
         return null;
     }
 
+    @Override
     @RequiredUIAccess
     public JComponent getPreferredFocusedComponent() {
         if (isToShowTextField()) {
@@ -388,6 +399,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
         }
     }
 
+    @Override
     public final void dispose() {
         LocalFileSystem.getInstance().removeWatchedRoots(myRequests.values());
         super.dispose();
@@ -397,6 +409,8 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
         return myPathTextField.getField().getRootPane() != null;
     }
 
+    @Override
+    @RequiredUIAccess
     protected void doOKAction() {
         if (!isOKActionEnabled()) {
             return;
@@ -433,6 +447,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
         super.doOKAction();
     }
 
+    @Override
     public final void doCancelAction() {
         myChosenFiles = VirtualFile.EMPTY_ARRAY;
         super.doCancelAction();
@@ -445,11 +460,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
         internalTree.setShowsRootHandles(true);
         Disposer.register(myDisposable, myFileSystemTree);
 
-        myFileSystemTree.addOkAction(new Runnable() {
-            public void run() {
-                doOKAction();
-            }
-        });
+        myFileSystemTree.addOkAction(this::doOKAction);
         JTree tree = myFileSystemTree.getTree();
         if (!Registry.is("file.chooser.async.tree.model")) {
             tree.setCellRenderer(new NodeRenderer());
@@ -458,24 +469,20 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
         tree.addTreeExpansionListener(new FileTreeExpansionListener());
         setOKActionEnabled(false);
 
-        myFileSystemTree.addListener(
-            new FileSystemTree.Listener() {
-                public void selectionChanged(final List<? extends VirtualFile> selection) {
-                    updatePathFromTree(selection, false);
-                }
-            },
-            myDisposable
-        );
+        myFileSystemTree.addListener(selection -> updatePathFromTree(selection, false), myDisposable);
 
         new FileDrop(tree, new FileDrop.Target() {
+            @Override
             public FileChooserDescriptor getDescriptor() {
                 return myChooserDescriptor;
             }
 
+            @Override
             public boolean isHiddenShown() {
                 return myFileSystemTree.areHiddensShown();
             }
 
+            @Override
             public void dropFiles(final List<VirtualFile> files) {
                 if (!myChooserDescriptor.isChooseMultiple() && files.size() > 0) {
                     selectInTree(new VirtualFile[]{files.get(0)}, true);
@@ -502,8 +509,8 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
         if (myTreeIsUpdating || !myUiUpdater.isEmpty()) {
             if (isTextFieldActive() && !StringUtil.isEmpty(myPathTextField.getTextFieldText())) {
                 LookupFile toFind = myPathTextField.getFile();
-                if (toFind instanceof LocalFsFinder.VfsFile && toFind.exists()) {
-                    VirtualFile file = ((LocalFsFinder.VfsFile)toFind).getFile();
+                if (toFind instanceof LocalFsFinder.VfsFile vfsFile && toFind.exists()) {
+                    VirtualFile file = vfsFile.getFile();
                     if (file != null) {
                         return new VirtualFile[]{file};
                     }
@@ -526,30 +533,31 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
     }
 
     private final class FileTreeExpansionListener implements TreeExpansionListener {
+        @Override
         public void treeExpanded(TreeExpansionEvent event) {
             final Object[] path = event.getPath().getPath();
-            if (path.length == 2 && path[1] instanceof DefaultMutableTreeNode) {
+            if (path.length == 2 && path[1] instanceof DefaultMutableTreeNode node
+                && node.getUserObject() instanceof FileNodeDescriptor fileNodeDescriptor) {
                 // top node has been expanded => watch disk recursively
-                final DefaultMutableTreeNode node = (DefaultMutableTreeNode)path[1];
-                Object userObject = node.getUserObject();
-                if (userObject instanceof FileNodeDescriptor) {
-                    final VirtualFile file = ((FileNodeDescriptor)userObject).getElement().getFile();
-                    if (file != null && file.isDirectory()) {
-                        final String rootPath = file.getPath();
-                        if (myRequests.get(rootPath) == null) {
-                            final LocalFileSystem.WatchRequest watchRequest = LocalFileSystem.getInstance().addRootToWatch(rootPath, true);
-                            myRequests.put(rootPath, watchRequest);
-                        }
+                final VirtualFile file = fileNodeDescriptor.getElement().getFile();
+                if (file != null && file.isDirectory()) {
+                    final String rootPath = file.getPath();
+                    if (myRequests.get(rootPath) == null) {
+                        final LocalFileSystem.WatchRequest watchRequest = LocalFileSystem.getInstance().addRootToWatch(rootPath, true);
+                        myRequests.put(rootPath, watchRequest);
                     }
                 }
             }
         }
 
+        @Override
         public void treeCollapsed(TreeExpansionEvent event) {
         }
     }
 
     private final class FileTreeSelectionListener implements TreeSelectionListener {
+        @Override
+        @RequiredUIAccess
         public void valueChanged(TreeSelectionEvent e) {
             TreePath[] paths = e.getPaths();
 
@@ -571,12 +579,13 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
             super(new BorderLayout(0, 0));
         }
 
+        @Override
         public Object getData(@Nonnull Key<?> dataId) {
             if (VirtualFile.KEY_OF_ARRAY == dataId) {
                 return myFileSystemTree.getSelectedFiles();
             }
             else if (PathField.PATH_FIELD == dataId) {
-                return (PathField)() -> toggleShowTextField();
+                return (PathField)FileChooserDialogImpl.this::toggleShowTextField;
             }
             else if (FileSystemTree.DATA_KEY == dataId) {
                 return myFileSystemTree;
@@ -602,7 +611,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
             myNorthPanel.add(myPath, BorderLayout.CENTER);
         }
         else {
-            setErrorText(null);
+            setErrorText(LocalizeValue.empty());
         }
         IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> {
             IdeFocusManager.getGlobalInstance().requestFocus(myPathTextField.getField(), true);
@@ -631,7 +640,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
 
         myPathTextField.setText(text, now, () -> {
             myPathTextField.getField().selectAll();
-            setErrorText(null);
+            setErrorText(LocalizeValue.empty());
         });
     }
 
@@ -647,14 +656,16 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
         }
 
         myUiUpdater.queue(new Update("treeFromPath.1") {
+            @Override
             public void run() {
-                ApplicationManager.getApplication().executeOnPooledThread((Runnable)() -> {
+                Application.get().executeOnPooledThread((Runnable)() -> {
                     final LocalFsFinder.VfsFile toFind = (LocalFsFinder.VfsFile)myPathTextField.getFile();
                     if (toFind == null || !toFind.exists()) {
                         return;
                     }
 
                     myUiUpdater.queue(new Update("treeFromPath.2") {
+                        @Override
                         public void run() {
                             selectInTree(toFind.getFile(), text);
                         }
@@ -687,7 +698,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
                 }
 
                 myTreeIsUpdating = false;
-                setErrorText(null);
+                setErrorText(LocalizeValue.empty());
                 if (requestFocus) {
                     IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myFileSystemTree.getTree());
                 }
@@ -695,13 +706,13 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
         }
         else {
             myTreeIsUpdating = false;
-            setErrorText(null);
+            setErrorText(LocalizeValue.empty());
         }
     }
 
     private void reportFileNotFound() {
         myTreeIsUpdating = false;
-        setErrorText(null);
+        setErrorText(LocalizeValue.empty());
     }
 
     @Override

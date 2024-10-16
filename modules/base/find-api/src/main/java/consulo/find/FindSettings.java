@@ -141,25 +141,9 @@ public abstract class FindSettings {
 
     public abstract String getCustomScope();
 
-    public abstract boolean isInStringLiteralsOnly();
+    public abstract FindSearchContext getSearchContext();
 
-    public abstract void setInStringLiteralsOnly(boolean selected);
-
-    public abstract boolean isInCommentsOnly();
-
-    public abstract void setInCommentsOnly(boolean selected);
-
-    public abstract boolean isExceptStringLiterals();
-
-    public abstract void setExceptStringLiterals(boolean selected);
-
-    public abstract boolean isExceptComments();
-
-    public abstract void setExceptComments(boolean selected);
-
-    public abstract boolean isExceptCommentsAndLiterals();
-
-    public abstract void setExceptCommentsAndLiterals(boolean selected);
+    public abstract void setSearchContext(FindSearchContext searchContext);
 
     public abstract boolean isShowResultsInSeparateView();
 

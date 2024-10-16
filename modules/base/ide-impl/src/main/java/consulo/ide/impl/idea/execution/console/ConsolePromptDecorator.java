@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.execution.console;
 
 import consulo.execution.ui.console.ConsoleViewContentType;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.AnAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorLinePainter;
@@ -108,10 +109,10 @@ public class ConsolePromptDecorator extends EditorLinePainter implements TextAnn
         return null;
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    public String getToolTip(int line, Editor editor) {
-        return null;
+    public LocalizeValue getToolTipValue(int line, Editor editor) {
+        return LocalizeValue.empty();
     }
 
     @Override
@@ -147,7 +148,6 @@ public class ConsolePromptDecorator extends EditorLinePainter implements TextAnn
 
     @Override
     public void gutterClosed() {
-
     }
 
     public void update() {
