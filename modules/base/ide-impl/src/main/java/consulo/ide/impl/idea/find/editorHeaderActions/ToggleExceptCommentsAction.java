@@ -15,10 +15,10 @@
  */
 package consulo.ide.impl.idea.find.editorHeaderActions;
 
-import consulo.find.FindModel;
+import consulo.find.FindSearchContext;
 
 public class ToggleExceptCommentsAction extends EditorHeaderSetSearchContextAction {
-  public ToggleExceptCommentsAction() {
-    super("Except C&omments", FindModel.SearchContext.EXCEPT_COMMENTS);
-  }
+    public ToggleExceptCommentsAction() {
+        super("Except C&omments", FindSearchContext.EXCEPT_COMMENTS);
+    }
 }

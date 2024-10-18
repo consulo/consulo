@@ -15,10 +15,10 @@
  */
 package consulo.ide.impl.idea.find.editorHeaderActions;
 
-import consulo.find.FindModel;
+import consulo.find.FindSearchContext;
 
 public class ToggleAnywhereAction extends EditorHeaderSetSearchContextAction {
-  public ToggleAnywhereAction() {
-    super("Anywhere", FindModel.SearchContext.ANY);
-  }
+    public ToggleAnywhereAction() {
+        super("Anywhere", FindSearchContext.ANY);
+    }
 }

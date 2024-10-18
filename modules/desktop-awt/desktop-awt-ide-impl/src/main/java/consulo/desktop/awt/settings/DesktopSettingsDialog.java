@@ -15,17 +15,18 @@
  */
 package consulo.desktop.awt.settings;
 
-import consulo.application.ApplicationManager;
-import consulo.application.CommonBundle;
+import consulo.application.Application;
 import consulo.application.HelpManager;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.configurable.ProjectStructureSelectorOverSettings;
 import consulo.ide.impl.configurable.ConfigurablePreselectStrategy;
+import consulo.ide.impl.configurable.ProjectStructureSelectorOverSettings;
 import consulo.ide.setting.ProjectStructureSelector;
 import consulo.ide.setting.Settings;
+import consulo.localize.LocalizeValue;
+import consulo.platform.Platform;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.Size;
@@ -50,224 +51,233 @@ import java.util.Map;
 
 public class DesktopSettingsDialog extends WholeWestDialogWrapper implements DataProvider {
 
-  private Project myProject;
-  private Configurable[] myConfigurables;
-  private ConfigurablePreselectStrategy myPreselectStrategy;
-  private OptionsEditor myEditor;
+    private Project myProject;
+    private Configurable[] myConfigurables;
+    private ConfigurablePreselectStrategy myPreselectStrategy;
+    private OptionsEditor myEditor;
 
-  private ApplyAction myApplyAction;
-  public static final String DIMENSION_KEY = "OptionsEditor";
+    private ApplyAction myApplyAction;
+    public static final String DIMENSION_KEY = "OptionsEditor";
 
-  /**
-   * This constructor should be eliminated after the new modality approach
-   * will have been checked. See a {@code Registry} key ide.mac.modalDialogsOnFullscreen
-   *
-   * @deprecated
-   */
-  public DesktopSettingsDialog(Project project,
-                               Configurable[] configurables,
-                               @Nonnull ConfigurablePreselectStrategy strategy,
-                               boolean applicationModalIfPossible) {
-    super(true, applicationModalIfPossible);
-    init(project, configurables, strategy);
-  }
-
-  public DesktopSettingsDialog(Project project, Configurable[] configurables, @Nonnull ConfigurablePreselectStrategy strategy) {
-    super(project, true);
-    init(project, configurables, strategy);
-  }
-
-  private void init(final Project project, final Configurable[] configurables, @Nonnull ConfigurablePreselectStrategy strategy) {
-    myProject = project;
-    myConfigurables = configurables;
-    myPreselectStrategy = strategy;
-
-    setTitle(CommonBundle.settingsTitle());
-
-    init();
-  }
-
-  @Override
-  public boolean isTypeAheadEnabled() {
-    return true;
-  }
-
-  @Nonnull
-  @Override
-  public String getSplitterKey() {
-    return OptionsEditor.MAIN_SPLITTER_PROPORTION;
-  }
-
-  @Override
-  public Size getDefaultSize() {
-    return new Size(1028, 500);
-  }
-
-  @Nullable
-  @Override
-  protected Border createContentPaneBorder() {
-    return JBUI.Borders.empty();
-  }
-
-  @Nullable
-  @Override
-  protected JComponent createSouthPanel() {
-    JComponent southPanel = super.createSouthPanel();
-    if (southPanel != null) {
-      southPanel.setBorder(JBUI.Borders.empty(ourDefaultBorderInsets));
-      BorderLayoutPanel borderLayoutPanel = JBUI.Panels.simplePanel(southPanel);
-      borderLayoutPanel.setBorder(new CustomLineBorder(JBUI.scale(1), 0, 0, 0));
-      return borderLayoutPanel;
-    }
-    return null;
-  }
-
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public Couple<JComponent> createSplitterComponents(JPanel rootPanel) {
-    Configurable configurable = myPreselectStrategy.get(myConfigurables);
-    myEditor = new OptionsEditor(myProject, myConfigurables, configurable, rootPanel);
-    myEditor.getContext().addColleague(new OptionsEditorColleague() {
-      @Override
-      public AsyncResult<Void> onModifiedAdded(final Configurable configurable) {
-        updateStatus();
-        return AsyncResult.resolved();
-      }
-
-      @Override
-      public AsyncResult<Void> onModifiedRemoved(final Configurable configurable) {
-        updateStatus();
-        return AsyncResult.resolved();
-      }
-
-      @Override
-      public AsyncResult<Void> onErrorsChanged() {
-        updateStatus();
-        return AsyncResult.resolved();
-      }
-    });
-    Disposer.register(myDisposable, myEditor);
-    return Couple.of(myEditor.getLeftSide(), myEditor.getRightSide());
-  }
-
-  public boolean updateStatus() {
-    myApplyAction.setEnabled(myEditor.canApply());
-
-    final Map<Configurable, ConfigurationException> errors = myEditor.getContext().getErrors();
-    if (errors.size() == 0) {
-      setErrorText(null);
-    }
-    else {
-      String text = "Changes were not applied because of an error";
-
-      final String errorMessage = getErrorMessage(errors);
-      if (errorMessage != null) {
-        text += "<br>" + errorMessage;
-      }
-
-      setErrorText(text);
+    /**
+     * This constructor should be eliminated after the new modality approach
+     * will have been checked. See a {@code Registry} key ide.mac.modalDialogsOnFullscreen
+     *
+     * @deprecated
+     */
+    public DesktopSettingsDialog(
+        Project project,
+        Configurable[] configurables,
+        @Nonnull ConfigurablePreselectStrategy strategy,
+        boolean applicationModalIfPossible
+    ) {
+        super(true, applicationModalIfPossible);
+        init(project, configurables, strategy);
     }
 
-    return errors.size() == 0;
-  }
-
-  @Nullable
-  private static String getErrorMessage(final Map<Configurable, ConfigurationException> errors) {
-    final Collection<ConfigurationException> values = errors.values();
-    final ConfigurationException[] exceptions = values.toArray(new ConfigurationException[values.size()]);
-    if (exceptions.length > 0) {
-      return exceptions[0].getMessage();
-    }
-    return null;
-  }
-
-  @Override
-  protected String getDimensionServiceKey() {
-    return DIMENSION_KEY;
-  }
-
-  @Override
-  public void doOKAction() {
-    myEditor.flushModifications();
-
-    if (myEditor.canApply()) {
-      myEditor.apply();
-      if (!updateStatus()) return;
+    public DesktopSettingsDialog(Project project, Configurable[] configurables, @Nonnull ConfigurablePreselectStrategy strategy) {
+        super(project, true);
+        init(project, configurables, strategy);
     }
 
-    saveCurrentConfigurable();
+    private void init(final Project project, final Configurable[] configurables, @Nonnull ConfigurablePreselectStrategy strategy) {
+        myProject = project;
+        myConfigurables = configurables;
+        myPreselectStrategy = strategy;
 
-    ApplicationManager.getApplication().saveAll();
+        setTitle(Platform.current().os().isMac() ? CommonLocalize.titleSettingsMac() : CommonLocalize.titleSettings());
 
-    super.doOKAction();
-  }
-
-  private void saveCurrentConfigurable() {
-    final Configurable current = myEditor.getContext().getCurrentConfigurable();
-    if (current == null) return;
-
-    myPreselectStrategy.save(current);
-  }
-
-  @Override
-  public void doCancelAction(final AWTEvent source) {
-    if (source instanceof KeyEvent || source instanceof ActionEvent) {
-      if (myEditor.getContext().isHoldingFilter()) {
-        myEditor.clearFilter();
-        return;
-      }
-    }
-
-    super.doCancelAction(source);
-  }
-
-  @Override
-  public void doCancelAction() {
-    saveCurrentConfigurable();
-    super.doCancelAction();
-  }
-
-  @Nonnull
-  @Override
-  protected Action[] createActions() {
-    myApplyAction = new ApplyAction();
-    return new Action[]{getOKAction(), getCancelAction(), myApplyAction, getHelpAction()};
-  }
-
-  @Override
-  protected void doHelpAction() {
-    final String topic = myEditor.getHelpTopic();
-    HelpManager.getInstance().invokeHelp(topic);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public JComponent getPreferredFocusedComponent() {
-    return myEditor.getPreferredFocusedComponent();
-  }
-
-  @Override
-  public Object getData(@Nonnull Key<?> dataId) {
-    if (Settings.KEY == dataId) {
-      return myEditor;
-    }
-    else if (ProjectStructureSelector.KEY == dataId) {
-      return new ProjectStructureSelectorOverSettings(myEditor);
-    }
-    return null;
-  }
-
-  private class ApplyAction extends DialogWrapperAction {
-    public ApplyAction() {
-      super(CommonLocalize.buttonApply());
-      setEnabled(false);
+        init();
     }
 
     @Override
-    protected void doAction(ActionEvent e) {
-      myEditor.apply();
-      myEditor.repaint();
+    public boolean isTypeAheadEnabled() {
+        return true;
     }
-  }
+
+    @Nonnull
+    @Override
+    public String getSplitterKey() {
+        return OptionsEditor.MAIN_SPLITTER_PROPORTION;
+    }
+
+    @Override
+    public Size getDefaultSize() {
+        return new Size(1028, 500);
+    }
+
+    @Nullable
+    @Override
+    protected Border createContentPaneBorder() {
+        return JBUI.Borders.empty();
+    }
+
+    @Nullable
+    @Override
+    protected JComponent createSouthPanel() {
+        JComponent southPanel = super.createSouthPanel();
+        if (southPanel != null) {
+            southPanel.setBorder(JBUI.Borders.empty(ourDefaultBorderInsets));
+            BorderLayoutPanel borderLayoutPanel = JBUI.Panels.simplePanel(southPanel);
+            borderLayoutPanel.setBorder(new CustomLineBorder(JBUI.scale(1), 0, 0, 0));
+            return borderLayoutPanel;
+        }
+        return null;
+    }
+
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    public Couple<JComponent> createSplitterComponents(JPanel rootPanel) {
+        Configurable configurable = myPreselectStrategy.get(myConfigurables);
+        myEditor = new OptionsEditor(myProject, myConfigurables, configurable, rootPanel);
+        myEditor.getContext().addColleague(new OptionsEditorColleague() {
+            @Override
+            public AsyncResult<Void> onModifiedAdded(final Configurable configurable) {
+                updateStatus();
+                return AsyncResult.resolved();
+            }
+
+            @Override
+            public AsyncResult<Void> onModifiedRemoved(final Configurable configurable) {
+                updateStatus();
+                return AsyncResult.resolved();
+            }
+
+            @Override
+            public AsyncResult<Void> onErrorsChanged() {
+                updateStatus();
+                return AsyncResult.resolved();
+            }
+        });
+        Disposer.register(myDisposable, myEditor);
+        return Couple.of(myEditor.getLeftSide(), myEditor.getRightSide());
+    }
+
+    public boolean updateStatus() {
+        myApplyAction.setEnabled(myEditor.canApply());
+
+        final Map<Configurable, ConfigurationException> errors = myEditor.getContext().getErrors();
+        if (errors.size() == 0) {
+            setErrorText(LocalizeValue.empty());
+        }
+        else {
+            String text = "Changes were not applied because of an error";
+
+            final String errorMessage = getErrorMessage(errors);
+            if (errorMessage != null) {
+                text += "<br>" + errorMessage;
+            }
+
+            setErrorText(text);
+        }
+
+        return errors.size() == 0;
+    }
+
+    @Nullable
+    private static String getErrorMessage(final Map<Configurable, ConfigurationException> errors) {
+        final Collection<ConfigurationException> values = errors.values();
+        final ConfigurationException[] exceptions = values.toArray(new ConfigurationException[values.size()]);
+        if (exceptions.length > 0) {
+            return exceptions[0].getMessage();
+        }
+        return null;
+    }
+
+    @Override
+    protected String getDimensionServiceKey() {
+        return DIMENSION_KEY;
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void doOKAction() {
+        myEditor.flushModifications();
+
+        if (myEditor.canApply()) {
+            myEditor.apply();
+            if (!updateStatus()) {
+                return;
+            }
+        }
+
+        saveCurrentConfigurable();
+
+        Application.get().saveAll();
+
+        super.doOKAction();
+    }
+
+    private void saveCurrentConfigurable() {
+        final Configurable current = myEditor.getContext().getCurrentConfigurable();
+        if (current == null) {
+            return;
+        }
+
+        myPreselectStrategy.save(current);
+    }
+
+    @Override
+    public void doCancelAction(final AWTEvent source) {
+        if (source instanceof KeyEvent || source instanceof ActionEvent) {
+            if (myEditor.getContext().isHoldingFilter()) {
+                myEditor.clearFilter();
+                return;
+            }
+        }
+
+        super.doCancelAction(source);
+    }
+
+    @Override
+    public void doCancelAction() {
+        saveCurrentConfigurable();
+        super.doCancelAction();
+    }
+
+    @Nonnull
+    @Override
+    protected Action[] createActions() {
+        myApplyAction = new ApplyAction();
+        return new Action[]{getOKAction(), getCancelAction(), myApplyAction, getHelpAction()};
+    }
+
+    @Override
+    @RequiredUIAccess
+    protected void doHelpAction() {
+        final String topic = myEditor.getHelpTopic();
+        HelpManager.getInstance().invokeHelp(topic);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public JComponent getPreferredFocusedComponent() {
+        return myEditor.getPreferredFocusedComponent();
+    }
+
+    @Override
+    public Object getData(@Nonnull Key<?> dataId) {
+        if (Settings.KEY == dataId) {
+            return myEditor;
+        }
+        else if (ProjectStructureSelector.KEY == dataId) {
+            return new ProjectStructureSelectorOverSettings(myEditor);
+        }
+        return null;
+    }
+
+    private class ApplyAction extends DialogWrapperAction {
+        public ApplyAction() {
+            super(CommonLocalize.buttonApply());
+            setEnabled(false);
+        }
+
+        @Override
+        @RequiredUIAccess
+        protected void doAction(ActionEvent e) {
+            myEditor.apply();
+            myEditor.repaint();
+        }
+    }
 }

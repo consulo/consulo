@@ -15,6 +15,7 @@
  */
 package consulo.diff.impl.internal.util;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.codeEditor.markup.GutterIconRenderer;
@@ -25,64 +26,68 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public abstract class DiffGutterRenderer extends GutterIconRenderer {
-  @Nonnull
-  private final Image myIcon;
-  @Nullable
-  private final String myTooltip;
+    @Nonnull
+    private final Image myIcon;
+    @Nonnull
+    private final LocalizeValue myTooltip;
 
-  public DiffGutterRenderer(@Nonnull Image icon, @Nullable String tooltip) {
-    myIcon = icon;
-    myTooltip = tooltip;
-  }
+    public DiffGutterRenderer(@Nonnull Image icon, @Nonnull LocalizeValue tooltip) {
+        myIcon = icon;
+        myTooltip = tooltip;
+    }
 
-  @Nonnull
-  @Override
-  public Image getIcon() {
-    return myIcon;
-  }
+    public DiffGutterRenderer(@Nonnull Image icon, @Nullable String tooltip) {
+        this(icon, LocalizeValue.ofNullable(tooltip));
+    }
 
-  @Nullable
-  @Override
-  public String getTooltipText() {
-    return myTooltip;
-  }
+    @Nonnull
+    @Override
+    public Image getIcon() {
+        return myIcon;
+    }
 
-  @Override
-  public boolean isNavigateAction() {
-    return true;
-  }
+    @Nonnull
+    @Override
+    public LocalizeValue getTooltipValue() {
+        return myTooltip;
+    }
 
-  @Override
-  public boolean isDumbAware() {
-    return true;
-  }
+    @Override
+    public boolean isNavigateAction() {
+        return true;
+    }
 
-  @Nonnull
-  @Override
-  public Alignment getAlignment() {
-    return Alignment.LEFT;
-  }
+    @Override
+    public boolean isDumbAware() {
+        return true;
+    }
 
-  @Nullable
-  @Override
-  public AnAction getClickAction() {
-    return new DumbAwareAction() {
-      @Override
-      public void actionPerformed(AnActionEvent e) {
-        performAction(e);
-      }
-    };
-  }
+    @Nonnull
+    @Override
+    public Alignment getAlignment() {
+        return Alignment.LEFT;
+    }
 
-  @Override
-  public boolean equals(Object obj) {
-    return obj == this;
-  }
+    @Nullable
+    @Override
+    public AnAction getClickAction() {
+        return new DumbAwareAction() {
+            @Override
+            public void actionPerformed(AnActionEvent e) {
+                performAction(e);
+            }
+        };
+    }
 
-  @Override
-  public int hashCode() {
-    return System.identityHashCode(this);
-  }
+    @Override
+    public boolean equals(Object obj) {
+        return obj == this;
+    }
 
-  protected abstract void performAction(AnActionEvent e);
+    @Override
+    public int hashCode() {
+        return System.identityHashCode(this);
+    }
+
+    protected abstract void performAction(AnActionEvent e);
 }

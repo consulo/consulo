@@ -15,26 +15,26 @@
  */
 package consulo.ide.impl.idea.find.editorHeaderActions;
 
-import consulo.find.FindModel;
+import consulo.find.FindSearchContext;
 import consulo.ide.impl.idea.find.SearchSession;
 import jakarta.annotation.Nonnull;
 
 public class EditorHeaderSetSearchContextAction extends EditorHeaderToggleAction {
-  private final FindModel.SearchContext myContext;
+    private final FindSearchContext myContext;
 
-  protected EditorHeaderSetSearchContextAction(@Nonnull String text, @Nonnull FindModel.SearchContext context) {
-    super(text);
+    protected EditorHeaderSetSearchContextAction(@Nonnull String text, @Nonnull FindSearchContext context) {
+        super(text);
 
-    myContext = context;
-  }
+        myContext = context;
+    }
 
-  @Override
-  protected boolean isSelected(@Nonnull SearchSession session) {
-    return session.getFindModel().getSearchContext() == myContext;
-  }
+    @Override
+    protected boolean isSelected(@Nonnull SearchSession session) {
+        return session.getFindModel().getSearchContext() == myContext;
+    }
 
-  @Override
-  protected void setSelected(@Nonnull SearchSession session, boolean selected) {
-    session.getFindModel().setSearchContext(selected ? myContext : FindModel.SearchContext.ANY);
-  }
+    @Override
+    protected void setSelected(@Nonnull SearchSession session, boolean selected) {
+        session.getFindModel().setSearchContext(selected ? myContext : FindSearchContext.ANY);
+    }
 }

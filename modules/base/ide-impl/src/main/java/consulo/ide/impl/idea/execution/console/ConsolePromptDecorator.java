@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.execution.console;
 
 import consulo.execution.ui.console.ConsoleViewContentType;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.AnAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorLinePainter;
@@ -32,6 +33,7 @@ import consulo.ui.color.ColorValue;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -39,117 +41,116 @@ import java.util.List;
  * from kotlin
  */
 public class ConsolePromptDecorator extends EditorLinePainter implements TextAnnotationGutterProvider {
-  private static final EditorColorKey promptColor = EditorColorKey.createColorKey("CONSOLE_PROMPT_COLOR");
+    private static final EditorColorKey promptColor = EditorColorKey.createColorKey("CONSOLE_PROMPT_COLOR");
 
-  private final EditorEx myEditorEx;
+    private final EditorEx myEditorEx;
 
-  private ConsoleViewContentType promptAttributes = ConsoleViewContentType.USER_INPUT;
+    private ConsoleViewContentType promptAttributes = ConsoleViewContentType.USER_INPUT;
 
-  private String mainPrompt = ">";
+    private String mainPrompt = ">";
 
-  private String indentPrompt = "";
+    private String indentPrompt = "";
 
-  public ConsolePromptDecorator(EditorEx editorEx) {
-    myEditorEx = editorEx;
+    public ConsolePromptDecorator(EditorEx editorEx) {
+        myEditorEx = editorEx;
 
-    myEditorEx.getColorsScheme().setColor(promptColor, promptAttributes.getAttributes().getForegroundColor());
-  }
-
-  public void setPromptAttributes(ConsoleViewContentType promptAttributes) {
-    this.promptAttributes = promptAttributes;
-
-    myEditorEx.getColorsScheme().setColor(promptColor, promptAttributes.getAttributes().getForegroundColor());
-
-    update();
-  }
-
-  public void setMainPrompt(String mainPrompt) {
-    if(!StringUtil.equals(this.mainPrompt, mainPrompt)) {
-      // to be compatible with LanguageConsoleView we should reset the indent prompt
-      this.indentPrompt = "";
-      this.mainPrompt = mainPrompt;
-      update();
+        myEditorEx.getColorsScheme().setColor(promptColor, promptAttributes.getAttributes().getForegroundColor());
     }
-  }
 
-  public String getMainPrompt() {
-    return mainPrompt;
-  }
+    public void setPromptAttributes(ConsoleViewContentType promptAttributes) {
+        this.promptAttributes = promptAttributes;
 
-  public void setIndentPrompt(String indentPrompt) {
-    this.indentPrompt = indentPrompt;
-    update();
-  }
+        myEditorEx.getColorsScheme().setColor(promptColor, promptAttributes.getAttributes().getForegroundColor());
 
-  public String getIndentPrompt() {
-    return myEditorEx.isRendererMode() ? "" : indentPrompt;
-  }
-
-  public ConsoleViewContentType getPromptAttributes() {
-    return promptAttributes;
-  }
-
-  @Nullable
-  @Override
-  public Collection<LineExtensionInfo> getLineExtensions(@Nonnull Project project, @Nonnull VirtualFile file, int lineNumber) {
-    return null;
-  }
-
-  @Nullable
-  @Override
-  public String getLineText(int line, Editor editor) {
-    if(line == 0) {
-      return mainPrompt;
+        update();
     }
-    else if(line > 0) {
-      return getIndentPrompt();
+
+    public void setMainPrompt(String mainPrompt) {
+        if (!StringUtil.equals(this.mainPrompt, mainPrompt)) {
+            // to be compatible with LanguageConsoleView we should reset the indent prompt
+            this.indentPrompt = "";
+            this.mainPrompt = mainPrompt;
+            update();
+        }
     }
-    return null;
-  }
 
-  @Nullable
-  @Override
-  public String getToolTip(int line, Editor editor) {
-    return null;
-  }
-
-  @Override
-  public EditorFontType getStyle(int line, Editor editor) {
-    return EditorFontType.CONSOLE_PLAIN;
-  }
-
-  @Nullable
-  @Override
-  public EditorColorKey getColor(int line, Editor editor) {
-    return promptColor;
-  }
-
-  @Nullable
-  @Override
-  public ColorValue getBgColor(int line, Editor editor) {
-    ColorValue backgroundColor = this.promptAttributes.getAttributes().getBackgroundColor();
-    if(backgroundColor == null) {
-      backgroundColor = myEditorEx.getBackgroundColor();
+    public String getMainPrompt() {
+        return mainPrompt;
     }
-    return backgroundColor;
-  }
 
-  @Override
-  public boolean useMargin() {
-    return false;
-  }
+    public void setIndentPrompt(String indentPrompt) {
+        this.indentPrompt = indentPrompt;
+        update();
+    }
 
-  @Override
-  public List<AnAction> getPopupActions(int line, Editor editor) {
-    return null;
-  }
+    public String getIndentPrompt() {
+        return myEditorEx.isRendererMode() ? "" : indentPrompt;
+    }
 
-  @Override
-  public void gutterClosed() {
+    public ConsoleViewContentType getPromptAttributes() {
+        return promptAttributes;
+    }
 
-  }
+    @Nullable
+    @Override
+    public Collection<LineExtensionInfo> getLineExtensions(@Nonnull Project project, @Nonnull VirtualFile file, int lineNumber) {
+        return null;
+    }
 
-  public void update() {
-    UIUtil.invokeLaterIfNeeded(() -> myEditorEx.getGutterComponentEx().revalidateMarkup());
-  }
+    @Nullable
+    @Override
+    public String getLineText(int line, Editor editor) {
+        if (line == 0) {
+            return mainPrompt;
+        }
+        else if (line > 0) {
+            return getIndentPrompt();
+        }
+        return null;
+    }
+
+    @Nonnull
+    @Override
+    public LocalizeValue getToolTipValue(int line, Editor editor) {
+        return LocalizeValue.empty();
+    }
+
+    @Override
+    public EditorFontType getStyle(int line, Editor editor) {
+        return EditorFontType.CONSOLE_PLAIN;
+    }
+
+    @Nullable
+    @Override
+    public EditorColorKey getColor(int line, Editor editor) {
+        return promptColor;
+    }
+
+    @Nullable
+    @Override
+    public ColorValue getBgColor(int line, Editor editor) {
+        ColorValue backgroundColor = this.promptAttributes.getAttributes().getBackgroundColor();
+        if (backgroundColor == null) {
+            backgroundColor = myEditorEx.getBackgroundColor();
+        }
+        return backgroundColor;
+    }
+
+    @Override
+    public boolean useMargin() {
+        return false;
+    }
+
+    @Override
+    public List<AnAction> getPopupActions(int line, Editor editor) {
+        return null;
+    }
+
+    @Override
+    public void gutterClosed() {
+    }
+
+    public void update() {
+        UIUtil.invokeLaterIfNeeded(() -> myEditorEx.getGutterComponentEx().revalidateMarkup());
+    }
 }

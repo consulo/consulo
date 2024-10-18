@@ -2089,15 +2089,37 @@ public abstract class DialogWrapper {
      *
      * @param text the error text to display
      */
+    public void setErrorText(@Nonnull LocalizeValue text) {
+        setErrorText(text, null);
+    }
+
+    /**
+     * Don't override this method. It is not final for the API compatibility.
+     * It will not be called by the DialogWrapper's validator.
+     * Use this method only in circumstances when the exact invalid component is hard to
+     * detect or the valid status is based on several fields. In other cases use
+     * <code>{@link #setErrorText(String, JComponent)}</code> method.
+     *
+     * @param text the error text to display
+     */
+    @Deprecated
+    @DeprecationInfo("Use setErrorText(LocalizeValue)")
     public void setErrorText(@Nullable final String text) {
         setErrorText(text, null);
     }
 
-    public void setErrorText(@Nullable final String text, @Nullable final JComponent component) {
+    public void setErrorText(@Nonnull LocalizeValue text, @Nullable final JComponent component) {
         setErrorInfoAll(
-            (text == null) ? Collections.EMPTY_LIST
+            text == LocalizeValue.empty()
+                ? Collections.EMPTY_LIST
                 : Collections.singletonList(new ValidationInfo(text, component))
         );
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use setErrorText(LocalizeValue, JComponent)")
+    public void setErrorText(@Nullable final String text, @Nullable final JComponent component) {
+        setErrorText(LocalizeValue.ofNullable(text), component);
     }
 
     protected void setErrorInfoAll(@Nonnull List<ValidationInfo> info) {
@@ -2185,17 +2207,21 @@ public abstract class DialogWrapper {
             }
         }
         else if (!myInfo.isEmpty()) {
-            myErrorTextAlarm.addRequest(() -> {
-                for (ValidationInfo vi : myInfo) {
-                    myErrorText.appendError(vi.message);
-                }
-            }, 300, null);
+            myErrorTextAlarm.addRequest(
+                () -> {
+                    for (ValidationInfo vi : myInfo) {
+                        myErrorText.appendError(vi.message);
+                    }
+                },
+                300,
+                null
+            );
         }
     }
 
-    private void setErrorTipText(JComponent component, JLabel label, String text) {
+    private void setErrorTipText(JComponent component, JLabel label, LocalizeValue text) {
         Insets insets = UIManager.getInsets("Balloon.error.textInsets");
-        float oneLineWidth = BasicGraphicsUtils.getStringWidth(label, label.getFontMetrics(label.getFont()), text);
+        float oneLineWidth = BasicGraphicsUtils.getStringWidth(label, label.getFontMetrics(label.getFont()), text.get());
         float textWidth = getRootPane().getWidth() - component.getX() - insets.left - insets.right - JBUI.scale(30);
         if (textWidth < JBUI.scale(90)) {
             textWidth = JBUI.scale(90);
@@ -2289,7 +2315,7 @@ public abstract class DialogWrapper {
 
     private class ErrorText extends JPanel {
         private final JLabel myLabel = new JLabel();
-        private List<String> errors = new ArrayList<>();
+        private List<LocalizeValue> errors = new ArrayList<>();
 
         private ErrorText(int horizontalAlignment) {
             setLayout(new BorderLayout());
@@ -2315,7 +2341,7 @@ public abstract class DialogWrapper {
             updateSize();
         }
 
-        private void appendError(String text) {
+        private void appendError(LocalizeValue text) {
             errors.add(text);
             myLabel.setBounds(0, 0, 0, 0);
             StringBuilder sb = new StringBuilder("<html><font color='#" + ColorUtil.toHex(JBColor.RED) + "'>");
@@ -2358,10 +2384,10 @@ public abstract class DialogWrapper {
 
     private class ErrorFocusListener implements FocusListener {
         private final JLabel label;
-        private final String text;
+        private final LocalizeValue text;
         private final JComponent component;
 
-        private ErrorFocusListener(JLabel label, String text, JComponent component) {
+        private ErrorFocusListener(JLabel label, LocalizeValue text, JComponent component) {
             this.label = label;
             this.text = text;
             this.component = component;

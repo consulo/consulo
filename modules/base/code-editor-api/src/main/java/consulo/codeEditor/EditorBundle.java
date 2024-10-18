@@ -15,12 +15,18 @@
  */
 package consulo.codeEditor;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.internal.MigratedExtensionsTo;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.component.util.localize.AbstractBundle;
 import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author lesya
  */
+@Deprecated
+@DeprecationInfo("Use CodeEditorLocalize")
+@MigratedExtensionsTo(CodeEditorLocalize.class)
 public class EditorBundle extends AbstractBundle{
   private static final EditorBundle ourInstance = new EditorBundle();
 

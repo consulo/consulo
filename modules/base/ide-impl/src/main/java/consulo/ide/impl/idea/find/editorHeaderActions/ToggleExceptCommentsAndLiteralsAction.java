@@ -15,10 +15,10 @@
  */
 package consulo.ide.impl.idea.find.editorHeaderActions;
 
-import consulo.find.FindModel;
+import consulo.find.FindSearchContext;
 
 public class ToggleExceptCommentsAndLiteralsAction extends EditorHeaderSetSearchContextAction {
-  public ToggleExceptCommentsAndLiteralsAction() {
-    super("Except Comments and Li&terals", FindModel.SearchContext.EXCEPT_COMMENTS_AND_STRING_LITERALS);
-  }
+    public ToggleExceptCommentsAndLiteralsAction() {
+        super("Except Comments and Li&terals", FindSearchContext.EXCEPT_COMMENTS_AND_STRING_LITERALS);
+    }
 }

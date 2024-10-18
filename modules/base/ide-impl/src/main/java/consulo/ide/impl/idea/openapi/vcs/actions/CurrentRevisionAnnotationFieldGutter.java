@@ -17,14 +17,17 @@ package consulo.ide.impl.idea.openapi.vcs.actions;
 
 import consulo.codeEditor.Editor;
 import consulo.colorScheme.EditorColorKey;
+import consulo.ide.impl.idea.openapi.vcs.annotate.TextAnnotationPresentation;
+import consulo.localize.LocalizeValue;
+import consulo.ui.color.ColorValue;
 import consulo.util.lang.Couple;
-import consulo.versionControlSystem.VcsBundle;
+import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.annotate.AnnotationSource;
 import consulo.versionControlSystem.annotate.FileAnnotation;
 import consulo.versionControlSystem.annotate.LineAnnotationAspect;
-import consulo.ide.impl.idea.openapi.vcs.annotate.TextAnnotationPresentation;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
-import consulo.ui.color.ColorValue;
+import consulo.versionControlSystem.localize.VcsLocalize;
+import jakarta.annotation.Nonnull;
 
 import java.util.Map;
 import java.util.function.Consumer;
@@ -35,43 +38,46 @@ import java.util.function.Consumer;
  * @author Konstantin Bulenkov
  */
 class CurrentRevisionAnnotationFieldGutter extends AspectAnnotationFieldGutter implements Consumer<AnnotationSource> {
-  // merge source showing is turned on
-  private boolean myTurnedOn;
+    // merge source showing is turned on
+    private boolean myTurnedOn;
 
-  CurrentRevisionAnnotationFieldGutter(FileAnnotation annotation,
-                                       LineAnnotationAspect aspect,
-                                       TextAnnotationPresentation highlighting,
-                                       Couple<Map<VcsRevisionNumber, ColorValue>> colorScheme) {
-    super(annotation, aspect, highlighting, colorScheme);
-  }
-
-  @Override
-  public EditorColorKey getColor(int line, Editor editor) {
-    return AnnotationSource.LOCAL.getColor();
-  }
-
-  @Override
-  public String getLineText(int line, Editor editor) {
-    final String value = myAspect.getValue(line);
-    if (String.valueOf(myAnnotation.getLineRevisionNumber(line)).equals(value)) {
-      return "";
+    CurrentRevisionAnnotationFieldGutter(
+        FileAnnotation annotation,
+        LineAnnotationAspect aspect,
+        TextAnnotationPresentation highlighting,
+        Couple<Map<VcsRevisionNumber, ColorValue>> colorScheme
+    ) {
+        super(annotation, aspect, highlighting, colorScheme);
     }
-    // shown in merge sources mode
-    return myTurnedOn ? value : "";
-  }
 
-  @Override
-  public String getToolTip(int line, Editor editor) {
-    final String aspectTooltip = myAspect.getTooltipText(line);
-    if (aspectTooltip != null) {
-      return aspectTooltip;
+    @Override
+    public EditorColorKey getColor(int line, Editor editor) {
+        return AnnotationSource.LOCAL.getColor();
     }
-    final String text = getLineText(line, editor);
-    return ((text == null) || (text.length() == 0)) ? "" : VcsBundle.message("annotation.original.revision.text", text);
-  }
 
-  @Override
-  public void accept(final AnnotationSource annotationSource) {
-    myTurnedOn = annotationSource.showMerged();
-  }
+    @Override
+    public String getLineText(int line, Editor editor) {
+        final String value = myAspect.getValue(line);
+        if (String.valueOf(myAnnotation.getLineRevisionNumber(line)).equals(value)) {
+            return "";
+        }
+        // shown in merge sources mode
+        return myTurnedOn ? value : "";
+    }
+
+    @Nonnull
+    @Override
+    public LocalizeValue getToolTipValue(int line, Editor editor) {
+        LocalizeValue aspectTooltip = myAspect.getTooltipValue(line);
+        if (aspectTooltip != LocalizeValue.empty()) {
+            return aspectTooltip;
+        }
+        final String text = getLineText(line, editor);
+        return StringUtil.isEmpty(text) ? LocalizeValue.empty() : VcsLocalize.annotationOriginalRevisionText(text);
+    }
+
+    @Override
+    public void accept(final AnnotationSource annotationSource) {
+        myTurnedOn = annotationSource.showMerged();
+    }
 }
