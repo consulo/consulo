@@ -18,14 +18,18 @@ package consulo.desktop.awt.internal.diff.fragment;
 import consulo.desktop.awt.internal.diff.simple.SimpleOnesideDiffViewer;
 import consulo.diff.DiffContext;
 import consulo.diff.FrameDiffTool;
+import consulo.diff.localize.DiffLocalize;
 import consulo.diff.request.DiffRequest;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 
+@SuppressWarnings("ExtensionImplIsNotAnnotated")
 public class UnifiedDiffTool implements FrameDiffTool {
     public static final UnifiedDiffTool INSTANCE = new UnifiedDiffTool();
 
     @Nonnull
     @Override
+    @RequiredUIAccess
     public DiffViewer createComponent(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
         if (SimpleOnesideDiffViewer.canShowRequest(context, request)) {
             return new SimpleOnesideDiffViewer(context, request);
@@ -44,6 +48,6 @@ public class UnifiedDiffTool implements FrameDiffTool {
     @Nonnull
     @Override
     public String getName() {
-        return "Oneside viewer";
+        return DiffLocalize.unifiedViewer().get();
     }
 }

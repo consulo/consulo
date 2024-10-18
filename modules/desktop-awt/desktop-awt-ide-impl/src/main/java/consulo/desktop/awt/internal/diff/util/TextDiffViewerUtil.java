@@ -31,6 +31,7 @@ import consulo.diff.impl.internal.TextDiffSettingsHolder.TextDiffSettings;
 import consulo.diff.impl.internal.util.DiffImplUtil;
 import consulo.diff.impl.internal.util.HighlightPolicy;
 import consulo.diff.impl.internal.util.IgnorePolicy;
+import consulo.diff.localize.DiffLocalize;
 import consulo.diff.request.ContentDiffRequest;
 import consulo.disposer.Disposable;
 import consulo.externalService.statistic.UsageTrigger;
@@ -319,7 +320,7 @@ public class TextDiffViewerUtil {
         protected final TextDiffSettings mySettings;
 
         public ToggleAutoScrollAction(@Nonnull TextDiffSettings settings) {
-            super("Synchronize Scrolling", AllIcons.Actions.SynchronizeScrolling);
+            super(DiffLocalize.synchronizeScrolling(), AllIcons.Actions.SynchronizeScrolling);
             mySettings = settings;
             setEnabledInModalContext(true);
         }
@@ -340,7 +341,7 @@ public class TextDiffViewerUtil {
         protected final TextDiffSettings mySettings;
 
         public ToggleExpandByDefaultAction(@Nonnull TextDiffSettings settings) {
-            super("Collapse unchanged fragments", AllIcons.Actions.Collapseall);
+            super(DiffLocalize.collapseUnchangedFragments(), AllIcons.Actions.Collapseall);
             mySettings = settings;
             setEnabledInModalContext(true);
         }

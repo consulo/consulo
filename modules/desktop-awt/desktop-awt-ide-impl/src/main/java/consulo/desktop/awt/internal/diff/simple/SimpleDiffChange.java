@@ -25,11 +25,13 @@ import consulo.diff.fragment.DiffFragment;
 import consulo.diff.fragment.LineFragment;
 import consulo.diff.impl.internal.util.DiffGutterRenderer;
 import consulo.diff.impl.internal.util.DiffImplUtil;
+import consulo.diff.localize.DiffLocalize;
 import consulo.diff.util.Side;
 import consulo.diff.util.TextDiffType;
 import consulo.document.Document;
 import consulo.externalService.statistic.UsageTrigger;
 import consulo.ide.impl.diff.DiffDrawUtil;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -301,21 +303,31 @@ public class SimpleDiffChange {
 
     @Nullable
     private GutterIconRenderer createApplyRenderer(@Nonnull final Side side) {
-        return createIconRenderer(side, "Accept", DiffImplUtil.getArrowIcon(side), () -> myViewer.replaceChange(this, side));
+        return createIconRenderer(
+            side,
+            DiffLocalize.actionPresentationDiffAcceptText(),
+            DiffImplUtil.getArrowIcon(side),
+            () -> myViewer.replaceChange(this, side)
+        );
     }
 
     @Nullable
     private GutterIconRenderer createAppendRenderer(@Nonnull final Side side) {
-        return createIconRenderer(side, "Append", DiffImplUtil.getArrowDownIcon(side), () -> {
-            UsageTrigger.trigger("diff.SimpleDiffChange.Append");
-            myViewer.appendChange(this, side);
-        });
+        return createIconRenderer(
+            side,
+            DiffLocalize.actionPresentationDiffAppendText(),
+            DiffImplUtil.getArrowDownIcon(side),
+            () -> {
+                UsageTrigger.trigger("diff.SimpleDiffChange.Append");
+                myViewer.appendChange(this, side);
+            }
+        );
     }
 
     @Nullable
     private GutterIconRenderer createIconRenderer(
         @Nonnull final Side sourceSide,
-        @Nonnull final String tooltipText,
+        @Nonnull final LocalizeValue tooltipText,
         @Nonnull final Image icon,
         @Nonnull final Runnable perform
     ) {

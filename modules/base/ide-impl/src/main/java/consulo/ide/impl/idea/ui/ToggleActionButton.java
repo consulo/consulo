@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ui;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.Toggleable;
@@ -29,6 +30,12 @@ import jakarta.annotation.Nullable;
  * @author yole
  */
 public abstract class ToggleActionButton extends AnActionButton implements Toggleable {
+    public ToggleActionButton(@Nonnull LocalizeValue text, Image icon) {
+        super(text, LocalizeValue.empty(), icon);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     public ToggleActionButton(String text, Image icon) {
         super(text, null, icon);
     }

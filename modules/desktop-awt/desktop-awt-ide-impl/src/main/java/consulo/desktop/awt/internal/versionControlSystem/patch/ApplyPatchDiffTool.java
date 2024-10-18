@@ -20,12 +20,15 @@ import consulo.diff.DiffContext;
 import consulo.diff.FrameDiffTool;
 import consulo.diff.request.DiffRequest;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.tool.ApplyPatchDiffRequest;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class ApplyPatchDiffTool implements FrameDiffTool {
     @Nonnull
     @Override
+    @RequiredUIAccess
     public DiffViewer createComponent(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
         return new MyApplyPatchViewer(context, (ApplyPatchDiffRequest)request);
     }
@@ -38,7 +41,7 @@ public class ApplyPatchDiffTool implements FrameDiffTool {
     @Nonnull
     @Override
     public String getName() {
-        return "Apply patch somehow";
+        return VcsLocalize.patchApplySomehowDiffName().get();
     }
 
     private static class MyApplyPatchViewer extends ApplyPatchViewer implements DiffViewer {
@@ -48,6 +51,7 @@ public class ApplyPatchDiffTool implements FrameDiffTool {
 
         @Nonnull
         @Override
+        @RequiredUIAccess
         public ToolbarComponents init() {
             initPatchViewer();
 

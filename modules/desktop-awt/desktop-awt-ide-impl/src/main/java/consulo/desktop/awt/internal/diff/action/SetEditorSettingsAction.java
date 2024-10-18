@@ -23,9 +23,11 @@ import consulo.codeEditor.RealEditor;
 import consulo.desktop.awt.internal.diff.util.SyncScrollSupport;
 import consulo.diff.impl.internal.TextDiffSettingsHolder;
 import consulo.diff.impl.internal.util.HighlightingLevel;
+import consulo.diff.localize.DiffLocalize;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.editor.actions.AbstractToggleUseSoftWrapsAction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.*;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -48,7 +50,7 @@ public class SetEditorSettingsAction extends ActionGroup implements DumbAware {
         @Nonnull TextDiffSettingsHolder.TextDiffSettings settings,
         @Nonnull List<? extends Editor> editors
     ) {
-        super("Editor Settings", null, AllIcons.General.GearPlain);
+        super(DiffLocalize.editorSettings(), LocalizeValue.empty(), AllIcons.General.GearPlain);
         setPopup(true);
         myTextSettings = settings;
         myEditors = editors;
@@ -188,12 +190,12 @@ public class SetEditorSettingsAction extends ActionGroup implements DumbAware {
         }
 
         @Override
-        public boolean isSelected(AnActionEvent e) {
+        public boolean isSelected(@Nonnull AnActionEvent e) {
             return isSelected();
         }
 
         @Override
-        public void setSelected(AnActionEvent e, boolean state) {
+        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
             setSelected(state);
             for (Editor editor : myEditors) {
                 apply(editor, state);
@@ -206,6 +208,7 @@ public class SetEditorSettingsAction extends ActionGroup implements DumbAware {
 
         public abstract void apply(@Nonnull Editor editor, boolean value);
 
+        @Override
         public void applyDefaults(@Nonnull List<? extends Editor> editors) {
             for (Editor editor : editors) {
                 apply(editor, isSelected());
@@ -217,8 +220,8 @@ public class SetEditorSettingsAction extends ActionGroup implements DumbAware {
         private final AnAction[] myOptions;
 
         public EditorHighlightingLayerAction() {
-            super("Highlighting Level", true);
-            myOptions = ContainerUtil.map(HighlightingLevel.values(), level -> new OptionAction(level), AnAction.EMPTY_ARRAY);
+            super(DiffLocalize.highlightingLevel(), true);
+            myOptions = ContainerUtil.map(HighlightingLevel.values(), OptionAction::new, AnAction.EMPTY_ARRAY);
         }
 
         @Nonnull
@@ -243,17 +246,17 @@ public class SetEditorSettingsAction extends ActionGroup implements DumbAware {
             private final HighlightingLevel myLayer;
 
             public OptionAction(@Nonnull HighlightingLevel layer) {
-                super(layer.getText(), null, layer.getIcon());
+                super(layer.getText(), LocalizeValue.empty(), layer.getIcon());
                 myLayer = layer;
             }
 
             @Override
-            public boolean isSelected(AnActionEvent e) {
+            public boolean isSelected(@Nonnull AnActionEvent e) {
                 return myTextSettings.getHighlightingLevel() == myLayer;
             }
 
             @Override
-            public void setSelected(AnActionEvent e, boolean state) {
+            public void setSelected(@Nonnull AnActionEvent e, boolean state) {
                 myTextSettings.setHighlightingLevel(myLayer);
                 apply(myLayer);
             }

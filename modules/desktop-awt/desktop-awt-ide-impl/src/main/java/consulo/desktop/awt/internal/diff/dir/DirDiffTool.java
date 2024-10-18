@@ -17,15 +17,19 @@ package consulo.desktop.awt.internal.diff.dir;
 
 import consulo.diff.DiffContext;
 import consulo.diff.FrameDiffTool;
+import consulo.diff.localize.DiffLocalize;
 import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.request.DiffRequest;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 
+@SuppressWarnings("ExtensionImplIsNotAnnotated")
 public class DirDiffTool implements FrameDiffTool {
     public static final DirDiffTool INSTANCE = new DirDiffTool();
 
     @Nonnull
     @Override
+    @RequiredUIAccess
     public DiffViewer createComponent(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
         return new DirDiffViewer(context, (ContentDiffRequest)request);
     }
@@ -38,6 +42,6 @@ public class DirDiffTool implements FrameDiffTool {
     @Nonnull
     @Override
     public String getName() {
-        return "Directory viewer";
+        return DiffLocalize.directoryViewer().get();
     }
 }

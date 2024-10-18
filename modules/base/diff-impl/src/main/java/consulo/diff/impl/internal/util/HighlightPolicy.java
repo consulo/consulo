@@ -15,23 +15,25 @@
  */
 package consulo.diff.impl.internal.util;
 
+import consulo.diff.localize.DiffLocalize;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 public enum HighlightPolicy {
-    DO_NOT_HIGHLIGHT("Do not highlight"),
-    BY_LINE("Highlight lines"),
-    BY_WORD("Highlight words"),
-    BY_WORD_SPLIT("Highlight split changes");
+    DO_NOT_HIGHLIGHT(DiffLocalize.optionHighlightingPolicyNone()),
+    BY_LINE(DiffLocalize.optionHighlightingPolicyLines()),
+    BY_WORD(DiffLocalize.optionHighlightingPolicyWords()),
+    BY_WORD_SPLIT(DiffLocalize.optionHighlightingPolicySplit());
 
     @Nonnull
-    private final String myText;
+    private final LocalizeValue myText;
 
-    HighlightPolicy(@Nonnull String text) {
+    HighlightPolicy(@Nonnull LocalizeValue text) {
         myText = text;
     }
 
     @Nonnull
-    public String getText() {
+    public LocalizeValue getText() {
         return myText;
     }
 

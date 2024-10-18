@@ -16,40 +16,34 @@
 package consulo.diff.impl.internal.util;
 
 import consulo.diff.comparison.ComparisonPolicy;
+import consulo.diff.localize.DiffLocalize;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 public enum IgnorePolicy {
-    DEFAULT("Do not ignore"),
-    TRIM_WHITESPACES("Trim whitespaces"),
-    IGNORE_WHITESPACES("Ignore whitespaces"),
-    IGNORE_WHITESPACES_CHUNKS("Ignore whitespaces and empty lines");
+    DEFAULT(ComparisonPolicy.DEFAULT, DiffLocalize.optionIgnorePolicyNone()),
+    TRIM_WHITESPACES(ComparisonPolicy.TRIM_WHITESPACES, DiffLocalize.optionIgnorePolicyTrim()),
+    IGNORE_WHITESPACES(ComparisonPolicy.IGNORE_WHITESPACES, DiffLocalize.optionIgnorePolicyWhitespaces()),
+    IGNORE_WHITESPACES_CHUNKS(ComparisonPolicy.IGNORE_WHITESPACES, DiffLocalize.optionIgnorePolicyWhitespacesEmptyLines());
 
     @Nonnull
-    private final String myText;
+    private final ComparisonPolicy myComparisonPolicy;
+    @Nonnull
+    private final LocalizeValue myText;
 
-    IgnorePolicy(@Nonnull String text) {
+    IgnorePolicy(@Nonnull ComparisonPolicy comparisonPolicy, @Nonnull LocalizeValue text) {
+        myComparisonPolicy = comparisonPolicy;
         myText = text;
     }
 
     @Nonnull
-    public String getText() {
+    public LocalizeValue getText() {
         return myText;
     }
 
     @Nonnull
     public ComparisonPolicy getComparisonPolicy() {
-        switch (this) {
-            case DEFAULT:
-                return ComparisonPolicy.DEFAULT;
-            case TRIM_WHITESPACES:
-                return ComparisonPolicy.TRIM_WHITESPACES;
-            case IGNORE_WHITESPACES:
-                return ComparisonPolicy.IGNORE_WHITESPACES;
-            case IGNORE_WHITESPACES_CHUNKS:
-                return ComparisonPolicy.IGNORE_WHITESPACES;
-            default:
-                throw new IllegalArgumentException(this.name());
-        }
+        return myComparisonPolicy;
     }
 
     public boolean isShouldTrimChunks() {

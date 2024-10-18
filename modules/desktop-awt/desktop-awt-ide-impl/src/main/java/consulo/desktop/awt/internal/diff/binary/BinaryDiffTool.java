@@ -17,14 +17,18 @@ package consulo.desktop.awt.internal.diff.binary;
 
 import consulo.diff.DiffContext;
 import consulo.diff.FrameDiffTool;
+import consulo.diff.localize.DiffLocalize;
 import consulo.diff.request.DiffRequest;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 
+@SuppressWarnings("ExtensionImplIsNotAnnotated")
 public class BinaryDiffTool implements FrameDiffTool {
     public static final BinaryDiffTool INSTANCE = new BinaryDiffTool();
 
     @Nonnull
     @Override
+    @RequiredUIAccess
     public DiffViewer createComponent(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
         if (OnesideBinaryDiffViewer.canShowRequest(context, request)) {
             return new OnesideBinaryDiffViewer(context, request);
@@ -40,14 +44,14 @@ public class BinaryDiffTool implements FrameDiffTool {
 
     @Override
     public boolean canShow(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
-        return OnesideBinaryDiffViewer.canShowRequest(context, request) ||
-            TwosideBinaryDiffViewer.canShowRequest(context, request) ||
-            ThreesideBinaryDiffViewer.canShowRequest(context, request);
+        return OnesideBinaryDiffViewer.canShowRequest(context, request)
+            || TwosideBinaryDiffViewer.canShowRequest(context, request)
+            || ThreesideBinaryDiffViewer.canShowRequest(context, request);
     }
 
     @Nonnull
     @Override
     public String getName() {
-        return "Binary file viewer";
+        return DiffLocalize.binaryFileViewer().get();
     }
 }
