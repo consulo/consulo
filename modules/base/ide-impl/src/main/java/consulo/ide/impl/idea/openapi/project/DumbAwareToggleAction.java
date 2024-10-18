@@ -11,18 +11,18 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public abstract class DumbAwareToggleAction extends ToggleAction implements DumbAware {
-  protected DumbAwareToggleAction() {
-  }
+    protected DumbAwareToggleAction() {
+    }
 
-  protected DumbAwareToggleAction(@Nullable String text) {
-    super(text);
-  }
+    protected DumbAwareToggleAction(@Nullable String text) {
+        super(text);
+    }
 
-  protected DumbAwareToggleAction(@Nullable String text, @Nullable String description, @Nullable Image icon) {
-    super(text, description, icon);
-  }
+    protected DumbAwareToggleAction(@Nullable String text, @Nullable String description, @Nullable Image icon) {
+        super(text, description, icon);
+    }
 
-  protected DumbAwareToggleAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
-    super(text, description, icon);
-  }
+    protected DumbAwareToggleAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+        super(text, description, icon);
+    }
 }

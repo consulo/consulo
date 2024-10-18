@@ -24,26 +24,31 @@ import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
 
 public class TogglePreserveCaseAction extends EditorHeaderToggleAction implements Embeddable {
-  public TogglePreserveCaseAction() {
-    super(FindBundle.message("find.options.replace.preserve.case"), AllIcons.Actions.PreserveCase, AllIcons.Actions.PreserveCaseHover, AllIcons.Actions.PreserveCaseSelected);
-  }
+    public TogglePreserveCaseAction() {
+        super(
+            FindBundle.message("find.options.replace.preserve.case"),
+            AllIcons.Actions.PreserveCase,
+            AllIcons.Actions.PreserveCaseHover,
+            AllIcons.Actions.PreserveCaseSelected
+        );
+    }
 
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    EditorSearchSession search = e.getData(EditorSearchSession.SESSION_KEY);
-    FindModel findModel = search != null ? search.getFindModel() : null;
-    e.getPresentation().setEnabled(findModel != null && !findModel.isRegularExpressions());
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        EditorSearchSession search = e.getData(EditorSearchSession.SESSION_KEY);
+        FindModel findModel = search != null ? search.getFindModel() : null;
+        e.getPresentation().setEnabled(findModel != null && !findModel.isRegularExpressions());
 
-    super.update(e);
-  }
+        super.update(e);
+    }
 
-  @Override
-  protected boolean isSelected(@Nonnull SearchSession session) {
-    return session.getFindModel().isPreserveCase();
-  }
+    @Override
+    protected boolean isSelected(@Nonnull SearchSession session) {
+        return session.getFindModel().isPreserveCase();
+    }
 
-  @Override
-  protected void setSelected(@Nonnull SearchSession session, boolean selected) {
-    session.getFindModel().setPreserveCase(selected);
-  }
+    @Override
+    protected void setSelected(@Nonnull SearchSession session, boolean selected) {
+        session.getFindModel().setPreserveCase(selected);
+    }
 }

@@ -22,18 +22,23 @@ import consulo.application.AllIcons;
 import jakarta.annotation.Nonnull;
 
 public class ToggleMatchCase extends EditorHeaderToggleAction implements Embeddable {
-  public ToggleMatchCase() {
-    super(FindBundle.message("find.case.sensitive"), AllIcons.Actions.MatchCase, AllIcons.Actions.MatchCaseHovered, AllIcons.Actions.MatchCaseSelected);
-  }
+    public ToggleMatchCase() {
+        super(
+            FindBundle.message("find.case.sensitive"),
+            AllIcons.Actions.MatchCase,
+            AllIcons.Actions.MatchCaseHovered,
+            AllIcons.Actions.MatchCaseSelected
+        );
+    }
 
-  @Override
-  protected boolean isSelected(@Nonnull SearchSession session) {
-    return session.getFindModel().isCaseSensitive();
-  }
+    @Override
+    protected boolean isSelected(@Nonnull SearchSession session) {
+        return session.getFindModel().isCaseSensitive();
+    }
 
-  @Override
-  protected void setSelected(@Nonnull SearchSession session, boolean selected) {
-    session.getFindModel().setCaseSensitive(selected);
-    FindSettings.getInstance().setLocalCaseSensitive(selected);
-  }
+    @Override
+    protected void setSelected(@Nonnull SearchSession session, boolean selected) {
+        session.getFindModel().setCaseSensitive(selected);
+        FindSettings.getInstance().setLocalCaseSensitive(selected);
+    }
 }

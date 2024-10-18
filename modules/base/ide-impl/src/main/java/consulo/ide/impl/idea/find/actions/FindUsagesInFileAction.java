@@ -41,77 +41,78 @@ import consulo.usage.UsageView;
 import jakarta.annotation.Nonnull;
 
 public class FindUsagesInFileAction extends AnAction {
-
-  public FindUsagesInFileAction() {
-    setInjectedContext(true);
-  }
-
-  @Override
-  public void actionPerformed(AnActionEvent e) {
-    DataContext dataContext = e.getDataContext();
-    final Project project = dataContext.getData(Project.KEY);
-    if (project == null) return;
-    PsiDocumentManager.getInstance(project).commitAllDocuments();
-    Editor editor = dataContext.getData(Editor.KEY);
-
-    UsageTarget[] usageTargets = dataContext.getData(UsageView.USAGE_TARGETS_KEY);
-    if (usageTargets != null) {
-      FileEditor fileEditor = dataContext.getData(FileEditor.KEY);
-      if (fileEditor != null) {
-        usageTargets[0].findUsagesInEditor(fileEditor);
-      }
-    }
-    else if (editor == null) {
-      Messages.showMessageDialog(
-        project,
-        FindBundle.message("find.no.usages.at.cursor.error"),
-        CommonLocalize.titleError().get(),
-        UIUtil.getErrorIcon()
-      );
-    }
-    else {
-      HintManager.getInstance().showErrorHint(editor, FindBundle.message("find.no.usages.at.cursor.error"));
-    }
-  }
-
-  @Override
-  @RequiredReadAction
-  public void update(@Nonnull AnActionEvent event){
-    updateFindUsagesAction(event);
-  }
-
-  @RequiredReadAction
-  private static boolean isEnabled(DataContext dataContext) {
-    Project project = dataContext.getData(Project.KEY);
-    if (project == null) {
-      return false;
+    public FindUsagesInFileAction() {
+        setInjectedContext(true);
     }
 
-    Editor editor = dataContext.getData(Editor.KEY);
-    if (editor == null) {
-      UsageTarget[] target = dataContext.getData(UsageView.USAGE_TARGETS_KEY);
-      return target != null && target.length > 0;
-    }
-    else {
-      PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
-      if (file == null) {
-        return false;
-      }
+    @Override
+    public void actionPerformed(AnActionEvent e) {
+        DataContext dataContext = e.getDataContext();
+        final Project project = dataContext.getData(Project.KEY);
+        if (project == null) {
+            return;
+        }
+        PsiDocumentManager.getInstance(project).commitAllDocuments();
+        Editor editor = dataContext.getData(Editor.KEY);
 
-      Language language = PsiUtilBase.getLanguageInEditor(editor, project);
-      if (language == null) {
-        language = file.getLanguage();
-      }
-      return !(FindUsagesProvider.forLanguage(language) instanceof EmptyFindUsagesProvider);
+        UsageTarget[] usageTargets = dataContext.getData(UsageView.USAGE_TARGETS_KEY);
+        if (usageTargets != null) {
+            FileEditor fileEditor = dataContext.getData(FileEditor.KEY);
+            if (fileEditor != null) {
+                usageTargets[0].findUsagesInEditor(fileEditor);
+            }
+        }
+        else if (editor == null) {
+            Messages.showMessageDialog(
+                project,
+                FindBundle.message("find.no.usages.at.cursor.error"),
+                CommonLocalize.titleError().get(),
+                UIUtil.getErrorIcon()
+            );
+        }
+        else {
+            HintManager.getInstance().showErrorHint(editor, FindBundle.message("find.no.usages.at.cursor.error"));
+        }
     }
-  }
 
-  @RequiredReadAction
-  public static void updateFindUsagesAction(AnActionEvent event) {
-    Presentation presentation = event.getPresentation();
-    DataContext dataContext = event.getDataContext();
-    boolean enabled = isEnabled(dataContext);
-    presentation.setVisible(enabled || !ActionPlaces.isPopupPlace(event.getPlace()));
-    presentation.setEnabled(enabled);
-  }
+    @Override
+    @RequiredReadAction
+    public void update(@Nonnull AnActionEvent event) {
+        updateFindUsagesAction(event);
+    }
+
+    @RequiredReadAction
+    private static boolean isEnabled(DataContext dataContext) {
+        Project project = dataContext.getData(Project.KEY);
+        if (project == null) {
+            return false;
+        }
+
+        Editor editor = dataContext.getData(Editor.KEY);
+        if (editor == null) {
+            UsageTarget[] target = dataContext.getData(UsageView.USAGE_TARGETS_KEY);
+            return target != null && target.length > 0;
+        }
+        else {
+            PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+            if (file == null) {
+                return false;
+            }
+
+            Language language = PsiUtilBase.getLanguageInEditor(editor, project);
+            if (language == null) {
+                language = file.getLanguage();
+            }
+            return !(FindUsagesProvider.forLanguage(language) instanceof EmptyFindUsagesProvider);
+        }
+    }
+
+    @RequiredReadAction
+    public static void updateFindUsagesAction(AnActionEvent event) {
+        Presentation presentation = event.getPresentation();
+        DataContext dataContext = event.getDataContext();
+        boolean enabled = isEnabled(dataContext);
+        presentation.setVisible(enabled || !ActionPlaces.isPopupPlace(event.getPlace()));
+        presentation.setEnabled(enabled);
+    }
 }

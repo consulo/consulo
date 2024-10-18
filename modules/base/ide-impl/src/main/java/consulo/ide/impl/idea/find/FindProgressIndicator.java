@@ -25,11 +25,12 @@ import jakarta.annotation.Nonnull;
  * @author ven
  */
 public class FindProgressIndicator extends BackgroundableProcessIndicator {
-  public FindProgressIndicator(@Nonnull Project project, String scopeString) {
-    super(project,
-          FindBundle.message("find.progress.searching.message", scopeString),
-          new SearchInBackgroundOption(),
-          FindBundle.message("find.progress.stop.title"),
-          FindBundle.message("find.progress.stop.background.button"), true);
-  }
+    public FindProgressIndicator(@Nonnull Project project, String scopeString) {
+        super(project,
+            FindBundle.message("find.progress.searching.message", scopeString),
+            new SearchInBackgroundOption(),
+            FindBundle.message("find.progress.stop.title"),
+            FindBundle.message("find.progress.stop.background.button"), true
+        );
+    }
 }
