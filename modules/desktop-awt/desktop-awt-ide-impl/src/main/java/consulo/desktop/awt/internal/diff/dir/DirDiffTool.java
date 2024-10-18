@@ -22,22 +22,22 @@ import consulo.diff.request.DiffRequest;
 import jakarta.annotation.Nonnull;
 
 public class DirDiffTool implements FrameDiffTool {
-  public static final DirDiffTool INSTANCE = new DirDiffTool();
+    public static final DirDiffTool INSTANCE = new DirDiffTool();
 
-  @Nonnull
-  @Override
-  public DiffViewer createComponent(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
-    return new DirDiffViewer(context, (ContentDiffRequest)request);
-  }
+    @Nonnull
+    @Override
+    public DiffViewer createComponent(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
+        return new DirDiffViewer(context, (ContentDiffRequest)request);
+    }
 
-  @Override
-  public boolean canShow(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
-    return DirDiffViewer.canShowRequest(context, request);
-  }
+    @Override
+    public boolean canShow(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
+        return DirDiffViewer.canShowRequest(context, request);
+    }
 
-  @Nonnull
-  @Override
-  public String getName() {
-    return "Directory viewer";
-  }
+    @Nonnull
+    @Override
+    public String getName() {
+        return "Directory viewer";
+    }
 }

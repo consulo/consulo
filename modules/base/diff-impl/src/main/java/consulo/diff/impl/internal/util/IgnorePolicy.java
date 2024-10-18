@@ -19,40 +19,40 @@ import consulo.diff.comparison.ComparisonPolicy;
 import jakarta.annotation.Nonnull;
 
 public enum IgnorePolicy {
-  DEFAULT("Do not ignore"),
-  TRIM_WHITESPACES("Trim whitespaces"),
-  IGNORE_WHITESPACES("Ignore whitespaces"),
-  IGNORE_WHITESPACES_CHUNKS("Ignore whitespaces and empty lines");
+    DEFAULT("Do not ignore"),
+    TRIM_WHITESPACES("Trim whitespaces"),
+    IGNORE_WHITESPACES("Ignore whitespaces"),
+    IGNORE_WHITESPACES_CHUNKS("Ignore whitespaces and empty lines");
 
-  @Nonnull
-  private final String myText;
+    @Nonnull
+    private final String myText;
 
-  IgnorePolicy(@Nonnull String text) {
-    myText = text;
-  }
-
-  @Nonnull
-  public String getText() {
-    return myText;
-  }
-
-  @Nonnull
-  public ComparisonPolicy getComparisonPolicy() {
-    switch (this) {
-      case DEFAULT:
-        return ComparisonPolicy.DEFAULT;
-      case TRIM_WHITESPACES:
-        return ComparisonPolicy.TRIM_WHITESPACES;
-      case IGNORE_WHITESPACES:
-        return ComparisonPolicy.IGNORE_WHITESPACES;
-      case IGNORE_WHITESPACES_CHUNKS:
-        return ComparisonPolicy.IGNORE_WHITESPACES;
-      default:
-        throw new IllegalArgumentException(this.name());
+    IgnorePolicy(@Nonnull String text) {
+        myText = text;
     }
-  }
 
-  public boolean isShouldTrimChunks() {
-    return this == IGNORE_WHITESPACES_CHUNKS;
-  }
+    @Nonnull
+    public String getText() {
+        return myText;
+    }
+
+    @Nonnull
+    public ComparisonPolicy getComparisonPolicy() {
+        switch (this) {
+            case DEFAULT:
+                return ComparisonPolicy.DEFAULT;
+            case TRIM_WHITESPACES:
+                return ComparisonPolicy.TRIM_WHITESPACES;
+            case IGNORE_WHITESPACES:
+                return ComparisonPolicy.IGNORE_WHITESPACES;
+            case IGNORE_WHITESPACES_CHUNKS:
+                return ComparisonPolicy.IGNORE_WHITESPACES;
+            default:
+                throw new IllegalArgumentException(this.name());
+        }
+    }
+
+    public boolean isShouldTrimChunks() {
+        return this == IGNORE_WHITESPACES_CHUNKS;
+    }
 }

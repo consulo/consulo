@@ -16,7 +16,7 @@
 package consulo.diff.comparison;
 
 public enum ComparisonPolicy {
-  DEFAULT,
-  TRIM_WHITESPACES,
-  IGNORE_WHITESPACES
+    DEFAULT,
+    TRIM_WHITESPACES,
+    IGNORE_WHITESPACES
 }

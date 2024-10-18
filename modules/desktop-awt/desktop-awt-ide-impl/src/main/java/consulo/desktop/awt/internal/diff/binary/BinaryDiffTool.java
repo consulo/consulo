@@ -21,27 +21,33 @@ import consulo.diff.request.DiffRequest;
 import jakarta.annotation.Nonnull;
 
 public class BinaryDiffTool implements FrameDiffTool {
-  public static final BinaryDiffTool INSTANCE = new BinaryDiffTool();
+    public static final BinaryDiffTool INSTANCE = new BinaryDiffTool();
 
-  @Nonnull
-  @Override
-  public DiffViewer createComponent(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
-    if (OnesideBinaryDiffViewer.canShowRequest(context, request)) return new OnesideBinaryDiffViewer(context, request);
-    if (TwosideBinaryDiffViewer.canShowRequest(context, request)) return new TwosideBinaryDiffViewer(context, request);
-    if (ThreesideBinaryDiffViewer.canShowRequest(context, request)) return new ThreesideBinaryDiffViewer(context, request);
-    throw new IllegalArgumentException(request.toString());
-  }
+    @Nonnull
+    @Override
+    public DiffViewer createComponent(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
+        if (OnesideBinaryDiffViewer.canShowRequest(context, request)) {
+            return new OnesideBinaryDiffViewer(context, request);
+        }
+        if (TwosideBinaryDiffViewer.canShowRequest(context, request)) {
+            return new TwosideBinaryDiffViewer(context, request);
+        }
+        if (ThreesideBinaryDiffViewer.canShowRequest(context, request)) {
+            return new ThreesideBinaryDiffViewer(context, request);
+        }
+        throw new IllegalArgumentException(request.toString());
+    }
 
-  @Override
-  public boolean canShow(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
-    return OnesideBinaryDiffViewer.canShowRequest(context, request) ||
-           TwosideBinaryDiffViewer.canShowRequest(context, request) ||
-           ThreesideBinaryDiffViewer.canShowRequest(context, request);
-  }
+    @Override
+    public boolean canShow(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
+        return OnesideBinaryDiffViewer.canShowRequest(context, request) ||
+            TwosideBinaryDiffViewer.canShowRequest(context, request) ||
+            ThreesideBinaryDiffViewer.canShowRequest(context, request);
+    }
 
-  @Nonnull
-  @Override
-  public String getName() {
-    return "Binary file viewer";
-  }
+    @Nonnull
+    @Override
+    public String getName() {
+        return "Binary file viewer";
+    }
 }

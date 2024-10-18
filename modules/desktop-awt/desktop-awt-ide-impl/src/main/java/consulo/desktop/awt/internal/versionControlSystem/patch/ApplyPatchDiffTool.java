@@ -24,38 +24,38 @@ import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class ApplyPatchDiffTool implements FrameDiffTool {
-  @Nonnull
-  @Override
-  public DiffViewer createComponent(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
-    return new MyApplyPatchViewer(context, (ApplyPatchDiffRequest)request);
-  }
+    @Nonnull
+    @Override
+    public DiffViewer createComponent(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
+        return new MyApplyPatchViewer(context, (ApplyPatchDiffRequest)request);
+    }
 
-  @Override
-  public boolean canShow(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
-    return request instanceof ApplyPatchDiffRequest;
-  }
-
-  @Nonnull
-  @Override
-  public String getName() {
-    return "Apply patch somehow";
-  }
-
-  private static class MyApplyPatchViewer extends ApplyPatchViewer implements DiffViewer {
-    public MyApplyPatchViewer(@Nonnull DiffContext context, @Nonnull ApplyPatchDiffRequest request) {
-      super(context, request);
+    @Override
+    public boolean canShow(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
+        return request instanceof ApplyPatchDiffRequest;
     }
 
     @Nonnull
     @Override
-    public ToolbarComponents init() {
-      initPatchViewer();
-
-      ToolbarComponents components = new ToolbarComponents();
-      components.statusPanel = getStatusPanel();
-      components.toolbarActions = createToolbarActions();
-
-      return components;
+    public String getName() {
+        return "Apply patch somehow";
     }
-  }
+
+    private static class MyApplyPatchViewer extends ApplyPatchViewer implements DiffViewer {
+        public MyApplyPatchViewer(@Nonnull DiffContext context, @Nonnull ApplyPatchDiffRequest request) {
+            super(context, request);
+        }
+
+        @Nonnull
+        @Override
+        public ToolbarComponents init() {
+            initPatchViewer();
+
+            ToolbarComponents components = new ToolbarComponents();
+            components.statusPanel = getStatusPanel();
+            components.toolbarActions = createToolbarActions();
+
+            return components;
+        }
+    }
 }

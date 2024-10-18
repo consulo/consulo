@@ -25,35 +25,47 @@ import jakarta.annotation.Nullable;
 import java.util.function.Predicate;
 
 public enum HighlightingLevel {
-  INSPECTIONS("Inspections", AllIcons.Ide.HectorOn, rangeHighlighter -> true),
-  ADVANCED("Syntax", AllIcons.Ide.HectorSyntax, rangeHighlighter -> rangeHighlighter.getLayer() <= HighlighterLayer.ADDITIONAL_SYNTAX),
-  SIMPLE("None", AllIcons.Ide.HectorOff, rangeHighlighter -> rangeHighlighter.getLayer() <= HighlighterLayer.SYNTAX);
+    INSPECTIONS(
+        "Inspections",
+        AllIcons.Ide.HectorOn,
+        rangeHighlighter -> true
+    ),
+    ADVANCED(
+        "Syntax",
+        AllIcons.Ide.HectorSyntax,
+        rangeHighlighter -> rangeHighlighter.getLayer() <= HighlighterLayer.ADDITIONAL_SYNTAX
+    ),
+    SIMPLE(
+        "None",
+        AllIcons.Ide.HectorOff,
+        rangeHighlighter -> rangeHighlighter.getLayer() <= HighlighterLayer.SYNTAX
+    );
 
-  @Nonnull
-  private final String myText;
-  @Nullable
-  private final Image myIcon;
-  @Nonnull
-  private final Predicate<RangeHighlighter> myCondition;
+    @Nonnull
+    private final String myText;
+    @Nullable
+    private final Image myIcon;
+    @Nonnull
+    private final Predicate<RangeHighlighter> myCondition;
 
-  HighlightingLevel(@Nonnull String text, @Nullable Image icon, @Nonnull Predicate<RangeHighlighter> condition) {
-    myText = text;
-    myIcon = icon;
-    myCondition = condition;
-  }
+    HighlightingLevel(@Nonnull String text, @Nullable Image icon, @Nonnull Predicate<RangeHighlighter> condition) {
+        myText = text;
+        myIcon = icon;
+        myCondition = condition;
+    }
 
-  @Nonnull
-  public String getText() {
-    return myText;
-  }
+    @Nonnull
+    public String getText() {
+        return myText;
+    }
 
-  @Nullable
-  public Image getIcon() {
-    return myIcon;
-  }
+    @Nullable
+    public Image getIcon() {
+        return myIcon;
+    }
 
-  @Nonnull
-  public Predicate<RangeHighlighter> getCondition() {
-    return myCondition;
-  }
+    @Nonnull
+    public Predicate<RangeHighlighter> getCondition() {
+        return myCondition;
+    }
 }

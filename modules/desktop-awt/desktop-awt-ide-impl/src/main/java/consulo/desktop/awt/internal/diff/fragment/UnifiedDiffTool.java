@@ -22,24 +22,28 @@ import consulo.diff.request.DiffRequest;
 import jakarta.annotation.Nonnull;
 
 public class UnifiedDiffTool implements FrameDiffTool {
-  public static final UnifiedDiffTool INSTANCE = new UnifiedDiffTool();
+    public static final UnifiedDiffTool INSTANCE = new UnifiedDiffTool();
 
-  @Nonnull
-  @Override
-  public DiffViewer createComponent(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
-    if (SimpleOnesideDiffViewer.canShowRequest(context, request)) return new SimpleOnesideDiffViewer(context, request);
-    if (UnifiedDiffViewer.canShowRequest(context, request)) return new UnifiedDiffViewer(context, request);
-    throw new IllegalArgumentException(request.toString());
-  }
+    @Nonnull
+    @Override
+    public DiffViewer createComponent(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
+        if (SimpleOnesideDiffViewer.canShowRequest(context, request)) {
+            return new SimpleOnesideDiffViewer(context, request);
+        }
+        if (UnifiedDiffViewer.canShowRequest(context, request)) {
+            return new UnifiedDiffViewer(context, request);
+        }
+        throw new IllegalArgumentException(request.toString());
+    }
 
-  @Override
-  public boolean canShow(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
-    return SimpleOnesideDiffViewer.canShowRequest(context, request) || UnifiedDiffViewer.canShowRequest(context, request);
-  }
+    @Override
+    public boolean canShow(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
+        return SimpleOnesideDiffViewer.canShowRequest(context, request) || UnifiedDiffViewer.canShowRequest(context, request);
+    }
 
-  @Nonnull
-  @Override
-  public String getName() {
-    return "Oneside viewer";
-  }
+    @Nonnull
+    @Override
+    public String getName() {
+        return "Oneside viewer";
+    }
 }
