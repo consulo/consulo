@@ -5,7 +5,7 @@ package consulo.ide.impl.idea.find.replaceInProject;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.WriteAction;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.progress.ProgressManager;
@@ -14,6 +14,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.document.Document;
 import consulo.find.*;
+import consulo.find.localize.FindLocalize;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.find.actions.FindInPathAction;
 import consulo.ide.impl.idea.find.findInProject.FindInProjectManager;
@@ -26,15 +27,18 @@ import consulo.ide.impl.idea.usages.impl.UsageViewImpl;
 import consulo.ide.impl.idea.util.AdapterProcessor;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.KeyboardShortcut;
 import consulo.ui.ex.awt.MessageDialogBuilder;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.content.Content;
 import consulo.undoRedo.CommandProcessor;
 import consulo.usage.*;
@@ -237,6 +241,7 @@ public class ReplaceInProjectManager {
                 }
 
                 @Override
+                @RequiredUIAccess
                 public void findingUsagesFinished(final UsageView usageView) {
                     if (context[0] != null && !processPresentation.isShowFindOptionsPrompt()) {
                         replaceUsagesUnderCommand(context[0], usageView.getUsages());
@@ -254,18 +259,17 @@ public class ReplaceInProjectManager {
         @Nonnull String stringToReplace
     ) {
         return Messages.YES == MessageDialogBuilder.yesNo(
-                FindBundle.message("find.replace.all.confirmation.title"),
-                FindBundle.message(
-                    "find.replace.all.confirmation",
+                FindLocalize.findReplaceAllConfirmationTitle().get(),
+                FindLocalize.findReplaceAllConfirmation(
                     usagesCount,
                     StringUtil.escapeXmlEntities(stringToFind),
                     filesCount,
                     StringUtil.escapeXmlEntities(stringToReplace)
-                )
+                ).get()
             )
-            .yesText(FindBundle.message("find.replace.command"))
+            .yesText(FindLocalize.findReplaceCommand().get())
             .project(myProject)
-            .noText(Messages.CANCEL_BUTTON)
+            .noText(CommonLocalize.buttonCancel().get())
             .show();
     }
 
@@ -288,7 +292,7 @@ public class ReplaceInProjectManager {
         Set<Usage> usages = replaceContext.getUsageView().getUsages();
         Set<Usage> result = new LinkedHashSet<>();
         for (Usage usage : usages) {
-            if (usage instanceof UsageInfo2UsageAdapter && Comparing.equal(((UsageInfo2UsageAdapter)usage).getFile(), file)) {
+            if (usage instanceof UsageInfo2UsageAdapter usageAdapter && Comparing.equal(usageAdapter.getFile(), file)) {
                 result.add(usage);
             }
         }
@@ -296,7 +300,7 @@ public class ReplaceInProjectManager {
     }
 
     private void addReplaceActions(final ReplaceContext replaceContext) {
-        final AbstractAction replaceAllAction = new AbstractAction(FindBundle.message("find.replace.all.action")) {
+        final AbstractAction replaceAllAction = new AbstractAction(FindLocalize.findReplaceAllAction().get()) {
             {
                 KeyStroke altShiftEnter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.ALT_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK);
                 putValue(ACCELERATOR_KEY, altShiftEnter);
@@ -304,6 +308,7 @@ public class ReplaceInProjectManager {
             }
 
             @Override
+            @RequiredUIAccess
             public void actionPerformed(ActionEvent e) {
                 Set<Usage> usages = replaceContext.getUsageView().getUsages();
                 if (usages.isEmpty()) {
@@ -312,11 +317,11 @@ public class ReplaceInProjectManager {
                 Set<VirtualFile> files = getFiles(replaceContext, false);
                 if (files.size() < 2
                     || showReplaceAllConfirmDialog(
-                        String.valueOf(usages.size()),
-                        replaceContext.getFindModel().getStringToFind(),
-                        String.valueOf(files.size()),
-                        replaceContext.getFindModel().getStringToReplace()
-                    )) {
+                    String.valueOf(usages.size()),
+                    replaceContext.getFindModel().getStringToFind(),
+                    String.valueOf(files.size()),
+                    replaceContext.getFindModel().getStringToReplace()
+                )) {
                     replaceUsagesUnderCommand(replaceContext, usages);
                 }
             }
@@ -337,6 +342,7 @@ public class ReplaceInProjectManager {
             }
 
             @Override
+            @RequiredUIAccess
             public void actionPerformed(ActionEvent e) {
                 replaceUsagesUnderCommand(replaceContext, replaceContext.getUsageView().getSelectedUsages());
             }
@@ -344,10 +350,7 @@ public class ReplaceInProjectManager {
             @Override
             public Object getValue(String key) {
                 return Action.NAME.equals(key)
-                    ? FindBundle.message(
-                        "find.replace.selected.action",
-                        replaceContext.getUsageView().getSelectedUsages().size()
-                    )
+                    ? FindLocalize.findReplaceSelectedAction(replaceContext.getUsageView().getSelectedUsages().size()).get()
                     : super.getValue(key);
             }
 
@@ -365,6 +368,7 @@ public class ReplaceInProjectManager {
             }
 
             @Override
+            @RequiredUIAccess
             public void actionPerformed(ActionEvent e) {
                 Set<VirtualFile> files = getFiles(replaceContext, true);
                 if (files.size() == 1) {
@@ -376,9 +380,9 @@ public class ReplaceInProjectManager {
             public Object getValue(String key) {
                 return Action.NAME.equals(key)
                     ? FindBundle.message(
-                        "find.replace.this.file.action",
-                        replaceContext.getUsageView().getSelectedUsages().size()
-                    )
+                    "find.replace.this.file.action",
+                    replaceContext.getUsageView().getSelectedUsages().size()
+                )
                     : super.getValue(key);
             }
 
@@ -413,9 +417,9 @@ public class ReplaceInProjectManager {
             public Object getValue(String key) {
                 return Action.NAME.equals(key)
                     ? FindBundle.message(
-                        "find.replace.skip.this.file.action",
-                        replaceContext.getUsageView().getSelectedUsages().size()
-                    )
+                    "find.replace.skip.this.file.action",
+                    replaceContext.getUsageView().getSelectedUsages().size()
+                )
                     : super.getValue(key);
             }
 
@@ -434,6 +438,7 @@ public class ReplaceInProjectManager {
         //replaceContext.getUsageView().addButtonToLowerPane(skipThisFileAction);
     }
 
+    @RequiredUIAccess
     private boolean replaceUsages(@Nonnull ReplaceContext replaceContext, @Nonnull Collection<Usage> usages) {
         if (!ensureUsagesWritable(replaceContext, usages)) {
             return true;
@@ -442,8 +447,8 @@ public class ReplaceInProjectManager {
         int[] replacedCount = {0};
         final boolean[] success = {true};
 
-        success[0] &= ((ApplicationEx)ApplicationManager.getApplication()).runWriteActionWithCancellableProgressInDispatchThread(
-            FindBundle.message("find.replace.all.confirmation.title"),
+        success[0] &= ((ApplicationEx)Application.get()).runWriteActionWithCancellableProgressInDispatchThread(
+            FindLocalize.findReplaceAllConfirmationTitle().get(),
             myProject,
             null,
             indicator -> {
@@ -492,7 +497,7 @@ public class ReplaceInProjectManager {
         if (occurrences != 0) {
             final StatusBar statusBar = WindowManager.getInstance().getStatusBar(project);
             if (statusBar != null) {
-                statusBar.setInfo(FindBundle.message("0.occurrences.replaced", occurrences));
+                statusBar.setInfo(FindLocalize.zeroOccurrencesReplaced(occurrences).get());
             }
         }
     }
@@ -570,6 +575,7 @@ public class ReplaceInProjectManager {
         return true;
     }
 
+    @RequiredUIAccess
     private void replaceUsagesUnderCommand(@Nonnull final ReplaceContext replaceContext, @Nonnull final Set<? extends Usage> usagesSet) {
         if (usagesSet.isEmpty()) {
             return;
@@ -591,17 +597,18 @@ public class ReplaceInProjectManager {
                 if (closeUsageViewIfEmpty(usageView, success)) {
                     return;
                 }
-                IdeFocusManager.getGlobalInstance()
-                    .doWhenFocusSettlesDown(() -> IdeFocusManager.getGlobalInstance()
-                        .requestFocus(usageView.getPreferredFocusableComponent(), true));
+                IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(
+                    () -> IdeFocusManager.getGlobalInstance().requestFocus(usageView.getPreferredFocusableComponent(), true)
+                );
             },
-            FindBundle.message("find.replace.command"),
+            FindLocalize.findReplaceCommand().get(),
             null
         );
 
         replaceContext.invalidateExcludedSetCache();
     }
 
+    @RequiredUIAccess
     private boolean ensureUsagesWritable(ReplaceContext replaceContext, Collection<? extends Usage> selectedUsages) {
         Set<VirtualFile> readOnlyFiles = null;
         for (final Usage usage : selectedUsages) {
@@ -622,9 +629,9 @@ public class ReplaceInProjectManager {
         if (hasReadOnlyUsages(selectedUsages)) {
             int result = Messages.showOkCancelDialog(
                 replaceContext.getUsageView().getComponent(),
-                FindBundle.message("find.replace.occurrences.in.read.only.files.prompt"),
-                FindBundle.message("find.replace.occurrences.in.read.only.files.title"),
-                Messages.getWarningIcon()
+                FindLocalize.findReplaceOccurrencesInReadOnlyFilesPrompt().get(),
+                FindLocalize.findReplaceOccurrencesInReadOnlyFilesTitle().get(),
+                UIUtil.getWarningIcon()
             );
             if (result != Messages.OK) {
                 return false;

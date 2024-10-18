@@ -4,23 +4,23 @@ package consulo.ide.impl.idea.usageView.impl;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AllIcons;
-import consulo.find.FindBundle;
 import consulo.find.FindSettings;
-import consulo.ide.IdeBundle;
+import consulo.find.localize.FindLocalize;
 import consulo.ide.impl.idea.openapi.project.DumbAwareToggleAction;
-import consulo.ui.ex.internal.ToolWindowEx;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
-import consulo.ui.ex.UIBundle;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
-import consulo.ui.ex.content.event.ContentManagerAdapter;
+import consulo.ui.ex.content.event.ContentManagerListener;
 import consulo.ui.ex.content.event.ContentManagerEvent;
+import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.ex.toolWindow.ContentManagerWatcher;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
@@ -30,10 +30,9 @@ import consulo.usage.UsageViewContentManager;
 import consulo.usage.UsageViewSettings;
 import consulo.usage.rule.UsageFilteringRuleListener;
 import consulo.util.dataholder.Key;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.Arrays;
@@ -43,19 +42,20 @@ import java.util.List;
 @ServiceImpl
 public class UsageViewContentManagerImpl extends UsageViewContentManager {
     private final Key<Boolean> REUSABLE_CONTENT_KEY = Key.create("UsageTreeManager.REUSABLE_CONTENT_KEY");
-    private final Key<Boolean> NOT_REUSABLE_CONTENT_KEY = Key.create("UsageTreeManager.NOT_REUSABLE_CONTENT_KEY");
     //todo[myakovlev] dont use it
+    private final Key<Boolean> NOT_REUSABLE_CONTENT_KEY = Key.create("UsageTreeManager.NOT_REUSABLE_CONTENT_KEY");
     private final Key<UsageView> NEW_USAGE_VIEW_KEY = Key.create("NEW_USAGE_VIEW_KEY");
     private final ContentManager myFindContentManager;
 
     @Inject
+    @RequiredUIAccess
     public UsageViewContentManagerImpl(@Nonnull Project project, @Nonnull ToolWindowManager toolWindowManager) {
         ToolWindow toolWindow = toolWindowManager.registerToolWindow(ToolWindowId.FIND, true, ToolWindowAnchor.BOTTOM, project, true);
         //toolWindow.setHelpId(UsageViewImpl.HELP_ID);
         toolWindow.setToHideOnEmptyContent(true);
         toolWindow.setIcon(AllIcons.Toolwindows.ToolWindowFind);
 
-        DumbAwareToggleAction toggleNewTabAction = new DumbAwareToggleAction(FindBundle.message("find.open.in.new.tab.action")) {
+        DumbAwareToggleAction toggleNewTabAction = new DumbAwareToggleAction(FindLocalize.findOpenInNewTabAction()) {
             @Override
             public boolean isSelected(@Nonnull AnActionEvent e) {
                 return FindSettings.getInstance().isShowResultsInSeparateView();
@@ -82,8 +82,8 @@ public class UsageViewContentManagerImpl extends UsageViewContentManager {
             };
 
         DumbAwareToggleAction toggleAutoscrollAction = new DumbAwareToggleAction(
-            UIBundle.message("autoscroll.to.source.action.name"),
-            UIBundle.message("autoscroll.to.source.action.description"),
+            UILocalize.autoscrollToSourceActionName(),
+            UILocalize.autoscrollToSourceActionDescription(),
             AllIcons.General.AutoscrollToSource
         ) {
             @Override
@@ -97,18 +97,19 @@ public class UsageViewContentManagerImpl extends UsageViewContentManager {
             }
         };
 
-        DefaultActionGroup gearActions = new DefaultActionGroup(IdeBundle.message("group.view.options"), true);
+        DefaultActionGroup gearActions = new DefaultActionGroup(IdeLocalize.groupViewOptions(), true);
         gearActions.addAll(toggleAutoscrollAction, toggleSortAction, toggleNewTabAction);
-        ((ToolWindowEx)toolWindow).setAdditionalGearActions(gearActions);
+        toolWindow.setAdditionalGearActions(gearActions);
 
         myFindContentManager = toolWindow.getContentManager();
-        myFindContentManager.addContentManagerListener(new ContentManagerAdapter() {
+        myFindContentManager.addContentManagerListener(new ContentManagerListener() {
             @Override
+            @RequiredUIAccess
             public void contentRemoved(@Nonnull ContentManagerEvent event) {
                 event.getContent().release();
             }
         });
-        new ContentManagerWatcher(toolWindow, myFindContentManager);
+        ContentManagerWatcher.watchContentManager(toolWindow, myFindContentManager);
     }
 
     @Nonnull

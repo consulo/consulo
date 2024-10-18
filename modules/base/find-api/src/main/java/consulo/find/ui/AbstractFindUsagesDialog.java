@@ -16,15 +16,15 @@
 package consulo.find.ui;
 
 import consulo.disposer.Disposer;
-import consulo.find.FindBundle;
 import consulo.find.FindSettings;
 import consulo.find.FindUsagesOptions;
 import consulo.find.PersistentFindUsagesOptions;
+import consulo.find.localize.FindLocalize;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
 import consulo.usage.UsageViewContentManager;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -79,8 +79,8 @@ public abstract class AbstractFindUsagesDialog extends DialogWrapper {
 
         myUpdateAction = event -> update();
 
-        setOKButtonText(FindBundle.message("find.dialog.find.button"));
-        setTitle(isSingleFile ? FindBundle.message("find.usages.in.file.dialog.title") : FindBundle.message("find.usages.dialog.title"));
+        setOKButtonText(FindLocalize.findDialogFindButton());
+        setTitle(isSingleFile ? FindLocalize.findUsagesInFileDialogTitle() : FindLocalize.findUsagesDialogTitle());
     }
 
     @Nonnull
@@ -98,7 +98,7 @@ public abstract class AbstractFindUsagesDialog extends DialogWrapper {
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbConstraints = new GridBagConstraints();
 
-        gbConstraints.insets = new Insets(0, 0, UIUtil.DEFAULT_VGAP, 0);
+        gbConstraints.insets = JBUI.insetsBottom(UIUtil.DEFAULT_VGAP);
         gbConstraints.fill = GridBagConstraints.NONE;
         gbConstraints.weightx = 1;
         gbConstraints.weighty = 1;
@@ -125,7 +125,7 @@ public abstract class AbstractFindUsagesDialog extends DialogWrapper {
         );
 
         if (myIsShowInNewTabVisible) {
-            myCbToOpenInNewTab = new JCheckBox(FindBundle.message("find.open.in.new.tab.checkbox"));
+            myCbToOpenInNewTab = new JCheckBox(FindLocalize.findOpenInNewTabCheckbox().get());
             myCbToOpenInNewTab.setSelected(myToShowInNewTab);
             myCbToOpenInNewTab.setEnabled(myIsShowInNewTabEnabled);
             _panel.add(myCbToOpenInNewTab, BorderLayout.EAST);
@@ -255,7 +255,7 @@ public abstract class AbstractFindUsagesDialog extends DialogWrapper {
     protected void addUsagesOptions(JPanel optionsPanel) {
         if (mySearchForTextOccurrencesAvailable) {
             myCbToSearchForTextOccurrences = addCheckboxToPanel(
-                FindBundle.message("find.options.search.for.text.occurrences.checkbox"),
+                FindLocalize.findOptionsSearchForTextOccurrencesCheckbox().get(),
                 myFindUsagesOptions.isSearchForTextOccurrences,
                 optionsPanel,
                 false
@@ -264,7 +264,7 @@ public abstract class AbstractFindUsagesDialog extends DialogWrapper {
 
         if (myIsShowInNewTabVisible) {
             myCbToSkipResultsWhenOneUsage = addCheckboxToPanel(
-                FindBundle.message("find.options.skip.results.tab.with.one.usage.checkbox"),
+                FindLocalize.findOptionsSkipResultsTabWithOneUsageCheckbox().get(),
                 FindSettings.getInstance().isSkipResultsWithOneUsage(),
                 optionsPanel,
                 false
@@ -275,7 +275,7 @@ public abstract class AbstractFindUsagesDialog extends DialogWrapper {
     @Nullable
     protected JPanel createUsagesOptionsPanel() {
         JPanel optionsPanel = new JPanel();
-        optionsPanel.setBorder(IdeBorderFactory.createTitledBorder(FindBundle.message("find.options.group"), true));
+        optionsPanel.setBorder(IdeBorderFactory.createTitledBorder(FindLocalize.findOptionsGroup().get(), true));
         optionsPanel.setLayout(new BoxLayout(optionsPanel, BoxLayout.Y_AXIS));
         addUsagesOptions(optionsPanel);
         return optionsPanel.getComponents().length == 0 ? null : optionsPanel;
@@ -291,7 +291,7 @@ public abstract class AbstractFindUsagesDialog extends DialogWrapper {
         myScopeCombo = new ScopeChooserCombo(myProject, mySearchInLibrariesAvailable, true, scope);
         Disposer.register(myDisposable, myScopeCombo);
         optionsPanel.add(myScopeCombo, BorderLayout.CENTER);
-        JComponent separator = SeparatorFactory.createSeparator(FindBundle.message("find.scope.label"), myScopeCombo.getComboBox());
+        JComponent separator = SeparatorFactory.createSeparator(FindLocalize.findScopeLabel().get(), myScopeCombo.getComboBox());
         optionsPanel.add(separator, BorderLayout.NORTH);
         return optionsPanel;
     }
@@ -302,6 +302,7 @@ public abstract class AbstractFindUsagesDialog extends DialogWrapper {
     }
 
     @Override
+    @RequiredUIAccess
     public JComponent getPreferredFocusedComponent() {
         if (myScopeCombo != null) {
             return myScopeCombo.getComboBox();

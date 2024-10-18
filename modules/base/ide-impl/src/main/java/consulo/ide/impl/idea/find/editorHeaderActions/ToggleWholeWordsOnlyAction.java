@@ -1,16 +1,16 @@
 package consulo.ide.impl.idea.find.editorHeaderActions;
 
-import consulo.find.FindBundle;
-import consulo.find.FindSettings;
-import consulo.ide.impl.idea.find.SearchSession;
 import consulo.application.AllIcons;
+import consulo.find.FindSettings;
+import consulo.find.localize.FindLocalize;
+import consulo.ide.impl.idea.find.SearchSession;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
 
 public class ToggleWholeWordsOnlyAction extends EditorHeaderToggleAction implements Embeddable {
     public ToggleWholeWordsOnlyAction() {
         super(
-            FindBundle.message("find.whole.words"),
+            FindLocalize.findWholeWords(),
             AllIcons.Actions.Words,
             AllIcons.Actions.WordsHovered,
             AllIcons.Actions.WordsSelected

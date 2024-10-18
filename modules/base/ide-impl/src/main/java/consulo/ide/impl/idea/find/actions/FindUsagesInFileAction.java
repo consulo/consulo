@@ -20,7 +20,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.fileEditor.FileEditor;
-import consulo.find.FindBundle;
+import consulo.find.localize.FindLocalize;
 import consulo.language.Language;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.util.PsiUtilBase;
@@ -30,6 +30,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -46,6 +47,7 @@ public class FindUsagesInFileAction extends AnAction {
     }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
         final Project project = dataContext.getData(Project.KEY);
@@ -65,13 +67,13 @@ public class FindUsagesInFileAction extends AnAction {
         else if (editor == null) {
             Messages.showMessageDialog(
                 project,
-                FindBundle.message("find.no.usages.at.cursor.error"),
+                FindLocalize.findNoUsagesAtCursorError().get(),
                 CommonLocalize.titleError().get(),
                 UIUtil.getErrorIcon()
             );
         }
         else {
-            HintManager.getInstance().showErrorHint(editor, FindBundle.message("find.no.usages.at.cursor.error"));
+            HintManager.getInstance().showErrorHint(editor, FindLocalize.findNoUsagesAtCursorError().get());
         }
     }
 

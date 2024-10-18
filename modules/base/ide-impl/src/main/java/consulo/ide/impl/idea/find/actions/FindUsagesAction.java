@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.find.actions;
 
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
-import consulo.find.FindBundle;
 import consulo.find.FindManager;
+import consulo.find.localize.FindLocalize;
 import consulo.ide.impl.idea.codeInsight.navigation.actions.GotoDeclarationAction;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.psi.PsiDocumentManager;
@@ -27,6 +27,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.resolve.PsiElementProcessor;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
@@ -77,6 +78,7 @@ public class FindUsagesAction extends AnAction {
         FindUsagesInFileAction.updateFindUsagesAction(event);
     }
 
+    @RequiredUIAccess
     static void chooseAmbiguousTargetAndPerform(
         @Nonnull final Project project,
         final Editor editor,
@@ -85,7 +87,7 @@ public class FindUsagesAction extends AnAction {
         if (editor == null) {
             Messages.showMessageDialog(
                 project,
-                FindBundle.message("find.no.usages.at.cursor.error"),
+                FindLocalize.findNoUsagesAtCursorError().get(),
                 CommonLocalize.titleError().get(),
                 UIUtil.getErrorIcon()
             );
@@ -96,7 +98,7 @@ public class FindUsagesAction extends AnAction {
                 editor,
                 offset,
                 processor,
-                FindBundle.message("find.usages.ambiguous.title"),
+                FindLocalize.findUsagesAmbiguousTitle().get(),
                 null
             );
             if (!chosen) {
@@ -105,7 +107,7 @@ public class FindUsagesAction extends AnAction {
                         if (editor.isDisposed() || !editor.getComponent().isShowing()) {
                             return;
                         }
-                        HintManager.getInstance().showErrorHint(editor, FindBundle.message("find.no.usages.at.cursor.error"));
+                        HintManager.getInstance().showErrorHint(editor, FindLocalize.findNoUsagesAtCursorError().get());
                     },
                     project.getDisposed()
                 );

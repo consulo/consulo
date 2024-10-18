@@ -1,8 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.find.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.application.impl.internal.progress.CoreProgressManager;
 import consulo.application.internal.TooManyUsagesStatus;
@@ -15,8 +15,8 @@ import consulo.component.ProcessCanceledException;
 import consulo.content.ContentIterator;
 import consulo.content.FileIndex;
 import consulo.content.scope.SearchScope;
-import consulo.find.FindBundle;
 import consulo.find.FindModel;
+import consulo.find.localize.FindLocalize;
 import consulo.ide.impl.idea.find.FindInProjectSearchEngine;
 import consulo.ide.impl.idea.find.findInProject.FindInProjectManager;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
@@ -33,6 +33,7 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.scope.GlobalSearchScopeUtil;
 import consulo.language.psi.scope.LocalSearchScope;
 import consulo.language.psi.search.PsiSearchHelper;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
@@ -126,7 +127,7 @@ class FindInProjectTask {
 
         try {
             myProgress.setIndeterminate(true);
-            myProgress.setText(FindBundle.message("progress.text.scanning.indexed.files"));
+            myProgress.setTextValue(FindLocalize.progressTextScanningIndexedFiles());
             Set<VirtualFile> filesForFastWordSearch = ReadAction.compute(this::getFilesForFastWordSearch);
             myProgress.setIndeterminate(false);
             if (LOG.isDebugEnabled()) {
@@ -136,7 +137,7 @@ class FindInProjectTask {
             searchInFiles(filesForFastWordSearch, processPresentation, consumer);
 
             myProgress.setIndeterminate(true);
-            myProgress.setText(FindBundle.message("progress.text.scanning.non.indexed.files"));
+            myProgress.setTextValue(FindLocalize.progressTextScanningNonIndexedFiles());
             boolean canRelyOnIndices = canRelyOnSearchers();
             final Collection<VirtualFile> otherFiles = collectFilesInScope(filesForFastWordSearch, canRelyOnIndices);
             myProgress.setIndeterminate(false);
@@ -164,7 +165,7 @@ class FindInProjectTask {
         }
 
         if (!myProgress.isCanceled()) {
-            myProgress.setText(FindBundle.message("find.progress.search.completed"));
+            myProgress.setTextValue(FindLocalize.findProgressSearchCompleted());
         }
     }
 
@@ -219,12 +220,11 @@ class FindInProjectTask {
                 double fraction = (double)processedFileCount.incrementAndGet() / virtualFiles.size();
                 myProgress.setFraction(fraction);
             }
-            myProgress.setText(FindBundle.message(
-                "find.searching.for.string.in.file.progress",
+            myProgress.setTextValue(FindLocalize.findSearchingForStringInFileProgress(
                 myFindModel.getStringToFind(),
                 virtualFile.getPresentableUrl()
             ));
-            myProgress.setText2(FindBundle.message("find.searching.for.string.in.file.occurrences.progress", occurrenceCount));
+            myProgress.setText2Value(FindLocalize.findSearchingForStringInFileOccurrencesProgress(occurrenceCount));
 
             Pair.NonNull<PsiFile, VirtualFile> pair = ReadAction.compute(() -> findFile(virtualFile));
             if (pair == null) {
@@ -273,13 +273,12 @@ class FindInProjectTask {
                 TooManyUsagesStatus tooManyUsagesStatus = TooManyUsagesStatus.getFrom(myProgress);
                 if (tooManyUsagesStatus.switchTooManyUsagesStatus()) {
                     UIUtil.invokeLaterIfNeeded(() -> {
-                        String message = FindBundle.message(
-                            "find.excessive.total.size.prompt",
+                        LocalizeValue message = FindLocalize.findExcessiveTotalSizePrompt(
                             UsageViewManagerImpl.presentableSize(myTotalFilesSize.longValue()),
                             Application.get().getName()
                         );
                         UsageLimitUtil.Result ret =
-                            UsageLimitUtil.showTooManyUsagesWarning(myProject, message, processPresentation.getUsageViewPresentation());
+                            UsageLimitUtil.showTooManyUsagesWarning(myProject, message.get(), processPresentation.getUsageViewPresentation());
                         if (ret == UsageLimitUtil.Result.ABORT) {
                             myProgress.cancel();
                         }
@@ -313,28 +312,25 @@ class FindInProjectTask {
 
             @Override
             public boolean processFile(@Nonnull final VirtualFile virtualFile) {
-                ApplicationManager.getApplication().runReadAction(new Runnable() {
-                    @Override
-                    public void run() {
-                        ProgressManager.checkCanceled();
-                        if (virtualFile.isDirectory() || !virtualFile.isValid() || !myFileMask.value(virtualFile) || globalCustomScope != null && !globalCustomScope.contains(
-                            virtualFile)) {
-                            return;
-                        }
+                Application.get().runReadAction(() -> {
+                    ProgressManager.checkCanceled();
+                    if (virtualFile.isDirectory() || !virtualFile.isValid() || !myFileMask.value(virtualFile) || globalCustomScope != null && !globalCustomScope.contains(
+                        virtualFile)) {
+                        return;
+                    }
 
-                        if (skipIndexed && ContainerUtil.find(mySearchers, p -> p.isCovered(virtualFile)) != null) {
-                            return;
-                        }
+                    if (skipIndexed && ContainerUtil.find(mySearchers, p -> p.isCovered(virtualFile)) != null) {
+                        return;
+                    }
 
-                        Pair.NonNull<PsiFile, VirtualFile> pair = findFile(virtualFile);
-                        if (pair == null) {
-                            return;
-                        }
-                        VirtualFile sourceVirtualFile = pair.second;
+                    Pair.NonNull<PsiFile, VirtualFile> pair = findFile(virtualFile);
+                    if (pair == null) {
+                        return;
+                    }
+                    VirtualFile sourceVirtualFile = pair.second;
 
-                        if (sourceVirtualFile != null && !alreadySearched.contains(sourceVirtualFile)) {
-                            myFiles.add(sourceVirtualFile);
-                        }
+                    if (sourceVirtualFile != null && !alreadySearched.contains(sourceVirtualFile)) {
+                        myFiles.add(sourceVirtualFile);
                     }
                 });
                 return true;
@@ -348,8 +344,8 @@ class FindInProjectTask {
 
         final EnumContentIterator iterator = new EnumContentIterator();
 
-        if (customScope instanceof LocalSearchScope) {
-            for (VirtualFile file : GlobalSearchScopeUtil.getLocalScopeFiles((LocalSearchScope)customScope)) {
+        if (customScope instanceof LocalSearchScope localSearchScope) {
+            for (VirtualFile file : GlobalSearchScopeUtil.getLocalScopeFiles(localSearchScope)) {
                 iterator.processFile(file);
             }
         }
@@ -405,7 +401,7 @@ class FindInProjectTask {
     }
 
     private boolean canRelyOnSearchers() {
-        return ContainerUtil.find(mySearchers, s -> s.isReliable()) != null;
+        return ContainerUtil.find(mySearchers, FindInProjectSearchEngine.FindInProjectSearcher::isReliable) != null;
     }
 
     @Nonnull
@@ -429,6 +425,7 @@ class FindInProjectTask {
         return resultFiles;
     }
 
+    @RequiredReadAction
     private Pair.NonNull<PsiFile, VirtualFile> findFile(@Nonnull final VirtualFile virtualFile) {
         PsiFile psiFile = myPsiManager.findFile(virtualFile);
         if (psiFile != null) {

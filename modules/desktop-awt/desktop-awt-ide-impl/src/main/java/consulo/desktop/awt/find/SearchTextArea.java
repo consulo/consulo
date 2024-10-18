@@ -8,11 +8,12 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.desktop.awt.action.ActionButtonImpl;
 import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.find.FindBundle;
 import consulo.find.FindInProjectSettings;
+import consulo.find.localize.FindLocalize;
 import consulo.ide.impl.idea.find.editorHeaderActions.Utils;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -320,8 +321,8 @@ public class SearchTextArea extends JPanel implements PropertyChangeListener {
 
         ShowHistoryAction() {
             super(
-                FindBundle.message(mySearchMode ? "find.search.history" : "find.replace.history"),
-                FindBundle.message(mySearchMode ? "find.search.history" : "find.replace.history"),
+                mySearchMode ? FindLocalize.findSearchHistory() : FindLocalize.findReplaceHistory(),
+                mySearchMode ? FindLocalize.findSearchHistory() : FindLocalize.findReplaceHistory(),
                 AllIcons.Actions.SearchWithHistory
             );
             registerCustomShortcutSet(KeymapUtil.getActiveKeymapShortcuts("ShowSearchHistory"), myTextArea);
@@ -354,7 +355,7 @@ public class SearchTextArea extends JPanel implements PropertyChangeListener {
 
     private class NewLineAction extends DumbAwareAction {
         NewLineAction() {
-            super(FindBundle.message("find.new.line"), null, AllIcons.Actions.SearchNewLine);
+            super(FindLocalize.findNewLine(), LocalizeValue.empty(), AllIcons.Actions.SearchNewLine);
             setShortcutSet(new CustomShortcutSet(NEW_LINE_KEYSTROKE));
             getTemplatePresentation().setHoveredIcon(AllIcons.Actions.SearchNewLineHover);
         }

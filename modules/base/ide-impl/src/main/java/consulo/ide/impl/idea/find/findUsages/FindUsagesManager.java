@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.find.findUsages;
 
 import consulo.application.AccessRule;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.application.progress.ProgressIndicator;
@@ -33,17 +33,18 @@ import consulo.document.Document;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorLocation;
 import consulo.fileEditor.TextEditor;
-import consulo.find.*;
+import consulo.find.FindSettings;
+import consulo.find.FindUsagesHandler;
+import consulo.find.FindUsagesHandlerFactory;
+import consulo.find.FindUsagesOptions;
+import consulo.find.localize.FindLocalize;
 import consulo.find.ui.AbstractFindUsagesDialog;
 import consulo.ide.impl.find.PsiElement2UsageTargetAdapter;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.progress.impl.ProgressManagerImpl;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.util.lang.Comparing;
-import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.ui.LightweightHint;
-import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.util.collection.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.language.psi.IdePsiManagerImpl;
 import consulo.language.editor.hint.HintManager;
@@ -54,22 +55,25 @@ import consulo.language.psi.scope.LocalSearchScope;
 import consulo.language.psi.search.PsiSearchHelper;
 import consulo.language.psi.search.SearchRequestCollector;
 import consulo.language.psi.search.SearchSession;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.content.ProjectFileIndex;
 import consulo.navigation.NavigationItem;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.content.Content;
 import consulo.usage.*;
 import consulo.util.dataholder.Key;
-import org.jetbrains.annotations.NonNls;
-
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -123,21 +127,25 @@ public class FindUsagesManager {
         return false;
     }
 
+    @RequiredUIAccess
     public void clearFindingNextUsageInFile() {
-        ApplicationManager.getApplication().assertIsDispatchThread();
+        Application.get().assertIsDispatchThread();
         myLastSearchInFileData = null;
     }
 
+    @RequiredUIAccess
     public boolean findNextUsageInFile(@Nonnull FileEditor editor) {
         return findUsageInFile(editor, FileSearchScope.AFTER_CARET);
     }
 
+    @RequiredUIAccess
     public boolean findPreviousUsageInFile(@Nonnull FileEditor editor) {
         return findUsageInFile(editor, FileSearchScope.BEFORE_CARET);
     }
 
+    @RequiredUIAccess
     private boolean findUsageInFile(@Nonnull FileEditor editor, @Nonnull FileSearchScope direction) {
-        ApplicationManager.getApplication().assertIsDispatchThread();
+        Application.get().assertIsDispatchThread();
 
         if (myLastSearchInFileData == null) {
             return false;
@@ -147,8 +155,8 @@ public class FindUsagesManager {
         if (primaryElements.length == 0) {//all elements have been invalidated
             Messages.showMessageDialog(
                 myProject,
-                FindBundle.message("find.searched.elements.have.been.changed.error"),
-                FindBundle.message("cannot.search.for.usages.title"),
+                FindLocalize.findSearchedElementsHaveBeenChangedError().get(),
+                FindLocalize.cannotSearchForUsagesTitle().get(),
                 UIUtil.getInformationIcon()
             );
             // SCR #10022
@@ -181,12 +189,13 @@ public class FindUsagesManager {
     }
 
 
+    @RequiredUIAccess
     private void initLastSearchElement(
         @Nonnull FindUsagesOptions findUsagesOptions,
         @Nonnull PsiElement[] primaryElements,
         @Nonnull PsiElement[] secondaryElements
     ) {
-        ApplicationManager.getApplication().assertIsDispatchThread();
+        Application.get().assertIsDispatchThread();
 
         myLastSearchInFileData = new PsiElement2UsageTargetComposite(primaryElements, secondaryElements, findUsagesOptions);
     }
@@ -232,6 +241,7 @@ public class FindUsagesManager {
      * @param showDialog
      * @param searchScope null means default (stored in options)
      */
+    @RequiredUIAccess
     public void findUsages(
         @Nonnull PsiElement psiElement,
         final PsiFile scopeFile,
@@ -267,6 +277,7 @@ public class FindUsagesManager {
         startFindUsages(findUsagesOptions, handler, scopeFile, editor);
     }
 
+    @RequiredUIAccess
     public void startFindUsages(
         @Nonnull PsiElement psiElement,
         @Nonnull FindUsagesOptions findUsagesOptions,
@@ -280,6 +291,7 @@ public class FindUsagesManager {
         startFindUsages(findUsagesOptions, handler, scopeFile, editor);
     }
 
+    @RequiredUIAccess
     private void startFindUsages(
         @Nonnull FindUsagesOptions findUsagesOptions,
         @Nonnull FindUsagesHandler handler,
@@ -317,16 +329,15 @@ public class FindUsagesManager {
             return;
         }
         NavigationItem target = targets[0];
-        if (!(target instanceof ConfigurableUsageTarget)) {
-            return;
+        if (target instanceof ConfigurableUsageTarget configurableUsageTarget) {
+            configurableUsageTarget.showSettings();
         }
-        ((ConfigurableUsageTarget)target).showSettings();
     }
 
     private static void checkNotNull(
         @Nonnull PsiElement[] elements,
         @Nonnull FindUsagesHandler handler,
-        @NonNls @Nonnull String methodName
+        @Nonnull String methodName
     ) {
         for (PsiElement element : elements) {
             if (element == null) {
@@ -336,6 +347,7 @@ public class FindUsagesManager {
     }
 
     @Nonnull
+    @RequiredUIAccess
     public static ProgressIndicator startProcessUsages(
         @Nonnull final FindUsagesHandler handler,
         @Nonnull final PsiElement[] primaryElements,
@@ -344,9 +356,9 @@ public class FindUsagesManager {
         @Nonnull final FindUsagesOptions findUsagesOptions,
         @Nonnull final Runnable onComplete
     ) {
-        ApplicationManager.getApplication().assertIsDispatchThread();
+        Application.get().assertIsDispatchThread();
         final ProgressIndicatorBase indicator = new ProgressIndicatorBase();
-        Task.Backgroundable task = new Task.Backgroundable(handler.getProject(), "Finding Usages") {
+        Task.Backgroundable task = new Task.Backgroundable(handler.getProject(), LocalizeValue.localizeTODO("Finding Usages")) {
             @Override
             public void run(@Nonnull ProgressIndicator indicator) {
                 ThrowableComputable<UsageSearcher, RuntimeException> action = () -> {
@@ -462,16 +474,15 @@ public class FindUsagesManager {
                     }
                 }
 
-                PsiSearchHelper.getInstance(project).processRequests(optionsClone.fastTrack, ref -> {
-                    ThrowableComputable<UsageInfo, RuntimeException> action = () -> {
-                        if (!ref.getElement().isValid()) {
-                            return null;
-                        }
-                        return new UsageInfo(ref);
-                    };
-                    UsageInfo info = AccessRule.read(action);
-                    return info == null || usageInfoProcessor.process(info);
-                });
+                PsiSearchHelper.getInstance(project).processRequests(
+                    optionsClone.fastTrack,
+                    ref -> {
+                        ThrowableComputable<UsageInfo, RuntimeException> action =
+                            () -> !ref.getElement().isValid() ? null : new UsageInfo(ref);
+                        UsageInfo info = AccessRule.read(action);
+                        return info == null || usageInfoProcessor.process(info);
+                    }
+                );
             }
             finally {
                 optionsClone.fastTrack = null;
@@ -536,23 +547,16 @@ public class FindUsagesManager {
         presentation.setScopeText(scopeString);
         String usagesString = generateUsagesString(options);
         presentation.setUsagesString(usagesString);
-        String title = FindBundle.message(
-            "find.usages.of.element.in.scope.panel.title",
-            usagesString,
-            UsageViewUtil.getLongName(psiElement),
-            scopeString
-        );
+        String title =
+            FindLocalize.findUsagesOfElementInScopePanelTitle(usagesString, UsageViewUtil.getLongName(psiElement), scopeString).get();
         presentation.setTabText(title);
-        presentation.setTabName(FindBundle.message(
-            "find.usages.of.element.tab.name",
-            usagesString,
-            UsageViewUtil.getShortName(psiElement)
-        ));
+        presentation.setTabName(FindLocalize.findUsagesOfElementTabName(usagesString, UsageViewUtil.getShortName(psiElement)).get());
         presentation.setTargetsNodeText(StringUtil.capitalize(UsageViewUtil.getType(psiElement)));
         presentation.setOpenInNewTab(toOpenInNewTab);
         return presentation;
     }
 
+    @RequiredUIAccess
     private void findUsagesInEditor(
         @Nonnull final PsiElement[] primaryElements,
         @Nonnull final PsiElement[] secondaryElements,
@@ -580,7 +584,7 @@ public class FindUsagesManager {
             fUsage.selectInEditor();
         }
         else if (!usagesWereFound.get()) {
-            String message = getNoUsagesFoundMessage(primaryElements[0]) + " in " + scopeFile.getName();
+            LocalizeValue message = LocalizeValue.localizeTODO(getNoUsagesFoundMessage(primaryElements[0]) + " in " + scopeFile.getName());
             showHintOrStatusBarMessage(message, fileEditor);
         }
         else {
@@ -589,48 +593,49 @@ public class FindUsagesManager {
         }
     }
 
-    private static String getNoUsagesFoundMessage(PsiElement psiElement) {
+    @Nonnull
+    private static LocalizeValue getNoUsagesFoundMessage(PsiElement psiElement) {
         String elementType = UsageViewUtil.getType(psiElement);
         String elementName = UsageViewUtil.getShortName(psiElement);
-        return FindBundle.message("find.usages.of.element_type.element_name.not.found.message", elementType, elementName);
+        return FindLocalize.findUsagesOfElement_typeElement_nameNotFoundMessage(elementType, elementName);
     }
 
     private void clearStatusBar() {
         StatusBar.Info.set("", myProject);
     }
 
-    private static String getSearchAgainMessage(PsiElement element, final FileSearchScope direction) {
-        String message = getNoUsagesFoundMessage(element);
+    @Nonnull
+    private static LocalizeValue getSearchAgainMessage(PsiElement element, final FileSearchScope direction) {
+        LocalizeValue message = getNoUsagesFoundMessage(element);
         if (direction == FileSearchScope.AFTER_CARET) {
             AnAction action = ActionManager.getInstance().getAction(IdeActions.ACTION_FIND_NEXT);
             String shortcutsText = KeymapUtil.getFirstKeyboardShortcutText(action);
             if (shortcutsText.isEmpty()) {
-                message = FindBundle.message("find.search.again.from.top.action.message", message);
+                return FindLocalize.findSearchAgainFromTopActionMessage(message);
             }
             else {
-                message = FindBundle.message("find.search.again.from.top.hotkey.message", message, shortcutsText);
+                return FindLocalize.findSearchAgainFromTopHotkeyMessage(message, shortcutsText);
             }
         }
         else {
             String shortcutsText =
                 KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction(IdeActions.ACTION_FIND_PREVIOUS));
             if (shortcutsText.isEmpty()) {
-                message = FindBundle.message("find.search.again.from.bottom.action.message", message);
+                return FindLocalize.findSearchAgainFromBottomActionMessage(message);
             }
             else {
-                message = FindBundle.message("find.search.again.from.bottom.hotkey.message", message, shortcutsText);
+                return FindLocalize.findSearchAgainFromBottomHotkeyMessage(message, shortcutsText);
             }
         }
-        return message;
     }
 
-    private void showHintOrStatusBarMessage(String message, FileEditor fileEditor) {
-        if (fileEditor instanceof TextEditor) {
-            TextEditor textEditor = (TextEditor)fileEditor;
+    @RequiredUIAccess
+    private void showHintOrStatusBarMessage(@Nonnull LocalizeValue message, FileEditor fileEditor) {
+        if (fileEditor instanceof TextEditor textEditor) {
             showEditorHint(message, textEditor.getEditor());
         }
         else {
-            StatusBar.Info.set(message, myProject);
+            StatusBar.Info.set(message.get(), myProject);
         }
     }
 
@@ -703,8 +708,9 @@ public class FindUsagesManager {
         return selectedOptions.generateUsagesString();
     }
 
-    private static void showEditorHint(String message, final Editor editor) {
-        JComponent component = HintUtil.createInformationLabel(message);
+    @RequiredUIAccess
+    private static void showEditorHint(@Nonnull LocalizeValue message, final Editor editor) {
+        JComponent component = HintUtil.createInformationLabel(message.get());
         final LightweightHint hint = new LightweightHint(component);
         HintManagerImpl.getInstanceImpl().showEditorHint(
             hint,

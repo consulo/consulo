@@ -15,18 +15,18 @@
  */
 package consulo.ide.impl.idea.find.editorHeaderActions;
 
-import consulo.ide.impl.idea.find.EditorSearchSession;
-import consulo.find.FindBundle;
-import consulo.find.FindModel;
-import consulo.ide.impl.idea.find.SearchSession;
 import consulo.application.AllIcons;
+import consulo.find.FindModel;
+import consulo.find.localize.FindLocalize;
+import consulo.ide.impl.idea.find.EditorSearchSession;
+import consulo.ide.impl.idea.find.SearchSession;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
 
 public class TogglePreserveCaseAction extends EditorHeaderToggleAction implements Embeddable {
     public TogglePreserveCaseAction() {
         super(
-            FindBundle.message("find.options.replace.preserve.case"),
+            FindLocalize.findOptionsReplacePreserveCase(),
             AllIcons.Actions.PreserveCase,
             AllIcons.Actions.PreserveCaseHover,
             AllIcons.Actions.PreserveCaseSelected

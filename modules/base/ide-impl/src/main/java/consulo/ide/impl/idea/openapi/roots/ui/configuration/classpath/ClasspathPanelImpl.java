@@ -16,10 +16,11 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.classpath;
 
 import consulo.content.bundle.Sdk;
+import consulo.content.internal.LibraryEx;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.dataContext.DataManager;
-import consulo.find.FindBundle;
+import consulo.find.localize.FindLocalize;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.module.impl.scopes.LibraryScope;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.FindUsagesInProjectStructureActionBase;
@@ -43,7 +44,6 @@ import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.orderEntry.*;
-import consulo.module.impl.internal.layer.library.LibraryTableImplUtil;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.localize.ProjectLocalize;
@@ -64,7 +64,6 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -151,10 +150,11 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
             }
         };
         setFixedColumnWidth(ClasspathTableModel.EXPORT_COLUMN, ClasspathTableModel.EXPORT_COLUMN_NAME);
+        // leave space for combobox border
         setFixedColumnWidth(
             ClasspathTableModel.SCOPE_COLUMN,
             DependencyScope.COMPILE.toString() + "     "
-        );  // leave space for combobox border
+        );
 
         myEntryTable.registerKeyboardAction(
             e -> {
@@ -227,6 +227,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
             }
 
             @Override
+            @RequiredUIAccess
             public void update(AnActionEvent e) {
                 final Presentation presentation = e.getPresentation();
                 presentation.setEnabled(false);
@@ -243,7 +244,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
             myEntryTable
         );
         actionGroup.add(myEditButton);
-        actionGroup.add(new DumbAwareAction(CommonLocalize.buttonRemove().get(), null, IconUtil.getRemoveIcon()) {
+        actionGroup.add(new DumbAwareAction(CommonLocalize.buttonRemove(), LocalizeValue.empty(), IconUtil.getRemoveIcon()) {
             @RequiredUIAccess
             @Override
             public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -284,6 +285,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
     }
 
     @Override
+    @RequiredUIAccess
     public void navigate(AnActionEvent e, boolean openLibraryEditor) {
         final OrderEntry entry = getSelectedEntry();
         ProjectStructureSelector selector = e.getData(ProjectStructureSelector.KEY);
@@ -398,7 +400,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
     @Override
     @Nonnull
     public LibraryTableModifiableModelProvider getModifiableModelProvider(@Nonnull String tableLevel) {
-        if (LibraryTableImplUtil.MODULE_LEVEL.equals(tableLevel)) {
+        if (LibraryEx.MODULE_LEVEL.equals(tableLevel)) {
             final LibraryTable moduleLibraryTable = getRootModel().getModuleLibraryTable();
             return moduleLibraryTable::getModifiableModel;
         }
@@ -652,8 +654,8 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
                     return false;
                 }
 
-                @NonNls
                 @Override
+                @RequiredUIAccess
                 protected boolean shouldShowDependenciesPanel(List<DependenciesBuilder> builders) {
                     for (DependenciesBuilder builder : builders) {
                         for (Set<PsiFile> files : builder.getDependencies().values()) {
@@ -661,7 +663,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
                                 Messages.showInfoMessage(
                                     myEntryTable,
                                     "Dependencies were successfully collected in \"" + ToolWindowId.DEPENDENCIES + "\" toolwindow",
-                                    FindBundle.message("find.pointcut.applications.not.found.title")
+                                    FindLocalize.findPointcutApplicationsNotFoundTitle().get()
                                 );
                                 return true;
                             }
@@ -671,7 +673,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
                         myEntryTable,
                         "No code dependencies were found. Would you like to remove the dependency?",
                         CommonLocalize.titleWarning().get(),
-                        Messages.getWarningIcon()
+                        UIUtil.getWarningIcon()
                     ) == DialogWrapper.OK_EXIT_CODE) {
                         removeSelectedItems(TableUtil.removeSelectedItems(myEntryTable));
                     }
@@ -681,6 +683,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
         }
 
         @Override
+        @RequiredUIAccess
         public void update(AnActionEvent e) {
             final OrderEntry entry = getSelectedEntry();
             e.getPresentation().setVisible(

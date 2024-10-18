@@ -2,12 +2,12 @@
 package consulo.desktop.awt.find;
 
 import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
-import consulo.find.FindBundle;
 import consulo.find.FindInProjectSettings;
+import consulo.find.localize.FindLocalize;
 import consulo.ide.impl.idea.find.SearchReplaceComponent;
 import consulo.ide.impl.idea.find.editorHeaderActions.*;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
@@ -18,6 +18,7 @@ import consulo.ide.impl.idea.ui.ListFocusTraversalPolicy;
 import consulo.ide.impl.idea.ui.mac.TouchbarDataKeys;
 import consulo.ide.impl.idea.util.BooleanFunction;
 import consulo.ide.impl.idea.util.EventDispatcher;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
@@ -28,12 +29,10 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.ui.ex.internal.ActionToolbarEx;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -198,7 +197,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
                 close();
             }
         });
-        closeLabel.setToolTipText(FindBundle.message("tooltip.close.search.bar.escape"));
+        closeLabel.setToolTipText(FindLocalize.tooltipCloseSearchBarEscape().get());
         searchPair.add(new Wrapper(closeLabel), BorderLayout.EAST);
 
         myRightPanel = new NonOpaquePanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 0, true, false));
@@ -316,7 +315,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
 
     @Nullable
     @Override
-    public Object getData(@Nonnull @NonNls Key dataId) {
+    public Object getData(@Nonnull Key dataId) {
         if (SpeedSearchSupply.SPEED_SEARCH_CURRENT_QUERY == dataId) {
             return mySearchTextComponent.getText();
         }
@@ -399,21 +398,18 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
         mySearchTextComponent.getDocument().addDocumentListener(new DocumentAdapter() {
             @Override
             protected void textChanged(@Nonnull DocumentEvent e) {
-                ApplicationManager.getApplication().invokeLater(() -> myEventDispatcher.getMulticaster().searchFieldDocumentChanged());
+                Application.get().invokeLater(() -> myEventDispatcher.getMulticaster().searchFieldDocumentChanged());
             }
         });
 
         mySearchTextComponent.registerKeyboardAction(
-            new ActionListener() {
-                @Override
-                public void actionPerformed(final ActionEvent e) {
-                    if (StringUtil.isEmpty(mySearchTextComponent.getText())) {
-                        close();
-                    }
-                    else {
-                        ProjectIdeFocusManager.getInstance(myProject).requestFocus(myTargetComponent, true);
-                        addTextToRecent(mySearchTextComponent);
-                    }
+            e -> {
+                if (StringUtil.isEmpty(mySearchTextComponent.getText())) {
+                    close();
+                }
+                else {
+                    ProjectIdeFocusManager.getInstance(myProject).requestFocus(myTargetComponent, true);
+                    addTextToRecent(mySearchTextComponent);
                 }
             },
             KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, Platform.current().os().isMac() ? META_DOWN_MASK : CTRL_DOWN_MASK),
@@ -422,10 +418,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
         // make sure Enter is consumed by search text field, even if 'next occurrence' action is disabled
         // this is needed to e.g. avoid triggering a default button in containing dialog (see IDEA-128057)
         mySearchTextComponent.registerKeyboardAction(
-            new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                }
+            e -> {
             },
             KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),
             WHEN_FOCUSED
@@ -455,7 +448,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
         myReplaceTextComponent.getDocument().addDocumentListener(new DocumentAdapter() {
             @Override
             protected void textChanged(@Nonnull DocumentEvent e) {
-                ApplicationManager.getApplication().invokeLater(() -> myEventDispatcher.getMulticaster().replaceFieldDocumentChanged());
+                Application.get().invokeLater(() -> myEventDispatcher.getMulticaster().replaceFieldDocumentChanged());
             }
         });
 
@@ -469,6 +462,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
     }
 
     @Override
+    @RequiredUIAccess
     public void update(@Nonnull String findText, @Nonnull String replaceText, boolean replaceMode, boolean multiline) {
         setMultilineInternal(multiline);
         boolean needToResetSearchFocus = mySearchTextComponent != null && mySearchTextComponent.hasFocus();
@@ -497,16 +491,17 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
     }
 
     @Override
+    @RequiredUIAccess
     public void updateActions() {
         mySearchActionsToolbar.updateActionsImmediately();
         myReplaceActionsToolbar.updateActionsImmediately();
         JComponent textComponent = mySearchFieldWrapper.getTargetComponent();
-        if (textComponent instanceof SearchTextArea) {
-            ((SearchTextArea)textComponent).updateExtraActions();
+        if (textComponent instanceof SearchTextArea searchTextArea) {
+            searchTextArea.updateExtraActions();
         }
         textComponent = myReplaceFieldWrapper.getTargetComponent();
-        if (textComponent instanceof SearchTextArea) {
-            ((SearchTextArea)textComponent).updateExtraActions();
+        if (textComponent instanceof SearchTextArea searchTextArea) {
+            searchTextArea.updateExtraActions();
         }
     }
 
@@ -514,6 +509,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
         addTextToRecent(textField.getText(), textField == mySearchTextComponent);
     }
 
+    @Override
     public void addTextToRecent(@Nonnull String text, boolean search) {
         if (text.length() > 0) {
             FindInProjectSettings findInProjectSettings = FindInProjectSettings.getInstance(myProject);
@@ -555,10 +551,10 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
         textComponent.setRows(isMultiline() ? 2 : 1);
         textComponent.setColumns(12);
         if (search) {
-            textComponent.getAccessibleContext().setAccessibleName(FindBundle.message("find.search.accessible.name"));
+            textComponent.getAccessibleContext().setAccessibleName(FindLocalize.findSearchAccessibleName().get());
         }
         else {
-            textComponent.getAccessibleContext().setAccessibleName(FindBundle.message("find.replace.accessible.name"));
+            textComponent.getAccessibleContext().setAccessibleName(FindLocalize.findReplaceAccessibleName().get());
         }
         SearchTextArea textArea = new SearchTextArea(textComponent, search);
         if (search) {
@@ -606,12 +602,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
     }
 
     private void installReplaceOnEnterAction(@Nonnull JTextComponent c) {
-        ActionListener action = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                replace();
-            }
-        };
+        ActionListener action = e -> replace();
         c.registerKeyboardAction(action, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), JComponent.WHEN_FOCUSED);
     }
 
@@ -652,7 +643,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
     private ActionToolbar createSearchToolbar1(@Nonnull DefaultActionGroup group) {
         ActionToolbarEx toolbar = createToolbar(group);
         toolbar.setSecondaryButtonPopupStateModifier(mySearchToolbar1PopupStateModifier);
-        toolbar.setSecondaryActionsTooltip(FindBundle.message("find.popup.show.filter.popup"));
+        toolbar.setSecondaryActionsTooltip(FindLocalize.findPopupShowFilterPopup().get());
         toolbar.setSecondaryActionsIcon(AllIcons.General.Filter);
         toolbar.setNoGapMode();
 

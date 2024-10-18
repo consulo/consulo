@@ -2,6 +2,7 @@
 
 package consulo.ide.impl.idea.openapi.project;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.localize.LocalizeValue;
 import consulo.application.dumb.DumbAware;
@@ -14,10 +15,18 @@ public abstract class DumbAwareToggleAction extends ToggleAction implements Dumb
     protected DumbAwareToggleAction() {
     }
 
+    protected DumbAwareToggleAction(@Nonnull LocalizeValue text) {
+        super(text);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     protected DumbAwareToggleAction(@Nullable String text) {
         super(text);
     }
 
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     protected DumbAwareToggleAction(@Nullable String text, @Nullable String description, @Nullable Image icon) {
         super(text, description, icon);
     }

@@ -3,6 +3,7 @@ package consulo.ui.ex.action;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;
 
@@ -46,6 +47,7 @@ public abstract class ToggleAction extends AnAction implements Toggleable {
     }
 
     @Override
+    @RequiredUIAccess
     public final void actionPerformed(@Nonnull final AnActionEvent e) {
         final boolean state = !isSelected(e);
         setSelected(e, state);
@@ -70,6 +72,7 @@ public abstract class ToggleAction extends AnAction implements Toggleable {
     public abstract void setSelected(@Nonnull AnActionEvent e, boolean state);
 
     @Override
+    @RequiredUIAccess
     public void update(@Nonnull final AnActionEvent e) {
         boolean selected = isSelected(e);
         final Presentation presentation = e.getPresentation();

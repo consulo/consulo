@@ -16,22 +16,22 @@
 
 package consulo.ide.impl.find;
 
-import consulo.ide.impl.idea.codeInsight.highlighting.HighlightUsagesHandler;
-import consulo.ide.impl.idea.find.findUsages.FindUsagesManager;
-import consulo.ide.impl.idea.find.impl.FindManagerImpl;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.content.scope.SearchScope;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.TypeSafeDataProvider;
 import consulo.fileEditor.FileEditor;
-import consulo.find.FindBundle;
 import consulo.find.FindManager;
 import consulo.find.FindUsagesHandler;
 import consulo.find.FindUsagesOptions;
+import consulo.find.localize.FindLocalize;
+import consulo.ide.impl.idea.codeInsight.highlighting.HighlightUsagesHandler;
+import consulo.ide.impl.idea.find.findUsages.FindUsagesManager;
+import consulo.ide.impl.idea.find.impl.FindManagerImpl;
 import consulo.language.findUsage.DescriptiveNameUtil;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.*;
-import consulo.language.psi.meta.PsiMetaData;
 import consulo.language.psi.meta.PsiMetaOwner;
 import consulo.language.psi.meta.PsiPresentableMetaData;
 import consulo.language.psi.scope.LocalSearchScope;
@@ -40,6 +40,7 @@ import consulo.navigation.ItemPresentation;
 import consulo.navigation.Navigatable;
 import consulo.navigation.NavigationItem;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.KeyboardShortcut;
 import consulo.ui.image.Image;
 import consulo.usage.*;
@@ -47,7 +48,6 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFilePresentation;
-
 import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
@@ -74,14 +74,16 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, Typ
         update(element);
     }
 
+    @RequiredReadAction
     public PsiElement2UsageTargetAdapter(@Nonnull PsiElement element) {
         this(element, new FindUsagesOptions(element.getProject()));
     }
 
     @Override
+    @RequiredReadAction
     public String getName() {
         PsiElement element = getElement();
-        return element instanceof NavigationItem ? ((NavigationItem)element).getName() : null;
+        return element instanceof NavigationItem navigationItem ? navigationItem.getName() : null;
     }
 
     @Override
@@ -91,26 +93,30 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, Typ
     }
 
     @Override
+    @RequiredReadAction
     public void navigate(boolean requestFocus) {
         PsiElement element = getElement();
-        if (element instanceof Navigatable && ((Navigatable)element).canNavigate()) {
-            ((Navigatable)element).navigate(requestFocus);
+        if (element instanceof Navigatable navigatable && navigatable.canNavigate()) {
+            navigatable.navigate(requestFocus);
         }
     }
 
     @Override
+    @RequiredReadAction
     public boolean canNavigate() {
         PsiElement element = getElement();
-        return element instanceof Navigatable && ((Navigatable)element).canNavigate();
+        return element instanceof Navigatable navigatable && navigatable.canNavigate();
     }
 
     @Override
+    @RequiredReadAction
     public boolean canNavigateToSource() {
         PsiElement element = getElement();
-        return element instanceof Navigatable && ((Navigatable)element).canNavigateToSource();
+        return element instanceof Navigatable navigatable && navigatable.canNavigateToSource();
     }
 
     @Override
+    @RequiredReadAction
     public PsiElement getTargetElement() {
         return getElement();
     }
@@ -121,6 +127,7 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, Typ
     }
 
     @Override
+    @RequiredUIAccess
     public void findUsages() {
         PsiElement element = getElement();
         if (element == null) {
@@ -131,22 +138,25 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, Typ
     }
 
     @Override
+    @RequiredReadAction
     public PsiElement getElement() {
         return myPointer.getElement();
     }
 
     @Override
+    @RequiredUIAccess
     public void findUsagesInEditor(@Nonnull FileEditor editor) {
         PsiElement element = getElement();
         FindManager.getInstance(element.getProject()).findUsagesInEditor(element, editor);
     }
 
     @Override
+    @RequiredUIAccess
     public void highlightUsages(@Nonnull PsiFile file, @Nonnull Editor editor, boolean clearHighlights) {
         PsiElement target = getElement();
 
-        if (file instanceof PsiCompiledFile) {
-            file = ((PsiCompiledFile)file).getDecompiledPsiFile();
+        if (file instanceof PsiCompiledFile compiledFile) {
+            file = compiledFile.getDecompiledPsiFile();
         }
 
         Project project = target.getProject();
@@ -164,16 +174,19 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, Typ
     }
 
     @Override
+    @RequiredReadAction
     public boolean isValid() {
         return getElement() != null;
     }
 
     @Override
+    @RequiredReadAction
     public boolean isReadOnly() {
         return isValid() && !getElement().isWritable();
     }
 
     @Override
+    @RequiredReadAction
     public VirtualFile[] getFiles() {
         if (!isValid()) {
             return null;
@@ -189,6 +202,7 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, Typ
     }
 
     @Nonnull
+    @RequiredReadAction
     public static PsiElement2UsageTargetAdapter[] convert(@Nonnull PsiElement[] psiElements) {
         PsiElement2UsageTargetAdapter[] targets = new PsiElement2UsageTargetAdapter[psiElements.length];
         for (int i = 0; i < targets.length; i++) {
@@ -199,6 +213,7 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, Typ
     }
 
     @Nonnull
+    @RequiredReadAction
     public static PsiElement[] convertToPsiElements(PsiElement2UsageTargetAdapter[] adapters) {
         PsiElement[] targets = new PsiElement[adapters.length];
         for (int i = 0; i < targets.length; i++) {
@@ -209,6 +224,7 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, Typ
     }
 
     @Override
+    @RequiredReadAction
     public void calcData(final Key<?> key, final DataSink sink) {
         if (key == UsageView.USAGE_INFO_KEY) {
             PsiElement element = getElement();
@@ -228,6 +244,7 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, Typ
 
     @Nonnull
     @Override
+    @RequiredReadAction
     public String getLongDescriptiveName() {
         SearchScope searchScope = myOptions.searchScope;
         String scopeString = searchScope.getDisplayName();
@@ -235,15 +252,15 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, Typ
 
         return psiElement == null
             ? UsageViewBundle.message("node.invalid")
-            : FindBundle.message(
-                "recent.find.usages.action.popup",
+            : FindLocalize.recentFindUsagesActionPopup(
                 StringUtil.capitalize(UsageViewUtil.getType(psiElement)),
                 DescriptiveNameUtil.getDescriptiveName(psiElement),
                 scopeString
-            );
+            ).get();
     }
 
     @Override
+    @RequiredUIAccess
     public void showSettings() {
         PsiElement element = getElement();
         if (element != null) {
@@ -253,6 +270,7 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, Typ
     }
 
     @Override
+    @RequiredReadAction
     public void update() {
         update(getElement());
     }
@@ -263,19 +281,15 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, Typ
             myIcon = presentation == null ? null : presentation.getIcon();
             myPresentableText = presentation == null ? UsageViewUtil.createNodeText(element) : presentation.getPresentableText();
             if (myIcon == null) {
-                if (element instanceof PsiMetaOwner) {
-                    final PsiMetaOwner psiMetaOwner = (PsiMetaOwner)element;
-                    final PsiMetaData metaData = psiMetaOwner.getMetaData();
-                    if (metaData instanceof PsiPresentableMetaData) {
-                        final PsiPresentableMetaData psiPresentableMetaData = (PsiPresentableMetaData)metaData;
+                if (element instanceof PsiMetaOwner metaOwner) {
+                    if (metaOwner.getMetaData() instanceof PsiPresentableMetaData presentableMetaData) {
                         if (myIcon == null) {
-                            myIcon = psiPresentableMetaData.getIcon();
+                            myIcon = presentableMetaData.getIcon();
                         }
                     }
                 }
-                else if (element instanceof PsiFile) {
-                    final PsiFile psiFile = (PsiFile)element;
-                    final VirtualFile virtualFile = psiFile.getVirtualFile();
+                else if (element instanceof PsiFile file) {
+                    final VirtualFile virtualFile = file.getVirtualFile();
                     if (virtualFile != null) {
                         myIcon = VirtualFilePresentation.getIcon(virtualFile);
                     }

@@ -16,16 +16,18 @@
 package consulo.desktop.awt.find;
 
 import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.find.FindBundle;
 import consulo.find.FindInProjectSettings;
 import consulo.find.FindModel;
+import consulo.find.localize.FindLocalize;
 import consulo.ide.impl.idea.find.impl.FindInProjectUtil;
 import consulo.ide.impl.idea.find.impl.FindUIHelper;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
@@ -40,7 +42,6 @@ import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -80,40 +81,37 @@ public class FindPopupDirectoryChooser extends JPanel {
         TextFieldWithBrowseButton.MyDoClickAction.addTo(mySelectDirectoryButton, myDirectoryComboBox);
         mySelectDirectoryButton.setMargin(JBUI.emptyInsets());
 
-        mySelectDirectoryButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
-                descriptor.setUseApplicationDialog();
-                myFindPopupPanel.getCanClose().set(false);
-                IdeaFileChooser.chooseFiles(
-                    descriptor,
-                    myProject,
-                    null,
-                    VfsUtil.findFileByIoFile(new File(getDirectory()), true),
-                    new IdeaFileChooser.FileChooserConsumer() {
-                        @Override
-                        public void accept(List<VirtualFile> files) {
-                            ApplicationManager.getApplication().invokeLater(() -> {
-                                myFindPopupPanel.getCanClose().set(true);
-                                ProjectIdeFocusManager.getInstance(myProject)
-                                    .requestFocus(myDirectoryComboBox.getEditor().getEditorComponent(), true);
-                                myHelper.getModel().setDirectoryName(files.get(0).getPresentableUrl());
-                                myDirectoryComboBox.getEditor().setItem(files.get(0).getPresentableUrl());
-                            });
-                        }
-
-                        @Override
-                        public void cancelled() {
-                            ApplicationManager.getApplication().invokeLater(() -> {
-                                myFindPopupPanel.getCanClose().set(true);
-                                ProjectIdeFocusManager.getInstance(myProject)
-                                    .requestFocus(myDirectoryComboBox.getEditor().getEditorComponent(), true);
-                            });
-                        }
+        mySelectDirectoryButton.addActionListener(e -> {
+            FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
+            descriptor.setUseApplicationDialog();
+            myFindPopupPanel.getCanClose().set(false);
+            IdeaFileChooser.chooseFiles(
+                descriptor,
+                myProject,
+                null,
+                VfsUtil.findFileByIoFile(new File(getDirectory()), true),
+                new IdeaFileChooser.FileChooserConsumer() {
+                    @Override
+                    public void accept(List<VirtualFile> files) {
+                        Application.get().invokeLater(() -> {
+                            myFindPopupPanel.getCanClose().set(true);
+                            ProjectIdeFocusManager.getInstance(myProject)
+                                .requestFocus(myDirectoryComboBox.getEditor().getEditorComponent(), true);
+                            myHelper.getModel().setDirectoryName(files.get(0).getPresentableUrl());
+                            myDirectoryComboBox.getEditor().setItem(files.get(0).getPresentableUrl());
+                        });
                     }
-                );
-            }
+
+                    @Override
+                    public void cancelled() {
+                        Application.get().invokeLater(() -> {
+                            myFindPopupPanel.getCanClose().set(true);
+                            ProjectIdeFocusManager.getInstance(myProject)
+                                .requestFocus(myDirectoryComboBox.getEditor().getEditorComponent(), true);
+                        });
+                    }
+                }
+            );
         });
 
         MyRecursiveDirectoryAction recursiveDirectoryAction = new MyRecursiveDirectoryAction();
@@ -175,16 +173,16 @@ public class FindPopupDirectoryChooser extends JPanel {
 
     private class MyRecursiveDirectoryAction extends ToggleAction {
         MyRecursiveDirectoryAction() {
-            super(FindBundle.message("find.scope.directory.recursive.checkbox"), "Recursively", AllIcons.Actions.ShowAsTree);
+            super(FindLocalize.findScopeDirectoryRecursiveCheckbox(), LocalizeValue.localizeTODO("Recursively"), AllIcons.Actions.ShowAsTree);
         }
 
         @Override
-        public boolean isSelected(AnActionEvent e) {
+        public boolean isSelected(@Nonnull AnActionEvent e) {
             return myHelper.getModel().isWithSubdirectories();
         }
 
         @Override
-        public void setSelected(AnActionEvent e, boolean state) {
+        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
             myHelper.getModel().setWithSubdirectories(state);
             myFindPopupPanel.scheduleResultsUpdate();
         }

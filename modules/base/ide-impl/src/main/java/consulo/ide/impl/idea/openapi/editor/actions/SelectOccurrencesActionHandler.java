@@ -15,21 +15,22 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
-import consulo.language.editor.action.SelectWordUtil;
-import consulo.language.editor.hint.HintManager;
-import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
-import consulo.language.editor.ui.awt.HintUtil;
-import consulo.find.FindBundle;
-import consulo.codeEditor.action.EditorActionUtil;
-import consulo.ui.ex.action.IdeActions;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.openapi.editor.EditorLastActionTracker;
 import consulo.codeEditor.action.EditorActionHandler;
-import consulo.util.dataholder.Key;
+import consulo.codeEditor.action.EditorActionUtil;
 import consulo.document.util.TextRange;
+import consulo.find.localize.FindLocalize;
+import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
+import consulo.ide.impl.idea.openapi.editor.EditorLastActionTracker;
 import consulo.ide.impl.idea.ui.LightweightHint;
-
+import consulo.language.editor.action.SelectWordUtil;
+import consulo.language.editor.hint.HintManager;
+import consulo.language.editor.ui.awt.HintUtil;
+import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.IdeActions;
+import consulo.util.dataholder.Key;
 import jakarta.annotation.Nullable;
 
 abstract public class SelectOccurrencesActionHandler extends EditorActionHandler {
@@ -42,9 +43,10 @@ abstract public class SelectOccurrencesActionHandler extends EditorActionHandler
         caret.setSelection(selectionRange.getStartOffset(), selectionRange.getEndOffset());
     }
 
+    @RequiredUIAccess
     protected static void showHint(final Editor editor) {
-        String message = FindBundle.message("select.next.occurence.not.found.message");
-        final LightweightHint hint = new LightweightHint(HintUtil.createInformationLabel(message));
+        LocalizeValue message = FindLocalize.selectNextOccurenceNotFoundMessage();
+        final LightweightHint hint = new LightweightHint(HintUtil.createInformationLabel(message.get()));
         HintManagerImpl.getInstanceImpl().showEditorHint(
             hint,
             editor,
