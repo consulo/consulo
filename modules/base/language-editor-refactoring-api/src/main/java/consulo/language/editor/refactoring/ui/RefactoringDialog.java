@@ -108,7 +108,7 @@ public abstract class RefactoringDialog extends DialogWrapper {
     protected void validateButtons() {
         boolean enabled = true;
         try {
-            setErrorText(LocalizeValue.empty());
+            clearErrorText();
             canRun();
         }
         catch (ConfigurationException e) {

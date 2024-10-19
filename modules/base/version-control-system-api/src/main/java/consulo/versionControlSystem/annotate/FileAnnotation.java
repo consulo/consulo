@@ -125,7 +125,9 @@ public abstract class FileAnnotation {
      */
     //TODO: rename into getToolTip() after deprecation deletion
     @Nonnull
-    public abstract LocalizeValue getToolTipValue(int lineNumber);
+    public LocalizeValue getToolTipValue(int lineNumber) {
+        return LocalizeValue.ofNullable(getToolTip(lineNumber));
+    }
 
     /**
      * The tooltip that is shown over annotation.
@@ -134,7 +136,11 @@ public abstract class FileAnnotation {
     @Deprecated
     @DeprecationInfo("Use getToolTipValue(int)")
     @Nullable
-    public abstract String getToolTip(int lineNumber);
+    public String getToolTip(int lineNumber) {
+        LocalizeValue toolTipValue = getToolTipValue(lineNumber);
+        return toolTipValue == LocalizeValue.empty() ? null : toolTipValue.get();
+    }
+
     /**
      * @return last revision that modified this line.
      */

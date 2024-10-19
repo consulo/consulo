@@ -230,7 +230,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
         if (!checkDestination()) {
             return;
         }
-        setErrorText(LocalizeValue.empty());
+        clearErrorText();
         setOKActionEnabled(true);
     }
 
@@ -241,7 +241,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
      */
     private boolean checkDestination() {
         if (myParentDirectory.getText().length() == 0 || myDirectoryName.getText().length() == 0) {
-            setErrorText(LocalizeValue.empty());
+            clearErrorText();
             setOKActionEnabled(false);
             return false;
         }
@@ -262,7 +262,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
     private boolean checkRepositoryURL() {
         String repository = getCurrentUrlText();
         if (repository.length() == 0) {
-            setErrorText(LocalizeValue.empty());
+            clearErrorText();
             setOKActionEnabled(false);
             return false;
         }

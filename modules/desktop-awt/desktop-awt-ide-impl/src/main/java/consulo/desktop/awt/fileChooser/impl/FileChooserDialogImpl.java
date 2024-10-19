@@ -611,7 +611,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
             myNorthPanel.add(myPath, BorderLayout.CENTER);
         }
         else {
-            setErrorText(LocalizeValue.empty());
+            clearErrorText();
         }
         IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> {
             IdeFocusManager.getGlobalInstance().requestFocus(myPathTextField.getField(), true);
@@ -640,7 +640,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
 
         myPathTextField.setText(text, now, () -> {
             myPathTextField.getField().selectAll();
-            setErrorText(LocalizeValue.empty());
+            clearErrorText();
         });
     }
 
@@ -698,7 +698,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
                 }
 
                 myTreeIsUpdating = false;
-                setErrorText(LocalizeValue.empty());
+                clearErrorText();
                 if (requestFocus) {
                     IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myFileSystemTree.getTree());
                 }
@@ -706,13 +706,13 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
         }
         else {
             myTreeIsUpdating = false;
-            setErrorText(LocalizeValue.empty());
+            clearErrorText();
         }
     }
 
     private void reportFileNotFound() {
         myTreeIsUpdating = false;
-        setErrorText(LocalizeValue.empty());
+        clearErrorText();
     }
 
     @Override

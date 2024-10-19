@@ -2080,6 +2080,10 @@ public abstract class DialogWrapper {
         }
     }
 
+    public void clearErrorText() {
+        setErrorInfoAll(List.of());
+    }
+
     /**
      * Don't override this method. It is not final for the API compatibility.
      * It will not be called by the DialogWrapper's validator.
