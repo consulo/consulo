@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.find.actions;
 
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
-import consulo.find.FindBundle;
 import consulo.find.FindManager;
+import consulo.find.localize.FindLocalize;
 import consulo.ide.impl.idea.codeInsight.navigation.actions.GotoDeclarationAction;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.psi.PsiDocumentManager;
@@ -27,6 +27,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.resolve.PsiElementProcessor;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
@@ -37,78 +38,87 @@ import consulo.usage.UsageView;
 import jakarta.annotation.Nonnull;
 
 public class FindUsagesAction extends AnAction {
-  public FindUsagesAction() {
-    setInjectedContext(true);
-  }
-
-  @Override
-  public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
-    if (project == null) {
-      return;
+    public FindUsagesAction() {
+        setInjectedContext(true);
     }
-    PsiDocumentManager.getInstance(project).commitAllDocuments();
 
-    UsageTarget[] usageTargets = e.getData(UsageView.USAGE_TARGETS_KEY);
-    if (usageTargets == null) {
-      final Editor editor = e.getData(Editor.KEY);
-      chooseAmbiguousTargetAndPerform(project, editor, element -> {
-        startFindUsages(element);
-        return false;
-      });
-    }
-    else {
-      UsageTarget target = usageTargets[0];
-      if (target instanceof PsiElementUsageTarget) {
-        PsiElement element = ((PsiElementUsageTarget)target).getElement();
-        if (element != null) {
-          startFindUsages(element);
-        }
-      }
-    }
-  }
-
-  protected void startFindUsages(@Nonnull PsiElement element) {
-    FindManager.getInstance(element.getProject()).findUsages(element);
-  }
-
-  @Override
-  public void update(AnActionEvent event) {
-    FindUsagesInFileAction.updateFindUsagesAction(event);
-  }
-
-  static void chooseAmbiguousTargetAndPerform(
-    @Nonnull final Project project,
-    final Editor editor,
-    @Nonnull PsiElementProcessor<PsiElement> processor
-  ) {
-    if (editor == null) {
-      Messages.showMessageDialog(
-        project,
-        FindBundle.message("find.no.usages.at.cursor.error"),
-        CommonLocalize.titleError().get(),
-        UIUtil.getErrorIcon()
-      );
-    }
-    else {
-      int offset = editor.getCaretModel().getOffset();
-      boolean chosen = GotoDeclarationAction.chooseAmbiguousTarget(editor, offset, processor, FindBundle.message("find.usages.ambiguous.title"), null);
-      if (!chosen) {
-        Application.get().invokeLater(
-          () -> {
-            if (editor.isDisposed() || !editor.getComponent().isShowing()) return;
-            HintManager.getInstance().showErrorHint(editor, FindBundle.message("find.no.usages.at.cursor.error"));
-          },
-          project.getDisposed()
-        );
-      }
-    }
-  }
-
-  public static class ShowSettingsAndFindUsages extends FindUsagesAction {
     @Override
-    protected void startFindUsages(@Nonnull PsiElement element) {
-      FindManager.getInstance(element.getProject()).findUsages(element, true);
+    public void actionPerformed(AnActionEvent e) {
+        final Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return;
+        }
+        PsiDocumentManager.getInstance(project).commitAllDocuments();
+
+        UsageTarget[] usageTargets = e.getData(UsageView.USAGE_TARGETS_KEY);
+        if (usageTargets == null) {
+            final Editor editor = e.getData(Editor.KEY);
+            chooseAmbiguousTargetAndPerform(project, editor, element -> {
+                startFindUsages(element);
+                return false;
+            });
+        }
+        else {
+            UsageTarget target = usageTargets[0];
+            if (target instanceof PsiElementUsageTarget) {
+                PsiElement element = ((PsiElementUsageTarget)target).getElement();
+                if (element != null) {
+                    startFindUsages(element);
+                }
+            }
+        }
     }
-  }
+
+    protected void startFindUsages(@Nonnull PsiElement element) {
+        FindManager.getInstance(element.getProject()).findUsages(element);
+    }
+
+    @Override
+    public void update(AnActionEvent event) {
+        FindUsagesInFileAction.updateFindUsagesAction(event);
+    }
+
+    @RequiredUIAccess
+    static void chooseAmbiguousTargetAndPerform(
+        @Nonnull final Project project,
+        final Editor editor,
+        @Nonnull PsiElementProcessor<PsiElement> processor
+    ) {
+        if (editor == null) {
+            Messages.showMessageDialog(
+                project,
+                FindLocalize.findNoUsagesAtCursorError().get(),
+                CommonLocalize.titleError().get(),
+                UIUtil.getErrorIcon()
+            );
+        }
+        else {
+            int offset = editor.getCaretModel().getOffset();
+            boolean chosen = GotoDeclarationAction.chooseAmbiguousTarget(
+                editor,
+                offset,
+                processor,
+                FindLocalize.findUsagesAmbiguousTitle().get(),
+                null
+            );
+            if (!chosen) {
+                Application.get().invokeLater(
+                    () -> {
+                        if (editor.isDisposed() || !editor.getComponent().isShowing()) {
+                            return;
+                        }
+                        HintManager.getInstance().showErrorHint(editor, FindLocalize.findNoUsagesAtCursorError().get());
+                    },
+                    project.getDisposed()
+                );
+            }
+        }
+    }
+
+    public static class ShowSettingsAndFindUsages extends FindUsagesAction {
+        @Override
+        protected void startFindUsages(@Nonnull PsiElement element) {
+            FindManager.getInstance(element.getProject()).findUsages(element, true);
+        }
+    }
 }

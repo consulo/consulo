@@ -204,3 +204,51 @@ filetype.diff.description:
   text: Diff
 merge.dialog.resolve.change.action.name:
   text: Resolve
+action.presentation.diff.accept.text:
+  text: Accept
+action.presentation.diff.append.text:
+  text: Append
+option.ignore.policy.none:
+  text: Do not ignore
+option.ignore.policy.trim:
+  text: Trim whitespaces
+option.ignore.policy.whitespaces:
+  text: Ignore whitespaces
+option.ignore.policy.whitespaces.empty.lines:
+  text: Ignore whitespaces and empty lines
+option.highlighting.level.inspections:
+  text: Inspections
+option.highlighting.level.syntax:
+  text: Syntax
+option.highlighting.level.none:
+  text: None
+option.highlighting.policy.lines:
+  text: Highlight lines
+option.highlighting.policy.words:
+  text: Highlight words
+option.highlighting.policy.split:
+  text: Highlight split changes
+option.highlighting.policy.symbols:
+  text: Highlight characters
+option.highlighting.policy.none:
+  text: Do not highlight
+binary.file.viewer:
+  text: Binary file viewer
+directory.viewer:
+  text: Directory viewer
+error.viewer:
+  text: Error viewer
+side.by.side.viewer:
+  text: Side-by-side viewer
+unified.viewer:
+  text: Unified viewer
+error.message.cannot.show.diff:
+  text: Cannot show diff
+highlighting.level:
+  text: Highlighting Level
+editor.settings:
+  text: Settings
+collapse.unchanged.fragments:
+  text: Collapse Unchanged Fragments
+synchronize.scrolling:
+  text: Synchronize Scrolling

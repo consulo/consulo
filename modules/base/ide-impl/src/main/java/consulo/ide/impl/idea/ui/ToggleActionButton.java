@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ui;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.Toggleable;
@@ -29,49 +30,57 @@ import jakarta.annotation.Nullable;
  * @author yole
  */
 public abstract class ToggleActionButton extends AnActionButton implements Toggleable {
-  public ToggleActionButton(String text, Image icon) {
-    super(text, null, icon);
-  }
+    public ToggleActionButton(@Nonnull LocalizeValue text, Image icon) {
+        super(text, LocalizeValue.empty(), icon);
+    }
 
-  protected ToggleActionButton(@Nonnull LocalizeValue text) {
-    super(text);
-  }
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public ToggleActionButton(String text, Image icon) {
+        super(text, null, icon);
+    }
 
-  protected ToggleActionButton(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
-    super(text, description);
-  }
+    protected ToggleActionButton(@Nonnull LocalizeValue text) {
+        super(text);
+    }
 
-  protected ToggleActionButton(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
-    super(text, description, icon);
-  }
+    protected ToggleActionButton(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+        super(text, description);
+    }
 
-  /**
-   * Returns the selected (checked, pressed) state of the action.
-   * @param e the action event representing the place and context in which the selected state is queried.
-   * @return true if the action is selected, false otherwise
-   */
-  public abstract boolean isSelected(AnActionEvent e);
+    protected ToggleActionButton(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+        super(text, description, icon);
+    }
 
-  /**
-   * Sets the selected state of the action to the specified value.
-   * @param e     the action event which caused the state change.
-   * @param state the new selected state of the action.
-   */
-  public abstract void setSelected(AnActionEvent e, boolean state);
+    /**
+     * Returns the selected (checked, pressed) state of the action.
+     *
+     * @param e the action event representing the place and context in which the selected state is queried.
+     * @return true if the action is selected, false otherwise
+     */
+    public abstract boolean isSelected(AnActionEvent e);
 
-  @Override
-  public final void actionPerformed(AnActionEvent e) {
-    final boolean state = !isSelected(e);
-    setSelected(e, state);
-    final Boolean selected = state ? Boolean.TRUE : Boolean.FALSE;
-    final Presentation presentation = e.getPresentation();
-    presentation.putClientProperty(Toggleable.SELECTED_PROPERTY, selected);
-  }
+    /**
+     * Sets the selected state of the action to the specified value.
+     *
+     * @param e     the action event which caused the state change.
+     * @param state the new selected state of the action.
+     */
+    public abstract void setSelected(AnActionEvent e, boolean state);
 
-  @Override
-  public final void updateButton(AnActionEvent e) {
-    final Boolean selected = isSelected(e) ? Boolean.TRUE : Boolean.FALSE;
-    final Presentation presentation = e.getPresentation();
-    presentation.putClientProperty(Toggleable.SELECTED_PROPERTY, selected);
-  }
+    @Override
+    public final void actionPerformed(AnActionEvent e) {
+        final boolean state = !isSelected(e);
+        setSelected(e, state);
+        final Boolean selected = state ? Boolean.TRUE : Boolean.FALSE;
+        final Presentation presentation = e.getPresentation();
+        presentation.putClientProperty(Toggleable.SELECTED_PROPERTY, selected);
+    }
+
+    @Override
+    public final void updateButton(AnActionEvent e) {
+        final Boolean selected = isSelected(e) ? Boolean.TRUE : Boolean.FALSE;
+        final Presentation presentation = e.getPresentation();
+        presentation.putClientProperty(Toggleable.SELECTED_PROPERTY, selected);
+    }
 }

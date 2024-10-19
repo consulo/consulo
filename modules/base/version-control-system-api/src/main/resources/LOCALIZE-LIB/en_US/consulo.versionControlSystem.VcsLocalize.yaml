@@ -1188,3 +1188,5 @@ scope.name.changelist.all.changed.files:
   text: All Changed Files
 progress.title.version.control.processing.changed.files:
   text: 'Version Control: Processing Changed Files'
+patch.apply.somehow.diff.name:
+  text: Apply patch somehow
