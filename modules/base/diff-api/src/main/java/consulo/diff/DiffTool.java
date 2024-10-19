@@ -23,10 +23,10 @@ import jakarta.annotation.Nonnull;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface DiffTool {
-  ExtensionPointName<DiffTool> EP_NAME = ExtensionPointName.create(DiffTool.class);
+    ExtensionPointName<DiffTool> EP_NAME = ExtensionPointName.create(DiffTool.class);
 
-  @Nonnull
-  String getName();
+    @Nonnull
+    String getName();
 
-  boolean canShow(@Nonnull DiffContext context, @Nonnull DiffRequest request);
+    boolean canShow(@Nonnull DiffContext context, @Nonnull DiffRequest request);
 }

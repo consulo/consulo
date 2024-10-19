@@ -18,28 +18,36 @@ package consulo.desktop.awt.internal.diff.fragment;
 import consulo.desktop.awt.internal.diff.simple.SimpleOnesideDiffViewer;
 import consulo.diff.DiffContext;
 import consulo.diff.FrameDiffTool;
+import consulo.diff.localize.DiffLocalize;
 import consulo.diff.request.DiffRequest;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 
+@SuppressWarnings("ExtensionImplIsNotAnnotated")
 public class UnifiedDiffTool implements FrameDiffTool {
-  public static final UnifiedDiffTool INSTANCE = new UnifiedDiffTool();
+    public static final UnifiedDiffTool INSTANCE = new UnifiedDiffTool();
 
-  @Nonnull
-  @Override
-  public DiffViewer createComponent(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
-    if (SimpleOnesideDiffViewer.canShowRequest(context, request)) return new SimpleOnesideDiffViewer(context, request);
-    if (UnifiedDiffViewer.canShowRequest(context, request)) return new UnifiedDiffViewer(context, request);
-    throw new IllegalArgumentException(request.toString());
-  }
+    @Nonnull
+    @Override
+    @RequiredUIAccess
+    public DiffViewer createComponent(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
+        if (SimpleOnesideDiffViewer.canShowRequest(context, request)) {
+            return new SimpleOnesideDiffViewer(context, request);
+        }
+        if (UnifiedDiffViewer.canShowRequest(context, request)) {
+            return new UnifiedDiffViewer(context, request);
+        }
+        throw new IllegalArgumentException(request.toString());
+    }
 
-  @Override
-  public boolean canShow(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
-    return SimpleOnesideDiffViewer.canShowRequest(context, request) || UnifiedDiffViewer.canShowRequest(context, request);
-  }
+    @Override
+    public boolean canShow(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
+        return SimpleOnesideDiffViewer.canShowRequest(context, request) || UnifiedDiffViewer.canShowRequest(context, request);
+    }
 
-  @Nonnull
-  @Override
-  public String getName() {
-    return "Oneside viewer";
-  }
+    @Nonnull
+    @Override
+    public String getName() {
+        return DiffLocalize.unifiedViewer().get();
+    }
 }

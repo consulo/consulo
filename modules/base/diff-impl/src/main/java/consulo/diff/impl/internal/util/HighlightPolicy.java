@@ -15,35 +15,37 @@
  */
 package consulo.diff.impl.internal.util;
 
+import consulo.diff.localize.DiffLocalize;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 public enum HighlightPolicy {
-  DO_NOT_HIGHLIGHT("Do not highlight"),
-  BY_LINE("Highlight lines"),
-  BY_WORD("Highlight words"),
-  BY_WORD_SPLIT("Highlight split changes");
+    DO_NOT_HIGHLIGHT(DiffLocalize.optionHighlightingPolicyNone()),
+    BY_LINE(DiffLocalize.optionHighlightingPolicyLines()),
+    BY_WORD(DiffLocalize.optionHighlightingPolicyWords()),
+    BY_WORD_SPLIT(DiffLocalize.optionHighlightingPolicySplit());
 
-  @Nonnull
-  private final String myText;
+    @Nonnull
+    private final LocalizeValue myText;
 
-  HighlightPolicy(@Nonnull String text) {
-    myText = text;
-  }
+    HighlightPolicy(@Nonnull LocalizeValue text) {
+        myText = text;
+    }
 
-  @Nonnull
-  public String getText() {
-    return myText;
-  }
+    @Nonnull
+    public LocalizeValue getText() {
+        return myText;
+    }
 
-  public boolean isShouldCompare() {
-    return this != DO_NOT_HIGHLIGHT;
-  }
+    public boolean isShouldCompare() {
+        return this != DO_NOT_HIGHLIGHT;
+    }
 
-  public boolean isFineFragments() {
-    return this == BY_WORD || this == BY_WORD_SPLIT;
-  }
+    public boolean isFineFragments() {
+        return this == BY_WORD || this == BY_WORD_SPLIT;
+    }
 
-  public boolean isShouldSquash() {
-    return this == BY_WORD || this == BY_LINE;
-  }
+    public boolean isShouldSquash() {
+        return this == BY_WORD || this == BY_LINE;
+    }
 }

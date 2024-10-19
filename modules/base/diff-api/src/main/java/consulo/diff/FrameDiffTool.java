@@ -26,38 +26,38 @@ import javax.swing.*;
 import java.util.List;
 
 public interface FrameDiffTool extends DiffTool {
-  /**
-   * Creates viewer for the given request. Clients should call {@link #canShow(DiffContext, DiffRequest)} first.
-   */
-  @RequiredUIAccess
-  @Nonnull
-  DiffViewer createComponent(@Nonnull DiffContext context, @Nonnull DiffRequest request);
-
-  interface DiffViewer extends Disposable {
-    @Nonnull
-    JComponent getComponent();
-
-    @Nullable
-    JComponent getPreferredFocusedComponent();
-
     /**
-     * Should be called after adding {@link #getComponent()} to the components hierarchy.
+     * Creates viewer for the given request. Clients should call {@link #canShow(DiffContext, DiffRequest)} first.
      */
+    @RequiredUIAccess
     @Nonnull
-    @RequiredUIAccess
-    ToolbarComponents init();
+    DiffViewer createComponent(@Nonnull DiffContext context, @Nonnull DiffRequest request);
 
-    @Override
-    @RequiredUIAccess
-    void dispose();
-  }
+    interface DiffViewer extends Disposable {
+        @Nonnull
+        JComponent getComponent();
 
-  class ToolbarComponents {
-    @Nullable
-    public List<AnAction> toolbarActions;
-    @Nullable
-    public List<AnAction> popupActions;
-    @Nullable
-    public JComponent statusPanel;
-  }
+        @Nullable
+        JComponent getPreferredFocusedComponent();
+
+        /**
+         * Should be called after adding {@link #getComponent()} to the components hierarchy.
+         */
+        @Nonnull
+        @RequiredUIAccess
+        ToolbarComponents init();
+
+        @Override
+        @RequiredUIAccess
+        void dispose();
+    }
+
+    class ToolbarComponents {
+        @Nullable
+        public List<AnAction> toolbarActions;
+        @Nullable
+        public List<AnAction> popupActions;
+        @Nullable
+        public JComponent statusPanel;
+    }
 }

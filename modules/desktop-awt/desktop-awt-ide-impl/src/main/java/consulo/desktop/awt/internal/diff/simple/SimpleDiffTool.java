@@ -17,31 +17,41 @@ package consulo.desktop.awt.internal.diff.simple;
 
 import consulo.diff.DiffContext;
 import consulo.diff.FrameDiffTool;
+import consulo.diff.localize.DiffLocalize;
 import consulo.diff.request.DiffRequest;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 
+@SuppressWarnings("ExtensionImplIsNotAnnotated")
 public class SimpleDiffTool implements FrameDiffTool {
-  public static final SimpleDiffTool INSTANCE = new SimpleDiffTool();
+    public static final SimpleDiffTool INSTANCE = new SimpleDiffTool();
 
-  @Nonnull
-  @Override
-  public DiffViewer createComponent(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
-    if (SimpleOnesideDiffViewer.canShowRequest(context, request)) return new SimpleOnesideDiffViewer(context, request);
-    if (SimpleDiffViewer.canShowRequest(context, request)) return new SimpleDiffViewer(context, request);
-    if (SimpleThreesideDiffViewer.canShowRequest(context, request)) return new SimpleThreesideDiffViewer(context, request);
-    throw new IllegalArgumentException(request.toString());
-  }
+    @Nonnull
+    @Override
+    @RequiredUIAccess
+    public DiffViewer createComponent(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
+        if (SimpleOnesideDiffViewer.canShowRequest(context, request)) {
+            return new SimpleOnesideDiffViewer(context, request);
+        }
+        if (SimpleDiffViewer.canShowRequest(context, request)) {
+            return new SimpleDiffViewer(context, request);
+        }
+        if (SimpleThreesideDiffViewer.canShowRequest(context, request)) {
+            return new SimpleThreesideDiffViewer(context, request);
+        }
+        throw new IllegalArgumentException(request.toString());
+    }
 
-  @Override
-  public boolean canShow(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
-    return SimpleOnesideDiffViewer.canShowRequest(context, request) ||
-           SimpleDiffViewer.canShowRequest(context, request) ||
-           SimpleThreesideDiffViewer.canShowRequest(context, request);
-  }
+    @Override
+    public boolean canShow(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
+        return SimpleOnesideDiffViewer.canShowRequest(context, request) ||
+            SimpleDiffViewer.canShowRequest(context, request) ||
+            SimpleThreesideDiffViewer.canShowRequest(context, request);
+    }
 
-  @Nonnull
-  @Override
-  public String getName() {
-    return "Default viewer";
-  }
+    @Nonnull
+    @Override
+    public String getName() {
+        return DiffLocalize.sideBySideViewer().get();
+    }
 }
