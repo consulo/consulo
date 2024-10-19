@@ -159,7 +159,7 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
 
         final Map<Configurable, ConfigurationException> errors = myEditor.getContext().getErrors();
         if (errors.size() == 0) {
-            setErrorText(LocalizeValue.empty());
+            clearErrorText();
         }
         else {
             String text = "Changes were not applied because of an error";
