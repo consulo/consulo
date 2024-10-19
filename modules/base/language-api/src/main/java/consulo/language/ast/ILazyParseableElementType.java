@@ -84,6 +84,7 @@ public class ILazyParseableElementType extends IElementType implements ILazyPars
     return null;
   }
 
+  @Override
   public boolean reuseCollapsedTokens() {
     return false;
   }

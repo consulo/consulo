@@ -15,9 +15,7 @@
  */
 package consulo.language.ast;
 
-import consulo.language.ast.ASTNode;
-import consulo.language.ast.IElementType;
-import consulo.language.ast.ILazyParseableElementType;
+import consulo.language.parser.PsiBuilder;
 
 /**
  * An additional interface to be implemented by {@link IElementType} instances for tokens which should be parsed lazily, but
@@ -25,12 +23,21 @@ import consulo.language.ast.ILazyParseableElementType;
  */
 public interface ILazyParseableElementTypeBase {
 
-  /**
-   * Parses the contents of the specified chameleon node and returns the AST tree
-   * representing the parsed contents.
-   *
-   * @param chameleon the node to parse.
-   * @return the parsed contents of the node.
-   */
-  ASTNode parseContents(ASTNode chameleon);
+    /**
+     * Parses the contents of the specified chameleon node and returns the AST tree
+     * representing the parsed contents.
+     *
+     * @param chameleon the node to parse.
+     * @return the parsed contents of the node.
+     */
+    ASTNode parseContents(ASTNode chameleon);
+
+    /**
+     * @return whether it's safe during lazy parsing to reuse tokens that were previously collapsed into a single token of this
+     * type via {@link PsiBuilder.Marker#collapse}. This can increase lazy-parsing speed
+     * (by not having to run the lexer again), but requires additional memory to store the tokens.
+     */
+    default boolean reuseCollapsedTokens() {
+        return false;
+    }
 }
