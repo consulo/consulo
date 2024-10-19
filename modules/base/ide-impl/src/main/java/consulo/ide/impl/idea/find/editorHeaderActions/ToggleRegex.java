@@ -15,30 +15,30 @@
  */
 package consulo.ide.impl.idea.find.editorHeaderActions;
 
-import consulo.find.FindBundle;
+import consulo.application.AllIcons;
 import consulo.find.FindModel;
 import consulo.find.FindSettings;
+import consulo.find.localize.FindLocalize;
 import consulo.ide.impl.idea.find.SearchSession;
-import consulo.application.AllIcons;
 import jakarta.annotation.Nonnull;
 
 public class ToggleRegex extends EditorHeaderToggleAction implements Embeddable {
-  public ToggleRegex() {
-    super(FindBundle.message("find.regex"), AllIcons.Actions.Regex, AllIcons.Actions.RegexHovered, AllIcons.Actions.RegexSelected);
-  }
-
-  @Override
-  protected boolean isSelected(@Nonnull SearchSession session) {
-    return session.getFindModel().isRegularExpressions();
-  }
-
-  @Override
-  protected void setSelected(@Nonnull SearchSession session, boolean selected) {
-    FindModel findModel = session.getFindModel();
-    findModel.setRegularExpressions(selected);
-    if (selected) {
-      findModel.setWholeWordsOnly(false);
+    public ToggleRegex() {
+        super(FindLocalize.findRegex(), AllIcons.Actions.Regex, AllIcons.Actions.RegexHovered, AllIcons.Actions.RegexSelected);
     }
-    FindSettings.getInstance().setLocalRegularExpressions(selected);
-  }
+
+    @Override
+    protected boolean isSelected(@Nonnull SearchSession session) {
+        return session.getFindModel().isRegularExpressions();
+    }
+
+    @Override
+    protected void setSelected(@Nonnull SearchSession session, boolean selected) {
+        FindModel findModel = session.getFindModel();
+        findModel.setRegularExpressions(selected);
+        if (selected) {
+            findModel.setWholeWordsOnly(false);
+        }
+        FindSettings.getInstance().setLocalRegularExpressions(selected);
+    }
 }

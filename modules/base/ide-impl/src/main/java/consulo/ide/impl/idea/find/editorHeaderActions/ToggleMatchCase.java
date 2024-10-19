@@ -15,25 +15,30 @@
  */
 package consulo.ide.impl.idea.find.editorHeaderActions;
 
-import consulo.find.FindBundle;
-import consulo.find.FindSettings;
-import consulo.ide.impl.idea.find.SearchSession;
 import consulo.application.AllIcons;
+import consulo.find.FindSettings;
+import consulo.find.localize.FindLocalize;
+import consulo.ide.impl.idea.find.SearchSession;
 import jakarta.annotation.Nonnull;
 
 public class ToggleMatchCase extends EditorHeaderToggleAction implements Embeddable {
-  public ToggleMatchCase() {
-    super(FindBundle.message("find.case.sensitive"), AllIcons.Actions.MatchCase, AllIcons.Actions.MatchCaseHovered, AllIcons.Actions.MatchCaseSelected);
-  }
+    public ToggleMatchCase() {
+        super(
+            FindLocalize.findCaseSensitive(),
+            AllIcons.Actions.MatchCase,
+            AllIcons.Actions.MatchCaseHovered,
+            AllIcons.Actions.MatchCaseSelected
+        );
+    }
 
-  @Override
-  protected boolean isSelected(@Nonnull SearchSession session) {
-    return session.getFindModel().isCaseSensitive();
-  }
+    @Override
+    protected boolean isSelected(@Nonnull SearchSession session) {
+        return session.getFindModel().isCaseSensitive();
+    }
 
-  @Override
-  protected void setSelected(@Nonnull SearchSession session, boolean selected) {
-    session.getFindModel().setCaseSensitive(selected);
-    FindSettings.getInstance().setLocalCaseSensitive(selected);
-  }
+    @Override
+    protected void setSelected(@Nonnull SearchSession session, boolean selected) {
+        session.getFindModel().setCaseSensitive(selected);
+        FindSettings.getInstance().setLocalCaseSensitive(selected);
+    }
 }

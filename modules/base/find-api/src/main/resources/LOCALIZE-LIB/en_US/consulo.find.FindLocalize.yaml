@@ -349,3 +349,7 @@ find.popup.show.filter.popup:
   text: Show Filter Popup
 find.popup.show.tab.options:
   text: Show Tab Options
+find.search.history:
+  text: Search History
+find.replace.history:
+  text: Replace History

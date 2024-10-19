@@ -16,20 +16,23 @@
 
 package consulo.ide.impl.idea.find;
 
-import consulo.find.FindBundle;
-import consulo.project.Project;
+import consulo.find.localize.FindLocalize;
 import consulo.ide.impl.idea.openapi.progress.impl.BackgroundableProcessIndicator;
+import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author ven
  */
 public class FindProgressIndicator extends BackgroundableProcessIndicator {
-  public FindProgressIndicator(@Nonnull Project project, String scopeString) {
-    super(project,
-          FindBundle.message("find.progress.searching.message", scopeString),
-          new SearchInBackgroundOption(),
-          FindBundle.message("find.progress.stop.title"),
-          FindBundle.message("find.progress.stop.background.button"), true);
-  }
+    public FindProgressIndicator(@Nonnull Project project, String scopeString) {
+        super(
+            project,
+            FindLocalize.findProgressSearchingMessage(scopeString).get(),
+            new SearchInBackgroundOption(),
+            FindLocalize.findProgressStopTitle().get(),
+            FindLocalize.findProgressStopBackgroundButton().get(),
+            true
+        );
+    }
 }
