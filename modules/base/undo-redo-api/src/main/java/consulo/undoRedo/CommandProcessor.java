@@ -5,14 +5,13 @@ import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.undoRedo.event.CommandListener;
 import consulo.util.lang.EmptyRunnable;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -29,59 +28,125 @@ public abstract class CommandProcessor {
         return Application.get().getInstance(CommandProcessor.class);
     }
 
-    /**
-     * @deprecated use {@link #executeCommand(Project, Runnable, String, Object)}
-     */
     @Deprecated
-    public abstract void executeCommand(@Nonnull Runnable runnable, @Nullable String name, @Nullable Object groupId);
+    @DeprecationInfo("Use #executeCommand(CommandDescriptor)")
+    public void executeCommand(@Nonnull Runnable runnable, @Nullable String name, @Nullable Object groupId) {
+        executeCommand(
+            new CommandDescriptor(runnable)
+                .name(LocalizeValue.ofNullable(name))
+                .groupId(groupId)
+        );
+    }
 
-    public abstract void executeCommand(
+    @Deprecated
+    @DeprecationInfo("Use #executeCommand(CommandDescriptor)")
+    public void executeCommand(
         @Nullable Project project,
         @Nonnull Runnable runnable,
         @Nullable String name,
         @Nullable Object groupId
-    );
+    ) {
+        executeCommand(
+            new CommandDescriptor(runnable)
+                .project(project)
+                .name(LocalizeValue.ofNullable(name))
+                .groupId(groupId)
+        );
+    }
 
-    public abstract void executeCommand(
+    @Deprecated
+    @DeprecationInfo("Use #executeCommand(CommandDescriptor)")
+    public void executeCommand(
         @Nullable Project project,
         @Nonnull Runnable runnable,
         @Nullable String name,
         @Nullable Object groupId,
         @Nullable Document document
-    );
+    ) {
+        executeCommand(
+            new CommandDescriptor(runnable)
+                .project(project)
+                .name(LocalizeValue.ofNullable(name))
+                .groupId(groupId)
+                .document(document)
+        );
+    }
 
-    public abstract void executeCommand(
+    @Deprecated
+    @DeprecationInfo("Use #executeCommand(CommandDescriptor)")
+    public void executeCommand(
         @Nullable Project project,
         @Nonnull Runnable runnable,
         @Nullable String name,
         @Nullable Object groupId,
         @Nonnull UndoConfirmationPolicy confirmationPolicy
-    );
+    ) {
+        executeCommand(
+            new CommandDescriptor(runnable)
+                .project(project)
+                .name(LocalizeValue.ofNullable(name))
+                .groupId(groupId)
+                .undoConfirmationPolicy(confirmationPolicy)
+        );
+    }
 
-    public abstract void executeCommand(
+    @Deprecated
+    @DeprecationInfo("Use #executeCommand(CommandDescriptor)")
+    public void executeCommand(
         @Nullable Project project,
         @Nonnull Runnable command,
         @Nullable String name,
         @Nullable Object groupId,
         @Nonnull UndoConfirmationPolicy confirmationPolicy,
         @Nullable Document document
-    );
+    ) {
+        executeCommand(
+            new CommandDescriptor(command)
+                .project(project)
+                .name(LocalizeValue.ofNullable(name))
+                .groupId(groupId)
+                .undoConfirmationPolicy(confirmationPolicy)
+                .document(document)
+        );
+    }
 
     /**
-     * @param shouldRecordCommandForActiveDocument {@code false} if the action is not supposed to be recorded into the currently open document's history.
+     * @param shouldRecordCommandForActiveDocument {@code false} if the action is not supposed to be recorded
+     *                                             into the currently open document's history.
      *                                             Examples of such actions: Create New File, Change Project Settings etc.
      *                                             Default is {@code true}.
      */
-    public abstract void executeCommand(
+    @Deprecated
+    @DeprecationInfo("Use #executeCommand(CommandDescriptor)")
+    public void executeCommand(
         @Nullable Project project,
         @Nonnull Runnable command,
         @Nullable String name,
         @Nullable Object groupId,
         @Nonnull UndoConfirmationPolicy confirmationPolicy,
         boolean shouldRecordCommandForActiveDocument
-    );
+    ) {
+        executeCommand(
+            new CommandDescriptor(command)
+                .project(project)
+                .name(LocalizeValue.ofNullable(name))
+                .groupId(groupId)
+                .undoConfirmationPolicy(confirmationPolicy)
+                .shouldRecordActionForActiveDocument(shouldRecordCommandForActiveDocument)
+        );
+    }
 
-    public abstract void setCurrentCommandName(@Nullable String name);
+    public abstract void executeCommand(CommandDescriptor commandDescriptor);
+
+    public void setCurrentCommandName(@Nonnull LocalizeValue name) {
+        setCurrentCommandName(name == LocalizeValue.empty() ? null : name.get());
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public void setCurrentCommandName(@Nullable String name) {
+        setCurrentCommandName(LocalizeValue.ofNullable(name));
+    }
 
     public abstract void setCurrentCommandGroupId(@Nullable Object groupId);
 
@@ -94,8 +159,19 @@ public abstract class CommandProcessor {
 
     public abstract boolean hasCurrentCommand();
 
+    //TODO: rename into #getCurrentCommandName() after deprecation removal
+    @Nonnull
+    public LocalizeValue getCurrentCommandNameValue() {
+        return LocalizeValue.ofNullable(getCurrentCommandName());
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use #getCurrentCommandNameValue()")
     @Nullable
-    public abstract String getCurrentCommandName();
+    public String getCurrentCommandName() {
+        LocalizeValue currentCommandName = getCurrentCommandNameValue();
+        return currentCommandName == LocalizeValue.empty() ? null : currentCommandName.get();
+    }
 
     @Nullable
     public abstract Object getCurrentCommandGroupId();
@@ -131,7 +207,7 @@ public abstract class CommandProcessor {
      */
     @Deprecated
     public void addCommandListener(@Nonnull CommandListener listener, @Nonnull Disposable parentDisposable) {
-        ApplicationManager.getApplication().getMessageBus().connect(parentDisposable).subscribe(CommandListener.class, listener);
+        Application.get().getMessageBus().connect(parentDisposable).subscribe(CommandListener.class, listener);
     }
 
     /**

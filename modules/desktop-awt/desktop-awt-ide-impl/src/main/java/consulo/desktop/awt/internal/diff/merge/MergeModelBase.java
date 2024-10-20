@@ -17,12 +17,9 @@ package consulo.desktop.awt.internal.diff.merge;
 
 import consulo.diff.impl.internal.util.DiffImplUtil;
 import consulo.diff.util.LineRange;
-import consulo.undoRedo.BasicUndoableAction;
-import consulo.undoRedo.UndoManager;
-import consulo.undoRedo.UnexpectedUndoException;
+import consulo.localize.LocalizeValue;
+import consulo.undoRedo.*;
 import consulo.annotation.access.RequiredWriteAction;
-import consulo.undoRedo.ApplicationUndoManager;
-import consulo.undoRedo.ProjectUndoManager;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.document.event.DocumentAdapter;
@@ -30,7 +27,6 @@ import consulo.document.event.DocumentEvent;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.util.collection.SmartList;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
@@ -241,6 +237,40 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
     }
 
     @RequiredUIAccess
+    public CommandDescriptor mergeCommand(
+        boolean underBulkUpdate,
+        @Nullable IntList affectedChanges,
+        @Nonnull Runnable task
+    ) {
+        IntList allAffectedChanges = affectedChanges != null ? collectAffectedChanges(affectedChanges) : null;
+        Runnable mergeTask = () -> {
+            LOG.assertTrue(!myInsideCommand);
+
+            // We should restore states after changes in document (by DocumentUndoProvider) to avoid corruption by our onBeforeDocumentChange()
+            // Undo actions are performed in backward order, while redo actions are performed in forward order.
+            // Thus we should register two UndoableActions.
+
+            myInsideCommand = true;
+            enterBulkChangeUpdateBlock();
+            registerUndoRedo(true, allAffectedChanges);
+            try {
+                task.run();
+            }
+            finally {
+                registerUndoRedo(false, allAffectedChanges);
+                exitBulkChangeUpdateBlock();
+                myInsideCommand = false;
+            }
+        };
+        CommandDescriptor descriptor = underBulkUpdate ? DiffImplUtil.underBulkUpdate(mergeTask) : new CommandDescriptor(mergeTask);
+
+        return descriptor
+            .project(myProject)
+            .document(myDocument);
+    }
+
+    @Deprecated(forRemoval = true)
+    @RequiredUIAccess
     public void executeMergeCommand(
         @Nullable String commandName,
         @Nullable String commandGroupId,
@@ -249,33 +279,11 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
         @Nullable IntList affectedChanges,
         @Nonnull Runnable task
     ) {
-        IntList allAffectedChanges = affectedChanges != null ? collectAffectedChanges(affectedChanges) : null;
         DiffImplUtil.executeWriteCommand(
-            myProject,
-            myDocument,
-            commandName,
-            commandGroupId,
-            confirmationPolicy,
-            underBulkUpdate,
-            () -> {
-                LOG.assertTrue(!myInsideCommand);
-
-                // We should restore states after changes in document (by DocumentUndoProvider) to avoid corruption by our onBeforeDocumentChange()
-                // Undo actions are performed in backward order, while redo actions are performed in forward order.
-                // Thus we should register two UndoableActions.
-
-                myInsideCommand = true;
-                enterBulkChangeUpdateBlock();
-                registerUndoRedo(true, allAffectedChanges);
-                try {
-                    task.run();
-                }
-                finally {
-                    registerUndoRedo(false, allAffectedChanges);
-                    exitBulkChangeUpdateBlock();
-                    myInsideCommand = false;
-                }
-            }
+            mergeCommand(underBulkUpdate, affectedChanges, task)
+                .name(LocalizeValue.ofNullable(commandName))
+                .groupId(commandGroupId)
+                .undoConfirmationPolicy(confirmationPolicy)
         );
     }
 

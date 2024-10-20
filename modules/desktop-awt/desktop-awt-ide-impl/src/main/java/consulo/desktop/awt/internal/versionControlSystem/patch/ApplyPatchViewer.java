@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.internal.versionControlSystem.patch;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.AllIcons;
 import consulo.codeEditor.*;
@@ -50,16 +51,18 @@ import consulo.ide.impl.idea.openapi.vcs.changes.patch.AppliedTextPatch;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.tool.ApplyPatchRequest;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.tool.PatchChangeBuilder;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.undoRedo.UndoConfirmationPolicy;
+import consulo.undoRedo.CommandDescriptor;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -317,15 +320,15 @@ class ApplyPatchViewer implements DataProvider, Disposable {
     protected void initPatchViewer() {
         final Document outputDocument = myResultEditor.getDocument();
         DiffImplUtil.executeWriteCommand(
-            outputDocument,
-            myProject,
-            "Init merge content",
-            () -> {
+            new CommandDescriptor(() -> {
                 outputDocument.setText(myPatchRequest.getLocalContent());
                 if (!isReadOnly()) {
                     DiffImplUtil.putNonundoableOperation(myProject, outputDocument);
                 }
-            }
+            })
+                .project(myProject)
+                .document(outputDocument)
+                .name(DiffLocalize.messageInitMergeContentCommand())
         );
 
         PatchChangeBuilder builder = new PatchChangeBuilder();
@@ -451,15 +454,14 @@ class ApplyPatchViewer implements DataProvider, Disposable {
     }
 
     @RequiredUIAccess
+    CommandDescriptor patchCommand(@Nonnull final Runnable task) {
+        return myModel.mergeCommand(false, null, task);
+    }
+
+    @Deprecated(forRemoval = true)
+    @RequiredUIAccess
     public void executeCommand(@Nullable String commandName, @Nonnull final Runnable task) {
-        myModel.executeMergeCommand(
-            commandName,
-            null,
-            UndoConfirmationPolicy.DEFAULT,
-            false,
-            null,
-            task
-        );
+        DiffImplUtil.executeWriteCommand(patchCommand(task).name(LocalizeValue.ofNullable(commandName)));
     }
 
     class MyModel extends MergeModelBase<ApplyPatchChange.State> {
@@ -620,9 +622,10 @@ class ApplyPatchViewer implements DataProvider, Disposable {
                 return;
             }
 
-            String title = e.getPresentation().getText() + " in patch resolve";
-
-            executeCommand(title, () -> apply(selectedChanges));
+            DiffImplUtil.executeWriteCommand(
+                patchCommand(() -> apply(selectedChanges))
+                    .name(VcsLocalize.patchApplyChangesInPatchResolve(e.getPresentation().getText()))
+            );
         }
 
         private boolean isSomeChangeSelected(@Nonnull Side side) {
@@ -706,9 +709,8 @@ class ApplyPatchViewer implements DataProvider, Disposable {
                 return;
             }
 
-            executeCommand(
-                "Apply Non Conflicted Changes",
-                () -> {
+            DiffImplUtil.executeWriteCommand(
+                patchCommand(() -> {
                     for (int i = changes.size() - 1; i >= 0; i--) {
                         ApplyPatchChange change = changes.get(i);
                         switch (change.getStatus()) {
@@ -722,7 +724,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
                                 break;
                         }
                     }
-                }
+                }).name(DiffLocalize.mergeDialogApplyNonConflictedChangesCommand())
             );
         }
     }

@@ -2,7 +2,9 @@
 
 package consulo.ide.impl.idea.codeInsight.completion;
 
-import consulo.application.*;
+import consulo.application.AppUIExecutor;
+import consulo.application.Application;
+import consulo.application.WriteAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
 import consulo.application.util.registry.Registry;
@@ -20,7 +22,6 @@ import consulo.ide.impl.idea.codeInsight.completion.actions.BaseCodeCompletionAc
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
 import consulo.ide.impl.idea.openapi.application.impl.ApplicationInfoImpl;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
-import consulo.ide.impl.psi.impl.source.PostprocessReformattingAspectImpl;
 import consulo.ide.impl.psi.stubs.StubTextInconsistencyException;
 import consulo.language.Language;
 import consulo.language.codeStyle.PostprocessReformattingAspect;
@@ -33,11 +34,14 @@ import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
+import consulo.undoRedo.CommandDescriptor;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.Ref;
@@ -189,7 +193,11 @@ public class CodeCompletionHandlerBase {
                 CommandProcessor.getInstance().runUndoTransparentAction(initCmd);
             }
             else {
-                CommandProcessor.getInstance().executeCommand(project, initCmd, null, null, editor.getDocument());
+                CommandProcessor.getInstance().executeCommand(
+                    new CommandDescriptor(initCmd)
+                        .project(project)
+                        .document(editor.getDocument())
+                );
             }
         }
         catch (IndexNotReadyException e) {
@@ -201,10 +209,9 @@ public class CodeCompletionHandlerBase {
     }
 
     private static void checkNoWriteAccess() {
-        if (!ApplicationManager.getApplication().isUnitTestMode()) {
-            if (ApplicationManager.getApplication().isWriteAccessAllowed()) {
-                throw new AssertionError("Completion should not be invoked inside write action");
-            }
+        Application application = Application.get();
+        if (!application.isUnitTestMode() && application.isWriteAccessAllowed()) {
+            throw new AssertionError("Completion should not be invoked inside write action");
         }
     }
 
@@ -230,6 +237,7 @@ public class CodeCompletionHandlerBase {
         return lookup;
     }
 
+    @RequiredUIAccess
     private void doComplete(
         CompletionInitializationContextImpl initContext,
         boolean hasModifiers,
@@ -291,8 +299,8 @@ public class CodeCompletionHandlerBase {
         CompletionServiceImpl.setCompletionPhase(phase);
 
         AppUIExecutor.onUiThread().withDocumentsCommitted(initContext.getProject()).expireWith(phase).execute(() -> {
-            if (phase instanceof CompletionPhase.CommittingDocuments) {
-                ((CompletionPhase.CommittingDocuments)phase).replaced = true;
+            if (phase instanceof CompletionPhase.CommittingDocuments committingDocuments) {
+                committingDocuments.replaced = true;
             }
             CompletionServiceImpl.setCompletionPhase(new CompletionPhase.BgCalculation(indicator));
             startContributorThread(initContext, indicator, hostCopyOffsets, hasModifiers);
@@ -365,7 +373,7 @@ public class CodeCompletionHandlerBase {
     }
 
     private static void checkForExceptions(Future<?> future) {
-        if (ApplicationManager.getApplication().isUnitTestMode()) {
+        if (Application.get().isUnitTestMode()) {
             try {
                 future.get();
             }
@@ -377,7 +385,11 @@ public class CodeCompletionHandlerBase {
 
     private static void checkNotSync(CompletionProgressIndicator indicator, List<LookupElement> allItems) {
         if (CompletionServiceImpl.isPhase(CompletionPhase.Synchronous.class)) {
-            LOG.error("sync phase survived: " + allItems + "; indicator=" + CompletionServiceImpl.getCompletionPhase().indicator + "; myIndicator=" + indicator);
+            LOG.error(
+                "sync phase survived: " + allItems +
+                    "; indicator=" + CompletionServiceImpl.getCompletionPhase().indicator +
+                    "; myIndicator=" + indicator
+            );
             CompletionServiceImpl.setCompletionPhase(CompletionPhase.NoCompletion);
         }
     }
@@ -467,14 +479,18 @@ public class CodeCompletionHandlerBase {
                 indicator.showLookup();
                 CompletionServiceImpl.setCompletionPhase(new CompletionPhase.ItemsCalculated(indicator));
             }
-            else if (decision instanceof AutoCompletionDecision.InsertItem) {
+            else if (decision instanceof AutoCompletionDecision.InsertItem insertItem) {
                 final Runnable restorePrefix = rememberDocumentState(indicator.getEditor());
 
-                final LookupElement item = ((AutoCompletionDecision.InsertItem)decision).getElement();
-                CommandProcessor.getInstance().executeCommand(indicator.getProject(), () -> {
-                    indicator.setMergeCommand();
-                    indicator.getLookup().finishLookup(Lookup.AUTO_INSERT_SELECT_CHAR, item);
-                }, "Autocompletion", null);
+                final LookupElement item = insertItem.getElement();
+                CommandProcessor.getInstance().executeCommand(
+                    new CommandDescriptor(() -> {
+                        indicator.setMergeCommand();
+                        indicator.getLookup().finishLookup(Lookup.AUTO_INSERT_SELECT_CHAR, item);
+                    })
+                        .project(indicator.getProject())
+                        .name(LocalizeValue.localizeTODO("Autocompletion"))
+                );
 
                 // the insert handler may have started a live template with completion
                 if (CompletionService.getCompletionService().getCurrentCompletion() == null
@@ -615,7 +631,7 @@ public class CodeCompletionHandlerBase {
             PsiUtilBase.getPsiFileInEditor(InjectedLanguageUtil.getTopLevelEditor(indicator.getEditor()), indicator.getProject());
         if (psiFile != null) {
             if (Registry.is("ide.check.stub.text.consistency")
-                || ApplicationManager.getApplication().isUnitTestMode() && !ApplicationInfoImpl.isInPerformanceTest()) {
+                || Application.get().isUnitTestMode() && !ApplicationInfoImpl.isInPerformanceTest()) {
                 StubTextInconsistencyException.checkStubTextConsistency(psiFile);
                 if (PsiDocumentManager.getInstance(psiFile.getProject()).hasUncommitedDocuments()) {
                     PsiDocumentManager.getInstance(psiFile.getProject()).commitAllDocuments();
@@ -641,6 +657,7 @@ public class CodeCompletionHandlerBase {
         }
     }
 
+    @RequiredUIAccess
     private static WatchingInsertionContext insertItem(
         @Nullable final Lookup lookup,
         final LookupElement item,
@@ -656,7 +673,7 @@ public class CodeCompletionHandlerBase {
         WatchingInsertionContext context =
             createInsertionContext(lookup, item, completionChar, editor, psiFile, caretOffset, idEndOffset, offsetMap);
         int initialStartOffset = Math.max(0, caretOffset - item.getLookupString().length());
-        ApplicationManager.getApplication().runWriteAction(() -> {
+        Application.get().runWriteAction(() -> {
             try {
                 if (caretOffset < idEndOffset && completionChar == Lookup.REPLACE_SELECT_CHAR) {
                     Document document = editor.getDocument();
@@ -665,15 +682,23 @@ public class CodeCompletionHandlerBase {
                     }
                 }
 
-                assert context.getStartOffset() >= 0 : "stale startOffset: was " + initialStartOffset + "; selEnd=" + caretOffset + "; idEnd=" + idEndOffset + "; file=" + psiFile;
-                assert context.getTailOffset() >= 0 : "stale tail: was " + initialStartOffset + "; selEnd=" + caretOffset + "; idEnd=" + idEndOffset + "; file=" + psiFile;
+                assert context.getStartOffset() >= 0
+                    : "stale startOffset: was " + initialStartOffset +
+                    "; selEnd=" + caretOffset +
+                    "; idEnd=" + idEndOffset +
+                    "; file=" + psiFile;
+                assert context.getTailOffset() >= 0
+                    : "stale tail: was " + initialStartOffset +
+                    "; selEnd=" + caretOffset +
+                    "; idEnd=" + idEndOffset +
+                    "; file=" + psiFile;
 
                 Project project = psiFile.getProject();
                 if (item.requiresCommittedDocuments()) {
                     PsiDocumentManager.getInstance(project).commitAllDocuments();
                 }
                 item.handleInsert(context);
-                ((PostprocessReformattingAspectImpl)PostprocessReformattingAspect.getInstance(project)).doPostponedFormatting();
+                PostprocessReformattingAspect.getInstance(project).doPostponedFormatting();
             }
             finally {
                 context.stopWatching();
@@ -843,6 +868,6 @@ public class CodeCompletionHandlerBase {
     }
 
     protected boolean isTestingMode() {
-        return ApplicationManager.getApplication().isUnitTestMode() || isTestingCompletionQualityMode();
+        return Application.get().isUnitTestMode() || isTestingCompletionQualityMode();
     }
 }

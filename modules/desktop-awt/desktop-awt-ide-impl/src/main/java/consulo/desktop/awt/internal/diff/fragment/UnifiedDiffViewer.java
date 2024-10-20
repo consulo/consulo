@@ -68,6 +68,7 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnSeparator;
+import consulo.undoRedo.CommandDescriptor;
 import consulo.undoRedo.UndoManager;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
@@ -773,28 +774,20 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
         @RequiredUIAccess
         public void actionPerformed(@Nonnull final AnActionEvent e) {
             final List<UnifiedDiffChange> selectedChanges = getSelectedChanges();
-            if (selectedChanges.isEmpty()) {
+            if (selectedChanges.isEmpty() || !isEditable(myModifiedSide, true) || isStateIsOutOfDate()) {
                 return;
             }
 
-            if (!isEditable(myModifiedSide, true)) {
-                return;
-            }
-            if (isStateIsOutOfDate()) {
-                return;
-            }
-
-            String title = e.getPresentation().getText() + " selected changes";
             DiffImplUtil.executeWriteCommand(
-                getDocument(myModifiedSide),
-                e.getData(Project.KEY),
-                title,
-                () -> {
+                new CommandDescriptor(() -> {
                     // state is invalidated during apply(), but changes are in reverse order, so they should not conflict with each other
                     apply(selectedChanges);
                     //noinspection RequiredXAction
                     scheduleRediff();
-                }
+                })
+                    .project(e.getData(Project.KEY))
+                    .document(getDocument(myModifiedSide))
+                    .name(DiffLocalize.messageUseSelectedChangesCommand(e.getPresentation().getText()))
             );
         }
 

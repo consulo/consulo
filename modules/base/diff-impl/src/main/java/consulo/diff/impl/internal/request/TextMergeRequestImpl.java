@@ -20,6 +20,8 @@ import consulo.diff.merge.MergeResult;
 import consulo.diff.util.ThreeSide;
 import consulo.diff.merge.TextMergeRequest;
 import consulo.diff.impl.internal.util.DiffImplUtil;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.undoRedo.CommandDescriptor;
 import consulo.util.lang.StringUtil;
 import consulo.project.Project;
 
@@ -95,6 +97,7 @@ public class TextMergeRequestImpl extends TextMergeRequest {
         return myTitles;
     }
 
+    @RequiredUIAccess
     @Override
     public void applyResult(@Nonnull MergeResult result) {
         final CharSequence applyContent;
@@ -119,15 +122,9 @@ public class TextMergeRequestImpl extends TextMergeRequest {
 
         if (applyContent != null) {
             DiffImplUtil.executeWriteCommand(
-                myOutput.getDocument(),
-                myProject,
-                null,
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        myOutput.getDocument().setText(applyContent);
-                    }
-                }
+                new CommandDescriptor(() -> myOutput.getDocument().setText(applyContent))
+                    .project(myProject)
+                    .document(myOutput.getDocument())
             );
         }
 

@@ -15,11 +15,11 @@
  */
 package consulo.diff.impl.internal.util;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.codeEditor.*;
-import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.component.persist.StoragePathMacros;
 import consulo.dataContext.DataProvider;
@@ -37,8 +37,8 @@ import consulo.diff.fragment.DiffFragment;
 import consulo.diff.fragment.LineFragment;
 import consulo.diff.fragment.MergeLineFragment;
 import consulo.diff.impl.internal.DiffSettingsHolder;
-import consulo.diff.internal.DiffUserDataKeysEx;
 import consulo.diff.impl.internal.merge.MergeInnerDifferences;
+import consulo.diff.internal.DiffUserDataKeysEx;
 import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.request.DiffRequest;
 import consulo.diff.util.*;
@@ -57,6 +57,7 @@ import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighterFactory;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.plain.PlainTextFileType;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
@@ -77,6 +78,7 @@ import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.Condition;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.RefreshQueue;
 import consulo.virtualFileSystem.VirtualFile;
@@ -84,7 +86,6 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.*;
 import java.util.function.BiPredicate;
@@ -187,7 +188,7 @@ public class DiffImplUtil {
             : factory.createEditor(document, project, EditorKind.DIFF));
 
         editor.getSettings().setShowIntentionBulb(false);
-        ((MarkupModelEx)editor.getMarkupModel()).setErrorStripeVisible(true);
+        editor.getMarkupModel().setErrorStripeVisible(true);
         editor.getGutterComponentEx().setShowDefaultGutterPopup(false);
 
         if (enableFolding) {
@@ -210,10 +211,7 @@ public class DiffImplUtil {
     }
 
     public static boolean isMirrored(@Nonnull Editor editor) {
-        if (editor instanceof EditorEx) {
-            return ((EditorEx)editor).getVerticalScrollbarOrientation() == EditorEx.VERTICAL_SCROLLBAR_LEFT;
-        }
-        return false;
+        return editor instanceof EditorEx editorEx && editorEx.getVerticalScrollbarOrientation() == EditorEx.VERTICAL_SCROLLBAR_LEFT;
     }
 
     //
@@ -494,13 +492,8 @@ public class DiffImplUtil {
     }
 
     public static boolean isSelectedByLine(int line, int line1, int line2) {
-        if (line1 == line2 && line == line1) {
-            return true;
-        }
-        if (line >= line1 && line < line2) {
-            return true;
-        }
-        return false;
+        return line1 == line2 && line == line1
+            || line >= line1 && line < line2;
     }
 
     public static boolean isSelectedByLine(@Nonnull BitSet selected, int line1, int line2) {
@@ -797,25 +790,23 @@ public class DiffImplUtil {
                 return new MergeConflictType(equalModifications ? TextDiffType.INSERTED : TextDiffType.CONFLICT);
             }
         }
-        else {
-            if (isLeftEmpty && isRightEmpty) { // -=-
-                return new MergeConflictType(TextDiffType.DELETED);
-            }
-            else { // -==, ==-, ===
-                boolean unchangedLeft = equality.test(ThreeSide.BASE, ThreeSide.LEFT);
-                boolean unchangedRight = equality.test(ThreeSide.BASE, ThreeSide.RIGHT);
-                assert !unchangedLeft || !unchangedRight;
+        else if (isLeftEmpty && isRightEmpty) { // -=-
+            return new MergeConflictType(TextDiffType.DELETED);
+        }
+        else { // -==, ==-, ===
+            boolean unchangedLeft = equality.test(ThreeSide.BASE, ThreeSide.LEFT);
+            boolean unchangedRight = equality.test(ThreeSide.BASE, ThreeSide.RIGHT);
+            assert !unchangedLeft || !unchangedRight;
 
-                if (unchangedLeft) {
-                    return new MergeConflictType(isRightEmpty ? TextDiffType.DELETED : TextDiffType.MODIFIED, false, true);
-                }
-                if (unchangedRight) {
-                    return new MergeConflictType(isLeftEmpty ? TextDiffType.DELETED : TextDiffType.MODIFIED, true, false);
-                }
-
-                boolean equalModifications = equality.test(ThreeSide.LEFT, ThreeSide.RIGHT);
-                return new MergeConflictType(equalModifications ? TextDiffType.MODIFIED : TextDiffType.CONFLICT);
+            if (unchangedLeft) {
+                return new MergeConflictType(isRightEmpty ? TextDiffType.DELETED : TextDiffType.MODIFIED, false, true);
             }
+            if (unchangedRight) {
+                return new MergeConflictType(isLeftEmpty ? TextDiffType.DELETED : TextDiffType.MODIFIED, true, false);
+            }
+
+            boolean equalModifications = equality.test(ThreeSide.LEFT, ThreeSide.RIGHT);
+            return new MergeConflictType(equalModifications ? TextDiffType.MODIFIED : TextDiffType.CONFLICT);
         }
     }
 
@@ -872,6 +863,48 @@ public class DiffImplUtil {
     // Writable
     //
 
+    @Deprecated(forRemoval = true)
+    @RequiredUIAccess
+    public static void executeWriteCommand(
+        @Nullable Project project,
+        @Nonnull Document document,
+        @Nonnull LocalizeValue commandName,
+        @Nullable String commandGroupId,
+        @Nonnull UndoConfirmationPolicy confirmationPolicy,
+        boolean underBulkUpdate,
+        @Nonnull Runnable task
+    ) {
+        CommandDescriptor commandDescriptor = underBulkUpdate ? underBulkUpdate(task) : new CommandDescriptor(task);
+
+        executeWriteCommand(
+            commandDescriptor
+                .project(project)
+                .document(document)
+                .name(commandName)
+                .groupId(commandGroupId)
+                .undoConfirmationPolicy(confirmationPolicy)
+        );
+    }
+
+    @RequiredUIAccess
+    public static void executeWriteCommand(@Nonnull CommandDescriptor commandDescriptor) {
+        commandDescriptor.lock();
+        if (!makeWritable(commandDescriptor.getProject(), commandDescriptor.getDocument())) {
+            VirtualFile file = FileDocumentManager.getInstance().getFile(commandDescriptor.getDocument());
+            LOG.warn("Document is read-only" + (file != null ? ": " + file.getPresentableName() : ""));
+            return;
+        }
+
+        Application.get().runWriteAction(() -> CommandProcessor.getInstance().executeCommand(commandDescriptor));
+    }
+
+    public static CommandDescriptor underBulkUpdate(final @Nonnull Runnable task) {
+        final SimpleReference<CommandDescriptor> descriptor = new SimpleReference<>();
+        descriptor.set(new CommandDescriptor(() -> DocumentUtil.executeInBulk(descriptor.get().getDocument(), true, task)));
+        return descriptor.get();
+    }
+
+    @Deprecated(forRemoval = true)
     @RequiredUIAccess
     public static void executeWriteCommand(
         @Nullable Project project,
@@ -882,32 +915,31 @@ public class DiffImplUtil {
         boolean underBulkUpdate,
         @Nonnull Runnable task
     ) {
-        if (!makeWritable(project, document)) {
-            VirtualFile file = FileDocumentManager.getInstance().getFile(document);
-            LOG.warn("Document is read-only" + (file != null ? ": " + file.getPresentableName() : ""));
-            return;
-        }
-
-        ApplicationManager.getApplication().runWriteAction(() -> {
-            CommandProcessor.getInstance().executeCommand(project, () -> {
-                if (underBulkUpdate) {
-                    DocumentUtil.executeInBulk(document, true, task);
-                }
-                else {
-                    task.run();
-                }
-            }, commandName, commandGroupId, confirmationPolicy, document);
-        });
+        executeWriteCommand(
+            project,
+            document,
+            LocalizeValue.ofNullable(commandName),
+            commandGroupId,
+            confirmationPolicy,
+            underBulkUpdate,
+            task
+        );
     }
 
+    @Deprecated(forRemoval = true)
     @RequiredUIAccess
     public static void executeWriteCommand(
-        @Nonnull final Document document,
-        @Nullable final Project project,
-        @Nullable final String commandName,
-        @Nonnull final Runnable task
+        @Nonnull Document document,
+        @Nullable Project project,
+        @Nullable String commandName,
+        @Nonnull Runnable task
     ) {
-        executeWriteCommand(project, document, commandName, null, UndoConfirmationPolicy.DEFAULT, false, task);
+        executeWriteCommand(
+            new CommandDescriptor(task)
+                .project(project)
+                .document(document)
+                .name(LocalizeValue.ofNullable(commandName))
+        );
     }
 
     public static boolean isEditable(@Nonnull Editor editor) {
@@ -919,11 +951,7 @@ public class DiffImplUtil {
             return true;
         }
         VirtualFile file = FileDocumentManager.getInstance().getFile(document);
-        if (file != null && file.isValid() && file.isInLocalFileSystem()) {
-            // decompiled file can be writable, but Document with decompiled content is still read-only
-            return !file.isWritable();
-        }
-        return false;
+        return file != null && file.isValid() && file.isInLocalFileSystem() && !file.isWritable();
     }
 
     @RequiredUIAccess
@@ -955,7 +983,7 @@ public class DiffImplUtil {
      * Difference with {@link VfsUtil#markDirtyAndRefresh} is that refresh from VfsUtil will be performed with ModalityState.NON_MODAL.
      */
     public static void markDirtyAndRefresh(boolean async, boolean recursive, boolean reloadChildren, @Nonnull VirtualFile... files) {
-        ModalityState modalityState = ApplicationManager.getApplication().getDefaultModalityState();
+        ModalityState modalityState = Application.get().getDefaultModalityState();
         VirtualFileUtil.markDirty(recursive, reloadChildren, files);
         RefreshQueue.getInstance().refresh(async, recursive, null, modalityState, files);
     }
@@ -1026,7 +1054,7 @@ public class DiffImplUtil {
     }
 
     @Nullable
-    public static Object getData(@Nullable DataProvider provider, @Nullable DataProvider fallbackProvider, @NonNls Key<?> dataId) {
+    public static Object getData(@Nullable DataProvider provider, @Nullable DataProvider fallbackProvider, Key<?> dataId) {
         if (provider != null) {
             Object data = provider.getData(dataId);
             if (data != null) {

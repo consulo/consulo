@@ -15,7 +15,7 @@
  */
 package consulo.language.editor.ui.awt;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.codeEditor.CaretModel;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
@@ -24,20 +24,25 @@ import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.language.plain.PlainTextFileType;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.TextComponentAccessor;
 import consulo.ui.ex.awt.util.MacUIUtil;
+import consulo.undoRedo.CommandDescriptor;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.Lists;
 import consulo.virtualFileSystem.fileType.FileType;
-
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +57,7 @@ public class EditorComboBox extends ComboBox implements DocumentListener {
         }
 
         @Override
+        @RequiredUIAccess
         public void setText(EditorComboBox component, @Nonnull String text) {
             component.setText(text);
         }
@@ -85,13 +91,10 @@ public class EditorComboBox extends ComboBox implements DocumentListener {
         myProject = project;
         enableEvents(AWTEvent.KEY_EVENT_MASK);
 
-        addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                final Editor editor = myEditorField != null ? myEditorField.getEditor() : null;
-                if (editor != null) {
-                    editor.getSelectionModel().removeSelection();
-                }
+        addActionListener(e -> {
+            final Editor editor = myEditorField != null ? myEditorField.getEditor() : null;
+            if (editor != null) {
+                editor.getSelectionModel().removeSelection();
             }
         });
         setHistory(new String[]{""});
@@ -174,17 +177,17 @@ public class EditorComboBox extends ComboBox implements DocumentListener {
         }
     }
 
+    @RequiredUIAccess
     public void setText(final String text) {
-        ApplicationManager.getApplication().runWriteAction(() -> CommandProcessor.getInstance().executeCommand(
-            getProject(),
-            () -> {
+        Application.get().runWriteAction(() -> CommandProcessor.getInstance().executeCommand(
+            new CommandDescriptor(() -> {
                 myDocument.replaceString(0, myDocument.getTextLength(), text);
                 if (myEditorField != null && myEditorField.getEditor() != null) {
                     myEditorField.getCaretModel().moveToOffset(myDocument.getTextLength());
                 }
-            },
-            null,
-            myDocument
+            })
+                .project(getProject())
+                .document(myDocument)
         ));
     }
 
@@ -262,13 +265,9 @@ public class EditorComboBox extends ComboBox implements DocumentListener {
         }
 
         @Override
+        @RequiredUIAccess
         public void setItem(Object anObject) {
-            if (anObject != null) {
-                EditorComboBox.this.setText(anObject.toString());
-            }
-            else {
-                EditorComboBox.this.setText("");
-            }
+            EditorComboBox.this.setText(anObject != null ? anObject.toString() : "");
         }
     }
 
@@ -342,10 +341,7 @@ public class EditorComboBox extends ComboBox implements DocumentListener {
 
     @Override
     protected boolean processKeyBinding(KeyStroke ks, KeyEvent e, int condition, boolean pressed) {
-        if (!((EditorEx)myEditorField.getEditor()).processKeyTyped(e)) {
-            return super.processKeyBinding(ks, e, condition, pressed);
-        }
-        return true;
+        return ((EditorEx)myEditorField.getEditor()).processKeyTyped(e) || super.processKeyBinding(ks, e, condition, pressed);
     }
 
     public EditorEx getEditorEx() {

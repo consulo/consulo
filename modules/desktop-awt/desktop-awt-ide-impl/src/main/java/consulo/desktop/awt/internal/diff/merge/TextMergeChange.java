@@ -338,10 +338,11 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
             DiffLocalize.mergeDialogApplyChangeActionName().get(),
             icon,
             isConflict(),
-            () -> myViewer.executeMergeCommand(
-                "Accept change",
-                Collections.singletonList(this),
-                () -> myViewer.replaceChange(this, side, modifier)
+            () -> DiffImplUtil.executeWriteCommand(
+                myViewer.mergeCommand(
+                    Collections.singletonList(this),
+                    () -> myViewer.replaceChange(this, side, modifier)
+                ).name(DiffLocalize.mergeDialogAcceptChangeCommand())
             )
         );
     }
@@ -355,10 +356,11 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
             DiffLocalize.mergeDialogIgnoreChangeActionName().get(),
             AllIcons.Diff.Remove,
             isConflict(),
-            () -> myViewer.executeMergeCommand(
-                "Ignore change",
-                Collections.singletonList(this),
-                () -> myViewer.ignoreChange(this, side, modifier)
+            () -> DiffImplUtil.executeWriteCommand(
+                myViewer.mergeCommand(
+                    Collections.singletonList(this),
+                    () -> myViewer.ignoreChange(this, side, modifier)
+                ).name(DiffLocalize.mergeDialogIgnoreChangeCommand())
             )
         );
     }
@@ -373,10 +375,11 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
             DiffLocalize.mergeDialogResolveChangeActionName().get(),
             AllIcons.Actions.Checked,
             false,
-            () -> myViewer.executeMergeCommand(
-                "Resolve conflict",
-                Collections.singletonList(this),
-                () -> myViewer.resolveConflictedChange(this)
+            () -> DiffImplUtil.executeWriteCommand(
+                myViewer.mergeCommand(
+                    Collections.singletonList(this),
+                    () -> myViewer.resolveConflictedChange(this)
+                ).name(DiffLocalize.mergeDialogResolveConflictCommand())
             )
         );
     }

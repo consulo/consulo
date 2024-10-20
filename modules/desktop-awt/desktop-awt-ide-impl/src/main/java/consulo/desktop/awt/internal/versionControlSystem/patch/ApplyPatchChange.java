@@ -38,12 +38,12 @@ import consulo.ide.impl.idea.openapi.vcs.changes.patch.AppliedTextPatch.HunkStat
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.tool.PatchChangeBuilder;
 import consulo.ide.impl.idea.openapi.vcs.ex.LineStatusMarkerRenderer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
-import consulo.util.lang.function.PairConsumer;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -51,6 +51,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
 
 class ApplyPatchChange {
     @Nonnull
@@ -172,14 +173,14 @@ class ApplyPatchChange {
             HighlighterTargetArea.LINES_IN_RANGE
         );
 
-        PairConsumer<Editor, MouseEvent> clickHandler = getResultRange() != null
+        BiConsumer<Editor, MouseEvent> clickHandler = getResultRange() != null
             ? (e, event) -> myViewer.scrollToChange(this, Side.RIGHT, false)
             : null;
         highlighter.setLineMarkerRenderer(LineStatusMarkerRenderer.createRenderer(
             line1,
             line2,
             TargetAWT.from(color),
-            tooltip,
+            LocalizeValue.ofNullable(tooltip),
             clickHandler
         ));
 
@@ -276,16 +277,12 @@ class ApplyPatchChange {
 
     @Nonnull
     private Color getStatusColor() {
-        switch (myStatus) {
-            case ALREADY_APPLIED:
-                return JBColor.YELLOW.darker();
-            case EXACTLY_APPLIED:
-                return new JBColor(new Color(0, 180, 5), new Color(0, 147, 5));
-            case NOT_APPLIED:
-                return JBColor.RED.darker();
-            default:
-                throw new IllegalStateException();
-        }
+        return switch (myStatus) {
+            case ALREADY_APPLIED -> JBColor.YELLOW.darker();
+            case EXACTLY_APPLIED -> new JBColor(new Color(0, 180, 5), new Color(0, 147, 5));
+            case NOT_APPLIED -> JBColor.RED.darker();
+            default -> throw new IllegalStateException();
+        };
     }
 
     //
@@ -318,7 +315,9 @@ class ApplyPatchChange {
         int line = getPatchRange().start;
         int offset = line == DiffImplUtil.getLineCount(document) ? document.getTextLength() : document.getLineStartOffset(line);
 
-        RangeHighlighter highlighter = editor.getMarkupModel().addRangeHighlighter(offset, offset,
+        RangeHighlighter highlighter = editor.getMarkupModel().addRangeHighlighter(
+            offset,
+            offset,
             HighlighterLayer.ADDITIONAL_SYNTAX,
             null,
             HighlighterTargetArea.LINES_IN_RANGE
@@ -345,42 +344,43 @@ class ApplyPatchChange {
 
         @Nullable
         public GutterIconRenderer createRenderer() {
-            switch (myType) {
-                case APPLY:
-                    return createApplyRenderer();
-                case IGNORE:
-                    return createIgnoreRenderer();
-                default:
-                    throw new IllegalArgumentException(myType.name());
-            }
+            return switch (myType) {
+                case APPLY -> createApplyRenderer();
+                case IGNORE -> createIgnoreRenderer();
+                default -> throw new IllegalArgumentException(myType.name());
+            };
         }
     }
 
-    @Nullable
     private GutterIconRenderer createApplyRenderer() {
         return createIconRenderer(
-            DiffLocalize.mergeDialogApplyChangeActionName().get(),
+            DiffLocalize.mergeDialogApplyChangeActionName(),
             DiffImplUtil.getArrowIcon(Side.RIGHT),
-            () -> myViewer.executeCommand("Accept change", () -> myViewer.replaceChange(this))
+            () -> DiffImplUtil.executeWriteCommand(
+                myViewer.patchCommand(() -> myViewer.replaceChange(this))
+                    .name(DiffLocalize.mergeDialogAcceptChangeCommand())
+            )
         );
     }
 
-    @Nullable
     private GutterIconRenderer createIgnoreRenderer() {
         return createIconRenderer(
-            DiffLocalize.mergeDialogIgnoreChangeActionName().get(),
+            DiffLocalize.mergeDialogIgnoreChangeActionName(),
             AllIcons.Diff.Remove,
-            () -> myViewer.executeCommand("Ignore change", () -> myViewer.markChangeResolved(this))
+            () -> DiffImplUtil.executeWriteCommand(
+                myViewer.patchCommand(() -> myViewer.markChangeResolved(this))
+                    .name(DiffLocalize.mergeDialogIgnoreChangeCommand())
+            )
         );
     }
 
     @Nonnull
     private static GutterIconRenderer createIconRenderer(
-        @Nonnull final String text,
-        @Nonnull final Image icon,
+        @Nonnull LocalizeValue text,
+        @Nonnull Image icon,
         @Nonnull final Runnable perform
     ) {
-        final String tooltipText = DiffImplUtil.createTooltipText(text, null);
+        final String tooltipText = DiffImplUtil.createTooltipText(text.get(), null);
         return new DiffGutterRenderer(icon, tooltipText) {
             @Override
             protected void performAction(AnActionEvent e) {

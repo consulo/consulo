@@ -15,7 +15,7 @@
  */
 package consulo.language.editor.ui.awt;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.*;
@@ -38,22 +38,23 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.DocumentBasedComponent;
 import consulo.ui.ex.TextComponent;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.style.StyleManager;
+import consulo.undoRedo.CommandDescriptor;
 import consulo.undoRedo.CommandProcessor;
-import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.fileType.FileType;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -299,16 +300,21 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
         }
     }
 
+    @RequiredUIAccess
     public void setText(@Nullable final String text) {
-        ApplicationManager.getApplication().runWriteAction(() -> CommandProcessor.getInstance().executeCommand(getProject(), () -> {
-            myDocument.replaceString(0, myDocument.getTextLength(), text == null ? "" : text);
-            if (myEditor != null) {
-                final CaretModel caretModel = myEditor.getCaretModel();
-                if (caretModel.getOffset() >= myDocument.getTextLength()) {
-                    caretModel.moveToOffset(myDocument.getTextLength());
+        Application.get().runWriteAction(() -> CommandProcessor.getInstance().executeCommand(
+            new CommandDescriptor(() -> {
+                myDocument.replaceString(0, myDocument.getTextLength(), text == null ? "" : text);
+                if (myEditor != null) {
+                    final CaretModel caretModel = myEditor.getCaretModel();
+                    if (caretModel.getOffset() >= myDocument.getTextLength()) {
+                        caretModel.moveToOffset(myDocument.getTextLength());
+                    }
                 }
-            }
-        }, null, null, UndoConfirmationPolicy.DEFAULT, getDocument()));
+            })
+                .project(getProject())
+                .document(getDocument())
+        ));
     }
 
     /**
@@ -349,7 +355,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
     }
 
     /**
-     * @see javax.swing.text.JTextComponent#setCaretPosition(int)
+     * @see JTextComponent#setCaretPosition(int)
      */
     public void setCaretPosition(int position) {
         Document document = getDocument();
@@ -385,7 +391,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
         if (myProject != null) {
             ProjectManagerListener listener = new ProjectManagerListener() {
                 @Override
-                public void projectClosing(Project project) {
+                public void projectClosing(@Nonnull Project project) {
                     releaseEditor(myEditor);
                     myEditor = null;
                 }
@@ -742,10 +748,8 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
 
     @Override
     protected boolean processKeyBinding(KeyStroke ks, KeyEvent e, int condition, boolean pressed) {
-        if (e.isConsumed() || myEditor != null && !myEditor.processKeyTyped(e)) {
-            return super.processKeyBinding(ks, e, condition, pressed);
-        }
-        return true;
+        return !(e.isConsumed() || myEditor != null && !myEditor.processKeyTyped(e))
+            || super.processKeyBinding(ks, e, condition, pressed);
     }
 
     @Override

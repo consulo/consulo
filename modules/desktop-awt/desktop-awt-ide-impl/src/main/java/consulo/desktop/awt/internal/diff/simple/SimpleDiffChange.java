@@ -28,7 +28,6 @@ import consulo.diff.impl.internal.util.DiffImplUtil;
 import consulo.diff.localize.DiffLocalize;
 import consulo.diff.util.Side;
 import consulo.diff.util.TextDiffType;
-import consulo.document.Document;
 import consulo.externalService.statistic.UsageTrigger;
 import consulo.ide.impl.diff.DiffDrawUtil;
 import consulo.localize.LocalizeValue;
@@ -36,6 +35,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
+import consulo.undoRedo.CommandDescriptor;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -341,9 +341,12 @@ public class SimpleDiffChange {
                 if (!myIsValid) {
                     return;
                 }
-                final Project project = e.getData(Project.KEY);
-                final Document document = myViewer.getEditor(sourceSide.other()).getDocument();
-                DiffImplUtil.executeWriteCommand(document, project, "Replace change", perform);
+                DiffImplUtil.executeWriteCommand(
+                    new CommandDescriptor(perform)
+                        .project(e.getData(Project.KEY))
+                        .document(myViewer.getEditor(sourceSide.other()).getDocument())
+                        .name(DiffLocalize.messageReplaceChangeCommand())
+                );
             }
         };
     }

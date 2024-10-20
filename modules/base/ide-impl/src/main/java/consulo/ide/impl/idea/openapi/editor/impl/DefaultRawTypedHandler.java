@@ -1,7 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.editor.impl;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.*;
 import consulo.dataContext.DataContext;
@@ -12,8 +12,9 @@ import consulo.ide.impl.idea.openapi.command.CommandProcessorEx;
 import consulo.ide.impl.idea.openapi.command.CommandToken;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.undoRedo.CommandDescriptor;
 import consulo.undoRedo.CommandProcessor;
-import consulo.undoRedo.UndoConfirmationPolicy;
 
 import jakarta.annotation.Nonnull;
 
@@ -40,19 +41,24 @@ public class DefaultRawTypedHandler implements TypedActionHandlerEx {
     }
 
     @Override
+    @RequiredUIAccess
     public void execute(@Nonnull final Editor editor, final char charTyped, @Nonnull final DataContext dataContext) {
         CommandProcessorEx commandProcessorEx = (CommandProcessorEx)CommandProcessor.getInstance();
         Project project = dataContext.getData(Project.KEY);
         if (myCurrentCommandToken != null) {
             throw new IllegalStateException("Unexpected reentrancy of DefaultRawTypedHandler");
         }
-        myCurrentCommandToken = commandProcessorEx.startCommand(project, "", editor.getDocument(), UndoConfirmationPolicy.DEFAULT);
+        myCurrentCommandToken = commandProcessorEx.startCommand(
+            new CommandDescriptor()
+                .project(project)
+                .groupId(editor.getDocument())
+        );
         myInOuterCommand = myCurrentCommandToken == null;
         try {
             if (!EditorModificationUtil.requestWriting(editor)) {
                 return;
             }
-            ApplicationManager.getApplication().runWriteAction(new DocumentRunnable(editor.getDocument(), editor.getProject()) {
+            Application.get().runWriteAction(new DocumentRunnable(editor.getDocument(), editor.getProject()) {
                 @Override
                 public void run() {
                     Document doc = editor.getDocument();
@@ -88,6 +94,6 @@ public class DefaultRawTypedHandler implements TypedActionHandlerEx {
         CommandProcessorEx commandProcessorEx = (CommandProcessorEx)CommandProcessor.getInstance();
         Project project = myCurrentCommandToken.getProject();
         commandProcessorEx.finishCommand(myCurrentCommandToken, null);
-        myCurrentCommandToken = commandProcessorEx.startCommand(project, "", null, UndoConfirmationPolicy.DEFAULT);
+        myCurrentCommandToken = commandProcessorEx.startCommand(new CommandDescriptor().project(project));
     }
 }

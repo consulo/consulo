@@ -1,5 +1,6 @@
 package consulo.language.editor.action;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
@@ -22,6 +23,7 @@ import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiWhiteSpace;
+import consulo.undoRedo.CommandDescriptor;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.CharFilter;
 import consulo.util.lang.StringUtil;
@@ -34,7 +36,6 @@ import java.util.List;
 /**
  * Defines general re-flow paragraph functionality.
  * Serves plain text files.
- * <p>
  *
  * @author ktisha
  */
@@ -48,6 +49,7 @@ public abstract class ParagraphFillHandler implements LanguageExtension {
         return Application.get().getExtensionPoint(ParagraphFillHandler.class).getOrBuildCache(KEY).requiredGet(language);
     }
 
+    @RequiredReadAction
     public final void performOnElement(@Nonnull final PsiElement element, @Nonnull final Editor editor) {
         final Document document = editor.getDocument();
 
@@ -77,8 +79,7 @@ public abstract class ParagraphFillHandler implements LanguageExtension {
         final String replacementText = stringBuilder.toString();
 
         CommandProcessor.getInstance().executeCommand(
-            element.getProject(),
-            () -> {
+            new CommandDescriptor(() -> {
                 document.replaceString(textRange.getStartOffset(), textRange.getEndOffset(), replacementText);
                 final PsiFile file = element.getContainingFile();
                 FormatterTagHandler formatterTagHandler = new FormatterTagHandler(CodeStyleSettingsManager.getSettings(file.getProject()));
@@ -96,11 +97,10 @@ public abstract class ParagraphFillHandler implements LanguageExtension {
                     textRange.getStartOffset() + replacementText.length() + 1,
                     enabledRanges
                 );
-            },
-            null,
-            document
+            })
+                .project(element.getProject())
+                .groupId(document)
         );
-
     }
 
     protected void appendPostfix(
@@ -121,12 +121,14 @@ public abstract class ParagraphFillHandler implements LanguageExtension {
         }
     }
 
+    @RequiredReadAction
     private TextRange getTextRange(@Nonnull final PsiElement element, @Nonnull final Editor editor) {
         int startOffset = getStartOffset(element, editor);
         int endOffset = getEndOffset(element, editor);
         return new UnfairTextRange(startOffset, endOffset);
     }
 
+    @RequiredReadAction
     private int getStartOffset(@Nonnull final PsiElement element, @Nonnull final Editor editor) {
         if (isBunchOfElement(element)) {
             final PsiElement firstElement = getFirstElement(element);
@@ -146,8 +148,9 @@ public abstract class ParagraphFillHandler implements LanguageExtension {
             }
             lineNumber -= 1;
         }
-        final int lineStartOffset =
-            lineNumber == document.getLineNumber(elementTextOffset) ? elementTextOffset : document.getLineStartOffset(lineNumber);
+        final int lineStartOffset = lineNumber == document.getLineNumber(elementTextOffset)
+            ? elementTextOffset
+            : document.getLineStartOffset(lineNumber);
         final String lineText = document.getText(TextRange.create(lineStartOffset, document.getLineEndOffset(lineNumber)));
         int shift = StringUtil.findFirst(lineText, CharFilter.NOT_WHITESPACE_FILTER);
 
@@ -158,6 +161,7 @@ public abstract class ParagraphFillHandler implements LanguageExtension {
         return element instanceof PsiComment;
     }
 
+    @RequiredReadAction
     private int getEndOffset(@Nonnull final PsiElement element, @Nonnull final Editor editor) {
         if (isBunchOfElement(element)) {
             final PsiElement next = getLastElement(element);
@@ -181,13 +185,13 @@ public abstract class ParagraphFillHandler implements LanguageExtension {
     }
 
     @Nullable
+    @RequiredReadAction
     private PsiElement getFirstElement(@Nonnull final PsiElement element) {
         final IElementType elementType = element.getNode().getElementType();
         PsiElement prevSibling = element.getPrevSibling();
         PsiElement result = element;
-        while (prevSibling != null && (prevSibling.getNode()
-            .getElementType()
-            .equals(elementType) || (atWhitespaceToken(prevSibling) && StringUtil.countChars(prevSibling.getText(), '\n') <= 1))) {
+        while (prevSibling != null && (prevSibling.getNode().getElementType().equals(elementType)
+            || (atWhitespaceToken(prevSibling) && StringUtil.countChars(prevSibling.getText(), '\n') <= 1))) {
             String text = prevSibling.getText();
             final String prefix = getPrefix(element);
             final String postfix = getPostfix(element);
@@ -206,6 +210,7 @@ public abstract class ParagraphFillHandler implements LanguageExtension {
     }
 
     @Nullable
+    @RequiredReadAction
     private PsiElement getLastElement(@Nonnull final PsiElement element) {
         final IElementType elementType = element.getNode().getElementType();
         PsiElement nextSibling = element.getNextSibling();

@@ -20,6 +20,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
+import consulo.undoRedo.CommandDescriptor;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -101,6 +102,11 @@ public class RollbackLineStatusAction extends DumbAwareAction {
 
   @RequiredUIAccess
   private static void execute(@Nonnull final LineStatusTracker tracker, @Nonnull final Runnable task) {
-    DiffImplUtil.executeWriteCommand(tracker.getDocument(), tracker.getProject(), VcsLocalize.commandNameRollbackChange().get(), task);
+    DiffImplUtil.executeWriteCommand(
+        new CommandDescriptor(task)
+            .project(tracker.getProject())
+            .document(tracker.getDocument())
+            .name(VcsLocalize.commandNameRollbackChange())
+    );
   }
 }

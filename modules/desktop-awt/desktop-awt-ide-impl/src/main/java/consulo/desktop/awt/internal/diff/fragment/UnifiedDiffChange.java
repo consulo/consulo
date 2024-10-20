@@ -26,14 +26,17 @@ import consulo.diff.impl.internal.fragment.ChangedBlock;
 import consulo.diff.impl.internal.util.DiffGutterRenderer;
 import consulo.diff.impl.internal.util.DiffImplUtil;
 import consulo.diff.impl.internal.util.DiffImplUtil.UpdatedLineRange;
+import consulo.diff.localize.DiffLocalize;
 import consulo.diff.util.LineRange;
 import consulo.diff.util.Side;
 import consulo.document.Document;
 import consulo.ide.impl.diff.DiffDrawUtil;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
+import consulo.undoRedo.CommandDescriptor;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -189,18 +192,17 @@ public class UnifiedDiffChange {
             }
 
             if (mySide.isLeft()) {
-                return createIconRenderer(mySide, "Revert", AllIcons.Diff.Remove);
+                return createIconRenderer(mySide, DiffLocalize.actionPresentationDiffRevertText(), AllIcons.Diff.Remove);
             }
             else {
-                return createIconRenderer(mySide, "Accept", AllIcons.Actions.Checked);
+                return createIconRenderer(mySide, DiffLocalize.actionPresentationDiffAcceptText(), AllIcons.Actions.Checked);
             }
         }
     }
 
-    @Nullable
     private GutterIconRenderer createIconRenderer(
         @Nonnull final Side sourceSide,
-        @Nonnull final String tooltipText,
+        @Nonnull final LocalizeValue tooltipText,
         @Nonnull final Image icon
     ) {
         return new DiffGutterRenderer(icon, tooltipText) {
@@ -218,13 +220,13 @@ public class UnifiedDiffChange {
                 final Document document = myViewer.getDocument(sourceSide.other());
 
                 DiffImplUtil.executeWriteCommand(
-                    document,
-                    project,
-                    "Replace change",
-                    () -> {
+                    new CommandDescriptor(() -> {
                         myViewer.replaceChange(UnifiedDiffChange.this, sourceSide);
                         myViewer.scheduleRediff();
-                    }
+                    })
+                        .project(project)
+                        .document(document)
+                        .name(DiffLocalize.messageReplaceChangeCommand())
                 );
                 // applyChange() will schedule rediff, but we want to try to do it in sync
                 // and we can't do it inside write action
