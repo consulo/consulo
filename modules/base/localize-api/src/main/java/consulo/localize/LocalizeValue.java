@@ -15,6 +15,7 @@
  */
 package consulo.localize;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.localize.internal.DefaultMapFunctions;
 import consulo.localize.internal.JoinLocalizeValue;
 import consulo.localize.internal.MapLocalizeValue;
@@ -97,8 +98,15 @@ public interface LocalizeValue extends Supplier<String>, Comparable<LocalizeValu
     }
 
     @Nonnull
+    default LocalizeValue capitalize() {
+        return map(DefaultMapFunctions.CAPITALIZE);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use proper English word #capitalize()")
+    @Nonnull
     default LocalizeValue captilize() {
-        return map(DefaultMapFunctions.CAPTILIZE);
+        return capitalize();
     }
 
     int compareIgnoreCase(@Nonnull LocalizeValue other);

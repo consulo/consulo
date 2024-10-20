@@ -57,7 +57,6 @@ abstract class BaseLocalizeValue implements LocalizeValue {
 
     @Nonnull
     protected String calcValue(LocalizeManager manager) {
-        String newText;
         String unformattedText = getUnformattedText(manager);
         if (myArgs.length > 0) {
             Object[] args = new Object[myArgs.length];
@@ -65,16 +64,14 @@ abstract class BaseLocalizeValue implements LocalizeValue {
             for (int i = 0; i < myArgs.length; i++) {
                 Object oldValue = myArgs[i];
 
-                args[i] = oldValue instanceof LocalizeValue ? ((LocalizeValue)oldValue).getValue() : oldValue;
+                args[i] = oldValue instanceof LocalizeValue oldLocalizeValue ? oldLocalizeValue.getValue() : oldValue;
             }
 
-            newText = manager.formatText(unformattedText, args);
+            return manager.formatText(unformattedText, args);
         }
         else {
-            newText = unformattedText;
+            return unformattedText;
         }
-
-        return newText;
     }
 
     @Nonnull
