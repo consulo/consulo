@@ -1799,7 +1799,7 @@ class EditorGutterComponentImpl extends JComponent implements EditorGutterCompon
         myBackgroundIndicator.cancel();
         myBackgroundIndicator = new ProgressIndicatorBase();
         myBackgroundIndicator.setModalityProgress(null);
-        AtomicReference<LocalizeValue> tooltip = new AtomicReference<>();
+        AtomicReference<LocalizeValue> tooltip = new AtomicReference<>(LocalizeValue.empty());
         ProgressManager.getInstance().runProcessWithProgressAsynchronously(
             new Task.Backgroundable(myEditor.getProject(), "Constructing Tooltip") {
                 @Override
