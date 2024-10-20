@@ -16,17 +16,14 @@
 package consulo.ide.impl.idea.ui.tabs;
 
 import consulo.ui.ex.awt.JBUI;
-import consulo.annotation.DeprecationInfo;
 
 /**
  * @author pegov
  */
 public class TabsUtil {
   public static final int TAB_VERTICAL_PADDING = 2;
+  @Deprecated
   public static final int TABS_BORDER = 1;
-
-  @Deprecated @DeprecationInfo(value = "Use consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl#getActiveTabUnderlineHeight()")
-  public static final int ACTIVE_TAB_UNDERLINE_HEIGHT = 4;
 
   private TabsUtil() {
   }

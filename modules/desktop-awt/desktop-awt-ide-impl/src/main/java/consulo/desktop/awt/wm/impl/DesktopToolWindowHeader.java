@@ -173,7 +173,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
     setBackground(MorphColor.ofWithoutCache(() -> myToolWindow.isActive() ? SwingUIDecorator.get(SwingUIDecorator::getSidebarColor) : UIUtil
       .getPanelBackground()));
 
-    setBorder(JBUI.Borders.customLine(UIUtil.getBorderColor(), TabsUtil.TABS_BORDER, 0, TabsUtil.TABS_BORDER, 0));
+    setBorder(JBUI.Borders.customLine(UIUtil.getBorderColor(), 1, 0, 1, 0));
 
     new DoubleClickListener() {
       @Override

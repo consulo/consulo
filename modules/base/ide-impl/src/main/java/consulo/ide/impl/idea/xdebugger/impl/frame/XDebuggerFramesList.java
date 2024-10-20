@@ -37,7 +37,6 @@ import consulo.ui.ex.ColoredStringBuilder;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.popup.GroupedItemsListRenderer;
 import consulo.ui.ex.awt.popup.ListItemDescriptorAdapter;
 import consulo.ui.image.Image;
@@ -216,15 +215,11 @@ public class XDebuggerFramesList extends DebuggerFramesList {
                                          final int index,
                                          final boolean selected,
                                          final boolean hasFocus) {
-      // Fix GTK background
-      if (UIUtil.isUnderGTKLookAndFeel()){
-        final Color background = selected ? UIUtil.getTreeSelectionBackground() : UIUtil.getTreeTextBackground();
-        UIUtil.changeBackGround(this, background);
-      }
       if (value == null) {
         append(XDebuggerBundle.message("stack.frame.loading.text"), SimpleTextAttributes.GRAY_ATTRIBUTES);
         return;
       }
+
       if (value instanceof String) {
         append((String)value, SimpleTextAttributes.ERROR_ATTRIBUTES);
         return;

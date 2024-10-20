@@ -81,9 +81,8 @@ public abstract class JBTabsImpl extends JComponent
   private static final String uiClassID = "JBEditorTabsUI";
 
   public static final Key<JBTabsImpl> NAVIGATION_ACTIONS_KEY = Key.create("JBTabs");
-  @NonNls
+
   public static final Key<Integer> SIDE_TABS_SIZE_LIMIT_KEY = Key.create("SIDE_TABS_SIZE_LIMIT_KEY");
-  public static final int DEFAULT_MAX_TAB_WIDTH = JBUI.scale(300);
 
   public static final Color MAC_AQUA_BG_COLOR = Gray._200;
 
@@ -1634,6 +1633,7 @@ public abstract class JBTabsImpl extends JComponent
     return max;
   }
 
+  @Deprecated
   public int getTabBorderSize() {
     return TabsUtil.TABS_BORDER;
   }
@@ -2479,8 +2479,12 @@ public abstract class JBTabsImpl extends JComponent
     return -1;
   }
 
-  public boolean isTabsBorderEnabled() {
+  public boolean holdsFocus() {
     return true;
+  }
+
+  public boolean paintSelection() {
+      return true;
   }
 
   @Override
