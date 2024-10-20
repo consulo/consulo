@@ -21,9 +21,9 @@ import jakarta.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 
 public abstract class MergeContextEx extends MergeContext {
-  /*
-   * Destroy active MergeViewer and reopen current MergeRequest in the new one
-   */
-  @RequiredUIAccess
-  public abstract void reopenWithTool(@Nonnull MergeTool tool);
+    /*
+     * Destroy active MergeViewer and reopen current MergeRequest in the new one
+     */
+    @RequiredUIAccess
+    public abstract void reopenWithTool(@Nonnull MergeTool tool);
 }
