@@ -12,12 +12,17 @@ import jakarta.annotation.Nullable;
  * @author max
  */
 public abstract class CommandProcessorEx extends CommandProcessor {
-  public abstract void enterModal();
+    public abstract void enterModal();
 
-  public abstract void leaveModal();
+    public abstract void leaveModal();
 
-  @Nullable
-  public abstract CommandToken startCommand(@Nullable Project project, @Nls String name, @Nullable Object groupId, @Nonnull UndoConfirmationPolicy undoConfirmationPolicy);
+    @Nullable
+    public abstract CommandToken startCommand(
+        @Nullable Project project,
+        @Nls String name,
+        @Nullable Object groupId,
+        @Nonnull UndoConfirmationPolicy undoConfirmationPolicy
+    );
 
-  public abstract void finishCommand(@Nonnull final CommandToken command, @Nullable Throwable throwable);
+    public abstract void finishCommand(@Nonnull final CommandToken command, @Nullable Throwable throwable);
 }

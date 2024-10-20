@@ -25,101 +25,114 @@ import consulo.project.Project;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 import java.util.function.Consumer;
 
 public class TextMergeRequestImpl extends TextMergeRequest {
-  @Nullable private final Project myProject;
-  @Nonnull
-  private final DocumentContent myOutput;
-  @Nonnull
-  private final List<DocumentContent> myContents;
+    @Nullable
+    private final Project myProject;
+    @Nonnull
+    private final DocumentContent myOutput;
+    @Nonnull
+    private final List<DocumentContent> myContents;
 
-  @Nonnull
-  private final CharSequence myOriginalContent;
+    @Nonnull
+    private final CharSequence myOriginalContent;
 
-  @Nullable private final String myTitle;
-  @Nonnull
-  private final List<String> myTitles;
+    @Nullable
+    private final String myTitle;
+    @Nonnull
+    private final List<String> myTitles;
 
-  @Nullable private final Consumer<MergeResult> myApplyCallback;
+    @Nullable
+    private final Consumer<MergeResult> myApplyCallback;
 
-  public TextMergeRequestImpl(@Nullable Project project,
-                              @Nonnull DocumentContent output,
-                              @Nonnull CharSequence originalContent,
-                              @Nonnull List<DocumentContent> contents,
-                              @Nullable String title,
-                              @Nonnull List<String> contentTitles,
-                              @Nullable Consumer<MergeResult> applyCallback) {
-    assert contents.size() == 3;
-    assert contentTitles.size() == 3;
-    myProject = project;
+    public TextMergeRequestImpl(
+        @Nullable Project project,
+        @Nonnull DocumentContent output,
+        @Nonnull CharSequence originalContent,
+        @Nonnull List<DocumentContent> contents,
+        @Nullable String title,
+        @Nonnull List<String> contentTitles,
+        @Nullable Consumer<MergeResult> applyCallback
+    ) {
+        assert contents.size() == 3;
+        assert contentTitles.size() == 3;
+        myProject = project;
 
-    myOutput = output;
-    myOriginalContent = originalContent;
+        myOutput = output;
+        myOriginalContent = originalContent;
 
-    myContents = contents;
-    myTitles = contentTitles;
-    myTitle = title;
+        myContents = contents;
+        myTitles = contentTitles;
+        myTitle = title;
 
-    myApplyCallback = applyCallback;
-  }
-
-  @Nonnull
-  @Override
-  public DocumentContent getOutputContent() {
-    return myOutput;
-  }
-
-  @Nonnull
-  @Override
-  public List<DocumentContent> getContents() {
-    return myContents;
-  }
-
-  @Nullable
-  @Override
-  public String getTitle() {
-    return myTitle;
-  }
-
-  @Nonnull
-  @Override
-  public List<String> getContentTitles() {
-    return myTitles;
-  }
-
-  @Override
-  public void applyResult(@Nonnull MergeResult result) {
-    final CharSequence applyContent;
-    switch (result) {
-      case CANCEL:
-        applyContent = myOriginalContent;
-        break;
-      case LEFT:
-        CharSequence leftContent = ThreeSide.LEFT.select(getContents()).getDocument().getImmutableCharSequence();
-        applyContent = StringUtil.convertLineSeparators(leftContent.toString());
-        break;
-      case RIGHT:
-        CharSequence rightContent = ThreeSide.RIGHT.select(getContents()).getDocument().getImmutableCharSequence();
-        applyContent = StringUtil.convertLineSeparators(rightContent.toString());
-        break;
-      case RESOLVED:
-        applyContent = null;
-        break;
-      default:
-        throw new IllegalArgumentException(result.toString());
+        myApplyCallback = applyCallback;
     }
 
-    if (applyContent != null) {
-      DiffImplUtil.executeWriteCommand(myOutput.getDocument(), myProject, null, new Runnable() {
-        @Override
-        public void run() {
-          myOutput.getDocument().setText(applyContent);
+    @Nonnull
+    @Override
+    public DocumentContent getOutputContent() {
+        return myOutput;
+    }
+
+    @Nonnull
+    @Override
+    public List<DocumentContent> getContents() {
+        return myContents;
+    }
+
+    @Nullable
+    @Override
+    public String getTitle() {
+        return myTitle;
+    }
+
+    @Nonnull
+    @Override
+    public List<String> getContentTitles() {
+        return myTitles;
+    }
+
+    @Override
+    public void applyResult(@Nonnull MergeResult result) {
+        final CharSequence applyContent;
+        switch (result) {
+            case CANCEL:
+                applyContent = myOriginalContent;
+                break;
+            case LEFT:
+                CharSequence leftContent = ThreeSide.LEFT.select(getContents()).getDocument().getImmutableCharSequence();
+                applyContent = StringUtil.convertLineSeparators(leftContent.toString());
+                break;
+            case RIGHT:
+                CharSequence rightContent = ThreeSide.RIGHT.select(getContents()).getDocument().getImmutableCharSequence();
+                applyContent = StringUtil.convertLineSeparators(rightContent.toString());
+                break;
+            case RESOLVED:
+                applyContent = null;
+                break;
+            default:
+                throw new IllegalArgumentException(result.toString());
         }
-      });
-    }
 
-    if (myApplyCallback != null) myApplyCallback.accept(result);
-  }
+        if (applyContent != null) {
+            DiffImplUtil.executeWriteCommand(
+                myOutput.getDocument(),
+                myProject,
+                null,
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        myOutput.getDocument().setText(applyContent);
+                    }
+                }
+            );
+        }
+
+        if (myApplyCallback != null) {
+            myApplyCallback.accept(result);
+        }
+    }
 }
