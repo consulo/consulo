@@ -36,7 +36,6 @@ import consulo.diff.PrevNextDifferenceIterable;
 import consulo.diff.comparison.DiffTooBigException;
 import consulo.diff.content.DocumentContent;
 import consulo.diff.fragment.LineFragment;
-import consulo.diff.internal.DiffUserDataKeysEx.ScrollToPolicy;
 import consulo.diff.impl.internal.TextDiffSettingsHolder;
 import consulo.diff.impl.internal.action.AllLinesIterator;
 import consulo.diff.impl.internal.action.BufferedLineIterator;
@@ -45,6 +44,7 @@ import consulo.diff.impl.internal.util.DiffImplUtil;
 import consulo.diff.impl.internal.util.HighlightPolicy;
 import consulo.diff.impl.internal.util.IgnorePolicy;
 import consulo.diff.impl.internal.util.PrevNextDifferenceIterableBase;
+import consulo.diff.internal.DiffUserDataKeysEx.ScrollToPolicy;
 import consulo.diff.localize.DiffLocalize;
 import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.request.DiffRequest;
@@ -78,7 +78,6 @@ import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.util.*;
@@ -786,12 +785,17 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
             }
 
             String title = e.getPresentation().getText() + " selected changes";
-            DiffImplUtil.executeWriteCommand(getDocument(myModifiedSide), e.getData(Project.KEY), title, () -> {
-                // state is invalidated during apply(), but changes are in reverse order, so they should not conflict with each other
-                apply(selectedChanges);
-                //noinspection RequiredXAction
-                scheduleRediff();
-            });
+            DiffImplUtil.executeWriteCommand(
+                getDocument(myModifiedSide),
+                e.getData(Project.KEY),
+                title,
+                () -> {
+                    // state is invalidated during apply(), but changes are in reverse order, so they should not conflict with each other
+                    apply(selectedChanges);
+                    //noinspection RequiredXAction
+                    scheduleRediff();
+                }
+            );
         }
 
         protected boolean isSomeChangeSelected() {
@@ -1278,7 +1282,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
     @Nullable
     @Override
     @RequiredUIAccess
-    public Object getData(@Nonnull @NonNls Key<?> dataId) {
+    public Object getData(@Nonnull Key<?> dataId) {
         if (DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE == dataId) {
             return myPrevNextDifferenceIterable;
         }

@@ -25,6 +25,7 @@ import consulo.diff.request.DiffRequest;
 import consulo.fileEditor.FileEditor;
 import consulo.logging.Logger;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 
@@ -47,14 +48,11 @@ public class OnesideBinaryDiffViewer extends OnesideDiffViewer<BinaryEditorHolde
     }
 
     @Nonnull
-    private Runnable applyNotification(@jakarta.annotation.Nullable final JComponent notification) {
-        return new Runnable() {
-            @Override
-            public void run() {
-                clearDiffPresentation();
-                if (notification != null) {
-                    myPanel.addNotification(notification);
-                }
+    private Runnable applyNotification(@Nullable final JComponent notification) {
+        return () -> {
+            clearDiffPresentation();
+            if (notification != null) {
+                myPanel.addNotification(notification);
             }
         };
     }

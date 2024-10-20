@@ -222,15 +222,13 @@ public class TwosideBinaryDiffViewer extends TwosideDiffViewer<BinaryEditorHolde
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(AnActionEvent e) {
+        public void actionPerformed(@Nonnull AnActionEvent e) {
             final VirtualFile baseFile = getContentFile(myBaseSide);
             final VirtualFile targetFile = getContentFile(myBaseSide.other());
             assert baseFile != null && targetFile != null;
 
             try {
-                WriteAction.run(() -> {
-                    targetFile.setBinaryContent(baseFile.contentsToByteArray());
-                });
+                WriteAction.run(() -> targetFile.setBinaryContent(baseFile.contentsToByteArray()));
             }
             catch (IOException err) {
                 LOG.warn(err);

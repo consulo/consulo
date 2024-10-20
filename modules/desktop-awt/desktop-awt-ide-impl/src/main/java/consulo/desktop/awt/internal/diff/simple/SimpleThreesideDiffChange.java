@@ -38,6 +38,7 @@ public class SimpleThreesideDiffChange extends ThreesideDiffChangeBase {
     private int[] myLineStarts = new int[3];
     private int[] myLineEnds = new int[3];
 
+    @RequiredUIAccess
     public SimpleThreesideDiffChange(
         @Nonnull MergeLineFragment fragment,
         @Nonnull MergeConflictType conflictType,

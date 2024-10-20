@@ -250,25 +250,33 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
         @Nonnull Runnable task
     ) {
         IntList allAffectedChanges = affectedChanges != null ? collectAffectedChanges(affectedChanges) : null;
-        DiffImplUtil.executeWriteCommand(myProject, myDocument, commandName, commandGroupId, confirmationPolicy, underBulkUpdate, () -> {
-            LOG.assertTrue(!myInsideCommand);
+        DiffImplUtil.executeWriteCommand(
+            myProject,
+            myDocument,
+            commandName,
+            commandGroupId,
+            confirmationPolicy,
+            underBulkUpdate,
+            () -> {
+                LOG.assertTrue(!myInsideCommand);
 
-            // We should restore states after changes in document (by DocumentUndoProvider) to avoid corruption by our onBeforeDocumentChange()
-            // Undo actions are performed in backward order, while redo actions are performed in forward order.
-            // Thus we should register two UndoableActions.
+                // We should restore states after changes in document (by DocumentUndoProvider) to avoid corruption by our onBeforeDocumentChange()
+                // Undo actions are performed in backward order, while redo actions are performed in forward order.
+                // Thus we should register two UndoableActions.
 
-            myInsideCommand = true;
-            enterBulkChangeUpdateBlock();
-            registerUndoRedo(true, allAffectedChanges);
-            try {
-                task.run();
+                myInsideCommand = true;
+                enterBulkChangeUpdateBlock();
+                registerUndoRedo(true, allAffectedChanges);
+                try {
+                    task.run();
+                }
+                finally {
+                    registerUndoRedo(false, allAffectedChanges);
+                    exitBulkChangeUpdateBlock();
+                    myInsideCommand = false;
+                }
             }
-            finally {
-                registerUndoRedo(false, allAffectedChanges);
-                exitBulkChangeUpdateBlock();
-                myInsideCommand = false;
-            }
-        });
+        );
     }
 
     @RequiredUIAccess

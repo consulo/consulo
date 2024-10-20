@@ -40,7 +40,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
+import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -159,6 +159,7 @@ public class SimpleOnesideDiffViewer extends OnesideTextDiffViewer {
         DiffImplUtil.scrollEditor(getEditor(), 0, animated);
     }
 
+    @RequiredUIAccess
     protected boolean doScrollToContext(@Nonnull DiffNavigationContext context) {
         if (getSide().isLeft()) {
             return false;
@@ -203,6 +204,7 @@ public class SimpleOnesideDiffViewer extends OnesideTextDiffViewer {
         }
 
         @Override
+        @RequiredUIAccess
         protected void onSettingsChanged() {
             rediff();
         }
@@ -214,6 +216,7 @@ public class SimpleOnesideDiffViewer extends OnesideTextDiffViewer {
         }
 
         @Override
+        @RequiredUIAccess
         protected void onSettingsChanged() {
             rediff();
         }
@@ -223,9 +226,9 @@ public class SimpleOnesideDiffViewer extends OnesideTextDiffViewer {
     // Helpers
     //
 
-    @jakarta.annotation.Nullable
+    @Nullable
     @Override
-    public Object getData(@Nonnull @NonNls Key<?> dataId) {
+    public Object getData(@Nonnull Key<?> dataId) {
         if (DiffDataKeys.CURRENT_CHANGE_RANGE == dataId) {
             int lineCount = getLineCount(getEditor().getDocument());
             return new LineRange(0, lineCount);
@@ -235,6 +238,7 @@ public class SimpleOnesideDiffViewer extends OnesideTextDiffViewer {
 
     private class MyInitialScrollHelper extends MyInitialScrollPositionHelper {
         @Override
+        @RequiredUIAccess
         protected boolean doScrollToChange() {
             if (myScrollToChange == null) {
                 return false;
@@ -244,20 +248,20 @@ public class SimpleOnesideDiffViewer extends OnesideTextDiffViewer {
         }
 
         @Override
+        @RequiredUIAccess
         protected boolean doScrollToFirstChange() {
             SimpleOnesideDiffViewer.this.doScrollToChange(false);
             return true;
         }
 
         @Override
+        @RequiredUIAccess
         protected boolean doScrollToContext() {
-            if (myNavigationContext == null) {
-                return false;
-            }
-            return SimpleOnesideDiffViewer.this.doScrollToContext(myNavigationContext);
+            return myNavigationContext != null && SimpleOnesideDiffViewer.this.doScrollToContext(myNavigationContext);
         }
 
         @Override
+        @RequiredUIAccess
         protected boolean doScrollToPosition() {
             if (myCaretPosition == null) {
                 return false;
@@ -275,7 +279,7 @@ public class SimpleOnesideDiffViewer extends OnesideTextDiffViewer {
             return true;
         }
 
-        @jakarta.annotation.Nullable
+        @Nullable
         @Override
         protected LogicalPosition[] getCaretPositions() {
             int index = getSide().getIndex();

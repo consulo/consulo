@@ -24,6 +24,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 
 import jakarta.annotation.Nonnull;
 
+@SuppressWarnings("ExtensionImplIsNotAnnotated")
 public class TextMergeTool implements MergeTool {
     public static final TextMergeTool INSTANCE = new TextMergeTool();
 

@@ -31,6 +31,7 @@ import consulo.diff.impl.internal.external.ExternalDiffToolUtil;
 import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.request.DiffRequest;
 import consulo.diff.internal.DiffManagerEx;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.StringUtil;
 import consulo.logging.Logger;
 import consulo.process.ExecutionException;
@@ -42,6 +43,7 @@ import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.ref.Ref;
 
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -59,15 +61,16 @@ public class ExternalDiffTool {
         return ExternalDiffSettings.getInstance().isDiffEnabled();
     }
 
+    @RequiredUIAccess
     public static void show(
-        @jakarta.annotation.Nullable final Project project,
+        @Nullable final Project project,
         @Nonnull final DiffRequestChain chain,
         @Nonnull final DiffDialogHints hints
     ) {
         try {
             //noinspection unchecked
-            final Ref<List<DiffRequest>> requestsRef = new Ref<List<DiffRequest>>();
-            final Ref<Throwable> exceptionRef = new Ref<Throwable>();
+            final Ref<List<DiffRequest>> requestsRef = new Ref<>();
+            final Ref<Throwable> exceptionRef = new Ref<>();
             ProgressManager.getInstance().run(new Task.Modal(project, "Loading Requests", true) {
                 @Override
                 public void run(@Nonnull ProgressIndicator indicator) {
@@ -84,7 +87,7 @@ public class ExternalDiffTool {
                 throw exceptionRef.get();
             }
 
-            List<DiffRequest> showInBuiltin = new ArrayList<DiffRequest>();
+            List<DiffRequest> showInBuiltin = new ArrayList<>();
             for (DiffRequest request : requestsRef.get()) {
                 if (canShow(request)) {
                     showRequest(project, request);
@@ -108,14 +111,14 @@ public class ExternalDiffTool {
 
     @Nonnull
     private static List<DiffRequest> collectRequests(
-        @jakarta.annotation.Nullable Project project,
+        @Nullable Project project,
         @Nonnull final DiffRequestChain chain,
         @Nonnull ProgressIndicator indicator
     ) {
-        List<DiffRequest> requests = new ArrayList<DiffRequest>();
+        List<DiffRequest> requests = new ArrayList<>();
 
         UserDataHolderBase context = new UserDataHolderBase();
-        List<String> errorRequests = new ArrayList<String>();
+        List<String> errorRequests = new ArrayList<>();
 
         // TODO: show all changes on explicit selection
         List<? extends DiffRequestProducer> producers = Collections.singletonList(chain.getRequests().get(chain.getIndex()));
@@ -142,16 +145,16 @@ public class ExternalDiffTool {
         return requests;
     }
 
-    public static void showRequest(
-        @jakarta.annotation.Nullable Project project,
-        @Nonnull DiffRequest request
-    ) throws ExecutionException, IOException {
+    @RequiredUIAccess
+    public static void showRequest(@Nullable Project project, @Nonnull DiffRequest request) throws ExecutionException, IOException {
         request.onAssigned(true);
 
         ExternalDiffSettings settings = ExternalDiffSettings.getInstance();
 
-        List<DiffContent> contents = ((ContentDiffRequest)request).getContents();
-        List<String> titles = ((ContentDiffRequest)request).getContentTitles();
+        ContentDiffRequest contentDiffRequest = (ContentDiffRequest)request;
+
+        List<DiffContent> contents = contentDiffRequest.getContents();
+        List<String> titles = contentDiffRequest.getContentTitles();
 
         ExternalDiffToolUtil.execute(settings, contents, titles, request.getTitle());
 
@@ -159,18 +162,18 @@ public class ExternalDiffTool {
     }
 
     public static boolean canShow(@Nonnull DiffRequest request) {
-        if (!(request instanceof ContentDiffRequest)) {
-            return false;
-        }
-        List<DiffContent> contents = ((ContentDiffRequest)request).getContents();
-        if (contents.size() != 2 && contents.size() != 3) {
-            return false;
-        }
-        for (DiffContent content : contents) {
-            if (!ExternalDiffToolUtil.canCreateFile(content)) {
+        if (request instanceof ContentDiffRequest contentDiffRequest) {
+            List<DiffContent> contents = contentDiffRequest.getContents();
+            if (contents.size() != 2 && contents.size() != 3) {
                 return false;
             }
+            for (DiffContent content : contents) {
+                if (!ExternalDiffToolUtil.canCreateFile(content)) {
+                    return false;
+                }
+            }
+            return true;
         }
-        return true;
+        return false;
     }
 }

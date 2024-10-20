@@ -62,7 +62,6 @@ import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.awt.*;
@@ -206,6 +205,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
     }
 
     @Override
+    @RequiredUIAccess
     protected void onSlowRediff() {
         super.onSlowRediff();
         myStatusPanel.setBusy(true);
@@ -221,9 +221,8 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
             final Document document1 = getContent1().getDocument();
             final Document document2 = getContent2().getDocument();
 
-            ThrowableComputable<CharSequence[], RuntimeException> action = () -> {
-                return new CharSequence[]{document1.getImmutableCharSequence(), document2.getImmutableCharSequence()};
-            };
+            ThrowableComputable<CharSequence[], RuntimeException> action =
+                () -> new CharSequence[]{document1.getImmutableCharSequence(), document2.getImmutableCharSequence()};
             CharSequence[] texts = AccessRule.read(action);
 
             List<LineFragment> lineFragments = null;
@@ -383,6 +382,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
         getSyncScrollSupport().makeVisible(getCurrentSide(), line1, endLine1, line2, endLine2, animated);
     }
 
+    @RequiredUIAccess
     protected boolean doScrollToContext(@Nonnull DiffNavigationContext context) {
         ChangedLinesIterator changedLinesIterator = new ChangedLinesIterator();
         int line = context.contextMatchCheck(changedLinesIterator);
@@ -542,6 +542,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
         }
 
         @Override
+        @RequiredUIAccess
         public void update(@Nonnull AnActionEvent e) {
             if (myShortcut) {
                 // consume shortcut even if there are nothing to do - avoid calling some other action
@@ -569,6 +570,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
         }
 
         @Override
+        @RequiredUIAccess
         public void actionPerformed(@Nonnull final AnActionEvent e) {
             Editor editor = e.getData(Editor.KEY);
             final Side side = assertNotNull(Side.fromValue(getEditors(), editor));
@@ -585,9 +587,8 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
             DiffImplUtil.executeWriteCommand(
                 getEditor(myModifiedSide).getDocument(),
                 e.getData(Project.KEY),
-                title, () -> {
-                    apply(selectedChanges);
-                }
+                title,
+                () -> apply(selectedChanges)
             );
         }
 
@@ -659,6 +660,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
         }
 
         @Override
+        @RequiredWriteAction
         protected void apply(@Nonnull List<SimpleDiffChange> changes) {
             for (SimpleDiffChange change : changes) {
                 replaceChange(change, myModifiedSide.other());
@@ -694,6 +696,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
         }
 
         @Override
+        @RequiredWriteAction
         protected void apply(@Nonnull List<SimpleDiffChange> changes) {
             for (SimpleDiffChange change : changes) {
                 appendChange(change, myModifiedSide.other());
@@ -750,6 +753,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
         }
 
         @Override
+        @RequiredUIAccess
         protected void onSettingsChanged() {
             rediff();
         }
@@ -761,6 +765,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
         }
 
         @Override
+        @RequiredUIAccess
         protected void onSettingsChanged() {
             rediff();
         }
@@ -819,7 +824,8 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
 
     @Nullable
     @Override
-    public Object getData(@Nonnull @NonNls Key<?> dataId) {
+    @RequiredUIAccess
+    public Object getData(@Nonnull Key<?> dataId) {
         if (DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE == dataId) {
             return myPrevNextDifferenceIterable;
         }
@@ -834,11 +840,13 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
 
     private class MySyncScrollable extends BaseSyncScrollable {
         @Override
+        @RequiredUIAccess
         public boolean isSyncScrollEnabled() {
             return getTextSettings().isEnableSyncScroll();
         }
 
         @Override
+        @RequiredUIAccess
         public int transfer(@Nonnull Side baseSide, int line) {
             if (myDiffChanges.isEmpty()) {
                 return line;
@@ -972,24 +980,21 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
 
     private class MyInitialScrollHelper extends MyInitialScrollPositionHelper {
         @Override
+        @RequiredUIAccess
         protected boolean doScrollToChange() {
-            if (myScrollToChange == null) {
-                return false;
-            }
-            return SimpleDiffViewer.this.doScrollToChange(myScrollToChange);
+            return myScrollToChange != null && SimpleDiffViewer.this.doScrollToChange(myScrollToChange);
         }
 
         @Override
+        @RequiredUIAccess
         protected boolean doScrollToFirstChange() {
             return SimpleDiffViewer.this.doScrollToChange(ScrollToPolicy.FIRST_CHANGE);
         }
 
         @Override
+        @RequiredUIAccess
         protected boolean doScrollToContext() {
-            if (myNavigationContext == null) {
-                return false;
-            }
-            return SimpleDiffViewer.this.doScrollToContext(myNavigationContext);
+            return myNavigationContext != null && SimpleDiffViewer.this.doScrollToContext(myNavigationContext);
         }
     }
 }

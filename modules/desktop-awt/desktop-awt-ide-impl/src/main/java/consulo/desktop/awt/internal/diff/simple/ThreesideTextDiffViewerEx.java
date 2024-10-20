@@ -24,9 +24,9 @@ import consulo.diff.DiffContext;
 import consulo.diff.DiffDataKeys;
 import consulo.diff.PrevNextDifferenceIterable;
 import consulo.diff.fragment.MergeLineFragment;
-import consulo.diff.internal.DiffUserDataKeysEx.ScrollToPolicy;
 import consulo.diff.impl.internal.util.DiffImplUtil;
 import consulo.diff.impl.internal.util.PrevNextDifferenceIterableBase;
+import consulo.diff.internal.DiffUserDataKeysEx.ScrollToPolicy;
 import consulo.diff.localize.DiffLocalize;
 import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.util.LineRange;
@@ -43,7 +43,6 @@ import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.awt.*;
@@ -122,13 +121,10 @@ public abstract class ThreesideTextDiffViewerEx extends ThreesideTextDiffViewer 
 
     @Nonnull
     protected Runnable applyNotification(@Nullable final JComponent notification) {
-        return new Runnable() {
-            @Override
-            public void run() {
-                clearDiffPresentation();
-                if (notification != null) {
-                    myPanel.addNotification(notification);
-                }
+        return () -> {
+            clearDiffPresentation();
+            if (notification != null) {
+                myPanel.addNotification(notification);
             }
         };
     }
@@ -324,7 +320,8 @@ public abstract class ThreesideTextDiffViewerEx extends ThreesideTextDiffViewer 
 
     @Nullable
     @Override
-    public Object getData(@Nonnull @NonNls Key<?> dataId) {
+    @RequiredUIAccess
+    public Object getData(@Nonnull Key<?> dataId) {
         if (DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE == dataId) {
             return myPrevNextDifferenceIterable;
         }
@@ -459,14 +456,13 @@ public abstract class ThreesideTextDiffViewerEx extends ThreesideTextDiffViewer 
 
     protected class MyInitialScrollHelper extends MyInitialScrollPositionHelper {
         @Override
+        @RequiredUIAccess
         protected boolean doScrollToChange() {
-            if (myScrollToChange == null) {
-                return false;
-            }
-            return ThreesideTextDiffViewerEx.this.doScrollToChange(myScrollToChange);
+            return myScrollToChange != null && ThreesideTextDiffViewerEx.this.doScrollToChange(myScrollToChange);
         }
 
         @Override
+        @RequiredUIAccess
         protected boolean doScrollToFirstChange() {
             return ThreesideTextDiffViewerEx.this.doScrollToChange(ScrollToPolicy.FIRST_CHANGE);
         }

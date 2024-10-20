@@ -113,6 +113,7 @@ public class SimpleThreesideDiffViewer extends ThreesideTextDiffViewerEx {
     //
 
     @Override
+    @RequiredUIAccess
     protected void onSlowRediff() {
         super.onSlowRediff();
         myStatusPanel.setBusy(true);
@@ -345,6 +346,7 @@ public class SimpleThreesideDiffViewer extends ThreesideTextDiffViewerEx {
         }
 
         @Override
+        @RequiredUIAccess
         protected void onSettingsChanged() {
             rediff();
         }
@@ -368,6 +370,7 @@ public class SimpleThreesideDiffViewer extends ThreesideTextDiffViewerEx {
         }
 
         @Override
+        @RequiredUIAccess
         protected void onSettingsChanged() {
             rediff();
         }
