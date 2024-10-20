@@ -394,14 +394,7 @@ public class DvcsUtil {
   }
 
   public static <T extends Repository> List<T> sortRepositories(@Nonnull Collection<T> repositories) {
-    List<T> validRepositories = ContainerUtil.filter(repositories, new Condition<>() {
-      @Override
-      public boolean value(T t) {
-        return t.getRoot().isValid();
-      }
-    });
-    Collections.sort(validRepositories, REPOSITORY_COMPARATOR);
-    return validRepositories;
+    return repositories.stream().filter(t -> t.getRoot().isValid()).sorted(REPOSITORY_COMPARATOR).toList();
   }
 
   @Nullable
