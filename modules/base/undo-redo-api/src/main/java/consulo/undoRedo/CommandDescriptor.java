@@ -30,6 +30,7 @@ public class CommandDescriptor {
     @Nonnull
     private final Runnable myCommand;
     private Project myProject = null;
+    @Nonnull
     private LocalizeValue myName = LocalizeValue.empty();
     private Object myGroupId = null;
     private Document myDocument = null;
@@ -47,13 +48,13 @@ public class CommandDescriptor {
         myCommand = command;
     }
 
-    public CommandDescriptor project(@Nonnull Project project) {
+    public CommandDescriptor project(Project project) {
         ensureNonLocked();
         myProject = project;
         return this;
     }
 
-    public CommandDescriptor document(@Nonnull Document document) {
+    public CommandDescriptor document(Document document) {
         ensureNonLocked();
         myDocument = document;
         return this;
@@ -64,7 +65,7 @@ public class CommandDescriptor {
         return this;
     }
 
-    public CommandDescriptor groupId(@Nonnull Object groupId) {
+    public CommandDescriptor groupId(Object groupId) {
         myGroupId = groupId;
 
         if (groupId instanceof Document docGroupId) {
