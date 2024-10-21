@@ -9,6 +9,9 @@ import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.undoRedo.builder.BaseCommandBuilder;
+import consulo.undoRedo.builder.CommandBuilder;
 import consulo.undoRedo.event.CommandListener;
 import consulo.util.lang.EmptyRunnable;
 import consulo.virtualFileSystem.VirtualFile;
@@ -23,6 +26,31 @@ import jakarta.annotation.Nullable;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class CommandProcessor {
+    public interface ExecutableCommandBuilder extends CommandBuilder<ExecutableCommandBuilder> {
+        void execute();
+
+        @RequiredUIAccess
+        default void executeInWriteAction() {
+            Application.get().runWriteAction(this::execute);
+        }
+    }
+
+    private class MyCommandBuilder extends BaseCommandBuilder<ExecutableCommandBuilder> implements ExecutableCommandBuilder {
+        protected MyCommandBuilder(@Nonnull Runnable command) {
+            super(command);
+        }
+
+        @Override
+        public void execute() {
+            executeCommand(build());
+        }
+    }
+
+    @Nonnull
+    public ExecutableCommandBuilder newCommand(@Nonnull Runnable command) {
+        return new MyCommandBuilder(command);
+    }
+
     @Nonnull
     public static CommandProcessor getInstance() {
         return Application.get().getInstance(CommandProcessor.class);
@@ -31,11 +59,10 @@ public abstract class CommandProcessor {
     @Deprecated
     @DeprecationInfo("Use #executeCommand(CommandDescriptor)")
     public void executeCommand(@Nonnull Runnable runnable, @Nullable String name, @Nullable Object groupId) {
-        executeCommand(
-            new CommandDescriptor(runnable)
-                .name(LocalizeValue.ofNullable(name))
-                .groupId(groupId)
-        );
+        newCommand(runnable)
+            .withName(LocalizeValue.ofNullable(name))
+            .withGroupId(groupId)
+            .execute();
     }
 
     @Deprecated
@@ -46,12 +73,11 @@ public abstract class CommandProcessor {
         @Nullable String name,
         @Nullable Object groupId
     ) {
-        executeCommand(
-            new CommandDescriptor(runnable)
-                .project(project)
-                .name(LocalizeValue.ofNullable(name))
-                .groupId(groupId)
-        );
+        newCommand(runnable)
+            .withProject(project)
+            .withName(LocalizeValue.ofNullable(name))
+            .withGroupId(groupId)
+            .execute();
     }
 
     @Deprecated
@@ -63,13 +89,12 @@ public abstract class CommandProcessor {
         @Nullable Object groupId,
         @Nullable Document document
     ) {
-        executeCommand(
-            new CommandDescriptor(runnable)
-                .project(project)
-                .name(LocalizeValue.ofNullable(name))
-                .groupId(groupId)
-                .document(document)
-        );
+        newCommand(runnable)
+            .withProject(project)
+            .withName(LocalizeValue.ofNullable(name))
+            .withGroupId(groupId)
+            .withDocument(document)
+            .execute();
     }
 
     @Deprecated
@@ -81,13 +106,12 @@ public abstract class CommandProcessor {
         @Nullable Object groupId,
         @Nonnull UndoConfirmationPolicy confirmationPolicy
     ) {
-        executeCommand(
-            new CommandDescriptor(runnable)
-                .project(project)
-                .name(LocalizeValue.ofNullable(name))
-                .groupId(groupId)
-                .undoConfirmationPolicy(confirmationPolicy)
-        );
+        newCommand(runnable)
+            .withProject(project)
+            .withName(LocalizeValue.ofNullable(name))
+            .withGroupId(groupId)
+            .withUndoConfirmationPolicy(confirmationPolicy)
+            .execute();
     }
 
     @Deprecated
@@ -100,14 +124,13 @@ public abstract class CommandProcessor {
         @Nonnull UndoConfirmationPolicy confirmationPolicy,
         @Nullable Document document
     ) {
-        executeCommand(
-            new CommandDescriptor(command)
-                .project(project)
-                .name(LocalizeValue.ofNullable(name))
-                .groupId(groupId)
-                .undoConfirmationPolicy(confirmationPolicy)
-                .document(document)
-        );
+        newCommand(command)
+            .withProject(project)
+            .withName(LocalizeValue.ofNullable(name))
+            .withGroupId(groupId)
+            .withUndoConfirmationPolicy(confirmationPolicy)
+            .withDocument(document)
+            .execute();
     }
 
     /**
@@ -126,14 +149,13 @@ public abstract class CommandProcessor {
         @Nonnull UndoConfirmationPolicy confirmationPolicy,
         boolean shouldRecordCommandForActiveDocument
     ) {
-        executeCommand(
-            new CommandDescriptor(command)
-                .project(project)
-                .name(LocalizeValue.ofNullable(name))
-                .groupId(groupId)
-                .undoConfirmationPolicy(confirmationPolicy)
-                .shouldRecordActionForActiveDocument(shouldRecordCommandForActiveDocument)
-        );
+        newCommand(command)
+            .withProject(project)
+            .withName(LocalizeValue.ofNullable(name))
+            .withGroupId(groupId)
+            .withUndoConfirmationPolicy(confirmationPolicy)
+            .withShouldRecordActionForActiveDocument(shouldRecordCommandForActiveDocument)
+            .execute();
     }
 
     public abstract void executeCommand(CommandDescriptor commandDescriptor);

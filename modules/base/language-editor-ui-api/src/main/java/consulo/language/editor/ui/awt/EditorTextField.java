@@ -15,7 +15,6 @@
  */
 package consulo.language.editor.ui.awt;
 
-import consulo.application.Application;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.*;
@@ -45,7 +44,6 @@ import consulo.ui.ex.TextComponent;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.style.StyleManager;
-import consulo.undoRedo.CommandDescriptor;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
@@ -302,8 +300,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
 
     @RequiredUIAccess
     public void setText(@Nullable final String text) {
-        Application.get().runWriteAction(() -> CommandProcessor.getInstance().executeCommand(
-            new CommandDescriptor(() -> {
+        CommandProcessor.getInstance().newCommand(() -> {
                 myDocument.replaceString(0, myDocument.getTextLength(), text == null ? "" : text);
                 if (myEditor != null) {
                     final CaretModel caretModel = myEditor.getCaretModel();
@@ -312,9 +309,9 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
                     }
                 }
             })
-                .project(getProject())
-                .document(getDocument())
-        ));
+            .withProject(getProject())
+            .withDocument(getDocument())
+            .executeInWriteAction();
     }
 
     /**

@@ -68,7 +68,6 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnSeparator;
-import consulo.undoRedo.CommandDescriptor;
 import consulo.undoRedo.UndoManager;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
@@ -778,17 +777,16 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
                 return;
             }
 
-            DiffImplUtil.executeWriteCommand(
-                new CommandDescriptor(() -> {
+            DiffImplUtil.newWriteCommand(() -> {
                     // state is invalidated during apply(), but changes are in reverse order, so they should not conflict with each other
                     apply(selectedChanges);
                     //noinspection RequiredXAction
                     scheduleRediff();
                 })
-                    .project(e.getData(Project.KEY))
-                    .document(getDocument(myModifiedSide))
-                    .name(DiffLocalize.messageUseSelectedChangesCommand(e.getPresentation().getText()))
-            );
+                .withProject(e.getData(Project.KEY))
+                .withDocument(getDocument(myModifiedSide))
+                .withName(DiffLocalize.messageUseSelectedChangesCommand(e.getPresentation().getText()))
+                .execute();
         }
 
         protected boolean isSomeChangeSelected() {

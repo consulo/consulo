@@ -3,9 +3,9 @@ package consulo.ide.impl.idea.openapi.command;
 
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.undoRedo.CommandDescriptor;
-import consulo.undoRedo.CommandProcessor;
-import consulo.undoRedo.UndoConfirmationPolicy;
+import consulo.undoRedo.*;
+import consulo.undoRedo.builder.BaseCommandBuilder;
+import consulo.undoRedo.builder.CommandBuilder;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -13,12 +13,27 @@ import jakarta.annotation.Nullable;
  * @author max
  */
 public abstract class CommandProcessorEx extends CommandProcessor {
+    public interface StartableCommandBuilder extends CommandBuilder<StartableCommandBuilder> {
+        CommandToken start();
+    }
+
+    public class MyStartableCommandBuilder extends BaseCommandBuilder<StartableCommandBuilder> implements StartableCommandBuilder {
+        @Override
+        public CommandToken start() {
+            return startCommand(build());
+        }
+    }
+
     public abstract void enterModal();
 
     public abstract void leaveModal();
 
+    public StartableCommandBuilder newCommand() {
+        return new MyStartableCommandBuilder();
+    }
+
     @Nullable
-    public abstract CommandToken startCommand(CommandDescriptor commandDescriptor);
+    protected abstract CommandToken startCommand(CommandDescriptor commandDescriptor);
 
     @Deprecated(forRemoval = true)
     @Nullable
@@ -28,13 +43,12 @@ public abstract class CommandProcessorEx extends CommandProcessor {
         @Nullable Object groupId,
         @Nonnull UndoConfirmationPolicy undoConfirmationPolicy
     ) {
-        return startCommand(
-            new CommandDescriptor()
-                .project(project)
-                .name(LocalizeValue.ofNullable(name))
-                .groupId(groupId)
-                .undoConfirmationPolicy(undoConfirmationPolicy)
-        );
+        return newCommand()
+            .withProject(project)
+            .withName(LocalizeValue.ofNullable(name))
+            .withGroupId(groupId)
+            .withUndoConfirmationPolicy(undoConfirmationPolicy)
+            .start();
     }
 
     public abstract void finishCommand(@Nonnull final CommandToken command, @Nullable Throwable throwable);

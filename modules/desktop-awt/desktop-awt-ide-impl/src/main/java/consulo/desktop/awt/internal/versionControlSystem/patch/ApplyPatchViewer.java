@@ -15,7 +15,6 @@
  */
 package consulo.desktop.awt.internal.versionControlSystem.patch;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.AllIcons;
 import consulo.codeEditor.*;
@@ -58,7 +57,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.undoRedo.CommandDescriptor;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
@@ -319,17 +317,16 @@ class ApplyPatchViewer implements DataProvider, Disposable {
     @RequiredUIAccess
     protected void initPatchViewer() {
         final Document outputDocument = myResultEditor.getDocument();
-        DiffImplUtil.executeWriteCommand(
-            new CommandDescriptor(() -> {
+        DiffImplUtil.newWriteCommand(() -> {
                 outputDocument.setText(myPatchRequest.getLocalContent());
                 if (!isReadOnly()) {
                     DiffImplUtil.putNonundoableOperation(myProject, outputDocument);
                 }
             })
-                .project(myProject)
-                .document(outputDocument)
-                .name(DiffLocalize.messageInitMergeContentCommand())
-        );
+            .withProject(myProject)
+            .withDocument(outputDocument)
+            .withName(DiffLocalize.messageInitMergeContentCommand())
+            .execute();
 
         PatchChangeBuilder builder = new PatchChangeBuilder();
         builder.exec(myPatchRequest.getPatch().getHunks());
@@ -454,14 +451,14 @@ class ApplyPatchViewer implements DataProvider, Disposable {
     }
 
     @RequiredUIAccess
-    CommandDescriptor patchCommand(@Nonnull final Runnable task) {
-        return myModel.mergeCommand(false, null, task);
+    DiffImplUtil.WriteCommandBuilder newPatchCommand(@Nonnull final Runnable task) {
+        return myModel.newMergeCommand(false, null, task);
     }
 
     @Deprecated(forRemoval = true)
     @RequiredUIAccess
     public void executeCommand(@Nullable String commandName, @Nonnull final Runnable task) {
-        DiffImplUtil.executeWriteCommand(patchCommand(task).name(LocalizeValue.ofNullable(commandName)));
+        newPatchCommand(task).withName(LocalizeValue.ofNullable(commandName)).execute();
     }
 
     class MyModel extends MergeModelBase<ApplyPatchChange.State> {
@@ -622,10 +619,9 @@ class ApplyPatchViewer implements DataProvider, Disposable {
                 return;
             }
 
-            DiffImplUtil.executeWriteCommand(
-                patchCommand(() -> apply(selectedChanges))
-                    .name(VcsLocalize.patchApplyChangesInPatchResolve(e.getPresentation().getText()))
-            );
+            newPatchCommand(() -> apply(selectedChanges))
+                .withName(VcsLocalize.patchApplyChangesInPatchResolve(e.getPresentation().getText()))
+                .execute();
         }
 
         private boolean isSomeChangeSelected(@Nonnull Side side) {
@@ -709,23 +705,23 @@ class ApplyPatchViewer implements DataProvider, Disposable {
                 return;
             }
 
-            DiffImplUtil.executeWriteCommand(
-                patchCommand(() -> {
-                    for (int i = changes.size() - 1; i >= 0; i--) {
-                        ApplyPatchChange change = changes.get(i);
-                        switch (change.getStatus()) {
-                            case ALREADY_APPLIED:
-                                markChangeResolved(change);
-                                break;
-                            case EXACTLY_APPLIED:
-                                replaceChange(change);
-                                break;
-                            case NOT_APPLIED:
-                                break;
-                        }
+            newPatchCommand(() -> {
+                for (int i = changes.size() - 1; i >= 0; i--) {
+                    ApplyPatchChange change = changes.get(i);
+                    switch (change.getStatus()) {
+                        case ALREADY_APPLIED:
+                            markChangeResolved(change);
+                            break;
+                        case EXACTLY_APPLIED:
+                            replaceChange(change);
+                            break;
+                        case NOT_APPLIED:
+                            break;
                     }
-                }).name(DiffLocalize.mergeDialogApplyNonConflictedChangesCommand())
-            );
+                }
+            })
+                .withName(DiffLocalize.mergeDialogApplyNonConflictedChangesCommand())
+                .execute();
         }
     }
 

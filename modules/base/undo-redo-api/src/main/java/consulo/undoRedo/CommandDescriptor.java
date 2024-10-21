@@ -19,7 +19,6 @@ import consulo.document.Document;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.util.lang.EmptyRunnable;
-import consulo.util.lang.ref.Ref;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -29,16 +28,14 @@ import jakarta.annotation.Nonnull;
 public class CommandDescriptor {
     @Nonnull
     private final Runnable myCommand;
-    private Project myProject = null;
     @Nonnull
     private LocalizeValue myName = LocalizeValue.empty();
     private Object myGroupId = null;
+    private Project myProject = null;
     private Document myDocument = null;
     @Nonnull
     private UndoConfirmationPolicy myUndoConfirmationPolicy = UndoConfirmationPolicy.DEFAULT;
     private boolean myShouldRecordActionForActiveDocument = true;
-
-    private boolean myLocked = false;
 
     public CommandDescriptor() {
         this(EmptyRunnable.INSTANCE);
@@ -48,67 +45,36 @@ public class CommandDescriptor {
         myCommand = command;
     }
 
-    public CommandDescriptor project(Project project) {
-        ensureNonLocked();
-        myProject = project;
-        return this;
-    }
-
-    public CommandDescriptor document(Document document) {
-        ensureNonLocked();
-        myDocument = document;
-        return this;
-    }
-
-    public CommandDescriptor name(@Nonnull LocalizeValue name) {
-        myName = name;
-        return this;
-    }
-
-    public CommandDescriptor groupId(Object groupId) {
-        myGroupId = groupId;
-
-        if (groupId instanceof Document docGroupId) {
-            myDocument = docGroupId;
-        }
-        else if (groupId instanceof Ref refGroupId && refGroupId.get() instanceof Document docRefGroupId) {
-            myDocument = docRefGroupId;
-        }
-
-        return this;
-    }
-
-    public CommandDescriptor undoConfirmationPolicy(@Nonnull UndoConfirmationPolicy undoConfirmationPolicy) {
-        ensureNonLocked();
-        myUndoConfirmationPolicy = undoConfirmationPolicy;
-        return this;
-    }
-
-    /**
-     * @param shouldRecordActionForActiveDocument {@code false} if the action is not supposed to be recorded
-     *                                            into the currently open document's history.
-     *                                            Examples of such actions: Create New File, Change Project Settings etc.
-     *                                            Default is {@code true}.
-     */
-    public CommandDescriptor shouldRecordActionForActiveDocument(boolean shouldRecordActionForActiveDocument) {
-        ensureNonLocked();
-        myShouldRecordActionForActiveDocument = shouldRecordActionForActiveDocument;
-        return this;
-    }
-
-    public void lock() {
-        myLocked = true;
-    }
-
-    private void ensureNonLocked() {
-        if (myLocked) {
-            throw new IllegalStateException("Attempting to modify after locking");
-        }
+    public CommandDescriptor(
+        @Nonnull Runnable myCommand,
+        @Nonnull LocalizeValue myName,
+        Object myGroupId,
+        Project myProject,
+        Document myDocument,
+        @Nonnull UndoConfirmationPolicy myUndoConfirmationPolicy,
+        boolean myShouldRecordActionForActiveDocument
+    ) {
+        this.myCommand = myCommand;
+        this.myProject = myProject;
+        this.myName = myName;
+        this.myGroupId = myGroupId;
+        this.myDocument = myDocument;
+        this.myUndoConfirmationPolicy = myUndoConfirmationPolicy;
+        this.myShouldRecordActionForActiveDocument = myShouldRecordActionForActiveDocument;
     }
 
     @Nonnull
     public Runnable getCommand() {
         return myCommand;
+    }
+
+    @Nonnull
+    public LocalizeValue getName() {
+        return myName;
+    }
+
+    public Object getGroupId() {
+        return myGroupId;
     }
 
     public Project getProject() {
@@ -117,14 +83,6 @@ public class CommandDescriptor {
 
     public Document getDocument() {
         return myDocument;
-    }
-
-    public LocalizeValue getName() {
-        return myName;
-    }
-
-    public Object getGroupId() {
-        return myGroupId;
     }
 
     public UndoConfirmationPolicy getUndoConfirmationPolicy() {

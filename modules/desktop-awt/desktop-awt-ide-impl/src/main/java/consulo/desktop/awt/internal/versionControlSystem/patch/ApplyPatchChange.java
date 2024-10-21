@@ -356,10 +356,9 @@ class ApplyPatchChange {
         return createIconRenderer(
             DiffLocalize.mergeDialogApplyChangeActionName(),
             DiffImplUtil.getArrowIcon(Side.RIGHT),
-            () -> DiffImplUtil.executeWriteCommand(
-                myViewer.patchCommand(() -> myViewer.replaceChange(this))
-                    .name(DiffLocalize.mergeDialogAcceptChangeCommand())
-            )
+            () -> DiffImplUtil.newWriteCommand(() -> myViewer.replaceChange(this))
+                .withName(DiffLocalize.mergeDialogAcceptChangeCommand())
+                .execute()
         );
     }
 
@@ -367,10 +366,9 @@ class ApplyPatchChange {
         return createIconRenderer(
             DiffLocalize.mergeDialogIgnoreChangeActionName(),
             AllIcons.Diff.Remove,
-            () -> DiffImplUtil.executeWriteCommand(
-                myViewer.patchCommand(() -> myViewer.markChangeResolved(this))
-                    .name(DiffLocalize.mergeDialogIgnoreChangeCommand())
-            )
+            () -> DiffImplUtil.newWriteCommand(() -> myViewer.markChangeResolved(this))
+                .withName(DiffLocalize.mergeDialogIgnoreChangeCommand())
+                .execute()
         );
     }
 

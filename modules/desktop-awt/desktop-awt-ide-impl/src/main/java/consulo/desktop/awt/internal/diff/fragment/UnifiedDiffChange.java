@@ -36,7 +36,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
-import consulo.undoRedo.CommandDescriptor;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -219,15 +218,14 @@ public class UnifiedDiffChange {
                 final Project project = e.getData(Project.KEY);
                 final Document document = myViewer.getDocument(sourceSide.other());
 
-                DiffImplUtil.executeWriteCommand(
-                    new CommandDescriptor(() -> {
+                DiffImplUtil.newWriteCommand(() -> {
                         myViewer.replaceChange(UnifiedDiffChange.this, sourceSide);
                         myViewer.scheduleRediff();
                     })
-                        .project(project)
-                        .document(document)
-                        .name(DiffLocalize.messageReplaceChangeCommand())
-                );
+                    .withProject(project)
+                    .withDocument(document)
+                    .withName(DiffLocalize.messageReplaceChangeCommand())
+                    .execute();
                 // applyChange() will schedule rediff, but we want to try to do it in sync
                 // and we can't do it inside write action
                 myViewer.rediff();

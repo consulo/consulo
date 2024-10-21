@@ -9,6 +9,7 @@ import consulo.ide.impl.idea.openapi.command.CommandToken;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.undoRedo.builder.BaseCommandBuilder;
 import consulo.undoRedo.CommandDescriptor;
 import consulo.undoRedo.event.CommandEvent;
 import consulo.undoRedo.event.CommandListener;
@@ -22,7 +23,7 @@ import java.util.Stack;
 
 public class CoreCommandProcessor extends CommandProcessorEx {
     private class Command implements CommandToken {
-        private final CommandDescriptor myDescriptor;
+        private CommandDescriptor myDescriptor;
 
         Command(CommandDescriptor commandDescriptor) {
             this.myDescriptor = commandDescriptor;
@@ -36,6 +37,14 @@ public class CoreCommandProcessor extends CommandProcessorEx {
 
         public CommandDescriptor getDescriptor() {
             return myDescriptor;
+        }
+
+        public void setName(@Nonnull LocalizeValue name) {
+            myDescriptor = new BaseCommandBuilder(myDescriptor).withName(name).build();
+        }
+
+        public void setGroupId(Object groupId) {
+            myDescriptor = new BaseCommandBuilder(myDescriptor).withGroupId(groupId).build();
         }
     }
 
@@ -137,7 +146,6 @@ public class CoreCommandProcessor extends CommandProcessorEx {
     @RequiredUIAccess
     public void executeCommand(CommandDescriptor commandDescriptor) {
         myApplication.assertIsDispatchThread();
-        commandDescriptor.lock();
         Project project = commandDescriptor.getProject();
         if (project != null && project.isDisposed()) {
             CommandLog.LOG.error("Project " + project + " already disposed");
@@ -177,7 +185,6 @@ public class CoreCommandProcessor extends CommandProcessorEx {
     @RequiredUIAccess
     public CommandToken startCommand(CommandDescriptor commandDescriptor) {
         myApplication.assertIsDispatchThread();
-        commandDescriptor.lock();
         Project project = commandDescriptor.getProject();
         if (project != null && project.isDisposed()) {
             return null;
@@ -268,7 +275,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
         myApplication.assertIsDispatchThread();
         Command currentCommand = myCurrentCommand;
         assert currentCommand != null;
-        currentCommand.getDescriptor().name(name);
+        currentCommand.setName(name);
     }
 
     @Override
@@ -277,7 +284,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
         myApplication.assertIsDispatchThread();
         Command currentCommand = myCurrentCommand;
         assert currentCommand != null;
-        currentCommand.getDescriptor().groupId(groupId);
+        currentCommand.setGroupId(groupId);
     }
 
     @Override

@@ -16,15 +16,13 @@
 package consulo.diff.impl.internal.request;
 
 import consulo.diff.content.DocumentContent;
-import consulo.diff.merge.MergeResult;
-import consulo.diff.util.ThreeSide;
-import consulo.diff.merge.TextMergeRequest;
 import consulo.diff.impl.internal.util.DiffImplUtil;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.undoRedo.CommandDescriptor;
-import consulo.util.lang.StringUtil;
+import consulo.diff.merge.MergeResult;
+import consulo.diff.merge.TextMergeRequest;
+import consulo.diff.util.ThreeSide;
 import consulo.project.Project;
-
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -121,11 +119,10 @@ public class TextMergeRequestImpl extends TextMergeRequest {
         }
 
         if (applyContent != null) {
-            DiffImplUtil.executeWriteCommand(
-                new CommandDescriptor(() -> myOutput.getDocument().setText(applyContent))
-                    .project(myProject)
-                    .document(myOutput.getDocument())
-            );
+            DiffImplUtil.newWriteCommand(() -> myOutput.getDocument().setText(applyContent))
+                .withProject(myProject)
+                .withDocument(myOutput.getDocument())
+                .execute();
         }
 
         if (myApplyCallback != null) {

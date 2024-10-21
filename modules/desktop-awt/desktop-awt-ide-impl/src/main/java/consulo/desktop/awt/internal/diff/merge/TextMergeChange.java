@@ -338,12 +338,12 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
             DiffLocalize.mergeDialogApplyChangeActionName().get(),
             icon,
             isConflict(),
-            () -> DiffImplUtil.executeWriteCommand(
-                myViewer.mergeCommand(
+            () -> myViewer.newMergeCommand(
                     Collections.singletonList(this),
                     () -> myViewer.replaceChange(this, side, modifier)
-                ).name(DiffLocalize.mergeDialogAcceptChangeCommand())
-            )
+                )
+                .withName(DiffLocalize.mergeDialogAcceptChangeCommand())
+                .execute()
         );
     }
 
@@ -356,12 +356,12 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
             DiffLocalize.mergeDialogIgnoreChangeActionName().get(),
             AllIcons.Diff.Remove,
             isConflict(),
-            () -> DiffImplUtil.executeWriteCommand(
-                myViewer.mergeCommand(
+            () -> myViewer.newMergeCommand(
                     Collections.singletonList(this),
                     () -> myViewer.ignoreChange(this, side, modifier)
-                ).name(DiffLocalize.mergeDialogIgnoreChangeCommand())
-            )
+                )
+                .withName(DiffLocalize.mergeDialogIgnoreChangeCommand())
+                .execute()
         );
     }
 
@@ -375,12 +375,12 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
             DiffLocalize.mergeDialogResolveChangeActionName().get(),
             AllIcons.Actions.Checked,
             false,
-            () -> DiffImplUtil.executeWriteCommand(
-                myViewer.mergeCommand(
+            () -> myViewer.newMergeCommand(
                     Collections.singletonList(this),
                     () -> myViewer.resolveConflictedChange(this)
-                ).name(DiffLocalize.mergeDialogResolveConflictCommand())
-            )
+                )
+                .withName(DiffLocalize.mergeDialogResolveConflictCommand())
+                .execute()
         );
     }
 

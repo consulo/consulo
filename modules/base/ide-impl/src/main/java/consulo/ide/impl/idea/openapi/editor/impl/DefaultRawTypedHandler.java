@@ -13,9 +13,7 @@ import consulo.ide.impl.idea.openapi.command.CommandToken;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.undoRedo.CommandDescriptor;
 import consulo.undoRedo.CommandProcessor;
-
 import jakarta.annotation.Nonnull;
 
 public class DefaultRawTypedHandler implements TypedActionHandlerEx {
@@ -48,11 +46,10 @@ public class DefaultRawTypedHandler implements TypedActionHandlerEx {
         if (myCurrentCommandToken != null) {
             throw new IllegalStateException("Unexpected reentrancy of DefaultRawTypedHandler");
         }
-        myCurrentCommandToken = commandProcessorEx.startCommand(
-            new CommandDescriptor()
-                .project(project)
-                .groupId(editor.getDocument())
-        );
+        myCurrentCommandToken = commandProcessorEx.newCommand()
+            .withProject(project)
+            .withGroupId(editor.getDocument())
+            .start();
         myInOuterCommand = myCurrentCommandToken == null;
         try {
             if (!EditorModificationUtil.requestWriting(editor)) {
@@ -94,6 +91,6 @@ public class DefaultRawTypedHandler implements TypedActionHandlerEx {
         CommandProcessorEx commandProcessorEx = (CommandProcessorEx)CommandProcessor.getInstance();
         Project project = myCurrentCommandToken.getProject();
         commandProcessorEx.finishCommand(myCurrentCommandToken, null);
-        myCurrentCommandToken = commandProcessorEx.startCommand(new CommandDescriptor().project(project));
+        myCurrentCommandToken = commandProcessorEx.newCommand().withProject(project).start();
     }
 }

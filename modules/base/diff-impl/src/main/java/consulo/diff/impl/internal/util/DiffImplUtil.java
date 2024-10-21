@@ -15,7 +15,6 @@
  */
 package consulo.diff.impl.internal.util;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
@@ -71,6 +70,8 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.image.Image;
 import consulo.undoRedo.*;
+import consulo.undoRedo.builder.CommandBuilder;
+import consulo.undoRedo.builder.ProxyCommandBuilder;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
@@ -863,45 +864,46 @@ public class DiffImplUtil {
     // Writable
     //
 
-    @Deprecated(forRemoval = true)
-    @RequiredUIAccess
-    public static void executeWriteCommand(
-        @Nullable Project project,
-        @Nonnull Document document,
-        @Nonnull LocalizeValue commandName,
-        @Nullable String commandGroupId,
-        @Nonnull UndoConfirmationPolicy confirmationPolicy,
-        boolean underBulkUpdate,
-        @Nonnull Runnable task
-    ) {
-        CommandDescriptor commandDescriptor = underBulkUpdate ? underBulkUpdate(task) : new CommandDescriptor(task);
-
-        executeWriteCommand(
-            commandDescriptor
-                .project(project)
-                .document(document)
-                .name(commandName)
-                .groupId(commandGroupId)
-                .undoConfirmationPolicy(confirmationPolicy)
-        );
+    public interface WriteCommandBuilder extends CommandBuilder<WriteCommandBuilder> {
+        @RequiredUIAccess
+        void execute();
     }
 
-    @RequiredUIAccess
-    public static void executeWriteCommand(@Nonnull CommandDescriptor commandDescriptor) {
-        commandDescriptor.lock();
-        if (!makeWritable(commandDescriptor.getProject(), commandDescriptor.getDocument())) {
-            VirtualFile file = FileDocumentManager.getInstance().getFile(commandDescriptor.getDocument());
-            LOG.warn("Document is read-only" + (file != null ? ": " + file.getPresentableName() : ""));
-            return;
+    private static class MyCommandBuilder extends ProxyCommandBuilder<WriteCommandBuilder, CommandProcessor.ExecutableCommandBuilder>
+        implements WriteCommandBuilder {
+
+        protected MyCommandBuilder(@Nonnull Runnable command) {
+            super(CommandProcessor.getInstance().newCommand(command));
         }
 
-        Application.get().runWriteAction(() -> CommandProcessor.getInstance().executeCommand(commandDescriptor));
+        protected static MyCommandBuilder underBulkUpdate(final @Nonnull Runnable task) {
+            final SimpleReference<MyCommandBuilder> builder = new SimpleReference<>();
+            builder.set(new MyCommandBuilder(() -> DocumentUtil.executeInBulk(builder.get().build().getDocument(), true, task)));
+            return builder.get();
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void execute() {
+            CommandDescriptor descriptor = subBuilder.build();
+            if (!makeWritable(descriptor.getProject(), descriptor.getDocument())) {
+                VirtualFile file = FileDocumentManager.getInstance().getFile(descriptor.getDocument());
+                LOG.warn("Document is read-only" + (file != null ? ": " + file.getPresentableName() : ""));
+                return;
+            }
+
+            subBuilder.executeInWriteAction();
+        }
     }
 
-    public static CommandDescriptor underBulkUpdate(final @Nonnull Runnable task) {
-        final SimpleReference<CommandDescriptor> descriptor = new SimpleReference<>();
-        descriptor.set(new CommandDescriptor(() -> DocumentUtil.executeInBulk(descriptor.get().getDocument(), true, task)));
-        return descriptor.get();
+    @RequiredUIAccess
+    public static WriteCommandBuilder newWriteCommand(@Nonnull Runnable command) {
+        return new MyCommandBuilder(command);
+    }
+
+    @RequiredUIAccess
+    public static WriteCommandBuilder newBulkUpdateWriteCommand(@Nonnull Runnable command) {
+        return MyCommandBuilder.underBulkUpdate(command);
     }
 
     @Deprecated(forRemoval = true)
@@ -915,15 +917,15 @@ public class DiffImplUtil {
         boolean underBulkUpdate,
         @Nonnull Runnable task
     ) {
-        executeWriteCommand(
-            project,
-            document,
-            LocalizeValue.ofNullable(commandName),
-            commandGroupId,
-            confirmationPolicy,
-            underBulkUpdate,
-            task
-        );
+        WriteCommandBuilder builder = underBulkUpdate ? newBulkUpdateWriteCommand(task) : newWriteCommand(task);
+
+        builder
+            .withProject(project)
+            .withDocument(document)
+            .withName(LocalizeValue.ofNullable(commandName))
+            .withGroupId(commandGroupId)
+            .withUndoConfirmationPolicy(confirmationPolicy)
+            .execute();
     }
 
     @Deprecated(forRemoval = true)
@@ -934,12 +936,11 @@ public class DiffImplUtil {
         @Nullable String commandName,
         @Nonnull Runnable task
     ) {
-        executeWriteCommand(
-            new CommandDescriptor(task)
-                .project(project)
-                .document(document)
-                .name(LocalizeValue.ofNullable(commandName))
-        );
+        newWriteCommand(task)
+            .withProject(project)
+            .withDocument(document)
+            .withName(LocalizeValue.ofNullable(commandName))
+            .execute();
     }
 
     public static boolean isEditable(@Nonnull Editor editor) {

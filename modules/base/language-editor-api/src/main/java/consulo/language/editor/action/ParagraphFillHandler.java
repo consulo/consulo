@@ -23,11 +23,9 @@ import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiWhiteSpace;
-import consulo.undoRedo.CommandDescriptor;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.CharFilter;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -78,8 +76,7 @@ public abstract class ParagraphFillHandler implements LanguageExtension {
 
         final String replacementText = stringBuilder.toString();
 
-        CommandProcessor.getInstance().executeCommand(
-            new CommandDescriptor(() -> {
+        CommandProcessor.getInstance().newCommand(() -> {
                 document.replaceString(textRange.getStartOffset(), textRange.getEndOffset(), replacementText);
                 final PsiFile file = element.getContainingFile();
                 FormatterTagHandler formatterTagHandler = new FormatterTagHandler(CodeStyleSettingsManager.getSettings(file.getProject()));
@@ -98,9 +95,9 @@ public abstract class ParagraphFillHandler implements LanguageExtension {
                     enabledRanges
                 );
             })
-                .project(element.getProject())
-                .groupId(document)
-        );
+            .withProject(element.getProject())
+            .withGroupId(document)
+            .execute();
     }
 
     protected void appendPostfix(

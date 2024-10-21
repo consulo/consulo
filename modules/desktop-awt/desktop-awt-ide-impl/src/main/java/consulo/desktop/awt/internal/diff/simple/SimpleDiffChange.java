@@ -35,7 +35,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
-import consulo.undoRedo.CommandDescriptor;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -341,12 +340,11 @@ public class SimpleDiffChange {
                 if (!myIsValid) {
                     return;
                 }
-                DiffImplUtil.executeWriteCommand(
-                    new CommandDescriptor(perform)
-                        .project(e.getData(Project.KEY))
-                        .document(myViewer.getEditor(sourceSide.other()).getDocument())
-                        .name(DiffLocalize.messageReplaceChangeCommand())
-                );
+                DiffImplUtil.newWriteCommand(perform)
+                    .withProject(e.getData(Project.KEY))
+                    .withDocument(myViewer.getEditor(sourceSide.other()).getDocument())
+                    .withName(DiffLocalize.messageReplaceChangeCommand())
+                    .execute();
             }
         };
     }

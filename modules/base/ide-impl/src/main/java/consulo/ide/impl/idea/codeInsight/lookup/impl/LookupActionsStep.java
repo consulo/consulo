@@ -23,7 +23,6 @@ import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.image.Image;
-import consulo.undoRedo.CommandDescriptor;
 import consulo.undoRedo.CommandProcessor;
 import jakarta.annotation.Nonnull;
 
@@ -67,10 +66,9 @@ public class LookupActionsStep extends BaseListPopupStep<LookupElementAction> im
         }
         else if (result instanceof LookupElementAction.Result.ChooseItem chooseItem) {
             myLookup.setCurrentItem(chooseItem.item);
-            CommandProcessor.getInstance().executeCommand(
-                new CommandDescriptor(() -> myLookup.finishLookup(Lookup.AUTO_INSERT_SELECT_CHAR))
-                    .project(myLookup.getProject())
-            );
+            CommandProcessor.getInstance().newCommand(() -> myLookup.finishLookup(Lookup.AUTO_INSERT_SELECT_CHAR))
+                .withProject(myLookup.getProject())
+                .execute();
         }
         return FINAL_CHOICE;
     }

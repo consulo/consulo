@@ -15,24 +15,23 @@
  */
 package consulo.desktop.awt.internal.diff.merge;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.diff.impl.internal.util.DiffImplUtil;
 import consulo.diff.util.LineRange;
-import consulo.localize.LocalizeValue;
-import consulo.undoRedo.*;
-import consulo.annotation.access.RequiredWriteAction;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.undoRedo.*;
 import consulo.util.collection.SmartList;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -237,7 +236,7 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
     }
 
     @RequiredUIAccess
-    public CommandDescriptor mergeCommand(
+    public DiffImplUtil.WriteCommandBuilder newMergeCommand(
         boolean underBulkUpdate,
         @Nullable IntList affectedChanges,
         @Nonnull Runnable task
@@ -262,11 +261,13 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
                 myInsideCommand = false;
             }
         };
-        CommandDescriptor descriptor = underBulkUpdate ? DiffImplUtil.underBulkUpdate(mergeTask) : new CommandDescriptor(mergeTask);
+        DiffImplUtil.WriteCommandBuilder builder = underBulkUpdate
+            ? DiffImplUtil.newBulkUpdateWriteCommand(mergeTask)
+            : DiffImplUtil.newWriteCommand(mergeTask);
 
-        return descriptor
-            .project(myProject)
-            .document(myDocument);
+        return builder
+            .withProject(myProject)
+            .withDocument(myDocument);
     }
 
     @Deprecated(forRemoval = true)
@@ -279,12 +280,11 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
         @Nullable IntList affectedChanges,
         @Nonnull Runnable task
     ) {
-        DiffImplUtil.executeWriteCommand(
-            mergeCommand(underBulkUpdate, affectedChanges, task)
-                .name(LocalizeValue.ofNullable(commandName))
-                .groupId(commandGroupId)
-                .undoConfirmationPolicy(confirmationPolicy)
-        );
+        newMergeCommand(underBulkUpdate, affectedChanges, task)
+            .withName(LocalizeValue.ofNullable(commandName))
+            .withGroupId(commandGroupId)
+            .withUndoConfirmationPolicy(confirmationPolicy)
+            .execute();
     }
 
     @RequiredUIAccess

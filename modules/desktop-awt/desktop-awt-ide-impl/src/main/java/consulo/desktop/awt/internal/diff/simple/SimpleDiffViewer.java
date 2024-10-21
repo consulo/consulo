@@ -57,7 +57,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
-import consulo.undoRedo.CommandDescriptor;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.StringUtil;
@@ -584,12 +583,11 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
                 return;
             }
 
-            DiffImplUtil.executeWriteCommand(
-                new CommandDescriptor(() -> apply(selectedChanges))
-                    .project(e.getData(Project.KEY))
-                    .document(getEditor(myModifiedSide).getDocument())
-                    .name(DiffLocalize.messageUseSelectedChangesCommand(e.getPresentation().getText()))
-            );
+            DiffImplUtil.newWriteCommand(() -> apply(selectedChanges))
+                .withProject(e.getData(Project.KEY))
+                .withDocument(getEditor(myModifiedSide).getDocument())
+                .withName(DiffLocalize.messageUseSelectedChangesCommand(e.getPresentation().getText()))
+                .execute();
         }
 
         protected boolean isSomeChangeSelected(@Nonnull Side side) {

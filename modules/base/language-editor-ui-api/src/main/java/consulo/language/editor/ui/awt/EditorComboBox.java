@@ -15,7 +15,6 @@
  */
 package consulo.language.editor.ui.awt;
 
-import consulo.application.Application;
 import consulo.codeEditor.CaretModel;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
@@ -24,13 +23,11 @@ import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.language.plain.PlainTextFileType;
-import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.TextComponentAccessor;
 import consulo.ui.ex.awt.util.MacUIUtil;
-import consulo.undoRedo.CommandDescriptor;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.Lists;
@@ -179,16 +176,15 @@ public class EditorComboBox extends ComboBox implements DocumentListener {
 
     @RequiredUIAccess
     public void setText(final String text) {
-        Application.get().runWriteAction(() -> CommandProcessor.getInstance().executeCommand(
-            new CommandDescriptor(() -> {
+        CommandProcessor.getInstance().newCommand(() -> {
                 myDocument.replaceString(0, myDocument.getTextLength(), text);
                 if (myEditorField != null && myEditorField.getEditor() != null) {
                     myEditorField.getCaretModel().moveToOffset(myDocument.getTextLength());
                 }
             })
-                .project(getProject())
-                .document(myDocument)
-        ));
+            .withProject(getProject())
+            .withDocument(myDocument)
+            .executeInWriteAction();
     }
 
     public void removeSelection() {

@@ -38,7 +38,6 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
 import consulo.language.util.IncorrectOperationException;
-import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.util.ProjectUIUtil;
@@ -47,7 +46,6 @@ import consulo.ui.ex.awt.CustomLineBorder;
 import consulo.ui.ex.awt.UserActivityWatcher;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.awt.util.Alarm;
-import consulo.undoRedo.CommandDescriptor;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.LocalTimeCounter;
@@ -190,7 +188,9 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
         int currOffs = myEditor.getScrollingModel().getVerticalScrollOffset();
 
         final Project finalProject = ProjectUIUtil.guessCurrentProject(getPanel());
-        CommandProcessor.getInstance().executeCommand(new CommandDescriptor(() -> replaceText(finalProject)).project(finalProject));
+        CommandProcessor.getInstance().newCommand(() -> replaceText(finalProject))
+            .withProject(finalProject)
+            .execute();
 
         myEditor.getSettings().setRightMargin(getAdjustedRightMargin());
         myLastDocumentModificationStamp = myEditor.getDocument().getModificationStamp();
@@ -255,6 +255,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
      * by change start offset in ascending order
      */
     @Nullable
+    @RequiredReadAction
     private Document collectChangesBeforeCurrentSettingsAppliance(Project project) {
         PsiFile psiFile = createFileFromText(project, myTextToReformat);
         prepareForReformat(psiFile);
@@ -305,7 +306,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
         markupModel.removeAllHighlighters();
         int textLength = myEditor.getDocument().getTextLength();
         boolean highlightPreview = false;
-        Collection<TextRange> ranges = myDiffCalculator.calculateDiff(beforeReformat, myEditor.getDocument());
+        Collection<TextRange> ranges = ChangesDiffCalculator.calculateDiff(beforeReformat, myEditor.getDocument());
         for (TextRange range : ranges) {
             if (range.getStartOffset() >= textLength) {
                 continue;

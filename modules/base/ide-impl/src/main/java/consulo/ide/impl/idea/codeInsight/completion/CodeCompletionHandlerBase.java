@@ -41,7 +41,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
-import consulo.undoRedo.CommandDescriptor;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.Ref;
@@ -193,11 +192,10 @@ public class CodeCompletionHandlerBase {
                 CommandProcessor.getInstance().runUndoTransparentAction(initCmd);
             }
             else {
-                CommandProcessor.getInstance().executeCommand(
-                    new CommandDescriptor(initCmd)
-                        .project(project)
-                        .document(editor.getDocument())
-                );
+                CommandProcessor.getInstance().newCommand(initCmd)
+                    .withProject(project)
+                    .withDocument(editor.getDocument())
+                    .execute();
             }
         }
         catch (IndexNotReadyException e) {
@@ -483,14 +481,13 @@ public class CodeCompletionHandlerBase {
                 final Runnable restorePrefix = rememberDocumentState(indicator.getEditor());
 
                 final LookupElement item = insertItem.getElement();
-                CommandProcessor.getInstance().executeCommand(
-                    new CommandDescriptor(() -> {
+                CommandProcessor.getInstance().newCommand(() -> {
                         indicator.setMergeCommand();
                         indicator.getLookup().finishLookup(Lookup.AUTO_INSERT_SELECT_CHAR, item);
                     })
-                        .project(indicator.getProject())
-                        .name(LocalizeValue.localizeTODO("Autocompletion"))
-                );
+                    .withProject(indicator.getProject())
+                    .withName(LocalizeValue.localizeTODO("Autocompletion"))
+                    .execute();
 
                 // the insert handler may have started a live template with completion
                 if (CompletionService.getCompletionService().getCurrentCompletion() == null
