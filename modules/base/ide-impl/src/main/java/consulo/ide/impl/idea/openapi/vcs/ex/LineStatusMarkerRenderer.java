@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.ex;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.codeEditor.*;
 import consulo.codeEditor.markup.*;
 import consulo.colorScheme.EditorColorsManager;
@@ -37,6 +38,7 @@ import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
@@ -104,8 +106,8 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
         int line1,
         int line2,
         @Nonnull ColorValue color,
-        @Nullable String tooltip,
-        @Nullable PairConsumer<Editor, MouseEvent> action
+        @Nonnull LocalizeValue tooltip,
+        @Nullable BiConsumer<Editor, MouseEvent> action
     ) {
         return new ActiveGutterRenderer() {
             @Override
@@ -120,9 +122,9 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
                 }
             }
 
-            @Nullable
+            @Nonnull
             @Override
-            public String getTooltipText() {
+            public LocalizeValue getTooltipValue() {
                 return tooltip;
             }
 
@@ -134,10 +136,23 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
             @Override
             public void doAction(@Nonnull Editor editor, @Nonnull MouseEvent e) {
                 if (action != null) {
-                    action.consume(editor, e);
+                    action.accept(editor, e);
                 }
             }
         };
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    @Nonnull
+    public static LineMarkerRenderer createRenderer(
+        int line1,
+        int line2,
+        @Nonnull ColorValue color,
+        @Nullable String tooltip,
+        @Nullable PairConsumer<Editor, MouseEvent> action
+    ) {
+        return createRenderer(line1, line2, color, LocalizeValue.ofNullable(tooltip), action);
     }
 
     @Nonnull

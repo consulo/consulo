@@ -24,26 +24,26 @@ import jakarta.annotation.Nonnull;
  * @since 24/09/2021
  */
 public final class JoinLocalizeValue extends BaseLocalizeValue {
-  public JoinLocalizeValue(LocalizeValue[] values) {
-    super(values);
-  }
-
-  @Nonnull
-  @Override
-  protected String getUnformattedText(@Nonnull LocalizeManager localizeManager) {
-    throw new UnsupportedOperationException("this method will never called");
-  }
-
-  @Nonnull
-  @Override
-  protected String calcValue(LocalizeManager manager) {
-    StringBuilder builder = new StringBuilder();
-
-    for (Object arg : myArgs) {
-      String value = arg instanceof LocalizeValue lv ? lv.getValue() : String.valueOf(arg);
-
-      builder.append(value);
+    public JoinLocalizeValue(LocalizeValue[] values) {
+        super(values);
     }
-    return builder.toString();
-  }
+
+    @Nonnull
+    @Override
+    protected String getUnformattedText(@Nonnull LocalizeManager localizeManager) {
+        throw new UnsupportedOperationException("this method will never called");
+    }
+
+    @Nonnull
+    @Override
+    protected String calcValue(LocalizeManager manager) {
+        StringBuilder builder = new StringBuilder();
+
+        for (Object arg : myArgs) {
+            String value = arg instanceof LocalizeValue lv ? lv.getValue() : String.valueOf(arg);
+
+            builder.append(value);
+        }
+        return builder.toString();
+    }
 }

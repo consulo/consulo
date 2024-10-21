@@ -23,6 +23,7 @@ import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.image.Image;
+import consulo.undoRedo.CommandDescriptor;
 import consulo.undoRedo.CommandProcessor;
 import jakarta.annotation.Nonnull;
 
@@ -33,50 +34,55 @@ import java.util.Collection;
  * @author peter
  */
 public class LookupActionsStep extends BaseListPopupStep<LookupElementAction> implements ClosableByLeftArrow {
-  private final LookupEx myLookup;
-  private final LookupElement myLookupElement;
-  private final Image myEmptyIcon;
+    private final LookupEx myLookup;
+    private final LookupElement myLookupElement;
+    private final Image myEmptyIcon;
 
-  public LookupActionsStep(Collection<LookupElementAction> actions, LookupEx lookup, LookupElement lookupElement) {
-    super(null, new ArrayList<>(actions));
-    myLookup = lookup;
-    myLookupElement = lookupElement;
+    public LookupActionsStep(Collection<LookupElementAction> actions, LookupEx lookup, LookupElement lookupElement) {
+        super(null, new ArrayList<>(actions));
+        myLookup = lookup;
+        myLookupElement = lookupElement;
 
-    int w = 0, h = 0;
-    for (LookupElementAction action : actions) {
-      final Image icon = action.getIcon();
-      if (icon != null) {
-        w = Math.max(w, icon.getWidth());
-        h = Math.max(h, icon.getHeight());
-      }
+        int w = 0, h = 0;
+        for (LookupElementAction action : actions) {
+            final Image icon = action.getIcon();
+            if (icon != null) {
+                w = Math.max(w, icon.getWidth());
+                h = Math.max(h, icon.getHeight());
+            }
+        }
+        myEmptyIcon = Image.empty(w, h);
     }
-    myEmptyIcon = Image.empty(w, h);
-  }
 
-  @Override
-  public PopupStep onChosen(LookupElementAction selectedValue, boolean finalChoice) {
-    final LookupElementAction.Result result = selectedValue.performLookupAction();
-    if (result == LookupElementAction.Result.HIDE_LOOKUP) {
-      myLookup.hideLookup(true);
-    } else if (result == LookupElementAction.Result.REFRESH_ITEM) {
-      myLookup.updateLookupWidth();
-      myLookup.requestResize();
-      myLookup.refreshUi(false, true);
-    } else if (result instanceof LookupElementAction.Result.ChooseItem) {
-      myLookup.setCurrentItem(((LookupElementAction.Result.ChooseItem)result).item);
-      CommandProcessor.getInstance().executeCommand(myLookup.getProject(), () -> myLookup.finishLookup(Lookup.AUTO_INSERT_SELECT_CHAR), null, null);
+    @Override
+    public PopupStep onChosen(LookupElementAction selectedValue, boolean finalChoice) {
+        final LookupElementAction.Result result = selectedValue.performLookupAction();
+        if (result == LookupElementAction.Result.HIDE_LOOKUP) {
+            myLookup.hideLookup(true);
+        }
+        else if (result == LookupElementAction.Result.REFRESH_ITEM) {
+            myLookup.updateLookupWidth();
+            myLookup.requestResize();
+            myLookup.refreshUi(false, true);
+        }
+        else if (result instanceof LookupElementAction.Result.ChooseItem chooseItem) {
+            myLookup.setCurrentItem(chooseItem.item);
+            CommandProcessor.getInstance().executeCommand(
+                new CommandDescriptor(() -> myLookup.finishLookup(Lookup.AUTO_INSERT_SELECT_CHAR))
+                    .project(myLookup.getProject())
+            );
+        }
+        return FINAL_CHOICE;
     }
-    return FINAL_CHOICE;
-  }
 
-  @Override
-  public Image getIconFor(LookupElementAction aValue) {
-    return LookupIconUtil.augmentIcon(myLookup.getEditor(), aValue.getIcon(), myEmptyIcon);
-  }
+    @Override
+    public Image getIconFor(LookupElementAction aValue) {
+        return LookupIconUtil.augmentIcon(myLookup.getEditor(), aValue.getIcon(), myEmptyIcon);
+    }
 
-  @Nonnull
-  @Override
-  public String getTextFor(LookupElementAction value) {
-    return value.getText();
-  }
+    @Nonnull
+    @Override
+    public String getTextFor(LookupElementAction value) {
+        return value.getText();
+    }
 }

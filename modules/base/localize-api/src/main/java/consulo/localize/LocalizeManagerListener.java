@@ -16,6 +16,7 @@
 package consulo.localize;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.EventListener;
 import java.util.Locale;
 
@@ -23,6 +24,6 @@ import java.util.Locale;
  * @author VISTALL
  * @since 2020-05-20
  */
-public interface LocalizeManagerListener extends EventListener  {
-  void localeChanged(@Nonnull Locale oldLocale, @Nonnull Locale newLocale);
+public interface LocalizeManagerListener extends EventListener {
+    void localeChanged(@Nonnull Locale oldLocale, @Nonnull Locale newLocale);
 }

@@ -25,52 +25,56 @@ import java.util.Objects;
  * @since 09-Nov-17
  */
 public class SingleLocalizeValue implements LocalizeValue {
-  public static final SingleLocalizeValue ourEmpty = new SingleLocalizeValue("");
-  public static final SingleLocalizeValue ourSpace = new SingleLocalizeValue(" ");
-  public static final SingleLocalizeValue ourColon = new SingleLocalizeValue(":");
+    public static final SingleLocalizeValue ourEmpty = new SingleLocalizeValue("");
+    public static final SingleLocalizeValue ourSpace = new SingleLocalizeValue(" ");
+    public static final SingleLocalizeValue ourColon = new SingleLocalizeValue(":");
 
-  private final String myValue;
+    private final String myValue;
 
-  public SingleLocalizeValue(String value) {
-    myValue = value;
-  }
+    public SingleLocalizeValue(String value) {
+        myValue = value;
+    }
 
-  @Nonnull
-  @Override
-  public String getValue() {
-    return myValue;
-  }
+    @Nonnull
+    @Override
+    public String getValue() {
+        return myValue;
+    }
 
-  @Override
-  public long getModificationCount() {
-    return 0;
-  }
+    @Override
+    public long getModificationCount() {
+        return 0;
+    }
 
-  @Override
-  public int compareIgnoreCase(@Nonnull LocalizeValue other) {
-    return getValue().compareToIgnoreCase(other.getValue());
-  }
+    @Override
+    public int compareIgnoreCase(@Nonnull LocalizeValue other) {
+        return getValue().compareToIgnoreCase(other.getValue());
+    }
 
-  @Override
-  public int compareTo(@Nonnull LocalizeValue o) {
-    return getValue().compareTo(o.getValue());
-  }
+    @Override
+    public int compareTo(@Nonnull LocalizeValue o) {
+        return getValue().compareTo(o.getValue());
+    }
 
-  @Override
-  public String toString() {
-    return getValue();
-  }
+    @Override
+    public String toString() {
+        return getValue();
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    SingleLocalizeValue that = (SingleLocalizeValue)o;
-    return Objects.equals(myValue, that.myValue);
-  }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        SingleLocalizeValue that = (SingleLocalizeValue)o;
+        return Objects.equals(myValue, that.myValue);
+    }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(myValue);
-  }
+    @Override
+    public int hashCode() {
+        return Objects.hash(myValue);
+    }
 }

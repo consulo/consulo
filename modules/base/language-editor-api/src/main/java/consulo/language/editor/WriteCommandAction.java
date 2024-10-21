@@ -18,8 +18,10 @@ package consulo.language.editor;
 import consulo.application.*;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.undoRedo.CommandDescriptor;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.util.collection.ArrayUtil;
@@ -179,7 +181,7 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
   }
 
   /**
-   * See {@link CommandProcessor#executeCommand(Project, Runnable, String, Object, UndoConfirmationPolicy, boolean)} for details.
+   * See {@link CommandDescriptor#shouldRecordActionForActiveDocument(boolean)} for details.
    */
   protected boolean shouldRecordActionForActiveDocument() {
     return true;
@@ -205,7 +207,14 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
       if (isGlobalUndoAction()) CommandProcessor.getInstance().markCurrentCommandAsGlobal(getProject());
       runnable.run();
     };
-    CommandProcessor.getInstance().executeCommand(getProject(), wrappedRunnable, getCommandName(), getGroupID(), getUndoConfirmationPolicy(), shouldRecordActionForActiveDocument());
+    CommandProcessor.getInstance().executeCommand(
+      new CommandDescriptor(wrappedRunnable)
+        .project(getProject())
+        .name(LocalizeValue.ofNullable(getCommandName()))
+        .groupId(getGroupID())
+        .undoConfirmationPolicy(getUndoConfirmationPolicy())
+        .shouldRecordActionForActiveDocument(shouldRecordActionForActiveDocument())
+    );
   }
 
   /**

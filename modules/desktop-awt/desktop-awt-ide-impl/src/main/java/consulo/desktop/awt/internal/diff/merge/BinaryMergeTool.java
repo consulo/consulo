@@ -141,8 +141,8 @@ public class BinaryMergeTool implements MergeTool {
             return new ActionRecord(
                 MergeImplUtil.getResolveActionTitle(result, myMergeRequest, myMergeContext),
                 () -> {
-                    if (result == MergeResult.CANCEL &&
-                        !MergeImplUtil.showExitWithoutApplyingChangesDialog(BinaryMergeViewer.this, myMergeRequest, myMergeContext)) {
+                    if (result == MergeResult.CANCEL
+                        && !MergeImplUtil.showExitWithoutApplyingChangesDialog(BinaryMergeViewer.this, myMergeRequest, myMergeContext)) {
                         return;
                     }
                     myMergeContext.finishMerge(result);

@@ -25,18 +25,18 @@ import consulo.util.lang.EmptyRunnable;
 import jakarta.annotation.Nonnull;
 
 public class ThreesideBinaryDiffViewer extends ThreesideDiffViewer<BinaryEditorHolder> {
-  public ThreesideBinaryDiffViewer(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
-    super(context, (ContentDiffRequest)request, BinaryEditorHolder.BinaryEditorHolderFactory.INSTANCE);
-  }
+    public ThreesideBinaryDiffViewer(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
+        super(context, (ContentDiffRequest)request, BinaryEditorHolder.BinaryEditorHolderFactory.INSTANCE);
+    }
 
-  @Override
-  @Nonnull
-  protected Runnable performRediff(@Nonnull final ProgressIndicator indicator) {
-    return EmptyRunnable.INSTANCE;
-  }
+    @Override
+    @Nonnull
+    protected Runnable performRediff(@Nonnull final ProgressIndicator indicator) {
+        return EmptyRunnable.INSTANCE;
+    }
 
-  public static boolean canShowRequest(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
-    return ThreesideDiffViewer.canShowRequest(context, request, BinaryEditorHolder.BinaryEditorHolderFactory.INSTANCE);
-  }
+    public static boolean canShowRequest(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
+        return ThreesideDiffViewer.canShowRequest(context, request, BinaryEditorHolder.BinaryEditorHolderFactory.INSTANCE);
+    }
 }
 

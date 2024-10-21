@@ -30,89 +30,92 @@ import jakarta.annotation.Nullable;
 import java.util.List;
 
 public class SimpleThreesideDiffChange extends ThreesideDiffChangeBase {
-  @Nonnull
-  private final List<? extends EditorEx> myEditors;
-  @Nullable
-  private final MergeInnerDifferences myInnerFragments;
+    @Nonnull
+    private final List<? extends EditorEx> myEditors;
+    @Nullable
+    private final MergeInnerDifferences myInnerFragments;
 
-  private int[] myLineStarts = new int[3];
-  private int[] myLineEnds = new int[3];
+    private int[] myLineStarts = new int[3];
+    private int[] myLineEnds = new int[3];
 
-  public SimpleThreesideDiffChange(@Nonnull MergeLineFragment fragment,
-                                   @Nonnull MergeConflictType conflictType,
-                                   @Nullable MergeInnerDifferences innerFragments,
-                                   @Nonnull SimpleThreesideDiffViewer viewer) {
-    super(conflictType);
-    myEditors = viewer.getEditors();
-    myInnerFragments = innerFragments;
+    @RequiredUIAccess
+    public SimpleThreesideDiffChange(
+        @Nonnull MergeLineFragment fragment,
+        @Nonnull MergeConflictType conflictType,
+        @Nullable MergeInnerDifferences innerFragments,
+        @Nonnull SimpleThreesideDiffViewer viewer
+    ) {
+        super(conflictType);
+        myEditors = viewer.getEditors();
+        myInnerFragments = innerFragments;
 
-    for (ThreeSide side : ThreeSide.values()) {
-      myLineStarts[side.getIndex()] = fragment.getStartLine(side);
-      myLineEnds[side.getIndex()] = fragment.getEndLine(side);
+        for (ThreeSide side : ThreeSide.values()) {
+            myLineStarts[side.getIndex()] = fragment.getStartLine(side);
+            myLineEnds[side.getIndex()] = fragment.getEndLine(side);
+        }
+
+        reinstallHighlighters();
     }
 
-    reinstallHighlighters();
-  }
+    @RequiredUIAccess
+    public void destroy() {
+        destroyHighlighters();
+        destroyInnerHighlighters();
+    }
 
-  @RequiredUIAccess
-  public void destroy() {
-    destroyHighlighters();
-    destroyInnerHighlighters();
-  }
+    @RequiredUIAccess
+    public void reinstallHighlighters() {
+        destroyHighlighters();
+        installHighlighters();
 
-  @RequiredUIAccess
-  public void reinstallHighlighters() {
-    destroyHighlighters();
-    installHighlighters();
+        destroyInnerHighlighters();
+        installInnerHighlighters();
+    }
 
-    destroyInnerHighlighters();
-    installInnerHighlighters();
-  }
+    //
+    // Getters
+    //
 
-  //
-  // Getters
-  //
+    @Override
+    public int getStartLine(@Nonnull ThreeSide side) {
+        return side.select(myLineStarts);
+    }
 
-  @Override
-  public int getStartLine(@Nonnull ThreeSide side) {
-    return side.select(myLineStarts);
-  }
+    @Override
+    public int getEndLine(@Nonnull ThreeSide side) {
+        return side.select(myLineEnds);
+    }
 
-  @Override
-  public int getEndLine(@Nonnull ThreeSide side) {
-    return side.select(myLineEnds);
-  }
+    @Override
+    public boolean isResolved(@Nonnull ThreeSide side) {
+        return false;
+    }
 
-  @Override
-  public boolean isResolved(@Nonnull ThreeSide side) {
-    return false;
-  }
+    @Nonnull
+    @Override
+    protected Editor getEditor(@Nonnull ThreeSide side) {
+        return side.select(myEditors);
+    }
 
-  @Nonnull
-  @Override
-  protected Editor getEditor(@Nonnull ThreeSide side) {
-    return side.select(myEditors);
-  }
+    @Nullable
+    @Override
+    protected MergeInnerDifferences getInnerFragments() {
+        return myInnerFragments;
+    }
 
-  @Nullable
-  @Override
-  protected MergeInnerDifferences getInnerFragments() {
-    return myInnerFragments;
-  }
+    //
+    // Shift
+    //
 
-  //
-  // Shift
-  //
+    public boolean processChange(int oldLine1, int oldLine2, int shift, @Nonnull ThreeSide side) {
+        int line1 = getStartLine(side);
+        int line2 = getEndLine(side);
+        int sideIndex = side.getIndex();
 
-  public boolean processChange(int oldLine1, int oldLine2, int shift, @Nonnull ThreeSide side) {
-    int line1 = getStartLine(side);
-    int line2 = getEndLine(side);
-    int sideIndex = side.getIndex();
+        DiffImplUtil.UpdatedLineRange newRange = DiffImplUtil.updateRangeOnModification(line1, line2, oldLine1, oldLine2, shift);
+        myLineStarts[sideIndex] = newRange.startLine;
+        myLineEnds[sideIndex] = newRange.endLine;
 
-    DiffImplUtil.UpdatedLineRange newRange = DiffImplUtil.updateRangeOnModification(line1, line2, oldLine1, oldLine2, shift);
-    myLineStarts[sideIndex] = newRange.startLine;
-    myLineEnds[sideIndex] = newRange.endLine;
-
-    return newRange.damaged;
-  }
+        return newRange.damaged;
+    }
 }

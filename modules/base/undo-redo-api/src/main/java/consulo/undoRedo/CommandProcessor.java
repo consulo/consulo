@@ -5,14 +5,13 @@ import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.undoRedo.event.CommandListener;
 import consulo.util.lang.EmptyRunnable;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -24,98 +23,196 @@ import jakarta.annotation.Nullable;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class CommandProcessor {
-  @Nonnull
-  public static CommandProcessor getInstance() {
-    return Application.get().getInstance(CommandProcessor.class);
-  }
+    @Nonnull
+    public static CommandProcessor getInstance() {
+        return Application.get().getInstance(CommandProcessor.class);
+    }
 
-  /**
-   * @deprecated use {@link #executeCommand(Project, Runnable, String, Object)}
-   */
-  @Deprecated
-  public abstract void executeCommand(@Nonnull Runnable runnable, @Nullable String name, @Nullable Object groupId);
+    @Deprecated
+    @DeprecationInfo("Use #executeCommand(CommandDescriptor)")
+    public void executeCommand(@Nonnull Runnable runnable, @Nullable String name, @Nullable Object groupId) {
+        executeCommand(
+            new CommandDescriptor(runnable)
+                .name(LocalizeValue.ofNullable(name))
+                .groupId(groupId)
+        );
+    }
 
-  public abstract void executeCommand(@Nullable Project project, @Nonnull Runnable runnable, @Nullable String name, @Nullable Object groupId);
+    @Deprecated
+    @DeprecationInfo("Use #executeCommand(CommandDescriptor)")
+    public void executeCommand(
+        @Nullable Project project,
+        @Nonnull Runnable runnable,
+        @Nullable String name,
+        @Nullable Object groupId
+    ) {
+        executeCommand(
+            new CommandDescriptor(runnable)
+                .project(project)
+                .name(LocalizeValue.ofNullable(name))
+                .groupId(groupId)
+        );
+    }
 
-  public abstract void executeCommand(@Nullable Project project, @Nonnull Runnable runnable, @Nullable String name, @Nullable Object groupId, @Nullable Document document);
+    @Deprecated
+    @DeprecationInfo("Use #executeCommand(CommandDescriptor)")
+    public void executeCommand(
+        @Nullable Project project,
+        @Nonnull Runnable runnable,
+        @Nullable String name,
+        @Nullable Object groupId,
+        @Nullable Document document
+    ) {
+        executeCommand(
+            new CommandDescriptor(runnable)
+                .project(project)
+                .name(LocalizeValue.ofNullable(name))
+                .groupId(groupId)
+                .document(document)
+        );
+    }
 
-  public abstract void executeCommand(@Nullable Project project, @Nonnull Runnable runnable, @Nullable String name, @Nullable Object groupId, @Nonnull UndoConfirmationPolicy confirmationPolicy);
+    @Deprecated
+    @DeprecationInfo("Use #executeCommand(CommandDescriptor)")
+    public void executeCommand(
+        @Nullable Project project,
+        @Nonnull Runnable runnable,
+        @Nullable String name,
+        @Nullable Object groupId,
+        @Nonnull UndoConfirmationPolicy confirmationPolicy
+    ) {
+        executeCommand(
+            new CommandDescriptor(runnable)
+                .project(project)
+                .name(LocalizeValue.ofNullable(name))
+                .groupId(groupId)
+                .undoConfirmationPolicy(confirmationPolicy)
+        );
+    }
 
-  public abstract void executeCommand(@Nullable Project project,
-                                      @Nonnull Runnable command,
-                                      @Nullable String name,
-                                      @Nullable Object groupId,
-                                      @Nonnull UndoConfirmationPolicy confirmationPolicy,
-                                      @Nullable Document document);
+    @Deprecated
+    @DeprecationInfo("Use #executeCommand(CommandDescriptor)")
+    public void executeCommand(
+        @Nullable Project project,
+        @Nonnull Runnable command,
+        @Nullable String name,
+        @Nullable Object groupId,
+        @Nonnull UndoConfirmationPolicy confirmationPolicy,
+        @Nullable Document document
+    ) {
+        executeCommand(
+            new CommandDescriptor(command)
+                .project(project)
+                .name(LocalizeValue.ofNullable(name))
+                .groupId(groupId)
+                .undoConfirmationPolicy(confirmationPolicy)
+                .document(document)
+        );
+    }
 
-  /**
-   * @param shouldRecordCommandForActiveDocument {@code false} if the action is not supposed to be recorded into the currently open document's history.
-   *                                             Examples of such actions: Create New File, Change Project Settings etc.
-   *                                             Default is {@code true}.
-   */
-  public abstract void executeCommand(@Nullable Project project,
-                                      @Nonnull Runnable command,
-                                      @Nullable String name,
-                                      @Nullable Object groupId,
-                                      @Nonnull UndoConfirmationPolicy confirmationPolicy,
-                                      boolean shouldRecordCommandForActiveDocument);
+    /**
+     * @param shouldRecordCommandForActiveDocument {@code false} if the action is not supposed to be recorded
+     *                                             into the currently open document's history.
+     *                                             Examples of such actions: Create New File, Change Project Settings etc.
+     *                                             Default is {@code true}.
+     */
+    @Deprecated
+    @DeprecationInfo("Use #executeCommand(CommandDescriptor)")
+    public void executeCommand(
+        @Nullable Project project,
+        @Nonnull Runnable command,
+        @Nullable String name,
+        @Nullable Object groupId,
+        @Nonnull UndoConfirmationPolicy confirmationPolicy,
+        boolean shouldRecordCommandForActiveDocument
+    ) {
+        executeCommand(
+            new CommandDescriptor(command)
+                .project(project)
+                .name(LocalizeValue.ofNullable(name))
+                .groupId(groupId)
+                .undoConfirmationPolicy(confirmationPolicy)
+                .shouldRecordActionForActiveDocument(shouldRecordCommandForActiveDocument)
+        );
+    }
 
-  public abstract void setCurrentCommandName(@Nullable String name);
+    public abstract void executeCommand(CommandDescriptor commandDescriptor);
 
-  public abstract void setCurrentCommandGroupId(@Nullable Object groupId);
+    public void setCurrentCommandName(@Nonnull LocalizeValue name) {
+        setCurrentCommandName(name == LocalizeValue.empty() ? null : name.get());
+    }
 
-  @Nullable
-  @Deprecated
-  @DeprecationInfo("Use #hasCurrentCommand()")
-  public final Runnable getCurrentCommand() {
-    return hasCurrentCommand() ? EmptyRunnable.getInstance() : null;
-  }
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public void setCurrentCommandName(@Nullable String name) {
+        setCurrentCommandName(LocalizeValue.ofNullable(name));
+    }
 
-  public abstract boolean hasCurrentCommand();
+    public abstract void setCurrentCommandGroupId(@Nullable Object groupId);
 
-  @Nullable
-  public abstract String getCurrentCommandName();
+    @Nullable
+    @Deprecated
+    @DeprecationInfo("Use #hasCurrentCommand()")
+    public final Runnable getCurrentCommand() {
+        return hasCurrentCommand() ? EmptyRunnable.getInstance() : null;
+    }
 
-  @Nullable
-  public abstract Object getCurrentCommandGroupId();
+    public abstract boolean hasCurrentCommand();
 
-  @Nullable
-  public abstract Project getCurrentCommandProject();
+    //TODO: rename into #getCurrentCommandName() after deprecation removal
+    @Nonnull
+    public LocalizeValue getCurrentCommandNameValue() {
+        return LocalizeValue.ofNullable(getCurrentCommandName());
+    }
 
-  /**
-   * Defines a scope which contains undoable actions, for which there won't be a separate undo/redo step - they will be undone/redone along
-   * with 'adjacent' command.
-   */
-  public abstract void runUndoTransparentAction(@Nonnull Runnable action);
+    @Deprecated
+    @DeprecationInfo("Use #getCurrentCommandNameValue()")
+    @Nullable
+    public String getCurrentCommandName() {
+        LocalizeValue currentCommandName = getCurrentCommandNameValue();
+        return currentCommandName == LocalizeValue.empty() ? null : currentCommandName.get();
+    }
 
-  /**
-   * @see #runUndoTransparentAction(Runnable)
-   */
-  public abstract boolean isUndoTransparentActionInProgress();
+    @Nullable
+    public abstract Object getCurrentCommandGroupId();
 
-  public abstract void markCurrentCommandAsGlobal(@Nullable Project project);
+    @Nullable
+    public abstract Project getCurrentCommandProject();
 
-  public abstract void addAffectedDocuments(@Nullable Project project, @Nonnull Document... docs);
+    /**
+     * Defines a scope which contains undoable actions, for which there won't be a separate undo/redo step - they will be undone/redone along
+     * with 'adjacent' command.
+     */
+    public abstract void runUndoTransparentAction(@Nonnull Runnable action);
 
-  public abstract void addAffectedFiles(@Nullable Project project, @Nonnull VirtualFile... files);
+    /**
+     * @see #runUndoTransparentAction(Runnable)
+     */
+    public abstract boolean isUndoTransparentActionInProgress();
 
-  /**
-   * @deprecated use {@link CommandListener#class}
-   */
-  @Deprecated
-  public abstract void addCommandListener(@Nonnull CommandListener listener);
+    public abstract void markCurrentCommandAsGlobal(@Nullable Project project);
 
-  /**
-   * @deprecated use {@link CommandListener#class}
-   */
-  @Deprecated
-  public void addCommandListener(@Nonnull CommandListener listener, @Nonnull Disposable parentDisposable) {
-    ApplicationManager.getApplication().getMessageBus().connect(parentDisposable).subscribe(CommandListener.class, listener);
-  }
+    public abstract void addAffectedDocuments(@Nullable Project project, @Nonnull Document... docs);
 
-  /**
-   * @deprecated use {@link CommandListener#class}
-   */
-  @Deprecated
-  public abstract void removeCommandListener(@Nonnull CommandListener listener);
+    public abstract void addAffectedFiles(@Nullable Project project, @Nonnull VirtualFile... files);
+
+    /**
+     * @deprecated use {@link CommandListener#class}
+     */
+    @Deprecated
+    public abstract void addCommandListener(@Nonnull CommandListener listener);
+
+    /**
+     * @deprecated use {@link CommandListener#class}
+     */
+    @Deprecated
+    public void addCommandListener(@Nonnull CommandListener listener, @Nonnull Disposable parentDisposable) {
+        Application.get().getMessageBus().connect(parentDisposable).subscribe(CommandListener.class, listener);
+    }
+
+    /**
+     * @deprecated use {@link CommandListener#class}
+     */
+    @Deprecated
+    public abstract void removeCommandListener(@Nonnull CommandListener listener);
 }

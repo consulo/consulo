@@ -105,8 +105,7 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
         load(forLoad);
     }
 
-    private void legacySearch(PluginDescriptor pluginDescriptor,
-                              List<PluginFileInfo> forLoad) {
+    private void legacySearch(PluginDescriptor pluginDescriptor, List<PluginFileInfo> forLoad) {
         PluginClassLoader pluginClassLoader = (PluginClassLoader) pluginDescriptor.getPluginClassLoader();
 
         try {

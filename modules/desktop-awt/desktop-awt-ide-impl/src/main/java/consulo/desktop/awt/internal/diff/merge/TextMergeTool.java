@@ -24,20 +24,21 @@ import consulo.ui.annotation.RequiredUIAccess;
 
 import jakarta.annotation.Nonnull;
 
+@SuppressWarnings("ExtensionImplIsNotAnnotated")
 public class TextMergeTool implements MergeTool {
-  public static final TextMergeTool INSTANCE = new TextMergeTool();
+    public static final TextMergeTool INSTANCE = new TextMergeTool();
 
-  public static final Logger LOG = Logger.getInstance(TextMergeTool.class);
+    public static final Logger LOG = Logger.getInstance(TextMergeTool.class);
 
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public MergeViewer createComponent(@Nonnull MergeContext context, @Nonnull MergeRequest request) {
-    return new TextMergeViewer(context, ((TextMergeRequest)request));
-  }
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    public MergeViewer createComponent(@Nonnull MergeContext context, @Nonnull MergeRequest request) {
+        return new TextMergeViewer(context, ((TextMergeRequest)request));
+    }
 
-  @Override
-  public boolean canShow(@Nonnull MergeContext context, @Nonnull MergeRequest request) {
-    return request instanceof TextMergeRequest;
-  }
+    @Override
+    public boolean canShow(@Nonnull MergeContext context, @Nonnull MergeRequest request) {
+        return request instanceof TextMergeRequest;
+    }
 }
