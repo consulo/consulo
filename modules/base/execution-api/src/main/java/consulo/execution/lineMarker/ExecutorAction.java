@@ -19,6 +19,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.execution.RunManager;
 import consulo.execution.RunnerAndConfigurationSettings;
+import consulo.execution.internal.ExecutionActionValue;
 import consulo.execution.internal.action.BaseRunConfigurationAction;
 import consulo.execution.action.ConfigurationContext;
 import consulo.execution.action.ConfigurationFromContext;
@@ -29,6 +30,7 @@ import consulo.execution.executor.Executor;
 import consulo.execution.executor.ExecutorRegistry;
 import consulo.execution.internal.ConfigurationFromContextImpl;
 import consulo.execution.internal.RunManagerEx;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
@@ -68,9 +70,9 @@ public class ExecutorAction extends AnAction {
   @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    String name = getActionName(e.getDataContext(), myExecutor);
-    e.getPresentation().setVisible(name != null);
-    e.getPresentation().setText(name);
+    LocalizeValue activeText = getActionText(e.getDataContext(), myExecutor);
+    e.getPresentation().setVisible(activeText != LocalizeValue.of());
+    e.getPresentation().setTextValue(activeText);
   }
 
   @RequiredUIAccess
@@ -96,12 +98,13 @@ public class ExecutorAction extends AnAction {
     return ContainerUtil.mapNotNull(producers, producer -> createConfiguration(producer, context));
   }
 
-  private String getActionName(DataContext dataContext, @Nonnull Executor executor) {
+  @Nonnull
+  private LocalizeValue getActionText(DataContext dataContext, @Nonnull Executor executor) {
     List<ConfigurationFromContext> list = getConfigurations(dataContext);
-    if (list.isEmpty()) return null;
+    if (list.isEmpty()) return LocalizeValue.of();
     ConfigurationFromContext configuration = list.get(myOrder < list.size() ? myOrder : 0);
     String actionName = BaseRunConfigurationAction.suggestRunActionName((LocatableConfiguration)configuration.getConfiguration());
-    return executor.getActionText(actionName);
+    return ExecutionActionValue.buildWithConfiguration(executor::getStartActiveText, actionName);
   }
 
   @Nullable

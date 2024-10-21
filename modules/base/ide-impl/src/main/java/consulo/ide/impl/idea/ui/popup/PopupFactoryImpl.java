@@ -35,7 +35,7 @@ import consulo.ui.ex.awt.popup.AWTPopupChooserBuilder;
 import consulo.ui.ex.awt.popup.AWTPopupFactory;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.popup.*;
-import consulo.ui.ex.util.TextWithMnemonic;
+import consulo.ui.util.TextWithMnemonic;
 import consulo.ui.image.Image;
 import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.ObjectUtil;

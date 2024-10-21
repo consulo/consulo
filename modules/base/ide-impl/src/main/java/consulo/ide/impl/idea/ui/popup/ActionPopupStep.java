@@ -6,7 +6,7 @@ import consulo.ui.ex.action.BasePresentationFactory;
 import consulo.ide.impl.idea.openapi.ui.popup.*;
 import consulo.ui.ex.action.*;
 import consulo.util.lang.function.Condition;
-import consulo.ui.ex.util.TextWithMnemonic;
+import consulo.ui.util.TextWithMnemonic;
 import consulo.util.lang.ObjectUtil;
 import consulo.ui.ex.awt.StatusText;
 import consulo.ui.ex.awt.UIUtil;

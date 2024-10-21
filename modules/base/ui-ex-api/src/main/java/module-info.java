@@ -47,6 +47,7 @@ module consulo.ui.ex.api {
     consulo.desktop.awt.ide.impl,
     consulo.desktop.swt.ide.impl,
     consulo.ui.ex.awt.api,
+    consulo.execution.api,
     consulo.execution.impl,
     consulo.project.ui.api;
 

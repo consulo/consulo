@@ -90,7 +90,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
     myPopup = new RunListPopup(
       project,
       null,
-      new ConfigurationListPopupStep(this, myProject, this, myDefaultExecutor.getActionName()),
+      new ConfigurationListPopupStep(this, myProject, this, myDefaultExecutor.getActionName().get()),
       null
     );
   }
@@ -116,7 +116,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
       return String.format(
         "Hold %s to %s",
         KeymapUtil.getKeystrokeText(KeyStroke.getKeyStroke("SHIFT")),
-        alternateExecutor.getActionName()
+        alternateExecutor.getActionName().get()
       );
     }
 
@@ -216,7 +216,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
   }
 
   private void updatePresentation() {
-    myPopup.setCaption(getExecutor().getActionName());
+    myPopup.setCaption(getExecutor().getActionName().get());
   }
 
   static void execute(final ItemWrapper itemWrapper, final Executor executor) {
@@ -612,7 +612,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
       for (final Executor executor : ExecutorRegistry.getInstance().getRegisteredExecutors()) {
         final ProgramRunner runner = RunnerRegistry.getInstance().getRunner(executor.getId(), settings.getConfiguration());
         if (runner != null) {
-          result.add(new ActionWrapper(executor.getActionName(), executor.getIcon(), isFirst) {
+          result.add(new ActionWrapper(executor.getActionName().get(), executor.getIcon(), isFirst) {
             @Override
             public void perform() {
               final RunManagerEx manager = RunManagerEx.getInstanceEx(project);

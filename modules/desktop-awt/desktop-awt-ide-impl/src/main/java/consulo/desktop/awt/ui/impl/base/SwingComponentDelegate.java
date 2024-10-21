@@ -40,7 +40,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.font.Font;
 import consulo.ui.impl.BorderInfo;
 import consulo.ui.impl.UIDataObject;
-import consulo.ui.util.MnemonicInfo;
+import consulo.ui.util.TextWithMnemonic;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -76,8 +76,8 @@ public class SwingComponentDelegate<T extends java.awt.Component> implements Com
     protected static void updateTextForButton(AbstractButton button, LocalizeValue textValue) {
         String text = textValue.getValue();
 
-        MnemonicInfo mnemonicInfo = MnemonicInfo.parse(text);
-        if (mnemonicInfo == null) {
+        TextWithMnemonic mnemonicInfo = TextWithMnemonic.parse(text);
+        if (!mnemonicInfo.hasMnemonic()) {
             button.setText(text);
 
             button.setMnemonic(0);
@@ -85,8 +85,8 @@ public class SwingComponentDelegate<T extends java.awt.Component> implements Com
         }
         else {
             button.setText(mnemonicInfo.getText());
-            button.setMnemonic(mnemonicInfo.getKeyCode());
-            button.setDisplayedMnemonicIndex(mnemonicInfo.getIndex());
+            button.setMnemonic(mnemonicInfo.getMnemonic());
+            button.setDisplayedMnemonicIndex(mnemonicInfo.getMnemonicIndex());
         }
     }
 

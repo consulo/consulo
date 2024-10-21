@@ -68,7 +68,9 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
 
         final Presentation presentation = getTemplatePresentation();
         String text = projectPath.equals(displayName) ? UserHomeFileUtil.getLocationRelativeToUserHome(projectPath) : displayName;
-        presentation.setTextValue(LocalizeValue.of(text).map(Presentation.NO_MNEMONIC));
+
+        presentation.setDisabledMnemonic(true);
+        presentation.setTextValue(LocalizeValue.of(text));
         presentation.setDescriptionValue(LocalizeValue.of(projectPath));
     }
 
@@ -121,7 +123,7 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
     @Nonnull
     public Image getExtensionIcon() {
         List<String> extensions = getExtensions();
-        Image moduleMainIcon = Image.empty(16);
+        Image moduleMainIcon = Image.empty(Image.DEFAULT_ICON_SIZE);
         if (!extensions.isEmpty()) {
             for (String extensionId : extensions) {
                 ModuleExtensionProvider provider = ModuleExtensionProvider.findProvider(extensionId);

@@ -80,7 +80,7 @@ import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
-import consulo.ui.ex.util.TextWithMnemonic;
+import consulo.ui.util.TextWithMnemonic;
 import consulo.ui.image.Image;
 import consulo.undoRedo.CommandProcessor;
 import consulo.usage.*;

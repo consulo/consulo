@@ -178,6 +178,8 @@ debugger.state.message.disconnected:
   text: Disconnected
 debugger.runner.start.action.text:
   text: '&Debug'
+debugger.runner.start.action.text.0:
+  text: '&Debug {0}'
 string.debugger.runner.description:
   text: Debug selected configuration
 debugger.session.tab.threads.title:

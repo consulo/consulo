@@ -35,7 +35,7 @@ import consulo.project.ProjectManager;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.internal.ActionManagerEx;
-import consulo.ui.ex.util.TextWithMnemonic;
+import consulo.ui.util.TextWithMnemonic;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;

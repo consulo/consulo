@@ -29,8 +29,9 @@ import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.FocusEvent;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.internal.LocalizeValueWithMnemonic;
 import consulo.ui.image.Image;
-import consulo.ui.util.MnemonicInfo;
+import consulo.ui.util.TextWithMnemonic;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -119,17 +120,16 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
                 return;
             }
 
-            String text = myTextValue.getValue();
-            MnemonicInfo mnemonicInfo = MnemonicInfo.parse(text);
-            if (mnemonicInfo == null) {
-                setText(text);
+            TextWithMnemonic mnemonicInfo = LocalizeValueWithMnemonic.get(myTextValue);
+            if (!mnemonicInfo.hasMnemonic()) {
+                setText(mnemonicInfo.getText());
                 setDisplayedMnemonicIndex(-1);
                 setDisplayedMnemonic(0);
             }
             else {
                 setText(mnemonicInfo.getText());
-                setDisplayedMnemonicIndex(mnemonicInfo.getIndex());
-                setDisplayedMnemonic(mnemonicInfo.getKeyCode());
+                setDisplayedMnemonicIndex(mnemonicInfo.getMnemonicIndex());
+                setDisplayedMnemonic(mnemonicInfo.getMnemonic());
             }
         }
     }

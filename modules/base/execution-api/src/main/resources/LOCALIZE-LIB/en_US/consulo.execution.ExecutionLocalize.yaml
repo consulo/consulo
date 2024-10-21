@@ -349,6 +349,8 @@ run.error.message.title:
   text: Run Error
 default.runner.start.action.text:
   text: R&un
+default.runner.start.action.text.0:
+  text: R&un {0}
 remote.debug.configuration.description:
   text: Remote debug configuration
 remote.debug.configuration.display.name:

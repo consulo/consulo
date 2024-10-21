@@ -17,12 +17,13 @@ package consulo.execution.debug;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.execution.executor.Executor;
 import consulo.execution.executor.ExecutorRegistry;
+import consulo.localize.LocalizeValue;
 import consulo.project.ui.wm.ToolWindowId;
-import consulo.ui.ex.UIBundle;
+import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -30,58 +31,66 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl(id = "debug", order = "after run")
 public class DefaultDebugExecutor extends Executor {
-  public static final String EXECUTOR_ID = ToolWindowId.DEBUG;
+    public static final String EXECUTOR_ID = ToolWindowId.DEBUG;
 
-  @Override
-  public String getToolWindowId() {
-    return ToolWindowId.DEBUG;
-  }
+    @Override
+    public String getToolWindowId() {
+        return ToolWindowId.DEBUG;
+    }
 
-  @Override
-  public Image getToolWindowIcon() {
-    return AllIcons.Toolwindows.ToolWindowDebugger;
-  }
+    @Override
+    public Image getToolWindowIcon() {
+        return AllIcons.Toolwindows.ToolWindowDebugger;
+    }
 
-  @Override
-  @Nonnull
-  public Image getIcon() {
-    return AllIcons.Actions.StartDebugger;
-  }
+    @Override
+    @Nonnull
+    public Image getIcon() {
+        return AllIcons.Actions.StartDebugger;
+    }
 
-  @Override
-  @Nonnull
-  public String getActionName() {
-    return UIBundle.message("tool.window.name.debug");
-  }
+    @Override
+    @Nonnull
+    public LocalizeValue getActionName() {
+        return UILocalize.toolWindowNameDebug();
+    }
 
-  @Override
-  @Nonnull
-  public String getId() {
-    return EXECUTOR_ID;
-  }
+    @Override
+    @Nonnull
+    public String getId() {
+        return EXECUTOR_ID;
+    }
 
-  @Override
-  public String getContextActionId() {
-    return "DebugClass";
-  }
+    @Nonnull
+    @Override
+    public String getContextActionId() {
+        return "DebugClass";
+    }
 
-  @Override
-  @Nonnull
-  public String getStartActionText() {
-    return XDebuggerBundle.message("debugger.runner.start.action.text");
-  }
+    @Nonnull
+    @Override
+    public LocalizeValue getStartActionText() {
+        return XDebuggerLocalize.debuggerRunnerStartActionText();
+    }
 
-  @Override
-  public String getDescription() {
-    return XDebuggerBundle.message("string.debugger.runner.description");
-  }
+    @Nonnull
+    @Override
+    public LocalizeValue getStartActiveText(@Nonnull String configurationName) {
+        return XDebuggerLocalize.debuggerRunnerStartActionText0(configurationName);
+    }
 
-  @Override
-  public String getHelpId() {
-    return "debugging.DebugWindow";
-  }
+    @Nonnull
+    @Override
+    public LocalizeValue getDescription() {
+        return XDebuggerLocalize.stringDebuggerRunnerDescription();
+    }
 
-  public static Executor getDebugExecutorInstance() {
-    return ExecutorRegistry.getInstance().getExecutorById(EXECUTOR_ID);
-  }
+    @Override
+    public String getHelpId() {
+        return "debugging.DebugWindow";
+    }
+
+    public static Executor getDebugExecutorInstance() {
+        return ExecutorRegistry.getInstance().getExecutorById(EXECUTOR_ID);
+    }
 }

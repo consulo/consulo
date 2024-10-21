@@ -16,16 +16,12 @@
 
 package consulo.execution.executor;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
-import consulo.component.util.localize.BundleBase;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.image.Image;
-import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -34,65 +30,51 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class Executor {
-  public static final ExtensionPointName<Executor> EP_NAME = ExtensionPointName.create(Executor.class);
+    public static final ExtensionPointName<Executor> EP_NAME = ExtensionPointName.create(Executor.class);
 
-  public abstract String getToolWindowId();
+    @Nonnull
+    public abstract String getId();
 
-  public abstract Image getToolWindowIcon();
+    @Nonnull
+    public abstract String getToolWindowId();
 
-  @Nonnull
-  public abstract Image getIcon();
+    public abstract Image getToolWindowIcon();
 
-  @Nullable
-  public Image getDisabledIcon() {
-    return null;
-  }
+    @Nonnull
+    public abstract Image getIcon();
 
-  public abstract String getDescription();
+    @Nullable
+    public Image getDisabledIcon() {
+        return null;
+    }
 
-  @Nonnull
-  public abstract String getActionName();
+    @Nonnull
+    public abstract LocalizeValue getDescription();
 
-  @Nonnull
-  @NonNls
-  public abstract String getId();
+    @Nonnull
+    public abstract LocalizeValue getActionName();
 
-  @Nonnull
-  public abstract String getStartActionText();
 
-  @NonNls
-  public String getContextActionId() {
-    return "Context" + getId();
-  }
+    @Nonnull
+    public abstract LocalizeValue getStartActionText();
 
-  @NonNls
-  public abstract String getHelpId();
+    @Nonnull
+    public abstract LocalizeValue getStartActiveText(@Nonnull String configurationName);
 
-  /**
-   * Override this method and return {@code false} to hide executor from panel
-   */
-  public boolean isApplicable(@Nonnull Project project) {
-    return true;
-  }
+    @Nonnull
+    public String getContextActionId() {
+        return "Context" + getId();
+    }
 
-  @Nonnull
-  public String getActionText(@Nullable String configurationName) {
-    return BundleBase.format(getStartActionText(StringUtil.isEmpty(configurationName)), escapeMnemonicsInConfigurationName(configurationName));
-  }
+    @Nullable
+    public String getHelpId() {
+        return null;
+    }
 
-  private static String escapeMnemonicsInConfigurationName(String configurationName) {
-    return configurationName.replace("_", "__");
-  }
-
-  @Nonnull
-  public String getStartActionText(boolean emptyName) {
-    return getStartActionText() + (emptyName ? "" : " ''{0}''");
-  }
-
-  @Deprecated
-  @DeprecationInfo("Use #getStartActionText(emptyName)")
-  @Nonnull
-  public String getStartActionText(String configurationName) {
-    return getStartActionText(StringUtil.isEmpty(configurationName));
-  }
+    /**
+     * Override this method and return {@code false} to hide executor from panel
+     */
+    public boolean isApplicable(@Nonnull Project project) {
+        return true;
+    }
 }

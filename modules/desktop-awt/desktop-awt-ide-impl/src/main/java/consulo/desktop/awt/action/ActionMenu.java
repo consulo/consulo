@@ -33,7 +33,8 @@ import consulo.ui.ex.action.PresentationFactory;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.ex.util.TextWithMnemonic;
+import consulo.ui.ex.internal.LocalizeValueWithMnemonic;
+import consulo.ui.util.TextWithMnemonic;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import jakarta.annotation.Nonnull;
@@ -164,8 +165,7 @@ public final class ActionMenu extends JMenu {
       myTextValue = newTextValue;
     }
 
-    String value = myTextValue.getValue();
-    TextWithMnemonic textWithMnemonic = TextWithMnemonic.parse(value);
+      TextWithMnemonic textWithMnemonic = LocalizeValueWithMnemonic.get(myTextValue);
 
     setText(textWithMnemonic.getText());
     setDisplayedMnemonicIndex(textWithMnemonic.getMnemonicIndex());

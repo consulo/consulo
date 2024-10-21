@@ -19,7 +19,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.component.util.localize.BundleBase;
 import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeValue;
-import consulo.ui.ex.util.TextWithMnemonic;
+import consulo.ui.util.TextWithMnemonic;
 import consulo.ui.image.Image;
 import consulo.util.collection.SmartFMap;
 import consulo.util.dataholder.Key;

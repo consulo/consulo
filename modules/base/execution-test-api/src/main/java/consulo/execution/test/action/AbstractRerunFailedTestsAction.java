@@ -41,8 +41,8 @@ import consulo.ui.ex.ComponentContainer;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.popup.IPopupChooserBuilder;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.xml.serializer.InvalidDataException;
@@ -187,7 +187,7 @@ public class AbstractRerunFailedTestsAction extends AnAction implements AnAction
       builder.setRenderer(new ColoredListCellRenderer<Executor>() {
         @Override
         protected void customizeCellRenderer(@Nonnull JList<? extends Executor> list, Executor value, int index, boolean selected, boolean hasFocus) {
-          append(UIUtil.removeMnemonic(value.getStartActionText()));
+          append(value.getStartActionText().map(Presentation.NO_MNEMONIC).get());
           setIcon(value.getIcon());
         }
       });

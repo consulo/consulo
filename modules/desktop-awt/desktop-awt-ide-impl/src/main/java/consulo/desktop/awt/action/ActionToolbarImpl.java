@@ -15,7 +15,6 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.actionSystem.RightAlignedToolbarAction;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionUpdater;
-import consulo.ui.ex.action.BasePresentationFactory;
 import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -34,16 +33,12 @@ import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.util.JBSwingUtilities;
 import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.ex.internal.ActionButtonEx;
-import consulo.ui.ex.internal.ActionManagerEx;
-import consulo.ui.ex.internal.ActionToolbarEx;
-import consulo.ui.ex.internal.ActionToolbarsHolder;
+import consulo.ui.ex.internal.*;
 import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupAdapter;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
-import consulo.ui.ex.util.TextWithMnemonic;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.CancellablePromise;
 import consulo.util.dataholder.Key;
@@ -399,8 +394,8 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbarEx, QuickA
                                                  @Nonnull Presentation presentation,
                                                  @Nonnull Size minimumSize) {
     if (action.displayTextInToolbar()) {
-      int mnemonic =
-        KeyEvent.getExtendedKeyCodeForChar(TextWithMnemonic.parse(action.getTemplatePresentation().getTextWithMnemonic()).getMnemonic());
+        int mnemonic =
+        KeyEvent.getExtendedKeyCodeForChar(LocalizeValueWithMnemonic.get(action.getTemplatePresentation().getTextValue()).getMnemonic());
 
       ActionButtonWithText buttonWithText = new ActionButtonWithText(action, presentation, place, minimumSize);
 

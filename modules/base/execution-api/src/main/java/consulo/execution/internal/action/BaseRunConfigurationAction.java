@@ -52,6 +52,7 @@ import java.util.List;
 public abstract class BaseRunConfigurationAction extends ActionGroup {
   protected static final Logger LOG = Logger.getInstance(BaseRunConfigurationAction.class);
 
+  @Deprecated
   protected BaseRunConfigurationAction(final String text, final String description, final Image icon) {
     super(text, description, icon);
     setPopup(true);

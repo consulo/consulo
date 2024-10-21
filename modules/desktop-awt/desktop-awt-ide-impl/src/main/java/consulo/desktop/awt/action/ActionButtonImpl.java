@@ -34,12 +34,10 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.accessibility.ScreenReader;
 import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.ex.internal.ActionButtonEx;
-import consulo.ui.ex.internal.ActionManagerEx;
-import consulo.ui.ex.internal.HelpTooltip;
-import consulo.ui.ex.util.TextWithMnemonic;
+import consulo.ui.ex.internal.*;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.ui.util.TextWithMnemonic;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import kava.beans.PropertyChangeEvent;
@@ -503,7 +501,7 @@ public class ActionButtonImpl extends JComponent implements ActionButtonEx, Acce
       setDisplayedMnemonicIndex(-1);
     }
     else {
-      TextWithMnemonic textWithMnemonic = TextWithMnemonic.parse(localizeValue.getValue());
+        TextWithMnemonic textWithMnemonic = LocalizeValueWithMnemonic.get(localizeValue);
       myLastComputedText = textWithMnemonic.getText();
       setDisplayedMnemonicIndex(textWithMnemonic.getMnemonicIndex());
     }

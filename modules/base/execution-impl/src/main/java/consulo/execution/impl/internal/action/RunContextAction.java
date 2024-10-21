@@ -16,6 +16,7 @@
 
 package consulo.execution.impl.internal.action;
 
+import consulo.execution.internal.ExecutionActionValue;
 import consulo.execution.internal.action.BaseRunConfigurationAction;
 import consulo.execution.internal.RunManagerEx;
 import consulo.execution.*;
@@ -26,6 +27,7 @@ import consulo.execution.executor.Executor;
 import consulo.execution.executor.ExecutorRegistry;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.runner.ProgramRunner;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.Presentation;
 import consulo.util.lang.Pair;
 
@@ -36,7 +38,7 @@ public class RunContextAction extends BaseRunConfigurationAction {
   private final Executor myExecutor;
 
   public RunContextAction(@Nonnull final Executor executor) {
-    super(ExecutionLocalize.performActionWithContextConfigurationActionName(executor.getStartActionText()).get(), null, executor.getIcon());
+    super(ExecutionLocalize.performActionWithContextConfigurationActionName(executor.getActionName()), LocalizeValue.of(), executor.getIcon());
     myExecutor = executor;
   }
 
@@ -68,7 +70,7 @@ public class RunContextAction extends BaseRunConfigurationAction {
 
   @Override
   protected void updatePresentation(final Presentation presentation, @Nonnull final String actionText, final ConfigurationContext context) {
-    presentation.setText(myExecutor.getActionText(actionText));
+    presentation.setTextValue(ExecutionActionValue.buildWithConfiguration(myExecutor::getStartActiveText, actionText));
 
     Pair<Boolean, Boolean> b = isEnabledAndVisible(context);
 

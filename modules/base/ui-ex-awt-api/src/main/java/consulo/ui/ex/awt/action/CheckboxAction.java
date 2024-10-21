@@ -18,7 +18,8 @@ package consulo.ui.ex.awt.action;
 
 import consulo.dataContext.DataManager;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.util.TextWithMnemonic;
+import consulo.ui.ex.internal.LocalizeValueWithMnemonic;
+import consulo.ui.util.TextWithMnemonic;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.dataContext.DataContext;
 import consulo.localize.LocalizeValue;
@@ -62,7 +63,7 @@ public abstract class CheckboxAction extends ToggleAction implements CustomCompo
   public JComponent createCustomComponent(Presentation presentation, @Nonnull String place) {
     // this component cannot be stored right here because of action system architecture:
     // one action can be shown on multiple toolbars simultaneously
-    TextWithMnemonic textWithMnemonic = TextWithMnemonic.parse(presentation.getTextValue().getValue());
+      TextWithMnemonic textWithMnemonic = LocalizeValueWithMnemonic.get(presentation.getTextValue());
 
     JCheckBox checkBox = new JCheckBox(textWithMnemonic.getText());
     checkBox.setOpaque(false);

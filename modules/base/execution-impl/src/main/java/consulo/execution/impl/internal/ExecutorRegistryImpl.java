@@ -26,12 +26,14 @@ import consulo.execution.event.ExecutionListener;
 import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.executor.Executor;
 import consulo.execution.impl.internal.action.RunContextAction;
+import consulo.execution.internal.ExecutionActionValue;
 import consulo.execution.internal.ExecutorRegistryEx;
 import consulo.execution.internal.RunManagerEx;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ExecutionEnvironmentBuilder;
 import consulo.execution.runner.ProgramRunner;
 import consulo.execution.ui.RunContentDescriptor;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.process.ProcessHandler;
 import consulo.project.DumbService;
@@ -230,8 +232,9 @@ public class ExecutorRegistryImpl extends ExecutorRegistryEx implements Disposab
 
             final RunnerAndConfigurationSettings selectedConfiguration = getConfiguration(project);
             boolean enabled = false;
-            String text;
-            final String textWithMnemonic = getTemplatePresentation().getTextWithMnemonic();
+
+            LocalizeValue text;
+            LocalizeValue templateText = getTemplatePresentation().getTextValue();
             if (selectedConfiguration != null) {
                 presentation.setIcon(getInformativeIcon(project, selectedConfiguration));
 
@@ -242,16 +245,16 @@ public class ExecutorRegistryImpl extends ExecutorRegistryEx implements Disposab
                     && runner != null && !isStarting(project, myExecutor.getId(), runner.getRunnerId());
 
                 if (enabled) {
-                    presentation.setDescription(myExecutor.getDescription());
+                    presentation.setDescriptionValue(myExecutor.getDescription());
                 }
-                text = myExecutor.getActionText(selectedConfiguration.getName());
+                text = ExecutionActionValue.buildWithConfiguration(myExecutor::getStartActiveText, selectedConfiguration.getName());
             }
             else {
-                text = textWithMnemonic;
+                text = templateText;
             }
 
             presentation.setEnabled(enabled);
-            presentation.setText(text);
+            presentation.setTextValue(text);
         }
 
         @Nonnull

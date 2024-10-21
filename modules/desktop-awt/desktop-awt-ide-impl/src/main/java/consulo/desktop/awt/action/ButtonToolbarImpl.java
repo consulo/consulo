@@ -8,7 +8,8 @@ import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.util.TextWithMnemonic;
+import consulo.ui.ex.internal.LocalizeValueWithMnemonic;
+import consulo.ui.util.TextWithMnemonic;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.dataContext.BaseDataManager;
 
@@ -78,7 +79,7 @@ public class ButtonToolbarImpl extends JPanel {
 
     ActionJButton(final AnAction action) {
       myAction = action;
-      TextWithMnemonic textWithMnemonic = TextWithMnemonic.parse(action.getTemplatePresentation().getTextValue().getValue());
+        TextWithMnemonic textWithMnemonic = LocalizeValueWithMnemonic.get(action.getTemplatePresentation().getTextValue());
 
       setText(textWithMnemonic.getText());
       setMnemonic(textWithMnemonic.getMnemonic());

@@ -16,13 +16,13 @@
 package consulo.sandboxPlugin.ide.run;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.execution.executor.Executor;
 import consulo.application.AllIcons;
-import consulo.project.Project;
+import consulo.execution.executor.Executor;
+import consulo.localize.LocalizeValue;
 import consulo.module.extension.ModuleExtensionHelper;
+import consulo.project.Project;
 import consulo.sandboxPlugin.ide.module.extension.SandModuleExtension;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -31,57 +31,59 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class SandExecutor extends Executor {
-  @Override
-  public String getToolWindowId() {
-    return "SandExecutor";
-  }
+    @Override
+    public String getToolWindowId() {
+        return "SandExecutor";
+    }
 
-  @Override
-  public Image getToolWindowIcon() {
-    return AllIcons.Toolwindows.ToolWindowInspection;
-  }
+    @Override
+    public Image getToolWindowIcon() {
+        return AllIcons.Toolwindows.ToolWindowInspection;
+    }
 
-  @Nonnull
-  @Override
-  public Image getIcon() {
-    return AllIcons.Ide.HectorOn;
-  }
+    @Nonnull
+    @Override
+    public Image getIcon() {
+        return AllIcons.Ide.HectorOn;
+    }
 
-  @Override
-  public Image getDisabledIcon() {
-    return AllIcons.Ide.HectorOff;
-  }
+    @Override
+    public Image getDisabledIcon() {
+        return AllIcons.Ide.HectorOff;
+    }
 
-  @Override
-  public String getDescription() {
-    return "Sand executor";
-  }
+    @Nonnull
+    @Override
+    public LocalizeValue getDescription() {
+        return LocalizeValue.localizeTODO("Sand executor");
+    }
 
-  @Override
-  public boolean isApplicable(@Nonnull Project project) {
-    return ModuleExtensionHelper.getInstance(project).hasModuleExtension(SandModuleExtension.class);
-  }
+    @Override
+    public boolean isApplicable(@Nonnull Project project) {
+        return ModuleExtensionHelper.getInstance(project).hasModuleExtension(SandModuleExtension.class);
+    }
 
-  @Nonnull
-  @Override
-  public String getActionName() {
-    return "Sand";
-  }
+    @Nonnull
+    @Override
+    public LocalizeValue getActionName() {
+        return LocalizeValue.localizeTODO("Sand");
+    }
 
-  @Nonnull
-  @Override
-  public String getId() {
-    return "SandExecutor";
-  }
+    @Nonnull
+    @Override
+    public String getId() {
+        return "SandExecutor";
+    }
 
-  @Nonnull
-  @Override
-  public String getStartActionText() {
-    return "Start Sand";
-  }
+    @Nonnull
+    @Override
+    public LocalizeValue getStartActionText() {
+        return LocalizeValue.localizeTODO("Start Sand");
+    }
 
-  @Override
-  public String getHelpId() {
-    return null;
-  }
+    @Nonnull
+    @Override
+    public LocalizeValue getStartActiveText(@Nonnull String configurationName) {
+        return LocalizeValue.localizeTODO("Start Sand " + configurationName);
+    }
 }

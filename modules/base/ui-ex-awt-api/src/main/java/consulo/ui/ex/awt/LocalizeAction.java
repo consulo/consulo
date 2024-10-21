@@ -17,7 +17,8 @@ package consulo.ui.ex.awt;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
-import consulo.ui.util.MnemonicInfo;
+import consulo.ui.ex.internal.LocalizeValueWithMnemonic;
+import consulo.ui.util.TextWithMnemonic;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -47,18 +48,14 @@ public abstract class LocalizeAction extends AbstractAction {
 
     public void updateName() {
         if (withMnemonic()) {
-            String textValue = myTextValue.get();
-            MnemonicInfo mnemonicInfo = MnemonicInfo.parse(textValue);
-            if (mnemonicInfo == null) {
-                putValue(NAME, textValue);
+            TextWithMnemonic mnemonicInfo = LocalizeValueWithMnemonic.get(myTextValue);
+            if (!mnemonicInfo.hasMnemonic()) {
+                putValue(NAME, mnemonicInfo.getText());
             }
             else {
                 putValue(NAME, mnemonicInfo.getText());
-
-                if (mnemonicInfo.getIndex() != -1) {
-                    putValue(MNEMONIC_KEY, (int)mnemonicInfo.getKeyCode());
-                    putValue(DISPLAYED_MNEMONIC_INDEX_KEY, mnemonicInfo.getIndex());
-                }
+                putValue(MNEMONIC_KEY, (int) mnemonicInfo.getMnemonic());
+                putValue(DISPLAYED_MNEMONIC_INDEX_KEY, mnemonicInfo.getMnemonicIndex());
             }
         }
         else {

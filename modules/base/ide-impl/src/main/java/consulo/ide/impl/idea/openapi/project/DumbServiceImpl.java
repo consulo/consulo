@@ -42,7 +42,7 @@ import consulo.project.ui.wm.WindowManager;
 import consulo.ui.NotificationType;
 import consulo.ui.ex.AppIcon;
 import consulo.ui.ex.AppIconScheme;
-import consulo.ui.util.MnemonicInfo;
+import consulo.ui.util.TextWithMnemonic;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.collection.Queue;
@@ -107,8 +107,8 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
       public void batchChangeStarted(@Nonnull ComponentManager project, @Nullable String activityName) {
         if (project == myProject) {
           String heavyActivityName = Optional.ofNullable(activityName)
-                                             .map(MnemonicInfo::parse)
-                                             .map(MnemonicInfo::getText)
+                                             .map(TextWithMnemonic::parse)
+                                             .map(TextWithMnemonic::getText)
                                              .orElseGet(() -> activityName != null ? activityName : "file system changes");
           stack.push(heavyActivityStarted(heavyActivityName));
         }

@@ -18,6 +18,7 @@ package consulo.execution.executor;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.execution.localize.ExecutionLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.image.Image;
@@ -28,58 +29,66 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl(id = "run", order = "first")
 public class DefaultRunExecutor extends Executor {
-  public static final String EXECUTOR_ID = ToolWindowId.RUN;
+    public static final String EXECUTOR_ID = ToolWindowId.RUN;
 
-  @Override
-  @Nonnull
-  public String getStartActionText() {
-    return ExecutionLocalize.defaultRunnerStartActionText().get();
-  }
+    @Nonnull
+    @Override
+    public LocalizeValue getStartActionText() {
+        return ExecutionLocalize.defaultRunnerStartActionText();
+    }
 
-  @Override
-  public String getToolWindowId() {
-    return ToolWindowId.RUN;
-  }
+    @Nonnull
+    @Override
+    public LocalizeValue getStartActiveText(@Nonnull String configurationName) {
+        return ExecutionLocalize.defaultRunnerStartActionText0(configurationName);
+    }
 
-  @Override
-  public Image getToolWindowIcon() {
-    return PlatformIconGroup.toolwindowsToolwindowrun();
-  }
+    @Override
+    public String getToolWindowId() {
+        return ToolWindowId.RUN;
+    }
 
-  @Override
-  @Nonnull
-  public Image getIcon() {
-    return PlatformIconGroup.actionsExecute();
-  }
+    @Override
+    public Image getToolWindowIcon() {
+        return PlatformIconGroup.toolwindowsToolwindowrun();
+    }
 
-  @Override
-  public String getDescription() {
-    return ExecutionLocalize.standardRunnerDescription().get();
-  }
+    @Override
+    @Nonnull
+    public Image getIcon() {
+        return PlatformIconGroup.actionsExecute();
+    }
 
-  @Override
-  @Nonnull
-  public String getActionName() {
-    return ExecutionLocalize.toolWindowNameRun().get();
-  }
+    @Nonnull
+    @Override
+    public LocalizeValue getDescription() {
+        return ExecutionLocalize.standardRunnerDescription();
+    }
 
-  @Override
-  @Nonnull
-  public String getId() {
-    return EXECUTOR_ID;
-  }
+    @Override
+    @Nonnull
+    public LocalizeValue getActionName() {
+        return ExecutionLocalize.toolWindowNameRun();
+    }
 
-  @Override
-  public String getContextActionId() {
-    return "RunClass";
-  }
+    @Override
+    @Nonnull
+    public String getId() {
+        return EXECUTOR_ID;
+    }
 
-  @Override
-  public String getHelpId() {
-    return "ideaInterface.run";
-  }
+    @Nonnull
+    @Override
+    public String getContextActionId() {
+        return "RunClass";
+    }
 
-  public static Executor getRunExecutorInstance() {
-    return ExecutorRegistry.getInstance().getExecutorById(EXECUTOR_ID);
-  }
+    @Override
+    public String getHelpId() {
+        return "ideaInterface.run";
+    }
+
+    public static Executor getRunExecutorInstance() {
+        return ExecutorRegistry.getInstance().getExecutorById(EXECUTOR_ID);
+    }
 }
