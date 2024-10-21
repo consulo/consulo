@@ -48,6 +48,12 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
     }
 
     @Nonnull
+    @Override
+    public LocalizeValue getTooltipValue() {
+        return LocalizeValue.empty();
+    }
+
+    @Nonnull
     public static RangeHighlighter createRangeHighlighter(
         @Nonnull Range range,
         @Nonnull TextRange textRange,
