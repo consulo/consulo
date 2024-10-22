@@ -24,11 +24,13 @@ import java.util.function.BiFunction;
  * @since 2020-07-30
  */
 public class DefaultMapFunctions {
-    public static final BiFunction<LocalizeManager, String, String> TO_UPPER_CASE = (localizeManager, s) -> s.toUpperCase(localizeManager.getLocale());
+    public static final BiFunction<LocalizeManager, String, String> TO_UPPER_CASE =
+        (localizeManager, s) -> s.toUpperCase(localizeManager.getLocale());
 
-    public static final BiFunction<LocalizeManager, String, String> TO_LOWER_CASE = (localizeManager, s) -> s.toLowerCase(localizeManager.getLocale());
+    public static final BiFunction<LocalizeManager, String, String> TO_LOWER_CASE =
+        (localizeManager, s) -> s.toLowerCase(localizeManager.getLocale());
 
-    public static final BiFunction<LocalizeManager, String, String> CAPTILIZE = (localizeManager, s) -> {
+    public static final BiFunction<LocalizeManager, String, String> CAPITALIZE = (localizeManager, s) -> {
         if (s.isEmpty()) {
             return s;
         }

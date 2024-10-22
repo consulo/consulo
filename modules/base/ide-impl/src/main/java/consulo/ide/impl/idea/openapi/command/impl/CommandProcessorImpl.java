@@ -23,66 +23,68 @@ import jakarta.inject.Singleton;
 @Singleton
 @ServiceImpl
 public class CommandProcessorImpl extends CoreCommandProcessor {
-  @Inject
-  public CommandProcessorImpl(@Nonnull Application application) {
-    super(application);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void finishCommand(@Nonnull final CommandToken command, @Nullable final Throwable throwable) {
-    if (myCurrentCommand != command) return;
-    final boolean failed;
-    try {
-      if (throwable != null) {
-        failed = true;
-        ExceptionUtil.rethrowUnchecked(throwable);
-        CommandLog.LOG.error(throwable);
-      }
-      else {
-        failed = false;
-      }
+    @Inject
+    public CommandProcessorImpl(@Nonnull Application application) {
+        super(application);
     }
-    finally {
-      try {
-        super.finishCommand(command, throwable);
-      }
-      catch (Throwable e) {
-        if (throwable != null) {
-          e.addSuppressed(throwable);
+
+    @RequiredUIAccess
+    @Override
+    public void finishCommand(@Nonnull final CommandToken command, @Nullable final Throwable throwable) {
+        if (myCurrentCommand != command) {
+            return;
         }
-        throw e;
-      }
-    }
-    if (failed) {
-      Project project = command.getProject();
-      if (project != null) {
-        FileEditor editor = CurrentEditorProvider.getInstance().getCurrentEditor();
-        final UndoManager undoManager = ProjectUndoManager.getInstance(project);
-        if (undoManager.isUndoAvailable(editor)) {
-          undoManager.undo(editor);
+        final boolean failed;
+        try {
+            if (throwable != null) {
+                failed = true;
+                ExceptionUtil.rethrowUnchecked(throwable);
+                CommandLog.LOG.error(throwable);
+            }
+            else {
+                failed = false;
+            }
         }
-      }
-      Messages.showErrorDialog(project, "Cannot perform operation. Too complex, sorry.", "Failed to Perform Operation");
+        finally {
+            try {
+                super.finishCommand(command, throwable);
+            }
+            catch (Throwable e) {
+                if (throwable != null) {
+                    e.addSuppressed(throwable);
+                }
+                throw e;
+            }
+        }
+        if (failed) {
+            Project project = command.getProject();
+            if (project != null) {
+                FileEditor editor = CurrentEditorProvider.getInstance().getCurrentEditor();
+                final UndoManager undoManager = ProjectUndoManager.getInstance(project);
+                if (undoManager.isUndoAvailable(editor)) {
+                    undoManager.undo(editor);
+                }
+            }
+            Messages.showErrorDialog(project, "Cannot perform operation. Too complex, sorry.", "Failed to Perform Operation");
+        }
     }
-  }
 
-  @Override
-  public void markCurrentCommandAsGlobal(Project project) {
-    getUndoManager(project).markCurrentCommandAsGlobal();
-  }
+    @Override
+    public void markCurrentCommandAsGlobal(Project project) {
+        getUndoManager(project).markCurrentCommandAsGlobal();
+    }
 
-  private static UndoManagerImpl getUndoManager(Project project) {
-    return (UndoManagerImpl)(project != null ? ProjectUndoManager.getInstance(project) : ApplicationUndoManager.getInstance());
-  }
+    private static UndoManagerImpl getUndoManager(Project project) {
+        return (UndoManagerImpl)(project != null ? ProjectUndoManager.getInstance(project) : ApplicationUndoManager.getInstance());
+    }
 
-  @Override
-  public void addAffectedDocuments(Project project, @Nonnull Document... docs) {
-    getUndoManager(project).addAffectedDocuments(docs);
-  }
+    @Override
+    public void addAffectedDocuments(Project project, @Nonnull Document... docs) {
+        getUndoManager(project).addAffectedDocuments(docs);
+    }
 
-  @Override
-  public void addAffectedFiles(Project project, @Nonnull VirtualFile... files) {
-    getUndoManager(project).addAffectedFiles(files);
-  }
+    @Override
+    public void addAffectedFiles(Project project, @Nonnull VirtualFile... files) {
+        getUndoManager(project).addAffectedFiles(files);
+    }
 }

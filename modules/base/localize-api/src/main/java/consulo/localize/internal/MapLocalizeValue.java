@@ -26,19 +26,19 @@ import java.util.function.BiFunction;
  * @since 2020-07-30
  */
 public final class MapLocalizeValue extends BaseLocalizeValue {
-  private final LocalizeValue myDelegate;
-  private final BiFunction<LocalizeManager, String, String> myMapper;
+    private final LocalizeValue myDelegate;
+    private final BiFunction<LocalizeManager, String, String> myMapper;
 
-  public MapLocalizeValue(LocalizeValue delegate, BiFunction<LocalizeManager, String, String> mapper) {
-    super(ourEmptyArgs);
-    myDelegate = delegate;
-    myMapper = mapper;
-  }
+    public MapLocalizeValue(LocalizeValue delegate, BiFunction<LocalizeManager, String, String> mapper) {
+        super(ourEmptyArgs);
+        myDelegate = delegate;
+        myMapper = mapper;
+    }
 
-  @Nonnull
-  @Override
-  protected String getUnformattedText(@Nonnull LocalizeManager localizeManager) {
-    String value = myDelegate.getValue();
-    return myMapper.apply(localizeManager, value);
-  }
+    @Nonnull
+    @Override
+    protected String getUnformattedText(@Nonnull LocalizeManager localizeManager) {
+        String value = myDelegate.getValue();
+        return myMapper.apply(localizeManager, value);
+    }
 }

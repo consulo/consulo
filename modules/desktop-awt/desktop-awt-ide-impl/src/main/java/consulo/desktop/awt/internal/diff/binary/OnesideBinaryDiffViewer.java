@@ -25,56 +25,56 @@ import consulo.diff.request.DiffRequest;
 import consulo.fileEditor.FileEditor;
 import consulo.logging.Logger;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 
 public class OnesideBinaryDiffViewer extends OnesideDiffViewer<BinaryEditorHolder> {
-  public static final Logger LOG = Logger.getInstance(OnesideBinaryDiffViewer.class);
+    public static final Logger LOG = Logger.getInstance(OnesideBinaryDiffViewer.class);
 
-  public OnesideBinaryDiffViewer(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
-    super(context, (ContentDiffRequest)request, BinaryEditorHolder.BinaryEditorHolderFactory.INSTANCE);
-  }
+    public OnesideBinaryDiffViewer(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
+        super(context, (ContentDiffRequest)request, BinaryEditorHolder.BinaryEditorHolderFactory.INSTANCE);
+    }
 
-  //
-  // Diff
-  //
+    //
+    // Diff
+    //
 
-  @Override
-  @Nonnull
-  protected Runnable performRediff(@Nonnull final ProgressIndicator indicator) {
-    JComponent notification = getSide().select(DiffNotifications.createRemovedContent(), DiffNotifications.createInsertedContent());
-    return applyNotification(notification);
-  }
+    @Override
+    @Nonnull
+    protected Runnable performRediff(@Nonnull final ProgressIndicator indicator) {
+        JComponent notification = getSide().select(DiffNotifications.createRemovedContent(), DiffNotifications.createInsertedContent());
+        return applyNotification(notification);
+    }
 
-  @Nonnull
-  private Runnable applyNotification(@jakarta.annotation.Nullable final JComponent notification) {
-    return new Runnable() {
-      @Override
-      public void run() {
-        clearDiffPresentation();
-        if (notification != null) myPanel.addNotification(notification);
-      }
-    };
-  }
+    @Nonnull
+    private Runnable applyNotification(@Nullable final JComponent notification) {
+        return () -> {
+            clearDiffPresentation();
+            if (notification != null) {
+                myPanel.addNotification(notification);
+            }
+        };
+    }
 
-  private void clearDiffPresentation() {
-    myPanel.resetNotifications();
-  }
+    private void clearDiffPresentation() {
+        myPanel.resetNotifications();
+    }
 
-  //
-  // Getters
-  //
+    //
+    // Getters
+    //
 
-  @Nonnull
-  FileEditor getEditor() {
-    return getEditorHolder().getEditor();
-  }
+    @Nonnull
+    FileEditor getEditor() {
+        return getEditorHolder().getEditor();
+    }
 
-  //
-  // Misc
-  //
+    //
+    // Misc
+    //
 
-  public static boolean canShowRequest(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
-    return OnesideDiffViewer.canShowRequest(context, request, BinaryEditorHolder.BinaryEditorHolderFactory.INSTANCE);
-  }
+    public static boolean canShowRequest(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
+        return OnesideDiffViewer.canShowRequest(context, request, BinaryEditorHolder.BinaryEditorHolderFactory.INSTANCE);
+    }
 }

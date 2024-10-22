@@ -23,31 +23,31 @@ import java.awt.*;
 import java.util.List;
 
 class UnifiedContentPanel extends JPanel {
-  public UnifiedContentPanel(@Nonnull List<JComponent> titles, @Nonnull Editor editor) {
-    super(new BorderLayout());
+    public UnifiedContentPanel(@Nonnull List<JComponent> titles, @Nonnull Editor editor) {
+        super(new BorderLayout());
 
-    add(editor.getComponent(), BorderLayout.CENTER);
+        add(editor.getComponent(), BorderLayout.CENTER);
 
-    assert titles.size() == 2;
-    JComponent title1 = titles.get(0);
-    JComponent title2 = titles.get(1);
+        assert titles.size() == 2;
+        JComponent title1 = titles.get(0);
+        JComponent title2 = titles.get(1);
 
-    if (title1 != null || title2 != null) {
-      if (title1 == null) {
-        add(title2, BorderLayout.NORTH);
-      }
-      else if (title2 == null) {
-        add(title1, BorderLayout.NORTH);
-      }
-      else {
-        JPanel panel = new JPanel();
-        BoxLayout layout = new BoxLayout(panel, BoxLayout.Y_AXIS);
-        panel.setLayout(layout);
+        if (title1 != null || title2 != null) {
+            if (title1 == null) {
+                add(title2, BorderLayout.NORTH);
+            }
+            else if (title2 == null) {
+                add(title1, BorderLayout.NORTH);
+            }
+            else {
+                JPanel panel = new JPanel();
+                BoxLayout layout = new BoxLayout(panel, BoxLayout.Y_AXIS);
+                panel.setLayout(layout);
 
-        panel.add(title2);
-        panel.add(title1);
-        add(panel, BorderLayout.NORTH);
-      }
+                panel.add(title2);
+                panel.add(title1);
+                add(panel, BorderLayout.NORTH);
+            }
+        }
     }
-  }
 }

@@ -101,6 +101,10 @@ public class RollbackLineStatusAction extends DumbAwareAction {
 
   @RequiredUIAccess
   private static void execute(@Nonnull final LineStatusTracker tracker, @Nonnull final Runnable task) {
-    DiffImplUtil.executeWriteCommand(tracker.getDocument(), tracker.getProject(), VcsLocalize.commandNameRollbackChange().get(), task);
+    DiffImplUtil.newWriteCommand(task)
+        .withProject(tracker.getProject())
+        .withDocument(tracker.getDocument())
+        .withName(VcsLocalize.commandNameRollbackChange())
+        .execute();
   }
 }

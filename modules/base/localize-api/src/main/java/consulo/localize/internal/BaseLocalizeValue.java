@@ -24,86 +24,83 @@ import jakarta.annotation.Nonnull;
  * @since 2020-07-30
  */
 abstract class BaseLocalizeValue implements LocalizeValue {
-  protected static final Object[] ourEmptyArgs = new Object[0];
+    protected static final Object[] ourEmptyArgs = new Object[0];
 
-  protected final Object[] myArgs;
+    protected final Object[] myArgs;
 
-  private LocalizeManager myLocalizeManager;
+    private LocalizeManager myLocalizeManager;
 
-  private String myText;
+    private String myText;
 
-  private long myModificationCount = -1;
+    private long myModificationCount = -1;
 
-  BaseLocalizeValue(Object... args) {
-    myArgs = args;
-  }
-
-  @Nonnull
-  private LocalizeManager getLocalizeManager() {
-    if (myLocalizeManager == null) {
-      myLocalizeManager = LocalizeManager.get();
+    BaseLocalizeValue(Object... args) {
+        myArgs = args;
     }
 
-    return myLocalizeManager;
-  }
+    @Nonnull
+    private LocalizeManager getLocalizeManager() {
+        if (myLocalizeManager == null) {
+            myLocalizeManager = LocalizeManager.get();
+        }
 
-  @Override
-  public long getModificationCount() {
-    return myModificationCount;
-  }
-
-  @Nonnull
-  protected abstract String getUnformattedText(@Nonnull LocalizeManager localizeManager);
-
-  @Nonnull
-  protected String calcValue(LocalizeManager manager) {
-    String newText;
-    String unformattedText = getUnformattedText(manager);
-    if (myArgs.length > 0) {
-      Object[] args = new Object[myArgs.length];
-      // change LocalizeValue if found in args
-      for (int i = 0; i < myArgs.length; i++) {
-        Object oldValue = myArgs[i];
-
-        args[i] = oldValue instanceof LocalizeValue ? ((LocalizeValue)oldValue).getValue() : oldValue;
-      }
-
-      newText = manager.formatText(unformattedText, args);
-    }
-    else {
-      newText = unformattedText;
+        return myLocalizeManager;
     }
 
-    return newText;
-  }
-
-  @Nonnull
-  @Override
-  public String getValue() {
-    LocalizeManager manager = getLocalizeManager();
-    if (myModificationCount == manager.getModificationCount()) {
-      return myText;
+    @Override
+    public long getModificationCount() {
+        return myModificationCount;
     }
 
-    String newText = calcValue(manager);
+    @Nonnull
+    protected abstract String getUnformattedText(@Nonnull LocalizeManager localizeManager);
 
-    myText = newText;
-    myModificationCount = manager.getModificationCount();
-    return newText;
-  }
+    @Nonnull
+    protected String calcValue(LocalizeManager manager) {
+        String unformattedText = getUnformattedText(manager);
+        if (myArgs.length > 0) {
+            Object[] args = new Object[myArgs.length];
+            // change LocalizeValue if found in args
+            for (int i = 0; i < myArgs.length; i++) {
+                Object oldValue = myArgs[i];
 
-  @Override
-  public int compareIgnoreCase(@Nonnull LocalizeValue other) {
-    return getValue().compareToIgnoreCase(other.getValue());
-  }
+                args[i] = oldValue instanceof LocalizeValue oldLocalizeValue ? oldLocalizeValue.getValue() : oldValue;
+            }
 
-  @Override
-  public int compareTo(@Nonnull LocalizeValue o) {
-    return getValue().compareTo(o.getValue());
-  }
+            return manager.formatText(unformattedText, args);
+        }
+        else {
+            return unformattedText;
+        }
+    }
 
-  @Override
-  public String toString() {
-    return getValue();
-  }
+    @Nonnull
+    @Override
+    public String getValue() {
+        LocalizeManager manager = getLocalizeManager();
+        if (myModificationCount == manager.getModificationCount()) {
+            return myText;
+        }
+
+        String newText = calcValue(manager);
+
+        myText = newText;
+        myModificationCount = manager.getModificationCount();
+        return newText;
+    }
+
+    @Override
+    public int compareIgnoreCase(@Nonnull LocalizeValue other) {
+        return getValue().compareToIgnoreCase(other.getValue());
+    }
+
+    @Override
+    public int compareTo(@Nonnull LocalizeValue o) {
+        return getValue().compareTo(o.getValue());
+    }
+
+    @Override
+    public String toString() {
+        return getValue();
+    }
 }
