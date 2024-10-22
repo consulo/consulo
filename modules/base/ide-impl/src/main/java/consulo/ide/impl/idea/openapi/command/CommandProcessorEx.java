@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.openapi.command;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.undoRedo.*;
-import consulo.undoRedo.builder.BaseCommandBuilder;
+import consulo.ide.impl.idea.openapi.command.impl.BaseCommandBuilder;
 import consulo.undoRedo.builder.CommandBuilder;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;

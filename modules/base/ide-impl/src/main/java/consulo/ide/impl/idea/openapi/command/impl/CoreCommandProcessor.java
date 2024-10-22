@@ -9,7 +9,6 @@ import consulo.ide.impl.idea.openapi.command.CommandToken;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.undoRedo.builder.BaseCommandBuilder;
 import consulo.undoRedo.CommandDescriptor;
 import consulo.undoRedo.event.CommandEvent;
 import consulo.undoRedo.event.CommandListener;
@@ -22,6 +21,18 @@ import java.util.List;
 import java.util.Stack;
 
 public class CoreCommandProcessor extends CommandProcessorEx {
+    private class MyCommandBuilder extends BaseCommandBuilder<ExecutableCommandBuilder> implements ExecutableCommandBuilder {
+        protected MyCommandBuilder(@Nonnull Runnable command) {
+            super(command);
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void execute() {
+            executeCommand(build());
+        }
+    }
+
     private class Command implements CommandToken {
         private CommandDescriptor myDescriptor;
 
@@ -32,7 +43,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
         @Nullable
         @Override
         public Project getProject() {
-            return myDescriptor.getProject();
+            return myDescriptor.project();
         }
 
         public CommandDescriptor getDescriptor() {
@@ -143,10 +154,15 @@ public class CoreCommandProcessor extends CommandProcessorEx {
     }
 
     @Override
+    @Nonnull
+    public ExecutableCommandBuilder newCommand(@Nonnull Runnable command) {
+        return new MyCommandBuilder(command);
+    }
+
     @RequiredUIAccess
-    public void executeCommand(CommandDescriptor commandDescriptor) {
+    protected void executeCommand(CommandDescriptor commandDescriptor) {
         myApplication.assertIsDispatchThread();
-        Project project = commandDescriptor.getProject();
+        Project project = commandDescriptor.project();
         if (project != null && project.isDisposed()) {
             CommandLog.LOG.error("Project " + project + " already disposed");
             return;
@@ -154,23 +170,23 @@ public class CoreCommandProcessor extends CommandProcessorEx {
 
         if (CommandLog.LOG.isDebugEnabled()) {
             CommandLog.LOG.debug(
-                "executeCommand: " + commandDescriptor.getCommand() +
-                    ", name = " + commandDescriptor.getName() +
-                    ", groupId = " + commandDescriptor.getGroupId() +
+                "executeCommand: " + commandDescriptor.command() +
+                    ", name = " + commandDescriptor.name() +
+                    ", groupId = " + commandDescriptor.groupId() +
                     ", in command = " + (myCurrentCommand != null) +
                     ", in transparent action = " + isUndoTransparentActionInProgress()
             );
         }
 
         if (myCurrentCommand != null) {
-            commandDescriptor.getCommand().run();
+            commandDescriptor.command().run();
             return;
         }
         Throwable throwable = null;
         myCurrentCommand = new Command(commandDescriptor);
         try {
             fireCommandStarted();
-            commandDescriptor.getCommand().run();
+            commandDescriptor.command().run();
         }
         catch (Throwable th) {
             throwable = th;
@@ -185,15 +201,15 @@ public class CoreCommandProcessor extends CommandProcessorEx {
     @RequiredUIAccess
     public CommandToken startCommand(CommandDescriptor commandDescriptor) {
         myApplication.assertIsDispatchThread();
-        Project project = commandDescriptor.getProject();
+        Project project = commandDescriptor.project();
         if (project != null && project.isDisposed()) {
             return null;
         }
 
         if (CommandLog.LOG.isDebugEnabled()) {
             CommandLog.LOG.debug(
-                "startCommand: name = " + commandDescriptor.getName() +
-                    ", groupId = " + commandDescriptor.getGroupId()
+                "startCommand: name = " + commandDescriptor.name() +
+                    ", groupId = " + commandDescriptor.groupId()
             );
         }
 
@@ -209,7 +225,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
             @Nullable
             @Override
             public Project getProject() {
-                return commandDescriptor.getProject();
+                return commandDescriptor.project();
             }
         };
     }
@@ -228,13 +244,13 @@ public class CoreCommandProcessor extends CommandProcessorEx {
         CommandDescriptor currentCommand = myCurrentCommand.getDescriptor();
         CommandEvent event = new CommandEvent(
             this,
-            currentCommand.getCommand(),
-            currentCommand.getName(),
-            currentCommand.getGroupId(),
-            currentCommand.getProject(),
-            currentCommand.getUndoConfirmationPolicy(),
-            currentCommand.isShouldRecordActionForActiveDocument(),
-            currentCommand.getDocument()
+            currentCommand.command(),
+            currentCommand.name(),
+            currentCommand.groupId(),
+            currentCommand.project(),
+            currentCommand.undoConfirmationPolicy(),
+            currentCommand.shouldRecordActionForActiveDocument(),
+            currentCommand.document()
         );
         CommandListener publisher = eventPublisher;
         try {
@@ -297,11 +313,11 @@ public class CoreCommandProcessor extends CommandProcessorEx {
     public LocalizeValue getCurrentCommandNameValue() {
         Command currentCommand = myCurrentCommand;
         if (currentCommand != null) {
-            return currentCommand.getDescriptor().getName();
+            return currentCommand.getDescriptor().name();
         }
         if (!myInterruptedCommands.isEmpty()) {
             Command command = myInterruptedCommands.peek();
-            return command != null ? command.getDescriptor().getName() : LocalizeValue.empty();
+            return command != null ? command.getDescriptor().name() : LocalizeValue.empty();
         }
         return LocalizeValue.empty();
     }
@@ -311,11 +327,11 @@ public class CoreCommandProcessor extends CommandProcessorEx {
     public Object getCurrentCommandGroupId() {
         Command currentCommand = myCurrentCommand;
         if (currentCommand != null) {
-            return currentCommand.getDescriptor().getGroupId();
+            return currentCommand.getDescriptor().groupId();
         }
         if (!myInterruptedCommands.isEmpty()) {
             Command command = myInterruptedCommands.peek();
-            return command != null ? command.getDescriptor().getGroupId() : null;
+            return command != null ? command.getDescriptor().groupId() : null;
         }
         return null;
     }
@@ -385,13 +401,13 @@ public class CoreCommandProcessor extends CommandProcessorEx {
         CommandDescriptor currentCommand = myCurrentCommand.getDescriptor();
         CommandEvent event = new CommandEvent(
             this,
-            currentCommand.getCommand(),
-            currentCommand.getName(),
-            currentCommand.getGroupId(),
-            currentCommand.getProject(),
-            currentCommand.getUndoConfirmationPolicy(),
-            currentCommand.isShouldRecordActionForActiveDocument(),
-            currentCommand.getDocument()
+            currentCommand.command(),
+            currentCommand.name(),
+            currentCommand.groupId(),
+            currentCommand.project(),
+            currentCommand.undoConfirmationPolicy(),
+            currentCommand.shouldRecordActionForActiveDocument(),
+            currentCommand.document()
         );
         eventPublisher.commandStarted(event);
     }

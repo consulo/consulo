@@ -10,7 +10,6 @@ import consulo.document.Document;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.undoRedo.builder.BaseCommandBuilder;
 import consulo.undoRedo.builder.CommandBuilder;
 import consulo.undoRedo.event.CommandListener;
 import consulo.util.lang.EmptyRunnable;
@@ -27,6 +26,7 @@ import jakarta.annotation.Nullable;
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class CommandProcessor {
     public interface ExecutableCommandBuilder extends CommandBuilder<ExecutableCommandBuilder> {
+        @RequiredUIAccess
         void execute();
 
         @RequiredUIAccess
@@ -35,26 +35,13 @@ public abstract class CommandProcessor {
         }
     }
 
-    private class MyCommandBuilder extends BaseCommandBuilder<ExecutableCommandBuilder> implements ExecutableCommandBuilder {
-        protected MyCommandBuilder(@Nonnull Runnable command) {
-            super(command);
-        }
-
-        @Override
-        public void execute() {
-            executeCommand(build());
-        }
-    }
-
-    @Nonnull
-    public ExecutableCommandBuilder newCommand(@Nonnull Runnable command) {
-        return new MyCommandBuilder(command);
-    }
-
     @Nonnull
     public static CommandProcessor getInstance() {
         return Application.get().getInstance(CommandProcessor.class);
     }
+
+    @Nonnull
+    public abstract ExecutableCommandBuilder newCommand(@Nonnull Runnable command);
 
     @Deprecated
     @DeprecationInfo("Use #executeCommand(CommandDescriptor)")
@@ -157,8 +144,6 @@ public abstract class CommandProcessor {
             .withShouldRecordActionForActiveDocument(shouldRecordCommandForActiveDocument)
             .execute();
     }
-
-    public abstract void executeCommand(CommandDescriptor commandDescriptor);
 
     public void setCurrentCommandName(@Nonnull LocalizeValue name) {
         setCurrentCommandName(name == LocalizeValue.empty() ? null : name.get());

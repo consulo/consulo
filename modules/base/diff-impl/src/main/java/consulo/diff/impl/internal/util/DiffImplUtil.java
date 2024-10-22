@@ -878,7 +878,7 @@ public class DiffImplUtil {
 
         protected static MyCommandBuilder underBulkUpdate(final @Nonnull Runnable task) {
             final SimpleReference<MyCommandBuilder> builder = new SimpleReference<>();
-            builder.set(new MyCommandBuilder(() -> DocumentUtil.executeInBulk(builder.get().build().getDocument(), true, task)));
+            builder.set(new MyCommandBuilder(() -> DocumentUtil.executeInBulk(builder.get().build().document(), true, task)));
             return builder.get();
         }
 
@@ -886,8 +886,8 @@ public class DiffImplUtil {
         @RequiredUIAccess
         public void execute() {
             CommandDescriptor descriptor = subBuilder.build();
-            if (!makeWritable(descriptor.getProject(), descriptor.getDocument())) {
-                VirtualFile file = FileDocumentManager.getInstance().getFile(descriptor.getDocument());
+            if (!makeWritable(descriptor.project(), descriptor.document())) {
+                VirtualFile file = FileDocumentManager.getInstance().getFile(descriptor.document());
                 LOG.warn("Document is read-only" + (file != null ? ": " + file.getPresentableName() : ""));
                 return;
             }

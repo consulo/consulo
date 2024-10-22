@@ -18,83 +18,19 @@ package consulo.undoRedo;
 import consulo.document.Document;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.util.lang.EmptyRunnable;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author UNV
  * @since 2024-10-21
  */
-public class CommandDescriptor {
-    @Nonnull
-    private final Runnable myCommand;
-    @Nonnull
-    private LocalizeValue myName = LocalizeValue.empty();
-    private Object myGroupId = null;
-    private Project myProject = null;
-    private Document myDocument = null;
-    @Nonnull
-    private UndoConfirmationPolicy myUndoConfirmationPolicy = UndoConfirmationPolicy.DEFAULT;
-    private boolean myShouldRecordActionForActiveDocument = true;
-
-    public CommandDescriptor() {
-        this(EmptyRunnable.INSTANCE);
-    }
-
-    public CommandDescriptor(@Nonnull Runnable command) {
-        myCommand = command;
-    }
-
-    public CommandDescriptor(
-        @Nonnull Runnable myCommand,
-        @Nonnull LocalizeValue myName,
-        Object myGroupId,
-        Project myProject,
-        Document myDocument,
-        @Nonnull UndoConfirmationPolicy myUndoConfirmationPolicy,
-        boolean myShouldRecordActionForActiveDocument
-    ) {
-        this.myCommand = myCommand;
-        this.myProject = myProject;
-        this.myName = myName;
-        this.myGroupId = myGroupId;
-        this.myDocument = myDocument;
-        this.myUndoConfirmationPolicy = myUndoConfirmationPolicy;
-        this.myShouldRecordActionForActiveDocument = myShouldRecordActionForActiveDocument;
-    }
-
-    @Nonnull
-    public Runnable getCommand() {
-        return myCommand;
-    }
-
-    @Nonnull
-    public LocalizeValue getName() {
-        return myName;
-    }
-
-    public Object getGroupId() {
-        return myGroupId;
-    }
-
-    public Project getProject() {
-        return myProject;
-    }
-
-    public Document getDocument() {
-        return myDocument;
-    }
-
-    public UndoConfirmationPolicy getUndoConfirmationPolicy() {
-        return myUndoConfirmationPolicy;
-    }
-
-    public boolean isShouldRecordActionForActiveDocument() {
-        return myShouldRecordActionForActiveDocument;
-    }
-
-    @Override
-    public String toString() {
-        return "'" + myName + "', group: '" + myGroupId + "'";
-    }
+public record CommandDescriptor(
+    @Nonnull Runnable command,
+    @Nonnull LocalizeValue name,
+    Object groupId,
+    Project project,
+    Document document,
+    @Nonnull UndoConfirmationPolicy undoConfirmationPolicy,
+    boolean shouldRecordActionForActiveDocument
+) {
 }

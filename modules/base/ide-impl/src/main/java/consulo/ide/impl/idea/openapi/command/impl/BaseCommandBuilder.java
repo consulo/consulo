@@ -13,21 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.undoRedo.builder;
+package consulo.ide.impl.idea.openapi.command.impl;
 
 import consulo.document.Document;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.undoRedo.CommandDescriptor;
 import consulo.undoRedo.UndoConfirmationPolicy;
+import consulo.undoRedo.builder.CommandBuilder;
 import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.ref.Ref;
 import jakarta.annotation.Nonnull;
 
 /**
-* @author UNV
-* @since 2024-10-21
-*/
+ * @author UNV
+ * @since 2024-10-21
+ */
 public class BaseCommandBuilder<THIS extends CommandBuilder> implements CommandBuilder<THIS> {
     @Nonnull
     private final Runnable myCommand;
@@ -49,13 +50,13 @@ public class BaseCommandBuilder<THIS extends CommandBuilder> implements CommandB
     }
 
     public BaseCommandBuilder(CommandDescriptor descriptor) {
-        this(descriptor.getCommand());
-        withName(descriptor.getName());
-        withGroupId(descriptor.getGroupId());
-        withProject(descriptor.getProject());
-        withDocument(descriptor.getDocument());
-        withUndoConfirmationPolicy(descriptor.getUndoConfirmationPolicy());
-        withShouldRecordActionForActiveDocument(descriptor.isShouldRecordActionForActiveDocument());
+        this(descriptor.command());
+        withName(descriptor.name());
+        withGroupId(descriptor.groupId());
+        withProject(descriptor.project());
+        withDocument(descriptor.document());
+        withUndoConfirmationPolicy(descriptor.undoConfirmationPolicy());
+        withShouldRecordActionForActiveDocument(descriptor.shouldRecordActionForActiveDocument());
     }
 
     @Override
