@@ -206,6 +206,8 @@ merge.dialog.resolve.change.action.name:
   text: Resolve
 action.presentation.diff.accept.text:
   text: Accept
+action.presentation.diff.revert.text:
+  text: Revert
 action.presentation.diff.append.text:
   text: Append
 option.ignore.policy.none:
@@ -252,3 +254,19 @@ collapse.unchanged.fragments:
   text: Collapse Unchanged Fragments
 synchronize.scrolling:
   text: Synchronize Scrolling
+merge.dialog.accept.change.command:
+  text: Accept change
+merge.dialog.ignore.change.command:
+  text: Ignore change
+merge.dialog.resolve.conflict.command:
+  text: Resolve conflict
+merge.dialog.apply.non.conflicted.changes.command:
+  text: Apply non conflicted changes
+message.init.merge.content.command:
+  text: Init merge content
+message.replace.change.command:
+  text: Replace change
+message.use.selected.changes.command:
+  text: '{0} selected changes'
+message.do.in.merge.command:
+  text: '{0} in merge'

@@ -19,6 +19,7 @@ import consulo.container.plugin.util.PlatformServiceLoader;
 import consulo.disposer.Disposable;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.Locale;
 import java.util.ServiceLoader;
 import java.util.Set;
@@ -28,51 +29,51 @@ import java.util.Set;
  * @since 2019-04-11
  */
 public abstract class LocalizeManager {
-  private static LocalizeManager ourInstance = PlatformServiceLoader.findImplementation(LocalizeManager.class, ServiceLoader::load);
+    private static LocalizeManager ourInstance = PlatformServiceLoader.findImplementation(LocalizeManager.class, ServiceLoader::load);
 
-  @Nonnull
-  public static LocalizeManager get() {
-    return ourInstance;
-  }
+    @Nonnull
+    public static LocalizeManager get() {
+        return ourInstance;
+    }
 
-  /**
-   * Parse localizeKeyInfo
-   *
-   * @param localizeKeyInfo string like 'consulo.platform.base.IdeLocalize@text.some.value'
-   * @return localize value, if key not found, or parsing error return localize value like parameter
-   */
-  @Nonnull
-  public abstract LocalizeValue fromStringKey(@Nonnull String localizeKeyInfo);
+    /**
+     * Parse localizeKeyInfo
+     *
+     * @param localizeKeyInfo string like 'consulo.platform.base.IdeLocalize@text.some.value'
+     * @return localize value, if key not found, or parsing error return localize value like parameter
+     */
+    @Nonnull
+    public abstract LocalizeValue fromStringKey(@Nonnull String localizeKeyInfo);
 
-  /**
-   * Return unformatted localize text
-   *
-   * @throws IllegalArgumentException if key is invalid
-   */
-  @Nonnull
-  public abstract String getUnformattedText(@Nonnull LocalizeKey key);
+    /**
+     * Return unformatted localize text
+     *
+     * @throws IllegalArgumentException if key is invalid
+     */
+    @Nonnull
+    public abstract String getUnformattedText(@Nonnull LocalizeKey key);
 
-  @Nonnull
-  public abstract Locale parseLocale(@Nonnull String localeText);
+    @Nonnull
+    public abstract Locale parseLocale(@Nonnull String localeText);
 
-  public void setLocale(@Nonnull Locale locale) {
-    setLocale(locale, true);
-  }
+    public void setLocale(@Nonnull Locale locale) {
+        setLocale(locale, true);
+    }
 
-  public abstract void setLocale(@Nonnull Locale locale, boolean fireEvents);
+    public abstract void setLocale(@Nonnull Locale locale, boolean fireEvents);
 
-  @Nonnull
-  public abstract Locale getLocale();
+    @Nonnull
+    public abstract Locale getLocale();
 
-  public abstract boolean isDefaultLocale();
+    public abstract boolean isDefaultLocale();
 
-  @Nonnull
-  public abstract Set<Locale> getAvaliableLocales();
+    @Nonnull
+    public abstract Set<Locale> getAvaliableLocales();
 
-  public abstract void addListener(@Nonnull LocalizeManagerListener listener, @Nonnull Disposable disposable);
+    public abstract void addListener(@Nonnull LocalizeManagerListener listener, @Nonnull Disposable disposable);
 
-  public abstract long getModificationCount();
+    public abstract long getModificationCount();
 
-  @Nonnull
-  public abstract String formatText(String unformattedText, Object... arg);
+    @Nonnull
+    public abstract String formatText(String unformattedText, Object... arg);
 }

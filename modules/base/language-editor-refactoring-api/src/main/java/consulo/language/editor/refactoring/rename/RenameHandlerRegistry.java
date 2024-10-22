@@ -119,7 +119,7 @@ public class RenameHandlerRegistry {
 
     @Nonnull
     private static LocalizeValue getHandlerTitle(RenameHandler renameHandler) {
-        return renameHandler.getActionTitleValue().captilize();
+        return renameHandler.getActionTitleValue().capitalize();
     }
 
     /**

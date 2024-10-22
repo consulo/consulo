@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.awt.internal.diff.merge;
+package consulo.undoRedo;
 
-import consulo.diff.merge.MergeContext;
-import consulo.diff.merge.MergeTool;
+import consulo.document.Document;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
 import jakarta.annotation.Nonnull;
-import consulo.ui.annotation.RequiredUIAccess;
 
-public abstract class MergeContextEx extends MergeContext {
-    /*
-     * Destroy active MergeViewer and reopen current MergeRequest in the new one
-     */
-    @RequiredUIAccess
-    public abstract void reopenWithTool(@Nonnull MergeTool tool);
+/**
+ * @author UNV
+ * @since 2024-10-21
+ */
+public record CommandDescriptor(
+    @Nonnull Runnable command,
+    @Nonnull LocalizeValue name,
+    Object groupId,
+    Project project,
+    Document document,
+    @Nonnull UndoConfirmationPolicy undoConfirmationPolicy,
+    boolean shouldRecordActionForActiveDocument
+) {
 }

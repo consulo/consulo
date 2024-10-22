@@ -24,20 +24,20 @@ import jakarta.annotation.Nonnull;
  * @since 2020-05-20
  */
 public final class DefaultLocalizeValue extends BaseLocalizeValue {
-  private final LocalizeKey myLocalizeKey;
+    private final LocalizeKey myLocalizeKey;
 
-  public DefaultLocalizeValue(@Nonnull LocalizeKey localizeKey) {
-    this(localizeKey, ourEmptyArgs);
-  }
+    public DefaultLocalizeValue(@Nonnull LocalizeKey localizeKey) {
+        this(localizeKey, ourEmptyArgs);
+    }
 
-  public DefaultLocalizeValue(@Nonnull LocalizeKey localizeKey, @Nonnull Object... args) {
-    super(args);
-    myLocalizeKey = localizeKey;
-  }
+    public DefaultLocalizeValue(@Nonnull LocalizeKey localizeKey, @Nonnull Object... args) {
+        super(args);
+        myLocalizeKey = localizeKey;
+    }
 
-  @Nonnull
-  @Override
-  protected String getUnformattedText(@Nonnull LocalizeManager localizeManager) {
-    return localizeManager.getUnformattedText(myLocalizeKey);
-  }
+    @Nonnull
+    @Override
+    protected String getUnformattedText(@Nonnull LocalizeManager localizeManager) {
+        return localizeManager.getUnformattedText(myLocalizeKey);
+    }
 }

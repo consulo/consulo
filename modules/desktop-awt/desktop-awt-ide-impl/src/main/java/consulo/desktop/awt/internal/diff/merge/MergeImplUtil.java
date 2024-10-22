@@ -72,18 +72,13 @@ public class MergeImplUtil {
             return LocalizeValue.localizeTODO(message);
         }
 
-        switch (result) {
-            case CANCEL:
-                return LocalizeValue.localizeTODO("Abort");
-            case LEFT:
-                return LocalizeValue.localizeTODO("Accept Left");
-            case RIGHT:
-                return LocalizeValue.localizeTODO("Accept Right");
-            case RESOLVED:
-                return LocalizeValue.localizeTODO("Apply");
-            default:
-                throw new IllegalArgumentException(result.toString());
-        }
+        return switch (result) {
+            case CANCEL -> LocalizeValue.localizeTODO("Abort");
+            case LEFT -> LocalizeValue.localizeTODO("Accept Left");
+            case RIGHT -> LocalizeValue.localizeTODO("Accept Right");
+            case RESOLVED -> LocalizeValue.localizeTODO("Apply");
+            default -> throw new IllegalArgumentException(result.toString());
+        };
     }
 
     @Nonnull
