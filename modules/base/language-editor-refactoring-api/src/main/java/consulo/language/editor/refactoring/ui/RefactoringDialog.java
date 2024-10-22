@@ -113,7 +113,7 @@ public abstract class RefactoringDialog extends DialogWrapper {
         }
         catch (ConfigurationException e) {
             enabled = false;
-            setErrorText(LocalizeValue.of(e.getMessage()));
+            setErrorText(LocalizeValue.ofNullable(e.getMessage()));
         }
         getPreviewAction().setEnabled(enabled);
         getRefactorAction().setEnabled(enabled);
