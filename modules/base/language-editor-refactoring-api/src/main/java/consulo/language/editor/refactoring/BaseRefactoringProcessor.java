@@ -255,6 +255,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
         }
     }
 
+    @RequiredUIAccess
     protected void previewRefactoring(@Nonnull UsageInfo[] usages) {
         if (myProject.getApplication().isUnitTestMode()) {
             if (!PREVIEW_IN_TESTS) {
@@ -293,6 +294,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
         return false;
     }
 
+    @RequiredUIAccess
     private boolean ensureElementsWritable(@Nonnull final UsageInfo[] usages, @Nonnull UsageViewDescriptor descriptor) {
         Set<PsiElement> elements = ContainerUtil.newIdentityTroveSet(); // protect against poorly implemented equality
         for (UsageInfo usage : usages) {
@@ -315,20 +317,19 @@ public abstract class BaseRefactoringProcessor implements Runnable {
         return CommonRefactoringUtil.checkReadOnlyStatus(project, psiElements);
     }
 
+    @RequiredUIAccess
     protected void execute(@Nonnull final UsageInfo[] usages) {
-        CommandProcessor.getInstance().executeCommand(
-            myProject,
-            () -> {
+        CommandProcessor.getInstance().newCommand(() -> {
                 Collection<UsageInfo> usageInfos = new LinkedHashSet<>(Arrays.asList(usages));
                 doRefactoring(usageInfos);
                 if (isGlobalUndoAction()) {
                     CommandProcessor.getInstance().markCurrentCommandAsGlobal(myProject);
                 }
-            },
-            getCommandName(),
-            null,
-            getUndoConfirmationPolicy()
-        );
+            })
+            .withProject(myProject)
+            .withName(LocalizeValue.ofNullable(getCommandName()))
+            .withUndoConfirmationPolicy(getUndoConfirmationPolicy())
+            .execute();
     }
 
     protected boolean isGlobalUndoAction() {

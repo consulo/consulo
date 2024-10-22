@@ -9,6 +9,7 @@ import consulo.codeEditor.action.EditorActionManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.document.Document;
+import consulo.document.DocumentWindow;
 import consulo.document.FileDocumentManager;
 import consulo.document.RangeMarker;
 import consulo.document.util.Segment;
@@ -26,7 +27,6 @@ import consulo.language.codeStyle.*;
 import consulo.language.editor.LanguageLineWrapPositionStrategy;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.file.FileViewProvider;
-import consulo.document.DocumentWindow;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.impl.psi.SourceTreeToPsiMap;
 import consulo.language.inject.InjectedLanguageManager;
@@ -37,6 +37,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -48,7 +49,6 @@ import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import java.awt.*;
 import java.util.List;
@@ -327,8 +327,10 @@ public class CodeFormatterFacade {
                         }
 
                         // Allow only range expansion (not reduction) for injected context.
-                        if ((initialInjectedRange.getStartOffset() > injectedRange.getStartOffset() && initialInjectedRange.getStartOffset() > 0) ||
-                            (initialInjectedRange.getEndOffset() < injectedRange.getEndOffset() && initialInjectedRange.getEndOffset() < injected.getTextLength())) {
+                        if ((initialInjectedRange.getStartOffset() > injectedRange.getStartOffset()
+                            && initialInjectedRange.getStartOffset() > 0)
+                            || (initialInjectedRange.getEndOffset() < injectedRange.getEndOffset()
+                            && initialInjectedRange.getEndOffset() < injected.getTextLength())) {
                             range = TextRange.create(
                                 range.getStartOffset() + injectedRange.getStartOffset() - initialInjectedRange.getStartOffset(),
                                 range.getEndOffset() + initialInjectedRange.getEndOffset() - injectedRange.getEndOffset()
@@ -493,6 +495,7 @@ public class CodeFormatterFacade {
         }
     }
 
+    @RequiredUIAccess
     public void doWrapLongLinesIfNecessary(
         @Nonnull final Editor editor,
         @Nonnull final Project project,
@@ -597,6 +600,7 @@ public class CodeFormatterFacade {
      *                1. The first element holds added lines number;
      *                2. The second element holds added symbols number;
      */
+    @RequiredUIAccess
     private static void emulateEnter(@Nonnull final Editor editor, @Nonnull Project project, int[] shifts) {
         final DataContext dataContext = prepareContext(editor.getComponent(), project);
         int caretOffset = editor.getCaretModel().getOffset();
@@ -619,7 +623,10 @@ public class CodeFormatterFacade {
             Runnable command =
                 () -> EditorActionManager.getInstance().getActionHandler(IdeActions.ACTION_EDITOR_ENTER).execute(editor, dataContext);
             if (!commandProcessor.hasCurrentCommand()) {
-                commandProcessor.executeCommand(editor.getProject(), command, WRAP_LINE_COMMAND_NAME, null);
+                commandProcessor.newCommand(command)
+                    .withProject(editor.getProject())
+                    .withName(LocalizeValue.ofNullable(WRAP_LINE_COMMAND_NAME))
+                    .execute();
             }
             else {
                 command.run();
@@ -806,7 +813,7 @@ public class CodeFormatterFacade {
         final DataContext baseDataContext = DataManager.getInstance().getDataContext(component);
         return new DelegatingDataContext(baseDataContext) {
             @Override
-            public Object getData(@Nonnull @NonNls Key dataId) {
+            public Object getData(@Nonnull Key dataId) {
                 Object result = baseDataContext.getData(dataId);
                 if (result == null && Project.KEY == dataId) {
                     result = project;
@@ -826,7 +833,7 @@ public class CodeFormatterFacade {
         }
 
         @Override
-        public Object getData(@Nonnull @NonNls Key dataId) {
+        public Object getData(@Nonnull Key dataId) {
             return myDataContextDelegate.getData(dataId);
         }
 

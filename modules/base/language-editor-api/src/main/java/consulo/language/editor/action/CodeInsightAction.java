@@ -11,6 +11,7 @@ import consulo.language.editor.util.LanguageEditorUtil;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -57,27 +58,22 @@ public abstract class CodeInsightAction extends AnAction implements UpdateInBack
             return;
         }
 
-        CommandProcessor.getInstance().executeCommand(
-            project,
-            () -> {
-                Application application = project.getApplication();
-                final Runnable action = () -> {
-                    if (!application.isHeadlessEnvironment() && !editor.getContentComponent().isShowing()) {
-                        return;
-                    }
+        CommandProcessor.ExecutableCommandBuilder commandBuilder = CommandProcessor.getInstance().newCommand(() -> {
+                if (Application.get().isHeadlessEnvironment() || editor.getContentComponent().isShowing()) {
                     handler.invoke(project, editor, psiFile);
-                };
-                if (handler.startInWriteAction()) {
-                    application.runWriteAction(action);
                 }
-                else {
-                    action.run();
-                }
-            },
-            getCommandName(),
-            DocCommandGroupId.noneGroupId(editor.getDocument()),
-            editor.getDocument()
-        );
+            })
+            .withProject(project)
+            .withDocument(editor.getDocument())
+            .withName(LocalizeValue.ofNullable(getCommandName()))
+            .withGroupId(DocCommandGroupId.noneGroupId(editor.getDocument()));
+
+        if (handler.startInWriteAction()) {
+            commandBuilder.executeInWriteAction();
+        }
+        else {
+            commandBuilder.execute();
+        }
     }
 
     @RequiredUIAccess

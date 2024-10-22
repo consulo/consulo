@@ -15,19 +15,18 @@
  */
 package consulo.ide.impl.idea.util.ui;
 
-import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.undoRedo.CommandProcessor;
-import consulo.undoRedo.UndoConfirmationPolicy;
-import consulo.logging.Logger;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.colorScheme.TextAttributes;
+import consulo.document.Document;
+import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.util.Alarm;
+import consulo.undoRedo.CommandProcessor;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -56,25 +55,21 @@ public class EditorAdapter {
     private final Editor myEditor;
 
     private final Alarm myFlushAlarm = new Alarm();
-    private final Collection<Line> myLines = new ArrayList<Line>();
+    private final Collection<Line> myLines = new ArrayList<>();
     private final Project myProject;
     private final boolean myScrollToTheEndOnAppend;
 
-    private final Runnable myFlushDeferredRunnable = new Runnable() {
-        public void run() {
-            flushStoredLines();
-        }
-    };
+    private final Runnable myFlushDeferredRunnable = this::flushStoredLines;
 
+    @RequiredUIAccess
     private synchronized void flushStoredLines() {
         Collection<Line> lines;
         synchronized (myLines) {
-            lines = new ArrayList<Line>(myLines);
+            lines = new ArrayList<>(myLines);
             myLines.clear();
         }
-        ApplicationManager.getApplication().runWriteAction(writingCommand(lines));
+        executeWritingCommand(lines);
     }
-
 
     public EditorAdapter(Editor editor, Project project, boolean scrollToTheEndOnAppend) {
         myEditor = editor;
@@ -97,10 +92,9 @@ public class EditorAdapter {
         }
     }
 
-    private Runnable writingCommand(final Collection<Line> lines) {
-        final Runnable command = new Runnable() {
-            public void run() {
-
+    @RequiredUIAccess
+    private void executeWritingCommand(final Collection<Line> lines) {
+        CommandProcessor.getInstance().newCommand(() -> {
                 Document document = myEditor.getDocument();
 
                 StringBuilder buffer = new StringBuilder();
@@ -124,14 +118,10 @@ public class EditorAdapter {
                     }
                 }
                 shiftCursorToTheEndOfDocument();
-            }
-        };
-        return new Runnable() {
-            public void run() {
-                CommandProcessor.getInstance()
-                    .executeCommand(myProject, command, "", null, UndoConfirmationPolicy.DEFAULT, myEditor.getDocument());
-            }
-        };
+            })
+            .withProject(myProject)
+            .withDocument(myEditor.getDocument())
+            .executeInWriteAction();
     }
 
     private void shiftCursorToTheEndOfDocument() {

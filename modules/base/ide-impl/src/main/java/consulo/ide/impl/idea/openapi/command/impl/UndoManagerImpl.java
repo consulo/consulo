@@ -27,6 +27,7 @@ import consulo.fileEditor.*;
 import consulo.fileEditor.text.TextEditorProvider;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.internal.ExternalChangeAction;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.platform.base.localize.CommonLocalize;
@@ -140,7 +141,7 @@ public abstract class UndoManagerImpl implements UndoManager, Disposable {
                     if (myProject != null && myProject.isDisposed()) {
                         return;
                     }
-                    onCommandFinished(event.getProject(), event.getCommandName(), event.getCommandGroupId());
+                    onCommandFinished(event.getProject(), event.getCommandNameValue(), event.getCommandGroupId());
                 }
 
                 @Override
@@ -161,7 +162,7 @@ public abstract class UndoManagerImpl implements UndoManager, Disposable {
                     }
                     if (myStarted) {
                         myStarted = false;
-                        onCommandFinished(myProject, "", null);
+                        onCommandFinished(myProject, LocalizeValue.empty(), null);
                     }
                 }
             },
@@ -190,7 +191,7 @@ public abstract class UndoManagerImpl implements UndoManager, Disposable {
         LOG.assertTrue(myCommandLevel == 0 || !(myCurrentActionProject instanceof DummyProject));
     }
 
-    private void onCommandFinished(final Project project, final String commandName, final Object commandGroupId) {
+    private void onCommandFinished(final Project project, @Nonnull LocalizeValue commandName, Object commandGroupId) {
         commandFinished(commandName, commandGroupId);
         if (myCommandLevel == 0) {
             forEachProvider(undoProvider -> undoProvider.commandFinished(project));
@@ -232,7 +233,7 @@ public abstract class UndoManagerImpl implements UndoManager, Disposable {
         myCommandLevel++;
     }
 
-    private void commandFinished(String commandName, Object groupId) {
+    private void commandFinished(@Nonnull LocalizeValue commandName, Object groupId) {
         if (myCommandLevel == 0) {
             return; // possible if command listener was added within command
         }
@@ -247,7 +248,7 @@ public abstract class UndoManagerImpl implements UndoManager, Disposable {
         myOriginatorReference = null;
 
         myCurrentMerger.setAfterState(getCurrentState());
-        myMerger.commandFinished(commandName, groupId, myCurrentMerger);
+        myMerger.commandFinished(commandName.get(), groupId, myCurrentMerger);
 
         disposeCurrentMerger();
     }
@@ -281,6 +282,7 @@ public abstract class UndoManagerImpl implements UndoManager, Disposable {
 
     @Override
     @RequiredUIAccess
+    @RequiredWriteAction
     public void nonundoableActionPerformed(@Nonnull final DocumentReference ref, final boolean isGlobal) {
         Application.get().assertIsDispatchThread();
         if (myProject != null && myProject.isDisposed()) {
@@ -291,6 +293,7 @@ public abstract class UndoManagerImpl implements UndoManager, Disposable {
 
     @Override
     @RequiredUIAccess
+    @RequiredWriteAction
     public void undoableActionPerformed(@Nonnull UndoableAction action) {
         Application.get().assertIsWriteThread();
         if (myProject != null && myProject.isDisposed()) {
@@ -308,7 +311,7 @@ public abstract class UndoManagerImpl implements UndoManager, Disposable {
             );
             commandStarted(UndoConfirmationPolicy.DEFAULT, false);
             myCurrentMerger.addAction(action);
-            commandFinished("", null);
+            commandFinished(LocalizeValue.empty(), null);
             return;
         }
 
@@ -407,14 +410,12 @@ public abstract class UndoManagerImpl implements UndoManager, Disposable {
             }
         };
 
-        String name = getUndoOrRedoActionNameAndDescription(editor, isUndoInProgress()).second;
-        CommandProcessor.getInstance().executeCommand(
-            myProject,
-            executeUndoOrRedoAction,
-            name,
-            null,
-            myMerger.getUndoConfirmationPolicy()
-        );
+        LocalizeValue name = getUndoOrRedoActionNameAndDescription(editor, isUndoInProgress()).second;
+        CommandProcessor.getInstance().newCommand(executeUndoOrRedoAction)
+            .withProject(myProject)
+            .withName(name)
+            .withUndoConfirmationPolicy(myMerger.getUndoConfirmationPolicy())
+            .execute();
         if (exception[0] != null) {
             throw exception[0];
         }
@@ -506,47 +507,46 @@ public abstract class UndoManagerImpl implements UndoManager, Disposable {
     @Override
     @RequiredUIAccess
     public Couple<String> getUndoActionNameAndDescription(Object editor) {
-        return getUndoOrRedoActionNameAndDescription(editor, true);
+        Couple<LocalizeValue> nameAndDescription = getUndoOrRedoActionNameAndDescription(editor, true);
+        return Couple.of(nameAndDescription.getFirst().get(), nameAndDescription.getSecond().get());
     }
 
     @Nonnull
     @Override
     @RequiredUIAccess
     public Couple<String> getRedoActionNameAndDescription(Object editor) {
-        return getUndoOrRedoActionNameAndDescription(editor, false);
+        Couple<LocalizeValue> nameAndDescription = getUndoOrRedoActionNameAndDescription(editor, false);
+        return Couple.of(nameAndDescription.getFirst().get(), nameAndDescription.getSecond().get());
     }
 
     @Nonnull
     @RequiredUIAccess
-    private Couple<String> getUndoOrRedoActionNameAndDescription(Object editor, boolean undo) {
-        String desc = isUndoOrRedoAvailable(editor, undo) ? doFormatAvailableUndoRedoAction(editor, undo) : null;
-        if (desc == null) {
-            desc = "";
-        }
-        String shortActionName = StringUtil.first(desc, 30, true);
+    private Couple<LocalizeValue> getUndoOrRedoActionNameAndDescription(Object editor, boolean undo) {
+        LocalizeValue desc = isUndoOrRedoAvailable(editor, undo) ? doFormatAvailableUndoRedoAction(editor, undo) : LocalizeValue.empty();
+        LocalizeValue shortActionName = desc.map((localizeManager, value) -> StringUtil.first(value, 30, true));
 
-        if (desc.isEmpty()) {
+        if (desc == LocalizeValue.empty()) {
             desc = undo
-                ? ActionLocalize.actionUndoDescriptionEmpty().get()
-                : ActionLocalize.actionRedoDescriptionEmpty().get();
+                ? ActionLocalize.actionUndoDescriptionEmpty()
+                : ActionLocalize.actionRedoDescriptionEmpty();
         }
 
         return Couple.of(
-            (undo ? ActionLocalize.actionUndoText(shortActionName) : ActionLocalize.actionRedoText(shortActionName)).get().trim(),
-            (undo ? ActionLocalize.actionUndoDescription(desc) : ActionLocalize.actionRedoDescription(desc)).get().trim()
+            (undo ? ActionLocalize.actionUndoText(shortActionName) : ActionLocalize.actionRedoText(shortActionName)),
+            (undo ? ActionLocalize.actionUndoDescription(desc) : ActionLocalize.actionRedoDescription(desc))
         );
     }
 
-    @Nullable
-    private String doFormatAvailableUndoRedoAction(Object editor, boolean isUndo) {
+    @Nonnull
+    private LocalizeValue doFormatAvailableUndoRedoAction(Object editor, boolean isUndo) {
         Collection<DocumentReference> refs = getDocRefs(editor);
         if (refs == null) {
-            return null;
+            return LocalizeValue.empty();
         }
         if (isUndo && myMerger.isUndoAvailable(refs)) {
-            return myMerger.getCommandName();
+            return LocalizeValue.ofNullable(myMerger.getCommandName());
         }
-        return getStackHolder(isUndo).getLastAction(refs).getCommandName();
+        return LocalizeValue.ofNullable(getStackHolder(isUndo).getLastAction(refs).getCommandName());
     }
 
     @Nonnull
@@ -647,6 +647,7 @@ public abstract class UndoManagerImpl implements UndoManager, Disposable {
     }
 
     @TestOnly
+    @RequiredUIAccess
     public void dropHistoryInTests() {
         flushMergers();
         LOG.assertTrue(myCommandLevel == 0, myCommandLevel);
@@ -656,11 +657,14 @@ public abstract class UndoManagerImpl implements UndoManager, Disposable {
     }
 
     @TestOnly
+    @RequiredUIAccess
     private void flushMergers() {
         assert myProject == null || !myProject.isDisposed();
         // Run dummy command in order to flush all mergers...
-        CommandProcessor.getInstance()
-            .executeCommand(myProject, EmptyRunnable.getInstance(), CommonLocalize.dropUndoHistoryCommandName().get(), null);
+        CommandProcessor.getInstance().newCommand(EmptyRunnable.getInstance())
+            .withProject(myProject)
+            .withName(CommonLocalize.dropUndoHistoryCommandName())
+            .execute();
     }
 
     @TestOnly

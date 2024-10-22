@@ -15,7 +15,6 @@
  */
 package consulo.language.codeStyle.ui.setting;
 
-import consulo.application.ApplicationManager;
 import consulo.codeEditor.EditorHighlighter;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.document.Document;
@@ -31,11 +30,11 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.util.ProjectUIUtil;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import consulo.virtualFileSystem.fileType.FileType;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -43,7 +42,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
-import java.util.function.Function;
 
 /**
  * Base class for code style settings panels supporting multiple programming languages.
@@ -125,13 +123,12 @@ public abstract class CustomizableLanguageCodeStylePanel extends CodeStyleAbstra
 
 
     @Override
+    @RequiredUIAccess
     protected PsiFile doReformat(final Project project, final PsiFile psiFile) {
         final String text = psiFile.getText();
         final PsiDocumentManager manager = PsiDocumentManager.getInstance(project);
         final Document doc = manager.getDocument(psiFile);
-        CommandProcessor.getInstance().executeCommand(
-            project,
-            () -> ApplicationManager.getApplication().runWriteAction(() -> {
+        CommandProcessor.getInstance().newCommand(() -> {
                 if (doc != null) {
                     doc.replaceString(0, doc.getTextLength(), text);
                     manager.commitDocument(doc);
@@ -142,10 +139,9 @@ public abstract class CustomizableLanguageCodeStylePanel extends CodeStyleAbstra
                 catch (IncorrectOperationException e) {
                     LOG.error(e);
                 }
-            }),
-            "",
-            ""
-        );
+            })
+            .withProject(project)
+            .executeInWriteAction();
         if (doc != null) {
             manager.commitDocument(doc);
         }
@@ -162,7 +158,7 @@ public abstract class CustomizableLanguageCodeStylePanel extends CodeStyleAbstra
     }
 
     protected <T extends OrderedOption> List<T> sortOptions(Collection<T> options) {
-        Set<String> names = new HashSet<>(ContainerUtil.map(options, (Function<OrderedOption, String>)option -> option.getOptionName()));
+        Set<String> names = new HashSet<>(ContainerUtil.map(options, OrderedOption::getOptionName));
 
         List<T> order = new ArrayList<>(options.size());
         MultiMap<String, T> afters = new MultiMap<>();

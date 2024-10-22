@@ -4,7 +4,6 @@ package consulo.ide.impl.idea.openapi.fileEditor.impl;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.WriteAction;
 import consulo.codeEditor.EditorFactory;
 import consulo.component.ComponentManager;
@@ -28,13 +27,12 @@ import consulo.ide.impl.idea.openapi.editor.impl.TrailingSpacesStripper;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.text.TextEditorImpl;
 import consulo.ide.impl.idea.openapi.project.ProjectUtil;
 import consulo.ide.impl.idea.openapi.vfs.SafeWriteRequestor;
-import consulo.ide.impl.idea.util.ExceptionUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.lang.ExceptionUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.language.codeStyle.CodeStyle;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.impl.file.AbstractFileViewProvider;
 import consulo.language.impl.internal.pom.PomAspectGuard;
-import consulo.virtualFileSystem.internal.LoadTextUtil;
 import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
@@ -45,7 +43,7 @@ import consulo.project.Project;
 import consulo.project.ProjectLocator;
 import consulo.project.ProjectManager;
 import consulo.project.internal.ProjectManagerEx;
-import consulo.ui.ex.UIBundle;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ui.ex.localize.UILocalize;
@@ -61,6 +59,7 @@ import consulo.virtualFileSystem.event.VFileDeleteEvent;
 import consulo.virtualFileSystem.event.VFilePropertyChangeEvent;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.impl.internal.RawFileLoaderImpl;
+import consulo.virtualFileSystem.internal.LoadTextUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
@@ -112,11 +111,10 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
         @Override
         public void documentChanged(@Nonnull DocumentEvent e) {
             final Document document = e.getDocument();
-            if (!ApplicationManager.getApplication().hasWriteAction(ExternalChangeAction.ExternalDocumentChange.class)) {
+            if (!Application.get().hasWriteAction(ExternalChangeAction.ExternalDocumentChange.class)) {
                 myUnsavedDocuments.add(document);
             }
-            final Runnable currentCommand = CommandProcessor.getInstance().getCurrentCommand();
-            Project project = currentCommand == null ? null : CommandProcessor.getInstance().getCurrentCommandProject();
+            Project project = CommandProcessor.getInstance().getCurrentCommandProject();
             if (project == null) {
                 project = ProjectUtil.guessProjectForFile(getFile(document));
             }
@@ -147,6 +145,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
 
     static final class MyProjectCloseHandler implements Predicate<Project> {
         @Override
+        @RequiredUIAccess
         public boolean test(@Nonnull Project project) {
             FileDocumentManagerImpl manager = (FileDocumentManagerImpl)FileDocumentManager.getInstance();
             if (!manager.myUnsavedDocuments.isEmpty()) {
@@ -192,10 +191,11 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
         }
     }
 
-    @Override
     @Nullable
+    @Override
+    @RequiredUIAccess
     public Document getDocument(@Nonnull final VirtualFile file) {
-        ApplicationManager.getApplication().assertReadAccessAllowed();
+        Application.get().assertReadAccessAllowed();
         DocumentEx document = (DocumentEx)getCachedDocument(file);
         if (document == null) {
             if (!file.isValid() || file.isDirectory() || isBinaryWithoutDecompiler(file)) {
@@ -292,11 +292,12 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
     }
 
     @TestOnly
+    @RequiredWriteAction
     public void dropAllUnsavedDocuments() {
-        if (!ApplicationManager.getApplication().isUnitTestMode()) {
+        if (!Application.get().isUnitTestMode()) {
             throw new RuntimeException("This method is only for test mode!");
         }
-        ApplicationManager.getApplication().assertWriteAccessAllowed();
+        Application.get().assertWriteAccessAllowed();
         if (!myUnsavedDocuments.isEmpty()) {
             myUnsavedDocuments.clear();
             fireUnsavedDocumentsDropped();
@@ -313,14 +314,9 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
                     continue;
                 }
                 Project project = ProjectUtil.guessProjectForFile(file);
-                if (project == null) {
-                    continue;
+                if (project != null && !PsiDocumentManager.getInstance(project).isDocumentBlockedByPsi(document)) {
+                    saveDocument(document);
                 }
-                if (PsiDocumentManager.getInstance(project).isDocumentBlockedByPsi(document)) {
-                    continue;
-                }
-
-                saveDocument(document);
             }
         });
     }
@@ -329,8 +325,9 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
      * @param isExplicit caused by user directly (Save action) or indirectly (e.g. Compile)
      */
     @Override
+    @RequiredUIAccess
     public void saveAllDocuments(boolean isExplicit) {
-        ApplicationManager.getApplication().assertIsDispatchThread();
+        Application.get().assertIsDispatchThread();
 
         myMultiCaster.beforeAllDocumentsSaving();
         if (myUnsavedDocuments.isEmpty()) {
@@ -343,10 +340,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
             int count = 0;
 
             for (Document document : myUnsavedDocuments) {
-                if (failedToSave.containsKey(document)) {
-                    continue;
-                }
-                if (vetoed.contains(document)) {
+                if (failedToSave.containsKey(document) || vetoed.contains(document)) {
                     continue;
                 }
                 try {
@@ -372,12 +366,14 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
     }
 
     @Override
+    @RequiredUIAccess
     public void saveDocument(@Nonnull final Document document) {
         saveDocument(document, true);
     }
 
+    @RequiredUIAccess
     public void saveDocument(@Nonnull final Document document, final boolean explicit) {
-        ApplicationManager.getApplication().assertIsDispatchThread();
+        Application.get().assertIsDispatchThread();
 
         if (!myUnsavedDocuments.contains(document)) {
             return;
@@ -394,6 +390,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
     }
 
     @Override
+    @RequiredUIAccess
     public void saveDocumentAsIs(@Nonnull Document document) {
         VirtualFile file = getFile(document);
         boolean spaceStrippingEnabled = true;
@@ -444,7 +441,9 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
 
     private boolean maySaveDocument(@Nonnull VirtualFile file, @Nonnull Document document, boolean isExplicit) {
         return !myConflictResolver.hasConflict(file)
-            && FileDocumentSynchronizationVetoer.EP_NAME.getExtensionList().stream().allMatch(vetoer -> vetoer.maySaveDocument(document, isExplicit));
+            && FileDocumentSynchronizationVetoer.EP_NAME.getExtensionList()
+            .stream()
+            .allMatch(vetoer -> vetoer.maySaveDocument(document, isExplicit));
     }
 
     @RequiredWriteAction
@@ -565,7 +564,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
                 return WriteAccessStatus.NON_WRITABLE;
             }
             ReadonlyStatusHandler.OperationStatus writableStatus =
-                ReadonlyStatusHandler.getInstance((Project)project).ensureFilesWritable(Collections.singletonList(file));
+                ReadonlyStatusHandler.getInstance(project).ensureFilesWritable(Collections.singletonList(file));
             if (writableStatus.hasReadonlyFiles()) {
                 return new WriteAccessStatus(writableStatus.getReadonlyFilesMessage());
             }
@@ -579,6 +578,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
     }
 
     @Override
+    @RequiredUIAccess
     public void reloadFiles(@Nonnull final VirtualFile... files) {
         for (VirtualFile file : files) {
             if (file.exists()) {
@@ -617,12 +617,13 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
         return document.getUserData(BIG_FILE_PREVIEW) == Boolean.TRUE;
     }
 
+    @RequiredUIAccess
     protected void propertyChanged(@Nonnull VFilePropertyChangeEvent event) {
         final VirtualFile file = event.getFile();
         if (VirtualFile.PROP_WRITABLE.equals(event.getPropertyName())) {
             final Document document = getCachedDocument(file);
             if (document != null) {
-                ApplicationManager.getApplication().runWriteAction((ExternalChangeAction)() -> document.setReadOnly(!file.isWritable()));
+                Application.get().runWriteAction(() -> document.setReadOnly(!file.isWritable()));
             }
         }
         else if (VirtualFile.PROP_NAME.equals(event.getPropertyName())) {
@@ -652,6 +653,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
         return fileType.isBinary() && BinaryFileDecompiler.forFileType(fileType) == null;
     }
 
+    @RequiredUIAccess
     public void contentsChanged(VFileContentChangeEvent event) {
         VirtualFile virtualFile = event.getFile();
         Document document = getCachedDocument(virtualFile);
@@ -670,8 +672,9 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
     }
 
     @Override
+    @RequiredUIAccess
     public void reloadFromDisk(@Nonnull final Document document) {
-        ApplicationManager.getApplication().assertIsDispatchThread();
+        Application.get().assertIsDispatchThread();
 
         final VirtualFile file = getFile(document);
         assert file != null;
@@ -683,36 +686,32 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
         final Project project = ProjectLocator.getInstance().guessProjectForFile(file);
         boolean[] isReloadable = {isReloadable(file, document, project)};
         if (isReloadable[0]) {
-            CommandProcessor.getInstance().executeCommand(
-                project,
-                () -> ApplicationManager.getApplication().runWriteAction(
-                    new ExternalChangeAction.ExternalDocumentChange(document, project) {
-                        @Override
-                        public void run() {
-                            if (!isBinaryWithoutDecompiler(file)) {
-                                LoadTextUtil.clearCharsetAutoDetectionReason(file);
-                                file.setBOM(null); // reset BOM in case we had one and the external change stripped it away
-                                file.setCharset(null, null, false);
-                                boolean wasWritable = document.isWritable();
-                                document.setReadOnly(false);
-                                boolean tooLarge = RawFileLoader.getInstance().isTooLarge(file.getLength());
-                                isReloadable[0] = isReloadable(file, document, project);
-                                if (isReloadable[0]) {
-                                    CharSequence reloaded = tooLarge
-                                        ? LoadTextUtil.loadText(file, getPreviewCharCount(file))
-                                        : LoadTextUtil.loadText(file);
-                                    ((DocumentEx)document).replaceText(reloaded, file.getModificationStamp());
-                                    document.putUserData(BIG_FILE_PREVIEW, tooLarge ? Boolean.TRUE : null);
-                                }
-                                document.setReadOnly(!wasWritable);
+            CommandProcessor.getInstance().newCommand(new ExternalChangeAction.ExternalDocumentChange(document, project) {
+                    @Override
+                    public void run() {
+                        if (!isBinaryWithoutDecompiler(file)) {
+                            LoadTextUtil.clearCharsetAutoDetectionReason(file);
+                            file.setBOM(null); // reset BOM in case we had one and the external change stripped it away
+                            file.setCharset(null, null, false);
+                            boolean wasWritable = document.isWritable();
+                            document.setReadOnly(false);
+                            boolean tooLarge = RawFileLoader.getInstance().isTooLarge(file.getLength());
+                            isReloadable[0] = isReloadable(file, document, project);
+                            if (isReloadable[0]) {
+                                CharSequence reloaded = tooLarge
+                                    ? LoadTextUtil.loadText(file, getPreviewCharCount(file))
+                                    : LoadTextUtil.loadText(file);
+                                ((DocumentEx)document).replaceText(reloaded, file.getModificationStamp());
+                                document.putUserData(BIG_FILE_PREVIEW, tooLarge ? Boolean.TRUE : null);
                             }
+                            document.setReadOnly(!wasWritable);
                         }
                     }
-                ),
-                UILocalize.fileCacheConflictAction().get(),
-                null,
-                UndoConfirmationPolicy.REQUEST_CONFIRMATION
-            );
+                })
+                .withProject(project)
+                .withName(UILocalize.fileCacheConflictAction())
+                .withUndoConfirmationPolicy(UndoConfirmationPolicy.REQUEST_CONFIRMATION)
+                .executeInWriteAction();
         }
         if (isReloadable[0]) {
             myMultiCaster.fileContentReloaded(file, document);
@@ -779,8 +778,9 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
         return (int)(RawFileLoaderImpl.LARGE_FILE_PREVIEW_SIZE / bytesPerChar);
     }
 
+    @RequiredUIAccess
     private void handleErrorsOnSave(@Nonnull Map<Document, IOException> failures) {
-        if (ApplicationManager.getApplication().isUnitTestMode()) {
+        if (Application.get().isUnitTestMode()) {
             IOException ioException = ContainerUtil.getFirstItem(failures.values());
             if (ioException != null) {
                 throw new RuntimeException(ioException);
@@ -802,9 +802,10 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
             @Override
             protected void createDefaultActions() {
                 super.createDefaultActions();
-                myOKAction.putValue(
-                    Action.NAME,
-                    UIBundle.message(myOnClose ? "cannot.save.files.dialog.ignore.changes" : "cannot.save.files.dialog.revert.changes")
+                myOKAction.setText(
+                    myOnClose
+                        ? UILocalize.cannotSaveFilesDialogIgnoreChanges()
+                        : UILocalize.cannotSaveFilesDialogRevertChanges()
                 );
                 myOKAction.putValue(DEFAULT_ACTION, null);
 

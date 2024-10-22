@@ -17,7 +17,6 @@
 package consulo.execution.unscramble;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.EditorSettings;
@@ -33,12 +32,13 @@ import consulo.execution.ui.ExecutionConsole;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.execution.ui.console.*;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.image.Image;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -77,7 +77,7 @@ public class AnalyzeStacktraceUtil {
         @Nullable ConsoleFactory consoleFactory,
         final String tabTitle,
         String text,
-        @Nullable consulo.ui.image.Image icon
+        @Nullable Image icon
     ) {
         final TextConsoleBuilder builder = TextConsoleBuilderFactory.getInstance().createBuilder(project);
         builder.filters(project.getExtensionList(AnalyzeStackTraceFilter.class));
@@ -164,28 +164,23 @@ public class AnalyzeStacktraceUtil {
             return myEditor;
         }
 
+        @RequiredUIAccess
         public final void setText(@Nonnull final String text) {
-            Runnable runnable = new Runnable() {
-                @Override
-                public void run() {
-                    ApplicationManager.getApplication().runWriteAction(new Runnable() {
-                        @Override
-                        public void run() {
-                            final Document document = myEditor.getDocument();
-                            document.replaceString(0, document.getTextLength(), StringUtil.convertLineSeparators(text));
-                        }
-                    });
-                }
-            };
-            CommandProcessor.getInstance().executeCommand(myProject, runnable, "", this);
+            CommandProcessor.getInstance().newCommand(() -> {
+                    final Document document = myEditor.getDocument();
+                    document.replaceString(0, document.getTextLength(), StringUtil.convertLineSeparators(text));
+                })
+                .withProject(myProject)
+                .withGroupId(this)
+                .executeInWriteAction();
         }
 
+        @RequiredUIAccess
         public void pasteTextFromClipboard() {
             String text = getTextInClipboard();
             if (text != null) {
                 setText(text);
             }
-
         }
 
         @Override

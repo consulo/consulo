@@ -123,11 +123,9 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
         openMessagesView(errorTreeView, LocalizeValue.ofNullable(tabDisplayName));
     }
 
+    @RequiredUIAccess
     public void openMessagesView(final NewErrorTreeViewPanel errorTreeView, @Nonnull final LocalizeValue tabDisplayName) {
-        CommandProcessor commandProcessor = CommandProcessor.getInstance();
-        commandProcessor.executeCommand(
-            myProject,
-            () -> {
+        CommandProcessor.getInstance().newCommand(() -> {
                 final MessageView messageView = MessageView.getInstance(myProject);
                 messageView.runWhenInitialized(() -> {
                     final Content content =
@@ -139,10 +137,10 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
 
                     ToolWindowManager.getInstance(myProject).getToolWindow(ToolWindowId.MESSAGES_WINDOW).activate(null);
                 });
-            },
-            VcsLocalize.commandNameOpenErrorMessageView().get(),
-            null
-        );
+            })
+            .withProject(myProject)
+            .withName(VcsLocalize.commandNameOpenErrorMessageView())
+            .execute();
     }
 
     @Override
@@ -700,6 +698,7 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
     }
 
     @Override
+    @RequiredUIAccess
     public void openCommittedChangesTab(
         final AbstractVcs vcs,
         final VirtualFile root,
@@ -713,6 +712,7 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
     }
 
     @Override
+    @RequiredUIAccess
     public void openCommittedChangesTab(
         final CommittedChangesProvider provider,
         final RepositoryLocation location,
@@ -847,7 +847,7 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
             task,
             new BackgroundableProcessIndicator(task),
             null,
-            IdeaModalityState.current()
+            Application.get().getCurrentModalityState()
         );
     }
 
@@ -934,7 +934,10 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
                             appender.finished();
 
                             if (!myRevisionsReturned) {
-                                application.invokeLater(() -> myDlg.close(-1), IdeaModalityState.stateForComponent(myDlg.getWindow()));
+                                application.invokeLater(
+                                    () -> myDlg.close(-1),
+                                    Application.get().getModalityStateForComponent(myDlg.getWindow())
+                                );
                             }
                         }
                     }
@@ -942,7 +945,10 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
             }
             catch (VcsException e) {
                 myExceptions.add(e);
-                application.invokeLater(() -> myDlg.close(-1), IdeaModalityState.stateForComponent(myDlg.getWindow()));
+                application.invokeLater(
+                    () -> myDlg.close(-1),
+                    Application.get().getModalityStateForComponent(myDlg.getWindow())
+                );
             }
         }
 

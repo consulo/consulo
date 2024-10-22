@@ -39,6 +39,7 @@ import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiModificationTracker;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.awt.ScrollPaneFactory;
@@ -507,23 +508,26 @@ class Browser extends JPanel {
         }
     }
 
+    @RequiredUIAccess
     private void performFix(final RefEntity element, final CommonProblemDescriptor descriptor, final int idx, final QuickFix fix) {
-        final Runnable command = () -> Application.get().runWriteAction(() -> {
-            final PsiModificationTracker tracker = PsiManager.getInstance(myView.getProject()).getModificationTracker();
-            final long startCount = tracker.getModificationCount();
-            CommandProcessor.getInstance().markCurrentCommandAsGlobal(myView.getProject());
-            //CCE here means QuickFix was incorrectly inherited
-            fix.applyFix(myView.getProject(), descriptor);
-            if (startCount != tracker.getModificationCount()) {
-                InspectionToolWrapper toolWrapper = myView.getTree().getSelectedToolWrapper();
-                if (toolWrapper != null) {
-                    InspectionToolPresentation presentation =
-                        myView.getGlobalInspectionContext().getPresentation(toolWrapper);
-                    presentation.ignoreProblem(element, descriptor, idx);
+        CommandProcessor.getInstance().newCommand(() -> {
+                final PsiModificationTracker tracker = PsiManager.getInstance(myView.getProject()).getModificationTracker();
+                final long startCount = tracker.getModificationCount();
+                CommandProcessor.getInstance().markCurrentCommandAsGlobal(myView.getProject());
+                //CCE here means QuickFix was incorrectly inherited
+                fix.applyFix(myView.getProject(), descriptor);
+                if (startCount != tracker.getModificationCount()) {
+                    InspectionToolWrapper toolWrapper = myView.getTree().getSelectedToolWrapper();
+                    if (toolWrapper != null) {
+                        InspectionToolPresentation presentation =
+                            myView.getGlobalInspectionContext().getPresentation(toolWrapper);
+                        presentation.ignoreProblem(element, descriptor, idx);
+                    }
+                    myView.updateView(false);
                 }
-                myView.updateView(false);
-            }
-        });
-        CommandProcessor.getInstance().executeCommand(myView.getProject(), command, fix.getName(), null);
+            })
+            .withProject(myView.getProject())
+            .withName(LocalizeValue.ofNullable(fix.getName()))
+            .executeInWriteAction();
     }
 }

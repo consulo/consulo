@@ -17,7 +17,6 @@
 package consulo.language.editor.template.macro;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;
 import consulo.language.editor.WriteCommandAction;
@@ -31,7 +30,6 @@ import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.undoRedo.CommandProcessor;
-
 import jakarta.annotation.Nonnull;
 
 public abstract class BaseCompleteMacro extends Macro {
@@ -67,36 +65,27 @@ public abstract class BaseCompleteMacro extends Macro {
         final Editor editor = context.getEditor();
 
         final PsiFile psiFile = PsiUtilBase.getPsiFileInEditor(editor, project);
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                if (project.isDisposed() || editor.isDisposed() || psiFile == null || !psiFile.isValid()) {
-                    return;
-                }
-
-                CommandProcessor.getInstance().executeCommand(
-                    project,
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            invokeCompletionHandler(project, editor);
-                            Lookup lookup = LookupManager.getInstance(project).getActiveLookup();
-
-                            if (lookup != null) {
-                                lookup.addLookupListener(new MyLookupListener(context));
-                            }
-                            else {
-                                considerNextTab(editor);
-                            }
-                        }
-                    },
-                    "",
-                    null
-                );
+        Runnable runnable = () -> {
+            if (project.isDisposed() || editor.isDisposed() || psiFile == null || !psiFile.isValid()) {
+                return;
             }
+
+            CommandProcessor.getInstance().newCommand(() -> {
+                    invokeCompletionHandler(project, editor);
+                    Lookup lookup = LookupManager.getInstance(project).getActiveLookup();
+
+                    if (lookup != null) {
+                        lookup.addLookupListener(new MyLookupListener(context));
+                    }
+                    else {
+                        considerNextTab(editor);
+                    }
+                })
+                .withProject(project)
+                .execute();
         };
 
-        ApplicationManager.getApplication().invokeLater(runnable);
+        Application.get().invokeLater(runnable);
     }
 
     private static void considerNextTab(Editor editor) {
@@ -147,20 +136,15 @@ public abstract class BaseCompleteMacro extends Macro {
                 return;
             }
 
-            Runnable runnable = new Runnable() {
+            Runnable runnable = () -> new WriteCommandAction(project) {
                 @Override
-                public void run() {
-                    new WriteCommandAction(project) {
-                        @Override
-                        protected void run(consulo.application.Result result) throws Throwable {
-                            Editor editor = myContext.getEditor();
-                            if (editor != null) {
-                                considerNextTab(editor);
-                            }
-                        }
-                    }.execute();
+                protected void run(consulo.application.Result result) throws Throwable {
+                    Editor editor = myContext.getEditor();
+                    if (editor != null) {
+                        considerNextTab(editor);
+                    }
                 }
-            };
+            }.execute();
 
             Application application = Application.get();
             application.invokeLater(runnable, application.getCurrentModalityState(), project.getDisposed());

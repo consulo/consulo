@@ -34,6 +34,7 @@ import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.language.psi.*;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -42,7 +43,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.UpdateInBackground;
 import consulo.undoRedo.CommandProcessor;
-import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -129,8 +129,12 @@ public abstract class BaseRefactoringAction extends AnAction implements UpdateIn
                 assert editor != null;
                 Document doc = editor.getDocument();
                 DocCommandGroupId group = DocCommandGroupId.noneGroupId(doc);
-                CommandProcessor.getInstance()
-                    .executeCommand(editor.getProject(), command, "Completion", group, UndoConfirmationPolicy.DEFAULT, doc);
+                CommandProcessor.getInstance().newCommand(command)
+                    .withProject(editor.getProject())
+                    .withDocument(doc)
+                    .withName(LocalizeValue.localizeTODO("Completion"))
+                    .withGroupId(group)
+                    .execute();
             }
         }
 

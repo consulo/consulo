@@ -42,12 +42,9 @@ public class CopyElementAction extends AnAction {
             return;
         }
 
-        CommandProcessor.getInstance().executeCommand(
-            project,
-            () -> PsiDocumentManager.getInstance(project).commitAllDocuments(),
-            "",
-            null
-        );
+        CommandProcessor.getInstance().newCommand(() -> PsiDocumentManager.getInstance(project).commitAllDocuments())
+            .withProject(project)
+            .execute();
         final Editor editor = dataContext.getData(Editor.KEY);
         PsiElement[] elements;
 

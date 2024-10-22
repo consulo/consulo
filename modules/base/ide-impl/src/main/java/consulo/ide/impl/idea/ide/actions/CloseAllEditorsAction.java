@@ -34,10 +34,7 @@ public class CloseAllEditorsAction extends AnAction implements DumbAware {
     @RequiredUIAccess
     public void actionPerformed(final AnActionEvent e) {
         final Project project = e.getData(Project.KEY);
-        CommandProcessor commandProcessor = CommandProcessor.getInstance();
-        commandProcessor.executeCommand(
-            project,
-            () -> {
+        CommandProcessor.getInstance().newCommand(() -> {
                 final FileEditorWindow window = e.getData(FileEditorWindow.DATA_KEY);
                 if (window != null) {
                     final VirtualFile[] files = window.getFiles();
@@ -52,10 +49,10 @@ public class CloseAllEditorsAction extends AnAction implements DumbAware {
                 for (final VirtualFile openFile : openFiles) {
                     fileEditorManager.closeFile(openFile);
                 }
-            },
-            IdeLocalize.commandCloseAllEditors().get(),
-            null
-        );
+            })
+            .withProject(project)
+            .withName(IdeLocalize.commandCloseAllEditors())
+            .execute();
     }
 
     @Override

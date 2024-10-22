@@ -19,6 +19,7 @@ import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -96,6 +97,7 @@ public abstract class EditorAction extends AnAction implements DumbAware, Update
         return dataContext.getData(Editor.KEY);
     }
 
+    @RequiredUIAccess
     public final void actionPerformed(final Editor editor, @Nonnull final DataContext dataContext) {
         if (editor == null) {
             return;
@@ -113,14 +115,13 @@ public abstract class EditorAction extends AnAction implements DumbAware, Update
         if (commandName == null) {
             commandName = "";
         }
-        CommandProcessor.getInstance().executeCommand(
-            editor.getProject(),
-            command,
-            commandName,
-            handler.getCommandGroupId(editor),
-            UndoConfirmationPolicy.DEFAULT,
-            editor.getDocument()
-        );
+        CommandProcessor.getInstance().newCommand(command)
+            .withProject(editor.getProject())
+            .withName(LocalizeValue.ofNullable(commandName))
+            .withGroupId(handler.getCommandGroupId(editor))
+            .withUndoConfirmationPolicy(UndoConfirmationPolicy.DEFAULT)
+            .withDocument(editor.getDocument())
+            .execute();
     }
 
     public void update(Editor editor, Presentation presentation, DataContext dataContext) {
@@ -140,13 +141,11 @@ public abstract class EditorAction extends AnAction implements DumbAware, Update
         if (editor == null) {
             presentation.setEnabled(false);
         }
+        else if (e.getInputEvent() instanceof KeyEvent) {
+            updateForKeyboardAccess(editor, presentation, dataContext);
+        }
         else {
-            if (e.getInputEvent() instanceof KeyEvent) {
-                updateForKeyboardAccess(editor, presentation, dataContext);
-            }
-            else {
-                update(editor, presentation, dataContext);
-            }
+            update(editor, presentation, dataContext);
         }
     }
 
@@ -157,7 +156,7 @@ public abstract class EditorAction extends AnAction implements DumbAware, Update
 
         return new DataContext() {
             @Override
-            public Object getData(Key dataId) {
+            public Object getData(@Nonnull Key dataId) {
                 if (Project.KEY == dataId) {
                     return editor.getProject();
                 }

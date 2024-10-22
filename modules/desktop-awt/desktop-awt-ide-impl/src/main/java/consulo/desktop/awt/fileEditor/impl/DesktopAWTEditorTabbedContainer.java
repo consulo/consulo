@@ -41,6 +41,7 @@ import consulo.ide.impl.idea.ui.InplaceButton;
 import consulo.ide.impl.idea.ui.tabs.TabsUtil;
 import consulo.ide.impl.idea.ui.tabs.impl.JBEditorTabs;
 import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
+import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
@@ -51,6 +52,7 @@ import consulo.project.ui.wm.dock.DockContainer;
 import consulo.project.ui.wm.dock.DockManager;
 import consulo.project.ui.wm.dock.DockableContent;
 import consulo.project.ui.wm.dock.DragSession;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.*;
@@ -151,15 +153,13 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
             })
             .setSelectionChangeHandler((info, requestFocus, doChangeSelection) -> {
                 final ActionCallback result = new ActionCallback();
-                CommandProcessor.getInstance().executeCommand(
-                    myProject,
-                    () -> {
+                CommandProcessor.getInstance().newCommand(() -> {
                         ((IdeDocumentHistoryImpl)IdeDocumentHistory.getInstance(myProject)).onSelectionChanged();
                         result.notify(doChangeSelection.run());
-                    },
-                    "EditorChange",
-                    null
-                );
+                    })
+                    .withProject(myProject)
+                    .withName(LocalizeValue.localizeTODO("EditorChange"))
+                    .execute();
                 return result;
             })
             .getPresentation()
@@ -291,6 +291,7 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
         return myTabs.getComponent();
     }
 
+    @Nonnull
     @Override
     public ActionCallback removeTabAt(final int componentIndex, int indexToSelect, boolean transferFocus) {
         TabInfo toSelect = indexToSelect >= 0 && indexToSelect < myTabs.getTabCount() ? myTabs.getTabAt(indexToSelect) : null;
@@ -423,7 +424,6 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
     }
 
     private static class MyQueryable implements Queryable {
-
         private final TabInfo myTab;
 
         MyQueryable(TabInfo tab) {
@@ -701,6 +701,7 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
         }
 
         @Override
+        @RequiredUIAccess
         public void close() {
             myContainer.close(myFile);
         }
@@ -718,6 +719,7 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
         private final FileDropHandler myFileDropHandler = new FileDropHandler(null);
 
         @Override
+        @RequiredUIAccess
         public boolean importData(JComponent comp, Transferable t) {
             if (myFileDropHandler.canHandleDrop(t.getTransferDataFlavors())) {
                 myFileDropHandler.handleDrop(t, myProject, myWindow);

@@ -54,7 +54,6 @@ import consulo.ui.ex.awt.util.JBSwingUtilities;
 import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.undoRedo.CommandProcessor;
-import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
@@ -716,39 +715,35 @@ public class EditorComponentImpl extends JTextComponent
         if (!FileDocumentManager.getInstance().requestWriting(document, project)) {
             return;
         }
-        CommandProcessor.getInstance().executeCommand(
-            project,
-            () -> Application.get().runWriteAction(
-                new DocumentRunnable(document, project) {
-                    @Override
-                    public void run() {
-                        document.startGuardedBlockChecking();
-                        try {
-                            if (text == null) {
-                                // remove
-                                document.deleteString(offset, offset + length);
-                            }
-                            else if (length == 0) {
-                                // insert
-                                document.insertString(offset, text);
-                            }
-                            else {
-                                document.replaceString(offset, offset + length, text);
-                            }
+        CommandProcessor.getInstance().newCommand(new DocumentRunnable(document, project) {
+                @Override
+                public void run() {
+                    document.startGuardedBlockChecking();
+                    try {
+                        if (text == null) {
+                            // remove
+                            document.deleteString(offset, offset + length);
                         }
-                        catch (ReadOnlyFragmentModificationException e) {
-                            EditorActionManager.getInstance().getReadonlyFragmentModificationHandler(document).handle(e);
+                        else if (length == 0) {
+                            // insert
+                            document.insertString(offset, text);
                         }
-                        finally {
-                            document.stopGuardedBlockChecking();
+                        else {
+                            document.replaceString(offset, offset + length, text);
                         }
                     }
-                }),
-            "",
-            document,
-            UndoConfirmationPolicy.DEFAULT,
-            document
-        );
+                    catch (ReadOnlyFragmentModificationException e) {
+                        EditorActionManager.getInstance().getReadonlyFragmentModificationHandler(document).handle(e);
+                    }
+                    finally {
+                        document.stopGuardedBlockChecking();
+                    }
+                }
+            })
+            .withProject(project)
+            .withDocument(document)
+            .withGroupId(document)
+            .executeInWriteAction();
     }
 
     /**

@@ -38,6 +38,7 @@ import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
 import consulo.ui.ModalityState;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.MessagesEx;
 import consulo.ui.ex.awt.UIUtil;
@@ -50,7 +51,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileFilter;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -306,8 +306,7 @@ public abstract class AbstractLayoutCodeProcessor {
         return dirs;
     }
 
-    @NonNls
-    @RequiredReadAction
+    @RequiredUIAccess
     private void runProcessFile(@Nonnull final PsiFile file) {
         assert file.isValid() : "Invalid " + file.getLanguage() + " PSI file " + file.getName();
 
@@ -430,9 +429,7 @@ public abstract class AbstractLayoutCodeProcessor {
                 return;
             }
 
-            final Runnable writeRunnable = () -> CommandProcessor.getInstance().executeCommand(
-                myProject,
-                () -> {
+            final Runnable writeRunnable = () -> CommandProcessor.getInstance().newCommand(() -> {
                     try {
                         writeAction.run();
 
@@ -443,10 +440,10 @@ public abstract class AbstractLayoutCodeProcessor {
                     catch (IndexNotReadyException e) {
                         LOG.warn(e);
                     }
-                },
-                myCommandName,
-                null
-            );
+                })
+                .withProject(myProject)
+                .withName(LocalizeValue.ofNullable(myCommandName))
+                .execute();
 
             if (Application.get().isUnitTestMode()) {
                 writeRunnable.run();

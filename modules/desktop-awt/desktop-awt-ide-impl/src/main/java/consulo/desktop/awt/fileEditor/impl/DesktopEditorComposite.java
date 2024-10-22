@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.fileEditor.impl;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorColorsManager;
@@ -26,14 +26,15 @@ import consulo.disposer.Disposer;
 import consulo.fileEditor.*;
 import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.event.FileEditorManagerListener;
+import consulo.fileEditor.history.IdeDocumentHistory;
+import consulo.fileEditor.impl.internal.FileEditorManagerImpl;
 import consulo.fileEditor.impl.internal.FileEditorProviderManagerImpl;
+import consulo.fileEditor.impl.internal.IdeDocumentHistoryImpl;
 import consulo.fileEditor.internal.EditorWindowHolder;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.impl.TabFactoryBuilderImpl;
-import consulo.fileEditor.history.IdeDocumentHistory;
-import consulo.fileEditor.impl.internal.FileEditorManagerImpl;
-import consulo.fileEditor.impl.internal.IdeDocumentHistoryImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -162,9 +163,11 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
                         ((FileEditorProviderManagerImpl)FileEditorProviderManager.getInstance()).providerSelected(DesktopEditorComposite.this);
                         ((IdeDocumentHistoryImpl)IdeDocumentHistory.getInstance(myFileEditorManager.getProject())).onSelectionChanged();
                     };
-                    if (ApplicationManager.getApplication().isDispatchThread()) {
-                        CommandProcessor.getInstance()
-                            .executeCommand(myFileEditorManager.getProject(), runnable, "Switch Active Editor", null);
+                    if (Application.get().isDispatchThread()) {
+                        CommandProcessor.getInstance().newCommand(runnable)
+                            .withProject(myFileEditorManager.getProject())
+                            .withName(LocalizeValue.localizeTODO("Switch Active Editor"))
+                            .execute();
                     }
                     else {
                         runnable.run(); // not invoked by user
@@ -445,6 +448,7 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
     /**
      * @return component which represents set of file editors in the UI
      */
+    @Override
     public JComponent getComponent() {
         return myComponent;
     }
@@ -524,8 +528,8 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
             }
             else {
                 JComponent component = getPreferredFocusedComponent();
-                if (component instanceof DataProvider && component != this) {
-                    return ((DataProvider)component).getData(dataId);
+                if (component instanceof DataProvider dataProvider && component != this) {
+                    return dataProvider.getData(dataId);
                 }
                 return null;
             }
@@ -544,7 +548,7 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
 
     @RequiredUIAccess
     void addEditor(@Nonnull FileEditor editor) {
-        ApplicationManager.getApplication().assertIsDispatchThread();
+        Application.get().assertIsDispatchThread();
         myEditors = ArrayUtil.append(myEditors, editor);
         if (myTabbedPaneWrapper == null) {
             myTabbedPaneWrapper = createTabbedPaneWrapper(myEditors);

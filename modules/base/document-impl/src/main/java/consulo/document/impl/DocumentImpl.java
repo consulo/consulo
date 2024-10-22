@@ -15,11 +15,12 @@
  */
 package consulo.document.impl;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
-import consulo.component.ProcessCanceledException;
 import consulo.application.util.function.Processor;
+import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.*;
@@ -27,12 +28,7 @@ import consulo.document.event.DocumentBulkUpdateListener;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.document.impl.event.DocumentEventImpl;
-import consulo.document.internal.EditReadOnlyListener;
-import consulo.document.internal.PrioritizedDocumentListener;
-import consulo.document.internal.PrioritizedInternalDocumentListener;
-import consulo.document.internal.DocumentEx;
-import consulo.document.internal.LineIterator;
-import consulo.document.internal.RangeMarkerEx;
+import consulo.document.internal.*;
 import consulo.document.util.DocumentUtil;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
@@ -41,6 +37,7 @@ import consulo.logging.attachment.Attachment;
 import consulo.logging.attachment.AttachmentFactory;
 import consulo.logging.attachment.ExceptionWithAttachments;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
@@ -54,12 +51,11 @@ import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.*;
 import consulo.util.lang.ref.SoftReference;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
 import org.jetbrains.annotations.TestOnly;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
@@ -769,6 +765,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
         }
     }
 
+    @RequiredWriteAction
     private void assertWriteAccess() {
         if (myAssertThreading) {
             final Application application = ApplicationManager.getApplication();
@@ -976,7 +973,10 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
         CommandProcessor commandProcessor = CommandProcessor.getInstance();
         if (!commandProcessor.isUndoTransparentActionInProgress() && commandProcessor.getCurrentCommand() == null) {
             throw new UnsupportedOperationException(
-                "Must not change document outside command or undo-transparent action. See consulo.ide.impl.idea.openapi.command.WriteCommandAction or consulo.ide.impl.idea.openapi.command.CommandProcessor");
+                "Must not change document outside command or undo-transparent action. " +
+                    "See consulo.ide.impl.idea.openapi.command.WriteCommandAction or " +
+                    "consulo.ide.impl.idea.openapi.command.CommandProcessor"
+            );
         }
     }
 
@@ -1196,13 +1196,16 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     }
 
     @Override
+    @RequiredUIAccess
     public void setText(@Nonnull final CharSequence text) {
         Runnable runnable = () -> replaceString(0, getTextLength(), text, LocalTimeCounter.currentTime(), true);
         if (CommandProcessor.getInstance().isUndoTransparentActionInProgress()) {
             runnable.run();
         }
         else {
-            CommandProcessor.getInstance().executeCommand(null, runnable, "", DocCommandGroupId.noneGroupId(this));
+            CommandProcessor.getInstance().newCommand(runnable)
+                .withGroupId(DocCommandGroupId.noneGroupId(this))
+                .execute();
         }
 
         clearLineModificationFlags();
@@ -1214,9 +1217,10 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     }
 
     @Override
+    @RequiredUIAccess
     public final void setInBulkUpdate(boolean value) {
         if (myAssertThreading) {
-            ApplicationManager.getApplication().assertIsDispatchThread();
+            Application.get().assertIsDispatchThread();
         }
         if (myUpdatingBulkModeStatus) {
             throw new IllegalStateException("Detected bulk mode status update from DocumentBulkUpdateListener");
@@ -1274,7 +1278,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
 
     private static class DocumentBulkUpdateListenerHolder {
         private static final DocumentBulkUpdateListener ourBulkChangePublisher =
-            ApplicationManager.getApplication().getMessageBus().syncPublisher(DocumentBulkUpdateListener.class);
+            Application.get().getMessageBus().syncPublisher(DocumentBulkUpdateListener.class);
     }
 
     @Nonnull

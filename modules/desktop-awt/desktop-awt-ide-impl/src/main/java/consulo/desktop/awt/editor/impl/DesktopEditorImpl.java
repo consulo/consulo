@@ -2,7 +2,6 @@
 package consulo.desktop.awt.editor.impl;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.progress.ProgressManager;
 import consulo.application.ui.UISettings;
@@ -19,6 +18,7 @@ import consulo.codeEditor.event.*;
 import consulo.codeEditor.impl.FontInfo;
 import consulo.codeEditor.impl.*;
 import consulo.codeEditor.internal.EditorActionPlan;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.codeEditor.markup.GutterDraggableObject;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.codeEditor.markup.LineMarkerRenderer;
@@ -57,8 +57,7 @@ import consulo.ide.impl.idea.openapi.editor.markup.LineMarkerRendererEx;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.ui.LightweightHint;
 import consulo.ide.impl.idea.ui.mac.touchbar.TouchBarsManager;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.EditorPopupHandler;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.codeStyle.event.CodeStyleSettingsChangeEvent;
 import consulo.language.codeStyle.event.CodeStyleSettingsListener;
@@ -70,6 +69,7 @@ import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.internal.ToolWindowManagerEx;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.IdeGlassPane;
@@ -89,7 +89,8 @@ import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.ex.update.Activatable;
 import consulo.undoRedo.CommandProcessor;
-import consulo.undoRedo.UndoConfirmationPolicy;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
@@ -97,7 +98,6 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.MagicConstant;
@@ -129,8 +129,10 @@ import java.util.List;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
-public final class DesktopEditorImpl extends CodeEditorBase implements RealEditor, DesktopAWTEditor, HighlighterClient, Queryable, Dumpable, CodeStyleSettingsListener {
+public final class DesktopEditorImpl extends CodeEditorBase
+    implements RealEditor, DesktopAWTEditor, HighlighterClient, Queryable, Dumpable, CodeStyleSettingsListener {
     public static final int TEXT_ALIGNMENT_LEFT = 0;
     public static final int TEXT_ALIGNMENT_RIGHT = 1;
 
@@ -391,13 +393,17 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
 
         getMarkupModel().updateUI();
 
-        UIUtil.putClientProperty(myPanel, UIUtil.NOT_IN_HIERARCHY_COMPONENTS, (Iterable<JComponent>)() -> {
-            JComponent component = getPermanentHeaderComponent();
-            if (component != null && component.getParent() == null) {
-                return Collections.singleton(component).iterator();
+        UIUtil.putClientProperty(
+            myPanel,
+            UIUtil.NOT_IN_HIERARCHY_COMPONENTS,
+            (Iterable<JComponent>)() -> {
+                JComponent component = getPermanentHeaderComponent();
+                if (component != null && component.getParent() == null) {
+                    return Collections.singleton(component).iterator();
+                }
+                return Collections.emptyIterator();
             }
-            return Collections.emptyIterator();
-        });
+        );
 
         myHeaderPanel = new MyHeaderPanel();
         myGutterComponent = new EditorGutterComponentImpl(this);
@@ -429,12 +435,9 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
 
         myScrollingModel.addVisibleAreaListener(this::moveCaretIntoViewIfCoveredByToolWindowBelow);
 
-        PropertyChangeListener propertyChangeListener = new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent e) {
-                if (Document.PROP_WRITABLE.equals(e.getPropertyName())) {
-                    myEditorComponent.repaint();
-                }
+        PropertyChangeListener propertyChangeListener = e -> {
+            if (Document.PROP_WRITABLE.equals(e.getPropertyName())) {
+                myEditorComponent.repaint();
             }
         };
         myDocument.addPropertyChangeListener(propertyChangeListener);
@@ -445,7 +448,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         myFocusModeModel = new FocusModeModel(this);
         Disposer.register(myDisposable, myFocusModeModel);
 
-        myLatencyPublisher = ApplicationManager.getApplication().getMessageBus().syncPublisher(LatencyListener.class);
+        myLatencyPublisher = Application.get().getMessageBus().syncPublisher(LatencyListener.class);
     }
 
     @Override
@@ -520,6 +523,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
     }
 
     @Override
+    @RequiredUIAccess
     protected void onHighlighterChanged(
         @Nonnull RangeHighlighter highlighter,
         boolean canImpactGutterSize,
@@ -572,6 +576,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         updateCaretCursor();
     }
 
+    @RequiredUIAccess
     private void onInlayUpdated(@Nonnull Inlay inlay) {
         if (myDocument.isInEventsHandling() || myDocument.isInBulkUpdate()) {
             return;
@@ -588,8 +593,8 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         }
         else {
             int visualLine = offsetToVisualLine(offset);
-            int y =
-                visualLineToY(visualLine) - EditorUtil.getTotalInlaysHeight(myInlayModel.getBlockElementsForVisualLine(visualLine, true));
+            int y = visualLineToY(visualLine) -
+                EditorUtil.getTotalInlaysHeight(myInlayModel.getBlockElementsForVisualLine(visualLine, true));
             repaintToScreenBottomStartingFrom(y);
         }
     }
@@ -601,16 +606,20 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
             int caretY = myView.visualLineToY(myCaretModel.getVisualPosition().line);
             if (caretY < oldRectangle.getMaxY() && caretY > newRectangle.getMaxY()) {
                 myScrollingToCaret = true;
-                ApplicationManager.getApplication().invokeLater(() -> {
-                    myScrollingToCaret = false;
-                    if (!isReleased) {
-                        EditorUtil.runWithAnimationDisabled(this, () -> myScrollingModel.scrollToCaret(ScrollType.MAKE_VISIBLE));
-                    }
-                }, IdeaModalityState.any());
+                Application.get().invokeLater(
+                    () -> {
+                        myScrollingToCaret = false;
+                        if (!isReleased) {
+                            EditorUtil.runWithAnimationDisabled(this, () -> myScrollingModel.scrollToCaret(ScrollType.MAKE_VISIBLE));
+                        }
+                    },
+                    IdeaModalityState.any()
+                );
             }
         }
     }
 
+    @RequiredUIAccess
     private void repaintCaretRegion(CaretEvent e) {
         DesktopCaretImpl caretImpl = (DesktopCaretImpl)e.getCaret();
         if (caretImpl != null) {
@@ -639,7 +648,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
     }
 
     @Override
-    public void registerScrollBarRepaintCallback(@Nullable java.util.function.Consumer<Graphics> callback) {
+    public void registerScrollBarRepaintCallback(@Nullable Consumer<Graphics> callback) {
         myVerticalScrollBar.registerRepaintCallback(callback);
     }
 
@@ -701,11 +710,13 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         return (InlayModelImpl)super.getInlayModel();
     }
 
+    @Override
     public void resetSizes() {
         myView.reset();
     }
 
     @Override
+    @RequiredUIAccess
     public void reinitSettings() {
         reinitSettings(true);
     }
@@ -715,13 +726,14 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         myView.reinitSettings();
     }
 
+    @RequiredUIAccess
     private void reinitSettings(boolean updateGutterSize) {
         assertIsDispatchThread();
 
         for (EditorColorsScheme scheme = myScheme; scheme instanceof DelegateColorScheme;
              scheme = ((DelegateColorScheme)scheme).getDelegate()) {
-            if (scheme instanceof MyColorSchemeDelegate) {
-                ((MyColorSchemeDelegate)scheme).updateGlobalScheme();
+            if (scheme instanceof MyColorSchemeDelegate colorSchemeDelegate) {
+                colorSchemeDelegate.updateGlobalScheme();
                 break;
             }
         }
@@ -775,6 +787,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
 
     // EditorFactory.releaseEditor should be used to release editor
     @Override
+    @RequiredUIAccess
     public void release() {
         assertIsDispatchThread();
         if (isReleased) {
@@ -896,12 +909,15 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
             }
         });
 
-        UiNotifyConnector connector = new UiNotifyConnector(myEditorComponent, new Activatable.Adapter() {
-            @Override
-            public void showNotify() {
-                myGutterComponent.updateSizeOnShowNotify();
+        UiNotifyConnector connector = new UiNotifyConnector(
+            myEditorComponent,
+            new Activatable.Adapter() {
+                @Override
+                public void showNotify() {
+                    myGutterComponent.updateSizeOnShowNotify();
+                }
             }
-        });
+        );
         Disposer.register(getDisposable(), connector);
 
         try {
@@ -1112,11 +1128,13 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         return myView.offsetToVisualPosition(offset, leanForward, beforeSoftWrap);
     }
 
+    @RequiredUIAccess
     public int offsetToVisualColumnInFoldRegion(@Nonnull FoldRegion region, int offset, boolean leanTowardsLargerOffsets) {
         assertIsDispatchThread();
         return myView.offsetToVisualColumnInFoldRegion(region, offset, leanTowardsLargerOffsets);
     }
 
+    @RequiredUIAccess
     public int visualColumnToOffsetInFoldRegion(@Nonnull FoldRegion region, int visualColumn, boolean leansRight) {
         assertIsDispatchThread();
         return myView.visualColumnToOffsetInFoldRegion(region, visualColumn, leansRight);
@@ -1187,6 +1205,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
      * Returns how much current line height bigger than the normal (16px)
      * This method is used to scale editors elements such as gutter icons, folding elements, and others
      */
+    @Override
     public float getScale() {
         if (!Registry.is("editor.scale.gutter.icons")) {
             return 1f;
@@ -1195,6 +1214,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         return normLineHeight / JBUIScale.scale(16f);
     }
 
+    @Override
     public int findNearestDirectionBoundary(int offset, boolean lookForward) {
         return myView.findNearestDirectionBoundary(offset, lookForward);
     }
@@ -1205,6 +1225,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
     }
 
     @Override
+    @RequiredUIAccess
     public void repaint(int startOffset, int endOffset, boolean invalidateTextLayout) {
         if (myDocument.isInBulkUpdate()) {
             return;
@@ -1243,7 +1264,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
 
         myEditorComponent.repaintEditorComponent(visibleArea.x, y, visibleArea.x + visibleArea.width, yEndLine - y);
         myGutterComponent.repaint(0, y, myGutterComponent.getWidth(), yEndLine - y);
-        ((DesktopEditorMarkupModelImpl)getMarkupModel()).repaint(-1, -1);
+        getMarkupModel().repaint(-1, -1);
     }
 
     /**
@@ -1283,6 +1304,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
     }
 
     @Override
+    @RequiredUIAccess
     protected void bulkUpdateFinished() {
         myFoldingModel.onBulkDocumentUpdateFinished();
         mySoftWrapModel.onBulkDocumentUpdateFinished();
@@ -1309,6 +1331,8 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         }
     }
 
+    @Override
+    @RequiredUIAccess
     protected void changedUpdate(DocumentEvent e) {
         myDocumentChangeInProgress = false;
         if (myDocument.isInBulkUpdate()) {
@@ -1370,6 +1394,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
     }
 
     @Override
+    @RequiredUIAccess
     public void setHighlighter(@Nonnull EditorHighlighter highlighter) {
         super.setHighlighter(highlighter);
 
@@ -1387,6 +1412,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         }
     }
 
+    @Override
     public void hideCursor() {
         if (!myIsViewer && EMPTY_CURSOR != null && Registry.is("ide.hide.cursor.when.typing")) {
             myDefaultCursor = EMPTY_CURSOR;
@@ -1400,24 +1426,30 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
 
     private boolean updatingSize; // accessed from EDT only
 
+    @RequiredUIAccess
     private void updateGutterSize() {
         assertIsDispatchThread();
         if (!updatingSize) {
             updatingSize = true;
-            ApplicationManager.getApplication().invokeLater(() -> {
-                try {
-                    if (!isDisposed()) {
-                        myGutterComponent.updateSize();
+            Application.get().invokeLater(
+                () -> {
+                    try {
+                        if (!isDisposed()) {
+                            myGutterComponent.updateSize();
+                        }
                     }
-                }
-                finally {
-                    updatingSize = false;
-                }
-            }, IdeaModalityState.any(), () -> isDisposed());
+                    finally {
+                        updatingSize = false;
+                    }
+                },
+                Application.get().getAnyModalityState(),
+                this::isDisposed
+            );
         }
     }
 
     @Override
+    @RequiredUIAccess
     public void validateSize() {
         if (isReleased) {
             return;
@@ -1441,6 +1473,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         }
     }
 
+    @RequiredUIAccess
     void recalculateSizeAndRepaint() {
         validateSize();
         myEditorComponent.repaintEditorComponent();
@@ -1462,6 +1495,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         myHorizontalTextAlignment = alignment;
     }
 
+    @Override
     public boolean isRightAligned() {
         return myHorizontalTextAlignment == TEXT_ALIGNMENT_RIGHT;
     }
@@ -1476,10 +1510,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
      */
     @Override
     public void startDumb() {
-        if (ApplicationManager.getApplication().isHeadlessEnvironment()) {
-            return;
-        }
-        if (!Registry.is("editor.dumb.mode.available")) {
+        if (Application.get().isHeadlessEnvironment() || !Registry.is("editor.dumb.mode.available")) {
             return;
         }
         putUserData(BUFFER, null);
@@ -1641,6 +1672,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         return myPaintSelection || !isOneLineMode() || IJSwingUtilities.hasFocus(getContentComponent());
     }
 
+    @Override
     public void setPaintSelection(boolean paintSelection) {
         myPaintSelection = paintSelection;
     }
@@ -1669,6 +1701,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
     }
 
     @Nonnull
+    @Override
     public FontMetrics getFontMetrics(@JdkConstants.FontStyle int fontType) {
         EditorFontType ft;
         if (fontType == Font.PLAIN) {
@@ -1878,6 +1911,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         return true;
     }
 
+    @RequiredUIAccess
     private void processMouseReleased(@Nonnull MouseEvent e) {
         if (checkIgnore(e)) {
             return;
@@ -1976,23 +2010,21 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         return UIUtil.getTextCursor(TargetAWT.to(getBackgroundColor()));
     }
 
+    @RequiredUIAccess
     private void runMouseDraggedCommand(@Nonnull final MouseEvent e) {
         if (myCommandProcessor == null || myMousePressedEvent != null && myMousePressedEvent.isConsumed()) {
             return;
         }
-        myCommandProcessor.executeCommand(
-            myProject,
-            () -> processMouseDragged(e),
-            "",
-            MOUSE_DRAGGED_GROUP,
-            UndoConfirmationPolicy.DEFAULT,
-            getDocument()
-        );
+        myCommandProcessor.newCommand(() -> processMouseDragged(e))
+            .withProject(myProject)
+            .withDocument(getDocument())
+            .withGroupId(MOUSE_DRAGGED_GROUP)
+            .execute();
     }
 
     private void processMouseDragged(@Nonnull MouseEvent e) {
-        if (!SwingUtilities.isLeftMouseButton(e) && !SwingUtilities.isMiddleMouseButton(e) || (Registry.is(
-            "editor.disable.drag.with.right.button") && SwingUtilities.isRightMouseButton(e))) {
+        if (!SwingUtilities.isLeftMouseButton(e) && !SwingUtilities.isMiddleMouseButton(e)
+            || (Registry.is("editor.disable.drag.with.right.button") && SwingUtilities.isRightMouseButton(e))) {
             return;
         }
 
@@ -2253,6 +2285,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         myCurrentDragIsSubstantial = true;
     }
 
+    @Override
     public void updateCaretCursor() {
         myUpdateCursor = true;
         if (myCaretCursor.myIsShown) {
@@ -2319,6 +2352,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
     }
 
     @Override
+    @RequiredUIAccess
     public void setEmbeddedIntoDialogWrapper(boolean b) {
         assertIsDispatchThread();
 
@@ -2448,9 +2482,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
                         stop();
                         return;
                     }
-                    myCommandProcessor.executeCommand(
-                        myProject,
-                        new DocumentRunnable(myDocument, myProject) {
+                    myCommandProcessor.newCommand(new DocumentRunnable(myDocument, myProject) {
                             @Override
                             public void run() {
                                 int oldSelectionStart = mySelectionModel.getLeadSelectionOffset();
@@ -2529,12 +2561,12 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
                                     mySelectionModel.setSelection(oldSelectionStart, getCaretModel().getOffset());
                                 }
                             }
-                        },
-                        EditorBundle.message("move.cursor.command.name"),
-                        DocCommandGroupId.noneGroupId(getDocument()),
-                        UndoConfirmationPolicy.DEFAULT,
-                        getDocument()
-                    );
+                        })
+                        .withProject(myProject)
+                        .withDocument(getDocument())
+                        .withName(CodeEditorLocalize.moveCursorCommandName())
+                        .withGroupId(DocCommandGroupId.noneGroupId(getDocument()))
+                        .execute();
                 }
             );
             myTimer.start();
@@ -2566,7 +2598,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
     }
 
     class MyVerticalScrollBar extends JBScrollBar implements IdeGlassPane.TopComponent {
-        private java.util.function.Consumer<Graphics> myRepaintCallback;
+        private Consumer<Graphics> myRepaintCallback;
 
         private MyVerticalScrollBar(@JdkConstants.AdjustableOrientation int orientation) {
             super(orientation);
@@ -2594,12 +2626,13 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
             return myEditorComponent.getScrollableBlockIncrement(vr, SwingConstants.VERTICAL, direction);
         }
 
-        private void registerRepaintCallback(@Nullable java.util.function.Consumer<Graphics> callback) {
+        private void registerRepaintCallback(@Nullable Consumer<Graphics> callback) {
             myRepaintCallback = callback;
         }
     }
 
     @Override
+    @RequiredUIAccess
     public void setVerticalScrollbarOrientation(int type) {
         assertIsDispatchThread();
         if (myScrollBarOrientation == type) {
@@ -2607,24 +2640,23 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         }
         int currentHorOffset = myScrollingModel.getHorizontalScrollOffset();
         myScrollBarOrientation = type;
-        if (type == VERTICAL_SCROLLBAR_LEFT) {
-            myScrollPane.setLayout(new LeftHandScrollbarLayout());
-        }
-        else {
-            myScrollPane.setLayout(new ScrollPaneLayout());
-        }
+        myScrollPane.setLayout(type == VERTICAL_SCROLLBAR_LEFT ? new LeftHandScrollbarLayout() : new ScrollPaneLayout());
         getMarkupModel().updateErrorStripePanel();
         myScrollingModel.scrollHorizontally(currentHorOffset);
     }
 
     @Override
     public void setVerticalScrollbarVisible(boolean b) {
-        myScrollPane.setVerticalScrollBarPolicy(b ? ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS : ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        myScrollPane.setVerticalScrollBarPolicy(
+            b ? ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS : ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
+        );
     }
 
     @Override
     public void setHorizontalScrollbarVisible(boolean b) {
-        myScrollPane.setHorizontalScrollBarPolicy(b ? ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED : ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        myScrollPane.setHorizontalScrollBarPolicy(
+            b ? ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED : ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
+        );
     }
 
     @Override
@@ -2671,7 +2703,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
             myMouseSelectionStateAlarm.addRequest(
                 myMouseSelectionStateResetRunnable,
                 Registry.intValue("editor.mouseSelectionStateResetTimeout"),
-                IdeaModalityState.stateForComponent(myEditorComponent)
+                Application.get().getModalityStateForComponent(myEditorComponent)
             );
         }
     }
@@ -2756,6 +2788,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         return myDropHandler;
     }
 
+    @Override
     public void setDropHandler(@Nonnull EditorDropHandler dropHandler) {
         myDropHandler = dropHandler;
     }
@@ -2976,14 +3009,13 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         }
 
         private void runUndoTransparent(@Nonnull final Runnable runnable) {
-            CommandProcessor.getInstance().runUndoTransparentAction(() -> CommandProcessor.getInstance().executeCommand(
-                myProject,
-                () -> ApplicationManager.getApplication().runWriteAction(runnable),
-                "",
-                getDocument(),
-                UndoConfirmationPolicy.DEFAULT,
-                getDocument()
-            ));
+            CommandProcessor.getInstance().runUndoTransparentAction(
+                () -> CommandProcessor.getInstance().newCommand(runnable)
+                    .withProject(myProject)
+                    .withDocument(getDocument())
+                    .withGroupId(getDocument())
+                    .executeInWriteAction()
+            );
         }
 
         private boolean hasRelevantCommittedText(@Nonnull InputMethodEvent e) {
@@ -2995,9 +3027,9 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         }
 
         private void replaceInputMethodText(@Nonnull InputMethodEvent e) {
-            if (myNeedToSelectPreviousChar && Platform.current().os().isMac() &&
-                (Registry.is("ide.mac.pressAndHold.brute.workaround") || Registry.is("ide.mac.pressAndHold.workaround") && (hasRelevantCommittedText(
-                    e) || e.getCaret() == null))) {
+            if (myNeedToSelectPreviousChar && Platform.current().os().isMac()
+                && (Registry.is("ide.mac.pressAndHold.brute.workaround") || Registry.is("ide.mac.pressAndHold.workaround") && (hasRelevantCommittedText(
+                e) || e.getCaret() == null))) {
                 // This is required to support input of accented characters using press-and-hold method (http://support.apple.com/kb/PH11264).
                 // JDK currently properly supports this functionality only for TextComponent/JTextComponent descendants.
                 // For our editor component we need this workaround.
@@ -3064,12 +3096,14 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
 
     private class MyMouseAdapter extends MouseAdapter {
         @Override
+        @RequiredUIAccess
         public void mousePressed(@Nonnull MouseEvent e) {
             requestFocus();
             runMousePressedCommand(e);
         }
 
         @Override
+        @RequiredUIAccess
         public void mouseReleased(@Nonnull MouseEvent e) {
             myMousePressArea = null;
             myLastMousePressedLocation = null;
@@ -3095,6 +3129,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
             }
         }
 
+        @RequiredUIAccess
         private void runMousePressedCommand(@Nonnull final MouseEvent e) {
             myLastMousePressedLocation = xyToLogicalPosition(e.getPoint());
             myCaretStateBeforeLastPress = isToggleCaretEvent(e) ? myCaretModel.getCaretsAndSelections() : Collections.emptyList();
@@ -3112,7 +3147,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
                     boolean wasConsumed = event.isConsumed();
                     mouseListener.mousePressed(event);
                     //noinspection deprecation
-                    if (!wasConsumed && event.isConsumed() && mouseListener instanceof consulo.ide.impl.idea.util.EditorPopupHandler) {
+                    if (!wasConsumed && event.isConsumed() && mouseListener instanceof EditorPopupHandler) {
                         // compatibility with legacy code, this logic should be removed along with EditorPopupHandler
                         forceProcessing = true;
                     }
@@ -3125,8 +3160,8 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
                 myExpectedCaretOffset = -1;
             }
 
-            if (event.getArea() == EditorMouseEventArea.LINE_MARKERS_AREA || event.getArea() == EditorMouseEventArea.FOLDING_OUTLINE_AREA && !isInsideGutterWhitespaceArea(
-                e)) {
+            if (event.getArea() == EditorMouseEventArea.LINE_MARKERS_AREA
+                || event.getArea() == EditorMouseEventArea.FOLDING_OUTLINE_AREA && !isInsideGutterWhitespaceArea(e)) {
                 myDragOnGutterSelectionStartLine = EditorUtil.yPositionToLogicalLine(DesktopEditorImpl.this, e);
             }
 
@@ -3135,19 +3170,15 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
             }
 
             if (myCommandProcessor != null) {
-                Runnable runnable = () -> {
-                    if (processMousePressed(e) && myProject != null && !myProject.isDefault()) {
-                        IdeDocumentHistory.getInstance(myProject).includeCurrentCommandAsNavigation();
-                    }
-                };
-                myCommandProcessor.executeCommand(
-                    myProject,
-                    runnable,
-                    "",
-                    DocCommandGroupId.noneGroupId(getDocument()),
-                    UndoConfirmationPolicy.DEFAULT,
-                    getDocument()
-                );
+                myCommandProcessor.newCommand(() -> {
+                        if (processMousePressed(e) && myProject != null && !myProject.isDefault()) {
+                            IdeDocumentHistory.getInstance(myProject).includeCurrentCommandAsNavigation();
+                        }
+                    })
+                    .withProject(myProject)
+                    .withDocument(getDocument())
+                    .withGroupId(DocCommandGroupId.noneGroupId(getDocument()))
+                    .execute();
             }
             else {
                 processMousePressed(e);
@@ -3170,6 +3201,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
             }
         }
 
+        @RequiredUIAccess
         private void runMouseReleasedCommand(@Nonnull final MouseEvent e) {
             myMultiSelectionInProgress = false;
             myDragOnGutterSelectionStartLine = -1;
@@ -3193,15 +3225,11 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
             }
 
             if (myCommandProcessor != null) {
-                Runnable runnable = () -> processMouseReleased(e);
-                myCommandProcessor.executeCommand(
-                    myProject,
-                    runnable,
-                    "",
-                    DocCommandGroupId.noneGroupId(getDocument()),
-                    UndoConfirmationPolicy.DEFAULT,
-                    getDocument()
-                );
+                myCommandProcessor.newCommand(() -> processMouseReleased(e))
+                    .withProject(myProject)
+                    .withDocument(getDocument())
+                    .withGroupId(DocCommandGroupId.noneGroupId(getDocument()))
+                    .execute();
             }
             else {
                 processMouseReleased(e);
@@ -3236,10 +3264,12 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
             }
         }
 
+        @RequiredUIAccess
         private boolean processMousePressed(@Nonnull final MouseEvent e) {
             myInitialMouseEvent = e;
 
-            if (myMouseSelectionState != MOUSE_SELECTION_STATE_NONE && System.currentTimeMillis() - myMouseSelectionChangeTimestamp > Registry.intValue(
+            if (myMouseSelectionState != MOUSE_SELECTION_STATE_NONE
+                && System.currentTimeMillis() - myMouseSelectionChangeTimestamp > Registry.intValue(
                 "editor.mouseSelectionStateResetTimeout")) {
                 resetMouseSelectionState(e);
             }
@@ -3555,12 +3585,14 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         return myUseEditorAntialiasing;
     }
 
+    @Override
     public void setUseEditorAntialiasing(boolean value) {
         myUseEditorAntialiasing = value;
     }
 
     private class MyMouseMotionListener implements MouseMotionListener {
         @Override
+        @RequiredUIAccess
         public void mouseDragged(@Nonnull MouseEvent e) {
             if (myDraggedRange != null || myGutterComponent.myDnDInProgress) {
                 return; // on Mac we receive events even if drag-n-drop is in progress
@@ -3581,6 +3613,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         }
 
         @Override
+        @RequiredUIAccess
         public void mouseMoved(@Nonnull MouseEvent e) {
             if (getMouseSelectionState() != MOUSE_SELECTION_STATE_NONE) {
                 if (myMousePressedEvent != null && myMousePressedEvent.getComponent() == e.getComponent()) {
@@ -3680,6 +3713,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
 
     }
 
+    @RequiredUIAccess
     static boolean handleDrop(@Nonnull DesktopEditorImpl editor, @Nonnull final Transferable t, int dropAction) {
         final EditorDropHandler dropHandler = editor.getDropHandler();
 
@@ -3687,28 +3721,26 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
             XDebuggerSettingsManager.getInstance().getGeneralSettings().isSingleClickForDisablingBreakpoint();
         if (singleClickForDisablingBreakpoint) {
             try {
-                if (t.isDataFlavorSupported(GutterDraggableObject.flavor)) {
-                    Object attachedObject = t.getTransferData(GutterDraggableObject.flavor);
-                    if (attachedObject instanceof GutterIconRenderer) {
-                        GutterDraggableObject object = ((GutterIconRenderer)attachedObject).getDraggableObject();
-                        if (object != null) {
-                            object.remove();
-                            Point mouseLocationOnScreen = MouseInfo.getPointerInfo().getLocation();
-                            JComponent editorComponent = editor.getComponent();
-                            Point editorComponentLocationOnScreen = editorComponent.getLocationOnScreen();
-                            Disposable painterListenersDisposable = Disposable.newDisposable("PainterListenersDisposable");
-                            Disposer.register(editor.getDisposable(), painterListenersDisposable);
-                            ExplosionPainter painter = new ExplosionPainter(
-                                new Point(
-                                    mouseLocationOnScreen.x - editorComponentLocationOnScreen.x,
-                                    mouseLocationOnScreen.y - editorComponentLocationOnScreen.y
-                                ),
-                                editor.getGutterComponentEx().getDragImage((GutterIconRenderer)attachedObject),
-                                painterListenersDisposable
-                            );
-                            IdeGlassPaneUtil.installPainter(editorComponent, painter, painterListenersDisposable);
-                            return true;
-                        }
+                if (t.isDataFlavorSupported(GutterDraggableObject.flavor)
+                    && t.getTransferData(GutterDraggableObject.flavor) instanceof GutterIconRenderer gutterIconRenderer) {
+                    GutterDraggableObject object = gutterIconRenderer.getDraggableObject();
+                    if (object != null) {
+                        object.remove();
+                        Point mouseLocationOnScreen = MouseInfo.getPointerInfo().getLocation();
+                        JComponent editorComponent = editor.getComponent();
+                        Point editorComponentLocationOnScreen = editorComponent.getLocationOnScreen();
+                        Disposable painterListenersDisposable = Disposable.newDisposable("PainterListenersDisposable");
+                        Disposer.register(editor.getDisposable(), painterListenersDisposable);
+                        ExplosionPainter painter = new ExplosionPainter(
+                            new Point(
+                                mouseLocationOnScreen.x - editorComponentLocationOnScreen.x,
+                                mouseLocationOnScreen.y - editorComponentLocationOnScreen.y
+                            ),
+                            editor.getGutterComponentEx().getDragImage(gutterIconRenderer),
+                            painterListenersDisposable
+                        );
+                        IdeGlassPaneUtil.installPainter(editorComponent, painter, painterListenersDisposable);
+                        return true;
                     }
                 }
             }
@@ -3731,9 +3763,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
             editor.getCaretModel().moveToOffset(editor.mySavedCaretOffsetForDNDUndoHack);
         }
 
-        CommandProcessor.getInstance().executeCommand(
-            editor.myProject,
-            () -> {
+        CommandProcessor.getInstance().newCommand(() -> {
                 try {
                     editor.getSelectionModel().removeSelection();
 
@@ -3764,12 +3794,12 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
                 catch (Exception exception) {
                     LOG.error(exception);
                 }
-            },
-            EditorBundle.message("paste.command.name"),
-            DND_COMMAND_KEY,
-            UndoConfirmationPolicy.DEFAULT,
-            editor.getDocument()
-        );
+            })
+            .withProject(editor.myProject)
+            .withDocument(editor.getDocument())
+            .withName(CodeEditorLocalize.pasteCommandName())
+            .withGroupId(DND_COMMAND_KEY)
+            .execute();
 
         return true;
     }
@@ -3781,10 +3811,10 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         }
 
         @Override
+        @RequiredUIAccess
         public boolean importData(TransferSupport support) {
-            Component comp = support.getComponent();
-            return comp instanceof JComponent
-                && handleDrop(getEditor((JComponent)comp), support.getTransferable(), support.getDropAction());
+            return support.getComponent() instanceof JComponent component
+                && handleDrop(getEditor(component), support.getTransferable(), support.getDropAction());
         }
 
         @Override
@@ -3807,11 +3837,8 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
             }
 
             int offset = editor.getCaretModel().getOffset();
-            if (editor.getDocument().getRangeGuard(offset, offset) != null) {
-                return false;
-            }
-
-            return ArrayUtil.contains(DataFlavor.stringFlavor, transferFlavors);
+            return editor.getDocument().getRangeGuard(offset, offset) == null
+                && ArrayUtil.contains(DataFlavor.stringFlavor, transferFlavors);
         }
 
         @Override
@@ -3835,6 +3862,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         }
 
         @Override
+        @RequiredUIAccess
         protected void exportDone(@Nonnull final JComponent source, @Nullable Transferable data, int action) {
             if (data == null) {
                 return;
@@ -3854,13 +3882,12 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
             editor.clearDnDContext();
         }
 
+        @RequiredUIAccess
         private static void removeDraggedOutFragment(DesktopEditorImpl editor) {
             if (!FileDocumentManager.getInstance().requestWriting(editor.getDocument(), editor.getProject())) {
                 return;
             }
-            CommandProcessor.getInstance().executeCommand(
-                editor.myProject,
-                () -> ApplicationManager.getApplication().runWriteAction(() -> {
+            CommandProcessor.getInstance().newCommand(() -> {
                     Document doc = editor.getDocument();
                     doc.startGuardedBlockChecking();
                     try {
@@ -3872,12 +3899,12 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
                     finally {
                         doc.stopGuardedBlockChecking();
                     }
-                }),
-                EditorBundle.message("move.selection.command.name"),
-                DND_COMMAND_KEY,
-                UndoConfirmationPolicy.DEFAULT,
-                editor.getDocument()
-            );
+                })
+                .withProject(editor.myProject)
+                .withDocument(editor.getDocument())
+                .withName(CodeEditorLocalize.moveSelectionCommandName())
+                .withGroupId(DND_COMMAND_KEY)
+                .executeInWriteAction();
         }
     }
 
@@ -3887,6 +3914,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         return getGutterComponentEx();
     }
 
+    @Override
     public boolean isInDistractionFreeMode() {
         return EditorUtil.isRealFileEditor(this) && (Registry.is("editor.distraction.free.mode") || isInPresentationMode());
     }
@@ -3896,6 +3924,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
     }
 
     @Override
+    @RequiredUIAccess
     public void codeStyleSettingsChanged(@Nonnull CodeStyleSettingsChangeEvent event) {
         if (myProject != null) {
             if (event.getPsiFile() != null) {
@@ -3990,8 +4019,8 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
 
         @Override
         public void paintBorder(@Nonnull Component c, @Nonnull Graphics g, int x, int y, int width, int height) {
-            if (c instanceof JComponent) {
-                Insets insets = ((JComponent)c).getInsets();
+            if (c instanceof JComponent component) {
+                Insets insets = component.getInsets();
                 if (insets.left > 0) {
                     super.paintBorder(c, g, x, y, width, height);
                 }

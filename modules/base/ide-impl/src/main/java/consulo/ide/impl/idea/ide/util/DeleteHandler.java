@@ -17,12 +17,14 @@
 package consulo.ide.impl.idea.ide.util;
 
 import consulo.application.Application;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider;
 import consulo.ide.impl.idea.util.io.ReadOnlyAttributeUtil;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.safeDelete.SafeDeleteDialog;
 import consulo.language.editor.refactoring.safeDelete.SafeDeleteProcessor;
@@ -35,9 +37,7 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localHistory.LocalHistory;
 import consulo.localHistory.LocalHistoryAction;
-import consulo.application.localize.ApplicationLocalize;
 import consulo.platform.base.localize.CommonLocalize;
-import consulo.ide.localize.IdeLocalize;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -54,7 +54,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.WritingAccessProvider;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -119,7 +118,6 @@ public class DeleteHandler {
         deletePsiElement(elementsToDelete, project, true);
     }
 
-    @NonNls
     @RequiredUIAccess
     public static void deletePsiElement(final PsiElement[] elementsToDelete, final Project project, boolean needConfirmation) {
         if (elementsToDelete == null || elementsToDelete.length == 0) {
@@ -216,9 +214,7 @@ public class DeleteHandler {
             }
         }
 
-        CommandProcessor.getInstance().executeCommand(
-            project,
-            () -> NonProjectFileWritingAccessProvider.disableChecksDuring(() -> {
+        CommandProcessor.getInstance().newCommand(() -> NonProjectFileWritingAccessProvider.disableChecksDuring(() -> {
                 Collection<PsiElement> directories = new SmartList<>();
                 for (PsiElement e : elements) {
                     if (e instanceof PsiFileSystemItem && e.getParent() != null) {
@@ -310,31 +306,26 @@ public class DeleteHandler {
                         }
                     });
                 }
-            }),
-            RefactoringLocalize.safeDeleteCommand(RefactoringUIUtil.calculatePsiElementDescriptionList(elements)).get(),
-            null
-        );
+            }))
+            .withProject(project)
+            .withName(RefactoringLocalize.safeDeleteCommand(RefactoringUIUtil.calculatePsiElementDescriptionList(elements)))
+            .execute();
     }
 
+    @RequiredUIAccess
     private static boolean clearReadOnlyFlag(final VirtualFile virtualFile, final Project project) {
         final boolean[] success = new boolean[1];
-        CommandProcessor.getInstance().executeCommand(
-            project,
-            () -> {
-                Runnable action = () -> {
-                    try {
-                        ReadOnlyAttributeUtil.setReadOnlyAttribute(virtualFile, false);
-                        success[0] = true;
-                    }
-                    catch (IOException e1) {
-                        Messages.showMessageDialog(project, e1.getMessage(), CommonLocalize.titleError().get(), UIUtil.getErrorIcon());
-                    }
-                };
-                project.getApplication().runWriteAction(action);
-            },
-            "",
-            null
-        );
+        CommandProcessor.getInstance().newCommand(() -> {
+                try {
+                    ReadOnlyAttributeUtil.setReadOnlyAttribute(virtualFile, false);
+                    success[0] = true;
+                }
+                catch (IOException e1) {
+                    Messages.showMessageDialog(project, e1.getMessage(), CommonLocalize.titleError().get(), UIUtil.getErrorIcon());
+                }
+            })
+            .withProject(project)
+            .executeInWriteAction();
         return success[0];
     }
 

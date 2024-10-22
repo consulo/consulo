@@ -37,8 +37,10 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.Comparing;
 import jakarta.annotation.Nonnull;
@@ -72,13 +74,15 @@ public class CleanupInspectionIntention implements IntentionAction, HighPriority
     }
 
     @Override
+    @RequiredUIAccess
     public void invoke(@Nonnull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException {
-
-        final List<ProblemDescriptor> descriptions =
-            ProgressManager.getInstance().runProcess(() -> {
+        final List<ProblemDescriptor> descriptions = ProgressManager.getInstance().runProcess(
+            () -> {
                 InspectionManager inspectionManager = InspectionManager.getInstance(project);
                 return InspectionEngine.runInspectionOnFile(file, myToolWrapper, inspectionManager.createNewGlobalContext(false));
-            }, new EmptyProgressIndicator());
+            },
+            new EmptyProgressIndicator()
+        );
 
         if (!descriptions.isEmpty() && !FileModificationService.getInstance().preparePsiElementForWrite(file)) {
             return;
@@ -95,6 +99,7 @@ public class CleanupInspectionIntention implements IntentionAction, HighPriority
         }
     }
 
+    @RequiredUIAccess
     public static AbstractPerformFixesTask applyFixes(
         @Nonnull Project project,
         @Nonnull String presentationText,
@@ -105,6 +110,7 @@ public class CleanupInspectionIntention implements IntentionAction, HighPriority
         return applyFixesNoSort(project, presentationText, descriptions, quickfixClass);
     }
 
+    @RequiredUIAccess
     public static AbstractPerformFixesTask applyFixesNoSort(
         @Nonnull Project project,
         @Nonnull String presentationText,
@@ -116,17 +122,15 @@ public class CleanupInspectionIntention implements IntentionAction, HighPriority
         final AbstractPerformFixesTask fixesTask = isBatch
             ? new PerformBatchFixesTask(project, descriptions.toArray(ProblemDescriptor.EMPTY_ARRAY), progressTask, quickfixClass)
             : new PerformFixesTask(project, descriptions.toArray(ProblemDescriptor.EMPTY_ARRAY), progressTask, quickfixClass);
-        CommandProcessor.getInstance().executeCommand(
-            project,
-            () -> {
+        CommandProcessor.getInstance().newCommand(() -> {
                 CommandProcessor.getInstance().markCurrentCommandAsGlobal(project);
                 progressTask.setMinIterationTime(200);
                 progressTask.setTask(fixesTask);
                 ProgressManager.getInstance().run(progressTask);
-            },
-            presentationText,
-            null
-        );
+            })
+            .withProject(project)
+            .withName(LocalizeValue.ofNullable(presentationText))
+            .execute();
         return fixesTask;
     }
 

@@ -24,6 +24,7 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.openapi.command.undo.GlobalUndoableAction;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -136,11 +137,16 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
             @Nonnull
             @Override
             protected DefaultActionGroup createPopupActionGroup(JComponent button) {
-                return createCharsetsActionGroup(clearItemText, null, charset -> "Change encoding to '" + charset.displayName() + "'");
+                return createCharsetsActionGroup(
+                    clearItemText,
+                    null,
+                    charset -> "Change encoding to '" + charset.displayName() + "'"
+                );
                 // no 'clear'
             }
 
             @Override
+            @RequiredUIAccess
             protected void chosen(@Nullable VirtualFile virtualFile, @Nonnull Charset charset) {
                 ChangeFileEncodingAction.this.chosen(document, editor, virtualFile, bytes, charset);
             }
@@ -148,6 +154,7 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
     }
 
     // returns true if charset was changed, false if failed
+    @RequiredUIAccess
     protected boolean chosen(
         final Document document,
         final Editor editor,
@@ -166,6 +173,7 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
         return changeTo(project, document, editor, virtualFile, charset, isSafeToConvert, isSafeToReload);
     }
 
+    @RequiredUIAccess
     public static boolean changeTo(
         Project project,
         @Nonnull Document document,
@@ -217,16 +225,14 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
         };
 
         redo.run();
-        CommandProcessor.getInstance().executeCommand(
-            project,
-            () -> {
+        CommandProcessor.getInstance().newCommand(() -> {
                 UndoManager undoManager = project == null ? ApplicationUndoManager.getInstance() : ProjectUndoManager.getInstance(project);
                 undoManager.undoableActionPerformed(action);
-            },
-            "Change encoding for '" + virtualFile.getName() + "'",
-            null,
-            UndoConfirmationPolicy.REQUEST_CONFIRMATION
-        );
+            })
+            .withProject(project)
+            .withName(LocalizeValue.localizeTODO("Change encoding for '" + virtualFile.getName() + "'"))
+            .withUndoConfirmationPolicy(UndoConfirmationPolicy.REQUEST_CONFIRMATION)
+            .execute();
 
         return true;
     }

@@ -17,8 +17,7 @@ package consulo.language.editor.refactoring.copy;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.ApplicationManager;
-import consulo.application.CommonBundle;
+import consulo.application.Application;
 import consulo.application.Result;
 import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.refactoring.internal.RefactoringInternalHelper;
@@ -37,6 +36,7 @@ import consulo.module.content.ModuleRootManager;
 import consulo.module.content.NewFileModuleResolver;
 import consulo.module.content.ProjectRootManager;
 import consulo.module.content.layer.ModifiableRootModel;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -124,18 +124,18 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
         return defaultTargetDirectory;
     }
 
-    @RequiredReadAction
+    @RequiredUIAccess
     public static void copyAsFiles(PsiElement[] elements, @Nullable PsiDirectory defaultTargetDirectory, Project project) {
         doCopyAsFiles(elements, defaultTargetDirectory, project);
     }
 
-    @RequiredReadAction
+    @RequiredUIAccess
     private static void doCopyAsFiles(PsiElement[] elements, @Nullable PsiDirectory defaultTargetDirectory, Project project) {
         PsiDirectory targetDirectory;
         String newName;
         boolean openInEditor;
         VirtualFile[] files = Arrays.stream(elements).map(el -> ((PsiFileSystemItem)el).getVirtualFile()).toArray(VirtualFile[]::new);
-        if (ApplicationManager.getApplication().isUnitTestMode()) {
+        if (Application.get().isUnitTestMode()) {
             targetDirectory = defaultTargetDirectory;
             newName = null;
             openInEditor = true;
@@ -164,16 +164,14 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
                 }
             }
             catch (IncorrectOperationException e) {
-                CommonRefactoringUtil.showErrorHint(project, null, e.getMessage(), CommonBundle.getErrorTitle(), null);
+                CommonRefactoringUtil.showErrorHint(project, null, e.getMessage(), CommonLocalize.titleError().get(), null);
                 return;
             }
 
-            CommandProcessor.getInstance().executeCommand(
-                project,
-                () -> copyImpl(files, newName, targetDirectory, false, openInEditor),
-                RefactoringLocalize.copyHandlerCopyFilesDirectories().get(),
-                null
-            );
+            CommandProcessor.getInstance().newCommand(() -> copyImpl(files, newName, targetDirectory, false, openInEditor))
+                .withProject(project)
+                .withName(RefactoringLocalize.copyHandlerCopyFilesDirectories())
+                .execute();
         }
     }
 

@@ -12,9 +12,10 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.util.ui.tree.PerFileConfigurableBase;
-import consulo.language.LangBundle;
 import consulo.ide.localize.IdeLocalize;
+import consulo.language.localize.LanguageLocalize;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.ActionGroup;
@@ -171,6 +172,7 @@ class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> implemen
 
         return new ChangeFileEncodingAction(true) {
             @Override
+            @RequiredUIAccess
             protected boolean chosen(Document document, Editor editor, VirtualFile virtualFile, byte[] bytes, @Nonnull Charset charset) {
                 onChosen.accept(charset);
                 return true;
@@ -181,7 +183,7 @@ class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> implemen
     @Override
     @Nullable
     protected String getClearValueText(@Nullable Object target) {
-        return target != null ? super.getClearValueText(target) : LangBundle.message("action.set.system.default.encoding.text");
+        return target != null ? super.getClearValueText(target) : LanguageLocalize.actionSetSystemDefaultEncodingText().get();
     }
 
     @Override
@@ -200,6 +202,7 @@ class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> implemen
 
     @Nonnull
     @Override
+    @RequiredUIAccess
     public JComponent createComponent() {
         myTablePanel.add(super.createComponent(), BorderLayout.CENTER);
         JPanel p = createActionPanel(null, new Value<>() {
@@ -233,6 +236,7 @@ class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> implemen
     }
 
     @Override
+    @RequiredUIAccess
     public boolean isModified() {
         if (super.isModified()) {
             return true;
@@ -250,6 +254,7 @@ class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> implemen
     }
 
     @Override
+    @RequiredUIAccess
     public void apply() throws ConfigurationException {
         super.apply();
         EncodingProjectManagerImpl encodingManager = (EncodingProjectManagerImpl)EncodingProjectManager.getInstance(myProject);
@@ -263,6 +268,7 @@ class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> implemen
     }
 
     @Override
+    @RequiredUIAccess
     public void reset() {
         EncodingProjectManagerImpl encodingManager = (EncodingProjectManagerImpl)EncodingProjectManager.getInstance(myProject);
         myTransparentNativeToAsciiCheckBox.setSelected(encodingManager.isNative2AsciiForPropertiesFiles());

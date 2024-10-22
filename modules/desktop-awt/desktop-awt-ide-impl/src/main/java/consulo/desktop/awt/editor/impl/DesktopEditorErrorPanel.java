@@ -18,8 +18,12 @@ package consulo.desktop.awt.editor.impl;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.codeEditor.*;
+import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.FoldRegion;
+import consulo.codeEditor.FoldingModelEx;
+import consulo.codeEditor.VisualPosition;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.document.DocCommandGroupId;
 import consulo.document.Document;
 import consulo.document.util.ProperTextRange;
@@ -35,7 +39,6 @@ import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.PopupHandler;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.UndoConfirmationPolicy;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -234,6 +237,7 @@ public class DesktopEditorErrorPanel extends JComponent implements UISettingsLis
         return myEditor;
     }
 
+    @Override
     public DesktopEditorErrorPanelUI getUI() {
         return (DesktopEditorErrorPanelUI)ui;
     }
@@ -254,20 +258,13 @@ public class DesktopEditorErrorPanel extends JComponent implements UISettingsLis
 
     @RequiredUIAccess
     public void mouseClicked(final MouseEvent e) {
-        CommandProcessor.getInstance().executeCommand(
-            myEditor.getProject(),
-            new Runnable() {
-                @Override
-                @RequiredUIAccess
-                public void run() {
-                    doMouseClicked(e);
-                }
-            },
-            EditorBundle.message("move.caret.command.name"),
-            DocCommandGroupId.noneGroupId(myEditor.getDocument()),
-            UndoConfirmationPolicy.DEFAULT,
-            myEditor.getDocument()
-        );
+        CommandProcessor.getInstance().newCommand(() -> doMouseClicked(e))
+            .withProject(myEditor.getProject())
+            .withName(CodeEditorLocalize.moveCaretCommandName())
+            .withGroupId(DocCommandGroupId.noneGroupId(myEditor.getDocument()))
+            .withUndoConfirmationPolicy(UndoConfirmationPolicy.DEFAULT)
+            .withDocument(myEditor.getDocument())
+            .execute();
     }
 
     @RequiredUIAccess
@@ -277,9 +274,9 @@ public class DesktopEditorErrorPanel extends JComponent implements UISettingsLis
             return;
         }
 
-        IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> {
-            IdeFocusManager.getGlobalInstance().requestFocus(myEditor.getContentComponent(), true);
-        });
+        IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(
+            () -> IdeFocusManager.getGlobalInstance().requestFocus(myEditor.getContentComponent(), true)
+        );
 
         int lineCount = myEditor.getDocument().getLineCount() + myEditor.getSettings().getAdditionalLinesCount();
         if (lineCount == 0) {

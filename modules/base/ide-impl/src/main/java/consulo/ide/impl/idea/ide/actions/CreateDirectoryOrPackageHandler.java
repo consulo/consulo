@@ -15,12 +15,13 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.util.registry.Registry;
 import consulo.ide.action.CreateElementActionBase;
 import consulo.ide.action.CreateFileAction;
 import consulo.ide.impl.actions.CreateDirectoryOrPackageType;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.file.FileTypeManager;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFileSystemItem;
@@ -30,7 +31,6 @@ import consulo.localHistory.LocalHistory;
 import consulo.localHistory.LocalHistoryAction;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.CommonLocalize;
-import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.InputValidatorEx;
@@ -43,7 +43,6 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import java.awt.*;
 import java.io.File;
@@ -87,7 +86,6 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
         myDialogParent = dialogParent;
     }
 
-    @NonNls
     @Override
     @RequiredUIAccess
     public boolean checkInput(String inputString) {
@@ -155,10 +153,10 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
     }
 
     @Override
+    @RequiredUIAccess
     public boolean canClose(final String subDirName) {
-
-        if (subDirName.length() == 0) {
-            showErrorDialog(IdeLocalize.errorNameShouldBeSpecified().get());
+        if (subDirName.isEmpty()) {
+            showErrorDialog(IdeLocalize.errorNameShouldBeSpecified());
             return false;
         }
 
@@ -168,7 +166,7 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
                 myDirectory.checkCreateSubdirectory(subDirName);
             }
             catch (IncorrectOperationException ex) {
-                showErrorDialog(CreateElementActionBase.filterMessage(ex.getMessage()));
+                showErrorDialog(LocalizeValue.ofNullable(CreateElementActionBase.filterMessage(ex.getMessage())));
                 return false;
             }
         }
@@ -183,8 +181,8 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
         return myCreatedElement != null;
     }
 
-    @NonNls
     @Nullable
+    @RequiredUIAccess
     private Boolean suggestCreatingFileInstead(String subDirName) {
         boolean isDirectory = myType == CreateDirectoryOrPackageType.Directory;
 
@@ -197,9 +195,9 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
                 int ec = Messages.showYesNoCancelDialog(
                     myProject,
                     message,
-                    "File Name Detected",
-                    "&Yes, create file",
-                    "&No, create " + (isDirectory ? "directory" : "packages"),
+                    LocalizeValue.localizeTODO("File Name Detected").get(),
+                    LocalizeValue.localizeTODO("&Yes, create file").get(),
+                    LocalizeValue.localizeTODO("&No, create " + (isDirectory ? "directory" : "packages")).get(),
                     CommonLocalize.buttonCancel().get(),
                     fileType.getIcon()
                 );
@@ -220,11 +218,11 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
         return fileType instanceof UnknownFileType ? null : fileType;
     }
 
+    @RequiredUIAccess
     private void doCreateElement(final String subDirName, final boolean createFile) {
         boolean isDirectory = myType == CreateDirectoryOrPackageType.Directory;
 
-        Runnable command = () -> {
-            final Runnable run = () -> {
+        CommandProcessor.getInstance().newCommand(() -> {
                 String dirPath = myDirectory.getVirtualFile().getPresentableUrl();
                 LocalizeValue actionName = IdeLocalize.progressCreatingDirectory(dirPath, File.separator, subDirName);
                 LocalHistoryAction action = LocalHistory.getInstance().startAction(actionName.get());
@@ -238,35 +236,34 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
                     }
                 }
                 catch (final IncorrectOperationException ex) {
-                    ApplicationManager.getApplication()
-                        .invokeLater(() -> showErrorDialog(CreateElementActionBase.filterMessage(ex.getMessage())));
+                    Application.get().invokeLater(
+                        () -> showErrorDialog(LocalizeValue.ofNullable(CreateElementActionBase.filterMessage(ex.getMessage())))
+                    );
                 }
                 finally {
                     action.finish();
                 }
-            };
-            ApplicationManager.getApplication().runWriteAction(run);
-        };
-        CommandProcessor.getInstance().executeCommand(
-            myProject,
-            command,
-            createFile
-                ? IdeLocalize.commandCreateFile().get()
-                : isDirectory
-                ? IdeLocalize.commandCreateDirectory().get()
-                : IdeLocalize.commandCreatePackage().get(),
-            null
-        );
+            })
+            .withProject(myProject)
+            .withName(
+                createFile
+                    ? IdeLocalize.commandCreateFile()
+                    : isDirectory
+                    ? IdeLocalize.commandCreateDirectory()
+                    : IdeLocalize.commandCreatePackage()
+            )
+            .executeInWriteAction();
     }
 
-    private void showErrorDialog(String message) {
+    @RequiredUIAccess
+    private void showErrorDialog(LocalizeValue message) {
         LocalizeValue title = CommonLocalize.titleError();
         Image icon = Messages.getErrorIcon();
         if (myDialogParent != null) {
-            Messages.showMessageDialog(myDialogParent, message, title.get(), icon);
+            Messages.showMessageDialog(myDialogParent, message.get(), title.get(), icon);
         }
         else {
-            Messages.showMessageDialog(myProject, message, title.get(), icon);
+            Messages.showMessageDialog(myProject, message.get(), title.get(), icon);
         }
     }
 

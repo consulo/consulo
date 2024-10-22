@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.refactoring.copy;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.HelpManager;
 import consulo.fileChooser.FileChooserDescriptor;
@@ -78,6 +79,7 @@ public class CopyFilesOrDirectoriesDialog extends DialogWrapper {
     private PsiDirectory myTargetDirectory;
     private boolean myFileCopy = false;
 
+    @RequiredReadAction
     public CopyFilesOrDirectoriesDialog(PsiElement[] elements, PsiDirectory defaultTargetDirectory, Project project, boolean doClone) {
         super(project, true);
         myProject = project;
@@ -163,6 +165,7 @@ public class CopyFilesOrDirectoriesDialog extends DialogWrapper {
     }
 
     @Override
+    @RequiredUIAccess
     public JComponent getPreferredFocusedComponent() {
         return myShowNewNameField ? myNewNameField : myTargetDirectoryField.getChildComponent();
     }
@@ -268,19 +271,17 @@ public class CopyFilesOrDirectoriesDialog extends DialogWrapper {
 
             RecentsManager.getInstance(myProject).registerRecentEntry(RECENT_KEYS, targetDirectoryName);
 
-            CommandProcessor.getInstance().executeCommand(
-                myProject,
-                () -> myProject.getApplication().runWriteAction(() -> {
+            CommandProcessor.getInstance().newCommand(() -> {
                     try {
                         myTargetDirectory =
                             DirectoryUtil.mkdirs(PsiManager.getInstance(myProject), targetDirectoryName.replace(File.separatorChar, '/'));
                     }
                     catch (IncorrectOperationException ignored) {
                     }
-                }),
-                RefactoringLocalize.createDirectory().get(),
-                null
-            );
+                })
+                .withProject(myProject)
+                .withName(RefactoringLocalize.createDirectory())
+                .executeInWriteAction();
 
             if (myTargetDirectory == null) {
                 Messages.showErrorDialog(
@@ -313,6 +314,7 @@ public class CopyFilesOrDirectoriesDialog extends DialogWrapper {
     }
 
     @Override
+    @RequiredUIAccess
     protected void doHelpAction() {
         HelpManager.getInstance().invokeHelp("refactoring.copyClass");
     }

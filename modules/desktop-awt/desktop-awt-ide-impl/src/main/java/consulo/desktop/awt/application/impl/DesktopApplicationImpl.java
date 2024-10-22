@@ -18,7 +18,6 @@ package consulo.desktop.awt.application.impl;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentProfiles;
 import consulo.application.Application;
-import consulo.application.ApplicationBundle;
 import consulo.application.ApplicationManager;
 import consulo.application.ApplicationProperties;
 import consulo.application.impl.internal.BaseApplication;
@@ -185,11 +184,14 @@ public class DesktopApplicationImpl extends BaseApplication {
         final boolean[] canClose = {true};
         for (final Project project : manager.getOpenProjects()) {
             try {
-                CommandProcessor.getInstance().executeCommand(project, () -> {
-                    if (!manager.closeProject(project, true, true, checkCanCloseProject)) {
-                        canClose[0] = false;
-                    }
-                }, ApplicationBundle.message("command.exit"), null);
+                CommandProcessor.getInstance().newCommand(() -> {
+                        if (!manager.closeProject(project, true, true, checkCanCloseProject)) {
+                            canClose[0] = false;
+                        }
+                    })
+                    .withProject(project)
+                    .withName(ApplicationLocalize.commandExit())
+                    .execute();
             }
             catch (Throwable e) {
                 LOG.error(e);
@@ -230,14 +232,14 @@ public class DesktopApplicationImpl extends BaseApplication {
     }
 
     @Override
-    public void invokeLater(@Nonnull final Runnable runnable, @Nonnull final consulo.ui.ModalityState state) {
+    public void invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState state) {
         invokeLater(runnable, state, getDisposed());
     }
 
     @Override
     public void invokeLater(
         @Nonnull final Runnable runnable,
-        @Nonnull final consulo.ui.ModalityState state,
+        @Nonnull final ModalityState state,
         @Nonnull final BooleanSupplier expired
     ) {
         LaterInvocator.invokeLaterWithCallback(() -> runIntendedWriteActionOnCurrentThread(runnable), state, expired, null);
@@ -326,7 +328,7 @@ public class DesktopApplicationImpl extends BaseApplication {
     }
 
     @Override
-    public void invokeAndWait(@Nonnull Runnable runnable, @Nonnull consulo.ui.ModalityState modalityState) {
+    public void invokeAndWait(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState) {
         if (isDispatchThread()) {
             runnable.run();
             return;
@@ -437,7 +439,7 @@ public class DesktopApplicationImpl extends BaseApplication {
                 runnable.run();
             }
             else {
-                invokeLater(runnable, IdeaModalityState.nonModal());
+                invokeLater(runnable, Application.get().getNoneModalityState());
             }
         }
         finally {
