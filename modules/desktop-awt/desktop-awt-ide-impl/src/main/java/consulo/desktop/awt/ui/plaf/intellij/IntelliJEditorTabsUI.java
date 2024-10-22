@@ -26,6 +26,7 @@ import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.paint.LinePainter2D;
+import consulo.ui.ex.awt.paint.RectanglePainter2D;
 import consulo.ui.ex.awt.tab.JBTabsPosition;
 import consulo.ui.ex.awt.tab.TabInfo;
 import consulo.ui.ex.awt.util.ColorUtil;
@@ -369,13 +370,10 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
 
         switch (tabs.getTabsPosition()) {
             case top:
-                g2d.fillRect(rect.x, rect.height - underlineSize, rect.width, underlineSize);
+                RectanglePainter2D.FILL.paint(g2d, rect.x, rect.y + rect.height - underlineSize, rect.width, underlineSize);
                 break;
             case left:
-                g2d.fillRect(rect.x + rect.width - underlineSize, rect.y, underlineSize, rect.height);
-                break;
-            case right:
-                g2d.fillRect(rect.x, rect.y, underlineSize, rect.height);
+                RectanglePainter2D.FILL.paint(g2d, rect.x + rect.width - underlineSize, rect.y, underlineSize, rect.height);
                 break;
         }
     }
