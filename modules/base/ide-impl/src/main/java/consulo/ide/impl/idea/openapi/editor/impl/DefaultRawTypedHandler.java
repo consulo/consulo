@@ -74,13 +74,14 @@ public class DefaultRawTypedHandler implements TypedActionHandlerEx {
         }
         finally {
             if (!myInOuterCommand) {
-                commandProcessorEx.finishCommand(myCurrentCommandToken, null);
+                myCurrentCommandToken.finish();
                 myCurrentCommandToken = null;
             }
             myInOuterCommand = false;
         }
     }
 
+    @RequiredUIAccess
     public void beginUndoablePostProcessing() {
         if (myInOuterCommand) {
             return;
@@ -90,7 +91,7 @@ public class DefaultRawTypedHandler implements TypedActionHandlerEx {
         }
         CommandProcessorEx commandProcessorEx = (CommandProcessorEx)CommandProcessor.getInstance();
         Project project = myCurrentCommandToken.getProject();
-        commandProcessorEx.finishCommand(myCurrentCommandToken, null);
+        myCurrentCommandToken.finish();
         myCurrentCommandToken = commandProcessorEx.newCommand().withProject(project).start();
     }
 }

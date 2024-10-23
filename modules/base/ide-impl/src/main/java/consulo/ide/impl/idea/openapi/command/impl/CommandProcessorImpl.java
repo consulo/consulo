@@ -30,7 +30,7 @@ public class CommandProcessorImpl extends CoreCommandProcessor {
 
     @RequiredUIAccess
     @Override
-    public void finishCommand(@Nonnull final CommandToken command, @Nullable final Throwable throwable) {
+    protected void finishCommand(@Nonnull final CommandToken command, @Nullable final Throwable throwable) {
         if (myCurrentCommand != command) {
             return;
         }
