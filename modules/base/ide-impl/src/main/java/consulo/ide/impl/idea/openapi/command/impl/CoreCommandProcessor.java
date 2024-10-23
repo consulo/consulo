@@ -221,13 +221,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
 
         fireCommandStarted();
 
-        return new CommandToken() {
-            @Nullable
-            @Override
-            public Project getProject() {
-                return commandDescriptor.project();
-            }
-        };
+        return myCurrentCommand;
     }
 
     @Override
