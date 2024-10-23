@@ -153,7 +153,7 @@ public class DesktopApplicationImpl extends BaseApplication {
         Thread edt = UIUtil.invokeAndWaitIfNeeded(() -> {
             // instantiate AppDelayQueue which starts "Periodic task thread" which we'll mark busy to prevent this EDT to die
             // that thread was chosen because we know for sure it's running
-            AppScheduledExecutorService service = (AppScheduledExecutorService) AppExecutorUtil.getAppScheduledExecutorService();
+            AppScheduledExecutorService service = (AppScheduledExecutorService)AppExecutorUtil.getAppScheduledExecutorService();
             Thread thread = service.getPeriodicTasksThread();
             AWTAutoShutdownHacking.notifyThreadBusy(thread); // needed for EDT not to exit suddenly
             Disposer.register(this, () -> {
@@ -164,7 +164,7 @@ public class DesktopApplicationImpl extends BaseApplication {
 
         myLock = new ReadMostlyRWLock(edt);
 
-        UIUtil.invokeAndWaitIfNeeded((Runnable) () -> acquireWriteIntentLock(getClass().getName()));
+        UIUtil.invokeAndWaitIfNeeded((Runnable)() -> acquireWriteIntentLock(getClass().getName()));
 
         NoSwingUnderWriteAction.watchForEvents(this);
     }
@@ -553,7 +553,7 @@ public class DesktopApplicationImpl extends BaseApplication {
     ) {
         // Use Potemkin progress in legacy mode; in the new model such execution will always move to a separate thread.
         return runWriteActionWithClass(action.getClass(), () -> {
-            PotemkinProgress indicator = new PotemkinProgress(title, (Project) project, parentComponent, cancelText);
+            PotemkinProgress indicator = new PotemkinProgress(title, (Project)project, parentComponent, cancelText);
             indicator.runInSwingThread(() -> action.accept(indicator));
             return !indicator.isCanceled();
         });
@@ -568,7 +568,7 @@ public class DesktopApplicationImpl extends BaseApplication {
         @Nullable JComponent parentComponent,
         @Nullable String cancelText
     ) {
-        ProgressWindow progress = new ProgressWindow(canBeCanceled, !shouldShowModalWindow, (Project) project, parentComponent, cancelText);
+        ProgressWindow progress = new ProgressWindow(canBeCanceled, !shouldShowModalWindow, (Project)project, parentComponent, cancelText);
         // in case of abrupt application exit when 'ProgressManager.getInstance().runProcess(process, progress)' below
         // does not have a chance to run, and as a result the progress won't be disposed
         Disposer.register(this, progress);

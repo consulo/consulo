@@ -35,126 +35,135 @@ import consulo.undoRedo.CommandProcessor;
 import jakarta.annotation.Nonnull;
 
 public abstract class BaseCompleteMacro extends Macro {
-  private final String myName;
+    private final String myName;
 
-  protected BaseCompleteMacro(String name) {
-    myName = name;
-  }
-
-  @Override
-  public String getName() {
-    return myName;
-  }
-
-  @Override
-  public String getPresentableName() {
-    return myName + "()";
-  }
-
-  @Override
-  @Nonnull
-  public String getDefaultValue() {
-    return "a";
-  }
-
-  @Override
-  public final Result calculateResult(@Nonnull Expression[] params, final ExpressionContext context) {
-    return new InvokeActionResult(() -> invokeCompletion(context));
-  }
-
-  private void invokeCompletion(final ExpressionContext context) {
-    final Project project = context.getProject();
-    final Editor editor = context.getEditor();
-
-    final PsiFile psiFile = PsiUtilBase.getPsiFileInEditor(editor, project);
-    Runnable runnable = new Runnable() {
-      @Override
-      public void run() {
-        if (project.isDisposed() || editor.isDisposed() || psiFile == null || !psiFile.isValid()) return;
-
-        CommandProcessor.getInstance().executeCommand(project, new Runnable() {
-          @Override
-          public void run() {
-            invokeCompletionHandler(project, editor);
-            Lookup lookup = LookupManager.getInstance(project).getActiveLookup();
-
-            if (lookup != null) {
-              lookup.addLookupListener(new MyLookupListener(context));
-            }
-            else {
-              considerNextTab(editor);
-            }
-          }
-        }, "", null);
-      }
-    };
-
-    ApplicationManager.getApplication().invokeLater(runnable);
-  }
-
-  private static void considerNextTab(Editor editor) {
-    TemplateState templateState = TemplateManager.getInstance(editor.getProject()).getTemplateState(editor);
-    if (templateState != null) {
-      TextRange range = templateState.getCurrentVariableRange();
-      if (range != null && range.getLength() > 0) {
-        int caret = editor.getCaretModel().getOffset();
-        if (caret == range.getEndOffset()) {
-          templateState.nextTab();
-        }
-        else if (caret > range.getEndOffset()) {
-          templateState.cancelTemplate();
-        }
-      }
-    }
-  }
-
-  protected abstract void invokeCompletionHandler(Project project, Editor editor);
-
-  private static class MyLookupListener extends LookupAdapter {
-    private final ExpressionContext myContext;
-
-    public MyLookupListener(@Nonnull ExpressionContext context) {
-      myContext = context;
+    protected BaseCompleteMacro(String name) {
+        myName = name;
     }
 
     @Override
-    public void itemSelected(LookupEvent event) {
-      LookupElement item = event.getItem();
-      if (item == null) return;
-
-      char c = event.getCompletionChar();
-      if (!LookupEvent.isSpecialCompletionChar(c)) {
-        return;
-      }
-
-      for (TemplateCompletionProcessor processor : TemplateCompletionProcessor.EP_NAME.getExtensionList()) {
-        if (!processor.nextTabOnItemSelected(myContext, item)) {
-          return;
-        }
-      }
-
-      final Project project = myContext.getProject();
-      if (project == null) {
-        return;
-      }
-
-      Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-          new WriteCommandAction(project) {
-            @Override
-            protected void run(consulo.application.Result result) throws Throwable {
-              Editor editor = myContext.getEditor();
-              if (editor != null) {
-                considerNextTab(editor);
-              }
-            }
-          }.execute();
-        }
-      };
-
-      Application application = Application.get();
-      application.invokeLater(runnable, application.getCurrentModalityState(), project.getDisposed());
+    public String getName() {
+        return myName;
     }
-  }
+
+    @Override
+    public String getPresentableName() {
+        return myName + "()";
+    }
+
+    @Override
+    @Nonnull
+    public String getDefaultValue() {
+        return "a";
+    }
+
+    @Override
+    public final Result calculateResult(@Nonnull Expression[] params, final ExpressionContext context) {
+        return new InvokeActionResult(() -> invokeCompletion(context));
+    }
+
+    private void invokeCompletion(final ExpressionContext context) {
+        final Project project = context.getProject();
+        final Editor editor = context.getEditor();
+
+        final PsiFile psiFile = PsiUtilBase.getPsiFileInEditor(editor, project);
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                if (project.isDisposed() || editor.isDisposed() || psiFile == null || !psiFile.isValid()) {
+                    return;
+                }
+
+                CommandProcessor.getInstance().executeCommand(
+                    project,
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            invokeCompletionHandler(project, editor);
+                            Lookup lookup = LookupManager.getInstance(project).getActiveLookup();
+
+                            if (lookup != null) {
+                                lookup.addLookupListener(new MyLookupListener(context));
+                            }
+                            else {
+                                considerNextTab(editor);
+                            }
+                        }
+                    },
+                    "",
+                    null
+                );
+            }
+        };
+
+        ApplicationManager.getApplication().invokeLater(runnable);
+    }
+
+    private static void considerNextTab(Editor editor) {
+        TemplateState templateState = TemplateManager.getInstance(editor.getProject()).getTemplateState(editor);
+        if (templateState != null) {
+            TextRange range = templateState.getCurrentVariableRange();
+            if (range != null && range.getLength() > 0) {
+                int caret = editor.getCaretModel().getOffset();
+                if (caret == range.getEndOffset()) {
+                    templateState.nextTab();
+                }
+                else if (caret > range.getEndOffset()) {
+                    templateState.cancelTemplate();
+                }
+            }
+        }
+    }
+
+    protected abstract void invokeCompletionHandler(Project project, Editor editor);
+
+    private static class MyLookupListener extends LookupAdapter {
+        private final ExpressionContext myContext;
+
+        public MyLookupListener(@Nonnull ExpressionContext context) {
+            myContext = context;
+        }
+
+        @Override
+        public void itemSelected(LookupEvent event) {
+            LookupElement item = event.getItem();
+            if (item == null) {
+                return;
+            }
+
+            char c = event.getCompletionChar();
+            if (!LookupEvent.isSpecialCompletionChar(c)) {
+                return;
+            }
+
+            for (TemplateCompletionProcessor processor : TemplateCompletionProcessor.EP_NAME.getExtensionList()) {
+                if (!processor.nextTabOnItemSelected(myContext, item)) {
+                    return;
+                }
+            }
+
+            final Project project = myContext.getProject();
+            if (project == null) {
+                return;
+            }
+
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    new WriteCommandAction(project) {
+                        @Override
+                        protected void run(consulo.application.Result result) throws Throwable {
+                            Editor editor = myContext.getEditor();
+                            if (editor != null) {
+                                considerNextTab(editor);
+                            }
+                        }
+                    }.execute();
+                }
+            };
+
+            Application application = Application.get();
+            application.invokeLater(runnable, application.getCurrentModalityState(), project.getDisposed());
+        }
+    }
 }

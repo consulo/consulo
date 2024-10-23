@@ -32,131 +32,137 @@ import java.awt.event.KeyEvent;
 import java.util.List;
 
 public abstract class EditorAction extends AnAction implements DumbAware, UpdateInBackground {
-  private EditorActionHandler myHandler;
-  private boolean myHandlersLoaded;
+    private EditorActionHandler myHandler;
+    private boolean myHandlersLoaded;
 
-  public EditorActionHandler getHandler() {
-    ensureHandlersLoaded();
-    return myHandler;
-  }
+    public EditorActionHandler getHandler() {
+        ensureHandlersLoaded();
+        return myHandler;
+    }
 
-  protected EditorAction(EditorActionHandler defaultHandler) {
-    myHandler = defaultHandler;
-    setEnabledInModalContext(true);
-  }
+    protected EditorAction(EditorActionHandler defaultHandler) {
+        myHandler = defaultHandler;
+        setEnabledInModalContext(true);
+    }
 
-  public final EditorActionHandler setupHandler(@Nonnull EditorActionHandler newHandler) {
-    ensureHandlersLoaded();
-    EditorActionHandler tmp = myHandler;
-    myHandler = newHandler;
-    myHandler.setWorksInInjected(isInInjectedContext());
-    return tmp;
-  }
+    public final EditorActionHandler setupHandler(@Nonnull EditorActionHandler newHandler) {
+        ensureHandlersLoaded();
+        EditorActionHandler tmp = myHandler;
+        myHandler = newHandler;
+        myHandler.setWorksInInjected(isInInjectedContext());
+        return tmp;
+    }
 
-  @Override
-  public boolean isTransparentUpdate() {
-    return false;
-  }
+    @Override
+    public boolean isTransparentUpdate() {
+        return false;
+    }
 
-  private void ensureHandlersLoaded() {
-    if (!myHandlersLoaded) {
-      myHandlersLoaded = true;
-      final String id = ActionManager.getInstance().getId(this);
-      List<ExtensionEditorActionHandler> extensions = Application.get().getExtensionList(ExtensionEditorActionHandler.class);
-      for (int i = extensions.size() - 1; i >= 0; i--) {
-        final ExtensionEditorActionHandler handler = extensions.get(i);
-        if (handler.getActionId().equals(id)) {
-          handler.init(myHandler);
-          myHandler = (EditorActionHandler)handler;
-          myHandler.setWorksInInjected(isInInjectedContext());
+    private void ensureHandlersLoaded() {
+        if (!myHandlersLoaded) {
+            myHandlersLoaded = true;
+            final String id = ActionManager.getInstance().getId(this);
+            List<ExtensionEditorActionHandler> extensions = Application.get().getExtensionList(ExtensionEditorActionHandler.class);
+            for (int i = extensions.size() - 1; i >= 0; i--) {
+                final ExtensionEditorActionHandler handler = extensions.get(i);
+                if (handler.getActionId().equals(id)) {
+                    handler.init(myHandler);
+                    myHandler = (EditorActionHandler)handler;
+                    myHandler.setWorksInInjected(isInInjectedContext());
+                }
+            }
         }
-      }
-    }
-  }
-
-  @Override
-  public void setInjectedContext(boolean worksInInjected) {
-    super.setInjectedContext(worksInInjected);
-    // we assume that this method is called in constructor at the point
-    // where the chain of handlers is not initialized yet
-    // and it's enough to pass the flag to the default handler only
-    myHandler.setWorksInInjected(isInInjectedContext());
-  }
-
-  @RequiredUIAccess
-  @Override
-  public final void actionPerformed(@Nonnull AnActionEvent e) {
-    DataContext dataContext = e.getDataContext();
-    Editor editor = getEditor(dataContext);
-    actionPerformed(editor, dataContext);
-  }
-
-  @Nullable
-  protected Editor getEditor(@Nonnull DataContext dataContext) {
-    return dataContext.getData(Editor.KEY);
-  }
-
-  public final void actionPerformed(final Editor editor, @Nonnull final DataContext dataContext) {
-    if (editor == null) return;
-
-    final EditorActionHandler handler = getHandler();
-    Runnable command = () -> handler.execute(editor, null, getProjectAwareDataContext(editor, dataContext));
-
-    if (!handler.executeInCommand(editor, dataContext)) {
-      command.run();
-      return;
     }
 
-    String commandName = getTemplatePresentation().getText();
-    if (commandName == null) commandName = "";
-    CommandProcessor.getInstance().executeCommand(editor.getProject(),
-                                                  command,
-                                                  commandName,
-                                                  handler.getCommandGroupId(editor),
-                                                  UndoConfirmationPolicy.DEFAULT,
-                                                  editor.getDocument());
-  }
-
-  public void update(Editor editor, Presentation presentation, DataContext dataContext) {
-    presentation.setEnabled(getHandler().isEnabled(editor, dataContext));
-  }
-
-  public void updateForKeyboardAccess(Editor editor, Presentation presentation, DataContext dataContext) {
-    update(editor, presentation, dataContext);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void update(AnActionEvent e) {
-    Presentation presentation = e.getPresentation();
-    DataContext dataContext = e.getDataContext();
-    Editor editor = getEditor(dataContext);
-    if (editor == null) {
-      presentation.setEnabled(false);
+    @Override
+    public void setInjectedContext(boolean worksInInjected) {
+        super.setInjectedContext(worksInInjected);
+        // we assume that this method is called in constructor at the point
+        // where the chain of handlers is not initialized yet
+        // and it's enough to pass the flag to the default handler only
+        myHandler.setWorksInInjected(isInInjectedContext());
     }
-    else {
-      if (e.getInputEvent() instanceof KeyEvent) {
-        updateForKeyboardAccess(editor, presentation, dataContext);
-      }
-      else {
+
+    @RequiredUIAccess
+    @Override
+    public final void actionPerformed(@Nonnull AnActionEvent e) {
+        DataContext dataContext = e.getDataContext();
+        Editor editor = getEditor(dataContext);
+        actionPerformed(editor, dataContext);
+    }
+
+    @Nullable
+    protected Editor getEditor(@Nonnull DataContext dataContext) {
+        return dataContext.getData(Editor.KEY);
+    }
+
+    public final void actionPerformed(final Editor editor, @Nonnull final DataContext dataContext) {
+        if (editor == null) {
+            return;
+        }
+
+        final EditorActionHandler handler = getHandler();
+        Runnable command = () -> handler.execute(editor, null, getProjectAwareDataContext(editor, dataContext));
+
+        if (!handler.executeInCommand(editor, dataContext)) {
+            command.run();
+            return;
+        }
+
+        String commandName = getTemplatePresentation().getText();
+        if (commandName == null) {
+            commandName = "";
+        }
+        CommandProcessor.getInstance().executeCommand(
+            editor.getProject(),
+            command,
+            commandName,
+            handler.getCommandGroupId(editor),
+            UndoConfirmationPolicy.DEFAULT,
+            editor.getDocument()
+        );
+    }
+
+    public void update(Editor editor, Presentation presentation, DataContext dataContext) {
+        presentation.setEnabled(getHandler().isEnabled(editor, dataContext));
+    }
+
+    public void updateForKeyboardAccess(Editor editor, Presentation presentation, DataContext dataContext) {
         update(editor, presentation, dataContext);
-      }
-    }
-  }
-
-  private static DataContext getProjectAwareDataContext(final Editor editor, @Nonnull final DataContext original) {
-    if (original.getData(Project.KEY) == editor.getProject()) {
-      return original;
     }
 
-    return new DataContext() {
-      @Override
-      public Object getData(Key dataId) {
-        if (Project.KEY == dataId) {
-          return editor.getProject();
+    @RequiredUIAccess
+    @Override
+    public void update(AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
+        DataContext dataContext = e.getDataContext();
+        Editor editor = getEditor(dataContext);
+        if (editor == null) {
+            presentation.setEnabled(false);
         }
-        return original.getData(dataId);
-      }
-    };
-  }
+        else {
+            if (e.getInputEvent() instanceof KeyEvent) {
+                updateForKeyboardAccess(editor, presentation, dataContext);
+            }
+            else {
+                update(editor, presentation, dataContext);
+            }
+        }
+    }
+
+    private static DataContext getProjectAwareDataContext(final Editor editor, @Nonnull final DataContext original) {
+        if (original.getData(Project.KEY) == editor.getProject()) {
+            return original;
+        }
+
+        return new DataContext() {
+            @Override
+            public Object getData(Key dataId) {
+                if (Project.KEY == dataId) {
+                    return editor.getProject();
+                }
+                return original.getData(dataId);
+            }
+        };
+    }
 }

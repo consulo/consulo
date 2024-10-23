@@ -33,105 +33,112 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 class Line {
-  private final String myValue;
-  private final TextAttributes myTextAttributes;
+    private final String myValue;
+    private final TextAttributes myTextAttributes;
 
-  public Line(String value, TextAttributes textAttributes) {
-    myValue = value.replaceAll("\r", "") + "\n";
-    myTextAttributes = textAttributes;
-  }
+    public Line(String value, TextAttributes textAttributes) {
+        myValue = value.replaceAll("\r", "") + "\n";
+        myTextAttributes = textAttributes;
+    }
 
-  public String getValue() {
-    return myValue;
-  }
+    public String getValue() {
+        return myValue;
+    }
 
-  public TextAttributes getAttributes() {
-    return myTextAttributes;
-  }
+    public TextAttributes getAttributes() {
+        return myTextAttributes;
+    }
 }
 
 public class EditorAdapter {
-  private static final Logger LOG = Logger.getInstance(EditorAdapter.class);
+    private static final Logger LOG = Logger.getInstance(EditorAdapter.class);
 
-  private final Editor myEditor;
+    private final Editor myEditor;
 
-  private final Alarm myFlushAlarm = new Alarm();
-  private final Collection<Line> myLines = new ArrayList<Line>();
-  private final Project myProject;
-  private final boolean myScrollToTheEndOnAppend;
+    private final Alarm myFlushAlarm = new Alarm();
+    private final Collection<Line> myLines = new ArrayList<Line>();
+    private final Project myProject;
+    private final boolean myScrollToTheEndOnAppend;
 
-  private final Runnable myFlushDeferredRunnable = new Runnable() {
-    public void run() {
-      flushStoredLines();
-    }
-  };
-
-  private synchronized void flushStoredLines() {
-    Collection<Line> lines;
-    synchronized (myLines) {
-      lines = new ArrayList<Line>(myLines);
-      myLines.clear();
-    }
-    ApplicationManager.getApplication().runWriteAction(writingCommand(lines));
-  }
-
-
-  public EditorAdapter(Editor editor, Project project, boolean scrollToTheEndOnAppend) {
-    myEditor = editor;
-    myProject = project;
-    myScrollToTheEndOnAppend = scrollToTheEndOnAppend;
-    LOG.assertTrue(myEditor.isViewer());
-  }
-
-  public Editor getEditor() {
-    return myEditor;
-  }
-
-  public void appendString(String string, TextAttributes attrs) {
-    synchronized (myLines) {
-      myLines.add(new Line(string, attrs));
-    }
-
-    if (myFlushAlarm.getActiveRequestCount() == 0) {
-      myFlushAlarm.addRequest(myFlushDeferredRunnable, 200, IdeaModalityState.nonModal());
-    }
-  }
-
-  private Runnable writingCommand(final Collection<Line> lines) {
-    final Runnable command = new Runnable() {
-      public void run() {
-
-        Document document = myEditor.getDocument();
-
-        StringBuilder buffer = new StringBuilder();
-        for (Line line : lines) {
-          buffer.append(line.getValue());
+    private final Runnable myFlushDeferredRunnable = new Runnable() {
+        public void run() {
+            flushStoredLines();
         }
-        int endBefore = document.getTextLength();
-        int endBeforeLine = endBefore;
-        document.insertString(endBefore, buffer.toString());
-        for (Line line : lines) {
-          myEditor.getMarkupModel()
-              .addRangeHighlighter(endBeforeLine, Math.min(document.getTextLength(), endBeforeLine + line.getValue().length()), HighlighterLayer.ADDITIONAL_SYNTAX,
-                                   line.getAttributes(), HighlighterTargetArea.EXACT_RANGE);
-          endBeforeLine += line.getValue().length();
-          if (endBeforeLine > document.getTextLength()) break;
-        }
-        shiftCursorToTheEndOfDocument();
-      }
     };
-    return new Runnable() {
-      public void run() {
-        CommandProcessor.getInstance().executeCommand(myProject, command, "", null, UndoConfirmationPolicy.DEFAULT, myEditor.getDocument());
-      }
-    };
-  }
 
-  private void shiftCursorToTheEndOfDocument() {
-    if (myScrollToTheEndOnAppend) {
-      myEditor.getCaretModel().moveToOffset(myEditor.getDocument().getTextLength());
-      myEditor.getSelectionModel().removeSelection();
-      myEditor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
+    private synchronized void flushStoredLines() {
+        Collection<Line> lines;
+        synchronized (myLines) {
+            lines = new ArrayList<Line>(myLines);
+            myLines.clear();
+        }
+        ApplicationManager.getApplication().runWriteAction(writingCommand(lines));
     }
-  }
+
+
+    public EditorAdapter(Editor editor, Project project, boolean scrollToTheEndOnAppend) {
+        myEditor = editor;
+        myProject = project;
+        myScrollToTheEndOnAppend = scrollToTheEndOnAppend;
+        LOG.assertTrue(myEditor.isViewer());
+    }
+
+    public Editor getEditor() {
+        return myEditor;
+    }
+
+    public void appendString(String string, TextAttributes attrs) {
+        synchronized (myLines) {
+            myLines.add(new Line(string, attrs));
+        }
+
+        if (myFlushAlarm.getActiveRequestCount() == 0) {
+            myFlushAlarm.addRequest(myFlushDeferredRunnable, 200, IdeaModalityState.nonModal());
+        }
+    }
+
+    private Runnable writingCommand(final Collection<Line> lines) {
+        final Runnable command = new Runnable() {
+            public void run() {
+
+                Document document = myEditor.getDocument();
+
+                StringBuilder buffer = new StringBuilder();
+                for (Line line : lines) {
+                    buffer.append(line.getValue());
+                }
+                int endBefore = document.getTextLength();
+                int endBeforeLine = endBefore;
+                document.insertString(endBefore, buffer.toString());
+                for (Line line : lines) {
+                    myEditor.getMarkupModel().addRangeHighlighter(
+                        endBeforeLine,
+                        Math.min(document.getTextLength(), endBeforeLine + line.getValue().length()),
+                        HighlighterLayer.ADDITIONAL_SYNTAX,
+                        line.getAttributes(),
+                        HighlighterTargetArea.EXACT_RANGE
+                    );
+                    endBeforeLine += line.getValue().length();
+                    if (endBeforeLine > document.getTextLength()) {
+                        break;
+                    }
+                }
+                shiftCursorToTheEndOfDocument();
+            }
+        };
+        return new Runnable() {
+            public void run() {
+                CommandProcessor.getInstance()
+                    .executeCommand(myProject, command, "", null, UndoConfirmationPolicy.DEFAULT, myEditor.getDocument());
+            }
+        };
+    }
+
+    private void shiftCursorToTheEndOfDocument() {
+        if (myScrollToTheEndOnAppend) {
+            myEditor.getCaretModel().moveToOffset(myEditor.getDocument().getTextLength());
+            myEditor.getSelectionModel().removeSelection();
+            myEditor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
+        }
+    }
 }

@@ -123,47 +123,50 @@ public abstract class UndoManagerImpl implements UndoManager, Disposable {
 
     private void runStartupActivity() {
         myEditorProvider = CurrentEditorProvider.getInstance();
-        myCommandProcessor.addCommandListener(new CommandListener() {
-            private boolean myStarted;
+        myCommandProcessor.addCommandListener(
+            new CommandListener() {
+                private boolean myStarted;
 
-            @Override
-            public void commandStarted(CommandEvent event) {
-                if (myProject != null && myProject.isDisposed()) {
-                    return;
+                @Override
+                public void commandStarted(CommandEvent event) {
+                    if (myProject != null && myProject.isDisposed()) {
+                        return;
+                    }
+                    onCommandStarted(event.getProject(), event.getUndoConfirmationPolicy(), event.shouldRecordActionForOriginalDocument());
                 }
-                onCommandStarted(event.getProject(), event.getUndoConfirmationPolicy(), event.shouldRecordActionForOriginalDocument());
-            }
 
-            @Override
-            public void commandFinished(CommandEvent event) {
-                if (myProject != null && myProject.isDisposed()) {
-                    return;
+                @Override
+                public void commandFinished(CommandEvent event) {
+                    if (myProject != null && myProject.isDisposed()) {
+                        return;
+                    }
+                    onCommandFinished(event.getProject(), event.getCommandName(), event.getCommandGroupId());
                 }
-                onCommandFinished(event.getProject(), event.getCommandName(), event.getCommandGroupId());
-            }
 
-            @Override
-            public void undoTransparentActionStarted() {
-                if (myProject != null && myProject.isDisposed()) {
-                    return;
+                @Override
+                public void undoTransparentActionStarted() {
+                    if (myProject != null && myProject.isDisposed()) {
+                        return;
+                    }
+                    if (!isInsideCommand()) {
+                        myStarted = true;
+                        onCommandStarted(myProject, UndoConfirmationPolicy.DEFAULT, true);
+                    }
                 }
-                if (!isInsideCommand()) {
-                    myStarted = true;
-                    onCommandStarted(myProject, UndoConfirmationPolicy.DEFAULT, true);
-                }
-            }
 
-            @Override
-            public void undoTransparentActionFinished() {
-                if (myProject != null && myProject.isDisposed()) {
-                    return;
+                @Override
+                public void undoTransparentActionFinished() {
+                    if (myProject != null && myProject.isDisposed()) {
+                        return;
+                    }
+                    if (myStarted) {
+                        myStarted = false;
+                        onCommandFinished(myProject, "", null);
+                    }
                 }
-                if (myStarted) {
-                    myStarted = false;
-                    onCommandFinished(myProject, "", null);
-                }
-            }
-        }, this);
+            },
+            this
+        );
     }
 
     protected abstract void forEachProvider(@Nonnull Consumer<? super UndoProvider> consumer);
@@ -227,7 +230,6 @@ public abstract class UndoManagerImpl implements UndoManager, Disposable {
         myCurrentMerger.mergeUndoConfirmationPolicy(undoConfirmationPolicy);
 
         myCommandLevel++;
-
     }
 
     private void commandFinished(String commandName, Object groupId) {
@@ -300,7 +302,10 @@ public abstract class UndoManagerImpl implements UndoManager, Disposable {
         }
 
         if (myCommandLevel == 0) {
-            LOG.assertTrue(action instanceof NonUndoableAction, "Undoable actions allowed inside commands only (see consulo.ide.impl.idea.openapi.command.CommandProcessor.executeCommand())");
+            LOG.assertTrue(
+                action instanceof NonUndoableAction,
+                "Undoable actions allowed inside commands only (see consulo.ide.impl.idea.openapi.command.CommandProcessor.executeCommand())"
+            );
             commandStarted(UndoConfirmationPolicy.DEFAULT, false);
             myCurrentMerger.addAction(action);
             commandFinished("", null);
@@ -392,7 +397,7 @@ public abstract class UndoManagerImpl implements UndoManager, Disposable {
                     PsiDocumentManager.getInstance(myProject).commitAllDocuments();
                 }
                 CopyPasteManager.getInstance().stopKillRings();
-                myMerger.undoOrRedo((FileEditor) editor, isUndo);
+                myMerger.undoOrRedo((FileEditor)editor, isUndo);
             }
             catch (RuntimeException ex) {
                 exception[0] = ex;
@@ -403,7 +408,13 @@ public abstract class UndoManagerImpl implements UndoManager, Disposable {
         };
 
         String name = getUndoOrRedoActionNameAndDescription(editor, isUndoInProgress()).second;
-        CommandProcessor.getInstance().executeCommand(myProject, executeUndoOrRedoAction, name, null, myMerger.getUndoConfirmationPolicy());
+        CommandProcessor.getInstance().executeCommand(
+            myProject,
+            executeUndoOrRedoAction,
+            name,
+            null,
+            myMerger.getUndoConfirmationPolicy()
+        );
         if (exception[0] != null) {
             throw exception[0];
         }
@@ -459,7 +470,7 @@ public abstract class UndoManagerImpl implements UndoManager, Disposable {
         if (editor == null) {
             return Collections.emptyList();
         }
-        return getDocumentReferences((FileEditor) editor);
+        return getDocumentReferences((FileEditor)editor);
     }
 
     @Nonnull

@@ -164,8 +164,11 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         Cursor emptyCursor = null;
         if (!GraphicsEnvironment.isHeadless()) {
             try {
-                emptyCursor = Toolkit.getDefaultToolkit()
-                    .createCustomCursor(ImageUtil.createImage(1, 1, BufferedImage.TYPE_INT_ARGB), new Point(), "Empty cursor");
+                emptyCursor = Toolkit.getDefaultToolkit().createCustomCursor(
+                    ImageUtil.createImage(1, 1, BufferedImage.TYPE_INT_ARGB),
+                    new Point(),
+                    "Empty cursor"
+                );
             }
             catch (Exception e) {
                 LOG.warn("Couldn't create an empty cursor", e);
@@ -328,10 +331,14 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
                         final Rectangle visibleArea = getScrollingModel().getVisibleArea();
                         final int endLine = newGuide.startLine;
                         if (logicalLineToY(endLine) < visibleArea.y) {
-                            int startLine = Math.max(newGuide.codeConstructStartLine,
-                                endLine - EditorFragmentComponent.getAvailableVisualLinesAboveEditor(DesktopEditorImpl.this) + 1);
-                            TextRange textRange = new TextRange(myDocument.getLineStartOffset(startLine), myDocument.getLineEndOffset(endLine));
-                            myCurrentHint = EditorFragmentComponent.showEditorFragmentHint(DesktopEditorImpl.this, textRange, false, false);
+                            int startLine = Math.max(
+                                newGuide.codeConstructStartLine,
+                                endLine - EditorFragmentComponent.getAvailableVisualLinesAboveEditor(DesktopEditorImpl.this) + 1
+                            );
+                            TextRange textRange =
+                                new TextRange(myDocument.getLineStartOffset(startLine), myDocument.getLineEndOffset(endLine));
+                            myCurrentHint =
+                                EditorFragmentComponent.showEditorFragmentHint(DesktopEditorImpl.this, textRange, false, false);
                         }
                     }
                 }
@@ -343,13 +350,13 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
                     myPrimaryCaret.updateVisualPosition(); // repainting old primary caret's row background
                 }
                 repaintCaretRegion(e);
-                myPrimaryCaret = (DesktopCaretImpl) myCaretModel.getPrimaryCaret();
+                myPrimaryCaret = (DesktopCaretImpl)myCaretModel.getPrimaryCaret();
             }
 
             @Override
             public void caretRemoved(@Nonnull CaretEvent e) {
                 repaintCaretRegion(e);
-                myPrimaryCaret = (DesktopCaretImpl) myCaretModel.getPrimaryCaret(); // repainting new primary caret's row background
+                myPrimaryCaret = (DesktopCaretImpl)myCaretModel.getPrimaryCaret(); // repainting new primary caret's row background
                 myPrimaryCaret.updateVisualPosition();
             }
         });
@@ -379,12 +386,12 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         new FoldingPopupManager(this);
 
         myEditorComponent = new EditorComponentImpl(this);
-        myVerticalScrollBar = (MyVerticalScrollBar) myScrollPane.getVerticalScrollBar();
+        myVerticalScrollBar = (MyVerticalScrollBar)myScrollPane.getVerticalScrollBar();
         myPanel = new JPanel(new BorderLayout());
 
         getMarkupModel().updateUI();
 
-        UIUtil.putClientProperty(myPanel, UIUtil.NOT_IN_HIERARCHY_COMPONENTS, (Iterable<JComponent>) () -> {
+        UIUtil.putClientProperty(myPanel, UIUtil.NOT_IN_HIERARCHY_COMPONENTS, (Iterable<JComponent>)() -> {
             JComponent component = getPermanentHeaderComponent();
             if (component != null && component.getParent() == null) {
                 return Collections.singleton(component).iterator();
@@ -508,15 +515,17 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
             return false;
         }
         LineMarkerRendererEx.Position position = EditorGutterComponentImpl.getLineMarkerPosition(lineMarkerRenderer);
-        return position == LineMarkerRendererEx.Position.LEFT && !myGutterComponent.myForceLeftFreePaintersAreaShown ||
-            position == LineMarkerRendererEx.Position.RIGHT && !myGutterComponent.myForceRightFreePaintersAreaShown;
+        return position == LineMarkerRendererEx.Position.LEFT && !myGutterComponent.myForceLeftFreePaintersAreaShown
+            || position == LineMarkerRendererEx.Position.RIGHT && !myGutterComponent.myForceRightFreePaintersAreaShown;
     }
 
     @Override
-    protected void onHighlighterChanged(@Nonnull RangeHighlighter highlighter,
-                                        boolean canImpactGutterSize,
-                                        boolean fontStyleOrColorChanged,
-                                        boolean remove) {
+    protected void onHighlighterChanged(
+        @Nonnull RangeHighlighter highlighter,
+        boolean canImpactGutterSize,
+        boolean fontStyleOrColorChanged,
+        boolean remove
+    ) {
         if (myDocument.isInBulkUpdate()) {
             return; // bulkUpdateFinished() will repaint anything
         }
@@ -579,7 +588,8 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         }
         else {
             int visualLine = offsetToVisualLine(offset);
-            int y = visualLineToY(visualLine) - EditorUtil.getTotalInlaysHeight(myInlayModel.getBlockElementsForVisualLine(visualLine, true));
+            int y =
+                visualLineToY(visualLine) - EditorUtil.getTotalInlaysHeight(myInlayModel.getBlockElementsForVisualLine(visualLine, true));
             repaintToScreenBottomStartingFrom(y);
         }
     }
@@ -602,7 +612,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
     }
 
     private void repaintCaretRegion(CaretEvent e) {
-        DesktopCaretImpl caretImpl = (DesktopCaretImpl) e.getCaret();
+        DesktopCaretImpl caretImpl = (DesktopCaretImpl)e.getCaret();
         if (caretImpl != null) {
             caretImpl.updateVisualPosition();
             if (caretImpl.hasSelection()) {
@@ -619,7 +629,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
 
     @Override
     public int getPrefixTextWidthInPixels() {
-        return (int) myView.getPrefixTextWidthInPixels();
+        return (int)myView.getPrefixTextWidthInPixels();
     }
 
     @Override
@@ -652,43 +662,43 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
     @Override
     @Nonnull
     public DesktopSelectionModelImpl getSelectionModel() {
-        return (DesktopSelectionModelImpl) super.getSelectionModel();
+        return (DesktopSelectionModelImpl)super.getSelectionModel();
     }
 
     @Override
     @Nonnull
     public DesktopEditorMarkupModelImpl getMarkupModel() {
-        return (DesktopEditorMarkupModelImpl) super.getMarkupModel();
+        return (DesktopEditorMarkupModelImpl)super.getMarkupModel();
     }
 
     @Override
     @Nonnull
     public DesktopFoldingModelImpl getFoldingModel() {
-        return (DesktopFoldingModelImpl) super.getFoldingModel();
+        return (DesktopFoldingModelImpl)super.getFoldingModel();
     }
 
     @Override
     @Nonnull
     public DesktopCaretModelImpl getCaretModel() {
-        return (DesktopCaretModelImpl) super.getCaretModel();
+        return (DesktopCaretModelImpl)super.getCaretModel();
     }
 
     @Override
     @Nonnull
     public DesktopScrollingModelImpl getScrollingModel() {
-        return (DesktopScrollingModelImpl) super.getScrollingModel();
+        return (DesktopScrollingModelImpl)super.getScrollingModel();
     }
 
     @Override
     @Nonnull
     public SoftWrapModelImpl getSoftWrapModel() {
-        return (SoftWrapModelImpl) super.getSoftWrapModel();
+        return (SoftWrapModelImpl)super.getSoftWrapModel();
     }
 
     @Nonnull
     @Override
     public InlayModelImpl getInlayModel() {
-        return (InlayModelImpl) super.getInlayModel();
+        return (InlayModelImpl)super.getInlayModel();
     }
 
     public void resetSizes() {
@@ -709,9 +719,9 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         assertIsDispatchThread();
 
         for (EditorColorsScheme scheme = myScheme; scheme instanceof DelegateColorScheme;
-             scheme = ((DelegateColorScheme) scheme).getDelegate()) {
+             scheme = ((DelegateColorScheme)scheme).getDelegate()) {
             if (scheme instanceof MyColorSchemeDelegate) {
-                ((MyColorSchemeDelegate) scheme).updateGlobalScheme();
+                ((MyColorSchemeDelegate)scheme).updateGlobalScheme();
                 break;
             }
         }
@@ -973,9 +983,11 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         Point shiftedZoomCenterAbsolute = logicalPositionToXY(zoomCenterLogical);
         myScrollingModel.disableAnimation();
         try {
-            myScrollingModel.scroll(visibleArea.x == 0 ? 0 : shiftedZoomCenterAbsolute.x - zoomCenterRelative.x,
+            myScrollingModel.scroll(
+                visibleArea.x == 0 ? 0 : shiftedZoomCenterAbsolute.x - zoomCenterRelative.x,
                 // stick to left border if it's visible
-                shiftedZoomCenterAbsolute.y - zoomCenterRelative.y + (intraLineOffset * getLineHeight() + oldLineHeight / 2) / oldLineHeight);
+                shiftedZoomCenterAbsolute.y - zoomCenterRelative.y + (intraLineOffset * getLineHeight() + oldLineHeight / 2) / oldLineHeight
+            );
         }
         finally {
             myScrollingModel.enableAnimation();
@@ -1002,7 +1014,6 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
     }
 
     private boolean processKeyTyped(char c) {
-
         if (ProgressManager.getInstance().hasModalProgressIndicator()) {
             return false;
         }
@@ -1016,7 +1027,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
 
         Graphics graphics = GraphicsUtil.safelyGetGraphics(myEditorComponent);
         if (graphics != null) { // editor component is not showing
-            PaintUtil.alignTxToInt((Graphics2D) graphics, PaintUtil.insets2offset(getInsets()), true, false, RoundingMode.CEIL);
+            PaintUtil.alignTxToInt((Graphics2D)graphics, PaintUtil.insets2offset(getInsets()), true, false, RoundingMode.CEIL);
             processKeyTypedImmediately(c, graphics, context);
             graphics.dispose();
         }
@@ -1086,7 +1097,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
     @Nonnull
     public Point offsetToXY(int offset, boolean leanForward, boolean beforeSoftWrap) {
         Point2D point2D = offsetToPoint2D(offset, leanForward, beforeSoftWrap);
-        return new Point((int) point2D.getX(), (int) point2D.getY());
+        return new Point((int)point2D.getX(), (int)point2D.getY());
     }
 
     @Override
@@ -1163,7 +1174,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
     @Nonnull
     public Point visualPositionToXY(@Nonnull VisualPosition visible) {
         Point2D point2D = myView.visualPositionToXY(visible);
-        return new Point((int) point2D.getX(), (int) point2D.getY());
+        return new Point((int)point2D.getX(), (int)point2D.getY());
     }
 
     @Override
@@ -1232,7 +1243,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
 
         myEditorComponent.repaintEditorComponent(visibleArea.x, y, visibleArea.x + visibleArea.width, yEndLine - y);
         myGutterComponent.repaint(0, y, myGutterComponent.getWidth(), yEndLine - y);
-        ((DesktopEditorMarkupModelImpl) getMarkupModel()).repaint(-1, -1);
+        ((DesktopEditorMarkupModelImpl)getMarkupModel()).repaint(-1, -1);
     }
 
     /**
@@ -1247,9 +1258,9 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         }
 
         int startVisualLine = logicalToVisualLine(startLine);
-        int endVisualLine =
-            myDocument.getTextLength() <= 0 ? 0 : offsetToVisualLine(myDocument.getLineEndOffset(Math.min(myDocument.getLineCount() - 1,
-                endLine)));
+        int endVisualLine = myDocument.getTextLength() <= 0
+            ? 0
+            : offsetToVisualLine(myDocument.getLineEndOffset(Math.min(myDocument.getLineCount() - 1, endLine)));
         doRepaint(startVisualLine, endVisualLine);
     }
 
@@ -1268,7 +1279,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
     protected void bulkUpdateStarted() {
         myView.getPreferredSize(); // make sure size is calculated (in case it will be required while bulk mode is active)
 
-        ((DesktopScrollingModelImpl) myScrollingModel).onBulkDocumentUpdateStarted();
+        ((DesktopScrollingModelImpl)myScrollingModel).onBulkDocumentUpdateStarted();
     }
 
     @Override
@@ -1472,7 +1483,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
             return;
         }
         putUserData(BUFFER, null);
-        Rectangle rect = ((JViewport) myEditorComponent.getParent()).getViewRect();
+        Rectangle rect = ((JViewport)myEditorComponent.getParent()).getViewRect();
         // The LCD text loop is enabled only for opaque images
         BufferedImage image = UIUtil.createImage(myEditorComponent, rect.width, rect.height, BufferedImage.TYPE_INT_RGB);
         Graphics imageGraphics = image.createGraphics();
@@ -1564,7 +1575,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
     @Nullable
     public JComponent getHeaderComponent() {
         if (myHeaderPanel.getComponentCount() > 0) {
-            return (JComponent) myHeaderPanel.getComponent(0);
+            return (JComponent)myHeaderPanel.getComponent(0);
         }
         return null;
     }
@@ -1685,9 +1696,11 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
     }
 
     public Dimension getPreferredSize() {
-        return isReleased ? new Dimension() : Registry.is("idea.true.smooth.scrolling.dynamic.scrollbars") ? new Dimension(
-            getPreferredWidthOfVisibleLines(),
-            myView.getPreferredHeight()) : myView.getPreferredSize();
+        return isReleased
+            ? new Dimension()
+            : Registry.is("idea.true.smooth.scrolling.dynamic.scrollbars")
+            ? new Dimension(getPreferredWidthOfVisibleLines(), myView.getPreferredHeight())
+            : myView.getPreferredSize();
     }
 
     /* When idea.true.smooth.scrolling=true, this method is used to compute width of currently visible line range
@@ -1889,21 +1902,22 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         // The general idea is to check if the user performed 'caret position change click' (left click most of the time) inside selection
         // and, in the case of the positive answer, clear selection. Please note that there is a possible case that mouse click
         // is performed inside selection but it triggers context menu. We don't want to drop the selection then.
-        if (myMousePressedEvent != null &&
-            myMousePressedEvent.getClickCount() == 1 &&
-            myKeepSelectionOnMousePress &&
-            !myDragStarted &&
-            !myMousePressedEvent.isShiftDown() &&
-            !myMousePressedEvent.isPopupTrigger() &&
-            !isToggleCaretEvent(myMousePressedEvent) &&
-            !isCreateRectangularSelectionEvent(myMousePressedEvent)) {
+        if (myMousePressedEvent != null
+            && myMousePressedEvent.getClickCount() == 1
+            && myKeepSelectionOnMousePress
+            && !myDragStarted
+            && !myMousePressedEvent.isShiftDown()
+            && !myMousePressedEvent.isPopupTrigger()
+            && !isToggleCaretEvent(myMousePressedEvent)
+            && !isCreateRectangularSelectionEvent(myMousePressedEvent)) {
             getSelectionModel().removeSelection();
         }
     }
 
     private boolean isInsideGutterWhitespaceArea(@Nonnull MouseEvent e) {
         EditorMouseEventArea area = getMouseEventArea(e);
-        return area == EditorMouseEventArea.FOLDING_OUTLINE_AREA && myGutterComponent.convertX(e.getX()) > myGutterComponent.getWhitespaceSeparatorOffset();
+        return area == EditorMouseEventArea.FOLDING_OUTLINE_AREA
+            && myGutterComponent.convertX(e.getX()) > myGutterComponent.getWhitespaceSeparatorOffset();
     }
 
     @Override
@@ -1939,10 +1953,10 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         Cursor customCursor = getCustomCursor();
         if (customCursor == null && myCursorSetExternally && myEditorComponent.isCursorSet()) {
             Cursor cursor = myEditorComponent.getCursor();
-            if (cursor != Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR) &&
-                cursor != Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR) &&
-                cursor != EMPTY_CURSOR &&
-                (!Platform.current().os().isMac() || cursor != MacUIUtil.getInvertedTextCursor())) {
+            if (cursor != Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
+                && cursor != Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR)
+                && cursor != EMPTY_CURSOR
+                && (!Platform.current().os().isMac() || cursor != MacUIUtil.getInvertedTextCursor())) {
                 // someone else has set cursor, don't touch it
                 return;
             }
@@ -1966,12 +1980,14 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         if (myCommandProcessor == null || myMousePressedEvent != null && myMousePressedEvent.isConsumed()) {
             return;
         }
-        myCommandProcessor.executeCommand(myProject,
+        myCommandProcessor.executeCommand(
+            myProject,
             () -> processMouseDragged(e),
             "",
             MOUSE_DRAGGED_GROUP,
             UndoConfirmationPolicy.DEFAULT,
-            getDocument());
+            getDocument()
+        );
     }
 
     private void processMouseDragged(@Nonnull MouseEvent e) {
@@ -1992,8 +2008,11 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
             // further dragging (if any).
             if (myDragOnGutterSelectionStartLine >= 0) {
                 mySelectionModel.removeSelection();
-                myCaretModel.moveToOffset(myDragOnGutterSelectionStartLine < myDocument.getLineCount() ? myDocument.getLineStartOffset(
-                    myDragOnGutterSelectionStartLine) : myDocument.getTextLength());
+                myCaretModel.moveToOffset(
+                    myDragOnGutterSelectionStartLine < myDocument.getLineCount()
+                        ? myDocument.getLineStartOffset(myDragOnGutterSelectionStartLine)
+                        : myDocument.getTextLength()
+                );
             }
             myDragOnGutterSelectionStartLine = -1;
         }
@@ -2018,10 +2037,8 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         if (x < visibleArea.x && visibleArea.x > 0) {
             dx = x - visibleArea.x;
         }
-        else {
-            if (x > visibleArea.x + visibleArea.width) {
-                dx = x - visibleArea.x - visibleArea.width;
-            }
+        else if (x > visibleArea.x + visibleArea.width) {
+            dx = x - visibleArea.x - visibleArea.width;
         }
 
         int dy = 0;
@@ -2029,10 +2046,8 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         if (y < visibleArea.y && visibleArea.y > 0) {
             dy = y - visibleArea.y;
         }
-        else {
-            if (y > visibleArea.y + visibleArea.height && visibleArea.y + visibleArea.height < myEditorComponent.getHeight()) {
-                dy = y - visibleArea.y - visibleArea.height;
-            }
+        else if (y > visibleArea.y + visibleArea.height && visibleArea.y + visibleArea.height < myEditorComponent.getHeight()) {
+            dy = y - visibleArea.y - visibleArea.height;
         }
         if (dx == 0 && dy == 0) {
             myScrollingTimer.stop();
@@ -2062,95 +2077,87 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
                 getMouseEventArea(myMousePressedEvent) != EditorMouseEventArea.LINE_NUMBERS_AREA) {
                 selectionModel.setSelection(oldSelectionStart, newCaretOffset);
             }
-            else {
-                if (multiCaretSelection) {
-                    if (myLastMousePressedLocation != null && (myCurrentDragIsSubstantial || !newLogicalCaret.equals(myLastMousePressedLocation))) {
-                        createSelectionTill(newLogicalCaret);
-                        blockActionsIfNeeded(e, myLastMousePressedLocation, newLogicalCaret);
+            else if (multiCaretSelection) {
+                if (myLastMousePressedLocation != null
+                    && (myCurrentDragIsSubstantial || !newLogicalCaret.equals(myLastMousePressedLocation))) {
+                    createSelectionTill(newLogicalCaret);
+                    blockActionsIfNeeded(e, myLastMousePressedLocation, newLogicalCaret);
+                }
+            }
+            else if (getMouseSelectionState() != MOUSE_SELECTION_STATE_NONE) {
+                if (caretShift < 0) {
+                    int newSelection = newCaretOffset;
+                    if (getMouseSelectionState() == MOUSE_SELECTION_STATE_WORD_SELECTED) {
+                        newSelection = myCaretModel.getWordAtCaretStart();
+                    }
+                    else if (getMouseSelectionState() == MOUSE_SELECTION_STATE_LINE_SELECTED) {
+                        newSelection = logicalPositionToOffset(visualToLogicalPosition(new VisualPosition(
+                            getCaretModel().getVisualPosition().line,
+                            0
+                        )));
+                    }
+                    if (newSelection < 0) {
+                        newSelection = newCaretOffset;
+                    }
+                    selectionModel.setSelection(mySavedSelectionEnd, newSelection);
+                    getCaretModel().moveToOffset(newSelection);
+                }
+                else {
+                    int newSelection = newCaretOffset;
+                    if (getMouseSelectionState() == MOUSE_SELECTION_STATE_WORD_SELECTED) {
+                        newSelection = myCaretModel.getWordAtCaretEnd();
+                    }
+                    else if (getMouseSelectionState() == MOUSE_SELECTION_STATE_LINE_SELECTED) {
+                        newSelection = logicalPositionToOffset(visualToLogicalPosition(new VisualPosition(
+                            getCaretModel().getVisualPosition().line + 1,
+                            0
+                        )));
+                    }
+                    if (newSelection < 0) {
+                        newSelection = newCaretOffset;
+                    }
+                    selectionModel.setSelection(mySavedSelectionStart, newSelection);
+                    getCaretModel().moveToOffset(newSelection);
+                }
+                cancelAutoResetForMouseSelectionState();
+            }
+            else if (!myKeepSelectionOnMousePress) {
+                // There is a possible case that lead selection position should be adjusted in accordance with the mouse move direction.
+                // E.g. consider situation when user selects the whole line by clicking at 'line numbers' area. 'Line end' is considered
+                // to be lead selection point then. However, when mouse is dragged down we want to consider 'line start' to be
+                // lead selection point.
+                if ((myMousePressArea == EditorMouseEventArea.LINE_NUMBERS_AREA
+                    || myMousePressArea == EditorMouseEventArea.LINE_MARKERS_AREA)
+                    && selectionModel.hasSelection()) {
+                    if (newCaretOffset >= selectionModel.getSelectionEnd()) {
+                        oldSelectionStart = selectionModel.getSelectionStart();
+                        oldVisLeadSelectionStart = selectionModel.getSelectionStartPosition();
+                    }
+                    else if (newCaretOffset <= selectionModel.getSelectionStart()) {
+                        oldSelectionStart = selectionModel.getSelectionEnd();
+                        oldVisLeadSelectionStart = selectionModel.getSelectionEndPosition();
+                    }
+                }
+                if (oldVisLeadSelectionStart != null) {
+                    setSelectionAndBlockActions(e, oldVisLeadSelectionStart, oldSelectionStart, newVisualCaret, newCaretOffset);
+                }
+                else {
+                    setSelectionAndBlockActions(e, oldSelectionStart, newCaretOffset);
+                }
+                cancelAutoResetForMouseSelectionState();
+            }
+            else if (caretShift != 0 && myMousePressedEvent != null) {
+                if (mySettings.isDndEnabled()) {
+                    if (!myDragStarted) {
+                        myDragStarted = true;
+                        boolean isCopy = UIUtil.isControlKeyDown(e) || isViewer() || !getDocument().isWritable();
+                        mySavedCaretOffsetForDNDUndoHack = oldCaretOffset;
+                        getContentComponent().getTransferHandler()
+                            .exportAsDrag(getContentComponent(), e, isCopy ? TransferHandler.COPY : TransferHandler.MOVE);
                     }
                 }
                 else {
-                    if (getMouseSelectionState() != MOUSE_SELECTION_STATE_NONE) {
-                        if (caretShift < 0) {
-                            int newSelection = newCaretOffset;
-                            if (getMouseSelectionState() == MOUSE_SELECTION_STATE_WORD_SELECTED) {
-                                newSelection = myCaretModel.getWordAtCaretStart();
-                            }
-                            else {
-                                if (getMouseSelectionState() == MOUSE_SELECTION_STATE_LINE_SELECTED) {
-                                    newSelection =
-                                        logicalPositionToOffset(visualToLogicalPosition(new VisualPosition(getCaretModel().getVisualPosition().line, 0)));
-                                }
-                            }
-                            if (newSelection < 0) {
-                                newSelection = newCaretOffset;
-                            }
-                            selectionModel.setSelection(mySavedSelectionEnd, newSelection);
-                            getCaretModel().moveToOffset(newSelection);
-                        }
-                        else {
-                            int newSelection = newCaretOffset;
-                            if (getMouseSelectionState() == MOUSE_SELECTION_STATE_WORD_SELECTED) {
-                                newSelection = myCaretModel.getWordAtCaretEnd();
-                            }
-                            else {
-                                if (getMouseSelectionState() == MOUSE_SELECTION_STATE_LINE_SELECTED) {
-                                    newSelection =
-                                        logicalPositionToOffset(visualToLogicalPosition(new VisualPosition(getCaretModel().getVisualPosition().line + 1, 0)));
-                                }
-                            }
-                            if (newSelection < 0) {
-                                newSelection = newCaretOffset;
-                            }
-                            selectionModel.setSelection(mySavedSelectionStart, newSelection);
-                            getCaretModel().moveToOffset(newSelection);
-                        }
-                        cancelAutoResetForMouseSelectionState();
-                        return;
-                    }
-
-                    if (!myKeepSelectionOnMousePress) {
-                        // There is a possible case that lead selection position should be adjusted in accordance with the mouse move direction.
-                        // E.g. consider situation when user selects the whole line by clicking at 'line numbers' area. 'Line end' is considered
-                        // to be lead selection point then. However, when mouse is dragged down we want to consider 'line start' to be
-                        // lead selection point.
-                        if ((myMousePressArea == EditorMouseEventArea.LINE_NUMBERS_AREA || myMousePressArea == EditorMouseEventArea.LINE_MARKERS_AREA) && selectionModel
-                            .hasSelection()) {
-                            if (newCaretOffset >= selectionModel.getSelectionEnd()) {
-                                oldSelectionStart = selectionModel.getSelectionStart();
-                                oldVisLeadSelectionStart = selectionModel.getSelectionStartPosition();
-                            }
-                            else if (newCaretOffset <= selectionModel.getSelectionStart()) {
-                                oldSelectionStart = selectionModel.getSelectionEnd();
-                                oldVisLeadSelectionStart = selectionModel.getSelectionEndPosition();
-                            }
-                        }
-                        if (oldVisLeadSelectionStart != null) {
-                            setSelectionAndBlockActions(e, oldVisLeadSelectionStart, oldSelectionStart, newVisualCaret, newCaretOffset);
-                        }
-                        else {
-                            setSelectionAndBlockActions(e, oldSelectionStart, newCaretOffset);
-                        }
-                        cancelAutoResetForMouseSelectionState();
-                    }
-                    else {
-                        if (caretShift != 0) {
-                            if (myMousePressedEvent != null) {
-                                if (mySettings.isDndEnabled()) {
-                                    if (!myDragStarted) {
-                                        myDragStarted = true;
-                                        boolean isCopy = UIUtil.isControlKeyDown(e) || isViewer() || !getDocument().isWritable();
-                                        mySavedCaretOffsetForDNDUndoHack = oldCaretOffset;
-                                        getContentComponent().getTransferHandler()
-                                            .exportAsDrag(getContentComponent(), e, isCopy ? TransferHandler.COPY : TransferHandler.MOVE);
-                                    }
-                                }
-                                else {
-                                    selectionModel.removeSelection();
-                                }
-                            }
-                        }
-                    }
+                    selectionModel.removeSelection();
                 }
             }
         }
@@ -2191,7 +2198,8 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
                         targetPosition = selectionEnd = offsetToLogicalPosition(selectionEndOffset);
                     }
                     else if (getMouseSelectionState() == MOUSE_SELECTION_STATE_LINE_SELECTED) {
-                        targetPosition = selectionEnd = visualToLogicalPosition(new VisualPosition(offsetToVisualLine(selectionEndOffset) + 1, 0));
+                        targetPosition = selectionEnd =
+                            visualToLogicalPosition(new VisualPosition(offsetToVisualLine(selectionEndOffset) + 1, 0));
                     }
                 }
                 cancelAutoResetForMouseSelectionState();
@@ -2217,20 +2225,24 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         }
     }
 
-    private void setSelectionAndBlockActions(@Nonnull MouseEvent mouseDragEvent,
-                                             VisualPosition startPosition,
-                                             int startOffset,
-                                             VisualPosition endPosition,
-                                             int endOffset) {
+    private void setSelectionAndBlockActions(
+        @Nonnull MouseEvent mouseDragEvent,
+        VisualPosition startPosition,
+        int startOffset,
+        VisualPosition endPosition,
+        int endOffset
+    ) {
         mySelectionModel.setSelection(startPosition, startOffset, endPosition, endOffset);
         if (myCurrentDragIsSubstantial || startOffset != endOffset || !Comparing.equal(startPosition, endPosition)) {
             onSubstantialDrag(mouseDragEvent);
         }
     }
 
-    private void blockActionsIfNeeded(@Nonnull MouseEvent mouseDragEvent,
-                                      @Nonnull LogicalPosition startPosition,
-                                      @Nonnull LogicalPosition endPosition) {
+    private void blockActionsIfNeeded(
+        @Nonnull MouseEvent mouseDragEvent,
+        @Nonnull LogicalPosition startPosition,
+        @Nonnull LogicalPosition endPosition
+    ) {
         if (myCurrentDragIsSubstantial || !startPosition.equals(endPosition)) {
             onSubstantialDrag(mouseDragEvent);
         }
@@ -2268,11 +2280,14 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
             boolean isRtl = caret.isAtRtlLocation();
             VisualPosition caretPosition = caret.getVisualPosition();
             Point2D pos1 = visualPositionToPoint2D(caretPosition.leanRight(!isRtl));
-            Point2D pos2 =
-                visualPositionToPoint2D(new VisualPosition(caretPosition.line, Math.max(0, caretPosition.column + (isRtl ? -1 : 1)), isRtl));
-            float width = (float) Math.abs(pos2.getX() - pos1.getX());
+            Point2D pos2 = visualPositionToPoint2D(new VisualPosition(
+                caretPosition.line,
+                Math.max(0, caretPosition.column + (isRtl ? -1 : 1)),
+                isRtl
+            ));
+            float width = (float)Math.abs(pos2.getX() - pos1.getX());
             if (!isRtl && myInlayModel.hasInlineElementAt(caretPosition)) {
-                width = Math.min(width, (float) Math.ceil(myView.getPlainSpaceWidth()));
+                width = Math.min(width, (float)Math.ceil(myView.getPlainSpaceWidth()));
             }
             caretPoints.add(new CaretRectangle(pos1, width, caret, isRtl));
         }
@@ -2407,122 +2422,121 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
                 myXCycles = CYCLE_SIZE / dx + 1;
                 myDx = 1 + dx / CYCLE_SIZE;
             }
-            else {
-                if (dx < 0) {
-                    myXCycles = -CYCLE_SIZE / dx + 1;
-                    myDx = -1 + dx / CYCLE_SIZE;
-                }
+            else if (dx < 0) {
+                myXCycles = -CYCLE_SIZE / dx + 1;
+                myDx = -1 + dx / CYCLE_SIZE;
             }
 
             if (dy > 0) {
                 myYCycles = CYCLE_SIZE / dy + 1;
                 myDy = 1 + dy / CYCLE_SIZE;
             }
-            else {
-                if (dy < 0) {
-                    myYCycles = -CYCLE_SIZE / dy + 1;
-                    myDy = -1 + dy / CYCLE_SIZE;
-                }
+            else if (dy < 0) {
+                myYCycles = -CYCLE_SIZE / dy + 1;
+                myDy = -1 + dy / CYCLE_SIZE;
             }
 
             if (myTimer != null) {
                 return;
             }
 
+            myTimer = TimerUtil.createNamedTimer(
+                "Editor scroll timer",
+                TIMER_PERIOD,
+                e -> {
+                    if (isDisposed()) {
+                        stop();
+                        return;
+                    }
+                    myCommandProcessor.executeCommand(
+                        myProject,
+                        new DocumentRunnable(myDocument, myProject) {
+                            @Override
+                            public void run() {
+                                int oldSelectionStart = mySelectionModel.getLeadSelectionOffset();
+                                VisualPosition caretPosition =
+                                    myMultiSelectionInProgress ? myTargetMultiSelectionPosition : getCaretModel().getVisualPosition();
+                                int column = caretPosition.column;
+                                xPassedCycles++;
+                                if (xPassedCycles >= myXCycles) {
+                                    xPassedCycles = 0;
+                                    column += myDx;
+                                }
 
-            myTimer = TimerUtil.createNamedTimer("Editor scroll timer", TIMER_PERIOD, e -> {
-                if (isDisposed()) {
-                    stop();
-                    return;
-                }
-                myCommandProcessor.executeCommand(myProject,
-                    new DocumentRunnable(myDocument, myProject) {
-                        @Override
-                        public void run() {
-                            int oldSelectionStart = mySelectionModel.getLeadSelectionOffset();
-                            VisualPosition caretPosition =
-                                myMultiSelectionInProgress ? myTargetMultiSelectionPosition : getCaretModel().getVisualPosition();
-                            int column = caretPosition.column;
-                            xPassedCycles++;
-                            if (xPassedCycles >= myXCycles) {
-                                xPassedCycles = 0;
-                                column += myDx;
-                            }
+                                int line = caretPosition.line;
+                                yPassedCycles++;
+                                if (yPassedCycles >= myYCycles) {
+                                    yPassedCycles = 0;
+                                    line += myDy;
+                                }
 
-                            int line = caretPosition.line;
-                            yPassedCycles++;
-                            if (yPassedCycles >= myYCycles) {
-                                yPassedCycles = 0;
-                                line += myDy;
-                            }
+                                line = Math.max(0, line);
+                                column = Math.max(0, column);
+                                VisualPosition pos = new VisualPosition(line, column);
+                                if (!myMultiSelectionInProgress) {
+                                    getCaretModel().moveToVisualPosition(pos);
+                                    getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
+                                }
 
-                            line = Math.max(0, line);
-                            column = Math.max(0, column);
-                            VisualPosition pos = new VisualPosition(line, column);
-                            if (!myMultiSelectionInProgress) {
-                                getCaretModel().moveToVisualPosition(pos);
-                                getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
-                            }
+                                int newCaretOffset = getCaretModel().getOffset();
+                                int caretShift = newCaretOffset - mySavedSelectionStart;
 
-                            int newCaretOffset = getCaretModel().getOffset();
-                            int caretShift = newCaretOffset - mySavedSelectionStart;
-
-                            if (getMouseSelectionState() != MOUSE_SELECTION_STATE_NONE) {
-                                if (caretShift < 0) {
-                                    int newSelection = newCaretOffset;
-                                    if (getMouseSelectionState() == MOUSE_SELECTION_STATE_WORD_SELECTED) {
-                                        newSelection = myCaretModel.getWordAtCaretStart();
-                                    }
-                                    else {
-                                        if (getMouseSelectionState() == MOUSE_SELECTION_STATE_LINE_SELECTED) {
+                                if (getMouseSelectionState() != MOUSE_SELECTION_STATE_NONE) {
+                                    if (caretShift < 0) {
+                                        int newSelection = newCaretOffset;
+                                        if (getMouseSelectionState() == MOUSE_SELECTION_STATE_WORD_SELECTED) {
+                                            newSelection = myCaretModel.getWordAtCaretStart();
+                                        }
+                                        else if (getMouseSelectionState() == MOUSE_SELECTION_STATE_LINE_SELECTED) {
                                             newSelection = logicalPositionToOffset(visualToLogicalPosition(new VisualPosition(
                                                 getCaretModel().getVisualPosition().line,
-                                                0)));
+                                                0
+                                            )));
                                         }
-                                    }
-                                    if (newSelection < 0) {
-                                        newSelection = newCaretOffset;
-                                    }
-                                    mySelectionModel.setSelection(validateOffset(mySavedSelectionEnd), newSelection);
-                                    getCaretModel().moveToOffset(newSelection);
-                                }
-                                else {
-                                    int newSelection = newCaretOffset;
-                                    if (getMouseSelectionState() == MOUSE_SELECTION_STATE_WORD_SELECTED) {
-                                        newSelection = myCaretModel.getWordAtCaretEnd();
+                                        if (newSelection < 0) {
+                                            newSelection = newCaretOffset;
+                                        }
+                                        mySelectionModel.setSelection(validateOffset(mySavedSelectionEnd), newSelection);
+                                        getCaretModel().moveToOffset(newSelection);
                                     }
                                     else {
-                                        if (getMouseSelectionState() == MOUSE_SELECTION_STATE_LINE_SELECTED) {
+                                        int newSelection = newCaretOffset;
+                                        if (getMouseSelectionState() == MOUSE_SELECTION_STATE_WORD_SELECTED) {
+                                            newSelection = myCaretModel.getWordAtCaretEnd();
+                                        }
+                                        else if (getMouseSelectionState() == MOUSE_SELECTION_STATE_LINE_SELECTED) {
                                             newSelection = logicalPositionToOffset(visualToLogicalPosition(new VisualPosition(
                                                 getCaretModel().getVisualPosition().line + 1,
-                                                0)));
+                                                0
+                                            )));
                                         }
+                                        if (newSelection < 0) {
+                                            newSelection = newCaretOffset;
+                                        }
+                                        mySelectionModel.setSelection(validateOffset(mySavedSelectionStart), newSelection);
+                                        getCaretModel().moveToOffset(newSelection);
                                     }
-                                    if (newSelection < 0) {
-                                        newSelection = newCaretOffset;
-                                    }
-                                    mySelectionModel.setSelection(validateOffset(mySavedSelectionStart), newSelection);
-                                    getCaretModel().moveToOffset(newSelection);
+                                    return;
                                 }
-                                return;
-                            }
 
-                            if (myMultiSelectionInProgress && myLastMousePressedLocation != null) {
-                                myTargetMultiSelectionPosition = pos;
-                                LogicalPosition newLogicalPosition = visualToLogicalPosition(pos);
-                                getScrollingModel().scrollTo(newLogicalPosition, ScrollType.RELATIVE);
-                                createSelectionTill(newLogicalPosition);
+                                if (myMultiSelectionInProgress && myLastMousePressedLocation != null) {
+                                    myTargetMultiSelectionPosition = pos;
+                                    LogicalPosition newLogicalPosition = visualToLogicalPosition(pos);
+                                    getScrollingModel().scrollTo(newLogicalPosition, ScrollType.RELATIVE);
+                                    createSelectionTill(newLogicalPosition);
+                                }
+                                else {
+                                    mySelectionModel.setSelection(oldSelectionStart, getCaretModel().getOffset());
+                                }
                             }
-                            else {
-                                mySelectionModel.setSelection(oldSelectionStart, getCaretModel().getOffset());
-                            }
-                        }
-                    },
-                    EditorBundle.message("move.cursor.command.name"),
-                    DocCommandGroupId.noneGroupId(getDocument()),
-                    UndoConfirmationPolicy.DEFAULT,
-                    getDocument());
-            });
+                        },
+                        EditorBundle.message("move.cursor.command.name"),
+                        DocCommandGroupId.noneGroupId(getDocument()),
+                        UndoConfirmationPolicy.DEFAULT,
+                        getDocument()
+                    );
+                }
+            );
             myTimer.start();
         }
 
@@ -2633,7 +2647,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
 
     @Nonnull
     MyVerticalScrollBar getHorizontalScrollBar() {
-        return (MyVerticalScrollBar) myScrollPane.getHorizontalScrollBar();
+        return (MyVerticalScrollBar)myScrollPane.getHorizontalScrollBar();
     }
 
     @MouseSelectionState
@@ -2654,9 +2668,11 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
             if (myMouseSelectionStateResetRunnable == null) {
                 myMouseSelectionStateResetRunnable = () -> resetMouseSelectionState(null);
             }
-            myMouseSelectionStateAlarm.addRequest(myMouseSelectionStateResetRunnable,
+            myMouseSelectionStateAlarm.addRequest(
+                myMouseSelectionStateResetRunnable,
                 Registry.intValue("editor.mouseSelectionStateResetTimeout"),
-                IdeaModalityState.stateForComponent(myEditorComponent));
+                IdeaModalityState.stateForComponent(myEditorComponent)
+            );
         }
     }
 
@@ -2733,7 +2749,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
     }
 
     public void beforeModalityStateChanged() {
-        ((DesktopScrollingModelImpl) myScrollingModel).beforeModalityStateChanged();
+        ((DesktopScrollingModelImpl)myScrollingModel).beforeModalityStateChanged();
     }
 
     EditorDropHandler getDropHandler() {
@@ -2769,9 +2785,11 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
 
         @Nonnull
         @Override
-        public AttributedCharacterIterator getCommittedText(final int beginIndex,
-                                                            final int endIndex,
-                                                            final AttributedCharacterIterator.Attribute[] attributes) {
+        public AttributedCharacterIterator getCommittedText(
+            final int beginIndex,
+            final int endIndex,
+            final AttributedCharacterIterator.Attribute[] attributes
+        ) {
             return execute(() -> myDelegate.getCommittedText(beginIndex, endIndex, attributes));
         }
 
@@ -2878,7 +2896,11 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
 
         @Nonnull
         @Override
-        public AttributedCharacterIterator getCommittedText(int beginIndex, int endIndex, AttributedCharacterIterator.Attribute[] attributes) {
+        public AttributedCharacterIterator getCommittedText(
+            int beginIndex,
+            int endIndex,
+            AttributedCharacterIterator.Attribute[] attributes
+        ) {
             int composedStartIndex = 0;
             int composedEndIndex = 0;
             if (composedText != null) {
@@ -2954,15 +2976,14 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         }
 
         private void runUndoTransparent(@Nonnull final Runnable runnable) {
-            CommandProcessor.getInstance().runUndoTransparentAction(() -> CommandProcessor.getInstance()
-                .executeCommand(myProject,
-                    () -> ApplicationManager.getApplication()
-                        .runWriteAction(
-                            runnable),
-                    "",
-                    getDocument(),
-                    UndoConfirmationPolicy.DEFAULT,
-                    getDocument()));
+            CommandProcessor.getInstance().runUndoTransparentAction(() -> CommandProcessor.getInstance().executeCommand(
+                myProject,
+                () -> ApplicationManager.getApplication().runWriteAction(runnable),
+                "",
+                getDocument(),
+                UndoConfirmationPolicy.DEFAULT,
+                getDocument()
+            ));
         }
 
         private boolean hasRelevantCommittedText(@Nonnull InputMethodEvent e) {
@@ -3027,7 +3048,12 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
                     if (composedTextIndex < text.getEndIndex()) {
                         createComposedString(composedTextIndex, text);
 
-                        runUndoTransparent(() -> EditorModificationUtil.insertStringAtCaret(DesktopEditorImpl.this, composedText, false, false));
+                        runUndoTransparent(() -> EditorModificationUtil.insertStringAtCaret(
+                            DesktopEditorImpl.this,
+                            composedText,
+                            false,
+                            false
+                        ));
 
                         composedTextRange = ProperTextRange.from(getCaretModel().getOffset(), composedText.length());
                     }
@@ -3048,9 +3074,9 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
             myMousePressArea = null;
             myLastMousePressedLocation = null;
             runMouseReleasedCommand(e);
-            if (!e.isConsumed() && myMousePressedEvent != null && !myMousePressedEvent.isConsumed() &&
-                Math.abs(e.getX() - myMousePressedEvent.getX()) < EditorUtil.getSpaceWidth(Font.PLAIN, DesktopEditorImpl.this) &&
-                Math.abs(e.getY() - myMousePressedEvent.getY()) < getLineHeight()) {
+            if (!e.isConsumed() && myMousePressedEvent != null && !myMousePressedEvent.isConsumed()
+                && Math.abs(e.getX() - myMousePressedEvent.getX()) < EditorUtil.getSpaceWidth(Font.PLAIN, DesktopEditorImpl.this)
+                && Math.abs(e.getY() - myMousePressedEvent.getY()) < getLineHeight()) {
                 runMouseClickedCommand(e);
             }
         }
@@ -3114,12 +3140,14 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
                         IdeDocumentHistory.getInstance(myProject).includeCurrentCommandAsNavigation();
                     }
                 };
-                myCommandProcessor.executeCommand(myProject,
+                myCommandProcessor.executeCommand(
+                    myProject,
                     runnable,
                     "",
                     DocCommandGroupId.noneGroupId(getDocument()),
                     UndoConfirmationPolicy.DEFAULT,
-                    getDocument());
+                    getDocument()
+                );
             }
             else {
                 processMousePressed(e);
@@ -3166,12 +3194,14 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
 
             if (myCommandProcessor != null) {
                 Runnable runnable = () -> processMouseReleased(e);
-                myCommandProcessor.executeCommand(myProject,
+                myCommandProcessor.executeCommand(
+                    myProject,
                     runnable,
                     "",
                     DocCommandGroupId.noneGroupId(getDocument()),
                     UndoConfirmationPolicy.DEFAULT,
-                    getDocument());
+                    getDocument()
+                );
             }
             else {
                 processMouseReleased(e);
@@ -3278,9 +3308,9 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
             // Don't move caret on mouse press above gutter line markers area (a place where break points, 'override', 'implements' etc icons
             // are drawn) and annotations area. E.g. we don't want to change caret position if a user sets new break point (clicks
             // at 'line markers' area).
-            boolean insideEditorRelatedAreas =
-                eventArea == EditorMouseEventArea.LINE_NUMBERS_AREA || eventArea == EditorMouseEventArea.EDITING_AREA || isInsideGutterWhitespaceArea(
-                    e);
+            boolean insideEditorRelatedAreas = eventArea == EditorMouseEventArea.LINE_NUMBERS_AREA
+                || eventArea == EditorMouseEventArea.EDITING_AREA
+                || isInsideGutterWhitespaceArea(e);
             if (insideEditorRelatedAreas) {
                 VisualPosition visualPosition = getTargetPosition(x, y, true);
                 LogicalPosition pos = visualToLogicalPosition(visualPosition);
@@ -3300,9 +3330,9 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
                 }
                 else if (e.getSource() != myGutterComponent && isCreateRectangularSelectionEvent(e)) {
                     CaretState anchorCaretState = myCaretModel.getCaretsAndSelections().get(0);
-                    LogicalPosition anchor = Objects.equals(anchorCaretState.getCaretPosition(),
-                        anchorCaretState.getSelectionStart()) ? anchorCaretState.getSelectionEnd() : anchorCaretState
-                        .getSelectionStart();
+                    LogicalPosition anchor = Objects.equals(anchorCaretState.getCaretPosition(), anchorCaretState.getSelectionStart())
+                        ? anchorCaretState.getSelectionEnd()
+                        : anchorCaretState.getSelectionStart();
                     if (anchor == null) {
                         anchor = myCaretModel.getLogicalPosition();
                     }
@@ -3358,34 +3388,34 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
                         mySelectionModel.setSelection(startToUse, caretOffset);
                     }
                 }
-                else {
-                    if (!myKeepSelectionOnMousePress && getSelectionModel().hasSelection() && !isCreateRectangularSelectionEvent(e) && e.getClickCount() == 1) {
-                        setMouseSelectionState(MOUSE_SELECTION_STATE_NONE);
-                        mySelectionModel.setSelection(caretOffset, caretOffset);
-                    }
-                    else {
-                        if (e.getButton() == MouseEvent.BUTTON1 && (eventArea == EditorMouseEventArea.EDITING_AREA || eventArea == EditorMouseEventArea.LINE_NUMBERS_AREA) && (!toggleCaret || lastPressCreatedCaret)) {
-                            switch (e.getClickCount()) {
-                                case 2:
-                                    selectWordAtCaret(mySettings.isMouseClickSelectionHonorsCamelWords() && mySettings.isCamelWords());
-                                    break;
+                else if (!myKeepSelectionOnMousePress && getSelectionModel().hasSelection()
+                    && !isCreateRectangularSelectionEvent(e)
+                    && e.getClickCount() == 1) {
+                    setMouseSelectionState(MOUSE_SELECTION_STATE_NONE);
+                    mySelectionModel.setSelection(caretOffset, caretOffset);
+                }
+                else if (e.getButton() == MouseEvent.BUTTON1
+                    && (eventArea == EditorMouseEventArea.EDITING_AREA || eventArea == EditorMouseEventArea.LINE_NUMBERS_AREA)
+                    && (!toggleCaret || lastPressCreatedCaret)) {
+                    switch (e.getClickCount()) {
+                        case 2:
+                            selectWordAtCaret(mySettings.isMouseClickSelectionHonorsCamelWords() && mySettings.isCamelWords());
+                            break;
 
-                                case 3:
-                                    if (HONOR_CAMEL_HUMPS_ON_TRIPLE_CLICK && mySettings.isCamelWords()) {
-                                        // We want to differentiate between triple and quadruple clicks when 'select by camel humps' is on. The former
-                                        // is assumed to select 'hump' while the later points to the whole word.
-                                        selectWordAtCaret(false);
-                                        break;
-                                    }
-                                case 4:
-                                    mySelectionModel.selectLineAtCaret();
-                                    setMouseSelectionState(MOUSE_SELECTION_STATE_LINE_SELECTED);
-                                    mySavedSelectionStart = mySelectionModel.getSelectionStart();
-                                    mySavedSelectionEnd = mySelectionModel.getSelectionEnd();
-                                    mySelectionModel.setUnknownDirection(true);
-                                    break;
+                        case 3:
+                            if (HONOR_CAMEL_HUMPS_ON_TRIPLE_CLICK && mySettings.isCamelWords()) {
+                                // We want to differentiate between triple and quadruple clicks when 'select by camel humps' is on. The former
+                                // is assumed to select 'hump' while the later points to the whole word.
+                                selectWordAtCaret(false);
+                                break;
                             }
-                        }
+                        case 4:
+                            mySelectionModel.selectLineAtCaret();
+                            setMouseSelectionState(MOUSE_SELECTION_STATE_LINE_SELECTED);
+                            mySavedSelectionStart = mySelectionModel.getSelectionStart();
+                            mySavedSelectionEnd = mySelectionModel.getSelectionEnd();
+                            mySelectionModel.setUnknownDirection(true);
+                            break;
                     }
                 }
             }
@@ -3430,8 +3460,12 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
                 continue;
             }
             AnAction action = actionManager.getAction(mappedActionId);
-            AnActionEvent actionEvent =
-                AnActionEvent.createFromAnAction(action, e, ActionPlaces.MAIN_MENU, DataManager.getInstance().getDataContext(e.getComponent()));
+            AnActionEvent actionEvent = AnActionEvent.createFromAnAction(
+                action,
+                e,
+                ActionPlaces.MAIN_MENU,
+                DataManager.getInstance().getDataContext(e.getComponent())
+            );
             if (ActionUtil.lastUpdateAndCheckDumb(action, actionEvent, false)) {
                 return false;
             }
@@ -3495,25 +3529,23 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
             // Remove selection
             getSelectionModel().removeSelection();
         }
-        else {
+        else if (getSelectionModel().getLeadSelectionOffset() == endSelectionOffset) {
             // Reduce selection in backward direction.
-            if (getSelectionModel().getLeadSelectionOffset() == endSelectionOffset) {
-                if (clickVisLine == startVisLine) {
-                    clickVisLine++;
-                }
-                int startOffset = logicalPositionToOffset(visualToLogicalPosition(new VisualPosition(clickVisLine, 0)));
-                getSelectionModel().setSelection(startOffset, endSelectionOffset);
-                getCaretModel().moveToOffset(startOffset);
+            if (clickVisLine == startVisLine) {
+                clickVisLine++;
             }
-            else {
-                // Reduce selection is forward direction.
-                if (clickVisLine == endVisLine) {
-                    clickVisLine--;
-                }
-                int endLineOffset = EditorUtil.getVisualLineEndOffset(this, clickVisLine);
-                getSelectionModel().setSelection(startSelectionOffset, endLineOffset);
-                getCaretModel().moveToOffset(endLineOffset);
+            int startOffset = logicalPositionToOffset(visualToLogicalPosition(new VisualPosition(clickVisLine, 0)));
+            getSelectionModel().setSelection(startOffset, endSelectionOffset);
+            getCaretModel().moveToOffset(startOffset);
+        }
+        else {
+            // Reduce selection is forward direction.
+            if (clickVisLine == endVisLine) {
+                clickVisLine--;
             }
+            int endLineOffset = EditorUtil.getVisualLineEndOffset(this, clickVisLine);
+            getSelectionModel().setSelection(startSelectionOffset, endLineOffset);
+            getCaretModel().moveToOffset(endLineOffset);
         }
         e.consume();
         return true;
@@ -3614,7 +3646,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
 
             long currentTimeMillis = System.currentTimeMillis();
 
-            float alpha = 1 - (float) frameIndex / TOTAL_FRAMES;
+            float alpha = 1 - (float)frameIndex / TOTAL_FRAMES;
             g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
             Image scaledImage = ImageUtil.scaleImage(myImage, alpha);
 
@@ -3651,13 +3683,14 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
     static boolean handleDrop(@Nonnull DesktopEditorImpl editor, @Nonnull final Transferable t, int dropAction) {
         final EditorDropHandler dropHandler = editor.getDropHandler();
 
-        boolean singleClickForDisablingBreakpoint = XDebuggerSettingsManager.getInstance().getGeneralSettings().isSingleClickForDisablingBreakpoint();
+        boolean singleClickForDisablingBreakpoint =
+            XDebuggerSettingsManager.getInstance().getGeneralSettings().isSingleClickForDisablingBreakpoint();
         if (singleClickForDisablingBreakpoint) {
             try {
                 if (t.isDataFlavorSupported(GutterDraggableObject.flavor)) {
                     Object attachedObject = t.getTransferData(GutterDraggableObject.flavor);
                     if (attachedObject instanceof GutterIconRenderer) {
-                        GutterDraggableObject object = ((GutterIconRenderer) attachedObject).getDraggableObject();
+                        GutterDraggableObject object = ((GutterIconRenderer)attachedObject).getDraggableObject();
                         if (object != null) {
                             object.remove();
                             Point mouseLocationOnScreen = MouseInfo.getPointerInfo().getLocation();
@@ -3665,11 +3698,14 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
                             Point editorComponentLocationOnScreen = editorComponent.getLocationOnScreen();
                             Disposable painterListenersDisposable = Disposable.newDisposable("PainterListenersDisposable");
                             Disposer.register(editor.getDisposable(), painterListenersDisposable);
-                            ExplosionPainter painter = new ExplosionPainter(new Point(mouseLocationOnScreen.x - editorComponentLocationOnScreen.x,
-                                mouseLocationOnScreen.y - editorComponentLocationOnScreen.y),
-                                editor.getGutterComponentEx()
-                                    .getDragImage((GutterIconRenderer) attachedObject),
-                                painterListenersDisposable);
+                            ExplosionPainter painter = new ExplosionPainter(
+                                new Point(
+                                    mouseLocationOnScreen.x - editorComponentLocationOnScreen.x,
+                                    mouseLocationOnScreen.y - editorComponentLocationOnScreen.y
+                                ),
+                                editor.getGutterComponentEx().getDragImage((GutterIconRenderer)attachedObject),
+                                painterListenersDisposable
+                            );
                             IdeGlassPaneUtil.installPainter(editorComponent, painter, painterListenersDisposable);
                             return true;
                         }
@@ -3695,52 +3731,60 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
             editor.getCaretModel().moveToOffset(editor.mySavedCaretOffsetForDNDUndoHack);
         }
 
-        CommandProcessor.getInstance().executeCommand(editor.myProject, () -> {
-            try {
-                editor.getSelectionModel().removeSelection();
+        CommandProcessor.getInstance().executeCommand(
+            editor.myProject,
+            () -> {
+                try {
+                    editor.getSelectionModel().removeSelection();
 
-                final int offset;
-                if (editor.myDraggedRange != null) {
-                    editor.getCaretModel().moveToOffset(caretOffset);
-                    offset = caretOffset;
-                }
-                else {
-                    offset = editor.getCaretModel().getOffset();
-                }
-                if (editor.getDocument().getRangeGuard(offset, offset) != null) {
-                    return;
-                }
+                    final int offset;
+                    if (editor.myDraggedRange != null) {
+                        editor.getCaretModel().moveToOffset(caretOffset);
+                        offset = caretOffset;
+                    }
+                    else {
+                        offset = editor.getCaretModel().getOffset();
+                    }
+                    if (editor.getDocument().getRangeGuard(offset, offset) != null) {
+                        return;
+                    }
 
-                editor.putUserData(LAST_PASTED_REGION, null);
+                    editor.putUserData(LAST_PASTED_REGION, null);
 
-                EditorActionHandler pasteHandler = EditorActionManager.getInstance().getActionHandler(IdeActions.ACTION_EDITOR_PASTE);
-                LOG.assertTrue(pasteHandler instanceof EditorTextInsertHandler, String.valueOf(pasteHandler));
-                ((EditorTextInsertHandler) pasteHandler).execute(editor, editor.getDataContext(), () -> t);
+                    EditorActionHandler pasteHandler = EditorActionManager.getInstance().getActionHandler(IdeActions.ACTION_EDITOR_PASTE);
+                    LOG.assertTrue(pasteHandler instanceof EditorTextInsertHandler, String.valueOf(pasteHandler));
+                    ((EditorTextInsertHandler)pasteHandler).execute(editor, editor.getDataContext(), () -> t);
 
-                TextRange range = editor.getUserData(LAST_PASTED_REGION);
-                if (range != null) {
-                    editor.getCaretModel().moveToOffset(range.getStartOffset());
-                    editor.getSelectionModel().setSelection(range.getStartOffset(), range.getEndOffset());
+                    TextRange range = editor.getUserData(LAST_PASTED_REGION);
+                    if (range != null) {
+                        editor.getCaretModel().moveToOffset(range.getStartOffset());
+                        editor.getSelectionModel().setSelection(range.getStartOffset(), range.getEndOffset());
+                    }
                 }
-            }
-            catch (Exception exception) {
-                LOG.error(exception);
-            }
-        }, EditorBundle.message("paste.command.name"), DND_COMMAND_KEY, UndoConfirmationPolicy.DEFAULT, editor.getDocument());
+                catch (Exception exception) {
+                    LOG.error(exception);
+                }
+            },
+            EditorBundle.message("paste.command.name"),
+            DND_COMMAND_KEY,
+            UndoConfirmationPolicy.DEFAULT,
+            editor.getDocument()
+        );
 
         return true;
     }
 
     private static class MyTransferHandler extends TransferHandler {
         private static DesktopEditorImpl getEditor(@Nonnull JComponent comp) {
-            EditorComponentImpl editorComponent = (EditorComponentImpl) comp;
+            EditorComponentImpl editorComponent = (EditorComponentImpl)comp;
             return editorComponent.getEditor();
         }
 
         @Override
         public boolean importData(TransferSupport support) {
             Component comp = support.getComponent();
-            return comp instanceof JComponent && handleDrop(getEditor((JComponent) comp), support.getTransferable(), support.getDropAction());
+            return comp instanceof JComponent
+                && handleDrop(getEditor((JComponent)comp), support.getTransferable(), support.getDropAction());
         }
 
         @Override
@@ -3752,7 +3796,8 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
             }
 
             //should be used a better representation class
-            boolean singleClickForDisablingBreakpoint = XDebuggerSettingsManager.getInstance().getGeneralSettings().isSingleClickForDisablingBreakpoint();
+            boolean singleClickForDisablingBreakpoint =
+                XDebuggerSettingsManager.getInstance().getGeneralSettings().isSingleClickForDisablingBreakpoint();
             if (singleClickForDisablingBreakpoint && ArrayUtil.contains(GutterDraggableObject.flavor, transferFlavors)) {
                 return true;
             }
@@ -3813,19 +3858,26 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
             if (!FileDocumentManager.getInstance().requestWriting(editor.getDocument(), editor.getProject())) {
                 return;
             }
-            CommandProcessor.getInstance().executeCommand(editor.myProject, () -> ApplicationManager.getApplication().runWriteAction(() -> {
-                Document doc = editor.getDocument();
-                doc.startGuardedBlockChecking();
-                try {
-                    doc.deleteString(editor.myDraggedRange.getStartOffset(), editor.myDraggedRange.getEndOffset());
-                }
-                catch (ReadOnlyFragmentModificationException e) {
-                    EditorActionManager.getInstance().getReadonlyFragmentModificationHandler(doc).handle(e);
-                }
-                finally {
-                    doc.stopGuardedBlockChecking();
-                }
-            }), EditorBundle.message("move.selection.command.name"), DND_COMMAND_KEY, UndoConfirmationPolicy.DEFAULT, editor.getDocument());
+            CommandProcessor.getInstance().executeCommand(
+                editor.myProject,
+                () -> ApplicationManager.getApplication().runWriteAction(() -> {
+                    Document doc = editor.getDocument();
+                    doc.startGuardedBlockChecking();
+                    try {
+                        doc.deleteString(editor.myDraggedRange.getStartOffset(), editor.myDraggedRange.getEndOffset());
+                    }
+                    catch (ReadOnlyFragmentModificationException e) {
+                        EditorActionManager.getInstance().getReadonlyFragmentModificationHandler(doc).handle(e);
+                    }
+                    finally {
+                        doc.stopGuardedBlockChecking();
+                    }
+                }),
+                EditorBundle.message("move.selection.command.name"),
+                DND_COMMAND_KEY,
+                UndoConfirmationPolicy.DEFAULT,
+                editor.getDocument()
+            );
         }
     }
 
@@ -3939,7 +3991,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         @Override
         public void paintBorder(@Nonnull Component c, @Nonnull Graphics g, int x, int y, int width, int height) {
             if (c instanceof JComponent) {
-                Insets insets = ((JComponent) c).getInsets();
+                Insets insets = ((JComponent)c).getInsets();
                 if (insets.left > 0) {
                     super.paintBorder(c, g, x, y, width, height);
                 }
@@ -3957,12 +4009,14 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         public Insets getBorderInsets(Component c) {
             FileEditorsSplitters splitters = AWTComponentProviderUtil.findParent(c, FileEditorsSplitters.class);
 
-            boolean thereIsSomethingAbove =
-                !Platform.current().os().isMac() || UISettings.getInstance().getShowMainToolbar() || UISettings.getInstance()
-                    .getShowNavigationBar() || toolWindowIsNotEmpty();
+            boolean thereIsSomethingAbove = !Platform.current().os().isMac()
+                || UISettings.getInstance().getShowMainToolbar()
+                || UISettings.getInstance().getShowNavigationBar()
+                || toolWindowIsNotEmpty();
             //noinspection ConstantConditions
             Component header = myHeaderPanel == null ? null : ArrayUtil.getFirstElement(myHeaderPanel.getComponents());
-            boolean paintTop = thereIsSomethingAbove && header == null && UISettings.getInstance().getEditorTabPlacement() != SwingConstants.TOP;
+            boolean paintTop =
+                thereIsSomethingAbove && header == null && UISettings.getInstance().getEditorTabPlacement() != SwingConstants.TOP;
             return splitters == null ? super.getBorderInsets(c) : JBUI.insetsTop(paintTop ? 1 : 0);
         }
 
@@ -4009,7 +4063,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
     private class MyTextDrawingCallback implements TextDrawingCallback {
         @Override
         public void drawChars(@Nonnull Graphics g, @Nonnull char[] data, int start, int end, int x, int y, Color color, @Nonnull Object f) {
-            FontInfo fontInfo = (FontInfo) f;
+            FontInfo fontInfo = (FontInfo)f;
 
             myView.drawChars(g, data, start, end, x, y, color, fontInfo);
         }

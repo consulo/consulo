@@ -50,231 +50,233 @@ import java.io.File;
 import java.util.StringTokenizer;
 
 public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
-  @Nullable
-  private final Project myProject;
-  @Nonnull
-  private final PsiDirectory myDirectory;
-  @Nonnull
-  private final CreateDirectoryOrPackageType myType;
-  @Nullable
-  private PsiFileSystemItem myCreatedElement = null;
-  @Nonnull
-  private final String myDelimiters;
-  @Nullable
-  private final Component myDialogParent;
-  private String myErrorText;
+    @Nullable
+    private final Project myProject;
+    @Nonnull
+    private final PsiDirectory myDirectory;
+    @Nonnull
+    private final CreateDirectoryOrPackageType myType;
+    @Nullable
+    private PsiFileSystemItem myCreatedElement = null;
+    @Nonnull
+    private final String myDelimiters;
+    @Nullable
+    private final Component myDialogParent;
+    private String myErrorText;
 
-  public CreateDirectoryOrPackageHandler(
-    @Nullable Project project,
-    @Nonnull PsiDirectory directory,
-    CreateDirectoryOrPackageType type,
-    @Nonnull final String delimiters
-  ) {
-    this(project, directory, type, delimiters, null);
-  }
+    public CreateDirectoryOrPackageHandler(
+        @Nullable Project project,
+        @Nonnull PsiDirectory directory,
+        CreateDirectoryOrPackageType type,
+        @Nonnull final String delimiters
+    ) {
+        this(project, directory, type, delimiters, null);
+    }
 
-  public CreateDirectoryOrPackageHandler(
-    @Nullable Project project,
-    @Nonnull PsiDirectory directory,
-    CreateDirectoryOrPackageType type,
-    @Nonnull final String delimiters,
-    @Nullable Component dialogParent
-  ) {
-    myProject = project;
-    myDirectory = directory;
-    myType = type;
-    myDelimiters = delimiters;
-    myDialogParent = dialogParent;
-  }
+    public CreateDirectoryOrPackageHandler(
+        @Nullable Project project,
+        @Nonnull PsiDirectory directory,
+        CreateDirectoryOrPackageType type,
+        @Nonnull final String delimiters,
+        @Nullable Component dialogParent
+    ) {
+        myProject = project;
+        myDirectory = directory;
+        myType = type;
+        myDelimiters = delimiters;
+        myDialogParent = dialogParent;
+    }
 
-  @NonNls
-  @Override
-  @RequiredUIAccess
-  public boolean checkInput(String inputString) {
-    final StringTokenizer tokenizer = new StringTokenizer(inputString, myDelimiters);
-    VirtualFile vFile = myDirectory.getVirtualFile();
-    boolean firstToken = true;
-    while (tokenizer.hasMoreTokens()) {
-      final String token = tokenizer.nextToken();
-      if (!tokenizer.hasMoreTokens() && (token.equals(".") || token.equals(".."))) {
-        myErrorText = "Can't create a directory with name '" + token + "'";
-        return false;
-      }
-      if (vFile != null) {
-        if (firstToken && "~".equals(token)) {
-          final VirtualFile userHomeDir = VfsUtil.getUserHomeDir();
-          if (userHomeDir == null) {
-            myErrorText = "User home directory not found";
-            return false;
-          }
-          vFile = userHomeDir;
-        }
-        else if ("..".equals(token)) {
-          vFile = vFile.getParent();
-          if (vFile == null) {
-            myErrorText = "Not a valid directory";
-            return false;
-          }
-        }
-        else if (!".".equals(token)) {
-          final VirtualFile child = vFile.findChild(token);
-          if (child != null) {
-            if (!child.isDirectory()) {
-              myErrorText = "A file with name '" + token + "' already exists";
-              return false;
+    @NonNls
+    @Override
+    @RequiredUIAccess
+    public boolean checkInput(String inputString) {
+        final StringTokenizer tokenizer = new StringTokenizer(inputString, myDelimiters);
+        VirtualFile vFile = myDirectory.getVirtualFile();
+        boolean firstToken = true;
+        while (tokenizer.hasMoreTokens()) {
+            final String token = tokenizer.nextToken();
+            if (!tokenizer.hasMoreTokens() && (token.equals(".") || token.equals(".."))) {
+                myErrorText = "Can't create a directory with name '" + token + "'";
+                return false;
             }
-            else if (!tokenizer.hasMoreTokens()) {
-              myErrorText = "A directory with name '" + token + "' already exists";
-              return false;
+            if (vFile != null) {
+                if (firstToken && "~".equals(token)) {
+                    final VirtualFile userHomeDir = VfsUtil.getUserHomeDir();
+                    if (userHomeDir == null) {
+                        myErrorText = "User home directory not found";
+                        return false;
+                    }
+                    vFile = userHomeDir;
+                }
+                else if ("..".equals(token)) {
+                    vFile = vFile.getParent();
+                    if (vFile == null) {
+                        myErrorText = "Not a valid directory";
+                        return false;
+                    }
+                }
+                else if (!".".equals(token)) {
+                    final VirtualFile child = vFile.findChild(token);
+                    if (child != null) {
+                        if (!child.isDirectory()) {
+                            myErrorText = "A file with name '" + token + "' already exists";
+                            return false;
+                        }
+                        else if (!tokenizer.hasMoreTokens()) {
+                            myErrorText = "A directory with name '" + token + "' already exists";
+                            return false;
+                        }
+                    }
+                    vFile = child;
+                }
             }
-          }
-          vFile = child;
+
+            boolean isDirectory = myType == CreateDirectoryOrPackageType.Directory;
+            if (FileTypeManager.getInstance().isFileIgnored(token)) {
+                myErrorText = "Trying to create a " + (isDirectory ? "directory" : "package") +
+                    " with an ignored name, the result will not be visible";
+                return true;
+            }
+            if (!isDirectory && token.length() > 0
+                && !PsiPackageManager.getInstance(myDirectory.getProject()).isValidPackageName(myDirectory, token)) {
+                myErrorText = "Not a valid package name, it will not be possible to create a class inside";
+                return true;
+            }
+            firstToken = false;
         }
-      }
-
-      boolean isDirectory = myType == CreateDirectoryOrPackageType.Directory;
-      if (FileTypeManager.getInstance().isFileIgnored(token)) {
-        myErrorText = "Trying to create a " + (isDirectory ? "directory" : "package") +
-          " with an ignored name, the result will not be visible";
+        myErrorText = null;
         return true;
-      }
-      if (!isDirectory && token.length() > 0
-        && !PsiPackageManager.getInstance(myDirectory.getProject()).isValidPackageName(myDirectory, token)) {
-        myErrorText = "Not a valid package name, it will not be possible to create a class inside";
-        return true;
-      }
-      firstToken = false;
-    }
-    myErrorText = null;
-    return true;
-  }
-
-  @Override
-  public String getErrorText(String inputString) {
-    return myErrorText;
-  }
-
-  @Override
-  public boolean canClose(final String subDirName) {
-
-    if (subDirName.length() == 0) {
-      showErrorDialog(IdeLocalize.errorNameShouldBeSpecified().get());
-      return false;
     }
 
-    final boolean multiCreation = StringUtil.containsAnyChar(subDirName, myDelimiters);
-    if (!multiCreation) {
-      try {
-        myDirectory.checkCreateSubdirectory(subDirName);
-      }
-      catch (IncorrectOperationException ex) {
-        showErrorDialog(CreateElementActionBase.filterMessage(ex.getMessage()));
-        return false;
-      }
+    @Override
+    public String getErrorText(String inputString) {
+        return myErrorText;
     }
 
-    final Boolean createFile = suggestCreatingFileInstead(subDirName);
-    if (createFile == null) {
-      return false;
+    @Override
+    public boolean canClose(final String subDirName) {
+
+        if (subDirName.length() == 0) {
+            showErrorDialog(IdeLocalize.errorNameShouldBeSpecified().get());
+            return false;
+        }
+
+        final boolean multiCreation = StringUtil.containsAnyChar(subDirName, myDelimiters);
+        if (!multiCreation) {
+            try {
+                myDirectory.checkCreateSubdirectory(subDirName);
+            }
+            catch (IncorrectOperationException ex) {
+                showErrorDialog(CreateElementActionBase.filterMessage(ex.getMessage()));
+                return false;
+            }
+        }
+
+        final Boolean createFile = suggestCreatingFileInstead(subDirName);
+        if (createFile == null) {
+            return false;
+        }
+
+        doCreateElement(subDirName, createFile);
+
+        return myCreatedElement != null;
     }
 
-    doCreateElement(subDirName, createFile);
+    @NonNls
+    @Nullable
+    private Boolean suggestCreatingFileInstead(String subDirName) {
+        boolean isDirectory = myType == CreateDirectoryOrPackageType.Directory;
 
-    return myCreatedElement != null;
-  }
+        Boolean createFile = false;
+        if (StringUtil.countChars(subDirName, '.') == 1 && Registry.is("ide.suggest.file.when.creating.filename.like.directory")) {
+            FileType fileType = findFileTypeBoundToName(subDirName);
+            if (fileType != null) {
+                String message =
+                    "The name you entered looks like a file name. Do you want to create a file named " + subDirName + " instead?";
+                int ec = Messages.showYesNoCancelDialog(
+                    myProject,
+                    message,
+                    "File Name Detected",
+                    "&Yes, create file",
+                    "&No, create " + (isDirectory ? "directory" : "packages"),
+                    CommonLocalize.buttonCancel().get(),
+                    fileType.getIcon()
+                );
+                if (ec == Messages.CANCEL) {
+                    createFile = null;
+                }
+                if (ec == Messages.YES) {
+                    createFile = true;
+                }
+            }
+        }
+        return createFile;
+    }
 
-  @NonNls
-  @Nullable
-  private Boolean suggestCreatingFileInstead(String subDirName) {
-    boolean isDirectory = myType == CreateDirectoryOrPackageType.Directory;
+    @Nullable
+    public static FileType findFileTypeBoundToName(String name) {
+        FileType fileType = FileTypeManager.getInstance().getFileTypeByFileName(name);
+        return fileType instanceof UnknownFileType ? null : fileType;
+    }
 
-    Boolean createFile = false;
-    if (StringUtil.countChars(subDirName, '.') == 1 && Registry.is("ide.suggest.file.when.creating.filename.like.directory")) {
-      FileType fileType = findFileTypeBoundToName(subDirName);
-      if (fileType != null) {
-        String message = "The name you entered looks like a file name. Do you want to create a file named " + subDirName + " instead?";
-        int ec = Messages.showYesNoCancelDialog(
-          myProject,
-          message,
-          "File Name Detected",
-          "&Yes, create file",
-          "&No, create " + (isDirectory ? "directory" : "packages"),
-          CommonLocalize.buttonCancel().get(),
-          fileType.getIcon()
+    private void doCreateElement(final String subDirName, final boolean createFile) {
+        boolean isDirectory = myType == CreateDirectoryOrPackageType.Directory;
+
+        Runnable command = () -> {
+            final Runnable run = () -> {
+                String dirPath = myDirectory.getVirtualFile().getPresentableUrl();
+                LocalizeValue actionName = IdeLocalize.progressCreatingDirectory(dirPath, File.separator, subDirName);
+                LocalHistoryAction action = LocalHistory.getInstance().startAction(actionName.get());
+                try {
+                    if (createFile) {
+                        CreateFileAction.MkDirs mkdirs = new CreateFileAction.MkDirs(subDirName, myDirectory);
+                        myCreatedElement = myType.createDirectory(mkdirs.directory, mkdirs.newName);
+                    }
+                    else {
+                        createDirectories(subDirName);
+                    }
+                }
+                catch (final IncorrectOperationException ex) {
+                    ApplicationManager.getApplication()
+                        .invokeLater(() -> showErrorDialog(CreateElementActionBase.filterMessage(ex.getMessage())));
+                }
+                finally {
+                    action.finish();
+                }
+            };
+            ApplicationManager.getApplication().runWriteAction(run);
+        };
+        CommandProcessor.getInstance().executeCommand(
+            myProject,
+            command,
+            createFile
+                ? IdeLocalize.commandCreateFile().get()
+                : isDirectory
+                ? IdeLocalize.commandCreateDirectory().get()
+                : IdeLocalize.commandCreatePackage().get(),
+            null
         );
-        if (ec == Messages.CANCEL) {
-          createFile = null;
-        }
-        if (ec == Messages.YES) {
-          createFile = true;
-        }
-      }
     }
-    return createFile;
-  }
 
-  @Nullable
-  public static FileType findFileTypeBoundToName(String name) {
-    FileType fileType = FileTypeManager.getInstance().getFileTypeByFileName(name);
-    return fileType instanceof UnknownFileType ? null : fileType;
-  }
-
-  private void doCreateElement(final String subDirName, final boolean createFile) {
-    boolean isDirectory = myType == CreateDirectoryOrPackageType.Directory;
-
-    Runnable command = () -> {
-      final Runnable run = () -> {
-        String dirPath = myDirectory.getVirtualFile().getPresentableUrl();
-        LocalizeValue actionName = IdeLocalize.progressCreatingDirectory(dirPath, File.separator, subDirName);
-        LocalHistoryAction action = LocalHistory.getInstance().startAction(actionName.get());
-        try {
-          if (createFile) {
-            CreateFileAction.MkDirs mkdirs = new CreateFileAction.MkDirs(subDirName, myDirectory);
-            myCreatedElement = myType.createDirectory(mkdirs.directory, mkdirs.newName);
-          }
-          else {
-            createDirectories(subDirName);
-          }
+    private void showErrorDialog(String message) {
+        LocalizeValue title = CommonLocalize.titleError();
+        Image icon = Messages.getErrorIcon();
+        if (myDialogParent != null) {
+            Messages.showMessageDialog(myDialogParent, message, title.get(), icon);
         }
-        catch (final IncorrectOperationException ex) {
-          ApplicationManager.getApplication()
-            .invokeLater(() -> showErrorDialog(CreateElementActionBase.filterMessage(ex.getMessage())));
+        else {
+            Messages.showMessageDialog(myProject, message, title.get(), icon);
         }
-        finally {
-          action.finish();
-        }
-      };
-      ApplicationManager.getApplication().runWriteAction(run);
-    };
-    CommandProcessor.getInstance().executeCommand(
-      myProject,
-      command,
-      createFile
-        ? IdeLocalize.commandCreateFile().get()
-        : isDirectory
-        ? IdeLocalize.commandCreateDirectory().get()
-        : IdeLocalize.commandCreatePackage().get(),
-      null);
-  }
-
-  private void showErrorDialog(String message) {
-    LocalizeValue title = CommonLocalize.titleError();
-    Image icon = Messages.getErrorIcon();
-    if (myDialogParent != null) {
-      Messages.showMessageDialog(myDialogParent, message, title.get(), icon);
     }
-    else {
-      Messages.showMessageDialog(myProject, message, title.get(), icon);
+
+    @RequiredUIAccess
+    protected void createDirectories(String subDirName) {
+        myCreatedElement = myType.createDirectory(myDirectory, subDirName);
     }
-  }
 
-  @RequiredUIAccess
-  protected void createDirectories(String subDirName) {
-    myCreatedElement = myType.createDirectory(myDirectory, subDirName);
-  }
-
-  @Nullable
-  public PsiFileSystemItem getCreatedElement() {
-    return myCreatedElement;
-  }
+    @Nullable
+    public PsiFileSystemItem getCreatedElement() {
+        return myCreatedElement;
+    }
 }

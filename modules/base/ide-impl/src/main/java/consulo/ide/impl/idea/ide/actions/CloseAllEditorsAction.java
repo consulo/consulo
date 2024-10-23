@@ -30,48 +30,48 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.virtualFileSystem.VirtualFile;
 
 public class CloseAllEditorsAction extends AnAction implements DumbAware {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(final AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
-    CommandProcessor commandProcessor = CommandProcessor.getInstance();
-    commandProcessor.executeCommand(
-      project,
-      () -> {
-        final FileEditorWindow window = e.getData(FileEditorWindow.DATA_KEY);
-        if (window != null) {
-          final VirtualFile[] files = window.getFiles();
-          for (final VirtualFile file : files) {
-            window.closeFile(file);
-          }
-          return;
-        }
-        FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
-        VirtualFile selectedFile = fileEditorManager.getSelectedFiles()[0];
-        VirtualFile[] openFiles = fileEditorManager.getSiblings(selectedFile);
-        for (final VirtualFile openFile : openFiles) {
-          fileEditorManager.closeFile(openFile);
-        }
-      },
-      IdeLocalize.commandCloseAllEditors().get(),
-      null
-    );
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent event) {
-    Presentation presentation = event.getPresentation();
-    final FileEditorWindow editorWindow = event.getData(FileEditorWindow.DATA_KEY);
-    LocalizeValue text = editorWindow != null && editorWindow.inSplitter()
-      ? IdeLocalize.actionCloseAllEditorsInTabGroup()
-      : IdeLocalize.actionCloseAllEditors();
-    presentation.setTextValue(text);
-    Project project = event.getData(Project.KEY);
-    if (project == null) {
-      presentation.setEnabled(false);
-      return;
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(final AnActionEvent e) {
+        final Project project = e.getData(Project.KEY);
+        CommandProcessor commandProcessor = CommandProcessor.getInstance();
+        commandProcessor.executeCommand(
+            project,
+            () -> {
+                final FileEditorWindow window = e.getData(FileEditorWindow.DATA_KEY);
+                if (window != null) {
+                    final VirtualFile[] files = window.getFiles();
+                    for (final VirtualFile file : files) {
+                        window.closeFile(file);
+                    }
+                    return;
+                }
+                FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
+                VirtualFile selectedFile = fileEditorManager.getSelectedFiles()[0];
+                VirtualFile[] openFiles = fileEditorManager.getSiblings(selectedFile);
+                for (final VirtualFile openFile : openFiles) {
+                    fileEditorManager.closeFile(openFile);
+                }
+            },
+            IdeLocalize.commandCloseAllEditors().get(),
+            null
+        );
     }
-    presentation.setEnabled(FileEditorManager.getInstance(project).getSelectedFiles().length > 0);
-  }
+
+    @Override
+    @RequiredUIAccess
+    public void update(AnActionEvent event) {
+        Presentation presentation = event.getPresentation();
+        final FileEditorWindow editorWindow = event.getData(FileEditorWindow.DATA_KEY);
+        LocalizeValue text = editorWindow != null && editorWindow.inSplitter()
+            ? IdeLocalize.actionCloseAllEditorsInTabGroup()
+            : IdeLocalize.actionCloseAllEditors();
+        presentation.setTextValue(text);
+        Project project = event.getData(Project.KEY);
+        if (project == null) {
+            presentation.setEnabled(false);
+            return;
+        }
+        presentation.setEnabled(FileEditorManager.getInstance(project).getSelectedFiles().length > 0);
+    }
 }
