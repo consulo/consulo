@@ -281,7 +281,6 @@ public abstract class UndoManagerImpl implements UndoManager, Disposable {
     }
 
     @Override
-    @RequiredUIAccess
     @RequiredWriteAction
     public void nonundoableActionPerformed(@Nonnull final DocumentReference ref, final boolean isGlobal) {
         Application.get().assertIsDispatchThread();
@@ -292,7 +291,6 @@ public abstract class UndoManagerImpl implements UndoManager, Disposable {
     }
 
     @Override
-    @RequiredUIAccess
     @RequiredWriteAction
     public void undoableActionPerformed(@Nonnull UndoableAction action) {
         Application.get().assertIsWriteThread();
@@ -307,7 +305,8 @@ public abstract class UndoManagerImpl implements UndoManager, Disposable {
         if (myCommandLevel == 0) {
             LOG.assertTrue(
                 action instanceof NonUndoableAction,
-                "Undoable actions allowed inside commands only (see consulo.ide.impl.idea.openapi.command.CommandProcessor.executeCommand())"
+                "Undoable actions allowed inside commands only " +
+                    "(see consulo.ide.impl.idea.openapi.command.CommandProcessor.newCommand().execute())"
             );
             commandStarted(UndoConfirmationPolicy.DEFAULT, false);
             myCurrentMerger.addAction(action);

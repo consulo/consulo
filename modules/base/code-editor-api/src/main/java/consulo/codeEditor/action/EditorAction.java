@@ -111,16 +111,11 @@ public abstract class EditorAction extends AnAction implements DumbAware, Update
             return;
         }
 
-        String commandName = getTemplatePresentation().getText();
-        if (commandName == null) {
-            commandName = "";
-        }
         CommandProcessor.getInstance().newCommand(command)
             .withProject(editor.getProject())
-            .withName(LocalizeValue.ofNullable(commandName))
-            .withGroupId(handler.getCommandGroupId(editor))
-            .withUndoConfirmationPolicy(UndoConfirmationPolicy.DEFAULT)
             .withDocument(editor.getDocument())
+            .withName(getTemplatePresentation().getTextValue())
+            .withGroupId(handler.getCommandGroupId(editor))
             .execute();
     }
 
