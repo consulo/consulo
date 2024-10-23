@@ -451,13 +451,13 @@ class ApplyPatchViewer implements DataProvider, Disposable {
     }
 
     @RequiredUIAccess
-    DiffImplUtil.WriteCommandBuilder newPatchCommand(@Nonnull final Runnable task) {
+    DiffImplUtil.WriteCommandBuilder newPatchCommand(@Nonnull @RequiredUIAccess Runnable task) {
         return myModel.newMergeCommand(false, null, task);
     }
 
     @Deprecated(forRemoval = true)
     @RequiredUIAccess
-    public void executeCommand(@Nullable String commandName, @Nonnull final Runnable task) {
+    public void executeCommand(@Nullable String commandName, @Nonnull @RequiredUIAccess Runnable task) {
         newPatchCommand(task).withName(LocalizeValue.ofNullable(commandName)).execute();
     }
 

@@ -897,12 +897,12 @@ public class DiffImplUtil {
     }
 
     @RequiredUIAccess
-    public static WriteCommandBuilder newWriteCommand(@Nonnull Runnable command) {
+    public static WriteCommandBuilder newWriteCommand(@Nonnull @RequiredUIAccess Runnable command) {
         return new MyCommandBuilder(command);
     }
 
     @RequiredUIAccess
-    public static WriteCommandBuilder newBulkUpdateWriteCommand(@Nonnull Runnable command) {
+    public static WriteCommandBuilder newBulkUpdateWriteCommand(@Nonnull @RequiredUIAccess Runnable command) {
         return MyCommandBuilder.underBulkUpdate(command);
     }
 
