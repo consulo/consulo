@@ -44,7 +44,8 @@ public abstract class CommandProcessor {
     public abstract ExecutableCommandBuilder newCommand(@Nonnull Runnable command);
 
     @Deprecated
-    @DeprecationInfo("Use #executeCommand(CommandDescriptor)")
+    @DeprecationInfo("Use #newCommand(Runnable).execute()")
+    @RequiredUIAccess
     public void executeCommand(@Nonnull Runnable runnable, @Nullable String name, @Nullable Object groupId) {
         newCommand(runnable)
             .withName(LocalizeValue.ofNullable(name))
@@ -53,7 +54,8 @@ public abstract class CommandProcessor {
     }
 
     @Deprecated
-    @DeprecationInfo("Use #executeCommand(CommandDescriptor)")
+    @DeprecationInfo("Use #newCommand(Runnable).execute()")
+    @RequiredUIAccess
     public void executeCommand(
         @Nullable Project project,
         @Nonnull Runnable runnable,
@@ -68,7 +70,8 @@ public abstract class CommandProcessor {
     }
 
     @Deprecated
-    @DeprecationInfo("Use #executeCommand(CommandDescriptor)")
+    @DeprecationInfo("Use #newCommand(Runnable).execute()")
+    @RequiredUIAccess
     public void executeCommand(
         @Nullable Project project,
         @Nonnull Runnable runnable,
@@ -85,7 +88,8 @@ public abstract class CommandProcessor {
     }
 
     @Deprecated
-    @DeprecationInfo("Use #executeCommand(CommandDescriptor)")
+    @DeprecationInfo("Use #newCommand(Runnable).execute()")
+    @RequiredUIAccess
     public void executeCommand(
         @Nullable Project project,
         @Nonnull Runnable runnable,
@@ -102,7 +106,8 @@ public abstract class CommandProcessor {
     }
 
     @Deprecated
-    @DeprecationInfo("Use #executeCommand(CommandDescriptor)")
+    @DeprecationInfo("Use #newCommand(Runnable).execute()")
+    @RequiredUIAccess
     public void executeCommand(
         @Nullable Project project,
         @Nonnull Runnable command,
@@ -127,7 +132,8 @@ public abstract class CommandProcessor {
      *                                             Default is {@code true}.
      */
     @Deprecated
-    @DeprecationInfo("Use #executeCommand(CommandDescriptor)")
+    @DeprecationInfo("Use #newCommand(Runnable).execute()")
+    @RequiredUIAccess
     public void executeCommand(
         @Nullable Project project,
         @Nonnull Runnable command,
