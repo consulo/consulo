@@ -55,178 +55,186 @@ import java.io.File;
 import java.util.List;
 
 public class MoveFilesOrDirectoriesDialog extends DialogWrapper {
-  private static final String RECENT_KEYS = "MoveFile.RECENT_KEYS";
-  private static final String MOVE_FILES_OPEN_IN_EDITOR = "MoveFile.OpenInEditor";
+    private static final String RECENT_KEYS = "MoveFile.RECENT_KEYS";
+    private static final String MOVE_FILES_OPEN_IN_EDITOR = "MoveFile.OpenInEditor";
 
-
-  public interface Callback {
-    void run(MoveFilesOrDirectoriesDialog dialog);
-  }
-
-  private JLabel myNameLabel;
-  private TextFieldWithHistoryWithBrowseButton myTargetDirectoryField;
-  private String myHelpID;
-  private final Project myProject;
-  private final Callback myCallback;
-  private PsiDirectory myTargetDirectory;
-  private CheckBox myCbSearchForReferences;
-  private CheckBox myOpenInEditorCb;
-
-  public MoveFilesOrDirectoriesDialog(Project project, Callback callback) {
-    super(project, true);
-    myProject = project;
-    myCallback = callback;
-    setTitle(RefactoringLocalize.moveTitle());
-    init();
-  }
-
-  @Override
-  @Nonnull
-  protected Action[] createActions() {
-    return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};
-  }
-
-  @RequiredUIAccess
-  @Override
-  public JComponent getPreferredFocusedComponent() {
-    return myTargetDirectoryField;
-  }
-
-  @Override
-  protected JComponent createCenterPanel() {
-    return null;
-  }
-
-  @Override
-  @RequiredUIAccess
-  protected JComponent createNorthPanel() {
-    myNameLabel = JBLabelDecorator.createJBLabelDecorator().setBold(true);
-
-    myTargetDirectoryField = new TextFieldWithHistoryWithBrowseButton();
-    final List<String> recentEntries = RecentsManager.getInstance(myProject).getRecentEntries(RECENT_KEYS);
-    if (recentEntries != null) {
-      myTargetDirectoryField.getChildComponent().setHistory(recentEntries);
-    }
-    final FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
-    myTargetDirectoryField.addBrowseFolderListener(
-      RefactoringLocalize.selectTargetDirectory().get(),
-      RefactoringLocalize.theFileWillBeMovedToThisDirectory().get(),
-      myProject,
-      descriptor,
-      TextComponentAccessor.TEXT_FIELD_WITH_HISTORY_WHOLE_TEXT
-    );
-    final JTextField textField = myTargetDirectoryField.getChildComponent().getTextEditor();
-    FileChooserFactory.getInstance().installFileCompletion(textField, descriptor, true, getDisposable());
-    textField.getDocument().addDocumentListener(new DocumentAdapter() {
-      @Override
-      protected void textChanged(DocumentEvent e) {
-        validateOKButton();
-      }
-    });
-    myTargetDirectoryField.setTextFieldPreferredWidth(CopyFilesOrDirectoriesDialog.MAX_PATH_LENGTH);
-    Disposer.register(getDisposable(), myTargetDirectoryField);
-
-    String shortcutText = KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction(IdeActions.ACTION_CODE_COMPLETION));
-
-    myCbSearchForReferences = CheckBox.create(RefactoringLocalize.searchForReferences());
-    myCbSearchForReferences.setValue(RefactoringSettings.getInstance().MOVE_SEARCH_FOR_REFERENCES_FOR_FILE);
-    NonFocusableSetting.initFocusability(myCbSearchForReferences);
-
-    myOpenInEditorCb = CheckBox.create(LocalizeValue.localizeTODO("Open moved files in editor"));
-    myOpenInEditorCb.setValue(isOpenInEditor());
-    NonFocusableSetting.initFocusability(myOpenInEditorCb);
-
-    return FormBuilder.createFormBuilder().addComponent(myNameLabel)
-                      .addLabeledComponent(RefactoringLocalize.moveFilesToDirectoryLabel().get(), myTargetDirectoryField, UIUtil.LARGE_VGAP)
-                      .addTooltip(RefactoringLocalize.pathCompletionShortcut(shortcutText).get())
-                      .addComponentToRightColumn((JComponent)TargetAWT.to(myCbSearchForReferences), UIUtil.LARGE_VGAP)
-                      .addComponentToRightColumn((JComponent)TargetAWT.to(myOpenInEditorCb), UIUtil.LARGE_VGAP)
-                      .getPanel();
-  }
-
-  public void setData(PsiElement[] psiElements, PsiDirectory initialTargetDirectory, @NonNls String helpID) {
-    if (psiElements.length == 1) {
-      LocalizeValue text = psiElements[0] instanceof PsiFile file
-        ? RefactoringLocalize.moveFile0(CopyFilesOrDirectoriesDialog.shortenPath(file.getVirtualFile()))
-        : RefactoringLocalize.moveDirectory0(CopyFilesOrDirectoriesDialog.shortenPath(((PsiDirectory)psiElements[0]).getVirtualFile()));
-      myNameLabel.setText(text.get());
-    }
-    else {
-      boolean isFile = true;
-      boolean isDirectory = true;
-      for (PsiElement psiElement : psiElements) {
-        isFile &= psiElement instanceof PsiFile;
-        isDirectory &= psiElement instanceof PsiDirectory;
-      }
-      LocalizeValue text = isFile ? RefactoringLocalize.moveSpecifiedFiles()
-        : isDirectory ? RefactoringLocalize.moveSpecifiedDirectories() : RefactoringLocalize.moveSpecifiedElements();
-      myNameLabel.setText(text.get());
+    public interface Callback {
+        void run(MoveFilesOrDirectoriesDialog dialog);
     }
 
-    final String initialTargetPath = initialTargetDirectory == null ? "" : initialTargetDirectory.getVirtualFile().getPresentableUrl();
-    myTargetDirectoryField.getChildComponent().setText(initialTargetPath);
-    final int lastDirectoryIdx = initialTargetPath.lastIndexOf(File.separator);
-    final int textLength = initialTargetPath.length();
-    if (lastDirectoryIdx > 0 && lastDirectoryIdx + 1 < textLength) {
-      myTargetDirectoryField.getChildComponent().getTextEditor().select(lastDirectoryIdx + 1, textLength);
+    private JLabel myNameLabel;
+    private TextFieldWithHistoryWithBrowseButton myTargetDirectoryField;
+    private String myHelpID;
+    private final Project myProject;
+    private final Callback myCallback;
+    private PsiDirectory myTargetDirectory;
+    private CheckBox myCbSearchForReferences;
+    private CheckBox myOpenInEditorCb;
+
+    public MoveFilesOrDirectoriesDialog(Project project, Callback callback) {
+        super(project, true);
+        myProject = project;
+        myCallback = callback;
+        setTitle(RefactoringLocalize.moveTitle());
+        init();
     }
 
-    validateOKButton();
-    myHelpID = helpID;
-  }
-
-  @Override
-  protected void doHelpAction() {
-    HelpManager.getInstance().invokeHelp(myHelpID);
-  }
-
-  public static boolean isOpenInEditor() {
-    return ApplicationPropertiesComponent.getInstance().getBoolean(MOVE_FILES_OPEN_IN_EDITOR, false);
-  }
-
-  private void validateOKButton() {
-    setOKActionEnabled(myTargetDirectoryField.getChildComponent().getText().length() > 0);
-  }
-
-  @Override
-  @RequiredUIAccess
-  protected void doOKAction() {
-    ApplicationPropertiesComponent.getInstance().setValue(MOVE_FILES_OPEN_IN_EDITOR, myOpenInEditorCb.getValue(), false);
-    //myTargetDirectoryField.getChildComponent().addCurrentTextToHistory();
-    RecentsManager.getInstance(myProject).registerRecentEntry(RECENT_KEYS, myTargetDirectoryField.getChildComponent().getText());
-    RefactoringSettings.getInstance().MOVE_SEARCH_FOR_REFERENCES_FOR_FILE = myCbSearchForReferences.getValue();
-
-    if (DumbService.isDumb(myProject)) {
-      Messages.showMessageDialog(myProject, "Move refactoring is not available while indexing is in progress", "Indexing", null);
-      return;
+    @Override
+    @Nonnull
+    protected Action[] createActions() {
+        return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};
     }
 
-    CommandProcessor.getInstance().executeCommand(
-      myProject,
-      () -> {
-        final Runnable action = () -> {
-          String directoryName = myTargetDirectoryField.getChildComponent().getText().replace(File.separatorChar, '/');
-          try {
-            myTargetDirectory = DirectoryUtil.mkdirs(PsiManager.getInstance(myProject), directoryName);
-          }
-          catch (IncorrectOperationException e) {
-            // ignore
-          }
-        };
+    @RequiredUIAccess
+    @Override
+    public JComponent getPreferredFocusedComponent() {
+        return myTargetDirectoryField;
+    }
 
-        myProject.getApplication().runWriteAction(action);
-        if (myTargetDirectory == null) {
-          CommonRefactoringUtil.showErrorMessage(getTitle(), RefactoringLocalize.cannotCreateDirectory().get(), myHelpID, myProject);
-          return;
+    @Override
+    protected JComponent createCenterPanel() {
+        return null;
+    }
+
+    @Override
+    @RequiredUIAccess
+    protected JComponent createNorthPanel() {
+        myNameLabel = JBLabelDecorator.createJBLabelDecorator().setBold(true);
+
+        myTargetDirectoryField = new TextFieldWithHistoryWithBrowseButton();
+        final List<String> recentEntries = RecentsManager.getInstance(myProject).getRecentEntries(RECENT_KEYS);
+        if (recentEntries != null) {
+            myTargetDirectoryField.getChildComponent().setHistory(recentEntries);
         }
-        myCallback.run(this);
-      },
-      RefactoringLocalize.moveTitle().get(),
-      null
-    );
-  }
+        final FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
+        myTargetDirectoryField.addBrowseFolderListener(
+            RefactoringLocalize.selectTargetDirectory().get(),
+            RefactoringLocalize.theFileWillBeMovedToThisDirectory().get(),
+            myProject,
+            descriptor,
+            TextComponentAccessor.TEXT_FIELD_WITH_HISTORY_WHOLE_TEXT
+        );
+        final JTextField textField = myTargetDirectoryField.getChildComponent().getTextEditor();
+        FileChooserFactory.getInstance().installFileCompletion(textField, descriptor, true, getDisposable());
+        textField.getDocument().addDocumentListener(new DocumentAdapter() {
+            @Override
+            protected void textChanged(DocumentEvent e) {
+                validateOKButton();
+            }
+        });
+        myTargetDirectoryField.setTextFieldPreferredWidth(CopyFilesOrDirectoriesDialog.MAX_PATH_LENGTH);
+        Disposer.register(getDisposable(), myTargetDirectoryField);
 
-  public PsiDirectory getTargetDirectory() {
-    return myTargetDirectory;
-  }
+        String shortcutText =
+            KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction(IdeActions.ACTION_CODE_COMPLETION));
+
+        myCbSearchForReferences = CheckBox.create(RefactoringLocalize.searchForReferences());
+        myCbSearchForReferences.setValue(RefactoringSettings.getInstance().MOVE_SEARCH_FOR_REFERENCES_FOR_FILE);
+        NonFocusableSetting.initFocusability(myCbSearchForReferences);
+
+        myOpenInEditorCb = CheckBox.create(LocalizeValue.localizeTODO("Open moved files in editor"));
+        myOpenInEditorCb.setValue(isOpenInEditor());
+        NonFocusableSetting.initFocusability(myOpenInEditorCb);
+
+        return FormBuilder.createFormBuilder().addComponent(myNameLabel)
+            .addLabeledComponent(RefactoringLocalize.moveFilesToDirectoryLabel().get(), myTargetDirectoryField, UIUtil.LARGE_VGAP)
+            .addTooltip(RefactoringLocalize.pathCompletionShortcut(shortcutText).get())
+            .addComponentToRightColumn((JComponent)TargetAWT.to(myCbSearchForReferences), UIUtil.LARGE_VGAP)
+            .addComponentToRightColumn((JComponent)TargetAWT.to(myOpenInEditorCb), UIUtil.LARGE_VGAP)
+            .getPanel();
+    }
+
+    public void setData(PsiElement[] psiElements, PsiDirectory initialTargetDirectory, @NonNls String helpID) {
+        if (psiElements.length == 1) {
+            LocalizeValue text = psiElements[0] instanceof PsiFile file
+                ? RefactoringLocalize.moveFile0(CopyFilesOrDirectoriesDialog.shortenPath(file.getVirtualFile()))
+                : RefactoringLocalize.moveDirectory0(CopyFilesOrDirectoriesDialog.shortenPath(((PsiDirectory)psiElements[0]).getVirtualFile()));
+            myNameLabel.setText(text.get());
+        }
+        else {
+            boolean isFile = true;
+            boolean isDirectory = true;
+            for (PsiElement psiElement : psiElements) {
+                isFile &= psiElement instanceof PsiFile;
+                isDirectory &= psiElement instanceof PsiDirectory;
+            }
+            LocalizeValue text = isFile
+                ? RefactoringLocalize.moveSpecifiedFiles()
+                : isDirectory
+                ? RefactoringLocalize.moveSpecifiedDirectories()
+                : RefactoringLocalize.moveSpecifiedElements();
+            myNameLabel.setText(text.get());
+        }
+
+        final String initialTargetPath = initialTargetDirectory == null ? "" : initialTargetDirectory.getVirtualFile().getPresentableUrl();
+        myTargetDirectoryField.getChildComponent().setText(initialTargetPath);
+        final int lastDirectoryIdx = initialTargetPath.lastIndexOf(File.separator);
+        final int textLength = initialTargetPath.length();
+        if (lastDirectoryIdx > 0 && lastDirectoryIdx + 1 < textLength) {
+            myTargetDirectoryField.getChildComponent().getTextEditor().select(lastDirectoryIdx + 1, textLength);
+        }
+
+        validateOKButton();
+        myHelpID = helpID;
+    }
+
+    @Override
+    protected void doHelpAction() {
+        HelpManager.getInstance().invokeHelp(myHelpID);
+    }
+
+    public static boolean isOpenInEditor() {
+        return ApplicationPropertiesComponent.getInstance().getBoolean(MOVE_FILES_OPEN_IN_EDITOR, false);
+    }
+
+    private void validateOKButton() {
+        setOKActionEnabled(myTargetDirectoryField.getChildComponent().getText().length() > 0);
+    }
+
+    @Override
+    @RequiredUIAccess
+    protected void doOKAction() {
+        ApplicationPropertiesComponent.getInstance().setValue(MOVE_FILES_OPEN_IN_EDITOR, myOpenInEditorCb.getValue(), false);
+        //myTargetDirectoryField.getChildComponent().addCurrentTextToHistory();
+        RecentsManager.getInstance(myProject).registerRecentEntry(RECENT_KEYS, myTargetDirectoryField.getChildComponent().getText());
+        RefactoringSettings.getInstance().MOVE_SEARCH_FOR_REFERENCES_FOR_FILE = myCbSearchForReferences.getValue();
+
+        if (DumbService.isDumb(myProject)) {
+            Messages.showMessageDialog(myProject, "Move refactoring is not available while indexing is in progress", "Indexing", null);
+            return;
+        }
+
+        CommandProcessor.getInstance().executeCommand(
+            myProject,
+            () -> {
+                final Runnable action = () -> {
+                    String directoryName = myTargetDirectoryField.getChildComponent().getText().replace(File.separatorChar, '/');
+                    try {
+                        myTargetDirectory = DirectoryUtil.mkdirs(PsiManager.getInstance(myProject), directoryName);
+                    }
+                    catch (IncorrectOperationException e) {
+                        // ignore
+                    }
+                };
+
+                myProject.getApplication().runWriteAction(action);
+                if (myTargetDirectory == null) {
+                    CommonRefactoringUtil.showErrorMessage(
+                        getTitle(),
+                        RefactoringLocalize.cannotCreateDirectory().get(),
+                        myHelpID,
+                        myProject
+                    );
+                    return;
+                }
+                myCallback.run(this);
+            },
+            RefactoringLocalize.moveTitle().get(),
+            null
+        );
+    }
+
+    public PsiDirectory getTargetDirectory() {
+        return myTargetDirectory;
+    }
 }

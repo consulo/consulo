@@ -54,92 +54,99 @@ import java.util.Set;
  * @author Rustam Vishnyakov
  */
 public class GotoCustomRegionAction extends AnAction implements DumbAware, PopupAction {
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull final AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
-    final Editor editor = e.getData(Editor.KEY);
-    if (Boolean.TRUE.equals(e.getData(PlatformDataKeys.IS_MODAL_CONTEXT))) {
-      return;
-    }
-    if (project != null && editor != null) {
-      if (DumbService.getInstance(project).isDumb()) {
-        DumbService.getInstance(project).showDumbModeNotification(IdeLocalize.gotoCustomRegionMessageDumbMode().get());
-        return;
-      }
-      CommandProcessor processor = CommandProcessor.getInstance();
-      processor.executeCommand(project, () -> {
-        Collection<FoldingDescriptor> foldingDescriptors = getCustomFoldingDescriptors(editor, project);
-        if (foldingDescriptors.size() > 0) {
-          CustomFoldingRegionsPopup regionsPopup = new CustomFoldingRegionsPopup(foldingDescriptors, editor, project);
-          regionsPopup.show();
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull final AnActionEvent e) {
+        final Project project = e.getData(Project.KEY);
+        final Editor editor = e.getData(Editor.KEY);
+        if (Boolean.TRUE.equals(e.getData(PlatformDataKeys.IS_MODAL_CONTEXT))) {
+            return;
         }
-        else {
-          notifyCustomRegionsUnavailable(editor, project);
-        }
-      }, IdeLocalize.gotoCustomRegionCommand().get(), null);
-    }
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    Presentation presentation = e.getPresentation();
-    presentation.setTextValue(IdeLocalize.gotoCustomRegionMenuItem());
-    final Editor editor = e.getData(Editor.KEY);
-    final Project project = e.getData(Project.KEY);
-    boolean isAvailable = editor != null && project != null;
-    presentation.setEnabled(isAvailable);
-    presentation.setVisible(isAvailable);
-  }
-
-  @Nonnull
-  @RequiredReadAction
-  private static Collection<FoldingDescriptor> getCustomFoldingDescriptors(@Nonnull Editor editor, @Nonnull Project project) {
-    Set<FoldingDescriptor> foldingDescriptors = new HashSet<>();
-    final Document document = editor.getDocument();
-    PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
-    PsiFile file = documentManager != null ? documentManager.getPsiFile(document) : null;
-    if (file != null) {
-      final FileViewProvider viewProvider = file.getViewProvider();
-      for (final Language language : viewProvider.getLanguages()) {
-        final PsiFile psi = viewProvider.getPsi(language);
-        final FoldingBuilder foldingBuilder = FoldingBuilder.forLanguageComposite(language);
-        if (psi != null) {
-          for (FoldingDescriptor descriptor : LanguageFolding.buildFoldingDescriptors(foldingBuilder, psi, document, false)) {
-            CustomFoldingBuilder customFoldingBuilder = getCustomFoldingBuilder(foldingBuilder, descriptor);
-            if (customFoldingBuilder != null) {
-              if (customFoldingBuilder.isCustomRegionStart(descriptor.getElement())) {
-                foldingDescriptors.add(descriptor);
-              }
+        if (project != null && editor != null) {
+            if (DumbService.getInstance(project).isDumb()) {
+                DumbService.getInstance(project).showDumbModeNotification(IdeLocalize.gotoCustomRegionMessageDumbMode().get());
+                return;
             }
-          }
+            CommandProcessor processor = CommandProcessor.getInstance();
+            processor.executeCommand(
+                project,
+                () -> {
+                    Collection<FoldingDescriptor> foldingDescriptors = getCustomFoldingDescriptors(editor, project);
+                    if (foldingDescriptors.size() > 0) {
+                        CustomFoldingRegionsPopup regionsPopup = new CustomFoldingRegionsPopup(foldingDescriptors, editor, project);
+                        regionsPopup.show();
+                    }
+                    else {
+                        notifyCustomRegionsUnavailable(editor, project);
+                    }
+                },
+                IdeLocalize.gotoCustomRegionCommand().get(),
+                null
+            );
         }
-      }
     }
-    return foldingDescriptors;
-  }
 
-  @Nullable
-  private static CustomFoldingBuilder getCustomFoldingBuilder(FoldingBuilder builder, FoldingDescriptor descriptor) {
-    if (builder instanceof CustomFoldingBuilder) return (CustomFoldingBuilder)builder;
-    FoldingBuilder originalBuilder = descriptor.getElement().getUserData(CompositeFoldingBuilder.FOLDING_BUILDER);
-    if (originalBuilder instanceof CustomFoldingBuilder) return (CustomFoldingBuilder)originalBuilder;
-    return null;
-  }
+    @RequiredUIAccess
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
+        presentation.setTextValue(IdeLocalize.gotoCustomRegionMenuItem());
+        final Editor editor = e.getData(Editor.KEY);
+        final Project project = e.getData(Project.KEY);
+        boolean isAvailable = editor != null && project != null;
+        presentation.setEnabled(isAvailable);
+        presentation.setVisible(isAvailable);
+    }
 
-  private static void notifyCustomRegionsUnavailable(@Nonnull Editor editor, @Nonnull Project project) {
-    final JBPopupFactory popupFactory = JBPopupFactory.getInstance();
-    Balloon balloon = popupFactory.createHtmlTextBalloonBuilder(
-        IdeLocalize.gotoCustomRegionMessageUnavailable().get(),
-        NotificationType.INFO,
-        null
-      )
-      .setFadeoutTime(2000)
-      .setHideOnClickOutside(true)
-      .setHideOnKeyOutside(true)
-      .createBalloon();
-    Disposer.register(project, balloon);
-    balloon.show(EditorPopupHelper.getInstance().guessBestPopupLocation(editor), Balloon.Position.below);
-  }
+    @Nonnull
+    @RequiredReadAction
+    private static Collection<FoldingDescriptor> getCustomFoldingDescriptors(@Nonnull Editor editor, @Nonnull Project project) {
+        Set<FoldingDescriptor> foldingDescriptors = new HashSet<>();
+        final Document document = editor.getDocument();
+        PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
+        PsiFile file = documentManager != null ? documentManager.getPsiFile(document) : null;
+        if (file != null) {
+            final FileViewProvider viewProvider = file.getViewProvider();
+            for (final Language language : viewProvider.getLanguages()) {
+                final PsiFile psi = viewProvider.getPsi(language);
+                final FoldingBuilder foldingBuilder = FoldingBuilder.forLanguageComposite(language);
+                if (psi != null) {
+                    for (FoldingDescriptor descriptor : LanguageFolding.buildFoldingDescriptors(foldingBuilder, psi, document, false)) {
+                        CustomFoldingBuilder customFoldingBuilder = getCustomFoldingBuilder(foldingBuilder, descriptor);
+                        if (customFoldingBuilder != null && customFoldingBuilder.isCustomRegionStart(descriptor.getElement())) {
+                            foldingDescriptors.add(descriptor);
+                        }
+                    }
+                }
+            }
+        }
+        return foldingDescriptors;
+    }
+
+    @Nullable
+    private static CustomFoldingBuilder getCustomFoldingBuilder(FoldingBuilder builder, FoldingDescriptor descriptor) {
+        if (builder instanceof CustomFoldingBuilder) {
+            return (CustomFoldingBuilder)builder;
+        }
+        FoldingBuilder originalBuilder = descriptor.getElement().getUserData(CompositeFoldingBuilder.FOLDING_BUILDER);
+        if (originalBuilder instanceof CustomFoldingBuilder) {
+            return (CustomFoldingBuilder)originalBuilder;
+        }
+        return null;
+    }
+
+    private static void notifyCustomRegionsUnavailable(@Nonnull Editor editor, @Nonnull Project project) {
+        final JBPopupFactory popupFactory = JBPopupFactory.getInstance();
+        Balloon balloon = popupFactory.createHtmlTextBalloonBuilder(
+                IdeLocalize.gotoCustomRegionMessageUnavailable().get(),
+                NotificationType.INFO,
+                null
+            )
+            .setFadeoutTime(2000)
+            .setHideOnClickOutside(true)
+            .setHideOnKeyOutside(true)
+            .createBalloon();
+        Disposer.register(project, balloon);
+        balloon.show(EditorPopupHelper.getInstance().guessBestPopupLocation(editor), Balloon.Position.below);
+    }
 }

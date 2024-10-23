@@ -36,117 +36,120 @@ import consulo.undoRedo.CommandProcessor;
 import jakarta.annotation.Nonnull;
 
 public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements HintManagerImpl.ActionToIgnore, DumbAware, PopupAction {
-  @SuppressWarnings("SpellCheckingInspection") public static final String CODEASSISTS_QUICKJAVADOC_FEATURE = "codeassists.quickjavadoc";
-  @SuppressWarnings("SpellCheckingInspection") public static final String CODEASSISTS_QUICKJAVADOC_LOOKUP_FEATURE = "codeassists.quickjavadoc.lookup";
-  @SuppressWarnings("SpellCheckingInspection") public static final String CODEASSISTS_QUICKJAVADOC_CTRLN_FEATURE = "codeassists.quickjavadoc.ctrln";
+    @SuppressWarnings("SpellCheckingInspection")
+    public static final String CODEASSISTS_QUICKJAVADOC_FEATURE = "codeassists.quickjavadoc";
+    @SuppressWarnings("SpellCheckingInspection")
+    public static final String CODEASSISTS_QUICKJAVADOC_LOOKUP_FEATURE = "codeassists.quickjavadoc.lookup";
+    @SuppressWarnings("SpellCheckingInspection")
+    public static final String CODEASSISTS_QUICKJAVADOC_CTRLN_FEATURE = "codeassists.quickjavadoc.ctrln";
 
-  public ShowQuickDocInfoAction() {
-    setEnabledInModalContext(true);
-    setInjectedContext(true);
-  }
-
-  @Nonnull
-  @Override
-  protected CodeInsightActionHandler getHandler() {
-    return new CodeInsightActionHandler() {
-      @RequiredUIAccess
-      @Override
-      public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
-        DocumentationManager.getInstance(project).showJavaDocInfo(editor, file, LookupManager.getActiveLookup(editor) == null);
-      }
-
-      @Override
-      public boolean startInWriteAction() {
-        return false;
-      }
-    };
-  }
-
-  @Override
-  protected boolean isValidForLookup() {
-    return true;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void update(AnActionEvent event) {
-    Presentation presentation = event.getPresentation();
-
-    Project project = event.getData(Project.KEY);
-    if (project == null) {
-      presentation.setEnabled(false);
-      return;
+    public ShowQuickDocInfoAction() {
+        setEnabledInModalContext(true);
+        setInjectedContext(true);
     }
 
-    Editor editor = event.getData(Editor.KEY);
-    PsiElement element = event.getData(PsiElement.KEY);
-    if (editor == null && element == null) {
-      presentation.setEnabled(false);
-      return;
-    }
-
-    if (LookupManager.getInstance(project).getActiveLookup() != null) {
-      if (!isValidForLookup()) {
-        presentation.setEnabled(false);
-      }
-      else {
-        presentation.setEnabled(true);
-      }
-    }
-    else {
-      if (editor != null) {
-        if (event.getData(EditorGutter.KEY) != null) {
-          presentation.setEnabled(false);
-          return;
-        }
-        PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
-        if (file == null) {
-          presentation.setEnabled(false);
-        }
-
-        if (element == null && file != null) {
-          try {
-            final PsiReference ref = file.findReferenceAt(editor.getCaretModel().getOffset());
-            if (ref instanceof PsiPolyVariantReference) {
-              element = ref.getElement();
+    @Nonnull
+    @Override
+    protected CodeInsightActionHandler getHandler() {
+        return new CodeInsightActionHandler() {
+            @RequiredUIAccess
+            @Override
+            public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+                DocumentationManager.getInstance(project).showJavaDocInfo(editor, file, LookupManager.getActiveLookup(editor) == null);
             }
-          }
-          catch (IndexNotReadyException e) {
-            element = null;
-          }
+
+            @Override
+            public boolean startInWriteAction() {
+                return false;
+            }
+        };
+    }
+
+    @Override
+    protected boolean isValidForLookup() {
+        return true;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void update(AnActionEvent event) {
+        Presentation presentation = event.getPresentation();
+
+        Project project = event.getData(Project.KEY);
+        if (project == null) {
+            presentation.setEnabled(false);
+            return;
         }
-      }
 
-      if (element != null) {
-        presentation.setEnabled(true);
-      }
-    }
-  }
+        Editor editor = event.getData(Editor.KEY);
+        PsiElement element = event.getData(PsiElement.KEY);
+        if (editor == null && element == null) {
+            presentation.setEnabled(false);
+            return;
+        }
 
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
-    final Editor editor = e.getData(Editor.KEY);
-    final PsiElement element = e.getData(PsiElement.KEY);
+        if (LookupManager.getInstance(project).getActiveLookup() != null) {
+            if (!isValidForLookup()) {
+                presentation.setEnabled(false);
+            }
+            else {
+                presentation.setEnabled(true);
+            }
+        }
+        else {
+            if (editor != null) {
+                if (event.getData(EditorGutter.KEY) != null) {
+                    presentation.setEnabled(false);
+                    return;
+                }
+                PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+                if (file == null) {
+                    presentation.setEnabled(false);
+                }
 
-    if (project != null && editor != null) {
-      FeatureUsageTracker.getInstance().triggerFeatureUsed(CODEASSISTS_QUICKJAVADOC_FEATURE);
-      final LookupEx lookup = LookupManager.getInstance(project).getActiveLookup();
-      if (lookup != null) {
-        //dumpLookupElementWeights(lookup);
-        FeatureUsageTracker.getInstance().triggerFeatureUsed(CODEASSISTS_QUICKJAVADOC_LOOKUP_FEATURE);
-      }
-      actionPerformedImpl(project, editor);
+                if (element == null && file != null) {
+                    try {
+                        final PsiReference ref = file.findReferenceAt(editor.getCaretModel().getOffset());
+                        if (ref instanceof PsiPolyVariantReference) {
+                            element = ref.getElement();
+                        }
+                    }
+                    catch (IndexNotReadyException e) {
+                        element = null;
+                    }
+                }
+            }
+
+            if (element != null) {
+                presentation.setEnabled(true);
+            }
+        }
     }
-    else if (project != null && element != null) {
-      FeatureUsageTracker.getInstance().triggerFeatureUsed(CODEASSISTS_QUICKJAVADOC_CTRLN_FEATURE);
-      CommandProcessor.getInstance().executeCommand(
-        project,
-        () -> DocumentationManager.getInstance(project)
-          .showJavaDocInfo(element, null), getCommandName(),
-        null
-      );
+
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        final Project project = e.getData(Project.KEY);
+        final Editor editor = e.getData(Editor.KEY);
+        final PsiElement element = e.getData(PsiElement.KEY);
+
+        if (project != null && editor != null) {
+            FeatureUsageTracker.getInstance().triggerFeatureUsed(CODEASSISTS_QUICKJAVADOC_FEATURE);
+            final LookupEx lookup = LookupManager.getInstance(project).getActiveLookup();
+            if (lookup != null) {
+                //dumpLookupElementWeights(lookup);
+                FeatureUsageTracker.getInstance().triggerFeatureUsed(CODEASSISTS_QUICKJAVADOC_LOOKUP_FEATURE);
+            }
+            actionPerformedImpl(project, editor);
+        }
+        else if (project != null && element != null) {
+            FeatureUsageTracker.getInstance().triggerFeatureUsed(CODEASSISTS_QUICKJAVADOC_CTRLN_FEATURE);
+            CommandProcessor.getInstance().executeCommand(
+                project,
+                () -> DocumentationManager.getInstance(project).showJavaDocInfo(element, null),
+                getCommandName(),
+                null
+            );
+        }
     }
-  }
 }

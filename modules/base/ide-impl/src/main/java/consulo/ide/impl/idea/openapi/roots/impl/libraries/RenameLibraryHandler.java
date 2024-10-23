@@ -65,7 +65,8 @@ public class RenameLibraryHandler implements RenameHandler, TitledHandler {
     public void invoke(@Nonnull final Project project, @Nonnull PsiElement[] elements, @Nonnull DataContext dataContext) {
         final Library library = dataContext.getData(Library.KEY);
         LOG.assertTrue(library != null);
-        Messages.showInputDialog(project,
+        Messages.showInputDialog(
+            project,
             IdeLocalize.promptEnterNewLibraryName().get(),
             IdeLocalize.titleRenameLibrary().get(),
             UIUtil.getQuestionIcon(),
@@ -144,5 +145,4 @@ public class RenameLibraryHandler implements RenameHandler, TitledHandler {
             return modifiableModel;
         }
     }
-
 }
