@@ -4,10 +4,12 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiNavigateUtil;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
@@ -35,8 +37,8 @@ public abstract class ClassRefactoringHandlerBase implements RefactoringActionHa
 
         while (true) {
             if (element == null || element instanceof PsiFile) {
-                String message = RefactoringBundle.getCannotRefactorMessage(getInvalidPositionMessage());
-                CommonRefactoringUtil.showErrorHint(project, editor, message, getTitle(), getHelpId());
+                LocalizeValue message = RefactoringLocalize.cannotPerformRefactoringWithReason(getInvalidPositionMessage());
+                CommonRefactoringUtil.showErrorHint(project, editor, message.get(), getTitle(), getHelpId());
                 return;
             }
 

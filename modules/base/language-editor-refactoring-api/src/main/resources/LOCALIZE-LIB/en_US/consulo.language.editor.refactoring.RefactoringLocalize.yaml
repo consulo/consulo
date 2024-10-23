@@ -314,6 +314,8 @@ convertToInstanceMethod.all.reference.type.parameters.are.not.in.project:
   text: All reference type parameters have types that are not in project
 cannot.perform.refactoring:
   text: Cannot perform refactoring.
+cannot.perform.refactoring.with.reason:
+  text: "Cannot perform refactoring.\n{0}"
 move.instance.method.title:
   text: Move Instance Method
 move.method.is.not.supported.for.constructors:

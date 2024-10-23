@@ -60,10 +60,10 @@ public class MoveHandler implements RefactoringActionHandler {
         PsiElement element = file.findElementAt(offset);
         while (true) {
             if (element == null) {
-                String message = RefactoringBundle.getCannotRefactorMessage(
-                    RefactoringLocalize.theCaretShouldBePositionedAtTheClassMethodOrFieldToBeRefactored().get()
+                LocalizeValue message = RefactoringLocalize.cannotPerformRefactoringWithReason(
+                    RefactoringLocalize.theCaretShouldBePositionedAtTheClassMethodOrFieldToBeRefactored()
                 );
-                CommonRefactoringUtil.showErrorHint(project, editor, message, REFACTORING_NAME.get(), null);
+                CommonRefactoringUtil.showErrorHint(project, editor, message.get(), REFACTORING_NAME.get(), null);
                 return;
             }
 

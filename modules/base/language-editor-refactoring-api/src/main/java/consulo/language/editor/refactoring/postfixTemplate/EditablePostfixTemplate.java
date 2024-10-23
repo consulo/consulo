@@ -1,11 +1,12 @@
 // Copyright 2000-2022 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.language.editor.refactoring.postfixTemplate;
 
-import consulo.application.ApplicationManager;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
-import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.postfixTemplate.PostfixTemplate;
 import consulo.language.editor.postfixTemplate.PostfixTemplateProvider;
 import consulo.language.editor.postfixTemplate.PostfixTemplatesUtils;
@@ -16,6 +17,7 @@ import consulo.language.editor.template.TemplateManager;
 import consulo.language.editor.template.TextExpression;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
@@ -66,6 +68,7 @@ public abstract class EditablePostfixTemplate extends PostfixTemplate {
     }
 
     @Override
+    @RequiredUIAccess
     public final void expand(@Nonnull PsiElement context, @Nonnull final Editor editor) {
         List<PsiElement> expressions = getExpressions(context, editor.getDocument(), editor.getCaretModel().getOffset());
 
@@ -79,7 +82,7 @@ public abstract class EditablePostfixTemplate extends PostfixTemplate {
             return;
         }
 
-        if (ApplicationManager.getApplication().isUnitTestMode()) {
+        if (Application.get().isUnitTestMode()) {
             PsiElement item = ContainerUtil.getFirstItem(expressions);
             assert item != null;
             prepareAndExpandForChooseExpression(item, editor);
@@ -90,22 +93,18 @@ public abstract class EditablePostfixTemplate extends PostfixTemplate {
             editor, expressions,
             e -> prepareAndExpandForChooseExpression(e, editor),
             getElementRenderer(),
-            CodeInsightBundle.message("dialog.title.expressions"), 0, ScopeHighlighter.NATURAL_RANGER
+            CodeInsightLocalize.dialogTitleExpressions().get(),
+            0,
+            ScopeHighlighter.NATURAL_RANGER
         );
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof EditablePostfixTemplate template)) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
-        return Objects.equals(myLiveTemplate, template.myLiveTemplate);
+        return this == o
+            || o instanceof EditablePostfixTemplate template
+            && super.equals(o)
+            && Objects.equals(myLiveTemplate, template.myLiveTemplate);
     }
 
     @Override
@@ -140,6 +139,7 @@ public abstract class EditablePostfixTemplate extends PostfixTemplate {
      * @return a range to remove before inserting the template
      */
     @Nonnull
+    @RequiredReadAction
     protected TextRange getRangeToRemove(@Nonnull PsiElement element) {
         return getElementToRemove(element).getTextRange();
     }
@@ -157,17 +157,16 @@ public abstract class EditablePostfixTemplate extends PostfixTemplate {
         return provider;
     }
 
+    @RequiredUIAccess
     private void prepareAndExpandForChooseExpression(@Nonnull PsiElement element, @Nonnull Editor editor) {
-        ApplicationManager.getApplication().runWriteAction(
-            () -> CommandProcessor.getInstance().executeCommand(
-                element.getProject(),
-                () -> expandForChooseExpression(element, editor),
-                CodeInsightBundle.message("command.expand.postfix.template"),
-                PostfixTemplate.POSTFIX_TEMPLATE_CUSTOM_TEMPLATE_ID
-            )
-        );
+        CommandProcessor.getInstance().newCommand(() -> expandForChooseExpression(element, editor))
+            .withProject(element.getProject())
+            .withName(CodeInsightLocalize.commandExpandPostfixTemplate())
+            .withGroupId(PostfixTemplate.POSTFIX_TEMPLATE_CUSTOM_TEMPLATE_ID)
+            .executeInWriteAction();
     }
 
+    @RequiredReadAction
     private void expandForChooseExpression(@Nonnull PsiElement element, @Nonnull Editor editor) {
         Project project = element.getProject();
         Document document = editor.getDocument();

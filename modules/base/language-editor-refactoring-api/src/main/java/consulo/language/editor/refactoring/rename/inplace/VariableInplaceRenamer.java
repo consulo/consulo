@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.refactoring.rename.inplace;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Result;
 import consulo.application.progress.ProgressManager;
 import consulo.codeEditor.Editor;
@@ -57,10 +58,12 @@ public class VariableInplaceRenamer extends InplaceRefactoring {
     private TextRange mySelectedRange;
     private Language myLanguage;
 
+    @RequiredReadAction
     public VariableInplaceRenamer(@Nonnull PsiNamedElement elementToRename, Editor editor) {
         this(elementToRename, editor, elementToRename.getProject());
     }
 
+    @RequiredReadAction
     public VariableInplaceRenamer(PsiNamedElement elementToRename, Editor editor, Project project) {
         this(
             elementToRename,
@@ -71,6 +74,7 @@ public class VariableInplaceRenamer extends InplaceRefactoring {
         );
     }
 
+    @RequiredReadAction
     public VariableInplaceRenamer(
         PsiNamedElement elementToRename,
         Editor editor,
@@ -82,15 +86,18 @@ public class VariableInplaceRenamer extends InplaceRefactoring {
     }
 
     @Override
+    @RequiredReadAction
     protected boolean startsOnTheSameElement(RefactoringActionHandler handler, PsiElement element) {
         return super.startsOnTheSameElement(handler, element) && handler instanceof VariableInplaceRenameHandler;
     }
 
+    @RequiredUIAccess
     public boolean performInplaceRename() {
         return performInplaceRefactoring(null);
     }
 
     @Override
+    @RequiredReadAction
     protected void collectAdditionalElementsToRename(final List<Pair<PsiElement, TextRange>> stringUsages) {
         final String stringToSearch = myElementToRename.getName();
         final PsiFile currentFile = PsiDocumentManager.getInstance(myProject).getPsiFile(myEditor.getDocument());
@@ -110,6 +117,7 @@ public class VariableInplaceRenamer extends InplaceRefactoring {
     }
 
     @Override
+    @RequiredUIAccess
     protected boolean buildTemplateAndStart(
         final Collection<PsiReference> refs,
         Collection<Pair<PsiElement, TextRange>> stringUsages,
@@ -122,6 +130,7 @@ public class VariableInplaceRenamer extends InplaceRefactoring {
         else {
             final RenameChooser renameChooser = new RenameChooser(myEditor) {
                 @Override
+                @RequiredUIAccess
                 protected void runRenameTemplate(Collection<Pair<PsiElement, TextRange>> stringUsages) {
                     VariableInplaceRenamer.super.buildTemplateAndStart(refs, stringUsages, scope, containingFile);
                 }
@@ -140,6 +149,7 @@ public class VariableInplaceRenamer extends InplaceRefactoring {
     }
 
     @Override
+    @RequiredReadAction
     protected void beforeTemplateStart() {
         super.beforeTemplateStart();
         myLanguage = myScope.getLanguage();
@@ -183,10 +193,12 @@ public class VariableInplaceRenamer extends InplaceRefactoring {
         return selectAll != null && selectAll;
     }
 
+    @RequiredReadAction
     protected VariableInplaceRenamer createInplaceRenamerToRestart(PsiNamedElement variable, Editor editor, String initialName) {
         return new VariableInplaceRenamer(variable, editor, myProject, initialName, myOldName);
     }
 
+    @RequiredReadAction
     protected void performOnInvalidIdentifier(final String newName, final LinkedHashSet<String> nameSuggestions) {
         final PsiNamedElement variable = getVariable();
         if (variable != null) {
@@ -321,6 +333,7 @@ public class VariableInplaceRenamer extends InplaceRefactoring {
     }
 
     @Override
+    @RequiredUIAccess
     public void finish(boolean success) {
         super.finish(success);
         if (success) {
@@ -331,6 +344,7 @@ public class VariableInplaceRenamer extends InplaceRefactoring {
         }
     }
 
+    @RequiredUIAccess
     protected void revertStateOnFinish() {
         if (myInsertedName == null || !isIdentifier(myInsertedName, myLanguage)) {
             revertState();

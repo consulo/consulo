@@ -19,7 +19,6 @@ package consulo.language.editor.refactoring.safeDelete;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.dataContext.DataContext;
-import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.RefactoringSettings;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
@@ -51,9 +50,10 @@ public class SafeDeleteHandler implements RefactoringActionHandler {
         PsiElement element = dataContext.getData(PsiElement.KEY);
         editor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
         if (element == null || !SafeDeleteProcessor.validElement(element)) {
-            String message =
-                RefactoringBundle.getCannotRefactorMessage(RefactoringLocalize.isNotSupportedInTheCurrentContext(REFACTORING_NAME).get());
-            CommonRefactoringUtil.showErrorHint(project, editor, message, REFACTORING_NAME.get(), "refactoring.safeDelete");
+            LocalizeValue message = RefactoringLocalize.cannotPerformRefactoringWithReason(
+                RefactoringLocalize.isNotSupportedInTheCurrentContext(REFACTORING_NAME)
+            );
+            CommonRefactoringUtil.showErrorHint(project, editor, message.get(), REFACTORING_NAME.get(), "refactoring.safeDelete");
             return;
         }
         invoke(project, new PsiElement[]{element}, dataContext);
