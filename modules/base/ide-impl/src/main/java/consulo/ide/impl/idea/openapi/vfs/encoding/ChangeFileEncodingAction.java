@@ -24,6 +24,7 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.openapi.command.undo.GlobalUndoableAction;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -46,154 +47,193 @@ import java.nio.charset.Charset;
  * @author cdr
  */
 public class ChangeFileEncodingAction extends AnAction implements DumbAware {
-  private final boolean allowDirectories;
+    private final boolean allowDirectories;
 
-  public ChangeFileEncodingAction() {
-    this(false);
-  }
-
-  public ChangeFileEncodingAction(boolean allowDirectories) {
-    this.allowDirectories = allowDirectories;
-  }
-
-  private boolean checkEnabled(@Nonnull VirtualFile virtualFile) {
-    if (allowDirectories && virtualFile.isDirectory()) return true;
-    FileDocumentManager documentManager = FileDocumentManager.getInstance();
-    Document document = documentManager.getDocument(virtualFile);
-    return document != null
-      && (EncodingUtil.checkCanConvert(virtualFile) == null || EncodingUtil.checkCanReload(virtualFile, null) == null);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void update(@Nonnull AnActionEvent e) {
-    VirtualFile myFile = e.getData(VirtualFile.KEY);
-    boolean enabled = myFile != null && checkEnabled(myFile);
-    e.getPresentation().setEnabled(enabled);
-    e.getPresentation().setVisible(myFile != null);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public final void actionPerformed(@Nonnull final AnActionEvent e) {
-    DataContext dataContext = e.getDataContext();
-
-    ListPopup popup = createPopup(dataContext);
-    if (popup != null) {
-      popup.showInBestPositionFor(dataContext);
-    }
-  }
-
-  @Nullable
-  public ListPopup createPopup(@Nonnull DataContext dataContext) {
-    final VirtualFile virtualFile = dataContext.getData(VirtualFile.KEY);
-    if (virtualFile == null) return null;
-    boolean enabled = checkEnabled(virtualFile);
-    if (!enabled) return null;
-    Editor editor = dataContext.getData(Editor.KEY);
-    FileDocumentManager documentManager = FileDocumentManager.getInstance();
-    final Document document = documentManager.getDocument(virtualFile);
-    if (!allowDirectories && virtualFile.isDirectory() || document == null && !virtualFile.isDirectory()) return null;
-
-    final byte[] bytes;
-    try {
-      bytes = virtualFile.isDirectory() ? null : VfsUtilCore.loadBytes(virtualFile);
-    }
-    catch (IOException e) {
-      return null;
-    }
-    DefaultActionGroup group = createActionGroup(virtualFile, editor, document, bytes, null);
-
-    return JBPopupFactory.getInstance().createActionGroupPopup(getTemplatePresentation().getText(), group, dataContext, JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false);
-  }
-
-  public DefaultActionGroup createActionGroup(@Nullable final VirtualFile myFile, final Editor editor, final Document document, final byte[] bytes, @Nullable final String clearItemText) {
-    return new ChooseFileEncodingAction(myFile) {
-      @Override
-      public void update(@Nonnull final AnActionEvent e) {
-      }
-
-      @Nonnull
-      @Override
-      protected DefaultActionGroup createPopupActionGroup(JComponent button) {
-        return createCharsetsActionGroup(clearItemText, null, charset -> "Change encoding to '" + charset.displayName() + "'");
-        // no 'clear'
-      }
-
-      @Override
-      protected void chosen(@Nullable VirtualFile virtualFile, @Nonnull Charset charset) {
-        ChangeFileEncodingAction.this.chosen(document, editor, virtualFile, bytes, charset);
-      }
-    }.createPopupActionGroup(null);
-  }
-
-  // returns true if charset was changed, false if failed
-  protected boolean chosen(final Document document, final Editor editor, @Nullable final VirtualFile virtualFile, byte[] bytes, @Nonnull final Charset charset) {
-    if (virtualFile == null) return false;
-    String text = document.getText();
-    EncodingUtil.Magic8 isSafeToConvert = EncodingUtil.isSafeToConvertTo(virtualFile, text, bytes, charset);
-    EncodingUtil.Magic8 isSafeToReload = EncodingUtil.isSafeToReloadIn(virtualFile, text, bytes, charset);
-
-    final Project project = ProjectLocator.getInstance().guessProjectForFile(virtualFile);
-    return changeTo(project, document, editor, virtualFile, charset, isSafeToConvert, isSafeToReload);
-  }
-
-  public static boolean changeTo(
-    Project project,
-    @Nonnull Document document,
-    Editor editor,
-    @Nonnull VirtualFile virtualFile,
-    @Nonnull Charset charset,
-    @Nonnull EncodingUtil.Magic8 isSafeToConvert,
-    @Nonnull EncodingUtil.Magic8 isSafeToReload
-  ) {
-    final Charset oldCharset = virtualFile.getCharset();
-    final Runnable undo;
-    final Runnable redo;
-
-    if (isSafeToConvert == EncodingUtil.Magic8.ABSOLUTELY && isSafeToReload == EncodingUtil.Magic8.ABSOLUTELY) {
-      //change and forget
-      undo = () -> EncodingManager.getInstance().setEncoding(virtualFile, oldCharset);
-      redo = () -> EncodingManager.getInstance().setEncoding(virtualFile, charset);
-    }
-    else {
-      IncompatibleEncodingDialog dialog = new IncompatibleEncodingDialog(virtualFile, charset, isSafeToReload, isSafeToConvert);
-      dialog.show();
-      if (dialog.getExitCode() == IncompatibleEncodingDialog.RELOAD_EXIT_CODE) {
-        undo = () -> EncodingUtil.reloadIn(virtualFile, oldCharset, project);
-        redo = () -> EncodingUtil.reloadIn(virtualFile, charset, project);
-      }
-      else if (dialog.getExitCode() == IncompatibleEncodingDialog.CONVERT_EXIT_CODE) {
-        undo = () -> EncodingUtil.saveIn(document, editor, virtualFile, oldCharset);
-        redo = () -> EncodingUtil.saveIn(document, editor, virtualFile, charset);
-      }
-      else {
-        return false;
-      }
+    public ChangeFileEncodingAction() {
+        this(false);
     }
 
-    final UndoableAction action = new GlobalUndoableAction(virtualFile) {
-      @Override
-      public void undo() {
-        // invoke later because changing document inside undo/redo is not allowed
-        Application application = Application.get();
-        application.invokeLater(undo, IdeaModalityState.nonModal(), (project == null ? application : project).getDisposed());
-      }
+    public ChangeFileEncodingAction(boolean allowDirectories) {
+        this.allowDirectories = allowDirectories;
+    }
 
-      @Override
-      public void redo() {
-        // invoke later because changing document inside undo/redo is not allowed
-        Application application = Application.get();
-        application.invokeLater(redo, IdeaModalityState.nonModal(), (project == null ? application : project).getDisposed());
-      }
-    };
+    private boolean checkEnabled(@Nonnull VirtualFile virtualFile) {
+        if (allowDirectories && virtualFile.isDirectory()) {
+            return true;
+        }
+        FileDocumentManager documentManager = FileDocumentManager.getInstance();
+        Document document = documentManager.getDocument(virtualFile);
+        return document != null
+            && (EncodingUtil.checkCanConvert(virtualFile) == null || EncodingUtil.checkCanReload(virtualFile, null) == null);
+    }
 
-    redo.run();
-    CommandProcessor.getInstance().executeCommand(project, () -> {
-      UndoManager undoManager = project == null ? ApplicationUndoManager.getInstance() : ProjectUndoManager.getInstance(project);
-      undoManager.undoableActionPerformed(action);
-    }, "Change encoding for '" + virtualFile.getName() + "'", null, UndoConfirmationPolicy.REQUEST_CONFIRMATION);
+    @Override
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent e) {
+        VirtualFile myFile = e.getData(VirtualFile.KEY);
+        boolean enabled = myFile != null && checkEnabled(myFile);
+        e.getPresentation().setEnabled(enabled);
+        e.getPresentation().setVisible(myFile != null);
+    }
 
-    return true;
-  }
+    @Override
+    @RequiredUIAccess
+    public final void actionPerformed(@Nonnull final AnActionEvent e) {
+        DataContext dataContext = e.getDataContext();
+
+        ListPopup popup = createPopup(dataContext);
+        if (popup != null) {
+            popup.showInBestPositionFor(dataContext);
+        }
+    }
+
+    @Nullable
+    public ListPopup createPopup(@Nonnull DataContext dataContext) {
+        final VirtualFile virtualFile = dataContext.getData(VirtualFile.KEY);
+        if (virtualFile == null) {
+            return null;
+        }
+        boolean enabled = checkEnabled(virtualFile);
+        if (!enabled) {
+            return null;
+        }
+        Editor editor = dataContext.getData(Editor.KEY);
+        FileDocumentManager documentManager = FileDocumentManager.getInstance();
+        final Document document = documentManager.getDocument(virtualFile);
+        if (!allowDirectories && virtualFile.isDirectory() || document == null && !virtualFile.isDirectory()) {
+            return null;
+        }
+
+        final byte[] bytes;
+        try {
+            bytes = virtualFile.isDirectory() ? null : VfsUtilCore.loadBytes(virtualFile);
+        }
+        catch (IOException e) {
+            return null;
+        }
+        DefaultActionGroup group = createActionGroup(virtualFile, editor, document, bytes, null);
+
+        return JBPopupFactory.getInstance().createActionGroupPopup(
+            getTemplatePresentation().getText(),
+            group,
+            dataContext,
+            JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
+            false
+        );
+    }
+
+    public DefaultActionGroup createActionGroup(
+        @Nullable final VirtualFile myFile,
+        final Editor editor,
+        final Document document,
+        final byte[] bytes,
+        @Nullable final String clearItemText
+    ) {
+        return new ChooseFileEncodingAction(myFile) {
+            @Override
+            public void update(@Nonnull final AnActionEvent e) {
+            }
+
+            @Nonnull
+            @Override
+            protected DefaultActionGroup createPopupActionGroup(JComponent button) {
+                return createCharsetsActionGroup(
+                    clearItemText,
+                    null,
+                    charset -> "Change encoding to '" + charset.displayName() + "'"
+                );
+                // no 'clear'
+            }
+
+            @Override
+            @RequiredUIAccess
+            protected void chosen(@Nullable VirtualFile virtualFile, @Nonnull Charset charset) {
+                ChangeFileEncodingAction.this.chosen(document, editor, virtualFile, bytes, charset);
+            }
+        }.createPopupActionGroup(null);
+    }
+
+    // returns true if charset was changed, false if failed
+    @RequiredUIAccess
+    protected boolean chosen(
+        final Document document,
+        final Editor editor,
+        @Nullable final VirtualFile virtualFile,
+        byte[] bytes,
+        @Nonnull final Charset charset
+    ) {
+        if (virtualFile == null) {
+            return false;
+        }
+        String text = document.getText();
+        EncodingUtil.Magic8 isSafeToConvert = EncodingUtil.isSafeToConvertTo(virtualFile, text, bytes, charset);
+        EncodingUtil.Magic8 isSafeToReload = EncodingUtil.isSafeToReloadIn(virtualFile, text, bytes, charset);
+
+        final Project project = ProjectLocator.getInstance().guessProjectForFile(virtualFile);
+        return changeTo(project, document, editor, virtualFile, charset, isSafeToConvert, isSafeToReload);
+    }
+
+    @RequiredUIAccess
+    public static boolean changeTo(
+        Project project,
+        @Nonnull Document document,
+        Editor editor,
+        @Nonnull VirtualFile virtualFile,
+        @Nonnull Charset charset,
+        @Nonnull EncodingUtil.Magic8 isSafeToConvert,
+        @Nonnull EncodingUtil.Magic8 isSafeToReload
+    ) {
+        final Charset oldCharset = virtualFile.getCharset();
+        final Runnable undo;
+        final Runnable redo;
+
+        if (isSafeToConvert == EncodingUtil.Magic8.ABSOLUTELY && isSafeToReload == EncodingUtil.Magic8.ABSOLUTELY) {
+            //change and forget
+            undo = () -> EncodingManager.getInstance().setEncoding(virtualFile, oldCharset);
+            redo = () -> EncodingManager.getInstance().setEncoding(virtualFile, charset);
+        }
+        else {
+            IncompatibleEncodingDialog dialog = new IncompatibleEncodingDialog(virtualFile, charset, isSafeToReload, isSafeToConvert);
+            dialog.show();
+            if (dialog.getExitCode() == IncompatibleEncodingDialog.RELOAD_EXIT_CODE) {
+                undo = () -> EncodingUtil.reloadIn(virtualFile, oldCharset, project);
+                redo = () -> EncodingUtil.reloadIn(virtualFile, charset, project);
+            }
+            else if (dialog.getExitCode() == IncompatibleEncodingDialog.CONVERT_EXIT_CODE) {
+                undo = () -> EncodingUtil.saveIn(document, editor, virtualFile, oldCharset);
+                redo = () -> EncodingUtil.saveIn(document, editor, virtualFile, charset);
+            }
+            else {
+                return false;
+            }
+        }
+
+        final UndoableAction action = new GlobalUndoableAction(virtualFile) {
+            @Override
+            public void undo() {
+                // invoke later because changing document inside undo/redo is not allowed
+                Application application = Application.get();
+                application.invokeLater(undo, IdeaModalityState.nonModal(), (project == null ? application : project).getDisposed());
+            }
+
+            @Override
+            public void redo() {
+                // invoke later because changing document inside undo/redo is not allowed
+                Application application = Application.get();
+                application.invokeLater(redo, IdeaModalityState.nonModal(), (project == null ? application : project).getDisposed());
+            }
+        };
+
+        redo.run();
+        CommandProcessor.getInstance().newCommand(() -> {
+                UndoManager undoManager = project == null ? ApplicationUndoManager.getInstance() : ProjectUndoManager.getInstance(project);
+                undoManager.undoableActionPerformed(action);
+            })
+            .withProject(project)
+            .withName(LocalizeValue.localizeTODO("Change encoding for '" + virtualFile.getName() + "'"))
+            .withUndoConfirmationPolicy(UndoConfirmationPolicy.REQUEST_CONFIRMATION)
+            .execute();
+
+        return true;
+    }
 }

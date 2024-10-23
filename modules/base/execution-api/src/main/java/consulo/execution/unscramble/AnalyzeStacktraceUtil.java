@@ -17,7 +17,6 @@
 package consulo.execution.unscramble;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.EditorSettings;
@@ -33,14 +32,16 @@ import consulo.execution.ui.ExecutionConsole;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.execution.ui.console.*;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.image.Image;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
@@ -49,147 +50,150 @@ import java.awt.datatransfer.DataFlavor;
  * @author yole
  */
 public class AnalyzeStacktraceUtil {
-  private AnalyzeStacktraceUtil() {
-  }
-
-  public static void printStacktrace(final ConsoleView consoleView, final String unscrambledTrace) {
-    consoleView.clear();
-    consoleView.print(unscrambledTrace + "\n", ConsoleViewContentType.ERROR_OUTPUT);
-    consoleView.scrollTo(0);
-  }
-
-  @Nullable
-  public static String getTextInClipboard() {
-    return CopyPasteManager.getInstance().getContents(DataFlavor.stringFlavor);
-  }
-
-  public interface ConsoleFactory {
-    JComponent createConsoleComponent(ConsoleView consoleView, DefaultActionGroup toolbarActions);
-  }
-
-  public static void addConsole(Project project, @Nullable ConsoleFactory consoleFactory, final String tabTitle, String text) {
-    addConsole(project, consoleFactory, tabTitle, text, null);
-  }
-
-  public static RunContentDescriptor addConsole(Project project, @Nullable ConsoleFactory consoleFactory, final String tabTitle, String text, @Nullable consulo.ui.image.Image icon) {
-    final TextConsoleBuilder builder = TextConsoleBuilderFactory.getInstance().createBuilder(project);
-    builder.filters(project.getExtensionList(AnalyzeStackTraceFilter.class));
-    final ConsoleView consoleView = builder.getConsole();
-
-    final DefaultActionGroup toolbarActions = new DefaultActionGroup();
-    JComponent consoleComponent = consoleFactory != null ? consoleFactory.createConsoleComponent(consoleView, toolbarActions) : new MyConsolePanel(consoleView, toolbarActions);
-    final RunContentDescriptor descriptor = new RunContentDescriptor(consoleView, null, consoleComponent, tabTitle, icon) {
-      @Override
-      public boolean isContentReuseProhibited() {
-        return true;
-      }
-    };
-
-    final Executor executor = DefaultRunExecutor.getRunExecutorInstance();
-    for (AnAction action : consoleView.createConsoleActions()) {
-      toolbarActions.add(action);                                     
-    }
-    ConsoleViewUtil.enableReplaceActionForConsoleViewEditor(consoleView.getEditor());
-    consoleView.getEditor().getSettings().setCaretRowShown(true);
-    AnalyzeStacktraceService analyzeStacktraceService = Application.get().getInstance(AnalyzeStacktraceService.class);
-    toolbarActions.add(analyzeStacktraceService.createAnnotateStackTraceAction(consoleView));
-    ExecutionManager.getInstance(project).getContentManager().showRunContent(executor, descriptor);
-    consoleView.allowHeavyFilters();
-    if (consoleFactory == null) {
-      printStacktrace(consoleView, text);
-    }
-    return descriptor;
-  }
-
-  private static final class MyConsolePanel extends JPanel {
-    public MyConsolePanel(ExecutionConsole consoleView, ActionGroup toolbarActions) {
-      super(new BorderLayout());
-      JPanel toolbarPanel = new JPanel(new BorderLayout());
-      ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, toolbarActions, false);
-      
-      JComponent component = consoleView.getComponent();
-      toolbar.setTargetComponent(component);
-      toolbarPanel.add(toolbar.getComponent());
-      add(toolbarPanel, BorderLayout.WEST);
-      add(component, BorderLayout.CENTER);
-    }
-  }
-
-  public static StacktraceEditorPanel createEditorPanel(Project project, @Nonnull Disposable parentDisposable) {
-    EditorFactory editorFactory = EditorFactory.getInstance();
-    Document document = editorFactory.createDocument("");
-    Editor editor = editorFactory.createEditor(document, project);
-    EditorSettings settings = editor.getSettings();
-    settings.setFoldingOutlineShown(false);
-    settings.setLineMarkerAreaShown(false);
-    settings.setIndentGuidesShown(false);
-    settings.setLineNumbersShown(false);
-    settings.setRightMarginShown(false);
-
-    StacktraceEditorPanel editorPanel = new StacktraceEditorPanel(project, editor);
-    editorPanel.setPreferredSize(new Dimension(600, 400));
-    Disposer.register(parentDisposable, editorPanel);
-    return editorPanel;
-  }
-
-  public static final class StacktraceEditorPanel extends JPanel implements DataProvider, Disposable {
-    private final Project myProject;
-    private final Editor myEditor;
-
-    public StacktraceEditorPanel(Project project, Editor editor) {
-      super(new BorderLayout());
-      myProject = project;
-      myEditor = editor;
-      add(myEditor.getComponent());
+    private AnalyzeStacktraceUtil() {
     }
 
-    @Override
-    public Object getData(@Nonnull Key<?> dataId) {
-      if (Editor.KEY == dataId) {
-        return myEditor;
-      }
-      return null;
+    public static void printStacktrace(final ConsoleView consoleView, final String unscrambledTrace) {
+        consoleView.clear();
+        consoleView.print(unscrambledTrace + "\n", ConsoleViewContentType.ERROR_OUTPUT);
+        consoleView.scrollTo(0);
     }
 
-    public Editor getEditor() {
-      return myEditor;
+    @Nullable
+    public static String getTextInClipboard() {
+        return CopyPasteManager.getInstance().getContents(DataFlavor.stringFlavor);
     }
 
-    public final void setText(@Nonnull final String text) {
-      Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-          ApplicationManager.getApplication().runWriteAction(new Runnable() {
+    public interface ConsoleFactory {
+        JComponent createConsoleComponent(ConsoleView consoleView, DefaultActionGroup toolbarActions);
+    }
+
+    public static void addConsole(Project project, @Nullable ConsoleFactory consoleFactory, final String tabTitle, String text) {
+        addConsole(project, consoleFactory, tabTitle, text, null);
+    }
+
+    public static RunContentDescriptor addConsole(
+        Project project,
+        @Nullable ConsoleFactory consoleFactory,
+        final String tabTitle,
+        String text,
+        @Nullable Image icon
+    ) {
+        final TextConsoleBuilder builder = TextConsoleBuilderFactory.getInstance().createBuilder(project);
+        builder.filters(project.getExtensionList(AnalyzeStackTraceFilter.class));
+        final ConsoleView consoleView = builder.getConsole();
+
+        final DefaultActionGroup toolbarActions = new DefaultActionGroup();
+        JComponent consoleComponent = consoleFactory != null
+            ? consoleFactory.createConsoleComponent(consoleView, toolbarActions)
+            : new MyConsolePanel(consoleView, toolbarActions);
+        final RunContentDescriptor descriptor = new RunContentDescriptor(consoleView, null, consoleComponent, tabTitle, icon) {
             @Override
-            public void run() {
-              final Document document = myEditor.getDocument();
-              document.replaceString(0, document.getTextLength(), StringUtil.convertLineSeparators(text));
+            public boolean isContentReuseProhibited() {
+                return true;
             }
-          });
+        };
+
+        final Executor executor = DefaultRunExecutor.getRunExecutorInstance();
+        for (AnAction action : consoleView.createConsoleActions()) {
+            toolbarActions.add(action);
         }
-      };
-      CommandProcessor.getInstance().executeCommand(myProject, runnable, "", this);
+        ConsoleViewUtil.enableReplaceActionForConsoleViewEditor(consoleView.getEditor());
+        consoleView.getEditor().getSettings().setCaretRowShown(true);
+        AnalyzeStacktraceService analyzeStacktraceService = Application.get().getInstance(AnalyzeStacktraceService.class);
+        toolbarActions.add(analyzeStacktraceService.createAnnotateStackTraceAction(consoleView));
+        ExecutionManager.getInstance(project).getContentManager().showRunContent(executor, descriptor);
+        consoleView.allowHeavyFilters();
+        if (consoleFactory == null) {
+            printStacktrace(consoleView, text);
+        }
+        return descriptor;
     }
 
-    public void pasteTextFromClipboard() {
-      String text = getTextInClipboard();
-      if (text != null) {
-        setText(text);
-      }
+    private static final class MyConsolePanel extends JPanel {
+        public MyConsolePanel(ExecutionConsole consoleView, ActionGroup toolbarActions) {
+            super(new BorderLayout());
+            JPanel toolbarPanel = new JPanel(new BorderLayout());
+            ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, toolbarActions, false);
 
+            JComponent component = consoleView.getComponent();
+            toolbar.setTargetComponent(component);
+            toolbarPanel.add(toolbar.getComponent());
+            add(toolbarPanel, BorderLayout.WEST);
+            add(component, BorderLayout.CENTER);
+        }
     }
 
-    @Override
-    public void dispose() {
-      EditorFactory.getInstance().releaseEditor(myEditor);
+    public static StacktraceEditorPanel createEditorPanel(Project project, @Nonnull Disposable parentDisposable) {
+        EditorFactory editorFactory = EditorFactory.getInstance();
+        Document document = editorFactory.createDocument("");
+        Editor editor = editorFactory.createEditor(document, project);
+        EditorSettings settings = editor.getSettings();
+        settings.setFoldingOutlineShown(false);
+        settings.setLineMarkerAreaShown(false);
+        settings.setIndentGuidesShown(false);
+        settings.setLineNumbersShown(false);
+        settings.setRightMarginShown(false);
+
+        StacktraceEditorPanel editorPanel = new StacktraceEditorPanel(project, editor);
+        editorPanel.setPreferredSize(new Dimension(600, 400));
+        Disposer.register(parentDisposable, editorPanel);
+        return editorPanel;
     }
 
-    public String getText() {
-      return myEditor.getDocument().getText();
-    }
+    public static final class StacktraceEditorPanel extends JPanel implements DataProvider, Disposable {
+        private final Project myProject;
+        private final Editor myEditor;
 
-    public JComponent getEditorComponent() {
-      return myEditor.getContentComponent();
+        public StacktraceEditorPanel(Project project, Editor editor) {
+            super(new BorderLayout());
+            myProject = project;
+            myEditor = editor;
+            add(myEditor.getComponent());
+        }
+
+        @Override
+        public Object getData(@Nonnull Key<?> dataId) {
+            if (Editor.KEY == dataId) {
+                return myEditor;
+            }
+            return null;
+        }
+
+        public Editor getEditor() {
+            return myEditor;
+        }
+
+        @RequiredUIAccess
+        public final void setText(@Nonnull final String text) {
+            CommandProcessor.getInstance().newCommand(() -> {
+                    final Document document = myEditor.getDocument();
+                    document.replaceString(0, document.getTextLength(), StringUtil.convertLineSeparators(text));
+                })
+                .withProject(myProject)
+                .withGroupId(this)
+                .executeInWriteAction();
+        }
+
+        @RequiredUIAccess
+        public void pasteTextFromClipboard() {
+            String text = getTextInClipboard();
+            if (text != null) {
+                setText(text);
+            }
+        }
+
+        @Override
+        public void dispose() {
+            EditorFactory.getInstance().releaseEditor(myEditor);
+        }
+
+        public String getText() {
+            return myEditor.getDocument().getText();
+        }
+
+        public JComponent getEditorComponent() {
+            return myEditor.getContentComponent();
+        }
     }
-  }
 }
