@@ -40,6 +40,12 @@ public class CoreCommandProcessor extends CommandProcessorEx {
             this.myDescriptor = commandDescriptor;
         }
 
+        @Override
+        @RequiredUIAccess
+        public void finish(@Nullable Throwable throwable) {
+            finishCommand(this, throwable);
+        }
+
         @Nullable
         @Override
         public Project getProject() {
@@ -192,7 +198,9 @@ public class CoreCommandProcessor extends CommandProcessorEx {
             throwable = th;
         }
         finally {
-            finishCommand(myCurrentCommand, throwable);
+            if (myCurrentCommand != null) {
+                myCurrentCommand.finish(throwable);
+            }
         }
     }
 
@@ -224,9 +232,8 @@ public class CoreCommandProcessor extends CommandProcessorEx {
         return myCurrentCommand;
     }
 
-    @Override
     @RequiredUIAccess
-    public void finishCommand(@Nonnull CommandToken command, @Nullable Throwable throwable) {
+    protected void finishCommand(@Nonnull CommandToken command, @Nullable Throwable throwable) {
         myApplication.assertIsDispatchThread();
         CommandLog.LOG.assertTrue(myCurrentCommand != null, "no current command in progress");
         fireCommandFinished();

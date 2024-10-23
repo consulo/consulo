@@ -50,6 +50,4 @@ public abstract class CommandProcessorEx extends CommandProcessor {
             .withUndoConfirmationPolicy(undoConfirmationPolicy)
             .start();
     }
-
-    public abstract void finishCommand(@Nonnull final CommandToken command, @Nullable Throwable throwable);
 }

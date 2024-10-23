@@ -3,6 +3,7 @@ package consulo.ide.impl.idea.openapi.command;
 
 import consulo.project.Project;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nullable;
 
 /**
@@ -14,4 +15,12 @@ import jakarta.annotation.Nullable;
 public interface CommandToken {
     @Nullable
     Project getProject();
+
+    @RequiredUIAccess
+    void finish(@Nullable Throwable throwable);
+
+    @RequiredUIAccess
+    default void finish() {
+        finish(null);
+    }
 }
