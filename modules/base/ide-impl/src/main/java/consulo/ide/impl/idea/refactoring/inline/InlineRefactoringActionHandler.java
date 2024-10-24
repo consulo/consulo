@@ -16,6 +16,7 @@
 
 /**
  * created at Nov 21, 2001
+ *
  * @author Jeka
  */
 package consulo.ide.impl.idea.refactoring.inline;
@@ -43,59 +44,62 @@ import jakarta.annotation.Nullable;
 import java.util.List;
 
 public class InlineRefactoringActionHandler implements RefactoringActionHandler {
-  private static final Logger LOG = Logger.getInstance(InlineRefactoringActionHandler.class);
-  private static final LocalizeValue REFACTORING_NAME = RefactoringLocalize.inlineTitle();
+    private static final Logger LOG = Logger.getInstance(InlineRefactoringActionHandler.class);
+    private static final LocalizeValue REFACTORING_NAME = RefactoringLocalize.inlineTitle();
 
-  @Override
-  @RequiredUIAccess
-  public void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, DataContext dataContext) {
-    LOG.assertTrue(elements.length == 1);
-    if (dataContext == null) {
-      dataContext = DataManager.getInstance().getDataContext();
-    }
-    final Editor editor = dataContext.getData(Editor.KEY);
-    for (InlineActionHandler handler: InlineActionHandler.EP_NAME.getExtensionList()) {
-      if (handler.canInlineElement(elements[0])) {
-        handler.inlineElement(project, editor, elements [0]);
-        return;
-      }
-    }
-
-    invokeInliner(editor, elements[0]);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void invoke(@Nonnull final Project project, Editor editor, PsiFile file, DataContext dataContext) {
-    editor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
-
-    PsiElement element = dataContext.getData(PsiElement.KEY);
-    if (element == null) {
-      element = BaseRefactoringAction.getElementAtCaret(editor, file);
-    }
-    if (element != null) {
-      for (InlineActionHandler handler: InlineActionHandler.EP_NAME.getExtensionList()) {
-        if (handler.canInlineElementInEditor(element, editor)) {
-          handler.inlineElement(project, editor, element);
-          return;
+    @Override
+    @RequiredUIAccess
+    public void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, DataContext dataContext) {
+        LOG.assertTrue(elements.length == 1);
+        if (dataContext == null) {
+            dataContext = DataManager.getInstance().getDataContext();
         }
-      }
+        final Editor editor = dataContext.getData(Editor.KEY);
+        for (InlineActionHandler handler : InlineActionHandler.EP_NAME.getExtensionList()) {
+            if (handler.canInlineElement(elements[0])) {
+                handler.inlineElement(project, editor, elements[0]);
+                return;
+            }
+        }
 
-      if (invokeInliner(editor, element)) return;
-
-      String message = RefactoringBundle.getCannotRefactorMessage(RefactoringLocalize.errorWrongCaretPositionMethodOrLocalName().get());
-      CommonRefactoringUtil.showErrorHint(project, editor, message, REFACTORING_NAME.get(), null);
+        invokeInliner(editor, elements[0]);
     }
-  }
 
-  @RequiredUIAccess
-  public static boolean invokeInliner(@Nullable Editor editor, PsiElement element) {
-    final List<InlineHandler> handlers = InlineHandler.forLanguage(element.getLanguage());
-    for (InlineHandler handler : handlers) {
-      if (GenericInlineHandler.invoke(element, editor, handler)) {
-        return true;
-      }
+    @Override
+    @RequiredUIAccess
+    public void invoke(@Nonnull final Project project, Editor editor, PsiFile file, DataContext dataContext) {
+        editor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
+
+        PsiElement element = dataContext.getData(PsiElement.KEY);
+        if (element == null) {
+            element = BaseRefactoringAction.getElementAtCaret(editor, file);
+        }
+        if (element != null) {
+            for (InlineActionHandler handler : InlineActionHandler.EP_NAME.getExtensionList()) {
+                if (handler.canInlineElementInEditor(element, editor)) {
+                    handler.inlineElement(project, editor, element);
+                    return;
+                }
+            }
+
+            if (invokeInliner(editor, element)) {
+                return;
+            }
+
+            String message =
+                RefactoringBundle.getCannotRefactorMessage(RefactoringLocalize.errorWrongCaretPositionMethodOrLocalName().get());
+            CommonRefactoringUtil.showErrorHint(project, editor, message, REFACTORING_NAME.get(), null);
+        }
     }
-    return false;
-  }
+
+    @RequiredUIAccess
+    public static boolean invokeInliner(@Nullable Editor editor, PsiElement element) {
+        final List<InlineHandler> handlers = InlineHandler.forLanguage(element.getLanguage());
+        for (InlineHandler handler : handlers) {
+            if (GenericInlineHandler.invoke(element, editor, handler)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

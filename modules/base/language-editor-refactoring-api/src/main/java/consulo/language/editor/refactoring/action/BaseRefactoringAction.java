@@ -29,7 +29,6 @@ import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.refactoring.ContextAwareActionHandler;
-import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
@@ -110,8 +109,8 @@ public abstract class BaseRefactoringAction extends AnAction implements UpdateIn
             CommonRefactoringUtil.showErrorHint(
                 project,
                 editor,
-                RefactoringBundle.getCannotRefactorMessage(RefactoringLocalize.errorWrongCaretPositionSymbolToRefactor().get()),
-                RefactoringBundle.getCannotRefactorMessage(null),
+                RefactoringLocalize.cannotPerformRefactoringWithReason(RefactoringLocalize.errorWrongCaretPositionSymbolToRefactor()).get(),
+                RefactoringLocalize.cannotPerformRefactoring().get(),
                 null
             );
             return;

@@ -29,28 +29,28 @@ import consulo.undoRedo.CommandProcessor;
 import jakarta.annotation.Nonnull;
 
 public class SelectAllAction extends TextComponentEditorAction implements DumbAware {
-  public SelectAllAction() {
-    super(new Handler());
-  }
-
-  private static class Handler extends EditorActionHandler {
-    @Override
-    public void execute(@Nonnull final Editor editor, DataContext dataContext) {
-      CommandProcessor processor = CommandProcessor.getInstance();
-      processor.executeCommand(
-        dataContext.getData(Project.KEY),
-        () -> editor.getSelectionModel().setSelection(0, editor.getDocument().getTextLength()),
-        IdeLocalize.commandSelectAll().get(),
-        null
-      );
+    public SelectAllAction() {
+        super(new Handler());
     }
-  }
 
-  @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent event){
-    Presentation presentation = event.getPresentation();
-    Editor editor = TextComponentEditorAction.getEditorFromContext(event.getDataContext());
-    presentation.setEnabled(editor != null);
-  }
+    private static class Handler extends EditorActionHandler {
+        @Override
+        public void execute(@Nonnull final Editor editor, DataContext dataContext) {
+            CommandProcessor processor = CommandProcessor.getInstance();
+            processor.executeCommand(
+                dataContext.getData(Project.KEY),
+                () -> editor.getSelectionModel().setSelection(0, editor.getDocument().getTextLength()),
+                IdeLocalize.commandSelectAll().get(),
+                null
+            );
+        }
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void update(AnActionEvent event) {
+        Presentation presentation = event.getPresentation();
+        Editor editor = TextComponentEditorAction.getEditorFromContext(event.getDataContext());
+        presentation.setEnabled(editor != null);
+    }
 }

@@ -49,7 +49,6 @@ import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.scope.GlobalSearchScopeUtil;
 import consulo.localize.LocalizeValue;
-import consulo.logging.Logger;
 import consulo.navigation.Navigatable;
 import consulo.platform.Platform;
 import consulo.platform.base.localize.CommonLocalize;
@@ -80,10 +79,11 @@ import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
-import consulo.ui.util.TextWithMnemonic;
 import consulo.ui.image.Image;
+import consulo.ui.util.TextWithMnemonic;
 import consulo.undoRedo.CommandProcessor;
 import consulo.usage.*;
+import consulo.usage.localize.UsageLocalize;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.JBIterable;
@@ -120,8 +120,6 @@ import static java.awt.event.InputEvent.ALT_DOWN_MASK;
 import static java.awt.event.InputEvent.CTRL_DOWN_MASK;
 
 public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
-    private static final Logger LOG = Logger.getInstance(FindPopupPanel.class);
-
     private static final KeyStroke ENTER = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
     private static final KeyStroke ENTER_WITH_MODIFIERS =
         KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, Platform.current().os().isMac() ? InputEvent.META_DOWN_MASK : InputEvent.CTRL_DOWN_MASK);
@@ -290,8 +288,8 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
             }
             if (parent != null && showPoint == null) {
                 int height = UISettings.getInstance().getShowNavigationBar() ? 135 : 115;
-                if (parent instanceof Window) {
-                    consulo.ui.Window uiWindow = TargetAWT.from((Window)parent);
+                if (parent instanceof Window parentWindow) {
+                    consulo.ui.Window uiWindow = TargetAWT.from(parentWindow);
                     IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
                     if (ideFrame instanceof IdeFrameEx && ideFrame.isInFullScreen()) {
                         height -= 20;
@@ -332,8 +330,8 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
                         glass.setCursor(cursor, this);
                         myCursor = cursor;
 
-                        if (content instanceof JComponent) {
-                            IdeGlassPaneImpl.savePreProcessedCursor((JComponent)content, content.getCursor());
+                        if (content instanceof JComponent component) {
+                            IdeGlassPaneImpl.savePreProcessedCursor(component, content.getCursor());
                         }
                         super.setCursor(content, cursor);
                     }
@@ -530,8 +528,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         myFileMaskField.setMaximumRowCount(8);
         myFileMaskField.addActionListener(__ -> scheduleResultsUpdate());
         Component editorComponent = myFileMaskField.getEditor().getEditorComponent();
-        if (editorComponent instanceof EditorTextField) {
-            final EditorTextField etf = (EditorTextField)editorComponent;
+        if (editorComponent instanceof EditorTextField etf) {
             etf.addDocumentListener(new DocumentListener() {
                 @Override
                 public void documentChanged(@Nonnull consulo.document.event.DocumentEvent event) {
@@ -540,8 +537,8 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
             });
         }
         else {
-            if (editorComponent instanceof JTextComponent) {
-                ((JTextComponent)editorComponent).getDocument().addDocumentListener(new DocumentAdapter() {
+            if (editorComponent instanceof JTextComponent textComponent) {
+                textComponent.getDocument().addDocumentListener(new DocumentAdapter() {
                     @Override
                     protected void textChanged(@Nonnull DocumentEvent e) {
                         onFileMaskChanged();
@@ -609,9 +606,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
             if (usages == null) {
                 return;
             }
-            CommandProcessor.getInstance().executeCommand(
-                myProject,
-                () -> {
+            CommandProcessor.getInstance().newCommand(() -> {
                     for (Map.Entry<Integer, Usage> entry : usages.entrySet()) {
                         try {
                             ReplaceInProjectManager.getInstance(myProject)
@@ -636,10 +631,10 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
                         }
                         ScrollingUtil.ensureSelectionExists(myResultsPreviewTable);
                     });
-                },
-                FindLocalize.findReplaceCommand().get(),
-                null
-            );
+                })
+                .withProject(myProject)
+                .withName(FindLocalize.findReplaceCommand())
+                .execute();
         });
         myOKButton.addActionListener(myOkActionListener);
         TouchbarDataKeys.putDialogButtonDescriptor(myOKButton, 0, true);
@@ -1335,8 +1330,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
             final DefaultTableModel previousModel = (DefaultTableModel)myResultsPreviewTable.getModel();
             for (int i = 0, len = previousModel.getRowCount(); i < len; ++i) {
                 final Object value = previousModel.getValueAt(i, 0);
-                if (value instanceof UsageInfo2UsageAdapter) {
-                    final UsageInfo2UsageAdapter usage = (UsageInfo2UsageAdapter)value;
+                if (value instanceof UsageInfo2UsageAdapter usage) {
                     final VirtualFile file = usage.getFile();
                     if (file != null) {
                         filesToScanInitially.add(file);
@@ -1402,7 +1396,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
                             }
 
                             Usage recent = SoftReference.dereference(recentUsageRef.get());
-                            UsageInfoAdapter recentAdapter = recent instanceof UsageInfoAdapter ? (UsageInfoAdapter)recent : null;
+                            UsageInfoAdapter recentAdapter = recent instanceof UsageInfoAdapter usageInfoAdapter ? usageInfoAdapter : null;
                             final boolean merged = !myHelper.isReplaceState() && recentAdapter != null && recentAdapter.merge(usage);
                             if (!merged) {
                                 recentUsageRef.set(new WeakReference<>(usage));
@@ -1578,10 +1572,10 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
             if (model.isReplaceState()) {
                 if (myResultsPreviewTable.getRowCount() > 0) {
                     Object value = myResultsPreviewTable.getModel().getValueAt(0, 0);
-                    if (value instanceof Usage) {
+                    if (value instanceof Usage usage) {
                         try {
                             // Just check
-                            ReplaceInProjectManager.getInstance(myProject).replaceUsage((Usage)value, model, Collections.emptySet(), true);
+                            ReplaceInProjectManager.getInstance(myProject).replaceUsage(usage, model, Collections.emptySet(), true);
                         }
                         catch (FindManager.MalformedReplacementStringException e) {
                             return new ValidationInfo(LocalizeValue.localizeTODO(e.getMessage()), myReplaceComponent);
@@ -1696,11 +1690,11 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         for (int i = rows.length - 1; i >= 0; i--) {
             int row = rows[i];
             Object valueAt = myResultsPreviewTable.getModel().getValueAt(row, 0);
-            if (valueAt instanceof Usage) {
+            if (valueAt instanceof Usage usage) {
                 if (result == null) {
                     result = new LinkedHashMap<>();
                 }
-                result.put(row, (Usage)valueAt);
+                result.put(row, usage);
             }
         }
         return result;
@@ -1861,9 +1855,9 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         private final ColoredTableCellRenderer myUsageRenderer = new ColoredTableCellRenderer() {
             @Override
             protected void customizeCellRenderer(JTable table, Object value, boolean selected, boolean hasFocus, int row, int column) {
-                if (value instanceof UsageInfo2UsageAdapter) {
-                    if (!((UsageInfo2UsageAdapter)value).isValid()) {
-                        myUsageRenderer.append(" " + UsageViewBundle.message("node.invalid") + " ", SimpleTextAttributes.ERROR_ATTRIBUTES);
+                if (value instanceof UsageInfo2UsageAdapter usageAdapter) {
+                    if (!usageAdapter.isValid()) {
+                        myUsageRenderer.append(" " + UsageLocalize.nodeInvalid().get() + " ", SimpleTextAttributes.ERROR_ATTRIBUTES);
                     }
                     TextChunk[] text = ((UsageInfo2UsageAdapter)value).getPresentation().getText();
 
@@ -1897,8 +1891,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
 
             @Override
             protected void customizeCellRenderer(JTable table, Object value, boolean selected, boolean hasFocus, int row, int column) {
-                if (value instanceof UsageInfo2UsageAdapter) {
-                    UsageInfo2UsageAdapter usageAdapter = (UsageInfo2UsageAdapter)value;
+                if (value instanceof UsageInfo2UsageAdapter usageAdapter) {
                     TextChunk[] text = usageAdapter.getPresentation().getText();
                     // line number / file info
                     VirtualFile file = usageAdapter.getFile();
@@ -1928,7 +1921,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
                     return null;
                 }
                 Object prev = table.getValueAt(row - 1, column);
-                return prev instanceof UsageInfo2UsageAdapter ? ((UsageInfo2UsageAdapter)prev).getFile() : null;
+                return prev instanceof UsageInfo2UsageAdapter usageAdapter ? usageAdapter.getFile() : null;
             }
         };
 
@@ -1955,8 +1948,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
             myUsageRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             myFileAndLineNumber.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             setBackground(myUsageRenderer.getBackground());
-            if (!isSelected && value instanceof UsageInfo2UsageAdapter) {
-                UsageInfo2UsageAdapter usageAdapter = (UsageInfo2UsageAdapter)value;
+            if (!isSelected && value instanceof UsageInfo2UsageAdapter usageAdapter) {
                 Project project = usageAdapter.getUsageInfo().getProject();
                 Color color = VfsPresentationUtil.getFileBackgroundColor(project, usageAdapter.getFile());
                 setBackground(color);

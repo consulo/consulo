@@ -18,6 +18,8 @@ package consulo.application.ui.wm;
 import consulo.component.ComponentManager;
 import consulo.dataContext.DataContext;
 import consulo.ui.ModalityState;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -43,7 +45,6 @@ import java.awt.*;
  * <code>IdeFocusManager.getGlobalInstance()</code> can be used.
  */
 public interface IdeFocusManager extends FocusRequestor {
-
     default AsyncResult<Void> requestFocusInProject(@Nonnull Component c, @Nullable ComponentManager project) {
         return requestFocus(c, false);
     }
@@ -61,7 +62,7 @@ public interface IdeFocusManager extends FocusRequestor {
     /**
      * Executes given runnable after all focus activities are finished
      */
-    public abstract void doWhenFocusSettlesDown(@Nonnull Runnable runnable);
+    public abstract void doWhenFocusSettlesDown(@RequiredUIAccess @Nonnull Runnable runnable);
 
     default void doForceFocusWhenFocusSettlesDown(@Nonnull consulo.ui.Component component) {
         doWhenFocusSettlesDown(() -> requestFocus(component, true));
@@ -74,12 +75,12 @@ public interface IdeFocusManager extends FocusRequestor {
     /**
      * Executes given runnable after all focus activities are finished, immediately or later with the given modaliy state
      */
-    public abstract void doWhenFocusSettlesDown(@Nonnull Runnable runnable, @Nonnull ModalityState modality);
+    public abstract void doWhenFocusSettlesDown(@RequiredUIAccess @Nonnull Runnable runnable, @Nonnull ModalityState modality);
 
     /**
      * Executes given runnable after all focus activities are finished
      */
-    public abstract void doWhenFocusSettlesDown(@Nonnull ExpirableRunnable runnable);
+    public abstract void doWhenFocusSettlesDown(@RequiredUIAccess @Nonnull ExpirableRunnable runnable);
 
 
     /**

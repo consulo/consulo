@@ -47,166 +47,182 @@ import java.util.*;
 @SuppressWarnings({"UtilityClassWithoutPrivateConstructor"})
 public class GenericInlineHandler {
 
-  private static final Logger LOG = Logger.getInstance(GenericInlineHandler.class);
+    private static final Logger LOG = Logger.getInstance(GenericInlineHandler.class);
 
-  @RequiredUIAccess
-  public static boolean invoke(final PsiElement element, @Nullable Editor editor, final InlineHandler languageSpecific) {
-    final PsiReference invocationReference = editor != null ? TargetElementUtil.findReference(editor) : null;
-    final InlineHandler.Settings settings = languageSpecific.prepareInlineElement(element, editor, invocationReference != null);
-    if (settings == null || settings == InlineHandler.Settings.CANNOT_INLINE_SETTINGS) {
-      return settings != null;
-    }
-
-    final Collection<? extends PsiReference> allReferences;
-
-    if (settings.isOnlyOneReferenceToInline()) {
-      allReferences = Collections.singleton(invocationReference);
-    }
-    else {
-      final Ref<Collection<? extends PsiReference>> usagesRef = new Ref<>();
-      ProgressManager.getInstance().runProcessWithProgressSynchronously(
-        () -> usagesRef.set(ReferencesSearch.search(element).findAll()),
-        "Find Usages",
-        false,
-        element.getProject()
-      );
-      allReferences = usagesRef.get();
-    }
-
-    final MultiMap<PsiElement, String> conflicts = new MultiMap<>();
-    final Map<Language, InlineHandler.Inliner> inliners = initializeInliners(element, settings, allReferences);
-
-    for (PsiReference reference : allReferences) {
-      collectConflicts(reference, element, inliners, conflicts);
-    }
-
-    final Project project = element.getProject();
-    if (!conflicts.isEmpty()) {
-      if (project.getApplication().isUnitTestMode()) {
-        throw new BaseRefactoringProcessor.ConflictsInTestsException(conflicts.values());
-      }
-      else {
-        final ConflictsDialog conflictsDialog = new ConflictsDialog(project, conflicts);
-        conflictsDialog.show();
-        if (!conflictsDialog.isOK()) {
-          return true;
-        }
-      }
-    }
-
-    HashSet<PsiElement> elements = new HashSet<>();
-    for (PsiReference reference : allReferences) {
-      PsiElement refElement = reference.getElement();
-      if (refElement != null) {
-        elements.add(refElement);
-      }
-    }
-    if (!settings.isOnlyOneReferenceToInline()) {
-      elements.add(element);
-    }
-
-    if (!CommonRefactoringUtil.checkReadOnlyStatusRecursively(project, elements, true)) {
-      return true;
-    }
-    project.getApplication().runWriteAction(() -> {
-      final String subj = element instanceof PsiNamedElement ? ((PsiNamedElement)element).getName() : "element";
-
-      CommandProcessor.getInstance().executeCommand(project, () -> {
-        final PsiReference[] references = sortDepthFirstRightLeftOrder(allReferences);
-
-
-        final UsageInfo[] usages = new UsageInfo[references.length];
-        for (int i = 0; i < references.length; i++) {
-          usages[i] = new UsageInfo(references[i]);
+    @RequiredUIAccess
+    public static boolean invoke(final PsiElement element, @Nullable Editor editor, final InlineHandler languageSpecific) {
+        final PsiReference invocationReference = editor != null ? TargetElementUtil.findReference(editor) : null;
+        final InlineHandler.Settings settings = languageSpecific.prepareInlineElement(element, editor, invocationReference != null);
+        if (settings == null || settings == InlineHandler.Settings.CANNOT_INLINE_SETTINGS) {
+            return settings != null;
         }
 
-        for (UsageInfo usage : usages) {
-          inlineReference(usage, element, inliners);
+        final Collection<? extends PsiReference> allReferences;
+
+        if (settings.isOnlyOneReferenceToInline()) {
+            allReferences = Collections.singleton(invocationReference);
+        }
+        else {
+            final Ref<Collection<? extends PsiReference>> usagesRef = new Ref<>();
+            ProgressManager.getInstance().runProcessWithProgressSynchronously(
+                () -> usagesRef.set(ReferencesSearch.search(element).findAll()),
+                "Find Usages",
+                false,
+                element.getProject()
+            );
+            allReferences = usagesRef.get();
         }
 
+        final MultiMap<PsiElement, String> conflicts = new MultiMap<>();
+        final Map<Language, InlineHandler.Inliner> inliners = initializeInliners(element, settings, allReferences);
+
+        for (PsiReference reference : allReferences) {
+            collectConflicts(reference, element, inliners, conflicts);
+        }
+
+        final Project project = element.getProject();
+        if (!conflicts.isEmpty()) {
+            if (project.getApplication().isUnitTestMode()) {
+                throw new BaseRefactoringProcessor.ConflictsInTestsException(conflicts.values());
+            }
+            else {
+                final ConflictsDialog conflictsDialog = new ConflictsDialog(project, conflicts);
+                conflictsDialog.show();
+                if (!conflictsDialog.isOK()) {
+                    return true;
+                }
+            }
+        }
+
+        HashSet<PsiElement> elements = new HashSet<>();
+        for (PsiReference reference : allReferences) {
+            PsiElement refElement = reference.getElement();
+            if (refElement != null) {
+                elements.add(refElement);
+            }
+        }
         if (!settings.isOnlyOneReferenceToInline()) {
-          languageSpecific.removeDefinition(element, settings);
+            elements.add(element);
         }
-      }, RefactoringLocalize.inlineCommand(StringUtil.notNullize(subj, "<nameless>")).get(), null);
-    });
-    return true;
-  }
 
-  public static Map<Language, InlineHandler.Inliner> initializeInliners(
-    PsiElement element,
-    InlineHandler.Settings settings,
-    Collection<? extends PsiReference> allReferences
-  ) {
-    final Map<Language, InlineHandler.Inliner> inliners = new HashMap<>();
-    for (PsiReference ref : allReferences) {
-      if (ref == null) {
-        LOG.error("element: " + element.getClass()+ ", allReferences contains null!");
-        continue;
-      }
-      PsiElement refElement = ref.getElement();
-      LOG.assertTrue(refElement != null, ref.getClass().getName());
+        if (!CommonRefactoringUtil.checkReadOnlyStatusRecursively(project, elements, true)) {
+            return true;
+        }
+        project.getApplication().runWriteAction(() -> {
+            final String subj = element instanceof PsiNamedElement ? ((PsiNamedElement)element).getName() : "element";
 
-      final Language language = refElement.getLanguage();
-      if (inliners.containsKey(language)) continue;
+            CommandProcessor.getInstance().executeCommand(
+                project,
+                () -> {
+                    final PsiReference[] references = sortDepthFirstRightLeftOrder(allReferences);
 
-      final List<InlineHandler> handlers = InlineHandler.forLanguage(language);
-      for (InlineHandler handler : handlers) {
-        InlineHandler.Inliner inliner = handler.createInliner(element, settings);
+
+                    final UsageInfo[] usages = new UsageInfo[references.length];
+                    for (int i = 0; i < references.length; i++) {
+                        usages[i] = new UsageInfo(references[i]);
+                    }
+
+                    for (UsageInfo usage : usages) {
+                        inlineReference(usage, element, inliners);
+                    }
+
+                    if (!settings.isOnlyOneReferenceToInline()) {
+                        languageSpecific.removeDefinition(element, settings);
+                    }
+                },
+                RefactoringLocalize.inlineCommand(StringUtil.notNullize(subj, "<nameless>")).get(),
+                null
+            );
+        });
+        return true;
+    }
+
+    public static Map<Language, InlineHandler.Inliner> initializeInliners(
+        PsiElement element,
+        InlineHandler.Settings settings,
+        Collection<? extends PsiReference> allReferences
+    ) {
+        final Map<Language, InlineHandler.Inliner> inliners = new HashMap<>();
+        for (PsiReference ref : allReferences) {
+            if (ref == null) {
+                LOG.error("element: " + element.getClass() + ", allReferences contains null!");
+                continue;
+            }
+            PsiElement refElement = ref.getElement();
+            LOG.assertTrue(refElement != null, ref.getClass().getName());
+
+            final Language language = refElement.getLanguage();
+            if (inliners.containsKey(language)) {
+                continue;
+            }
+
+            final List<InlineHandler> handlers = InlineHandler.forLanguage(language);
+            for (InlineHandler handler : handlers) {
+                InlineHandler.Inliner inliner = handler.createInliner(element, settings);
+                if (inliner != null) {
+                    inliners.put(language, inliner);
+                    break;
+                }
+            }
+        }
+        return inliners;
+    }
+
+    public static void collectConflicts(
+        final PsiReference reference,
+        final PsiElement element,
+        final Map<Language, InlineHandler.Inliner> inliners,
+        final MultiMap<PsiElement, String> conflicts
+    ) {
+        final PsiElement referenceElement = reference.getElement();
+        if (referenceElement == null) {
+            return;
+        }
+        final Language language = referenceElement.getLanguage();
+        final InlineHandler.Inliner inliner = inliners.get(language);
         if (inliner != null) {
-          inliners.put(language, inliner);
-          break;
+            final MultiMap<PsiElement, String> refConflicts = inliner.getConflicts(reference, element);
+            if (refConflicts != null) {
+                for (PsiElement psiElement : refConflicts.keySet()) {
+                    conflicts.putValues(psiElement, refConflicts.get(psiElement));
+                }
+            }
         }
-      }
-    }
-    return inliners;
-  }
-
-  public static void collectConflicts(
-    final PsiReference reference,
-    final PsiElement element,
-    final Map<Language, InlineHandler.Inliner> inliners,
-    final MultiMap<PsiElement, String> conflicts
-  ) {
-    final PsiElement referenceElement = reference.getElement();
-    if (referenceElement == null) return;
-    final Language language = referenceElement.getLanguage();
-    final InlineHandler.Inliner inliner = inliners.get(language);
-    if (inliner != null) {
-      final MultiMap<PsiElement, String> refConflicts = inliner.getConflicts(reference, element);
-      if (refConflicts != null) {
-        for (PsiElement psiElement : refConflicts.keySet()) {
-          conflicts.putValues(psiElement, refConflicts.get(psiElement));
+        else {
+            conflicts.putValue(referenceElement, "Cannot inline reference from " + language.getID());
         }
-      }
     }
-    else {
-      conflicts.putValue(referenceElement, "Cannot inline reference from " + language.getID());
-    }
-  }
 
-  public static void inlineReference(
-    final UsageInfo usage,
-    final PsiElement element,
-    final Map<Language, InlineHandler.Inliner> inliners
-  ) {
-    PsiElement usageElement = usage.getElement();
-    if (usageElement == null) return;
-    final Language language = usageElement.getLanguage();
-    final InlineHandler.Inliner inliner = inliners.get(language);
-    if (inliner != null) {
-      inliner.inlineUsage(usage, element);
+    public static void inlineReference(
+        final UsageInfo usage,
+        final PsiElement element,
+        final Map<Language, InlineHandler.Inliner> inliners
+    ) {
+        PsiElement usageElement = usage.getElement();
+        if (usageElement == null) {
+            return;
+        }
+        final Language language = usageElement.getLanguage();
+        final InlineHandler.Inliner inliner = inliners.get(language);
+        if (inliner != null) {
+            inliner.inlineUsage(usage, element);
+        }
     }
-  }
 
-  //order of usages across different files is irrelevant
-  public static PsiReference[] sortDepthFirstRightLeftOrder(final Collection<? extends PsiReference> allReferences) {
-    final PsiReference[] usages = allReferences.toArray(new PsiReference[allReferences.size()]);
-    Arrays.sort(usages, (usage1, usage2) -> {
-      final PsiElement element1 = usage1.getElement();
-      final PsiElement element2 = usage2.getElement();
-      if (element1 == null || element2 == null) return 0;
-      return element2.getTextRange().getStartOffset() - element1.getTextRange().getStartOffset();
-    });
-    return usages;
-  }
+    //order of usages across different files is irrelevant
+    public static PsiReference[] sortDepthFirstRightLeftOrder(final Collection<? extends PsiReference> allReferences) {
+        final PsiReference[] usages = allReferences.toArray(new PsiReference[allReferences.size()]);
+        Arrays.sort(
+            usages,
+            (usage1, usage2) -> {
+                final PsiElement element1 = usage1.getElement();
+                final PsiElement element2 = usage2.getElement();
+                if (element1 == null || element2 == null) {
+                    return 0;
+                }
+                return element2.getTextRange().getStartOffset() - element1.getTextRange().getStartOffset();
+            }
+        );
+        return usages;
+    }
 }

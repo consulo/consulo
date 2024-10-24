@@ -28,33 +28,33 @@ import consulo.ui.ex.action.Presentation;
 import consulo.undoRedo.CommandProcessor;
 
 public class PrevSplitAction extends AnAction implements DumbAware {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
-    final CommandProcessor commandProcessor = CommandProcessor.getInstance();
-    commandProcessor.executeCommand(
-      project,
-      () -> {
-        final FileEditorManagerEx manager = FileEditorManagerEx.getInstanceEx(project);
-        manager.setCurrentWindow(manager.getPrevWindow(manager.getCurrentWindow()));
-      },
-      IdeLocalize.commandGoToPrevSplit().get(),
-      null
-    );
-  }
-  
-  @Override
-  @RequiredUIAccess
-  public void update(final AnActionEvent event){
-    final Project project = event.getData(Project.KEY);
-    final Presentation presentation = event.getPresentation();
-    if (project == null) {
-      presentation.setEnabled(false);
-      return;
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        final Project project = e.getData(Project.KEY);
+        final CommandProcessor commandProcessor = CommandProcessor.getInstance();
+        commandProcessor.executeCommand(
+            project,
+            () -> {
+                final FileEditorManagerEx manager = FileEditorManagerEx.getInstanceEx(project);
+                manager.setCurrentWindow(manager.getPrevWindow(manager.getCurrentWindow()));
+            },
+            IdeLocalize.commandGoToPrevSplit().get(),
+            null
+        );
     }
-    final FileEditorManagerEx manager = FileEditorManagerEx.getInstanceEx(project);
-    final ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-    presentation.setEnabled (toolWindowManager.isEditorComponentActive() && manager.isInSplitter() && manager.getCurrentWindow() != null);
-  }
+
+    @Override
+    @RequiredUIAccess
+    public void update(final AnActionEvent event) {
+        final Project project = event.getData(Project.KEY);
+        final Presentation presentation = event.getPresentation();
+        if (project == null) {
+            presentation.setEnabled(false);
+            return;
+        }
+        final FileEditorManagerEx manager = FileEditorManagerEx.getInstanceEx(project);
+        final ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
+        presentation.setEnabled(toolWindowManager.isEditorComponentActive() && manager.isInSplitter() && manager.getCurrentWindow() != null);
+    }
 }

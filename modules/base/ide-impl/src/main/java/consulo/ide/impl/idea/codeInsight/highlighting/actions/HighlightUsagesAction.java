@@ -32,44 +32,49 @@ import consulo.ui.ex.action.Presentation;
 import consulo.undoRedo.CommandProcessor;
 
 public class HighlightUsagesAction extends AnAction implements DumbAware {
-  public HighlightUsagesAction() {
-    setInjectedContext(true);
-  }
+    public HighlightUsagesAction() {
+        setInjectedContext(true);
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void update(final AnActionEvent event) {
-    final Presentation presentation = event.getPresentation();
-    final DataContext dataContext = event.getDataContext();
-    presentation.setEnabled(dataContext.getData(Project.KEY) != null && dataContext.getData(Editor.KEY) != null);
-  }
+    @Override
+    @RequiredUIAccess
+    public void update(final AnActionEvent event) {
+        final Presentation presentation = event.getPresentation();
+        final DataContext dataContext = event.getDataContext();
+        presentation.setEnabled(dataContext.getData(Project.KEY) != null && dataContext.getData(Editor.KEY) != null);
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    final Editor editor = e.getDataContext().getData(Editor.KEY);
-    final Project project = e.getDataContext().getData(Project.KEY);
-    if (editor == null || project == null) return;
-    String commandName = getTemplatePresentation().getText();
-    if (commandName == null) commandName = "";
-
-    CommandProcessor.getInstance().executeCommand(
-      project,
-      new Runnable() {
-        @Override
-        @RequiredUIAccess
-        public void run() {
-          PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
-          try {
-            HighlightUsagesHandler.invoke(project, editor, psiFile);
-          }
-          catch (IndexNotReadyException ex) {
-            DumbService.getInstance(project).showDumbModeNotification(ActionLocalize.actionHighlightusagesinfileNotReady().get());
-          }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        final Editor editor = e.getDataContext().getData(Editor.KEY);
+        final Project project = e.getDataContext().getData(Project.KEY);
+        if (editor == null || project == null) {
+            return;
         }
-      },
-      commandName,
-      null
-    );
-  }
+        String commandName = getTemplatePresentation().getText();
+        if (commandName == null) {
+            commandName = "";
+        }
+
+        CommandProcessor.getInstance().executeCommand(
+            project,
+            new Runnable() {
+                @Override
+                @RequiredUIAccess
+                public void run() {
+                    PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+                    try {
+                        HighlightUsagesHandler.invoke(project, editor, psiFile);
+                    }
+                    catch (IndexNotReadyException ex) {
+                        DumbService.getInstance(project)
+                            .showDumbModeNotification(ActionLocalize.actionHighlightusagesinfileNotReady().get());
+                    }
+                }
+            },
+            commandName,
+            null
+        );
+    }
 }

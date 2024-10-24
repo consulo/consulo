@@ -32,42 +32,45 @@ import consulo.ui.ex.action.Presentation;
 import consulo.undoRedo.CommandProcessor;
 
 public class SearchAgainAction extends AnAction implements DumbAware {
-  public SearchAgainAction() {
-    setEnabledInModalContext(true);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(final AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
-    final FileEditor editor = e.getData(FileEditor.KEY);
-    if (editor == null || project == null) return;
-    CommandProcessor commandProcessor = CommandProcessor.getInstance();
-    commandProcessor.executeCommand(
-      project, () -> {
-          PsiDocumentManager.getInstance(project).commitAllDocuments();
-          IdeDocumentHistory.getInstance(project).includeCurrentCommandAsNavigation();
-          if (FindManager.getInstance(project).findNextUsageInEditor(editor)) {
-            return;
-          }
-
-          FindUtil.searchAgain(project, editor, e.getDataContext());
-        },
-      IdeLocalize.commandFindNext().get(),
-      null
-    );
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent event){
-    Presentation presentation = event.getPresentation();
-    Project project = event.getData(Project.KEY);
-    if (project == null) {
-      presentation.setEnabled(false);
-      return;
+    public SearchAgainAction() {
+        setEnabledInModalContext(true);
     }
-    FileEditor editor = event.getData(FileEditor.KEY);
-    presentation.setEnabled(editor instanceof TextEditor);
-  }
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(final AnActionEvent e) {
+        final Project project = e.getData(Project.KEY);
+        final FileEditor editor = e.getData(FileEditor.KEY);
+        if (editor == null || project == null) {
+            return;
+        }
+        CommandProcessor commandProcessor = CommandProcessor.getInstance();
+        commandProcessor.executeCommand(
+            project,
+            () -> {
+                PsiDocumentManager.getInstance(project).commitAllDocuments();
+                IdeDocumentHistory.getInstance(project).includeCurrentCommandAsNavigation();
+                if (FindManager.getInstance(project).findNextUsageInEditor(editor)) {
+                    return;
+                }
+
+                FindUtil.searchAgain(project, editor, e.getDataContext());
+            },
+            IdeLocalize.commandFindNext().get(),
+            null
+        );
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void update(AnActionEvent event) {
+        Presentation presentation = event.getPresentation();
+        Project project = event.getData(Project.KEY);
+        if (project == null) {
+            presentation.setEnabled(false);
+            return;
+        }
+        FileEditor editor = event.getData(FileEditor.KEY);
+        presentation.setEnabled(editor instanceof TextEditor);
+    }
 }

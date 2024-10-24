@@ -19,6 +19,7 @@ import consulo.application.Application;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -32,55 +33,60 @@ import jakarta.annotation.Nonnull;
  * @author yole
  */
 public class FixLineSeparatorsAction extends AnAction {
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    final VirtualFile[] vFiles = e.getData(VirtualFile.KEY_OF_ARRAY);
-    if (project == null || vFiles == null) return;
-    CommandProcessor.getInstance().executeCommand(project, () -> {
-      for (VirtualFile vFile : vFiles) {
-        fixSeparators(vFile);
-      }
-    }, "fixing line separators", null);
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        final VirtualFile[] vFiles = e.getData(VirtualFile.KEY_OF_ARRAY);
+        if (project == null || vFiles == null) {
+            return;
+        }
+        CommandProcessor.getInstance().newCommand(() -> {
+                for (VirtualFile vFile : vFiles) {
+                    fixSeparators(vFile);
+                }
+            })
+            .withProject(project)
+            .withName(IdeLocalize.commandFixingLineSeparators())
+            .execute();
+    }
 
-  private static void fixSeparators(VirtualFile vFile) {
-    VfsUtilCore.visitChildrenRecursively(vFile, new VirtualFileVisitor() {
-      @RequiredUIAccess
-      @Override
-      public boolean visitFile(@Nonnull VirtualFile file) {
-        if (!file.isDirectory() && !file.getFileType().isBinary()) {
-          final Document document = FileDocumentManager.getInstance().getDocument(file);
-          if (areSeparatorsBroken(document)) {
-            fixSeparators(document);
-          }
+    private static void fixSeparators(VirtualFile vFile) {
+        VfsUtilCore.visitChildrenRecursively(vFile, new VirtualFileVisitor() {
+            @RequiredUIAccess
+            @Override
+            public boolean visitFile(@Nonnull VirtualFile file) {
+                if (!file.isDirectory() && !file.getFileType().isBinary()) {
+                    final Document document = FileDocumentManager.getInstance().getDocument(file);
+                    if (areSeparatorsBroken(document)) {
+                        fixSeparators(document);
+                    }
+                }
+                return true;
+            }
+        });
+    }
+
+    private static boolean areSeparatorsBroken(Document document) {
+        final int count = document.getLineCount();
+        for (int i = 1; i < count; i += 2) {
+            if (document.getLineStartOffset(i) != document.getLineEndOffset(i)) {
+                return false;
+            }
         }
         return true;
-      }
-    });
-  }
-
-  private static boolean areSeparatorsBroken(Document document) {
-    final int count = document.getLineCount();
-    for (int i = 1; i < count; i += 2) {
-      if (document.getLineStartOffset(i) != document.getLineEndOffset(i)) {
-        return false;
-      }
     }
-    return true;    
-  }
 
-  @RequiredUIAccess
-  private static void fixSeparators(final Document document) {
-    Application.get().runWriteAction(() -> {
-      int i = 1;
-      while(i < document.getLineCount()) {
-        final int start = document.getLineEndOffset(i);
-        final int end = document.getLineEndOffset(i) + document.getLineSeparatorLength(i);
-        document.deleteString(start, end);
-        i++;
-      }
-    });
-  }
+    @RequiredUIAccess
+    private static void fixSeparators(final Document document) {
+        Application.get().runWriteAction(() -> {
+            int i = 1;
+            while (i < document.getLineCount()) {
+                final int start = document.getLineEndOffset(i);
+                final int end = document.getLineEndOffset(i) + document.getLineSeparatorLength(i);
+                document.deleteString(start, end);
+                i++;
+            }
+        });
+    }
 }

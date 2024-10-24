@@ -15,106 +15,105 @@
  */
 package consulo.diff.impl.internal.action;
 
-import consulo.application.ApplicationManager;
-import consulo.undoRedo.CommandProcessor;
 import consulo.document.Document;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.undoRedo.CommandProcessor;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 
-import jakarta.annotation.Nonnull;
-
 public abstract class DocumentsSynchronizer {
-  @Nonnull
-  protected final Document myDocument1;
-  @Nonnull
-  protected final Document myDocument2;
-  @Nullable
-  private final Project myProject;
+    @Nonnull
+    protected final Document myDocument1;
+    @Nonnull
+    protected final Document myDocument2;
+    @Nullable
+    private final Project myProject;
 
-  private volatile boolean myDuringModification = false;
+    private volatile boolean myDuringModification = false;
 
-  private final DocumentAdapter myListener1 = new DocumentAdapter() {
-    @Override
-    public void documentChanged(DocumentEvent e) {
-      if (myDuringModification) return;
-      onDocumentChanged1(e);
-    }
-  };
-
-  private final DocumentAdapter myListener2 = new DocumentAdapter() {
-    @Override
-    public void documentChanged(DocumentEvent e) {
-      if (myDuringModification) return;
-      onDocumentChanged2(e);
-    }
-  };
-
-  private final PropertyChangeListener myROListener = new PropertyChangeListener() {
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-      if (Document.PROP_WRITABLE.equals(evt.getPropertyName())) getDocument2().setReadOnly(!getDocument1().isWritable());
-    }
-  };
-
-  protected DocumentsSynchronizer(@Nullable Project project, @Nonnull Document document1, @Nonnull Document document2) {
-    myProject = project;
-    myDocument1 = document1;
-    myDocument2 = document2;
-  }
-
-  @Nonnull
-  public Document getDocument1() {
-    return myDocument1;
-  }
-
-  @Nonnull
-  public Document getDocument2() {
-    return myDocument2;
-  }
-
-  protected abstract void onDocumentChanged1(@Nonnull DocumentEvent event);
-
-  protected abstract void onDocumentChanged2(@Nonnull DocumentEvent event);
-
-  @RequiredUIAccess
-  protected void replaceString(@Nonnull final Document document,
-                               final int startOffset,
-                               final int endOffset,
-                               @Nonnull final CharSequence newText) {
-    try {
-      myDuringModification = true;
-      CommandProcessor.getInstance().executeCommand(myProject, new Runnable() {
+    private final DocumentAdapter myListener1 = new DocumentAdapter() {
         @Override
-        public void run() {
-          assert endOffset <= document.getTextLength();
-          ApplicationManager.getApplication().runWriteAction(new Runnable() {
-            @Override
-            public void run() {
-              document.replaceString(startOffset, endOffset, newText);
+        public void documentChanged(DocumentEvent e) {
+            if (myDuringModification) {
+                return;
             }
-          });
+            onDocumentChanged1(e);
         }
-      }, "Synchronize document and its fragment", document);
-    }
-    finally {
-      myDuringModification = false;
-    }
-  }
+    };
 
-  public void startListen() {
-    myDocument1.addDocumentListener(myListener1);
-    myDocument2.addDocumentListener(myListener2);
-    myDocument1.addPropertyChangeListener(myROListener);
-  }
+    private final DocumentAdapter myListener2 = new DocumentAdapter() {
+        @Override
+        public void documentChanged(DocumentEvent e) {
+            if (myDuringModification) {
+                return;
+            }
+            onDocumentChanged2(e);
+        }
+    };
 
-  public void stopListen() {
-    myDocument1.removeDocumentListener(myListener1);
-    myDocument2.removeDocumentListener(myListener2);
-    myDocument1.removePropertyChangeListener(myROListener);
-  }
+    private final PropertyChangeListener myROListener = evt -> {
+        if (Document.PROP_WRITABLE.equals(evt.getPropertyName())) {
+            getDocument2().setReadOnly(!getDocument1().isWritable());
+        }
+    };
+
+    protected DocumentsSynchronizer(@Nullable Project project, @Nonnull Document document1, @Nonnull Document document2) {
+        myProject = project;
+        myDocument1 = document1;
+        myDocument2 = document2;
+    }
+
+    @Nonnull
+    public Document getDocument1() {
+        return myDocument1;
+    }
+
+    @Nonnull
+    public Document getDocument2() {
+        return myDocument2;
+    }
+
+    protected abstract void onDocumentChanged1(@Nonnull DocumentEvent event);
+
+    protected abstract void onDocumentChanged2(@Nonnull DocumentEvent event);
+
+    @RequiredUIAccess
+    protected void replaceString(
+        @Nonnull final Document document,
+        final int startOffset,
+        final int endOffset,
+        @Nonnull final CharSequence newText
+    ) {
+        try {
+            myDuringModification = true;
+            CommandProcessor.getInstance().newCommand(() -> {
+                    assert endOffset <= document.getTextLength();
+                    document.replaceString(startOffset, endOffset, newText);
+                })
+                .withProject(myProject)
+                .withName(LocalizeValue.localizeTODO("Synchronize document and its fragment"))
+                .withGroupId(document)
+                .executeInWriteAction();
+        }
+        finally {
+            myDuringModification = false;
+        }
+    }
+
+    public void startListen() {
+        myDocument1.addDocumentListener(myListener1);
+        myDocument2.addDocumentListener(myListener2);
+        myDocument1.addPropertyChangeListener(myROListener);
+    }
+
+    public void stopListen() {
+        myDocument1.removeDocumentListener(myListener1);
+        myDocument2.removeDocumentListener(myListener2);
+        myDocument1.removePropertyChangeListener(myROListener);
+    }
 }

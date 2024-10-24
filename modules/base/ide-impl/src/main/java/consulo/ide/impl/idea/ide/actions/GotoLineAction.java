@@ -18,44 +18,44 @@ import consulo.undoRedo.CommandProcessor;
 import jakarta.annotation.Nonnull;
 
 public class GotoLineAction extends AnAction implements DumbAware {
-  public GotoLineAction() {
-    setEnabledInModalContext(true);
-  }
+    public GotoLineAction() {
+        setEnabledInModalContext(true);
+    }
 
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
-    final Editor editor = e.getData(EditorKeys.EDITOR_EVEN_IF_INACTIVE);
-    if (Boolean.TRUE.equals(e.getData(PlatformDataKeys.IS_MODAL_CONTEXT))) {
-      GotoLineNumberDialog dialog = new EditorGotoLineNumberDialog(project, editor);
-      dialog.show();
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        final Project project = e.getData(Project.KEY);
+        final Editor editor = e.getData(EditorKeys.EDITOR_EVEN_IF_INACTIVE);
+        if (Boolean.TRUE.equals(e.getData(PlatformDataKeys.IS_MODAL_CONTEXT))) {
+            GotoLineNumberDialog dialog = new EditorGotoLineNumberDialog(project, editor);
+            dialog.show();
+        }
+        else {
+            CommandProcessor processor = CommandProcessor.getInstance();
+            processor.executeCommand(
+                project,
+                () -> {
+                    GotoLineNumberDialog dialog = new EditorGotoLineNumberDialog(project, editor);
+                    dialog.show();
+                    IdeDocumentHistory.getInstance(project).includeCurrentCommandAsNavigation();
+                },
+                IdeLocalize.commandGoToLine().get(),
+                null
+            );
+        }
     }
-    else {
-      CommandProcessor processor = CommandProcessor.getInstance();
-      processor.executeCommand(
-        project,
-        () -> {
-          GotoLineNumberDialog dialog = new EditorGotoLineNumberDialog(project, editor);
-          dialog.show();
-          IdeDocumentHistory.getInstance(project).includeCurrentCommandAsNavigation();
-        },
-        IdeLocalize.commandGoToLine().get(),
-        null
-      );
-    }
-  }
 
-  @Override
-  @RequiredUIAccess
-  public void update(@Nonnull AnActionEvent event) {
-    Presentation presentation = event.getPresentation();
-    Project project = event.getData(Project.KEY);
-    if (project == null) {
-      presentation.setEnabledAndVisible(false);
-      return;
+    @Override
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent event) {
+        Presentation presentation = event.getPresentation();
+        Project project = event.getData(Project.KEY);
+        if (project == null) {
+            presentation.setEnabledAndVisible(false);
+            return;
+        }
+        Editor editor = event.getData(EditorKeys.EDITOR_EVEN_IF_INACTIVE);
+        presentation.setEnabledAndVisible(editor != null);
     }
-    Editor editor = event.getData(EditorKeys.EDITOR_EVEN_IF_INACTIVE);
-    presentation.setEnabledAndVisible(editor != null);
-  }
 }

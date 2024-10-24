@@ -2627,3 +2627,5 @@ label.appearance.show.trailing.whitespaces:
   text: Show trailing whitespaces
 label.tabs.show.directory.for.non.unique.filenames:
   text: Show directory in editor tabs for non-unique filenames
+command.fixing.line.separators:
+  text: fixing line separators

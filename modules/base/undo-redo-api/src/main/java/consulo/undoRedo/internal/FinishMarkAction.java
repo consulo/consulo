@@ -18,7 +18,9 @@ package consulo.undoRedo.internal;
 import consulo.document.Document;
 import consulo.document.DocumentReference;
 import consulo.document.DocumentReferenceManager;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.BasicUndoableAction;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.ProjectUndoManager;
@@ -27,59 +29,65 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
- * User: anna
- * Date: 11/8/11
+ * @author anna
+ * @since 2011-11-08
  */
 public class FinishMarkAction extends BasicUndoableAction {
-  @Nonnull
-  private final StartMarkAction myStartAction;
-  private boolean myGlobal = false;
-  private String myCommandName;
-  private DocumentReference myReference;
+    @Nonnull
+    private final StartMarkAction myStartAction;
+    private boolean myGlobal = false;
+    private String myCommandName;
+    private DocumentReference myReference;
 
-  private FinishMarkAction(DocumentReference reference, @Nonnull StartMarkAction action) {
-    super(reference);
-    myReference = reference;
-    myStartAction = action;
-  }
+    private FinishMarkAction(DocumentReference reference, @Nonnull StartMarkAction action) {
+        super(reference);
+        myReference = reference;
+        myStartAction = action;
+    }
 
-  @Override
-  public void undo() {
-  }
+    @Override
+    public void undo() {
+    }
 
-  @Override
-  public void redo() {
-  }
+    @Override
+    public void redo() {
+    }
 
-  @Override
-  public boolean isGlobal() {
-    return myGlobal;
-  }
+    @Override
+    public boolean isGlobal() {
+        return myGlobal;
+    }
 
-  public void setGlobal(boolean isGlobal) {
-    myStartAction.setGlobal(isGlobal);
-    myGlobal = isGlobal;
-  }
+    public void setGlobal(boolean isGlobal) {
+        myStartAction.setGlobal(isGlobal);
+        myGlobal = isGlobal;
+    }
 
-  public void setCommandName(String commandName) {
-    myStartAction.setCommandName(commandName);
-    myCommandName = commandName;
-  }
+    public void setCommandName(String commandName) {
+        myStartAction.setCommandName(commandName);
+        myCommandName = commandName;
+    }
 
-  public String getCommandName() {
-    return myCommandName;
-  }
+    public String getCommandName() {
+        return myCommandName;
+    }
 
-  public DocumentReference getAffectedDocument() {
-    return myReference;
-  }
+    public DocumentReference getAffectedDocument() {
+        return myReference;
+    }
 
-  public static void finish(final Project project, final Document document, @Nullable final StartMarkAction startAction) {
-    if (startAction == null) return;
-    CommandProcessor.getInstance().executeCommand(project, () -> {
-      DocumentReference reference = DocumentReferenceManager.getInstance().create(document);
-      ProjectUndoManager.getInstance(project).undoableActionPerformed(new FinishMarkAction(reference, startAction));
-      StartMarkAction.markFinished(project);
-    }, "finish", null);
-  }
+    @RequiredUIAccess
+    public static void finish(final Project project, final Document document, @Nullable final StartMarkAction startAction) {
+        if (startAction == null) {
+            return;
+        }
+        CommandProcessor.getInstance().newCommand(() -> {
+                DocumentReference reference = DocumentReferenceManager.getInstance().create(document);
+                ProjectUndoManager.getInstance(project).undoableActionPerformed(new FinishMarkAction(reference, startAction));
+                StartMarkAction.markFinished(project);
+            })
+            .withProject(project)
+            .withName(LocalizeValue.localizeTODO("finish"))
+            .execute();
+    }
 }

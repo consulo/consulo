@@ -236,10 +236,11 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
     }
 
     @RequiredUIAccess
+    @SuppressWarnings("RequiredXAction")
     public DiffImplUtil.WriteCommandBuilder newMergeCommand(
         boolean underBulkUpdate,
         @Nullable IntList affectedChanges,
-        @Nonnull Runnable task
+        @Nonnull @RequiredUIAccess Runnable task
     ) {
         IntList allAffectedChanges = affectedChanges != null ? collectAffectedChanges(affectedChanges) : null;
         Runnable mergeTask = () -> {
@@ -278,7 +279,7 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
         @Nonnull UndoConfirmationPolicy confirmationPolicy,
         boolean underBulkUpdate,
         @Nullable IntList affectedChanges,
-        @Nonnull Runnable task
+        @Nonnull @RequiredUIAccess Runnable task
     ) {
         newMergeCommand(underBulkUpdate, affectedChanges, task)
             .withName(LocalizeValue.ofNullable(commandName))
@@ -296,6 +297,7 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
         List<S> states;
         if (affectedChanges != null) {
             states = new ArrayList<>(affectedChanges.size());
+            //noinspection RequiredXAction
             affectedChanges.forEach((index) -> states.add(storeChangeState(index)));
         }
         else {

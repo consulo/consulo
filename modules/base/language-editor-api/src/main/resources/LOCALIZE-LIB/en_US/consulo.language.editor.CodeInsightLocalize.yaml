@@ -1011,3 +1011,5 @@ command.expand.postfix.template:
   text: Expand Postfix Template
 command.wrap.with.template:
   text: Wrap With Template
+dialog.title.expressions:
+  text: Expressions
