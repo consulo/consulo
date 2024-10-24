@@ -18,7 +18,6 @@ package consulo.application.ui.wm;
 import consulo.component.ComponentManager;
 import consulo.dataContext.DataContext;
 import consulo.ui.ModalityState;
-import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -88,20 +87,6 @@ public interface IdeFocusManager extends FocusRequestor {
      */
     @Nullable
     public abstract Component getFocusedDescendantFor(final Component comp);
-
-    @Deprecated
-    // use #typeAheadUntil(ActionCallback, String) instead
-    default void typeAheadUntil(AsyncResult<Void> done) {
-    }
-
-    /**
-     * Aggregates all key events until given callback object is processed
-     *
-     * @param done action callback
-     */
-    @Deprecated
-    default void typeAheadUntil(ActionCallback done, @Nonnull String cause) {
-    }
 
     /**
      * Requests default focus. The method should not be called by the user code.
