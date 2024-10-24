@@ -24,6 +24,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.Html;
 import consulo.ui.ex.JBColor;
@@ -2767,7 +2768,7 @@ public class UIUtil {
         return result.toString();
     }
 
-    public static void invokeLaterIfNeeded(@Nonnull Runnable runnable) {
+    public static void invokeLaterIfNeeded(@RequiredUIAccess @Nonnull Runnable runnable) {
         if (EDT.isCurrentThreadEdt()) {
             runnable.run();
         }
@@ -2785,7 +2786,7 @@ public class UIUtil {
      * @param runnable a runnable to invoke
      * @see #invokeAndWaitIfNeeded(ThrowableRunnable)
      */
-    public static void invokeAndWaitIfNeeded(@Nonnull Runnable runnable) {
+    public static void invokeAndWaitIfNeeded(@RequiredUIAccess @Nonnull Runnable runnable) {
         if (EDT.isCurrentThreadEdt()) {
             runnable.run();
         }
@@ -2799,7 +2800,7 @@ public class UIUtil {
         }
     }
 
-    public static <T> T invokeAndWaitIfNeeded(@Nonnull final Supplier<T> computable) {
+    public static <T> T invokeAndWaitIfNeeded(@RequiredUIAccess @Nonnull final Supplier<T> computable) {
         final SimpleReference<T> result = SimpleReference.create();
         invokeAndWaitIfNeeded(new Runnable() {
             @Override
@@ -2810,7 +2811,7 @@ public class UIUtil {
         return result.get();
     }
 
-    public static void invokeAndWaitIfNeeded(@Nonnull final ThrowableRunnable runnable) throws Throwable {
+    public static void invokeAndWaitIfNeeded(@RequiredUIAccess @Nonnull final ThrowableRunnable runnable) throws Throwable {
         if (EDT.isCurrentThreadEdt()) {
             runnable.run();
         }
