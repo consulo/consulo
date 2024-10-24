@@ -16,34 +16,40 @@
 
 package consulo.usage;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.component.util.localize.AbstractBundle;
+import consulo.usage.localize.UsageLocalize;
 import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author yole
  */
+@Deprecated
+@DeprecationInfo("Use UsageLocalize")
+@MigratedExtensionsTo(UsageLocalize.class)
 public class UsageViewBundle extends AbstractBundle {
-  private static UsageViewBundle ourInstance = new UsageViewBundle();
+    private static UsageViewBundle ourInstance = new UsageViewBundle();
 
-  private static final String BUNDLE = "consulo.usage.UsageView";
+    private static final String BUNDLE = "consulo.usage.UsageView";
 
-  private UsageViewBundle() {
-    super(BUNDLE);
-  }
+    private UsageViewBundle() {
+        super(BUNDLE);
+    }
 
-  public static String getUsagesString(int usagesCount, int filesCount) {
-    return " (" + message("occurence.info.usage", usagesCount, filesCount) + ")";
-  }
+    public static String getUsagesString(int usagesCount, int filesCount) {
+        return " (" + message("occurence.info.usage", usagesCount, filesCount) + ")";
+    }
 
-  public static String getOccurencesString(int usagesCount, int filesCount) {
-    return " (" + message("occurence.info.occurence", usagesCount, filesCount) + ")";
-  }
+    public static String getOccurencesString(int usagesCount, int filesCount) {
+        return " (" + message("occurence.info.occurence", usagesCount, filesCount) + ")";
+    }
 
-  public static String getReferencesString(int usagesCount, int filesCount) {
-    return " (" + message("occurence.info.reference", usagesCount, filesCount) + ")";
-  }
+    public static String getReferencesString(int usagesCount, int filesCount) {
+        return " (" + message("occurence.info.reference", usagesCount, filesCount) + ")";
+    }
 
-  public static String message(@PropertyKey(resourceBundle = BUNDLE) String key, Object... params) {
-    return ourInstance.getMessage(key, params);
-  }
+    public static String message(@PropertyKey(resourceBundle = BUNDLE) String key, Object... params) {
+        return ourInstance.getMessage(key, params);
+    }
 }

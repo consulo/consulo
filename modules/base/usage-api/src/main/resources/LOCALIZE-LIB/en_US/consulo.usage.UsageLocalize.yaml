@@ -1,0 +1,168 @@
+node.targets:
+  text: Targets
+node.non.code.usages:
+  text: Non-code usages
+node.usages.in.generated.code:
+  text: Usages in generated code
+node.found.usages:
+  text: Found usages
+usage.name:
+  text: usage
+usages.title:
+  text: Usages
+usages.n:
+  text: '{0,choice, 0#no usages|1#1 usage|2#{0,number} usages} found'
+action.show.import.statements:
+  text: Show import statements
+action.show.read.access:
+  text: Show read access
+action.show.write.access:
+  text: Show write access
+action.group.by.file.structure:
+  text: Group by file structure
+action.group.by.usage.type:
+  text: Group by usage type
+action.group.by.module:
+  text: Group by module
+action.group.by.package:
+  text: Group by package
+action.close:
+  text: Close
+usage.view.cancel.button:
+  text: '&Cancel'
+action.merge.same.line:
+  text: Merge usages from the same line
+action.rerun:
+  text: Rerun
+action.description.rerun:
+  text: Rerun search
+dialog.rerun.search:
+  text: Would you like to rerun the search now?
+action.next.occurrence:
+  text: Next Occurrence
+action.previous.occurrence:
+  text: Previous Occurrence
+progress.searching.for:
+  text: Searching for {0}...
+progress.searching.for.in:
+  text: Searching for {0} in {1}{2}...
+dialog.no.usages.found.in:
+  text: No {0} found in {1}
+dialog.title.information:
+  text: Information
+dialog.button.ok:
+  text: OK
+node.invalid:
+  text: INVALID
+node.readonly:
+  text: Read-only
+node.group.module:
+  text: 'Module:'
+node.group.code.usages:
+  text: Code usages
+usage.type.instanceof:
+  text: Usage in instanceof
+usage.type.import:
+  text: Usage in import
+usage.type.cast.target:
+  text: Usage in cast target type
+usage.type.extends:
+  text: Usage in extends/implements clause
+usage.type.static.member:
+  text: Class static member access
+usage.type.nested.class:
+  text: Nested class access
+usage.type.throws.list:
+  text: Method throws list
+usage.type.class.object:
+  text: Usage in .class
+usage.type.field.declaration:
+  text: Field declaration
+usage.type.local.declaration:
+  text: Local variable declaration
+usage.type.parameter.declaration:
+  text: Method parameter declaration
+usage.type.catch.declaration:
+  text: Catch clause parameter declaration
+usage.type.return:
+  text: Method return type
+usage.type.string.constant:
+  text: Usage in string constants
+usage.type.comment:
+  text: Usage in comments
+usage.type.unclassified:
+  text: Unclassified usage
+occurence.info.usage:
+  text: '{0,choice, 0#Not Found|1#1 usage|2#{0,number} usages}{1,choice, 0#|1# in 1 file|2# in {1,number} files}'
+occurence.info.occurence:
+  text: '{0,choice, 0#Not Found|1#1 occurrence|2#{0,number} occurrences}{1,choice, 0#|1# in 1 file|2# in {1,number} files}'
+occurence.info.reference:
+  text: '{0,choice, 0#Not Found|1#1 reference|2#{0,number} references}{1,choice, 0#|1# in 1 file|2# in {1,number} files}'
+default.package.presentable.name:
+  text: <default>
+changes.detected.error.title:
+  text: Changes Detected
+usage.target.xml.tag.of.file:
+  text: '{0} of file {1}'
+usage.target.package.in.directory:
+  text: '{0} (in {1})'
+usage.target.exception:
+  text: Exception
+usage.type.new:
+  text: New instance creation
+usage.type.new.anonymous:
+  text: New anonymous inheritor creation
+usage.type.new.array:
+  text: New array creation
+usage.type.annotation:
+  text: Annotation
+usage.type.type.parameter:
+  text: Type parameter
+usage.type.read:
+  text: Value read
+usage.type.write:
+  text: Value write
+preview.usages.action.text:
+  text: Preview Usages
+select.the.usage.to.preview:
+  text: Select the usage to preview
+usages.were.filtered.out:
+  text: '{0,number} {0,choice, 1#usage was|2#usages were} filtered out'
+show.usages.only.usage:
+  text: It''s the only usage in {0}
+all.usages.are.in.this.line:
+  text: All {0} usages in {1} are in this line
+no.usages.found.in:
+  text: No usages found in {0}
+sort.alphabetically.action.text:
+  text: Sort Members Alphabetically
+button.text.continue:
+  text: Continue
+button.text.abort:
+  text: Abort
+find.excessive.usages.title:
+  text: Too Many Usages
+find.excessive.usage.count.prompt:
+  text: '{0} usages found so far. Are you sure you wish to continue?'
+find.file.size.megabytes:
+  text: '{0} megabytes'
+large.files.were.ignored:
+  text: '{0,choice, 0#No|1#1 too large file was ignored|2#{0,number} too large files were ignored}'
+usage.excluded:
+  text: excluded
+several.occurrences.selected:
+  text: |-
+    Several files selected.
+    Select occurrences from one file to preview.
+action.group.by.title:
+  text: Group By
+occurrences.found.in.comments.strings.and.non.java.files:
+  text: Occurrences found in comments, strings and non-code files
+occurrences.found.in.comments.strings.non.java.files.and.generated.code:
+  text: Occurrences found in comments, strings, non-code files and generated code
+action.text.usage.view.settings:
+  text: Settings…
+action.ShowSettings.show.settings.for.description:
+  text: Show settings for {0}
+action.ShowSettings.show.find.usages.settings.dialog.description:
+  text: Show find usages settings dialog

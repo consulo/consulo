@@ -1,6 +1,6 @@
 /**
  * @author VISTALL
- * @since 27-Mar-22
+ * @since 2022-03-27
  */
 module consulo.usage.api {
     // TODO remove this dependency in future
@@ -13,6 +13,7 @@ module consulo.usage.api {
     requires transitive consulo.project.ui.api;
 
     exports consulo.usage;
+    exports consulo.usage.localize;
     exports consulo.usage.rule;
     exports consulo.usage.util;
     exports consulo.usage.internal to
