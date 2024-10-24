@@ -19,6 +19,7 @@ import consulo.application.Application;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -40,16 +41,14 @@ public class FixLineSeparatorsAction extends AnAction {
         if (project == null || vFiles == null) {
             return;
         }
-        CommandProcessor.getInstance().executeCommand(
-            project,
-            () -> {
+        CommandProcessor.getInstance().newCommand(() -> {
                 for (VirtualFile vFile : vFiles) {
                     fixSeparators(vFile);
                 }
-            },
-            "fixing line separators",
-            null
-        );
+            })
+            .withProject(project)
+            .withName(IdeLocalize.commandFixingLineSeparators())
+            .execute();
     }
 
     private static void fixSeparators(VirtualFile vFile) {
