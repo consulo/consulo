@@ -138,9 +138,7 @@ public class MoveFilesOrDirectoriesUtil {
 
         final PsiDirectory initialTargetDirectory = getInitialTargetDirectory(targetDirectory, elements);
 
-        final MoveFilesOrDirectoriesDialog.Callback doRun = moveDialog -> CommandProcessor.getInstance().executeCommand(
-            project,
-            () -> {
+        final MoveFilesOrDirectoriesDialog.Callback doRun = moveDialog -> CommandProcessor.getInstance().newCommand(() -> {
                 final PsiDirectory targetDirectory1 = moveDialog != null ? moveDialog.getTargetDirectory() : initialTargetDirectory;
                 if (targetDirectory1 == null) {
                     LOG.error("It is null! The target directory, it is null!");
@@ -196,10 +194,10 @@ public class MoveFilesOrDirectoriesUtil {
                         project
                     );
                 }
-            },
-            MoveHandler.REFACTORING_NAME.get(),
-            null
-        );
+            })
+            .withProject(project)
+            .withName(MoveHandler.REFACTORING_NAME)
+            .execute();
 
         if (project.getApplication().isUnitTestMode()) {
             doRun.run(null);
@@ -213,18 +211,16 @@ public class MoveFilesOrDirectoriesUtil {
 
     @Nullable
     public static PsiDirectory resolveToDirectory(final Project project, final PsiElement element) {
-        if (!(element instanceof PsiDirectoryContainer)) {
-            return (PsiDirectory)element;
+        if (element instanceof PsiDirectoryContainer directoryContainer) {
+            PsiDirectory[] directories = directoryContainer.getDirectories();
+            return switch (directories.length) {
+                case 0 -> null;
+                case 1 -> directories[0];
+                default -> RefactoringInternalHelper.getInstance().chooseDirectory(directories, directories[0], project, new HashMap<>());
+            };
         }
-
-        PsiDirectory[] directories = ((PsiDirectoryContainer)element).getDirectories();
-        switch (directories.length) {
-            case 0:
-                return null;
-            case 1:
-                return directories[0];
-            default:
-                return RefactoringInternalHelper.getInstance().chooseDirectory(directories, directories[0], project, new HashMap<>());
+        else {
+            return (PsiDirectory)element;
         }
     }
 
@@ -246,10 +242,8 @@ public class MoveFilesOrDirectoriesUtil {
                 if (commonDirectory == null) {
                     commonDirectory = containingDirectory;
                 }
-                else {
-                    if (commonDirectory != containingDirectory) {
-                        return null;
-                    }
+                else if (commonDirectory != containingDirectory) {
+                    return null;
                 }
             }
         }
@@ -258,19 +252,11 @@ public class MoveFilesOrDirectoriesUtil {
 
     @Nullable
     public static PsiDirectory getInitialTargetDirectory(PsiDirectory initialTargetElement, final PsiElement[] movedElements) {
-        PsiDirectory initialTargetDirectory = initialTargetElement;
-        if (initialTargetDirectory == null) {
-            if (movedElements != null) {
-                final PsiDirectory commonDirectory = getCommonDirectory(movedElements);
-                if (commonDirectory != null) {
-                    initialTargetDirectory = commonDirectory;
-                }
-                else {
-                    initialTargetDirectory = getContainerDirectory(movedElements[0]);
-                }
-            }
+        if (initialTargetElement == null && movedElements != null) {
+            final PsiDirectory commonDirectory = getCommonDirectory(movedElements);
+            return commonDirectory != null ? commonDirectory : getContainerDirectory(movedElements[0]);
         }
-        return initialTargetDirectory;
+        return initialTargetElement;
     }
 
     @Nullable
@@ -302,7 +288,8 @@ public class MoveFilesOrDirectoriesUtil {
             }
             else if (dirs.length > 1) {
                 throw new IncorrectOperationException(
-                    "Moving of packages represented by more than one physical directory is not supported.");
+                    "Moving of packages represented by more than one physical directory is not supported."
+                );
             }
             checkMove(dirs[0], newContainer);
             return;

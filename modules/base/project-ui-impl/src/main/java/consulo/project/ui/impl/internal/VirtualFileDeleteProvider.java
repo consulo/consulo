@@ -27,6 +27,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.StringUtil;
@@ -62,7 +63,7 @@ public final class VirtualFileDeleteProvider implements DeleteProvider {
             UILocalize.deleteDialogTitle().get(),
             ApplicationLocalize.buttonDelete().get(),
             CommonLocalize.buttonCancel().get(),
-            Messages.getQuestionIcon()
+            UIUtil.getQuestionIcon()
         );
         if (returnValue != Messages.OK) {
             return;
@@ -71,55 +72,52 @@ public final class VirtualFileDeleteProvider implements DeleteProvider {
         Arrays.sort(files, FileComparator.getInstance());
 
         List<String> problems = new LinkedList<>();
-        CommandProcessor.getInstance().executeCommand(
-            project,
-            () -> {
-                new Task.Modal(project, "Deleting Files...", true) {
-                    @Override
-                    public void run(@Nonnull ProgressIndicator indicator) {
-                        indicator.setIndeterminate(false);
-                        int i = 0;
-                        for (VirtualFile file : files) {
-                            indicator.checkCanceled();
-                            indicator.setText2(file.getPresentableUrl());
-                            indicator.setFraction((double)i / files.length);
-                            i++;
+        CommandProcessor.getInstance().newCommand(() -> new Task.Modal(project, "Deleting Files...", true) {
+                @Override
+                public void run(@Nonnull ProgressIndicator indicator) {
+                    indicator.setIndeterminate(false);
+                    int i = 0;
+                    for (VirtualFile file : files) {
+                        indicator.checkCanceled();
+                        indicator.setText2(file.getPresentableUrl());
+                        indicator.setFraction((double)i / files.length);
+                        i++;
 
-                            try {
-                                WriteAction.run(() -> file.delete(this));
-                            }
-                            catch (Exception e) {
-                                LOG.info("Error when deleting " + file, e);
-                                problems.add(file.getName());
-                            }
+                        try {
+                            WriteAction.run(() -> file.delete(this));
+                        }
+                        catch (Exception e) {
+                            LOG.info("Error when deleting " + file, e);
+                            problems.add(file.getName());
                         }
                     }
+                }
 
-                    @RequiredUIAccess
-                    @Override
-                    public void onSuccess() {
-                        reportProblems();
-                    }
+                @RequiredUIAccess
+                @Override
+                public void onSuccess() {
+                    reportProblems();
+                }
 
-                    @RequiredUIAccess
-                    @Override
-                    public void onCancel() {
-                        reportProblems();
-                    }
+                @RequiredUIAccess
+                @Override
+                public void onCancel() {
+                    reportProblems();
+                }
 
-                    @RequiredUIAccess
-                    private void reportProblems() {
-                        if (!problems.isEmpty()) {
-                            reportDeletionProblem(problems);
-                        }
+                @RequiredUIAccess
+                private void reportProblems() {
+                    if (!problems.isEmpty()) {
+                        reportDeletionProblem(problems);
                     }
-                }.queue();
-            },
-            "Deleting files",
-            null
-        );
+                }
+            }.queue())
+            .withProject(project)
+            .withName(LocalizeValue.localizeTODO("Deleting files"))
+            .execute();
     }
 
+    @RequiredUIAccess
     private static void test() {
         reportDeletionProblem(List.of());
     }
@@ -134,7 +132,7 @@ public final class VirtualFileDeleteProvider implements DeleteProvider {
         Messages.showMessageDialog(
             "Could not erase files or folders:\n  " + StringUtil.join(problems, ",\n  ") + (more ? "\n  ..." : ""),
             UILocalize.errorDialogTitle().get(),
-            Messages.getErrorIcon()
+            UIUtil.getErrorIcon()
         );
     }
 

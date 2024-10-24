@@ -15,18 +15,16 @@
  */
 package consulo.diff.impl.internal.action;
 
-import consulo.application.ApplicationManager;
-import consulo.undoRedo.CommandProcessor;
 import consulo.document.Document;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nullable;
-import kava.beans.PropertyChangeEvent;
-import kava.beans.PropertyChangeListener;
-
+import consulo.undoRedo.CommandProcessor;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+import kava.beans.PropertyChangeListener;
 
 public abstract class DocumentsSynchronizer {
     @Nonnull
@@ -58,12 +56,9 @@ public abstract class DocumentsSynchronizer {
         }
     };
 
-    private final PropertyChangeListener myROListener = new PropertyChangeListener() {
-        @Override
-        public void propertyChange(PropertyChangeEvent evt) {
-            if (Document.PROP_WRITABLE.equals(evt.getPropertyName())) {
-                getDocument2().setReadOnly(!getDocument1().isWritable());
-            }
+    private final PropertyChangeListener myROListener = evt -> {
+        if (Document.PROP_WRITABLE.equals(evt.getPropertyName())) {
+            getDocument2().setReadOnly(!getDocument1().isWritable());
         }
     };
 
@@ -96,23 +91,14 @@ public abstract class DocumentsSynchronizer {
     ) {
         try {
             myDuringModification = true;
-            CommandProcessor.getInstance().executeCommand(
-                myProject,
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        assert endOffset <= document.getTextLength();
-                        ApplicationManager.getApplication().runWriteAction(new Runnable() {
-                            @Override
-                            public void run() {
-                                document.replaceString(startOffset, endOffset, newText);
-                            }
-                        });
-                    }
-                },
-                "Synchronize document and its fragment",
-                document
-            );
+            CommandProcessor.getInstance().newCommand(() -> {
+                    assert endOffset <= document.getTextLength();
+                    document.replaceString(startOffset, endOffset, newText);
+                })
+                .withProject(myProject)
+                .withName(LocalizeValue.localizeTODO("Synchronize document and its fragment"))
+                .withGroupId(document)
+                .executeInWriteAction();
         }
         finally {
             myDuringModification = false;

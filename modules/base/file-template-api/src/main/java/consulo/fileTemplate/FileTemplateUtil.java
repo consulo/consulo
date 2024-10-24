@@ -17,22 +17,21 @@
 package consulo.fileTemplate;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.application.ApplicationManager;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.file.FileTypeManager;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
-import consulo.logging.Logger;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.primitive.ints.IntObjectMap;
 import consulo.util.lang.ClassLoaderUtil;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.fileType.FileType;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -44,15 +43,14 @@ import java.util.regex.Pattern;
  * @author MYakovlev
  */
 public class FileTemplateUtil {
-    private static final Logger LOG = Logger.getInstance(FileTemplateUtil.class);
-
     private FileTemplateUtil() {
     }
 
     @Deprecated
+    @RequiredUIAccess
     public static PsiElement createFromTemplate(
         @Nonnull final FileTemplate template,
-        @NonNls @Nullable final String fileName,
+        @Nullable final String fileName,
         @Nullable Properties props,
         @Nonnull final PsiDirectory directory
     )
@@ -69,9 +67,10 @@ public class FileTemplateUtil {
     }
 
     @Nonnull
+    @RequiredUIAccess
     public static PsiElement createFromTemplate(
         @Nonnull final FileTemplate template,
-        @NonNls @Nullable final String fileName,
+        @Nullable final String fileName,
         @Nullable Map<String, Object> props,
         @Nonnull final PsiDirectory directory
     )
@@ -88,9 +87,10 @@ public class FileTemplateUtil {
 
     @Deprecated
     @DeprecationInfo("Use #createFromTemplate with Map parameter")
+    @RequiredUIAccess
     public static PsiElement createFromTemplate(
         @Nonnull final FileTemplate template,
-        @NonNls @Nullable String fileName,
+        @Nullable String fileName,
         @Nullable Properties props,
         @Nonnull final PsiDirectory directory,
         @Nullable ClassLoader classLoader
@@ -106,9 +106,10 @@ public class FileTemplateUtil {
         return createFromTemplate(template, fileName, map, directory, classLoader);
     }
 
+    @RequiredUIAccess
     public static PsiElement createFromTemplate(
         @Nonnull final FileTemplate template,
-        @NonNls @Nullable String fileName,
+        @Nullable String fileName,
         @Nullable Map<String, Object> additionalProperties,
         @Nonnull final PsiDirectory directory,
         @Nullable ClassLoader classLoader
@@ -150,25 +151,23 @@ public class FileTemplateUtil {
             (ThrowableComputable<String, IOException>)() -> template.getText(properties)
         );
         final String templateText = StringUtil.convertLineSeparators(mergedText);
-        final Exception[] commandException = new Exception[1];
-        final PsiElement[] result = new PsiElement[1];
-        CommandProcessor.getInstance().executeCommand(
-            project,
-            () -> ApplicationManager.getApplication().runWriteAction(() -> {
+        final SimpleReference<Exception> commandException = new SimpleReference<>();
+        final SimpleReference<PsiElement> result = new SimpleReference<>();
+        CommandProcessor.getInstance().newCommand(() -> {
                 try {
-                    result[0] = handler.createFromTemplate(project, directory, fileName_, template, templateText, properties);
+                    result.set(handler.createFromTemplate(project, directory, fileName_, template, templateText, properties));
                 }
                 catch (Exception ex) {
-                    commandException[0] = ex;
+                    commandException.set(ex);
                 }
-            }),
-            handler.commandName(template),
-            null
-        );
-        if (commandException[0] != null) {
-            throw commandException[0];
+            })
+            .withProject(project)
+            .withName(LocalizeValue.ofNullable(handler.commandName(template)))
+            .executeInWriteAction();
+        if (!commandException.isNull()) {
+            throw commandException.get();
         }
-        return result[0];
+        return result.get();
     }
 
     @Nonnull

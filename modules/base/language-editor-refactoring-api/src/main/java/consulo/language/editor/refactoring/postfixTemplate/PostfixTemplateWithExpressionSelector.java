@@ -1,10 +1,10 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.editor.refactoring.postfixTemplate;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
-import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.postfixTemplate.PostfixTemplate;
 import consulo.language.editor.postfixTemplate.PostfixTemplateProvider;
 import consulo.language.editor.postfixTemplate.PostfixTemplatesUtils;
@@ -16,7 +16,6 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.List;
 
@@ -50,7 +49,7 @@ public abstract class PostfixTemplateWithExpressionSelector extends PostfixTempl
     }
 
     protected PostfixTemplateWithExpressionSelector(
-        @Nullable @NonNls String id,
+        @Nullable String id,
         @Nonnull String name,
         @Nonnull String example,
         @Nonnull PostfixTemplateExpressionSelector selector,
@@ -61,7 +60,7 @@ public abstract class PostfixTemplateWithExpressionSelector extends PostfixTempl
     }
 
     protected PostfixTemplateWithExpressionSelector(
-        @Nullable @NonNls String id,
+        @Nullable String id,
         @Nonnull String name,
         @Nonnull String key,
         @Nonnull String example,
@@ -78,6 +77,7 @@ public abstract class PostfixTemplateWithExpressionSelector extends PostfixTempl
     }
 
     @Override
+    @RequiredUIAccess
     public final void expand(@Nonnull PsiElement context, @Nonnull final Editor editor) {
         List<PsiElement> expressions = mySelector.getExpressions(
             context,
@@ -95,7 +95,7 @@ public abstract class PostfixTemplateWithExpressionSelector extends PostfixTempl
             return;
         }
 
-        if (ApplicationManager.getApplication().isUnitTestMode()) {
+        if (Application.get().isUnitTestMode()) {
             PsiElement item = ContainerUtil.getFirstItem(expressions);
             assert item != null;
             prepareAndExpandForChooseExpression(item, editor);
@@ -103,23 +103,23 @@ public abstract class PostfixTemplateWithExpressionSelector extends PostfixTempl
         }
 
         IntroduceTargetChooser.showChooser(
-            editor, expressions, e -> prepareAndExpandForChooseExpression(e, editor),
+            editor,
+            expressions,
+            e -> prepareAndExpandForChooseExpression(e, editor),
             mySelector.getRenderer(),
-            CodeInsightBundle.message("dialog.title.expressions"), 0, ScopeHighlighter.NATURAL_RANGER
+            CodeInsightLocalize.dialogTitleExpressions().get(),
+            0,
+            ScopeHighlighter.NATURAL_RANGER
         );
     }
 
     @RequiredUIAccess
     protected void prepareAndExpandForChooseExpression(@Nonnull PsiElement expression, @Nonnull Editor editor) {
-        ApplicationManager.getApplication().runWriteAction(() -> CommandProcessor.getInstance().executeCommand(
-            expression.getProject(),
-            () -> expandForChooseExpression(
-                expression,
-                editor
-            ),
-            CodeInsightBundle.message("command.expand.postfix.template"),
-            PostfixTemplate.POSTFIX_TEMPLATE_CUSTOM_TEMPLATE_ID
-        ));
+        CommandProcessor.getInstance().newCommand(() -> expandForChooseExpression(expression, editor))
+            .withProject(expression.getProject())
+            .withName(CodeInsightLocalize.commandExpandPostfixTemplate())
+            .withGroupId(PostfixTemplate.POSTFIX_TEMPLATE_CUSTOM_TEMPLATE_ID)
+            .executeInWriteAction();
     }
 
     @Override

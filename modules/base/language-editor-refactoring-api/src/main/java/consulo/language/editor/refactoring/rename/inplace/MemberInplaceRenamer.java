@@ -53,17 +53,19 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * User: anna
- * Date: 11/9/11
+ * @author anna
+ * @since 2011-11-09
  */
 public class MemberInplaceRenamer extends VariableInplaceRenamer {
     private final PsiElement mySubstituted;
     private RangeMarker mySubstitutedRange;
 
+    @RequiredReadAction
     public MemberInplaceRenamer(@Nonnull PsiNamedElement elementToRename, PsiElement substituted, Editor editor) {
         this(elementToRename, substituted, editor, elementToRename.getName(), elementToRename.getName());
     }
 
+    @RequiredReadAction
     public MemberInplaceRenamer(
         @Nonnull PsiNamedElement elementToRename,
         PsiElement substituted,
@@ -87,11 +89,13 @@ public class MemberInplaceRenamer extends VariableInplaceRenamer {
     }
 
     @Override
+    @RequiredReadAction
     protected VariableInplaceRenamer createInplaceRenamerToRestart(PsiNamedElement variable, Editor editor, String initialName) {
         return new MemberInplaceRenamer(variable, getSubstituted(), editor, initialName, myOldName);
     }
 
     @Override
+    @RequiredReadAction
     protected boolean acceptReference(PsiReference reference) {
         final PsiElement element = reference.getElement();
         final TextRange textRange = reference.getRangeInElement();
@@ -109,6 +113,7 @@ public class MemberInplaceRenamer extends VariableInplaceRenamer {
     }
 
     @Override
+    @RequiredReadAction
     protected PsiElement getNameIdentifier() {
         final PsiFile currentFile = PsiDocumentManager.getInstance(myProject).getPsiFile(myEditor.getDocument());
         if (currentFile == myElementToRename.getContainingFile()) {
@@ -133,6 +138,7 @@ public class MemberInplaceRenamer extends VariableInplaceRenamer {
     }
 
     @Override
+    @RequiredReadAction
     protected Collection<PsiReference> collectRefs(SearchScope referencesSearchScope) {
         final ArrayList<PsiReference> references = new ArrayList<>(super.collectRefs(referencesSearchScope));
         final PsiNamedElement variable = getVariable();
@@ -163,6 +169,7 @@ public class MemberInplaceRenamer extends VariableInplaceRenamer {
     }
 
     @Override
+    @RequiredReadAction
     protected boolean appendAdditionalElement(Collection<PsiReference> refs, Collection<Pair<PsiElement, TextRange>> stringUsages) {
         boolean showChooser = super.appendAdditionalElement(refs, stringUsages);
         PsiNamedElement variable = getVariable();
@@ -187,6 +194,7 @@ public class MemberInplaceRenamer extends VariableInplaceRenamer {
         return false;
     }
 
+    @RequiredReadAction
     private void appendAdditionalElement(
         Collection<Pair<PsiElement, TextRange>> stringUsages,
         PsiNamedElement variable,
@@ -213,20 +221,17 @@ public class MemberInplaceRenamer extends VariableInplaceRenamer {
                         return;
                     }
 
-                    final LocalizeValue commandName = RefactoringLocalize.renaming01To2(
-                        UsageViewUtil.getType(variable),
-                        DescriptiveNameUtil.getDescriptiveName(variable),
-                        newName
-                    );
-                    CommandProcessor.getInstance().executeCommand(
-                        myProject,
-                        () -> {
+                    CommandProcessor.getInstance().newCommand(() -> {
                             performRenameInner(substituted, newName);
                             PsiDocumentManager.getInstance(myProject).commitAllDocuments();
-                        },
-                        commandName.get(),
-                        null
-                    );
+                        })
+                        .withProject(myProject)
+                        .withName(RefactoringLocalize.renaming01To2(
+                            UsageViewUtil.getType(variable),
+                            DescriptiveNameUtil.getDescriptiveName(variable),
+                            newName
+                        ))
+                        .execute();
                 }
             }
         }
@@ -277,11 +282,13 @@ public class MemberInplaceRenamer extends VariableInplaceRenamer {
     }
 
     @Override
+    @RequiredReadAction
     protected void collectAdditionalElementsToRename(List<Pair<PsiElement, TextRange>> stringUsages) {
         //do not highlight non-code usages in file
     }
 
     @Override
+    @RequiredUIAccess
     protected void revertStateOnFinish() {
         final Editor editor = EditorWindow.getTopLevelEditor(myEditor);
         if (editor == FileEditorManager.getInstance(myProject).getSelectedTextEditor()) {

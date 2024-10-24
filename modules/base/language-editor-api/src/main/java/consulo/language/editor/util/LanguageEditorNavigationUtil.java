@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.util;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;
 import consulo.fileEditor.EditorHistoryManager;
@@ -25,31 +26,34 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.navigation.NavigationItem;
 import consulo.navigation.NavigationUtil;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.INativeFileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
-
 import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 05-Apr-22
+ * @since 2022-04-05
  */
 public class LanguageEditorNavigationUtil {
+    @RequiredUIAccess
     public static boolean activateFileWithPsiElement(@Nonnull PsiElement elt) {
         return activateFileWithPsiElement(elt, true);
     }
 
+    @RequiredUIAccess
     public static boolean activateFileWithPsiElement(@Nonnull PsiElement elt, boolean searchForOpen) {
         return openFileWithPsiElement(elt, searchForOpen, true);
     }
 
+    @RequiredUIAccess
     public static boolean openFileWithPsiElement(PsiElement element, boolean searchForOpen, boolean requestFocus) {
         boolean openAsNative = false;
-        if (element instanceof PsiFile) {
-            VirtualFile virtualFile = ((PsiFile)element).getVirtualFile();
+        if (element instanceof PsiFile file) {
+            VirtualFile virtualFile = file.getVirtualFile();
             if (virtualFile != null) {
                 openAsNative =
                     virtualFile.getFileType() instanceof INativeFileType || virtualFile.getFileType() == UnknownFileType.INSTANCE;
@@ -66,9 +70,7 @@ public class LanguageEditorNavigationUtil {
         SimpleReference<Boolean> resultRef = new SimpleReference<>();
         boolean openAsNativeFinal = openAsNative;
         // all navigation inside should be treated as a single operation, so that 'Back' action undoes it in one go
-        CommandProcessor.getInstance().executeCommand(
-            element.getProject(),
-            () -> {
+        CommandProcessor.getInstance().newCommand(() -> {
                 if (openAsNativeFinal || !activatePsiElementIfOpen(element, searchForOpen, requestFocus)) {
                     final NavigationItem navigationItem = (NavigationItem)element;
                     if (navigationItem.canNavigate()) {
@@ -79,10 +81,9 @@ public class LanguageEditorNavigationUtil {
                         resultRef.set(Boolean.FALSE);
                     }
                 }
-            },
-            "",
-            null
-        );
+            })
+            .withProject(element.getProject())
+            .execute();
         if (!resultRef.isNull()) {
             return resultRef.get();
         }
@@ -91,6 +92,7 @@ public class LanguageEditorNavigationUtil {
         return false;
     }
 
+    @RequiredReadAction
     private static boolean activatePsiElementIfOpen(@Nonnull PsiElement elt, boolean searchForOpen, boolean requestFocus) {
         if (!elt.isValid()) {
             return false;
@@ -102,11 +104,7 @@ public class LanguageEditorNavigationUtil {
         }
 
         VirtualFile vFile = file.getVirtualFile();
-        if (vFile == null) {
-            return false;
-        }
-
-        if (!EditorHistoryManager.getInstance(elt.getProject()).hasBeenOpen(vFile)) {
+        if (vFile == null || !EditorHistoryManager.getInstance(elt.getProject()).hasBeenOpen(vFile)) {
             return false;
         }
 
@@ -122,9 +120,9 @@ public class LanguageEditorNavigationUtil {
 
         final FileEditor[] editors = fem.getEditors(vFile);
         for (FileEditor editor : editors) {
-            if (editor instanceof TextEditor) {
-                final Editor text = ((TextEditor)editor).getEditor();
-                final int offset = text.getCaretModel().getOffset();
+            if (editor instanceof TextEditor textEditor) {
+                Editor text = textEditor.getEditor();
+                int offset = text.getCaretModel().getOffset();
 
                 if (range.containsOffset(offset)) {
                     // select the file

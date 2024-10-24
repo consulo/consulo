@@ -54,6 +54,7 @@ import java.util.function.Supplier;
  */
 public interface Application extends ComponentManager {
     @Nonnull
+    @SuppressWarnings("deprecation")
     public static Application get() {
         Application application = ApplicationManager.getApplication();
         if (application == null) {

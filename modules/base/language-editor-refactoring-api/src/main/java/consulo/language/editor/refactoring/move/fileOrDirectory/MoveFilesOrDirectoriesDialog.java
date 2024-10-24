@@ -47,7 +47,6 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.undoRedo.CommandProcessor;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -139,12 +138,12 @@ public class MoveFilesOrDirectoriesDialog extends DialogWrapper {
         return FormBuilder.createFormBuilder().addComponent(myNameLabel)
             .addLabeledComponent(RefactoringLocalize.moveFilesToDirectoryLabel().get(), myTargetDirectoryField, UIUtil.LARGE_VGAP)
             .addTooltip(RefactoringLocalize.pathCompletionShortcut(shortcutText).get())
-            .addComponentToRightColumn((JComponent)TargetAWT.to(myCbSearchForReferences), UIUtil.LARGE_VGAP)
-            .addComponentToRightColumn((JComponent)TargetAWT.to(myOpenInEditorCb), UIUtil.LARGE_VGAP)
+            .addComponentToRightColumn(TargetAWT.to(myCbSearchForReferences), UIUtil.LARGE_VGAP)
+            .addComponentToRightColumn(TargetAWT.to(myOpenInEditorCb), UIUtil.LARGE_VGAP)
             .getPanel();
     }
 
-    public void setData(PsiElement[] psiElements, PsiDirectory initialTargetDirectory, @NonNls String helpID) {
+    public void setData(PsiElement[] psiElements, PsiDirectory initialTargetDirectory, String helpID) {
         if (psiElements.length == 1) {
             LocalizeValue text = psiElements[0] instanceof PsiFile file
                 ? RefactoringLocalize.moveFile0(CopyFilesOrDirectoriesDialog.shortenPath(file.getVirtualFile()))
@@ -204,10 +203,8 @@ public class MoveFilesOrDirectoriesDialog extends DialogWrapper {
             return;
         }
 
-        CommandProcessor.getInstance().executeCommand(
-            myProject,
-            () -> {
-                final Runnable action = () -> {
+        CommandProcessor.getInstance().newCommand(() -> {
+                myProject.getApplication().runWriteAction(() -> {
                     String directoryName = myTargetDirectoryField.getChildComponent().getText().replace(File.separatorChar, '/');
                     try {
                         myTargetDirectory = DirectoryUtil.mkdirs(PsiManager.getInstance(myProject), directoryName);
@@ -215,9 +212,7 @@ public class MoveFilesOrDirectoriesDialog extends DialogWrapper {
                     catch (IncorrectOperationException e) {
                         // ignore
                     }
-                };
-
-                myProject.getApplication().runWriteAction(action);
+                });
                 if (myTargetDirectory == null) {
                     CommonRefactoringUtil.showErrorMessage(
                         getTitle(),
@@ -228,10 +223,10 @@ public class MoveFilesOrDirectoriesDialog extends DialogWrapper {
                     return;
                 }
                 myCallback.run(this);
-            },
-            RefactoringLocalize.moveTitle().get(),
-            null
-        );
+            })
+            .withProject(myProject)
+            .withName(RefactoringLocalize.moveTitle())
+            .execute();
     }
 
     public PsiDirectory getTargetDirectory() {

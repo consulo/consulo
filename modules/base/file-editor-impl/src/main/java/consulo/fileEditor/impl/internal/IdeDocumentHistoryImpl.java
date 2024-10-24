@@ -39,6 +39,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.util.ProjectUtil;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.undoRedo.ApplicationUndoManager;
@@ -67,7 +68,6 @@ import java.util.concurrent.Executor;
 @State(name = "IdeDocumentHistory", storages = @Storage(value = StoragePathMacros.WORKSPACE_FILE))
 @ServiceImpl
 public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Disposable, PersistentStateComponent<IdeDocumentHistoryImpl.RecentlyChangedFilesState> {
-
     private static final Logger LOG = Logger.getInstance(IdeDocumentHistoryImpl.class);
 
     private static final int BACK_QUEUE_LIMIT = 150;
@@ -399,6 +399,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
     }
 
     @Override
+    @RequiredUIAccess
     public final void back() {
         removeInvalidFilesFromStacks();
         if (myBackPlaces.isEmpty()) {
@@ -414,7 +415,9 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
 
         myBackInProgress = true;
         try {
-            executeCommand(() -> gotoPlaceInfo(info), "", null);
+            CommandProcessor.getInstance().newCommand(() -> gotoPlaceInfo(info))
+                .withProject(myProject)
+                .execute();
         }
         finally {
             myBackInProgress = false;
@@ -422,6 +425,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
     }
 
     @Override
+    @RequiredUIAccess
     public final void forward() {
         removeInvalidFilesFromStacks();
 
@@ -432,7 +436,9 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
 
         myForwardInProgress = true;
         try {
-            executeCommand(() -> gotoPlaceInfo(target), "", null);
+            CommandProcessor.getInstance().newCommand(() -> gotoPlaceInfo(target))
+                .withProject(myProject)
+                .execute();
         }
         finally {
             myForwardInProgress = false;
@@ -469,6 +475,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
     }
 
     @Override
+    @RequiredUIAccess
     public final void navigatePreviousChange() {
         removeInvalidFilesFromStacks();
         if (myCurrentIndex == 0) {
@@ -478,7 +485,9 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
         for (int i = myCurrentIndex - 1; i >= 0; i--) {
             PlaceInfo info = myChangePlaces.get(i);
             if (currentPlace == null || !isSame(currentPlace, info)) {
-                executeCommand(() -> gotoPlaceInfo(info), "", null);
+                CommandProcessor.getInstance().newCommand(() -> gotoPlaceInfo(info))
+                    .withProject(myProject)
+                    .execute();
                 myCurrentIndex = i;
                 break;
             }
@@ -528,6 +537,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
     }
 
     @Override
+    @RequiredUIAccess
     public void navigateNextChange() {
         removeInvalidFilesFromStacks();
         if (myCurrentIndex >= myChangePlaces.size()) {
@@ -537,7 +547,9 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
         for (int i = myCurrentIndex; i < myChangePlaces.size(); i++) {
             PlaceInfo info = myChangePlaces.get(i);
             if (currentPlace == null || !isSame(currentPlace, info)) {
-                executeCommand(() -> gotoPlaceInfo(info), "", null);
+                CommandProcessor.getInstance().newCommand(() -> gotoPlaceInfo(info))
+                    .withProject(myProject)
+                    .execute();
                 myCurrentIndex = i + 1;
                 break;
             }
@@ -554,6 +566,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
     }
 
     @Override
+    @RequiredUIAccess
     public void gotoPlaceInfo(@Nonnull PlaceInfo info) {
         final boolean wasActive = ToolWindowManager.getInstance(myProject).isEditorComponentActive();
         FileEditorWindow wnd = info.getWindow();
@@ -656,10 +669,6 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
                 LOG.info("Cannot close persistent viewed files timestamps hash map", e);
             }
         }
-    }
-
-    protected void executeCommand(Runnable runnable, String name, Object groupId) {
-        CommandProcessor.getInstance().executeCommand(myProject, runnable, name, groupId);
     }
 
     public static boolean isSame(@Nonnull PlaceInfo first, @Nonnull PlaceInfo second) {

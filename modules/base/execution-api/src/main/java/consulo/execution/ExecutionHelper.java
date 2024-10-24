@@ -16,7 +16,7 @@
 
 package consulo.execution;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
@@ -27,6 +27,7 @@ import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.process.ExecutionMode;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.execution.ui.RunContentManager;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.navigation.Navigatable;
 import consulo.process.ProcessHandler;
@@ -36,6 +37,7 @@ import consulo.project.Project;
 import consulo.project.ui.view.MessageView;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.MessageCategory;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.Messages;
@@ -50,7 +52,6 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.image.Image;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ArrayUtil;
-import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -65,10 +66,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
- * Created by IntelliJ IDEA.
- *
- * @author: Roman Chernyatchik
- * @date: Oct 4, 2007
+ * @author Roman Chernyatchik
+ * @since 2007-10-04
  */
 public class ExecutionHelper {
     private static final Logger LOG = Logger.getInstance(ExecutionHelper.class);
@@ -92,48 +91,45 @@ public class ExecutionHelper {
         @Nonnull final String tabDisplayName,
         @Nullable final VirtualFile file
     ) {
-        if (ApplicationManager.getApplication().isUnitTestMode() && !errors.isEmpty()) {
+        if (Application.get().isUnitTestMode() && !errors.isEmpty()) {
             throw new RuntimeException(errors.get(0));
         }
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                if (myProject.isDisposed()) {
-                    return;
-                }
-                if (errors.isEmpty() && warnings.isEmpty()) {
-                    removeContents(null, myProject, tabDisplayName);
-                    return;
-                }
-
-                final NewErrorTreeViewPanel errorTreeView = myProject.getApplication()
-                    .getInstance(NewErrorTreeViewPanelFactory.class)
-                    .createPanel(myProject, "reference.toolWindows.messages");
-                errorTreeView.setCanHideWarningsOrInfos(false);
-                try {
-                    openMessagesView(errorTreeView, myProject, tabDisplayName);
-                }
-                catch (NullPointerException e) {
-                    final StringBuilder builder = new StringBuilder();
-                    builder.append("Exceptions occurred:");
-                    for (final Exception exception : errors) {
-                        builder.append("\n");
-                        builder.append(exception.getMessage());
-                    }
-                    builder.append("Warnings occurred:");
-                    for (final Exception exception : warnings) {
-                        builder.append("\n");
-                        builder.append(exception.getMessage());
-                    }
-                    Messages.showErrorDialog(builder.toString(), "Execution Error");
-                    return;
-                }
-
-                addMessages(MessageCategory.ERROR, errors, errorTreeView, file, "Unknown Error");
-                addMessages(MessageCategory.WARNING, warnings, errorTreeView, file, "Unknown Warning");
-
-                ToolWindowManager.getInstance(myProject).getToolWindow(ToolWindowId.MESSAGES_WINDOW).activate(null);
+        Application.get().invokeLater(() -> {
+            if (myProject.isDisposed()) {
+                return;
             }
+            if (errors.isEmpty() && warnings.isEmpty()) {
+                removeContents(null, myProject, tabDisplayName);
+                return;
+            }
+
+            final NewErrorTreeViewPanel errorTreeView = myProject.getApplication()
+                .getInstance(NewErrorTreeViewPanelFactory.class)
+                .createPanel(myProject, "reference.toolWindows.messages");
+            errorTreeView.setCanHideWarningsOrInfos(false);
+            try {
+                openMessagesView(errorTreeView, myProject, tabDisplayName);
+            }
+            catch (NullPointerException e) {
+                final StringBuilder builder = new StringBuilder();
+                builder.append("Exceptions occurred:");
+                for (final Exception exception : errors) {
+                    builder.append("\n");
+                    builder.append(exception.getMessage());
+                }
+                builder.append("Warnings occurred:");
+                for (final Exception exception : warnings) {
+                    builder.append("\n");
+                    builder.append(exception.getMessage());
+                }
+                Messages.showErrorDialog(builder.toString(), "Execution Error");
+                return;
+            }
+
+            addMessages(MessageCategory.ERROR, errors, errorTreeView, file, "Unknown Error");
+            addMessages(MessageCategory.WARNING, warnings, errorTreeView, file, "Unknown Warning");
+
+            ToolWindowManager.getInstance(myProject).getToolWindow(ToolWindowId.MESSAGES_WINDOW).activate(null);
         });
     }
 
@@ -154,7 +150,7 @@ public class ExecutionHelper {
     }
 
     public static void showOutput(
-        @Nonnull final Project myProject,
+        @Nonnull final Project project,
         @Nonnull final ProcessOutput output,
         @Nonnull final String tabDisplayName,
         @Nullable final VirtualFile file,
@@ -162,70 +158,46 @@ public class ExecutionHelper {
     ) {
         final String stdout = output.getStdout();
         final String stderr = output.getStderr();
-        if (ApplicationManager.getApplication().isUnitTestMode() && !(stdout.isEmpty() || stderr.isEmpty())) {
+        if (Application.get().isUnitTestMode() && !(stdout.isEmpty() || stderr.isEmpty())) {
             throw new RuntimeException("STDOUT:\n" + stdout + "\nSTDERR:\n" + stderr);
         }
 
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                if (myProject.isDisposed()) {
-                    return;
-                }
+        project.getApplication().invokeLater(() -> {
+            if (project.isDisposed()) {
+                return;
+            }
 
-                final String stdOutTitle = "[Stdout]:";
-                final String stderrTitle = "[Stderr]:";
-                final NewErrorTreeViewPanel errorTreeView = myProject.getApplication()
-                    .getInstance(NewErrorTreeViewPanelFactory.class)
-                    .createPanel(myProject, "reference.toolWindows.messages");
-                errorTreeView.setCanHideWarningsOrInfos(false);
-                try {
-                    openMessagesView(errorTreeView, myProject, tabDisplayName);
-                }
-                catch (NullPointerException e) {
-                    final StringBuilder builder = new StringBuilder();
-                    builder.append(stdOutTitle).append("\n").append(stdout != null ? stdout : "<empty>").append("\n");
-                    builder.append(stderrTitle).append("\n").append(stderr != null ? stderr : "<empty>");
-                    Messages.showErrorDialog(builder.toString(), "Process Output");
-                    return;
-                }
+            final String stdOutTitle = "[Stdout]:";
+            final String stderrTitle = "[Stderr]:";
+            final NewErrorTreeViewPanel errorTreeView = project.getApplication()
+                .getInstance(NewErrorTreeViewPanelFactory.class)
+                .createPanel(project, "reference.toolWindows.messages");
+            errorTreeView.setCanHideWarningsOrInfos(false);
+            try {
+                openMessagesView(errorTreeView, project, tabDisplayName);
+            }
+            catch (NullPointerException e) {
+                final StringBuilder builder = new StringBuilder();
+                builder.append(stdOutTitle).append("\n").append(stdout != null ? stdout : "<empty>").append("\n");
+                builder.append(stderrTitle).append("\n").append(stderr != null ? stderr : "<empty>");
+                Messages.showErrorDialog(builder.toString(), "Process Output");
+                return;
+            }
 
-                if (!StringUtil.isEmpty(stdout)) {
-                    final String[] stdoutLines = StringUtil.splitByLines(stdout);
-                    if (stdoutLines.length > 0) {
-                        if (StringUtil.isEmpty(stderr)) {
-                            // Only stdout available
-                            errorTreeView.addMessage(MessageCategory.SIMPLE, stdoutLines, file, -1, -1, null);
-                        }
-                        else {
-                            // both stdout and stderr available, show as groups
-                            if (file == null) {
-                                errorTreeView.addMessage(
-                                    MessageCategory.SIMPLE,
-                                    stdoutLines,
-                                    stdOutTitle,
-                                    new FakeNavigatable(),
-                                    null,
-                                    null,
-                                    null
-                                );
-                            }
-                            else {
-                                errorTreeView.addMessage(MessageCategory.SIMPLE, new String[]{stdOutTitle}, file, -1, -1, null);
-                                errorTreeView.addMessage(MessageCategory.SIMPLE, new String[]{""}, file, -1, -1, null);
-                                errorTreeView.addMessage(MessageCategory.SIMPLE, stdoutLines, file, -1, -1, null);
-                            }
-                        }
+            if (!StringUtil.isEmpty(stdout)) {
+                final String[] stdoutLines = StringUtil.splitByLines(stdout);
+                if (stdoutLines.length > 0) {
+                    if (StringUtil.isEmpty(stderr)) {
+                        // Only stdout available
+                        errorTreeView.addMessage(MessageCategory.SIMPLE, stdoutLines, file, -1, -1, null);
                     }
-                }
-                if (!StringUtil.isEmpty(stderr)) {
-                    final String[] stderrLines = StringUtil.splitByLines(stderr);
-                    if (stderrLines.length > 0) {
+                    else {
+                        // both stdout and stderr available, show as groups
                         if (file == null) {
                             errorTreeView.addMessage(
                                 MessageCategory.SIMPLE,
-                                stderrLines,
-                                stderrTitle,
+                                stdoutLines,
+                                stdOutTitle,
                                 new FakeNavigatable(),
                                 null,
                                 null,
@@ -233,45 +205,67 @@ public class ExecutionHelper {
                             );
                         }
                         else {
-                            errorTreeView.addMessage(MessageCategory.SIMPLE, new String[]{stderrTitle}, file, -1, -1, null);
-                            errorTreeView.addMessage(MessageCategory.SIMPLE, ArrayUtil.EMPTY_STRING_ARRAY, file, -1, -1, null);
-                            errorTreeView.addMessage(MessageCategory.SIMPLE, stderrLines, file, -1, -1, null);
+                            errorTreeView.addMessage(MessageCategory.SIMPLE, new String[]{stdOutTitle}, file, -1, -1, null);
+                            errorTreeView.addMessage(MessageCategory.SIMPLE, new String[]{""}, file, -1, -1, null);
+                            errorTreeView.addMessage(MessageCategory.SIMPLE, stdoutLines, file, -1, -1, null);
                         }
                     }
                 }
-                errorTreeView.addMessage(
-                    MessageCategory.SIMPLE,
-                    new String[]{"Process finished with exit code " + output.getExitCode()},
-                    null,
-                    -1,
-                    -1,
-                    null
-                );
-
-                if (activateWindow) {
-                    ToolWindowManager.getInstance(myProject).getToolWindow(ToolWindowId.MESSAGES_WINDOW).activate(null);
+            }
+            if (!StringUtil.isEmpty(stderr)) {
+                final String[] stderrLines = StringUtil.splitByLines(stderr);
+                if (stderrLines.length > 0) {
+                    if (file == null) {
+                        errorTreeView.addMessage(
+                            MessageCategory.SIMPLE,
+                            stderrLines,
+                            stderrTitle,
+                            new FakeNavigatable(),
+                            null,
+                            null,
+                            null
+                        );
+                    }
+                    else {
+                        errorTreeView.addMessage(MessageCategory.SIMPLE, new String[]{stderrTitle}, file, -1, -1, null);
+                        errorTreeView.addMessage(MessageCategory.SIMPLE, ArrayUtil.EMPTY_STRING_ARRAY, file, -1, -1, null);
+                        errorTreeView.addMessage(MessageCategory.SIMPLE, stderrLines, file, -1, -1, null);
+                    }
                 }
+            }
+            errorTreeView.addMessage(
+                MessageCategory.SIMPLE,
+                new String[]{"Process finished with exit code " + output.getExitCode()},
+                null,
+                -1,
+                -1,
+                null
+            );
+
+            if (activateWindow) {
+                ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.MESSAGES_WINDOW).activate(null);
             }
         });
     }
 
+    @RequiredUIAccess
     private static void openMessagesView(
         @Nonnull final NewErrorTreeViewPanel errorTreeView,
         @Nonnull final Project project,
         @Nonnull final String tabDisplayName
     ) {
         CommandProcessor commandProcessor = CommandProcessor.getInstance();
-        commandProcessor.executeCommand(project, new Runnable() {
-            @Override
-            public void run() {
+        commandProcessor.newCommand(() -> {
                 final MessageView messageView = MessageView.getInstance(project);
                 final Content content = ContentFactory.getInstance().createContent(errorTreeView.getComponent(), tabDisplayName, true);
                 messageView.getContentManager().addContent(content);
                 Disposer.register(content, errorTreeView);
                 messageView.getContentManager().setSelectedContent(content);
                 removeContents(content, project, tabDisplayName);
-            }
-        }, "Open message view", null);
+            })
+            .withProject(project)
+            .withName(LocalizeValue.localizeTODO("Open message view"))
+            .execute();
     }
 
     private static void removeContents(
@@ -321,7 +315,7 @@ public class ExecutionHelper {
             }
         }
 
-        final ArrayList<RunContentDescriptor> result = ContainerUtil.newArrayList();
+        List<RunContentDescriptor> result = new ArrayList<>();
         for (RunContentDescriptor runContentDescriptor : executionManager.getContentManager().getAllDescriptors()) {
             if (descriptorMatcher.apply(runContentDescriptor)) {
                 result.add(runContentDescriptor);
@@ -385,14 +379,17 @@ public class ExecutionHelper {
     }
 
     private static void descriptorToFront(final Project project, final RunContentDescriptor descriptor) {
-        ApplicationManager.getApplication().invokeLater(() -> {
-            RunContentManager manager = ExecutionManager.getInstance(project).getContentManager();
-            ToolWindow toolWindow = manager.getToolWindowByDescriptor(descriptor);
-            if (toolWindow != null) {
-                toolWindow.show(null);
-                manager.selectRunContent(descriptor);
-            }
-        }, project.getDisposed());
+        Application.get().invokeLater(
+            () -> {
+                RunContentManager manager = ExecutionManager.getInstance(project).getContentManager();
+                ToolWindow toolWindow = manager.getToolWindowByDescriptor(descriptor);
+                if (toolWindow != null) {
+                    toolWindow.show(null);
+                    manager.selectRunContent(descriptor);
+                }
+            },
+            project.getDisposed()
+        );
     }
 
     public static void executeExternalProcess(
@@ -419,12 +416,7 @@ public class ExecutionHelper {
         }
         else {
             if (mode.getTimeout() <= 0) {
-                process = new Runnable() {
-                    @Override
-                    public void run() {
-                        processHandler.waitFor();
-                    }
-                };
+                process = processHandler::waitFor;
             }
             else {
                 process = createTimelimitedExecutionProcess(processHandler, mode.getTimeout(), presentableCmdline);
@@ -474,9 +466,9 @@ public class ExecutionHelper {
                 @Override
                 public void run() {
                     for (; ; ) {
-                        if ((myProgressIndicator != null && (myProgressIndicator.isCanceled() || !myProgressIndicator.isRunning())) ||
-                            (cancelableFun != null && cancelableFun.apply(null).booleanValue()) ||
-                            processHandler.isProcessTerminated()) {
+                        if ((myProgressIndicator != null && (myProgressIndicator.isCanceled() || !myProgressIndicator.isRunning()))
+                            || (cancelableFun != null && cancelableFun.apply(null))
+                            || processHandler.isProcessTerminated()) {
 
                             if (!processHandler.isProcessTerminated()) {
                                 try {
@@ -512,8 +504,8 @@ public class ExecutionHelper {
                     "Cancelable process must have an opportunity to be canceled!"
                 );
                 mySemaphore.down();
-                ApplicationManager.getApplication().executeOnPooledThread(myWaitThread);
-                ApplicationManager.getApplication().executeOnPooledThread(myCancelListener);
+                Application.get().executeOnPooledThread(myWaitThread);
+                Application.get().executeOnPooledThread(myCancelListener);
 
                 mySemaphore.waitFor();
             }
@@ -528,27 +520,24 @@ public class ExecutionHelper {
         return new Runnable() {
             private final Semaphore mySemaphore = new Semaphore();
 
-            private final Runnable myProcessThread = new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        final boolean finished = processHandler.waitFor(1000 * timeout);
-                        if (!finished) {
-                            final String msg = "Timeout (" + timeout + " sec) on executing: " + presentableCmdline;
-                            LOG.error(msg);
-                            processHandler.destroyProcess();
-                        }
+            private final Runnable myProcessThread = () -> {
+                try {
+                    final boolean finished = processHandler.waitFor(1000 * timeout);
+                    if (!finished) {
+                        final String msg = "Timeout (" + timeout + " sec) on executing: " + presentableCmdline;
+                        LOG.error(msg);
+                        processHandler.destroyProcess();
                     }
-                    finally {
-                        mySemaphore.up();
-                    }
+                }
+                finally {
+                    mySemaphore.up();
                 }
             };
 
             @Override
             public void run() {
                 mySemaphore.down();
-                ApplicationManager.getApplication().executeOnPooledThread(myProcessThread);
+                Application.get().executeOnPooledThread(myProcessThread);
 
                 mySemaphore.waitFor();
             }
