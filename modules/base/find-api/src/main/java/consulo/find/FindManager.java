@@ -24,6 +24,7 @@ import consulo.language.findUsage.FindUsagesProvider;
 import consulo.language.psi.PsiElement;
 import consulo.navigation.NavigationItem;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
 import org.intellij.lang.annotations.MagicConstant;
 
@@ -62,7 +63,8 @@ public abstract class FindManager {
    * @param model the model containing the settings of a find or replace operation.
    * @param okHandler Will be executed after doOkAction
    */
-  public abstract void showFindDialog(@Nonnull FindModel model, @Nonnull Runnable okHandler);
+  @RequiredUIAccess
+  public abstract void showFindDialog(@Nonnull FindModel model, @Nonnull @RequiredUIAccess Runnable okHandler);
 
   /**
    * Shows a replace prompt dialog for the specified replace operation.

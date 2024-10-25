@@ -31,33 +31,39 @@ import consulo.undoRedo.CommandProcessor;
  * @author Dennis.Ushakov
  */
 public class ShowTaskDescription extends BaseTaskAction {
-  @Override
-  public void update(AnActionEvent event) {
-    super.update(event);
-    if (event.getPresentation().isEnabled()) {
-      final Presentation presentation = event.getPresentation();
-      final LocalTask activeTask = getActiveTask(event);
-      presentation.setEnabled(activeTask != null && activeTask.isIssue() && activeTask.getDescription() != null);
-      if (activeTask == null || !activeTask.isIssue()) {
-        presentation.setText(getTemplatePresentation().getText());
-      } else {
-        presentation.setText("Show '" + activeTask.getPresentableName() + "' _Description");
-      }
+    @Override
+    public void update(AnActionEvent event) {
+        super.update(event);
+        if (event.getPresentation().isEnabled()) {
+            final Presentation presentation = event.getPresentation();
+            final LocalTask activeTask = getActiveTask(event);
+            presentation.setEnabled(activeTask != null && activeTask.isIssue() && activeTask.getDescription() != null);
+            if (activeTask == null || !activeTask.isIssue()) {
+                presentation.setText(getTemplatePresentation().getText());
+            }
+            else {
+                presentation.setText("Show '" + activeTask.getPresentableName() + "' _Description");
+            }
+        }
     }
-  }
 
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(AnActionEvent e) {
-    final Project project = getProject(e);
-    assert project != null;
-    final LocalTask task = getActiveTask(e);
-    FeatureUsageTracker.getInstance().triggerFeatureUsed("codeassists.quickjavadoc.ctrln");
-    CommandProcessor.getInstance().executeCommand(project, () -> DocumentationManager.getInstance(project).showJavaDocInfo(new TaskPsiElement(PsiManager.getInstance(project), task), null), getCommandName(), null);
-  }
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(AnActionEvent e) {
+        final Project project = getProject(e);
+        assert project != null;
+        final LocalTask task = getActiveTask(e);
+        FeatureUsageTracker.getInstance().triggerFeatureUsed("codeassists.quickjavadoc.ctrln");
+        CommandProcessor.getInstance().executeCommand(
+            project,
+            () -> DocumentationManager.getInstance(project).showJavaDocInfo(new TaskPsiElement(PsiManager.getInstance(project), task), null),
+            getCommandName(),
+            null
+        );
+    }
 
-  protected String getCommandName() {
-    String text = getTemplatePresentation().getText();
-    return text != null ? text : "";
-  }
+    protected String getCommandName() {
+        String text = getTemplatePresentation().getText();
+        return text != null ? text : "";
+    }
 }

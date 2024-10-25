@@ -124,7 +124,8 @@ public abstract class ExtractIncludeFileBase<T extends PsiElement> implements Re
         final Project project
     ) {
         if (duplicates.size() > 0) {
-            final LocalizeValue message = RefactoringLocalize.ideaHasFoundFragmentsThatCanBeReplacedWithIncludeDirective(Application.get().getName());
+            final LocalizeValue message =
+                RefactoringLocalize.ideaHasFoundFragmentsThatCanBeReplacedWithIncludeDirective(Application.get().getName());
             final int exitCode = Messages.showYesNoDialog(project, message.get(), getRefactoringName(), UIUtil.getInformationIcon());
             if (exitCode == Messages.YES) {
                 CommandProcessor.getInstance().executeCommand(
@@ -136,7 +137,8 @@ public abstract class ExtractIncludeFileBase<T extends PsiElement> implements Re
 
                                 highlightInEditor(project, pair, editor);
 
-                                ReplacePromptDialog promptDialog = new ReplacePromptDialog(false, RefactoringLocalize.replaceFragment().get(), project);
+                                ReplacePromptDialog promptDialog =
+                                    new ReplacePromptDialog(false, RefactoringLocalize.replaceFragment().get(), project);
                                 promptDialog.show();
                                 final int promptResult = promptDialog.getExitCode();
                                 if (promptResult == FindManager.PromptResult.SKIP) {
@@ -194,7 +196,7 @@ public abstract class ExtractIncludeFileBase<T extends PsiElement> implements Re
     private static FileType getFileType(final Language language) {
         final FileType[] fileTypes = FileTypeManager.getInstance().getRegisteredFileTypes();
         for (FileType fileType : fileTypes) {
-            if (fileType instanceof LanguageFileType && language.equals(((LanguageFileType) fileType).getLanguage())) {
+            if (fileType instanceof LanguageFileType && language.equals(((LanguageFileType)fileType).getLanguage())) {
                 return fileType;
             }
         }
@@ -216,13 +218,15 @@ public abstract class ExtractIncludeFileBase<T extends PsiElement> implements Re
 
         final Pair<T, T> children = findPairToExtract(start, end);
         if (children == null) {
-            String message = RefactoringBundle.getCannotRefactorMessage(RefactoringLocalize.selectionDoesNotFormAFragmentForExtraction().get());
+            String message =
+                RefactoringBundle.getCannotRefactorMessage(RefactoringLocalize.selectionDoesNotFormAFragmentForExtraction().get());
             CommonRefactoringUtil.showErrorHint(project, editor, message, getRefactoringName(), HELP_ID);
             return;
         }
 
         if (!verifyChildRange(children.getFirst(), children.getSecond())) {
-            String message = RefactoringBundle.getCannotRefactorMessage(RefactoringLocalize.cannotExtractSelectedElementsIntoIncludeFile().get());
+            String message =
+                RefactoringBundle.getCannotRefactorMessage(RefactoringLocalize.cannotExtractSelectedElementsIntoIncludeFile().get());
             CommonRefactoringUtil.showErrorHint(project, editor, message, getRefactoringName(), HELP_ID);
             return;
         }
@@ -251,7 +255,12 @@ public abstract class ExtractIncludeFileBase<T extends PsiElement> implements Re
                         final List<IncludeDuplicate<T>> duplicates = new ArrayList<>();
                         final T first = children.getFirst();
                         final T second = children.getSecond();
-                        PsiEquivalenceUtil.findChildRangeDuplicates(first, second, file, (start1, end1) -> duplicates.add(new IncludeDuplicate<>((T) start1, (T) end1)));
+                        PsiEquivalenceUtil.findChildRangeDuplicates(
+                            first,
+                            second,
+                            file,
+                            (start1, end1) -> duplicates.add(new IncludeDuplicate<>((T)start1, (T)end1))
+                        );
                         final String includePath = processPrimaryFragment(first, second, targetDirectory, targetfileName, file);
                         editor.getCaretModel().moveToOffset(first.getTextRange().getStartOffset());
 

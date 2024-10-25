@@ -33,51 +33,57 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.undoRedo.CommandProcessor;
 
 public class ReloadFromDiskAction extends AnAction implements DumbAware {
-  @Override
-  public void actionPerformed(AnActionEvent e) {
-    DataContext dataContext = e.getDataContext();
-    final Project project = dataContext.getData(Project.KEY);
-    final Editor editor = dataContext.getData(Editor.KEY);
-    if (editor == null) return;
-    final PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
-    if (psiFile == null) return;
+    @Override
+    public void actionPerformed(AnActionEvent e) {
+        DataContext dataContext = e.getDataContext();
+        final Project project = dataContext.getData(Project.KEY);
+        final Editor editor = dataContext.getData(Editor.KEY);
+        if (editor == null) {
+            return;
+        }
+        final PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+        if (psiFile == null) {
+            return;
+        }
 
-    int res = Messages.showOkCancelDialog(
-      project,
-      IdeLocalize.promptReloadFileFromDisk(psiFile.getVirtualFile().getPresentableUrl()).get(),
-      IdeLocalize.titleReloadFile().get(),
-      UIUtil.getWarningIcon()
-    );
-    if (res != 0) return;
+        int res = Messages.showOkCancelDialog(
+            project,
+            IdeLocalize.promptReloadFileFromDisk(psiFile.getVirtualFile().getPresentableUrl()).get(),
+            IdeLocalize.titleReloadFile().get(),
+            UIUtil.getWarningIcon()
+        );
+        if (res != 0) {
+            return;
+        }
 
-    CommandProcessor.getInstance().executeCommand(
-      project,
-      () -> project.getApplication().runWriteAction(
-        () -> PsiManager.getInstance(project).reloadFromDisk(psiFile)
-      ),
-      IdeLocalize.commandReloadFromDisk().get(),
-      null
-    );
-  }
+        CommandProcessor.getInstance().executeCommand(
+            project,
+            () -> project.getApplication().runWriteAction(
+                () -> PsiManager.getInstance(project).reloadFromDisk(psiFile)
+            ),
+            IdeLocalize.commandReloadFromDisk().get(),
+            null
+        );
+    }
 
-  @Override
-  public void update(AnActionEvent event){
-    Presentation presentation = event.getPresentation();
-    DataContext dataContext = event.getDataContext();
-    Project project = dataContext.getData(Project.KEY);
-    if (project == null){
-      presentation.setEnabled(false);
-      return;
+    @Override
+    public void update(AnActionEvent event) {
+        Presentation presentation = event.getPresentation();
+        DataContext dataContext = event.getDataContext();
+        Project project = dataContext.getData(Project.KEY);
+        if (project == null) {
+            presentation.setEnabled(false);
+            return;
+        }
+        Editor editor = dataContext.getData(Editor.KEY);
+        if (editor == null) {
+            presentation.setEnabled(false);
+            return;
+        }
+        Document document = editor.getDocument();
+        PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document);
+        if (psiFile == null || psiFile.getVirtualFile() == null) {
+            presentation.setEnabled(false);
+        }
     }
-    Editor editor = dataContext.getData(Editor.KEY);
-    if (editor == null){
-      presentation.setEnabled(false);
-      return;
-    }
-    Document document = editor.getDocument();
-    PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document);
-    if (psiFile == null || psiFile.getVirtualFile() == null){
-      presentation.setEnabled(false);
-    }
-  }
 }

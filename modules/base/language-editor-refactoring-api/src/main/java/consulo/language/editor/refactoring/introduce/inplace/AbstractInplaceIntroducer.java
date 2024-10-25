@@ -58,8 +58,8 @@ import java.util.List;
 import java.util.*;
 
 /**
- * User: anna
- * Date: 3/15/11
+ * @author anna
+ * @since 2011-03-15
  */
 public abstract class AbstractInplaceIntroducer<V extends PsiNameIdentifierOwner, E extends PsiElement> extends InplaceVariableIntroducer<E> {
     protected V myLocalVariable;
@@ -358,6 +358,7 @@ public abstract class AbstractInplaceIntroducer<V extends PsiNameIdentifierOwner
 
 
     @Override
+    @RequiredUIAccess
     public void finish(boolean success) {
         myFinished = true;
         final TemplateState templateState = TemplateManager.getInstance(myProject).getTemplateState(myEditor);
@@ -393,6 +394,7 @@ public abstract class AbstractInplaceIntroducer<V extends PsiNameIdentifierOwner
     }
 
     @Override
+    @RequiredReadAction
     protected void addReferenceAtCaret(Collection<PsiReference> refs) {
         final V variable = getLocalVariable();
         if (variable != null) {
@@ -435,6 +437,7 @@ public abstract class AbstractInplaceIntroducer<V extends PsiNameIdentifierOwner
     }
 
     @Override
+    @RequiredReadAction
     protected void addHighlights(
         @Nonnull Map<TextRange, TextAttributes> ranges,
         @Nonnull Editor editor,
@@ -571,6 +574,7 @@ public abstract class AbstractInplaceIntroducer<V extends PsiNameIdentifierOwner
     }
 
     @Override
+    @RequiredReadAction
     protected void moveOffsetAfter(boolean success) {
         if (getLocalVariable() != null && getLocalVariable().isValid()) {
             myEditor.getCaretModel().moveToOffset(getLocalVariable().getTextOffset());
@@ -593,6 +597,7 @@ public abstract class AbstractInplaceIntroducer<V extends PsiNameIdentifierOwner
     }
 
     @Override
+    @RequiredReadAction
     protected boolean startsOnTheSameElement(RefactoringActionHandler handler, PsiElement element) {
         return super.startsOnTheSameElement(handler, element) || getLocalVariable() == element;
     }
@@ -636,6 +641,7 @@ public abstract class AbstractInplaceIntroducer<V extends PsiNameIdentifierOwner
     }
 
     @Override
+    @RequiredUIAccess
     protected void navigateToAlreadyStarted(Document oldDocument, int exitCode) {
         finish(true);
         super.navigateToAlreadyStarted(oldDocument, exitCode);

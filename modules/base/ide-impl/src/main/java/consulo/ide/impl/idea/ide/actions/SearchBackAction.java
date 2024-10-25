@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.application.dumb.DumbAware;
@@ -31,40 +30,40 @@ import consulo.ui.ex.action.Presentation;
 import consulo.undoRedo.CommandProcessor;
 
 public class SearchBackAction extends AnAction implements DumbAware {
-  public SearchBackAction() {
-    setEnabledInModalContext(true);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(final AnActionEvent e) {
-    final Project project = e.getRequiredData(Project.KEY);
-    final FileEditor editor = e.getRequiredData(FileEditor.KEY);
-    CommandProcessor commandProcessor = CommandProcessor.getInstance();
-    commandProcessor.executeCommand(
-      project,
-      () -> {
-        PsiDocumentManager.getInstance(project).commitAllDocuments();
-        if (FindManager.getInstance(project).findPreviousUsageInEditor(editor)) {
-          return;
-        }
-        FindUtil.searchBack(project, editor, e.getDataContext());
-      },
-      IdeLocalize.commandFindPrevious().get(),
-      null
-    );
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent event){
-    Presentation presentation = event.getPresentation();
-    Project project = event.getData(Project.KEY);
-    if (project == null) {
-      presentation.setEnabled(false);
-      return;
+    public SearchBackAction() {
+        setEnabledInModalContext(true);
     }
-    final FileEditor editor = event.getData(FileEditor.KEY);
-    presentation.setEnabled(editor instanceof TextEditor);
-  }
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(final AnActionEvent e) {
+        final Project project = e.getRequiredData(Project.KEY);
+        final FileEditor editor = e.getRequiredData(FileEditor.KEY);
+        CommandProcessor commandProcessor = CommandProcessor.getInstance();
+        commandProcessor.executeCommand(
+            project,
+            () -> {
+                PsiDocumentManager.getInstance(project).commitAllDocuments();
+                if (FindManager.getInstance(project).findPreviousUsageInEditor(editor)) {
+                    return;
+                }
+                FindUtil.searchBack(project, editor, e.getDataContext());
+            },
+            IdeLocalize.commandFindPrevious().get(),
+            null
+        );
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void update(AnActionEvent event) {
+        Presentation presentation = event.getPresentation();
+        Project project = event.getData(Project.KEY);
+        if (project == null) {
+            presentation.setEnabled(false);
+            return;
+        }
+        final FileEditor editor = event.getData(FileEditor.KEY);
+        presentation.setEnabled(editor instanceof TextEditor);
+    }
 }

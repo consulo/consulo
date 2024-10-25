@@ -43,98 +43,100 @@ import jakarta.annotation.Nonnull;
  * @see MultiCaretCodeInsightActionHandler
  */
 public abstract class MultiCaretCodeInsightAction extends AnAction {
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getData(Project.KEY);
-    if (project == null) {
-      return;
-    }
-    final Editor hostEditor = e.getDataContext().getData(Editor.KEY);
-    if (hostEditor == null) {
-      return;
-    }
-
-    actionPerformedImpl(project, hostEditor);
-  }
-
-  public void actionPerformedImpl(final Project project, final Editor hostEditor) {
-    CommandProcessor.getInstance().executeCommand(project, () -> Application.get().runWriteAction(() -> {
-      MultiCaretCodeInsightActionHandler handler = getHandler();
-      try {
-        iterateOverCarets(project, hostEditor, handler);
-      }
-      finally {
-        handler.postInvoke();
-      }
-    }), getCommandName(), DocCommandGroupId.noneGroupId(hostEditor.getDocument()));
-
-    hostEditor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
-  }
-
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    final Presentation presentation = e.getPresentation();
-
-    Project project = e.getData(Project.KEY);
-    if (project == null) {
-      presentation.setEnabled(false);
-      return;
-    }
-
-    Editor hostEditor = e.getDataContext().getData(Editor.KEY);
-    if (hostEditor == null) {
-      presentation.setEnabled(false);
-      return;
-    }
-
-    final Ref<Boolean> enabled  = new Ref<>(Boolean.FALSE);
-    iterateOverCarets(project, hostEditor, new MultiCaretCodeInsightActionHandler() {
-      @Override
-      public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull Caret caret, @Nonnull PsiFile file) {
-        if (isValidFor(project, editor, caret, file)) {
-          enabled.set(Boolean.TRUE);
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        final Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return;
         }
-      }
-    });
-    presentation.setEnabled(enabled.get());
-  }
-
-  private static void iterateOverCarets(@Nonnull final Project project,
-                                        @Nonnull final Editor hostEditor,
-                                        @Nonnull final MultiCaretCodeInsightActionHandler handler) {
-    PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
-    final PsiFile psiFile = documentManager.getCachedPsiFile(hostEditor.getDocument());
-    documentManager.commitAllDocuments();
-
-    hostEditor.getCaretModel().runForEachCaret(caret -> {
-      Editor editor = hostEditor;
-      if (psiFile != null) {
-        Caret injectedCaret = InjectedLanguageUtil.getCaretForInjectedLanguageNoCommit(caret, psiFile);
-        if (injectedCaret != null) {
-          caret = injectedCaret;
-          editor = caret.getEditor();
+        final Editor hostEditor = e.getDataContext().getData(Editor.KEY);
+        if (hostEditor == null) {
+            return;
         }
-      }
-      final PsiFile file = PsiUtilBase.getPsiFileInEditor(caret, project);
-      if (file != null) {
-        handler.invoke(project, editor, caret, file);
-      }
-    });
-  }
 
-  /**
-   * During action status update this method is invoked for each caret in editor. If at least for a single caret it returns
-   * <code>true</code>, action is considered enabled.
-   */
-  protected boolean isValidFor(@Nonnull Project project, @Nonnull Editor editor, @Nonnull Caret caret, @Nonnull PsiFile file) {
-    return true;
-  }
+        actionPerformedImpl(project, hostEditor);
+    }
 
-  @Nonnull
-  protected abstract MultiCaretCodeInsightActionHandler getHandler();
+    public void actionPerformedImpl(final Project project, final Editor hostEditor) {
+        CommandProcessor.getInstance().executeCommand(project, () -> Application.get().runWriteAction(() -> {
+            MultiCaretCodeInsightActionHandler handler = getHandler();
+            try {
+                iterateOverCarets(project, hostEditor, handler);
+            }
+            finally {
+                handler.postInvoke();
+            }
+        }), getCommandName(), DocCommandGroupId.noneGroupId(hostEditor.getDocument()));
 
-  protected String getCommandName() {
-    String text = getTemplatePresentation().getText();
-    return text == null ? "" : text;
-  }
+        hostEditor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
+    }
+
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        final Presentation presentation = e.getPresentation();
+
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            presentation.setEnabled(false);
+            return;
+        }
+
+        Editor hostEditor = e.getDataContext().getData(Editor.KEY);
+        if (hostEditor == null) {
+            presentation.setEnabled(false);
+            return;
+        }
+
+        final Ref<Boolean> enabled = new Ref<>(Boolean.FALSE);
+        iterateOverCarets(project, hostEditor, new MultiCaretCodeInsightActionHandler() {
+            @Override
+            public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull Caret caret, @Nonnull PsiFile file) {
+                if (isValidFor(project, editor, caret, file)) {
+                    enabled.set(Boolean.TRUE);
+                }
+            }
+        });
+        presentation.setEnabled(enabled.get());
+    }
+
+    private static void iterateOverCarets(
+        @Nonnull final Project project,
+        @Nonnull final Editor hostEditor,
+        @Nonnull final MultiCaretCodeInsightActionHandler handler
+    ) {
+        PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
+        final PsiFile psiFile = documentManager.getCachedPsiFile(hostEditor.getDocument());
+        documentManager.commitAllDocuments();
+
+        hostEditor.getCaretModel().runForEachCaret(caret -> {
+            Editor editor = hostEditor;
+            if (psiFile != null) {
+                Caret injectedCaret = InjectedLanguageUtil.getCaretForInjectedLanguageNoCommit(caret, psiFile);
+                if (injectedCaret != null) {
+                    caret = injectedCaret;
+                    editor = caret.getEditor();
+                }
+            }
+            final PsiFile file = PsiUtilBase.getPsiFileInEditor(caret, project);
+            if (file != null) {
+                handler.invoke(project, editor, caret, file);
+            }
+        });
+    }
+
+    /**
+     * During action status update this method is invoked for each caret in editor. If at least for a single caret it returns
+     * <code>true</code>, action is considered enabled.
+     */
+    protected boolean isValidFor(@Nonnull Project project, @Nonnull Editor editor, @Nonnull Caret caret, @Nonnull PsiFile file) {
+        return true;
+    }
+
+    @Nonnull
+    protected abstract MultiCaretCodeInsightActionHandler getHandler();
+
+    protected String getCommandName() {
+        String text = getTemplatePresentation().getText();
+        return text == null ? "" : text;
+    }
 }

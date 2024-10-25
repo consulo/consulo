@@ -22,7 +22,6 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.dataContext.DataContext;
 import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.action.BaseRefactoringAction;
 import consulo.language.editor.refactoring.internal.RefactoringInternalHelper;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
@@ -115,7 +114,7 @@ public class PsiElementRenameHandler implements RenameHandler {
                 throw new CommonRefactoringUtil.RefactoringErrorHintException(message);
             }
             int buttonPressed =
-                Messages.showYesNoDialog(project, message, RefactoringBundle.getCannotRefactorMessage(null), UIUtil.getWarningIcon());
+                Messages.showYesNoDialog(project, message, RefactoringLocalize.cannotPerformRefactoring().get(), UIUtil.getWarningIcon());
             if (buttonPressed != Messages.YES) {
                 return;
             }
@@ -148,7 +147,7 @@ public class PsiElementRenameHandler implements RenameHandler {
         boolean hasWritableMetaData = element instanceof PsiMetaOwner metaOwner && metaOwner.getMetaData() instanceof PsiWritableMetaData;
 
         if (!hasRenameProcessor && !hasWritableMetaData && !(element instanceof PsiNamedElement)) {
-            return RefactoringBundle.getCannotRefactorMessage(RefactoringLocalize.errorWrongCaretPositionSymbolToRename().get());
+            return RefactoringLocalize.cannotPerformRefactoringWithReason(RefactoringLocalize.errorWrongCaretPositionSymbolToRename()).get();
         }
 
         if (!PsiManager.getInstance(project).isInProject(element)) {
@@ -156,18 +155,18 @@ public class PsiElementRenameHandler implements RenameHandler {
                 VirtualFile virtualFile = PsiUtilCore.getVirtualFile(element);
                 if (!(virtualFile != null && RefactoringInternalHelper.getInstance().isWriteAccessAllowed(virtualFile, project))) {
                     LocalizeValue message = RefactoringLocalize.errorOutOfProjectElement(UsageViewUtil.getType(element));
-                    return RefactoringBundle.getCannotRefactorMessage(message.get());
+                    return RefactoringLocalize.cannotPerformRefactoringWithReason(message).get();
                 }
             }
 
             if (!element.isWritable()) {
-                return RefactoringBundle.getCannotRefactorMessage(RefactoringLocalize.errorCannotBeRenamed().get());
+                return RefactoringLocalize.cannotPerformRefactoringWithReason(RefactoringLocalize.errorCannotBeRenamed()).get();
             }
         }
 
         if (InjectedLanguageManagerUtil.isInInjectedLanguagePrefixSuffix(element)) {
             final LocalizeValue message = RefactoringLocalize.errorInInjectedLangPrefixSuffix(UsageViewUtil.getType(element));
-            return RefactoringBundle.getCannotRefactorMessage(message.get());
+            return RefactoringLocalize.cannotPerformRefactoringWithReason(message).get();
         }
 
         return null;

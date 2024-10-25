@@ -41,12 +41,12 @@ public abstract class CommandProcessor {
     }
 
     @Nonnull
-    public abstract ExecutableCommandBuilder newCommand(@Nonnull Runnable command);
+    public abstract ExecutableCommandBuilder newCommand(@RequiredUIAccess @Nonnull Runnable command);
 
     @Deprecated
     @DeprecationInfo("Use #newCommand(Runnable).execute()")
     @RequiredUIAccess
-    public void executeCommand(@Nonnull Runnable runnable, @Nullable String name, @Nullable Object groupId) {
+    public void executeCommand(@Nonnull @RequiredUIAccess Runnable runnable, @Nullable String name, @Nullable Object groupId) {
         newCommand(runnable)
             .withName(LocalizeValue.ofNullable(name))
             .withGroupId(groupId)
@@ -58,7 +58,7 @@ public abstract class CommandProcessor {
     @RequiredUIAccess
     public void executeCommand(
         @Nullable Project project,
-        @Nonnull Runnable runnable,
+        @Nonnull @RequiredUIAccess Runnable runnable,
         @Nullable String name,
         @Nullable Object groupId
     ) {
@@ -74,7 +74,7 @@ public abstract class CommandProcessor {
     @RequiredUIAccess
     public void executeCommand(
         @Nullable Project project,
-        @Nonnull Runnable runnable,
+        @Nonnull @RequiredUIAccess Runnable runnable,
         @Nullable String name,
         @Nullable Object groupId,
         @Nullable Document document
@@ -92,7 +92,7 @@ public abstract class CommandProcessor {
     @RequiredUIAccess
     public void executeCommand(
         @Nullable Project project,
-        @Nonnull Runnable runnable,
+        @Nonnull @RequiredUIAccess Runnable runnable,
         @Nullable String name,
         @Nullable Object groupId,
         @Nonnull UndoConfirmationPolicy confirmationPolicy
@@ -110,7 +110,7 @@ public abstract class CommandProcessor {
     @RequiredUIAccess
     public void executeCommand(
         @Nullable Project project,
-        @Nonnull Runnable command,
+        @Nonnull @RequiredUIAccess Runnable command,
         @Nullable String name,
         @Nullable Object groupId,
         @Nonnull UndoConfirmationPolicy confirmationPolicy,
@@ -136,7 +136,7 @@ public abstract class CommandProcessor {
     @RequiredUIAccess
     public void executeCommand(
         @Nullable Project project,
-        @Nonnull Runnable command,
+        @Nonnull @RequiredUIAccess Runnable command,
         @Nullable String name,
         @Nullable Object groupId,
         @Nonnull UndoConfirmationPolicy confirmationPolicy,
