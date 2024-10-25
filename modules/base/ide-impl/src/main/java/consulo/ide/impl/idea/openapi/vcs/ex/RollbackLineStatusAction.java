@@ -28,83 +28,87 @@ import java.util.BitSet;
 import java.util.List;
 
 public class RollbackLineStatusAction extends DumbAwareAction {
-  @Override
-  @RequiredUIAccess
-  public void update(AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    Editor editor = e.getData(Editor.KEY);
-    if (project == null || editor == null) {
-      e.getPresentation().setEnabledAndVisible(false);
-      return;
-    }
-    if (DiffImplUtil.isDiffEditor(editor)) {
-      e.getPresentation().setEnabledAndVisible(false);
-      return;
-    }
-    LineStatusTracker tracker = LineStatusTrackerManager.getInstance(project).getLineStatusTracker(editor.getDocument());
-    if (tracker == null || !tracker.isValid() || tracker.isSilentMode()) {
-      e.getPresentation().setEnabledAndVisible(false);
-      return;
-    }
-    if (!isSomeChangeSelected(editor, tracker)) {
-      e.getPresentation().setVisible(true);
-      e.getPresentation().setEnabled(false);
-      return;
-    }
-    e.getPresentation().setEnabledAndVisible(true);
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    Editor editor = e.getRequiredData(Editor.KEY);
-    LineStatusTracker tracker = LineStatusTrackerManager.getInstance(project).getLineStatusTracker(editor.getDocument());
-    assert tracker != null;
-
-    rollback(tracker, editor, null);
-  }
-
-  protected static boolean isSomeChangeSelected(@Nonnull Editor editor, @Nonnull LineStatusTracker tracker) {
-    List<Caret> carets = editor.getCaretModel().getAllCarets();
-    if (carets.size() != 1) return true;
-    Caret caret = carets.get(0);
-    if (caret.hasSelection()) return true;
-    if (caret.getOffset() == editor.getDocument().getTextLength()
-      && tracker.getRangeForLine(editor.getDocument().getLineCount()) != null) {
-      return true;
-    }
-    return tracker.getRangeForLine(caret.getLogicalPosition().line) != null;
-  }
-
-  @RequiredUIAccess
-  protected static void rollback(@Nonnull LineStatusTracker tracker, @Nullable Editor editor, @Nullable Range range) {
-    assert editor != null || range != null;
-
-    if (range != null) {
-      doRollback(tracker, range);
-      return;
+    @Override
+    @RequiredUIAccess
+    public void update(AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        Editor editor = e.getData(Editor.KEY);
+        if (project == null || editor == null) {
+            e.getPresentation().setEnabledAndVisible(false);
+            return;
+        }
+        if (DiffImplUtil.isDiffEditor(editor)) {
+            e.getPresentation().setEnabledAndVisible(false);
+            return;
+        }
+        LineStatusTracker tracker = LineStatusTrackerManager.getInstance(project).getLineStatusTracker(editor.getDocument());
+        if (tracker == null || !tracker.isValid() || tracker.isSilentMode()) {
+            e.getPresentation().setEnabledAndVisible(false);
+            return;
+        }
+        if (!isSomeChangeSelected(editor, tracker)) {
+            e.getPresentation().setVisible(true);
+            e.getPresentation().setEnabled(false);
+            return;
+        }
+        e.getPresentation().setEnabledAndVisible(true);
     }
 
-    doRollback(tracker, DiffImplUtil.getSelectedLines(editor));
-  }
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        Editor editor = e.getRequiredData(Editor.KEY);
+        LineStatusTracker tracker = LineStatusTrackerManager.getInstance(project).getLineStatusTracker(editor.getDocument());
+        assert tracker != null;
 
-  @RequiredUIAccess
-  private static void doRollback(@Nonnull final LineStatusTracker tracker, @Nonnull final Range range) {
-    execute(tracker, () -> tracker.rollbackChanges(range));
-  }
+        rollback(tracker, editor, null);
+    }
 
-  @RequiredUIAccess
-  private static void doRollback(@Nonnull final LineStatusTracker tracker, @Nonnull final BitSet lines) {
-    execute(tracker, () -> tracker.rollbackChanges(lines));
-  }
+    protected static boolean isSomeChangeSelected(@Nonnull Editor editor, @Nonnull LineStatusTracker tracker) {
+        List<Caret> carets = editor.getCaretModel().getAllCarets();
+        if (carets.size() != 1) {
+            return true;
+        }
+        Caret caret = carets.get(0);
+        if (caret.hasSelection()) {
+            return true;
+        }
+        if (caret.getOffset() == editor.getDocument().getTextLength()
+            && tracker.getRangeForLine(editor.getDocument().getLineCount()) != null) {
+            return true;
+        }
+        return tracker.getRangeForLine(caret.getLogicalPosition().line) != null;
+    }
 
-  @RequiredUIAccess
-  private static void execute(@Nonnull final LineStatusTracker tracker, @Nonnull final Runnable task) {
-    DiffImplUtil.newWriteCommand(task)
-        .withProject(tracker.getProject())
-        .withDocument(tracker.getDocument())
-        .withName(VcsLocalize.commandNameRollbackChange())
-        .execute();
-  }
+    @RequiredUIAccess
+    protected static void rollback(@Nonnull LineStatusTracker tracker, @Nullable Editor editor, @Nullable Range range) {
+        assert editor != null || range != null;
+
+        if (range != null) {
+            doRollback(tracker, range);
+            return;
+        }
+
+        doRollback(tracker, DiffImplUtil.getSelectedLines(editor));
+    }
+
+    @RequiredUIAccess
+    private static void doRollback(@Nonnull final LineStatusTracker tracker, @Nonnull final Range range) {
+        execute(tracker, () -> tracker.rollbackChanges(range));
+    }
+
+    @RequiredUIAccess
+    private static void doRollback(@Nonnull final LineStatusTracker tracker, @Nonnull final BitSet lines) {
+        execute(tracker, () -> tracker.rollbackChanges(lines));
+    }
+
+    @RequiredUIAccess
+    private static void execute(@Nonnull final LineStatusTracker tracker, @Nonnull final Runnable task) {
+        DiffImplUtil.newWriteCommand(task)
+            .withProject(tracker.getProject())
+            .withDocument(tracker.getDocument())
+            .withName(VcsLocalize.commandNameRollbackChange())
+            .execute();
+    }
 }

@@ -31,6 +31,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.Map;
 
 /**
@@ -38,57 +39,64 @@ import java.util.Map;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface CreateFromTemplateHandler {
-  ExtensionPointName<CreateFromTemplateHandler> EP_NAME = ExtensionPointName.create(CreateFromTemplateHandler.class);
+    ExtensionPointName<CreateFromTemplateHandler> EP_NAME = ExtensionPointName.create(CreateFromTemplateHandler.class);
 
-  boolean handlesTemplate(FileTemplate template);
+    boolean handlesTemplate(FileTemplate template);
 
-  default PsiElement createFromTemplate(Project project, PsiDirectory directory, String fileName, FileTemplate template, String templateText, Map<String, Object> props)
-          throws IncorrectOperationException {
-    String newFileName = checkAppendExtension(fileName, template);
+    default PsiElement createFromTemplate(
+        Project project,
+        PsiDirectory directory,
+        String fileName,
+        FileTemplate template,
+        String templateText,
+        Map<String, Object> props
+    )
+        throws IncorrectOperationException {
+        String newFileName = checkAppendExtension(fileName, template);
 
-    if (FileTypeManager.getInstance().isFileIgnored(newFileName)) {
-      throw new IncorrectOperationException("This filename is ignored (Settings | File Types | Ignore files and folders)");
+        if (FileTypeManager.getInstance().isFileIgnored(newFileName)) {
+            throw new IncorrectOperationException("This filename is ignored (Settings | File Types | Ignore files and folders)");
+        }
+
+        directory.checkCreateFile(newFileName);
+        FileType type = FileTypeRegistry.getInstance().getFileTypeByFileName(newFileName);
+        PsiFile file = PsiFileFactory.getInstance(project).createFileFromText(newFileName, type, templateText);
+
+        if (template.isReformatCode()) {
+            CodeStyleManager.getInstance(project).reformat(file);
+        }
+
+        file = (PsiFile)directory.add(file);
+        return file;
     }
 
-    directory.checkCreateFile(newFileName);
-    FileType type = FileTypeRegistry.getInstance().getFileTypeByFileName(newFileName);
-    PsiFile file = PsiFileFactory.getInstance(project).createFileFromText(newFileName, type, templateText);
+    @Nonnull
+    default String checkAppendExtension(String fileName, final FileTemplate template) {
+        final String suggestedFileNameEnd = "." + template.getExtension();
 
-    if (template.isReformatCode()) {
-      CodeStyleManager.getInstance(project).reformat(file);
+        if (!fileName.endsWith(suggestedFileNameEnd)) {
+            fileName += suggestedFileNameEnd;
+        }
+        return fileName;
     }
 
-    file = (PsiFile)directory.add(file);
-    return file;
-  }
-
-  @Nonnull
-  default String checkAppendExtension(String fileName, final FileTemplate template) {
-    final String suggestedFileNameEnd = "." + template.getExtension();
-
-    if (!fileName.endsWith(suggestedFileNameEnd)) {
-      fileName += suggestedFileNameEnd;
+    default boolean canCreate(final PsiDirectory[] dirs) {
+        return true;
     }
-    return fileName;
-  }
 
-  default boolean canCreate(final PsiDirectory[] dirs) {
-    return true;
-  }
+    default boolean isNameRequired() {
+        return true;
+    }
 
-  default boolean isNameRequired() {
-    return true;
-  }
+    default String getErrorMessage() {
+        return FileTemplateBundle.message("title.cannot.create.file");
+    }
 
-  default String getErrorMessage() {
-    return FileTemplateBundle.message("title.cannot.create.file");
-  }
+    default void prepareProperties(Map<String, Object> props) {
+    }
 
-  default void prepareProperties(Map<String, Object> props) {
-  }
-
-  @Nonnull
-  default String commandName(@Nonnull FileTemplate template) {
-    return FileTemplateBundle.message("command.create.file.from.template");
-  }
+    @Nonnull
+    default String commandName(@Nonnull FileTemplate template) {
+        return FileTemplateBundle.message("command.create.file.from.template");
+    }
 }

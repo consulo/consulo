@@ -35,258 +35,280 @@ import java.util.Collection;
 import java.util.function.Supplier;
 
 public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
-  private static final Logger LOG = Logger.getInstance(WriteCommandAction.class);
+    private static final Logger LOG = Logger.getInstance(WriteCommandAction.class);
 
-  private static final String DEFAULT_COMMAND_NAME = "Undefined";
-  private static final String DEFAULT_GROUP_ID = null;
+    private static final String DEFAULT_COMMAND_NAME = "Undefined";
+    private static final String DEFAULT_GROUP_ID = null;
 
-  public interface Builder {
+    public interface Builder {
+        @Nonnull
+        Builder withName(@Nullable String name);
+
+        @Nonnull
+        Builder withGroupId(@Nullable String groupId);
+
+        <E extends Throwable> void run(@Nonnull ThrowableRunnable<E> action) throws E;
+
+        <R, E extends Throwable> R compute(@Nonnull ThrowableComputable<R, E> action) throws E;
+    }
+
+    private static class BuilderImpl implements Builder {
+        private final Project myProject;
+        private final PsiFile[] myFiles;
+        private String myCommandName = DEFAULT_COMMAND_NAME;
+        private String myGroupId = DEFAULT_GROUP_ID;
+
+        private BuilderImpl(Project project, PsiFile... files) {
+            myProject = project;
+            myFiles = files;
+        }
+
+        @Nonnull
+        @Override
+        public Builder withName(String name) {
+            myCommandName = name;
+            return this;
+        }
+
+        @Nonnull
+        @Override
+        public Builder withGroupId(String groupId) {
+            myGroupId = groupId;
+            return this;
+        }
+
+        @Override
+        public <E extends Throwable> void run(@Nonnull final ThrowableRunnable<E> action) throws E {
+            new WriteCommandAction(myProject, myCommandName, myGroupId, myFiles) {
+                @Override
+                protected void run(@Nonnull Result result) throws Throwable {
+                    action.run();
+                }
+            }.execute();
+        }
+
+        @Override
+        public <R, E extends Throwable> R compute(@Nonnull final ThrowableComputable<R, E> action) throws E {
+            return new WriteCommandAction<R>(myProject, myCommandName, myGroupId, myFiles) {
+                @Override
+                protected void run(@Nonnull Result<R> result) throws Throwable {
+                    result.setResult(action.compute());
+                }
+            }.execute().getResultObject();
+        }
+    }
+
     @Nonnull
-    Builder withName(@Nullable String name);
+    public static Builder writeCommandAction(Project project) {
+        return new BuilderImpl(project);
+    }
 
     @Nonnull
-    Builder withGroupId(@Nullable String groupId);
+    public static Builder writeCommandAction(@Nonnull PsiFile first, @Nonnull PsiFile... others) {
+        return new BuilderImpl(first.getProject(), ArrayUtil.prepend(first, others));
+    }
 
-    <E extends Throwable> void run(@Nonnull ThrowableRunnable<E> action) throws E;
-
-    <R, E extends Throwable> R compute(@Nonnull ThrowableComputable<R, E> action) throws E;
-  }
-
-  private static class BuilderImpl implements Builder {
+    private final String myCommandName;
+    private final String myGroupID;
     private final Project myProject;
-    private final PsiFile[] myFiles;
-    private String myCommandName = DEFAULT_COMMAND_NAME;
-    private String myGroupId = DEFAULT_GROUP_ID;
+    private final PsiFile[] myPsiFiles;
 
-    private BuilderImpl(Project project, PsiFile... files) {
-      myProject = project;
-      myFiles = files;
+    protected WriteCommandAction(@Nullable Project project, /*@NotNull*/ PsiFile... files) {
+        this(project, DEFAULT_COMMAND_NAME, files);
+    }
+
+    protected WriteCommandAction(@Nullable Project project, @Nullable String commandName, /*@NotNull*/ PsiFile... files) {
+        this(project, commandName, DEFAULT_GROUP_ID, files);
+    }
+
+    protected WriteCommandAction(
+        @Nullable Project project,
+        @Nullable String commandName,
+        @Nullable String groupID, /*@NotNull*/
+        PsiFile... files
+    ) {
+        myCommandName = commandName;
+        myGroupID = groupID;
+        myProject = project;
+        if (files == null) {
+            LOG.warn("'files' parameter must not be null", new Throwable());
+        }
+        myPsiFiles = files == null || files.length == 0 ? PsiFile.EMPTY_ARRAY : files;
+    }
+
+    public final Project getProject() {
+        return myProject;
+    }
+
+    public final String getCommandName() {
+        return myCommandName;
+    }
+
+    public String getGroupID() {
+        return myGroupID;
     }
 
     @Nonnull
     @Override
-    public Builder withName(String name) {
-      myCommandName = name;
-      return this;
-    }
+    public RunResult<T> execute() {
+        Application application = ApplicationManager.getApplication();
+        boolean dispatchThread = application.isDispatchThread();
 
-    @Nonnull
-    @Override
-    public Builder withGroupId(String groupId) {
-      myGroupId = groupId;
-      return this;
-    }
-
-    @Override
-    public <E extends Throwable> void run(@Nonnull final ThrowableRunnable<E> action) throws E {
-      new WriteCommandAction(myProject, myCommandName, myGroupId, myFiles) {
-        @Override
-        protected void run(@Nonnull Result result) throws Throwable {
-          action.run();
+        if (!dispatchThread && application.isReadAccessAllowed()) {
+            LOG.error("Must not start write action from within read action in the other thread - deadlock is coming");
+            throw new IllegalStateException();
         }
-      }.execute();
+
+        final RunResult<T> result = new RunResult<>(this);
+        performWriteCommandAction(result);
+        return result;
     }
 
-    @Override
-    public <R, E extends Throwable> R compute(@Nonnull final ThrowableComputable<R, E> action) throws E {
-      return new WriteCommandAction<R>(myProject, myCommandName, myGroupId, myFiles) {
-        @Override
-        protected void run(@Nonnull Result<R> result) throws Throwable {
-          result.setResult(action.compute());
+    private void performWriteCommandAction(@Nonnull RunResult<T> result) {
+        if (!FileModificationService.getInstance().preparePsiElementsForWrite(Arrays.asList(myPsiFiles))) {
+            return;
         }
-      }.execute().getResultObject();
-    }
-  }
 
-  @Nonnull
-  public static Builder writeCommandAction(Project project) {
-    return new BuilderImpl(project);
-  }
+        // this is needed to prevent memory leak, since the command is put into undo queue
+        final RunResult[] results = {result};
 
-  @Nonnull
-  public static Builder writeCommandAction(@Nonnull PsiFile first, @Nonnull PsiFile... others) {
-    return new BuilderImpl(first.getProject(), ArrayUtil.prepend(first, others));
-  }
-
-  private final String myCommandName;
-  private final String myGroupID;
-  private final Project myProject;
-  private final PsiFile[] myPsiFiles;
-
-  protected WriteCommandAction(@Nullable Project project, /*@NotNull*/ PsiFile... files) {
-    this(project, DEFAULT_COMMAND_NAME, files);
-  }
-
-  protected WriteCommandAction(@Nullable Project project, @Nullable String commandName, /*@NotNull*/ PsiFile... files) {
-    this(project, commandName, DEFAULT_GROUP_ID, files);
-  }
-
-  protected WriteCommandAction(@Nullable Project project, @Nullable String commandName, @Nullable String groupID, /*@NotNull*/ PsiFile... files) {
-    myCommandName = commandName;
-    myGroupID = groupID;
-    myProject = project;
-    if (files == null) LOG.warn("'files' parameter must not be null", new Throwable());
-    myPsiFiles = files == null || files.length == 0 ? PsiFile.EMPTY_ARRAY : files;
-  }
-
-  public final Project getProject() {
-    return myProject;
-  }
-
-  public final String getCommandName() {
-    return myCommandName;
-  }
-
-  public String getGroupID() {
-    return myGroupID;
-  }
-
-  @Nonnull
-  @Override
-  public RunResult<T> execute() {
-    Application application = ApplicationManager.getApplication();
-    boolean dispatchThread = application.isDispatchThread();
-
-    if (!dispatchThread && application.isReadAccessAllowed()) {
-      LOG.error("Must not start write action from within read action in the other thread - deadlock is coming");
-      throw new IllegalStateException();
+        doExecuteCommand(() -> {
+            //noinspection deprecation
+            ApplicationManager.getApplication().runWriteAction(() -> {
+                results[0].run();
+                results[0] = null;
+            });
+        });
     }
 
-    final RunResult<T> result = new RunResult<>(this);
-    performWriteCommandAction(result);
-    return result;
-  }
-
-  private void performWriteCommandAction(@Nonnull RunResult<T> result) {
-    if (!FileModificationService.getInstance().preparePsiElementsForWrite(Arrays.asList(myPsiFiles))) return;
-
-    // this is needed to prevent memory leak, since the command is put into undo queue
-    final RunResult[] results = {result};
-
-    doExecuteCommand(() -> {
-      //noinspection deprecation
-      ApplicationManager.getApplication().runWriteAction(() -> {
-        results[0].run();
-        results[0] = null;
-      });
-    });
-  }
-
-  protected boolean isGlobalUndoAction() {
-    return false;
-  }
-
-  protected UndoConfirmationPolicy getUndoConfirmationPolicy() {
-    return UndoConfirmationPolicy.DO_NOT_REQUEST_CONFIRMATION;
-  }
-
-  /**
-   * See {@link CommandBuilder#withShouldRecordActionForActiveDocument(boolean)} for details.
-   */
-  protected boolean shouldRecordActionForActiveDocument() {
-    return true;
-  }
-
-  public void performCommand() throws Throwable {
-    //this is needed to prevent memory leak, since command
-    // is put into undo queue
-    final RunResult[] results = {new RunResult<>(this)};
-    final Ref<Throwable> exception = new Ref<>();
-
-    doExecuteCommand(() -> {
-      exception.set(results[0].run().getThrowable());
-      results[0] = null;
-    });
-
-    Throwable throwable = exception.get();
-    if (throwable != null) throw throwable;
-  }
-
-  private void doExecuteCommand(final Runnable runnable) {
-    Runnable wrappedRunnable = () -> {
-      if (isGlobalUndoAction()) CommandProcessor.getInstance().markCurrentCommandAsGlobal(getProject());
-      runnable.run();
-    };
-    CommandProcessor.getInstance().newCommand(wrappedRunnable)
-      .withProject(getProject())
-      .withName(LocalizeValue.ofNullable(getCommandName()))
-      .withGroupId(getGroupID())
-      .withUndoConfirmationPolicy(getUndoConfirmationPolicy())
-      .withShouldRecordActionForActiveDocument(shouldRecordActionForActiveDocument())
-      .execute();
-  }
-
-  /**
-   * WriteCommandAction without result
-   */
-  public abstract static class Simple<T> extends WriteCommandAction<T> {
-    protected Simple(Project project, /*@NotNull*/ PsiFile... files) {
-      super(project, files);
+    protected boolean isGlobalUndoAction() {
+        return false;
     }
 
-    protected Simple(Project project, String commandName, /*@NotNull*/ PsiFile... files) {
-      super(project, commandName, files);
+    protected UndoConfirmationPolicy getUndoConfirmationPolicy() {
+        return UndoConfirmationPolicy.DO_NOT_REQUEST_CONFIRMATION;
     }
 
-    protected Simple(Project project, String name, String groupID, /*@NotNull*/ PsiFile... files) {
-      super(project, name, groupID, files);
+    /**
+     * See {@link CommandBuilder#withShouldRecordActionForActiveDocument(boolean)} for details.
+     */
+    protected boolean shouldRecordActionForActiveDocument() {
+        return true;
     }
 
-    @Override
-    protected void run(@Nonnull Result<T> result) throws Throwable {
-      run();
+    public void performCommand() throws Throwable {
+        //this is needed to prevent memory leak, since command
+        // is put into undo queue
+        final RunResult[] results = {new RunResult<>(this)};
+        final Ref<Throwable> exception = new Ref<>();
+
+        doExecuteCommand(() -> {
+            exception.set(results[0].run().getThrowable());
+            results[0] = null;
+        });
+
+        Throwable throwable = exception.get();
+        if (throwable != null) {
+            throw throwable;
+        }
     }
 
-    protected abstract void run() throws Throwable;
-  }
-
-  public static void runWriteCommandAction(Project project, @Nonnull Runnable runnable) {
-    runWriteCommandAction(project, DEFAULT_COMMAND_NAME, DEFAULT_GROUP_ID, runnable);
-  }
-
-  public static void runWriteCommandAction(Project project, @Nullable final String commandName, @Nullable final String groupID, @Nonnull final Runnable runnable, @Nonnull PsiFile... files) {
-    new Simple(project, commandName, groupID, files) {
-      @Override
-      protected void run() throws Throwable {
-        runnable.run();
-      }
-    }.execute();
-  }
-
-  @SuppressWarnings("LambdaUnfriendlyMethodOverload")
-  public static <T> T runWriteCommandAction(Project project, @Nonnull final Supplier<T> computable) {
-    return new WriteCommandAction<T>(project) {
-      @Override
-      protected void run(@Nonnull Result<T> result) throws Throwable {
-        result.setResult(computable.get());
-      }
-    }.execute().getResultObject();
-  }
-
-  @SuppressWarnings("LambdaUnfriendlyMethodOverload")
-  public static <T, E extends Throwable> T runWriteCommandAction(Project project, @Nonnull final ThrowableComputable<T, E> computable) throws E {
-    RunResult<T> result = new WriteCommandAction<T>(project, "") {
-      @Override
-      protected void run(@Nonnull Result<T> result) throws Throwable {
-        result.setResult(computable.compute());
-      }
-    }.execute();
-    Throwable t = result.getThrowable();
-    if (t != null) {
-      @SuppressWarnings("unchecked") E e = (E)t;
-      throw e;
+    private void doExecuteCommand(final Runnable runnable) {
+        Runnable wrappedRunnable = () -> {
+            if (isGlobalUndoAction()) {
+                CommandProcessor.getInstance().markCurrentCommandAsGlobal(getProject());
+            }
+            runnable.run();
+        };
+        CommandProcessor.getInstance().newCommand(wrappedRunnable)
+            .withProject(getProject())
+            .withName(LocalizeValue.ofNullable(getCommandName()))
+            .withGroupId(getGroupID())
+            .withUndoConfirmationPolicy(getUndoConfirmationPolicy())
+            .withShouldRecordActionForActiveDocument(shouldRecordActionForActiveDocument())
+            .execute();
     }
-    return result.throwException().getResultObject();
-  }
 
-  //<editor-fold desc="Deprecated stuff.">
+    /**
+     * WriteCommandAction without result
+     */
+    public abstract static class Simple<T> extends WriteCommandAction<T> {
+        protected Simple(Project project, /*@NotNull*/ PsiFile... files) {
+            super(project, files);
+        }
 
-  /**
-   * @deprecated use {@link FileModificationService#preparePsiElementsForWrite(Collection)} (to be removed in IDEA 2018)
-   */
-  @SuppressWarnings("unused")
-  public static boolean ensureFilesWritable(@Nonnull Project project, @Nonnull Collection<PsiFile> psiFiles) {
-    return FileModificationService.getInstance().preparePsiElementsForWrite(psiFiles);
-  }
-  //</editor-fold>
+        protected Simple(Project project, String commandName, /*@NotNull*/ PsiFile... files) {
+            super(project, commandName, files);
+        }
+
+        protected Simple(Project project, String name, String groupID, /*@NotNull*/ PsiFile... files) {
+            super(project, name, groupID, files);
+        }
+
+        @Override
+        protected void run(@Nonnull Result<T> result) throws Throwable {
+            run();
+        }
+
+        protected abstract void run() throws Throwable;
+    }
+
+    public static void runWriteCommandAction(Project project, @Nonnull Runnable runnable) {
+        runWriteCommandAction(project, DEFAULT_COMMAND_NAME, DEFAULT_GROUP_ID, runnable);
+    }
+
+    public static void runWriteCommandAction(
+        Project project,
+        @Nullable final String commandName,
+        @Nullable final String groupID,
+        @Nonnull final Runnable runnable,
+        @Nonnull PsiFile... files
+    ) {
+        new Simple(project, commandName, groupID, files) {
+            @Override
+            protected void run() throws Throwable {
+                runnable.run();
+            }
+        }.execute();
+    }
+
+    @SuppressWarnings("LambdaUnfriendlyMethodOverload")
+    public static <T> T runWriteCommandAction(Project project, @Nonnull final Supplier<T> computable) {
+        return new WriteCommandAction<T>(project) {
+            @Override
+            protected void run(@Nonnull Result<T> result) throws Throwable {
+                result.setResult(computable.get());
+            }
+        }.execute().getResultObject();
+    }
+
+    @SuppressWarnings("LambdaUnfriendlyMethodOverload")
+    public static <T, E extends Throwable> T runWriteCommandAction(
+        Project project,
+        @Nonnull final ThrowableComputable<T, E> computable
+    ) throws E {
+        RunResult<T> result = new WriteCommandAction<T>(project, "") {
+            @Override
+            protected void run(@Nonnull Result<T> result) throws Throwable {
+                result.setResult(computable.compute());
+            }
+        }.execute();
+        Throwable t = result.getThrowable();
+        if (t != null) {
+            @SuppressWarnings("unchecked") E e = (E)t;
+            throw e;
+        }
+        return result.throwException().getResultObject();
+    }
+
+    //<editor-fold desc="Deprecated stuff.">
+
+    /**
+     * @deprecated use {@link FileModificationService#preparePsiElementsForWrite(Collection)} (to be removed in IDEA 2018)
+     */
+    @SuppressWarnings("unused")
+    public static boolean ensureFilesWritable(@Nonnull Project project, @Nonnull Collection<PsiFile> psiFiles) {
+        return FileModificationService.getInstance().preparePsiElementsForWrite(psiFiles);
+    }
+    //</editor-fold>
 }
