@@ -19,6 +19,7 @@ package consulo.fileTemplate;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
+import consulo.fileTemplate.localize.FileTemplateLocalize;
 import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.file.FileTypeManager;
 import consulo.language.psi.PsiDirectory;
@@ -26,10 +27,10 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-
 import jakarta.annotation.Nonnull;
 
 import java.util.Map;
@@ -50,12 +51,11 @@ public interface CreateFromTemplateHandler {
         FileTemplate template,
         String templateText,
         Map<String, Object> props
-    )
-        throws IncorrectOperationException {
+    ) throws IncorrectOperationException {
         String newFileName = checkAppendExtension(fileName, template);
 
         if (FileTypeManager.getInstance().isFileIgnored(newFileName)) {
-            throw new IncorrectOperationException("This filename is ignored (Settings | File Types | Ignore files and folders)");
+            throw new IncorrectOperationException(FileTemplateLocalize.errorFileNameIsIgnored(newFileName).get());
         }
 
         directory.checkCreateFile(newFileName);
@@ -88,15 +88,15 @@ public interface CreateFromTemplateHandler {
         return true;
     }
 
-    default String getErrorMessage() {
-        return FileTemplateBundle.message("title.cannot.create.file");
+    default LocalizeValue getErrorMessage() {
+        return FileTemplateLocalize.titleCannotCreateFile();
     }
 
     default void prepareProperties(Map<String, Object> props) {
     }
 
     @Nonnull
-    default String commandName(@Nonnull FileTemplate template) {
-        return FileTemplateBundle.message("command.create.file.from.template");
+    default LocalizeValue commandName(@Nonnull FileTemplate template) {
+        return FileTemplateLocalize.commandCreateFileFromTemplate();
     }
 }

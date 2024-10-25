@@ -162,7 +162,7 @@ public class FileTemplateUtil {
                 }
             })
             .withProject(project)
-            .withName(LocalizeValue.ofNullable(handler.commandName(template)))
+            .withName(handler.commandName(template))
             .executeInWriteAction();
         if (!commandException.isNull()) {
             throw commandException.get();

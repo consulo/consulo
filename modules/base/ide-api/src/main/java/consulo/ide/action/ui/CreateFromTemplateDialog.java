@@ -16,27 +16,21 @@
 
 package consulo.ide.action.ui;
 
-import consulo.ide.IdeBundle;
-import consulo.ide.action.CreateFileAction;
-import consulo.fileTemplate.AttributesDefaults;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
 import consulo.annotation.DeprecationInfo;
-import consulo.application.ApplicationManager;
-import consulo.application.CommonBundle;
+import consulo.application.Application;
 import consulo.application.WriteAction;
 import consulo.disposer.Disposer;
-import consulo.fileTemplate.FileTemplate;
-import consulo.fileTemplate.FileTemplateManager;
-import consulo.fileTemplate.FileTemplateParseException;
-import consulo.fileTemplate.FileTemplateUtil;
+import consulo.fileTemplate.*;
+import consulo.ide.action.CreateFileAction;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
-import consulo.ui.ex.awt.DialogWrapper;
-import org.jetbrains.annotations.NonNls;
-
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.*;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -60,6 +54,7 @@ public class CreateFromTemplateDialog extends DialogWrapper {
 
     @Deprecated
     @DeprecationInfo("Use constructor with Map parameter instead of Properties")
+    @RequiredUIAccess
     public CreateFromTemplateDialog(
         @Nonnull Project project,
         @Nonnull PsiDirectory directory,
@@ -70,6 +65,7 @@ public class CreateFromTemplateDialog extends DialogWrapper {
         this(directory, template, attributesDefaults, defaultProperties == null ? null : FileTemplateUtil.convert2Map(defaultProperties));
     }
 
+    @RequiredUIAccess
     public CreateFromTemplateDialog(
         @Nonnull PsiDirectory directory,
         @Nonnull FileTemplate template,
@@ -80,7 +76,7 @@ public class CreateFromTemplateDialog extends DialogWrapper {
         myDirectory = directory;
         myProject = directory.getProject();
         myTemplate = template;
-        setTitle(IdeBundle.message("title.new.from.template", template.getName()));
+        setTitle(IdeLocalize.titleNewFromTemplate(template.getName()));
 
         myDefaultProperties =
             defaultProperties == null ? FileTemplateManager.getInstance(myProject).getDefaultVariables() : defaultProperties;
@@ -110,8 +106,9 @@ public class CreateFromTemplateDialog extends DialogWrapper {
         }
     }
 
+    @RequiredUIAccess
     public PsiElement create() {
-        if (ApplicationManager.getApplication().isUnitTestMode()) {
+        if (Application.get().isUnitTestMode()) {
             doCreate(myTemplate.getName() + "." + myTemplate.getExtension());
             Disposer.dispose(getDisposable());
             return myCreatedElement;
@@ -128,14 +125,15 @@ public class CreateFromTemplateDialog extends DialogWrapper {
     }
 
     @Override
+    @RequiredUIAccess
     protected void doOKAction() {
         String fileName = myAttrPanel.getFileName();
         if (fileName != null && fileName.length() == 0) {
             Messages.showMessageDialog(
                 myAttrComponent,
-                IdeBundle.message("error.please.enter.a.file.name"),
-                CommonBundle.getErrorTitle(),
-                Messages.getErrorIcon()
+                IdeLocalize.errorPleaseEnterAFileName().get(),
+                CommonLocalize.titleError().get(),
+                UIUtil.getErrorIcon()
             );
             return;
         }
@@ -145,6 +143,7 @@ public class CreateFromTemplateDialog extends DialogWrapper {
         }
     }
 
+    @RequiredUIAccess
     private void doCreate(@Nullable String fileName) {
         try {
             String newName = fileName;
@@ -167,22 +166,23 @@ public class CreateFromTemplateDialog extends DialogWrapper {
         return myAttrPanel.getProperties(new Properties());
     }
 
+    @RequiredUIAccess
     private void showErrorDialog(final Exception e) {
         LOG.info(e);
-        Messages.showMessageDialog(myProject, filterMessage(e.getMessage()), getErrorMessage(), Messages.getErrorIcon());
+        Messages.showMessageDialog(myProject, filterMessage(e.getMessage()), getErrorMessage().get(), UIUtil.getErrorIcon());
     }
 
-    private String getErrorMessage() {
+    private LocalizeValue getErrorMessage() {
         return FileTemplateUtil.findHandler(myTemplate).getErrorMessage();
     }
 
-    @Nullable
+    @Nonnull
     private String filterMessage(String message) {
         if (message == null) {
             message = "unknown error";
         }
 
-        @NonNls String ioExceptionPrefix = "java.io.IOException:";
+        String ioExceptionPrefix = "java.io.IOException:";
         if (message.startsWith(ioExceptionPrefix)) {
             return message.substring(ioExceptionPrefix.length());
         }
@@ -190,7 +190,7 @@ public class CreateFromTemplateDialog extends DialogWrapper {
             return message;
         }
 
-        return IdeBundle.message("error.unable.to.parse.template.message", myTemplate.getName(), message);
+        return IdeLocalize.errorUnableToParseTemplateMessage(myTemplate.getName(), message).get();
     }
 
     @Override
@@ -199,12 +199,13 @@ public class CreateFromTemplateDialog extends DialogWrapper {
         JPanel centerPanel = new JPanel(new GridBagLayout());
         centerPanel.add(
             myAttrComponent,
-            new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0)
+            new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, JBUI.emptyInsets(), 0, 0)
         );
         return centerPanel;
     }
 
     @Override
+    @RequiredUIAccess
     public JComponent getPreferredFocusedComponent() {
         return IdeFocusTraversalPolicy.getPreferredFocusedComponent(myAttrComponent);
     }
