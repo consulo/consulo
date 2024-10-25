@@ -65,7 +65,7 @@ public abstract class CodeInsightAction extends AnAction implements UpdateInBack
             })
             .withProject(project)
             .withDocument(editor.getDocument())
-            .withName(LocalizeValue.ofNullable(getCommandName()))
+            .withName(getTemplatePresentation().getTextValue())
             .withGroupId(DocCommandGroupId.noneGroupId(editor.getDocument()));
 
         if (handler.startInWriteAction()) {

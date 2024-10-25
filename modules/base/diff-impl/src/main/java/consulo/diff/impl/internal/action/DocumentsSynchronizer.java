@@ -15,6 +15,7 @@
  */
 package consulo.diff.impl.internal.action;
 
+import consulo.diff.localize.DiffLocalize;
 import consulo.document.Document;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
@@ -96,7 +97,7 @@ public abstract class DocumentsSynchronizer {
                     document.replaceString(startOffset, endOffset, newText);
                 })
                 .withProject(myProject)
-                .withName(LocalizeValue.localizeTODO("Synchronize document and its fragment"))
+                .withName(DiffLocalize.synchronizeDocumentAndItsFragment())
                 .withGroupId(document)
                 .executeInWriteAction();
         }

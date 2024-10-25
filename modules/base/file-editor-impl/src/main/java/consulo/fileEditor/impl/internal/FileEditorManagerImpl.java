@@ -591,7 +591,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
                 }
             })
             .withProject(myProject)
-            .withName(LocalizeValue.ofNullable(FileEditorLocalize.commandCloseActiveEditor().get()))
+            .withName(FileEditorLocalize.commandCloseActiveEditor())
             .execute();
         removeSelectionRecord(file, window);
     }

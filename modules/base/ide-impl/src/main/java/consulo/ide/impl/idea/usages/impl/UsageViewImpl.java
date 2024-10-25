@@ -1719,7 +1719,8 @@ public class UsageViewImpl implements UsageViewEx {
         @Nonnull String shortDescription,
         boolean checkReadOnlyStatus
     ) {
-        Runnable runnable = new MyPerformOperationRunnable(processRunnable, commandName, cannotMakeString, checkReadOnlyStatus);
+        Runnable runnable =
+            new MyPerformOperationRunnable(processRunnable, LocalizeValue.of(commandName), cannotMakeString, checkReadOnlyStatus);
         addButtonToLowerPane(runnable, shortDescription);
     }
 
@@ -2242,12 +2243,13 @@ public class UsageViewImpl implements UsageViewEx {
     private class MyPerformOperationRunnable implements Runnable {
         private final String myCannotMakeString;
         private final Runnable myProcessRunnable;
-        private final String myCommandName;
+        @Nonnull
+        private final LocalizeValue myCommandName;
         private final boolean myCheckReadOnlyStatus;
 
         private MyPerformOperationRunnable(
             @Nonnull Runnable processRunnable,
-            @Nonnull String commandName,
+            @Nonnull LocalizeValue commandName,
             final String cannotMakeString,
             boolean checkReadOnlyStatus
         ) {
@@ -2265,13 +2267,13 @@ public class UsageViewImpl implements UsageViewEx {
             }
             PsiDocumentManager.getInstance(myProject).commitAllDocuments();
             if (myCannotMakeString != null && myChangesDetected) {
-                String title = UsageLocalize.changesDetectedErrorTitle().get();
+                LocalizeValue title = UsageLocalize.changesDetectedErrorTitle();
                 if (canPerformReRun()) {
                     String message = myCannotMakeString + "\n\n" + UsageLocalize.dialogRerunSearch();
                     int answer = Messages.showOkCancelDialog(
                         myProject,
                         message,
-                        title,
+                        title.get(),
                         UsageLocalize.actionDescriptionRerun().get(),
                         UsageLocalize.usageViewCancelButton().get(),
                         UIUtil.getErrorIcon()
@@ -2281,7 +2283,7 @@ public class UsageViewImpl implements UsageViewEx {
                     }
                 }
                 else {
-                    Messages.showMessageDialog(myProject, myCannotMakeString, title, UIUtil.getErrorIcon());
+                    Messages.showMessageDialog(myProject, myCannotMakeString, title.get(), UIUtil.getErrorIcon());
                     //todo[myakovlev] request focus to tree
                     //myUsageView.getTree().requestFocus();
                 }
@@ -2295,7 +2297,7 @@ public class UsageViewImpl implements UsageViewEx {
             try {
                 CommandProcessor.getInstance().newCommand(myProcessRunnable)
                     .withProject(myProject)
-                    .withName(LocalizeValue.ofNullable(myCommandName))
+                    .withName(myCommandName)
                     .execute();
             }
             finally {

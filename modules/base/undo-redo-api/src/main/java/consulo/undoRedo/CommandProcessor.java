@@ -196,7 +196,8 @@ public abstract class CommandProcessor {
      * Defines a scope which contains undoable actions, for which there won't be a separate undo/redo step - they will be undone/redone along
      * with 'adjacent' command.
      */
-    public abstract void runUndoTransparentAction(@Nonnull Runnable action);
+    @RequiredUIAccess
+    public abstract void runUndoTransparentAction(@RequiredUIAccess @Nonnull Runnable action);
 
     /**
      * @see #runUndoTransparentAction(Runnable)

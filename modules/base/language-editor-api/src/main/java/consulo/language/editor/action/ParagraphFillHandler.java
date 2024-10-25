@@ -23,6 +23,7 @@ import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiWhiteSpace;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.CharFilter;
 import consulo.util.lang.StringUtil;
@@ -48,6 +49,7 @@ public abstract class ParagraphFillHandler implements LanguageExtension {
     }
 
     @RequiredReadAction
+    @RequiredUIAccess
     public final void performOnElement(@Nonnull final PsiElement element, @Nonnull final Editor editor) {
         final Document document = editor.getDocument();
 

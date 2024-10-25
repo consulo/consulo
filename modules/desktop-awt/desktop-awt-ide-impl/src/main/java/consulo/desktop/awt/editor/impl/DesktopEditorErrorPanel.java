@@ -262,7 +262,6 @@ public class DesktopEditorErrorPanel extends JComponent implements UISettingsLis
             .withProject(myEditor.getProject())
             .withName(CodeEditorLocalize.moveCaretCommandName())
             .withGroupId(DocCommandGroupId.noneGroupId(myEditor.getDocument()))
-            .withUndoConfirmationPolicy(UndoConfirmationPolicy.DEFAULT)
             .withDocument(myEditor.getDocument())
             .execute();
     }

@@ -207,7 +207,7 @@ public class ExtractMethodHelper {
     ) {
         CommandProcessor.getInstance().newCommand(() -> replacer.accept(replacement))
             .withProject(project)
-            .withName(LocalizeValue.localizeTODO("Replace duplicate"))
+            .withName(RefactoringLocalize.extractMethodReplaceDuplicateCommandName())
             .executeInWriteAction();
     }
 

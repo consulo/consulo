@@ -1039,3 +1039,7 @@ dialog.edit.template.no.applicable.contexts:
   text: No applicable contexts.
 dialog.edit.template.no.applicable.contexts.yet:
   text: No applicable contexts yet.
+completion.automatic.command.name:
+  text: Autocompletion
+command.fix.documentation:
+  text: Fix documentation

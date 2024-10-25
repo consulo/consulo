@@ -20,6 +20,7 @@ import consulo.application.localize.ApplicationLocalize;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.dataContext.DataContext;
+import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
@@ -72,7 +73,7 @@ public final class VirtualFileDeleteProvider implements DeleteProvider {
         Arrays.sort(files, FileComparator.getInstance());
 
         List<String> problems = new LinkedList<>();
-        CommandProcessor.getInstance().newCommand(() -> new Task.Modal(project, "Deleting Files...", true) {
+        CommandProcessor.getInstance().newCommand(() -> new Task.Modal(project, IdeLocalize.progressTitleDeletingFiles(), true) {
                 @Override
                 public void run(@Nonnull ProgressIndicator indicator) {
                     indicator.setIndeterminate(false);
@@ -113,7 +114,7 @@ public final class VirtualFileDeleteProvider implements DeleteProvider {
                 }
             }.queue())
             .withProject(project)
-            .withName(LocalizeValue.localizeTODO("Deleting files"))
+            .withName(IdeLocalize.commandDeletingFiles())
             .execute();
     }
 

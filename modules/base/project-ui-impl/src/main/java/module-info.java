@@ -1,6 +1,6 @@
 /**
  * @author VISTALL
- * @since 24-Jul-24
+ * @since 2024-07-24
  */
 module consulo.project.ui.impl {
     requires transitive consulo.project.ui.api;
@@ -19,5 +19,6 @@ module consulo.project.ui.impl {
 
     // TODO remove in future
     requires java.desktop;
+    requires consulo.ide.api;
     requires consulo.ui.ex.awt.api;
 }

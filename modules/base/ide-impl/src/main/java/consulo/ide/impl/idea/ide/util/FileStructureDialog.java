@@ -38,10 +38,10 @@ import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.structureView.PsiStructureViewFactory;
 import consulo.language.editor.util.PsiUtilBase;
+import consulo.language.localize.LanguageLocalize;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
@@ -405,7 +405,7 @@ public class FileStructureDialog extends DialogWrapper {
                     IdeDocumentHistory.getInstance(myProject).includeCurrentCommandAsNavigation();
                 })
                 .withProject(myProject)
-                .withName(LocalizeValue.localizeTODO("Navigate"))
+                .withName(LanguageLocalize.commandNameNavigate())
                 .execute();
             if (succeeded.get()) {
                 close(CANCEL_EXIT_CODE);

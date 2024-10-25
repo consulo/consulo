@@ -176,7 +176,7 @@ public class UnwrapHandler implements CodeInsightActionHandler {
                 return;
             }
 
-            CommandProcessor.getInstance().newCommand(() -> Application.get().runWriteAction(() -> {
+            CommandProcessor.getInstance().newCommand(() -> {
                     try {
                         UnwrapDescriptor d = getUnwrapDescription(file);
                         if (d.shouldTryToRestoreCaretPosition()) {
@@ -196,10 +196,10 @@ public class UnwrapHandler implements CodeInsightActionHandler {
                     catch (IncorrectOperationException ex) {
                         throw new RuntimeException(ex);
                     }
-                }))
+                })
                 .withProject(myProject)
                 .withGroupId(myEditor.getDocument())
-                .execute();
+                .executeInWriteAction();
         }
 
         @RequiredReadAction

@@ -48,6 +48,7 @@ import consulo.undoRedo.internal.StartMarkAction;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -197,7 +198,7 @@ public abstract class AbstractInplaceIntroducer<V extends PsiNameIdentifierOwner
     @RequiredUIAccess
     public boolean startInplaceIntroduceTemplate() {
         final boolean replaceAllOccurrences = isReplaceAllOccurrences();
-        final Ref<Boolean> result = new Ref<>();
+        final SimpleReference<Boolean> result = new SimpleReference<>();
         CommandProcessor.getInstance().newCommand(() -> {
                 final String[] names = suggestNames(replaceAllOccurrences, getLocalVariable());
                 final V variable = createFieldToStartTemplateOn(replaceAllOccurrences, names);

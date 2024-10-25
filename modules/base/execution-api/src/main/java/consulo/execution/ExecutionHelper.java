@@ -24,6 +24,7 @@ import consulo.application.util.Semaphore;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposer;
 import consulo.execution.executor.DefaultRunExecutor;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.process.ExecutionMode;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.execution.ui.RunContentManager;
@@ -264,7 +265,7 @@ public class ExecutionHelper {
                 removeContents(content, project, tabDisplayName);
             })
             .withProject(project)
-            .withName(LocalizeValue.localizeTODO("Open message view"))
+            .withName(ExecutionLocalize.openMessageView())
             .execute();
     }
 

@@ -20,6 +20,7 @@ import consulo.language.codeStyle.DocCommentSettings;
 import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
 import consulo.language.editor.FileModificationService;
 import consulo.language.editor.documentation.*;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.psi.*;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
@@ -129,8 +130,7 @@ public class FixDocCommentAction extends EditorAction {
         }
         CommandProcessor.getInstance().newCommand(task)
             .withProject(project)
-            .withName(LocalizeValue.ofNullable("Fix documentation"))
-            .withGroupId(null)
+            .withName(CodeInsightLocalize.commandFixDocumentation())
             .executeInWriteAction();
     }
 

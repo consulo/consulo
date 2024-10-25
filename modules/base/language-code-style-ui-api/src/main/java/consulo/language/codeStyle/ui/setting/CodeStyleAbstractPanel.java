@@ -93,10 +93,12 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
     private final Language myDefaultLanguage;
     private Document myDocumentBeforeChanges;
 
+    @RequiredUIAccess
     protected CodeStyleAbstractPanel(@Nonnull CodeStyleSettings settings) {
         this(null, null, settings);
     }
 
+    @RequiredUIAccess
     protected CodeStyleAbstractPanel(
         @Nullable Language defaultLanguage,
         @Nullable CodeStyleSettings currentSettings,
@@ -165,6 +167,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
         editorSettings.setUseSoftWraps(false);
     }
 
+    @RequiredUIAccess
     protected void updatePreview(boolean useDefaultSample) {
         if (myEditor == null) {
             return;
@@ -173,6 +176,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
         updatePreviewHighlighter((EditorEx)myEditor);
     }
 
+    @RequiredUIAccess
     private void updateEditor(boolean useDefaultSample) {
         if (!myShouldUpdatePreview || !(Application.get().isUnitTestMode() || myEditor.getComponent().isShowing())) {
             return;
@@ -458,6 +462,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
         return fileType.getDefaultExtension();
     }
 
+    @RequiredUIAccess
     public void onSomethingChanged() {
         setSomethingChanged(true);
         if (myEditor != null) {
@@ -473,6 +478,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
     private void addUpdatePreviewRequest() {
         myUpdateAlarm.addComponentRequest(new Runnable() {
             @Override
+            @RequiredUIAccess
             public void run() {
                 try {
                     myUpdateAlarm.cancelAllRequests();
@@ -575,6 +581,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
         return Collections.emptySet();
     }
 
+    @RequiredUIAccess
     public final void applyPredefinedSettings(@Nonnull PredefinedCodeStyle codeStyle) {
         CodeStyleSettings settings = CodeStyleSettingsManager.getSettings(ProjectUIUtil.guessCurrentProject(getPanel())).clone();
         codeStyle.apply(settings);

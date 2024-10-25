@@ -46,9 +46,9 @@ import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.refactoring.ui.CopyPasteDelegator;
 import consulo.language.editor.structureView.PsiTreeElementBase;
 import consulo.language.editor.structureView.StructureViewCompositeModel;
+import consulo.language.localize.LanguageLocalize;
 import consulo.language.psi.*;
 import consulo.language.psi.util.PsiTreeUtil;
-import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.navigation.LocationPresentation;
 import consulo.navigation.Navigatable;
@@ -787,7 +787,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
                 IdeDocumentHistory.getInstance(myProject).includeCurrentCommandAsNavigation();
             })
             .withProject(myProject)
-            .withName(LocalizeValue.localizeTODO("Navigate"))
+            .withName(LanguageLocalize.commandNameNavigate())
             .execute();
         return succeeded.get();
     }

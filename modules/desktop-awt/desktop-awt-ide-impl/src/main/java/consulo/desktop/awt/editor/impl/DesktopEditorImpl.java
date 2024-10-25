@@ -3008,6 +3008,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
             }
         }
 
+        @RequiredUIAccess
         private void runUndoTransparent(@Nonnull final Runnable runnable) {
             CommandProcessor.getInstance().runUndoTransparentAction(
                 () -> CommandProcessor.getInstance().newCommand(runnable)

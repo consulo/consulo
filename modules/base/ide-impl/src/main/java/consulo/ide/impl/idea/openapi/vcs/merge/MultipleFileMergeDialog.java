@@ -33,6 +33,7 @@ import consulo.project.Project;
 import consulo.project.StoreReloadManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.table.ListTableModel;
 import consulo.ui.ex.awt.table.TableView;
@@ -241,7 +242,10 @@ public class MultipleFileMergeDialog extends DialogWrapper {
                     }
                 })
                 .withProject(myProject)
-                .withName(LocalizeValue.localizeTODO("Accept " + (isCurrent ? "Yours" : "Theirs")))
+                .withName(isCurrent
+                    ? VcsLocalize.multipleFileMergeAcceptYours().map(Presentation.NO_MNEMONIC)
+                    : VcsLocalize.multipleFileMergeAcceptTheirs().map(Presentation.NO_MNEMONIC)
+                )
                 .executeInWriteAction();
             if (!ex.isNull()) {
                 //noinspection ThrowableResultOfMethodCallIgnored

@@ -17,6 +17,7 @@
 package consulo.language.editor.refactoring.action;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.localize.ApplicationLocalize;
 import consulo.codeEditor.Editor;
 import consulo.component.ProcessCanceledException;
 import consulo.dataContext.DataContext;
@@ -131,7 +132,7 @@ public abstract class BaseRefactoringAction extends AnAction implements UpdateIn
                 CommandProcessor.getInstance().newCommand(command)
                     .withProject(editor.getProject())
                     .withDocument(doc)
-                    .withName(LocalizeValue.localizeTODO("Completion"))
+                    .withName(ApplicationLocalize.titleCodeCompletion())
                     .withGroupId(group)
                     .execute();
             }

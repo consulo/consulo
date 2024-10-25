@@ -15,18 +15,22 @@
  */
 package consulo.language.editor;
 
-import consulo.application.*;
+import consulo.application.Application;
+import consulo.application.BaseActionRunnable;
+import consulo.application.Result;
+import consulo.application.RunResult;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
-import consulo.undoRedo.builder.CommandBuilder;
 import consulo.undoRedo.UndoConfirmationPolicy;
+import consulo.undoRedo.builder.CommandBuilder;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.function.ThrowableRunnable;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -78,6 +82,7 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
         }
 
         @Override
+        @RequiredUIAccess
         public <E extends Throwable> void run(@Nonnull final ThrowableRunnable<E> action) throws E {
             new WriteCommandAction(myProject, myCommandName, myGroupId, myFiles) {
                 @Override
@@ -88,6 +93,7 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
         }
 
         @Override
+        @RequiredUIAccess
         public <R, E extends Throwable> R compute(@Nonnull final ThrowableComputable<R, E> action) throws E {
             return new WriteCommandAction<R>(myProject, myCommandName, myGroupId, myFiles) {
                 @Override
@@ -150,8 +156,9 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
 
     @Nonnull
     @Override
+    @RequiredUIAccess
     public RunResult<T> execute() {
-        Application application = ApplicationManager.getApplication();
+        Application application = Application.get();
         boolean dispatchThread = application.isDispatchThread();
 
         if (!dispatchThread && application.isReadAccessAllowed()) {
@@ -164,6 +171,7 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
         return result;
     }
 
+    @RequiredUIAccess
     private void performWriteCommandAction(@Nonnull RunResult<T> result) {
         if (!FileModificationService.getInstance().preparePsiElementsForWrite(Arrays.asList(myPsiFiles))) {
             return;
@@ -173,11 +181,8 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
         final RunResult[] results = {result};
 
         doExecuteCommand(() -> {
-            //noinspection deprecation
-            ApplicationManager.getApplication().runWriteAction(() -> {
-                results[0].run();
-                results[0] = null;
-            });
+            results[0].run();
+            results[0] = null;
         });
     }
 
@@ -196,11 +201,12 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
         return true;
     }
 
+    @RequiredUIAccess
     public void performCommand() throws Throwable {
         //this is needed to prevent memory leak, since command
         // is put into undo queue
         final RunResult[] results = {new RunResult<>(this)};
-        final Ref<Throwable> exception = new Ref<>();
+        final SimpleReference<Throwable> exception = new SimpleReference<>();
 
         doExecuteCommand(() -> {
             exception.set(results[0].run().getThrowable());
@@ -213,6 +219,7 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
         }
     }
 
+    @RequiredUIAccess
     private void doExecuteCommand(final Runnable runnable) {
         Runnable wrappedRunnable = () -> {
             if (isGlobalUndoAction()) {
@@ -226,7 +233,7 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
             .withGroupId(getGroupID())
             .withUndoConfirmationPolicy(getUndoConfirmationPolicy())
             .withShouldRecordActionForActiveDocument(shouldRecordActionForActiveDocument())
-            .execute();
+            .executeInWriteAction();
     }
 
     /**
@@ -253,10 +260,12 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
         protected abstract void run() throws Throwable;
     }
 
+    @RequiredUIAccess
     public static void runWriteCommandAction(Project project, @Nonnull Runnable runnable) {
         runWriteCommandAction(project, DEFAULT_COMMAND_NAME, DEFAULT_GROUP_ID, runnable);
     }
 
+    @RequiredUIAccess
     public static void runWriteCommandAction(
         Project project,
         @Nullable final String commandName,
@@ -273,6 +282,7 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
     }
 
     @SuppressWarnings("LambdaUnfriendlyMethodOverload")
+    @RequiredUIAccess
     public static <T> T runWriteCommandAction(Project project, @Nonnull final Supplier<T> computable) {
         return new WriteCommandAction<T>(project) {
             @Override
@@ -283,6 +293,7 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
     }
 
     @SuppressWarnings("LambdaUnfriendlyMethodOverload")
+    @RequiredUIAccess
     public static <T, E extends Throwable> T runWriteCommandAction(
         Project project,
         @Nonnull final ThrowableComputable<T, E> computable

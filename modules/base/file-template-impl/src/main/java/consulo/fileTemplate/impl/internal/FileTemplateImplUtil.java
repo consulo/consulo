@@ -16,8 +16,9 @@
 package consulo.fileTemplate.impl.internal;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.fileTemplate.*;
+import consulo.fileTemplate.localize.FileTemplateLocalize;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.file.FileTypeManager;
 import consulo.language.psi.PsiDirectory;
@@ -29,15 +30,14 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.VelocityException;
 import org.apache.velocity.runtime.parser.ParseException;
 import org.apache.velocity.runtime.parser.Token;
 import org.apache.velocity.runtime.parser.node.*;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -111,8 +111,8 @@ public class FileTemplateImplUtil {
         }
         catch (final VelocityException e) {
             LOG.error("Error evaluating template:\n" + templateContent, e);
-            ApplicationManager.getApplication().invokeLater(
-                () -> Alerts.okError(FileTemplateBundle.message("error.parsing.file.template", e.getMessage())).showAsync()
+            Application.get().invokeLater(
+                () -> Alerts.okError(FileTemplateLocalize.errorParsingFileTemplate(e.getMessage())).showAsync()
             );
         }
         final String result = stringWriter.toString();
