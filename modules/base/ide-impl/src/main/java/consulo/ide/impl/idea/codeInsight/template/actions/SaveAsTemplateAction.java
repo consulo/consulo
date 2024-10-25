@@ -24,6 +24,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.template.actions;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.component.util.pointer.NamedPointer;
@@ -44,13 +45,13 @@ import consulo.language.editor.impl.internal.template.TemplateImpl;
 import consulo.language.editor.impl.internal.template.TemplateManagerImpl;
 import consulo.language.editor.impl.internal.template.TemplateSettingsImpl;
 import consulo.language.editor.template.TemplateManager;
-import consulo.language.editor.template.context.BaseTemplateContextType;
 import consulo.language.editor.template.context.TemplateActionContext;
 import consulo.language.editor.template.context.TemplateContextType;
 import consulo.language.psi.*;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 
@@ -62,6 +63,7 @@ public class SaveAsTemplateAction extends AnAction {
     private static final NamedPointer<Language> ourXmlLanguagePointer = LanguagePointerUtil.createPointer("XML");
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
         Editor editor = Objects.requireNonNull(dataContext.getData(Editor.KEY));
@@ -95,6 +97,7 @@ public class SaveAsTemplateAction extends AnAction {
         final int offsetDelta = startOffset;
         new WriteCommandAction.Simple(project, (String)null) {
             @Override
+            @RequiredReadAction
             protected void run() throws Throwable {
                 Map<RangeMarker, String> rangeToText = new HashMap<>();
 
@@ -175,6 +178,7 @@ public class SaveAsTemplateAction extends AnAction {
     }
 
     @Override
+    @RequiredUIAccess
     public void update(AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
         Editor editor = dataContext.getData(Editor.KEY);

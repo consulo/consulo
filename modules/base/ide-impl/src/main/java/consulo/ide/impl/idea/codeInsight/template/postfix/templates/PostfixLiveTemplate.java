@@ -271,14 +271,11 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
         @Nonnull final PsiElement context
     ) {
         if (template.startInWriteAction()) {
-            Application.get().runWriteAction(
-                () -> CommandProcessor.getInstance().executeCommand(
-                    context.getProject(),
-                    () -> template.expand(context, editor),
-                    CodeInsightLocalize.commandExpandPostfixTemplate().get(),
-                    POSTFIX_TEMPLATE_ID
-                )
-            );
+            CommandProcessor.getInstance().newCommand(() -> template.expand(context, editor))
+                .withProject(context.getProject())
+                .withName(CodeInsightLocalize.commandExpandPostfixTemplate())
+                .withGroupId(POSTFIX_TEMPLATE_ID)
+                .executeInWriteAction();
         }
         else {
             template.expand(context, editor);
@@ -376,8 +373,8 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
             ? psiFileFactory.createFileFromText(file.getName(), language, fileContentWithoutKey, false, true)
             : psiFileFactory.createFileFromText(file.getName(), fileType, fileContentWithoutKey);
 
-        if (copy instanceof PsiFileImpl) {
-            ((PsiFileImpl)copy).setOriginalFile(TemplateLanguageUtil.getBaseFile(file));
+        if (copy instanceof PsiFileImpl copyFile) {
+            copyFile.setOriginalFile(TemplateLanguageUtil.getBaseFile(file));
         }
 
         VirtualFile vFile = copy.getVirtualFile();

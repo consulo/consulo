@@ -1013,3 +1013,29 @@ command.wrap.with.template:
   text: Wrap With Template
 dialog.title.expressions:
   text: Expressions
+command.rearrange.code:
+  text: Rearrange Code
+process.rearrange.code:
+  text: Rearranging code...
+action.text.move:
+  text: Move
+label.enter.the.new.group.name:
+  text: "Enter the new group name:"
+dialog.title.move.to.a.new.group:
+  text: Move to a New Group
+dialog.title.rename:
+  text: Rename
+action.AnActionButton.Template.list.text.duplicate:
+  text: Duplicate
+link.define.context:
+  text: Define
+link.change.context:
+  text: Change
+dialog.edit.template.context.other:
+  text: Other
+dialog.edit.template.applicable.in.contexts:
+  text: Applicable in {0}.
+dialog.edit.template.no.applicable.contexts:
+  text: No applicable contexts.
+dialog.edit.template.no.applicable.contexts.yet:
+  text: No applicable contexts yet.

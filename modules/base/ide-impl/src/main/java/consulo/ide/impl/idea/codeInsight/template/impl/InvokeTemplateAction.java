@@ -4,10 +4,11 @@ package consulo.ide.impl.idea.codeInsight.template.impl;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.template.Template;
 import consulo.language.editor.template.TemplateManager;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.UIUtil;
@@ -15,7 +16,6 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -73,10 +73,12 @@ public class InvokeTemplateAction extends AnAction {
     }
 
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         perform();
     }
 
+    @RequiredUIAccess
     public void perform() {
         final Document document = myEditor.getDocument();
         final VirtualFile file = FileDocumentManager.getInstance().getFile(document);
@@ -85,9 +87,7 @@ public class InvokeTemplateAction extends AnAction {
             return;
         }
 
-        CommandProcessor.getInstance().executeCommand(
-            myProject,
-            () -> {
+        CommandProcessor.getInstance().newCommand(() -> {
                 myEditor.getCaretModel().runForEachCaret(__ -> {
                     // adjust the selection so that it starts with a non-whitespace character (to make sure that the template is inserted
                     // at a meaningful position rather than at indent 0)
@@ -113,9 +113,10 @@ public class InvokeTemplateAction extends AnAction {
                 if (myCallback != null) {
                     myCallback.run();
                 }
-            },
-            CodeInsightBundle.message("command.wrap.with.template"),
-            "Wrap with template " + myTemplate.getKey()
-        );
+            })
+            .withProject(myProject)
+            .withName(CodeInsightLocalize.commandWrapWithTemplate())
+            .withGroupId("Wrap with template " + myTemplate.getKey())
+            .execute();
     }
 }

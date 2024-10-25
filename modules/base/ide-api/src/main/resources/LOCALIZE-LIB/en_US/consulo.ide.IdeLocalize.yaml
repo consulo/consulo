@@ -2629,3 +2629,7 @@ label.tabs.show.directory.for.non.unique.filenames:
   text: Show directory in editor tabs for non-unique filenames
 command.fixing.line.separators:
   text: fixing line separators
+action.Anonymous.text.rename:
+  text: Rename
+action.Anonymous.text.new.group:
+  text: New group…
