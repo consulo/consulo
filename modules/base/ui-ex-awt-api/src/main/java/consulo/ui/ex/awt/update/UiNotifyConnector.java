@@ -19,6 +19,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.update.Activatable;
 
 import jakarta.annotation.Nonnull;
@@ -70,6 +71,7 @@ public class UiNotifyConnector implements Disposable, HierarchyListener {
                     hideNotify();
                 }
             };
+            @SuppressWarnings("deprecation")
             final Application app = ApplicationManager.getApplication();
             if (app != null && app.isDispatchThread()) {
                 app.invokeLater(runnable, app.getCurrentModalityState());
@@ -147,11 +149,11 @@ public class UiNotifyConnector implements Disposable, HierarchyListener {
         }
     }
 
-    public static void doWhenFirstShown(@Nonnull JComponent c, @Nonnull Runnable runnable) {
+    public static void doWhenFirstShown(@Nonnull JComponent c, @RequiredUIAccess @Nonnull Runnable runnable) {
         doWhenFirstShown((Component)c, runnable);
     }
 
-    public static void doWhenFirstShown(@Nonnull Component c, @Nonnull final Runnable runnable) {
+    public static void doWhenFirstShown(@Nonnull Component c, @RequiredUIAccess @Nonnull final Runnable runnable) {
         Activatable activatable = new Activatable() {
             @Override
             public void showNotify() {
