@@ -79,10 +79,9 @@ public final class PositionPanel extends EditorBasedWidget
     @Override
     public String getTooltipText() {
         final String shortcut = KeymapUtil.getFirstKeyboardShortcutText("GotoLine");
-        if (!shortcut.isEmpty()) {
-            return UILocalize.goToLineCommandName() + LocalizeValue.localizeTODO(" (" + shortcut + ")").get();
-        }
-        return UILocalize.goToLineCommandName().get();
+        return shortcut.isEmpty()
+            ? UILocalize.goToLineCommandName().get()
+            : UILocalize.goToLineCommandNameWithShortkut(shortcut).get();
     }
 
     @Override

@@ -136,6 +136,8 @@ memory.usage.panel.message.text:
   text: '{0,number,####}M of {1,number,####}M'
 go.to.line.command.name:
   text: Go to Line
+go.to.line.command.name.with.shortkut:
+  text: Go to Line ({0})
 go.to.line.command.double.click:
   text: Click to go to line
 position.panel.caret.count:

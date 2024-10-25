@@ -196,14 +196,14 @@ public class TemplateListPanel extends JPanel implements Disposable {
         }
         TemplateSettingsImpl templateSettings = TemplateSettingsImpl.getInstanceImpl();
         templateSettings.setTemplates(templateGroups);
-        templateSettings.setDefaultShortcutChar(myExpandByCombo.getValue().getShortcutChar());
+        templateSettings.setDefaultShortcutChar(myExpandByCombo.getValueOrError().getShortcutChar());
 
         reset();
     }
 
     public boolean isModified() {
         TemplateSettingsImpl templateSettings = TemplateSettingsImpl.getInstanceImpl();
-        if (templateSettings.getDefaultShortcutChar() != myExpandByCombo.getValue().getShortcutChar()) {
+        if (templateSettings.getDefaultShortcutChar() != myExpandByCombo.getValueOrError().getShortcutChar()) {
             return true;
         }
 
@@ -664,7 +664,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
             .setRemoveAction(e -> removeRows())
             .disableDownAction()
             .disableUpAction()
-            .addExtraAction(new AnActionButton(CodeInsightLocalize.actionAnactionbuttonTemplateListTextDuplicate(), LocalizeValue.empty(), PlatformIconGroup.actionsCopy()) {
+            .addExtraAction(new AnAction(CodeInsightLocalize.actionAnactionbuttonTemplateListTextDuplicate(), LocalizeValue.empty(), PlatformIconGroup.actionsCopy()) {
                 @RequiredUIAccess
                 @Override
                 public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -672,7 +672,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
                 }
 
                 @Override
-                public void updateButton(AnActionEvent e) {
+                public void update(@Nonnull AnActionEvent e) {
                     e.getPresentation().setEnabled(getTemplate(getSingleSelectedIndex()) != null);
                 }
             });
@@ -828,7 +828,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
                 }
                 createTemplateEditor(
                     newTemplate,
-                    myExpandByCombo.getValue().getTitle().get(),
+                    myExpandByCombo.getValueOrError().getTitle().get(),
                     getTemplateOptions(newTemplate),
                     getTemplateContext(newTemplate)
                 );

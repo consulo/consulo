@@ -285,8 +285,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
         gbConstraints.insets = JBUI.insetsLeft(4);
         myExpandByCombo = ComboBox.create(ExpandByKey.values());
         myExpandByCombo.setTextRender(key -> key.getTitle(myDefaultShortcut));
-        //noinspection ConstantConditions
-        myExpandByCombo.addValueListener(e -> myTemplate.setShortcutChar(myExpandByCombo.getValue().getShortcutChar()));
+        myExpandByCombo.addValueListener(e -> myTemplate.setShortcutChar(myExpandByCombo.getValueOrError().getShortcutChar()));
         expandWithLabel.setTarget(myExpandByCombo);
 
         panel.add(TargetAWT.to(myExpandByCombo), gbConstraints);
@@ -545,7 +544,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
             .executeInWriteAction();
 
         myCbReformat.setValue(myTemplate.isToReformat());
-        myCbReformat.addValueListener(e -> myTemplate.setToReformat(myCbReformat.getValue()));
+        myCbReformat.addValueListener(e -> myTemplate.setToReformat(myCbReformat.getValueOrError()));
 
         myExpandByCombo.setEnabled(isExpandableFromEditor());
 
