@@ -19,9 +19,9 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.application.dumb.DumbAware;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.TextEditor;
+import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.find.FindManager;
 import consulo.ide.impl.idea.find.FindUtil;
-import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.project.Project;
@@ -44,10 +44,7 @@ public class SearchAgainAction extends AnAction implements DumbAware {
         if (editor == null || project == null) {
             return;
         }
-        CommandProcessor commandProcessor = CommandProcessor.getInstance();
-        commandProcessor.executeCommand(
-            project,
-            () -> {
+        CommandProcessor.getInstance().newCommand(() -> {
                 PsiDocumentManager.getInstance(project).commitAllDocuments();
                 IdeDocumentHistory.getInstance(project).includeCurrentCommandAsNavigation();
                 if (FindManager.getInstance(project).findNextUsageInEditor(editor)) {
@@ -55,10 +52,10 @@ public class SearchAgainAction extends AnAction implements DumbAware {
                 }
 
                 FindUtil.searchAgain(project, editor, e.getDataContext());
-            },
-            IdeLocalize.commandFindNext().get(),
-            null
-        );
+            })
+            .withProject(project)
+            .withName(IdeLocalize.commandFindNext())
+            .execute();
     }
 
     @Override

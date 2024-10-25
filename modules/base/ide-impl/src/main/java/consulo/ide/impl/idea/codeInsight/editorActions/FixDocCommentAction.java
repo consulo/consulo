@@ -1,7 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
-import consulo.application.Application;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.CaretModel;
 import consulo.codeEditor.Editor;
@@ -21,13 +21,14 @@ import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
 import consulo.language.editor.FileModificationService;
 import consulo.language.editor.documentation.*;
 import consulo.language.psi.*;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 /**
  * Creates documentation comment for the current context if it's not created yet (e.g. the caret is inside a method which
@@ -37,11 +38,10 @@ import org.jetbrains.annotations.NonNls;
  * outdated parameters and create stubs for the new ones.
  *
  * @author Denis Zhdanov
- * @since 9/20/12 10:15 AM
+ * @since 2012-09-20
  */
 public class FixDocCommentAction extends EditorAction {
     @Nonnull
-    @NonNls
     public static final String ACTION_ID = "FixDocComment";
 
     public FixDocCommentAction() {
@@ -49,8 +49,8 @@ public class FixDocCommentAction extends EditorAction {
     }
 
     private static final class MyHandler extends EditorActionHandler {
-
         @Override
+        @RequiredUIAccess
         public void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
             Project project = dataContext.getData(Project.KEY);
             if (project == null) {
@@ -66,6 +66,7 @@ public class FixDocCommentAction extends EditorAction {
         }
     }
 
+    @RequiredUIAccess
     private static void process(@Nonnull final PsiFile file, @Nonnull final Editor editor, @Nonnull final Project project, int offset) {
         PsiElement elementAtOffset = file.findElementAt(offset);
         if (elementAtOffset == null || !FileModificationService.getInstance().preparePsiElementForWrite(elementAtOffset)) {
@@ -81,6 +82,7 @@ public class FixDocCommentAction extends EditorAction {
      * @param project current project
      * @param editor  target editor
      */
+    @RequiredUIAccess
     public static void generateOrFixComment(
         @Nonnull final PsiElement element,
         @Nonnull final Project project,
@@ -89,15 +91,16 @@ public class FixDocCommentAction extends EditorAction {
         Language language = element.getLanguage();
         final CodeDocumentationProvider docProvider;
         final DocumentationProvider langDocumentationProvider = LanguageDocumentationProvider.forLanguageComposite(language);
-        if (langDocumentationProvider instanceof CompositeDocumentationProvider) {
-            docProvider = ((CompositeDocumentationProvider)langDocumentationProvider).getFirstCodeDocumentationProvider();
+        if (langDocumentationProvider instanceof CompositeDocumentationProvider compositeDocumentationProvider) {
+            docProvider = compositeDocumentationProvider.getFirstCodeDocumentationProvider();
         }
-        else if (langDocumentationProvider instanceof CodeDocumentationProvider) {
-            docProvider = (CodeDocumentationProvider)langDocumentationProvider;
+        else if (langDocumentationProvider instanceof CodeDocumentationProvider codeDocumentationProvider) {
+            docProvider = codeDocumentationProvider;
         }
         else {
             docProvider = null;
         }
+
         if (docProvider == null) {
             return;
         }
@@ -108,10 +111,9 @@ public class FixDocCommentAction extends EditorAction {
         }
 
         Commenter c = Commenter.forLanguage(language);
-        if (!(c instanceof CodeDocumentationAwareCommenter)) {
+        if (!(c instanceof CodeDocumentationAwareCommenter commenter)) {
             return;
         }
-        final CodeDocumentationAwareCommenter commenter = (CodeDocumentationAwareCommenter)c;
         final Runnable task;
         if (pair.second == null || pair.second.getTextRange().isEmpty()) {
             task = () -> generateComment(pair.first, editor, docProvider, commenter, project);
@@ -125,8 +127,11 @@ public class FixDocCommentAction extends EditorAction {
                 task = () -> fixer.fixComment(project, editor, pair.second);
             }
         }
-        final Runnable command = () -> Application.get().runWriteAction(task);
-        CommandProcessor.getInstance().executeCommand(project, command, "Fix documentation", null);
+        CommandProcessor.getInstance().newCommand(task)
+            .withProject(project)
+            .withName(LocalizeValue.ofNullable("Fix documentation"))
+            .withGroupId(null)
+            .executeInWriteAction();
     }
 
     /**
@@ -140,6 +145,7 @@ public class FixDocCommentAction extends EditorAction {
      * @param commenter commenter to use
      * @param project   current project
      */
+    @RequiredReadAction
     private static void generateComment(
         @Nonnull PsiElement anchor,
         @Nonnull Editor editor,
@@ -232,6 +238,7 @@ public class FixDocCommentAction extends EditorAction {
         }
     }
 
+    @RequiredReadAction
     private static void reformatCommentKeepingEmptyTags(@Nonnull PsiFile file, @Nonnull Project project, int start, int end) {
         CodeStyleSettings tempSettings = CodeStyle.getSettings(file).clone();
         LanguageCodeStyleSettingsProvider langProvider = LanguageCodeStyleSettingsProvider.forLanguage(file.getLanguage());
@@ -243,6 +250,7 @@ public class FixDocCommentAction extends EditorAction {
         CodeStyle.doWithTemporarySettings(project, tempSettings, () -> codeStyleManager.reformatText(file, start, end));
     }
 
+    @RequiredReadAction
     private static int calcStartReformatOffset(@Nonnull PsiElement element) {
         int result = element.getTextRange().getStartOffset();
         for (PsiElement e = element.getPrevSibling(); e != null; e = e.getPrevSibling()) {

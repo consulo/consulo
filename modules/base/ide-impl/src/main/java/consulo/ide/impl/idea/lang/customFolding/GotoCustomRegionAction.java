@@ -22,6 +22,7 @@ import consulo.codeEditor.EditorPopupHelper;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.ide.impl.idea.openapi.actionSystem.PopupAction;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.Language;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.folding.CustomFoldingBuilder;
@@ -32,7 +33,6 @@ import consulo.language.editor.internal.CompositeFoldingBuilder;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.ide.localize.IdeLocalize;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.NotificationType;
@@ -67,10 +67,7 @@ public class GotoCustomRegionAction extends AnAction implements DumbAware, Popup
                 DumbService.getInstance(project).showDumbModeNotification(IdeLocalize.gotoCustomRegionMessageDumbMode().get());
                 return;
             }
-            CommandProcessor processor = CommandProcessor.getInstance();
-            processor.executeCommand(
-                project,
-                () -> {
+            CommandProcessor.getInstance().newCommand(() -> {
                     Collection<FoldingDescriptor> foldingDescriptors = getCustomFoldingDescriptors(editor, project);
                     if (foldingDescriptors.size() > 0) {
                         CustomFoldingRegionsPopup regionsPopup = new CustomFoldingRegionsPopup(foldingDescriptors, editor, project);
@@ -79,10 +76,10 @@ public class GotoCustomRegionAction extends AnAction implements DumbAware, Popup
                     else {
                         notifyCustomRegionsUnavailable(editor, project);
                     }
-                },
-                IdeLocalize.gotoCustomRegionCommand().get(),
-                null
-            );
+                })
+                .withProject(project)
+                .withName(IdeLocalize.gotoCustomRegionCommand())
+                .execute();
         }
     }
 
@@ -125,12 +122,12 @@ public class GotoCustomRegionAction extends AnAction implements DumbAware, Popup
 
     @Nullable
     private static CustomFoldingBuilder getCustomFoldingBuilder(FoldingBuilder builder, FoldingDescriptor descriptor) {
-        if (builder instanceof CustomFoldingBuilder) {
-            return (CustomFoldingBuilder)builder;
+        if (builder instanceof CustomFoldingBuilder customFoldingBuilder) {
+            return customFoldingBuilder;
         }
         FoldingBuilder originalBuilder = descriptor.getElement().getUserData(CompositeFoldingBuilder.FOLDING_BUILDER);
-        if (originalBuilder instanceof CustomFoldingBuilder) {
-            return (CustomFoldingBuilder)originalBuilder;
+        if (originalBuilder instanceof CustomFoldingBuilder customFoldingBuilder) {
+            return customFoldingBuilder;
         }
         return null;
     }

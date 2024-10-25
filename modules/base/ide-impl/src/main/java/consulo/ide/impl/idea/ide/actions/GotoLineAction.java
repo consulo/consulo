@@ -4,9 +4,9 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorKeys;
+import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.ide.impl.idea.ide.util.EditorGotoLineNumberDialog;
 import consulo.ide.impl.idea.ide.util.GotoLineNumberDialog;
-import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
@@ -33,16 +33,14 @@ public class GotoLineAction extends AnAction implements DumbAware {
         }
         else {
             CommandProcessor processor = CommandProcessor.getInstance();
-            processor.executeCommand(
-                project,
-                () -> {
+            processor.newCommand(() -> {
                     GotoLineNumberDialog dialog = new EditorGotoLineNumberDialog(project, editor);
                     dialog.show();
                     IdeDocumentHistory.getInstance(project).includeCurrentCommandAsNavigation();
-                },
-                IdeLocalize.commandGoToLine().get(),
-                null
-            );
+                })
+                .withProject(project)
+                .withName(IdeLocalize.commandGoToLine())
+                .execute();
         }
     }
 

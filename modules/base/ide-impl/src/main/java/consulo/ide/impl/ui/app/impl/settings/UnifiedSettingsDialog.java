@@ -35,7 +35,7 @@ import java.util.function.Function;
 
 /**
  * @author VISTALL
- * @since 25-Oct-17
+ * @since 2017-10-25
  */
 public class UnifiedSettingsDialog extends WholeLeftWindowWrapper {
     private static final Logger LOG = Logger.getInstance(UnifiedSettingsDialog.class);
@@ -86,8 +86,8 @@ public class UnifiedSettingsDialog extends WholeLeftWindowWrapper {
             @Override
             public void buildChildren(@Nonnull Function<Configurable, TreeNode<Configurable>> nodeFactory, @Nullable Configurable parentValue) {
                 if (parentValue != null) {
-                    if (parentValue instanceof Configurable.Composite) {
-                        build(nodeFactory, ((Configurable.Composite) parentValue).getConfigurables());
+                    if (parentValue instanceof Configurable.Composite composite) {
+                        build(nodeFactory, composite.getConfigurables());
                     }
                 }
                 else {
@@ -105,7 +105,7 @@ public class UnifiedSettingsDialog extends WholeLeftWindowWrapper {
                 for (Configurable configurable : configurables) {
                     TreeNode<Configurable> node = nodeFactory.apply(configurable);
 
-                    boolean b = configurable instanceof Configurable.Composite && ((Configurable.Composite) configurable).getConfigurables().length > 0;
+                    boolean b = configurable instanceof Configurable.Composite composite && composite.getConfigurables().length > 0;
                     node.setLeaf(!b);
 
                     node.setRender((item, itemPresentation) -> itemPresentation.append(item.getDisplayName()));

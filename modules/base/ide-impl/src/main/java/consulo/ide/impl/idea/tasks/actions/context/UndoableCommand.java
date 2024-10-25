@@ -16,6 +16,8 @@
 
 package consulo.ide.impl.idea.tasks.actions.context;
 
+import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.ProjectUndoManager;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.UndoableAction;
@@ -26,24 +28,20 @@ import consulo.project.Project;
  * @author Dmitry Avdeev
  */
 public class UndoableCommand {
+    @RequiredUIAccess
     public static void execute(final Project project, final UndoableAction action, String name, String groupId) {
-        CommandProcessor.getInstance().executeCommand(
-            project,
-            new Runnable() {
-                public void run() {
-
-                    try {
-                        action.redo();
-                    }
-                    catch (UnexpectedUndoException e) {
-                        throw new RuntimeException(e);
-                    }
-                    ProjectUndoManager.getInstance(project).undoableActionPerformed(action);
-
+        CommandProcessor.getInstance().newCommand(() -> {
+                try {
+                    action.redo();
                 }
-            },
-            name,
-            groupId
-        );
+                catch (UnexpectedUndoException e) {
+                    throw new RuntimeException(e);
+                }
+                ProjectUndoManager.getInstance(project).undoableActionPerformed(action);
+            })
+            .withProject(project)
+            .withName(LocalizeValue.ofNullable(name))
+            .withGroupId(groupId)
+            .execute();
     }
 }

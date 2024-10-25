@@ -70,8 +70,8 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
         return true;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void update(AnActionEvent event) {
         Presentation presentation = event.getPresentation();
 
@@ -126,8 +126,8 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
         }
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         final Project project = e.getData(Project.KEY);
         final Editor editor = e.getData(Editor.KEY);
@@ -144,12 +144,10 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
         }
         else if (project != null && element != null) {
             FeatureUsageTracker.getInstance().triggerFeatureUsed(CODEASSISTS_QUICKJAVADOC_CTRLN_FEATURE);
-            CommandProcessor.getInstance().executeCommand(
-                project,
-                () -> DocumentationManager.getInstance(project).showJavaDocInfo(element, null),
-                getCommandName(),
-                null
-            );
+            CommandProcessor.getInstance().newCommand(() -> DocumentationManager.getInstance(project).showJavaDocInfo(element, null))
+                .withProject(project)
+                .withName(getTemplatePresentation().getTextValue())
+                .execute();
         }
     }
 }

@@ -10,18 +10,19 @@ import consulo.codeEditor.event.*;
 import consulo.document.Document;
 import consulo.document.event.BulkAwareDocumentListener;
 import consulo.fileEditor.event.FileEditorManagerEvent;
+import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.fileEditor.statusBar.EditorBasedWidget;
 import consulo.ide.impl.idea.ide.util.EditorGotoLineNumberDialog;
 import consulo.ide.impl.idea.ide.util.GotoLineNumberDialog;
-import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
-import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.awt.FocusUtil;
 import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ex.localize.UILocalize;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
@@ -79,9 +80,9 @@ public final class PositionPanel extends EditorBasedWidget
     public String getTooltipText() {
         final String shortcut = KeymapUtil.getFirstKeyboardShortcutText("GotoLine");
         if (!shortcut.isEmpty()) {
-            return UIBundle.message("go.to.line.command.name") + " (" + shortcut + ")";
+            return UILocalize.goToLineCommandName() + LocalizeValue.localizeTODO(" (" + shortcut + ")").get();
         }
-        return UIBundle.message("go.to.line.command.name");
+        return UILocalize.goToLineCommandName().get();
     }
 
     @Override
@@ -93,16 +94,14 @@ public final class PositionPanel extends EditorBasedWidget
                 return;
             }
 
-            CommandProcessor.getInstance().executeCommand(
-                project,
-                () -> {
+            CommandProcessor.getInstance().newCommand(() -> {
                     GotoLineNumberDialog dialog = new EditorGotoLineNumberDialog(project, editor);
                     dialog.show();
                     IdeDocumentHistory.getInstance(project).includeCurrentCommandAsNavigation();
-                },
-                UIBundle.message("go.to.line.command.name"),
-                null
-            );
+                })
+                .withProject(project)
+                .withName(UILocalize.goToLineCommandName())
+                .execute();
         };
     }
 
@@ -198,7 +197,7 @@ public final class PositionPanel extends EditorBasedWidget
 
         int caretCount = editor.getCaretModel().getCaretCount();
         if (caretCount > 1) {
-            return UIBundle.message("position.panel.caret.count", caretCount);
+            return UILocalize.positionPanelCaretCount(caretCount).get();
         }
 
         StringBuilder message = new StringBuilder();
@@ -222,10 +221,10 @@ public final class PositionPanel extends EditorBasedWidget
         message.append(" (");
         if (countTask.isQuick()) {
             int charCount = countTask.calculate();
-            message.append(charCount).append(" ").append(UIBundle.message("position.panel.selected.chars.count", charCount));
+            message.append(charCount).append(" ").append(UILocalize.positionPanelSelectedCharsCount(charCount));
         }
         else {
-            message.append(CHAR_COUNT_UNKNOWN).append(" ").append(UIBundle.message("position.panel.selected.chars.count", 2));
+            message.append(CHAR_COUNT_UNKNOWN).append(" ").append(UILocalize.positionPanelSelectedCharsCount(2));
 
             myCountTask = countTask;
             myAlarm.cancelAllRequests();
@@ -236,7 +235,7 @@ public final class PositionPanel extends EditorBasedWidget
         int selectionEndLine = editor.getDocument().getLineNumber(selectionEnd);
         if (selectionEndLine > selectionStartLine) {
             message.append(", ");
-            message.append(UIBundle.message("position.panel.selected.line.breaks.count", selectionEndLine - selectionStartLine));
+            message.append(UILocalize.positionPanelSelectedLineBreaksCount(selectionEndLine - selectionStartLine));
         }
 
         message.append(")");

@@ -32,7 +32,7 @@ import consulo.ui.ex.InputValidator;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.undoRedo.*;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -104,37 +104,31 @@ public class RenameLibraryHandler implements RenameHandler, TitledHandler {
             if (modifiableModel == null) {
                 return false;
             }
-            final Ref<Boolean> success = Ref.create(Boolean.TRUE);
-            CommandProcessor.getInstance().executeCommand(
-                myProject,
-                new Runnable() {
-                    @RequiredUIAccess
-                    @Override
-                    public void run() {
-                        UndoableAction action = new BasicUndoableAction() {
-                            @Override
-                            public void undo() throws UnexpectedUndoException {
-                                final Library.ModifiableModel modifiableModel = renameLibrary(oldName);
-                                if (modifiableModel != null) {
-                                    modifiableModel.commit();
-                                }
+            final SimpleReference<Boolean> success = SimpleReference.create(Boolean.TRUE);
+            CommandProcessor.getInstance().newCommand(() -> {
+                    UndoableAction action = new BasicUndoableAction() {
+                        @Override
+                        public void undo() throws UnexpectedUndoException {
+                            final Library.ModifiableModel modifiableModel1 = renameLibrary(oldName);
+                            if (modifiableModel1 != null) {
+                                modifiableModel1.commit();
                             }
+                        }
 
-                            @Override
-                            public void redo() throws UnexpectedUndoException {
-                                final Library.ModifiableModel modifiableModel = renameLibrary(inputString);
-                                if (modifiableModel != null) {
-                                    modifiableModel.commit();
-                                }
+                        @Override
+                        public void redo() throws UnexpectedUndoException {
+                            final Library.ModifiableModel modifiableModel1 = renameLibrary(inputString);
+                            if (modifiableModel1 != null) {
+                                modifiableModel1.commit();
                             }
-                        };
-                        ProjectUndoManager.getInstance(myProject).undoableActionPerformed(action);
-                        myProject.getApplication().runWriteAction(() -> modifiableModel.commit());
-                    }
-                },
-                IdeLocalize.commandRenamingModule(oldName).get(),
-                null
-            );
+                        }
+                    };
+                    ProjectUndoManager.getInstance(myProject).undoableActionPerformed(action);
+                    myProject.getApplication().runWriteAction(() -> modifiableModel.commit());
+                })
+                .withProject(myProject)
+                .withName(IdeLocalize.commandRenamingModule(oldName))
+                .execute();
             return success.get();
         }
 

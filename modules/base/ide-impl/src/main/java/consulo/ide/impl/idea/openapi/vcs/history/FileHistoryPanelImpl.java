@@ -40,7 +40,6 @@ import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.ide.impl.idea.openapi.vcs.CalledInAwt;
 import consulo.ide.impl.idea.openapi.vcs.actions.AnnotateRevisionActionBase;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.CreatePatchFromChangesAction;
-import consulo.versionControlSystem.impl.internal.change.ui.issueLink.IssueLinkRenderer;
 import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.TableLinkMouseListener;
 import consulo.ide.impl.idea.openapi.vcs.impl.AbstractVcsHelperImpl;
 import consulo.ide.impl.idea.openapi.vcs.ui.ReplaceFileConfirmationDialog;
@@ -83,13 +82,13 @@ import consulo.util.lang.TreeItem;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.history.*;
+import consulo.versionControlSystem.impl.internal.change.ui.issueLink.IssueLinkRenderer;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -232,6 +231,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
         }
 
         myHistoryPanelRefresh = new AsynchConsumer<>() {
+            @Override
             public void finished() {
                 if (treeHistoryProvider != null) {
                     // scroll tree view to most recent change
@@ -287,15 +287,13 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
     }
 
     private static void makeBold(Component component) {
-        if (component instanceof JComponent) {
-            JComponent jComponent = (JComponent)component;
+        if (component instanceof JComponent jComponent) {
             Font font = jComponent.getFont();
             if (font != null) {
                 jComponent.setFont(font.deriveFont(Font.BOLD));
             }
         }
-        else if (component instanceof Container) {
-            Container container = (Container)component;
+        else if (component instanceof Container container) {
             for (int i = 0; i < container.getComponentCount(); i++) {
                 makeBold(container.getComponent(i));
             }
@@ -310,9 +308,9 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
         sb.append(revision.getAuthor());
         long time = revision.getRevisionDate().getTime();
         sb.append(" on ").append(DateFormatUtil.formatDate(time)).append(" at ").append(DateFormatUtil.formatTime(time));
-        if (revision instanceof VcsFileRevisionEx
-            && !Comparing.equal(revision.getAuthor(), ((VcsFileRevisionEx)revision).getCommitterName())) {
-            sb.append(" (committed by ").append(((VcsFileRevisionEx)revision).getCommitterName()).append(")");
+        if (revision instanceof VcsFileRevisionEx vcsFileRevision
+            && !Comparing.equal(revision.getAuthor(), vcsFileRevision.getCommitterName())) {
+            sb.append(" (committed by ").append(vcsFileRevision.getCommitterName()).append(")");
         }
         if (withMessage) {
             sb.append(" ").append(MessageColumnInfo.getSubject(revision));
@@ -457,6 +455,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
     }
 
     @Nonnull
+    @Override
     protected JComponent createCenterPanel() {
         mySplitter =
             new OnePixelSplitter(true, "vcs.history.splitter.proportion", getConfiguration().FILE_HISTORY_SPLITTER_PROPORTION);
@@ -649,7 +648,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
 
     private VirtualFile createVirtualFileForRevision(VcsFileRevision revision) {
         if (!myRevisionToVirtualFile.containsKey(revision)) {
-            FilePath filePath = (revision instanceof VcsFileRevisionEx ? ((VcsFileRevisionEx)revision).getPath() : myFilePath);
+            FilePath filePath = (revision instanceof VcsFileRevisionEx vcsFileRevision ? vcsFileRevision.getPath() : myFilePath);
             myRevisionToVirtualFile.put(revision, filePath.isDirectory()
                 ? new VcsVirtualFolder(filePath.getPath(), null, VcsFileSystem.getInstance())
                 : new VcsVirtualFile(filePath.getPath(), revision, VcsFileSystem.getInstance()));
@@ -731,7 +730,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof FileHistoryPanelImpl && sameHistories((FileHistoryPanelImpl)obj, myFilePath, myStartingRevision);
+        return obj instanceof FileHistoryPanelImpl fileHistoryPanel && sameHistories(fileHistoryPanel, myFilePath, myStartingRevision);
     }
 
     @Override
@@ -773,8 +772,8 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
 
         static String toString(VcsFileRevision o, boolean shortVersion) {
             VcsRevisionNumber number = o.getRevisionNumber();
-            return shortVersion && number instanceof ShortVcsRevisionNumber
-                ? ((ShortVcsRevisionNumber)number).toShortString()
+            return shortVersion && number instanceof ShortVcsRevisionNumber shortVcsRevisionNumber
+                ? shortVcsRevisionNumber.toShortString()
                 : number.asString();
         }
 
@@ -872,10 +871,10 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
 
         static String toString(VcsFileRevision o) {
             VcsFileRevision rev = o;
-            if (o instanceof TreeNodeOnVcsRevision) {
-                rev = ((TreeNodeOnVcsRevision)o).getRevision();
+            if (o instanceof TreeNodeOnVcsRevision treeNodeOnVcsRevision) {
+                rev = treeNodeOnVcsRevision.getRevision();
             }
-            if (rev instanceof VcsFileRevisionEx && !Comparing.equal(rev.getAuthor(), ((VcsFileRevisionEx)rev).getCommitterName())) {
+            if (rev instanceof VcsFileRevisionEx vcsFileRevision && !Objects.equals(rev.getAuthor(), vcsFileRevision.getCommitterName())) {
                 return o.getAuthor() + "*";
             }
             return o.getAuthor();
@@ -893,14 +892,13 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
 
         @Override
         public TableCellRenderer getCustomizedRenderer(VcsFileRevision value, TableCellRenderer renderer) {
-            if (renderer instanceof AuthorCellRenderer) {
+            if (renderer instanceof AuthorCellRenderer authorCellRenderer) {
                 VcsFileRevision revision = value;
-                if (value instanceof TreeNodeOnVcsRevision) {
-                    revision = ((TreeNodeOnVcsRevision)value).getRevision();
+                if (value instanceof TreeNodeOnVcsRevision treeNodeOnVcsRevision) {
+                    revision = treeNodeOnVcsRevision.getRevision();
                 }
 
-                if (revision instanceof VcsFileRevisionEx) {
-                    VcsFileRevisionEx ex = (VcsFileRevisionEx)revision;
+                if (revision instanceof VcsFileRevisionEx ex) {
                     StringBuilder sb = new StringBuilder(StringUtil.notNullize(ex.getAuthor()));
                     if (ex.getAuthorEmail() != null) {
                         sb.append(" &lt;").append(ex.getAuthorEmail()).append("&gt;");
@@ -911,7 +909,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
                             sb.append(" &lt;").append(ex.getCommitterEmail()).append("&gt;");
                         }
                     }
-                    ((AuthorCellRenderer)renderer).setTooltipText(sb.toString());
+                    authorCellRenderer.setTooltipText(sb.toString());
                 }
             }
 
@@ -919,7 +917,6 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
         }
 
         @Override
-        @NonNls
         public String getPreferredStringValue() {
             return StringUtil.repeatSymbol('m', 14);
         }
@@ -935,8 +932,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
                 @Override
                 protected void customizeCellRenderer(JTable table, Object value, boolean selected, boolean hasFocus, int row, int column) {
                     setOpaque(selected);
-                    if (value instanceof String) {
-                        String message = (String)value;
+                    if (value instanceof String message) {
                         myIssueLinkRenderer.appendTextWithLinks(message);
                     }
                 }
@@ -988,7 +984,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
                 return VcsHistoryUtil.loadRevisionContentGuessEncoding(myRevision, myFile.getVirtualFile(), myProject);
             }
             catch (IOException e) {
-                throw new VcsException(VcsLocalize.messageTextCannotLoadRevision(e.getLocalizedMessage()).get());
+                throw new VcsException(VcsLocalize.messageTextCannotLoadRevision(e.getLocalizedMessage()));
             }
         }
 
@@ -999,7 +995,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
                 return VcsHistoryUtil.loadRevisionContent(myRevision);
             }
             catch (IOException e) {
-                throw new VcsException(VcsLocalize.messageTextCannotLoadRevision(e.getLocalizedMessage()).get());
+                throw new VcsException(VcsLocalize.messageTextCannotLoadRevision(e.getLocalizedMessage()));
             }
         }
 
@@ -1174,7 +1170,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
         private VcsException myException;
 
         private FolderPatchCreationTask(@Nonnull AbstractVcs vcs, final TreeNodeOnVcsRevision revision) {
-            super(vcs.getProject(), VcsLocalize.createPatchLoadingContentProgress().get(), true);
+            super(vcs.getProject(), VcsLocalize.createPatchLoadingContentProgress(), true);
             myVcs = vcs;
             myRevision = revision;
         }
@@ -1361,7 +1357,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
             final VirtualFile file = getVirtualFile();
             final Project project = myVcs.getProject();
 
-            new Task.Backgroundable(project, VcsLocalize.showDiffProgressTitle().get()) {
+            new Task.Backgroundable(project, VcsLocalize.showDiffProgressTitle()) {
                 @Override
                 public void run(@Nonnull ProgressIndicator indicator) {
                     final LocalHistoryAction action = file != null ? startLocalHistoryAction(revision) : LocalHistoryAction.NULL;
@@ -1425,6 +1421,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
             return VcsLocalize.actionNameForFileGetVersion(myFilePath.getPath(), revision.getRevisionNumber()).get();
         }
 
+        @RequiredUIAccess
         private void write(byte[] revision) throws IOException {
             VirtualFile virtualFile = getVirtualFile();
             if (virtualFile == null) {
@@ -1448,15 +1445,14 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
             FileUtil.writeToFile(myFilePath.getIOFile(), revisionContent);
         }
 
+        @RequiredUIAccess
         private void writeContentToDocument(final Document document, byte[] revisionContent) throws IOException {
             final String content = StringUtil.convertLineSeparators(new String(revisionContent, myFilePath.getCharset().name()));
 
-            CommandProcessor.getInstance().executeCommand(
-                myVcs.getProject(),
-                () -> document.replaceString(0, document.getTextLength(), content),
-                VcsLocalize.messageTitleGetVersion().get(),
-                null
-            );
+            CommandProcessor.getInstance().newCommand(() -> document.replaceString(0, document.getTextLength(), content))
+                .withProject(myVcs.getProject())
+                .withName(VcsLocalize.messageTitleGetVersion())
+                .execute();
         }
     }
 
@@ -1529,6 +1525,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
             registerShortcutOn(FileHistoryPanelImpl.this);
         }
 
+        @Override
         @RequiredUIAccess
         public void actionPerformed(AnActionEvent e) {
             if (myInRefresh) {

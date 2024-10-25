@@ -1182,3 +1182,5 @@ assignment.to.declared.variable.problem.descriptor:
   text: Variable ''{0}'' is initialized with self assignment
 inspection.profile.label:
   text: 'Inspection profile:'
+processing.progress.text:
+  text: Processing {0}

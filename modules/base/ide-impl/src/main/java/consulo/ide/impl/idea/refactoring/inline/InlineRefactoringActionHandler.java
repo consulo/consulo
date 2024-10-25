@@ -15,9 +15,8 @@
  */
 
 /**
- * created at Nov 21, 2001
- *
  * @author Jeka
+ * @since 2001-11-21
  */
 package consulo.ide.impl.idea.refactoring.inline;
 
@@ -25,7 +24,6 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.action.BaseRefactoringAction;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.language.editor.refactoring.inline.InlineActionHandler;
@@ -86,9 +84,9 @@ public class InlineRefactoringActionHandler implements RefactoringActionHandler 
                 return;
             }
 
-            String message =
-                RefactoringBundle.getCannotRefactorMessage(RefactoringLocalize.errorWrongCaretPositionMethodOrLocalName().get());
-            CommonRefactoringUtil.showErrorHint(project, editor, message, REFACTORING_NAME.get(), null);
+            LocalizeValue message =
+                RefactoringLocalize.cannotPerformRefactoringWithReason(RefactoringLocalize.errorWrongCaretPositionMethodOrLocalName());
+            CommonRefactoringUtil.showErrorHint(project, editor, message.get(), REFACTORING_NAME.get(), null);
         }
     }
 

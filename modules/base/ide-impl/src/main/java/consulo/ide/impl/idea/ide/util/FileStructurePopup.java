@@ -1,10 +1,8 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.util;
 
-import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
-import consulo.application.ApplicationPropertiesComponent;
-import consulo.application.ReadAction;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.*;
 import consulo.application.progress.ProgressManager;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.application.util.matcher.MinusculeMatcher;
@@ -16,6 +14,7 @@ import consulo.document.util.TextRange;
 import consulo.document.util.TextRangeUtil;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.TextEditor;
+import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.fileEditor.structureView.StructureView;
 import consulo.fileEditor.structureView.StructureViewModel;
@@ -29,7 +28,6 @@ import consulo.ide.impl.idea.ide.structureView.newStructureView.TreeModelWrapper
 import consulo.ide.impl.idea.ide.util.treeView.smartTree.SmartTreeStructure;
 import consulo.ide.impl.idea.ide.util.treeView.smartTree.TreeElementWrapper;
 import consulo.ide.impl.idea.ide.util.treeView.smartTree.TreeStructureUtil;
-import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupUpdateProcessor;
@@ -40,6 +38,7 @@ import consulo.ide.impl.idea.util.Functions;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.ui.TextTransferable;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
+import consulo.ide.localize.IdeLocalize;
 import consulo.ide.ui.popup.HintUpdateSupply;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.LangDataKeys;
@@ -49,13 +48,14 @@ import consulo.language.editor.structureView.PsiTreeElementBase;
 import consulo.language.editor.structureView.StructureViewCompositeModel;
 import consulo.language.psi.*;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.navigation.LocationPresentation;
 import consulo.navigation.Navigatable;
-import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.PlaceProvider;
 import consulo.ui.ex.TreeExpander;
@@ -81,7 +81,7 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
@@ -138,6 +138,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
      * @noinspection unused
      */
     @Deprecated
+    @RequiredReadAction
     public FileStructurePopup(
         @Nonnull Project project,
         @Nonnull FileEditor fileEditor,
@@ -164,7 +165,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
         myTreeStructure = new SmartTreeStructure(project, myTreeModelWrapper) {
             @Override
             public void rebuildTree() {
-                if (!ApplicationManager.getApplication().isUnitTestMode() && myPopup.isDisposed()) {
+                if (!Application.get().isUnitTestMode() && myPopup.isDisposed()) {
                     return;
                 }
                 ProgressManager.getInstance().computePrioritized(() -> {
@@ -185,7 +186,6 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
                 return StructureViewComponent.createWrapper(myProject, myModel.getRoot(), myModel);
             }
 
-            @NonNls
             @Override
             public String toString() {
                 return "structure view tree structure(model=" + myTreeModelWrapper + ")";
@@ -224,26 +224,30 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
                 JBIterable<Pair<FilteringTreeStructure.FilteringNode, PsiElement>> pairs = JBIterable.of(myTree.getSelectionPaths())
                     .filterMap(TreeUtil::getLastUserObject)
                     .filter(FilteringTreeStructure.FilteringNode.class)
-                    .filterMap(o -> o.getDelegate() instanceof PsiElement ? Pair.create(o, (PsiElement)o.getDelegate()) : null)
+                    .filterMap(o -> o.getDelegate() instanceof PsiElement element ? Pair.create(o, element) : null)
                     .collect();
                 if (pairs.isEmpty()) {
                     return null;
                 }
                 Set<PsiElement> psiSelection = pairs.map(Functions.pairSecond()).toSet();
 
-                String text = StringUtil.join(pairs, pair -> {
-                    PsiElement psi = pair.second;
-                    String defaultPresentation = pair.first.getPresentation().getPresentableText();
-                    if (psi == null) {
-                        return defaultPresentation;
-                    }
-                    for (PsiElement p = psi.getParent(); p != null; p = p.getParent()) {
-                        if (psiSelection.contains(p)) {
-                            return null;
+                String text = StringUtil.join(
+                    pairs,
+                    pair -> {
+                        PsiElement psi = pair.second;
+                        String defaultPresentation = pair.first.getPresentation().getPresentableText();
+                        if (psi == null) {
+                            return defaultPresentation;
                         }
-                    }
-                    return ObjectUtil.chooseNotNull(psi.getText(), defaultPresentation);
-                }, "\n");
+                        for (PsiElement p = psi.getParent(); p != null; p = p.getParent()) {
+                            if (psiSelection.contains(p)) {
+                                return null;
+                            }
+                        }
+                        return ObjectUtil.chooseNotNull(psi.getText(), defaultPresentation);
+                    },
+                    "\n"
+                );
 
                 String htmlText = "<body>\n" + text + "\n</body>";
                 return new TextTransferable(XmlStringUtil.wrapInHtml(htmlText), text);
@@ -317,7 +321,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
     }
 
     private void installUpdater() {
-        if (ApplicationManager.getApplication().isUnitTestMode() || myPopup.isDisposed()) {
+        if (Application.get().isUnitTestMode() || myPopup.isDisposed()) {
             return;
         }
         Alarm alarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD, myPopup);
@@ -388,12 +392,12 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
             Object last = path.getLastPathComponent();
             Object userObject = StructureViewComponent.unwrapNavigatable(last);
             Object value = StructureViewComponent.unwrapValue(last);
-            if (Comparing.equal(value, element) || userObject instanceof AbstractTreeNode && ((AbstractTreeNode)userObject).canRepresent(
-                element)) {
+            if (Comparing.equal(value, element)
+                || userObject instanceof AbstractTreeNode abstractTreeNode && abstractTreeNode.canRepresent(element)) {
                 return TreeVisitor.Action.INTERRUPT;
             }
-            if (value instanceof PsiElement && element instanceof PsiElement) {
-                if (PsiTreeUtil.isAncestor((PsiElement)value, (PsiElement)element, true)) {
+            if (value instanceof PsiElement valueElement && element instanceof PsiElement elementElement) {
+                if (PsiTreeUtil.isAncestor(valueElement, elementElement, true)) {
                     int count = path.getPathCount();
                     if (stage[1] == 0 || stage[1] < count) {
                         stage[1] = count;
@@ -413,7 +417,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
             TreeUtil.ensureSelection(myTree);
             return Promises.resolvedPromise(path);
         };
-        Function<TreePath, Promise<TreePath>> fallback = new Function<TreePath, Promise<TreePath>>() {
+        Function<TreePath, Promise<TreePath>> fallback = new Function<>() {
             @Override
             public Promise<TreePath> apply(TreePath path) {
                 if (path == null && stage[0] == 2) {
@@ -424,8 +428,8 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
                 }
                 else {
                     TreePath adjusted = path == null ? deepestPath[0] : path;
-                    if (path == null && adjusted != null && element instanceof PsiElement) {
-                        Object minChild = findClosestPsiElement((PsiElement)element, adjusted, myAsyncTreeModel);
+                    if (path == null && adjusted != null && element instanceof PsiElement psiElement) {
+                        Object minChild = findClosestPsiElement(psiElement, adjusted, myAsyncTreeModel);
                         if (minChild != null) {
                             adjusted = adjusted.pathByAddingChild(minChild);
                         }
@@ -474,13 +478,12 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
     public PsiElement getCurrentElement(@Nullable final PsiFile psiFile) {
         PsiDocumentManager.getInstance(myProject).commitAllDocuments();
 
-        Object elementAtCursor = myTreeModelWrapper.getCurrentEditorElement();
-        if (elementAtCursor instanceof PsiElement) {
-            return (PsiElement)elementAtCursor;
+        if (myTreeModelWrapper.getCurrentEditorElement() instanceof PsiElement elementAtCursor) {
+            return elementAtCursor;
         }
 
-        if (psiFile != null && myFileEditor instanceof TextEditor) {
-            return psiFile.getViewProvider().findElementAt(((TextEditor)myFileEditor).getEditor().getCaretModel().getOffset());
+        if (psiFile != null && myFileEditor instanceof TextEditor textEditor) {
+            return psiFile.getViewProvider().findElementAt(textEditor.getEditor().getCaretModel().getOffset());
         }
 
         return null;
@@ -491,17 +494,16 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
         List<FileStructureNodeProvider> fileStructureNodeProviders = new ArrayList<>();
         if (myTreeActionsOwner != null) {
             for (Filter filter : myTreeModel.getFilters()) {
-                if (filter instanceof FileStructureFilter) {
-                    FileStructureFilter fsFilter = (FileStructureFilter)filter;
+                if (filter instanceof FileStructureFilter fsFilter) {
                     myTreeActionsOwner.setActionIncluded(fsFilter, true);
                     fileStructureFilters.add(fsFilter);
                 }
             }
 
-            if (myTreeModel instanceof ProvidingTreeModel) {
-                for (NodeProvider provider : ((ProvidingTreeModel)myTreeModel).getNodeProviders()) {
-                    if (provider instanceof FileStructureNodeProvider) {
-                        fileStructureNodeProviders.add((FileStructureNodeProvider)provider);
+            if (myTreeModel instanceof ProvidingTreeModel providingTreeModel) {
+                for (NodeProvider provider : providingTreeModel.getNodeProviders()) {
+                    if (provider instanceof FileStructureNodeProvider fileStructureNodeProvider) {
+                        fileStructureNodeProviders.add(fileStructureNodeProvider);
                     }
                 }
             }
@@ -523,6 +525,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
         CustomShortcutSet shortcutSet = new CustomShortcutSet(ArrayUtil.mergeArrays(F4, ENTER));
         new DumbAwareAction() {
             @Override
+            @RequiredUIAccess
             public void actionPerformed(@Nonnull AnActionEvent e) {
                 boolean succeeded = navigateSelectedElement();
                 if (succeeded) {
@@ -541,6 +544,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
         }).registerCustomShortcutSet(CustomShortcutSet.fromString("ESCAPE"), myTree);
         new ClickListener() {
             @Override
+            @RequiredUIAccess
             public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
                 TreePath path = myTree.getClosestPathForLocation(e.getX(), e.getY());
                 Rectangle bounds = path == null ? null : myTree.getPathBounds(path);
@@ -581,10 +585,8 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
             if (FileEditor.KEY == dataId) {
                 return myFileEditor;
             }
-            if (OpenFileDescriptorImpl.NAVIGATE_IN_EDITOR == dataId) {
-                if (myFileEditor instanceof TextEditor) {
-                    return ((TextEditor)myFileEditor).getEditor();
-                }
+            if (OpenFileDescriptorImpl.NAVIGATE_IN_EDITOR == dataId && myFileEditor instanceof TextEditor textEditor) {
+                return textEditor.getEditor();
             }
             if (PsiElement.KEY == dataId) {
                 return getSelectedElements().filter(PsiElement.class).first();
@@ -693,6 +695,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
     }
 
     @Nullable
+    @RequiredReadAction
     private static Object findClosestPsiElement(@Nonnull PsiElement element, @Nonnull TreePath adjusted, @Nonnull TreeModel treeModel) {
         TextRange range = element.getTextRange();
         if (range == null) {
@@ -704,10 +707,10 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
         for (int i = 0, count = treeModel.getChildCount(parent); i < count; i++) {
             Object child = treeModel.getChild(parent, i);
             Object value = StructureViewComponent.unwrapValue(child);
-            if (value instanceof StubBasedPsiElement && ((StubBasedPsiElement)value).getStub() != null) {
+            if (value instanceof StubBasedPsiElement stubBasedPsiElement && stubBasedPsiElement.getStub() != null) {
                 continue;
             }
-            TextRange r = value instanceof PsiElement ? ((PsiElement)value).getTextRange() : null;
+            TextRange r = value instanceof PsiElement psiElement ? psiElement.getTextRange() : null;
             if (r == null) {
                 continue;
             }
@@ -752,12 +755,13 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
     private AbstractTreeNode getSelectedNode() {
         TreePath path = myTree.getSelectionPath();
         Object o = StructureViewComponent.unwrapNavigatable(path == null ? null : path.getLastPathComponent());
-        return o instanceof AbstractTreeNode ? (AbstractTreeNode)o : null;
+        return o instanceof AbstractTreeNode treeNode ? treeNode : null;
     }
 
+    @RequiredUIAccess
     private boolean navigateSelectedElement() {
         AbstractTreeNode selectedNode = getSelectedNode();
-        if (ApplicationManager.getApplication().isInternal()) {
+        if (Application.get().isInternal()) {
             String enteredPrefix = mySpeedSearch.getEnteredPrefix();
             String itemText = getSpeedSearchText(selectedNode);
             if (StringUtil.isNotEmpty(enteredPrefix) && StringUtil.isNotEmpty(itemText)) {
@@ -765,37 +769,35 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
             }
         }
 
-        Ref<Boolean> succeeded = new Ref<>();
+        SimpleReference<Boolean> succeeded = new SimpleReference<>();
         CommandProcessor commandProcessor = CommandProcessor.getInstance();
-        commandProcessor.executeCommand(
-            myProject,
-            () -> {
-                if (selectedNode != null) {
-                    if (selectedNode.canNavigateToSource()) {
-                        selectedNode.navigate(true);
-                        myPopup.cancel();
-                        succeeded.set(true);
-                    }
-                    else {
-                        succeeded.set(false);
-                    }
+        commandProcessor.newCommand(() -> {
+                if (selectedNode == null) {
+                    succeeded.set(false);
+                }
+                else if (selectedNode.canNavigateToSource()) {
+                    selectedNode.navigate(true);
+                    myPopup.cancel();
+                    succeeded.set(true);
                 }
                 else {
                     succeeded.set(false);
                 }
 
                 IdeDocumentHistory.getInstance(myProject).includeCurrentCommandAsNavigation();
-            },
-            "Navigate",
-            null
-        );
+            })
+            .withProject(myProject)
+            .withName(LocalizeValue.localizeTODO("Navigate"))
+            .execute();
         return succeeded.get();
     }
 
     private void addCheckbox(JPanel panel, TreeAction action) {
-        String text = action instanceof FileStructureFilter
-            ? ((FileStructureFilter)action).getCheckBoxText()
-            : action instanceof FileStructureNodeProvider ? ((FileStructureNodeProvider)action).getCheckBoxText() : null;
+        String text = action instanceof FileStructureFilter fileStructureFilter
+            ? fileStructureFilter.getCheckBoxText()
+            : action instanceof FileStructureNodeProvider fileStructureNodeProvider
+            ? fileStructureNodeProvider.getCheckBoxText()
+            : null;
 
         if (text == null) {
             return;
@@ -810,7 +812,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
 
         boolean selected = getDefaultValue(action);
         checkBox.setSelected(selected);
-        boolean isRevertedStructureFilter = action instanceof FileStructureFilter && ((FileStructureFilter)action).isReverted();
+        boolean isRevertedStructureFilter = action instanceof FileStructureFilter fileStructureFilter && fileStructureFilter.isReverted();
         myTreeActionsOwner.setActionIncluded(action, isRevertedStructureFilter != selected);
         checkBox.addActionListener(__ -> {
             boolean state = checkBox.isSelected();
@@ -850,13 +852,15 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
             if (refilterOnly) {
                 myFilteringStructure.refilter();
                 myStructureTreeModel.invalidate().onSuccess(
-                    res -> (selection == null ? myAsyncTreeModel.accept(o -> TreeVisitor.Action.CONTINUE) : select(selection)).onError(
-                        ignore2 -> result.setError("rejected")).onSuccess(p -> UIUtil.invokeLaterIfNeeded(() -> {
-                        TreeUtil.expand(getTree(), myTreeModel instanceof StructureViewCompositeModel ? 3 : 2);
-                        TreeUtil.ensureSelection(myTree);
-                        mySpeedSearch.refreshSelection();
-                        result.setResult(p);
-                    })));
+                    res -> (selection == null ? myAsyncTreeModel.accept(o -> TreeVisitor.Action.CONTINUE) : select(selection))
+                        .onError(ignore2 -> result.setError("rejected"))
+                        .onSuccess(p -> UIUtil.invokeLaterIfNeeded(() -> {
+                            TreeUtil.expand(getTree(), myTreeModel instanceof StructureViewCompositeModel ? 3 : 2);
+                            TreeUtil.ensureSelection(myTree);
+                            mySpeedSearch.refreshSelection();
+                            result.setResult(p);
+                        }))
+                );
             }
             else {
                 myTreeStructure.rebuildTree();
@@ -868,11 +872,13 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
 
     @Nonnull
     static Shortcut[] extractShortcutFor(@Nonnull TreeAction action) {
-        if (action instanceof ActionShortcutProvider) {
-            String actionId = ((ActionShortcutProvider)action).getActionIdForShortcut();
+        if (action instanceof ActionShortcutProvider actionShortcutProvider) {
+            String actionId = actionShortcutProvider.getActionIdForShortcut();
             return KeymapUtil.getActiveKeymapShortcuts(actionId).getShortcuts();
         }
-        return action instanceof FileStructureFilter ? ((FileStructureFilter)action).getShortcut() : ((FileStructureNodeProvider)action).getShortcut();
+        return action instanceof FileStructureFilter fileStructureFilter
+            ? fileStructureFilter.getShortcut()
+            : ((FileStructureNodeProvider)action).getShortcut();
     }
 
     private static boolean getDefaultValue(TreeAction action) {
@@ -920,14 +926,14 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
         String text = String.valueOf(object);
         Object value = StructureViewComponent.unwrapWrapper(object);
         if (text != null) {
-            if (value instanceof PsiTreeElementBase && ((PsiTreeElementBase)value).isSearchInLocationString()) {
-                String locationString = ((PsiTreeElementBase)value).getLocationString();
+            if (value instanceof PsiTreeElementBase psiTreeElementBase && psiTreeElementBase.isSearchInLocationString()) {
+                String locationString = psiTreeElementBase.getLocationString();
                 if (!StringUtil.isEmpty(locationString)) {
                     String locationPrefix = null;
                     String locationSuffix = null;
-                    if (value instanceof LocationPresentation) {
-                        locationPrefix = ((LocationPresentation)value).getLocationPrefix();
-                        locationSuffix = ((LocationPresentation)value).getLocationSuffix();
+                    if (value instanceof LocationPresentation locationPresentation) {
+                        locationPrefix = locationPresentation.getLocationPrefix();
+                        locationSuffix = locationPresentation.getLocationSuffix();
                     }
 
                     return text +
@@ -940,8 +946,8 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
         }
         // NB!: this point is achievable if the following method returns null
         // see consulo.ide.impl.idea.ide.util.treeView.NodeDescriptor.toString
-        if (value instanceof TreeElement) {
-            return ReadAction.compute(() -> ((TreeElement)value).getPresentation().getPresentableText());
+        if (value instanceof TreeElement treeElement) {
+            return ReadAction.compute(() -> treeElement.getPresentation().getPresentableText());
         }
 
         return null;
@@ -960,7 +966,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
     private class FileStructurePopupFilter implements ElementFilter {
         private String myLastFilter;
         private final Set<Object> myVisibleParents = new HashSet<>();
-        private final boolean isUnitTest = ApplicationManager.getApplication().isUnitTestMode();
+        private final boolean isUnitTest = Application.get().isUnitTestMode();
 
         @Override
         public boolean shouldBeShowing(Object value) {
@@ -985,9 +991,8 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
 
                 if (matches(filter, text)) {
                     Object o = value;
-                    while (o instanceof FilteringTreeStructure.FilteringNode
-                        && (o = ((FilteringTreeStructure.FilteringNode)o).getParent()) != null) {
-                        myVisibleParents.add(o);
+                    while (o instanceof FilteringTreeStructure.FilteringNode filteringNode && (o = filteringNode.getParent()) != null) {
+                        myVisibleParents.add(filteringNode.getParent());
                     }
                     return true;
                 }
@@ -1007,7 +1012,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
 
     @Nullable
     private String getSearchPrefix() {
-        if (ApplicationManager.getApplication().isUnitTestMode()) {
+        if (Application.get().isUnitTestMode()) {
             return myTestSearchFilter;
         }
 
@@ -1037,8 +1042,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
             if (best == null) {
                 return null;
             }
-            if (myInitialElement instanceof PsiElement) {
-                PsiElement initial = (PsiElement)myInitialElement;
+            if (myInitialElement instanceof PsiElement initial) {
                 // find children of the initial element
                 SpeedSearchObjectWithWeight bestForParent = find(initial, elements, FileStructurePopup::isParent);
                 if (bestForParent != null) {
@@ -1100,10 +1104,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
 
             HintUpdateSupply.installHintUpdateSupply(
                 this,
-                o -> {
-                    Object value = StructureViewComponent.unwrapValue(o);
-                    return value instanceof PsiElement ? (PsiElement)value : null;
-                }
+                o -> StructureViewComponent.unwrapValue(o) instanceof PsiElement element ? element : null
             );
         }
 

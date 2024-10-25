@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.idea.refactoring.extractMethod;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AccessRule;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
@@ -52,6 +52,7 @@ import java.util.function.Consumer;
  * @author Dennis.Ushakov
  */
 public class ExtractMethodHelper {
+    @RequiredUIAccess
     public static void processDuplicates(
         @Nonnull final PsiElement callElement,
         @Nonnull final PsiElement generatedMethod,
@@ -61,12 +62,12 @@ public class ExtractMethodHelper {
         @Nonnull final Consumer<Pair<SimpleMatch, PsiElement>> replacer
     ) {
         finder.setReplacement(callElement);
-        if (ApplicationManager.getApplication().isUnitTestMode()) {
+        if (Application.get().isUnitTestMode()) {
             replaceDuplicates(callElement, editor, replacer, finder.findDuplicates(scope, generatedMethod));
             return;
         }
         final Project project = callElement.getProject();
-        ProgressManager.getInstance().run(new Task.Backgroundable(project, RefactoringLocalize.searchingForDuplicates().get(), true) {
+        ProgressManager.getInstance().run(new Task.Backgroundable(project, RefactoringLocalize.searchingForDuplicates(), true) {
             @Override
             public void run(@Nonnull ProgressIndicator indicator) {
                 if (myProject == null || myProject.isDisposed()) {
@@ -141,15 +142,15 @@ public class ExtractMethodHelper {
                     Application.get().getName(),
                     duplicates.size()
                 );
-            final boolean isUnittest = ApplicationManager.getApplication().isUnitTestMode();
+            final boolean isUnittest = Application.get().isUnitTestMode();
             final Project project = callElement.getProject();
             final int exitCode = !isUnittest
                 ? Messages.showYesNoDialog(
-                  project,
-                  message.get(),
-                  RefactoringLocalize.refactoringExtractMethodDialogTitle().get(),
-                  UIUtil.getInformationIcon()
-              )
+                      project,
+                      message.get(),
+                      RefactoringLocalize.refactoringExtractMethodDialogTitle().get(),
+                      UIUtil.getInformationIcon()
+                  )
                 : Messages.YES;
             if (exitCode == Messages.YES) {
                 boolean replaceAll = false;
@@ -198,20 +199,19 @@ public class ExtractMethodHelper {
         }
     }
 
+    @RequiredUIAccess
     private static void replaceDuplicate(
         final Project project,
         final Consumer<Pair<SimpleMatch, PsiElement>> replacer,
         final Pair<SimpleMatch, PsiElement> replacement
     ) {
-        CommandProcessor.getInstance().executeCommand(
-            project,
-            () -> project.getApplication().runWriteAction(() -> replacer.accept(replacement)),
-            "Replace duplicate",
-            null
-        );
+        CommandProcessor.getInstance().newCommand(() -> replacer.accept(replacement))
+            .withProject(project)
+            .withName(LocalizeValue.localizeTODO("Replace duplicate"))
+            .executeInWriteAction();
     }
 
-
+    @RequiredReadAction
     private static void highlightInEditor(
         @Nonnull final Project project,
         @Nonnull final SimpleMatch match,

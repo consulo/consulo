@@ -32,16 +32,13 @@ public class NextSplitAction extends AnAction implements DumbAware {
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         final Project project = e.getData(Project.KEY);
-        final CommandProcessor commandProcessor = CommandProcessor.getInstance();
-        commandProcessor.executeCommand(
-            project,
-            () -> {
+        CommandProcessor.getInstance().newCommand(() -> {
                 final FileEditorManagerEx manager = FileEditorManagerEx.getInstanceEx(project);
                 manager.setCurrentWindow(manager.getNextWindow(manager.getCurrentWindow()));
-            },
-            IdeLocalize.commandGoToNextSplit().get(),
-            null
-        );
+            })
+            .withProject(project)
+            .withName(IdeLocalize.commandGoToNextSplit())
+            .execute();
     }
 
     @Override

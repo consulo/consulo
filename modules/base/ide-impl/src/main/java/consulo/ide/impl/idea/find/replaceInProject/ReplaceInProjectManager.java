@@ -21,8 +21,6 @@ import consulo.ide.impl.idea.find.findInProject.FindInProjectManager;
 import consulo.ide.impl.idea.find.impl.FindInProjectUtil;
 import consulo.ide.impl.idea.find.impl.FindManagerImpl;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.usages.impl.UsageViewImpl;
 import consulo.ide.impl.idea.util.AdapterProcessor;
 import consulo.language.psi.PsiDocumentManager;
@@ -43,7 +41,8 @@ import consulo.ui.ex.content.Content;
 import consulo.undoRedo.CommandProcessor;
 import consulo.usage.*;
 import consulo.usage.rule.UsageInFile;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -122,6 +121,7 @@ public class ReplaceInProjectManager {
     /**
      * @param model would be used for replacing if not null, otherwise shared (project-level) model would be used
      */
+    @RequiredUIAccess
     public void replaceInProject(@Nonnull DataContext dataContext, @Nullable FindModel model) {
         final FindManager findManager = FindManager.getInstance(myProject);
         final FindModel findModel;
@@ -151,14 +151,17 @@ public class ReplaceInProjectManager {
             findModel.setOpenInNewTabEnabled(isOpenInNewTabEnabled);
         }
 
-        findManager.showFindDialog(findModel, () -> {
-            if (findModel.isReplaceState()) {
-                replaceInPath(findModel);
+        findManager.showFindDialog(
+            findModel,
+            () -> {
+                if (findModel.isReplaceState()) {
+                    replaceInPath(findModel);
+                }
+                else {
+                    FindInProjectManager.getInstance(myProject).findInPath(findModel);
+                }
             }
-            else {
-                FindInProjectManager.getInstance(myProject).findInPath(findModel);
-            }
-        });
+        );
     }
 
     public void replaceInPath(@Nonnull FindModel findModel) {
@@ -201,6 +204,7 @@ public class ReplaceInProjectManager {
         }
 
         @Override
+        @RequiredUIAccess
         public void showSettings() {
             Content selectedContent = UsageViewContentManager.getInstance(myProject).getSelectedContent(true);
             JComponent component = selectedContent == null ? null : selectedContent.getComponent();
@@ -281,8 +285,8 @@ public class ReplaceInProjectManager {
 
         Set<VirtualFile> files = new HashSet<>();
         for (Usage usage : usages) {
-            if (usage instanceof UsageInfo2UsageAdapter) {
-                files.add(((UsageInfo2UsageAdapter)usage).getFile());
+            if (usage instanceof UsageInfo2UsageAdapter usageAdapter) {
+                files.add(usageAdapter.getFile());
             }
         }
         return files;
@@ -292,7 +296,7 @@ public class ReplaceInProjectManager {
         Set<Usage> usages = replaceContext.getUsageView().getUsages();
         Set<Usage> result = new LinkedHashSet<>();
         for (Usage usage : usages) {
-            if (usage instanceof UsageInfo2UsageAdapter usageAdapter && Comparing.equal(usageAdapter.getFile(), file)) {
+            if (usage instanceof UsageInfo2UsageAdapter usageAdapter && Objects.equals(usageAdapter.getFile(), file)) {
                 result.add(usage);
             }
         }
@@ -379,10 +383,7 @@ public class ReplaceInProjectManager {
             @Override
             public Object getValue(String key) {
                 return Action.NAME.equals(key)
-                    ? FindBundle.message(
-                    "find.replace.this.file.action",
-                    replaceContext.getUsageView().getSelectedUsages().size()
-                )
+                    ? FindLocalize.findReplaceSelectedAction(replaceContext.getUsageView().getSelectedUsages().size()).get()
                     : super.getValue(key);
             }
 
@@ -461,8 +462,8 @@ public class ReplaceInProjectManager {
                     indicator.checkCanceled();
                     indicator.setFraction((float)processed / usages.size());
 
-                    if (usage instanceof UsageInFile) {
-                        VirtualFile virtualFile = ((UsageInFile)usage).getFile();
+                    if (usage instanceof UsageInFile usageInFile) {
+                        VirtualFile virtualFile = usageInFile.getFile();
                         if (virtualFile != null && !virtualFile.equals(lastFile)) {
                             indicator.setText2(virtualFile.getPresentableUrl());
                             lastFile = virtualFile;
@@ -508,7 +509,7 @@ public class ReplaceInProjectManager {
         @Nonnull final Set<Usage> excludedSet,
         final boolean justCheck
     ) throws FindManager.MalformedReplacementStringException {
-        final Ref<FindManager.MalformedReplacementStringException> exceptionResult = Ref.create();
+        final SimpleReference<FindManager.MalformedReplacementStringException> exceptionResult = SimpleReference.create();
         final boolean result = WriteAction.compute(() -> {
             if (excludedSet.contains(usage)) {
                 return false;
@@ -522,7 +523,7 @@ public class ReplaceInProjectManager {
             return ((UsageInfo2UsageAdapter)usage).processRangeMarkers(segment -> {
                 final int textOffset = segment.getStartOffset();
                 final int textEndOffset = segment.getEndOffset();
-                final Ref<String> stringToReplace = Ref.create();
+                final SimpleReference<String> stringToReplace = SimpleReference.create();
                 try {
                     if (!getStringToReplace(textOffset, textEndOffset, document, findModel, stringToReplace)) {
                         return true;
@@ -550,7 +551,7 @@ public class ReplaceInProjectManager {
         int textEndOffset,
         Document document,
         FindModel findModel,
-        Ref<? super String> stringToReplace
+        SimpleReference<? super String> stringToReplace
     ) throws FindManager.MalformedReplacementStringException {
         if (textOffset < 0 || textOffset >= document.getTextLength()) {
             return false;
@@ -588,9 +589,7 @@ public class ReplaceInProjectManager {
             return;
         }
 
-        CommandProcessor.getInstance().executeCommand(
-            myProject,
-            () -> {
+        CommandProcessor.getInstance().newCommand(() -> {
                 final boolean success = replaceUsages(replaceContext, usages);
                 final UsageView usageView = replaceContext.getUsageView();
 
@@ -600,10 +599,10 @@ public class ReplaceInProjectManager {
                 IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(
                     () -> IdeFocusManager.getGlobalInstance().requestFocus(usageView.getPreferredFocusableComponent(), true)
                 );
-            },
-            FindLocalize.findReplaceCommand().get(),
-            null
-        );
+            })
+            .withProject(myProject)
+            .withName(FindLocalize.findReplaceCommand())
+            .execute();
 
         replaceContext.invalidateExcludedSetCache();
     }

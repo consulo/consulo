@@ -206,7 +206,8 @@ public class FindManagerImpl extends FindManager {
     }
 
     @Override
-    public void showFindDialog(@Nonnull FindModel model, @Nonnull Runnable okHandler) {
+    @RequiredUIAccess
+    public void showFindDialog(@Nonnull FindModel model, @Nonnull @RequiredUIAccess Runnable okHandler) {
         if (myHelper == null || Disposer.isDisposed(myHelper)) {
             myHelper = new FindUIHelper(myProject, model, okHandler);
             Disposer.register(myHelper, () -> myHelper = null);

@@ -26,6 +26,7 @@ import consulo.diff.merge.MergeResult;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
@@ -39,7 +40,7 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.SmartList;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
 import consulo.versionControlSystem.localize.VcsLocalize;
@@ -217,10 +218,8 @@ public class MultipleFileMergeDialog extends DialogWrapper {
         }
 
         for (final VirtualFile file : files) {
-            final Ref<Exception> ex = new Ref<>();
-            Application.get().runWriteAction(() -> CommandProcessor.getInstance().executeCommand(
-                myProject,
-                () -> {
+            final SimpleReference<Exception> ex = new SimpleReference<>();
+            CommandProcessor.getInstance().newCommand(() -> {
                     try {
                         if (!(myProvider instanceof MergeProvider2) || myMergeSession.canMerge(file)) {
                             if (!DiffImplUtil.makeWritable(myProject, file)) {
@@ -240,10 +239,10 @@ public class MultipleFileMergeDialog extends DialogWrapper {
                     catch (Exception e) {
                         ex.set(e);
                     }
-                },
-                "Accept " + (isCurrent ? "Yours" : "Theirs"),
-                null
-            ));
+                })
+                .withProject(myProject)
+                .withName(LocalizeValue.localizeTODO("Accept " + (isCurrent ? "Yours" : "Theirs")))
+                .executeInWriteAction();
             if (!ex.isNull()) {
                 //noinspection ThrowableResultOfMethodCallIgnored
                 Messages.showErrorDialog(myRootPanel, "Error saving merged data: " + ex.get().getMessage());
