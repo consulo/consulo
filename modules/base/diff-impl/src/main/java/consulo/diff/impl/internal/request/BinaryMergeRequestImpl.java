@@ -35,119 +35,125 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class BinaryMergeRequestImpl extends BinaryMergeRequest {
-  private static final Logger LOG = Logger.getInstance(BinaryMergeRequestImpl.class);
+    private static final Logger LOG = Logger.getInstance(BinaryMergeRequestImpl.class);
 
-  @Nullable
-  private final Project myProject;
-  @Nonnull
-  private final FileContent myFile;
-  @Nonnull
-  private final List<DiffContent> myContents;
+    @Nullable
+    private final Project myProject;
+    @Nonnull
+    private final FileContent myFile;
+    @Nonnull
+    private final List<DiffContent> myContents;
 
-  @Nonnull
-  private final List<byte[]> myByteContents;
-  @Nonnull
-  private final byte[] myOriginalContent;
+    @Nonnull
+    private final List<byte[]> myByteContents;
+    @Nonnull
+    private final byte[] myOriginalContent;
 
-  @Nullable
-  private final String myTitle;
-  @Nonnull
-  private final List<String> myTitles;
+    @Nullable
+    private final String myTitle;
+    @Nonnull
+    private final List<String> myTitles;
 
-  @Nullable
-  private final Consumer<MergeResult> myApplyCallback;
+    @Nullable
+    private final Consumer<MergeResult> myApplyCallback;
 
-  public BinaryMergeRequestImpl(@Nullable Project project,
-                                @Nonnull FileContent file,
-                                @Nonnull byte[] originalContent,
-                                @Nonnull List<DiffContent> contents,
-                                @Nonnull List<byte[]> byteContents,
-                                @Nullable String title,
-                                @Nonnull List<String> contentTitles,
-                                @Nullable Consumer<MergeResult> applyCallback) {
-    assert byteContents.size() == 3;
-    assert contents.size() == 3;
-    assert contentTitles.size() == 3;
+    public BinaryMergeRequestImpl(
+        @Nullable Project project,
+        @Nonnull FileContent file,
+        @Nonnull byte[] originalContent,
+        @Nonnull List<DiffContent> contents,
+        @Nonnull List<byte[]> byteContents,
+        @Nullable String title,
+        @Nonnull List<String> contentTitles,
+        @Nullable Consumer<MergeResult> applyCallback
+    ) {
+        assert byteContents.size() == 3;
+        assert contents.size() == 3;
+        assert contentTitles.size() == 3;
 
-    myProject = project;
-    myFile = file;
-    myOriginalContent = originalContent;
+        myProject = project;
+        myFile = file;
+        myOriginalContent = originalContent;
 
-    myByteContents = byteContents;
-    myContents = contents;
-    myTitle = title;
-    myTitles = contentTitles;
+        myByteContents = byteContents;
+        myContents = contents;
+        myTitle = title;
+        myTitles = contentTitles;
 
-    myApplyCallback = applyCallback;
-  }
-
-  @Nonnull
-  @Override
-  public FileContent getOutputContent() {
-    return myFile;
-  }
-
-  @Nonnull
-  @Override
-  public List<DiffContent> getContents() {
-    return myContents;
-  }
-
-  @Nonnull
-  @Override
-  public List<byte[]> getByteContents() {
-    return myByteContents;
-  }
-
-  @Nullable
-  @Override
-  public String getTitle() {
-    return myTitle;
-  }
-
-  @Nonnull
-  @Override
-  public List<String> getContentTitles() {
-    return myTitles;
-  }
-
-  @Override
-  public void applyResult(@Nonnull MergeResult result) {
-    final byte[] applyContent;
-    switch (result) {
-      case CANCEL:
-        applyContent = myOriginalContent;
-        break;
-      case LEFT:
-        applyContent = ThreeSide.LEFT.select(myByteContents);
-        break;
-      case RIGHT:
-        applyContent = ThreeSide.RIGHT.select(myByteContents);
-        break;
-      case RESOLVED:
-        applyContent = null;
-        break;
-      default:
-        throw new IllegalArgumentException(result.toString());
+        myApplyCallback = applyCallback;
     }
 
-    if (applyContent != null) {
-      new WriteCommandAction.Simple(null) {
-        @Override
-        protected void run() throws Throwable {
-          try {
-            VirtualFile file = myFile.getFile();
-            if (!DiffImplUtil.makeWritable(myProject, file)) throw new IOException("File is read-only: " + file.getPresentableName());
-            file.setBinaryContent(applyContent);
-          }
-          catch (IOException e) {
-            LOG.error(e);
-            Messages.showErrorDialog(myProject, "Can't apply result", CommonBundle.getErrorTitle());
-          }
+    @Nonnull
+    @Override
+    public FileContent getOutputContent() {
+        return myFile;
+    }
+
+    @Nonnull
+    @Override
+    public List<DiffContent> getContents() {
+        return myContents;
+    }
+
+    @Nonnull
+    @Override
+    public List<byte[]> getByteContents() {
+        return myByteContents;
+    }
+
+    @Nullable
+    @Override
+    public String getTitle() {
+        return myTitle;
+    }
+
+    @Nonnull
+    @Override
+    public List<String> getContentTitles() {
+        return myTitles;
+    }
+
+    @Override
+    public void applyResult(@Nonnull MergeResult result) {
+        final byte[] applyContent;
+        switch (result) {
+            case CANCEL:
+                applyContent = myOriginalContent;
+                break;
+            case LEFT:
+                applyContent = ThreeSide.LEFT.select(myByteContents);
+                break;
+            case RIGHT:
+                applyContent = ThreeSide.RIGHT.select(myByteContents);
+                break;
+            case RESOLVED:
+                applyContent = null;
+                break;
+            default:
+                throw new IllegalArgumentException(result.toString());
         }
-      }.execute();
-    }
 
-    if (myApplyCallback != null) myApplyCallback.accept(result);
-  }
+        if (applyContent != null) {
+            new WriteCommandAction.Simple(null) {
+                @Override
+                protected void run() throws Throwable {
+                    try {
+                        VirtualFile file = myFile.getFile();
+                        if (!DiffImplUtil.makeWritable(myProject, file)) {
+                            throw new IOException("File is read-only: " + file.getPresentableName());
+                        }
+                        file.setBinaryContent(applyContent);
+                    }
+                    catch (IOException e) {
+                        LOG.error(e);
+                        Messages.showErrorDialog(myProject, "Can't apply result", CommonBundle.getErrorTitle());
+                    }
+                }
+            }.execute();
+        }
+
+        if (myApplyCallback != null) {
+            myApplyCallback.accept(result);
+        }
+    }
 }

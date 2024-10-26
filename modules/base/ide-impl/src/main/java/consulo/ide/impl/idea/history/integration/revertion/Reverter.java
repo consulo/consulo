@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.history.integration.revertion;
 
 import consulo.ide.impl.idea.history.core.LocalHistoryFacade;
@@ -33,81 +32,81 @@ import java.io.IOException;
 import java.util.*;
 
 public abstract class Reverter {
-  private final Project myProject;
-  protected LocalHistoryFacade myVcs;
-  protected IdeaGateway myGateway;
+    private final Project myProject;
+    protected LocalHistoryFacade myVcs;
+    protected IdeaGateway myGateway;
 
-  protected Reverter(Project p, LocalHistoryFacade vcs, IdeaGateway gw) {
-    myProject = p;
-    myVcs = vcs;
-    myGateway = gw;
-  }
-
-  public List<String> askUserForProceeding() throws IOException {
-    return Collections.emptyList();
-  }
-
-  public List<String> checkCanRevert() throws IOException {
-    if (!askForReadOnlyStatusClearing()) {
-      return Collections.singletonList(LocalHistoryBundle.message("revert.error.files.are.read.only"));
+    protected Reverter(Project p, LocalHistoryFacade vcs, IdeaGateway gw) {
+        myProject = p;
+        myVcs = vcs;
+        myGateway = gw;
     }
-    return Collections.emptyList();
-  }
 
-  protected boolean askForReadOnlyStatusClearing() throws IOException {
-    return myGateway.ensureFilesAreWritable(myProject, getFilesToClearROStatus());
-  }
+    public List<String> askUserForProceeding() throws IOException {
+        return Collections.emptyList();
+    }
 
-  protected List<VirtualFile> getFilesToClearROStatus() throws IOException {
-    final Set<VirtualFile> files = new HashSet<VirtualFile>();
-
-    myVcs.accept(selective(new ChangeVisitor() {
-      @Override
-      public void visit(StructuralChange c) throws StopVisitingException {
-        files.addAll(myGateway.getAllFilesFrom(c.getPath()));
-      }
-    }));
-
-    return new ArrayList<VirtualFile>(files);
-  }
-
-  protected ChangeVisitor selective(ChangeVisitor v) {
-    return v;
-  }
-
-  public void revert() throws IOException {
-    try {
-      new WriteCommandAction(myProject, getCommandName()) {
-        @Override
-        protected void run(Result objectResult) throws Throwable {
-          myGateway.saveAllUnsavedDocuments();
-          doRevert();
-          myGateway.saveAllUnsavedDocuments();
+    public List<String> checkCanRevert() throws IOException {
+        if (!askForReadOnlyStatusClearing()) {
+            return Collections.singletonList(LocalHistoryBundle.message("revert.error.files.are.read.only"));
         }
-      }.execute();
+        return Collections.emptyList();
     }
-    catch (RuntimeException e) {
-      Throwable cause = e.getCause();
-      if (cause instanceof IOException) {
-        throw (IOException)cause;
-      }
-      throw e;
-    }
-  }
 
-  public String getCommandName() {
-    Revision to = getTargetRevision();
-    String name = to.getChangeSetName();
-    String date = DateFormatUtil.formatDateTime(to.getTimestamp());
-    if (name != null) {
-      return LocalHistoryBundle.message("system.label.revert.to.change.date", name, date);
+    protected boolean askForReadOnlyStatusClearing() throws IOException {
+        return myGateway.ensureFilesAreWritable(myProject, getFilesToClearROStatus());
     }
-    else {
-      return LocalHistoryBundle.message("system.label.revert.to.date", date);
+
+    protected List<VirtualFile> getFilesToClearROStatus() throws IOException {
+        final Set<VirtualFile> files = new HashSet<VirtualFile>();
+
+        myVcs.accept(selective(new ChangeVisitor() {
+            @Override
+            public void visit(StructuralChange c) throws StopVisitingException {
+                files.addAll(myGateway.getAllFilesFrom(c.getPath()));
+            }
+        }));
+
+        return new ArrayList<VirtualFile>(files);
     }
-  }
 
-  protected abstract Revision getTargetRevision();
+    protected ChangeVisitor selective(ChangeVisitor v) {
+        return v;
+    }
 
-  protected abstract void doRevert() throws IOException, FilesTooBigForDiffException;
+    public void revert() throws IOException {
+        try {
+            new WriteCommandAction(myProject, getCommandName()) {
+                @Override
+                protected void run(Result objectResult) throws Throwable {
+                    myGateway.saveAllUnsavedDocuments();
+                    doRevert();
+                    myGateway.saveAllUnsavedDocuments();
+                }
+            }.execute();
+        }
+        catch (RuntimeException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof IOException) {
+                throw (IOException)cause;
+            }
+            throw e;
+        }
+    }
+
+    public String getCommandName() {
+        Revision to = getTargetRevision();
+        String name = to.getChangeSetName();
+        String date = DateFormatUtil.formatDateTime(to.getTimestamp());
+        if (name != null) {
+            return LocalHistoryBundle.message("system.label.revert.to.change.date", name, date);
+        }
+        else {
+            return LocalHistoryBundle.message("system.label.revert.to.date", date);
+        }
+    }
+
+    protected abstract Revision getTargetRevision();
+
+    protected abstract void doRevert() throws IOException, FilesTooBigForDiffException;
 }

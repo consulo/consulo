@@ -42,59 +42,70 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionImpl
 public final class ScratchRootType extends RootType {
-  @Nonnull
-  public static ScratchRootType getInstance() {
-    return findByClass(ScratchRootType.class);
-  }
-
-  @Inject
-  ScratchRootType() {
-    super("scratches", "Scratches");
-  }
-
-  @Override
-  public Language substituteLanguage(@Nonnull Project project, @Nonnull VirtualFile file) {
-    return ScratchFileService.getInstance().getScratchesMapping().getMapping(file);
-  }
-
-  @Nullable
-  @Override
-  public Image substituteIcon(@Nonnull Project project, @Nonnull VirtualFile file) {
-    Image icon = ObjectUtil.chooseNotNull(super.substituteIcon(project, file), AllIcons.FileTypes.Text);
-    return ImageEffects.layered(icon, AllIcons.Actions.Scratch);
-  }
-
-  @Nullable
-  public VirtualFile createScratchFile(Project project, final String fileName, final Language language, final String text) {
-    return createScratchFile(project, fileName, language, text, ScratchFileService.Option.create_new_always);
-  }
-
-  @Nullable
-  public VirtualFile createScratchFile(Project project, final String fileName, final Language language, final String text, final ScratchFileService.Option option) {
-    RunResult<VirtualFile> result = new WriteCommandAction<VirtualFile>(project, UIBundle.message("file.chooser.create.new.file.command.name")) {
-      @Override
-      protected boolean isGlobalUndoAction() {
-        return true;
-      }
-
-      @Override
-      protected UndoConfirmationPolicy getUndoConfirmationPolicy() {
-        return UndoConfirmationPolicy.REQUEST_CONFIRMATION;
-      }
-
-      @Override
-      protected void run(@Nonnull Result<VirtualFile> result) throws Throwable {
-        ScratchFileService fileService = ScratchFileService.getInstance();
-        VirtualFile file = fileService.findFile(ScratchRootType.this, fileName, option);
-        fileService.getScratchesMapping().setMapping(file, language);
-        VfsUtil.saveText(file, text);
-        result.setResult(file);
-      }
-    }.execute();
-    if (result.hasException()) {
-      Messages.showMessageDialog(UIBundle.message("create.new.file.could.not.create.file.error.message", fileName), UIBundle.message("error.dialog.title"), Messages.getErrorIcon());
-      return null;
+    @Nonnull
+    public static ScratchRootType getInstance() {
+        return findByClass(ScratchRootType.class);
     }
-    return result.getResultObject();
-  }
+
+    @Inject
+    ScratchRootType() {
+        super("scratches", "Scratches");
+    }
+
+    @Override
+    public Language substituteLanguage(@Nonnull Project project, @Nonnull VirtualFile file) {
+        return ScratchFileService.getInstance().getScratchesMapping().getMapping(file);
+    }
+
+    @Nullable
+    @Override
+    public Image substituteIcon(@Nonnull Project project, @Nonnull VirtualFile file) {
+        Image icon = ObjectUtil.chooseNotNull(super.substituteIcon(project, file), AllIcons.FileTypes.Text);
+        return ImageEffects.layered(icon, AllIcons.Actions.Scratch);
+    }
+
+    @Nullable
+    public VirtualFile createScratchFile(Project project, final String fileName, final Language language, final String text) {
+        return createScratchFile(project, fileName, language, text, ScratchFileService.Option.create_new_always);
+    }
+
+    @Nullable
+    public VirtualFile createScratchFile(
+        Project project,
+        final String fileName,
+        final Language language,
+        final String text,
+        final ScratchFileService.Option option
+    ) {
+        RunResult<VirtualFile> result =
+            new WriteCommandAction<VirtualFile>(project, UIBundle.message("file.chooser.create.new.file.command.name")) {
+                @Override
+                protected boolean isGlobalUndoAction() {
+                    return true;
+                }
+
+                @Override
+                protected UndoConfirmationPolicy getUndoConfirmationPolicy() {
+                    return UndoConfirmationPolicy.REQUEST_CONFIRMATION;
+                }
+
+                @Override
+                protected void run(@Nonnull Result<VirtualFile> result) throws Throwable {
+                    ScratchFileService fileService = ScratchFileService.getInstance();
+                    VirtualFile file = fileService.findFile(ScratchRootType.this, fileName, option);
+                    fileService.getScratchesMapping().setMapping(file, language);
+                    VfsUtil.saveText(file, text);
+                    result.setResult(file);
+                }
+            }.execute();
+        if (result.hasException()) {
+            Messages.showMessageDialog(
+                UIBundle.message("create.new.file.could.not.create.file.error.message", fileName),
+                UIBundle.message("error.dialog.title"),
+                Messages.getErrorIcon()
+            );
+            return null;
+        }
+        return result.getResultObject();
+    }
 }

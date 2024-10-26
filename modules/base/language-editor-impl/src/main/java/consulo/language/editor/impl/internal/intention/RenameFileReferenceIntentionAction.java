@@ -32,59 +32,61 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
-*/
+ */
 public class RenameFileReferenceIntentionAction implements IntentionAction, LocalQuickFix {
-  private final String myExistingElementName;
-  private final FileReference myFileReference;
+    private final String myExistingElementName;
+    private final FileReference myFileReference;
 
-  public RenameFileReferenceIntentionAction(final String existingElementName, final FileReference fileReference) {
-    myExistingElementName = existingElementName;
-    myFileReference = fileReference;
-  }
-
-  @Override
-  @Nonnull
-  public String getText() {
-    return CodeInsightBundle.message("rename.file.reference.text", myExistingElementName);
-  }
-
-  @Override
-  @Nonnull
-  public String getName() {
-    return getText();
-  }
-
-  @Override
-  @Nonnull
-  public String getFamilyName() {
-    return CodeInsightBundle.message("rename.file.reference.family");
-  }
-
-  @Override
-  public void applyFix(@Nonnull final Project project, @Nonnull final ProblemDescriptor descriptor) {
-    if (isAvailable(project, null, null)) {
-      new WriteCommandAction(project) {
-        @Override
-        protected void run(Result result) throws Throwable {
-          invoke(project, null, descriptor.getPsiElement().getContainingFile());
-        }
-      }.execute();
+    public RenameFileReferenceIntentionAction(final String existingElementName, final FileReference fileReference) {
+        myExistingElementName = existingElementName;
+        myFileReference = fileReference;
     }
-  }
 
-  @Override
-  public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
-    return true;
-  }
+    @Override
+    @Nonnull
+    public String getText() {
+        return CodeInsightBundle.message("rename.file.reference.text", myExistingElementName);
+    }
 
-  @Override
-  public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-    if (!FileModificationService.getInstance().prepareFileForWrite(file)) return;
-    myFileReference.handleElementRename(myExistingElementName);
-  }
+    @Override
+    @Nonnull
+    public String getName() {
+        return getText();
+    }
 
-  @Override
-  public boolean startInWriteAction() {
-    return true;
-  }
+    @Override
+    @Nonnull
+    public String getFamilyName() {
+        return CodeInsightBundle.message("rename.file.reference.family");
+    }
+
+    @Override
+    public void applyFix(@Nonnull final Project project, @Nonnull final ProblemDescriptor descriptor) {
+        if (isAvailable(project, null, null)) {
+            new WriteCommandAction(project) {
+                @Override
+                protected void run(Result result) throws Throwable {
+                    invoke(project, null, descriptor.getPsiElement().getContainingFile());
+                }
+            }.execute();
+        }
+    }
+
+    @Override
+    public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+        return true;
+    }
+
+    @Override
+    public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+        if (!FileModificationService.getInstance().prepareFileForWrite(file)) {
+            return;
+        }
+        myFileReference.handleElementRename(myExistingElementName);
+    }
+
+    @Override
+    public boolean startInWriteAction() {
+        return true;
+    }
 }

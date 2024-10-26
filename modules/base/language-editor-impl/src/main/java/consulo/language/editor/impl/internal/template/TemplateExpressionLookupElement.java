@@ -39,69 +39,72 @@ import java.util.List;
  * @author peter
  */
 class TemplateExpressionLookupElement extends LookupElementDecorator<LookupElement> {
-  private final TemplateStateImpl myState;
+    private final TemplateStateImpl myState;
 
-  public TemplateExpressionLookupElement(final TemplateStateImpl state, LookupElement element, int index) {
-    super(PrioritizedLookupElement.withPriority(element, Integer.MAX_VALUE - 10 - index));
-    myState = state;
-  }
+    public TemplateExpressionLookupElement(final TemplateStateImpl state, LookupElement element, int index) {
+        super(PrioritizedLookupElement.withPriority(element, Integer.MAX_VALUE - 10 - index));
+        myState = state;
+    }
 
-  private static InsertionContext createInsertionContext(LookupElement item,
-                                                         PsiFile psiFile,
-                                                         List<? extends LookupElement> elements,
-                                                         Editor editor, final char completionChar) {
-    final OffsetMap offsetMap = new OffsetMap(editor.getDocument());
-    final InsertionContext context =
-      new InsertionContext(offsetMap, completionChar, elements.toArray(new LookupElement[elements.size()]), psiFile, editor, false);
-    context.setTailOffset(editor.getCaretModel().getOffset());
-    offsetMap.addOffset(CompletionInitializationContext.START_OFFSET, context.getTailOffset() - item.getLookupString().length());
-    offsetMap.addOffset(CompletionInitializationContext.SELECTION_END_OFFSET, context.getTailOffset());
-    offsetMap.addOffset(CompletionInitializationContext.IDENTIFIER_END_OFFSET, context.getTailOffset());
-    return context;
-  }
+    private static InsertionContext createInsertionContext(
+        LookupElement item,
+        PsiFile psiFile,
+        List<? extends LookupElement> elements,
+        Editor editor, final char completionChar
+    ) {
+        final OffsetMap offsetMap = new OffsetMap(editor.getDocument());
+        final InsertionContext context =
+            new InsertionContext(offsetMap, completionChar, elements.toArray(new LookupElement[elements.size()]), psiFile, editor, false);
+        context.setTailOffset(editor.getCaretModel().getOffset());
+        offsetMap.addOffset(CompletionInitializationContext.START_OFFSET, context.getTailOffset() - item.getLookupString().length());
+        offsetMap.addOffset(CompletionInitializationContext.SELECTION_END_OFFSET, context.getTailOffset());
+        offsetMap.addOffset(CompletionInitializationContext.IDENTIFIER_END_OFFSET, context.getTailOffset());
+        return context;
+    }
 
-  void handleTemplateInsert(List<? extends LookupElement> elements, final char completionChar) {
-    final InsertionContext context = createInsertionContext(this, myState.getPsiFile(), elements, myState.getEditor(), completionChar);
-    new WriteCommandAction(context.getProject()) {
-      @Override
-      protected void run(@Nonnull Result result) throws Throwable {
+    void handleTemplateInsert(List<? extends LookupElement> elements, final char completionChar) {
+        final InsertionContext context =
+            createInsertionContext(this, myState.getPsiFile(), elements, myState.getEditor(), completionChar);
+        new WriteCommandAction(context.getProject()) {
+            @Override
+            protected void run(@Nonnull Result result) throws Throwable {
+                doHandleInsert(context);
+            }
+        }.execute();
+        Disposer.dispose(context.getOffsetMap());
+
+        if (handleCompletionChar(context) && !myState.isFinished()) {
+            myState.calcResults(true);
+            myState.considerNextTabOnLookupItemSelected(getDelegate());
+        }
+    }
+
+    @Override
+    public void handleInsert(final InsertionContext context) {
         doHandleInsert(context);
-      }
-    }.execute();
-    Disposer.dispose(context.getOffsetMap());
-
-    if (handleCompletionChar(context) && !myState.isFinished()) {
-      myState.calcResults(true);
-      myState.considerNextTabOnLookupItemSelected(getDelegate());
+        handleCompletionChar(context);
     }
-  }
 
-  @Override
-  public void handleInsert(final InsertionContext context) {
-    doHandleInsert(context);
-    handleCompletionChar(context);
-  }
+    private void doHandleInsert(InsertionContext context) {
+        LookupElement item = getDelegate();
+        PsiDocumentManager.getInstance(context.getProject()).commitAllDocuments();
 
-  private void doHandleInsert(InsertionContext context) {
-    LookupElement item = getDelegate();
-    PsiDocumentManager.getInstance(context.getProject()).commitAllDocuments();
-
-    TextRange range = myState.getCurrentVariableRange();
-    final TemplateLookupSelectionHandler handler = item.getUserData(TemplateLookupSelectionHandler.KEY_IN_LOOKUP_ITEM);
-    if (handler != null && range != null) {
-      handler.itemSelected(item, context.getFile(), context.getDocument(), range.getStartOffset(), range.getEndOffset());
+        TextRange range = myState.getCurrentVariableRange();
+        final TemplateLookupSelectionHandler handler = item.getUserData(TemplateLookupSelectionHandler.KEY_IN_LOOKUP_ITEM);
+        if (handler != null && range != null) {
+            handler.itemSelected(item, context.getFile(), context.getDocument(), range.getStartOffset(), range.getEndOffset());
+        }
+        else {
+            super.handleInsert(context);
+        }
     }
-    else {
-      super.handleInsert(context);
-    }
-  }
 
-  private static boolean handleCompletionChar(InsertionContext context) {
-    if (context.getCompletionChar() == '.') {
-      EditorModificationUtil.insertStringAtCaret(context.getEditor(), ".");
-      AutoPopupController.getInstance(context.getProject()).autoPopupMemberLookup(context.getEditor(), null);
-      return false;
+    private static boolean handleCompletionChar(InsertionContext context) {
+        if (context.getCompletionChar() == '.') {
+            EditorModificationUtil.insertStringAtCaret(context.getEditor(), ".");
+            AutoPopupController.getInstance(context.getProject()).autoPopupMemberLookup(context.getEditor(), null);
+            return false;
+        }
+        return true;
     }
-    return true;
-  }
 }

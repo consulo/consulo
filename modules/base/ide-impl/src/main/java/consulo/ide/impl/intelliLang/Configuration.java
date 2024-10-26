@@ -72,7 +72,8 @@ import java.util.function.Supplier;
 public class Configuration implements PersistentStateComponent<Element>, ModificationTracker {
     private static final Logger LOG = Logger.getInstance(Configuration.class);
 
-    private static final Condition<BaseInjection> LANGUAGE_INJECTION_CONDITION = o -> Language.findLanguageByID(o.getInjectedLanguageId()) != null;
+    private static final Condition<BaseInjection> LANGUAGE_INJECTION_CONDITION =
+        o -> Language.findLanguageByID(o.getInjectedLanguageId()) != null;
 
     public enum InstrumentationType {
         NONE,
@@ -120,7 +121,8 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
     @NonNls
     private static final String SOURCE_MODIFICATION_ALLOWED = "SOURCE_MODIFICATION_ALLOWED";
 
-    private final Map<String, List<BaseInjection>> myInjections = ConcurrentFactoryMap.createMap(it -> ContainerUtil.createLockFreeCopyOnWriteList());
+    private final Map<String, List<BaseInjection>> myInjections =
+        ConcurrentFactoryMap.createMap(it -> ContainerUtil.createLockFreeCopyOnWriteList());
 
     public Collection<BaseInjection> getAllInjections() {
         ArrayList<BaseInjection> injections = new ArrayList<>();
@@ -130,13 +132,16 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
         return injections;
     }
 
-    private Supplier<MultiMap<String, BaseInjection>> myInjectionsById = LazyValue.notNullWithModCount(() -> {
-        MultiMap<String, BaseInjection> map = new MultiMap<>();
-        for (BaseInjection injection : getAllInjections()) {
-            map.putValue(injection.getInjectedLanguageId(), injection);
-        }
-        return map;
-    }, this::getModificationCount);
+    private Supplier<MultiMap<String, BaseInjection>> myInjectionsById = LazyValue.notNullWithModCount(
+        () -> {
+            MultiMap<String, BaseInjection> map = new MultiMap<>();
+            for (BaseInjection injection : getAllInjections()) {
+                map.putValue(injection.getInjectedLanguageId(), injection);
+            }
+            return map;
+        },
+        this::getModificationCount
+    );
 
     private volatile long myModificationCount;
 
@@ -303,10 +308,12 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
         return newInjections.size();
     }
 
-    static void importInjections(final Collection<BaseInjection> existingInjections,
-                                 final Collection<BaseInjection> importingInjections,
-                                 final Collection<BaseInjection> originalInjections,
-                                 final Collection<BaseInjection> newInjections) {
+    static void importInjections(
+        final Collection<BaseInjection> existingInjections,
+        final Collection<BaseInjection> importingInjections,
+        final Collection<BaseInjection> originalInjections,
+        final Collection<BaseInjection> newInjections
+    ) {
         final MultiValuesMap<InjectionPlace, BaseInjection> placeMap = new MultiValuesMap<>();
         for (BaseInjection exising : existingInjections) {
             for (InjectionPlace place : exising.getInjectionPlaces()) {
@@ -376,7 +383,8 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
                 boolean replace = false;
                 final ArrayList<InjectionPlace> newPlaces = new ArrayList<>();
                 for (InjectionPlace place : injection.getInjectionPlaces()) {
-                    if (place.isEnabled() != enabled && place.getElementPattern() != null && (place.getElementPattern().accepts(host) || place.getElementPattern().accepts(host.getParent()))) {
+                    if (place.isEnabled() != enabled && place.getElementPattern() != null
+                        && (place.getElementPattern().accepts(host) || place.getElementPattern().accepts(host.getParent()))) {
                         newPlaces.add(place.enabled(enabled));
                         replace = true;
                     }
@@ -413,31 +421,42 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
         return Collections.unmodifiableList(myInjections.get(injectorId));
     }
 
-    public void replaceInjectionsWithUndo(final Project project,
-                                          final List<? extends BaseInjection> newInjections,
-                                          final List<? extends BaseInjection> originalInjections,
-                                          final List<? extends PsiElement> psiElementsToRemove) {
-        replaceInjectionsWithUndo(project, newInjections, originalInjections, psiElementsToRemove, new PairProcessor<List<? extends BaseInjection>, List<? extends BaseInjection>>() {
-            @Override
-            public boolean process(final List<? extends BaseInjection> add, final List<? extends BaseInjection> remove) {
-                replaceInjectionsWithUndoInner(add, remove);
-                if (ContainerUtil.find(add, LANGUAGE_INJECTION_CONDITION) != null || ContainerUtil.find(remove, LANGUAGE_INJECTION_CONDITION) != null) {
-                    FileContentUtil.reparseOpenedFiles();
+    public void replaceInjectionsWithUndo(
+        final Project project,
+        final List<? extends BaseInjection> newInjections,
+        final List<? extends BaseInjection> originalInjections,
+        final List<? extends PsiElement> psiElementsToRemove
+    ) {
+        replaceInjectionsWithUndo(
+            project,
+            newInjections,
+            originalInjections,
+            psiElementsToRemove,
+            new PairProcessor<List<? extends BaseInjection>, List<? extends BaseInjection>>() {
+                @Override
+                public boolean process(final List<? extends BaseInjection> add, final List<? extends BaseInjection> remove) {
+                    replaceInjectionsWithUndoInner(add, remove);
+                    if (ContainerUtil.find(add, LANGUAGE_INJECTION_CONDITION) != null
+                        || ContainerUtil.find(remove, LANGUAGE_INJECTION_CONDITION) != null) {
+                        FileContentUtil.reparseOpenedFiles();
+                    }
+                    return true;
                 }
-                return true;
             }
-        });
+        );
     }
 
     protected void replaceInjectionsWithUndoInner(final List<? extends BaseInjection> add, final List<? extends BaseInjection> remove) {
         replaceInjections(add, remove, false);
     }
 
-    public static <T> void replaceInjectionsWithUndo(final Project project,
-                                                     final T add,
-                                                     final T remove,
-                                                     final List<? extends PsiElement> psiElementsToRemove,
-                                                     final PairProcessor<T, T> actualProcessor) {
+    public static <T> void replaceInjectionsWithUndo(
+        final Project project,
+        final T add,
+        final T remove,
+        final List<? extends PsiElement> psiElementsToRemove,
+        final PairProcessor<T, T> actualProcessor
+    ) {
         final UndoableAction action = new GlobalUndoableAction() {
             @Override
             public void undo() {
@@ -449,7 +468,10 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
                 actualProcessor.process(add, remove);
             }
         };
-        final List<PsiFile> psiFiles = ContainerUtil.mapNotNull(psiElementsToRemove, psiAnnotation -> psiAnnotation instanceof PsiCompiledElement ? null : psiAnnotation.getContainingFile());
+        final List<PsiFile> psiFiles = ContainerUtil.mapNotNull(
+            psiElementsToRemove,
+            psiAnnotation -> psiAnnotation instanceof PsiCompiledElement ? null : psiAnnotation.getContainingFile()
+        );
         new WriteCommandAction.Simple(project, "Language Injection Configuration Update", PsiUtilCore.toPsiFileArray(psiFiles)) {
             @Override
             public void run() {
@@ -467,7 +489,11 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
         }.execute();
     }
 
-    public boolean replaceInjections(List<? extends BaseInjection> newInjections, List<? extends BaseInjection> originalInjections, boolean forceLevel) {
+    public boolean replaceInjections(
+        List<? extends BaseInjection> newInjections,
+        List<? extends BaseInjection> originalInjections,
+        boolean forceLevel
+    ) {
         boolean changed = false;
         for (BaseInjection injection : originalInjections) {
             changed |= myInjections.get(injection.getSupportId()).remove(injection);

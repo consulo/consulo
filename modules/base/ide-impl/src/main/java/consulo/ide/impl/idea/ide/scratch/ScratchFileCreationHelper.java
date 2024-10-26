@@ -25,6 +25,7 @@ import consulo.util.lang.StringUtil;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.function.Supplier;
 
 /**
@@ -32,59 +33,65 @@ import java.util.function.Supplier;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class ScratchFileCreationHelper implements LanguageExtension {
-  private static final ExtensionPointCacheKey<ScratchFileCreationHelper, ByLanguageValue<ScratchFileCreationHelper>> KEY =
-          ExtensionPointCacheKey.create("ScratchFileCreationHelper", LanguageOneToOne.build(new ScratchFileCreationHelper() {
+    private static final ExtensionPointCacheKey<ScratchFileCreationHelper, ByLanguageValue<ScratchFileCreationHelper>> KEY =
+        ExtensionPointCacheKey.create("ScratchFileCreationHelper", LanguageOneToOne.build(new ScratchFileCreationHelper() {
             @Nonnull
             @Override
             public Language getLanguage() {
-              return Language.ANY;
+                return Language.ANY;
             }
-          }));
+        }));
 
-  @Nonnull
-  public static ScratchFileCreationHelper forLanguage(@Nonnull Language language) {
-    return Application.get().getExtensionPoint(ScratchFileCreationHelper.class).getOrBuildCache(KEY).requiredGet(language);
-  }
-
-  /**
-   * Override to change the default initial text for a scratch file stored in {@link Context#text} field.
-   * Return true if the text is set up as needed and no further considerations are necessary.
-   */
-  public boolean prepareText(@Nonnull Project project, @Nonnull Context context, @Nonnull DataContext dataContext) {
-    return false;
-  }
-
-  public void beforeCreate(@Nonnull Project project, @Nonnull Context context) {
-  }
-
-  public static class Context {
     @Nonnull
-    public String text = "";
-    public Language language;
-    public int caretOffset;
+    public static ScratchFileCreationHelper forLanguage(@Nonnull Language language) {
+        return Application.get().getExtensionPoint(ScratchFileCreationHelper.class).getOrBuildCache(KEY).requiredGet(language);
+    }
 
-    public String filePrefix;
-    public Supplier<Integer> fileCounter;
-    public String fileExtension;
+    /**
+     * Override to change the default initial text for a scratch file stored in {@link Context#text} field.
+     * Return true if the text is set up as needed and no further considerations are necessary.
+     */
+    public boolean prepareText(@Nonnull Project project, @Nonnull Context context, @Nonnull DataContext dataContext) {
+        return false;
+    }
 
-    public ScratchFileService.Option createOption = ScratchFileService.Option.create_new_always;
-    public IdeView ideView;
-  }
+    public void beforeCreate(@Nonnull Project project, @Nonnull Context context) {
+    }
 
-  @Nullable
-  public static PsiFile parseHeader(@Nonnull Project project, @Nonnull Language language, @Nonnull String text) {
-    LanguageFileType fileType = language.getAssociatedFileType();
-    CharSequence fileSnippet = StringUtil.first(text, 10 * 1024, false);
-    PsiFileFactory fileFactory = PsiFileFactory.getInstance(project);
-    return fileFactory.createFileFromText(PathUtil.makeFileName("a", fileType == null ? "" : fileType.getDefaultExtension()), language, fileSnippet);
-  }
+    public static class Context {
+        @Nonnull
+        public String text = "";
+        public Language language;
+        public int caretOffset;
 
-  @Nonnull
-  public static String reformat(@Nonnull Project project, @Nonnull Language language, @Nonnull String text) {
-    return WriteCommandAction.runWriteCommandAction(project, (Supplier<String>)() -> {
-      PsiFile psi = parseHeader(project, language, text);
-      if (psi != null) CodeStyleManager.getInstance(project).reformat(psi);
-      return psi == null ? text : psi.getText();
-    });
-  }
+        public String filePrefix;
+        public Supplier<Integer> fileCounter;
+        public String fileExtension;
+
+        public ScratchFileService.Option createOption = ScratchFileService.Option.create_new_always;
+        public IdeView ideView;
+    }
+
+    @Nullable
+    public static PsiFile parseHeader(@Nonnull Project project, @Nonnull Language language, @Nonnull String text) {
+        LanguageFileType fileType = language.getAssociatedFileType();
+        CharSequence fileSnippet = StringUtil.first(text, 10 * 1024, false);
+        PsiFileFactory fileFactory = PsiFileFactory.getInstance(project);
+        return fileFactory.createFileFromText(
+            PathUtil.makeFileName("a", fileType == null ? "" : fileType.getDefaultExtension()),
+            language,
+            fileSnippet
+        );
+    }
+
+    @Nonnull
+    public static String reformat(@Nonnull Project project, @Nonnull Language language, @Nonnull String text) {
+        return WriteCommandAction.runWriteCommandAction(project, (Supplier<String>)() -> {
+            PsiFile psi = parseHeader(project, language, text);
+            if (psi != null) {
+                CodeStyleManager.getInstance(project).reformat(psi);
+            }
+            return psi == null ? text : psi.getText();
+        });
+    }
 }
