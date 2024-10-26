@@ -75,6 +75,7 @@ public class ExtractIncludeDialog extends DialogWrapper {
     }
 
     @Override
+    @RequiredUIAccess
     public JComponent getPreferredFocusedComponent() {
         return myNameField;
     }
@@ -163,25 +164,20 @@ public class ExtractIncludeDialog extends DialogWrapper {
             return;
         }
 
-        CommandProcessor.getInstance().executeCommand(
-            project,
-            () -> {
-                final Runnable action = () -> {
-                    try {
-                        PsiDirectory targetDirectory = DirectoryUtil.mkdirs(PsiManager.getInstance(project), directoryName);
-                        targetDirectory.checkCreateFile(targetFileName);
-                        final String webPath = PsiFileSystemItemUtil.getRelativePath(myCurrentDirectory, targetDirectory);
-                        myTargetDirectory = webPath == null ? null : targetDirectory;
-                    }
-                    catch (IncorrectOperationException e) {
-                        CommonRefactoringUtil.showErrorMessage(REFACTORING_NAME.get(), e.getMessage(), null, project);
-                    }
-                };
-                project.getApplication().runWriteAction(action);
-            },
-            RefactoringLocalize.createDirectory().get(),
-            null
-        );
+        CommandProcessor.getInstance().newCommand(() -> {
+                try {
+                    PsiDirectory targetDirectory = DirectoryUtil.mkdirs(PsiManager.getInstance(project), directoryName);
+                    targetDirectory.checkCreateFile(targetFileName);
+                    final String webPath = PsiFileSystemItemUtil.getRelativePath(myCurrentDirectory, targetDirectory);
+                    myTargetDirectory = webPath == null ? null : targetDirectory;
+                }
+                catch (IncorrectOperationException e) {
+                    CommonRefactoringUtil.showErrorMessage(REFACTORING_NAME.get(), e.getMessage(), null, project);
+                }
+            })
+            .withProject(project)
+            .withName(RefactoringLocalize.createDirectory())
+            .executeInWriteAction();
         if (myTargetDirectory == null) {
             return;
         }
@@ -189,6 +185,7 @@ public class ExtractIncludeDialog extends DialogWrapper {
     }
 
     @Override
+    @RequiredUIAccess
     protected void doHelpAction() {
         HelpManager.getInstance().invokeHelp(getHelpTopic());
     }

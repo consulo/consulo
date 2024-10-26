@@ -16,7 +16,6 @@
 
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.actions;
 
-import consulo.application.ApplicationManager;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.TitledHandler;
 import consulo.ide.impl.idea.util.ArrayUtilRt;
@@ -32,8 +31,10 @@ import consulo.module.content.layer.orderEntry.ModuleOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
 import consulo.project.localize.ProjectLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
@@ -52,44 +53,40 @@ public class ModuleDeleteProvider implements DeleteProvider, TitledHandler {
     }
 
     @Override
+    @RequiredUIAccess
     public void deleteElement(@Nonnull DataContext dataContext) {
         final Module[] modules = dataContext.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
         assert modules != null;
         final Project project = dataContext.getData(Project.KEY);
         String names = StringUtil.join(Arrays.asList(modules), module -> "\'" + module.getName() + "\'", ", ");
-        int ret = Messages.showOkCancelDialog(getConfirmationText(modules, names), getActionTitleValue().get(), Messages.getQuestionIcon());
+        int ret = Messages.showOkCancelDialog(getConfirmationText(modules, names), getActionTitleValue().get(), UIUtil.getQuestionIcon());
         if (ret != 0) {
             return;
         }
-        CommandProcessor.getInstance().executeCommand(
-            project,
-            () -> {
-                final Runnable action = () -> {
-                    final ModuleManager moduleManager = ModuleManager.getInstance(project);
-                    final Module[] currentModules = moduleManager.getModules();
-                    final ModifiableModuleModel modifiableModuleModel = moduleManager.getModifiableModel();
-                    final Map<Module, ModifiableRootModel> otherModuleRootModels = new HashMap<>();
-                    for (final Module module : modules) {
-                        final ModifiableRootModel modifiableModel = ModuleRootManager.getInstance(module).getModifiableModel();
-                        for (final Module otherModule : currentModules) {
-                            if (otherModule == module || ArrayUtilRt.find(modules, otherModule) != -1) {
-                                continue;
-                            }
-                            if (!otherModuleRootModels.containsKey(otherModule)) {
-                                otherModuleRootModels.put(otherModule, ModuleRootManager.getInstance(otherModule).getModifiableModel());
-                            }
+        CommandProcessor.getInstance().newCommand(() -> {
+                final ModuleManager moduleManager = ModuleManager.getInstance(project);
+                final Module[] currentModules = moduleManager.getModules();
+                final ModifiableModuleModel modifiableModuleModel = moduleManager.getModifiableModel();
+                final Map<Module, ModifiableRootModel> otherModuleRootModels = new HashMap<>();
+                for (final Module module : modules) {
+                    final ModifiableRootModel modifiableModel = ModuleRootManager.getInstance(module).getModifiableModel();
+                    for (final Module otherModule : currentModules) {
+                        if (otherModule == module || ArrayUtilRt.find(modules, otherModule) != -1) {
+                            continue;
                         }
-                        removeModule(module, modifiableModel, otherModuleRootModels.values(), modifiableModuleModel);
+                        if (!otherModuleRootModels.containsKey(otherModule)) {
+                            otherModuleRootModels.put(otherModule, ModuleRootManager.getInstance(otherModule).getModifiableModel());
+                        }
                     }
-                    final ModifiableRootModel[] modifiableRootModels =
-                        otherModuleRootModels.values().toArray(new ModifiableRootModel[otherModuleRootModels.size()]);
-                    ModifiableModelCommitter.getInstance(project).multiCommit(modifiableRootModels, modifiableModuleModel);
-                };
-                ApplicationManager.getApplication().runWriteAction(action);
-            },
-            ProjectLocalize.moduleRemoveCommand().get(),
-            null
-        );
+                    removeModule(module, modifiableModel, otherModuleRootModels.values(), modifiableModuleModel);
+                }
+                final ModifiableRootModel[] modifiableRootModels =
+                    otherModuleRootModels.values().toArray(new ModifiableRootModel[otherModuleRootModels.size()]);
+                ModifiableModelCommitter.getInstance(project).multiCommit(modifiableRootModels, modifiableModuleModel);
+            })
+            .withProject(project)
+            .withName(ProjectLocalize.moduleRemoveCommand())
+            .executeInWriteAction();
     }
 
     private static String getConfirmationText(Module[] modules, String names) {
@@ -112,10 +109,10 @@ public class ModuleDeleteProvider implements DeleteProvider, TitledHandler {
         for (final ModifiableRootModel modifiableRootModel : otherModuleRootModels) {
             final OrderEntry[] orderEntries = modifiableRootModel.getOrderEntries();
             for (final OrderEntry orderEntry : orderEntries) {
-                if (orderEntry instanceof ModuleOrderEntry && orderEntry.isValid()) {
-                    final Module orderEntryModule = ((ModuleOrderEntry)orderEntry).getModule();
+                if (orderEntry instanceof ModuleOrderEntry moduleOrderEntry && moduleOrderEntry.isValid()) {
+                    final Module orderEntryModule = moduleOrderEntry.getModule();
                     if (orderEntryModule != null && orderEntryModule.equals(moduleToRemove)) {
-                        modifiableRootModel.removeOrderEntry(orderEntry);
+                        modifiableRootModel.removeOrderEntry(moduleOrderEntry);
                     }
                 }
             }

@@ -16,17 +16,16 @@
 
 package consulo.ide.impl.idea.codeInsight.template.impl;
 
-import consulo.application.ApplicationManager;
-import consulo.application.CommonBundle;
 import consulo.application.HelpManager;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
-import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.template.Variable;
-import consulo.language.editor.template.context.BaseTemplateContextType;
 import consulo.language.editor.template.context.TemplateContextType;
 import consulo.language.editor.template.macro.Macro;
 import consulo.language.editor.template.macro.MacroFactory;
+import consulo.platform.base.localize.CommonLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.EditableModel;
 import consulo.ui.ex.awt.ToolbarDecorator;
@@ -39,11 +38,13 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableModel;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.*;
 
 class EditVariableDialog extends DialogWrapper {
-    private ArrayList<Variable> myVariables = new ArrayList<Variable>();
+    private List<Variable> myVariables = new ArrayList<>();
 
     private JTable myTable;
     private Editor myEditor;
@@ -55,8 +56,8 @@ class EditVariableDialog extends DialogWrapper {
         myVariables = variables;
         myEditor = editor;
         init();
-        setTitle(CodeInsightBundle.message("templates.dialog.edit.variables.title"));
-        setOKButtonText(CommonBundle.getOkButtonText());
+        setTitle(CodeInsightLocalize.templatesDialogEditVariablesTitle());
+        setOKButtonText(CommonLocalize.buttonOk());
     }
 
     @Nonnull
@@ -66,6 +67,7 @@ class EditVariableDialog extends DialogWrapper {
     }
 
     @Override
+    @RequiredUIAccess
     protected void doHelpAction() {
         HelpManager.getInstance().invokeHelp("editing.templates.defineTemplates.editTemplVars");
     }
@@ -76,6 +78,7 @@ class EditVariableDialog extends DialogWrapper {
     }
 
     @Override
+    @RequiredUIAccess
     public JComponent getPreferredFocusedComponent() {
         return myTable;
     }
@@ -87,10 +90,10 @@ class EditVariableDialog extends DialogWrapper {
 
     private JComponent createVariablesTable() {
         final String[] names = {
-            CodeInsightBundle.message("templates.dialog.edit.variables.table.column.name"),
-            CodeInsightBundle.message("templates.dialog.edit.variables.table.column.expression"),
-            CodeInsightBundle.message("templates.dialog.edit.variables.table.column.default.value"),
-            CodeInsightBundle.message("templates.dialog.edit.variables.table.column.skip.if.defined")
+            CodeInsightLocalize.templatesDialogEditVariablesTableColumnName().get(),
+            CodeInsightLocalize.templatesDialogEditVariablesTableColumnExpression().get(),
+            CodeInsightLocalize.templatesDialogEditVariablesTableColumnDefaultValue().get(),
+            CodeInsightLocalize.templatesDialogEditVariablesTableColumnSkipIfDefined().get()
         };
 
         // Create a model of the data.
@@ -110,15 +113,7 @@ class EditVariableDialog extends DialogWrapper {
 
         JComboBox comboField = new JComboBox();
         Macro[] macros = MacroFactory.getMacros();
-        Arrays.sort(
-            macros,
-            new Comparator<Macro>() {
-                @Override
-                public int compare(Macro m1, Macro m2) {
-                    return m1.getPresentableName().compareTo(m2.getPresentableName());
-                }
-            }
-        );
+        Arrays.sort(macros, (m1, m2) -> m1.getPresentableName().compareTo(m2.getPresentableName()));
         eachMacro:
         for (Macro macro : macros) {
             for (TemplateContextType contextType : myContextTypes) {
@@ -184,26 +179,15 @@ class EditVariableDialog extends DialogWrapper {
         menu.show(field, x, y);
     }*/
 
+    @RequiredUIAccess
     private void updateTemplateTextByVarNameChange(final Variable oldVar, final Variable newVar) {
-        ApplicationManager.getApplication().runWriteAction(new Runnable() {
-            @Override
-            public void run() {
-                CommandProcessor.getInstance().executeCommand(
-                    null,
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            Document document = myEditor.getDocument();
-                            String templateText = document.getText();
-                            templateText = templateText.replaceAll("\\$" + oldVar.getName() + "\\$", "\\$" + newVar.getName() + "\\$");
-                            document.replaceString(0, document.getTextLength(), templateText);
-                        }
-                    },
-                    null,
-                    null
-                );
-            }
-        });
+        CommandProcessor.getInstance().newCommand(() -> {
+                Document document = myEditor.getDocument();
+                String templateText = document.getText();
+                templateText = templateText.replaceAll("\\$" + oldVar.getName() + "\\$", "\\$" + newVar.getName() + "\\$");
+                document.replaceString(0, document.getTextLength(), templateText);
+            })
+            .executeInWriteAction();
     }
 
     private class VariablesModel extends AbstractTableModel implements EditableModel {
@@ -261,6 +245,7 @@ class EditVariableDialog extends DialogWrapper {
         }
 
         @Override
+        @RequiredUIAccess
         public void setValueAt(Object aValue, int row, int col) {
             Variable variable = myVariables.get(row);
             if (col == 0) {
@@ -281,7 +266,7 @@ class EditVariableDialog extends DialogWrapper {
                 variable.setDefaultValueString((String)aValue);
             }
             else {
-                variable.setAlwaysStopAt(!((Boolean)aValue).booleanValue());
+                variable.setAlwaysStopAt(!(Boolean)aValue);
             }
         }
 

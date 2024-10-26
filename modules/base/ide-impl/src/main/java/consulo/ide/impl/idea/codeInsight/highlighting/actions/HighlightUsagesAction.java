@@ -52,14 +52,8 @@ public class HighlightUsagesAction extends AnAction implements DumbAware {
         if (editor == null || project == null) {
             return;
         }
-        String commandName = getTemplatePresentation().getText();
-        if (commandName == null) {
-            commandName = "";
-        }
 
-        CommandProcessor.getInstance().executeCommand(
-            project,
-            new Runnable() {
+        CommandProcessor.getInstance().newCommand(new Runnable() {
                 @Override
                 @RequiredUIAccess
                 public void run() {
@@ -72,9 +66,9 @@ public class HighlightUsagesAction extends AnAction implements DumbAware {
                             .showDumbModeNotification(ActionLocalize.actionHighlightusagesinfileNotReady().get());
                     }
                 }
-            },
-            commandName,
-            null
-        );
+            })
+            .withProject(project)
+            .withName(getTemplatePresentation().getTextValue())
+            .execute();
     }
 }

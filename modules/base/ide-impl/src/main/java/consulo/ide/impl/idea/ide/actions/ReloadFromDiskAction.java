@@ -20,11 +20,12 @@ import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
@@ -34,6 +35,7 @@ import consulo.undoRedo.CommandProcessor;
 
 public class ReloadFromDiskAction extends AnAction implements DumbAware {
     @Override
+    @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
         final Project project = dataContext.getData(Project.KEY);
@@ -56,17 +58,14 @@ public class ReloadFromDiskAction extends AnAction implements DumbAware {
             return;
         }
 
-        CommandProcessor.getInstance().executeCommand(
-            project,
-            () -> project.getApplication().runWriteAction(
-                () -> PsiManager.getInstance(project).reloadFromDisk(psiFile)
-            ),
-            IdeLocalize.commandReloadFromDisk().get(),
-            null
-        );
+        CommandProcessor.getInstance().newCommand(() -> PsiManager.getInstance(project).reloadFromDisk(psiFile))
+            .withProject(project)
+            .withName(IdeLocalize.commandReloadFromDisk())
+            .executeInWriteAction();
     }
 
     @Override
+    @RequiredUIAccess
     public void update(AnActionEvent event) {
         Presentation presentation = event.getPresentation();
         DataContext dataContext = event.getDataContext();

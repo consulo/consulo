@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.codeInsight.actions;
 
-import consulo.application.Application;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
@@ -25,11 +24,12 @@ import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.undoRedo.CommandProcessor;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -44,6 +44,7 @@ import jakarta.annotation.Nonnull;
  */
 public abstract class MultiCaretCodeInsightAction extends AnAction {
     @Override
+    @RequiredUIAccess
     public void actionPerformed(@Nonnull AnActionEvent e) {
         final Project project = e.getData(Project.KEY);
         if (project == null) {
@@ -57,21 +58,27 @@ public abstract class MultiCaretCodeInsightAction extends AnAction {
         actionPerformedImpl(project, hostEditor);
     }
 
+    @RequiredUIAccess
     public void actionPerformedImpl(final Project project, final Editor hostEditor) {
-        CommandProcessor.getInstance().executeCommand(project, () -> Application.get().runWriteAction(() -> {
-            MultiCaretCodeInsightActionHandler handler = getHandler();
-            try {
-                iterateOverCarets(project, hostEditor, handler);
-            }
-            finally {
-                handler.postInvoke();
-            }
-        }), getCommandName(), DocCommandGroupId.noneGroupId(hostEditor.getDocument()));
+        CommandProcessor.getInstance().newCommand(() -> {
+                MultiCaretCodeInsightActionHandler handler = getHandler();
+                try {
+                    iterateOverCarets(project, hostEditor, handler);
+                }
+                finally {
+                    handler.postInvoke();
+                }
+            })
+            .withProject(project)
+            .withName(getTemplatePresentation().getTextValue())
+            .withGroupId(DocCommandGroupId.noneGroupId(hostEditor.getDocument()))
+            .executeInWriteAction();
 
         hostEditor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
     }
 
     @Override
+    @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
         final Presentation presentation = e.getPresentation();
 
@@ -87,15 +94,19 @@ public abstract class MultiCaretCodeInsightAction extends AnAction {
             return;
         }
 
-        final Ref<Boolean> enabled = new Ref<>(Boolean.FALSE);
-        iterateOverCarets(project, hostEditor, new MultiCaretCodeInsightActionHandler() {
-            @Override
-            public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull Caret caret, @Nonnull PsiFile file) {
-                if (isValidFor(project, editor, caret, file)) {
-                    enabled.set(Boolean.TRUE);
+        final SimpleReference<Boolean> enabled = new SimpleReference<>(false);
+        iterateOverCarets(
+            project,
+            hostEditor,
+            new MultiCaretCodeInsightActionHandler() {
+                @Override
+                public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull Caret caret, @Nonnull PsiFile file) {
+                    if (isValidFor(project, editor, caret, file)) {
+                        enabled.set(true);
+                    }
                 }
             }
-        });
+        );
         presentation.setEnabled(enabled.get());
     }
 
@@ -134,9 +145,4 @@ public abstract class MultiCaretCodeInsightAction extends AnAction {
 
     @Nonnull
     protected abstract MultiCaretCodeInsightActionHandler getHandler();
-
-    protected String getCommandName() {
-        String text = getTemplatePresentation().getText();
-        return text == null ? "" : text;
-    }
 }

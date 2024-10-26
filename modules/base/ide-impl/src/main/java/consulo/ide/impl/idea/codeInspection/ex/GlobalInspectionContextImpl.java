@@ -32,7 +32,6 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
-import consulo.language.editor.ui.scope.AnalysisUIOptions;
 import consulo.ide.impl.idea.analysis.PerformAnalysisInBackgroundOption;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.LocalInspectionsPass;
 import consulo.ide.impl.idea.codeInspection.ui.DefaultInspectionToolPresentation;
@@ -62,15 +61,18 @@ import consulo.language.editor.inspection.scheme.Tools;
 import consulo.language.editor.internal.inspection.ScopeToolState;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.editor.scope.AnalysisScope;
+import consulo.language.editor.ui.scope.AnalysisUIOptions;
 import consulo.language.impl.file.SingleRootFileViewProvider;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.*;
 import consulo.language.psi.scope.LocalSearchScope;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.content.ProjectRootManager;
 import consulo.module.content.util.ProjectUtilCore;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectCoreUtil;
 import consulo.project.macro.ProjectPathMacroManager;
@@ -79,6 +81,7 @@ import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.content.Content;
@@ -95,7 +98,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -217,7 +219,7 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
     }
 
     private void exportResults(@Nonnull List<File> inspectionsResults, @Nullable String outputPath) {
-        @NonNls final String ext = ".xml";
+        final String ext = ".xml";
         final Map<Element, Tools> globalTools = new HashMap<>();
         for (Map.Entry<String, Tools> entry : myTools.entrySet()) {
             final Tools sameTools = entry.getValue();
@@ -911,13 +913,13 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
         final boolean modal
     ) {
         Task task = modal
-            ? new Task.Modal(project, "Inspect code...", true) {
+            ? new Task.Modal(project, ActionLocalize.actionInspectcodeText().map(Presentation.NO_MNEMONIC), true) {
                 @Override
                 public void run(@Nonnull ProgressIndicator indicator) {
                     cleanup(scope, profile, project, postRunnable, commandName);
                 }
             }
-            : new Task.Backgroundable(project, "Inspect code...", true) {
+            : new Task.Backgroundable(project, ActionLocalize.actionInspectcodeText().map(Presentation.NO_MNEMONIC), true) {
                 @Override
                 public void run(@Nonnull ProgressIndicator indicator) {
                     cleanup(scope, profile, project, postRunnable, commandName);
@@ -1027,9 +1029,7 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
             final SequentialModalProgressTask progressTask = new SequentialModalProgressTask(project, "Code Cleanup", true);
             progressTask.setMinIterationTime(200);
             progressTask.setTask(new SequentialCleanupTask(project, results, progressTask));
-            CommandProcessor.getInstance().executeCommand(
-                project,
-                () -> {
+            CommandProcessor.getInstance().newCommand(() -> {
                     if (commandName != null) {
                         CommandProcessor.getInstance().markCurrentCommandAsGlobal(project);
                     }
@@ -1038,10 +1038,10 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
                     if (postRunnable != null) {
                         application.invokeLater(postRunnable);
                     }
-                },
-                commandName,
-                null
-            );
+                })
+                .withProject(project)
+                .withName(LocalizeValue.ofNullable(commandName))
+                .execute();
         };
 
         getProject().getUIAccess().give(runnable);

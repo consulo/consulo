@@ -16,23 +16,25 @@
 
 package consulo.ide.impl.idea.codeInsight.unwrap;
 
-import consulo.application.ApplicationManager;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
-import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.FileModificationService;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.highlight.HighlightManager;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.refactoring.internal.unwrap.UnwrapHelper;
 import consulo.language.editor.refactoring.unwrap.ScopeHighlighter;
 import consulo.language.editor.refactoring.unwrap.UnwrapDescriptor;
 import consulo.language.editor.refactoring.unwrap.Unwrapper;
 import consulo.language.editor.util.LanguageEditorUtil;
-import consulo.language.impl.ast.TreeElement;
 import consulo.language.impl.ast.RecursiveTreeElementWalkingVisitor;
+import consulo.language.impl.ast.TreeElement;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -45,13 +47,10 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,8 +70,9 @@ public class UnwrapHandler implements CodeInsightActionHandler {
         selectOption(options, editor, file);
     }
 
+    @RequiredReadAction
     private List<AnAction> collectOptions(Project project, Editor editor, PsiFile file) {
-        List<AnAction> result = new ArrayList<AnAction>();
+        List<AnAction> result = new ArrayList<>();
 
         UnwrapDescriptor d = getUnwrapDescription(file);
 
@@ -84,6 +84,7 @@ public class UnwrapHandler implements CodeInsightActionHandler {
     }
 
     @Nullable
+    @RequiredReadAction
     private static UnwrapDescriptor getUnwrapDescription(PsiFile file) {
         return ContainerUtil.getFirstItem(UnwrapDescriptor.forLanguage(file.getLanguage()));
     }
@@ -92,12 +93,13 @@ public class UnwrapHandler implements CodeInsightActionHandler {
         return new MyUnwrapAction(p, ed, u, el);
     }
 
+    @RequiredUIAccess
     protected void selectOption(List<AnAction> options, Editor editor, PsiFile file) {
         if (options.isEmpty()) {
             return;
         }
 
-        if (!getUnwrapDescription(file).showOptionsDialog() || ApplicationManager.getApplication().isUnitTestMode()) {
+        if (!getUnwrapDescription(file).showOptionsDialog() || Application.get().isUnitTestMode()) {
             options.get(0).actionPerformed(null);
             return;
         }
@@ -117,33 +119,27 @@ public class UnwrapHandler implements CodeInsightActionHandler {
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         list.setVisibleRowCount(options.size());
 
-        list.addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                int index = list.getSelectedIndex();
-                if (index < 0) {
-                    return;
-                }
-
-                MyUnwrapAction a = (MyUnwrapAction)options.get(index);
-
-                List<PsiElement> toExtract = new ArrayList<PsiElement>();
-                PsiElement wholeRange = a.collectAffectedElements(toExtract);
-                highlighter.highlight(wholeRange, toExtract);
+        list.addListSelectionListener(e -> {
+            int index = list.getSelectedIndex();
+            if (index < 0) {
+                return;
             }
+
+            MyUnwrapAction a = (MyUnwrapAction)options.get(index);
+
+            List<PsiElement> toExtract = new ArrayList<>();
+            PsiElement wholeRange = a.collectAffectedElements(toExtract);
+            highlighter.highlight(wholeRange, toExtract);
         });
 
         PopupChooserBuilder builder = new PopupChooserBuilder<>(list);
-        builder.setTitle(CodeInsightBundle.message("unwrap.popup.title"))
+        builder.setTitle(CodeInsightLocalize.unwrapPopupTitle().get())
             .setMovable(false)
             .setResizable(false)
             .setRequestFocus(true)
-            .setItemChoosenCallback(new Runnable() {
-                @Override
-                public void run() {
-                    MyUnwrapAction a = (MyUnwrapAction)options.get(list.getSelectedIndex());
-                    a.actionPerformed(null);
-                }
+            .setItemChoosenCallback(() -> {
+                MyUnwrapAction a = (MyUnwrapAction)options.get(list.getSelectedIndex());
+                a.actionPerformed(null);
             })
             .addListener(new JBPopupAdapter() {
                 @Override
@@ -157,7 +153,7 @@ public class UnwrapHandler implements CodeInsightActionHandler {
     }
 
     private static class MyUnwrapAction extends AnAction {
-        private static final Key<Integer> CARET_POS_KEY = new Key<Integer>("UNWRAP_HANDLER_CARET_POSITION");
+        private static final Key<Integer> CARET_POS_KEY = new Key<>("UNWRAP_HANDLER_CARET_POSITION");
 
         private final Project myProject;
         private final Editor myEditor;
@@ -173,48 +169,40 @@ public class UnwrapHandler implements CodeInsightActionHandler {
         }
 
         @Override
-        public void actionPerformed(AnActionEvent e) {
+        @RequiredUIAccess
+        public void actionPerformed(@Nonnull AnActionEvent e) {
             final PsiFile file = myElement.getContainingFile();
             if (!FileModificationService.getInstance().prepareFileForWrite(file)) {
                 return;
             }
 
-            CommandProcessor.getInstance().executeCommand(
-                myProject,
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        ApplicationManager.getApplication().runWriteAction(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    UnwrapDescriptor d = getUnwrapDescription(file);
-                                    if (d.shouldTryToRestoreCaretPosition()) {
-                                        saveCaretPosition(file);
-                                    }
-                                    int scrollOffset = myEditor.getScrollingModel().getVerticalScrollOffset();
+            CommandProcessor.getInstance().newCommand(() -> Application.get().runWriteAction(() -> {
+                    try {
+                        UnwrapDescriptor d = getUnwrapDescription(file);
+                        if (d.shouldTryToRestoreCaretPosition()) {
+                            saveCaretPosition(file);
+                        }
+                        int scrollOffset = myEditor.getScrollingModel().getVerticalScrollOffset();
 
-                                    List<PsiElement> extractedElements = myUnwrapper.unwrap(myEditor, myElement);
+                        List<PsiElement> extractedElements = myUnwrapper.unwrap(myEditor, myElement);
 
-                                    if (d.shouldTryToRestoreCaretPosition()) {
-                                        restoreCaretPosition(file);
-                                    }
-                                    myEditor.getScrollingModel().scrollVertically(scrollOffset);
+                        if (d.shouldTryToRestoreCaretPosition()) {
+                            restoreCaretPosition(file);
+                        }
+                        myEditor.getScrollingModel().scrollVertically(scrollOffset);
 
-                                    highlightExtractedElements(extractedElements);
-                                }
-                                catch (IncorrectOperationException ex) {
-                                    throw new RuntimeException(ex);
-                                }
-                            }
-                        });
+                        highlightExtractedElements(extractedElements);
                     }
-                },
-                null,
-                myEditor.getDocument()
-            );
+                    catch (IncorrectOperationException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }))
+                .withProject(myProject)
+                .withGroupId(myEditor.getDocument())
+                .execute();
         }
 
+        @RequiredReadAction
         private void saveCaretPosition(PsiFile file) {
             int offset = myEditor.getCaretModel().getOffset();
             PsiElement el = file.findElementAt(offset);
@@ -241,6 +229,7 @@ public class UnwrapHandler implements CodeInsightActionHandler {
             });
         }
 
+        @RequiredReadAction
         private void highlightExtractedElements(final List<PsiElement> extractedElements) {
             for (PsiElement each : extractedElements) {
                 HighlightManager.getInstance(myProject).addRangeHighlight(

@@ -2,20 +2,20 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ide.impl.idea.openapi.editor.actions.PasteAction;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.FileModificationService;
 import consulo.language.editor.QualifiedNameProvider;
 import consulo.language.editor.QualifiedNameProviderUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.CustomPasteProvider;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.undoRedo.CommandProcessor;
@@ -28,6 +28,7 @@ import java.util.function.Supplier;
 @ExtensionImpl
 public class PasteReferenceProvider implements CustomPasteProvider {
     @Override
+    @RequiredUIAccess
     public void performPaste(@Nonnull DataContext dataContext) {
         final Project project = dataContext.getData(Project.KEY);
         final Editor editor = dataContext.getData(Editor.KEY);
@@ -66,6 +67,7 @@ public class PasteReferenceProvider implements CustomPasteProvider {
         return project != null && fqn != null && QualifiedNameProviderUtil.qualifiedNameToElement(fqn, project) != null;
     }
 
+    @RequiredUIAccess
     private static void insert(
         final String fqn,
         final PsiElement element,
@@ -85,18 +87,16 @@ public class PasteReferenceProvider implements CustomPasteProvider {
             return;
         }
 
-        CommandProcessor.getInstance().executeCommand(
-            project,
-            () -> ApplicationManager.getApplication().runWriteAction(() -> {
+        CommandProcessor.getInstance().newCommand(() -> {
                 Document document = editor.getDocument();
                 documentManager.doPostponedOperationsAndUnblockDocument(document);
                 documentManager.commitDocument(document);
                 EditorModificationUtil.deleteSelectedText(editor);
                 provider.insertQualifiedName(fqn, element, editor, project);
-            }),
-            IdeLocalize.commandPastingReference().get(),
-            null
-        );
+            })
+            .withProject(project)
+            .withName(IdeLocalize.commandPastingReference())
+            .executeInWriteAction();
     }
 
     @Nullable

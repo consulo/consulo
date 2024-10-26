@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.refactoring.inline;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressManager;
 import consulo.codeEditor.Editor;
 import consulo.language.Language;
@@ -36,7 +37,7 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.usage.UsageInfo;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nullable;
 
 import java.util.*;
@@ -46,7 +47,6 @@ import java.util.*;
  */
 @SuppressWarnings({"UtilityClassWithoutPrivateConstructor"})
 public class GenericInlineHandler {
-
     private static final Logger LOG = Logger.getInstance(GenericInlineHandler.class);
 
     @RequiredUIAccess
@@ -63,7 +63,7 @@ public class GenericInlineHandler {
             allReferences = Collections.singleton(invocationReference);
         }
         else {
-            final Ref<Collection<? extends PsiReference>> usagesRef = new Ref<>();
+            final SimpleReference<Collection<? extends PsiReference>> usagesRef = new SimpleReference<>();
             ProgressManager.getInstance().runProcessWithProgressSynchronously(
                 () -> usagesRef.set(ReferencesSearch.search(element).findAll()),
                 "Find Usages",
@@ -109,13 +109,10 @@ public class GenericInlineHandler {
             return true;
         }
         project.getApplication().runWriteAction(() -> {
-            final String subj = element instanceof PsiNamedElement ? ((PsiNamedElement)element).getName() : "element";
+            final String subj = element instanceof PsiNamedElement namedElement ? namedElement.getName() : "element";
 
-            CommandProcessor.getInstance().executeCommand(
-                project,
-                () -> {
+            CommandProcessor.getInstance().newCommand(() -> {
                     final PsiReference[] references = sortDepthFirstRightLeftOrder(allReferences);
-
 
                     final UsageInfo[] usages = new UsageInfo[references.length];
                     for (int i = 0; i < references.length; i++) {
@@ -129,14 +126,15 @@ public class GenericInlineHandler {
                     if (!settings.isOnlyOneReferenceToInline()) {
                         languageSpecific.removeDefinition(element, settings);
                     }
-                },
-                RefactoringLocalize.inlineCommand(StringUtil.notNullize(subj, "<nameless>")).get(),
-                null
-            );
+                })
+                .withProject(project)
+                .withName(RefactoringLocalize.inlineCommand(StringUtil.notNullize(subj, "<nameless>")))
+                .execute();
         });
         return true;
     }
 
+    @RequiredReadAction
     public static Map<Language, InlineHandler.Inliner> initializeInliners(
         PsiElement element,
         InlineHandler.Settings settings,
@@ -168,6 +166,7 @@ public class GenericInlineHandler {
         return inliners;
     }
 
+    @RequiredReadAction
     public static void collectConflicts(
         final PsiReference reference,
         final PsiElement element,
@@ -193,6 +192,7 @@ public class GenericInlineHandler {
         }
     }
 
+    @RequiredReadAction
     public static void inlineReference(
         final UsageInfo usage,
         final PsiElement element,

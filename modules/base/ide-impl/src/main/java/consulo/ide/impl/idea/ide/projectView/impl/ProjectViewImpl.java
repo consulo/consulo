@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.ide.projectView.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AllIcons;
@@ -881,7 +882,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
 
     private ProjectViewSelectInTarget getProjectViewSelectInTarget(AbstractProjectViewPane pane) {
         SelectInTarget target = getSelectInTarget(pane.getId());
-        return target instanceof ProjectViewSelectInTarget ? (ProjectViewSelectInTarget)target : null;
+        return target instanceof ProjectViewSelectInTarget projectViewSelectInTarget ? projectViewSelectInTarget : null;
     }
 
     @Override
@@ -900,19 +901,8 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
         }
         DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
         Object userObject = node.getUserObject();
-        if (userObject instanceof ProjectViewNode) {
-            ProjectViewNode descriptor = (ProjectViewNode)userObject;
-            Object element = descriptor.getValue();
-            if (element instanceof PsiElement) {
-                PsiElement psiElement = (PsiElement)element;
-                if (!psiElement.isValid()) {
-                    return null;
-                }
-                return psiElement;
-            }
-            else {
-                return null;
-            }
+        if (userObject instanceof ProjectViewNode descriptor && descriptor.getValue() instanceof PsiElement psiElement) {
+            return psiElement.isValid() ? psiElement : null;
         }
         return null;
     }
@@ -1104,13 +1094,10 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
                 return null;
             }
             Object userObject = node.getUserObject();
-            if (userObject instanceof AbstractTreeNode) {
-                return ((AbstractTreeNode)userObject).getValue();
+            if (userObject instanceof AbstractTreeNode abstractTreeNode) {
+                return abstractTreeNode.getValue();
             }
-            if (!(userObject instanceof NodeDescriptor)) {
-                return null;
-            }
-            return ((NodeDescriptor)userObject).getElement();
+            return userObject instanceof NodeDescriptor nodeDescriptor ? nodeDescriptor.getElement() : null;
         }
 
         @Override
@@ -1247,10 +1234,10 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
             Object userObject = parent.getUserObject();
             if (userObject instanceof LibraryGroupNode) {
                 userObject = node.getUserObject();
-                if (userObject instanceof NamedLibraryElementNode) {
-                    NamedLibraryElement element = ((NamedLibraryElementNode)userObject).getValue();
+                if (userObject instanceof NamedLibraryElementNode namedLibraryElementNode) {
+                    NamedLibraryElement element = namedLibraryElementNode.getValue();
                     OrderEntry orderEntry = element.getOrderEntry();
-                    return orderEntry instanceof LibraryOrderEntry ? (LibraryOrderEntry)orderEntry : null;
+                    return orderEntry instanceof LibraryOrderEntry libraryOrderEntry ? libraryOrderEntry : null;
                 }
                 PsiDirectory directory = ((PsiDirectoryNode)userObject).getValue();
                 VirtualFile virtualFile = directory.getVirtualFile();
@@ -1261,14 +1248,15 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
                 }
                 ModuleFileIndex index = ModuleRootManager.getInstance(module).getFileIndex();
                 OrderEntry entry = index.getOrderEntryForFile(virtualFile);
-                if (entry instanceof LibraryOrderEntry) {
-                    return (LibraryOrderEntry)entry;
+                if (entry instanceof LibraryOrderEntry libraryOrderEntry) {
+                    return libraryOrderEntry;
                 }
             }
 
             return null;
         }
 
+        @RequiredUIAccess
         private void detachLibrary(@Nonnull final LibraryOrderEntry orderEntry, @Nonnull Project project) {
             final Module module = orderEntry.getOwnerModule();
             LocalizeValue message = IdeLocalize.detachLibraryFromModule(orderEntry.getPresentableName(), module.getName());
@@ -1277,30 +1265,26 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
             if (ret != Messages.OK) {
                 return;
             }
-            CommandProcessor.getInstance().executeCommand(
-                module.getProject(),
-                () -> {
-                    final Runnable action = () -> {
-                        ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
-                        OrderEntry[] orderEntries = rootManager.getOrderEntries();
-                        ModifiableRootModel model = rootManager.getModifiableModel();
-                        OrderEntry[] modifiableEntries = model.getOrderEntries();
-                        for (int i = 0; i < orderEntries.length; i++) {
-                            OrderEntry entry = orderEntries[i];
-                            if (entry instanceof LibraryOrderEntry libraryOrderEntry && libraryOrderEntry.getLibrary() == orderEntry.getLibrary()) {
-                                model.removeOrderEntry(modifiableEntries[i]);
-                            }
+            CommandProcessor.getInstance().newCommand(() -> {
+                    ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
+                    OrderEntry[] orderEntries = rootManager.getOrderEntries();
+                    ModifiableRootModel model = rootManager.getModifiableModel();
+                    OrderEntry[] modifiableEntries = model.getOrderEntries();
+                    for (int i = 0; i < orderEntries.length; i++) {
+                        OrderEntry entry = orderEntries[i];
+                        if (entry instanceof LibraryOrderEntry libraryOrderEntry && libraryOrderEntry.getLibrary() == orderEntry.getLibrary()) {
+                            model.removeOrderEntry(modifiableEntries[i]);
                         }
-                        model.commit();
-                    };
-                    ApplicationManager.getApplication().runWriteAction(action);
-                },
-                title.get(),
-                null
-            );
+                    }
+                    model.commit();
+                })
+                .withProject(module.getProject())
+                .withName(title)
+                .executeInWriteAction();
         }
 
         @Nullable
+        @RequiredReadAction
         private Module[] getSelectedModules() {
             final AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
             if (viewPane == null) {
@@ -1309,24 +1293,23 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
             final Object[] elements = viewPane.getSelectedElements();
             ArrayList<Module> result = new ArrayList<>();
             for (Object element : elements) {
-                if (element instanceof Module) {
-                    final Module module = (Module)element;
+                if (element instanceof Module module) {
                     if (!module.isDisposed()) {
                         result.add(module);
                     }
                 }
-                else if (element instanceof ModuleGroup) {
-                    Collection<Module> modules = ((ModuleGroup)element).modulesInGroup(myProject, true);
+                else if (element instanceof ModuleGroup moduleGroup) {
+                    Collection<Module> modules = moduleGroup.modulesInGroup(myProject, true);
                     result.addAll(modules);
                 }
-                else if (element instanceof PsiDirectory) {
-                    Module module = moduleBySingleContentRoot(((PsiDirectory)element).getVirtualFile());
+                else if (element instanceof PsiDirectory directory) {
+                    Module module = moduleBySingleContentRoot(directory.getVirtualFile());
                     if (module != null) {
                         result.add(module);
                     }
                 }
-                else if (element instanceof VirtualFile) {
-                    Module module = moduleBySingleContentRoot((VirtualFile)element);
+                else if (element instanceof VirtualFile virtualFile) {
+                    Module module = moduleBySingleContentRoot(virtualFile);
                     if (module != null) {
                         result.add(module);
                     }
@@ -1362,6 +1345,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     }
 
     @Nonnull
+    @SuppressWarnings("unchecked")
     private <T> List<T> getSelectedElements(@Nonnull Class<T> klass) {
         List<T> result = new ArrayList<>();
         final AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
@@ -1444,7 +1428,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
         for (Map.Entry<String, Boolean> entry : optionsForPanes.entrySet()) {
             final String key = entry.getKey();
             if (key != null) { //SCR48267
-                e.setAttribute(key, Boolean.toString(entry.getValue().booleanValue()));
+                e.setAttribute(key, Boolean.toString(entry.getValue()));
             }
         }
 
@@ -1757,7 +1741,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
 
     private static boolean getPaneOptionValue(@Nonnull Map<String, Boolean> optionsMap, String paneId, boolean defaultValue) {
         final Boolean value = optionsMap.get(paneId);
-        return value == null ? defaultValue : value.booleanValue();
+        return value == null ? defaultValue : value;
     }
 
     private class HideEmptyMiddlePackagesAction extends PaneOptionAction {
@@ -1788,7 +1772,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
 
         @RequiredUIAccess
         @Override
-        public void update(AnActionEvent e) {
+        public void update(@Nonnull AnActionEvent e) {
             super.update(e);
             final Presentation presentation = e.getPresentation();
             Project project = e.getData(Project.KEY);
@@ -1880,8 +1864,8 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
                 return;
             }
             if (isAutoscrollFromSource(getCurrentViewId())) {
-                if (fileEditor instanceof TextEditor) {
-                    Editor editor = ((TextEditor)fileEditor).getEditor();
+                if (fileEditor instanceof TextEditor textEditor) {
+                    Editor editor = textEditor.getEditor();
                     selectElementAtCaretNotLosingFocus(editor);
                 }
                 else {
@@ -1908,6 +1892,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
             }
         }
 
+        @RequiredReadAction
         public void scrollFromSource() {
             final FileEditorManager fileEditorManager = FileEditorManager.getInstance(myProject);
             final Editor selectedTextEditor = fileEditorManager.getSelectedTextEditor();
@@ -1917,8 +1902,8 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
             }
             final FileEditor[] editors = fileEditorManager.getSelectedEditors();
             for (FileEditor fileEditor : editors) {
-                if (fileEditor instanceof TextEditor) {
-                    Editor editor = ((TextEditor)fileEditor).getEditor();
+                if (fileEditor instanceof TextEditor textEditor) {
+                    Editor editor = textEditor.getEditor();
                     selectElementAtCaret(editor);
                     return;
                 }
@@ -1939,6 +1924,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
             }
         }
 
+        @RequiredReadAction
         private void selectElementAtCaret(@Nonnull Editor editor) {
             final PsiFile file = PsiDocumentManager.getInstance(myProject).getPsiFile(editor.getDocument());
             if (file == null) {

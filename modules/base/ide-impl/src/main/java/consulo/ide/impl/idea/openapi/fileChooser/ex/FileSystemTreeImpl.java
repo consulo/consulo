@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.fileChooser.ex;
 
-import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -12,23 +11,21 @@ import consulo.ide.impl.idea.openapi.fileChooser.tree.*;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.project.Project;
-import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.*;
+import consulo.ui.ex.localize.UILocalize;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -76,7 +73,10 @@ public class FileSystemTreeImpl implements FileSystemTree {
         AbstractTreeModel fileTreeModel;
         if (renderer == null) {
             renderer = createFileRender();
-            fileTreeModel = new FileTreeModel(descriptor, new FileRefresher(true, 3, () -> IdeaModalityState.stateForComponent(tree)));
+            fileTreeModel = new FileTreeModel(
+                descriptor,
+                new FileRefresher(true, 3, () -> IdeaModalityState.stateForComponent(tree))
+            );
         }
         else {
             FileTreeStructure treeStructure = new FileTreeStructure(project, descriptor);
@@ -118,8 +118,8 @@ public class FileSystemTreeImpl implements FileSystemTree {
                 ) {
                     super.customizeCellRenderer(tree, value, selected, expanded, leaf, row, hasFocus);
                     final Object userObject = ((DefaultMutableTreeNode)value).getUserObject();
-                    if (userObject instanceof FileNodeDescriptor) {
-                        String comment = ((FileNodeDescriptor)userObject).getComment();
+                    if (userObject instanceof FileNodeDescriptor fileNodeDescriptor) {
+                        String comment = fileNodeDescriptor.getComment();
                         if (comment != null) {
                             append(comment, SimpleTextAttributes.REGULAR_ATTRIBUTES);
                         }
@@ -255,36 +255,27 @@ public class FileSystemTreeImpl implements FileSystemTree {
     @RequiredUIAccess
     public Exception createNewFolder(final VirtualFile parentDirectory, final String newFolderName) {
         final Exception[] failReason = new Exception[]{null};
-        CommandProcessor.getInstance().executeCommand(
-            myProject,
-            new Runnable() {
-                @Override
-                public void run() {
-                    ApplicationManager.getApplication().runWriteAction(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                VirtualFile parent = parentDirectory;
-                                for (String name : StringUtil.tokenize(newFolderName, "\\/")) {
-                                    VirtualFile folder = parent.createChildDirectory(this, name);
-                                    updateTree();
-                                    select(folder, null);
-                                    parent = folder;
-                                }
-                            }
-                            catch (IOException e) {
-                                failReason[0] = e;
-                            }
-                        }
-                    });
+        CommandProcessor.getInstance().newCommand(() -> {
+                try {
+                    VirtualFile parent = parentDirectory;
+                    for (String name : StringUtil.tokenize(newFolderName, "\\/")) {
+                        VirtualFile folder = parent.createChildDirectory(this, name);
+                        updateTree();
+                        select(folder, null);
+                        parent = folder;
+                    }
                 }
-            },
-            UIBundle.message("file.chooser.create.new.folder.command.name"),
-            null
-        );
+                catch (IOException e) {
+                    failReason[0] = e;
+                }
+            })
+            .withProject(myProject)
+            .withName(UILocalize.fileChooserCreateNewFolderCommandName())
+            .executeInWriteAction();
         return failReason[0];
     }
 
+    @RequiredUIAccess
     public Exception createNewFile(
         final VirtualFile parentDirectory,
         final String newFileName,
@@ -292,33 +283,23 @@ public class FileSystemTreeImpl implements FileSystemTree {
         final String initialContent
     ) {
         final Exception[] failReason = new Exception[]{null};
-        CommandProcessor.getInstance().executeCommand(
-            myProject,
-            new Runnable() {
-                @Override
-                public void run() {
-                    ApplicationManager.getApplication().runWriteAction(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                final String newFileNameWithExtension = newFileName.endsWith('.' + fileType.getDefaultExtension())
-                                    ? newFileName
-                                    : newFileName + '.' + fileType.getDefaultExtension();
-                                final VirtualFile file = parentDirectory.createChildData(this, newFileNameWithExtension);
-                                VfsUtil.saveText(file, initialContent != null ? initialContent : "");
-                                updateTree();
-                                select(file, null);
-                            }
-                            catch (IOException e) {
-                                failReason[0] = e;
-                            }
-                        }
-                    });
+        CommandProcessor.getInstance().newCommand(() -> {
+                try {
+                    final String newFileNameWithExtension = newFileName.endsWith('.' + fileType.getDefaultExtension())
+                        ? newFileName
+                        : newFileName + '.' + fileType.getDefaultExtension();
+                    final VirtualFile file = parentDirectory.createChildData(this, newFileNameWithExtension);
+                    VfsUtil.saveText(file, initialContent != null ? initialContent : "");
+                    updateTree();
+                    select(file, null);
                 }
-            },
-            UIBundle.message("file.chooser.create.new.file.command.name"),
-            null
-        );
+                catch (IOException e) {
+                    failReason[0] = e;
+                }
+            })
+            .withProject(myProject)
+            .withName(UILocalize.fileChooserCreateNewFileCommandName())
+            .executeInWriteAction();
         return failReason[0];
     }
 
@@ -374,28 +355,16 @@ public class FileSystemTreeImpl implements FileSystemTree {
 
     private boolean isLeaf(TreePath path) {
         Object component = path.getLastPathComponent();
-        if (component instanceof DefaultMutableTreeNode) {
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode)component;
-            return node.isLeaf();
-        }
-        return myAsyncTreeModel.isLeaf(component);
+        return component instanceof DefaultMutableTreeNode node ? node.isLeaf() : myAsyncTreeModel.isLeaf(component);
     }
 
     public static VirtualFile getVirtualFile(TreePath path) {
         Object component = path.getLastPathComponent();
-        if (component instanceof DefaultMutableTreeNode) {
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode)component;
-            Object userObject = node.getUserObject();
-            if (userObject instanceof FileNodeDescriptor) {
-                FileNodeDescriptor descriptor = (FileNodeDescriptor)userObject;
-                return descriptor.getElement().getFile();
-            }
+        if (component instanceof DefaultMutableTreeNode node
+            && node.getUserObject() instanceof FileNodeDescriptor descriptor) {
+            return descriptor.getElement().getFile();
         }
-        if (component instanceof FileNode) {
-            FileNode node = (FileNode)component;
-            return node.getFile();
-        }
-        return null;
+        return component instanceof FileNode node ? node.getFile() : null;
     }
 
     @Override

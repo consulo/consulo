@@ -4,16 +4,17 @@
  */
 package consulo.ide.impl.idea.codeInspection.ui.actions;
 
-import consulo.application.ApplicationManager;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
 import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextImpl;
 import consulo.ide.impl.idea.codeInspection.ex.InspectionManagerEx;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionTreeNode;
 import consulo.ide.impl.idea.codeInspection.ui.ProblemDescriptionNode;
 import consulo.ide.impl.idea.codeInspection.ui.RefElementNode;
 import consulo.language.editor.inspection.CommonProblemDescriptor;
-import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.editor.inspection.SuppressIntentionActionFromFix;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.inspection.reference.RefElement;
 import consulo.language.editor.inspection.reference.RefEntity;
 import consulo.language.editor.inspection.scheme.InspectionManager;
@@ -26,6 +27,7 @@ import consulo.language.psi.PsiModificationTracker;
 import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -33,7 +35,6 @@ import consulo.ui.ex.action.CompactActionGroup;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.Pair;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -45,7 +46,7 @@ import java.util.Set;
 public class SuppressActionWrapper extends ActionGroup implements CompactActionGroup {
     private final Project myProject;
     private final InspectionManagerEx myManager;
-    private final Set<InspectionTreeNode> myNodesToSuppress = new HashSet<InspectionTreeNode>();
+    private final Set<InspectionTreeNode> myNodesToSuppress = new HashSet<>();
     private final InspectionToolWrapper myToolWrapper;
     private static final Logger LOG = Logger.getInstance(SuppressActionWrapper.class);
 
@@ -54,7 +55,7 @@ public class SuppressActionWrapper extends ActionGroup implements CompactActionG
         @Nonnull final InspectionToolWrapper toolWrapper,
         @Nonnull final TreePath[] paths
     ) {
-        super(InspectionsBundle.message("suppress.inspection.problem"), false);
+        super(InspectionLocalize.suppressInspectionProblem(), false);
         myProject = project;
         myManager = (InspectionManagerEx)InspectionManager.getInstance(myProject);
         for (TreePath path : paths) {
@@ -88,6 +89,7 @@ public class SuppressActionWrapper extends ActionGroup implements CompactActionG
         return actions;
     }
 
+    @RequiredUIAccess
     private boolean suppress(
         final PsiElement element,
         final CommonProblemDescriptor descriptor,
@@ -95,65 +97,65 @@ public class SuppressActionWrapper extends ActionGroup implements CompactActionG
         final RefEntity refEntity
     ) {
         final PsiModificationTracker tracker = PsiManager.getInstance(myProject).getModificationTracker();
-        ApplicationManager.getApplication().runWriteAction(new Runnable() {
-            @Override
-            public void run() {
-                PsiDocumentManager.getInstance(myProject).commitAllDocuments();
-                try {
-                    final long startModificationCount = tracker.getModificationCount();
+        Application.get().runWriteAction(() -> {
+            PsiDocumentManager.getInstance(myProject).commitAllDocuments();
+            try {
+                final long startModificationCount = tracker.getModificationCount();
 
-                    PsiElement container = null;
-                    if (action instanceof SuppressIntentionActionFromFix) {
-                        container = ((SuppressIntentionActionFromFix)action).getContainer(element);
-                    }
-                    if (container == null) {
-                        container = element;
-                    }
+                PsiElement container = null;
+                if (action instanceof SuppressIntentionActionFromFix suppressIntentionActionFromFix) {
+                    container = suppressIntentionActionFromFix.getContainer(element);
+                }
+                if (container == null) {
+                    container = element;
+                }
 
-                    if (action.isAvailable(myProject, null, element)) {
-                        action.invoke(myProject, null, element);
-                    }
-                    if (startModificationCount != tracker.getModificationCount()) {
-                        final Set<GlobalInspectionContextImpl> globalInspectionContexts = myManager.getRunningContexts();
-                        for (GlobalInspectionContextImpl context : globalInspectionContexts) {
-                            context.ignoreElement(myToolWrapper.getTool(), container);
-                            if (descriptor != null) {
-                                context.getPresentation(myToolWrapper).ignoreCurrentElementProblem(refEntity, descriptor);
-                            }
+                if (action.isAvailable(myProject, null, element)) {
+                    action.invoke(myProject, null, element);
+                }
+                if (startModificationCount != tracker.getModificationCount()) {
+                    final Set<GlobalInspectionContextImpl> globalInspectionContexts = myManager.getRunningContexts();
+                    for (GlobalInspectionContextImpl context : globalInspectionContexts) {
+                        context.ignoreElement(myToolWrapper.getTool(), container);
+                        if (descriptor != null) {
+                            context.getPresentation(myToolWrapper).ignoreCurrentElementProblem(refEntity, descriptor);
                         }
                     }
                 }
-                catch (IncorrectOperationException e1) {
-                    LOG.error(e1);
-                }
+            }
+            catch (IncorrectOperationException e1) {
+                LOG.error(e1);
             }
         });
         return true;
     }
 
     @Override
-    public void update(final AnActionEvent e) {
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent e) {
         super.update(e);
         e.getPresentation().setEnabled(InspectionManagerEx.getSuppressActions(myToolWrapper) != null);
     }
 
+    @RequiredReadAction
     private static Pair<PsiElement, CommonProblemDescriptor> getContentToSuppress(InspectionTreeNode node) {
         RefElement refElement = null;
         CommonProblemDescriptor descriptor = null;
-        if (node instanceof RefElementNode) {
-            final RefElementNode elementNode = (RefElementNode)node;
+        if (node instanceof RefElementNode elementNode) {
             final RefEntity element = elementNode.getElement();
-            refElement = element instanceof RefElement ? (RefElement)element : null;
+            refElement = element instanceof RefElement refElement1 ? refElement1 : null;
             descriptor = elementNode.getProblem();
         }
-        else if (node instanceof ProblemDescriptionNode) {
-            final ProblemDescriptionNode descriptionNode = (ProblemDescriptionNode)node;
+        else if (node instanceof ProblemDescriptionNode descriptionNode) {
             final RefEntity element = descriptionNode.getElement();
-            refElement = element instanceof RefElement ? (RefElement)element : null;
+            refElement = element instanceof RefElement refElement1 ? refElement1 : null;
             descriptor = descriptionNode.getDescriptor();
         }
-        PsiElement element =
-            descriptor instanceof ProblemDescriptor ? ((ProblemDescriptor)descriptor).getPsiElement() : refElement != null ? refElement.getPsiElement() : null;
+        PsiElement element = descriptor instanceof ProblemDescriptor problemDescriptor
+            ? problemDescriptor.getPsiElement()
+            : refElement != null
+            ? refElement.getPsiElement()
+            : null;
         return Pair.create(element, descriptor);
     }
 
@@ -166,54 +168,48 @@ public class SuppressActionWrapper extends ActionGroup implements CompactActionG
         }
 
         @Override
-        public void actionPerformed(final AnActionEvent e) {
-            ApplicationManager.getApplication().invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    CommandProcessor.getInstance().executeCommand(
-                        myProject,
-                        new Runnable() {
-                            @Override
-                            public void run() {
-                                for (InspectionTreeNode node : myNodesToSuppress) {
-                                    final Pair<PsiElement, CommonProblemDescriptor> content = getContentToSuppress(node);
-                                    if (content.first == null) {
-                                        break;
-                                    }
-                                    final PsiElement element = content.first;
-                                    RefEntity refEntity = null;
-                                    if (node instanceof RefElementNode) {
-                                        refEntity = ((RefElementNode)node).getElement();
-                                    }
-                                    else if (node instanceof ProblemDescriptionNode) {
-                                        refEntity = ((ProblemDescriptionNode)node).getElement();
-                                    }
-                                    if (!suppress(element, content.second, mySuppressAction, refEntity)) {
-                                        break;
-                                    }
-                                }
-                                final Set<GlobalInspectionContextImpl> globalInspectionContexts = myManager.getRunningContexts();
-                                for (GlobalInspectionContextImpl context : globalInspectionContexts) {
-                                    context.refreshViews();
-                                }
-                                CommandProcessor.getInstance().markCurrentCommandAsGlobal(myProject);
-                            }
-                        },
-                        getTemplatePresentation().getText(),
-                        null
-                    );
-                }
-            });
+        @RequiredUIAccess
+        public void actionPerformed(@Nonnull final AnActionEvent e) {
+            Application.get().invokeLater(() -> CommandProcessor.getInstance().newCommand(() -> {
+                    for (InspectionTreeNode node : myNodesToSuppress) {
+                        final Pair<PsiElement, CommonProblemDescriptor> content = getContentToSuppress(node);
+                        if (content.first == null) {
+                            break;
+                        }
+                        final PsiElement element = content.first;
+                        RefEntity refEntity = null;
+                        if (node instanceof RefElementNode refElementNode) {
+                            refEntity = refElementNode.getElement();
+                        }
+                        else if (node instanceof ProblemDescriptionNode problemDescriptionNode) {
+                            refEntity = problemDescriptionNode.getElement();
+                        }
+                        if (!suppress(element, content.second, mySuppressAction, refEntity)) {
+                            break;
+                        }
+                    }
+                    final Set<GlobalInspectionContextImpl> globalInspectionContexts = myManager.getRunningContexts();
+                    for (GlobalInspectionContextImpl context : globalInspectionContexts) {
+                        context.refreshViews();
+                    }
+                    CommandProcessor.getInstance().markCurrentCommandAsGlobal(myProject);
+                })
+                .withProject(myProject)
+                .withName(getTemplatePresentation().getTextValue())
+                .execute()
+            );
         }
 
         @Override
-        public void update(final AnActionEvent e) {
+        @RequiredUIAccess
+        public void update(@Nonnull AnActionEvent e) {
             super.update(e);
             if (!isAvailable()) {
                 e.getPresentation().setVisible(false);
             }
         }
 
+        @RequiredReadAction
         public boolean isAvailable() {
             for (InspectionTreeNode node : myNodesToSuppress) {
                 final Pair<PsiElement, CommonProblemDescriptor> content = getContentToSuppress(node);

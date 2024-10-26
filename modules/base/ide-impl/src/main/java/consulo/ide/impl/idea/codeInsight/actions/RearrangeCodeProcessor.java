@@ -23,9 +23,10 @@ import consulo.document.util.TextRange;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.psi.codeStyle.arrangement.engine.ArrangementEngine;
 import consulo.language.codeStyle.arrangement.Rearranger;
-import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.undoRedo.CommandProcessor;
@@ -37,28 +38,28 @@ import java.util.Collection;
 import java.util.concurrent.FutureTask;
 
 public class RearrangeCodeProcessor extends AbstractLayoutCodeProcessor {
-    public static final String COMMAND_NAME = "Rearrange code";
-    public static final String PROGRESS_TEXT = CodeInsightBundle.message("process.rearrange.code");
+    public static final LocalizeValue COMMAND_NAME = CodeInsightLocalize.commandRearrangeCode();
+    public static final LocalizeValue PROGRESS_TEXT = CodeInsightLocalize.processRearrangeCode();
 
     private static final Logger LOG = Logger.getInstance(RearrangeCodeProcessor.class);
     private SelectionModel mySelectionModel;
 
     public RearrangeCodeProcessor(@Nonnull AbstractLayoutCodeProcessor previousProcessor) {
-        super(previousProcessor, COMMAND_NAME, PROGRESS_TEXT);
+        super(previousProcessor, COMMAND_NAME.get(), PROGRESS_TEXT.get());
     }
 
     public RearrangeCodeProcessor(@Nonnull AbstractLayoutCodeProcessor previousProcessor, @Nonnull SelectionModel selectionModel) {
-        super(previousProcessor, COMMAND_NAME, PROGRESS_TEXT);
+        super(previousProcessor, COMMAND_NAME.get(), PROGRESS_TEXT.get());
         mySelectionModel = selectionModel;
     }
 
     public RearrangeCodeProcessor(@Nonnull PsiFile file, @Nonnull SelectionModel selectionModel) {
-        super(file.getProject(), file, PROGRESS_TEXT, COMMAND_NAME, false);
+        super(file.getProject(), file, PROGRESS_TEXT.get(), COMMAND_NAME.get(), false);
         mySelectionModel = selectionModel;
     }
 
     public RearrangeCodeProcessor(@Nonnull PsiFile file) {
-        super(file.getProject(), file, PROGRESS_TEXT, COMMAND_NAME, false);
+        super(file.getProject(), file, PROGRESS_TEXT.get(), COMMAND_NAME.get(), false);
     }
 
     @RequiredReadAction
@@ -68,7 +69,7 @@ public class RearrangeCodeProcessor extends AbstractLayoutCodeProcessor {
         @Nonnull String commandName,
         @Nullable Runnable postRunnable
     ) {
-        super(project, files, PROGRESS_TEXT, commandName, postRunnable, false);
+        super(project, files, PROGRESS_TEXT.get(), commandName, postRunnable, false);
     }
 
     @Nonnull
@@ -82,9 +83,11 @@ public class RearrangeCodeProcessor extends AbstractLayoutCodeProcessor {
                 if (document != null && Rearranger.forLanguage(file.getLanguage()) != null) {
                     PsiDocumentManager.getInstance(myProject).doPostponedOperationsAndUnblockDocument(document);
                     PsiDocumentManager.getInstance(myProject).commitDocument(document);
-                    Runnable command = prepareRearrangeCommand(file, ranges);
                     try {
-                        CommandProcessor.getInstance().executeCommand(myProject, command, COMMAND_NAME, null);
+                        CommandProcessor.getInstance().newCommand(prepareRearrangeCommand(file, ranges))
+                            .withProject(myProject)
+                            .withName(COMMAND_NAME)
+                            .execute();
                     }
                     finally {
                         PsiDocumentManager.getInstance(myProject).commitDocument(document);
@@ -113,10 +116,8 @@ public class RearrangeCodeProcessor extends AbstractLayoutCodeProcessor {
     }
 
     @RequiredReadAction
-    public Collection<TextRange> getRangesToFormat(
-        @Nonnull PsiFile file,
-        boolean processChangedTextOnly
-    ) throws FilesTooBigForDiffException {
+    public Collection<TextRange> getRangesToFormat(@Nonnull PsiFile file, boolean processChangedTextOnly)
+        throws FilesTooBigForDiffException {
         if (mySelectionModel != null) {
             return getSelectedRanges(mySelectionModel);
         }

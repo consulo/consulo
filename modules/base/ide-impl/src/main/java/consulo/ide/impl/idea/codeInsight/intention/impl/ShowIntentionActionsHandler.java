@@ -2,7 +2,8 @@
 
 package consulo.ide.impl.idea.codeInsight.intention.impl;
 
-import consulo.application.ApplicationManager;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
 import consulo.application.WriteAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.util.registry.Registry;
@@ -34,7 +35,9 @@ import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ThreeState;
@@ -46,16 +49,17 @@ import jakarta.annotation.Nullable;
  * @author mike
  */
 public class ShowIntentionActionsHandler implements CodeInsightActionHandler {
-
     @Override
+    @RequiredUIAccess
     public void invoke(@Nonnull final Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
         invoke(project, editor, file, false);
     }
 
+    @RequiredUIAccess
     public void invoke(@Nonnull final Project project, @Nonnull Editor editor, @Nonnull PsiFile file, boolean showFeedbackOnEmptyMenu) {
         PsiDocumentManager.getInstance(project).commitAllDocuments();
-        if (editor instanceof EditorWindow) {
-            editor = ((EditorWindow)editor).getDelegate();
+        if (editor instanceof EditorWindow editorWindow) {
+            editor = editorWindow.getDelegate();
             file = InjectedLanguageManager.getInstance(file.getProject()).getTopLevelFile(file);
         }
 
@@ -88,6 +92,7 @@ public class ShowIntentionActionsHandler implements CodeInsightActionHandler {
         showIntentionHint(project, finalEditor, finalFile, intentions, showFeedbackOnEmptyMenu);
     }
 
+    @RequiredUIAccess
     protected void showIntentionHint(
         @Nonnull Project project,
         @Nonnull Editor editor,
@@ -115,6 +120,7 @@ public class ShowIntentionActionsHandler implements CodeInsightActionHandler {
         return false;
     }
 
+    @RequiredReadAction
     public static boolean availableFor(@Nonnull PsiFile psiFile, @Nonnull Editor editor, @Nonnull IntentionAction action) {
         if (!psiFile.isValid()) {
             return false;
@@ -123,9 +129,8 @@ public class ShowIntentionActionsHandler implements CodeInsightActionHandler {
         try {
             Project project = psiFile.getProject();
             action = IntentionActionDelegate.unwrap(action);
-            if (action instanceof SuppressIntentionActionFromFix) {
-                final ThreeState shouldBeAppliedToInjectionHost =
-                    ((SuppressIntentionActionFromFix)action).isShouldBeAppliedToInjectionHost();
+            if (action instanceof SuppressIntentionActionFromFix suppressIntentionActionFromFix) {
+                final ThreeState shouldBeAppliedToInjectionHost = suppressIntentionActionFromFix.isShouldBeAppliedToInjectionHost();
                 if (editor instanceof EditorWindow && shouldBeAppliedToInjectionHost == ThreeState.YES) {
                     return false;
                 }
@@ -134,8 +139,7 @@ public class ShowIntentionActionsHandler implements CodeInsightActionHandler {
                 }
             }
 
-            if (action instanceof PsiElementBaseIntentionAction) {
-                PsiElementBaseIntentionAction psiAction = (PsiElementBaseIntentionAction)action;
+            if (action instanceof PsiElementBaseIntentionAction psiAction) {
                 if (!psiAction.checkFile(psiFile)) {
                     return false;
                 }
@@ -183,6 +187,7 @@ public class ShowIntentionActionsHandler implements CodeInsightActionHandler {
         return Pair.create(fileToApply, editorToApply);
     }
 
+    @RequiredUIAccess
     public static boolean chooseActionAndInvoke(
         @Nonnull PsiFile hostFile,
         @Nonnull final Editor hostEditor,
@@ -193,6 +198,7 @@ public class ShowIntentionActionsHandler implements CodeInsightActionHandler {
         return chooseActionAndInvoke(hostFile, hostEditor, action, text, project);
     }
 
+    @RequiredUIAccess
     static boolean chooseActionAndInvoke(
         @Nonnull PsiFile hostFile,
         @Nullable final Editor hostEditor,
@@ -210,7 +216,10 @@ public class ShowIntentionActionsHandler implements CodeInsightActionHandler {
             return false;
         }
 
-        CommandProcessor.getInstance().executeCommand(project, () -> invokeIntention(action, pair.second, pair.first), text, null);
+        CommandProcessor.getInstance().newCommand(() -> invokeIntention(action, pair.second, pair.first))
+            .withProject(project)
+            .withName(LocalizeValue.ofNullable(text))
+            .execute();
 
         checkPsiTextConsistency(hostFile);
 
@@ -219,7 +228,7 @@ public class ShowIntentionActionsHandler implements CodeInsightActionHandler {
 
     private static void checkPsiTextConsistency(@Nonnull PsiFile hostFile) {
         if (Registry.is("ide.check.stub.text.consistency")
-            || ApplicationManager.getApplication().isUnitTestMode() && !ApplicationInfoImpl.isInPerformanceTest()) {
+            || Application.get().isUnitTestMode() && !ApplicationInfoImpl.isInPerformanceTest()) {
             if (hostFile.isValid()) {
                 StubTextInconsistencyException.checkStubTextConsistency(hostFile);
             }

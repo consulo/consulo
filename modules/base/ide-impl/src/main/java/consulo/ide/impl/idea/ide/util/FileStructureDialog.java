@@ -16,11 +16,13 @@
 
 package consulo.ide.impl.idea.ide.util;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.fileEditor.structureView.StructureViewModel;
@@ -31,19 +33,20 @@ import consulo.ide.impl.idea.ide.commander.CommanderPanel;
 import consulo.ide.impl.idea.ide.commander.ProjectListBuilder;
 import consulo.ide.impl.idea.ide.structureView.newStructureView.TreeModelWrapper;
 import consulo.ide.impl.idea.ide.util.treeView.smartTree.SmartTreeStructure;
-import consulo.fileEditor.history.IdeDocumentHistory;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.structureView.PsiStructureViewFactory;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
-import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.project.ui.wm.dock.DockManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchBase;
@@ -52,7 +55,7 @@ import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -154,12 +157,7 @@ public class FileStructureDialog extends DialogWrapper {
 
         PsiDocumentManager.getInstance(myProject).commitAllDocuments();
 
-        Object elementAtCursor = myTreeModel.getCurrentEditorElement();
-        if (elementAtCursor instanceof PsiElement) {
-            return (PsiElement)elementAtCursor;
-        }
-
-        return null;
+        return myTreeModel.getCurrentEditorElement() instanceof PsiElement elementAtCursor ? elementAtCursor : null;
     }
 
     @Override
@@ -178,10 +176,10 @@ public class FileStructureDialog extends DialogWrapper {
                 }
             }
 
-            if (myBaseTreeModel instanceof ProvidingTreeModel) {
-                for (NodeProvider provider : ((ProvidingTreeModel)myBaseTreeModel).getNodeProviders()) {
-                    if (provider instanceof FileStructureNodeProvider) {
-                        fileStructureNodeProviders.add((FileStructureNodeProvider)provider);
+            if (myBaseTreeModel instanceof ProvidingTreeModel providingTreeModel) {
+                for (NodeProvider provider : providingTreeModel.getNodeProviders()) {
+                    if (provider instanceof FileStructureNodeProvider fileStructureNodeProvider) {
+                        fileStructureNodeProviders.add(fileStructureNodeProvider);
                     }
                 }
             }
@@ -256,9 +254,10 @@ public class FileStructureDialog extends DialogWrapper {
         return panel;
     }
 
+    @RequiredReadAction
     protected boolean isShowRoot(final PsiFile psiFile) {
         StructureViewBuilder viewBuilder = PsiStructureViewFactory.createBuilderForFile(psiFile);
-        return viewBuilder instanceof TreeBasedStructureViewBuilder && ((TreeBasedStructureViewBuilder)viewBuilder).isRootNodeShown();
+        return viewBuilder instanceof TreeBasedStructureViewBuilder treeBasedStructureViewBuilder && treeBasedStructureViewBuilder.isRootNodeShown();
     }
 
     private void addNarrowDownCheckbox(final JPanel panel) {
@@ -281,15 +280,19 @@ public class FileStructureDialog extends DialogWrapper {
     }
 
     private void addCheckbox(final JPanel panel, final TreeAction action) {
-        String text = action instanceof FileStructureFilter ? ((FileStructureFilter)action).getCheckBoxText() :
-            action instanceof FileStructureNodeProvider ? ((FileStructureNodeProvider)action).getCheckBoxText() : null;
+        String text = action instanceof FileStructureFilter fileStructureFilter
+            ? fileStructureFilter.getCheckBoxText()
+            : action instanceof FileStructureNodeProvider fileStructureNodeProvider
+            ? fileStructureNodeProvider.getCheckBoxText()
+            : null;
 
         if (text == null) {
             return;
         }
 
-        Shortcut[] shortcuts = action instanceof FileStructureFilter ?
-            ((FileStructureFilter)action).getShortcut() : ((FileStructureNodeProvider)action).getShortcut();
+        Shortcut[] shortcuts = action instanceof FileStructureFilter fileStructureFilter
+            ? fileStructureFilter.getShortcut()
+            : ((FileStructureNodeProvider)action).getShortcut();
 
 
         final JCheckBox chkFilter = new JCheckBox();
@@ -298,12 +301,9 @@ public class FileStructureDialog extends DialogWrapper {
             PsiElement currentParent = null;
             if (builder != null) {
                 final AbstractTreeNode parentNode = builder.getParentNode();
-                final Object value = parentNode.getValue();
-                if (value instanceof StructureViewTreeElement) {
-                    final Object elementValue = ((StructureViewTreeElement)value).getValue();
-                    if (elementValue instanceof PsiElement) {
-                        currentParent = (PsiElement)elementValue;
-                    }
+                if (parentNode.getValue() instanceof StructureViewTreeElement structureViewTreeElement
+                    && structureViewTreeElement.getValue() instanceof PsiElement elementValue) {
+                    currentParent = elementValue;
                 }
             }
             final boolean state = chkFilter.isSelected();
@@ -395,19 +395,18 @@ public class FileStructureDialog extends DialogWrapper {
                 && ((String)evt.getNewValue()).length() < ((String)evt.getOldValue()).length();
         }
 
+        @RequiredUIAccess
         @Override
         public boolean navigateSelectedElement() {
-            final Ref<Boolean> succeeded = new Ref<>();
+            final SimpleReference<Boolean> succeeded = new SimpleReference<>();
             final CommandProcessor commandProcessor = CommandProcessor.getInstance();
-            commandProcessor.executeCommand(
-                myProject,
-                () -> {
+            commandProcessor.newCommand(() -> {
                     succeeded.set(MyCommanderPanel.super.navigateSelectedElement());
                     IdeDocumentHistory.getInstance(myProject).includeCurrentCommandAsNavigation();
-                },
-                "Navigate",
-                null
-            );
+                })
+                .withProject(myProject)
+                .withName(LocalizeValue.localizeTODO("Navigate"))
+                .execute();
             if (succeeded.get()) {
                 close(CANCEL_EXIT_CODE);
             }
@@ -418,8 +417,8 @@ public class FileStructureDialog extends DialogWrapper {
         public Object getData(@Nonnull Key dataId) {
             Object selectedElement = myCommanderPanel.getSelectedValue();
 
-            if (selectedElement instanceof TreeElement) {
-                selectedElement = ((StructureViewTreeElement)selectedElement).getValue();
+            if (selectedElement instanceof StructureViewTreeElement treeElement) {
+                selectedElement = treeElement.getValue();
             }
 
             if (Navigatable.KEY == dataId) {
@@ -471,13 +470,11 @@ public class FileStructureDialog extends DialogWrapper {
             SpeedSearchComparator speedSearchComparator = createSpeedSearchComparator();
 
             for (Object child : childElements) {
-                if (child instanceof AbstractTreeNode) {
-                    Object value = ((AbstractTreeNode)child).getValue();
-                    if (value instanceof TreeElement) {
-                        String name = ((TreeElement)value).getPresentation().getPresentableText();
-                        if (name == null || speedSearchComparator.matchingFragments(enteredPrefix, name) == null) {
-                            continue;
-                        }
+                if (child instanceof AbstractTreeNode treeNode
+                    && treeNode.getValue() instanceof TreeElement treeElement) {
+                    String name = treeElement.getPresentation().getPresentableText();
+                    if (name == null || speedSearchComparator.matchingFragments(enteredPrefix, name) == null) {
+                        continue;
                     }
                 }
                 filteredElements.add(child);

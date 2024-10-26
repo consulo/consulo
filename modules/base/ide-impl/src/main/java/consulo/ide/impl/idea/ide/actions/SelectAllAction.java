@@ -35,14 +35,13 @@ public class SelectAllAction extends TextComponentEditorAction implements DumbAw
 
     private static class Handler extends EditorActionHandler {
         @Override
+        @RequiredUIAccess
         public void execute(@Nonnull final Editor editor, DataContext dataContext) {
-            CommandProcessor processor = CommandProcessor.getInstance();
-            processor.executeCommand(
-                dataContext.getData(Project.KEY),
-                () -> editor.getSelectionModel().setSelection(0, editor.getDocument().getTextLength()),
-                IdeLocalize.commandSelectAll().get(),
-                null
-            );
+            CommandProcessor.getInstance()
+                .newCommand(() -> editor.getSelectionModel().setSelection(0, editor.getDocument().getTextLength()))
+                .withProject(dataContext.getData(Project.KEY))
+                .withName(IdeLocalize.commandSelectAll())
+                .execute();
         }
     }
 

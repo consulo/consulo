@@ -15,17 +15,17 @@
  */
 package consulo.ide.impl.idea.openapi.fileEditor.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.*;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.fileEditor.*;
 import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.event.FileEditorManagerListener;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.fileEditor.text.TextEditorProvider;
-import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.text.TextEditorPsiDataProvider;
-import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.language.editor.highlight.HighlighterFactory;
 import consulo.language.file.light.LightVirtualFile;
@@ -44,13 +44,13 @@ import consulo.ui.ex.ComponentContainer;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jdom.Element;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jdom.Element;
 
 import javax.swing.*;
 import java.awt.*;
@@ -77,7 +77,7 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
             ProjectManagerListener.class,
             new ProjectManagerAdapter() {
                 @Override
-                public void projectClosed(Project project, UIAccess uiAccess) {
+                public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
                     if (project == myProject) {
                         closeAllFiles();
                     }
@@ -86,18 +86,22 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
         );
     }
 
-    @Override
     @Nonnull
+    @Override
+    @RequiredUIAccess
     public Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(
         @Nonnull final VirtualFile file,
         final boolean focusEditor,
         boolean searchForSplitter
     ) {
-        final Ref<Pair<FileEditor[], FileEditorProvider[]>> result = new Ref<>();
-        CommandProcessor.getInstance().executeCommand(myProject, () -> result.set(openFileImpl3(file, focusEditor)), "", null);
+        final SimpleReference<Pair<FileEditor[], FileEditorProvider[]>> result = new SimpleReference<>();
+        CommandProcessor.getInstance().newCommand(() -> result.set(openFileImpl3(file, focusEditor)))
+            .withProject(myProject)
+            .execute();
         return result.get();
     }
 
+    @RequiredUIAccess
     private Pair<FileEditor[], FileEditorProvider[]> openFileImpl3(final VirtualFile file, boolean focusEditor) {
         // for non-text editors. uml, etc
         final FileEditorProvider provider = file.getUserData(FileEditorProvider.KEY);
@@ -113,12 +117,7 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
         Pair<FileEditor[], FileEditorProvider[]> result =
             Pair.create(new FileEditor[]{fileEditor}, new FileEditorProvider[]{fileEditorProvider});
 
-        modifyTabWell(new Runnable() {
-            @Override
-            public void run() {
-                myTestEditorSplitter.openAndFocusTab(file, fileEditor, fileEditorProvider);
-            }
-        });
+        modifyTabWell(() -> myTestEditorSplitter.openAndFocusTab(file, fileEditor, fileEditorProvider));
 
         return result;
     }
@@ -145,12 +144,7 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
         );
         final FileEditorManagerListener publisher = getProject().getMessageBus().syncPublisher(FileEditorManagerListener.class);
 
-        notifyPublisher(new Runnable() {
-            @Override
-            public void run() {
-                publisher.selectionChanged(event);
-            }
-        });
+        notifyPublisher(() -> publisher.selectionChanged(event));
     }
 
     @RequiredUIAccess
@@ -255,7 +249,7 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
 
     @Override
     public void closeAllFiles() {
-        for (VirtualFile file : new LinkedList<VirtualFile>(myVirtualFile2Editor.keySet())) {
+        for (VirtualFile file : new LinkedList<>(myVirtualFile2Editor.keySet())) {
             closeFile(file);
         }
     }
@@ -388,12 +382,7 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
             myActiveFile = null;
         }
 
-        modifyTabWell(new Runnable() {
-            @Override
-            public void run() {
-                myTestEditorSplitter.closeFile(file);
-            }
-        });
+        modifyTabWell(() -> myTestEditorSplitter.closeFile(file));
     }
 
     @Override
@@ -454,6 +443,7 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
     }
 
     @Override
+    @RequiredReadAction
     public Editor openTextEditor(@Nonnull OpenFileDescriptor descriptor, boolean focusEditor) {
         final VirtualFile file = descriptor.getFile();
         Editor editor = myVirtualFile2Editor.get(file);

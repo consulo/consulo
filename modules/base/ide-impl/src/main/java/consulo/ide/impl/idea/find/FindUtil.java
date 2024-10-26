@@ -380,17 +380,15 @@ public class FindUtil {
         });
     }
 
+    @RequiredUIAccess
     public static void searchBack(Project project, FileEditor fileEditor, @Nullable DataContext dataContext) {
-        if (!(fileEditor instanceof TextEditor)) {
-            return;
+        if (fileEditor instanceof TextEditor textEditor) {
+            searchBack(project, textEditor.getEditor(), dataContext);
         }
-        TextEditor textEditor = (TextEditor)fileEditor;
-        Editor editor = textEditor.getEditor();
-
-        searchBack(project, editor, dataContext);
     }
 
-    public static void searchBack(final Project project, final Editor editor, @Nullable DataContext context) {
+    @RequiredUIAccess
+    public static void searchBack(Project project, Editor editor, @Nullable DataContext context) {
         FindManager findManager = FindManager.getInstance(project);
         if (!findManager.findWasPerformed() && !findManager.selectNextOccurrenceWasPerformed()) {
             new IncrementalFindAction().getHandler().execute(editor, context);
@@ -424,16 +422,12 @@ public class FindUtil {
         searchAgain(project, editor, offset, model);
     }
 
+    @RequiredUIAccess
     public static boolean searchAgain(Project project, FileEditor fileEditor, @Nullable DataContext context) {
-        if (!(fileEditor instanceof TextEditor)) {
-            return false;
-        }
-        TextEditor textEditor = (TextEditor)fileEditor;
-        Editor editor = textEditor.getEditor();
-
-        return searchAgain(project, editor, context);
+        return fileEditor instanceof TextEditor textEditor && searchAgain(project, textEditor.getEditor(), context);
     }
 
+    @RequiredUIAccess
     private static boolean searchAgain(final Project project, final Editor editor, @Nullable DataContext context) {
         FindManager findManager = FindManager.getInstance(project);
         if (!findManager.findWasPerformed() && !findManager.selectNextOccurrenceWasPerformed()) {
@@ -456,8 +450,9 @@ public class FindUtil {
         }
         else {
             editor.putUserData(KEY, null);
-            offset =
-                model.isGlobal() && model.isForward() ? editor.getSelectionModel().getSelectionEnd() : editor.getCaretModel().getOffset();
+            offset = model.isGlobal() && model.isForward()
+                ? editor.getSelectionModel().getSelectionEnd()
+                : editor.getCaretModel().getOffset();
             if (!model.isForward() && offset > 0) {
                 offset--;
             }
@@ -483,6 +478,7 @@ public class FindUtil {
         }
     }
 
+    @RequiredUIAccess
     public static void replace(final Project project, final Editor editor) {
         final FindManager findManager = FindManager.getInstance(project);
         final FindModel model = findManager.getFindInFileModel().clone();
@@ -689,26 +685,22 @@ public class FindUtil {
                     caretOffset = newText.length();
                 }
                 final int finalCaretOffset = caretOffset;
-                CommandProcessor.getInstance().executeCommand(
-                    project,
-                    () -> Application.get().runWriteAction(() -> {
+                CommandProcessor.getInstance().newCommand(() -> {
                         document.setText(newText);
                         editor.getCaretModel().moveToOffset(finalCaretOffset);
                         if (model.isGlobal()) {
                             editor.getSelectionModel().removeSelection();
                         }
-                    }),
-                    null,
-                    document
-                );
+                    })
+                    .withProject(project)
+                    .withGroupId(document)
+                    .executeInWriteAction();
             }
-            else {
-                if (reallyReplaced) {
-                    if (caretOffset > document.getTextLength()) {
-                        caretOffset = document.getTextLength();
-                    }
-                    editor.getCaretModel().moveToOffset(caretOffset);
+            else if (reallyReplaced) {
+                if (caretOffset > document.getTextLength()) {
+                    caretOffset = document.getTextLength();
                 }
+                editor.getCaretModel().moveToOffset(caretOffset);
             }
         }
 
@@ -917,6 +909,7 @@ public class FindUtil {
         );
     }
 
+    @RequiredUIAccess
     public static TextRange doReplace(
         final Project project,
         final Document document,
@@ -970,6 +963,7 @@ public class FindUtil {
         return new TextRange(start, end);
     }
 
+    @RequiredUIAccess
     private static int doReplace(
         Project project,
         final Document document,
@@ -978,15 +972,12 @@ public class FindUtil {
         final String stringToReplace
     ) {
         final String converted = StringUtil.convertLineSeparators(stringToReplace);
-        CommandProcessor.getInstance().executeCommand(
-            project,
-            () -> Application.get().runWriteAction(() -> {
+        CommandProcessor.getInstance().newCommand(() -> {
                 //[ven] I doubt converting is a good solution to SCR 21224
                 document.replaceString(startOffset, endOffset, converted);
-            }),
-            null,
-            null
-        );
+            })
+            .withProject(project)
+            .executeInWriteAction();
         return startOffset + converted.length();
     }
 
@@ -1002,6 +993,7 @@ public class FindUtil {
     }
 
     @Nullable
+    @RequiredReadAction
     public static UsageView showInUsageView(
         @Nullable PsiElement sourceElement,
         @Nonnull PsiElement[] targets,
@@ -1028,7 +1020,7 @@ public class FindUtil {
         //noinspection UnusedAssignment
         targets = PsiElement.EMPTY_ARRAY;
 
-        ProgressManager.getInstance().run(new Task.Backgroundable(project, LocalizeValue.localizeTODO("Updating Usage View ...")) {
+        ProgressManager.getInstance().run(new Task.Backgroundable(project, FindLocalize.progressTitleUpdatingUsageView()) {
             @Override
             public void run(@Nonnull ProgressIndicator indicator) {
                 for (final SmartPsiElementPointer pointer : pointers) {

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.projectView;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.HelpManager;
@@ -75,7 +76,7 @@ import java.util.function.Function;
 
 /**
  * @author VISTALL
- * @since 23-Oct-17
+ * @since 2017-10-23
  */
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.UNIFIED)
@@ -97,6 +98,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
         }
 
         @Override
+        @RequiredReadAction
         public Object apply(@Nonnull Key<?> dataId) {
             final AbstractProjectViewPane currentProjectViewPane = getCurrentProjectViewPane();
             if (currentProjectViewPane != null) {
@@ -259,6 +261,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
             return null;
         }
 
+        @RequiredUIAccess
         private void detachLibrary(@Nonnull final LibraryOrderEntry orderEntry, @Nonnull Project project) {
             final Module module = orderEntry.getOwnerModule();
             LocalizeValue message = IdeLocalize.detachLibraryFromModule(orderEntry.getPresentableName(), module.getName());
@@ -267,30 +270,27 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
             if (ret != Messages.OK) {
                 return;
             }
-            CommandProcessor.getInstance().executeCommand(
-                module.getProject(),
-                () -> {
-                    final Runnable action = () -> {
-                        ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
-                        OrderEntry[] orderEntries = rootManager.getOrderEntries();
-                        ModifiableRootModel model = rootManager.getModifiableModel();
-                        OrderEntry[] modifiableEntries = model.getOrderEntries();
-                        for (int i = 0; i < orderEntries.length; i++) {
-                            OrderEntry entry = orderEntries[i];
-                            if (entry instanceof LibraryOrderEntry && ((LibraryOrderEntry)entry).getLibrary() == orderEntry.getLibrary()) {
-                                model.removeOrderEntry(modifiableEntries[i]);
-                            }
+            CommandProcessor.getInstance().newCommand(() -> {
+                    ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
+                    OrderEntry[] orderEntries = rootManager.getOrderEntries();
+                    ModifiableRootModel model = rootManager.getModifiableModel();
+                    OrderEntry[] modifiableEntries = model.getOrderEntries();
+                    for (int i = 0; i < orderEntries.length; i++) {
+                        OrderEntry entry = orderEntries[i];
+                        if (entry instanceof LibraryOrderEntry libraryOrderEntry
+                            && libraryOrderEntry.getLibrary() == orderEntry.getLibrary()) {
+                            model.removeOrderEntry(modifiableEntries[i]);
                         }
-                        model.commit();
-                    };
-                    myProject.getApplication().runWriteAction(action);
-                },
-                title.get(),
-                null
-            );
+                    }
+                    model.commit();
+                })
+                .withProject(module.getProject())
+                .withName(title)
+                .executeInWriteAction();
         }
 
         @Nullable
+        @RequiredReadAction
         private Module[] getSelectedModules() {
             final AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
             if (viewPane == null) {
@@ -299,8 +299,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
             final Object[] elements = viewPane.getSelectedElements();
             ArrayList<Module> result = new ArrayList<>();
             for (Object element : elements) {
-                if (element instanceof Module) {
-                    final Module module = (Module)element;
+                if (element instanceof Module module) {
                     if (!module.isDisposed()) {
                         result.add(module);
                     }
@@ -374,8 +373,8 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
     public void setupToolWindow(@Nonnull ToolWindow toolWindow, boolean loadPaneExtensions) {
         ProjectViewPaneImpl projectViewPane = null;
         for (AbstractProjectViewPane pane : AbstractProjectViewPane.EP_NAME.getExtensions(myProject)) {
-            if (pane instanceof ProjectViewPaneImpl) {
-                projectViewPane = (ProjectViewPaneImpl)pane;
+            if (pane instanceof ProjectViewPaneImpl projectViewPaneImpl) {
+                projectViewPane = projectViewPaneImpl;
             }
         }
 
@@ -415,6 +414,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
     }
 
     @Nonnull
+    @SuppressWarnings("unchecked")
     private <T> List<T> getSelectedElements(@Nonnull Class<T> klass) {
         List<T> result = new ArrayList<>();
         final AbstractProjectViewPane viewPane = getCurrentProjectViewPane();

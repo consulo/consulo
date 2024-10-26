@@ -26,12 +26,14 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.undoRedo.CommandProcessor;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Dennis.Ushakov
  */
 public class ShowTaskDescription extends BaseTaskAction {
     @Override
+    @RequiredUIAccess
     public void update(AnActionEvent event) {
         super.update(event);
         if (event.getPresentation().isEnabled()) {
@@ -39,7 +41,7 @@ public class ShowTaskDescription extends BaseTaskAction {
             final LocalTask activeTask = getActiveTask(event);
             presentation.setEnabled(activeTask != null && activeTask.isIssue() && activeTask.getDescription() != null);
             if (activeTask == null || !activeTask.isIssue()) {
-                presentation.setText(getTemplatePresentation().getText());
+                presentation.setTextValue(getTemplatePresentation().getTextValue());
             }
             else {
                 presentation.setText("Show '" + activeTask.getPresentableName() + "' _Description");
@@ -49,21 +51,14 @@ public class ShowTaskDescription extends BaseTaskAction {
 
     @RequiredUIAccess
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
         final Project project = getProject(e);
         assert project != null;
         final LocalTask task = getActiveTask(e);
         FeatureUsageTracker.getInstance().triggerFeatureUsed("codeassists.quickjavadoc.ctrln");
-        CommandProcessor.getInstance().executeCommand(
-            project,
-            () -> DocumentationManager.getInstance(project).showJavaDocInfo(new TaskPsiElement(PsiManager.getInstance(project), task), null),
-            getCommandName(),
-            null
-        );
-    }
-
-    protected String getCommandName() {
-        String text = getTemplatePresentation().getText();
-        return text != null ? text : "";
+        CommandProcessor.getInstance().newCommand(() -> DocumentationManager.getInstance(project).showJavaDocInfo(new TaskPsiElement(PsiManager.getInstance(project), task), null))
+            .withProject(project)
+            .withName(getTemplatePresentation().getTextValue())
+            .execute();
     }
 }

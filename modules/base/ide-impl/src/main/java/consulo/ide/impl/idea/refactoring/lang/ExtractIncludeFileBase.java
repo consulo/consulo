@@ -33,7 +33,6 @@ import consulo.language.Language;
 import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.editor.PsiEquivalenceUtil;
 import consulo.language.editor.highlight.HighlightManager;
-import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
@@ -54,7 +53,6 @@ import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,6 +90,7 @@ public abstract class ExtractIncludeFileBase<T extends PsiElement> implements Re
     protected abstract void doReplaceRange(final String includePath, final T first, final T last);
 
     @Nonnull
+    @RequiredReadAction
     protected String doExtract(
         final PsiDirectory targetDirectory,
         final String targetfileName,
@@ -124,17 +123,14 @@ public abstract class ExtractIncludeFileBase<T extends PsiElement> implements Re
         final Project project
     ) {
         if (duplicates.size() > 0) {
-            final LocalizeValue message =
+            LocalizeValue message =
                 RefactoringLocalize.ideaHasFoundFragmentsThatCanBeReplacedWithIncludeDirective(Application.get().getName());
-            final int exitCode = Messages.showYesNoDialog(project, message.get(), getRefactoringName(), UIUtil.getInformationIcon());
+            int exitCode = Messages.showYesNoDialog(project, message.get(), getRefactoringName(), UIUtil.getInformationIcon());
             if (exitCode == Messages.YES) {
-                CommandProcessor.getInstance().executeCommand(
-                    project,
-                    () -> {
+                CommandProcessor.getInstance().newCommand(() -> {
                         boolean replaceAll = false;
                         for (IncludeDuplicate<T> pair : duplicates) {
                             if (!replaceAll) {
-
                                 highlightInEditor(project, pair, editor);
 
                                 ReplacePromptDialog promptDialog =
@@ -163,14 +159,15 @@ public abstract class ExtractIncludeFileBase<T extends PsiElement> implements Re
                                 doReplaceRange(includePath, pair.getStart(), pair.getEnd());
                             }
                         }
-                    },
-                    RefactoringLocalize.removeDuplicatesCommand().get(),
-                    null
-                );
+                    })
+                    .withProject(project)
+                    .withName(RefactoringLocalize.removeDuplicatesCommand())
+                    .execute();
             }
         }
     }
 
+    @RequiredReadAction
     private static void highlightInEditor(final Project project, final IncludeDuplicate pair, final Editor editor) {
         final HighlightManager highlightManager = HighlightManager.getInstance(project);
         EditorColorsManager colorsManager = EditorColorsManager.getInstance();
@@ -188,6 +185,7 @@ public abstract class ExtractIncludeFileBase<T extends PsiElement> implements Re
     }
 
     @Nonnull
+    @RequiredReadAction
     protected Language getLanguageForExtract(PsiElement firstExtracted) {
         return firstExtracted.getLanguage();
     }
@@ -196,7 +194,7 @@ public abstract class ExtractIncludeFileBase<T extends PsiElement> implements Re
     private static FileType getFileType(final Language language) {
         final FileType[] fileTypes = FileTypeManager.getInstance().getRegisteredFileTypes();
         for (FileType fileType : fileTypes) {
-            if (fileType instanceof LanguageFileType && language.equals(((LanguageFileType)fileType).getLanguage())) {
+            if (fileType instanceof LanguageFileType languageFileType && language.equals(languageFileType.getLanguage())) {
                 return fileType;
             }
         }
@@ -206,11 +204,12 @@ public abstract class ExtractIncludeFileBase<T extends PsiElement> implements Re
 
     @Override
     @RequiredUIAccess
+    @SuppressWarnings("unchecked")
     public void invoke(@Nonnull final Project project, final Editor editor, final PsiFile file, DataContext dataContext) {
         myIncludingFile = file;
         if (!editor.getSelectionModel().hasSelection()) {
-            String message = RefactoringBundle.getCannotRefactorMessage(RefactoringLocalize.noSelection().get());
-            CommonRefactoringUtil.showErrorHint(project, editor, message, getRefactoringName(), HELP_ID);
+            LocalizeValue message = RefactoringLocalize.cannotPerformRefactoringWithReason(RefactoringLocalize.noSelection());
+            CommonRefactoringUtil.showErrorHint(project, editor, message.get(), getRefactoringName(), HELP_ID);
             return;
         }
         final int start = editor.getSelectionModel().getSelectionStart();
@@ -218,23 +217,23 @@ public abstract class ExtractIncludeFileBase<T extends PsiElement> implements Re
 
         final Pair<T, T> children = findPairToExtract(start, end);
         if (children == null) {
-            String message =
-                RefactoringBundle.getCannotRefactorMessage(RefactoringLocalize.selectionDoesNotFormAFragmentForExtraction().get());
-            CommonRefactoringUtil.showErrorHint(project, editor, message, getRefactoringName(), HELP_ID);
+            LocalizeValue message =
+                RefactoringLocalize.cannotPerformRefactoringWithReason(RefactoringLocalize.selectionDoesNotFormAFragmentForExtraction());
+            CommonRefactoringUtil.showErrorHint(project, editor, message.get(), getRefactoringName(), HELP_ID);
             return;
         }
 
         if (!verifyChildRange(children.getFirst(), children.getSecond())) {
-            String message =
-                RefactoringBundle.getCannotRefactorMessage(RefactoringLocalize.cannotExtractSelectedElementsIntoIncludeFile().get());
-            CommonRefactoringUtil.showErrorHint(project, editor, message, getRefactoringName(), HELP_ID);
+            LocalizeValue message =
+                RefactoringLocalize.cannotPerformRefactoringWithReason(RefactoringLocalize.cannotExtractSelectedElementsIntoIncludeFile());
+            CommonRefactoringUtil.showErrorHint(project, editor, message.get(), getRefactoringName(), HELP_ID);
             return;
         }
 
         final FileType fileType = getFileType(getLanguageForExtract(children.getFirst()));
         if (!(fileType instanceof LanguageFileType)) {
-            String message = RefactoringLocalize.theLanguageForSelectedElementsHasNoAssociatedFileType().get();
-            CommonRefactoringUtil.showErrorHint(project, editor, message, getRefactoringName(), HELP_ID);
+            LocalizeValue message = RefactoringLocalize.theLanguageForSelectedElementsHasNoAssociatedFileType();
+            CommonRefactoringUtil.showErrorHint(project, editor, message.get(), getRefactoringName(), HELP_ID);
             return;
         }
 
@@ -248,9 +247,7 @@ public abstract class ExtractIncludeFileBase<T extends PsiElement> implements Re
             final PsiDirectory targetDirectory = dialog.getTargetDirectory();
             LOG.assertTrue(targetDirectory != null);
             final String targetfileName = dialog.getTargetFileName();
-            CommandProcessor.getInstance().executeCommand(
-                project,
-                () -> project.getApplication().runWriteAction(() -> {
+            CommandProcessor.getInstance().newCommand(() -> {
                     try {
                         final List<IncludeDuplicate<T>> duplicates = new ArrayList<>();
                         final T first = children.getFirst();
@@ -271,10 +268,10 @@ public abstract class ExtractIncludeFileBase<T extends PsiElement> implements Re
                     }
 
                     editor.getSelectionModel().removeSelection();
-                }),
-                getRefactoringName(),
-                null
-            );
+                })
+                .withProject(project)
+                .withName(LocalizeValue.ofNullable(getRefactoringName()))
+                .executeInWriteAction();
         }
     }
 
@@ -285,7 +282,6 @@ public abstract class ExtractIncludeFileBase<T extends PsiElement> implements Re
     @Nullable
     protected abstract Pair<T, T> findPairToExtract(int start, int end);
 
-    @NonNls
     protected String getExtractExtension(final FileType extractFileType, final T first) {
         return extractFileType.getDefaultExtension();
     }
