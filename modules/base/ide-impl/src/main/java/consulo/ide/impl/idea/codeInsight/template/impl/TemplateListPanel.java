@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.codeInsight.template.impl;
 
+import consulo.application.Application;
 import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposable;
 import consulo.ide.localize.IdeLocalize;
@@ -449,11 +450,21 @@ public class TemplateListPanel extends JPanel implements Disposable {
 
     @RequiredUIAccess
     public void addTemplate(TemplateImpl template) {
-        myTemplateOptions.put(getKey(template), template.createOptions());
+        myTemplateOptions.put(getKey(template), createOptions(template));
         myTemplateContext.put(getKey(template), template.createContext());
 
         registerTemplate(template);
         updateTemplateDetails(true);
+    }
+
+    private Map<TemplateOptionalProcessor, Boolean> createOptions(TemplateImpl template) {
+        Map<TemplateOptionalProcessor, Boolean> context = new LinkedHashMap<>();
+        Application.get().getExtensionPoint(TemplateOptionalProcessor.class).forEachExtensionSafe(processor -> {
+            if (processor.isVisible(template)) {
+                context.put(processor, processor.isEnabled(template));
+            }
+        });
+        return context;
     }
 
     private static int getKey(final TemplateImpl template) {
@@ -954,8 +965,9 @@ public class TemplateListPanel extends JPanel implements Disposable {
     private void addTemplateNodes(TemplateGroup group, CheckedTreeNode groupNode) {
         List<TemplateImpl> templates = new ArrayList<>(group.getElements());
         Collections.sort(templates, TEMPLATE_COMPARATOR);
+
         for (final TemplateImpl template : templates) {
-            myTemplateOptions.put(getKey(template), template.createOptions());
+            myTemplateOptions.put(getKey(template), createOptions(template));
             myTemplateContext.put(getKey(template), template.createContext());
             CheckedTreeNode node = new CheckedTreeNode(template);
             node.setChecked(!template.isDeactivated());

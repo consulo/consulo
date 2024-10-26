@@ -17,7 +17,6 @@ package consulo.language.editor.impl.internal.template;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.component.ProcessCanceledException;
 import consulo.component.extension.ExtensionPoint;
 import consulo.component.persist.*;
 import consulo.component.persist.scheme.BaseSchemeProcessor;
@@ -26,10 +25,7 @@ import consulo.component.persist.scheme.SchemeManagerFactory;
 import consulo.component.util.PluginExceptionUtil;
 import consulo.component.util.localize.AbstractBundle;
 import consulo.container.classloader.PluginClassLoader;
-import consulo.container.plugin.PluginDescriptor;
-import consulo.container.plugin.PluginManager;
 import consulo.language.editor.internal.TemplateConstants;
-import consulo.language.editor.template.DefaultLiveTemplatesProvider;
 import consulo.language.editor.template.LiveTemplateContributor;
 import consulo.language.editor.template.Template;
 import consulo.language.editor.template.TemplateSettings;
@@ -38,7 +34,6 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.util.collection.MultiMap;
 import consulo.util.collection.SmartList;
-import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.Converter;
@@ -51,11 +46,8 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.JDOMException;
 import org.jetbrains.annotations.NonNls;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.*;
 
 @Singleton
@@ -93,8 +85,9 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
 
     private static final String CONTEXT = "context";
     private static final String TO_REFORMAT = "toReformat";
-    private static final String TO_SHORTEN_FQ_NAMES = "toShortenFQNames";
-    private static final String USE_STATIC_IMPORT = "useStaticImport";
+
+    private static final String OPTIONS = "options";
+    private static final String OPTION = "option";
 
     private static final String DEACTIVATED = "deactivated";
 
@@ -152,6 +145,7 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
             return new TemplateKey(template.getGroupName(), template.getKey());
         }
 
+        @Override
         public boolean equals(Object o) {
             if (this == o) {
                 return true;
@@ -164,6 +158,7 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
             return Comparing.equal(groupName, that.groupName) && Comparing.equal(key, that.key);
         }
 
+        @Override
         public int hashCode() {
             int result = groupName != null ? groupName.hashCode() : 0;
             result = 31 * result + (key != null ? key.hashCode() : 0);
@@ -337,12 +332,15 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
         myState.defaultShortcut = defaultShortcutChar;
     }
 
-    public Collection<TemplateImpl> getTemplates(@NonNls String key) {
+    @Nonnull
+    @Override
+    public Collection<TemplateImpl> getTemplates(String key) {
         return myTemplates.get(key);
     }
 
+    @Override
     @Nullable
-    public TemplateImpl getTemplate(@NonNls String key, String group) {
+    public TemplateImpl getTemplate(String key, String group) {
         final Collection<TemplateImpl> templates = myTemplates.get(key);
         for (TemplateImpl template : templates) {
             if (template.getGroupName().equals(group)) {
@@ -352,6 +350,7 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
         return null;
     }
 
+    @Override
     public Template getTemplateById(@Nonnull String id) {
         return myTemplatesById.get(id);
     }
@@ -533,27 +532,6 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
                 mySchemeManager.addNewScheme(result, false);
             }
         });
-
-        application.getExtensionPoint(DefaultLiveTemplatesProvider.class).forEachExtensionSafe(provider -> {
-            try {
-                for (String defTemplate : provider.getDefaultLiveTemplateFiles()) {
-                    readDefTemplate(provider, defTemplate, true);
-                }
-
-                String[] hidden = provider.getHiddenLiveTemplateFiles();
-                if (hidden != null) {
-                    for (String s : hidden) {
-                        readDefTemplate(provider, s, false);
-                    }
-                }
-            }
-            catch (ProcessCanceledException e) {
-                throw e;
-            }
-            catch (Exception e) {
-                LOG.error(e);
-            }
-        });
     }
 
     private TemplateImpl registerTemplate(LiveTemplateContributorBuilder builder, String groupId, LocalizeValue groupName) {
@@ -562,6 +540,11 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
         template.setId(builder.getId());
         template.setDescription(builder.getDescription().get());  // TODO [VISTALL] support localize key
         template.setShortcutChar(builder.myShortcut);
+        template.setToReformat(builder.myWantReformat);
+
+        for (Map.Entry<String, Boolean> entry : builder.myOptions.entrySet()) {
+            template.setOptionViaString(entry.getKey(), entry.getValue());
+        }
 
         for (LiveTemplateContributorBuilder.Variable variable : builder.getVariables()) {
             template.addVariable(variable.name(), variable.expression(), variable.defaultValue(), variable.alwaysStopAt());
@@ -570,40 +553,6 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
         myDefaultTemplates.put(TemplateKey.keyOf(template), template);
 
         return template;
-    }
-
-    private void readDefTemplate(DefaultLiveTemplatesProvider provider, String defTemplate, boolean registerTemplate) throws JDOMException, InvalidDataException, IOException {
-        String xmlFilePath = defTemplate;
-        if (!xmlFilePath.endsWith(".xml")) {
-            xmlFilePath = xmlFilePath + ".xml";
-        }
-
-        InputStream inputStream;
-        try {
-            inputStream = provider.getClass().getResourceAsStream(xmlFilePath);
-        }
-        catch (Exception e) {
-            LOG.warn(e);
-            return;
-        }
-
-        if (inputStream == null) {
-            PluginDescriptor plugin = PluginManager.getPlugin(provider.getClass());
-            LOG.error("Template by path " + xmlFilePath + " not found in plugin: " + plugin.getPluginClassLoader());
-            return;
-        }
-
-        TemplateGroup group = readTemplateFile(JDOMUtil.loadDocument(inputStream), defTemplate, true, registerTemplate, provider.getClass().getClassLoader());
-        if (group != null && group.getReplace() != null) {
-            Collection<TemplateImpl> templates = myTemplates.get(group.getReplace());
-            for (TemplateImpl template : templates) {
-                removeTemplate(template);
-            }
-        }
-    }
-
-    private static String getDefaultTemplateName(String defTemplate) {
-        return defTemplate.substring(defTemplate.lastIndexOf('/') + 1);
     }
 
     @Nullable
@@ -694,13 +643,9 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
         TemplateImpl template = addTemplate(name, value, groupName, description, shortcut, isDefault, id);
 
         template.setToReformat(Boolean.parseBoolean(element.getAttributeValue(TO_REFORMAT)));
-        template.setToShortenLongNames(Boolean.parseBoolean(element.getAttributeValue(TO_SHORTEN_FQ_NAMES)));
         template.setDeactivated(Boolean.parseBoolean(element.getAttributeValue(DEACTIVATED)));
 
-        String useStaticImport = element.getAttributeValue(USE_STATIC_IMPORT);
-        if (useStaticImport != null) {
-            template.setValue(TemplateImpl.Property.USE_STATIC_IMPORT_IF_POSSIBLE, Boolean.parseBoolean(useStaticImport));
-        }
+        JavaLegacy.read(template, element);
 
         for (final Element e : element.getChildren(VARIABLE)) {
             String variableName = e.getAttributeValue(NAME);
@@ -708,6 +653,16 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
             String defaultValue = e.getAttributeValue(DEFAULT_VALUE);
             boolean isAlwaysStopAt = Boolean.parseBoolean(e.getAttributeValue(ALWAYS_STOP_AT));
             template.addVariable(variableName, expression, defaultValue, isAlwaysStopAt);
+        }
+
+        Element optionsElement = element.getChild(OPTIONS);
+        if (optionsElement != null) {
+            for (Element optionElement : optionsElement.getChildren(OPTION)) {
+                String optionKey = optionElement.getAttributeValue("key");
+                boolean optionValue = Boolean.parseBoolean(optionElement.getAttributeValue("value"));
+
+                template.setOptionViaString(optionKey, optionValue);
+            }
         }
 
         Element context = element.getChild(CONTEXT);
@@ -739,10 +694,21 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
             element.setAttribute(DESCRIPTION, template.getDescription());
         }
         element.setAttribute(TO_REFORMAT, Boolean.toString(template.isToReformat()));
-        element.setAttribute(TO_SHORTEN_FQ_NAMES, Boolean.toString(template.isToShortenLongNames()));
-        if (template.getValue(Template.Property.USE_STATIC_IMPORT_IF_POSSIBLE) != Template.getDefaultValue(Template.Property.USE_STATIC_IMPORT_IF_POSSIBLE)) {
-            element.setAttribute(USE_STATIC_IMPORT, Boolean.toString(template.getValue(Template.Property.USE_STATIC_IMPORT_IF_POSSIBLE)));
+
+        Map<String, Boolean> options = template.getOptions();
+        if (!options.isEmpty()) {
+            Element optionsElement = new Element(OPTIONS);
+            element.addContent(optionsElement);
+
+            for (Map.Entry<String, Boolean> entry : options.entrySet()) {
+                Element optionElement = new Element(OPTION);
+                optionsElement.addContent(optionElement);
+
+                optionElement.setAttribute("key", entry.getKey());
+                optionElement.setAttribute("value", String.valueOf(entry.getValue()));
+            }
         }
+
         if (template.isDeactivated()) {
             element.setAttribute(DEACTIVATED, Boolean.toString(true));
         }

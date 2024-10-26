@@ -25,6 +25,7 @@ import consulo.language.editor.template.TemplateOptionalProcessor;
 import consulo.language.editor.template.Variable;
 import consulo.language.editor.template.context.TemplateContext;
 import consulo.language.editor.template.context.TemplateContextType;
+import consulo.util.dataholder.KeyWithDefaultValue;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -34,7 +35,10 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class TemplateImpl extends Template implements SchemeElement {
+public class TemplateImpl implements Template, SchemeElement {
+    private static record Segment(String name, int offset) {
+    }
+
     private String myKey;
     private String myString = null;
     private String myDescription;
@@ -44,93 +48,19 @@ public class TemplateImpl extends Template implements SchemeElement {
     private ArrayList<Segment> mySegments = null;
     private String myTemplateText = null;
     private String myId;
+    private Map<String, Boolean> myOptions = new LinkedHashMap<>();
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof TemplateImpl)) {
-            return false;
-        }
-
-        final TemplateImpl template = (TemplateImpl) o;
-        if (myId != null && template.myId != null && myId.equals(template.myId)) {
-            return true;
-        }
-
-        if (isToReformat != template.isToReformat) {
-            return false;
-        }
-        if (isToShortenLongNames != template.isToShortenLongNames) {
-            return false;
-        }
-        if (myShortcutChar != template.myShortcutChar) {
-            return false;
-        }
-        if (myDescription != null ? !myDescription.equals(template.myDescription) : template.myDescription != null) {
-            return false;
-        }
-        if (myGroupName != null ? !myGroupName.equals(template.myGroupName) : template.myGroupName != null) {
-            return false;
-        }
-        if (myKey != null ? !myKey.equals(template.myKey) : template.myKey != null) {
-            return false;
-        }
-        if (myString != null ? !myString.equals(template.myString) : template.myString != null) {
-            return false;
-        }
-        if (myTemplateText != null ? !myTemplateText.equals(template.myTemplateText) : template.myTemplateText != null) {
-            return false;
-        }
-
-        if (!new HashSet<>(myVariables).equals(new HashSet<>(template.myVariables))) {
-            return false;
-        }
-        if (isDeactivated != template.isDeactivated) {
-            return false;
-        }
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        if (myId != null) {
-            return myId.hashCode();
-        }
-        int result;
-        result = myKey.hashCode();
-        result = 29 * result + (myString == null ? 0 : myString.hashCode());
-        result = 29 * result + myGroupName.hashCode();
-        return result;
-    }
-
-    private boolean isToReformat = false;
-    private boolean isToShortenLongNames = true;
-    private boolean toParseSegments = true;
+    private boolean myIsToReformat = false;
+    private boolean myToParseSegments = true;
     private TemplateContext myTemplateContext = new TemplateContext();
+    private boolean myIsToIndent = true;
+    private boolean myIsInline = false;
 
     private boolean isDeactivated = false;
 
-    public boolean isInline() {
-        return myIsInline;
-    }
-
-    private boolean isToIndent = true;
-
-
-    @Override
-    public void setInline(boolean isInline) {
-        myIsInline = isInline;
-    }
-
-    private boolean myIsInline = false;
-
-
     public TemplateImpl(@Nonnull String key, String group) {
         this(key, null, group);
-        toParseSegments = false;
+        myToParseSegments = false;
         myTemplateText = "";
         mySegments = new ArrayList<>();
     }
@@ -139,6 +69,15 @@ public class TemplateImpl extends Template implements SchemeElement {
         myKey = key;
         myString = string;
         myGroupName = group;
+    }
+
+    public boolean isInline() {
+        return myIsInline;
+    }
+
+    @Override
+    public void setInline(boolean isInline) {
+        myIsInline = isInline;
     }
 
     @Override
@@ -198,50 +137,34 @@ public class TemplateImpl extends Template implements SchemeElement {
         template.myId = myId;
         template.myDescription = myDescription;
         template.myShortcutChar = myShortcutChar;
-        template.isToReformat = isToReformat;
-        template.isToShortenLongNames = isToShortenLongNames;
+        template.myIsToReformat = myIsToReformat;
         template.myIsInline = myIsInline;
         template.myTemplateContext = myTemplateContext.createCopy();
         template.isDeactivated = isDeactivated;
-        for (Property property : Property.values()) {
-            boolean value = getValue(property);
-            if (value != Template.getDefaultValue(property)) {
-                template.setValue(property, value);
-            }
-        }
         for (Variable variable : myVariables) {
             template.addVariable(variable.getName(), variable.getExpressionString(), variable.getDefaultValueString(), variable.isAlwaysStopAt());
         }
+        template.myOptions.putAll(myOptions);
         return template;
     }
 
     @Override
     public boolean isToReformat() {
-        return isToReformat;
+        return myIsToReformat;
     }
 
     @Override
     public void setToReformat(boolean toReformat) {
-        isToReformat = toReformat;
+        myIsToReformat = toReformat;
     }
 
     @Override
     public void setToIndent(boolean toIndent) {
-        isToIndent = toIndent;
+        myIsToIndent = toIndent;
     }
 
     public boolean isToIndent() {
-        return isToIndent;
-    }
-
-    @Override
-    public boolean isToShortenLongNames() {
-        return isToShortenLongNames;
-    }
-
-    @Override
-    public void setToShortenLongNames(boolean toShortenLongNames) {
-        isToShortenLongNames = toShortenLongNames;
+        return myIsToIndent;
     }
 
     @Override
@@ -254,6 +177,7 @@ public class TemplateImpl extends Template implements SchemeElement {
         return isDeactivated;
     }
 
+    @Nonnull
     @Override
     public TemplateContext getTemplateContext() {
         return myTemplateContext;
@@ -264,10 +188,12 @@ public class TemplateImpl extends Template implements SchemeElement {
         return getVariableSegmentNumber(END);
     }
 
+    @Override
     public int getSelectionStartSegmentNumber() {
         return getVariableSegmentNumber(SELECTION_START);
     }
 
+    @Override
     public int getSelectionEndSegmentNumber() {
         return getVariableSegmentNumber(SELECTION_END);
     }
@@ -309,7 +235,7 @@ public class TemplateImpl extends Template implements SchemeElement {
 
     @Override
     public void parseSegments() {
-        if (!toParseSegments) {
+        if (!myToParseSegments) {
             return;
         }
         if (mySegments != null) {
@@ -361,6 +287,7 @@ public class TemplateImpl extends Template implements SchemeElement {
         return variable;
     }
 
+    @Override
     public void removeVariable(int i) {
         myVariables.remove(i);
     }
@@ -462,6 +389,29 @@ public class TemplateImpl extends Template implements SchemeElement {
         return false;
     }
 
+    @Override
+    public boolean getOption(@Nonnull KeyWithDefaultValue<Boolean> key) {
+        return myOptions.getOrDefault(key.toString(), key.getDefaultValue());
+    }
+
+    @Override
+    public boolean containsOption(@Nonnull KeyWithDefaultValue<Boolean> key) {
+        return myOptions.containsKey(key.toString());
+    }
+
+    @Override
+    public void setOption(@Nonnull KeyWithDefaultValue<Boolean> key, boolean value) {
+        myOptions.put(key.toString(), value);
+    }
+
+    public Map<String, Boolean> getOptions() {
+        return myOptions;
+    }
+
+    public void setOptionViaString(String key, boolean value) {
+        myOptions.put(key, value);
+    }
+
     public boolean hasArgument() {
         for (Variable v : myVariables) {
             if (v.getName().equals(ARG)) {
@@ -473,12 +423,6 @@ public class TemplateImpl extends Template implements SchemeElement {
 
     public void setId(@Nullable final String id) {
         myId = id;
-    }
-
-    public Map<TemplateOptionalProcessor, Boolean> createOptions() {
-        Map<TemplateOptionalProcessor, Boolean> context = new LinkedHashMap<>();
-        TemplateOptionalProcessor.EP_NAME.forEachExtensionSafe(processor -> context.put(processor, processor.isEnabled(this)));
-        return context;
     }
 
     public Map<TemplateContextType, Boolean> createContext() {
@@ -511,16 +455,75 @@ public class TemplateImpl extends Template implements SchemeElement {
         return myVariables;
     }
 
-    private static class Segment {
-        public String name;
-        public int offset;
-
-        private Segment(String name, int offset) {
-            this.name = name;
-            this.offset = offset;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
         }
+        if (!(o instanceof TemplateImpl)) {
+            return false;
+        }
+
+        final TemplateImpl template = (TemplateImpl) o;
+        if (myId != null && template.myId != null && myId.equals(template.myId)) {
+            return true;
+        }
+
+        if (myIsToReformat != template.myIsToReformat) {
+            return false;
+        }
+
+        if (myShortcutChar != template.myShortcutChar) {
+            return false;
+        }
+
+        if (myDescription != null ? !myDescription.equals(template.myDescription) : template.myDescription != null) {
+            return false;
+        }
+
+        if (myGroupName != null ? !myGroupName.equals(template.myGroupName) : template.myGroupName != null) {
+            return false;
+        }
+
+        if (myKey != null ? !myKey.equals(template.myKey) : template.myKey != null) {
+            return false;
+        }
+
+        if (myString != null ? !myString.equals(template.myString) : template.myString != null) {
+            return false;
+        }
+
+        if (myTemplateText != null ? !myTemplateText.equals(template.myTemplateText) : template.myTemplateText != null) {
+            return false;
+        }
+
+        if (!new HashSet<>(myVariables).equals(new HashSet<>(template.myVariables))) {
+            return false;
+        }
+
+        if (isDeactivated != template.isDeactivated) {
+            return false;
+        }
+
+        if (!myOptions.equals(template.myOptions)) {
+            return false;
+        }
+
+        return true;
     }
 
+    @Override
+    public int hashCode() {
+        if (myId != null) {
+            return myId.hashCode();
+        }
+        int result;
+        result = myKey.hashCode();
+        result = 29 * result + (myString == null ? 0 : myString.hashCode());
+        result = 29 * result + myGroupName.hashCode();
+        return result;
+    }
+    
     @Override
     public String toString() {
         return myGroupName + "/" + myKey;

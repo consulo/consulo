@@ -299,15 +299,15 @@ public class LiveTemplateSettingsEditor extends JPanel {
         myCbReformat = CheckBox.create(CodeInsightLocalize.dialogEditTemplateCheckboxReformatAccordingToStyle());
         panel.add(TargetAWT.to(myCbReformat), gbConstraints);
 
-        for (final TemplateOptionalProcessor processor : myOptions.keySet()) {
+        for (TemplateOptionalProcessor processor : myOptions.keySet()) {
             if (!processor.isVisible(myTemplate)) {
                 continue;
             }
             gbConstraints.gridy++;
-            final JCheckBox cb = new JCheckBox(processor.getOptionName());
-            panel.add(cb, gbConstraints);
-            cb.setSelected(myOptions.get(processor));
-            cb.addActionListener(e -> myOptions.put(processor, cb.isSelected()));
+            CheckBox cb = CheckBox.create(processor.getOptionText());
+            panel.add(TargetAWT.to(cb), gbConstraints);
+            cb.setValue(myOptions.get(processor));
+            cb.addValueListener(e -> myOptions.put(processor, cb.getValue()));
         }
 
         gbConstraints.weighty = 1;

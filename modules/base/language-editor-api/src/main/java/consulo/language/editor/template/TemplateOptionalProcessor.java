@@ -19,27 +19,35 @@ package consulo.language.editor.template;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.codeEditor.Editor;
-import consulo.component.extension.ExtensionPointName;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import org.jetbrains.annotations.Nls;
+import consulo.util.dataholder.KeyWithDefaultValue;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface TemplateOptionalProcessor {
-  ExtensionPointName<TemplateOptionalProcessor> EP_NAME = ExtensionPointName.create(TemplateOptionalProcessor.class);
+    @Nonnull
+    KeyWithDefaultValue<Boolean> getKey();
 
-  void processText(final Project project, final Template template, final Document document, final RangeMarker templateRange, final Editor editor);
+    void processText(final Project project, final Template template, final Document document, final RangeMarker templateRange, final Editor editor);
 
-  @Nls
-  String getOptionName();
+    @Nonnull
+    LocalizeValue getOptionText();
 
-  boolean isEnabled(final Template template);
+    default boolean isEnabled(@Nonnull Template template) {
+        return template.getOption(getKey());
+    }
 
-  void setEnabled(Template template, boolean value);
+    default void setEnabled(@Nonnull Template template, boolean value) {
+        template.setOption(getKey(), value);
+    }
 
-  boolean isVisible(final Template template);
+    default boolean isVisible(@Nonnull Template template) {
+        return template.containsOption(getKey());
+    }
 }

@@ -64,6 +64,7 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.BasicUndoableAction;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.ProjectUndoManager;
@@ -500,15 +501,18 @@ public class TemplateStateImpl implements TemplateState {
     }
   }
 
+  @RequiredUIAccess
   private void shortenReferences() {
-    ApplicationManager.getApplication().runWriteAction(() -> {
+    myProject.getApplication().runWriteAction(() -> {
       final PsiFile file = getPsiFile();
       if (file != null) {
         IntList indices = initEmptyVariables();
         mySegments.setSegmentsGreedy(false);
-        for (TemplateOptionalProcessor processor : TemplateOptionalProcessor.EP_NAME.getExtensionList()) {
-          processor.processText(myProject, myTemplate, myDocument, myTemplateRange, myEditor);
-        }
+        myProject.getApplication().getExtensionPoint(TemplateOptionalProcessor.class).forEachExtensionSafe(processor -> {
+          if (processor.isEnabled(myTemplate)) {
+            processor.processText(myProject, myTemplate, myDocument, myTemplateRange, myEditor);
+          }
+        });
         mySegments.setSegmentsGreedy(true);
         restoreEmptyVariables(indices);
       }
@@ -1269,9 +1273,11 @@ public class TemplateStateImpl implements TemplateState {
     if (file != null) {
       CodeStyleManager style = CodeStyleManager.getInstance(myProject);
       DumbService.getInstance(myProject).withAlternativeResolveEnabled(() -> {
-        for (TemplateOptionalProcessor optionalProcessor : TemplateOptionalProcessor.EP_NAME.getExtensionList()) {
-          optionalProcessor.processText(myProject, myTemplate, myDocument, myTemplateRange, myEditor);
-        }
+        myProject.getApplication().getExtensionPoint(TemplateOptionalProcessor.class).forEachExtensionSafe(processor -> {
+          if (processor.isEnabled(myTemplate)) {
+            processor.processText(myProject, myTemplate, myDocument, myTemplateRange, myEditor);
+          }
+        });
       });
       PsiDocumentManager.getInstance(myProject).doPostponedOperationsAndUnblockDocument(myDocument);
       // for Python, we need to indent the template even if reformatting is enabled, because otherwise indents would be broken

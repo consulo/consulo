@@ -19,6 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.language.editor.template.context.TemplateContextType;
 import consulo.localize.LocalizeValue;
+import consulo.util.dataholder.KeyWithDefaultValue;
 import jakarta.annotation.Nonnull;
 
 import java.io.Closeable;
@@ -51,6 +52,9 @@ public interface LiveTemplateContributor {
 
         @Nonnull
         Builder withSpaceShortcut();
+
+        @Nonnull
+        Builder withOption(@Nonnull KeyWithDefaultValue<Boolean> key, boolean value);
 
         @Nonnull
         default Builder withContext(Class<? extends TemplateContextType> context) {

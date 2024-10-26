@@ -3,9 +3,6 @@
  * @since 17/01/2022
  */
 module consulo.document.api {
-  // TODO remove this dependency in future
-  requires java.desktop;
-
   requires transitive consulo.application.api;
   requires transitive consulo.virtual.file.system.api;
 

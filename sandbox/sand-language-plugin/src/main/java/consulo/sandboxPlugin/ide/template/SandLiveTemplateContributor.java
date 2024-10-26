@@ -34,7 +34,7 @@ public class SandLiveTemplateContributor implements LiveTemplateContributor {
         try (Builder builder = factory.newBuilder("sandTest", "test", "test($V$)", LocalizeValue.localizeTODO("Sand Test Expression"))) {
             builder.withReformat();
             builder.withVariable("V", "1", "1", true);
-            
+
             builder.withContext(EverywhereContextType.class);
         }
     }

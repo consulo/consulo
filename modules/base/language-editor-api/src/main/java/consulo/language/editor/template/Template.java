@@ -17,144 +17,119 @@
 package consulo.language.editor.template;
 
 import consulo.language.editor.template.context.TemplateContext;
-
+import consulo.util.dataholder.KeyWithDefaultValue;
 import jakarta.annotation.Nonnull;
-import java.util.EnumMap;
-import java.util.Map;
+
 import java.util.Set;
 
-public abstract class Template {
-  public static final String END = "END";
-  public static final String SELECTION = "SELECTION";
-  public static final String SELECTION_START = "SELECTION_START";
-  public static final String SELECTION_END = "SELECTION_END";
-  public static final String ARG = "ARG";
+public interface Template {
+    String END = "END";
+    String SELECTION = "SELECTION";
+    String SELECTION_START = "SELECTION_START";
+    String SELECTION_END = "SELECTION_END";
+    String ARG = "ARG";
 
-  public static final Set<String> INTERNAL_VARS_SET = Set.of(END, SELECTION, SELECTION_START, SELECTION_END);
+    Set<String> INTERNAL_VARS_SET = Set.of(END, SELECTION, SELECTION_START, SELECTION_END);
 
-  public enum Property {
-    USE_STATIC_IMPORT_IF_POSSIBLE
-  }
+    void addTextSegment(@Nonnull String text);
 
-  private static final Map<Property, Boolean> DEFAULT_PROPERTIES = new EnumMap<Property, Boolean>(Property.class);
+    void addVariableSegment(String name);
 
-  static {
-    DEFAULT_PROPERTIES.put(Property.USE_STATIC_IMPORT_IF_POSSIBLE, false);
-  }
+    default Variable addVariable(String name, @Nonnull Expression defaultValueExpression, boolean isAlwaysStopAt) {
+        return addVariable(name, defaultValueExpression, defaultValueExpression, isAlwaysStopAt);
+    }
 
-  private final Map<Property, Boolean> myProperties = new EnumMap<Property, Boolean>(Property.class);
+    Variable addVariable(Expression expression, boolean isAlwaysStopAt);
 
-  public abstract void addTextSegment(@Nonnull String text);
+    default Variable addVariable(String name, Expression expression, Expression defaultValueExpression, boolean isAlwaysStopAt) {
+        return addVariable(name, expression, defaultValueExpression, isAlwaysStopAt, false);
+    }
 
-  public abstract void addVariableSegment(String name);
+    Variable addVariable(String name, Expression expression, Expression defaultValueExpression, boolean isAlwaysStopAt, boolean skipOnStart);
 
-  public Variable addVariable(String name, @Nonnull Expression defaultValueExpression, boolean isAlwaysStopAt) {
-    return addVariable(name, defaultValueExpression, defaultValueExpression, isAlwaysStopAt);
-  }
+    Variable addVariable(String name, String expression, String defaultValueExpression, boolean isAlwaysStopAt);
 
-  public abstract Variable addVariable(Expression expression, boolean isAlwaysStopAt);
+    void addEndVariable();
 
-  public Variable addVariable(String name, Expression expression, Expression defaultValueExpression, boolean isAlwaysStopAt) {
-    return addVariable(name, expression, defaultValueExpression, isAlwaysStopAt, false);
-  }
+    void addSelectionStartVariable();
 
-  public abstract Variable addVariable(String name, Expression expression, Expression defaultValueExpression, boolean isAlwaysStopAt, boolean skipOnStart);
+    void addSelectionEndVariable();
 
-  public abstract Variable addVariable(String name, String expression, String defaultValueExpression, boolean isAlwaysStopAt);
+    String getId();
 
-  public abstract void addEndVariable();
+    String getKey();
 
-  public abstract void addSelectionStartVariable();
+    void setKey(String key);
 
-  public abstract void addSelectionEndVariable();
+    String getDescription();
 
-  public abstract String getId();
+    void setDescription(String description);
 
-  public abstract String getKey();
+    void setToReformat(boolean toReformat);
 
-  public abstract void setKey(String key);
+    void setToIndent(boolean toIndent);
 
-  public abstract String getDescription();
+    void setInline(boolean isInline);
 
-  public abstract void setDescription(String description);
+    int getSegmentsCount();
 
-  public abstract void setToReformat(boolean toReformat);
+    void parseSegments();
 
-  public abstract void setToIndent(boolean toIndent);
+    String getSegmentName(int segmentIndex);
 
-  public abstract void setInline(boolean isInline);
+    int getSegmentOffset(int segmentIndex);
 
-  public abstract int getSegmentsCount();
+    String getTemplateText();
 
-  public abstract void parseSegments();
+    String getGroupName();
 
-  public abstract String getSegmentName(int segmentIndex);
+    boolean isDeactivated();
 
-  public abstract int getSegmentOffset(int segmentIndex);
+    int getEndSegmentNumber();
 
-  public abstract String getTemplateText();
+    boolean isSelectionTemplate();
 
-  public abstract String getGroupName();
+    int getSelectionStartSegmentNumber();
 
-  public abstract boolean isToShortenLongNames();
+    int getSelectionEndSegmentNumber();
 
-  public abstract void setToShortenLongNames(boolean toShortenLongNames);
+    void setDeactivated(boolean isDeactivated);
 
-  public abstract boolean isDeactivated();
+    boolean isToReformat();
 
-  public abstract int getEndSegmentNumber();
+    char getShortcutChar();
 
-  public abstract boolean isSelectionTemplate();
+    void setShortcutChar(char shortcutChar);
 
-  public abstract int getSelectionStartSegmentNumber();
+    int getVariableCount();
 
-  public abstract int getSelectionEndSegmentNumber();
+    void removeVariable(int i);
 
-  public abstract void setDeactivated(boolean isDeactivated);
+    String getVariableNameAt(int i);
 
-  public abstract boolean isToReformat();
+    String getExpressionStringAt(int i);
 
-  public abstract char getShortcutChar();
+    Expression getExpressionAt(int i);
 
-  public abstract void setShortcutChar(char shortcutChar);
+    String getDefaultValueStringAt(int i);
 
-  public abstract int getVariableCount();
+    boolean isAlwaysStopAt(int i);
 
-  public abstract void removeVariable(int i);
+    Expression getDefaultValueAt(int i);
 
-  public abstract String getVariableNameAt(int i);
+    void setString(String string);
 
-  public abstract String getExpressionStringAt(int i);
+    String getString();
 
-  public abstract Expression getExpressionAt(int i);
+    @Nonnull
+    Template copy();
 
-  public abstract String getDefaultValueStringAt(int i);
+    @Nonnull
+    TemplateContext getTemplateContext();
 
-  public abstract boolean isAlwaysStopAt(int i);
+    void setOption(@Nonnull KeyWithDefaultValue<Boolean> key, boolean value);
 
-  public abstract Expression getDefaultValueAt(int i);
+    boolean getOption(@Nonnull KeyWithDefaultValue<Boolean> key);
 
-  public abstract void setString(String string);
-
-  public abstract String getString();
-
-  @Nonnull
-  public abstract Template copy();
-
-  @Nonnull
-  public abstract TemplateContext getTemplateContext();
-
-  public boolean getValue(@Nonnull Property key) {
-    Boolean result = myProperties.get(key);
-    return result == null ? getDefaultValue(key) : result;
-  }
-
-  public void setValue(@Nonnull Property key, boolean value) {
-    myProperties.put(key, value);
-  }
-
-  public static boolean getDefaultValue(@Nonnull Property key) {
-    Boolean result = DEFAULT_PROPERTIES.get(key);
-    return result == null ? false : result;
-  }
+    boolean containsOption(@Nonnull KeyWithDefaultValue<Boolean> key);
 }

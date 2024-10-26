@@ -19,9 +19,13 @@ import consulo.language.editor.internal.TemplateConstants;
 import consulo.language.editor.template.LiveTemplateContributor;
 import consulo.language.editor.template.context.TemplateContextType;
 import consulo.localize.LocalizeValue;
+import consulo.util.dataholder.KeyWithDefaultValue;
 import jakarta.annotation.Nonnull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -48,6 +52,8 @@ public abstract class LiveTemplateContributorBuilder implements LiveTemplateCont
     protected Map<Class<? extends TemplateContextType>, Boolean> myStrictContextTypes = new LinkedHashMap<>();
 
     protected Map<Class<? extends TemplateContextType>, Boolean> myContextTypes = new LinkedHashMap<>();
+
+    protected Map<String, Boolean> myOptions = new LinkedHashMap<>();
 
     public LiveTemplateContributorBuilder(String groupId,
                                           LocalizeValue groupName,
@@ -137,6 +143,13 @@ public abstract class LiveTemplateContributorBuilder implements LiveTemplateCont
     @Override
     public LiveTemplateContributor.Builder withSpaceShortcut() {
         myShortcut = TemplateConstants.SPACE_CHAR;
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public LiveTemplateContributor.Builder withOption(@Nonnull KeyWithDefaultValue<Boolean> key, boolean value) {
+        myOptions.put(key.toString(), value);
         return this;
     }
 }

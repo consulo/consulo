@@ -420,7 +420,6 @@ public abstract class InplaceRefactoring {
         final int offset = myEditor.getCaretModel().getOffset();
 
         Template template = builder.buildInlineTemplate();
-        template.setToShortenLongNames(false);
         template.setToReformat(false);
         TextRange range = myScope.getTextRange();
         assert range != null;
