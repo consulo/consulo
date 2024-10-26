@@ -1,0 +1,450 @@
+wrapping.and.braces:
+  text: Wrapping and Braces
+wrapping.keep.when.reformatting:
+  text: Keep when reformatting
+wrapping.keep.line.breaks:
+  text: Line breaks
+wrapping.keep.comment.at.first.column:
+  text: Comment at first column
+wrapping.keep.simple.classes.in.one.line:
+  text: Simple classes in one line
+wrapping.keep.simple.methods.in.one.line:
+  text: Simple methods in one line
+wrapping.keep.simple.lambdas.in.one.line:
+  text: Simple lambdas in one line
+wrapping.keep.multiple.expressions.in.one.line:
+  text: Multiple expressions in one line
+wrapping.keep.simple.blocks.in.one.line:
+  text: Simple blocks in one line
+wrapping.do.not.wrap:
+  text: Do not wrap
+wrapping.wrap.if.long:
+  text: Wrap if long
+wrapping.chop.down.if.long:
+  text: Chop down if long
+wrapping.wrap.always:
+  text: Wrap always
+wrapping.force.braces.do.not.force:
+  text: Do not force
+wrapping.force.braces.when.multiline:
+  text: When multiline
+wrapping.force.braces.always:
+  text: Always
+wrapping.brace.placement:
+  text: Braces placement
+wrapping.brace.placement.class.declaration:
+  text: In class declaration
+wrapping.brace.placement.method.declaration:
+  text: In method declaration
+wrapping.brace.placement.other:
+  text: Other
+wrapping.brace.placement.end.of.line:
+  text: End of line
+wrapping.brace.placement.next.line.if.wrapped:
+  text: Next line if wrapped
+wrapping.brace.placement.next.line:
+  text: Next line
+wrapping.brace.placement.next.line.shifted:
+  text: Next line shifted
+wrapping.brace.placement.next.line.each.shifted:
+  text: Next line, each shifted
+wrapping.align.when.multiline:
+  text: Align when multiline
+wrapping.align.parenthesised.when.multiline:
+  text: Align parenthesised when multiline
+wrapping.align.in.columns:
+  text: Align in columns
+wrapping.else.on.new.line:
+  text: '''else'' on new line'
+wrapping.while.on.new.line:
+  text: '''while'' on new line'
+wrapping.catch.on.new.line:
+  text: '''catch'' on new line'
+wrapping.finally.on.new.line:
+  text: '''finally'' on new line'
+wrapping.method.parentheses:
+  text: Method parentheses
+wrapping.special.else.if.braces.treatment:
+  text: Special 'else if' treatment
+wrapping.indent.case.from.switch:
+  text: Indent 'case' branches
+wrapping.force.braces:
+  text: Force braces
+wrapping.chained.method.call.first.on.new.line:
+  text: Wrap first call
+wrapping.method.parameters:
+  text: Method declaration parameters
+wrapping.method.arguments:
+  text: Method call arguments
+wrapping.chained.method.calls:
+  text: Chained method calls
+wrapping.for.statement:
+  text: '''for()'' statement'
+wrapping.if.statement:
+  text: '''if()'' statement'
+wrapping.while.statement:
+  text: '''while()'' statement'
+wrapping.dowhile.statement:
+  text: '''do ... while()'' statement'
+wrapping.switch.statement:
+  text: '''switch'' statement'
+wrapping.try.statement:
+  text: '''try'' statement'
+wrapping.try.resources:
+  text: '''try-with-resources'''
+wrapping.binary.operations:
+  text: Binary expressions
+wrapping.extends.implements.list:
+  text: Extends/implements list
+wrapping.extends.implements.keyword:
+  text: Extends/implements keyword
+wrapping.throws.list:
+  text: Throws list
+wrapping.throws.keyword:
+  text: Throws keyword
+wrapping.align.throws.keyword:
+  text: Align 'throws' to method start
+wrapping.ternary.operation:
+  text: Ternary operation
+wrapping.assignment.variables.groups:
+  text: Fields/variables groups
+wrapping.assignment.statement:
+  text: Assignment statement
+wrapping.array.initializer:
+  text: Array initializer
+wrapping.modifier.list:
+  text: Modifier list
+wrapping.assert.statement:
+  text: Assert statement
+wrapping.new.line.after.lpar:
+  text: New line after '('
+wrapping.rpar.on.new.line:
+  text: Place ')' on new line
+wrapping.take.priority.over.call.chain.wrapping:
+  text: Take priority over call chain wrapping
+wrapping.operation.sign.on.next.line:
+  text: Operation sign on next line
+wrapping.assignment.sign.on.next.line:
+  text: Assignment sign on next line
+wrapping.quest.and.colon.signs.on.next.line:
+  text: '''?'' and '':'' signs on next line'
+wrapping.new.line.after.lbrace:
+  text: New line after '{'
+wrapping.rbrace.on.new.line:
+  text: Place '}' on new line
+wrapping.after.modifier.list:
+  text: Wrap after modifier list
+wrapping.colon.signs.on.next.line:
+  text: ''':'' signs on next line'
+wrapping.classes.annotation:
+  text: Class annotations
+wrapping.methods.annotation:
+  text: Method annotations
+wrapping.fields.annotation:
+  text: Field annotations
+wrapping.parameters.annotation:
+  text: Parameter annotations
+wrapping.local.variables.annotation:
+  text: Local variable annotations
+wrapping.enum.constants:
+  text: Enum constants
+wrapping.long.lines:
+  text: Ensure right margin is not exceeded
+wrapping.comments:
+  text: Comments
+wrapping.comments.wrap.at.right.margin:
+  text: Wrap at right margin
+wrapping.align.fields.in.columns:
+  text: Align fields in columns
+wrapping.align.variables.in.columns:
+  text: Align variables in columns
+wrapping.align.simple.methods.in.columns:
+  text: Align simple methods in columns
+group.spaces.in.type.arguments.block:
+  text: Type Arguments
+group.spaces.in.type.parameters.block:
+  text: Type Parameters
+checkbox.align.multiline.chained.methods:
+  text: Chained methods
+checkbox.align.multiline.method.parameters:
+  text: Method parameters
+checkbox.align.multiline.call.arguments:
+  text: Call arguments
+checkbox.align.multiline.extends.list:
+  text: Extends list
+checkbox.align.multiline.throws.list:
+  text: Throws list
+checkbox.align.multiline.fields.groups:
+  text: Field groups
+checkbox.align.multiline.parenthesized.expression:
+  text: Parenthesized expression
+checkbox.align.multiline.binary.operation:
+  text: Binary operation
+checkbox.align.multiline.ternary.operation:
+  text: Ternary operation
+checkbox.align.multiline.assignments:
+  text: Assignments
+checkbox.align.multiline.for.statement:
+  text: For statement
+checkbox.align.multiline.array.initializer:
+  text: Array initializer
+title.place.on.new.line:
+  text: Place on New Line
+checkbox.keep.when.reformatting.control.statement.in.one.line:
+  text: Control statement in one line
+title.braces.placement:
+  text: Braces Placement
+combobox.force.braces.if:
+  text: 'if ():'
+combobox.force.braces.for:
+  text: 'for ():'
+combobox.force.braces.while:
+  text: 'while ():'
+combobox.force.braces.do.while:
+  text: 'do ... while():'
+label.loading.page.please.wait:
+  text: Loading...
+button.save.as:
+  text: Save As...
+button.delete:
+  text: Delete
+editbox.scheme.name:
+  text: 'Scheme:'
+html.project.uses.own.code.style:
+  text: <html><body>The current project is configured to use its own code style.<br>Changes made to global code style settings will not affect formatting in the current project.<br>See Project Settings | Code Style.<br>Press \&quot;Edit Global Settings\&quot; button below if you still want to edit global settings.</body></html>
+title.edit.global.settings:
+  text: Edit &Global Settings
+title.settings:
+  text: Settings
+title.global.code.style:
+  text: |-
+    Global
+    Code Style
+title.save.code.style.scheme.as:
+  text: Save Code Style Scheme As
+group.spaces.around.operators:
+  text: Around Operators
+group.spaces.before.parentheses:
+  text: Before Parentheses
+group.spaces.before.left.brace:
+  text: Before Left Brace
+group.spaces.after.right.brace:
+  text: Before Keywords
+group.spaces.within:
+  text: Within
+group.spaces.in.ternary.operator:
+  text: In Ternary Operator (?:)
+group.spaces.in.type.arguments:
+  text: Within Type Arguments
+group.spaces.other:
+  text: Other
+checkbox.spaces.method.call.parentheses:
+  text: Method call parentheses
+checkbox.spaces.method.declaration.parentheses:
+  text: Method declaration parentheses
+checkbox.spaces.if.parentheses:
+  text: '''if'' parentheses'
+checkbox.spaces.while.parentheses:
+  text: '''while'' parentheses'
+checkbox.spaces.for.parentheses:
+  text: '''for'' parentheses'
+checkbox.spaces.try.parentheses:
+  text: '''try'' parentheses'
+checkbox.spaces.catch.parentheses:
+  text: '''catch'' parentheses'
+checkbox.spaces.switch.parentheses:
+  text: '''switch'' parentheses'
+checkbox.spaces.synchronized.parentheses:
+  text: '''synchronized'' parentheses'
+checkbox.spaces.annotation.parameters:
+  text: Annotation parameters
+checkbox.spaces.assignment.operators:
+  text: Assignment operators (=, +=, ...)
+checkbox.spaces.logical.operators:
+  text: Logical operators (\&\&, ||)
+checkbox.spaces.equality.operators:
+  text: Equality operators (==, !=)
+checkbox.spaces.relational.operators:
+  text: Relational operators (<, >, <=, >=)
+checkbox.spaces.bitwise.operators:
+  text: Bitwise operators (\&, |, ^)
+checkbox.spaces.additive.operators:
+  text: Additive operators (+, -)
+checkbox.spaces.multiplicative.operators:
+  text: Multiplicative operators (*, /, %)
+checkbox.spaces.shift.operators:
+  text: Shift operators (<<, >>, >>>)
+checkbox.spaces.around.unary.operator:
+  text: Unary operators (!, -, +, ++, --)
+checkbox.spaces.class.left.brace:
+  text: Class left brace
+checkbox.spaces.method.left.brace:
+  text: Method left brace
+checkbox.spaces.if.left.brace:
+  text: '''if'' left brace'
+checkbox.spaces.else.left.brace:
+  text: '''else'' left brace'
+checkbox.spaces.while.left.brace:
+  text: '''while'' left brace'
+checkbox.spaces.for.left.brace:
+  text: '''for'' left brace'
+checkbox.spaces.do.left.brace:
+  text: '''do'' left brace'
+checkbox.spaces.switch.left.brace:
+  text: '''switch'' left brace'
+checkbox.spaces.try.left.brace:
+  text: '''try'' left brace'
+checkbox.spaces.catch.left.brace:
+  text: '''catch'' left brace'
+checkbox.spaces.finally.left.brace:
+  text: '''finally'' left brace'
+checkbox.spaces.synchronized.left.brace:
+  text: '''synchronized'' left brace'
+checkbox.spaces.array.initializer.left.brace:
+  text: Array initializer left brace
+checkbox.spaces.annotation.array.initializer.left.brace:
+  text: Annotation array initializer left brace
+checkbox.spaces.else.keyword:
+  text: '''else'' keyword'
+checkbox.spaces.while.keyword:
+  text: '''while'' keyword'
+checkbox.spaces.catch.keyword:
+  text: '''catch'' keyword'
+checkbox.spaces.finally.keyword:
+  text: '''finally'' keyword'
+checkbox.spaces.within.brackets:
+  text: Brackets
+checkbox.spaces.within.braces:
+  text: Code braces
+checkbox.spaces.within.array.initializer.braces:
+  text: Array initializer braces
+checkbox.spaces.within.parentheses:
+  text: Grouping parentheses
+checkbox.spaces.checkbox.spaces.method.call.parentheses:
+  text: Method call parentheses
+checkbox.spaces.checkbox.spaces.empty.method.call.parentheses:
+  text: Empty method call parentheses
+checkbox.spaces.checkbox.spaces.method.declaration.parentheses:
+  text: Method declaration parentheses
+checkbox.spaces.checkbox.spaces.empty.method.declaration.parentheses:
+  text: Empty method declaration parentheses
+checkbox.spaces.type.cast.parentheses:
+  text: Type cast parentheses
+checkbox.spaces.annotation.parentheses:
+  text: Annotation parentheses
+checkbox.spaces.before.question:
+  text: Before '?'
+checkbox.spaces.after.question:
+  text: After '?'
+checkbox.spaces.before.colon:
+  text: Before ':'
+checkbox.spaces.after.colon:
+  text: After ':'
+checkbox.spaces.after.colon.in.label.declaration:
+  text: After ':' in label declaration
+checkbox.spaces.after.comma:
+  text: After comma
+checkbox.spaces.before.comma:
+  text: Before comma
+checkbox.spaces.after.semicolon:
+  text: After semicolon
+checkbox.spaces.before.semicolon:
+  text: Before semicolon
+checkbox.spaces.after.type.cast:
+  text: After type cast
+wrapping.wrap.on.typing:
+  text: Wrap on typing
+wrapping.wrap.on.typing.no.wrap:
+  text: 'No'
+wrapping.wrap.on.typing.wrap:
+  text: 'Yes'
+wrapping.wrap.on.typing.default:
+  text: Default
+title.blank.lines:
+  text: Blank Lines
+title.keep.blank.lines:
+  text: Keep Maximum Blank Lines
+title.minimum.blank.lines:
+  text: Minimum Blank Lines
+arrangement.title.settings.tab:
+  text: Arrangement
+arrangement.text.empty.rule:
+  text: <empty rule>
+arrangement.text.type:
+  text: Type
+arrangement.text.modifier:
+  text: Modifier
+arrangement.text.name:
+  text: Name
+arrangement.order.name:
+  text: Order
+arrangement.action.rule.add.text:
+  text: Add rule
+arrangement.action.rule.add.description:
+  text: Add new arrangement rule
+arrangement.action.rule.remove.text:
+  text: Remove rule(s)
+arrangement.action.rule.remove.description:
+  text: Remove selected arrangement rule(s)
+arrangement.action.rule.edit.text:
+  text: Edit rule
+arrangement.action.rule.edit.description:
+  text: Edit selected arrangement rule
+arrangement.action.rule.move.up.text:
+  text: Move up
+arrangement.action.rule.move.up.description:
+  text: Move selected arrangement rule(s) up
+arrangement.action.rule.move.down.text:
+  text: Move down
+arrangement.action.rule.move.down.description:
+  text: Move selected arrangement rule(s) down
+arrangement.settings.section.groups:
+  text: Grouping rules
+arrangement.settings.section.match:
+  text: Matching rules
+arrangement.settings.groups.property.field:
+  text: Group property field with corresponding getter/setter
+arrangement.settings.groups.dependent.methods:
+  text: Keep dependent methods together
+arrangement.settings.groups.overridden.methods:
+  text: Keep overridden methods together
+arrangement.settings.groups.getters.and.setters.together:
+  text: Keep getters and setters together
+arrangement.settings.order.type.keep:
+  text: keep order
+arrangement.settings.order.type.by.name:
+  text: order by name
+arrangement.settings.order.type.depth.first:
+  text: depth-first order
+arrangement.settings.order.type.breadth.first:
+  text: breadth-first order
+arrangement.settings.text.general.type:
+  text: 'Type:'
+arrangement.settings.text.general.modifier:
+  text: 'Modifier:'
+arrangement.settings.text.general.name:
+  text: 'Name:'
+arrangement.settings.text.general.text:
+  text: 'Text:'
+arrangement.settings.text.general.order:
+  text: 'Order:'
+arrangement.settings.text.general.xml.namespace:
+  text: 'Namespace:'
+arrangement.settings.text.entry.type.xml.tag:
+  text: tag
+arrangement.settings.text.entry.type.xml.attribute:
+  text: attribute
+editbox.indent.tab.size:
+  text: 'Tab size:'
+editbox.indent.indent:
+  text: 'Indent:'
+editbox.indent.continuation.indent:
+  text: 'Continuation indent:'
+indent.status.bar.tab:
+  text: Tab
+indent.status.bar.spaces:
+  text: '{0, choice, 1#{0} space|2#{0} spaces}'
+indent.status.bar.indent.tooltip:
+  text: 'Indent:'
+checkbox.indent.use.tab.character:
+  text: Use tab character

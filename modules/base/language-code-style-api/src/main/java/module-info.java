@@ -1,6 +1,6 @@
 /**
  * @author VISTALL
- * @since 12-Mar-22
+ * @since 2022-03-12
  */
 module consulo.language.code.style.api {
     // todo drop this dependency
@@ -24,6 +24,7 @@ module consulo.language.code.style.api {
     exports consulo.language.codeStyle.fileSet;
     exports consulo.language.codeStyle.inject;
     exports consulo.language.codeStyle.lineIndent;
+    exports consulo.language.codeStyle.localize;
     exports consulo.language.codeStyle.setting;
     exports consulo.language.codeStyle.template;
 
