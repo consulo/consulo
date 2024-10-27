@@ -35,7 +35,6 @@ import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.impl.TabFactoryBuilderImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.localize.IdeLocalize;
-import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -165,10 +164,10 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
                         ((IdeDocumentHistoryImpl)IdeDocumentHistory.getInstance(myFileEditorManager.getProject())).onSelectionChanged();
                     };
                     if (Application.get().isDispatchThread()) {
-                        CommandProcessor.getInstance().newCommand(runnable)
-                            .withProject(myFileEditorManager.getProject())
-                            .withName(IdeLocalize.commandSwitchActiveEditor())
-                            .execute();
+                        CommandProcessor.getInstance().newCommand()
+                            .project(myFileEditorManager.getProject())
+                            .name(IdeLocalize.commandSwitchActiveEditor())
+                            .run(runnable);
                     }
                     else {
                         runnable.run(); // not invoked by user

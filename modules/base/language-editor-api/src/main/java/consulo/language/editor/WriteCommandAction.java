@@ -195,7 +195,7 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
     }
 
     /**
-     * See {@link CommandBuilder#withShouldRecordActionForActiveDocument(boolean)} for details.
+     * See {@link CommandBuilder#shouldRecordActionForActiveDocument (boolean)} for details.
      */
     protected boolean shouldRecordActionForActiveDocument() {
         return true;
@@ -221,19 +221,15 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
 
     @RequiredUIAccess
     private void doExecuteCommand(final Runnable runnable) {
-        Runnable wrappedRunnable = () -> {
-            if (isGlobalUndoAction()) {
-                CommandProcessor.getInstance().markCurrentCommandAsGlobal(getProject());
-            }
-            runnable.run();
-        };
-        CommandProcessor.getInstance().newCommand(wrappedRunnable)
-            .withProject(getProject())
-            .withName(LocalizeValue.ofNullable(getCommandName()))
-            .withGroupId(getGroupID())
-            .withUndoConfirmationPolicy(getUndoConfirmationPolicy())
-            .withShouldRecordActionForActiveDocument(shouldRecordActionForActiveDocument())
-            .executeInWriteAction();
+        CommandProcessor.getInstance().newCommand()
+            .project(getProject())
+            .name(LocalizeValue.ofNullable(getCommandName()))
+            .groupId(getGroupID())
+            .undoConfirmationPolicy(getUndoConfirmationPolicy())
+            .shouldRecordActionForActiveDocument(shouldRecordActionForActiveDocument())
+            .inWriteAction()
+            .inGlobalUndoActionIf(isGlobalUndoAction())
+            .run(runnable);
     }
 
     /**

@@ -47,8 +47,8 @@ public class DefaultRawTypedHandler implements TypedActionHandlerEx {
             throw new IllegalStateException("Unexpected reentrancy of DefaultRawTypedHandler");
         }
         myCurrentCommandToken = commandProcessorEx.newCommand()
-            .withProject(project)
-            .withGroupId(editor.getDocument())
+            .project(project)
+            .groupId(editor.getDocument())
             .start();
         myInOuterCommand = myCurrentCommandToken == null;
         try {
@@ -92,6 +92,6 @@ public class DefaultRawTypedHandler implements TypedActionHandlerEx {
         CommandProcessorEx commandProcessorEx = (CommandProcessorEx)CommandProcessor.getInstance();
         Project project = myCurrentCommandToken.getProject();
         myCurrentCommandToken.finish();
-        myCurrentCommandToken = commandProcessorEx.newCommand().withProject(project).start();
+        myCurrentCommandToken = commandProcessorEx.newCommand().project(project).start();
     }
 }

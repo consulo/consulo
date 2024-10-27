@@ -87,7 +87,11 @@ public class InvokeTemplateAction extends AnAction {
             return;
         }
 
-        CommandProcessor.getInstance().newCommand(() -> {
+        CommandProcessor.getInstance().newCommand()
+            .project(myProject)
+            .name(CodeInsightLocalize.commandWrapWithTemplate())
+            .groupId("Wrap with template " + myTemplate.getKey())
+            .run(() -> {
                 myEditor.getCaretModel().runForEachCaret(__ -> {
                     // adjust the selection so that it starts with a non-whitespace character (to make sure that the template is inserted
                     // at a meaningful position rather than at indent 0)
@@ -113,10 +117,6 @@ public class InvokeTemplateAction extends AnAction {
                 if (myCallback != null) {
                     myCallback.run();
                 }
-            })
-            .withProject(myProject)
-            .withName(CodeInsightLocalize.commandWrapWithTemplate())
-            .withGroupId("Wrap with template " + myTemplate.getKey())
-            .execute();
+            });
     }
 }

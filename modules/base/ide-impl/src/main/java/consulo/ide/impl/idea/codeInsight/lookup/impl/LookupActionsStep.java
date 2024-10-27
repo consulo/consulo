@@ -68,9 +68,9 @@ public class LookupActionsStep extends BaseListPopupStep<LookupElementAction> im
         }
         else if (result instanceof LookupElementAction.Result.ChooseItem chooseItem) {
             myLookup.setCurrentItem(chooseItem.item);
-            CommandProcessor.getInstance().newCommand(() -> myLookup.finishLookup(Lookup.AUTO_INSERT_SELECT_CHAR))
-                .withProject(myLookup.getProject())
-                .execute();
+            CommandProcessor.getInstance().newCommand()
+                .project(myLookup.getProject())
+                .run(() -> myLookup.finishLookup(Lookup.AUTO_INSERT_SELECT_CHAR));
         }
         return FINAL_CHOICE;
     }

@@ -15,7 +15,6 @@ import consulo.fileEditor.statusBar.EditorBasedWidget;
 import consulo.ide.impl.idea.ide.util.EditorGotoLineNumberDialog;
 import consulo.ide.impl.idea.ide.util.GotoLineNumberDialog;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
@@ -93,14 +92,14 @@ public final class PositionPanel extends EditorBasedWidget
                 return;
             }
 
-            CommandProcessor.getInstance().newCommand(() -> {
+            CommandProcessor.getInstance().newCommand()
+                .project(project)
+                .name(UILocalize.goToLineCommandName())
+                .run(() -> {
                     GotoLineNumberDialog dialog = new EditorGotoLineNumberDialog(project, editor);
                     dialog.show();
                     IdeDocumentHistory.getInstance(project).includeCurrentCommandAsNavigation();
-                })
-                .withProject(project)
-                .withName(UILocalize.goToLineCommandName())
-                .execute();
+                });
         };
     }
 

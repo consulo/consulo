@@ -319,17 +319,12 @@ public abstract class BaseRefactoringProcessor implements Runnable {
 
     @RequiredUIAccess
     protected void execute(@Nonnull final UsageInfo[] usages) {
-        CommandProcessor.getInstance().newCommand(() -> {
-                Collection<UsageInfo> usageInfos = new LinkedHashSet<>(Arrays.asList(usages));
-                doRefactoring(usageInfos);
-                if (isGlobalUndoAction()) {
-                    CommandProcessor.getInstance().markCurrentCommandAsGlobal(myProject);
-                }
-            })
-            .withProject(myProject)
-            .withName(LocalizeValue.ofNullable(getCommandName()))
-            .withUndoConfirmationPolicy(getUndoConfirmationPolicy())
-            .execute();
+        CommandProcessor.getInstance().newCommand()
+            .project(myProject)
+            .name(LocalizeValue.ofNullable(getCommandName()))
+            .undoConfirmationPolicy(getUndoConfirmationPolicy())
+            .inGlobalUndoActionIf(isGlobalUndoAction())
+            .run(() -> doRefactoring(new LinkedHashSet<>(Arrays.asList(usages))));
     }
 
     protected boolean isGlobalUndoAction() {

@@ -2637,9 +2637,3 @@ command.switch.active.editor:
   text: Switch Active Editor
 change.encoding.command.name:
   text: "Change Encoding for ''{0}''"
-command.deleting.files:
-  text: Deleting Files
-progress.title.deleting.files:
-  text: Deleting Files…
-command.finish:
-  text: finish

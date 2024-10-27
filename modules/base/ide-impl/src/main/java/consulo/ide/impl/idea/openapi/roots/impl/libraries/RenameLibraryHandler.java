@@ -105,7 +105,10 @@ public class RenameLibraryHandler implements RenameHandler, TitledHandler {
                 return false;
             }
             final SimpleReference<Boolean> success = SimpleReference.create(Boolean.TRUE);
-            CommandProcessor.getInstance().newCommand(() -> {
+            CommandProcessor.getInstance().newCommand()
+                .project(myProject)
+                .name(IdeLocalize.commandRenamingModule(oldName))
+                .run(() -> {
                     UndoableAction action = new BasicUndoableAction() {
                         @Override
                         public void undo() throws UnexpectedUndoException {
@@ -125,10 +128,7 @@ public class RenameLibraryHandler implements RenameHandler, TitledHandler {
                     };
                     ProjectUndoManager.getInstance(myProject).undoableActionPerformed(action);
                     myProject.getApplication().runWriteAction(() -> modifiableModel.commit());
-                })
-                .withProject(myProject)
-                .withName(IdeLocalize.commandRenamingModule(oldName))
-                .execute();
+                });
             return success.get();
         }
 

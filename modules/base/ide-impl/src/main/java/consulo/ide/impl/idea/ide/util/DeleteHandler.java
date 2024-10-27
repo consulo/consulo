@@ -214,7 +214,10 @@ public class DeleteHandler {
             }
         }
 
-        CommandProcessor.getInstance().newCommand(() -> NonProjectFileWritingAccessProvider.disableChecksDuring(() -> {
+        CommandProcessor.getInstance().newCommand()
+            .project(project)
+            .name(RefactoringLocalize.safeDeleteCommand(RefactoringUIUtil.calculatePsiElementDescriptionList(elements)))
+            .run(() -> NonProjectFileWritingAccessProvider.disableChecksDuring(() -> {
                 Collection<PsiElement> directories = new SmartList<>();
                 for (PsiElement e : elements) {
                     if (e instanceof PsiFileSystemItem && e.getParent() != null) {
@@ -306,27 +309,24 @@ public class DeleteHandler {
                         }
                     });
                 }
-            }))
-            .withProject(project)
-            .withName(RefactoringLocalize.safeDeleteCommand(RefactoringUIUtil.calculatePsiElementDescriptionList(elements)))
-            .execute();
+            }));
     }
 
     @RequiredUIAccess
     private static boolean clearReadOnlyFlag(final VirtualFile virtualFile, final Project project) {
-        final boolean[] success = new boolean[1];
-        CommandProcessor.getInstance().newCommand(() -> {
+        return (boolean)CommandProcessor.getInstance().newCommand()
+            .project(project)
+            .inWriteAction()
+            .get(() -> {
                 try {
                     ReadOnlyAttributeUtil.setReadOnlyAttribute(virtualFile, false);
-                    success[0] = true;
+                    return true;
                 }
                 catch (IOException e1) {
                     Messages.showMessageDialog(project, e1.getMessage(), CommonLocalize.titleError().get(), UIUtil.getErrorIcon());
+                    return false;
                 }
-            })
-            .withProject(project)
-            .executeInWriteAction();
-        return success[0];
+            });
     }
 
     public static boolean shouldEnableDeleteAction(PsiElement[] elements) {

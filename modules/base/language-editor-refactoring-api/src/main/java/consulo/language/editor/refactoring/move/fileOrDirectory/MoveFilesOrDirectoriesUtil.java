@@ -139,7 +139,10 @@ public class MoveFilesOrDirectoriesUtil {
         final PsiDirectory initialTargetDirectory = getInitialTargetDirectory(targetDirectory, elements);
 
         @RequiredUIAccess final MoveFilesOrDirectoriesDialog.Callback doRun =
-            moveDialog -> CommandProcessor.getInstance().newCommand(() -> {
+            moveDialog -> CommandProcessor.getInstance().newCommand()
+                .project(project)
+                .name(MoveHandler.REFACTORING_NAME)
+                .run(() -> {
                     final PsiDirectory targetDirectory1 = moveDialog != null ? moveDialog.getTargetDirectory() : initialTargetDirectory;
                     if (targetDirectory1 == null) {
                         LOG.error("It is null! The target directory, it is null!");
@@ -195,10 +198,7 @@ public class MoveFilesOrDirectoriesUtil {
                             project
                         );
                     }
-                })
-                .withProject(project)
-                .withName(MoveHandler.REFACTORING_NAME)
-                .execute();
+                });
 
         if (project.getApplication().isUnitTestMode()) {
             doRun.run(null);

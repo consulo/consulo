@@ -168,10 +168,10 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
                 return;
             }
 
-            CommandProcessor.getInstance().newCommand(() -> copyImpl(files, newName, targetDirectory, false, openInEditor))
-                .withProject(project)
-                .withName(RefactoringLocalize.copyHandlerCopyFilesDirectories())
-                .execute();
+            CommandProcessor.getInstance().newCommand()
+                .project(project)
+                .name(RefactoringLocalize.copyHandlerCopyFilesDirectories())
+                .run(() -> copyImpl(files, newName, targetDirectory, false, openInEditor));
         }
     }
 

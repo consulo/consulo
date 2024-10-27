@@ -27,6 +27,8 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.*;
+import consulo.undoRedo.builder.CommandBuilder;
+import consulo.undoRedo.builder.ProxyCommandBuilder;
 import consulo.util.collection.SmartList;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
@@ -236,39 +238,38 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
     }
 
     @RequiredUIAccess
-    @SuppressWarnings("RequiredXAction")
-    public DiffImplUtil.WriteCommandBuilder newMergeCommand(
-        boolean underBulkUpdate,
-        @Nullable IntList affectedChanges,
-        @Nonnull @RequiredUIAccess Runnable task
-    ) {
+    @SuppressWarnings({"RequiredXAction", "unchecked"})
+    public CommandBuilder newMergeCommand(@Nullable IntList affectedChanges) {
         IntList allAffectedChanges = affectedChanges != null ? collectAffectedChanges(affectedChanges) : null;
-        Runnable mergeTask = () -> {
-            LOG.assertTrue(!myInsideCommand);
 
-            // We should restore states after changes in document (by DocumentUndoProvider) to avoid corruption by our onBeforeDocumentChange()
-            // Undo actions are performed in backward order, while redo actions are performed in forward order.
-            // Thus we should register two UndoableActions.
+        CommandBuilder commandBuilder = DiffImplUtil.newWriteCommand()
+            .project(myProject)
+            .document(myDocument);
 
-            myInsideCommand = true;
-            enterBulkChangeUpdateBlock();
-            registerUndoRedo(true, allAffectedChanges);
-            try {
-                task.run();
-            }
-            finally {
-                registerUndoRedo(false, allAffectedChanges);
-                exitBulkChangeUpdateBlock();
-                myInsideCommand = false;
+        return new ProxyCommandBuilder(commandBuilder) {
+            @Override
+            public void run(@Nonnull Runnable runnable) {
+                super.run(() -> {
+                    LOG.assertTrue(!myInsideCommand);
+
+                    // We should restore states after changes in document (by DocumentUndoProvider) to avoid corruption by our onBeforeDocumentChange()
+                    // Undo actions are performed in backward order, while redo actions are performed in forward order.
+                    // Thus we should register two UndoableActions.
+
+                    myInsideCommand = true;
+                    enterBulkChangeUpdateBlock();
+                    registerUndoRedo(true, allAffectedChanges);
+                    try {
+                        runnable.run();
+                    }
+                    finally {
+                        registerUndoRedo(false, allAffectedChanges);
+                        exitBulkChangeUpdateBlock();
+                        myInsideCommand = false;
+                    }
+                });
             }
         };
-        DiffImplUtil.WriteCommandBuilder builder = underBulkUpdate
-            ? DiffImplUtil.newBulkUpdateWriteCommand(mergeTask)
-            : DiffImplUtil.newWriteCommand(mergeTask);
-
-        return builder
-            .withProject(myProject)
-            .withDocument(myDocument);
     }
 
     @Deprecated(forRemoval = true)
@@ -281,11 +282,12 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
         @Nullable IntList affectedChanges,
         @Nonnull @RequiredUIAccess Runnable task
     ) {
-        newMergeCommand(underBulkUpdate, affectedChanges, task)
-            .withName(LocalizeValue.ofNullable(commandName))
-            .withGroupId(commandGroupId)
-            .withUndoConfirmationPolicy(confirmationPolicy)
-            .execute();
+        newMergeCommand(affectedChanges)
+            .name(LocalizeValue.ofNullable(commandName))
+            .groupId(commandGroupId)
+            .undoConfirmationPolicy(confirmationPolicy)
+            .inBulkUpdateIf(underBulkUpdate)
+            .run(task);
     }
 
     @RequiredUIAccess

@@ -25,7 +25,6 @@ import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.openapi.command.undo.GlobalUndoableAction;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.localize.IdeLocalize;
-import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -226,14 +225,14 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
         };
 
         redo.run();
-        CommandProcessor.getInstance().newCommand(() -> {
+        CommandProcessor.getInstance().newCommand()
+            .project(project)
+            .name(IdeLocalize.changeEncodingCommandName(virtualFile.getName()))
+            .undoConfirmationPolicy(UndoConfirmationPolicy.REQUEST_CONFIRMATION)
+            .run(() -> {
                 UndoManager undoManager = project == null ? ApplicationUndoManager.getInstance() : ProjectUndoManager.getInstance(project);
                 undoManager.undoableActionPerformed(action);
-            })
-            .withProject(project)
-            .withName(IdeLocalize.changeEncodingCommandName(virtualFile.getName()))
-            .withUndoConfirmationPolicy(UndoConfirmationPolicy.REQUEST_CONFIRMATION)
-            .execute();
+            });
 
         return true;
     }

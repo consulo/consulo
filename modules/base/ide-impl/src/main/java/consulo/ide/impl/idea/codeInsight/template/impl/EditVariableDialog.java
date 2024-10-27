@@ -181,13 +181,15 @@ class EditVariableDialog extends DialogWrapper {
 
     @RequiredUIAccess
     private void updateTemplateTextByVarNameChange(final Variable oldVar, final Variable newVar) {
-        CommandProcessor.getInstance().newCommand(() -> {
-                Document document = myEditor.getDocument();
+        final Document document = myEditor.getDocument();
+        CommandProcessor.getInstance().newCommand()
+            .document(document)
+            .inWriteAction()
+            .run(() -> {
                 String templateText = document.getText();
                 templateText = templateText.replaceAll("\\$" + oldVar.getName() + "\\$", "\\$" + newVar.getName() + "\\$");
                 document.replaceString(0, document.getTextLength(), templateText);
-            })
-            .executeInWriteAction();
+            });
     }
 
     private class VariablesModel extends AbstractTableModel implements EditableModel {

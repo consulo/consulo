@@ -583,11 +583,11 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
                 return;
             }
 
-            DiffImplUtil.newWriteCommand(() -> apply(selectedChanges))
-                .withProject(e.getData(Project.KEY))
-                .withDocument(getEditor(myModifiedSide).getDocument())
-                .withName(DiffLocalize.messageUseSelectedChangesCommand(e.getPresentation().getText()))
-                .execute();
+            DiffImplUtil.newWriteCommand()
+                .project(e.getData(Project.KEY))
+                .document(getEditor(myModifiedSide).getDocument())
+                .name(DiffLocalize.messageUseSelectedChangesCommand(e.getPresentation().getText()))
+                .run(() -> apply(selectedChanges));
         }
 
         protected boolean isSomeChangeSelected(@Nonnull Side side) {

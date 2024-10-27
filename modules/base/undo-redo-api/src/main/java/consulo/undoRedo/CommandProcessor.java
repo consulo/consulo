@@ -25,36 +25,26 @@ import jakarta.annotation.Nullable;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class CommandProcessor {
-    public interface ExecutableCommandBuilder extends CommandBuilder<ExecutableCommandBuilder> {
-        @RequiredUIAccess
-        void execute();
-
-        @RequiredUIAccess
-        default void executeInWriteAction() {
-            Application.get().runWriteAction(this::execute);
-        }
-    }
-
     @Nonnull
     public static CommandProcessor getInstance() {
         return Application.get().getInstance(CommandProcessor.class);
     }
 
     @Nonnull
-    public abstract ExecutableCommandBuilder newCommand(@RequiredUIAccess @Nonnull Runnable command);
+    public abstract CommandBuilder newCommand();
 
     @Deprecated
-    @DeprecationInfo("Use #newCommand(Runnable).execute()")
+    @DeprecationInfo("Use #newCommand().run(Runnable)")
     @RequiredUIAccess
     public void executeCommand(@Nonnull @RequiredUIAccess Runnable runnable, @Nullable String name, @Nullable Object groupId) {
-        newCommand(runnable)
-            .withName(LocalizeValue.ofNullable(name))
-            .withGroupId(groupId)
-            .execute();
+        newCommand()
+            .name(LocalizeValue.ofNullable(name))
+            .groupId(groupId)
+            .run(runnable);
     }
 
     @Deprecated
-    @DeprecationInfo("Use #newCommand(Runnable).execute()")
+    @DeprecationInfo("Use #newCommand().run(Runnable)")
     @RequiredUIAccess
     public void executeCommand(
         @Nullable Project project,
@@ -62,15 +52,15 @@ public abstract class CommandProcessor {
         @Nullable String name,
         @Nullable Object groupId
     ) {
-        newCommand(runnable)
-            .withProject(project)
-            .withName(LocalizeValue.ofNullable(name))
-            .withGroupId(groupId)
-            .execute();
+        newCommand()
+            .project(project)
+            .name(LocalizeValue.ofNullable(name))
+            .groupId(groupId)
+            .run(runnable);
     }
 
     @Deprecated
-    @DeprecationInfo("Use #newCommand(Runnable).execute()")
+    @DeprecationInfo("Use #newCommand().run(Runnable)")
     @RequiredUIAccess
     public void executeCommand(
         @Nullable Project project,
@@ -79,16 +69,16 @@ public abstract class CommandProcessor {
         @Nullable Object groupId,
         @Nullable Document document
     ) {
-        newCommand(runnable)
-            .withProject(project)
-            .withName(LocalizeValue.ofNullable(name))
-            .withGroupId(groupId)
-            .withDocument(document)
-            .execute();
+        newCommand()
+            .project(project)
+            .name(LocalizeValue.ofNullable(name))
+            .groupId(groupId)
+            .document(document)
+            .run(runnable);
     }
 
     @Deprecated
-    @DeprecationInfo("Use #newCommand(Runnable).execute()")
+    @DeprecationInfo("Use #newCommand().run(Runnable)")
     @RequiredUIAccess
     public void executeCommand(
         @Nullable Project project,
@@ -97,16 +87,16 @@ public abstract class CommandProcessor {
         @Nullable Object groupId,
         @Nonnull UndoConfirmationPolicy confirmationPolicy
     ) {
-        newCommand(runnable)
-            .withProject(project)
-            .withName(LocalizeValue.ofNullable(name))
-            .withGroupId(groupId)
-            .withUndoConfirmationPolicy(confirmationPolicy)
-            .execute();
+        newCommand()
+            .project(project)
+            .name(LocalizeValue.ofNullable(name))
+            .groupId(groupId)
+            .undoConfirmationPolicy(confirmationPolicy)
+            .run(runnable);
     }
 
     @Deprecated
-    @DeprecationInfo("Use #newCommand(Runnable).execute()")
+    @DeprecationInfo("Use #newCommand().run(Runnable)")
     @RequiredUIAccess
     public void executeCommand(
         @Nullable Project project,
@@ -116,13 +106,13 @@ public abstract class CommandProcessor {
         @Nonnull UndoConfirmationPolicy confirmationPolicy,
         @Nullable Document document
     ) {
-        newCommand(command)
-            .withProject(project)
-            .withName(LocalizeValue.ofNullable(name))
-            .withGroupId(groupId)
-            .withUndoConfirmationPolicy(confirmationPolicy)
-            .withDocument(document)
-            .execute();
+        newCommand()
+            .project(project)
+            .name(LocalizeValue.ofNullable(name))
+            .groupId(groupId)
+            .undoConfirmationPolicy(confirmationPolicy)
+            .document(document)
+            .run(command);
     }
 
     /**
@@ -132,7 +122,7 @@ public abstract class CommandProcessor {
      *                                             Default is {@code true}.
      */
     @Deprecated
-    @DeprecationInfo("Use #newCommand(Runnable).execute()")
+    @DeprecationInfo("Use #newCommand().run(Runnable)")
     @RequiredUIAccess
     public void executeCommand(
         @Nullable Project project,
@@ -142,13 +132,13 @@ public abstract class CommandProcessor {
         @Nonnull UndoConfirmationPolicy confirmationPolicy,
         boolean shouldRecordCommandForActiveDocument
     ) {
-        newCommand(command)
-            .withProject(project)
-            .withName(LocalizeValue.ofNullable(name))
-            .withGroupId(groupId)
-            .withUndoConfirmationPolicy(confirmationPolicy)
-            .withShouldRecordActionForActiveDocument(shouldRecordCommandForActiveDocument)
-            .execute();
+        newCommand()
+            .project(project)
+            .name(LocalizeValue.ofNullable(name))
+            .groupId(groupId)
+            .undoConfirmationPolicy(confirmationPolicy)
+            .shouldRecordActionForActiveDocument(shouldRecordCommandForActiveDocument)
+            .run(command);
     }
 
     public void setCurrentCommandName(@Nonnull LocalizeValue name) {

@@ -32,13 +32,13 @@ public class PrevSplitAction extends AnAction implements DumbAware {
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
         final Project project = e.getData(Project.KEY);
-        CommandProcessor.getInstance().newCommand(() -> {
-                final FileEditorManagerEx manager = FileEditorManagerEx.getInstanceEx(project);
+        CommandProcessor.getInstance().newCommand()
+            .project(project)
+            .name(IdeLocalize.commandGoToPrevSplit())
+            .run(() -> {
+                FileEditorManagerEx manager = FileEditorManagerEx.getInstanceEx(project);
                 manager.setCurrentWindow(manager.getPrevWindow(manager.getCurrentWindow()));
-            })
-            .withProject(project)
-            .withName(IdeLocalize.commandGoToPrevSplit())
-            .execute();
+            });
     }
 
     @Override

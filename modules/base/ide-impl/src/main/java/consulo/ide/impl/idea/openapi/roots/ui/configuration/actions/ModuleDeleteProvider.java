@@ -63,7 +63,11 @@ public class ModuleDeleteProvider implements DeleteProvider, TitledHandler {
         if (ret != 0) {
             return;
         }
-        CommandProcessor.getInstance().newCommand(() -> {
+        CommandProcessor.getInstance().newCommand()
+            .project(project)
+            .name(ProjectLocalize.moduleRemoveCommand())
+            .inWriteAction()
+            .run(() -> {
                 final ModuleManager moduleManager = ModuleManager.getInstance(project);
                 final Module[] currentModules = moduleManager.getModules();
                 final ModifiableModuleModel modifiableModuleModel = moduleManager.getModifiableModel();
@@ -83,10 +87,7 @@ public class ModuleDeleteProvider implements DeleteProvider, TitledHandler {
                 final ModifiableRootModel[] modifiableRootModels =
                     otherModuleRootModels.values().toArray(new ModifiableRootModel[otherModuleRootModels.size()]);
                 ModifiableModelCommitter.getInstance(project).multiCommit(modifiableRootModels, modifiableModuleModel);
-            })
-            .withProject(project)
-            .withName(ProjectLocalize.moduleRemoveCommand())
-            .executeInWriteAction();
+            });
     }
 
     private static String getConfirmationText(Module[] modules, String names) {

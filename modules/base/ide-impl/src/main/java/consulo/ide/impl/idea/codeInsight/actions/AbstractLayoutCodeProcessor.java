@@ -429,7 +429,10 @@ public abstract class AbstractLayoutCodeProcessor {
                 return;
             }
 
-            final Runnable writeRunnable = () -> CommandProcessor.getInstance().newCommand(() -> {
+            final Runnable writeRunnable = () -> CommandProcessor.getInstance().newCommand()
+                .project(myProject)
+                .name(LocalizeValue.ofNullable(myCommandName))
+                .run(() -> {
                     try {
                         writeAction.run();
 
@@ -440,10 +443,7 @@ public abstract class AbstractLayoutCodeProcessor {
                     catch (IndexNotReadyException e) {
                         LOG.warn(e);
                     }
-                })
-                .withProject(myProject)
-                .withName(LocalizeValue.ofNullable(myCommandName))
-                .execute();
+                });
 
             if (Application.get().isUnitTestMode()) {
                 writeRunnable.run();

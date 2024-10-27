@@ -271,11 +271,12 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
         @Nonnull final PsiElement context
     ) {
         if (template.startInWriteAction()) {
-            CommandProcessor.getInstance().newCommand(() -> template.expand(context, editor))
-                .withProject(context.getProject())
-                .withName(CodeInsightLocalize.commandExpandPostfixTemplate())
-                .withGroupId(POSTFIX_TEMPLATE_ID)
-                .executeInWriteAction();
+            CommandProcessor.getInstance().newCommand()
+                .project(context.getProject())
+                .name(CodeInsightLocalize.commandExpandPostfixTemplate())
+                .groupId(POSTFIX_TEMPLATE_ID)
+                .inWriteAction()
+                .run(() -> template.expand(context, editor));
         }
         else {
             template.expand(context, editor);

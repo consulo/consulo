@@ -228,7 +228,10 @@ public class PatchApplier<BinaryType extends FilePatch> {
             final SimpleReference<ApplyPatchStatus> refStatus = SimpleReference.create(null);
             try {
                 setConfirmationToDefault();
-                CommandProcessor.getInstance().newCommand(() -> {
+                CommandProcessor.getInstance().newCommand()
+                    .project(myProject)
+                    .name(VcsLocalize.patchApplyCommand())
+                    .run(() -> {
                         //consider pre-check status only if not successful, otherwise we could not detect already applied status
                         if (createFiles() != ApplyPatchStatus.SUCCESS) {
                             refStatus.set(createFiles());
@@ -236,10 +239,7 @@ public class PatchApplier<BinaryType extends FilePatch> {
                         addSkippedItems(trigger);
                         trigger.prepare();
                         refStatus.set(ApplyPatchStatus.and(refStatus.get(), executeWritable()));
-                    })
-                    .withProject(myProject)
-                    .withName(VcsLocalize.patchApplyCommand())
-                    .execute();
+                    });
             }
             finally {
                 returnConfirmationBack();
@@ -305,7 +305,10 @@ public class PatchApplier<BinaryType extends FilePatch> {
         final TriggerAdditionOrDeletion trigger = new TriggerAdditionOrDeletion(project);
         final SimpleReference<ApplyPatchStatus> refStatus = new SimpleReference<>(result);
         try {
-            CommandProcessor.getInstance().newCommand(() -> {
+            CommandProcessor.getInstance().newCommand()
+                .project(project)
+                .name(VcsLocalize.patchApplyCommand())
+                .run(() -> {
                     for (PatchApplier applier : group) {
                         refStatus.set(ApplyPatchStatus.and(refStatus.get(), applier.createFiles()));
                         applier.addSkippedItems(trigger);
@@ -321,10 +324,7 @@ public class PatchApplier<BinaryType extends FilePatch> {
                             break;
                         }
                     }
-                })
-                .withProject(project)
-                .withName(VcsLocalize.patchApplyCommand())
-                .execute();
+                });
         }
         finally {
             VcsFileListenerContextHelper.getInstance(project).clearContext();

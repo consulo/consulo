@@ -47,8 +47,6 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.internal.StartMarkAction;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
-import consulo.util.lang.ref.Ref;
-import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -198,8 +196,11 @@ public abstract class AbstractInplaceIntroducer<V extends PsiNameIdentifierOwner
     @RequiredUIAccess
     public boolean startInplaceIntroduceTemplate() {
         final boolean replaceAllOccurrences = isReplaceAllOccurrences();
-        final SimpleReference<Boolean> result = new SimpleReference<>();
-        CommandProcessor.getInstance().newCommand(() -> {
+        return (boolean)CommandProcessor.getInstance().newCommand()
+            .project(myProject)
+            .name(LocalizeValue.ofNullable(getCommandName()))
+            .groupId(getCommandName())
+            .get(() -> {
                 final String[] names = suggestNames(replaceAllOccurrences, getLocalVariable());
                 final V variable = createFieldToStartTemplateOn(replaceAllOccurrences, names);
                 boolean started = false;
@@ -238,16 +239,11 @@ public abstract class AbstractInplaceIntroducer<V extends PsiNameIdentifierOwner
                         }
                     }
                 }
-                result.set(started);
                 if (!started) {
                     finish(true);
                 }
-            })
-            .withProject(myProject)
-            .withName(LocalizeValue.ofNullable(getCommandName()))
-            .withGroupId(getCommandName())
-            .execute();
-        return result.get();
+                return started;
+            });
     }
 
     protected int getCaretOffset() {
@@ -313,7 +309,11 @@ public abstract class AbstractInplaceIntroducer<V extends PsiNameIdentifierOwner
 
     @RequiredUIAccess
     public void restartInplaceIntroduceTemplate() {
-        CommandProcessor.getInstance().newCommand(() -> {
+        CommandProcessor.getInstance().newCommand()
+            .project(myProject)
+            .name(LocalizeValue.ofNullable(getCommandName()))
+            .groupId(getCommandName())
+            .run(() -> {
                 final TemplateState templateState = TemplateManager.getInstance(myProject).getTemplateState(myEditor);
                 if (templateState != null) {
                     myEditor.putUserData(INTRODUCE_RESTART, true);
@@ -339,11 +339,7 @@ public abstract class AbstractInplaceIntroducer<V extends PsiNameIdentifierOwner
                     }
                 }
                 updateTitle(getVariable());
-            })
-            .withProject(myProject)
-            .withName(LocalizeValue.ofNullable(getCommandName()))
-            .withGroupId(getCommandName())
-            .execute();
+            });
     }
 
     @Override
@@ -561,11 +557,11 @@ public abstract class AbstractInplaceIntroducer<V extends PsiNameIdentifierOwner
         if (!isIdentifier(newName, myExpr != null ? myExpr.getLanguage() : getLocalVariable().getLanguage())) {
             return false;
         }
-        CommandProcessor.getInstance().newCommand(this::performIntroduce)
-            .withProject(myProject)
-            .withName(LocalizeValue.ofNullable(getCommandName()))
-            .withGroupId(getCommandName())
-            .execute();
+        CommandProcessor.getInstance().newCommand()
+            .project(myProject)
+            .name(LocalizeValue.ofNullable(getCommandName()))
+            .groupId(getCommandName())
+            .run(this::performIntroduce);
 
         V variable = getVariable();
         if (variable != null) {
@@ -633,11 +629,11 @@ public abstract class AbstractInplaceIntroducer<V extends PsiNameIdentifierOwner
     public void stopIntroduce(Editor editor) {
         final TemplateState templateState = TemplateManager.getInstance(myProject).getTemplateState(editor);
         if (templateState != null) {
-            CommandProcessor.getInstance().newCommand(() -> templateState.gotoEnd(true))
-                .withProject(myProject)
-                .withName(LocalizeValue.ofNullable(getCommandName()))
-                .withGroupId(getCommandName())
-                .execute();
+            CommandProcessor.getInstance().newCommand()
+                .project(myProject)
+                .name(LocalizeValue.ofNullable(getCommandName()))
+                .groupId(getCommandName())
+                .run(() -> templateState.gotoEnd(true));
         }
     }
 

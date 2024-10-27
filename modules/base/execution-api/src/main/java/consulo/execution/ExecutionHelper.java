@@ -28,7 +28,6 @@ import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.process.ExecutionMode;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.execution.ui.RunContentManager;
-import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.navigation.Navigatable;
 import consulo.process.ProcessHandler;
@@ -256,17 +255,17 @@ public class ExecutionHelper {
         @Nonnull final String tabDisplayName
     ) {
         CommandProcessor commandProcessor = CommandProcessor.getInstance();
-        commandProcessor.newCommand(() -> {
+        commandProcessor.newCommand()
+            .project(project)
+            .name(ExecutionLocalize.openMessageView())
+            .run(() -> {
                 final MessageView messageView = MessageView.getInstance(project);
                 final Content content = ContentFactory.getInstance().createContent(errorTreeView.getComponent(), tabDisplayName, true);
                 messageView.getContentManager().addContent(content);
                 Disposer.register(content, errorTreeView);
                 messageView.getContentManager().setSelectedContent(content);
                 removeContents(content, project, tabDisplayName);
-            })
-            .withProject(project)
-            .withName(ExecutionLocalize.openMessageView())
-            .execute();
+            });
     }
 
     private static void removeContents(

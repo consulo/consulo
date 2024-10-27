@@ -510,10 +510,14 @@ class Browser extends JPanel {
 
     @RequiredUIAccess
     private void performFix(final RefEntity element, final CommonProblemDescriptor descriptor, final int idx, final QuickFix fix) {
-        CommandProcessor.getInstance().newCommand(() -> {
+        CommandProcessor.getInstance().newCommand()
+            .project(myView.getProject())
+            .name(LocalizeValue.ofNullable(fix.getName()))
+            .inWriteAction()
+            .inGlobalUndoAction()
+            .run(() -> {
                 final PsiModificationTracker tracker = PsiManager.getInstance(myView.getProject()).getModificationTracker();
                 final long startCount = tracker.getModificationCount();
-                CommandProcessor.getInstance().markCurrentCommandAsGlobal(myView.getProject());
                 //CCE here means QuickFix was incorrectly inherited
                 fix.applyFix(myView.getProject(), descriptor);
                 if (startCount != tracker.getModificationCount()) {
@@ -525,9 +529,6 @@ class Browser extends JPanel {
                     }
                     myView.updateView(false);
                 }
-            })
-            .withProject(myView.getProject())
-            .withName(LocalizeValue.ofNullable(fix.getName()))
-            .executeInWriteAction();
+            });
     }
 }

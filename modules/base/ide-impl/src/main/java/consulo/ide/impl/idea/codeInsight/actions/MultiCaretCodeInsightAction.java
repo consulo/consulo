@@ -60,7 +60,12 @@ public abstract class MultiCaretCodeInsightAction extends AnAction {
 
     @RequiredUIAccess
     public void actionPerformedImpl(final Project project, final Editor hostEditor) {
-        CommandProcessor.getInstance().newCommand(() -> {
+        CommandProcessor.getInstance().newCommand()
+            .project(project)
+            .name(getTemplatePresentation().getTextValue())
+            .groupId(DocCommandGroupId.noneGroupId(hostEditor.getDocument()))
+            .inWriteAction()
+            .run(() -> {
                 MultiCaretCodeInsightActionHandler handler = getHandler();
                 try {
                     iterateOverCarets(project, hostEditor, handler);
@@ -68,11 +73,7 @@ public abstract class MultiCaretCodeInsightAction extends AnAction {
                 finally {
                     handler.postInvoke();
                 }
-            })
-            .withProject(project)
-            .withName(getTemplatePresentation().getTextValue())
-            .withGroupId(DocCommandGroupId.noneGroupId(hostEditor.getDocument()))
-            .executeInWriteAction();
+            });
 
         hostEditor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
     }

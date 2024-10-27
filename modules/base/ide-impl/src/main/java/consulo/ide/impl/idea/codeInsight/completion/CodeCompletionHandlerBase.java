@@ -196,10 +196,10 @@ public class CodeCompletionHandlerBase {
                 CommandProcessor.getInstance().runUndoTransparentAction(initCmd);
             }
             else {
-                CommandProcessor.getInstance().newCommand(initCmd)
-                    .withProject(project)
-                    .withDocument(editor.getDocument())
-                    .execute();
+                CommandProcessor.getInstance().newCommand()
+                    .project(project)
+                    .document(editor.getDocument())
+                    .run(initCmd);
             }
         }
         catch (IndexNotReadyException e) {
@@ -488,13 +488,13 @@ public class CodeCompletionHandlerBase {
                 final Runnable restorePrefix = rememberDocumentState(indicator.getEditor());
 
                 final LookupElement item = insertItem.getElement();
-                CommandProcessor.getInstance().newCommand(() -> {
+                CommandProcessor.getInstance().newCommand()
+                    .project(indicator.getProject())
+                    .name(CodeInsightLocalize.completionAutomaticCommandName())
+                    .run(() -> {
                         indicator.setMergeCommand();
                         indicator.getLookup().finishLookup(Lookup.AUTO_INSERT_SELECT_CHAR, item);
-                    })
-                    .withProject(indicator.getProject())
-                    .withName(CodeInsightLocalize.completionAutomaticCommandName())
-                    .execute();
+                    });
 
                 // the insert handler may have started a live template with completion
                 if (CompletionService.getCompletionService().getCurrentCompletion() == null

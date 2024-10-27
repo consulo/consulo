@@ -33,14 +33,14 @@ public class GotoLineAction extends AnAction implements DumbAware {
         }
         else {
             CommandProcessor processor = CommandProcessor.getInstance();
-            processor.newCommand(() -> {
+            processor.newCommand()
+                .project(project)
+                .name(IdeLocalize.commandGoToLine())
+                .run(() -> {
                     GotoLineNumberDialog dialog = new EditorGotoLineNumberDialog(project, editor);
                     dialog.show();
                     IdeDocumentHistory.getInstance(project).includeCurrentCommandAsNavigation();
-                })
-                .withProject(project)
-                .withName(IdeLocalize.commandGoToLine())
-                .execute();
+                });
         }
     }
 

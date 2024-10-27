@@ -1203,9 +1203,9 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
             runnable.run();
         }
         else {
-            CommandProcessor.getInstance().newCommand(runnable)
-                .withGroupId(DocCommandGroupId.noneGroupId(this))
-                .execute();
+            CommandProcessor.getInstance().newCommand()
+                .groupId(DocCommandGroupId.noneGroupId(this))
+                .run(runnable);
         }
 
         clearLineModificationFlags();

@@ -80,23 +80,25 @@ public class PasteReferenceProvider implements CustomPasteProvider {
         }
 
         final PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
-        documentManager.commitDocument(editor.getDocument());
+        final Document document = editor.getDocument();
+        documentManager.commitDocument(document);
 
-        final PsiFile file = documentManager.getPsiFile(editor.getDocument());
+        final PsiFile file = documentManager.getPsiFile(document);
         if (!FileModificationService.getInstance().prepareFileForWrite(file)) {
             return;
         }
 
-        CommandProcessor.getInstance().newCommand(() -> {
-                Document document = editor.getDocument();
+        CommandProcessor.getInstance().newCommand()
+            .project(project)
+            .document(document)
+            .name(IdeLocalize.commandPastingReference())
+            .inWriteAction()
+            .run(() -> {
                 documentManager.doPostponedOperationsAndUnblockDocument(document);
                 documentManager.commitDocument(document);
                 EditorModificationUtil.deleteSelectedText(editor);
                 provider.insertQualifiedName(fqn, element, editor, project);
-            })
-            .withProject(project)
-            .withName(IdeLocalize.commandPastingReference())
-            .executeInWriteAction();
+            });
     }
 
     @Nullable

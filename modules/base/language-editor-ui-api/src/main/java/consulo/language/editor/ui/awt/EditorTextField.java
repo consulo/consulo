@@ -300,7 +300,11 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
 
     @RequiredUIAccess
     public void setText(@Nullable final String text) {
-        CommandProcessor.getInstance().newCommand(() -> {
+        CommandProcessor.getInstance().newCommand()
+            .project(getProject())
+            .document(getDocument())
+            .inWriteAction()
+            .run(() -> {
                 myDocument.replaceString(0, myDocument.getTextLength(), text == null ? "" : text);
                 if (myEditor != null) {
                     final CaretModel caretModel = myEditor.getCaretModel();
@@ -308,10 +312,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
                         caretModel.moveToOffset(myDocument.getTextLength());
                     }
                 }
-            })
-            .withProject(getProject())
-            .withDocument(getDocument())
-            .executeInWriteAction();
+            });
     }
 
     /**

@@ -685,16 +685,17 @@ public class FindUtil {
                     caretOffset = newText.length();
                 }
                 final int finalCaretOffset = caretOffset;
-                CommandProcessor.getInstance().newCommand(() -> {
+                CommandProcessor.getInstance().newCommand()
+                    .project(project)
+                    .groupId(document)
+                    .inWriteAction()
+                    .run(() -> {
                         document.setText(newText);
                         editor.getCaretModel().moveToOffset(finalCaretOffset);
                         if (model.isGlobal()) {
                             editor.getSelectionModel().removeSelection();
                         }
-                    })
-                    .withProject(project)
-                    .withGroupId(document)
-                    .executeInWriteAction();
+                    });
             }
             else if (reallyReplaced) {
                 if (caretOffset > document.getTextLength()) {
@@ -972,12 +973,14 @@ public class FindUtil {
         final String stringToReplace
     ) {
         final String converted = StringUtil.convertLineSeparators(stringToReplace);
-        CommandProcessor.getInstance().newCommand(() -> {
+        CommandProcessor.getInstance().newCommand()
+            .project(project)
+            .document(document)
+            .inWriteAction()
+            .run(() -> {
                 //[ven] I doubt converting is a good solution to SCR 21224
                 document.replaceString(startOffset, endOffset, converted);
-            })
-            .withProject(project)
-            .executeInWriteAction();
+            });
         return startOffset + converted.length();
     }
 

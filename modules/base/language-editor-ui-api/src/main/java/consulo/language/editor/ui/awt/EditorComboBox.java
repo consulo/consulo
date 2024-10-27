@@ -176,15 +176,16 @@ public class EditorComboBox extends ComboBox implements DocumentListener {
 
     @RequiredUIAccess
     public void setText(final String text) {
-        CommandProcessor.getInstance().newCommand(() -> {
+        CommandProcessor.getInstance().newCommand()
+            .project(getProject())
+            .document(myDocument)
+            .inWriteAction()
+            .run(() -> {
                 myDocument.replaceString(0, myDocument.getTextLength(), text);
                 if (myEditorField != null && myEditorField.getEditor() != null) {
                     myEditorField.getCaretModel().moveToOffset(myDocument.getTextLength());
                 }
-            })
-            .withProject(getProject())
-            .withDocument(myDocument)
-            .executeInWriteAction();
+            });
     }
 
     public void removeSelection() {

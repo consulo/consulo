@@ -191,10 +191,10 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
 
         int currOffs = myEditor.getScrollingModel().getVerticalScrollOffset();
 
-        final Project finalProject = ProjectUIUtil.guessCurrentProject(getPanel());
-        CommandProcessor.getInstance().newCommand(() -> replaceText(finalProject))
-            .withProject(finalProject)
-            .execute();
+        final Project project = ProjectUIUtil.guessCurrentProject(getPanel());
+        CommandProcessor.getInstance().newCommand()
+            .project(ProjectUIUtil.guessCurrentProject(getPanel()))
+            .run(() -> replaceText(project));
 
         myEditor.getSettings().setRightMargin(getAdjustedRightMargin());
         myLastDocumentModificationStamp = myEditor.getDocument().getModificationStamp();

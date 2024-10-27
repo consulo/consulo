@@ -719,11 +719,15 @@ title.add.module:
   text: New Module
 prompt.open.project.in.new.frame:
   text: <html><body>New projects can either be opened in a new window or replace the project in the existing window.<br>How would you like to open the project?</body></html>
-title.new.project:
-  text: New Project
 button.newframe:
   text: New &Window
 button.existingframe:
   text: '&This Window'
 title.open.project:
   text: Open Project
+command.deleting.files:
+  text: Deleting Files
+progress.title.deleting.files:
+  text: Deleting Files…
+command.finish:
+  text: finish

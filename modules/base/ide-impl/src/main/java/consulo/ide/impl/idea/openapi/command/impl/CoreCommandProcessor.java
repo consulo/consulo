@@ -21,15 +21,11 @@ import java.util.List;
 import java.util.Stack;
 
 public class CoreCommandProcessor extends CommandProcessorEx {
-    private class MyCommandBuilder extends BaseCommandBuilder<ExecutableCommandBuilder> implements ExecutableCommandBuilder {
-        protected MyCommandBuilder(@Nonnull Runnable command) {
-            super(command);
-        }
-
+    private class MyCommandBuilder extends MyStartableCommandBuilder {
         @Override
         @RequiredUIAccess
-        public void execute() {
-            executeCommand(build());
+        public void run(@RequiredUIAccess @Nonnull Runnable runnable) {
+            executeCommand(build(runnable));
         }
     }
 
@@ -57,11 +53,11 @@ public class CoreCommandProcessor extends CommandProcessorEx {
         }
 
         public void setName(@Nonnull LocalizeValue name) {
-            myDescriptor = new BaseCommandBuilder(myDescriptor).withName(name).build();
+            myDescriptor = new BaseCommandBuilder(myDescriptor).name(name).build(myDescriptor.command());
         }
 
         public void setGroupId(Object groupId) {
-            myDescriptor = new BaseCommandBuilder(myDescriptor).withGroupId(groupId).build();
+            myDescriptor = new BaseCommandBuilder(myDescriptor).groupId(groupId).build(myDescriptor.command());
         }
     }
 
@@ -159,10 +155,10 @@ public class CoreCommandProcessor extends CommandProcessorEx {
         eventPublisher = messageBus.syncPublisher(CommandListener.class);
     }
 
-    @Override
     @Nonnull
-    public ExecutableCommandBuilder newCommand(@Nonnull Runnable command) {
-        return new MyCommandBuilder(command);
+    @Override
+    public StartableCommandBuilder newCommand() {
+        return new MyCommandBuilder();
     }
 
     @RequiredUIAccess
@@ -355,6 +351,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
     }
 
     @Override
+    @RequiredUIAccess
     public void runUndoTransparentAction(@Nonnull Runnable action) {
         if (CommandLog.LOG.isDebugEnabled()) {
             CommandLog.LOG.debug(

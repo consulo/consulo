@@ -270,7 +270,11 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
             if (ret != Messages.OK) {
                 return;
             }
-            CommandProcessor.getInstance().newCommand(() -> {
+            CommandProcessor.getInstance().newCommand()
+                .project(module.getProject())
+                .name(title)
+                .inWriteAction()
+                .run(() -> {
                     ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
                     OrderEntry[] orderEntries = rootManager.getOrderEntries();
                     ModifiableRootModel model = rootManager.getModifiableModel();
@@ -283,10 +287,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
                         }
                     }
                     model.commit();
-                })
-                .withProject(module.getProject())
-                .withName(title)
-                .executeInWriteAction();
+                });
         }
 
         @Nullable

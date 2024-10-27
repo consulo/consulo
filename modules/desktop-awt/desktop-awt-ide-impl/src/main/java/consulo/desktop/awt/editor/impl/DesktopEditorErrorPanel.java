@@ -38,7 +38,6 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.PopupHandler;
 import consulo.undoRedo.CommandProcessor;
-import consulo.undoRedo.UndoConfirmationPolicy;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -258,12 +257,12 @@ public class DesktopEditorErrorPanel extends JComponent implements UISettingsLis
 
     @RequiredUIAccess
     public void mouseClicked(final MouseEvent e) {
-        CommandProcessor.getInstance().newCommand(() -> doMouseClicked(e))
-            .withProject(myEditor.getProject())
-            .withName(CodeEditorLocalize.moveCaretCommandName())
-            .withGroupId(DocCommandGroupId.noneGroupId(myEditor.getDocument()))
-            .withDocument(myEditor.getDocument())
-            .execute();
+        CommandProcessor.getInstance().newCommand()
+            .project(myEditor.getProject())
+            .document(myEditor.getDocument())
+            .name(CodeEditorLocalize.moveCaretCommandName())
+            .groupId(DocCommandGroupId.noneGroupId(myEditor.getDocument()))
+            .run(() -> doMouseClicked(e));
     }
 
     @RequiredUIAccess

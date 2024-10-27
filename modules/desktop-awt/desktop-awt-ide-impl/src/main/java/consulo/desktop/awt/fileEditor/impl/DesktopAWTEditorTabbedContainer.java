@@ -153,13 +153,13 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
             })
             .setSelectionChangeHandler((info, requestFocus, doChangeSelection) -> {
                 final ActionCallback result = new ActionCallback();
-                CommandProcessor.getInstance().newCommand(() -> {
+                CommandProcessor.getInstance().newCommand()
+                    .project(myProject)
+                    .name(LocalizeValue.localizeTODO("EditorChange"))
+                    .run(() -> {
                         ((IdeDocumentHistoryImpl)IdeDocumentHistory.getInstance(myProject)).onSelectionChanged();
                         result.notify(doChangeSelection.run());
-                    })
-                    .withProject(myProject)
-                    .withName(LocalizeValue.localizeTODO("EditorChange"))
-                    .execute();
+                    });
                 return result;
             })
             .getPresentation()

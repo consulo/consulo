@@ -39,6 +39,7 @@ import consulo.undoRedo.*;
 import consulo.undoRedo.event.CommandEvent;
 import consulo.undoRedo.event.CommandListener;
 import consulo.util.lang.*;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -392,31 +393,30 @@ public abstract class UndoManagerImpl implements UndoManager, Disposable {
     private void undoOrRedo(final Object editor, final boolean isUndo) {
         myCurrentOperationState = isUndo ? OperationState.UNDO : OperationState.REDO;
 
-        final RuntimeException[] exception = new RuntimeException[1];
-        Runnable executeUndoOrRedoAction = () -> {
-            try {
-                if (myProject != null) {
-                    PsiDocumentManager.getInstance(myProject).commitAllDocuments();
-                }
-                CopyPasteManager.getInstance().stopKillRings();
-                myMerger.undoOrRedo((FileEditor)editor, isUndo);
-            }
-            catch (RuntimeException ex) {
-                exception[0] = ex;
-            }
-            finally {
-                myCurrentOperationState = OperationState.NONE;
-            }
-        };
+        final SimpleReference<RuntimeException> exception = SimpleReference.create();
 
-        LocalizeValue name = getUndoOrRedoActionNameAndDescription(editor, isUndoInProgress()).second;
-        CommandProcessor.getInstance().newCommand(executeUndoOrRedoAction)
-            .withProject(myProject)
-            .withName(name)
-            .withUndoConfirmationPolicy(myMerger.getUndoConfirmationPolicy())
-            .execute();
-        if (exception[0] != null) {
-            throw exception[0];
+        CommandProcessor.getInstance().newCommand()
+            .project(myProject)
+            .name(getUndoOrRedoActionNameAndDescription(editor, isUndoInProgress()).second)
+            .undoConfirmationPolicy(myMerger.getUndoConfirmationPolicy())
+            .run(() -> {
+                try {
+                    if (myProject != null) {
+                        PsiDocumentManager.getInstance(myProject).commitAllDocuments();
+                    }
+                    CopyPasteManager.getInstance().stopKillRings();
+                    myMerger.undoOrRedo((FileEditor)editor, isUndo);
+                }
+                catch (RuntimeException ex) {
+                    exception.set(ex);
+                }
+                finally {
+                    myCurrentOperationState = OperationState.NONE;
+                }
+            });
+
+        if (!exception.isNull()) {
+            throw exception.get();
         }
     }
 
@@ -660,10 +660,10 @@ public abstract class UndoManagerImpl implements UndoManager, Disposable {
     private void flushMergers() {
         assert myProject == null || !myProject.isDisposed();
         // Run dummy command in order to flush all mergers...
-        CommandProcessor.getInstance().newCommand(EmptyRunnable.getInstance())
-            .withProject(myProject)
-            .withName(CommonLocalize.dropUndoHistoryCommandName())
-            .execute();
+        CommandProcessor.getInstance().newCommand()
+            .project(myProject)
+            .name(CommonLocalize.dropUndoHistoryCommandName())
+            .run(EmptyRunnable.getInstance());
     }
 
     @TestOnly

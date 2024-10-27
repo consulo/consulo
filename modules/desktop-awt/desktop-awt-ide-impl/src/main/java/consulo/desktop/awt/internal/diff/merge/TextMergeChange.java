@@ -338,12 +338,9 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
             DiffLocalize.mergeDialogApplyChangeActionName().get(),
             icon,
             isConflict(),
-            () -> myViewer.newMergeCommand(
-                    Collections.singletonList(this),
-                    () -> myViewer.replaceChange(this, side, modifier)
-                )
-                .withName(DiffLocalize.mergeDialogAcceptChangeCommand())
-                .execute()
+            () -> myViewer.newMergeCommand(Collections.singletonList(this))
+                .name(DiffLocalize.mergeDialogAcceptChangeCommand())
+                .run(() -> myViewer.replaceChange(this, side, modifier))
         );
     }
 
@@ -356,12 +353,9 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
             DiffLocalize.mergeDialogIgnoreChangeActionName().get(),
             AllIcons.Diff.Remove,
             isConflict(),
-            () -> myViewer.newMergeCommand(
-                    Collections.singletonList(this),
-                    () -> myViewer.ignoreChange(this, side, modifier)
-                )
-                .withName(DiffLocalize.mergeDialogIgnoreChangeCommand())
-                .execute()
+            () -> myViewer.newMergeCommand(Collections.singletonList(this))
+                .name(DiffLocalize.mergeDialogIgnoreChangeCommand())
+                .run(() -> myViewer.ignoreChange(this, side, modifier))
         );
     }
 
@@ -375,12 +369,9 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
             DiffLocalize.mergeDialogResolveChangeActionName().get(),
             AllIcons.Actions.Checked,
             false,
-            () -> myViewer.newMergeCommand(
-                    Collections.singletonList(this),
-                    () -> myViewer.resolveConflictedChange(this)
-                )
-                .withName(DiffLocalize.mergeDialogResolveConflictCommand())
-                .execute()
+            () -> myViewer.newMergeCommand(Collections.singletonList(this))
+                .name(DiffLocalize.mergeDialogResolveConflictCommand())
+                .run(() -> myViewer.resolveConflictedChange(this))
         );
     }
 
@@ -389,7 +380,7 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
         @Nonnull final String text,
         @Nonnull final Image icon,
         boolean ctrlClickVisible,
-        @Nonnull final Runnable perform
+        @RequiredUIAccess @Nonnull final Runnable perform
     ) {
         final String tooltipText = DiffImplUtil.createTooltipText(text, ctrlClickVisible ? CTRL_CLICK_TO_RESOLVE : null);
         return new DiffGutterRenderer(icon, tooltipText) {

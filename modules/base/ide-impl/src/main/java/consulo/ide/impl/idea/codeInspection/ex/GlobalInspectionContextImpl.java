@@ -1029,19 +1029,17 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
             final SequentialModalProgressTask progressTask = new SequentialModalProgressTask(project, "Code Cleanup", true);
             progressTask.setMinIterationTime(200);
             progressTask.setTask(new SequentialCleanupTask(project, results, progressTask));
-            CommandProcessor.getInstance().newCommand(() -> {
-                    if (commandName != null) {
-                        CommandProcessor.getInstance().markCurrentCommandAsGlobal(project);
-                    }
-                    Application application = Application.get();
-                    application.runWriteAction(() -> ProgressManager.getInstance().run(progressTask));
+            CommandProcessor.getInstance().newCommand()
+                .project(project)
+                .name(LocalizeValue.ofNullable(commandName))
+                .inGlobalUndoActionIf(commandName != null)
+                .inLater()
+                .run(() -> {
+                    Application.get().runWriteAction(() -> ProgressManager.getInstance().run(progressTask));
                     if (postRunnable != null) {
-                        application.invokeLater(postRunnable);
+                        Application.get().invokeLater(postRunnable);
                     }
-                })
-                .withProject(project)
-                .withName(LocalizeValue.ofNullable(commandName))
-                .execute();
+                });
         };
 
         getProject().getUIAccess().give(runnable);

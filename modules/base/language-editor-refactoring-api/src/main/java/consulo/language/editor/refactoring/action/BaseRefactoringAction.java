@@ -34,7 +34,6 @@ import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.language.psi.*;
-import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -125,16 +124,15 @@ public abstract class BaseRefactoringAction extends AnAction implements UpdateIn
         if (InplaceRefactoring.getActiveInplaceRenamer(editor) == null) {
             final LookupEx lookup = LookupManager.getActiveLookup(editor);
             if (lookup != null) {
-                Runnable command = () -> lookup.finishLookup(Lookup.NORMAL_SELECT_CHAR);
                 assert editor != null;
                 Document doc = editor.getDocument();
                 DocCommandGroupId group = DocCommandGroupId.noneGroupId(doc);
-                CommandProcessor.getInstance().newCommand(command)
-                    .withProject(editor.getProject())
-                    .withDocument(doc)
-                    .withName(ApplicationLocalize.titleCodeCompletion())
-                    .withGroupId(group)
-                    .execute();
+                CommandProcessor.getInstance().newCommand()
+                    .project(editor.getProject())
+                    .document(doc)
+                    .name(ApplicationLocalize.titleCodeCompletion())
+                    .groupId(group)
+                    .run(() -> lookup.finishLookup(Lookup.NORMAL_SELECT_CHAR));
             }
         }
 

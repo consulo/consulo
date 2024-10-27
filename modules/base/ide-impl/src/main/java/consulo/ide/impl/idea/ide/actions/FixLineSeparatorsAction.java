@@ -41,14 +41,14 @@ public class FixLineSeparatorsAction extends AnAction {
         if (project == null || vFiles == null) {
             return;
         }
-        CommandProcessor.getInstance().newCommand(() -> {
+        CommandProcessor.getInstance().newCommand()
+            .project(project)
+            .name(IdeLocalize.commandFixingLineSeparators())
+            .run(() -> {
                 for (VirtualFile vFile : vFiles) {
                     fixSeparators(vFile);
                 }
-            })
-            .withProject(project)
-            .withName(IdeLocalize.commandFixingLineSeparators())
-            .execute();
+            });
     }
 
     private static void fixSeparators(VirtualFile vFile) {

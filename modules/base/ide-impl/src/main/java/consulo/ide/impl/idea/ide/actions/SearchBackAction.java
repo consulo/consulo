@@ -39,16 +39,16 @@ public class SearchBackAction extends AnAction implements DumbAware {
     public void actionPerformed(final AnActionEvent e) {
         final Project project = e.getRequiredData(Project.KEY);
         final FileEditor editor = e.getRequiredData(FileEditor.KEY);
-        CommandProcessor.getInstance().newCommand(() -> {
+        CommandProcessor.getInstance().newCommand()
+            .project(e.getRequiredData(Project.KEY))
+            .name(IdeLocalize.commandFindPrevious())
+            .run(() -> {
                 PsiDocumentManager.getInstance(project).commitAllDocuments();
                 if (FindManager.getInstance(project).findPreviousUsageInEditor(editor)) {
                     return;
                 }
                 FindUtil.searchBack(project, editor, e.getDataContext());
-            })
-            .withProject(project)
-            .withName(IdeLocalize.commandFindPrevious())
-            .execute();
+            });
     }
 
     @Override

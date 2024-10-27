@@ -128,7 +128,10 @@ public abstract class CustomizableLanguageCodeStylePanel extends CodeStyleAbstra
         final String text = psiFile.getText();
         final PsiDocumentManager manager = PsiDocumentManager.getInstance(project);
         final Document doc = manager.getDocument(psiFile);
-        CommandProcessor.getInstance().newCommand(() -> {
+        CommandProcessor.getInstance().newCommand()
+            .project(project)
+            .inWriteAction()
+            .run(() -> {
                 if (doc != null) {
                     doc.replaceString(0, doc.getTextLength(), text);
                     manager.commitDocument(doc);
@@ -139,9 +142,7 @@ public abstract class CustomizableLanguageCodeStylePanel extends CodeStyleAbstra
                 catch (IncorrectOperationException e) {
                     LOG.error(e);
                 }
-            })
-            .withProject(project)
-            .executeInWriteAction();
+            });
         if (doc != null) {
             manager.commitDocument(doc);
         }

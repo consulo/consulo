@@ -239,7 +239,10 @@ public abstract class ExtractSuperBaseDialog<ClassType extends PsiElement, Membe
                 myExtractedSuperNameField.requestFocusInWindow();
             }
             else {
-                CommandProcessor.getInstance().newCommand(() -> {
+                CommandProcessor.getInstance().newCommand()
+                    .project(myProject)
+                    .name(RefactoringLocalize.createDirectory())
+                    .run(() -> {
                         try {
                             preparePackage();
                         }
@@ -247,10 +250,7 @@ public abstract class ExtractSuperBaseDialog<ClassType extends PsiElement, Membe
                             errorString[0] = e.getMessage();
                             myPackageNameField.requestFocusInWindow();
                         }
-                    })
-                    .withProject(myProject)
-                    .withName(RefactoringLocalize.createDirectory())
-                    .execute();
+                    });
             }
         }
         if (errorString[0] != null) {

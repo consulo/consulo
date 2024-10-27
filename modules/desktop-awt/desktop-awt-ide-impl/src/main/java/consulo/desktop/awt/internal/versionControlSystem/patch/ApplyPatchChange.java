@@ -37,8 +37,9 @@ import consulo.ide.impl.diff.DiffDrawUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.AppliedTextPatch.HunkStatus;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.tool.PatchChangeBuilder;
 import consulo.ide.impl.idea.openapi.vcs.ex.LineStatusMarkerRenderer;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.util.ColorUtil;
@@ -356,9 +357,9 @@ class ApplyPatchChange {
         return createIconRenderer(
             DiffLocalize.mergeDialogApplyChangeActionName(),
             DiffImplUtil.getArrowIcon(Side.RIGHT),
-            () -> DiffImplUtil.newWriteCommand(() -> myViewer.replaceChange(this))
-                .withName(DiffLocalize.mergeDialogAcceptChangeCommand())
-                .execute()
+            () -> DiffImplUtil.newWriteCommand()
+                .name(DiffLocalize.mergeDialogAcceptChangeCommand())
+                .run(() -> myViewer.replaceChange(this))
         );
     }
 
@@ -366,9 +367,9 @@ class ApplyPatchChange {
         return createIconRenderer(
             DiffLocalize.mergeDialogIgnoreChangeActionName(),
             AllIcons.Diff.Remove,
-            () -> DiffImplUtil.newWriteCommand(() -> myViewer.markChangeResolved(this))
-                .withName(DiffLocalize.mergeDialogIgnoreChangeCommand())
-                .execute()
+            () -> DiffImplUtil.newWriteCommand()
+                .name(DiffLocalize.mergeDialogIgnoreChangeCommand())
+                .run(() -> myViewer.markChangeResolved(this))
         );
     }
 
@@ -376,7 +377,7 @@ class ApplyPatchChange {
     private static GutterIconRenderer createIconRenderer(
         @Nonnull LocalizeValue text,
         @Nonnull Image icon,
-        @Nonnull final Runnable perform
+        @RequiredUIAccess @Nonnull final Runnable perform
     ) {
         final String tooltipText = DiffImplUtil.createTooltipText(text.get(), null);
         return new DiffGutterRenderer(icon, tooltipText) {

@@ -164,7 +164,11 @@ public class ExtractIncludeDialog extends DialogWrapper {
             return;
         }
 
-        CommandProcessor.getInstance().newCommand(() -> {
+        CommandProcessor.getInstance().newCommand()
+            .project(project)
+            .name(RefactoringLocalize.createDirectory())
+            .inWriteAction()
+            .run(() -> {
                 try {
                     PsiDirectory targetDirectory = DirectoryUtil.mkdirs(PsiManager.getInstance(project), directoryName);
                     targetDirectory.checkCreateFile(targetFileName);
@@ -174,10 +178,7 @@ public class ExtractIncludeDialog extends DialogWrapper {
                 catch (IncorrectOperationException e) {
                     CommonRefactoringUtil.showErrorMessage(REFACTORING_NAME.get(), e.getMessage(), null, project);
                 }
-            })
-            .withProject(project)
-            .withName(RefactoringLocalize.createDirectory())
-            .executeInWriteAction();
+            });
         if (myTargetDirectory == null) {
             return;
         }

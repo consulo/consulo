@@ -271,17 +271,18 @@ public class CopyFilesOrDirectoriesDialog extends DialogWrapper {
 
             RecentsManager.getInstance(myProject).registerRecentEntry(RECENT_KEYS, targetDirectoryName);
 
-            CommandProcessor.getInstance().newCommand(() -> {
+            CommandProcessor.getInstance().newCommand()
+                .project(myProject)
+                .name(RefactoringLocalize.createDirectory())
+                .inWriteAction()
+                .run(() -> {
                     try {
                         myTargetDirectory =
                             DirectoryUtil.mkdirs(PsiManager.getInstance(myProject), targetDirectoryName.replace(File.separatorChar, '/'));
                     }
                     catch (IncorrectOperationException ignored) {
                     }
-                })
-                .withProject(myProject)
-                .withName(RefactoringLocalize.createDirectory())
-                .executeInWriteAction();
+                });
 
             if (myTargetDirectory == null) {
                 Messages.showErrorDialog(

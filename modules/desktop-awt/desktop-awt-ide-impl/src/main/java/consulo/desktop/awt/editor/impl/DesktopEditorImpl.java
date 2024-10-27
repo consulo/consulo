@@ -2015,11 +2015,11 @@ public final class DesktopEditorImpl extends CodeEditorBase
         if (myCommandProcessor == null || myMousePressedEvent != null && myMousePressedEvent.isConsumed()) {
             return;
         }
-        myCommandProcessor.newCommand(() -> processMouseDragged(e))
-            .withProject(myProject)
-            .withDocument(getDocument())
-            .withGroupId(MOUSE_DRAGGED_GROUP)
-            .execute();
+        myCommandProcessor.newCommand()
+            .project(myProject)
+            .document(getDocument())
+            .groupId(MOUSE_DRAGGED_GROUP)
+            .run(() -> processMouseDragged(e));
     }
 
     private void processMouseDragged(@Nonnull MouseEvent e) {
@@ -2482,91 +2482,88 @@ public final class DesktopEditorImpl extends CodeEditorBase
                         stop();
                         return;
                     }
-                    myCommandProcessor.newCommand(new DocumentRunnable(myDocument, myProject) {
-                            @Override
-                            public void run() {
-                                int oldSelectionStart = mySelectionModel.getLeadSelectionOffset();
-                                VisualPosition caretPosition =
-                                    myMultiSelectionInProgress ? myTargetMultiSelectionPosition : getCaretModel().getVisualPosition();
-                                int column = caretPosition.column;
-                                xPassedCycles++;
-                                if (xPassedCycles >= myXCycles) {
-                                    xPassedCycles = 0;
-                                    column += myDx;
-                                }
+                    myCommandProcessor.newCommand()
+                        .project(myProject)
+                        .document(getDocument())
+                        .name(CodeEditorLocalize.moveCursorCommandName())
+                        .groupId(DocCommandGroupId.noneGroupId(getDocument()))
+                        .run(() -> {
+                            int oldSelectionStart = mySelectionModel.getLeadSelectionOffset();
+                            VisualPosition caretPosition =
+                                myMultiSelectionInProgress ? myTargetMultiSelectionPosition : getCaretModel().getVisualPosition();
+                            int column = caretPosition.column;
+                            xPassedCycles++;
+                            if (xPassedCycles >= myXCycles) {
+                                xPassedCycles = 0;
+                                column += myDx;
+                            }
 
-                                int line = caretPosition.line;
-                                yPassedCycles++;
-                                if (yPassedCycles >= myYCycles) {
-                                    yPassedCycles = 0;
-                                    line += myDy;
-                                }
+                            int line = caretPosition.line;
+                            yPassedCycles++;
+                            if (yPassedCycles >= myYCycles) {
+                                yPassedCycles = 0;
+                                line += myDy;
+                            }
 
-                                line = Math.max(0, line);
-                                column = Math.max(0, column);
-                                VisualPosition pos = new VisualPosition(line, column);
-                                if (!myMultiSelectionInProgress) {
-                                    getCaretModel().moveToVisualPosition(pos);
-                                    getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
-                                }
+                            line = Math.max(0, line);
+                            column = Math.max(0, column);
+                            VisualPosition pos = new VisualPosition(line, column);
+                            if (!myMultiSelectionInProgress) {
+                                getCaretModel().moveToVisualPosition(pos);
+                                getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
+                            }
 
-                                int newCaretOffset = getCaretModel().getOffset();
-                                int caretShift = newCaretOffset - mySavedSelectionStart;
+                            int newCaretOffset = getCaretModel().getOffset();
+                            int caretShift = newCaretOffset - mySavedSelectionStart;
 
-                                if (getMouseSelectionState() != MOUSE_SELECTION_STATE_NONE) {
-                                    if (caretShift < 0) {
-                                        int newSelection = newCaretOffset;
-                                        if (getMouseSelectionState() == MOUSE_SELECTION_STATE_WORD_SELECTED) {
-                                            newSelection = myCaretModel.getWordAtCaretStart();
-                                        }
-                                        else if (getMouseSelectionState() == MOUSE_SELECTION_STATE_LINE_SELECTED) {
-                                            newSelection = logicalPositionToOffset(visualToLogicalPosition(new VisualPosition(
-                                                getCaretModel().getVisualPosition().line,
-                                                0
-                                            )));
-                                        }
-                                        if (newSelection < 0) {
-                                            newSelection = newCaretOffset;
-                                        }
-                                        mySelectionModel.setSelection(validateOffset(mySavedSelectionEnd), newSelection);
-                                        getCaretModel().moveToOffset(newSelection);
+                            if (getMouseSelectionState() != MOUSE_SELECTION_STATE_NONE) {
+                                if (caretShift < 0) {
+                                    int newSelection = newCaretOffset;
+                                    if (getMouseSelectionState() == MOUSE_SELECTION_STATE_WORD_SELECTED) {
+                                        newSelection = myCaretModel.getWordAtCaretStart();
                                     }
-                                    else {
-                                        int newSelection = newCaretOffset;
-                                        if (getMouseSelectionState() == MOUSE_SELECTION_STATE_WORD_SELECTED) {
-                                            newSelection = myCaretModel.getWordAtCaretEnd();
-                                        }
-                                        else if (getMouseSelectionState() == MOUSE_SELECTION_STATE_LINE_SELECTED) {
-                                            newSelection = logicalPositionToOffset(visualToLogicalPosition(new VisualPosition(
-                                                getCaretModel().getVisualPosition().line + 1,
-                                                0
-                                            )));
-                                        }
-                                        if (newSelection < 0) {
-                                            newSelection = newCaretOffset;
-                                        }
-                                        mySelectionModel.setSelection(validateOffset(mySavedSelectionStart), newSelection);
-                                        getCaretModel().moveToOffset(newSelection);
+                                    else if (getMouseSelectionState() == MOUSE_SELECTION_STATE_LINE_SELECTED) {
+                                        newSelection = logicalPositionToOffset(visualToLogicalPosition(new VisualPosition(
+                                            getCaretModel().getVisualPosition().line,
+                                            0
+                                        )));
                                     }
-                                    return;
-                                }
-
-                                if (myMultiSelectionInProgress && myLastMousePressedLocation != null) {
-                                    myTargetMultiSelectionPosition = pos;
-                                    LogicalPosition newLogicalPosition = visualToLogicalPosition(pos);
-                                    getScrollingModel().scrollTo(newLogicalPosition, ScrollType.RELATIVE);
-                                    createSelectionTill(newLogicalPosition);
+                                    if (newSelection < 0) {
+                                        newSelection = newCaretOffset;
+                                    }
+                                    mySelectionModel.setSelection(validateOffset(mySavedSelectionEnd), newSelection);
+                                    getCaretModel().moveToOffset(newSelection);
                                 }
                                 else {
-                                    mySelectionModel.setSelection(oldSelectionStart, getCaretModel().getOffset());
+                                    int newSelection = newCaretOffset;
+                                    if (getMouseSelectionState() == MOUSE_SELECTION_STATE_WORD_SELECTED) {
+                                        newSelection = myCaretModel.getWordAtCaretEnd();
+                                    }
+                                    else if (getMouseSelectionState() == MOUSE_SELECTION_STATE_LINE_SELECTED) {
+                                        newSelection = logicalPositionToOffset(visualToLogicalPosition(new VisualPosition(
+                                            getCaretModel().getVisualPosition().line + 1,
+                                            0
+                                        )));
+                                    }
+                                    if (newSelection < 0) {
+                                        newSelection = newCaretOffset;
+                                    }
+                                    mySelectionModel.setSelection(validateOffset(mySavedSelectionStart), newSelection);
+                                    getCaretModel().moveToOffset(newSelection);
                                 }
+                                return;
                             }
-                        })
-                        .withProject(myProject)
-                        .withDocument(getDocument())
-                        .withName(CodeEditorLocalize.moveCursorCommandName())
-                        .withGroupId(DocCommandGroupId.noneGroupId(getDocument()))
-                        .execute();
+
+                            if (myMultiSelectionInProgress && myLastMousePressedLocation != null) {
+                                myTargetMultiSelectionPosition = pos;
+                                LogicalPosition newLogicalPosition = visualToLogicalPosition(pos);
+                                getScrollingModel().scrollTo(newLogicalPosition, ScrollType.RELATIVE);
+                                createSelectionTill(newLogicalPosition);
+                            }
+                            else {
+                                mySelectionModel.setSelection(oldSelectionStart, getCaretModel().getOffset());
+                            }
+                        });
                 }
             );
             myTimer.start();
@@ -3011,11 +3008,12 @@ public final class DesktopEditorImpl extends CodeEditorBase
         @RequiredUIAccess
         private void runUndoTransparent(@Nonnull final Runnable runnable) {
             CommandProcessor.getInstance().runUndoTransparentAction(
-                () -> CommandProcessor.getInstance().newCommand(runnable)
-                    .withProject(myProject)
-                    .withDocument(getDocument())
-                    .withGroupId(getDocument())
-                    .executeInWriteAction()
+                () -> CommandProcessor.getInstance().newCommand()
+                    .project(myProject)
+                    .document(getDocument())
+                    .groupId(getDocument())
+                    .inWriteAction()
+                    .run(runnable)
             );
         }
 
@@ -3171,15 +3169,15 @@ public final class DesktopEditorImpl extends CodeEditorBase
             }
 
             if (myCommandProcessor != null) {
-                myCommandProcessor.newCommand(() -> {
+                myCommandProcessor.newCommand()
+                    .project(myProject)
+                    .document(getDocument())
+                    .groupId(DocCommandGroupId.noneGroupId(getDocument()))
+                    .run(() -> {
                         if (processMousePressed(e) && myProject != null && !myProject.isDefault()) {
                             IdeDocumentHistory.getInstance(myProject).includeCurrentCommandAsNavigation();
                         }
-                    })
-                    .withProject(myProject)
-                    .withDocument(getDocument())
-                    .withGroupId(DocCommandGroupId.noneGroupId(getDocument()))
-                    .execute();
+                    });
             }
             else {
                 processMousePressed(e);
@@ -3226,11 +3224,11 @@ public final class DesktopEditorImpl extends CodeEditorBase
             }
 
             if (myCommandProcessor != null) {
-                myCommandProcessor.newCommand(() -> processMouseReleased(e))
-                    .withProject(myProject)
-                    .withDocument(getDocument())
-                    .withGroupId(DocCommandGroupId.noneGroupId(getDocument()))
-                    .execute();
+                myCommandProcessor.newCommand()
+                    .project(myProject)
+                    .document(getDocument())
+                    .groupId(DocCommandGroupId.noneGroupId(getDocument()))
+                    .run(() -> processMouseReleased(e));
             }
             else {
                 processMouseReleased(e);
@@ -3764,7 +3762,12 @@ public final class DesktopEditorImpl extends CodeEditorBase
             editor.getCaretModel().moveToOffset(editor.mySavedCaretOffsetForDNDUndoHack);
         }
 
-        CommandProcessor.getInstance().newCommand(() -> {
+        CommandProcessor.getInstance().newCommand()
+            .project(editor.myProject)
+            .document(editor.getDocument())
+            .name(CodeEditorLocalize.pasteCommandName())
+            .groupId(DND_COMMAND_KEY)
+            .run(() -> {
                 try {
                     editor.getSelectionModel().removeSelection();
 
@@ -3795,12 +3798,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
                 catch (Exception exception) {
                     LOG.error(exception);
                 }
-            })
-            .withProject(editor.myProject)
-            .withDocument(editor.getDocument())
-            .withName(CodeEditorLocalize.pasteCommandName())
-            .withGroupId(DND_COMMAND_KEY)
-            .execute();
+            });
 
         return true;
     }
@@ -3888,7 +3886,13 @@ public final class DesktopEditorImpl extends CodeEditorBase
             if (!FileDocumentManager.getInstance().requestWriting(editor.getDocument(), editor.getProject())) {
                 return;
             }
-            CommandProcessor.getInstance().newCommand(() -> {
+            CommandProcessor.getInstance().newCommand()
+                .project(editor.myProject)
+                .document(editor.getDocument())
+                .name(CodeEditorLocalize.moveSelectionCommandName())
+                .groupId(DND_COMMAND_KEY)
+                .inWriteAction()
+                .run(() -> {
                     Document doc = editor.getDocument();
                     doc.startGuardedBlockChecking();
                     try {
@@ -3900,12 +3904,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
                     finally {
                         doc.stopGuardedBlockChecking();
                     }
-                })
-                .withProject(editor.myProject)
-                .withDocument(editor.getDocument())
-                .withName(CodeEditorLocalize.moveSelectionCommandName())
-                .withGroupId(DND_COMMAND_KEY)
-                .executeInWriteAction();
+                });
         }
     }
 

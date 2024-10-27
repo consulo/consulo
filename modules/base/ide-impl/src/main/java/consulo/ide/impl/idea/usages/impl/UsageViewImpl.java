@@ -2295,10 +2295,10 @@ public class UsageViewImpl implements UsageViewEx {
             close();
 
             try {
-                CommandProcessor.getInstance().newCommand(myProcessRunnable)
-                    .withProject(myProject)
-                    .withName(myCommandName)
-                    .execute();
+                CommandProcessor.getInstance().newCommand()
+                    .project(myProject)
+                    .name(myCommandName)
+                    .run(myProcessRunnable);
             }
             finally {
                 disposeSmartPointers();

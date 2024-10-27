@@ -1265,7 +1265,11 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
             if (ret != Messages.OK) {
                 return;
             }
-            CommandProcessor.getInstance().newCommand(() -> {
+            CommandProcessor.getInstance().newCommand()
+                .project(module.getProject())
+                .name(title)
+                .inWriteAction()
+                .run(() -> {
                     ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
                     OrderEntry[] orderEntries = rootManager.getOrderEntries();
                     ModifiableRootModel model = rootManager.getModifiableModel();
@@ -1277,10 +1281,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
                         }
                     }
                     model.commit();
-                })
-                .withProject(module.getProject())
-                .withName(title)
-                .executeInWriteAction();
+                });
         }
 
         @Nullable

@@ -216,10 +216,10 @@ public class ShowIntentionActionsHandler implements CodeInsightActionHandler {
             return false;
         }
 
-        CommandProcessor.getInstance().newCommand(() -> invokeIntention(action, pair.second, pair.first))
-            .withProject(project)
-            .withName(LocalizeValue.ofNullable(text))
-            .execute();
+        CommandProcessor.getInstance().newCommand()
+            .project(project)
+            .name(LocalizeValue.ofNullable(text))
+            .run(() -> invokeIntention(action, pair.second, pair.first));
 
         checkPsiTextConsistency(hostFile);
 

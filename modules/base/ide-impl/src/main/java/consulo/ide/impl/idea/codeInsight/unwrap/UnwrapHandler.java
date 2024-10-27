@@ -34,7 +34,6 @@ import consulo.language.impl.ast.TreeElement;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
-import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -176,7 +175,11 @@ public class UnwrapHandler implements CodeInsightActionHandler {
                 return;
             }
 
-            CommandProcessor.getInstance().newCommand(() -> {
+            CommandProcessor.getInstance().newCommand()
+                .project(myProject)
+                .groupId(myEditor.getDocument())
+                .inWriteAction()
+                .run(() -> {
                     try {
                         UnwrapDescriptor d = getUnwrapDescription(file);
                         if (d.shouldTryToRestoreCaretPosition()) {
@@ -196,10 +199,7 @@ public class UnwrapHandler implements CodeInsightActionHandler {
                     catch (IncorrectOperationException ex) {
                         throw new RuntimeException(ex);
                     }
-                })
-                .withProject(myProject)
-                .withGroupId(myEditor.getDocument())
-                .executeInWriteAction();
+                });
         }
 
         @RequiredReadAction

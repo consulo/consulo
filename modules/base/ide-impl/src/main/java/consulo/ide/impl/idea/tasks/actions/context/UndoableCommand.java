@@ -30,7 +30,11 @@ import consulo.project.Project;
 public class UndoableCommand {
     @RequiredUIAccess
     public static void execute(final Project project, final UndoableAction action, String name, String groupId) {
-        CommandProcessor.getInstance().newCommand(() -> {
+        CommandProcessor.getInstance().newCommand()
+            .project(project)
+            .name(LocalizeValue.ofNullable(name))
+            .groupId(groupId)
+            .run(() -> {
                 try {
                     action.redo();
                 }
@@ -38,10 +42,6 @@ public class UndoableCommand {
                     throw new RuntimeException(e);
                 }
                 ProjectUndoManager.getInstance(project).undoableActionPerformed(action);
-            })
-            .withProject(project)
-            .withName(LocalizeValue.ofNullable(name))
-            .withGroupId(groupId)
-            .execute();
+            });
     }
 }

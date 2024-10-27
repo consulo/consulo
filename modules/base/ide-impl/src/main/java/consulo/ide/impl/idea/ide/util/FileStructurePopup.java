@@ -81,7 +81,6 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
@@ -769,27 +768,25 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
             }
         }
 
-        SimpleReference<Boolean> succeeded = new SimpleReference<>();
         CommandProcessor commandProcessor = CommandProcessor.getInstance();
-        commandProcessor.newCommand(() -> {
+        return (boolean)commandProcessor.newCommand()
+            .project(myProject)
+            .name(LanguageLocalize.commandNameNavigate())
+            .get(() -> {
+                IdeDocumentHistory.getInstance(myProject).includeCurrentCommandAsNavigation();
+
                 if (selectedNode == null) {
-                    succeeded.set(false);
+                    return false;
                 }
                 else if (selectedNode.canNavigateToSource()) {
                     selectedNode.navigate(true);
                     myPopup.cancel();
-                    succeeded.set(true);
+                    return true;
                 }
                 else {
-                    succeeded.set(false);
+                    return false;
                 }
-
-                IdeDocumentHistory.getInstance(myProject).includeCurrentCommandAsNavigation();
-            })
-            .withProject(myProject)
-            .withName(LanguageLocalize.commandNameNavigate())
-            .execute();
-        return succeeded.get();
+            });
     }
 
     private void addCheckbox(JPanel panel, TreeAction action) {

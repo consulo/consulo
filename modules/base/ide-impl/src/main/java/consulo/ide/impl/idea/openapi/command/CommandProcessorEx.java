@@ -1,11 +1,14 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.command;
 
+import consulo.ide.impl.idea.openapi.command.impl.BaseCommandBuilder;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.undoRedo.*;
-import consulo.ide.impl.idea.openapi.command.impl.BaseCommandBuilder;
+import consulo.undoRedo.CommandDescriptor;
+import consulo.undoRedo.CommandProcessor;
+import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.undoRedo.builder.CommandBuilder;
+import consulo.util.lang.EmptyRunnable;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -17,10 +20,10 @@ public abstract class CommandProcessorEx extends CommandProcessor {
         CommandToken start();
     }
 
-    public class MyStartableCommandBuilder extends BaseCommandBuilder<StartableCommandBuilder> implements StartableCommandBuilder {
+    protected class MyStartableCommandBuilder extends BaseCommandBuilder<StartableCommandBuilder> implements StartableCommandBuilder {
         @Override
         public CommandToken start() {
-            return startCommand(build());
+            return startCommand(build(EmptyRunnable.INSTANCE));
         }
     }
 
@@ -28,6 +31,7 @@ public abstract class CommandProcessorEx extends CommandProcessor {
 
     public abstract void leaveModal();
 
+    @Nonnull
     public StartableCommandBuilder newCommand() {
         return new MyStartableCommandBuilder();
     }
@@ -44,10 +48,10 @@ public abstract class CommandProcessorEx extends CommandProcessor {
         @Nonnull UndoConfirmationPolicy undoConfirmationPolicy
     ) {
         return newCommand()
-            .withProject(project)
-            .withName(LocalizeValue.ofNullable(name))
-            .withGroupId(groupId)
-            .withUndoConfirmationPolicy(undoConfirmationPolicy)
+            .project(project)
+            .name(LocalizeValue.ofNullable(name))
+            .groupId(groupId)
+            .undoConfirmationPolicy(undoConfirmationPolicy)
             .start();
     }
 }

@@ -222,7 +222,17 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
     private void doCreateElement(final String subDirName, final boolean createFile) {
         boolean isDirectory = myType == CreateDirectoryOrPackageType.Directory;
 
-        CommandProcessor.getInstance().newCommand(() -> {
+        CommandProcessor.getInstance().newCommand()
+            .project(myProject)
+            .name(
+                createFile
+                    ? IdeLocalize.commandCreateFile()
+                    : isDirectory
+                    ? IdeLocalize.commandCreateDirectory()
+                    : IdeLocalize.commandCreatePackage()
+            )
+            .inWriteAction()
+            .run(() -> {
                 String dirPath = myDirectory.getVirtualFile().getPresentableUrl();
                 LocalizeValue actionName = IdeLocalize.progressCreatingDirectory(dirPath, File.separator, subDirName);
                 LocalHistoryAction action = LocalHistory.getInstance().startAction(actionName.get());
@@ -243,16 +253,7 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
                 finally {
                     action.finish();
                 }
-            })
-            .withProject(myProject)
-            .withName(
-                createFile
-                    ? IdeLocalize.commandCreateFile()
-                    : isDirectory
-                    ? IdeLocalize.commandCreateDirectory()
-                    : IdeLocalize.commandCreatePackage()
-            )
-            .executeInWriteAction();
+            });
     }
 
     @RequiredUIAccess

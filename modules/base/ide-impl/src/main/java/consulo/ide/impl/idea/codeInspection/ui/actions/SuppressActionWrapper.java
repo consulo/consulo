@@ -170,7 +170,10 @@ public class SuppressActionWrapper extends ActionGroup implements CompactActionG
         @Override
         @RequiredUIAccess
         public void actionPerformed(@Nonnull final AnActionEvent e) {
-            Application.get().invokeLater(() -> CommandProcessor.getInstance().newCommand(() -> {
+            Application.get().invokeLater(() -> CommandProcessor.getInstance().newCommand()
+                .project(myProject)
+                .name(getTemplatePresentation().getTextValue())
+                .run(() -> {
                     for (InspectionTreeNode node : myNodesToSuppress) {
                         final Pair<PsiElement, CommonProblemDescriptor> content = getContentToSuppress(node);
                         if (content.first == null) {
@@ -194,9 +197,6 @@ public class SuppressActionWrapper extends ActionGroup implements CompactActionG
                     }
                     CommandProcessor.getInstance().markCurrentCommandAsGlobal(myProject);
                 })
-                .withProject(myProject)
-                .withName(getTemplatePresentation().getTextValue())
-                .execute()
             );
         }
 
