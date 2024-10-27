@@ -239,7 +239,7 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
 
     @RequiredUIAccess
     @SuppressWarnings({"RequiredXAction", "unchecked"})
-    public CommandBuilder newMergeCommand(@Nullable IntList affectedChanges) {
+    public <R> CommandBuilder<R, ? extends CommandBuilder<R, ?>> newMergeCommand(@Nullable IntList affectedChanges) {
         IntList allAffectedChanges = affectedChanges != null ? collectAffectedChanges(affectedChanges) : null;
 
         CommandBuilder commandBuilder = DiffImplUtil.newWriteCommand()

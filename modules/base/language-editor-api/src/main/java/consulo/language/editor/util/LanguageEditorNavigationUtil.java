@@ -68,9 +68,9 @@ public class LanguageEditorNavigationUtil {
 
         boolean openAsNativeFinal = openAsNative;
         // all navigation inside should be treated as a single operation, so that 'Back' action undoes it in one go
-        Boolean result = (Boolean)CommandProcessor.getInstance().newCommand()
+        Boolean result = CommandProcessor.getInstance().<Boolean>newCommand()
             .project(element.getProject())
-            .get(() -> {
+            .compute(() -> {
                 if (openAsNativeFinal || !activatePsiElementIfOpen(element, searchForOpen, requestFocus)) {
                     final NavigationItem navigationItem = (NavigationItem)element;
                     if (navigationItem.canNavigate()) {

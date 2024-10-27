@@ -314,10 +314,10 @@ public class DeleteHandler {
 
     @RequiredUIAccess
     private static boolean clearReadOnlyFlag(final VirtualFile virtualFile, final Project project) {
-        return (boolean)CommandProcessor.getInstance().newCommand()
+        return CommandProcessor.getInstance().<Boolean>newCommand()
             .project(project)
             .inWriteAction()
-            .get(() -> {
+            .compute(() -> {
                 try {
                     ReadOnlyAttributeUtil.setReadOnlyAttribute(virtualFile, false);
                     return true;

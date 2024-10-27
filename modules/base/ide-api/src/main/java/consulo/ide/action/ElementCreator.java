@@ -89,11 +89,11 @@ public abstract class ElementCreator {
     @Nullable
     @RequiredUIAccess
     private Exception executeCommand(@Nonnull LocalizeValue commandName, ThrowableRunnable<Exception> invokeCreate) {
-        return (Exception)CommandProcessor.getInstance().newCommand()
+        return CommandProcessor.getInstance().<Exception>newCommand()
             .project(myProject)
             .name(commandName)
             .undoConfirmationPolicy(UndoConfirmationPolicy.REQUEST_CONFIRMATION)
-            .get(() -> {
+            .compute(() -> {
                 LocalHistoryAction action = LocalHistory.getInstance().startAction(commandName.get());
                 try {
                     invokeCreate.run();

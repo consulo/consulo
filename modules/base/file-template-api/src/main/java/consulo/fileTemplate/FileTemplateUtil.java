@@ -151,11 +151,11 @@ public class FileTemplateUtil {
         );
         final String templateText = StringUtil.convertLineSeparators(mergedText);
         final SimpleReference<Exception> commandException = new SimpleReference<>();
-        PsiElement result = (PsiElement)CommandProcessor.getInstance().newCommand()
+        PsiElement result = CommandProcessor.getInstance().<PsiElement>newCommand()
             .project(project)
             .name(handler.commandName(template))
             .inWriteAction()
-            .get(() -> {
+            .compute(() -> {
                 try {
                     return handler.createFromTemplate(project, directory, fileName_, template, templateText, properties);
                 }

@@ -556,10 +556,10 @@ public abstract class InplaceRefactoring {
     @RequiredUIAccess
     protected StartMarkAction startRename() throws StartMarkAction.AlreadyStartedException {
         final SimpleReference<StartMarkAction.AlreadyStartedException> ex = new SimpleReference<>();
-        StartMarkAction markAction = (StartMarkAction)CommandProcessor.getInstance().newCommand()
+        StartMarkAction markAction = CommandProcessor.getInstance().<StartMarkAction>newCommand()
             .project(myProject)
             .name(LocalizeValue.ofNullable(getCommandName()))
-            .get(() -> {
+            .compute(() -> {
                 try {
                     return StartMarkAction.start(myEditor.getDocument(), myProject, getCommandName());
                 }

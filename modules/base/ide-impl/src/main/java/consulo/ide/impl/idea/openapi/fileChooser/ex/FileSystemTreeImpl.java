@@ -254,11 +254,11 @@ public class FileSystemTreeImpl implements FileSystemTree {
 
     @RequiredUIAccess
     public Exception createNewFolder(final VirtualFile parentDirectory, final String newFolderName) {
-        return (Exception)CommandProcessor.getInstance().newCommand()
+        return CommandProcessor.getInstance().<Exception>newCommand()
             .project(myProject)
             .name(UILocalize.fileChooserCreateNewFolderCommandName())
             .inWriteAction()
-            .get(() -> {
+            .compute(() -> {
                 try {
                     VirtualFile parent = parentDirectory;
                     for (String name : StringUtil.tokenize(newFolderName, "\\/")) {
@@ -282,11 +282,11 @@ public class FileSystemTreeImpl implements FileSystemTree {
         final FileType fileType,
         final String initialContent
     ) {
-        return (Exception)CommandProcessor.getInstance().newCommand()
+        return CommandProcessor.getInstance().<Exception>newCommand()
             .project(myProject)
             .name(UILocalize.fileChooserCreateNewFileCommandName())
             .inWriteAction()
-            .get(() -> {
+            .compute(() -> {
                 try {
                     final String newFileNameWithExtension = newFileName.endsWith('.' + fileType.getDefaultExtension())
                         ? newFileName

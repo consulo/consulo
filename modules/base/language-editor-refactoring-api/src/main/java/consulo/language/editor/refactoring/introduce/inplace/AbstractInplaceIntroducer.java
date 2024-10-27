@@ -196,11 +196,11 @@ public abstract class AbstractInplaceIntroducer<V extends PsiNameIdentifierOwner
     @RequiredUIAccess
     public boolean startInplaceIntroduceTemplate() {
         final boolean replaceAllOccurrences = isReplaceAllOccurrences();
-        return (boolean)CommandProcessor.getInstance().newCommand()
+        return CommandProcessor.getInstance().<Boolean>newCommand()
             .project(myProject)
             .name(LocalizeValue.ofNullable(getCommandName()))
             .groupId(getCommandName())
-            .get(() -> {
+            .compute(() -> {
                 final String[] names = suggestNames(replaceAllOccurrences, getLocalVariable());
                 final V variable = createFieldToStartTemplateOn(replaceAllOccurrences, names);
                 boolean started = false;

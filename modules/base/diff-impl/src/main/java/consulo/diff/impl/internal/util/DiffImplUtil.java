@@ -864,7 +864,7 @@ public class DiffImplUtil {
 
     @RequiredUIAccess
     @SuppressWarnings("unchecked")
-    public static CommandBuilder newWriteCommand() {
+    public static <R> CommandBuilder<R, ? extends CommandBuilder<R, ?>> newWriteCommand() {
         CommandBuilder commandBuilder = CommandProcessor.getInstance().newCommand().inWriteAction();
 
         return new ProxyCommandBuilder(commandBuilder) {

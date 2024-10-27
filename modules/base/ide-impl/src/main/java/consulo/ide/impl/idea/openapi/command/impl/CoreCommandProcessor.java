@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Stack;
 
 public class CoreCommandProcessor extends CommandProcessorEx {
-    private class MyCommandBuilder extends MyStartableCommandBuilder {
+    private class MyCommandBuilder<R> extends MyStartableCommandBuilder<R> {
         @Override
         @RequiredUIAccess
         public void run(@RequiredUIAccess @Nonnull Runnable runnable) {

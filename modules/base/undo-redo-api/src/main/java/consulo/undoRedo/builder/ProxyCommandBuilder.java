@@ -27,8 +27,8 @@ import jakarta.annotation.Nonnull;
  * @author UNV
  * @since 2024-10-21
  */
-public abstract class ProxyCommandBuilder<THIS extends CommandBuilder<THIS>, THAT extends CommandBuilder<THAT>>
-    implements CommandBuilder<THIS> {
+public abstract class ProxyCommandBuilder<R, THIS extends CommandBuilder<R, THIS>, THAT extends CommandBuilder<R, THAT>>
+    implements CommandBuilder<R, THIS> {
     protected THAT mySubBuilder;
 
     protected ProxyCommandBuilder(THAT subBuilder) {

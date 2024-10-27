@@ -94,9 +94,9 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
         final boolean focusEditor,
         boolean searchForSplitter
     ) {
-        return (Pair)CommandProcessor.getInstance().newCommand()
+        return CommandProcessor.getInstance().<Pair>newCommand()
             .project(myProject)
-            .get(() -> openFileImpl3(file, focusEditor));
+            .compute(() -> openFileImpl3(file, focusEditor));
     }
 
     @RequiredUIAccess

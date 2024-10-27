@@ -29,7 +29,7 @@ import jakarta.annotation.Nonnull;
  * @author UNV
  * @since 2024-10-21
  */
-public class BaseCommandBuilder<THIS extends CommandBuilder<THIS>> implements CommandBuilder<THIS> {
+public class BaseCommandBuilder<R, THIS extends CommandBuilder<R, THIS>> implements CommandBuilder<R, THIS> {
     @Nonnull
     private LocalizeValue myName = LocalizeValue.empty();
     private Object myGroupId = null;

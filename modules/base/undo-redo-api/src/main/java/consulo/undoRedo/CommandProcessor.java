@@ -31,7 +31,7 @@ public abstract class CommandProcessor {
     }
 
     @Nonnull
-    public abstract CommandBuilder newCommand();
+    public abstract <T> CommandBuilder<T, ? extends CommandBuilder<T, ?>> newCommand();
 
     @Deprecated
     @DeprecationInfo("Use #newCommand().run(Runnable)")

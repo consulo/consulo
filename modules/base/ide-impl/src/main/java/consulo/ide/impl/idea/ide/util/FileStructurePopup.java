@@ -768,11 +768,10 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
             }
         }
 
-        CommandProcessor commandProcessor = CommandProcessor.getInstance();
-        return (boolean)commandProcessor.newCommand()
+        return CommandProcessor.getInstance().<Boolean>newCommand()
             .project(myProject)
             .name(LanguageLocalize.commandNameNavigate())
-            .get(() -> {
+            .compute(() -> {
                 IdeDocumentHistory.getInstance(myProject).includeCurrentCommandAsNavigation();
 
                 if (selectedNode == null) {

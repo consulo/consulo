@@ -33,7 +33,7 @@ import java.util.function.Supplier;
  * @author UNV
  * @since 2024-10-21
  */
-public interface CommandBuilder<THIS extends CommandBuilder<THIS>> {
+public interface CommandBuilder<R, THIS extends CommandBuilder<R, THIS>> {
     THIS name(@Nonnull LocalizeValue name);
 
     THIS groupId(Object groupId);
@@ -111,8 +111,8 @@ public interface CommandBuilder<THIS extends CommandBuilder<THIS>> {
 
     void run(@RequiredUIAccess @Nonnull Runnable runnable);
 
-    default <T> T get(@RequiredUIAccess @Nonnull Supplier<T> supplier) {
-        SimpleReference<T> result = SimpleReference.create();
+    default R compute(@RequiredUIAccess @Nonnull Supplier<R> supplier) {
+        SimpleReference<R> result = SimpleReference.create();
         run(() -> result.set(supplier.get()));
         return result.get();
     }

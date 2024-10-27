@@ -217,7 +217,7 @@ public class MultipleFileMergeDialog extends DialogWrapper {
         }
 
         for (final VirtualFile file : files) {
-            Exception ex = (Exception)CommandProcessor.getInstance().newCommand()
+            Exception ex = CommandProcessor.getInstance().<Exception>newCommand()
                 .project(myProject)
                 .name(
                     isCurrent
@@ -225,7 +225,7 @@ public class MultipleFileMergeDialog extends DialogWrapper {
                         : VcsLocalize.multipleFileMergeAcceptTheirs().map(Presentation.NO_MNEMONIC)
                 )
                 .inWriteAction()
-                .get(() -> {
+                .compute(() -> {
                     try {
                         if (!(myProvider instanceof MergeProvider2) || myMergeSession.canMerge(file)) {
                             if (!DiffImplUtil.makeWritable(myProject, file)) {
