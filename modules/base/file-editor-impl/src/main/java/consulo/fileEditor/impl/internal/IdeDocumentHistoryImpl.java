@@ -415,9 +415,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
 
         myBackInProgress = true;
         try {
-            CommandProcessor.getInstance().newCommand(() -> gotoPlaceInfo(info))
-                .withProject(myProject)
-                .execute();
+            CommandProcessor.getInstance().newCommand().project(myProject).run(() -> gotoPlaceInfo(info));
         }
         finally {
             myBackInProgress = false;
@@ -436,9 +434,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
 
         myForwardInProgress = true;
         try {
-            CommandProcessor.getInstance().newCommand(() -> gotoPlaceInfo(target))
-                .withProject(myProject)
-                .execute();
+            CommandProcessor.getInstance().newCommand().project(myProject).run(() -> gotoPlaceInfo(target));
         }
         finally {
             myForwardInProgress = false;
@@ -485,9 +481,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
         for (int i = myCurrentIndex - 1; i >= 0; i--) {
             PlaceInfo info = myChangePlaces.get(i);
             if (currentPlace == null || !isSame(currentPlace, info)) {
-                CommandProcessor.getInstance().newCommand(() -> gotoPlaceInfo(info))
-                    .withProject(myProject)
-                    .execute();
+                CommandProcessor.getInstance().newCommand().project(myProject).run(() -> gotoPlaceInfo(info));
                 myCurrentIndex = i;
                 break;
             }
@@ -547,9 +541,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
         for (int i = myCurrentIndex; i < myChangePlaces.size(); i++) {
             PlaceInfo info = myChangePlaces.get(i);
             if (currentPlace == null || !isSame(currentPlace, info)) {
-                CommandProcessor.getInstance().newCommand(() -> gotoPlaceInfo(info))
-                    .withProject(myProject)
-                    .execute();
+                CommandProcessor.getInstance().newCommand().project(myProject).run(() -> gotoPlaceInfo(info));
                 myCurrentIndex = i + 1;
                 break;
             }

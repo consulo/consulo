@@ -623,10 +623,10 @@ public class CodeFormatterFacade {
             Runnable command =
                 () -> EditorActionManager.getInstance().getActionHandler(IdeActions.ACTION_EDITOR_ENTER).execute(editor, dataContext);
             if (!commandProcessor.hasCurrentCommand()) {
-                commandProcessor.newCommand(command)
-                    .withProject(editor.getProject())
-                    .withName(LocalizeValue.ofNullable(WRAP_LINE_COMMAND_NAME))
-                    .execute();
+                commandProcessor.newCommand()
+                    .project(editor.getProject())
+                    .name(LocalizeValue.ofNullable(WRAP_LINE_COMMAND_NAME))
+                    .run(command);
             }
             else {
                 command.run();

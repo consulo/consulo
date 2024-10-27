@@ -20,8 +20,8 @@ import consulo.language.codeStyle.DocCommentSettings;
 import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
 import consulo.language.editor.FileModificationService;
 import consulo.language.editor.documentation.*;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.psi.*;
-import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
@@ -127,11 +127,11 @@ public class FixDocCommentAction extends EditorAction {
                 task = () -> fixer.fixComment(project, editor, pair.second);
             }
         }
-        CommandProcessor.getInstance().newCommand(task)
-            .withProject(project)
-            .withName(LocalizeValue.ofNullable("Fix documentation"))
-            .withGroupId(null)
-            .executeInWriteAction();
+        CommandProcessor.getInstance().newCommand()
+            .project(project)
+            .name(CodeInsightLocalize.commandFixDocumentation())
+            .inWriteAction()
+            .run(task);
     }
 
     /**

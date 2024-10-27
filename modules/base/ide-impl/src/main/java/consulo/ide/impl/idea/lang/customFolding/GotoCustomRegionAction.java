@@ -67,7 +67,10 @@ public class GotoCustomRegionAction extends AnAction implements DumbAware, Popup
                 DumbService.getInstance(project).showDumbModeNotification(IdeLocalize.gotoCustomRegionMessageDumbMode().get());
                 return;
             }
-            CommandProcessor.getInstance().newCommand(() -> {
+            CommandProcessor.getInstance().newCommand()
+                .project(project)
+                .name(IdeLocalize.gotoCustomRegionCommand())
+                .run(() -> {
                     Collection<FoldingDescriptor> foldingDescriptors = getCustomFoldingDescriptors(editor, project);
                     if (foldingDescriptors.size() > 0) {
                         CustomFoldingRegionsPopup regionsPopup = new CustomFoldingRegionsPopup(foldingDescriptors, editor, project);
@@ -76,10 +79,7 @@ public class GotoCustomRegionAction extends AnAction implements DumbAware, Popup
                     else {
                         notifyCustomRegionsUnavailable(editor, project);
                     }
-                })
-                .withProject(project)
-                .withName(IdeLocalize.gotoCustomRegionCommand())
-                .execute();
+                });
         }
     }
 

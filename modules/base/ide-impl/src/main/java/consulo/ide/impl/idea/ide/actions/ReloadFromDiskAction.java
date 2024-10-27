@@ -58,10 +58,11 @@ public class ReloadFromDiskAction extends AnAction implements DumbAware {
             return;
         }
 
-        CommandProcessor.getInstance().newCommand(() -> PsiManager.getInstance(project).reloadFromDisk(psiFile))
-            .withProject(project)
-            .withName(IdeLocalize.commandReloadFromDisk())
-            .executeInWriteAction();
+        CommandProcessor.getInstance().newCommand()
+            .project(project)
+            .name(IdeLocalize.commandReloadFromDisk())
+            .inWriteAction()
+            .run(() -> PsiManager.getInstance(project).reloadFromDisk(psiFile));
     }
 
     @Override

@@ -72,6 +72,7 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.Alarm;
+import consulo.undoRedo.builder.CommandBuilder;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
@@ -330,14 +331,14 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
             final Document baseDocument = ThreeSide.BASE.select(myMergeRequest.getContents()).getDocument();
             final Document outputDocument = myMergeRequest.getOutputContent().getDocument();
 
-            DiffImplUtil.newWriteCommand(() -> {
+            DiffImplUtil.newWriteCommand()
+                .project(getProject())
+                .document(myMergeRequest.getOutputContent().getDocument())
+                .name(DiffLocalize.messageInitMergeContentCommand())
+                .run(() -> {
                     outputDocument.setText(baseDocument.getCharsSequence());
                     DiffImplUtil.putNonundoableOperation(getProject(), outputDocument);
-                })
-                .withProject(getProject())
-                .withDocument(outputDocument)
-                .withName(DiffLocalize.messageInitMergeContentCommand())
-                .execute();
+                });
         }
 
         @Override
@@ -755,15 +756,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
          * affected changes should be sorted
          */
         @RequiredUIAccess
-        DiffImplUtil.WriteCommandBuilder newMergeCommand(@Nullable List<TextMergeChange> affected, @Nonnull Runnable task) {
-            return newMergeCommand(false, affected, task);
-        }
-
-        /*
-         * affected changes should be sorted
-         */
-        @RequiredUIAccess
-        DiffImplUtil.WriteCommandBuilder newMergeCommand(boolean underBulkUpdate, @Nullable List<TextMergeChange> affected, @Nonnull Runnable task) {
+        CommandBuilder newMergeCommand(@Nullable List<TextMergeChange> affected) {
             myContentModified = true;
 
             IntList affectedIndexes = null;
@@ -774,7 +767,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
                 }
             }
 
-            return myModel.newMergeCommand(underBulkUpdate, affectedIndexes, task);
+            return myModel.newMergeCommand(affectedIndexes);
         }
 
         /*
@@ -788,9 +781,10 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
             @Nullable List<TextMergeChange> affected,
             @Nonnull Runnable task
         ) {
-            newMergeCommand(underBulkUpdate, affected, task)
-                .withName(LocalizeValue.ofNullable(commandName))
-                .execute();
+            newMergeCommand(affected)
+                .name(LocalizeValue.ofNullable(commandName))
+                .inBulkUpdateIf(underBulkUpdate)
+                .run(task);
         }
 
         @Deprecated(forRemoval = true)
@@ -1010,10 +1004,10 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
 
         @RequiredUIAccess
         private void applyNonConflictedChanges(@Nonnull ThreeSide side) {
-            newMergeCommand(
-                true,
-                null,
-                () -> {
+            newMergeCommand(null)
+                .name(DiffLocalize.mergeDialogApplyNonConflictedChangesCommand())
+                .inBulkUpdate()
+                .run(() -> {
                     List<TextMergeChange> allChanges = ContainerUtil.newArrayList(getAllChanges());
                     for (TextMergeChange change : allChanges) {
                         if (change.isConflict()) {
@@ -1028,9 +1022,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
                         Side masterSide = side.select(Side.LEFT, change.isChange(Side.LEFT) ? Side.LEFT : Side.RIGHT, Side.RIGHT);
                         replaceChange(change, masterSide, false);
                     }
-                })
-                .withName(DiffLocalize.mergeDialogApplyNonConflictedChangesCommand())
-                .execute();
+                });
 
             TextMergeChange firstConflict = getFirstUnresolvedChange(true, ThreeSide.BASE);
             if (firstConflict != null) {
@@ -1113,9 +1105,10 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
                     return;
                 }
 
-                newMergeCommand(selectedChanges.size() > 1, selectedChanges, () -> apply(side, selectedChanges))
-                    .withName(DiffLocalize.messageDoInMergeCommand(e.getPresentation().getText()))
-                    .execute();
+                newMergeCommand(selectedChanges)
+                    .name(DiffLocalize.messageDoInMergeCommand(e.getPresentation().getText()))
+                    .inBulkUpdateIf(selectedChanges.size() > 1)
+                    .run(() -> apply(side, selectedChanges));
             }
 
             private boolean isSomeChangeSelected(@Nonnull ThreeSide side) {

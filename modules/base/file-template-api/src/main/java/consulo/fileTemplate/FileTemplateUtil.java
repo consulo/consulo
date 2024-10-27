@@ -22,7 +22,6 @@ import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.file.FileTypeManager;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
-import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
@@ -152,22 +151,23 @@ public class FileTemplateUtil {
         );
         final String templateText = StringUtil.convertLineSeparators(mergedText);
         final SimpleReference<Exception> commandException = new SimpleReference<>();
-        final SimpleReference<PsiElement> result = new SimpleReference<>();
-        CommandProcessor.getInstance().newCommand(() -> {
+        PsiElement result = CommandProcessor.getInstance().<PsiElement>newCommand()
+            .project(project)
+            .name(handler.commandName(template))
+            .inWriteAction()
+            .compute(() -> {
                 try {
-                    result.set(handler.createFromTemplate(project, directory, fileName_, template, templateText, properties));
+                    return handler.createFromTemplate(project, directory, fileName_, template, templateText, properties);
                 }
                 catch (Exception ex) {
                     commandException.set(ex);
+                    return null;
                 }
-            })
-            .withProject(project)
-            .withName(LocalizeValue.ofNullable(handler.commandName(template)))
-            .executeInWriteAction();
+            });
         if (!commandException.isNull()) {
             throw commandException.get();
         }
-        return result.get();
+        return result;
     }
 
     @Nonnull

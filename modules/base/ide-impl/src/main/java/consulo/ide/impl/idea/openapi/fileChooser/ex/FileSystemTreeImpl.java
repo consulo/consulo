@@ -254,8 +254,11 @@ public class FileSystemTreeImpl implements FileSystemTree {
 
     @RequiredUIAccess
     public Exception createNewFolder(final VirtualFile parentDirectory, final String newFolderName) {
-        final Exception[] failReason = new Exception[]{null};
-        CommandProcessor.getInstance().newCommand(() -> {
+        return CommandProcessor.getInstance().<Exception>newCommand()
+            .project(myProject)
+            .name(UILocalize.fileChooserCreateNewFolderCommandName())
+            .inWriteAction()
+            .compute(() -> {
                 try {
                     VirtualFile parent = parentDirectory;
                     for (String name : StringUtil.tokenize(newFolderName, "\\/")) {
@@ -264,15 +267,12 @@ public class FileSystemTreeImpl implements FileSystemTree {
                         select(folder, null);
                         parent = folder;
                     }
+                    return null;
                 }
                 catch (IOException e) {
-                    failReason[0] = e;
+                    return e;
                 }
-            })
-            .withProject(myProject)
-            .withName(UILocalize.fileChooserCreateNewFolderCommandName())
-            .executeInWriteAction();
-        return failReason[0];
+            });
     }
 
     @RequiredUIAccess
@@ -282,8 +282,11 @@ public class FileSystemTreeImpl implements FileSystemTree {
         final FileType fileType,
         final String initialContent
     ) {
-        final Exception[] failReason = new Exception[]{null};
-        CommandProcessor.getInstance().newCommand(() -> {
+        return CommandProcessor.getInstance().<Exception>newCommand()
+            .project(myProject)
+            .name(UILocalize.fileChooserCreateNewFileCommandName())
+            .inWriteAction()
+            .compute(() -> {
                 try {
                     final String newFileNameWithExtension = newFileName.endsWith('.' + fileType.getDefaultExtension())
                         ? newFileName
@@ -292,15 +295,12 @@ public class FileSystemTreeImpl implements FileSystemTree {
                     VfsUtil.saveText(file, initialContent != null ? initialContent : "");
                     updateTree();
                     select(file, null);
+                    return null;
                 }
                 catch (IOException e) {
-                    failReason[0] = e;
+                    return e;
                 }
-            })
-            .withProject(myProject)
-            .withName(UILocalize.fileChooserCreateNewFileCommandName())
-            .executeInWriteAction();
-        return failReason[0];
+            });
     }
 
     @Override

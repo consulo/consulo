@@ -162,17 +162,18 @@ public class QuickFixAction extends AnAction {
         try {
             final Set<PsiElement> ignoredElements = new HashSet<>();
 
-            CommandProcessor.getInstance().newCommand(() -> {
-                    CommandProcessor.getInstance().markCurrentCommandAsGlobal(project);
+            CommandProcessor.getInstance().newCommand()
+                .project(project)
+                .name(getTemplatePresentation().getTextValue())
+                .inWriteAction()
+                .inGlobalUndoAction()
+                .run(() -> {
                     final SequentialModalProgressTask progressTask =
                         new SequentialModalProgressTask(project, getTemplatePresentation().getText(), false);
                     progressTask.setMinIterationTime(200);
                     progressTask.setTask(new PerformFixesTask(project, descriptors, ignoredElements, progressTask, context));
                     ProgressManager.getInstance().run(progressTask);
-                })
-                .withProject(project)
-                .withName(getTemplatePresentation().getTextValue())
-                .executeInWriteAction();
+                });
 
             refreshViews(project, ignoredElements, myToolWrapper);
         }
@@ -195,13 +196,12 @@ public class QuickFixAction extends AnAction {
             final SimpleReference<Boolean> refreshNeeded = new SimpleReference<>(false);
             if (refElements.length > 0) {
                 final Project project = refElements[0].getRefManager().getProject();
-                CommandProcessor.getInstance().newCommand(() -> {
-                        CommandProcessor.getInstance().markCurrentCommandAsGlobal(project);
-                        refreshNeeded.set(applyFix(refElements));
-                    })
-                    .withProject(project)
-                    .withName(getTemplatePresentation().getTextValue())
-                    .executeInWriteAction();
+                CommandProcessor.getInstance().newCommand()
+                    .project(project)
+                    .name(getTemplatePresentation().getTextValue())
+                    .inWriteAction()
+                    .inGlobalUndoAction()
+                    .run(() -> refreshNeeded.set(applyFix(refElements)));
             }
             if (refreshNeeded.get()) {
                 refreshViews(view.getProject(), refElements, myToolWrapper);

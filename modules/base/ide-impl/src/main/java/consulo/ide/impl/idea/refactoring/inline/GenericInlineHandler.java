@@ -111,7 +111,10 @@ public class GenericInlineHandler {
         project.getApplication().runWriteAction(() -> {
             final String subj = element instanceof PsiNamedElement namedElement ? namedElement.getName() : "element";
 
-            CommandProcessor.getInstance().newCommand(() -> {
+            CommandProcessor.getInstance().newCommand()
+                .project(project)
+                .name(RefactoringLocalize.inlineCommand(StringUtil.notNullize(subj, "<nameless>")))
+                .run(() -> {
                     final PsiReference[] references = sortDepthFirstRightLeftOrder(allReferences);
 
                     final UsageInfo[] usages = new UsageInfo[references.length];
@@ -126,10 +129,7 @@ public class GenericInlineHandler {
                     if (!settings.isOnlyOneReferenceToInline()) {
                         languageSpecific.removeDefinition(element, settings);
                     }
-                })
-                .withProject(project)
-                .withName(RefactoringLocalize.inlineCommand(StringUtil.notNullize(subj, "<nameless>")))
-                .execute();
+                });
         });
         return true;
     }

@@ -53,22 +53,18 @@ public class HighlightUsagesAction extends AnAction implements DumbAware {
             return;
         }
 
-        CommandProcessor.getInstance().newCommand(new Runnable() {
-                @Override
-                @RequiredUIAccess
-                public void run() {
-                    PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
-                    try {
-                        HighlightUsagesHandler.invoke(project, editor, psiFile);
-                    }
-                    catch (IndexNotReadyException ex) {
-                        DumbService.getInstance(project)
-                            .showDumbModeNotification(ActionLocalize.actionHighlightusagesinfileNotReady().get());
-                    }
+        CommandProcessor.getInstance().newCommand()
+            .project(project)
+            .name(getTemplatePresentation().getTextValue())
+            .run(() -> {
+                PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+                try {
+                    HighlightUsagesHandler.invoke(project, editor, psiFile);
                 }
-            })
-            .withProject(project)
-            .withName(getTemplatePresentation().getTextValue())
-            .execute();
+                catch (IndexNotReadyException ex) {
+                    DumbService.getInstance(project)
+                        .showDumbModeNotification(ActionLocalize.actionHighlightusagesinfileNotReady().get());
+                }
+            });
     }
 }

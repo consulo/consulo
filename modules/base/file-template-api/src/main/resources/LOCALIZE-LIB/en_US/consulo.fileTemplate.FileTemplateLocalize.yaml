@@ -1,0 +1,12 @@
+command.create.class.from.template:
+  text: Create Class From Template
+command.create.file.from.template:
+  text: Create File From Template
+error.parsing.file.template:
+  text: 'Error parsing file template: {0}'
+title.velocity.error:
+  text: Velocity Error
+title.cannot.create.file:
+  text: Cannot Create File
+error.file.name.is.ignored:
+  text: "''{0}'' is an ignored name (Settings | Editor | File Types | Ignore files and folders)"

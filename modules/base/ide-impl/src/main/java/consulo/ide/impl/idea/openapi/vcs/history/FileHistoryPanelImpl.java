@@ -1449,10 +1449,11 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
         private void writeContentToDocument(final Document document, byte[] revisionContent) throws IOException {
             final String content = StringUtil.convertLineSeparators(new String(revisionContent, myFilePath.getCharset().name()));
 
-            CommandProcessor.getInstance().newCommand(() -> document.replaceString(0, document.getTextLength(), content))
-                .withProject(myVcs.getProject())
-                .withName(VcsLocalize.messageTitleGetVersion())
-                .execute();
+            CommandProcessor.getInstance().newCommand()
+                .project(myVcs.getProject())
+                .document(document)
+                .name(VcsLocalize.messageTitleGetVersion())
+                .run(() -> document.replaceString(0, document.getTextLength(), content));
         }
     }
 

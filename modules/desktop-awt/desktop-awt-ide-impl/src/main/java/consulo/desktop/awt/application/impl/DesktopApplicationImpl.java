@@ -184,14 +184,14 @@ public class DesktopApplicationImpl extends BaseApplication {
         final boolean[] canClose = {true};
         for (final Project project : manager.getOpenProjects()) {
             try {
-                CommandProcessor.getInstance().newCommand(() -> {
+                CommandProcessor.getInstance().newCommand()
+                    .project(project)
+                    .name(ApplicationLocalize.commandExit())
+                    .run(() -> {
                         if (!manager.closeProject(project, true, true, checkCanCloseProject)) {
                             canClose[0] = false;
                         }
-                    })
-                    .withProject(project)
-                    .withName(ApplicationLocalize.commandExit())
-                    .execute();
+                    });
             }
             catch (Throwable e) {
                 LOG.error(e);

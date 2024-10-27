@@ -15,7 +15,10 @@
  */
 package consulo.fileTemplate;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.component.util.localize.AbstractBundle;
+import consulo.fileTemplate.localize.FileTemplateLocalize;
 import org.jetbrains.annotations.PropertyKey;
 
 import jakarta.annotation.Nonnull;
@@ -24,6 +27,9 @@ import jakarta.annotation.Nonnull;
  * @author VISTALL
  * @since 27-Mar-22
  */
+@Deprecated
+@DeprecationInfo("Use FileTemplateLocalize")
+@MigratedExtensionsTo(FileTemplateLocalize.class)
 public class FileTemplateBundle extends AbstractBundle {
   public static final FileTemplateBundle INSTANCE = new FileTemplateBundle();
 

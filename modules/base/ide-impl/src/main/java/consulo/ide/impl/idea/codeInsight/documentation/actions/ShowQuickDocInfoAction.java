@@ -144,10 +144,10 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
         }
         else if (project != null && element != null) {
             FeatureUsageTracker.getInstance().triggerFeatureUsed(CODEASSISTS_QUICKJAVADOC_CTRLN_FEATURE);
-            CommandProcessor.getInstance().newCommand(() -> DocumentationManager.getInstance(project).showJavaDocInfo(element, null))
-                .withProject(project)
-                .withName(getTemplatePresentation().getTextValue())
-                .execute();
+            CommandProcessor.getInstance().newCommand()
+                .project(project)
+                .name(getTemplatePresentation().getTextValue())
+                .run(() -> DocumentationManager.getInstance(project).showJavaDocInfo(element, null));
         }
     }
 }

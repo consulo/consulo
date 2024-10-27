@@ -125,7 +125,10 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
 
     @RequiredUIAccess
     public void openMessagesView(final NewErrorTreeViewPanel errorTreeView, @Nonnull final LocalizeValue tabDisplayName) {
-        CommandProcessor.getInstance().newCommand(() -> {
+        CommandProcessor.getInstance().newCommand()
+            .project(myProject)
+            .name(VcsLocalize.commandNameOpenErrorMessageView())
+            .run(() -> {
                 final MessageView messageView = MessageView.getInstance(myProject);
                 messageView.runWhenInitialized(() -> {
                     final Content content =
@@ -137,10 +140,7 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
 
                     ToolWindowManager.getInstance(myProject).getToolWindow(ToolWindowId.MESSAGES_WINDOW).activate(null);
                 });
-            })
-            .withProject(myProject)
-            .withName(VcsLocalize.commandNameOpenErrorMessageView())
-            .execute();
+            });
     }
 
     @Override

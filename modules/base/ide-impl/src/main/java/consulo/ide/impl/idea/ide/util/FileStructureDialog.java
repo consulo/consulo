@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.ide.util;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
@@ -38,10 +38,10 @@ import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.structureView.PsiStructureViewFactory;
 import consulo.language.editor.util.PsiUtilBase;
+import consulo.language.localize.LanguageLocalize;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
@@ -60,7 +60,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import kava.beans.PropertyChangeEvent;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -78,7 +77,6 @@ public class FileStructureDialog extends DialogWrapper {
     private SmartTreeStructure myTreeStructure;
     private final TreeStructureActionsOwner myTreeActionsOwner;
 
-    @NonNls
     private static final String ourPropertyKey = "FileStructure.narrowDown";
     private boolean myShouldNarrowDown = false;
 
@@ -165,8 +163,8 @@ public class FileStructureDialog extends DialogWrapper {
         myCommanderPanel = new MyCommanderPanel(myProject);
         myTreeStructure = new MyStructureTreeStructure();
 
-        List<FileStructureFilter> fileStructureFilters = new ArrayList<FileStructureFilter>();
-        List<FileStructureNodeProvider> fileStructureNodeProviders = new ArrayList<FileStructureNodeProvider>();
+        List<FileStructureFilter> fileStructureFilters = new ArrayList<>();
+        List<FileStructureNodeProvider> fileStructureNodeProviders = new ArrayList<>();
         if (myTreeActionsOwner != null) {
             for (Filter filter : myBaseTreeModel.getFilters()) {
                 if (filter instanceof FileStructureFilter) {
@@ -208,7 +206,7 @@ public class FileStructureDialog extends DialogWrapper {
 
             @Override
             protected List<AbstractTreeNode> getAllAcceptableNodes(final Object[] childElements, VirtualFile file) {
-                ArrayList<AbstractTreeNode> result = new ArrayList<AbstractTreeNode>();
+                ArrayList<AbstractTreeNode> result = new ArrayList<>();
                 for (Object childElement : childElements) {
                     result.add((AbstractTreeNode)childElement);
                 }
@@ -220,7 +218,8 @@ public class FileStructureDialog extends DialogWrapper {
 
         new AnAction() {
             @Override
-            public void actionPerformed(AnActionEvent e) {
+            @RequiredUIAccess
+            public void actionPerformed(@Nonnull AnActionEvent e) {
                 final boolean succeeded = myCommanderPanel.navigateSelectedElement();
                 if (succeeded) {
                     unregisterCustomShortcutSet(myCommanderPanel);
@@ -336,7 +335,8 @@ public class FileStructureDialog extends DialogWrapper {
             text += " (" + KeymapUtil.getShortcutText(shortcuts[0]) + ")";
             new AnAction() {
                 @Override
-                public void actionPerformed(final AnActionEvent e) {
+                @RequiredUIAccess
+                public void actionPerformed(@Nonnull AnActionEvent e) {
                     chkFilter.doClick();
                 }
             }.registerCustomShortcutSet(new CustomShortcutSet(shortcuts), myCommanderPanel);
@@ -371,17 +371,14 @@ public class FileStructureDialog extends DialogWrapper {
                     return;
                 }
                 builder.addUpdateRequest(hasPrefixShortened(evt));
-                ApplicationManager.getApplication().invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        int index = myList.getSelectedIndex();
-                        if (index != -1 && index < myList.getModel().getSize()) {
-                            myList.clearSelection();
-                            ScrollingUtil.selectItem(myList, index);
-                        }
-                        else {
-                            ScrollingUtil.ensureSelectionExists(myList);
-                        }
+                Application.get().invokeLater(() -> {
+                    int index = myList.getSelectedIndex();
+                    if (index != -1 && index < myList.getModel().getSize()) {
+                        myList.clearSelection();
+                        ScrollingUtil.selectItem(myList, index);
+                    }
+                    else {
+                        ScrollingUtil.ensureSelectionExists(myList);
                     }
                 });
 
@@ -400,13 +397,13 @@ public class FileStructureDialog extends DialogWrapper {
         public boolean navigateSelectedElement() {
             final SimpleReference<Boolean> succeeded = new SimpleReference<>();
             final CommandProcessor commandProcessor = CommandProcessor.getInstance();
-            commandProcessor.newCommand(() -> {
+            commandProcessor.newCommand()
+                .project(myProject)
+                .name(LanguageLocalize.commandNameNavigate())
+                .run(() -> {
                     succeeded.set(MyCommanderPanel.super.navigateSelectedElement());
                     IdeDocumentHistory.getInstance(myProject).includeCurrentCommandAsNavigation();
-                })
-                .withProject(myProject)
-                .withName(LocalizeValue.localizeTODO("Navigate"))
-                .execute();
+                });
             if (succeeded.get()) {
                 close(CANCEL_EXIT_CODE);
             }
@@ -453,6 +450,7 @@ public class FileStructureDialog extends DialogWrapper {
             super(FileStructureDialog.this.myProject, myTreeModel);
         }
 
+        @Nonnull
         @Override
         public Object[] getChildElements(Object element) {
             Object[] childElements = super.getChildElements(element);

@@ -554,23 +554,23 @@ public abstract class InplaceRefactoring {
     @Nullable
     @RequiredUIAccess
     protected StartMarkAction startRename() throws StartMarkAction.AlreadyStartedException {
-        final SimpleReference<StartMarkAction> markAction = new SimpleReference<>();
         final SimpleReference<StartMarkAction.AlreadyStartedException> ex = new SimpleReference<>();
-        CommandProcessor.getInstance().newCommand(() -> {
+        StartMarkAction markAction = CommandProcessor.getInstance().<StartMarkAction>newCommand()
+            .project(myProject)
+            .name(LocalizeValue.ofNullable(getCommandName()))
+            .compute(() -> {
                 try {
-                    markAction.set(StartMarkAction.start(myEditor.getDocument(), myProject, getCommandName()));
+                    return StartMarkAction.start(myEditor.getDocument(), myProject, getCommandName());
                 }
                 catch (StartMarkAction.AlreadyStartedException e) {
                     ex.set(e);
+                    return null;
                 }
-            })
-            .withProject(myProject)
-            .withName(LocalizeValue.ofNullable(getCommandName()))
-            .execute();
+            });
         if (!ex.isNull()) {
             throw ex.get();
         }
-        return markAction.get();
+        return markAction;
     }
 
     @Nullable
@@ -669,7 +669,10 @@ public abstract class InplaceRefactoring {
         if (myOldName == null) {
             return;
         }
-        CommandProcessor.getInstance().newCommand(() -> {
+        CommandProcessor.getInstance().newCommand()
+            .project(myProject)
+            .name(LocalizeValue.ofNullable(getCommandName()))
+            .run(() -> {
                 final Editor topLevelEditor = EditorWindow.getTopLevelEditor(myEditor);
                 myProject.getApplication().runWriteAction(() -> {
                     final TemplateState state = TemplateManager.getInstance(myProject).getTemplateState(topLevelEditor);
@@ -684,10 +687,7 @@ public abstract class InplaceRefactoring {
                 if (!myProject.isDisposed() && myProject.isOpen()) {
                     PsiDocumentManager.getInstance(myProject).commitDocument(topLevelEditor.getDocument());
                 }
-            })
-            .withProject(myProject)
-            .withName(LocalizeValue.ofNullable(getCommandName()))
-            .execute();
+            });
     }
 
     /**

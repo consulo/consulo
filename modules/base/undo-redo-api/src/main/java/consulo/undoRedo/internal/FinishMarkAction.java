@@ -18,8 +18,8 @@ package consulo.undoRedo.internal;
 import consulo.document.Document;
 import consulo.document.DocumentReference;
 import consulo.document.DocumentReferenceManager;
-import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.BasicUndoableAction;
 import consulo.undoRedo.CommandProcessor;
@@ -81,13 +81,13 @@ public class FinishMarkAction extends BasicUndoableAction {
         if (startAction == null) {
             return;
         }
-        CommandProcessor.getInstance().newCommand(() -> {
+        CommandProcessor.getInstance().newCommand()
+            .project(project)
+            .name(ProjectLocalize.commandFinish())
+            .run(() -> {
                 DocumentReference reference = DocumentReferenceManager.getInstance().create(document);
                 ProjectUndoManager.getInstance(project).undoableActionPerformed(new FinishMarkAction(reference, startAction));
                 StartMarkAction.markFinished(project);
-            })
-            .withProject(project)
-            .withName(LocalizeValue.localizeTODO("finish"))
-            .execute();
+            });
     }
 }

@@ -11,7 +11,6 @@ import consulo.language.editor.util.LanguageEditorUtil;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -19,6 +18,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.UpdateInBackground;
 import consulo.undoRedo.CommandProcessor;
+import consulo.undoRedo.builder.CommandBuilder;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -58,22 +58,21 @@ public abstract class CodeInsightAction extends AnAction implements UpdateInBack
             return;
         }
 
-        CommandProcessor.ExecutableCommandBuilder commandBuilder = CommandProcessor.getInstance().newCommand(() -> {
-                if (Application.get().isHeadlessEnvironment() || editor.getContentComponent().isShowing()) {
-                    handler.invoke(project, editor, psiFile);
-                }
-            })
-            .withProject(project)
-            .withDocument(editor.getDocument())
-            .withName(LocalizeValue.ofNullable(getCommandName()))
-            .withGroupId(DocCommandGroupId.noneGroupId(editor.getDocument()));
+        CommandBuilder commandBuilder = CommandProcessor.getInstance().newCommand()
+            .project(project)
+            .document(editor.getDocument())
+            .name(getTemplatePresentation().getTextValue())
+            .groupId(DocCommandGroupId.noneGroupId(editor.getDocument()));
 
         if (handler.startInWriteAction()) {
-            commandBuilder.executeInWriteAction();
+            commandBuilder = commandBuilder.inWriteAction();
         }
-        else {
-            commandBuilder.execute();
-        }
+
+        commandBuilder.run(() -> {
+            if (Application.get().isHeadlessEnvironment() || editor.getContentComponent().isShowing()) {
+                handler.invoke(project, editor, psiFile);
+            }
+        });
     }
 
     @RequiredUIAccess

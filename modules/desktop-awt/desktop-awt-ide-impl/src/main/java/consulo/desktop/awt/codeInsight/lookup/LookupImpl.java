@@ -595,10 +595,9 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable,
             hideWithItemSelected(null, completionChar);
             return;
         }
-        Runnable runnable = () -> finishLookupInWritableFile(completionChar, item);
-        CommandProcessor.getInstance().newCommand(runnable)
-            .withProject(myProject)
-            .execute();
+        CommandProcessor.getInstance().newCommand()
+            .project(myProject)
+            .run(() -> finishLookupInWritableFile(completionChar, item));
     }
 
     @Override
@@ -1066,11 +1065,10 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable,
                 markSelectionTouched();
 
                 if (clickCount == 2) {
-                    Runnable runnable = () -> finishLookup(NORMAL_SELECT_CHAR);
-                    CommandProcessor.getInstance().newCommand(runnable)
-                        .withProject(myProject)
-                        .withDocument(myEditor.getDocument())
-                        .execute();
+                    CommandProcessor.getInstance().newCommand()
+                        .project(myProject)
+                        .document(myEditor.getDocument())
+                        .run(() -> finishLookup(NORMAL_SELECT_CHAR));
                 }
                 return true;
             }

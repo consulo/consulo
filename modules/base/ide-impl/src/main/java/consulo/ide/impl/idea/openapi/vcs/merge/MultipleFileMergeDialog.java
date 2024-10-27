@@ -26,13 +26,13 @@ import consulo.diff.merge.MergeResult;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.StoreReloadManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.table.ListTableModel;
 import consulo.ui.ex.awt.table.TableView;
@@ -40,7 +40,6 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.SmartList;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.ref.SimpleReference;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
 import consulo.versionControlSystem.localize.VcsLocalize;
@@ -218,8 +217,15 @@ public class MultipleFileMergeDialog extends DialogWrapper {
         }
 
         for (final VirtualFile file : files) {
-            final SimpleReference<Exception> ex = new SimpleReference<>();
-            CommandProcessor.getInstance().newCommand(() -> {
+            Exception ex = CommandProcessor.getInstance().<Exception>newCommand()
+                .project(myProject)
+                .name(
+                    isCurrent
+                        ? VcsLocalize.multipleFileMergeAcceptYours().map(Presentation.NO_MNEMONIC)
+                        : VcsLocalize.multipleFileMergeAcceptTheirs().map(Presentation.NO_MNEMONIC)
+                )
+                .inWriteAction()
+                .compute(() -> {
                     try {
                         if (!(myProvider instanceof MergeProvider2) || myMergeSession.canMerge(file)) {
                             if (!DiffImplUtil.makeWritable(myProject, file)) {
@@ -235,17 +241,15 @@ public class MultipleFileMergeDialog extends DialogWrapper {
                             }
                         }
                         markFileProcessed(file, isCurrent ? MergeSession.Resolution.AcceptedYours : MergeSession.Resolution.AcceptedTheirs);
+                        return null;
                     }
                     catch (Exception e) {
-                        ex.set(e);
+                        return e;
                     }
-                })
-                .withProject(myProject)
-                .withName(LocalizeValue.localizeTODO("Accept " + (isCurrent ? "Yours" : "Theirs")))
-                .executeInWriteAction();
-            if (!ex.isNull()) {
+                });
+            if (ex != null) {
                 //noinspection ThrowableResultOfMethodCallIgnored
-                Messages.showErrorDialog(myRootPanel, "Error saving merged data: " + ex.get().getMessage());
+                Messages.showErrorDialog(myRootPanel, "Error saving merged data: " + ex.getMessage());
                 break;
             }
         }

@@ -20,6 +20,7 @@ import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementAction;
 import consulo.language.editor.completion.lookup.LookupEx;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.image.Image;
@@ -54,6 +55,7 @@ public class LookupActionsStep extends BaseListPopupStep<LookupElementAction> im
     }
 
     @Override
+    @RequiredUIAccess
     public PopupStep onChosen(LookupElementAction selectedValue, boolean finalChoice) {
         final LookupElementAction.Result result = selectedValue.performLookupAction();
         if (result == LookupElementAction.Result.HIDE_LOOKUP) {
@@ -66,9 +68,9 @@ public class LookupActionsStep extends BaseListPopupStep<LookupElementAction> im
         }
         else if (result instanceof LookupElementAction.Result.ChooseItem chooseItem) {
             myLookup.setCurrentItem(chooseItem.item);
-            CommandProcessor.getInstance().newCommand(() -> myLookup.finishLookup(Lookup.AUTO_INSERT_SELECT_CHAR))
-                .withProject(myLookup.getProject())
-                .execute();
+            CommandProcessor.getInstance().newCommand()
+                .project(myLookup.getProject())
+                .run(() -> myLookup.finishLookup(Lookup.AUTO_INSERT_SELECT_CHAR));
         }
         return FINAL_CHOICE;
     }

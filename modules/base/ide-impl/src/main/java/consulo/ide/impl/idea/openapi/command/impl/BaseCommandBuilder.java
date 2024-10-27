@@ -18,10 +18,10 @@ package consulo.ide.impl.idea.openapi.command.impl;
 import consulo.document.Document;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandDescriptor;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.undoRedo.builder.CommandBuilder;
-import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.ref.Ref;
 import jakarta.annotation.Nonnull;
 
@@ -29,9 +29,7 @@ import jakarta.annotation.Nonnull;
  * @author UNV
  * @since 2024-10-21
  */
-public class BaseCommandBuilder<THIS extends CommandBuilder> implements CommandBuilder<THIS> {
-    @Nonnull
-    private final Runnable myCommand;
+public class BaseCommandBuilder<R, THIS extends CommandBuilder<R, THIS>> implements CommandBuilder<R, THIS> {
     @Nonnull
     private LocalizeValue myName = LocalizeValue.empty();
     private Object myGroupId = null;
@@ -42,31 +40,25 @@ public class BaseCommandBuilder<THIS extends CommandBuilder> implements CommandB
     private boolean myShouldRecordActionForActiveDocument = true;
 
     public BaseCommandBuilder() {
-        this(EmptyRunnable.INSTANCE);
-    }
-
-    public BaseCommandBuilder(@Nonnull Runnable command) {
-        myCommand = command;
     }
 
     public BaseCommandBuilder(CommandDescriptor descriptor) {
-        this(descriptor.command());
-        withName(descriptor.name());
-        withGroupId(descriptor.groupId());
-        withProject(descriptor.project());
-        withDocument(descriptor.document());
-        withUndoConfirmationPolicy(descriptor.undoConfirmationPolicy());
-        withShouldRecordActionForActiveDocument(descriptor.shouldRecordActionForActiveDocument());
+        name(descriptor.name());
+        groupId(descriptor.groupId());
+        project(descriptor.project());
+        document(descriptor.document());
+        undoConfirmationPolicy(descriptor.undoConfirmationPolicy());
+        shouldRecordActionForActiveDocument(descriptor.shouldRecordActionForActiveDocument());
     }
 
     @Override
-    public THIS withName(@Nonnull LocalizeValue name) {
+    public THIS name(@Nonnull LocalizeValue name) {
         myName = name;
         return self();
     }
 
     @Override
-    public THIS withGroupId(Object groupId) {
+    public THIS groupId(Object groupId) {
         myGroupId = groupId;
 
         if (groupId instanceof Document docGroupId) {
@@ -80,19 +72,19 @@ public class BaseCommandBuilder<THIS extends CommandBuilder> implements CommandB
     }
 
     @Override
-    public THIS withProject(Project project) {
+    public THIS project(Project project) {
         myProject = project;
         return self();
     }
 
     @Override
-    public THIS withDocument(Document document) {
+    public THIS document(Document document) {
         myDocument = document;
         return self();
     }
 
     @Override
-    public THIS withUndoConfirmationPolicy(@Nonnull UndoConfirmationPolicy undoConfirmationPolicy) {
+    public THIS undoConfirmationPolicy(@Nonnull UndoConfirmationPolicy undoConfirmationPolicy) {
         myUndoConfirmationPolicy = undoConfirmationPolicy;
         return self();
     }
@@ -104,15 +96,20 @@ public class BaseCommandBuilder<THIS extends CommandBuilder> implements CommandB
      *                                            Default is {@code true}.
      */
     @Override
-    public THIS withShouldRecordActionForActiveDocument(boolean shouldRecordActionForActiveDocument) {
+    public THIS shouldRecordActionForActiveDocument(boolean shouldRecordActionForActiveDocument) {
         myShouldRecordActionForActiveDocument = shouldRecordActionForActiveDocument;
         return self();
     }
 
     @Override
-    public CommandDescriptor build() {
+    public void run(@RequiredUIAccess @Nonnull Runnable runnable) {
+        runnable.run();
+    }
+
+    @Override
+    public CommandDescriptor build(@RequiredUIAccess @Nonnull Runnable command) {
         return new CommandDescriptor(
-            myCommand,
+            command,
             myName,
             myGroupId,
             myProject,

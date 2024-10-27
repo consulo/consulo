@@ -46,7 +46,6 @@ import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
-import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -89,16 +88,15 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
     @Nonnull
     @Override
     @RequiredUIAccess
+    @SuppressWarnings("unchecked")
     public Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(
         @Nonnull final VirtualFile file,
         final boolean focusEditor,
         boolean searchForSplitter
     ) {
-        final SimpleReference<Pair<FileEditor[], FileEditorProvider[]>> result = new SimpleReference<>();
-        CommandProcessor.getInstance().newCommand(() -> result.set(openFileImpl3(file, focusEditor)))
-            .withProject(myProject)
-            .execute();
-        return result.get();
+        return CommandProcessor.getInstance().<Pair>newCommand()
+            .project(myProject)
+            .compute(() -> openFileImpl3(file, focusEditor));
     }
 
     @RequiredUIAccess

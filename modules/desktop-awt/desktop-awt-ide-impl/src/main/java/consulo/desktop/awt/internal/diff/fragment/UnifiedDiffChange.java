@@ -218,14 +218,14 @@ public class UnifiedDiffChange {
                 final Project project = e.getData(Project.KEY);
                 final Document document = myViewer.getDocument(sourceSide.other());
 
-                DiffImplUtil.newWriteCommand(() -> {
+                DiffImplUtil.newWriteCommand()
+                    .project(project)
+                    .document(document)
+                    .name(DiffLocalize.messageReplaceChangeCommand())
+                    .run(() -> {
                         myViewer.replaceChange(UnifiedDiffChange.this, sourceSide);
                         myViewer.scheduleRediff();
-                    })
-                    .withProject(project)
-                    .withDocument(document)
-                    .withName(DiffLocalize.messageReplaceChangeCommand())
-                    .execute();
+                    });
                 // applyChange() will schedule rediff, but we want to try to do it in sync
                 // and we can't do it inside write action
                 myViewer.rediff();

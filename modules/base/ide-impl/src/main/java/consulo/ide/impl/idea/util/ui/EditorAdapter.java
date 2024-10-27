@@ -94,9 +94,12 @@ public class EditorAdapter {
 
     @RequiredUIAccess
     private void executeWritingCommand(final Collection<Line> lines) {
-        CommandProcessor.getInstance().newCommand(() -> {
-                Document document = myEditor.getDocument();
-
+        final Document document = myEditor.getDocument();
+        CommandProcessor.getInstance().newCommand()
+            .project(myProject)
+            .document(myEditor.getDocument())
+            .inWriteAction()
+            .run(() -> {
                 StringBuilder buffer = new StringBuilder();
                 for (Line line : lines) {
                     buffer.append(line.getValue());
@@ -118,10 +121,7 @@ public class EditorAdapter {
                     }
                 }
                 shiftCursorToTheEndOfDocument();
-            })
-            .withProject(myProject)
-            .withDocument(myEditor.getDocument())
-            .executeInWriteAction();
+            });
     }
 
     private void shiftCursorToTheEndOfDocument() {

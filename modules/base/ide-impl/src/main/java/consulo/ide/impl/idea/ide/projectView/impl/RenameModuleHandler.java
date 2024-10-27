@@ -38,7 +38,6 @@ import consulo.ui.ex.InputValidator;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.undoRedo.CommandProcessor;
-import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -110,12 +109,12 @@ public class RenameModuleHandler implements RenameHandler, TitledHandler {
             if (modifiableModel == null) {
                 return false;
             }
-            final SimpleReference<Boolean> success = SimpleReference.create(true);
-            CommandProcessor.getInstance().newCommand(() -> modifiableModel.commit())
-                .withProject(myProject)
-                .withName(IdeLocalize.commandRenamingModule(oldName))
-                .executeInWriteAction();
-            return success.get();
+            CommandProcessor.getInstance().newCommand()
+                .project(myProject)
+                .name(IdeLocalize.commandRenamingModule(oldName))
+                .inWriteAction()
+                .run(() -> modifiableModel.commit());
+            return true;
         }
 
         @Nullable

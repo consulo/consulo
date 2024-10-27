@@ -15,13 +15,19 @@
  */
 package consulo.language.codeStyle;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.component.util.localize.AbstractBundle;
+import consulo.language.codeStyle.localize.CodeStyleLocalize;
 import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author VISTALL
  * @since 12-Mar-22
  */
+@Deprecated
+@DeprecationInfo("Use CodeStyleLocalize")
+@MigratedExtensionsTo(CodeStyleLocalize.class)
 public class CodeStyleBundle extends AbstractBundle {
   public static final String BUNDLE = "consulo.language.codeStyle.CodeStyleBundle";
 

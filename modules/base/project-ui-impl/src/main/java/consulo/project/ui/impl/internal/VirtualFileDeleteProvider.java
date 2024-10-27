@@ -24,6 +24,7 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.awt.Messages;
@@ -72,14 +73,17 @@ public final class VirtualFileDeleteProvider implements DeleteProvider {
         Arrays.sort(files, FileComparator.getInstance());
 
         List<String> problems = new LinkedList<>();
-        CommandProcessor.getInstance().newCommand(() -> new Task.Modal(project, "Deleting Files...", true) {
+        CommandProcessor.getInstance().newCommand()
+            .project(project)
+            .name(ProjectLocalize.commandDeletingFiles())
+            .run(() -> new Task.Modal(project, ProjectLocalize.progressTitleDeletingFiles(), true) {
                 @Override
                 public void run(@Nonnull ProgressIndicator indicator) {
                     indicator.setIndeterminate(false);
                     int i = 0;
                     for (VirtualFile file : files) {
                         indicator.checkCanceled();
-                        indicator.setText2(file.getPresentableUrl());
+                        indicator.setText2Value(LocalizeValue.of(file.getPresentableUrl()));
                         indicator.setFraction((double)i / files.length);
                         i++;
 
@@ -111,10 +115,7 @@ public final class VirtualFileDeleteProvider implements DeleteProvider {
                         reportDeletionProblem(problems);
                     }
                 }
-            }.queue())
-            .withProject(project)
-            .withName(LocalizeValue.localizeTODO("Deleting files"))
-            .execute();
+            }.queue());
     }
 
     @RequiredUIAccess

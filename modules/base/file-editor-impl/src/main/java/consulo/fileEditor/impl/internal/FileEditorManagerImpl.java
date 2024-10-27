@@ -55,7 +55,6 @@ import consulo.fileEditor.text.TextEditorProvider;
 import consulo.language.file.event.FileTypeEvent;
 import consulo.language.file.event.FileTypeListener;
 import consulo.language.file.inject.VirtualFileWindow;
-import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
@@ -585,14 +584,14 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         assertDispatchThread();
         ourOpenFilesSetModificationCount.incrementAndGet();
 
-        CommandProcessor.getInstance().newCommand(() -> {
+        CommandProcessor.getInstance().newCommand()
+            .project(myProject)
+            .name(FileEditorLocalize.commandCloseActiveEditor())
+            .run(() -> {
                 if (window.isFileOpen(file)) {
                     window.closeFile(file, true, transferFocus);
                 }
-            })
-            .withProject(myProject)
-            .withName(LocalizeValue.ofNullable(FileEditorLocalize.commandCloseActiveEditor().get()))
-            .execute();
+            });
         removeSelectionRecord(file, window);
     }
 
@@ -614,9 +613,9 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     public void closeFile(@Nonnull final VirtualFile file, final boolean moveFocus, final boolean closeAllCopies) {
         assertDispatchThread();
 
-        CommandProcessor.getInstance().newCommand(() -> closeFileImpl(file, moveFocus, closeAllCopies))
-            .withProject(myProject)
-            .execute();
+        CommandProcessor.getInstance().newCommand()
+            .project(myProject)
+            .run(() -> closeFileImpl(file, moveFocus, closeAllCopies));
     }
 
     @RequiredUIAccess
@@ -743,9 +742,9 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         final boolean focusEditor
     ) {
         final SimpleReference<Pair<FileEditor[], FileEditorProvider[]>> result = new SimpleReference<>();
-        CommandProcessor.getInstance().newCommand(() -> result.set(openFileImpl3(uiAccess, window, file, focusEditor, null, true)))
-            .withProject(myProject)
-            .execute();
+        CommandProcessor.getInstance().newCommand()
+            .project(myProject)
+            .run(() -> result.set(openFileImpl3(uiAccess, window, file, focusEditor, null, true)));
         return result.get();
     }
 
@@ -1135,34 +1134,32 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         }
 
         final List<FileEditor> result = new SmartList<>();
-        CommandProcessor.getInstance().newCommand(() -> {
-                VirtualFile file = descriptor.getFile();
-                final FileEditor[] editors = openFile(file, focusEditor, !descriptor.isUseCurrentWindow());
-                ContainerUtil.addAll(result, editors);
+        CommandProcessor.getInstance().newCommand().project(myProject).run(() -> {
+            VirtualFile file = descriptor.getFile();
+            final FileEditor[] editors = openFile(file, focusEditor, !descriptor.isUseCurrentWindow());
+            ContainerUtil.addAll(result, editors);
 
-                boolean navigated = false;
+            boolean navigated = false;
+            for (final FileEditor editor : editors) {
+                if (editor instanceof NavigatableFileEditor navigatableFileEditor && getSelectedEditor(descriptor.getFile()) == editor) {
+                    // try to navigate opened editor
+                    navigated = navigateAndSelectEditor(navigatableFileEditor, descriptor);
+                    if (navigated) {
+                        break;
+                    }
+                }
+            }
+
+            if (!navigated) {
                 for (final FileEditor editor : editors) {
-                    if (editor instanceof NavigatableFileEditor navigatableFileEditor && getSelectedEditor(descriptor.getFile()) == editor) {
-                        // try to navigate opened editor
-                        navigated = navigateAndSelectEditor(navigatableFileEditor, descriptor);
-                        if (navigated) {
-                            break;
-                        }
+                    if (editor instanceof NavigatableFileEditor navigatableFileEditor
+                        && getSelectedEditor(descriptor.getFile()) != editor
+                        && navigateAndSelectEditor(navigatableFileEditor, descriptor)) {
+                        break;
                     }
                 }
-
-                if (!navigated) {
-                    for (final FileEditor editor : editors) {
-                        if (editor instanceof NavigatableFileEditor navigatableFileEditor
-                            && getSelectedEditor(descriptor.getFile()) != editor
-                            && navigateAndSelectEditor(navigatableFileEditor, descriptor)) {
-                            break;
-                        }
-                    }
-                }
-            })
-            .withProject(myProject)
-            .execute();
+            }
+        });
 
         return result;
     }

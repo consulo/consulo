@@ -589,7 +589,10 @@ public class ReplaceInProjectManager {
             return;
         }
 
-        CommandProcessor.getInstance().newCommand(() -> {
+        CommandProcessor.getInstance().newCommand()
+            .project(myProject)
+            .name(FindLocalize.findReplaceCommand())
+            .run(() -> {
                 final boolean success = replaceUsages(replaceContext, usages);
                 final UsageView usageView = replaceContext.getUsageView();
 
@@ -599,10 +602,7 @@ public class ReplaceInProjectManager {
                 IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(
                     () -> IdeFocusManager.getGlobalInstance().requestFocus(usageView.getPreferredFocusableComponent(), true)
                 );
-            })
-            .withProject(myProject)
-            .withName(FindLocalize.findReplaceCommand())
-            .execute();
+            });
 
         replaceContext.invalidateExcludedSetCache();
     }

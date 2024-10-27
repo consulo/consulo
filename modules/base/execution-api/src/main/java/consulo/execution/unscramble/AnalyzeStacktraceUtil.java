@@ -166,13 +166,14 @@ public class AnalyzeStacktraceUtil {
 
         @RequiredUIAccess
         public final void setText(@Nonnull final String text) {
-            CommandProcessor.getInstance().newCommand(() -> {
+            CommandProcessor.getInstance().newCommand()
+                .project(myProject)
+                .groupId(this)
+                .inWriteAction()
+                .run(() -> {
                     final Document document = myEditor.getDocument();
                     document.replaceString(0, document.getTextLength(), StringUtil.convertLineSeparators(text));
-                })
-                .withProject(myProject)
-                .withGroupId(this)
-                .executeInWriteAction();
+                });
         }
 
         @RequiredUIAccess

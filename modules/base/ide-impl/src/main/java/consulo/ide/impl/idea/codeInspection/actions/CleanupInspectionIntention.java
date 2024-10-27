@@ -122,15 +122,15 @@ public class CleanupInspectionIntention implements IntentionAction, HighPriority
         final AbstractPerformFixesTask fixesTask = isBatch
             ? new PerformBatchFixesTask(project, descriptions.toArray(ProblemDescriptor.EMPTY_ARRAY), progressTask, quickfixClass)
             : new PerformFixesTask(project, descriptions.toArray(ProblemDescriptor.EMPTY_ARRAY), progressTask, quickfixClass);
-        CommandProcessor.getInstance().newCommand(() -> {
-                CommandProcessor.getInstance().markCurrentCommandAsGlobal(project);
+        CommandProcessor.getInstance().newCommand()
+            .project(project)
+            .name(LocalizeValue.ofNullable(presentationText))
+            .inGlobalUndoAction()
+            .run(() -> {
                 progressTask.setMinIterationTime(200);
                 progressTask.setTask(fixesTask);
                 ProgressManager.getInstance().run(progressTask);
-            })
-            .withProject(project)
-            .withName(LocalizeValue.ofNullable(presentationText))
-            .execute();
+            });
         return fixesTask;
     }
 

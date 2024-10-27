@@ -879,3 +879,5 @@ run.dashboard.restart.debugger.action.name:
   text: Rerun in Debug Mode
 run.dashboard.restart.debugger.action.description:
   text: Rerun selected configuration(s) in Debug Mode
+open.message.view:
+  text: Open Message View

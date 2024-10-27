@@ -203,7 +203,10 @@ public class MoveFilesOrDirectoriesDialog extends DialogWrapper {
             return;
         }
 
-        CommandProcessor.getInstance().newCommand(() -> {
+        CommandProcessor.getInstance().newCommand()
+            .project(myProject)
+            .name(RefactoringLocalize.moveTitle())
+            .run(() -> {
                 myProject.getApplication().runWriteAction(() -> {
                     String directoryName = myTargetDirectoryField.getChildComponent().getText().replace(File.separatorChar, '/');
                     try {
@@ -223,10 +226,7 @@ public class MoveFilesOrDirectoriesDialog extends DialogWrapper {
                     return;
                 }
                 myCallback.run(this);
-            })
-            .withProject(myProject)
-            .withName(RefactoringLocalize.moveTitle())
-            .execute();
+            });
     }
 
     public PsiDirectory getTargetDirectory() {

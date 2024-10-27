@@ -1634,3 +1634,5 @@ checkbox.search.in.comments.and.strings:
   text: '&Search in comments and strings'
 checkbox.search.in.non.java.files:
   text: S&earch for non-code usages
+extract.method.replace.duplicate.command.name:
+  text: Replace duplicate

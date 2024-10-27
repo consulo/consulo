@@ -537,11 +537,12 @@ public class LiveTemplateSettingsEditor extends JPanel {
 
         myExpandByCombo.setValue(ExpandByKey.valueOfShortcutChar(myTemplate.getShortcutChar()));
 
-        CommandProcessor.getInstance().newCommand(() -> {
-                final Document document = myTemplateEditor.getDocument();
-                document.replaceString(0, document.getTextLength(), myTemplate.getString());
-            })
-            .executeInWriteAction();
+        final Document document = myTemplateEditor.getDocument();
+        CommandProcessor.getInstance().newCommand()
+            .project(myTemplateEditor.getProject())
+            .document(document)
+            .inWriteAction()
+            .run(() -> document.replaceString(0, document.getTextLength(), myTemplate.getString()));
 
         myCbReformat.setValue(myTemplate.isToReformat());
         myCbReformat.addValueListener(e -> myTemplate.setToReformat(myCbReformat.getValueOrError()));

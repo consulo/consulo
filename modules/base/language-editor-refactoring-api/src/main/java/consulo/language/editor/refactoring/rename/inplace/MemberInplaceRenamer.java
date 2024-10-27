@@ -221,17 +221,17 @@ public class MemberInplaceRenamer extends VariableInplaceRenamer {
                         return;
                     }
 
-                    CommandProcessor.getInstance().newCommand(() -> {
-                            performRenameInner(substituted, newName);
-                            PsiDocumentManager.getInstance(myProject).commitAllDocuments();
-                        })
-                        .withProject(myProject)
-                        .withName(RefactoringLocalize.renaming01To2(
+                    CommandProcessor.getInstance().newCommand()
+                        .project(myProject)
+                        .name(RefactoringLocalize.renaming01To2(
                             UsageViewUtil.getType(variable),
                             DescriptiveNameUtil.getDescriptiveName(variable),
                             newName
                         ))
-                        .execute();
+                        .run(() -> {
+                            performRenameInner(substituted, newName);
+                            PsiDocumentManager.getInstance(myProject).commitAllDocuments();
+                        });
                 }
             }
         }

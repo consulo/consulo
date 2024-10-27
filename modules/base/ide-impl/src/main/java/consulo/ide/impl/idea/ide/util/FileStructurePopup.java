@@ -46,9 +46,9 @@ import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.refactoring.ui.CopyPasteDelegator;
 import consulo.language.editor.structureView.PsiTreeElementBase;
 import consulo.language.editor.structureView.StructureViewCompositeModel;
+import consulo.language.localize.LanguageLocalize;
 import consulo.language.psi.*;
 import consulo.language.psi.util.PsiTreeUtil;
-import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.navigation.LocationPresentation;
 import consulo.navigation.Navigatable;
@@ -81,7 +81,6 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
@@ -769,27 +768,24 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
             }
         }
 
-        SimpleReference<Boolean> succeeded = new SimpleReference<>();
-        CommandProcessor commandProcessor = CommandProcessor.getInstance();
-        commandProcessor.newCommand(() -> {
+        return CommandProcessor.getInstance().<Boolean>newCommand()
+            .project(myProject)
+            .name(LanguageLocalize.commandNameNavigate())
+            .compute(() -> {
+                IdeDocumentHistory.getInstance(myProject).includeCurrentCommandAsNavigation();
+
                 if (selectedNode == null) {
-                    succeeded.set(false);
+                    return false;
                 }
                 else if (selectedNode.canNavigateToSource()) {
                     selectedNode.navigate(true);
                     myPopup.cancel();
-                    succeeded.set(true);
+                    return true;
                 }
                 else {
-                    succeeded.set(false);
+                    return false;
                 }
-
-                IdeDocumentHistory.getInstance(myProject).includeCurrentCommandAsNavigation();
-            })
-            .withProject(myProject)
-            .withName(LocalizeValue.localizeTODO("Navigate"))
-            .execute();
-        return succeeded.get();
+            });
     }
 
     private void addCheckbox(JPanel panel, TreeAction action) {

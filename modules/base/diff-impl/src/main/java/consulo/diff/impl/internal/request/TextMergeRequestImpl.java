@@ -119,10 +119,10 @@ public class TextMergeRequestImpl extends TextMergeRequest {
         }
 
         if (applyContent != null) {
-            DiffImplUtil.newWriteCommand(() -> myOutput.getDocument().setText(applyContent))
-                .withProject(myProject)
-                .withDocument(myOutput.getDocument())
-                .execute();
+            DiffImplUtil.newWriteCommand()
+                .project(myProject)
+                .document(myOutput.getDocument())
+                .run(() -> myOutput.getDocument().setText(applyContent));
         }
 
         if (myApplyCallback != null) {

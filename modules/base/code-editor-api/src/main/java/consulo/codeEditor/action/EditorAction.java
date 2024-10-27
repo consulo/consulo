@@ -19,12 +19,10 @@ import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
-import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.undoRedo.CommandProcessor;
-import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -111,12 +109,12 @@ public abstract class EditorAction extends AnAction implements DumbAware, Update
             return;
         }
 
-        CommandProcessor.getInstance().newCommand(command)
-            .withProject(editor.getProject())
-            .withDocument(editor.getDocument())
-            .withName(getTemplatePresentation().getTextValue())
-            .withGroupId(handler.getCommandGroupId(editor))
-            .execute();
+        CommandProcessor.getInstance().newCommand()
+            .project(editor.getProject())
+            .document(editor.getDocument())
+            .name(getTemplatePresentation().getTextValue())
+            .groupId(handler.getCommandGroupId(editor))
+            .run(command);
     }
 
     public void update(Editor editor, Presentation presentation, DataContext dataContext) {

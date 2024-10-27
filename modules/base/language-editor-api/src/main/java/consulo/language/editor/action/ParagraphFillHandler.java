@@ -23,6 +23,7 @@ import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiWhiteSpace;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.CharFilter;
 import consulo.util.lang.StringUtil;
@@ -48,6 +49,7 @@ public abstract class ParagraphFillHandler implements LanguageExtension {
     }
 
     @RequiredReadAction
+    @RequiredUIAccess
     public final void performOnElement(@Nonnull final PsiElement element, @Nonnull final Editor editor) {
         final Document document = editor.getDocument();
 
@@ -76,7 +78,10 @@ public abstract class ParagraphFillHandler implements LanguageExtension {
 
         final String replacementText = stringBuilder.toString();
 
-        CommandProcessor.getInstance().newCommand(() -> {
+        CommandProcessor.getInstance().newCommand()
+            .project(element.getProject())
+            .groupId(document)
+            .run(() -> {
                 document.replaceString(textRange.getStartOffset(), textRange.getEndOffset(), replacementText);
                 final PsiFile file = element.getContainingFile();
                 FormatterTagHandler formatterTagHandler = new FormatterTagHandler(CodeStyleSettingsManager.getSettings(file.getProject()));
@@ -94,10 +99,7 @@ public abstract class ParagraphFillHandler implements LanguageExtension {
                     textRange.getStartOffset() + replacementText.length() + 1,
                     enabledRanges
                 );
-            })
-            .withProject(element.getProject())
-            .withGroupId(document)
-            .execute();
+            });
     }
 
     protected void appendPostfix(

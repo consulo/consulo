@@ -28,7 +28,6 @@ import consulo.navigation.NavigationItem;
 import consulo.navigation.NavigationUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
-import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.INativeFileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
@@ -67,25 +66,26 @@ public class LanguageEditorNavigationUtil {
             element.putUserData(NavigationUtil.USE_CURRENT_WINDOW, true);
         }
 
-        SimpleReference<Boolean> resultRef = new SimpleReference<>();
         boolean openAsNativeFinal = openAsNative;
         // all navigation inside should be treated as a single operation, so that 'Back' action undoes it in one go
-        CommandProcessor.getInstance().newCommand(() -> {
+        Boolean result = CommandProcessor.getInstance().<Boolean>newCommand()
+            .project(element.getProject())
+            .compute(() -> {
                 if (openAsNativeFinal || !activatePsiElementIfOpen(element, searchForOpen, requestFocus)) {
                     final NavigationItem navigationItem = (NavigationItem)element;
                     if (navigationItem.canNavigate()) {
                         navigationItem.navigate(requestFocus);
-                        resultRef.set(Boolean.TRUE);
+                        return true;
                     }
-                    else {
-                        resultRef.set(Boolean.FALSE);
+                    else
+                    {
+                        return false;
                     }
                 }
-            })
-            .withProject(element.getProject())
-            .execute();
-        if (!resultRef.isNull()) {
-            return resultRef.get();
+                return null;
+            });
+        if (result != null) {
+            return result;
         }
 
         element.putUserData(NavigationUtil.USE_CURRENT_WINDOW, null);

@@ -15,10 +15,10 @@
  */
 package consulo.diff.impl.internal.action;
 
+import consulo.diff.localize.DiffLocalize;
 import consulo.document.Document;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
-import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
@@ -91,14 +91,15 @@ public abstract class DocumentsSynchronizer {
     ) {
         try {
             myDuringModification = true;
-            CommandProcessor.getInstance().newCommand(() -> {
+            CommandProcessor.getInstance().newCommand()
+                .project(myProject)
+                .name(DiffLocalize.synchronizeDocumentAndItsFragment())
+                .groupId(document)
+                .inWriteAction()
+                .run(() -> {
                     assert endOffset <= document.getTextLength();
                     document.replaceString(startOffset, endOffset, newText);
-                })
-                .withProject(myProject)
-                .withName(LocalizeValue.localizeTODO("Synchronize document and its fragment"))
-                .withGroupId(document)
-                .executeInWriteAction();
+                });
         }
         finally {
             myDuringModification = false;

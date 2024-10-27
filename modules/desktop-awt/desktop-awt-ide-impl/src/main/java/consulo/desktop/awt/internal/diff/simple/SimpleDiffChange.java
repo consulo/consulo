@@ -340,11 +340,11 @@ public class SimpleDiffChange {
                 if (!myIsValid) {
                     return;
                 }
-                DiffImplUtil.newWriteCommand(perform)
-                    .withProject(e.getData(Project.KEY))
-                    .withDocument(myViewer.getEditor(sourceSide.other()).getDocument())
-                    .withName(DiffLocalize.messageReplaceChangeCommand())
-                    .execute();
+                DiffImplUtil.newWriteCommand()
+                    .project(e.getData(Project.KEY))
+                    .document(myViewer.getEditor(sourceSide.other()).getDocument())
+                    .name(DiffLocalize.messageReplaceChangeCommand())
+                    .run(perform);
             }
         };
     }

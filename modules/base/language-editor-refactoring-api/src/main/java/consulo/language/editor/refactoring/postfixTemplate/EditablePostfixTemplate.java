@@ -159,11 +159,12 @@ public abstract class EditablePostfixTemplate extends PostfixTemplate {
 
     @RequiredUIAccess
     private void prepareAndExpandForChooseExpression(@Nonnull PsiElement element, @Nonnull Editor editor) {
-        CommandProcessor.getInstance().newCommand(() -> expandForChooseExpression(element, editor))
-            .withProject(element.getProject())
-            .withName(CodeInsightLocalize.commandExpandPostfixTemplate())
-            .withGroupId(PostfixTemplate.POSTFIX_TEMPLATE_CUSTOM_TEMPLATE_ID)
-            .executeInWriteAction();
+        CommandProcessor.getInstance().newCommand()
+            .project(element.getProject())
+            .name(CodeInsightLocalize.commandExpandPostfixTemplate())
+            .groupId(PostfixTemplate.POSTFIX_TEMPLATE_CUSTOM_TEMPLATE_ID)
+            .inWriteAction()
+            .run(() -> expandForChooseExpression(element, editor));
     }
 
     @RequiredReadAction

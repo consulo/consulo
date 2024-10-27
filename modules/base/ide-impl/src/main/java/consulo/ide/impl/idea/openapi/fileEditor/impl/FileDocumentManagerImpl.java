@@ -52,6 +52,7 @@ import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.encoding.EncodingManager;
 import consulo.virtualFileSystem.event.VFileContentChangeEvent;
@@ -684,9 +685,14 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
         }
 
         final Project project = ProjectLocator.getInstance().guessProjectForFile(file);
-        boolean[] isReloadable = {isReloadable(file, document, project)};
-        if (isReloadable[0]) {
-            CommandProcessor.getInstance().newCommand(new ExternalChangeAction.ExternalDocumentChange(document, project) {
+        final SimpleReference<Boolean> isReloadable = SimpleReference.create(isReloadable(file, document, project));
+        if (isReloadable.get()) {
+            CommandProcessor.getInstance().newCommand()
+                .project(project)
+                .name(UILocalize.fileCacheConflictAction())
+                .undoConfirmationPolicy(UndoConfirmationPolicy.REQUEST_CONFIRMATION)
+                .inWriteAction()
+                .run(new ExternalChangeAction.ExternalDocumentChange(document, project) {
                     @Override
                     public void run() {
                         if (!isBinaryWithoutDecompiler(file)) {
@@ -696,8 +702,8 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
                             boolean wasWritable = document.isWritable();
                             document.setReadOnly(false);
                             boolean tooLarge = RawFileLoader.getInstance().isTooLarge(file.getLength());
-                            isReloadable[0] = isReloadable(file, document, project);
-                            if (isReloadable[0]) {
+                            isReloadable.set(isReloadable(file, document, project));
+                            if (isReloadable.get()) {
                                 CharSequence reloaded = tooLarge
                                     ? LoadTextUtil.loadText(file, getPreviewCharCount(file))
                                     : LoadTextUtil.loadText(file);
@@ -707,13 +713,9 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
                             document.setReadOnly(!wasWritable);
                         }
                     }
-                })
-                .withProject(project)
-                .withName(UILocalize.fileCacheConflictAction())
-                .withUndoConfirmationPolicy(UndoConfirmationPolicy.REQUEST_CONFIRMATION)
-                .executeInWriteAction();
+                });
         }
-        if (isReloadable[0]) {
+        if (isReloadable.get()) {
             myMultiCaster.fileContentReloaded(file, document);
         }
         else {

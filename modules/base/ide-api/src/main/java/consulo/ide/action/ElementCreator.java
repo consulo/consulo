@@ -89,24 +89,23 @@ public abstract class ElementCreator {
     @Nullable
     @RequiredUIAccess
     private Exception executeCommand(@Nonnull LocalizeValue commandName, ThrowableRunnable<Exception> invokeCreate) {
-        final Exception[] exception = new Exception[1];
-        CommandProcessor.getInstance().newCommand(() -> {
+        return CommandProcessor.getInstance().<Exception>newCommand()
+            .project(myProject)
+            .name(commandName)
+            .undoConfirmationPolicy(UndoConfirmationPolicy.REQUEST_CONFIRMATION)
+            .compute(() -> {
                 LocalHistoryAction action = LocalHistory.getInstance().startAction(commandName.get());
                 try {
                     invokeCreate.run();
+                    return null;
                 }
                 catch (Exception ex) {
-                    exception[0] = ex;
+                    return ex;
                 }
                 finally {
                     action.finish();
                 }
-            })
-            .withProject(myProject)
-            .withName(commandName)
-            .withUndoConfirmationPolicy(UndoConfirmationPolicy.REQUEST_CONFIRMATION)
-            .execute();
-        return exception[0];
+            });
     }
 
     @RequiredUIAccess

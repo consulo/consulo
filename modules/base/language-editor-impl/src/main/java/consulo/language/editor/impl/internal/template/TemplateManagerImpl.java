@@ -191,10 +191,10 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
             templateState.start((TemplateImpl)template, processor, predefinedVarValues);
         };
         if (inSeparateCommand) {
-            CommandProcessor.getInstance().newCommand(r)
-                .withProject(myProject)
-                .withName(CodeInsightLocalize.insertCodeTemplateCommand())
-                .execute();
+            CommandProcessor.getInstance().newCommand()
+                .project(myProject)
+                .name(CodeInsightLocalize.insertCodeTemplateCommand())
+                .run(r);
         }
         else {
             r.run();
@@ -459,7 +459,10 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
     ) {
         final int caretOffset = editor.getCaretModel().getOffset();
         final TemplateStateImpl templateState = initTemplateState(editor);
-        CommandProcessor.getInstance().newCommand(() -> {
+        CommandProcessor.getInstance().newCommand()
+            .project(myProject)
+            .name(CodeInsightLocalize.insertCodeTemplateCommand())
+            .run(() -> {
                 editor.getDocument().deleteString(templateStart, caretOffset);
                 editor.getCaretModel().moveToOffset(templateStart);
                 editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
@@ -470,10 +473,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
                     predefinedVarValues.put(TemplateImpl.ARG, argument);
                 }
                 templateState.start((TemplateImpl)template, processor, predefinedVarValues);
-            })
-            .withProject(myProject)
-            .withName(CodeInsightLocalize.insertCodeTemplateCommand())
-            .execute();
+            });
     }
 
     @RequiredReadAction

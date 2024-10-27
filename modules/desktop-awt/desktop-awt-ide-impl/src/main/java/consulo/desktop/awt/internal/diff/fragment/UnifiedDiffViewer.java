@@ -777,16 +777,16 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
                 return;
             }
 
-            DiffImplUtil.newWriteCommand(() -> {
+            DiffImplUtil.newWriteCommand()
+                .project(e.getData(Project.KEY))
+                .document(getDocument(myModifiedSide))
+                .name(DiffLocalize.messageUseSelectedChangesCommand(e.getPresentation().getText()))
+                .run(() -> {
                     // state is invalidated during apply(), but changes are in reverse order, so they should not conflict with each other
                     apply(selectedChanges);
                     //noinspection RequiredXAction
                     scheduleRediff();
-                })
-                .withProject(e.getData(Project.KEY))
-                .withDocument(getDocument(myModifiedSide))
-                .withName(DiffLocalize.messageUseSelectedChangesCommand(e.getPresentation().getText()))
-                .execute();
+                });
         }
 
         protected boolean isSomeChangeSelected() {

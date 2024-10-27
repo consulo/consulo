@@ -127,7 +127,10 @@ public abstract class ExtractIncludeFileBase<T extends PsiElement> implements Re
                 RefactoringLocalize.ideaHasFoundFragmentsThatCanBeReplacedWithIncludeDirective(Application.get().getName());
             int exitCode = Messages.showYesNoDialog(project, message.get(), getRefactoringName(), UIUtil.getInformationIcon());
             if (exitCode == Messages.YES) {
-                CommandProcessor.getInstance().newCommand(() -> {
+                CommandProcessor.getInstance().newCommand()
+                    .project(project)
+                    .name(RefactoringLocalize.removeDuplicatesCommand())
+                    .run(() -> {
                         boolean replaceAll = false;
                         for (IncludeDuplicate<T> pair : duplicates) {
                             if (!replaceAll) {
@@ -159,10 +162,7 @@ public abstract class ExtractIncludeFileBase<T extends PsiElement> implements Re
                                 doReplaceRange(includePath, pair.getStart(), pair.getEnd());
                             }
                         }
-                    })
-                    .withProject(project)
-                    .withName(RefactoringLocalize.removeDuplicatesCommand())
-                    .execute();
+                    });
             }
         }
     }
@@ -247,7 +247,11 @@ public abstract class ExtractIncludeFileBase<T extends PsiElement> implements Re
             final PsiDirectory targetDirectory = dialog.getTargetDirectory();
             LOG.assertTrue(targetDirectory != null);
             final String targetfileName = dialog.getTargetFileName();
-            CommandProcessor.getInstance().newCommand(() -> {
+            CommandProcessor.getInstance().newCommand()
+                .project(project)
+                .name(LocalizeValue.ofNullable(getRefactoringName()))
+                .inWriteAction()
+                .run(() -> {
                     try {
                         final List<IncludeDuplicate<T>> duplicates = new ArrayList<>();
                         final T first = children.getFirst();
@@ -268,10 +272,7 @@ public abstract class ExtractIncludeFileBase<T extends PsiElement> implements Re
                     }
 
                     editor.getSelectionModel().removeSelection();
-                })
-                .withProject(project)
-                .withName(LocalizeValue.ofNullable(getRefactoringName()))
-                .executeInWriteAction();
+                });
         }
     }
 

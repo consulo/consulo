@@ -115,11 +115,12 @@ public abstract class PostfixTemplateWithExpressionSelector extends PostfixTempl
 
     @RequiredUIAccess
     protected void prepareAndExpandForChooseExpression(@Nonnull PsiElement expression, @Nonnull Editor editor) {
-        CommandProcessor.getInstance().newCommand(() -> expandForChooseExpression(expression, editor))
-            .withProject(expression.getProject())
-            .withName(CodeInsightLocalize.commandExpandPostfixTemplate())
-            .withGroupId(PostfixTemplate.POSTFIX_TEMPLATE_CUSTOM_TEMPLATE_ID)
-            .executeInWriteAction();
+        CommandProcessor.getInstance().newCommand()
+            .project(expression.getProject())
+            .name(CodeInsightLocalize.commandExpandPostfixTemplate())
+            .groupId(PostfixTemplate.POSTFIX_TEMPLATE_CUSTOM_TEMPLATE_ID)
+            .inWriteAction()
+            .run(() -> expandForChooseExpression(expression, editor));
     }
 
     @Override

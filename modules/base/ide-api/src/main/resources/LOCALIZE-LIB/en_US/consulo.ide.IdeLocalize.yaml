@@ -2633,3 +2633,7 @@ action.Anonymous.text.rename:
   text: Rename
 action.Anonymous.text.new.group:
   text: New group…
+command.switch.active.editor:
+  text: Switch Active Editor
+change.encoding.command.name:
+  text: "Change Encoding for ''{0}''"

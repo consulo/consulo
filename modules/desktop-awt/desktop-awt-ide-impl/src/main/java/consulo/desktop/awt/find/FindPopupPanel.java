@@ -606,7 +606,10 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
             if (usages == null) {
                 return;
             }
-            CommandProcessor.getInstance().newCommand(() -> {
+            CommandProcessor.getInstance().newCommand()
+                .project(myProject)
+                .name(FindLocalize.findReplaceCommand())
+                .run(() -> {
                     for (Map.Entry<Integer, Usage> entry : usages.entrySet()) {
                         try {
                             ReplaceInProjectManager.getInstance(myProject)
@@ -631,10 +634,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
                         }
                         ScrollingUtil.ensureSelectionExists(myResultsPreviewTable);
                     });
-                })
-                .withProject(myProject)
-                .withName(FindLocalize.findReplaceCommand())
-                .execute();
+                });
         });
         myOKButton.addActionListener(myOkActionListener);
         TouchbarDataKeys.putDialogButtonDescriptor(myOKButton, 0, true);

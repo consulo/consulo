@@ -205,10 +205,11 @@ public class ExtractMethodHelper {
         final Consumer<Pair<SimpleMatch, PsiElement>> replacer,
         final Pair<SimpleMatch, PsiElement> replacement
     ) {
-        CommandProcessor.getInstance().newCommand(() -> replacer.accept(replacement))
-            .withProject(project)
-            .withName(LocalizeValue.localizeTODO("Replace duplicate"))
-            .executeInWriteAction();
+        CommandProcessor.getInstance().newCommand()
+            .project(project)
+            .name(RefactoringLocalize.extractMethodReplaceDuplicateCommandName())
+            .inWriteAction()
+            .run(() -> replacer.accept(replacement));
     }
 
     @RequiredReadAction

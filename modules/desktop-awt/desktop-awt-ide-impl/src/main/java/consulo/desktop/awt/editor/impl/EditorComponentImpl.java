@@ -31,7 +31,6 @@ import consulo.dataContext.DataProvider;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
-import consulo.document.DocumentRunnable;
 import consulo.document.FileDocumentManager;
 import consulo.document.ReadOnlyFragmentModificationException;
 import consulo.document.event.DocumentEvent;
@@ -715,9 +714,12 @@ public class EditorComponentImpl extends JTextComponent
         if (!FileDocumentManager.getInstance().requestWriting(document, project)) {
             return;
         }
-        CommandProcessor.getInstance().newCommand(new DocumentRunnable(document, project) {
-                @Override
-                public void run() {
+        CommandProcessor.getInstance().newCommand()
+            .project(project)
+            .document(document)
+            .groupId(document)
+            .inWriteAction()
+            .run(() -> {
                     document.startGuardedBlockChecking();
                     try {
                         if (text == null) {
@@ -738,12 +740,7 @@ public class EditorComponentImpl extends JTextComponent
                     finally {
                         document.stopGuardedBlockChecking();
                     }
-                }
-            })
-            .withProject(project)
-            .withDocument(document)
-            .withGroupId(document)
-            .executeInWriteAction();
+            });
     }
 
     /**

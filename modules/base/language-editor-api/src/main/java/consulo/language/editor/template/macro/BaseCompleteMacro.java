@@ -70,19 +70,17 @@ public abstract class BaseCompleteMacro extends Macro {
                 return;
             }
 
-            CommandProcessor.getInstance().newCommand(() -> {
-                    invokeCompletionHandler(project, editor);
-                    Lookup lookup = LookupManager.getInstance(project).getActiveLookup();
+            CommandProcessor.getInstance().newCommand().project(project).run(() -> {
+                invokeCompletionHandler(project, editor);
+                Lookup lookup = LookupManager.getInstance(project).getActiveLookup();
 
-                    if (lookup != null) {
-                        lookup.addLookupListener(new MyLookupListener(context));
-                    }
-                    else {
-                        considerNextTab(editor);
-                    }
-                })
-                .withProject(project)
-                .execute();
+                if (lookup != null) {
+                    lookup.addLookupListener(new MyLookupListener(context));
+                }
+                else {
+                    considerNextTab(editor);
+                }
+            });
         };
 
         Application.get().invokeLater(runnable);

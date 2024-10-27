@@ -18,6 +18,7 @@ package consulo.undoRedo.builder;
 import consulo.document.Document;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandDescriptor;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import jakarta.annotation.Nonnull;
@@ -26,52 +27,64 @@ import jakarta.annotation.Nonnull;
  * @author UNV
  * @since 2024-10-21
  */
-public abstract class ProxyCommandBuilder<THIS extends CommandBuilder, THAT extends CommandBuilder> implements CommandBuilder<THIS> {
-    protected final THAT subBuilder;
+public abstract class ProxyCommandBuilder<R, THIS extends CommandBuilder<R, THIS>, THAT extends CommandBuilder<R, THAT>>
+    implements CommandBuilder<R, THIS> {
+    protected THAT mySubBuilder;
 
     protected ProxyCommandBuilder(THAT subBuilder) {
-        this.subBuilder = subBuilder;
+        mySubBuilder = subBuilder;
     }
 
     @Override
-    public THIS withName(@Nonnull LocalizeValue name) {
-        subBuilder.withName(name);
+    public THIS name(@Nonnull LocalizeValue name) {
+        mySubBuilder = mySubBuilder.name(name);
         return self();
     }
 
     @Override
-    public THIS withGroupId(Object groupId) {
-        subBuilder.withGroupId(groupId);
+    public THIS groupId(Object groupId) {
+        mySubBuilder = mySubBuilder.groupId(groupId);
         return self();
     }
 
     @Override
-    public THIS withProject(Project project) {
-        subBuilder.withProject(project);
+    public THIS project(Project project) {
+        mySubBuilder = mySubBuilder.project(project);
         return self();
     }
 
     @Override
-    public THIS withDocument(Document document) {
-        subBuilder.withDocument(document);
+    public THIS document(Document document) {
+        mySubBuilder = mySubBuilder.document(document);
         return self();
     }
 
     @Override
-    public THIS withUndoConfirmationPolicy(@Nonnull UndoConfirmationPolicy undoConfirmationPolicy) {
-        subBuilder.withUndoConfirmationPolicy(undoConfirmationPolicy);
+    public THIS undoConfirmationPolicy(@Nonnull UndoConfirmationPolicy undoConfirmationPolicy) {
+        mySubBuilder = mySubBuilder.undoConfirmationPolicy(undoConfirmationPolicy);
         return self();
     }
 
     @Override
-    public THIS withShouldRecordActionForActiveDocument(boolean shouldRecordActionForActiveDocument) {
-        subBuilder.withShouldRecordActionForActiveDocument(shouldRecordActionForActiveDocument);
+    public THIS shouldRecordActionForActiveDocument(boolean shouldRecordActionForActiveDocument) {
+        mySubBuilder = mySubBuilder.shouldRecordActionForActiveDocument(shouldRecordActionForActiveDocument);
         return self();
     }
 
     @Override
-    public CommandDescriptor build() {
-        return subBuilder.build();
+    public THIS inWriteAction() {
+        mySubBuilder = mySubBuilder.inWriteAction();
+        return self();
+    }
+
+    @Override
+    public void run(@RequiredUIAccess @Nonnull Runnable runnable) {
+        mySubBuilder.run(runnable);
+    }
+
+    @Override
+    public CommandDescriptor build(@Nonnull Runnable command) {
+        return mySubBuilder.build(command);
     }
 
     @SuppressWarnings("unchecked")

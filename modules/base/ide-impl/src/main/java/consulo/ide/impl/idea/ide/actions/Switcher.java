@@ -1180,9 +1180,9 @@ public class Switcher extends AnAction implements DumbAware {
                                     settings.setReuseNotModifiedTabs(false);
                                     manager.openFile(file, true, true);
                                     if (oldValue) {
-                                        CommandProcessor.getInstance().newCommand(() -> settings.setReuseNotModifiedTabs(true))
-                                            .withProject(project)
-                                            .execute();
+                                        CommandProcessor.getInstance().newCommand()
+                                            .project(project)
+                                            .run(() -> settings.setReuseNotModifiedTabs(true));
                                     }
                                 }
                             }
