@@ -31,6 +31,7 @@ import consulo.language.editor.completion.lookup.PrioritizedLookupElement;
 import consulo.language.editor.template.TemplateLookupSelectionHandler;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 
 import java.util.List;
@@ -62,6 +63,7 @@ class TemplateExpressionLookupElement extends LookupElementDecorator<LookupEleme
         return context;
     }
 
+    @RequiredUIAccess
     void handleTemplateInsert(List<? extends LookupElement> elements, final char completionChar) {
         final InsertionContext context =
             createInsertionContext(this, myState.getPsiFile(), elements, myState.getEditor(), completionChar);

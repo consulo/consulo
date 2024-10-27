@@ -151,8 +151,8 @@ public final class ColorLineMarkerProvider implements LineMarkerProvider, DumbAw
         return Language.ANY;
     }
 
-    @RequiredReadAction
     @Override
+    @RequiredReadAction
     public LineMarkerInfo getLineMarkerInfo(@Nonnull PsiElement element) {
         ExtensionPoint<ElementColorProvider> point = element.getProject().getExtensionPoint(ElementColorProvider.class);
         Map.Entry<ElementColorProvider, ColorValue> colorInfo = point.computeSafeIfAny(it -> {

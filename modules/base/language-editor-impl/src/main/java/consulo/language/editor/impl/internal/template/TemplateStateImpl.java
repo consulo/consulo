@@ -16,7 +16,8 @@
 
 package consulo.language.editor.impl.internal.template;
 
-import consulo.application.ApplicationManager;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorColors;
@@ -64,6 +65,7 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.BasicUndoableAction;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.ProjectUndoManager;
@@ -78,9 +80,6 @@ import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import kava.beans.PropertyChangeEvent;
-import kava.beans.PropertyChangeListener;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.*;
 import java.util.function.BiPredicate;
@@ -137,6 +136,7 @@ public class TemplateStateImpl implements TemplateState {
         };
         myLookupListener = new LookupAdapter() {
             @Override
+            @RequiredUIAccess
             public void itemSelected(LookupEvent event) {
                 if (isCaretOutsideCurrentSegment()) {
                     if (isCaretInsideNextVariable()) {
@@ -148,17 +148,17 @@ public class TemplateStateImpl implements TemplateState {
                 }
             }
         };
-        LookupManager.getInstance(myProject).addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
+        LookupManager.getInstance(myProject).addPropertyChangeListener(
+            evt -> {
                 if (LookupManager.PROP_ACTIVE_LOOKUP.equals(evt.getPropertyName())) {
                     Lookup lookup = (Lookup)evt.getNewValue();
                     if (lookup != null) {
                         lookup.addLookupListener(myLookupListener);
                     }
                 }
-            }
-        }, this);
+            },
+            this
+        );
         myCommandListener = new CommandAdapter() {
             boolean started = false;
 
@@ -316,6 +316,7 @@ public class TemplateStateImpl implements TemplateState {
     }
 
     @Nullable
+    @Override
     public TextRange getVariableRange(String variableName) {
         int segment = myTemplate.getVariableSegmentNumber(variableName);
         if (segment < 0) {
@@ -330,11 +331,13 @@ public class TemplateStateImpl implements TemplateState {
         return mySegments.getSegmentsCount();
     }
 
+    @Nonnull
     @Override
     public TextRange getSegmentRange(int segment) {
         return new TextRange(mySegments.getSegmentStart(segment), mySegments.getSegmentEnd(segment));
     }
 
+    @Override
     public boolean isFinished() {
         return myCurrentVariableNumber < 0;
     }
@@ -364,6 +367,7 @@ public class TemplateStateImpl implements TemplateState {
         }
     }
 
+    @RequiredUIAccess
     public void start(
         @Nonnull TemplateImpl template,
         @Nullable final BiPredicate<String, String> processor,
@@ -436,8 +440,9 @@ public class TemplateStateImpl implements TemplateState {
         });
     }
 
+    @RequiredUIAccess
     private void processAllExpressions(@Nonnull final TemplateImpl template) {
-        ApplicationManager.getApplication().runWriteAction(() -> {
+        Application.get().runWriteAction(() -> {
             if (!template.isInline()) {
                 myDocument.insertString(myTemplateRange.getStartOffset(), template.getTemplateText());
             }
@@ -479,6 +484,7 @@ public class TemplateStateImpl implements TemplateState {
         return myTemplateRange + "\ntemplateKey: " + myTemplate.getKey() + "\ntemplateText: " + myTemplate.getTemplateText() + "\ntemplateString: " + myTemplate;
     }
 
+    @RequiredUIAccess
     private void doReformat(final TextRange range) {
         RangeMarker rangeMarker = null;
         if (range != null) {
@@ -498,7 +504,7 @@ public class TemplateStateImpl implements TemplateState {
             mySegments.setSegmentsGreedy(true);
             restoreEmptyVariables(indices);
         };
-        ApplicationManager.getApplication().runWriteAction(action);
+        Application.get().runWriteAction(action);
     }
 
     public void setSegmentsGreedy(boolean greedy) {
@@ -512,8 +518,9 @@ public class TemplateStateImpl implements TemplateState {
         }
     }
 
+    @RequiredUIAccess
     private void shortenReferences() {
-        ApplicationManager.getApplication().runWriteAction(() -> {
+        Application.get().runWriteAction(() -> {
             final PsiFile file = getPsiFile();
             if (file != null) {
                 IntList indices = initEmptyVariables();
@@ -529,6 +536,7 @@ public class TemplateStateImpl implements TemplateState {
         });
     }
 
+    @RequiredUIAccess
     private void afterChangedUpdate() {
         if (isFinished()) {
             return;
@@ -657,6 +665,7 @@ public class TemplateStateImpl implements TemplateState {
         return PsiDocumentManager.getInstance(myProject).getPsiFile(myDocument);
     }
 
+    @RequiredUIAccess
     private void insertSingleItem(List<TemplateExpressionLookupElement> lookupItems) {
         TemplateExpressionLookupElement first = lookupItems.get(0);
         EditorModificationUtil.insertStringAtCaret(myEditor, first.getLookupString());
@@ -715,6 +724,7 @@ public class TemplateStateImpl implements TemplateState {
             }
 
             @Override
+            @RequiredUIAccess
             public void itemSelected(LookupEvent event) {
                 lookup.removeLookupListener(this);
                 if (isFinished()) {
@@ -723,8 +733,8 @@ public class TemplateStateImpl implements TemplateState {
                 ourLookupShown = false;
 
                 LookupElement item = event.getItem();
-                if (item instanceof TemplateExpressionLookupElement) {
-                    ((TemplateExpressionLookupElement)item).handleTemplateInsert(lookupItems, event.getCompletionChar());
+                if (item instanceof TemplateExpressionLookupElement templateExpressionLookupElement) {
+                    templateExpressionLookupElement.handleTemplateInsert(lookupItems, event.getCompletionChar());
                 }
             }
         });
@@ -736,6 +746,7 @@ public class TemplateStateImpl implements TemplateState {
     }
 
     // Hours spent fixing code : 3
+    @RequiredUIAccess
     void calcResults(final boolean isQuick) {
         if (myProcessor != null && myCurrentVariableNumber >= 0) {
             final String variableName = myTemplate.getVariableNameAt(myCurrentVariableNumber);
@@ -781,7 +792,7 @@ public class TemplateStateImpl implements TemplateState {
                         }
                     }
 
-                    List<TemplateDocumentChange> changes = ContainerUtil.newArrayList();
+                    List<TemplateDocumentChange> changes = new ArrayList<>();
                     boolean selectionCalculated = false;
                     for (int i = 0; i < myTemplate.getSegmentsCount(); i++) {
                         if (!calcedSegments.get(i)) {
@@ -877,6 +888,7 @@ public class TemplateStateImpl implements TemplateState {
         return value != null ? value.getText() : "";
     }
 
+    @RequiredUIAccess
     private void recalcSegment(int segmentNumber, boolean isQuick, Expression expressionNode, Expression defaultValue) {
         String oldValue = getExpressionString(segmentNumber);
         int start = mySegments.getSegmentStart(segmentNumber);
@@ -922,11 +934,11 @@ public class TemplateStateImpl implements TemplateState {
 
         replaceString(StringUtil.notNullize(result.toString()), start, end, segmentNumber);
 
-        if (result instanceof RecalculatableResult) {
+        if (result instanceof RecalculatableResult recalculatableResult) {
             IntList indices = initEmptyVariables();
             shortenReferences();
             PsiDocumentManager.getInstance(myProject).commitDocument(myDocument);
-            ((RecalculatableResult)result).handleRecalc(
+            recalculatableResult.handleRecalc(
                 psiFile,
                 myDocument,
                 mySegments.getSegmentStart(segmentNumber),
@@ -956,10 +968,12 @@ public class TemplateStateImpl implements TemplateState {
         }
     }
 
+    @Override
     public int getCurrentVariableNumber() {
         return myCurrentVariableNumber;
     }
 
+    @RequiredUIAccess
     public void previousTab() {
         if (isFinished()) {
             return;
@@ -980,6 +994,7 @@ public class TemplateStateImpl implements TemplateState {
     }
 
     @Override
+    @RequiredUIAccess
     public void nextTab() {
         if (isFinished()) {
             return;
@@ -994,7 +1009,7 @@ public class TemplateStateImpl implements TemplateState {
         int nextVariableNumber = getNextVariableNumber(oldVar);
         if (nextVariableNumber == -1) {
             calcResults(false);
-            ApplicationManager.getApplication().runWriteAction(() -> reformat(null));
+            Application.get().runWriteAction(() -> reformat(null));
             finishTemplateEditing();
             return;
         }
@@ -1006,6 +1021,7 @@ public class TemplateStateImpl implements TemplateState {
         currentVariableChanged(oldVar);
     }
 
+    @RequiredUIAccess
     public void considerNextTabOnLookupItemSelected(LookupElement item) {
         if (item != null) {
             ExpressionContext context = getCurrentExpressionContext();
@@ -1072,6 +1088,7 @@ public class TemplateStateImpl implements TemplateState {
 
             @Nullable
             @Override
+            @RequiredReadAction
             public PsiElement getPsiElementAtStartOffset() {
                 Project project = getProject();
                 int templateStartOffset = getTemplateStartOffset();
@@ -1089,6 +1106,8 @@ public class TemplateStateImpl implements TemplateState {
         };
     }
 
+    @Override
+    @RequiredUIAccess
     public void gotoEnd(boolean brokenOff) {
         if (isDisposed()) {
             return;
@@ -1227,7 +1246,7 @@ public class TemplateStateImpl implements TemplateState {
         int selStart = myTemplate.getSelectionStartSegmentNumber();
         int selEnd = myTemplate.getSelectionEndSegmentNumber();
         IntList indices = IntLists.newArrayList();
-        List<TemplateDocumentChange> changes = ContainerUtil.newArrayList();
+        List<TemplateDocumentChange> changes = new ArrayList<>();
         for (int i = 0; i < myTemplate.getSegmentsCount(); i++) {
             int length = mySegments.getSegmentEnd(i) - mySegments.getSegmentStart(i);
             if (length != 0) {
@@ -1241,9 +1260,9 @@ public class TemplateStateImpl implements TemplateState {
             for (int j = 0; j < myTemplate.getVariableCount(); j++) {
                 if (myTemplate.getVariableNameAt(j).equals(name)) {
                     Expression e = myTemplate.getExpressionAt(j);
-                    @NonNls String marker = "a";
-                    if (e instanceof MacroCallNode) {
-                        marker = ((MacroCallNode)e).getMacro().getDefaultValue();
+                    String marker = "a";
+                    if (e instanceof MacroCallNode macroCallNode) {
+                        marker = macroCallNode.getMacro().getDefaultValue();
                     }
                     changes.add(new TemplateDocumentChange(marker, mySegments.getSegmentStart(i), mySegments.getSegmentEnd(i), i));
                     indices.add(i);
@@ -1256,7 +1275,7 @@ public class TemplateStateImpl implements TemplateState {
     }
 
     private void restoreEmptyVariables(IntList indices) {
-        List<TextRange> rangesToRemove = ContainerUtil.newArrayList();
+        List<TextRange> rangesToRemove = new ArrayList<>();
         for (int i = 0; i < indices.size(); i++) {
             int index = indices.get(i);
             rangesToRemove.add(TextRange.create(mySegments.getSegmentStart(index), mySegments.getSegmentEnd(index)));
@@ -1339,6 +1358,7 @@ public class TemplateStateImpl implements TemplateState {
         }
     }
 
+    @RequiredReadAction
     private void reformat(RangeMarker rangeMarkerToReformat) {
         final PsiFile file = getPsiFile();
         if (file != null) {
@@ -1491,6 +1511,7 @@ public class TemplateStateImpl implements TemplateState {
         );
     }
 
+    @Override
     public void addTemplateStateListener(TemplateEditingListener listener) {
         myListeners.add(listener);
     }
@@ -1537,6 +1558,8 @@ public class TemplateStateImpl implements TemplateState {
         return myTemplate;
     }
 
+    @Nonnull
+    @Override
     public Editor getEditor() {
         return myEditor;
     }

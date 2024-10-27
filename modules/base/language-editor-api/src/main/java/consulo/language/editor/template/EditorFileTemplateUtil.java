@@ -20,7 +20,7 @@ import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.util.EditorHelper;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
-
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
@@ -30,13 +30,15 @@ import java.util.Set;
 
 /**
  * @author VISTALL
- * @since 27-Mar-22
+ * @since 2022-03-27
  */
 public class EditorFileTemplateUtil {
+    @RequiredUIAccess
     public static void startLiveTemplate(@Nonnull PsiFile file) {
         startLiveTemplate(file, Collections.emptyMap());
     }
 
+    @RequiredUIAccess
     public static void startLiveTemplate(@Nonnull PsiFile file, @Nonnull Map<String, String> defaultValues) {
         Editor editor = EditorHelper.openInEditor(file);
         if (editor == null) {

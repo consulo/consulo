@@ -15,7 +15,6 @@
  */
 package consulo.diff.impl.internal.request;
 
-import consulo.application.CommonBundle;
 import consulo.diff.content.DiffContent;
 import consulo.diff.content.FileContent;
 import consulo.diff.impl.internal.util.DiffImplUtil;
@@ -24,7 +23,9 @@ import consulo.diff.merge.MergeResult;
 import consulo.diff.util.ThreeSide;
 import consulo.language.editor.WriteCommandAction;
 import consulo.logging.Logger;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -114,6 +115,7 @@ public class BinaryMergeRequestImpl extends BinaryMergeRequest {
     }
 
     @Override
+    @RequiredUIAccess
     public void applyResult(@Nonnull MergeResult result) {
         final byte[] applyContent;
         switch (result) {
@@ -136,6 +138,7 @@ public class BinaryMergeRequestImpl extends BinaryMergeRequest {
         if (applyContent != null) {
             new WriteCommandAction.Simple(null) {
                 @Override
+                @RequiredUIAccess
                 protected void run() throws Throwable {
                     try {
                         VirtualFile file = myFile.getFile();
@@ -146,7 +149,7 @@ public class BinaryMergeRequestImpl extends BinaryMergeRequest {
                     }
                     catch (IOException e) {
                         LOG.error(e);
-                        Messages.showErrorDialog(myProject, "Can't apply result", CommonBundle.getErrorTitle());
+                        Messages.showErrorDialog(myProject, "Can't apply result", CommonLocalize.titleError().get());
                     }
                 }
             }.execute();

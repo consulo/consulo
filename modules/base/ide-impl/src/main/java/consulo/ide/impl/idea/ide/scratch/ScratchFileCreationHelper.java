@@ -21,6 +21,7 @@ import consulo.language.file.LanguageFileType;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.StringUtil;
 
 import jakarta.annotation.Nonnull;
@@ -85,13 +86,17 @@ public abstract class ScratchFileCreationHelper implements LanguageExtension {
     }
 
     @Nonnull
+    @RequiredUIAccess
     public static String reformat(@Nonnull Project project, @Nonnull Language language, @Nonnull String text) {
-        return WriteCommandAction.runWriteCommandAction(project, (Supplier<String>)() -> {
-            PsiFile psi = parseHeader(project, language, text);
-            if (psi != null) {
-                CodeStyleManager.getInstance(project).reformat(psi);
+        return WriteCommandAction.runWriteCommandAction(
+            project,
+            (Supplier<String>)() -> {
+                PsiFile psi = parseHeader(project, language, text);
+                if (psi != null) {
+                    CodeStyleManager.getInstance(project).reformat(psi);
+                }
+                return psi == null ? text : psi.getText();
             }
-            return psi == null ? text : psi.getText();
-        });
+        );
     }
 }

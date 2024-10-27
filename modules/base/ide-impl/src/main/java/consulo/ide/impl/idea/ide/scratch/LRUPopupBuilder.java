@@ -2,16 +2,12 @@
 package consulo.ide.impl.idea.ide.scratch;
 
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ide.impl.idea.util.ArrayUtilRt;
-import consulo.util.lang.ObjectUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.LangBundle;
 import consulo.language.Language;
 import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.scratch.ScratchUtil;
 import consulo.language.file.LanguageFileType;
+import consulo.language.localize.LanguageLocalize;
 import consulo.language.util.LanguageUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -21,12 +17,15 @@ import consulo.ui.image.Image;
 import consulo.undoRedo.BasicUndoableAction;
 import consulo.undoRedo.ProjectUndoManager;
 import consulo.undoRedo.UnexpectedUndoException;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.JBIterable;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.PerFileMappings;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -67,7 +66,7 @@ public abstract class LRUPopupBuilder<T> {
         return forFileLanguages(project, title, null, t -> {
             try {
                 WriteCommandAction.writeCommandAction(project)
-                    .withName(LangBundle.message("command.name.change.language"))
+                    .withName(LanguageLocalize.commandNameChangeLanguage().get())
                     .run(() -> changeLanguageWithUndo(project, t, filesCopy, mappings));
             }
             catch (UnexpectedUndoException e) {
@@ -259,7 +258,7 @@ public abstract class LRUPopupBuilder<T> {
 
     @Nonnull
     private String[] restoreLRUItems() {
-        return ObjectUtil.notNull(myPropertiesComponent.getValues(getLRUKey()), ArrayUtilRt.EMPTY_STRING_ARRAY);
+        return ObjectUtil.notNull(myPropertiesComponent.getValues(getLRUKey()), ArrayUtil.EMPTY_STRING_ARRAY);
     }
 
     private void storeLRUItems(@Nonnull T t) {
@@ -276,7 +275,7 @@ public abstract class LRUPopupBuilder<T> {
                 }
             }
         }
-        myPropertiesComponent.setValues(getLRUKey(), ArrayUtilRt.toStringArray(lastUsed));
+        myPropertiesComponent.setValues(getLRUKey(), ArrayUtil.toStringArray(lastUsed));
     }
 
     @Nonnull

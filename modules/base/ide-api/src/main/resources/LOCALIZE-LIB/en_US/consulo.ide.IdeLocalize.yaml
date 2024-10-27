@@ -2637,3 +2637,5 @@ command.switch.active.editor:
   text: Switch Active Editor
 change.encoding.command.name:
   text: "Change Encoding for ''{0}''"
+action.Anonymous.text.live.templates:
+  text: Live Templates

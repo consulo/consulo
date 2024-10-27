@@ -16,7 +16,7 @@
 
 package consulo.language.editor.impl.internal.template;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.Result;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.ClientId;
@@ -25,13 +25,13 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.document.Document;
 import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.completion.lookup.*;
 import consulo.language.editor.completion.lookup.event.LookupAdapter;
 import consulo.language.editor.completion.lookup.event.LookupEvent;
 import consulo.language.editor.hint.HintManager;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.template.*;
 import consulo.language.editor.template.context.TemplateActionContext;
 import consulo.language.psi.PsiDocumentManager;
@@ -74,8 +74,8 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
         }
 
         if (matchingTemplates.isEmpty() && customTemplatesLookupElements.isEmpty()) {
-            if (!ApplicationManager.getApplication().isUnitTestMode()) {
-                HintManager.getInstance().showErrorHint(editor, CodeInsightBundle.message("templates.no.defined"));
+            if (!Application.get().isUnitTestMode()) {
+                HintManager.getInstance().showErrorHint(editor, CodeInsightLocalize.templatesNoDefined().get());
             }
             return;
         }
@@ -180,13 +180,13 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
         CustomTemplateCallback customTemplateCallback = new CustomTemplateCallback(editor, file);
         TemplateActionContext templateActionContext = TemplateActionContext.expanding(file, editor);
         for (CustomLiveTemplate customLiveTemplate : TemplateManagerImpl.listApplicableCustomTemplates(templateActionContext)) {
-            if (customLiveTemplate instanceof CustomLiveTemplateBase) {
+            if (customLiveTemplate instanceof CustomLiveTemplateBase customLiveTemplateBase) {
                 String customTemplatePrefix =
-                    ((CustomLiveTemplateBase)customLiveTemplate).computeTemplateKeyWithoutContextChecking(customTemplateCallback);
+                    customLiveTemplateBase.computeTemplateKeyWithoutContextChecking(customTemplateCallback);
                 if (customTemplatePrefix != null) {
                     result.putValues(
                         customTemplatePrefix,
-                        ((CustomLiveTemplateBase)customLiveTemplate).getLookupElements(file, editor, offset)
+                        customLiveTemplateBase.getLookupElements(file, editor, offset)
                     );
                 }
             }
@@ -287,26 +287,28 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
         }
 
         @Override
+        @RequiredUIAccess
         public void itemSelected(final LookupEvent event) {
             FeatureUsageTracker.getInstance().triggerFeatureUsed("codeassists.liveTemplates");
             final LookupElement item = event.getItem();
-            if (item instanceof LiveTemplateLookupElementImpl) {
-                final Template template = ((LiveTemplateLookupElementImpl)item).getTemplate();
+            if (item instanceof LiveTemplateLookupElementImpl liveTemplateLookupElement) {
+                final Template template = liveTemplateLookupElement.getTemplate();
                 final String argument = myTemplate2Argument != null ? myTemplate2Argument.get(template) : null;
                 new WriteCommandAction(myProject) {
                     @Override
+                    @RequiredUIAccess
                     protected void run(@Nonnull Result result) throws Throwable {
                         ((TemplateManagerImpl)TemplateManager.getInstance(myProject))
                             .startTemplateWithPrefix(myEditor, template, null, argument);
                     }
                 }.execute();
             }
-            else if (item instanceof CustomLiveTemplateLookupElement) {
+            else if (item instanceof CustomLiveTemplateLookupElement customLiveTemplateLookupElement) {
                 if (myFile != null) {
                     new WriteCommandAction(myProject) {
                         @Override
                         protected void run(@Nonnull Result result) throws Throwable {
-                            ((CustomLiveTemplateLookupElement)item).expandTemplate(myEditor, myFile);
+                            customLiveTemplateLookupElement.expandTemplate(myEditor, myFile);
                         }
                     }.execute();
                 }
@@ -318,7 +320,7 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
 
         @Override
         public Pair<List<LookupElement>, Integer> arrangeItems(@Nonnull Lookup lookup, boolean onExplicitAction) {
-            LinkedHashSet<LookupElement> result = new LinkedHashSet<LookupElement>();
+            LinkedHashSet<LookupElement> result = new LinkedHashSet<>();
             List<LookupElement> items = getMatchingItems();
             for (LookupElement item : items) {
                 if (item.getLookupString().startsWith(lookup.itemPattern(item))) {
@@ -326,9 +328,9 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
                 }
             }
             result.addAll(items);
-            ArrayList<LookupElement> list = new ArrayList<LookupElement>(result);
+            ArrayList<LookupElement> list = new ArrayList<>(result);
             int selected = lookup.isSelectionTouched() ? list.indexOf(lookup.getCurrentItem()) : 0;
-            return new Pair<List<LookupElement>, Integer>(list, selected >= 0 ? selected : 0);
+            return new Pair<>(list, selected >= 0 ? selected : 0);
         }
 
         @Override

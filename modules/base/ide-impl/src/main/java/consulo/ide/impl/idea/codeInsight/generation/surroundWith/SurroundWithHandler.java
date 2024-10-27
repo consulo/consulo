@@ -12,13 +12,12 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.util.DocumentUtil;
 import consulo.document.util.TextRange;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.codeInsight.template.impl.SurroundWithTemplateHandler;
 import consulo.ide.impl.idea.lang.folding.CustomFoldingSurroundDescriptor;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
+import consulo.ide.localize.IdeLocalize;
 import consulo.ide.setting.ShowSettingsUtil;
-import consulo.language.LangBundle;
 import consulo.language.Language;
 import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.action.CodeInsightActionHandler;
@@ -29,13 +28,19 @@ import consulo.language.editor.surroundWith.SurroundDescriptor;
 import consulo.language.editor.surroundWith.SurroundWithRangeAdjuster;
 import consulo.language.editor.surroundWith.Surrounder;
 import consulo.language.editor.template.TemplateManager;
+import consulo.language.localize.LanguageLocalize;
 import consulo.language.psi.PsiCompiledElement;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnSeparator;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
@@ -64,7 +69,7 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
             return;
         }
         if (file instanceof PsiCompiledElement) {
-            HintManager.getInstance().showErrorHint(editor, LangBundle.message("hint.text.can.t.modify.decompiled.code"));
+            HintManager.getInstance().showErrorHint(editor, LanguageLocalize.hintTextCanTModifyDecompiledCode().get());
             return;
         }
 
@@ -73,7 +78,7 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
             showPopup(editor, applicable);
         }
         else if (!project.getApplication().isUnitTestMode()) {
-            HintManager.getInstance().showErrorHint(editor, LangBundle.message("hint.text.couldn.t.find.surround"));
+            HintManager.getInstance().showErrorHint(editor, LanguageLocalize.hintTextCouldnTFindSurround().get());
         }
     }
 
@@ -258,7 +263,7 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
 
         List<AnAction> templateGroup = SurroundWithTemplateHandler.createActionGroup(editor, file, usedMnemonicsSet);
         if (!templateGroup.isEmpty()) {
-            applicable.add(new AnSeparator(IdeBundle.messagePointer("action.Anonymous.text.live.templates")));
+            applicable.add(new AnSeparator(IdeLocalize.actionAnonymousTextLiveTemplates()));
             applicable.addAll(templateGroup);
             applicable.add(AnSeparator.getInstance());
             applicable.add(new ConfigureTemplatesAction());
@@ -273,7 +278,7 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
         private final PsiElement[] myElements;
 
         InvokeSurrounderAction(Surrounder surrounder, Project project, Editor editor, PsiElement[] elements, char mnemonic) {
-            super(UIUtil.MNEMONIC + String.valueOf(mnemonic) + ". " + surrounder.getTemplateDescription());
+            super(LocalizeValue.localizeTODO(UIUtil.MNEMONIC + String.valueOf(mnemonic) + ". " + surrounder.getTemplateDescription()));
             mySurrounder = surrounder;
             myProject = project;
             myEditor = editor;
@@ -298,7 +303,7 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
 
     private static final class ConfigureTemplatesAction extends AnAction {
         private ConfigureTemplatesAction() {
-            super(ActionsBundle.message("action.ConfigureTemplatesAction.text"));
+            super(ActionLocalize.actionConfiguretemplatesactionText());
         }
 
         @RequiredUIAccess

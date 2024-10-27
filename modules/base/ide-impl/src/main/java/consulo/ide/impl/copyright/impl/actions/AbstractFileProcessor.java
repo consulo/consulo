@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.copyright.impl.actions;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Result;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.content.ContentIterator;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.language.copyright.UpdateCopyrightsProvider;
 import consulo.language.copyright.config.CopyrightManager;
@@ -36,6 +35,7 @@ import consulo.module.ModuleManager;
 import consulo.module.content.ModuleFileIndex;
 import consulo.module.content.ModuleRootManager;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -98,6 +98,7 @@ public abstract class AbstractFileProcessor {
         this.title = title;
     }
 
+    @RequiredUIAccess
     public void run() {
         if (directory != null) {
             process(directory, subdirs);
@@ -116,6 +117,7 @@ public abstract class AbstractFileProcessor {
         }
     }
 
+    @RequiredUIAccess
     private void process(final PsiFile file) {
         if (!FileModificationService.getInstance().preparePsiElementForWrite(file)) {
             return;
@@ -123,21 +125,17 @@ public abstract class AbstractFileProcessor {
         final Runnable[] resultRunnable = new Runnable[1];
 
         execute(
-            new Runnable() {
-                public void run() {
-                    try {
-                        resultRunnable[0] = preprocessFile(file);
-                    }
-                    catch (IncorrectOperationException incorrectoperationexception) {
-                        logger.error(incorrectoperationexception);
-                    }
+            () -> {
+                try {
+                    resultRunnable[0] = preprocessFile(file);
+                }
+                catch (IncorrectOperationException incorrectoperationexception) {
+                    logger.error(incorrectoperationexception);
                 }
             },
-            new Runnable() {
-                public void run() {
-                    if (resultRunnable[0] != null) {
-                        resultRunnable[0].run();
-                    }
+            () -> {
+                if (resultRunnable[0] != null) {
+                    resultRunnable[0].run();
                 }
             }
         );
@@ -185,105 +183,82 @@ public abstract class AbstractFileProcessor {
             indicator.setFraction(fraction);
         }
 
-        return new Runnable() {
-            public void run() {
-                ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
-                String msg = null;
-                double fraction = 0.0D;
-                if (indicator != null) {
-                    msg = indicator.getText();
-                    fraction = indicator.getFraction();
-                    indicator.setText(message);
-                }
+        return () -> {
+            ProgressIndicator indicator1 = ProgressManager.getInstance().getProgressIndicator();
+            String msg1 = null;
+            double fraction1 = 0.0D;
+            if (indicator1 != null) {
+                msg1 = indicator1.getText();
+                fraction1 = indicator1.getFraction();
+                indicator1.setText(message);
+            }
 
-                for (int j = 0; j < runnables.length; j++) {
-                    if (indicator != null) {
-                        if (indicator.isCanceled()) {
-                            return;
-                        }
-
-                        indicator.setFraction((double)j / (double)runnables.length);
+            for (int j = 0; j < runnables.length; j++) {
+                if (indicator1 != null) {
+                    if (indicator1.isCanceled()) {
+                        return;
                     }
 
-                    Runnable runnable = runnables[j];
-                    if (runnable != null) {
-                        runnable.run();
-                    }
-                    runnables[j] = null;
+                    indicator1.setFraction((double)j / (double)runnables.length);
                 }
 
-                if (indicator != null) {
-                    indicator.setText(msg);
-                    indicator.setFraction(fraction);
+                Runnable runnable = runnables[j];
+                if (runnable != null) {
+                    runnable.run();
                 }
+                runnables[j] = null;
+            }
+
+            if (indicator1 != null) {
+                indicator1.setText(msg1);
+                indicator1.setFraction(fraction1);
             }
         };
     }
 
+    @RequiredUIAccess
     private void process(final PsiFile[] files) {
         final Runnable[] resultRunnable = new Runnable[1];
         execute(
-            new Runnable() {
-                public void run() {
-                    resultRunnable[0] = prepareFiles(new ArrayList<PsiFile>(Arrays.asList(files)));
-                }
-            },
-            new Runnable() {
-                public void run() {
-                    if (resultRunnable[0] != null) {
-                        resultRunnable[0].run();
-                    }
+            () -> resultRunnable[0] = prepareFiles(new ArrayList<>(Arrays.asList(files))),
+            () -> {
+                if (resultRunnable[0] != null) {
+                    resultRunnable[0].run();
                 }
             }
         );
     }
 
+    @RequiredUIAccess
     private void process(final PsiDirectory dir, final boolean subdirs) {
-        final List<PsiFile> pfiles = new ArrayList<PsiFile>();
-        ProgressManager.getInstance().runProcessWithProgressSynchronously(new Runnable() {
-            public void run() {
-                findFiles(pfiles, dir, subdirs);
-            }
-        }, title, true, myProject);
+        final List<PsiFile> pfiles = new ArrayList<>();
+        ProgressManager.getInstance()
+            .runProcessWithProgressSynchronously(() -> findFiles(pfiles, dir, subdirs), title, true, myProject);
         handleFiles(pfiles);
     }
 
+    @RequiredUIAccess
     private void process(final Project project) {
-        final List<PsiFile> pfiles = new ArrayList<PsiFile>();
-        ProgressManager.getInstance().runProcessWithProgressSynchronously(
-            new Runnable() {
-                public void run() {
-                    findFiles(project, pfiles);
-                }
-            },
-            title,
-            true,
-            project
-        );
+        final List<PsiFile> pfiles = new ArrayList<>();
+        ProgressManager.getInstance()
+            .runProcessWithProgressSynchronously(() -> findFiles(project, pfiles), title, true, project);
         handleFiles(pfiles);
     }
 
+    @RequiredUIAccess
     private void process(final Module module) {
-        final List<PsiFile> pfiles = new ArrayList<PsiFile>();
-        ProgressManager.getInstance().runProcessWithProgressSynchronously(
-            new Runnable() {
-                public void run() {
-                    findFiles(module, pfiles);
-                }
-            },
-            title,
-            true,
-            myProject
-        );
+        final List<PsiFile> pfiles = new ArrayList<>();
+        ProgressManager.getInstance()
+            .runProcessWithProgressSynchronously(() -> findFiles(module, pfiles), title, true, myProject);
         handleFiles(pfiles);
     }
 
+    @RequiredReadAction
     private static void findFiles(Project project, List<PsiFile> files) {
         Module[] modules = ModuleManager.getInstance(project).getModules();
         for (Module module : modules) {
             findFiles(module, files);
         }
-
     }
 
     protected static void findFiles(final Module module, final List<PsiFile> files) {
@@ -292,8 +267,9 @@ public abstract class AbstractFileProcessor {
         final VirtualFile[] roots = ModuleRootManager.getInstance(module).getContentRoots();
 
         for (VirtualFile root : roots) {
-            idx.iterateContentUnderDirectory(root, new ContentIterator() {
-                public boolean processFile(final VirtualFile dir) {
+            idx.iterateContentUnderDirectory(
+                root,
+                dir -> {
                     if (dir.isDirectory()) {
                         final PsiDirectory psiDir = PsiManager.getInstance(module.getProject()).findDirectory(dir);
                         if (psiDir != null) {
@@ -302,12 +278,13 @@ public abstract class AbstractFileProcessor {
                     }
                     return true;
                 }
-            });
+            );
         }
     }
 
+    @RequiredUIAccess
     private void handleFiles(final List<PsiFile> files) {
-        final List<VirtualFile> vFiles = new ArrayList<VirtualFile>();
+        final List<VirtualFile> vFiles = new ArrayList<>();
         for (PsiFile psiFile : files) {
             vFiles.add(psiFile.getVirtualFile());
         }
@@ -315,22 +292,17 @@ public abstract class AbstractFileProcessor {
             && !files.isEmpty()) {
             final Runnable[] resultRunnable = new Runnable[1];
             execute(
-                new Runnable() {
-                    public void run() {
-                        resultRunnable[0] = prepareFiles(files);
-                    }
-                },
-                new Runnable() {
-                    public void run() {
-                        if (resultRunnable[0] != null) {
-                            resultRunnable[0].run();
-                        }
+                () -> resultRunnable[0] = prepareFiles(files),
+                () -> {
+                    if (resultRunnable[0] != null) {
+                        resultRunnable[0].run();
                     }
                 }
             );
         }
     }
 
+    @RequiredReadAction
     private static void findFiles(List<PsiFile> files, PsiDirectory directory, boolean subdirs) {
         final Project project = directory.getProject();
         PsiFile[] locals = directory.getFiles();
@@ -349,18 +321,16 @@ public abstract class AbstractFileProcessor {
         }
     }
 
+    @RequiredUIAccess
     private void execute(final Runnable readAction, final Runnable writeAction) {
         ProgressManager.getInstance().runProcessWithProgressSynchronously(
-            new Runnable() {
-                public void run() {
-                    readAction.run();
-                }
-            },
+            readAction::run,
             title,
             true,
             myProject
         );
         new WriteCommandAction(myProject, title) {
+            @Override
             protected void run(Result result) throws Throwable {
                 writeAction.run();
             }

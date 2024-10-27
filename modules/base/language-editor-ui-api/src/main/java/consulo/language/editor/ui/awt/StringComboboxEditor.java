@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.ui.awt;
 
 import consulo.application.Result;
 import consulo.language.editor.WriteCommandAction;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.util.UndoConstants;
 import consulo.logging.Logger;
 import consulo.document.Document;
@@ -72,6 +72,7 @@ public class StringComboboxEditor extends EditorComboBoxEditor {
     }
 
     @Override
+    @RequiredUIAccess
     public void setItem(Object anObject) {
         if (anObject == null) {
             anObject = "";

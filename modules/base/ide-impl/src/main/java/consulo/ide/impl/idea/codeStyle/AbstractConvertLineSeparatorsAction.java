@@ -117,17 +117,15 @@ public abstract class AbstractConvertLineSeparatorsAction extends AnAction {
     }
 
     public static boolean shouldProcess(@Nonnull VirtualFile file, @Nonnull Project project) {
-        if (file.isDirectory()
-            || !file.isWritable()
-            || FileTypeRegistry.getInstance().isFileIgnored(file)
-            || file.getFileType().isBinary()
-            || file.equals(project.getProjectFile())
-            || file.equals(project.getWorkspaceFile())) {
-            return false;
-        }
-        return true;
+        return !file.isDirectory()
+            && file.isWritable()
+            && !FileTypeRegistry.getInstance().isFileIgnored(file)
+            && !file.getFileType().isBinary()
+            && !file.equals(project.getProjectFile())
+            && !file.equals(project.getWorkspaceFile());
     }
 
+    @RequiredUIAccess
     public static void changeLineSeparators(
         @Nonnull final Project project,
         @Nonnull final VirtualFile virtualFile,

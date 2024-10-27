@@ -154,6 +154,7 @@ public class InplaceChangeSignature implements DocumentListener {
         return myStableChange;
     }
 
+    @RequiredUIAccess
     public void cancel() {
         TextRange highlightingRange = myDetector.getHighlightingRange(getStableChange());
         Document document = myEditor.getDocument();
@@ -195,6 +196,7 @@ public class InplaceChangeSignature implements DocumentListener {
         });
     }
 
+    @RequiredUIAccess
     private void updateCurrentInfo() {
         if (myCurrentInfo == null) {
             myCurrentInfo = myStableChange;
@@ -210,6 +212,7 @@ public class InplaceChangeSignature implements DocumentListener {
         myCurrentInfo = changeInfo;
     }
 
+    @RequiredUIAccess
     private void updateMethodSignature(ChangeInfo changeInfo) {
         ArrayList<TextRange> deleteRanges = new ArrayList<>();
         ArrayList<TextRange> newRanges = new ArrayList<>();
@@ -245,6 +248,7 @@ public class InplaceChangeSignature implements DocumentListener {
         }
     }
 
+    @RequiredUIAccess
     protected void showBalloon() {
         NonFocusableCheckBox checkBox = new NonFocusableCheckBox(RefactoringLocalize.delegationPanelDelegateViaOverloadingMethod().get());
         checkBox.addActionListener(e -> {
@@ -280,6 +284,7 @@ public class InplaceChangeSignature implements DocumentListener {
         );
     }
 
+    @RequiredUIAccess
     public void detach() {
         myEditor.getDocument().removeDocumentListener(this);
         HighlightManager highlightManager = HighlightManager.getInstance(myProject);
@@ -293,6 +298,7 @@ public class InplaceChangeSignature implements DocumentListener {
         myEditor.putUserData(INPLACE_CHANGE_SIGNATURE, null);
     }
 
+    @RequiredUIAccess
     public static void temporallyRevertChanges(
         final TextRange signatureRange,
         final Document document,

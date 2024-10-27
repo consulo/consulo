@@ -24,6 +24,7 @@ import consulo.ide.impl.idea.history.integration.LocalHistoryBundle;
 import consulo.application.Result;
 import consulo.language.editor.WriteCommandAction;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.util.diff.FilesTooBigForDiffException;
 import consulo.application.util.DateFormatUtil;
@@ -58,7 +59,7 @@ public abstract class Reverter {
     }
 
     protected List<VirtualFile> getFilesToClearROStatus() throws IOException {
-        final Set<VirtualFile> files = new HashSet<VirtualFile>();
+        final Set<VirtualFile> files = new HashSet<>();
 
         myVcs.accept(selective(new ChangeVisitor() {
             @Override
@@ -67,13 +68,14 @@ public abstract class Reverter {
             }
         }));
 
-        return new ArrayList<VirtualFile>(files);
+        return new ArrayList<>(files);
     }
 
     protected ChangeVisitor selective(ChangeVisitor v) {
         return v;
     }
 
+    @RequiredUIAccess
     public void revert() throws IOException {
         try {
             new WriteCommandAction(myProject, getCommandName()) {
@@ -87,8 +89,8 @@ public abstract class Reverter {
         }
         catch (RuntimeException e) {
             Throwable cause = e.getCause();
-            if (cause instanceof IOException) {
-                throw (IOException)cause;
+            if (cause instanceof IOException ioe) {
+                throw ioe;
             }
             throw e;
         }

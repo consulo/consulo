@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.refactoring.introduce.inplace;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Result;
 import consulo.codeEditor.Editor;
 import consulo.document.RangeMarker;
@@ -38,6 +39,7 @@ import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiElementPointer;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.internal.StartMarkAction;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
@@ -60,6 +62,7 @@ public abstract class InplaceVariableIntroducer<E extends PsiElement> extends In
     protected E[] myOccurrences;
     protected List<RangeMarker> myOccurrenceMarkers;
 
+    @RequiredUIAccess
     public InplaceVariableIntroducer(
         PsiNamedElement elementToRename,
         Editor editor,
@@ -95,6 +98,7 @@ public abstract class InplaceVariableIntroducer<E extends PsiElement> extends In
     }
 
     @Override
+    @RequiredUIAccess
     protected StartMarkAction startRename() throws StartMarkAction.AlreadyStartedException {
         return null;
     }
@@ -115,6 +119,7 @@ public abstract class InplaceVariableIntroducer<E extends PsiElement> extends In
         return myOccurrences;
     }
 
+    @RequiredUIAccess
     public List<RangeMarker> getOccurrenceMarkers() {
         if (myOccurrenceMarkers == null) {
             initOccurrencesMarkers();
@@ -122,16 +127,18 @@ public abstract class InplaceVariableIntroducer<E extends PsiElement> extends In
         return myOccurrenceMarkers;
     }
 
+    @RequiredReadAction
     protected void initOccurrencesMarkers() {
         if (myOccurrenceMarkers != null) {
             return;
         }
-        myOccurrenceMarkers = new ArrayList<RangeMarker>();
+        myOccurrenceMarkers = new ArrayList<>();
         for (E occurrence : myOccurrences) {
             myOccurrenceMarkers.add(createMarker(occurrence));
         }
     }
 
+    @RequiredReadAction
     protected RangeMarker createMarker(PsiElement element) {
         return myEditor.getDocument().createRangeMarker(element.getTextRange());
     }
@@ -170,6 +177,7 @@ public abstract class InplaceVariableIntroducer<E extends PsiElement> extends In
 
 
     @Override
+    @RequiredReadAction
     protected MyLookupExpression createLookupExpression(PsiElement selectedElement) {
         return new MyIntroduceLookupExpression(
             getInitialName(),
@@ -195,11 +203,13 @@ public abstract class InplaceVariableIntroducer<E extends PsiElement> extends In
         }
 
         @Override
+        @RequiredReadAction
         public LookupElement[] calculateLookupItems(ExpressionContext context) {
             return createLookupItems(myName, context.getEditor(), getElement());
         }
 
         @Nullable
+        @RequiredReadAction
         public PsiNamedElement getElement() {
             return myPointer.getElement();
         }
@@ -219,7 +229,9 @@ public abstract class InplaceVariableIntroducer<E extends PsiElement> extends In
                     names.add(text);
                     for (NameSuggestionProvider provider : NameSuggestionProvider.EP_NAME.getExtensionList()) {
                         final SuggestedNameInfo suggestedNameInfo = provider.getSuggestedNames(psiVariable, psiVariable, names);
-                        if (suggestedNameInfo != null && provider instanceof PreferrableNameSuggestionProvider && !((PreferrableNameSuggestionProvider)provider).shouldCheckOthers()) {
+                        if (suggestedNameInfo != null
+                            && provider instanceof PreferrableNameSuggestionProvider nameSuggestionProvider
+                            && !nameSuggestionProvider.shouldCheckOthers()) {
                             break;
                         }
                     }

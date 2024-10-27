@@ -31,9 +31,9 @@ import consulo.language.editor.intention.SyntheticIntentionAction;
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.Alerts;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
@@ -68,6 +68,7 @@ public class RenameFileFix implements SyntheticIntentionAction, LocalQuickFix {
     }
 
     @Override
+    @RequiredUIAccess
     public void applyFix(@Nonnull final Project project, @Nonnull ProblemDescriptor descriptor) {
         final PsiFile file = descriptor.getPsiElement().getContainingFile();
         if (isAvailable(project, null, file)) {

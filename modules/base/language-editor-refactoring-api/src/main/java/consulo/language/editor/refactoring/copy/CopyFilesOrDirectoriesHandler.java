@@ -86,7 +86,7 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
     }
 
     @Override
-    @RequiredReadAction
+    @RequiredUIAccess
     public void doCopy(final PsiElement[] elements, PsiDirectory defaultTargetDirectory) {
         if (defaultTargetDirectory == null) {
             defaultTargetDirectory = getCommonParentDirectory(elements);
@@ -181,7 +181,7 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
         doCloneFile(element);
     }
 
-    @RequiredReadAction
+    @RequiredUIAccess
     public static void doCloneFile(PsiElement element) {
         PsiDirectory targetDirectory;
         if (element instanceof PsiDirectory directory) {
@@ -300,7 +300,7 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
      * @return first copied PsiFile (recursively); null if no PsiFiles copied
      */
     @Nullable
-    @RequiredReadAction
+    @RequiredUIAccess
     public static PsiFile copyToDirectory(
         @Nonnull PsiFileSystemItem elementToCopy,
         @Nullable String newName,
@@ -316,7 +316,7 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
      * @return first copied PsiFile (recursively); null if no PsiFiles copied
      */
     @Nullable
-    @RequiredReadAction
+    @RequiredUIAccess
     public static PsiFile copyToDirectory(
         @Nonnull PsiFileSystemItem elementToCopy,
         @Nullable String newName,
@@ -395,6 +395,7 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
     }
 
     @Deprecated
+    @RequiredUIAccess
     public static boolean checkFileExist(@Nullable PsiDirectory targetDirectory, int[] choice, PsiFile file, String name, String title) {
         return CommonRefactoringUtil.checkFileExist(targetDirectory, choice, file, name, title);
     }
@@ -404,7 +405,7 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
         final Project project = defaultTargetDirectory.getProject();
         final Boolean showDirsChooser =
             defaultTargetDirectory.getCopyableUserData(RefactoringInternalHelper.COPY_PASTE_DELEGATE_SHOW_CHOOSER_KEY);
-        if (showDirsChooser != null && showDirsChooser.booleanValue()) {
+        if (showDirsChooser != null && showDirsChooser) {
             final PsiDirectoryContainer directoryContainer =
                 PsiPackageHelper.getInstance(project).getDirectoryContainer(defaultTargetDirectory);
             if (directoryContainer == null) {

@@ -37,7 +37,6 @@ import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.openapi.ui.PanelWithActionsAndCloseButton;
 import consulo.ide.impl.idea.openapi.util.Getter;
-import consulo.ide.impl.idea.openapi.vcs.CalledInAwt;
 import consulo.ide.impl.idea.openapi.vcs.actions.AnnotateRevisionActionBase;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.CreatePatchFromChangesAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.TableLinkMouseListener;
@@ -50,7 +49,6 @@ import consulo.ide.impl.idea.ui.dualView.CellWrapper;
 import consulo.ide.impl.idea.ui.dualView.DualView;
 import consulo.ide.impl.idea.ui.dualView.DualViewColumnInfo;
 import consulo.ide.impl.idea.ui.dualView.TreeTableView;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.WriteCommandAction;
 import consulo.localHistory.LocalHistory;
 import consulo.localHistory.LocalHistoryAction;
@@ -73,6 +71,7 @@ import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.image.Image;
 import consulo.undoRedo.CommandProcessor;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.Clock;
@@ -331,7 +330,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
         return historyPanel.getFilePath().equals(path) && Comparing.equal(existingRevision, newRevision);
     }
 
-    @CalledInAwt
+    @RequiredUIAccess
     void scheduleRefresh(boolean canUseLastRevision) {
         refreshUiAndScheduleDataRefresh(canUseLastRevision);
     }
@@ -530,6 +529,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
         return result;
     }
 
+    @RequiredUIAccess
     private void refreshUiAndScheduleDataRefresh(boolean canUseLastRevisionCheck) {
         myProject.getApplication().invokeAndWait(() -> {
             if (myInRefresh) {

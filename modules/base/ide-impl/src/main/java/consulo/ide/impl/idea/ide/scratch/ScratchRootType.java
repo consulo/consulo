@@ -25,8 +25,10 @@ import consulo.language.editor.WriteCommandAction;
 import consulo.language.scratch.RootType;
 import consulo.language.scratch.ScratchFileService;
 import consulo.project.Project;
-import consulo.ui.ex.UIBundle;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.undoRedo.UndoConfirmationPolicy;
@@ -65,11 +67,13 @@ public final class ScratchRootType extends RootType {
     }
 
     @Nullable
+    @RequiredUIAccess
     public VirtualFile createScratchFile(Project project, final String fileName, final Language language, final String text) {
         return createScratchFile(project, fileName, language, text, ScratchFileService.Option.create_new_always);
     }
 
     @Nullable
+    @RequiredUIAccess
     public VirtualFile createScratchFile(
         Project project,
         final String fileName,
@@ -78,7 +82,7 @@ public final class ScratchRootType extends RootType {
         final ScratchFileService.Option option
     ) {
         RunResult<VirtualFile> result =
-            new WriteCommandAction<VirtualFile>(project, UIBundle.message("file.chooser.create.new.file.command.name")) {
+            new WriteCommandAction<VirtualFile>(project, UILocalize.fileChooserCreateNewFileCommandName().get()) {
                 @Override
                 protected boolean isGlobalUndoAction() {
                     return true;
@@ -100,9 +104,9 @@ public final class ScratchRootType extends RootType {
             }.execute();
         if (result.hasException()) {
             Messages.showMessageDialog(
-                UIBundle.message("create.new.file.could.not.create.file.error.message", fileName),
-                UIBundle.message("error.dialog.title"),
-                Messages.getErrorIcon()
+                UILocalize.createNewFileCouldNotCreateFileErrorMessage(fileName).get(),
+                UILocalize.errorDialogTitle().get(),
+                UIUtil.getErrorIcon()
             );
             return null;
         }

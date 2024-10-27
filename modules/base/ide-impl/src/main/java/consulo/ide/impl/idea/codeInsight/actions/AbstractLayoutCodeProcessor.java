@@ -46,7 +46,7 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.ExceptionUtil;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileFilter;
 import jakarta.annotation.Nonnull;
@@ -251,7 +251,7 @@ public abstract class AbstractLayoutCodeProcessor {
         });
     }
 
-    @RequiredReadAction
+    @RequiredUIAccess
     public void run() {
         if (myFile != null) {
             runProcessFile(myFile);
@@ -326,7 +326,7 @@ public abstract class AbstractLayoutCodeProcessor {
             return;
         }
 
-        final Ref<FutureTask<Boolean>> writeActionRunnable = new Ref<>();
+        final SimpleReference<FutureTask<Boolean>> writeActionRunnable = new SimpleReference<>();
         Runnable readAction = () -> {
             if (!file.isValid() || !checkFileWritable(file)) {
                 return;
@@ -537,6 +537,7 @@ public abstract class AbstractLayoutCodeProcessor {
             return ReadAction.compute(() -> file.isWritable() && canBeFormatted(file) && acceptedByFilters(file));
         }
 
+        @RequiredUIAccess
         private void performFileProcessing(@Nonnull PsiFile file) {
             for (AbstractLayoutCodeProcessor processor : myProcessors) {
                 FutureTask<Boolean> writeTask = ReadAction.compute(() -> processor.prepareTask(file, myProcessChangedTextOnly));

@@ -2688,18 +2688,12 @@ action.OpenInRightSplit.text:
   text: Open in Right Split
 action.OpenInRightSplit.description:
   text: Split editor area into 2 tab groups and open the current file to the right group
-action.Diff.FocusOppositePane.text:
-  text: Select Opposite Diff Pane
 action.Diff.FocusOppositePane.description:
   text: Select opposite pane in diff view
 action.Diff.FocusOppositePaneAndScroll.text:
   text: Select Position In Opposite Diff Pane
 action.Diff.FocusOppositePaneAndScroll.description:
   text: Select the same position in opposite pane in diff view
-action.Diff.PrevChange.text:
-  text: Compare Previous File
-action.Diff.NextChange.text:
-  text: Compare Next File
 action.Diff.ApplyLeftSide.text:
   text: Accept Left Side
 action.Diff.ApplyRightSide.text:
@@ -2824,8 +2818,6 @@ action.RunDashboard.GroupByType.text:
   text: Type
 action.RunDashboard.GroupByStatus.text:
   text: Status
-action.RunDashboard.AddType.text:
-  text: Run Configuration Type…
 action.UpdateRunningApplication.text:
   text: Update Running Application
 group.TouchBar.text:
@@ -2862,8 +2854,6 @@ group.RunDashboard.Filter.text:
   text: Configuration Status
 group.RunDashboard.GroupBy.text:
   text: Configuration
-group.ServiceView.AddService.text:
-  text: Add Service
 group.ServiceView.OpenInNewTabGroup.text:
   text: Open in New Tab
 group.ServiceView.Filter.text:
@@ -2874,5 +2864,5 @@ group.ShowAnnotateOperationsPopupGroup.text:
   text: Annotated Line
 action.serviceview.groupbyservicegroup.text:
   text: Service Groups
-
-
+action.ConfigureTemplatesAction.text:
+  text: Configure Live Templates…

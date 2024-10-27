@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.patch.tool;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.util.function.Computable;
 import consulo.diff.content.DocumentContent;
 import consulo.diff.merge.MergeRequest;
@@ -23,6 +23,7 @@ import consulo.diff.merge.MergeResult;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.AppliedTextPatch;
 import consulo.language.editor.WriteCommandAction;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -69,12 +70,8 @@ public class ApplyPatchMergeRequest extends MergeRequest implements ApplyPatchRe
         myResultContent = resultContent;
         myAppliedPatch = appliedPatch;
 
-        myOriginalContent = ApplicationManager.getApplication().runReadAction(new Computable<CharSequence>() {
-            @Override
-            public CharSequence compute() {
-                return myResultContent.getDocument().getImmutableCharSequence();
-            }
-        });
+        myOriginalContent =
+            Application.get().runReadAction((Computable<CharSequence>)()-> myResultContent.getDocument().getImmutableCharSequence());
         myLocalContent = localContent;
 
         myWindowTitle = windowTitle;
@@ -108,7 +105,7 @@ public class ApplyPatchMergeRequest extends MergeRequest implements ApplyPatchRe
         return myAppliedPatch;
     }
 
-    @jakarta.annotation.Nullable
+    @Nullable
     @Override
     public String getTitle() {
         return myWindowTitle;
@@ -133,24 +130,15 @@ public class ApplyPatchMergeRequest extends MergeRequest implements ApplyPatchRe
     }
 
     @Override
+    @RequiredUIAccess
     public void applyResult(@Nonnull MergeResult result) {
-        final CharSequence applyContent;
-        switch (result) {
-            case CANCEL:
-                applyContent = myOriginalContent;
-                break;
-            case LEFT:
-                applyContent = myLocalContent;
-                break;
-            case RIGHT:
-                applyContent = PatchChangeBuilder.getPatchedContent(myAppliedPatch, myLocalContent);
-                break;
-            case RESOLVED:
-                applyContent = null;
-                break;
-            default:
-                throw new IllegalArgumentException(result.name());
-        }
+        final CharSequence applyContent = switch (result) {
+            case CANCEL -> myOriginalContent;
+            case LEFT -> myLocalContent;
+            case RIGHT -> PatchChangeBuilder.getPatchedContent(myAppliedPatch, myLocalContent);
+            case RESOLVED -> null;
+            default -> throw new IllegalArgumentException(result.name());
+        };
 
         if (applyContent != null) {
             new WriteCommandAction.Simple(myProject) {

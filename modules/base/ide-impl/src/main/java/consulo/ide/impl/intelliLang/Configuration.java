@@ -22,9 +22,7 @@ import consulo.component.util.ModificationTracker;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.openapi.command.undo.GlobalUndoableAction;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.FileContentUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.intelliLang.inject.InjectorUtils;
 import consulo.ide.impl.intelliLang.inject.config.BaseInjection;
 import consulo.ide.impl.intelliLang.inject.config.InjectionPlace;
@@ -37,16 +35,17 @@ import consulo.language.editor.WriteCommandAction;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.ProjectUndoManager;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.undoRedo.UndoableAction;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import consulo.util.collection.MultiValuesMap;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ControlFlowException;
 import consulo.util.lang.Pair;
-import consulo.util.lang.function.Condition;
-import consulo.util.lang.function.PairProcessor;
 import consulo.util.lang.lazy.LazyValue;
 import consulo.util.xml.serializer.JDOMExternalizerUtil;
 import jakarta.annotation.Nonnull;
@@ -54,11 +53,12 @@ import jakarta.annotation.Nullable;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import org.jetbrains.annotations.NonNls;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
@@ -72,7 +72,7 @@ import java.util.function.Supplier;
 public class Configuration implements PersistentStateComponent<Element>, ModificationTracker {
     private static final Logger LOG = Logger.getInstance(Configuration.class);
 
-    private static final Condition<BaseInjection> LANGUAGE_INJECTION_CONDITION =
+    private static final Predicate<BaseInjection> LANGUAGE_INJECTION_CONDITION =
         o -> Language.findLanguageByID(o.getInjectedLanguageId()) != null;
 
     public enum InstrumentationType {
@@ -98,31 +98,21 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
         return ServiceManager.getService(project, ProjectInjectionConfiguration.class);
     }
 
-    @NonNls
     public static final String COMPONENT_NAME = "LanguageInjectionConfiguration";
 
     // element names
-    @NonNls
     private static final String INSTRUMENTATION_TYPE_NAME = "INSTRUMENTATION";
-    @NonNls
     private static final String LANGUAGE_ANNOTATION_NAME = "LANGUAGE_ANNOTATION";
-    @NonNls
     private static final String PATTERN_ANNOTATION_NAME = "PATTERN_ANNOTATION";
-    @NonNls
     private static final String SUBST_ANNOTATION_NAME = "SUBST_ANNOTATION";
-    @NonNls
     private static final String RESOLVE_REFERENCES = "RESOLVE_REFERENCES";
-    @NonNls
     private static final String LOOK_FOR_VAR_ASSIGNMENTS = "LOOK_FOR_VAR_ASSIGNMENTS";
-    @NonNls
     private static final String USE_DFA_IF_AVAILABLE = "USE_DFA_IF_AVAILABLE";
-    @NonNls
     private static final String INCLUDE_UNCOMPUTABLES_AS_LITERALS = "INCLUDE_UNCOMPUTABLES_AS_LITERALS";
-    @NonNls
     private static final String SOURCE_MODIFICATION_ALLOWED = "SOURCE_MODIFICATION_ALLOWED";
 
     private final Map<String, List<BaseInjection>> myInjections =
-        ConcurrentFactoryMap.createMap(it -> ContainerUtil.createLockFreeCopyOnWriteList());
+        ConcurrentFactoryMap.createMap(it -> consulo.ide.impl.idea.util.containers.ContainerUtil.createLockFreeCopyOnWriteList());
 
     public Collection<BaseInjection> getAllInjections() {
         ArrayList<BaseInjection> injections = new ArrayList<>();
@@ -231,12 +221,7 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
     }
 
     protected Element getState(final Element element) {
-        Comparator<BaseInjection> comparator = new Comparator<BaseInjection>() {
-            @Override
-            public int compare(final BaseInjection o1, final BaseInjection o2) {
-                return Comparing.compare(o1.getDisplayName(), o2.getDisplayName());
-            }
-        };
+        Comparator<BaseInjection> comparator = (o1, o2) -> Comparing.compare(o1.getDisplayName(), o2.getDisplayName());
         List<String> injectorIds = new ArrayList<>(myInjections.keySet());
         Collections.sort(injectorIds);
         for (String key : injectorIds) {
@@ -272,7 +257,7 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
                 elements.add(rootElement);
                 //noinspection unchecked
                 elements.addAll(rootElement.getChildren("component"));
-                state = consulo.util.collection.ContainerUtil.find(
+                state = ContainerUtil.find(
                     elements,
                     element -> "component".equals(element.getName())
                         && COMPONENT_NAME.equals(element.getAttributeValue("name"))
@@ -291,7 +276,7 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
     }
 
     private int importPlaces(final List<BaseInjection> injections) {
-        final Map<String, Set<BaseInjection>> map = ContainerUtil.classify(injections.iterator(), o -> o.getSupportId());
+        final Map<String, Set<BaseInjection>> map = ContainerUtil.classify(injections.iterator(), BaseInjection::getSupportId);
         final ArrayList<BaseInjection> originalInjections = new ArrayList<>();
         final ArrayList<BaseInjection> newInjections = new ArrayList<>();
         for (String supportId : InjectorUtils.getActiveInjectionSupportIds()) {
@@ -322,10 +307,13 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
         }
         main:
         for (BaseInjection other : importingInjections) {
-            final List<BaseInjection> matchingInjections = ContainerUtil.concat(other.getInjectionPlaces(), o -> {
-                final Collection<BaseInjection> collection = placeMap.get(o);
-                return collection == null ? Collections.<BaseInjection>emptyList() : collection;
-            });
+            final List<BaseInjection> matchingInjections = ContainerUtil.concat(
+                other.getInjectionPlaces(),
+                o -> {
+                    final Collection<BaseInjection> collection = placeMap.get(o);
+                    return collection == null ? Collections.<BaseInjection>emptyList() : collection;
+                }
+            );
             if (matchingInjections.isEmpty()) {
                 newInjections.add(other);
             }
@@ -340,7 +328,7 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
                     }
                 }
                 if (existing == null) {
-                    continue main; // skip!! language changed
+                    continue; // skip!! language changed
                 }
                 final BaseInjection newInjection = existing.copy();
                 newInjection.mergeOriginalPlacesFrom(other, true);
@@ -372,6 +360,7 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
         return null;
     }
 
+    @RequiredUIAccess
     public boolean setHostInjectionEnabled(final PsiLanguageInjectionHost host, final Collection<String> languages, final boolean enabled) {
         final ArrayList<BaseInjection> originalInjections = new ArrayList<>();
         final ArrayList<BaseInjection> newInjections = new ArrayList<>();
@@ -421,6 +410,7 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
         return Collections.unmodifiableList(myInjections.get(injectorId));
     }
 
+    @RequiredUIAccess
     public void replaceInjectionsWithUndo(
         final Project project,
         final List<? extends BaseInjection> newInjections,
@@ -432,16 +422,13 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
             newInjections,
             originalInjections,
             psiElementsToRemove,
-            new PairProcessor<List<? extends BaseInjection>, List<? extends BaseInjection>>() {
-                @Override
-                public boolean process(final List<? extends BaseInjection> add, final List<? extends BaseInjection> remove) {
-                    replaceInjectionsWithUndoInner(add, remove);
-                    if (ContainerUtil.find(add, LANGUAGE_INJECTION_CONDITION) != null
-                        || ContainerUtil.find(remove, LANGUAGE_INJECTION_CONDITION) != null) {
-                        FileContentUtil.reparseOpenedFiles();
-                    }
-                    return true;
+            (add, remove) -> {
+                replaceInjectionsWithUndoInner(add, remove);
+                if (ContainerUtil.find(add, LANGUAGE_INJECTION_CONDITION) != null
+                    || ContainerUtil.find(remove, LANGUAGE_INJECTION_CONDITION) != null) {
+                    FileContentUtil.reparseOpenedFiles();
                 }
+                return true;
             }
         );
     }
@@ -450,22 +437,23 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
         replaceInjections(add, remove, false);
     }
 
+    @RequiredUIAccess
     public static <T> void replaceInjectionsWithUndo(
         final Project project,
         final T add,
         final T remove,
         final List<? extends PsiElement> psiElementsToRemove,
-        final PairProcessor<T, T> actualProcessor
+        final BiPredicate<T, T> actualProcessor
     ) {
         final UndoableAction action = new GlobalUndoableAction() {
             @Override
             public void undo() {
-                actualProcessor.process(remove, add);
+                actualProcessor.test(remove, add);
             }
 
             @Override
             public void redo() {
-                actualProcessor.process(add, remove);
+                actualProcessor.test(add, remove);
             }
         };
         final List<PsiFile> psiFiles = ContainerUtil.mapNotNull(
@@ -478,7 +466,7 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
                 for (PsiElement annotation : psiElementsToRemove) {
                     annotation.delete();
                 }
-                actualProcessor.process(add, remove);
+                actualProcessor.test(add, remove);
                 ProjectUndoManager.getInstance(project).undoableActionPerformed(action);
             }
 
