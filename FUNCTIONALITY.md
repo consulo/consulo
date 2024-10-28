@@ -5,20 +5,22 @@
 | [C#](https://github.com/consulo/consulo-csharp) | 🟢 | 🟢 |🟢 |🟢 
 | [JavaScript](https://github.com/consulo/consulo-javascript) |🔵 | 🔵 | 🔵 | 🔵
 | [PHP](https://github.com/consulo/consulo-php)| 🔵 | 🔵 | 🔵 | 🔴
-| [Ruby](https://github.com/consulo/incubating-consulo-ruby) | 🔵 | 🔴 | 🔴 | 🔴
-| [SQL](https://github.com/consulo/consulo-database) | 🔵 | 🔴 | 🔴 | 🔴
+| [Ruby](https://github.com/consulo/incubating-consulo-ruby) | 🔵 (incubating but delayed) | 🔴 | 🔴 | 🔴
+| [SQL](https://github.com/consulo/consulo-database) | 🔵 (incubating) | 🔴 | 🔴 | 🔴
 | [Dart](https://github.com/consulo/consulo-google-dart) |🔵 | 🔵 | 🔵 | 🔵
 | [Go](https://github.com/consulo/consulo-google-go) | 🔵 | 🔵 | 🔵 | 🔵 
 | [HTML & XML](https://github.com/consulo/consulo-xml) | 🟢 | 🟢 |🟢 |🟢 
 | [JSON](https://github.com/consulo/consulo-javascript) | 🟢 | 🟢 |🟢 |🟢 
 | [CSS](https://github.com/consulo/consulo-css) |🔵 | 🔵 | 🔵 | 🔵
+| [C/C++](https://github.com/consulo/incubating-consulo-cpp)|🔵 (incubating)|🔴 |🔴 |🔴
 
 ### Language Frameworks 
 | Name | Support |
 |  ------- | ------- |
-| Java ▸ [Spring](https://github.com/consulo/incubating-consulo-spring) | 🔵 (incubating))
+| Java ▸ [Spring](https://github.com/consulo/incubating-consulo-spring) | 🔵 (incubating)
 | Java ▸ [Hibernate](https://github.com/consulo/incubating-consulo-hibernate) | 🔴 (planned but delayed)
 | Java ▸ JPA | 🔴 (planned but delayed)
+| C# ▸ [Razor](https://github.com/consulo/incubating-consulo-razor) | 🔵 (incubating)
 
 ### Runtime Platforms
 | Name  | Importing | Running | Debugging |
@@ -32,6 +34,6 @@
 | [Node.js](https://github.com/consulo/consulo-nodejs) | 🔵 | 🔵 | 🔴
 
 Legend 
-  - 🟢 - fully supported
-  - 🔵 - partial supported
-  - 🔴 - not supported
+  - 🟢 ▸ fully supported
+  - 🔵 ▸ partial supported
+  - 🔴 ▸ not supported
