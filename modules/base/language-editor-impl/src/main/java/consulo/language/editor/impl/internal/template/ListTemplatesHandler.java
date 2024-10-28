@@ -17,7 +17,6 @@
 package consulo.language.editor.impl.internal.template;
 
 import consulo.application.Application;
-import consulo.application.Result;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.ClientId;
 import consulo.application.util.matcher.PlainPrefixMatcher;
@@ -25,7 +24,6 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.document.Document;
 import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.completion.lookup.*;
 import consulo.language.editor.completion.lookup.event.LookupAdapter;
@@ -40,6 +38,7 @@ import consulo.language.util.AttachmentFactoryUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
@@ -294,23 +293,20 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
             if (item instanceof LiveTemplateLookupElementImpl liveTemplateLookupElement) {
                 final Template template = liveTemplateLookupElement.getTemplate();
                 final String argument = myTemplate2Argument != null ? myTemplate2Argument.get(template) : null;
-                new WriteCommandAction(myProject) {
-                    @Override
-                    @RequiredUIAccess
-                    protected void run(@Nonnull Result result) throws Throwable {
-                        ((TemplateManagerImpl)TemplateManager.getInstance(myProject))
-                            .startTemplateWithPrefix(myEditor, template, null, argument);
-                    }
-                }.execute();
+                CommandProcessor.getInstance().newCommand()
+                    .project(myProject)
+                    .inWriteAction()
+                    .run(
+                        () -> ((TemplateManagerImpl)TemplateManager.getInstance(myProject))
+                            .startTemplateWithPrefix(myEditor, template, null, argument)
+                    );
             }
             else if (item instanceof CustomLiveTemplateLookupElement customLiveTemplateLookupElement) {
                 if (myFile != null) {
-                    new WriteCommandAction(myProject) {
-                        @Override
-                        protected void run(@Nonnull Result result) throws Throwable {
-                            customLiveTemplateLookupElement.expandTemplate(myEditor, myFile);
-                        }
-                    }.execute();
+                    CommandProcessor.getInstance().newCommand()
+                        .project(myProject)
+                        .inWriteAction()
+                        .run(() -> customLiveTemplateLookupElement.expandTemplate(myEditor, myFile));
                 }
             }
         }

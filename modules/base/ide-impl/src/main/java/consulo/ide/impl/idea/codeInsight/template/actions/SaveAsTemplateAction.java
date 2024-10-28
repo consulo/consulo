@@ -54,6 +54,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.undoRedo.CommandProcessor;
 
 import java.util.*;
 
@@ -95,10 +96,10 @@ public class SaveAsTemplateAction extends AnAction {
             substring(startOffset, selection.getEndOffset()));
         final boolean isXml = file.getLanguage().is(ourXmlLanguagePointer.get());
         final int offsetDelta = startOffset;
-        new WriteCommandAction.Simple(project, (String)null) {
-            @Override
-            @RequiredReadAction
-            protected void run() throws Throwable {
+        CommandProcessor.getInstance().newCommand()
+            .project(project)
+            .inWriteAction()
+            .run(() -> {
                 Map<RangeMarker, String> rangeToText = new HashMap<>();
 
                 for (PsiElement element : psiElements) {
@@ -148,8 +149,7 @@ public class SaveAsTemplateAction extends AnAction {
                     final String value = rangeToText.get(marker);
                     document.replaceString(marker.getStartOffset(), marker.getEndOffset(), value);
                 }
-            }
-        }.execute();
+            });
 
         final TemplateImpl template =
             new TemplateImpl(TemplateListPanel.ABBREVIATION, document.getText(), TemplateSettingsImpl.USER_GROUP_NAME);

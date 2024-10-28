@@ -16,7 +16,6 @@
 package consulo.language.editor.refactoring.util;
 
 import consulo.codeEditor.Editor;
-import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.file.FileTypeManager;
@@ -30,6 +29,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.undoRedo.CommandProcessor;
 import consulo.usage.UsageInfo;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
@@ -353,7 +353,11 @@ public class CommonRefactoringUtil {
             }
 
             if (selection == 0 && file != existing) {
-                WriteCommandAction.writeCommandAction(targetDirectory.getProject()).withName(title).run(existing::delete);
+                CommandProcessor.getInstance().newCommand()
+                    .project(targetDirectory.getProject())
+                    .name(LocalizeValue.ofNullable(title))
+                    .inWriteAction()
+                    .run(existing::delete);
             }
             else {
                 return true;

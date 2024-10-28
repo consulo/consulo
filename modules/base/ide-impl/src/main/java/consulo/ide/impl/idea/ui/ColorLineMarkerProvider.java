@@ -24,7 +24,6 @@ import consulo.component.extension.ExtensionPoint;
 import consulo.ide.impl.idea.util.FunctionUtil;
 import consulo.language.Language;
 import consulo.language.editor.Pass;
-import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.gutter.*;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.ElementColorProvider;
@@ -37,6 +36,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.image.ImageKey;
+import consulo.undoRedo.CommandProcessor;
 import jakarta.annotation.Nonnull;
 
 import java.awt.event.MouseEvent;
@@ -78,10 +78,10 @@ public final class ColorLineMarkerProvider implements LineMarkerProvider, DumbAw
                             true,
                             c -> {
                                 if (c != null) {
-                                    WriteCommandAction.runWriteCommandAction(
-                                        element.getProject(),
-                                        () -> colorProvider.setColorTo(element, TargetAWT.from(c))
-                                    );
+                                    CommandProcessor.getInstance().newCommand()
+                                        .project(element.getProject())
+                                        .inWriteAction()
+                                        .run(() -> colorProvider.setColorTo(element, TargetAWT.from(c)));
                                 }
                             }
                         );

@@ -49,7 +49,6 @@ import consulo.ide.impl.idea.ui.dualView.CellWrapper;
 import consulo.ide.impl.idea.ui.dualView.DualView;
 import consulo.ide.impl.idea.ui.dualView.DualViewColumnInfo;
 import consulo.ide.impl.idea.ui.dualView.TreeTableView;
-import consulo.language.editor.WriteCommandAction;
 import consulo.localHistory.LocalHistory;
 import consulo.localHistory.LocalHistoryAction;
 import consulo.localize.LocalizeValue;
@@ -1380,9 +1379,10 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
 
                     project.getApplication().invokeLater(() -> {
                         try {
-                            new WriteCommandAction.Simple(project) {
-                                @Override
-                                protected void run() throws Throwable {
+                            CommandProcessor.getInstance().newCommand()
+                                .project(project)
+                                .inWriteAction()
+                                .run(() -> {
                                     if (file != null &&
                                         !file.isWritable() &&
                                         ReadonlyStatusHandler.getInstance(project).ensureFilesWritable(file).hasReadonlyFiles()) {
@@ -1399,8 +1399,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
                                             UIUtil.getErrorIcon()
                                         );
                                     }
-                                }
-                            }.execute();
+                                });
                             if (file != null) {
                                 VcsDirtyScopeManager.getInstance(project).fileDirty(file);
                             }

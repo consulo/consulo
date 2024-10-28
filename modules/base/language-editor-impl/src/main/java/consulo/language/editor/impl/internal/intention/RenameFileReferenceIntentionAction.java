@@ -15,11 +15,8 @@
  */
 package consulo.language.editor.impl.internal.intention;
 
-import consulo.annotation.access.RequiredReadAction;
-import consulo.application.Result;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.FileModificationService;
-import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.inspection.LocalQuickFix;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.editor.intention.IntentionAction;
@@ -29,6 +26,7 @@ import consulo.language.psi.path.FileReference;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.undoRedo.CommandProcessor;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -65,13 +63,10 @@ public class RenameFileReferenceIntentionAction implements IntentionAction, Loca
     @RequiredUIAccess
     public void applyFix(@Nonnull final Project project, @Nonnull final ProblemDescriptor descriptor) {
         if (isAvailable(project, null, null)) {
-            new WriteCommandAction(project) {
-                @Override
-                @RequiredReadAction
-                protected void run(Result result) throws Throwable {
-                    invoke(project, null, descriptor.getPsiElement().getContainingFile());
-                }
-            }.execute();
+            CommandProcessor.getInstance().newCommand()
+                .project(project)
+                .inWriteAction()
+                .run(() -> invoke(project, null, descriptor.getPsiElement().getContainingFile()));
         }
     }
 

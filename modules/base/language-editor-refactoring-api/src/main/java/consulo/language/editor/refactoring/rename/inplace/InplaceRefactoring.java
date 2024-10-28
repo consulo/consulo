@@ -16,7 +16,6 @@
 package consulo.language.editor.refactoring.rename.inplace;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.Result;
 import consulo.application.util.function.CommonProcessors;
 import consulo.application.util.query.Query;
 import consulo.codeEditor.*;
@@ -34,7 +33,6 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.language.Language;
 import consulo.language.editor.DaemonCodeAnalyzer;
-import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupFocusDegree;
 import consulo.language.editor.completion.lookup.LookupManager;
@@ -371,13 +369,11 @@ public abstract class InplaceRefactoring {
 
         beforeTemplateStart();
 
-        new WriteCommandAction(myProject, getCommandName()) {
-            @Override
-            @RequiredReadAction
-            protected void run(Result result) throws Throwable {
-                startTemplate(builder);
-            }
-        }.execute();
+        CommandProcessor.getInstance().newCommand()
+            .project(myProject)
+            .name(LocalizeValue.ofNullable(getCommandName()))
+            .inWriteAction()
+            .run(() -> startTemplate(builder));
 
         if (myBalloon == null) {
             showBalloon();

@@ -16,7 +16,6 @@
 package consulo.ide.impl.copyright.impl.actions;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.Result;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
@@ -24,11 +23,11 @@ import consulo.language.copyright.UpdateCopyrightsProvider;
 import consulo.language.copyright.config.CopyrightManager;
 import consulo.language.copyright.config.CopyrightProfile;
 import consulo.language.editor.FileModificationService;
-import consulo.language.editor.WriteCommandAction;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
@@ -36,6 +35,7 @@ import consulo.module.content.ModuleFileIndex;
 import consulo.module.content.ModuleRootManager;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.undoRedo.CommandProcessor;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -329,12 +329,11 @@ public abstract class AbstractFileProcessor {
             true,
             myProject
         );
-        new WriteCommandAction(myProject, title) {
-            @Override
-            protected void run(Result result) throws Throwable {
-                writeAction.run();
-            }
-        }.execute();
+        CommandProcessor.getInstance().newCommand()
+            .project(myProject)
+            .name(LocalizeValue.ofNullable(title))
+            .inWriteAction()
+            .run(writeAction);
     }
 
     private static final Logger logger = Logger.getInstance(AbstractFileProcessor.class);

@@ -35,7 +35,6 @@ import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.util.PathUtil;
 import consulo.language.Language;
-import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.highlight.LexerEditorHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighter;
@@ -50,6 +49,7 @@ import consulo.project.internal.ProjectExListener;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.Messages;
+import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.util.UndoConstants;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.FactoryMap;
@@ -152,9 +152,11 @@ public class ConsoleHistoryController {
         return myHelper.getModel();
     }
 
+    @RequiredUIAccess
     public void install() {
         class Listener implements ProjectExListener, FileDocumentManagerListener {
             @Override
+            @RequiredUIAccess
             public void beforeDocumentSaving(@Nonnull Document document) {
                 if (document == myConsole.getEditorDocument()) {
                     saveHistory();
@@ -162,6 +164,7 @@ public class ConsoleHistoryController {
             }
 
             @Override
+            @RequiredUIAccess
             public void saved(@Nonnull Project project) {
                 saveHistory();
             }
@@ -248,9 +251,10 @@ public class ConsoleHistoryController {
         }
         final Editor editor = myConsole.getCurrentEditor();
         final Document document = editor.getDocument();
-        new WriteCommandAction.Simple(myConsole.getProject()) {
-            @Override
-            public void run() {
+        CommandProcessor.getInstance().newCommand()
+            .project(myConsole.getProject())
+            .inWriteAction()
+            .run(() -> {
                 if (storeUserText) {
                     String text = document.getText();
                     if (Comparing.equal(command, text) && myHelper.getContent() != null) {
@@ -281,8 +285,7 @@ public class ConsoleHistoryController {
                 }
                 editor.getCaretModel().moveToOffset(offset);
                 editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
-            }
-        }.execute();
+            });
     }
 
     protected int insertTextMultiline(String text, Editor editor, Document document) {

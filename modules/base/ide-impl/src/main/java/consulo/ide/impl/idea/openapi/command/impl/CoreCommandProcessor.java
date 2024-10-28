@@ -13,6 +13,8 @@ import consulo.undoRedo.CommandDescriptor;
 import consulo.undoRedo.event.CommandEvent;
 import consulo.undoRedo.event.CommandListener;
 import consulo.util.collection.Lists;
+import consulo.util.lang.function.ThrowableSupplier;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -24,8 +26,10 @@ public class CoreCommandProcessor extends CommandProcessorEx {
     private class MyCommandBuilder<R> extends MyStartableCommandBuilder<R> {
         @Override
         @RequiredUIAccess
-        public void run(@RequiredUIAccess @Nonnull Runnable runnable) {
-            executeCommand(build(runnable));
+        public ExecutionResult<R> execute(ThrowableSupplier<R, ? extends Throwable> executable) {
+            SimpleReference<ExecutionResult<R>> result = SimpleReference.create();
+            executeCommand(build(() -> result.set(super.execute(executable))));
+            return result.get();
         }
     }
 
@@ -157,7 +161,8 @@ public class CoreCommandProcessor extends CommandProcessorEx {
 
     @Nonnull
     @Override
-    public StartableCommandBuilder newCommand() {
+    @SuppressWarnings("unchecked")
+    public <R> StartableCommandBuilder<R> newCommand() {
         return new MyCommandBuilder();
     }
 

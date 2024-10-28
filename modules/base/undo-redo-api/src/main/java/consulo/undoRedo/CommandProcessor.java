@@ -11,6 +11,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.builder.CommandBuilder;
+import consulo.undoRedo.builder.RunnableCommandBuilder;
 import consulo.undoRedo.event.CommandListener;
 import consulo.util.lang.EmptyRunnable;
 import consulo.virtualFileSystem.VirtualFile;
@@ -31,7 +32,7 @@ public abstract class CommandProcessor {
     }
 
     @Nonnull
-    public abstract <T> CommandBuilder<T, ? extends CommandBuilder<T, ?>> newCommand();
+    public abstract <T> RunnableCommandBuilder<T, ? extends RunnableCommandBuilder<T, ?>> newCommand();
 
     @Deprecated
     @DeprecationInfo("Use #newCommand().run(Runnable)")

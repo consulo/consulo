@@ -16,11 +16,11 @@
 package consulo.language.editor.template;
 
 import consulo.codeEditor.Editor;
-import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.util.EditorHelper;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.undoRedo.CommandProcessor;
 import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
@@ -65,7 +65,10 @@ public class EditorFileTemplateUtil {
             template.addVariable(variable, null, '"' + defaultValue + '"', true);
         }
 
-        WriteCommandAction.runWriteCommandAction(project, () -> editor.getDocument().setText(template.getTemplateText()));
+        CommandProcessor.getInstance().newCommand()
+            .project(project)
+            .inWriteAction()
+            .run(() -> editor.getDocument().setText(template.getTemplateText()));
 
         editor.getCaretModel().moveToOffset(0);  // ensures caret at the start of the template
         templateManager.startTemplate(editor, template);

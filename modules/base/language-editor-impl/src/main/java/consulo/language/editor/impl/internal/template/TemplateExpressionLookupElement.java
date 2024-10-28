@@ -15,13 +15,11 @@
  */
 package consulo.language.editor.impl.internal.template;
 
-import consulo.application.Result;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.disposer.Disposer;
 import consulo.document.util.TextRange;
 import consulo.language.editor.AutoPopupController;
-import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.completion.CompletionInitializationContext;
 import consulo.language.editor.completion.OffsetMap;
 import consulo.language.editor.completion.lookup.InsertionContext;
@@ -32,7 +30,7 @@ import consulo.language.editor.template.TemplateLookupSelectionHandler;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
+import consulo.undoRedo.CommandProcessor;
 
 import java.util.List;
 
@@ -67,12 +65,10 @@ class TemplateExpressionLookupElement extends LookupElementDecorator<LookupEleme
     void handleTemplateInsert(List<? extends LookupElement> elements, final char completionChar) {
         final InsertionContext context =
             createInsertionContext(this, myState.getPsiFile(), elements, myState.getEditor(), completionChar);
-        new WriteCommandAction(context.getProject()) {
-            @Override
-            protected void run(@Nonnull Result result) throws Throwable {
-                doHandleInsert(context);
-            }
-        }.execute();
+        CommandProcessor.getInstance().newCommand()
+            .project(context.getProject())
+            .inWriteAction()
+            .run(() -> doHandleInsert(context));
         Disposer.dispose(context.getOffsetMap());
 
         if (handleCompletionChar(context) && !myState.isFinished()) {

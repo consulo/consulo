@@ -15,21 +15,20 @@
  */
 package consulo.language.editor.ui.awt;
 
-import consulo.application.Result;
-import consulo.language.editor.WriteCommandAction;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.undoRedo.util.UndoConstants;
-import consulo.logging.Logger;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
-import consulo.virtualFileSystem.fileType.FileType;
+import consulo.document.Document;
 import consulo.language.plain.PlainTextFileType;
-import consulo.project.Project;
-import consulo.ui.ex.awt.ComboBox;
-import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.ComboBox;
+import consulo.undoRedo.CommandProcessor;
+import consulo.undoRedo.util.UndoConstants;
+import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.swing.*;
 
@@ -81,12 +80,10 @@ public class StringComboboxEditor extends EditorComboBoxEditor {
             return;
         }
         final String s = (String)anObject;
-        new WriteCommandAction(myProject) {
-            @Override
-            protected void run(Result result) throws Throwable {
-                getDocument().setText(s);
-            }
-        }.execute();
+        CommandProcessor.getInstance().newCommand()
+            .project(myProject)
+            .inWriteAction()
+            .run(() -> getDocument().setText(s));
 
         final Editor editor = getEditor();
         if (editor != null) {

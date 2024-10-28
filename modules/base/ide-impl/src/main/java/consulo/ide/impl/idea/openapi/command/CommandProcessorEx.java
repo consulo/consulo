@@ -2,13 +2,13 @@
 package consulo.ide.impl.idea.openapi.command;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.ide.impl.idea.openapi.command.impl.BaseCommandBuilder;
+import consulo.ide.impl.idea.openapi.command.impl.BaseExecutableCommandBuilder;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.undoRedo.CommandDescriptor;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.UndoConfirmationPolicy;
-import consulo.undoRedo.builder.CommandBuilder;
+import consulo.undoRedo.builder.RunnableCommandBuilder;
 import consulo.util.lang.EmptyRunnable;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -17,11 +17,11 @@ import jakarta.annotation.Nullable;
  * @author max
  */
 public abstract class CommandProcessorEx extends CommandProcessor {
-    public interface StartableCommandBuilder<R> extends CommandBuilder<R, StartableCommandBuilder<R>> {
+    public interface StartableCommandBuilder<R> extends RunnableCommandBuilder<R, StartableCommandBuilder<R>> {
         CommandToken start();
     }
 
-    protected class MyStartableCommandBuilder<R> extends BaseCommandBuilder<R, StartableCommandBuilder<R>>
+    protected class MyStartableCommandBuilder<R> extends BaseExecutableCommandBuilder<R, StartableCommandBuilder<R>>
         implements StartableCommandBuilder<R> {
         @Override
         public CommandToken start() {

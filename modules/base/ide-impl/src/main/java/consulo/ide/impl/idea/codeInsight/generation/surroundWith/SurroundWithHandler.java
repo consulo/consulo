@@ -19,7 +19,6 @@ import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.Language;
-import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.localize.CodeInsightLocalize;
@@ -44,6 +43,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
+import consulo.undoRedo.CommandProcessor;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -185,7 +185,10 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
             if (elements.length > 0) {
                 for (Surrounder descriptorSurrounder : descriptor.getSurrounders()) {
                     if (surrounder.getClass().equals(descriptorSurrounder.getClass())) {
-                        WriteCommandAction.runWriteCommandAction(project, () -> doSurround(project, editor, surrounder, elements));
+                        CommandProcessor.getInstance().newCommand()
+                            .project(project)
+                            .inWriteAction()
+                            .run(() -> doSurround(project, editor, surrounder, elements));
                         return;
                     }
                 }
@@ -296,7 +299,10 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
             if (myElements != null && myElements.length != 0) {
                 language = myElements[0].getLanguage();
             }
-            WriteCommandAction.runWriteCommandAction(myProject, () -> doSurround(myProject, myEditor, mySurrounder, myElements));
+            CommandProcessor.getInstance().newCommand()
+                .project(myProject)
+                .inWriteAction()
+                .run(() -> doSurround(myProject, myEditor, mySurrounder, myElements));
             //SurroundWithLogger.logSurrounder(mySurrounder, language, myProject);
         }
     }

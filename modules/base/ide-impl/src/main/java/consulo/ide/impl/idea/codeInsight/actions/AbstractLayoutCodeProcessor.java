@@ -545,7 +545,11 @@ public abstract class AbstractLayoutCodeProcessor {
                 ProgressIndicatorProvider.checkCanceled();
 
                 Application.get().invokeAndWait(
-                    () -> WriteCommandAction.runWriteCommandAction(myProject, myCommandName, null, writeTask)
+                    () -> CommandProcessor.getInstance().newCommand()
+                        .project(myProject)
+                        .name(LocalizeValue.ofNullable(myCommandName))
+                        .inWriteAction()
+                        .run(writeTask)
                 );
 
                 checkStop(writeTask, file);

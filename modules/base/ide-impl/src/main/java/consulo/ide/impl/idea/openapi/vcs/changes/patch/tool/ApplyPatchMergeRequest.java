@@ -21,9 +21,9 @@ import consulo.diff.content.DocumentContent;
 import consulo.diff.merge.MergeRequest;
 import consulo.diff.merge.MergeResult;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.AppliedTextPatch;
-import consulo.language.editor.WriteCommandAction;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.undoRedo.CommandProcessor;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -141,12 +141,10 @@ public class ApplyPatchMergeRequest extends MergeRequest implements ApplyPatchRe
         };
 
         if (applyContent != null) {
-            new WriteCommandAction.Simple(myProject) {
-                @Override
-                protected void run() throws Throwable {
-                    myResultContent.getDocument().setText(applyContent);
-                }
-            }.execute();
+            CommandProcessor.getInstance().newCommand()
+                .project(myProject)
+                .inWriteAction()
+                .run(() -> myResultContent.getDocument().setText(applyContent));
         }
 
         if (myCallback != null) {

@@ -698,13 +698,13 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
 
     @RequiredUIAccess
     void restorePrefix(@Nonnull Runnable customRestore) {
-        WriteCommandAction.runWriteCommandAction(
-            getProject(),
-            () -> {
+        CommandProcessor.getInstance().newCommand()
+            .project(getProject())
+            .inWriteAction()
+            .run(() -> {
                 setMergeCommand();
                 customRestore.run();
-            }
-        );
+            });
     }
 
     int nextInvocationCount(int invocation, boolean reused) {

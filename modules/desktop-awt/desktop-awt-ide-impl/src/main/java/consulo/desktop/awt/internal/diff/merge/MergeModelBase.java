@@ -27,8 +27,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.*;
-import consulo.undoRedo.builder.CommandBuilder;
-import consulo.undoRedo.builder.ProxyCommandBuilder;
+import consulo.undoRedo.builder.RunnableCommandBuilder;
 import consulo.util.collection.SmartList;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
@@ -239,37 +238,31 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
 
     @RequiredUIAccess
     @SuppressWarnings({"RequiredXAction", "unchecked"})
-    public <R> CommandBuilder<R, ? extends CommandBuilder<R, ?>> newMergeCommand(@Nullable IntList affectedChanges) {
+    public <R> RunnableCommandBuilder<R, ? extends RunnableCommandBuilder<R, ?>> newMergeCommand(@Nullable IntList affectedChanges) {
         IntList allAffectedChanges = affectedChanges != null ? collectAffectedChanges(affectedChanges) : null;
 
-        CommandBuilder commandBuilder = DiffImplUtil.newWriteCommand()
+        return (RunnableCommandBuilder<R, ? extends RunnableCommandBuilder<R,?>>)DiffImplUtil.newWriteCommand()
             .project(myProject)
-            .document(myDocument);
+            .document(myDocument)
+            .proxy(runnable -> {
+                LOG.assertTrue(!myInsideCommand);
 
-        return new ProxyCommandBuilder(commandBuilder) {
-            @Override
-            public void run(@Nonnull Runnable runnable) {
-                super.run(() -> {
-                    LOG.assertTrue(!myInsideCommand);
+                // We should restore states after changes in document (by DocumentUndoProvider) to avoid corruption by our onBeforeDocumentChange()
+                // Undo actions are performed in backward order, while redo actions are performed in forward order.
+                // Thus we should register two UndoableActions.
 
-                    // We should restore states after changes in document (by DocumentUndoProvider) to avoid corruption by our onBeforeDocumentChange()
-                    // Undo actions are performed in backward order, while redo actions are performed in forward order.
-                    // Thus we should register two UndoableActions.
-
-                    myInsideCommand = true;
-                    enterBulkChangeUpdateBlock();
-                    registerUndoRedo(true, allAffectedChanges);
-                    try {
-                        runnable.run();
-                    }
-                    finally {
-                        registerUndoRedo(false, allAffectedChanges);
-                        exitBulkChangeUpdateBlock();
-                        myInsideCommand = false;
-                    }
-                });
-            }
-        };
+                myInsideCommand = true;
+                enterBulkChangeUpdateBlock();
+                registerUndoRedo(true, allAffectedChanges);
+                try {
+                    runnable.run();
+                }
+                finally {
+                    registerUndoRedo(false, allAffectedChanges);
+                    exitBulkChangeUpdateBlock();
+                    myInsideCommand = false;
+                }
+            });
     }
 
     @Deprecated(forRemoval = true)

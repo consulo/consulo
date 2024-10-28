@@ -15,12 +15,11 @@
  */
 package consulo.ide.impl.idea.codeStyle;
 
-import consulo.application.Result;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.util.LineSeparator;
-import consulo.language.editor.WriteCommandAction;
+import consulo.undoRedo.CommandProcessor;
 import consulo.virtualFileSystem.internal.LoadTextUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -150,16 +149,17 @@ public abstract class AbstractConvertLineSeparatorsAction extends AnAction {
             );
         }
 
-        new WriteCommandAction(project, commandText) {
-            @Override
-            protected void run(@Nonnull Result result) throws Throwable {
+        CommandProcessor.getInstance().newCommand()
+            .project(project)
+            .name(LocalizeValue.ofNullable(commandText))
+            .inWriteAction()
+            .run(() -> {
                 try {
-                    LoadTextUtil.changeLineSeparators(project, virtualFile, newSeparator, this);
+                    LoadTextUtil.changeLineSeparators(project, virtualFile, newSeparator, AbstractConvertLineSeparatorsAction.class);
                 }
                 catch (IOException e) {
                     LOG.info(e);
                 }
-            }
-        }.execute();
+            });
     }
 }

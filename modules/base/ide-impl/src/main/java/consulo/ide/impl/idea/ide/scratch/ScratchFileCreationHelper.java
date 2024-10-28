@@ -12,18 +12,17 @@ import consulo.ide.IdeView;
 import consulo.ide.impl.idea.util.PathUtil;
 import consulo.language.Language;
 import consulo.language.codeStyle.CodeStyleManager;
-import consulo.language.editor.WriteCommandAction;
-import consulo.language.scratch.ScratchFileService;
 import consulo.language.extension.ByLanguageValue;
 import consulo.language.extension.LanguageExtension;
 import consulo.language.extension.LanguageOneToOne;
 import consulo.language.file.LanguageFileType;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
+import consulo.language.scratch.ScratchFileService;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -88,15 +87,15 @@ public abstract class ScratchFileCreationHelper implements LanguageExtension {
     @Nonnull
     @RequiredUIAccess
     public static String reformat(@Nonnull Project project, @Nonnull Language language, @Nonnull String text) {
-        return WriteCommandAction.runWriteCommandAction(
-            project,
-            (Supplier<String>)() -> {
+        return CommandProcessor.getInstance().<String>newCommand()
+            .project(project)
+            .inWriteAction()
+            .compute(() -> {
                 PsiFile psi = parseHeader(project, language, text);
                 if (psi != null) {
                     CodeStyleManager.getInstance(project).reformat(psi);
                 }
                 return psi == null ? text : psi.getText();
-            }
-        );
+            });
     }
 }

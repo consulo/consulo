@@ -19,12 +19,10 @@
  */
 package consulo.language.editor.impl.intention;
 
-import consulo.application.Result;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.FileEditorManager;
-import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.inspection.LocalQuickFix;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.editor.intention.SyntheticIntentionAction;
@@ -34,6 +32,7 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.Alerts;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.undoRedo.CommandProcessor;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
@@ -72,12 +71,10 @@ public class RenameFileFix implements SyntheticIntentionAction, LocalQuickFix {
     public void applyFix(@Nonnull final Project project, @Nonnull ProblemDescriptor descriptor) {
         final PsiFile file = descriptor.getPsiElement().getContainingFile();
         if (isAvailable(project, null, file)) {
-            new WriteCommandAction(project) {
-                @Override
-                protected void run(Result result) throws Throwable {
-                    invoke(project, FileEditorManager.getInstance(project).getSelectedTextEditor(), file);
-                }
-            }.execute();
+            CommandProcessor.getInstance().newCommand()
+                .project(project)
+                .inWriteAction()
+                .run(() -> invoke(project, FileEditorManager.getInstance(project).getSelectedTextEditor(), file));
         }
     }
 

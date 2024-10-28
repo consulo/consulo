@@ -27,6 +27,7 @@ import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
+import consulo.undoRedo.CommandProcessor;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -117,29 +118,18 @@ public class BinaryMergeRequestImpl extends BinaryMergeRequest {
     @Override
     @RequiredUIAccess
     public void applyResult(@Nonnull MergeResult result) {
-        final byte[] applyContent;
-        switch (result) {
-            case CANCEL:
-                applyContent = myOriginalContent;
-                break;
-            case LEFT:
-                applyContent = ThreeSide.LEFT.select(myByteContents);
-                break;
-            case RIGHT:
-                applyContent = ThreeSide.RIGHT.select(myByteContents);
-                break;
-            case RESOLVED:
-                applyContent = null;
-                break;
-            default:
-                throw new IllegalArgumentException(result.toString());
-        }
+        final byte[] applyContent = switch (result) {
+            case CANCEL -> myOriginalContent;
+            case LEFT -> ThreeSide.LEFT.select(myByteContents);
+            case RIGHT -> ThreeSide.RIGHT.select(myByteContents);
+            case RESOLVED -> null;
+            default -> throw new IllegalArgumentException(result.toString());
+        };
 
         if (applyContent != null) {
-            new WriteCommandAction.Simple(null) {
-                @Override
-                @RequiredUIAccess
-                protected void run() throws Throwable {
+            CommandProcessor.getInstance().newCommand()
+                .inWriteAction()
+                .run(() -> {
                     try {
                         VirtualFile file = myFile.getFile();
                         if (!DiffImplUtil.makeWritable(myProject, file)) {
@@ -151,8 +141,7 @@ public class BinaryMergeRequestImpl extends BinaryMergeRequest {
                         LOG.error(e);
                         Messages.showErrorDialog(myProject, "Can't apply result", CommonLocalize.titleError().get());
                     }
-                }
-            }.execute();
+                });
         }
 
         if (myApplyCallback != null) {

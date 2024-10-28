@@ -56,7 +56,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.undoRedo.builder.CommandBuilder;
+import consulo.undoRedo.builder.RunnableCommandBuilder;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
@@ -451,7 +451,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
     }
 
     @RequiredUIAccess
-    CommandBuilder newPatchCommand() {
+    <R> RunnableCommandBuilder<R, ? extends RunnableCommandBuilder> newPatchCommand() {
         return myModel.newMergeCommand(null);
     }
 

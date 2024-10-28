@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.refactoring.changeSignature.inplace;
 
-import consulo.application.Result;
 import consulo.codeEditor.*;
 import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.codeEditor.markup.HighlighterTargetArea;
@@ -29,7 +28,6 @@ import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.document.util.TextRange;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
-import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.highlight.HighlightManager;
 import consulo.language.editor.refactoring.changeSignature.ChangeInfo;
 import consulo.language.editor.refactoring.changeSignature.ChangeSignatureHandler;
@@ -50,6 +48,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.BalloonBuilder;
 import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.internal.FinishMarkAction;
 import consulo.undoRedo.internal.StartMarkAction;
 import consulo.util.dataholder.Key;
@@ -219,12 +218,9 @@ public class InplaceChangeSignature implements DocumentListener {
         String methodSignature = myDetector.getMethodSignaturePreview(changeInfo, deleteRanges, newRanges);
 
         myPreview.getMarkupModel().removeAllHighlighters();
-        new WriteCommandAction(null) {
-            @Override
-            protected void run(@Nonnull Result result) throws Throwable {
-                myPreview.getDocument().replaceString(0, myPreview.getDocument().getTextLength(), methodSignature);
-            }
-        }.execute();
+        CommandProcessor.getInstance().newCommand()
+            .inWriteAction()
+            .run(() -> myPreview.getDocument().replaceString(0, myPreview.getDocument().getTextLength(), methodSignature));
         TextAttributes deprecatedAttributes =
             EditorColorsManager.getInstance().getGlobalScheme().getAttributes(CodeInsightColors.DEPRECATED_ATTRIBUTES);
         for (TextRange range : deleteRanges) {
@@ -305,12 +301,12 @@ public class InplaceChangeSignature implements DocumentListener {
         final String initialSignature,
         Project project
     ) {
-        WriteCommandAction.runWriteCommandAction(
-            project,
-            () -> {
+        CommandProcessor.getInstance().newCommand()
+            .project(project)
+            .inWriteAction()
+            .run(() -> {
                 document.replaceString(signatureRange.getStartOffset(), signatureRange.getEndOffset(), initialSignature);
                 PsiDocumentManager.getInstance(project).commitDocument(document);
-            }
-        );
+            });
     }
 }

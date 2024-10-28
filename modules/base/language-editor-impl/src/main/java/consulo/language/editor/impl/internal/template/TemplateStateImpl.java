@@ -43,7 +43,6 @@ import consulo.document.util.DocumentUtil;
 import consulo.document.util.TextRange;
 import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.editor.CodeInsightSettings;
-import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupEx;
@@ -761,9 +760,10 @@ public class TemplateStateImpl implements TemplateState {
 
         fixOverlappedSegments(myCurrentSegmentNumber);
 
-        WriteCommandAction.runWriteCommandAction(
-            myProject,
-            () -> {
+        CommandProcessor.getInstance().newCommand()
+            .project(myProject)
+            .inWriteAction()
+            .run(() -> {
                 if (isDisposed()) {
                     return;
                 }
@@ -818,8 +818,7 @@ public class TemplateStateImpl implements TemplateState {
                     }
                 }
                 while (!calcedSegments.isEmpty() && maxAttempts >= 0);
-            }
-        );
+            });
     }
 
     private static class TemplateDocumentChange {

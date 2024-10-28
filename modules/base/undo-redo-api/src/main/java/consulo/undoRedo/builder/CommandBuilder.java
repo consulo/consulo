@@ -15,25 +15,19 @@
  */
 package consulo.undoRedo.builder;
 
-import consulo.application.Application;
 import consulo.document.Document;
-import consulo.document.util.DocumentUtil;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandDescriptor;
-import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.UndoConfirmationPolicy;
-import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
-
-import java.util.function.Supplier;
 
 /**
  * @author UNV
  * @since 2024-10-21
  */
-public interface CommandBuilder<R, THIS extends CommandBuilder<R, THIS>> {
+public interface CommandBuilder<THIS extends CommandBuilder<THIS>> {
     THIS name(@Nonnull LocalizeValue name);
 
     THIS groupId(Object groupId);
@@ -46,74 +40,7 @@ public interface CommandBuilder<R, THIS extends CommandBuilder<R, THIS>> {
 
     THIS shouldRecordActionForActiveDocument(boolean shouldRecordActionForActiveDocument);
 
-    /* Context methods: execute in specific context */
-
-    @SuppressWarnings("unchecked")
-    default THIS inLater() {
-        return (THIS)new ProxyCommandBuilder(this) {
-            @Override
-            @RequiredUIAccess
-            public void run(@Nonnull Runnable runnable) {
-                Application.get().invokeLater(runnable);
-            }
-        };
-    }
-
-    @SuppressWarnings("unchecked")
-    default THIS inWriteAction() {
-        return (THIS)new ProxyCommandBuilder(this) {
-            @Override
-            @RequiredUIAccess
-            public void run(@Nonnull Runnable runnable) {
-                Application.get().runWriteAction(runnable);
-            }
-        };
-    }
-
-    @SuppressWarnings("unchecked")
-    default THIS inBulkUpdate() {
-        return (THIS)new ProxyCommandBuilder(this) {
-            @Override
-            @RequiredUIAccess
-            public void run(@Nonnull Runnable runnable) {
-                super.run(() -> DocumentUtil.executeInBulk(build(runnable).document(), true, runnable));
-            }
-        };
-    }
-
-    @SuppressWarnings("unchecked")
-    default THIS inBulkUpdateIf(boolean inBulkUpdate) {
-        return inBulkUpdate ? inBulkUpdate() : (THIS)this;
-    }
-
-    @SuppressWarnings("unchecked")
-    default THIS inGlobalUndoAction() {
-        return (THIS)new ProxyCommandBuilder(this) {
-            @Override
-            public void run(@Nonnull Runnable runnable) {
-                CommandDescriptor descriptor = build(runnable);
-                super.run(() -> {
-                    CommandProcessor.getInstance().markCurrentCommandAsGlobal(descriptor.project());
-                    runnable.run();
-                });
-            }
-        };
-    }
-
-    @SuppressWarnings("unchecked")
-    default THIS inGlobalUndoActionIf(boolean globalUndoAction) {
-        return globalUndoAction ? inGlobalUndoAction() : (THIS)this;
-    }
-
     /* Finishing methods */
 
     CommandDescriptor build(@RequiredUIAccess @Nonnull Runnable command);
-
-    void run(@RequiredUIAccess @Nonnull Runnable runnable);
-
-    default R compute(@RequiredUIAccess @Nonnull Supplier<R> supplier) {
-        SimpleReference<R> result = SimpleReference.create();
-        run(() -> result.set(supplier.get()));
-        return result.get();
-    }
 }

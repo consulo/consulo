@@ -15,6 +15,7 @@ import consulo.ui.ex.awt.EmptyIcon;
 import consulo.ui.ex.popup.*;
 import consulo.ui.image.Image;
 import consulo.undoRedo.BasicUndoableAction;
+import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.ProjectUndoManager;
 import consulo.undoRedo.UnexpectedUndoException;
 import consulo.util.collection.ArrayUtil;
@@ -63,16 +64,24 @@ public abstract class LRUPopupBuilder<T> {
     ) {
         VirtualFile[] filesCopy = VfsUtilCore.toVirtualFileArray(JBIterable.from(files).toList());
         Arrays.sort(filesCopy, (o1, o2) -> StringUtil.compare(o1.getName(), o2.getName(), !o1.getFileSystem().isCaseSensitive()));
-        return forFileLanguages(project, title, null, t -> {
-            try {
-                WriteCommandAction.writeCommandAction(project)
-                    .withName(LanguageLocalize.commandNameChangeLanguage().get())
-                    .run(() -> changeLanguageWithUndo(project, t, filesCopy, mappings));
+        return forFileLanguages(
+            project,
+            title,
+            null,
+            t -> {
+                try {
+                    CommandProcessor.getInstance().newCommand()
+                        .project(project)
+                        .name(LanguageLocalize.commandNameChangeLanguage())
+                        .inWriteAction()
+                        .canThrow(UnexpectedUndoException.class)
+                        .run(() -> changeLanguageWithUndo(project, t, filesCopy, mappings));
+                }
+                catch (UnexpectedUndoException e) {
+                    LOG.error(e);
+                }
             }
-            catch (UnexpectedUndoException e) {
-                LOG.error(e);
-            }
-        });
+        );
     }
 
     /**

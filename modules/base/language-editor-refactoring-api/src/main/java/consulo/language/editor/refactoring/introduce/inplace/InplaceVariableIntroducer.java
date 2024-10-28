@@ -16,13 +16,11 @@
 package consulo.language.editor.refactoring.introduce.inplace;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.Result;
 import consulo.codeEditor.Editor;
 import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.TokenSeparatorGenerator;
-import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementBuilder;
 import consulo.language.editor.refactoring.rename.NameSuggestionProvider;
@@ -38,12 +36,13 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiElementPointer;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.internal.StartMarkAction;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
-
 import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
@@ -79,12 +78,11 @@ public abstract class InplaceVariableIntroducer<E extends PsiElement> extends In
             final ASTNode astNode =
                 TokenSeparatorGenerator.forLanguage(expr.getLanguage()).generateWhitespaceBetweenTokens(node.getTreePrev(), node);
             if (astNode != null) {
-                new WriteCommandAction<Object>(project, "Normalize declaration") {
-                    @Override
-                    protected void run(Result<Object> result) throws Throwable {
-                        node.getTreeParent().addChild(astNode, node);
-                    }
-                }.execute();
+                CommandProcessor.getInstance().newCommand()
+                    .project(project)
+                    .name(LocalizeValue.ofNullable("Normalize declaration"))
+                    .inWriteAction()
+                    .run(() -> node.getTreeParent().addChild(astNode, node));
             }
             myExpr = expr;
         }

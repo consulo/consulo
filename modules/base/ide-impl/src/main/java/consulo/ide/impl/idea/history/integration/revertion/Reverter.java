@@ -21,10 +21,10 @@ import consulo.ide.impl.idea.history.core.changes.StructuralChange;
 import consulo.ide.impl.idea.history.core.revisions.Revision;
 import consulo.ide.impl.idea.history.integration.IdeaGateway;
 import consulo.ide.impl.idea.history.integration.LocalHistoryBundle;
-import consulo.application.Result;
-import consulo.language.editor.WriteCommandAction;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.undoRedo.CommandProcessor;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.util.diff.FilesTooBigForDiffException;
 import consulo.application.util.DateFormatUtil;
@@ -77,23 +77,21 @@ public abstract class Reverter {
 
     @RequiredUIAccess
     public void revert() throws IOException {
-        try {
-            new WriteCommandAction(myProject, getCommandName()) {
-                @Override
-                protected void run(Result objectResult) throws Throwable {
-                    myGateway.saveAllUnsavedDocuments();
+        CommandProcessor.getInstance().newCommand()
+            .project(myProject)
+            .name(LocalizeValue.ofNullable(getCommandName()))
+            .inWriteAction()
+            .canThrow(IOException.class)
+            .run(() -> {
+                myGateway.saveAllUnsavedDocuments();
+                try {
                     doRevert();
-                    myGateway.saveAllUnsavedDocuments();
                 }
-            }.execute();
-        }
-        catch (RuntimeException e) {
-            Throwable cause = e.getCause();
-            if (cause instanceof IOException ioe) {
-                throw ioe;
-            }
-            throw e;
-        }
+                catch (FilesTooBigForDiffException e) {
+                    throw new RuntimeException(e);
+                }
+                myGateway.saveAllUnsavedDocuments();
+            });
     }
 
     public String getCommandName() {

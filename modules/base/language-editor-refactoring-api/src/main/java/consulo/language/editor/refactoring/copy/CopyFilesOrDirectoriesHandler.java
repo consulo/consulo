@@ -18,8 +18,6 @@ package consulo.language.editor.refactoring.copy;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
-import consulo.application.Result;
-import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.refactoring.internal.RefactoringInternalHelper;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.move.fileOrDirectory.MoveFilesOrDirectoriesUtil;
@@ -329,9 +327,11 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
             if (checkFileExist(targetDirectory, choice, file, name, "Copy")) {
                 return null;
             }
-            return new WriteCommandAction<PsiFile>(targetDirectory.getProject(), title) {
-                @Override
-                protected void run(@Nonnull Result<PsiFile> result) throws Throwable {
+            return CommandProcessor.getInstance().<PsiFile>newCommand()
+                .project(targetDirectory.getProject())
+                .name(LocalizeValue.ofNullable(title))
+                .inWriteAction()
+                .compute(() -> {
                     PsiFile returnFile = targetDirectory.copyFileFrom(name, file);
 
                     Module module = NewFileModuleResolver.resolveModule(
@@ -345,9 +345,8 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
                         modifiableModel.addContentEntry(returnFile.getVirtualFile());
                         modifiableModel.commit();
                     }
-                    result.setResult(returnFile);
-                }
-            }.execute().getResultObject();
+                    return returnFile;
+                });
         }
         else if (elementToCopy instanceof PsiDirectory directory) {
             if (directory.equals(targetDirectory)) {
@@ -360,12 +359,11 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
             final PsiDirectory subdirectory;
             if (existing == null) {
                 String finalNewName = newName;
-                subdirectory = new WriteCommandAction<PsiDirectory>(targetDirectory.getProject(), title) {
-                    @Override
-                    protected void run(@Nonnull Result<PsiDirectory> result) throws Throwable {
-                        result.setResult(targetDirectory.createSubdirectory(finalNewName));
-                    }
-                }.execute().getResultObject();
+                subdirectory = CommandProcessor.getInstance().<PsiDirectory>newCommand()
+                    .project(targetDirectory.getProject())
+                    .name(LocalizeValue.ofNullable(title))
+                    .inWriteAction()
+                    .compute(() -> targetDirectory.createSubdirectory(finalNewName));
             }
             else {
                 subdirectory = existing;
