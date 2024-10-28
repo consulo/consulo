@@ -16,7 +16,6 @@
 package consulo.language.editor.refactoring.util;
 
 import consulo.codeEditor.Editor;
-import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.file.FileTypeManager;
@@ -30,6 +29,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.undoRedo.CommandProcessor;
 import consulo.usage.UsageInfo;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
@@ -50,299 +50,320 @@ import java.util.HashSet;
  * @author ven
  */
 public class CommonRefactoringUtil {
-  private CommonRefactoringUtil() { }
-
-  @RequiredUIAccess
-  public static void showErrorMessage(String title, String message, @Nullable String helpId, @Nonnull Project project) {
-    if (project.getApplication().isUnitTestMode()) throw new RuntimeException(message);
-    RefactoringMessageDialog dialog =
-      new RefactoringMessageDialog(title, message, helpId, "OptionPane.errorIcon", false, project);
-    dialog.show();
-  }
-
-  // order of usages across different files is irrelevant
-  public static void sortDepthFirstRightLeftOrder(final UsageInfo[] usages) {
-    Arrays.sort(usages, (usage1, usage2) -> {
-      PsiElement element1 = usage1.getElement(), element2 = usage2.getElement();
-      if (element1 == element2) return 0;
-      if (element1 == null) return 1;
-      if (element2 == null) return -1;
-      return element2.getTextRange().getStartOffset() - element1.getTextRange().getStartOffset();
-    });
-  }
-
-  /**
-   * Fatal refactoring problem during unit test run. Corresponds to message of modal dialog shown during user driven refactoring.
-   */
-  public static class RefactoringErrorHintException extends RuntimeException {
-    public RefactoringErrorHintException(String message) {
-      super(message);
-    }
-  }
-
-  @RequiredUIAccess
-  public static void showErrorHint(
-    @Nonnull Project project,
-    @Nullable Editor editor,
-    @Nonnull @Nls String message,
-    @Nonnull @Nls String title,
-    @Nullable String helpId
-  ) {
-    if (project.getApplication().isUnitTestMode()) throw new RefactoringErrorHintException(message);
-
-    project.getApplication().invokeLater(() -> {
-      if (editor == null || editor.getComponent().getRootPane() == null) {
-        showErrorMessage(title, message, helpId, project);
-      }
-      else {
-        HintManager.getInstance().showErrorHint(editor, message);
-      }
-    });
-  }
-
-  public static String htmlEmphasize(@Nonnull String text) {
-    return StringUtil.htmlEmphasize(text);
-  }
-
-  @RequiredUIAccess
-  public static boolean checkReadOnlyStatus(@Nonnull PsiElement element) {
-    final VirtualFile file = element.getContainingFile().getVirtualFile();
-    return file != null && !ReadonlyStatusHandler.getInstance(element.getProject()).ensureFilesWritable(file).hasReadonlyFiles();
-  }
-
-  @RequiredUIAccess
-  public static boolean checkReadOnlyStatus(@Nonnull Project project, @Nonnull PsiElement element) {
-    return checkReadOnlyStatus(element, project, RefactoringLocalize.refactoringCannotBePerformed().get());
-  }
-
-  @RequiredUIAccess
-  public static boolean checkReadOnlyStatus(@Nonnull Project project, @Nonnull PsiElement... elements) {
-    return checkReadOnlyStatus(
-      project,
-      Collections.<PsiElement>emptySet(),
-      Arrays.asList(elements),
-      RefactoringLocalize.refactoringCannotBePerformed().get(),
-      true
-    );
-  }
-
-  @RequiredUIAccess
-  public static boolean checkReadOnlyStatus(
-    @Nonnull Project project,
-    @Nonnull Collection<? extends PsiElement> elements,
-    boolean notifyOnFail
-  ) {
-    return checkReadOnlyStatus(
-      project,
-      Collections.<PsiElement>emptySet(),
-      elements,
-      RefactoringLocalize.refactoringCannotBePerformed().get(),
-      notifyOnFail
-    );
-  }
-
-  @RequiredUIAccess
-  public static boolean checkReadOnlyStatus(@Nonnull PsiElement element, @Nonnull Project project, @Nonnull String messagePrefix) {
-    return element.isWritable()
-      || checkReadOnlyStatus(project, Collections.<PsiElement>emptySet(), Collections.singleton(element), messagePrefix, true);
-  }
-
-  @RequiredUIAccess
-  public static boolean checkReadOnlyStatusRecursively(@Nonnull Project project, @Nonnull Collection<? extends PsiElement> elements) {
-    return checkReadOnlyStatus(
-      project,
-      elements,
-      Collections.<PsiElement>emptySet(),
-      RefactoringLocalize.refactoringCannotBePerformed().get(),
-      false
-    );
-  }
-
-  @RequiredUIAccess
-  public static boolean checkReadOnlyStatusRecursively(
-    @Nonnull Project project,
-    @Nonnull Collection<? extends PsiElement> elements,
-    boolean notifyOnFail
-  ) {
-    return checkReadOnlyStatus(
-      project,
-      elements,
-      Collections.<PsiElement>emptySet(),
-      RefactoringLocalize.refactoringCannotBePerformed().get(),
-      notifyOnFail
-    );
-  }
-
-  @RequiredUIAccess
-  public static boolean checkReadOnlyStatus(
-    @Nonnull Project project,
-    @Nonnull Collection<? extends PsiElement> recursive,
-    @Nonnull Collection<? extends PsiElement> flat,
-    boolean notifyOnFail
-  ) {
-    return checkReadOnlyStatus(project, recursive, flat, RefactoringLocalize.refactoringCannotBePerformed().get(), notifyOnFail);
-  }
-
-  @RequiredUIAccess
-  private static boolean checkReadOnlyStatus(
-    @Nonnull Project project,
-    @Nonnull Collection<? extends PsiElement> recursive,
-    @Nonnull Collection<? extends PsiElement> flat,
-    @Nonnull String messagePrefix,
-    boolean notifyOnFail
-  ) {
-    Collection<VirtualFile> readonly = new HashSet<>();  // not writable, but could be checked out
-    Collection<VirtualFile> failed = new HashSet<>();  // those located in read-only filesystem
-
-    boolean seenNonWritablePsiFilesWithoutVirtualFile =
-            checkReadOnlyStatus(flat, false, readonly, failed) || checkReadOnlyStatus(recursive, true, readonly, failed);
-
-    ReadonlyStatusHandler.OperationStatus status = ReadonlyStatusHandler.getInstance(project).ensureFilesWritable(readonly);
-    ContainerUtil.addAll(failed, status.getReadonlyFiles());
-
-    if (notifyOnFail && (!failed.isEmpty() || seenNonWritablePsiFilesWithoutVirtualFile && readonly.isEmpty())) {
-      StringBuilder message = new StringBuilder(messagePrefix).append('\n');
-      int i = 0;
-      for (VirtualFile virtualFile : failed) {
-        LocalizeValue subj = virtualFile.isDirectory()
-          ? RefactoringLocalize.directoryDescription(virtualFile.getPresentableUrl())
-          : RefactoringLocalize.fileDescription(virtualFile.getPresentableUrl());
-        if (virtualFile.getFileSystem().isReadOnly()) {
-          message.append(RefactoringLocalize.zeroIsLocatedInAArchiveFile(subj).get()).append('\n');
-        }
-        else {
-          message.append(RefactoringLocalize.zeroIsReadOnly(subj).get()).append('\n');
-        }
-        if (i++ > 20) {
-          message.append("...\n");
-          break;
-        }
-      }
-      showErrorMessage(RefactoringLocalize.errorTitle().get(), message.toString(), null, project);
-      return false;
+    private CommonRefactoringUtil() {
     }
 
-    return failed.isEmpty();
-  }
+    @RequiredUIAccess
+    public static void showErrorMessage(String title, String message, @Nullable String helpId, @Nonnull Project project) {
+        if (project.getApplication().isUnitTestMode()) {
+            throw new RuntimeException(message);
+        }
+        RefactoringMessageDialog dialog =
+            new RefactoringMessageDialog(title, message, helpId, "OptionPane.errorIcon", false, project);
+        dialog.show();
+    }
 
-  private static boolean checkReadOnlyStatus(
-    Collection<? extends PsiElement> elements,
-    boolean recursively,
-    Collection<VirtualFile> readonly,
-    Collection<VirtualFile> failed
-  ) {
-    boolean seenNonWritablePsiFilesWithoutVirtualFile = false;
+    // order of usages across different files is irrelevant
+    public static void sortDepthFirstRightLeftOrder(final UsageInfo[] usages) {
+        Arrays.sort(usages, (usage1, usage2) -> {
+            PsiElement element1 = usage1.getElement(), element2 = usage2.getElement();
+            if (element1 == element2) {
+                return 0;
+            }
+            if (element1 == null) {
+                return 1;
+            }
+            if (element2 == null) {
+                return -1;
+            }
+            return element2.getTextRange().getStartOffset() - element1.getTextRange().getStartOffset();
+        });
+    }
 
-    for (PsiElement element : elements) {
-      if (element instanceof PsiDirectory) {
-        final PsiDirectory dir = (PsiDirectory)element;
-        final VirtualFile vFile = dir.getVirtualFile();
-        if (vFile.getFileSystem().isReadOnly()) {
-          failed.add(vFile);
+    /**
+     * Fatal refactoring problem during unit test run. Corresponds to message of modal dialog shown during user driven refactoring.
+     */
+    public static class RefactoringErrorHintException extends RuntimeException {
+        public RefactoringErrorHintException(String message) {
+            super(message);
         }
-        else if (recursively) {
-          collectReadOnlyFiles(vFile, readonly);
+    }
+
+    @RequiredUIAccess
+    public static void showErrorHint(
+        @Nonnull Project project,
+        @Nullable Editor editor,
+        @Nonnull @Nls String message,
+        @Nonnull @Nls String title,
+        @Nullable String helpId
+    ) {
+        if (project.getApplication().isUnitTestMode()) {
+            throw new RefactoringErrorHintException(message);
         }
-        else {
-          readonly.add(vFile);
-        }
-      }
-      else if (element instanceof PsiDirectoryContainer) {
-        final PsiDirectory[] directories = ((PsiDirectoryContainer)element).getDirectories();
-        for (PsiDirectory directory : directories) {
-          VirtualFile virtualFile = directory.getVirtualFile();
-          if (recursively) {
-            if (virtualFile.getFileSystem().isReadOnly()) {
-              failed.add(virtualFile);
+
+        project.getApplication().invokeLater(() -> {
+            if (editor == null || editor.getComponent().getRootPane() == null) {
+                showErrorMessage(title, message, helpId, project);
             }
             else {
-              collectReadOnlyFiles(virtualFile, readonly);
+                HintManager.getInstance().showErrorHint(editor, message);
             }
-          }
-          else if (virtualFile.getFileSystem().isReadOnly()) {
-            failed.add(virtualFile);
-          }
-          else {
-            readonly.add(virtualFile);
-          }
-        }
-      }
-      else {
-        PsiFile file = element.getContainingFile();
-        if (file == null) {
-          if (!element.isWritable()) {
-            seenNonWritablePsiFilesWithoutVirtualFile = true;
-          }
-        }
-        else {
-          final VirtualFile vFile = file.getVirtualFile();
-          if (vFile != null) {
-            readonly.add(vFile);
-          }
-          else if (!element.isWritable()) {
-            seenNonWritablePsiFilesWithoutVirtualFile = true;
-          }
-        }
-      }
+        });
     }
 
-    return seenNonWritablePsiFilesWithoutVirtualFile;
-  }
+    public static String htmlEmphasize(@Nonnull String text) {
+        return StringUtil.htmlEmphasize(text);
+    }
 
-  public static void collectReadOnlyFiles(@Nonnull VirtualFile vFile, @Nonnull final Collection<VirtualFile> list) {
-    final FileTypeManager fileTypeManager = FileTypeManager.getInstance();
+    @RequiredUIAccess
+    public static boolean checkReadOnlyStatus(@Nonnull PsiElement element) {
+        final VirtualFile file = element.getContainingFile().getVirtualFile();
+        return file != null && !ReadonlyStatusHandler.getInstance(element.getProject()).ensureFilesWritable(file).hasReadonlyFiles();
+    }
 
-    VirtualFileUtil.visitChildrenRecursively(vFile, new VirtualFileVisitor(VirtualFileVisitor.NO_FOLLOW_SYMLINKS) {
-      @Override
-      public boolean visitFile(@Nonnull VirtualFile file) {
-        final boolean ignored = fileTypeManager.isFileIgnored(file);
-        if (!file.isWritable() && !ignored) {
-          list.add(file);
+    @RequiredUIAccess
+    public static boolean checkReadOnlyStatus(@Nonnull Project project, @Nonnull PsiElement element) {
+        return checkReadOnlyStatus(element, project, RefactoringLocalize.refactoringCannotBePerformed().get());
+    }
+
+    @RequiredUIAccess
+    public static boolean checkReadOnlyStatus(@Nonnull Project project, @Nonnull PsiElement... elements) {
+        return checkReadOnlyStatus(
+            project,
+            Collections.<PsiElement>emptySet(),
+            Arrays.asList(elements),
+            RefactoringLocalize.refactoringCannotBePerformed().get(),
+            true
+        );
+    }
+
+    @RequiredUIAccess
+    public static boolean checkReadOnlyStatus(
+        @Nonnull Project project,
+        @Nonnull Collection<? extends PsiElement> elements,
+        boolean notifyOnFail
+    ) {
+        return checkReadOnlyStatus(
+            project,
+            Collections.<PsiElement>emptySet(),
+            elements,
+            RefactoringLocalize.refactoringCannotBePerformed().get(),
+            notifyOnFail
+        );
+    }
+
+    @RequiredUIAccess
+    public static boolean checkReadOnlyStatus(@Nonnull PsiElement element, @Nonnull Project project, @Nonnull String messagePrefix) {
+        return element.isWritable()
+            || checkReadOnlyStatus(project, Collections.<PsiElement>emptySet(), Collections.singleton(element), messagePrefix, true);
+    }
+
+    @RequiredUIAccess
+    public static boolean checkReadOnlyStatusRecursively(@Nonnull Project project, @Nonnull Collection<? extends PsiElement> elements) {
+        return checkReadOnlyStatus(
+            project,
+            elements,
+            Collections.<PsiElement>emptySet(),
+            RefactoringLocalize.refactoringCannotBePerformed().get(),
+            false
+        );
+    }
+
+    @RequiredUIAccess
+    public static boolean checkReadOnlyStatusRecursively(
+        @Nonnull Project project,
+        @Nonnull Collection<? extends PsiElement> elements,
+        boolean notifyOnFail
+    ) {
+        return checkReadOnlyStatus(
+            project,
+            elements,
+            Collections.<PsiElement>emptySet(),
+            RefactoringLocalize.refactoringCannotBePerformed().get(),
+            notifyOnFail
+        );
+    }
+
+    @RequiredUIAccess
+    public static boolean checkReadOnlyStatus(
+        @Nonnull Project project,
+        @Nonnull Collection<? extends PsiElement> recursive,
+        @Nonnull Collection<? extends PsiElement> flat,
+        boolean notifyOnFail
+    ) {
+        return checkReadOnlyStatus(project, recursive, flat, RefactoringLocalize.refactoringCannotBePerformed().get(), notifyOnFail);
+    }
+
+    @RequiredUIAccess
+    private static boolean checkReadOnlyStatus(
+        @Nonnull Project project,
+        @Nonnull Collection<? extends PsiElement> recursive,
+        @Nonnull Collection<? extends PsiElement> flat,
+        @Nonnull String messagePrefix,
+        boolean notifyOnFail
+    ) {
+        Collection<VirtualFile> readonly = new HashSet<>();  // not writable, but could be checked out
+        Collection<VirtualFile> failed = new HashSet<>();  // those located in read-only filesystem
+
+        boolean seenNonWritablePsiFilesWithoutVirtualFile =
+            checkReadOnlyStatus(flat, false, readonly, failed) || checkReadOnlyStatus(recursive, true, readonly, failed);
+
+        ReadonlyStatusHandler.OperationStatus status = ReadonlyStatusHandler.getInstance(project).ensureFilesWritable(readonly);
+        ContainerUtil.addAll(failed, status.getReadonlyFiles());
+
+        if (notifyOnFail && (!failed.isEmpty() || seenNonWritablePsiFilesWithoutVirtualFile && readonly.isEmpty())) {
+            StringBuilder message = new StringBuilder(messagePrefix).append('\n');
+            int i = 0;
+            for (VirtualFile virtualFile : failed) {
+                LocalizeValue subj = virtualFile.isDirectory()
+                    ? RefactoringLocalize.directoryDescription(virtualFile.getPresentableUrl())
+                    : RefactoringLocalize.fileDescription(virtualFile.getPresentableUrl());
+                if (virtualFile.getFileSystem().isReadOnly()) {
+                    message.append(RefactoringLocalize.zeroIsLocatedInAArchiveFile(subj).get()).append('\n');
+                }
+                else {
+                    message.append(RefactoringLocalize.zeroIsReadOnly(subj).get()).append('\n');
+                }
+                if (i++ > 20) {
+                    message.append("...\n");
+                    break;
+                }
+            }
+            showErrorMessage(RefactoringLocalize.errorTitle().get(), message.toString(), null, project);
+            return false;
         }
-        return !ignored;
-      }
-    });
-  }
 
-  public static String capitalize(@Nonnull String text) {
-    return StringUtil.capitalize(text);
-  }
-
-  public static boolean isAncestor(@Nonnull PsiElement resolved, @Nonnull Collection<? extends PsiElement> scopes) {
-    for (final PsiElement scope : scopes) {
-      if (PsiTreeUtil.isAncestor(scope, resolved, false)) return true;
-    }
-    return false;
-  }
-
-  @RequiredUIAccess public static boolean checkFileExist(@Nullable PsiDirectory targetDirectory, int[] choice, PsiFile file, String name, String title) {
-    if (targetDirectory == null) return false;
-    final PsiFile existing = targetDirectory.findFile(name);
-    if (existing != null && !existing.equals(file)) {
-      int selection;
-      if (choice == null || choice[0] == -1) {
-        String message = String.format("File '%s' already exists in directory '%s'", name, targetDirectory.getVirtualFile().getPath());
-        String[] options =
-          choice == null ? new String[]{"Overwrite", "Skip"} : new String[]{"Overwrite", "Skip", "Overwrite for all", "Skip for all"};
-        selection = Messages.showDialog(message, title, options, 0, UIUtil.getQuestionIcon());
-      }
-      else {
-        selection = choice[0];
-      }
-
-      if (choice != null && selection > 1) {
-        choice[0] = selection % 2;
-        selection = choice[0];
-      }
-
-      if (selection == 0 && file != existing) {
-        WriteCommandAction.writeCommandAction(targetDirectory.getProject()).withName(title).run(existing::delete);
-      }
-      else {
-        return true;
-      }
+        return failed.isEmpty();
     }
 
-    return false;
-  }
+    private static boolean checkReadOnlyStatus(
+        Collection<? extends PsiElement> elements,
+        boolean recursively,
+        Collection<VirtualFile> readonly,
+        Collection<VirtualFile> failed
+    ) {
+        boolean seenNonWritablePsiFilesWithoutVirtualFile = false;
+
+        for (PsiElement element : elements) {
+            if (element instanceof PsiDirectory) {
+                final PsiDirectory dir = (PsiDirectory)element;
+                final VirtualFile vFile = dir.getVirtualFile();
+                if (vFile.getFileSystem().isReadOnly()) {
+                    failed.add(vFile);
+                }
+                else if (recursively) {
+                    collectReadOnlyFiles(vFile, readonly);
+                }
+                else {
+                    readonly.add(vFile);
+                }
+            }
+            else if (element instanceof PsiDirectoryContainer) {
+                final PsiDirectory[] directories = ((PsiDirectoryContainer)element).getDirectories();
+                for (PsiDirectory directory : directories) {
+                    VirtualFile virtualFile = directory.getVirtualFile();
+                    if (recursively) {
+                        if (virtualFile.getFileSystem().isReadOnly()) {
+                            failed.add(virtualFile);
+                        }
+                        else {
+                            collectReadOnlyFiles(virtualFile, readonly);
+                        }
+                    }
+                    else if (virtualFile.getFileSystem().isReadOnly()) {
+                        failed.add(virtualFile);
+                    }
+                    else {
+                        readonly.add(virtualFile);
+                    }
+                }
+            }
+            else {
+                PsiFile file = element.getContainingFile();
+                if (file == null) {
+                    if (!element.isWritable()) {
+                        seenNonWritablePsiFilesWithoutVirtualFile = true;
+                    }
+                }
+                else {
+                    final VirtualFile vFile = file.getVirtualFile();
+                    if (vFile != null) {
+                        readonly.add(vFile);
+                    }
+                    else if (!element.isWritable()) {
+                        seenNonWritablePsiFilesWithoutVirtualFile = true;
+                    }
+                }
+            }
+        }
+
+        return seenNonWritablePsiFilesWithoutVirtualFile;
+    }
+
+    public static void collectReadOnlyFiles(@Nonnull VirtualFile vFile, @Nonnull final Collection<VirtualFile> list) {
+        final FileTypeManager fileTypeManager = FileTypeManager.getInstance();
+
+        VirtualFileUtil.visitChildrenRecursively(vFile, new VirtualFileVisitor(VirtualFileVisitor.NO_FOLLOW_SYMLINKS) {
+            @Override
+            public boolean visitFile(@Nonnull VirtualFile file) {
+                final boolean ignored = fileTypeManager.isFileIgnored(file);
+                if (!file.isWritable() && !ignored) {
+                    list.add(file);
+                }
+                return !ignored;
+            }
+        });
+    }
+
+    public static String capitalize(@Nonnull String text) {
+        return StringUtil.capitalize(text);
+    }
+
+    public static boolean isAncestor(@Nonnull PsiElement resolved, @Nonnull Collection<? extends PsiElement> scopes) {
+        for (final PsiElement scope : scopes) {
+            if (PsiTreeUtil.isAncestor(scope, resolved, false)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @RequiredUIAccess
+    public static boolean checkFileExist(@Nullable PsiDirectory targetDirectory, int[] choice, PsiFile file, String name, String title) {
+        if (targetDirectory == null) {
+            return false;
+        }
+        final PsiFile existing = targetDirectory.findFile(name);
+        if (existing != null && !existing.equals(file)) {
+            int selection;
+            if (choice == null || choice[0] == -1) {
+                String message =
+                    String.format("File '%s' already exists in directory '%s'", name, targetDirectory.getVirtualFile().getPath());
+                String[] options =
+                    choice == null ? new String[]{"Overwrite", "Skip"} : new String[]{"Overwrite", "Skip", "Overwrite for all", "Skip for all"};
+                selection = Messages.showDialog(message, title, options, 0, UIUtil.getQuestionIcon());
+            }
+            else {
+                selection = choice[0];
+            }
+
+            if (choice != null && selection > 1) {
+                choice[0] = selection % 2;
+                selection = choice[0];
+            }
+
+            if (selection == 0 && file != existing) {
+                CommandProcessor.getInstance().newCommand()
+                    .project(targetDirectory.getProject())
+                    .name(LocalizeValue.ofNullable(title))
+                    .inWriteAction()
+                    .run(existing::delete);
+            }
+            else {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

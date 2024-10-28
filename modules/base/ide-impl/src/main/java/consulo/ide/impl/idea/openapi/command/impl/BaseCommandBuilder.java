@@ -29,7 +29,7 @@ import jakarta.annotation.Nonnull;
  * @author UNV
  * @since 2024-10-21
  */
-public class BaseCommandBuilder<R, THIS extends CommandBuilder<R, THIS>> implements CommandBuilder<R, THIS> {
+public class BaseCommandBuilder<THIS extends CommandBuilder<THIS>> implements CommandBuilder<THIS> {
     @Nonnull
     private LocalizeValue myName = LocalizeValue.empty();
     private Object myGroupId = null;
@@ -99,11 +99,6 @@ public class BaseCommandBuilder<R, THIS extends CommandBuilder<R, THIS>> impleme
     public THIS shouldRecordActionForActiveDocument(boolean shouldRecordActionForActiveDocument) {
         myShouldRecordActionForActiveDocument = shouldRecordActionForActiveDocument;
         return self();
-    }
-
-    @Override
-    public void run(@RequiredUIAccess @Nonnull Runnable runnable) {
-        runnable.run();
     }
 
     @Override

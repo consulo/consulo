@@ -15,13 +15,12 @@
  */
 package consulo.language.editor.refactoring.introduce.inplace;
 
-import consulo.application.Result;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.TokenSeparatorGenerator;
-import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementBuilder;
 import consulo.language.editor.refactoring.rename.NameSuggestionProvider;
@@ -37,12 +36,15 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiElementPointer;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.internal.StartMarkAction;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
-
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -53,166 +55,193 @@ import java.util.List;
  * Date: 3/15/11
  */
 public abstract class InplaceVariableIntroducer<E extends PsiElement> extends InplaceRefactoring {
-  protected E myExpr;
-  protected RangeMarker myExprMarker;
+    protected E myExpr;
+    protected RangeMarker myExprMarker;
 
-  protected E[] myOccurrences;
-  protected List<RangeMarker> myOccurrenceMarkers;
+    protected E[] myOccurrences;
+    protected List<RangeMarker> myOccurrenceMarkers;
 
-  public InplaceVariableIntroducer(PsiNamedElement elementToRename, Editor editor, Project project, String title, E[] occurrences, @Nullable E expr) {
-    super(editor, elementToRename, project);
-    myTitle = title;
-    myOccurrences = occurrences;
-    if (expr != null) {
-      final ASTNode node = expr.getNode();
-      final ASTNode astNode = TokenSeparatorGenerator.forLanguage(expr.getLanguage()).generateWhitespaceBetweenTokens(node.getTreePrev(), node);
-      if (astNode != null) {
-        new WriteCommandAction<Object>(project, "Normalize declaration") {
-          @Override
-          protected void run(Result<Object> result) throws Throwable {
-            node.getTreeParent().addChild(astNode, node);
-          }
-        }.execute();
-      }
-      myExpr = expr;
-    }
-    myExprMarker = myExpr != null && myExpr.isPhysical() ? createMarker(myExpr) : null;
-    initOccurrencesMarkers();
-  }
-
-  @Override
-  protected boolean shouldSelectAll() {
-    return true;
-  }
-
-  @Override
-  protected StartMarkAction startRename() throws StartMarkAction.AlreadyStartedException {
-    return null;
-  }
-
-  public void setOccurrenceMarkers(List<RangeMarker> occurrenceMarkers) {
-    myOccurrenceMarkers = occurrenceMarkers;
-  }
-
-  public void setExprMarker(RangeMarker exprMarker) {
-    myExprMarker = exprMarker;
-  }
-
-  public E getExpr() {
-    return myExpr != null && myExpr.isValid() && myExpr.isPhysical() ? myExpr : null;
-  }
-
-  public E[] getOccurrences() {
-    return myOccurrences;
-  }
-
-  public List<RangeMarker> getOccurrenceMarkers() {
-    if (myOccurrenceMarkers == null) {
-      initOccurrencesMarkers();
-    }
-    return myOccurrenceMarkers;
-  }
-
-  protected void initOccurrencesMarkers() {
-    if (myOccurrenceMarkers != null) return;
-    myOccurrenceMarkers = new ArrayList<RangeMarker>();
-    for (E occurrence : myOccurrences) {
-      myOccurrenceMarkers.add(createMarker(occurrence));
-    }
-  }
-
-  protected RangeMarker createMarker(PsiElement element) {
-    return myEditor.getDocument().createRangeMarker(element.getTextRange());
-  }
-
-
-  public RangeMarker getExprMarker() {
-    return myExprMarker;
-  }
-
-  @Override
-  protected boolean performRefactoring() {
-    return false;
-  }
-
-  @Override
-  protected void collectAdditionalElementsToRename(List<Pair<PsiElement, TextRange>> stringUsages) {
-  }
-
-  @Override
-  protected String getCommandName() {
-    return myTitle;
-  }
-
-  @Override
-  protected void moveOffsetAfter(boolean success) {
-    super.moveOffsetAfter(success);
-    if (myOccurrenceMarkers != null) {
-      for (RangeMarker marker : myOccurrenceMarkers) {
-        marker.dispose();
-      }
-    }
-    if (myExprMarker != null && !isRestart()) {
-      myExprMarker.dispose();
-    }
-  }
-
-
-  @Override
-  protected MyLookupExpression createLookupExpression(PsiElement selectedElement) {
-    return new MyIntroduceLookupExpression(getInitialName(), myNameSuggestions, myElementToRename, shouldSelectAll(), myAdvertisementText);
-  }
-
-  private static class MyIntroduceLookupExpression extends MyLookupExpression {
-    private final SmartPsiElementPointer<PsiNamedElement> myPointer;
-
-    public MyIntroduceLookupExpression(final String initialName,
-                                       final LinkedHashSet<String> names,
-                                       final PsiNamedElement elementToRename,
-                                       final boolean shouldSelectAll,
-                                       final String advertisementText) {
-      super(initialName, names, elementToRename, elementToRename, shouldSelectAll, advertisementText);
-      myPointer = SmartPointerManager.getInstance(elementToRename.getProject()).createSmartPsiElementPointer(elementToRename);
+    @RequiredUIAccess
+    public InplaceVariableIntroducer(
+        PsiNamedElement elementToRename,
+        Editor editor,
+        Project project,
+        String title,
+        E[] occurrences,
+        @Nullable E expr
+    ) {
+        super(editor, elementToRename, project);
+        myTitle = title;
+        myOccurrences = occurrences;
+        if (expr != null) {
+            final ASTNode node = expr.getNode();
+            final ASTNode astNode =
+                TokenSeparatorGenerator.forLanguage(expr.getLanguage()).generateWhitespaceBetweenTokens(node.getTreePrev(), node);
+            if (astNode != null) {
+                CommandProcessor.getInstance().newCommand()
+                    .project(project)
+                    .name(LocalizeValue.ofNullable("Normalize declaration"))
+                    .inWriteAction()
+                    .run(() -> node.getTreeParent().addChild(astNode, node));
+            }
+            myExpr = expr;
+        }
+        myExprMarker = myExpr != null && myExpr.isPhysical() ? createMarker(myExpr) : null;
+        initOccurrencesMarkers();
     }
 
     @Override
-    public LookupElement[] calculateLookupItems(ExpressionContext context) {
-      return createLookupItems(myName, context.getEditor(), getElement());
+    protected boolean shouldSelectAll() {
+        return true;
     }
 
-    @Nullable
-    public PsiNamedElement getElement() {
-      return myPointer.getElement();
+    @Override
+    @RequiredUIAccess
+    protected StartMarkAction startRename() throws StartMarkAction.AlreadyStartedException {
+        return null;
     }
 
-    @Nullable
-    private LookupElement[] createLookupItems(String name, Editor editor, PsiNamedElement psiVariable) {
-      if (psiVariable == null) {
-        return myLookupItems;
-      }
+    public void setOccurrenceMarkers(List<RangeMarker> occurrenceMarkers) {
+        myOccurrenceMarkers = occurrenceMarkers;
+    }
 
-      TemplateState templateState = TemplateManager.getInstance(psiVariable.getProject()).getTemplateState(editor);
-      final TextResult insertedValue = templateState != null ? templateState.getVariableValue(PRIMARY_VARIABLE_NAME) : null;
-      if (insertedValue != null) {
-        final String text = insertedValue.getText();
-        if (!text.isEmpty() && !Comparing.strEqual(text, name)) {
-          final LinkedHashSet<String> names = new LinkedHashSet<>();
-          names.add(text);
-          for (NameSuggestionProvider provider : NameSuggestionProvider.EP_NAME.getExtensionList()) {
-            final SuggestedNameInfo suggestedNameInfo = provider.getSuggestedNames(psiVariable, psiVariable, names);
-            if (suggestedNameInfo != null && provider instanceof PreferrableNameSuggestionProvider && !((PreferrableNameSuggestionProvider)provider).shouldCheckOthers()) {
-              break;
-            }
-          }
-          final LookupElement[] items = new LookupElement[names.size()];
-          final Iterator<String> iterator = names.iterator();
-          for (int i = 0; i < items.length; i++) {
-            items[i] = LookupElementBuilder.create(iterator.next());
-          }
-          return items;
+    public void setExprMarker(RangeMarker exprMarker) {
+        myExprMarker = exprMarker;
+    }
+
+    public E getExpr() {
+        return myExpr != null && myExpr.isValid() && myExpr.isPhysical() ? myExpr : null;
+    }
+
+    public E[] getOccurrences() {
+        return myOccurrences;
+    }
+
+    @RequiredUIAccess
+    public List<RangeMarker> getOccurrenceMarkers() {
+        if (myOccurrenceMarkers == null) {
+            initOccurrencesMarkers();
         }
-      }
-      return myLookupItems;
+        return myOccurrenceMarkers;
     }
-  }
+
+    @RequiredReadAction
+    protected void initOccurrencesMarkers() {
+        if (myOccurrenceMarkers != null) {
+            return;
+        }
+        myOccurrenceMarkers = new ArrayList<>();
+        for (E occurrence : myOccurrences) {
+            myOccurrenceMarkers.add(createMarker(occurrence));
+        }
+    }
+
+    @RequiredReadAction
+    protected RangeMarker createMarker(PsiElement element) {
+        return myEditor.getDocument().createRangeMarker(element.getTextRange());
+    }
+
+
+    public RangeMarker getExprMarker() {
+        return myExprMarker;
+    }
+
+    @Override
+    protected boolean performRefactoring() {
+        return false;
+    }
+
+    @Override
+    protected void collectAdditionalElementsToRename(List<Pair<PsiElement, TextRange>> stringUsages) {
+    }
+
+    @Override
+    protected String getCommandName() {
+        return myTitle;
+    }
+
+    @Override
+    protected void moveOffsetAfter(boolean success) {
+        super.moveOffsetAfter(success);
+        if (myOccurrenceMarkers != null) {
+            for (RangeMarker marker : myOccurrenceMarkers) {
+                marker.dispose();
+            }
+        }
+        if (myExprMarker != null && !isRestart()) {
+            myExprMarker.dispose();
+        }
+    }
+
+
+    @Override
+    @RequiredReadAction
+    protected MyLookupExpression createLookupExpression(PsiElement selectedElement) {
+        return new MyIntroduceLookupExpression(
+            getInitialName(),
+            myNameSuggestions,
+            myElementToRename,
+            shouldSelectAll(),
+            myAdvertisementText
+        );
+    }
+
+    private static class MyIntroduceLookupExpression extends MyLookupExpression {
+        private final SmartPsiElementPointer<PsiNamedElement> myPointer;
+
+        public MyIntroduceLookupExpression(
+            final String initialName,
+            final LinkedHashSet<String> names,
+            final PsiNamedElement elementToRename,
+            final boolean shouldSelectAll,
+            final String advertisementText
+        ) {
+            super(initialName, names, elementToRename, elementToRename, shouldSelectAll, advertisementText);
+            myPointer = SmartPointerManager.getInstance(elementToRename.getProject()).createSmartPsiElementPointer(elementToRename);
+        }
+
+        @Override
+        @RequiredReadAction
+        public LookupElement[] calculateLookupItems(ExpressionContext context) {
+            return createLookupItems(myName, context.getEditor(), getElement());
+        }
+
+        @Nullable
+        @RequiredReadAction
+        public PsiNamedElement getElement() {
+            return myPointer.getElement();
+        }
+
+        @Nullable
+        private LookupElement[] createLookupItems(String name, Editor editor, PsiNamedElement psiVariable) {
+            if (psiVariable == null) {
+                return myLookupItems;
+            }
+
+            TemplateState templateState = TemplateManager.getInstance(psiVariable.getProject()).getTemplateState(editor);
+            final TextResult insertedValue = templateState != null ? templateState.getVariableValue(PRIMARY_VARIABLE_NAME) : null;
+            if (insertedValue != null) {
+                final String text = insertedValue.getText();
+                if (!text.isEmpty() && !Comparing.strEqual(text, name)) {
+                    final LinkedHashSet<String> names = new LinkedHashSet<>();
+                    names.add(text);
+                    for (NameSuggestionProvider provider : NameSuggestionProvider.EP_NAME.getExtensionList()) {
+                        final SuggestedNameInfo suggestedNameInfo = provider.getSuggestedNames(psiVariable, psiVariable, names);
+                        if (suggestedNameInfo != null
+                            && provider instanceof PreferrableNameSuggestionProvider nameSuggestionProvider
+                            && !nameSuggestionProvider.shouldCheckOthers()) {
+                            break;
+                        }
+                    }
+                    final LookupElement[] items = new LookupElement[names.size()];
+                    final Iterator<String> iterator = names.iterator();
+                    for (int i = 0; i < items.length; i++) {
+                        items[i] = LookupElementBuilder.create(iterator.next());
+                    }
+                    return items;
+                }
+            }
+            return myLookupItems;
+        }
+    }
 }

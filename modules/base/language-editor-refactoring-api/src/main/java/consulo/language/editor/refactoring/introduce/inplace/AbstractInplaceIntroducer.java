@@ -16,9 +16,7 @@
 package consulo.language.editor.refactoring.introduce.inplace;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.Application;
-import consulo.application.Result;
 import consulo.codeEditor.*;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.colorScheme.EditorColorsManager;
@@ -28,7 +26,6 @@ import consulo.document.RangeMarker;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import consulo.document.util.TextRange;
-import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.highlight.HighlightManager;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
@@ -545,13 +542,12 @@ public abstract class AbstractInplaceIntroducer<V extends PsiNameIdentifierOwner
             return false;
         }
         if (getLocalVariable() != null) {
-            new WriteCommandAction(myProject, getCommandName(), getCommandName()) {
-                @Override
-                @RequiredWriteAction
-                protected void run(Result result) throws Throwable {
-                    getLocalVariable().setName(myLocalName);
-                }
-            }.execute();
+            CommandProcessor.getInstance().newCommand()
+                .project(myProject)
+                .name(LocalizeValue.ofNullable(getCommandName()))
+                .groupId(getCommandName())
+                .inWriteAction()
+                .compute(() -> getLocalVariable().setName(myLocalName));
         }
 
         if (!isIdentifier(newName, myExpr != null ? myExpr.getLanguage() : getLocalVariable().getLanguage())) {

@@ -69,8 +69,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.image.Image;
 import consulo.undoRedo.*;
-import consulo.undoRedo.builder.CommandBuilder;
-import consulo.undoRedo.builder.ProxyCommandBuilder;
+import consulo.undoRedo.builder.RunnableCommandBuilder;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
@@ -864,23 +863,20 @@ public class DiffImplUtil {
 
     @RequiredUIAccess
     @SuppressWarnings("unchecked")
-    public static <R> CommandBuilder<R, ? extends CommandBuilder<R, ?>> newWriteCommand() {
-        CommandBuilder commandBuilder = CommandProcessor.getInstance().newCommand().inWriteAction();
+    public static <R> RunnableCommandBuilder<R, ? extends RunnableCommandBuilder> newWriteCommand() {
+        RunnableCommandBuilder<R, ? extends RunnableCommandBuilder> commandBuilder =
+            CommandProcessor.getInstance().<R>newCommand()
+                .inWriteAction();
 
-        return new ProxyCommandBuilder(commandBuilder) {
-            @Override
-            @RequiredUIAccess
-            public void run(@RequiredUIAccess @Nonnull Runnable runnable) {
-                CommandDescriptor descriptor = mySubBuilder.build(runnable);
+            return commandBuilder.proxy(runnable -> {
+                CommandDescriptor descriptor = commandBuilder.build(runnable);
                 if (!makeWritable(descriptor.project(), descriptor.document())) {
                     VirtualFile file = FileDocumentManager.getInstance().getFile(descriptor.document());
                     LOG.warn("Document is read-only" + (file != null ? ": " + file.getPresentableName() : ""));
                     return;
                 }
-
-                super.run(runnable);
-            }
-        };
+                runnable.run();
+            });
     }
 
     @Deprecated(forRemoval = true)

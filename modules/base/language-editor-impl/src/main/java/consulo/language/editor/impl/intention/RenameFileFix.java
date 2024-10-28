@@ -19,94 +19,98 @@
  */
 package consulo.language.editor.impl.intention;
 
-import consulo.application.Result;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.FileEditorManager;
-import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.inspection.LocalQuickFix;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.editor.intention.SyntheticIntentionAction;
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.Alerts;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.undoRedo.CommandProcessor;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 
 public class RenameFileFix implements SyntheticIntentionAction, LocalQuickFix {
-  private final String myNewFileName;
+    private final String myNewFileName;
 
-  /**
-   * @param newFileName with extension
-   */
-  public RenameFileFix(String newFileName) {
-    myNewFileName = newFileName;
-  }
+    /**
+     * @param newFileName with extension
+     */
+    public RenameFileFix(String newFileName) {
+        myNewFileName = newFileName;
+    }
 
-  @Override
-  @Nonnull
-  public String getText() {
-    return CodeInsightLocalize.renameFileFix().get();
-  }
+    @Override
+    @Nonnull
+    public String getText() {
+        return CodeInsightLocalize.renameFileFix().get();
+    }
 
-  @Override
-  @Nonnull
-  public String getName() {
-    return getText();
-  }
+    @Override
+    @Nonnull
+    public String getName() {
+        return getText();
+    }
 
-  @Override
-  @Nonnull
-  public String getFamilyName() {
-    return CodeInsightLocalize.renameFileFix().get();
-  }
+    @Override
+    @Nonnull
+    public String getFamilyName() {
+        return CodeInsightLocalize.renameFileFix().get();
+    }
 
-  @Override
-  public void applyFix(@Nonnull final Project project, @Nonnull ProblemDescriptor descriptor) {
-    final PsiFile file = descriptor.getPsiElement().getContainingFile();
-    if (isAvailable(project, null, file)) {
-      new WriteCommandAction(project) {
-        @Override
-        protected void run(Result result) throws Throwable {
-          invoke(project, FileEditorManager.getInstance(project).getSelectedTextEditor(), file);
+    @Override
+    @RequiredUIAccess
+    public void applyFix(@Nonnull final Project project, @Nonnull ProblemDescriptor descriptor) {
+        final PsiFile file = descriptor.getPsiElement().getContainingFile();
+        if (isAvailable(project, null, file)) {
+            CommandProcessor.getInstance().newCommand()
+                .project(project)
+                .inWriteAction()
+                .run(() -> invoke(project, FileEditorManager.getInstance(project).getSelectedTextEditor(), file));
         }
-      }.execute();
     }
-  }
 
-  @Override
-  public final boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
-    if (!file.isValid()) return false;
-    VirtualFile vFile = file.getVirtualFile();
-    if (vFile == null) return false;
-    final VirtualFile parent = vFile.getParent();
-    if (parent == null) return false;
-    final VirtualFile newVFile = parent.findChild(myNewFileName);
-    return newVFile == null || newVFile.equals(vFile);
-  }
-
-
-  @Override
-  public void invoke(@Nonnull Project project, Editor editor, PsiFile file) {
-    VirtualFile vFile = file.getVirtualFile();
-    Document document = PsiDocumentManager.getInstance(project).getDocument(file);
-    FileDocumentManager.getInstance().saveDocument(document);
-    try {
-      vFile.rename(file.getManager(), myNewFileName);
+    @Override
+    public final boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+        if (!file.isValid()) {
+            return false;
+        }
+        VirtualFile vFile = file.getVirtualFile();
+        if (vFile == null) {
+            return false;
+        }
+        final VirtualFile parent = vFile.getParent();
+        if (parent == null) {
+            return false;
+        }
+        final VirtualFile newVFile = parent.findChild(myNewFileName);
+        return newVFile == null || newVFile.equals(vFile);
     }
-    catch(IOException e) {
-      project.getUIAccess().giveIfNeed(() -> Alerts.okError(e.getLocalizedMessage()).showAsync());
-    }
-  }
 
-  @Override
-  public boolean startInWriteAction() {
-    return true;
-  }
+
+    @Override
+    public void invoke(@Nonnull Project project, Editor editor, PsiFile file) {
+        VirtualFile vFile = file.getVirtualFile();
+        Document document = PsiDocumentManager.getInstance(project).getDocument(file);
+        FileDocumentManager.getInstance().saveDocument(document);
+        try {
+            vFile.rename(file.getManager(), myNewFileName);
+        }
+        catch (IOException e) {
+            project.getUIAccess().giveIfNeed(() -> Alerts.okError(e.getLocalizedMessage()).showAsync());
+        }
+    }
+
+    @Override
+    public boolean startInWriteAction() {
+        return true;
+    }
 }

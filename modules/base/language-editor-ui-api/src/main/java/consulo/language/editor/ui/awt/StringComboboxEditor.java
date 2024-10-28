@@ -13,75 +13,81 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.ui.awt;
 
-import consulo.application.Result;
-import consulo.language.editor.WriteCommandAction;
-import consulo.undoRedo.util.UndoConstants;
-import consulo.logging.Logger;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
-import consulo.virtualFileSystem.fileType.FileType;
+import consulo.document.Document;
 import consulo.language.plain.PlainTextFileType;
-import consulo.project.Project;
-import consulo.ui.ex.awt.ComboBox;
-import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.ComboBox;
+import consulo.undoRedo.CommandProcessor;
+import consulo.undoRedo.util.UndoConstants;
+import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.swing.*;
 
 /**
  * ComboBox with Editor and Strings as item
+ *
  * @author dsl
  */
 public class StringComboboxEditor extends EditorComboBoxEditor {
-  public static final Key<JComboBox> COMBO_BOX_KEY = Key.create("COMBO_BOX_KEY");
-  public static final Key<Boolean> USE_PLAIN_PREFIX_MATCHER = Key.create("USE_PLAIN_PREFIX_MATCHER");
+    public static final Key<JComboBox> COMBO_BOX_KEY = Key.create("COMBO_BOX_KEY");
+    public static final Key<Boolean> USE_PLAIN_PREFIX_MATCHER = Key.create("USE_PLAIN_PREFIX_MATCHER");
 
-  private static final Logger LOG = Logger.getInstance(StringComboboxEditor.class);
-  private final Project myProject;
+    private static final Logger LOG = Logger.getInstance(StringComboboxEditor.class);
+    private final Project myProject;
 
-  public StringComboboxEditor(final Project project, final FileType fileType, ComboBox comboBox) {
-    this(project, fileType, comboBox, false);
-  }
-
-  public StringComboboxEditor(final Project project, final FileType fileType, ComboBox comboBox, boolean usePlainMatcher) {
-    super(project, fileType);
-    myProject = project;
-    final PsiFile file = PsiFileFactory.getInstance(project).createFileFromText("a.dummy", PlainTextFileType.INSTANCE, "", 0, true);
-    final Document document = PsiDocumentManager.getInstance(project).getDocument(file);
-    assert document != null;
-    document.putUserData(COMBO_BOX_KEY, comboBox);
-    if (usePlainMatcher) {
-      document.putUserData(USE_PLAIN_PREFIX_MATCHER, true);
+    public StringComboboxEditor(final Project project, final FileType fileType, ComboBox comboBox) {
+        this(project, fileType, comboBox, false);
     }
-    document.putUserData(UndoConstants.DONT_RECORD_UNDO, true);
-    super.setItem(document);
-  }
 
-  @Override
-  public Object getItem() {
-    final String text = ((Document) super.getItem()).getText();
-    LOG.assertTrue(text != null);
-    return text;
-  }
+    public StringComboboxEditor(final Project project, final FileType fileType, ComboBox comboBox, boolean usePlainMatcher) {
+        super(project, fileType);
+        myProject = project;
+        final PsiFile file =
+            PsiFileFactory.getInstance(project).createFileFromText("a.dummy", PlainTextFileType.INSTANCE, "", 0, true);
+        final Document document = PsiDocumentManager.getInstance(project).getDocument(file);
+        assert document != null;
+        document.putUserData(COMBO_BOX_KEY, comboBox);
+        if (usePlainMatcher) {
+            document.putUserData(USE_PLAIN_PREFIX_MATCHER, true);
+        }
+        document.putUserData(UndoConstants.DONT_RECORD_UNDO, true);
+        super.setItem(document);
+    }
 
-  @Override
-  public void setItem(Object anObject) {
-    if (anObject == null) anObject = "";
-    if (anObject.equals(getItem())) return;
-    final String s = (String)anObject;
-    new WriteCommandAction(myProject) {
-      @Override
-      protected void run(Result result) throws Throwable {
-        getDocument().setText(s);
-      }
-    }.execute();
+    @Override
+    public Object getItem() {
+        final String text = ((Document)super.getItem()).getText();
+        LOG.assertTrue(text != null);
+        return text;
+    }
 
-    final Editor editor = getEditor();
-    if (editor != null) editor.getCaretModel().moveToOffset(s.length());
-  }
+    @Override
+    @RequiredUIAccess
+    public void setItem(Object anObject) {
+        if (anObject == null) {
+            anObject = "";
+        }
+        if (anObject.equals(getItem())) {
+            return;
+        }
+        final String s = (String)anObject;
+        CommandProcessor.getInstance().newCommand()
+            .project(myProject)
+            .inWriteAction()
+            .run(() -> getDocument().setText(s));
+
+        final Editor editor = getEditor();
+        if (editor != null) {
+            editor.getCaretModel().moveToOffset(s.length());
+        }
+    }
 }

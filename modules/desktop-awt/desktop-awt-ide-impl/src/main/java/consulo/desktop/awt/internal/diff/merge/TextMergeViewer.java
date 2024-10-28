@@ -73,6 +73,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.undoRedo.builder.CommandBuilder;
+import consulo.undoRedo.builder.RunnableCommandBuilder;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
@@ -756,7 +757,10 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
          * affected changes should be sorted
          */
         @RequiredUIAccess
-        CommandBuilder newMergeCommand(@Nullable List<TextMergeChange> affected) {
+        @SuppressWarnings("unchecked")
+        public <R> RunnableCommandBuilder<R, ? extends RunnableCommandBuilder<R, ?>> newMergeCommand(
+            @Nullable List<TextMergeChange> affected
+        ) {
             myContentModified = true;
 
             IntList affectedIndexes = null;

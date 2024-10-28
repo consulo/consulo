@@ -15,6 +15,7 @@
  */
 package consulo.language.editor;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
 import consulo.application.BaseActionRunnable;
 import consulo.application.Result;
@@ -38,6 +39,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.function.Supplier;
 
+@Deprecated
+@DeprecationInfo("Use CommandProcessor#newCommand()")
 public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
     private static final Logger LOG = Logger.getInstance(WriteCommandAction.class);
 

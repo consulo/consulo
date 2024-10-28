@@ -18,7 +18,6 @@ package consulo.undoRedo.builder;
 import consulo.document.Document;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandDescriptor;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import jakarta.annotation.Nonnull;
@@ -27,8 +26,8 @@ import jakarta.annotation.Nonnull;
  * @author UNV
  * @since 2024-10-21
  */
-public abstract class ProxyCommandBuilder<R, THIS extends CommandBuilder<R, THIS>, THAT extends CommandBuilder<R, THAT>>
-    implements CommandBuilder<R, THIS> {
+public abstract class ProxyCommandBuilder<THIS extends CommandBuilder<THIS>, THAT extends CommandBuilder<THAT>>
+    implements CommandBuilder<THIS> {
     protected THAT mySubBuilder;
 
     protected ProxyCommandBuilder(THAT subBuilder) {
@@ -69,17 +68,6 @@ public abstract class ProxyCommandBuilder<R, THIS extends CommandBuilder<R, THIS
     public THIS shouldRecordActionForActiveDocument(boolean shouldRecordActionForActiveDocument) {
         mySubBuilder = mySubBuilder.shouldRecordActionForActiveDocument(shouldRecordActionForActiveDocument);
         return self();
-    }
-
-    @Override
-    public THIS inWriteAction() {
-        mySubBuilder = mySubBuilder.inWriteAction();
-        return self();
-    }
-
-    @Override
-    public void run(@RequiredUIAccess @Nonnull Runnable runnable) {
-        mySubBuilder.run(runnable);
     }
 
     @Override

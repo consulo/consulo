@@ -15,150 +15,140 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.patch.tool;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.util.function.Computable;
 import consulo.diff.content.DocumentContent;
 import consulo.diff.merge.MergeRequest;
 import consulo.diff.merge.MergeResult;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.AppliedTextPatch;
-import consulo.language.editor.WriteCommandAction;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.undoRedo.CommandProcessor;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.function.Consumer;
 
 public class ApplyPatchMergeRequest extends MergeRequest implements ApplyPatchRequest {
-  @Nullable
-  private final Project myProject;
+    @Nullable
+    private final Project myProject;
 
-  @Nonnull
-  private final DocumentContent myResultContent;
-  @Nonnull
-  private final AppliedTextPatch myAppliedPatch;
+    @Nonnull
+    private final DocumentContent myResultContent;
+    @Nonnull
+    private final AppliedTextPatch myAppliedPatch;
 
-  @Nonnull
-  private final CharSequence myOriginalContent;
-  @Nonnull
-  private final String myLocalContent;
+    @Nonnull
+    private final CharSequence myOriginalContent;
+    @Nonnull
+    private final String myLocalContent;
 
-  @Nullable
-  private final String myWindowTitle;
-  @Nonnull
-  private final String myLocalTitle;
-  @Nonnull
-  private final String myResultTitle;
-  @Nonnull
-  private final String myPatchTitle;
+    @Nullable
+    private final String myWindowTitle;
+    @Nonnull
+    private final String myLocalTitle;
+    @Nonnull
+    private final String myResultTitle;
+    @Nonnull
+    private final String myPatchTitle;
 
-  @Nullable
-  private final Consumer<MergeResult> myCallback;
+    @Nullable
+    private final Consumer<MergeResult> myCallback;
 
-  public ApplyPatchMergeRequest(@Nullable Project project,
-                                @Nonnull DocumentContent resultContent,
-                                @Nonnull AppliedTextPatch appliedPatch,
-                                @Nonnull String localContent,
-                                @Nullable String windowTitle,
-                                @Nonnull String localTitle,
-                                @Nonnull String resultTitle,
-                                @Nonnull String patchTitle,
-                                @Nullable Consumer<MergeResult> callback) {
-    myProject = project;
-    myResultContent = resultContent;
-    myAppliedPatch = appliedPatch;
+    public ApplyPatchMergeRequest(
+        @Nullable Project project,
+        @Nonnull DocumentContent resultContent,
+        @Nonnull AppliedTextPatch appliedPatch,
+        @Nonnull String localContent,
+        @Nullable String windowTitle,
+        @Nonnull String localTitle,
+        @Nonnull String resultTitle,
+        @Nonnull String patchTitle,
+        @Nullable Consumer<MergeResult> callback
+    ) {
+        myProject = project;
+        myResultContent = resultContent;
+        myAppliedPatch = appliedPatch;
 
-    myOriginalContent = ApplicationManager.getApplication().runReadAction(new Computable<CharSequence>() {
-      @Override
-      public CharSequence compute() {
-        return myResultContent.getDocument().getImmutableCharSequence();
-      }
-    });
-    myLocalContent = localContent;
+        myOriginalContent =
+            Application.get().runReadAction((Computable<CharSequence>)()-> myResultContent.getDocument().getImmutableCharSequence());
+        myLocalContent = localContent;
 
-    myWindowTitle = windowTitle;
-    myLocalTitle = localTitle;
-    myResultTitle = resultTitle;
-    myPatchTitle = patchTitle;
+        myWindowTitle = windowTitle;
+        myLocalTitle = localTitle;
+        myResultTitle = resultTitle;
+        myPatchTitle = patchTitle;
 
-    myCallback = callback;
-  }
-
-  @Nullable
-  public Project getProject() {
-    return myProject;
-  }
-
-  @Override
-  @Nonnull
-  public DocumentContent getResultContent() {
-    return myResultContent;
-  }
-
-  @Override
-  @Nonnull
-  public String getLocalContent() {
-    return myLocalContent;
-  }
-
-  @Override
-  @Nonnull
-  public AppliedTextPatch getPatch() {
-    return myAppliedPatch;
-  }
-
-  @jakarta.annotation.Nullable
-  @Override
-  public String getTitle() {
-    return myWindowTitle;
-  }
-
-  @Override
-  @Nonnull
-  public String getLocalTitle() {
-    return myLocalTitle;
-  }
-
-  @Override
-  @Nonnull
-  public String getResultTitle() {
-    return myResultTitle;
-  }
-
-  @Override
-  @Nonnull
-  public String getPatchTitle() {
-    return myPatchTitle;
-  }
-
-  @Override
-  public void applyResult(@Nonnull MergeResult result) {
-    final CharSequence applyContent;
-    switch (result) {
-      case CANCEL:
-        applyContent = myOriginalContent;
-        break;
-      case LEFT:
-        applyContent = myLocalContent;
-        break;
-      case RIGHT:
-        applyContent = PatchChangeBuilder.getPatchedContent(myAppliedPatch, myLocalContent);
-        break;
-      case RESOLVED:
-        applyContent = null;
-        break;
-      default:
-        throw new IllegalArgumentException(result.name());
+        myCallback = callback;
     }
 
-    if (applyContent != null) {
-      new WriteCommandAction.Simple(myProject) {
-        @Override
-        protected void run() throws Throwable {
-          myResultContent.getDocument().setText(applyContent);
+    @Nullable
+    public Project getProject() {
+        return myProject;
+    }
+
+    @Override
+    @Nonnull
+    public DocumentContent getResultContent() {
+        return myResultContent;
+    }
+
+    @Override
+    @Nonnull
+    public String getLocalContent() {
+        return myLocalContent;
+    }
+
+    @Override
+    @Nonnull
+    public AppliedTextPatch getPatch() {
+        return myAppliedPatch;
+    }
+
+    @Nullable
+    @Override
+    public String getTitle() {
+        return myWindowTitle;
+    }
+
+    @Override
+    @Nonnull
+    public String getLocalTitle() {
+        return myLocalTitle;
+    }
+
+    @Override
+    @Nonnull
+    public String getResultTitle() {
+        return myResultTitle;
+    }
+
+    @Override
+    @Nonnull
+    public String getPatchTitle() {
+        return myPatchTitle;
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void applyResult(@Nonnull MergeResult result) {
+        final CharSequence applyContent = switch (result) {
+            case CANCEL -> myOriginalContent;
+            case LEFT -> myLocalContent;
+            case RIGHT -> PatchChangeBuilder.getPatchedContent(myAppliedPatch, myLocalContent);
+            case RESOLVED -> null;
+            default -> throw new IllegalArgumentException(result.name());
+        };
+
+        if (applyContent != null) {
+            CommandProcessor.getInstance().newCommand()
+                .project(myProject)
+                .inWriteAction()
+                .run(() -> myResultContent.getDocument().setText(applyContent));
         }
-      }.execute();
-    }
 
-    if (myCallback != null) myCallback.accept(result);
-  }
+        if (myCallback != null) {
+            myCallback.accept(result);
+        }
+    }
 }

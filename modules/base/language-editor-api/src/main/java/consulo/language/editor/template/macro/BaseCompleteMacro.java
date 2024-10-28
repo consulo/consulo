@@ -19,7 +19,6 @@ package consulo.language.editor.template.macro;
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;
-import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupManager;
@@ -134,15 +133,15 @@ public abstract class BaseCompleteMacro extends Macro {
                 return;
             }
 
-            Runnable runnable = () -> new WriteCommandAction(project) {
-                @Override
-                protected void run(consulo.application.Result result) throws Throwable {
+            Runnable runnable = () -> CommandProcessor.getInstance().newCommand()
+                .project(project)
+                .inWriteAction()
+                .run(() -> {
                     Editor editor = myContext.getEditor();
                     if (editor != null) {
                         considerNextTab(editor);
                     }
-                }
-            }.execute();
+                });
 
             Application application = Application.get();
             application.invokeLater(runnable, application.getCurrentModalityState(), project.getDisposed());

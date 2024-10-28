@@ -16,14 +16,12 @@
 package consulo.language.editor.refactoring.rename.inplace;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.Result;
 import consulo.application.progress.ProgressManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.RealEditor;
 import consulo.codeEditor.SelectionModel;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
-import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.language.editor.refactoring.ResolveSnapshotProvider;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
@@ -33,6 +31,7 @@ import consulo.language.editor.refactoring.rename.*;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.language.editor.refactoring.util.TextOccurrencesUtil;
 import consulo.language.psi.*;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -225,12 +224,11 @@ public class VariableInplaceRenamer extends InplaceRefactoring {
             }
             PsiNamedElement elementToRename = getVariable();
             if (elementToRename != null) {
-                new WriteCommandAction(myProject, getCommandName()) {
-                    @Override
-                    protected void run(Result result) throws Throwable {
-                        renameSynthetic(newName);
-                    }
-                }.execute();
+                CommandProcessor.getInstance().newCommand()
+                    .project(myProject)
+                    .name(LocalizeValue.ofNullable(getCommandName()))
+                    .inWriteAction()
+                    .run(() -> renameSynthetic(newName));
             }
             for (AutomaticRenamerFactory factory : AutomaticRenamerFactory.EP_NAME.getExtensionList()) {
                 if (factory.isApplicable(elementToRename)) {
@@ -279,18 +277,12 @@ public class VariableInplaceRenamer extends InplaceRefactoring {
                                 }
                             }
                         };
-                        final WriteCommandAction writeCommandAction = new WriteCommandAction(myProject, getCommandName()) {
-                            @Override
-                            protected void run(Result result) throws Throwable {
-                                performAutomaticRename.run();
-                            }
-                        };
-                        if (myProject.getApplication().isUnitTestMode()) {
-                            writeCommandAction.execute();
-                        }
-                        else {
-                            myProject.getApplication().invokeLater(writeCommandAction::execute);
-                        }
+                        CommandProcessor.getInstance().newCommand()
+                            .project(myProject)
+                            .name(LocalizeValue.ofNullable(getCommandName()))
+                            .inLaterIf(!myProject.getApplication().isUnitTestMode())
+                            .inWriteAction()
+                            .run(() -> performAutomaticRename.run());
                     }
                 }
             }
