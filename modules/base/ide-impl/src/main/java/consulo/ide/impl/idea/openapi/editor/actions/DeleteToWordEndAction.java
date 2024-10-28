@@ -19,7 +19,7 @@
  * User: max
  * Date: May 14, 2002
  * Time: 7:18:30 PM
- * To change template for new class use 
+ * To change template for new class use
  * Code Style | Class Templates options (Tools | IDE Options).
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
@@ -35,67 +35,69 @@ import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.annotation.access.RequiredWriteAction;
 
 public class DeleteToWordEndAction extends TextComponentEditorAction {
-  public DeleteToWordEndAction() {
-    super(new Handler(false));
-  }
-
-  static class Handler extends EditorWriteActionHandler {
-
-    private final boolean myNegateCamelMode;
-
-    Handler(boolean negateCamelMode) {
-      super(true);
-      myNegateCamelMode = negateCamelMode;
+    public DeleteToWordEndAction() {
+        super(new Handler(false));
     }
 
-    @RequiredWriteAction
-    @Override
-    public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
-      CommandProcessor.getInstance().setCurrentCommandGroupId(EditorActionUtil.DELETE_COMMAND_GROUP);
-      CopyPasteManager.getInstance().stopKillRings();
+    static class Handler extends EditorWriteActionHandler {
 
-      int lineNumber = editor.getCaretModel().getLogicalPosition().line;
-      if (editor.isColumnMode() && editor.getCaretModel().supportsMultipleCarets()
-          && editor.getCaretModel().getOffset() == editor.getDocument().getLineEndOffset(lineNumber)) {
-        return;
-      }
+        private final boolean myNegateCamelMode;
 
-      boolean camelMode = editor.getSettings().isCamelWords();
-      if (myNegateCamelMode) {
-        camelMode = !camelMode;
-      }
-      deleteToWordEnd(editor, camelMode);
-    }
-  }
+        Handler(boolean negateCamelMode) {
+            super(true);
+            myNegateCamelMode = negateCamelMode;
+        }
 
-  private static void deleteToWordEnd(Editor editor, boolean camelMode) {
-    int startOffset = editor.getCaretModel().getOffset();
-    int endOffset = getWordEndOffset(editor, startOffset, camelMode);
-    if(endOffset > startOffset) {
-      Document document = editor.getDocument();
-      document.deleteString(startOffset, endOffset);
-    }
-  }
+        @RequiredWriteAction
+        @Override
+        public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
+            CommandProcessor.getInstance().setCurrentCommandGroupId(EditorActionUtil.DELETE_COMMAND_GROUP);
+            CopyPasteManager.getInstance().stopKillRings();
 
-  private static int getWordEndOffset(Editor editor, int offset, boolean camelMode) {
-    Document document = editor.getDocument();
-    CharSequence text = document.getCharsSequence();
-    if(offset >= document.getTextLength() - 1)
-      return offset;
-    int newOffset = offset + 1;
-    int lineNumber = editor.getCaretModel().getLogicalPosition().line;
-    int maxOffset = document.getLineEndOffset(lineNumber);
-    if(newOffset > maxOffset) {
-      if(lineNumber+1 >= document.getLineCount())
-        return offset;
-      maxOffset = document.getLineEndOffset(lineNumber+1);
+            int lineNumber = editor.getCaretModel().getLogicalPosition().line;
+            if (editor.isColumnMode() && editor.getCaretModel().supportsMultipleCarets()
+                && editor.getCaretModel().getOffset() == editor.getDocument().getLineEndOffset(lineNumber)) {
+                return;
+            }
+
+            boolean camelMode = editor.getSettings().isCamelWords();
+            if (myNegateCamelMode) {
+                camelMode = !camelMode;
+            }
+            deleteToWordEnd(editor, camelMode);
+        }
     }
-    for (; newOffset < maxOffset; newOffset++) {
-      if (EditorActionUtil.isWordEnd(text, newOffset, camelMode) ||
-          EditorActionUtil.isWordStart(text, newOffset, camelMode)) {
-        break;
-      }
+
+    private static void deleteToWordEnd(Editor editor, boolean camelMode) {
+        int startOffset = editor.getCaretModel().getOffset();
+        int endOffset = getWordEndOffset(editor, startOffset, camelMode);
+        if (endOffset > startOffset) {
+            Document document = editor.getDocument();
+            document.deleteString(startOffset, endOffset);
+        }
     }
-    return newOffset;
-  }
+
+    private static int getWordEndOffset(Editor editor, int offset, boolean camelMode) {
+        Document document = editor.getDocument();
+        CharSequence text = document.getCharsSequence();
+        if (offset >= document.getTextLength() - 1) {
+            return offset;
+        }
+        int newOffset = offset + 1;
+        int lineNumber = editor.getCaretModel().getLogicalPosition().line;
+        int maxOffset = document.getLineEndOffset(lineNumber);
+        if (newOffset > maxOffset) {
+            if (lineNumber + 1 >= document.getLineCount()) {
+                return offset;
+            }
+            maxOffset = document.getLineEndOffset(lineNumber + 1);
+        }
+        for (; newOffset < maxOffset; newOffset++) {
+            if (EditorActionUtil.isWordEnd(text, newOffset, camelMode) ||
+                EditorActionUtil.isWordStart(text, newOffset, camelMode)) {
+                break;
+            }
+        }
+        return newOffset;
+    }
 }

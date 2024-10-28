@@ -49,75 +49,79 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class TabAction extends EditorAction {
-  public TabAction() {
-    super(new Handler());
-    setInjectedContext(true);
-  }
-
-  private static class Handler extends EditorWriteActionHandler {
-    public Handler() {
-      super(true);
+    public TabAction() {
+        super(new Handler());
+        setInjectedContext(true);
     }
 
-    @RequiredWriteAction
-    @Override
-    public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
-      if (caret == null) {
-        caret = editor.getCaretModel().getPrimaryCaret();
-      }
-      CommandProcessor.getInstance().setCurrentCommandGroupId(EditorActionUtil.EDIT_COMMAND_GROUP);
-      CommandProcessor.getInstance().setCurrentCommandName(EditorBundle.message("typing.command.name"));
-      Project project = dataContext.getData(Project.KEY);
-      insertTabAtCaret(editor, caret, project);
+    private static class Handler extends EditorWriteActionHandler {
+        public Handler() {
+            super(true);
+        }
+
+        @RequiredWriteAction
+        @Override
+        public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
+            if (caret == null) {
+                caret = editor.getCaretModel().getPrimaryCaret();
+            }
+            CommandProcessor.getInstance().setCurrentCommandGroupId(EditorActionUtil.EDIT_COMMAND_GROUP);
+            CommandProcessor.getInstance().setCurrentCommandName(EditorBundle.message("typing.command.name"));
+            Project project = dataContext.getData(Project.KEY);
+            insertTabAtCaret(editor, caret, project);
+        }
+
+        @Override
+        public boolean isEnabled(Editor editor, DataContext dataContext) {
+            return !editor.isOneLineMode() && !((EditorEx)editor).isEmbeddedIntoDialogWrapper() && !editor.isViewer();
+        }
     }
 
-    @Override
-    public boolean isEnabled(Editor editor, DataContext dataContext) {
-      return !editor.isOneLineMode() && !((EditorEx)editor).isEmbeddedIntoDialogWrapper() && !editor.isViewer();
-    }
-  }
+    private static void insertTabAtCaret(Editor editor, @Nonnull Caret caret, @Nullable Project project) {
+        EditorUIUtil.hideCursorInEditor(editor);
+        int columnNumber;
+        if (caret.hasSelection()) {
+            columnNumber = editor.visualToLogicalPosition(caret.getSelectionStartPosition()).column;
+        }
+        else {
+            columnNumber = editor.getCaretModel().getLogicalPosition().column;
+        }
 
-  private static void insertTabAtCaret(Editor editor, @Nonnull Caret caret, @Nullable Project project) {
-    EditorUIUtil.hideCursorInEditor(editor);
-    int columnNumber;
-    if (caret.hasSelection()) {
-      columnNumber = editor.visualToLogicalPosition(caret.getSelectionStartPosition()).column;
-    }
-    else {
-      columnNumber = editor.getCaretModel().getLogicalPosition().column;
-    }
+        CodeStyleSettings settings = CodeStyleSettingsManager.getSettings(project);
 
-    CodeStyleSettings settings = CodeStyleSettingsManager.getSettings(project);
+        final Document doc = editor.getDocument();
+        CommonCodeStyleSettings.IndentOptions indentOptions = settings.getIndentOptionsByDocument(project, doc);
 
-    final Document doc = editor.getDocument();
-    CommonCodeStyleSettings.IndentOptions indentOptions = settings.getIndentOptionsByDocument(project, doc);
+        int tabSize = indentOptions.INDENT_SIZE;
+        int spacesToAddCount = tabSize - columnNumber % Math.max(1, tabSize);
 
-    int tabSize = indentOptions.INDENT_SIZE;
-    int spacesToAddCount = tabSize - columnNumber % Math.max(1,tabSize);
+        boolean useTab = editor.getSettings().isUseTabCharacter(project);
 
-    boolean useTab = editor.getSettings().isUseTabCharacter(project);
+        CharSequence chars = doc.getCharsSequence();
+        if (useTab && indentOptions.SMART_TABS) {
+            int offset = editor.getCaretModel().getOffset();
+            while (offset > 0) {
+                offset--;
+                if (chars.charAt(offset) == '\t') {
+                    continue;
+                }
+                if (chars.charAt(offset) == '\n') {
+                    break;
+                }
+                useTab = false;
+                break;
+            }
+        }
 
-    CharSequence chars = doc.getCharsSequence();
-    if (useTab && indentOptions.SMART_TABS) {
-      int offset = editor.getCaretModel().getOffset();
-      while (offset > 0) {
-        offset--;
-        if (chars.charAt(offset) == '\t') continue;
-        if (chars.charAt(offset) == '\n') break;
-        useTab = false;
-        break;
-      }
+        doc.startGuardedBlockChecking();
+        try {
+            EditorModificationUtil.insertStringAtCaret(editor, useTab ? "\t" : StringUtil.repeatSymbol(' ', spacesToAddCount), false, true);
+        }
+        catch (ReadOnlyFragmentModificationException e) {
+            EditorActionManager.getInstance().getReadonlyFragmentModificationHandler(doc).handle(e);
+        }
+        finally {
+            doc.stopGuardedBlockChecking();
+        }
     }
-
-    doc.startGuardedBlockChecking();
-    try {
-      EditorModificationUtil.insertStringAtCaret(editor, useTab ? "\t" : StringUtil.repeatSymbol(' ', spacesToAddCount), false, true);
-    }
-    catch (ReadOnlyFragmentModificationException e) {
-      EditorActionManager.getInstance().getReadonlyFragmentModificationHandler(doc).handle(e);
-    }
-    finally {
-      doc.stopGuardedBlockChecking();
-    }
-  }
 }

@@ -720,26 +720,26 @@ public class EditorComponentImpl extends JTextComponent
             .groupId(document)
             .inWriteAction()
             .run(() -> {
-                    document.startGuardedBlockChecking();
-                    try {
-                        if (text == null) {
-                            // remove
-                            document.deleteString(offset, offset + length);
-                        }
-                        else if (length == 0) {
-                            // insert
-                            document.insertString(offset, text);
-                        }
-                        else {
-                            document.replaceString(offset, offset + length, text);
-                        }
+                document.startGuardedBlockChecking();
+                try {
+                    if (text == null) {
+                        // remove
+                        document.deleteString(offset, offset + length);
                     }
-                    catch (ReadOnlyFragmentModificationException e) {
-                        EditorActionManager.getInstance().getReadonlyFragmentModificationHandler(document).handle(e);
+                    else if (length == 0) {
+                        // insert
+                        document.insertString(offset, text);
                     }
-                    finally {
-                        document.stopGuardedBlockChecking();
+                    else {
+                        document.replaceString(offset, offset + length, text);
                     }
+                }
+                catch (ReadOnlyFragmentModificationException e) {
+                    EditorActionManager.getInstance().getReadonlyFragmentModificationHandler(document).handle(e);
+                }
+                finally {
+                    document.stopGuardedBlockChecking();
+                }
             });
     }
 

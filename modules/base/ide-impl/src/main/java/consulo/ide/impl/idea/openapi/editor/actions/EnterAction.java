@@ -41,82 +41,84 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class EnterAction extends EditorAction {
-  public EnterAction() {
-    super(new Handler());
-    setInjectedContext(true);
-  }
-
-  private static class Handler extends EditorWriteActionHandler {
-    public Handler() {
-      super(true);
+    public EnterAction() {
+        super(new Handler());
+        setInjectedContext(true);
     }
 
-    @RequiredWriteAction
-    @Override
-    public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
-      CommandProcessor.getInstance().setCurrentCommandName(EditorBundle.message("typing.command.name"));
-      insertNewLineAtCaret(editor);
-    }
-
-    @Override
-    public boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
-      return !editor.isOneLineMode();
-    }
-  }
-
-  public static void insertNewLineAtCaret(Editor editor) {
-    EditorUIUtil.hideCursorInEditor(editor);
-    Document document = editor.getDocument();
-    int caretLine = editor.getCaretModel().getLogicalPosition().line;
-    if(!editor.isInsertMode()) {
-      int lineCount = document.getLineCount();
-      if(caretLine < lineCount) {
-        if (caretLine == lineCount - 1) {
-          document.insertString(document.getTextLength(), "\n");
+    private static class Handler extends EditorWriteActionHandler {
+        public Handler() {
+            super(true);
         }
-        LogicalPosition pos = new LogicalPosition(caretLine + 1, 0);
-        editor.getCaretModel().moveToLogicalPosition(pos);
-        editor.getSelectionModel().removeSelection();
+
+        @RequiredWriteAction
+        @Override
+        public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
+            CommandProcessor.getInstance().setCurrentCommandName(EditorBundle.message("typing.command.name"));
+            insertNewLineAtCaret(editor);
+        }
+
+        @Override
+        public boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
+            return !editor.isOneLineMode();
+        }
+    }
+
+    public static void insertNewLineAtCaret(Editor editor) {
+        EditorUIUtil.hideCursorInEditor(editor);
+        Document document = editor.getDocument();
+        int caretLine = editor.getCaretModel().getLogicalPosition().line;
+        if (!editor.isInsertMode()) {
+            int lineCount = document.getLineCount();
+            if (caretLine < lineCount) {
+                if (caretLine == lineCount - 1) {
+                    document.insertString(document.getTextLength(), "\n");
+                }
+                LogicalPosition pos = new LogicalPosition(caretLine + 1, 0);
+                editor.getCaretModel().moveToLogicalPosition(pos);
+                editor.getSelectionModel().removeSelection();
+                EditorModificationUtil.scrollToCaret(editor);
+            }
+            return;
+        }
+        EditorModificationUtil.deleteSelectedText(editor);
+        // Smart indenting here:
+        CharSequence text = document.getCharsSequence();
+
+        int indentLineNum = caretLine;
+        int lineLength = 0;
+        if (document.getLineCount() > 0) {
+            for (; indentLineNum >= 0; indentLineNum--) {
+                lineLength = document.getLineEndOffset(indentLineNum) - document.getLineStartOffset(indentLineNum);
+                if (lineLength > 0) {
+                    break;
+                }
+            }
+        }
+        else {
+            indentLineNum = -1;
+        }
+
+        int colNumber = editor.getCaretModel().getLogicalPosition().column;
+        StringBuilder buf = new StringBuilder();
+        if (indentLineNum >= 0) {
+            int lineStartOffset = document.getLineStartOffset(indentLineNum);
+            for (int i = 0; i < lineLength; i++) {
+                char c = text.charAt(lineStartOffset + i);
+                if (c != ' ' && c != '\t') {
+                    break;
+                }
+                if (i >= colNumber) {
+                    break;
+                }
+                buf.append(c);
+            }
+        }
+        int caretOffset = editor.getCaretModel().getOffset();
+        String s = "\n" + buf;
+        document.insertString(caretOffset, s);
+        editor.getCaretModel().moveToOffset(caretOffset + s.length());
         EditorModificationUtil.scrollToCaret(editor);
-      }
-      return;
+        editor.getSelectionModel().removeSelection();
     }
-    EditorModificationUtil.deleteSelectedText(editor);
-    // Smart indenting here:
-    CharSequence text = document.getCharsSequence();
-
-    int indentLineNum = caretLine;
-    int lineLength = 0;
-    if (document.getLineCount() > 0) {
-      for(;indentLineNum >= 0; indentLineNum--) {
-        lineLength = document.getLineEndOffset(indentLineNum) - document.getLineStartOffset(indentLineNum);
-        if(lineLength > 0)
-          break;
-      }
-    } else {
-      indentLineNum = -1;
-    }
-
-    int colNumber = editor.getCaretModel().getLogicalPosition().column;
-    StringBuilder buf = new StringBuilder();
-    if(indentLineNum >= 0) {
-      int lineStartOffset = document.getLineStartOffset(indentLineNum);
-      for(int i = 0; i < lineLength; i++) {
-        char c = text.charAt(lineStartOffset + i);
-        if(c != ' ' && c != '\t') {
-          break;
-        }
-        if(i >= colNumber) {
-          break;
-        }
-        buf.append(c);
-      }
-    }
-    int caretOffset = editor.getCaretModel().getOffset();
-    String s = "\n"+buf;
-    document.insertString(caretOffset, s);
-    editor.getCaretModel().moveToOffset(caretOffset + s.length());
-    EditorModificationUtil.scrollToCaret(editor);
-    editor.getSelectionModel().removeSelection();
-  }
 }

@@ -37,25 +37,24 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class PreviousVariableAction extends EditorAction {
-  public PreviousVariableAction() {
-    super(new Handler());
-    setInjectedContext(true);
-  }
-
-  private static class Handler extends EditorActionHandler {
-
-    @Override
-    protected void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
-      final TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
-      assert templateState != null;
-      CommandProcessor.getInstance().setCurrentCommandName(CodeInsightBundle.message("template.previous.variable.command"));
-      templateState.previousTab();
+    public PreviousVariableAction() {
+        super(new Handler());
+        setInjectedContext(true);
     }
 
-    @Override
-    protected boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
-      final TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
-      return templateState != null && !templateState.isFinished();
+    private static class Handler extends EditorActionHandler {
+        @Override
+        protected void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
+            final TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
+            assert templateState != null;
+            CommandProcessor.getInstance().setCurrentCommandName(CodeInsightBundle.message("template.previous.variable.command"));
+            templateState.previousTab();
+        }
+
+        @Override
+        protected boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
+            final TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
+            return templateState != null && !templateState.isFinished();
+        }
     }
-  }
 }

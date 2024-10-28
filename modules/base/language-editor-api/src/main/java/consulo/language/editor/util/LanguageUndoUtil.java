@@ -28,15 +28,17 @@ import jakarta.annotation.Nonnull;
  * @since 16-Feb-22
  */
 public class LanguageUndoUtil {
-  /**
-   * make undoable action in current document in order to Undo action work from current file
-   *
-   * @param file to make editors of to respond to undo action.
-   */
-  public static void markPsiFileForUndo(@Nonnull final PsiFile file) {
-    Project project = file.getProject();
-    final Document document = PsiDocumentManager.getInstance(project).getDocument(file);
-    if (document == null) return;
-    CommandProcessor.getInstance().addAffectedDocuments(project, document);
-  }
+    /**
+     * make undoable action in current document in order to Undo action work from current file
+     *
+     * @param file to make editors of to respond to undo action.
+     */
+    public static void markPsiFileForUndo(@Nonnull final PsiFile file) {
+        Project project = file.getProject();
+        final Document document = PsiDocumentManager.getInstance(project).getDocument(file);
+        if (document == null) {
+            return;
+        }
+        CommandProcessor.getInstance().addAffectedDocuments(project, document);
+    }
 }

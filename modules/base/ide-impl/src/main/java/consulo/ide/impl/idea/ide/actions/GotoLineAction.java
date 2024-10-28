@@ -32,8 +32,7 @@ public class GotoLineAction extends AnAction implements DumbAware {
             dialog.show();
         }
         else {
-            CommandProcessor processor = CommandProcessor.getInstance();
-            processor.newCommand()
+            CommandProcessor.getInstance().newCommand()
                 .project(project)
                 .name(IdeLocalize.commandGoToLine())
                 .run(() -> {
