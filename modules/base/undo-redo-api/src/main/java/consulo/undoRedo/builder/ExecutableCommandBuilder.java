@@ -66,6 +66,11 @@ public interface ExecutableCommandBuilder<R, THIS extends ExecutableCommandBuild
     }
 
     @SuppressWarnings("unchecked")
+    default THIS inUndoTransparentAction() {
+        return proxy(runnable -> CommandProcessor.getInstance().runUndoTransparentAction(runnable));
+    }
+
+    @SuppressWarnings("unchecked")
     default THIS inWriteAction() {
         return proxy(runnable -> Application.get().runWriteAction(runnable));
     }
