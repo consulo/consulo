@@ -24,38 +24,39 @@
  */
 package consulo.ide.impl.idea.codeInsight.template.impl.actions;
 
-import consulo.language.editor.CodeInsightBundle;
-import consulo.language.editor.impl.internal.template.TemplateManagerImpl;
-import consulo.language.editor.impl.internal.template.TemplateStateImpl;
-import consulo.dataContext.DataContext;
-import consulo.undoRedo.CommandProcessor;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.dataContext.DataContext;
+import consulo.language.editor.impl.internal.template.TemplateManagerImpl;
+import consulo.language.editor.impl.internal.template.TemplateStateImpl;
+import consulo.language.editor.localize.CodeInsightLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.undoRedo.CommandProcessor;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class PreviousVariableAction extends EditorAction {
-  public PreviousVariableAction() {
-    super(new Handler());
-    setInjectedContext(true);
-  }
-
-  private static class Handler extends EditorActionHandler {
-
-    @Override
-    protected void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
-      final TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
-      assert templateState != null;
-      CommandProcessor.getInstance().setCurrentCommandName(CodeInsightBundle.message("template.previous.variable.command"));
-      templateState.previousTab();
+    public PreviousVariableAction() {
+        super(new Handler());
+        setInjectedContext(true);
     }
 
-    @Override
-    protected boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
-      final TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
-      return templateState != null && !templateState.isFinished();
+    private static class Handler extends EditorActionHandler {
+        @Override
+        @RequiredUIAccess
+        protected void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
+            final TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
+            assert templateState != null;
+            CommandProcessor.getInstance().setCurrentCommandName(CodeInsightLocalize.templatePreviousVariableCommand());
+            templateState.previousTab();
+        }
+
+        @Override
+        protected boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
+            final TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
+            return templateState != null && !templateState.isFinished();
+        }
     }
-  }
 }

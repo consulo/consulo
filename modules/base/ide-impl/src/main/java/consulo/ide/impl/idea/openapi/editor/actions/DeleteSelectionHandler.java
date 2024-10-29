@@ -36,36 +36,36 @@ import jakarta.annotation.Nullable;
 
 @ExtensionImpl(id = "delete.for.selection")
 public class DeleteSelectionHandler extends EditorWriteActionHandler implements ExtensionEditorActionHandler {
-  private EditorActionHandler myOriginalHandler;
+    private EditorActionHandler myOriginalHandler;
 
-  @RequiredWriteAction
-  @Override
-  public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
-    if (caret == null ? editor.getSelectionModel().hasSelection(true) : caret.hasSelection()) {
-      EditorUIUtil.hideCursorInEditor(editor);
-      CommandProcessor.getInstance().setCurrentCommandGroupId(EditorActionUtil.DELETE_COMMAND_GROUP);
-      CopyPasteManager.getInstance().stopKillRings();
-      CaretAction action = c -> EditorModificationUtil.deleteSelectedText(editor);
-      if (caret == null) {
-        editor.getCaretModel().runForEachCaret(action);
-      }
-      else {
-        action.perform(caret);
-      }
+    @RequiredWriteAction
+    @Override
+    public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
+        if (caret == null ? editor.getSelectionModel().hasSelection(true) : caret.hasSelection()) {
+            EditorUIUtil.hideCursorInEditor(editor);
+            CommandProcessor.getInstance().setCurrentCommandGroupId(EditorActionUtil.DELETE_COMMAND_GROUP);
+            CopyPasteManager.getInstance().stopKillRings();
+            CaretAction action = c -> EditorModificationUtil.deleteSelectedText(editor);
+            if (caret == null) {
+                editor.getCaretModel().runForEachCaret(action);
+            }
+            else {
+                action.perform(caret);
+            }
+        }
+        else {
+            myOriginalHandler.execute(editor, caret, dataContext);
+        }
     }
-    else {
-      myOriginalHandler.execute(editor, caret, dataContext);
+
+    @Override
+    public void init(@Nullable EditorActionHandler originalHandler) {
+        myOriginalHandler = originalHandler;
     }
-  }
 
-  @Override
-  public void init(@Nullable EditorActionHandler originalHandler) {
-    myOriginalHandler = originalHandler;
-  }
-
-  @Nonnull
-  @Override
-  public String getActionId() {
-    return IdeActions.ACTION_EDITOR_DELETE;
-  }
+    @Nonnull
+    @Override
+    public String getActionId() {
+        return IdeActions.ACTION_EDITOR_DELETE;
+    }
 }

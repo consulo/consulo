@@ -282,7 +282,7 @@ public class VariableInplaceRenamer extends InplaceRefactoring {
                             .name(LocalizeValue.ofNullable(getCommandName()))
                             .inLaterIf(!myProject.getApplication().isUnitTestMode())
                             .inWriteAction()
-                            .run(() -> performAutomaticRename.run());
+                            .run(performAutomaticRename::run);
                     }
                 }
             }

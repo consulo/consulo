@@ -1386,3 +1386,19 @@ message.duplicate.plugin.id:
   text: 'Duplicate plugin id:'
 task.button.cancel:
   text: Cancel
+code.style.indent.provider.notification.settings:
+  text: Code Style Settings
+code.style.indent.provider.notification.re.enable:
+  text: Undo
+code.style.indent.detector.reject:
+  text: Indent New Lines with {0}
+code.style.indent.detector.disable:
+  text: Disable Indents Detection for Project
+code.style.indent.detector.apply:
+  text: <html>Indent New Lines with {0}  <span style="color:#{1}">detected</span>
+code.style.indent.detector.reindent:
+  text: Reindent File with {0}
+code.style.indent.detector.notification.content:
+  text: Indents detection disabled
+notification.group.automatic.indent.detection:
+  text: Automatic indent detection

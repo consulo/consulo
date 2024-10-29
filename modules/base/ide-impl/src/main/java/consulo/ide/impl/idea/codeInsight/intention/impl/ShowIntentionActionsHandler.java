@@ -111,6 +111,7 @@ public class ShowIntentionActionsHandler implements CodeInsightActionHandler {
         }
     }
 
+    @RequiredUIAccess
     private static void letAutoImportComplete(@Nonnull Editor editor, @Nonnull PsiFile file, DaemonCodeAnalyzerImpl codeAnalyzer) {
         CommandProcessor.getInstance().runUndoTransparentAction(() -> codeAnalyzer.autoImportReferenceAtCursor(editor, file));
     }

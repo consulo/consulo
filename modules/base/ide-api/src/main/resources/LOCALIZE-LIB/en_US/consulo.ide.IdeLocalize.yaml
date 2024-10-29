@@ -2639,3 +2639,5 @@ change.encoding.command.name:
   text: "Change Encoding for ''{0}''"
 action.Anonymous.text.live.templates:
   text: Live Templates
+dialog.title.choose.color:
+  text: Choose Color
