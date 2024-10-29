@@ -38,6 +38,12 @@ public class ProxyExecutableCommandBuilder<R, THIS extends ExecutableCommandBuil
     }
 
     @Override
+    public THIS inGlobalUndoAction() {
+        mySubBuilder = mySubBuilder.inGlobalUndoAction();
+        return self();
+    }
+
+    @Override
     public ExecutionResult<R> execute(ThrowableSupplier<R, ? extends Throwable> executable) {
         SimpleReference<ExecutionResult<R>> result = SimpleReference.create();
         myRunner.accept(() -> result.set(mySubBuilder.execute(executable)));

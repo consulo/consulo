@@ -13,6 +13,7 @@ import consulo.undoRedo.CommandDescriptor;
 import consulo.undoRedo.event.CommandEvent;
 import consulo.undoRedo.event.CommandListener;
 import consulo.util.collection.Lists;
+import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.function.ThrowableSupplier;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
@@ -28,7 +29,12 @@ public class CoreCommandProcessor extends CommandProcessorEx {
         @RequiredUIAccess
         public ExecutionResult<R> execute(ThrowableSupplier<R, ? extends Throwable> executable) {
             SimpleReference<ExecutionResult<R>> result = SimpleReference.create();
-            executeCommand(build(() -> result.set(super.execute(executable))));
+            executeCommand(build(() -> {
+                if (myGlobalUndoAction) {
+                    markCurrentCommandAsGlobal(build(EmptyRunnable.INSTANCE).project());
+                }
+                result.set(super.execute(executable));
+            }));
             return result.get();
         }
     }
