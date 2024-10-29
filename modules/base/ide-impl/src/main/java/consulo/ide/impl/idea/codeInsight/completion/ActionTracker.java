@@ -35,47 +35,55 @@ import consulo.disposer.Disposable;
  * @author peter
  */
 class ActionTracker {
-  private boolean myActionsHappened;
-  private final Editor myEditor;
-  private final Project myProject;
-  private boolean myIgnoreDocumentChanges;
+    private boolean myActionsHappened;
+    private final Editor myEditor;
+    private final Project myProject;
+    private boolean myIgnoreDocumentChanges;
 
-  ActionTracker(Editor editor, Disposable parentDisposable) {
-    myEditor = editor;
-    myProject = editor.getProject();
-    ActionManager.getInstance().addAnActionListener(new AnActionListener.Adapter() {
-      @Override
-      public void beforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
-        myActionsHappened = true;
-      }
-    }, parentDisposable);
-    myEditor.getDocument().addDocumentListener(new DocumentAdapter() {
-      @Override
-      public void documentChanged(DocumentEvent e) {
-        if (!myIgnoreDocumentChanges) {
-          myActionsHappened = true;
+    ActionTracker(Editor editor, Disposable parentDisposable) {
+        myEditor = editor;
+        myProject = editor.getProject();
+        ActionManager.getInstance().addAnActionListener(
+            new AnActionListener.Adapter() {
+                @Override
+                public void beforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
+                    myActionsHappened = true;
+                }
+            },
+            parentDisposable
+        );
+        myEditor.getDocument().addDocumentListener(
+            new DocumentAdapter() {
+                @Override
+                public void documentChanged(DocumentEvent e) {
+                    if (!myIgnoreDocumentChanges) {
+                        myActionsHappened = true;
+                    }
+                }
+            },
+            parentDisposable
+        );
+    }
+
+    void ignoreCurrentDocumentChange() {
+        final CommandProcessor commandProcessor = CommandProcessor.getInstance();
+        if (commandProcessor.getCurrentCommand() == null) {
+            return;
         }
-      }
-    }, parentDisposable);
-  }
 
-  void ignoreCurrentDocumentChange() {
-    final CommandProcessor commandProcessor = CommandProcessor.getInstance();
-    if (commandProcessor.getCurrentCommand() == null) return;
+        myIgnoreDocumentChanges = true;
+        commandProcessor.addCommandListener(new CommandListener() {
+            @Override
+            public void commandFinished(CommandEvent event) {
+                commandProcessor.removeCommandListener(this);
+                myIgnoreDocumentChanges = false;
+            }
+        });
+    }
 
-    myIgnoreDocumentChanges = true;
-    commandProcessor.addCommandListener(new CommandListener() {
-      @Override
-      public void commandFinished(CommandEvent event) {
-        commandProcessor.removeCommandListener(this);
-        myIgnoreDocumentChanges = false;
-      }
-    });
-  }
-
-  boolean hasAnythingHappened() {
-    return myActionsHappened || DumbService.getInstance(myProject).isDumb() ||
-      myEditor.isDisposed() || (myEditor instanceof EditorWindow editorWindow && !editorWindow.isValid());
-  }
+    boolean hasAnythingHappened() {
+        return myActionsHappened || DumbService.getInstance(myProject).isDumb() ||
+            myEditor.isDisposed() || (myEditor instanceof EditorWindow editorWindow && !editorWindow.isValid());
+    }
 
 }

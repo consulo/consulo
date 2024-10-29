@@ -711,14 +711,8 @@ class ApplyPatchViewer implements DataProvider, Disposable {
                     for (int i = changes.size() - 1; i >= 0; i--) {
                         ApplyPatchChange change = changes.get(i);
                         switch (change.getStatus()) {
-                            case ALREADY_APPLIED:
-                                markChangeResolved(change);
-                                break;
-                            case EXACTLY_APPLIED:
-                                replaceChange(change);
-                                break;
-                            case NOT_APPLIED:
-                                break;
+                            case ALREADY_APPLIED -> markChangeResolved(change);
+                            case EXACTLY_APPLIED -> replaceChange(change);
                         }
                     }
                 });

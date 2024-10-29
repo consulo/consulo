@@ -16,32 +16,34 @@ import jakarta.annotation.Nonnull;
  * @author eldar
  */
 class DeleteToWordBoundaryHandler extends EditorWriteActionHandler.ForEachCaret {
-  private final boolean myIsUntilStart;
-  private final boolean myNegateCamelMode;
+    private final boolean myIsUntilStart;
+    private final boolean myNegateCamelMode;
 
-  DeleteToWordBoundaryHandler(boolean isUntilStart, boolean negateCamelMode) {
-    myIsUntilStart = isUntilStart;
-    myNegateCamelMode = negateCamelMode;
-  }
-
-  @Override
-  public void executeWriteAction(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
-    CommandProcessor.getInstance().setCurrentCommandGroupId(EditorActionUtil.DELETE_COMMAND_GROUP);
-    CopyPasteManager.getInstance().stopKillRings();
-
-    boolean camelMode = editor.getSettings().isCamelWords();
-    if (myNegateCamelMode) {
-      camelMode = !camelMode;
+    DeleteToWordBoundaryHandler(boolean isUntilStart, boolean negateCamelMode) {
+        myIsUntilStart = isUntilStart;
+        myNegateCamelMode = negateCamelMode;
     }
 
-    if (editor.getSelectionModel().hasSelection()) {
-      EditorModificationUtil.deleteSelectedText(editor);
-      return;
-    }
+    @Override
+    public void executeWriteAction(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
+        CommandProcessor.getInstance().setCurrentCommandGroupId(EditorActionUtil.DELETE_COMMAND_GROUP);
+        CopyPasteManager.getInstance().stopKillRings();
 
-    final TextRange range = myIsUntilStart ? EditorActionUtil.getRangeToWordStart(editor, camelMode, true) : EditorActionUtil.getRangeToWordEnd(editor, camelMode, true);
-    if (!range.isEmpty()) {
-      editor.getDocument().deleteString(range.getStartOffset(), range.getEndOffset());
+        boolean camelMode = editor.getSettings().isCamelWords();
+        if (myNegateCamelMode) {
+            camelMode = !camelMode;
+        }
+
+        if (editor.getSelectionModel().hasSelection()) {
+            EditorModificationUtil.deleteSelectedText(editor);
+            return;
+        }
+
+        final TextRange range = myIsUntilStart
+            ? EditorActionUtil.getRangeToWordStart(editor, camelMode, true)
+            : EditorActionUtil.getRangeToWordEnd(editor, camelMode, true);
+        if (!range.isEmpty()) {
+            editor.getDocument().deleteString(range.getStartOffset(), range.getEndOffset());
+        }
     }
-  }
 }

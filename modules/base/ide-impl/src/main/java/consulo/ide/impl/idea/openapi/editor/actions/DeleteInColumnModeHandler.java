@@ -21,35 +21,37 @@ import jakarta.annotation.Nullable;
 
 @ExtensionImpl(id = "delete.in.column.mode")
 public class DeleteInColumnModeHandler extends EditorWriteActionHandler implements ExtensionEditorActionHandler {
-  private EditorActionHandler myOriginalHandler;
+    private EditorActionHandler myOriginalHandler;
 
-  @RequiredWriteAction
-  @Override
-  public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
-    if (editor.isColumnMode() && caret == null && editor.getCaretModel().getCaretCount() > 1) {
-      EditorUIUtil.hideCursorInEditor(editor);
-      CommandProcessor.getInstance().setCurrentCommandGroupId(EditorActionUtil.DELETE_COMMAND_GROUP);
-      CopyPasteManager.getInstance().stopKillRings();
+    @RequiredWriteAction
+    @Override
+    public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
+        if (editor.isColumnMode() && caret == null && editor.getCaretModel().getCaretCount() > 1) {
+            EditorUIUtil.hideCursorInEditor(editor);
+            CommandProcessor.getInstance().setCurrentCommandGroupId(EditorActionUtil.DELETE_COMMAND_GROUP);
+            CopyPasteManager.getInstance().stopKillRings();
 
-      editor.getCaretModel().runForEachCaret(c -> {
-        int offset = c.getOffset();
-        int lineEndOffset = DocumentUtil.getLineEndOffset(offset, editor.getDocument());
-        if (offset < lineEndOffset) myOriginalHandler.execute(editor, c, dataContext);
-      });
+            editor.getCaretModel().runForEachCaret(c -> {
+                int offset = c.getOffset();
+                int lineEndOffset = DocumentUtil.getLineEndOffset(offset, editor.getDocument());
+                if (offset < lineEndOffset) {
+                    myOriginalHandler.execute(editor, c, dataContext);
+                }
+            });
+        }
+        else {
+            myOriginalHandler.execute(editor, caret, dataContext);
+        }
     }
-    else {
-      myOriginalHandler.execute(editor, caret, dataContext);
+
+    @Override
+    public void init(@Nullable EditorActionHandler originalHandler) {
+        myOriginalHandler = originalHandler;
     }
-  }
 
-  @Override
-  public void init(@Nullable EditorActionHandler originalHandler) {
-    myOriginalHandler = originalHandler;
-  }
-
-  @Nonnull
-  @Override
-  public String getActionId() {
-    return IdeActions.ACTION_EDITOR_DELETE;
-  }
+    @Nonnull
+    @Override
+    public String getActionId() {
+        return IdeActions.ACTION_EDITOR_DELETE;
+    }
 }

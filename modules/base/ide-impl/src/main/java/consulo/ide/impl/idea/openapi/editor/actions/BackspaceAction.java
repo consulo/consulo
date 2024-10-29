@@ -40,69 +40,69 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;
 
 public class BackspaceAction extends EditorAction {
-  public BackspaceAction() {
-    super(new Handler());
-  }
-
-  private static class Handler extends EditorWriteActionHandler {
-    private Handler() {
-      super(true);
+    public BackspaceAction() {
+        super(new Handler());
     }
 
-    @RequiredWriteAction
-    @Override
-    public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
-      MacUIUtil.hideCursor();
-      CommandProcessor.getInstance().setCurrentCommandGroupId(EditorActionUtil.DELETE_COMMAND_GROUP);
-      if (editor instanceof EditorWindow editorWindow) {
-        // manipulate actual document/editor instead of injected
-        // since the latter have trouble finding the right location of caret movement in the case of multi-shred injected fragments
-        editor = editorWindow.getDelegate();
-      }
-      doBackSpaceAtCaret(editor);
-    }
-  }
-
-  private static void doBackSpaceAtCaret(@Nonnull Editor editor) {
-    if(editor.getSelectionModel().hasSelection()) {
-      EditorModificationUtil.deleteSelectedText(editor);
-      return;
-    }
-
-    int lineNumber = editor.getCaretModel().getLogicalPosition().line;
-    int colNumber = editor.getCaretModel().getLogicalPosition().column;
-    Document document = editor.getDocument();
-    int offset = editor.getCaretModel().getOffset();
-    if(colNumber > 0) {
-      if(EditorModificationUtil.calcAfterLineEnd(editor) > 0) {
-        int columnShift = -1;
-        editor.getCaretModel().moveCaretRelatively(columnShift, 0, false, false, true);
-      }
-      else {
-        EditorModificationUtil.scrollToCaret(editor);
-        editor.getSelectionModel().removeSelection();
-
-        FoldRegion region = editor.getFoldingModel().getCollapsedRegionAtOffset(offset - 1);
-        if (region != null && region.shouldNeverExpand()) {
-          document.deleteString(region.getStartOffset(), region.getEndOffset());
-          editor.getCaretModel().moveToOffset(region.getStartOffset());
+    private static class Handler extends EditorWriteActionHandler {
+        private Handler() {
+            super(true);
         }
-        else {
-          document.deleteString(offset - 1, offset);
-          editor.getCaretModel().moveToOffset(offset - 1, true);
+
+        @RequiredWriteAction
+        @Override
+        public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
+            MacUIUtil.hideCursor();
+            CommandProcessor.getInstance().setCurrentCommandGroupId(EditorActionUtil.DELETE_COMMAND_GROUP);
+            if (editor instanceof EditorWindow editorWindow) {
+                // manipulate actual document/editor instead of injected
+                // since the latter have trouble finding the right location of caret movement in the case of multi-shred injected fragments
+                editor = editorWindow.getDelegate();
+            }
+            doBackSpaceAtCaret(editor);
         }
-      }
     }
-    else if(lineNumber > 0) {
-      int separatorLength = document.getLineSeparatorLength(lineNumber - 1);
-      int lineEnd = document.getLineEndOffset(lineNumber - 1) + separatorLength;
-      document.deleteString(lineEnd - separatorLength, lineEnd);
-      editor.getCaretModel().moveToOffset(lineEnd - separatorLength);
-      EditorModificationUtil.scrollToCaret(editor);
-      editor.getSelectionModel().removeSelection();
-      // Do not group delete newline and other deletions.
-      CommandProcessor commandProcessor = CommandProcessor.getInstance();
-      commandProcessor.setCurrentCommandGroupId(null);
+
+    private static void doBackSpaceAtCaret(@Nonnull Editor editor) {
+        if (editor.getSelectionModel().hasSelection()) {
+            EditorModificationUtil.deleteSelectedText(editor);
+            return;
+        }
+
+        int lineNumber = editor.getCaretModel().getLogicalPosition().line;
+        int colNumber = editor.getCaretModel().getLogicalPosition().column;
+        Document document = editor.getDocument();
+        int offset = editor.getCaretModel().getOffset();
+        if (colNumber > 0) {
+            if (EditorModificationUtil.calcAfterLineEnd(editor) > 0) {
+                int columnShift = -1;
+                editor.getCaretModel().moveCaretRelatively(columnShift, 0, false, false, true);
+            }
+            else {
+                EditorModificationUtil.scrollToCaret(editor);
+                editor.getSelectionModel().removeSelection();
+
+                FoldRegion region = editor.getFoldingModel().getCollapsedRegionAtOffset(offset - 1);
+                if (region != null && region.shouldNeverExpand()) {
+                    document.deleteString(region.getStartOffset(), region.getEndOffset());
+                    editor.getCaretModel().moveToOffset(region.getStartOffset());
+                }
+                else {
+                    document.deleteString(offset - 1, offset);
+                    editor.getCaretModel().moveToOffset(offset - 1, true);
+                }
+            }
+        }
+        else if (lineNumber > 0) {
+            int separatorLength = document.getLineSeparatorLength(lineNumber - 1);
+            int lineEnd = document.getLineEndOffset(lineNumber - 1) + separatorLength;
+            document.deleteString(lineEnd - separatorLength, lineEnd);
+            editor.getCaretModel().moveToOffset(lineEnd - separatorLength);
+            EditorModificationUtil.scrollToCaret(editor);
+            editor.getSelectionModel().removeSelection();
+            // Do not group delete newline and other deletions.
+            CommandProcessor commandProcessor = CommandProcessor.getInstance();
+            commandProcessor.setCurrentCommandGroupId(null);
+        }
     }
-  }
 }

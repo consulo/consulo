@@ -2991,6 +2991,7 @@ public final class DesktopEditorImpl extends CodeEditorBase
             composedText = new String(strBuf);
         }
 
+        @RequiredUIAccess
         private void setInputMethodCaretPosition(@Nonnull InputMethodEvent e) {
             if (composedText != null) {
                 int dot = composedTextRange.getStartOffset();
@@ -3005,18 +3006,6 @@ public final class DesktopEditorImpl extends CodeEditorBase
             }
         }
 
-        @RequiredUIAccess
-        private void runUndoTransparent(@Nonnull final Runnable runnable) {
-            CommandProcessor.getInstance().runUndoTransparentAction(
-                () -> CommandProcessor.getInstance().newCommand()
-                    .project(myProject)
-                    .document(getDocument())
-                    .groupId(getDocument())
-                    .inWriteAction()
-                    .run(runnable)
-            );
-        }
-
         private boolean hasRelevantCommittedText(@Nonnull InputMethodEvent e) {
             if (e.getCommittedCharacterCount() <= 0) {
                 return false;
@@ -3027,8 +3016,8 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
         private void replaceInputMethodText(@Nonnull InputMethodEvent e) {
             if (myNeedToSelectPreviousChar && Platform.current().os().isMac()
-                && (Registry.is("ide.mac.pressAndHold.brute.workaround") || Registry.is("ide.mac.pressAndHold.workaround") && (hasRelevantCommittedText(
-                e) || e.getCaret() == null))) {
+                && (Registry.is("ide.mac.pressAndHold.brute.workaround") || Registry.is("ide.mac.pressAndHold.workaround")
+                && (hasRelevantCommittedText(e) || e.getCaret() == null))) {
                 // This is required to support input of accented characters using press-and-hold method (http://support.apple.com/kb/PH11264).
                 // JDK currently properly supports this functionality only for TextComponent/JTextComponent descendants.
                 // For our editor component we need this workaround.
@@ -3050,13 +3039,19 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
             if (composedText != null) {
                 if (!isViewer() && doc.isWritable()) {
-                    runUndoTransparent(() -> {
-                        int docLength = doc.getTextLength();
-                        ProperTextRange range = composedTextRange.intersection(new TextRange(0, docLength));
-                        if (range != null) {
-                            doc.deleteString(range.getStartOffset(), range.getEndOffset());
-                        }
-                    });
+                    CommandProcessor.getInstance().newCommand()
+                        .project(myProject)
+                        .document(getDocument())
+                        .groupId(getDocument())
+                        .inUndoTransparentAction()
+                        .inWriteAction()
+                        .run(() -> {
+                            int docLength = doc.getTextLength();
+                            ProperTextRange range = composedTextRange.intersection(new TextRange(0, docLength));
+                            if (range != null) {
+                                doc.deleteString(range.getStartOffset(), range.getEndOffset());
+                            }
+                        });
                 }
                 composedText = null;
             }
@@ -3079,12 +3074,18 @@ public final class DesktopEditorImpl extends CodeEditorBase
                     if (composedTextIndex < text.getEndIndex()) {
                         createComposedString(composedTextIndex, text);
 
-                        runUndoTransparent(() -> EditorModificationUtil.insertStringAtCaret(
-                            DesktopEditorImpl.this,
-                            composedText,
-                            false,
-                            false
-                        ));
+                        CommandProcessor.getInstance().newCommand()
+                            .project(myProject)
+                            .document(getDocument())
+                            .groupId(getDocument())
+                            .inUndoTransparentAction()
+                            .inWriteAction()
+                            .run(() -> EditorModificationUtil.insertStringAtCaret(
+                                DesktopEditorImpl.this,
+                                composedText,
+                                false,
+                                false
+                            ));
 
                         composedTextRange = ProperTextRange.from(getCaretModel().getOffset(), composedText.length());
                     }

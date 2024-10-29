@@ -1383,9 +1383,8 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
                                 .project(project)
                                 .inWriteAction()
                                 .run(() -> {
-                                    if (file != null &&
-                                        !file.isWritable() &&
-                                        ReadonlyStatusHandler.getInstance(project).ensureFilesWritable(file).hasReadonlyFiles()) {
+                                    if (file != null && !file.isWritable()
+                                        && ReadonlyStatusHandler.getInstance(project).ensureFilesWritable(file).hasReadonlyFiles()) {
                                         return;
                                     }
 

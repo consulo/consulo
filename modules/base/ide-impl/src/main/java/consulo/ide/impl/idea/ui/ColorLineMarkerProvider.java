@@ -22,6 +22,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.component.extension.ExtensionPoint;
 import consulo.ide.impl.idea.util.FunctionUtil;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.Language;
 import consulo.language.editor.Pass;
 import consulo.language.editor.gutter.*;
@@ -73,7 +74,7 @@ public final class ColorLineMarkerProvider implements LineMarkerProvider, DumbAw
 
                         ColorChooser.chooseColor(
                             editor.getComponent(),
-                            "Choose Color",
+                            IdeLocalize.dialogTitleChooseColor().get(),
                             TargetAWT.to(color),
                             true,
                             c -> {

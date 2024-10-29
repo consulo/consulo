@@ -22,6 +22,7 @@ import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.file.FileTypeManager;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
@@ -29,7 +30,6 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.primitive.ints.IntObjectMap;
 import consulo.util.lang.ClassLoaderUtil;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -52,8 +52,7 @@ public class FileTemplateUtil {
         @Nullable final String fileName,
         @Nullable Properties props,
         @Nonnull final PsiDirectory directory
-    )
-        throws Exception {
+    ) throws Exception {
         Map<String, Object> map;
         if (props != null) {
             map = new HashMap<>();
@@ -72,8 +71,7 @@ public class FileTemplateUtil {
         @Nullable final String fileName,
         @Nullable Map<String, Object> props,
         @Nonnull final PsiDirectory directory
-    )
-        throws Exception {
+    ) throws Exception {
         Map<String, Object> map;
         if (props != null) {
             map = new HashMap<>(props);
@@ -150,24 +148,12 @@ public class FileTemplateUtil {
             (ThrowableComputable<String, IOException>)() -> template.getText(properties)
         );
         final String templateText = StringUtil.convertLineSeparators(mergedText);
-        final SimpleReference<Exception> commandException = new SimpleReference<>();
-        PsiElement result = CommandProcessor.getInstance().<PsiElement>newCommand()
+        return CommandProcessor.getInstance().<PsiElement>newCommand()
             .project(project)
             .name(handler.commandName(template))
             .inWriteAction()
-            .compute(() -> {
-                try {
-                    return handler.createFromTemplate(project, directory, fileName_, template, templateText, properties);
-                }
-                catch (Exception ex) {
-                    commandException.set(ex);
-                    return null;
-                }
-            });
-        if (!commandException.isNull()) {
-            throw commandException.get();
-        }
-        return result;
+            .canThrow(IncorrectOperationException.class)
+            .compute(() -> handler.createFromTemplate(project, directory, fileName_, template, templateText, properties));
     }
 
     @Nonnull

@@ -105,7 +105,7 @@ public class RollbackLineStatusAction extends DumbAwareAction {
     }
 
     @RequiredUIAccess
-    private static void execute(@Nonnull final LineStatusTracker tracker, @Nonnull final Runnable task) {
+    private static void execute(@Nonnull final LineStatusTracker tracker, @RequiredUIAccess @Nonnull final Runnable task) {
         CommandProcessor.getInstance().newCommand()
             .project(tracker.getProject())
             .document(tracker.getDocument())

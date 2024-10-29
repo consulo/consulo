@@ -32,6 +32,7 @@ import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.IOException;
 import java.util.Objects;
 
@@ -39,78 +40,84 @@ import java.util.Objects;
  * @author gregsh
  */
 public class ScratchUtil {
-  private ScratchUtil() {
-  }
-
-  /**
-   * Returns true if a file or a directory is in one of scratch roots: scratch, console, etc.
-   *
-   * @see RootType
-   * @see ScratchFileService
-   */
-  public static boolean isScratch(@Nullable VirtualFile file) {
-    RootType rootType = RootType.forFile(file);
-    return rootType != null && !rootType.isHidden();
-  }
-
-  public static void updateFileExtension(@Nonnull Project project, @Nullable VirtualFile file) throws IOException {
-    ApplicationManager.getApplication().assertWriteAccessAllowed();
-    if (CommandProcessor.getInstance().getCurrentCommand() == null) {
-      throw new AssertionError("command required");
+    private ScratchUtil() {
     }
 
-    if (file == null) return;
-    Language language = LanguageUtil.getLanguageForPsi(project, file);
-    FileType expected = getFileTypeFromName(file);
-    FileType actual = language == null ? null : language.getAssociatedFileType();
-    if (expected == actual || actual == null) return;
-    String ext = actual.getDefaultExtension();
-    if (StringUtil.isEmpty(ext)) return;
-
-    String newName = PathUtil.makeFileName(file.getNameWithoutExtension(), ext);
-    VirtualFile parent = file.getParent();
-    newName = parent != null && parent.findChild(newName) != null ? PathUtil.makeFileName(file.getName(), ext) : newName;
-    file.rename(ScratchUtil.class, newName);
-  }
-
-  public static boolean hasMatchingExtension(@Nonnull Project project, @Nonnull VirtualFile file) {
-    FileType expected = getFileTypeFromName(file);
-    Language language = LanguageUtil.getLanguageForPsi(project, file);
-    FileType actual = language == null ? null : language.getAssociatedFileType();
-    return expected == actual && actual != null;
-  }
-
-  @Nullable
-  public static FileType getFileTypeFromName(@Nonnull VirtualFile file) {
-    String extension = file.getExtension();
-    return extension == null ? null : FileTypeManager.getInstance().getFileTypeByExtension(extension);
-  }
-
-  @Nonnull
-  public static String getRelativePath(@Nonnull Project project, @Nonnull VirtualFile file) {
-    RootType rootType = Objects.requireNonNull(RootType.forFile(file));
-    String rootPath = ScratchFileService.getInstance().getRootPath(rootType);
-    VirtualFile rootFile = LocalFileSystem.getInstance().findFileByPath(rootPath);
-    if (rootFile == null || !VirtualFileUtil.isAncestor(rootFile, file, false)) {
-      throw new AssertionError(file.getPath());
+    /**
+     * Returns true if a file or a directory is in one of scratch roots: scratch, console, etc.
+     *
+     * @see RootType
+     * @see ScratchFileService
+     */
+    public static boolean isScratch(@Nullable VirtualFile file) {
+        RootType rootType = RootType.forFile(file);
+        return rootType != null && !rootType.isHidden();
     }
-    StringBuilder sb = new StringBuilder();
-    for (VirtualFile o = file; !rootFile.equals(o); o = o.getParent()) {
-      String part = StringUtil.notNullize(rootType.substituteName(project, o), o.getName());
-      if (sb.length() == 0 && part.indexOf('/') > -1) {
-        // db console root type adds folder here, trim it
-        part = part.substring(part.lastIndexOf('/') + 1);
-      }
-      sb.insert(0, "/" + part);
+
+    public static void updateFileExtension(@Nonnull Project project, @Nullable VirtualFile file) throws IOException {
+        ApplicationManager.getApplication().assertWriteAccessAllowed();
+        if (CommandProcessor.getInstance().getCurrentCommand() == null) {
+            throw new AssertionError("command required");
+        }
+
+        if (file == null) {
+            return;
+        }
+        Language language = LanguageUtil.getLanguageForPsi(project, file);
+        FileType expected = getFileTypeFromName(file);
+        FileType actual = language == null ? null : language.getAssociatedFileType();
+        if (expected == actual || actual == null) {
+            return;
+        }
+        String ext = actual.getDefaultExtension();
+        if (StringUtil.isEmpty(ext)) {
+            return;
+        }
+
+        String newName = PathUtil.makeFileName(file.getNameWithoutExtension(), ext);
+        VirtualFile parent = file.getParent();
+        newName = parent != null && parent.findChild(newName) != null ? PathUtil.makeFileName(file.getName(), ext) : newName;
+        file.rename(ScratchUtil.class, newName);
     }
-    sb.insert(0, rootType.getDisplayName());
-    if (sb.charAt(sb.length() - 1) == ']') {
-      // db console root type adds [data source name] here, trim it
-      int idx = sb.lastIndexOf(" [");
-      if (idx > 0 && sb.indexOf("/" + sb.substring(idx + 2, sb.length() - 1) + "/") < idx) {
-        sb.setLength(idx);
-      }
+
+    public static boolean hasMatchingExtension(@Nonnull Project project, @Nonnull VirtualFile file) {
+        FileType expected = getFileTypeFromName(file);
+        Language language = LanguageUtil.getLanguageForPsi(project, file);
+        FileType actual = language == null ? null : language.getAssociatedFileType();
+        return expected == actual && actual != null;
     }
-    return sb.toString();
-  }
+
+    @Nullable
+    public static FileType getFileTypeFromName(@Nonnull VirtualFile file) {
+        String extension = file.getExtension();
+        return extension == null ? null : FileTypeManager.getInstance().getFileTypeByExtension(extension);
+    }
+
+    @Nonnull
+    public static String getRelativePath(@Nonnull Project project, @Nonnull VirtualFile file) {
+        RootType rootType = Objects.requireNonNull(RootType.forFile(file));
+        String rootPath = ScratchFileService.getInstance().getRootPath(rootType);
+        VirtualFile rootFile = LocalFileSystem.getInstance().findFileByPath(rootPath);
+        if (rootFile == null || !VirtualFileUtil.isAncestor(rootFile, file, false)) {
+            throw new AssertionError(file.getPath());
+        }
+        StringBuilder sb = new StringBuilder();
+        for (VirtualFile o = file; !rootFile.equals(o); o = o.getParent()) {
+            String part = StringUtil.notNullize(rootType.substituteName(project, o), o.getName());
+            if (sb.length() == 0 && part.indexOf('/') > -1) {
+                // db console root type adds folder here, trim it
+                part = part.substring(part.lastIndexOf('/') + 1);
+            }
+            sb.insert(0, "/" + part);
+        }
+        sb.insert(0, rootType.getDisplayName());
+        if (sb.charAt(sb.length() - 1) == ']') {
+            // db console root type adds [data source name] here, trim it
+            int idx = sb.lastIndexOf(" [");
+            if (idx > 0 && sb.indexOf("/" + sb.substring(idx + 2, sb.length() - 1) + "/") < idx) {
+                sb.setLength(idx);
+            }
+        }
+        return sb.toString();
+    }
 }

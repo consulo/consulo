@@ -393,12 +393,11 @@ public abstract class UndoManagerImpl implements UndoManager, Disposable {
     private void undoOrRedo(final Object editor, final boolean isUndo) {
         myCurrentOperationState = isUndo ? OperationState.UNDO : OperationState.REDO;
 
-        final SimpleReference<RuntimeException> exception = SimpleReference.create();
-
         CommandProcessor.getInstance().newCommand()
             .project(myProject)
             .name(getUndoOrRedoActionNameAndDescription(editor, isUndoInProgress()).second)
             .undoConfirmationPolicy(myMerger.getUndoConfirmationPolicy())
+            .canThrow(RuntimeException.class)
             .run(() -> {
                 try {
                     if (myProject != null) {
@@ -407,17 +406,10 @@ public abstract class UndoManagerImpl implements UndoManager, Disposable {
                     CopyPasteManager.getInstance().stopKillRings();
                     myMerger.undoOrRedo((FileEditor)editor, isUndo);
                 }
-                catch (RuntimeException ex) {
-                    exception.set(ex);
-                }
                 finally {
                     myCurrentOperationState = OperationState.NONE;
                 }
             });
-
-        if (!exception.isNull()) {
-            throw exception.get();
-        }
     }
 
     @Override
