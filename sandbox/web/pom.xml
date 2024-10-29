@@ -359,10 +359,6 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>com.vaadin</groupId>
-            <artifactId>flow-commons-upload</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.vaadin.external</groupId>
             <artifactId>gentyref</artifactId>
         </dependency>

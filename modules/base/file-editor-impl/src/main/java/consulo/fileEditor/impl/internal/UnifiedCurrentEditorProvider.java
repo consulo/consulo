@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.fileEditor;
+package consulo.fileEditor.impl.internal;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ServiceAPI;
-import consulo.application.Application;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import consulo.annotation.component.ComponentProfiles;
+import consulo.annotation.component.ServiceImpl;
+import consulo.fileEditor.CurrentEditorProvider;
+import consulo.fileEditor.FileEditor;
+import jakarta.inject.Singleton;
 
 /**
- * @author max
+ * @author VISTALL
+ * @since 2024-10-29
  */
-@ServiceAPI(ComponentScope.APPLICATION)
-public interface CurrentEditorProvider {
-  @Nonnull
-  static CurrentEditorProvider getInstance() {
-    return Application.get().getInstance(CurrentEditorProvider.class);
-  }
-
-  @Nullable
-  FileEditor getCurrentEditor();
+@Singleton
+@ServiceImpl(profiles = ComponentProfiles.UNIFIED)
+public class UnifiedCurrentEditorProvider implements CurrentEditorProvider {
+    @Override
+    public FileEditor getCurrentEditor() {
+        return null;
+    }
 }
