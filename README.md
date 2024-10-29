@@ -17,7 +17,6 @@ If you can't describe the issue, you can use our [forum](https://discuss.consulo
 | Java 21       | ![jdk21](https://github.com/consulo/consulo/workflows/jdk21/badge.svg) |
 | Java 22       | ![jdk22](https://github.com/consulo/consulo/workflows/jdk22/badge.svg) |
 | Java 23       | ![jdk23](https://github.com/consulo/consulo/workflows/jdk23/badge.svg) |
-| Java 24       | ![jdk24](https://github.com/consulo/consulo/workflows/jdk24/badge.svg) |
 
 First of all, you need these tools:
 
