@@ -18,18 +18,16 @@ package consulo.ide.impl.idea.ide.fileTemplates.impl;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
+import consulo.application.ApplicationPropertiesComponent;
 import consulo.configurable.*;
 import consulo.disposer.Disposable;
 import consulo.fileTemplate.*;
 import consulo.fileTemplate.impl.internal.*;
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.actionSystem.DefaultCompactActionGroup;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.ide.setting.ShowSettingsUtil;
+import consulo.language.localize.LanguageLocalize;
 import consulo.language.plain.PlainTextFileType;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -38,6 +36,8 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Comparing;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -46,7 +46,6 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
 import java.awt.*;
-import java.text.MessageFormat;
 import java.util.List;
 import java.util.*;
 
@@ -54,8 +53,7 @@ import static consulo.fileTemplate.FileTemplateManager.*;
 
 /*
  * @author: MYakovlev
- * Date: Jul 26, 2002
- * Time: 12:44:56 PM
+ * @since 2022-07-26
  */
 @ExtensionImpl
 public class AllFileTemplatesConfigurable implements SearchableConfigurable, Configurable.NoMargin, Configurable.NoScroll, ProjectConfigurable {
@@ -90,7 +88,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
         myProject = project;
         myManager = getInstance(project);
         myScheme = myManager.getCurrentScheme();
-        myInternalTemplateNames = ContainerUtil.map2Set(myManager.getInternalTemplates(), template -> template.getName());
+        myInternalTemplateNames = ContainerUtil.map2Set(myManager.getInternalTemplates(), FileTemplate::getName);
     }
 
     private void onRemove() {
@@ -113,6 +111,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
         return newTemplate;
     }
 
+    @RequiredUIAccess
     private void onClone() {
         try {
             myEditor.apply();
@@ -130,13 +129,12 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
         for (FileTemplate template : templates) {
             names.add(template.getName());
         }
-        @SuppressWarnings({"UnresolvedPropertyKey"}) final String nameTemplate = IdeBundle.message("template.copy.N.of.T");
-        String name = MessageFormat.format(nameTemplate, "", selected.getName());
+        LocalizeValue name = IdeLocalize.templateCopyNOfT("", selected.getName());
         int i = 0;
-        while (names.contains(name)) {
-            name = MessageFormat.format(nameTemplate, ++i + " ", selected.getName());
+        while (names.contains(name.get())) {
+            name = IdeLocalize.templateCopyNOfT(++i, selected.getName());
         }
-        final FileTemplate newTemplate = new CustomFileTemplate(name, selected.getExtension());
+        final FileTemplate newTemplate = new CustomFileTemplate(name.get(), selected.getExtension());
         newTemplate.setText(selected.getText());
         newTemplate.setReformatCode(selected.isReformatCode());
         newTemplate.setLiveTemplateEnabled(selected.isLiveTemplateEnabled());
@@ -154,18 +152,13 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
     @Override
     public String getHelpTopic() {
         int index = myTabbedPane.getSelectedIndex();
-        switch (index) {
-            case 0:
-                return "fileTemplates.templates";
-            case 1:
-                return "fileTemplates.includes";
-            case 2:
-                return "fileTemplates.code";
-            case 3:
-                return "fileTemplates.j2ee";
-            default:
-                throw new IllegalStateException("wrong index: " + index);
-        }
+        return switch (index) {
+            case 0 -> "fileTemplates.templates";
+            case 1 -> "fileTemplates.includes";
+            case 2 -> "fileTemplates.code";
+            case 3 -> "fileTemplates.j2ee";
+            default -> throw new IllegalStateException("wrong index: " + index);
+        };
     }
 
     @RequiredUIAccess
@@ -173,18 +166,21 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
     public JComponent createComponent(@Nonnull Disposable parentUIDisposable) {
         myTemplatesList = new FileTemplateTabAsList(IdeLocalize.tabFiletemplatesTemplates().get()) {
             @Override
+            @RequiredUIAccess
             public void onTemplateSelected() {
                 onListSelectionChanged();
             }
         };
         myIncludesList = new FileTemplateTabAsList(IdeLocalize.tabFiletemplatesIncludes().get()) {
             @Override
+            @RequiredUIAccess
             public void onTemplateSelected() {
                 onListSelectionChanged();
             }
         };
         myCodeTemplatesList = new FileTemplateTabAsList(IdeLocalize.tabFiletemplatesCode().get()) {
             @Override
+            @RequiredUIAccess
             public void onTemplateSelected() {
                 onListSelectionChanged();
             }
@@ -197,6 +193,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
         if (!factories.isEmpty()) {
             myOtherTemplatesList = new FileTemplateTabAsTree(IdeLocalize.tabFiletemplatesJ2ee().get()) {
                 @Override
+                @RequiredUIAccess
                 public void onTemplateSelected() {
                     onListSelectionChanged();
                 }
@@ -248,7 +245,8 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
             public void update(@Nonnull AnActionEvent e) {
                 super.update(e);
                 FileTemplate selectedItem = myCurrentTab.getSelectedTemplate();
-                e.getPresentation().setEnabled(selectedItem != null && !isInternalTemplate(selectedItem.getName(), myCurrentTab.getTitle()));
+                e.getPresentation()
+                    .setEnabled(selectedItem != null && !isInternalTemplate(selectedItem.getName(), myCurrentTab.getTitle()));
             }
         };
         AnAction addAction = new AnAction(IdeLocalize.actionCreateTemplate(), LocalizeValue.empty(), AllIcons.General.Add) {
@@ -277,7 +275,9 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
             public void update(@Nonnull AnActionEvent e) {
                 super.update(e);
                 e.getPresentation().setEnabled(
-                    myCurrentTab != myCodeTemplatesList && myCurrentTab != myOtherTemplatesList && myCurrentTab.getSelectedTemplate() != null
+                    myCurrentTab != myCodeTemplatesList
+                        && myCurrentTab != myOtherTemplatesList
+                        && myCurrentTab.getSelectedTemplate() != null
                 );
             }
         };
@@ -311,7 +311,8 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
 
         JPanel toolbarPanel = new JPanel(new BorderLayout());
         toolbarPanel.add(myToolBar, BorderLayout.WEST);
-        ActionToolbar actionToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, new DefaultCompactActionGroup(new ChangeSchemaCombo(this)), true);
+        ActionToolbar actionToolbar = ActionManager.getInstance()
+            .createActionToolbar(ActionPlaces.UNKNOWN, new DefaultCompactActionGroup(new ChangeSchemaCombo(this)), true);
         JComponent schemaComponent = actionToolbar.getComponent();
         JPanel schemaPanel = new JPanel(new BorderLayout());
         schemaPanel.add(schemaComponent, BorderLayout.EAST);
@@ -331,7 +332,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
         myMainPanel.add(toolbarPanel, BorderLayout.NORTH);
         myMainPanel.add(centerPanel, BorderLayout.CENTER);
 
-        final PropertiesComponent propertiesComponent = PropertiesComponent.getInstance();
+        final ApplicationPropertiesComponent propertiesComponent = ApplicationPropertiesComponent.getInstance();
         final String tabName = propertiesComponent.getValue(CURRENT_TAB);
         if (selectTab(tabName)) {
             //final String selectedTemplateName = propertiesComponent.getValue(SELECTED_TEMPLATE);
@@ -342,18 +343,19 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
             //  }
             //}
         }
-        
+
         actionToolbar.setTargetComponent(myMainPanel);
         return myMainPanel;
     }
 
+    @RequiredUIAccess
     private void onReset() {
         FileTemplate selected = myCurrentTab.getSelectedTemplate();
         if (selected instanceof BundledFileTemplate bundledFileTemplate) {
             if (Messages.showOkCancelDialog(
                 IdeLocalize.promptResetToOriginalTemplate().get(),
                 IdeLocalize.titleResetTemplate().get(),
-                Messages.getQuestionIcon()
+                UIUtil.getQuestionIcon()
             ) != Messages.OK) {
                 return;
             }
@@ -367,6 +369,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
         fireListChanged();
     }
 
+    @RequiredUIAccess
     private void onTabChanged() {
         applyEditor(myCurrentTab.getSelectedTemplate());
 
@@ -374,7 +377,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
         if (0 <= selectedIndex && selectedIndex < myTabs.length) {
             myCurrentTab = myTabs[selectedIndex];
         }
-        ((CardLayout) myLeftPanel.getLayout()).show(myLeftPanel, myCurrentTab.getTitle());
+        ((CardLayout)myLeftPanel.getLayout()).show(myLeftPanel, myCurrentTab.getTitle());
         onListSelectionChanged();
     }
 
@@ -435,21 +438,22 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
     }
 
     // internal template could not be removed and should be rendered bold
+    //TODO: should not be checked based on localized name equals
     public static boolean isInternalTemplate(String templateName, String templateTabTitle) {
         if (templateName == null) {
             return false;
         }
-        if (Comparing.strEqual(templateTabTitle, IdeLocalize.tabFiletemplatesTemplates().get())) {
+        if (Objects.equals(templateTabTitle, IdeLocalize.tabFiletemplatesTemplates().get())) {
             return isInternalTemplateName(templateName);
         }
-        if (Comparing.strEqual(templateTabTitle, IdeLocalize.tabFiletemplatesCode().get())) {
+        if (Objects.equals(templateTabTitle, IdeLocalize.tabFiletemplatesCode().get())) {
             return true;
         }
-        if (Comparing.strEqual(templateTabTitle, IdeLocalize.tabFiletemplatesJ2ee().get())) {
+        if (Objects.equals(templateTabTitle, IdeLocalize.tabFiletemplatesJ2ee().get())) {
             return true;
         }
-        if (Comparing.strEqual(templateTabTitle, IdeLocalize.tabFiletemplatesIncludes().get())) {
-            return Comparing.strEqual(templateName, FILE_HEADER_TEMPLATE_NAME);
+        if (Objects.equals(templateTabTitle, IdeLocalize.tabFiletemplatesIncludes().get())) {
+            return Objects.equals(templateName, FILE_HEADER_TEMPLATE_NAME);
         }
         return false;
     }
@@ -486,26 +490,28 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
         return myScheme != myManager.getCurrentScheme() || !myChangesCache.isEmpty() || isSchemeModified();
     }
 
+    @RequiredUIAccess
     private boolean isSchemeModified() {
         return myModified || myEditor != null && myEditor.isModified();
     }
 
+    @RequiredUIAccess
     private void checkCanApply(FileTemplateTab list) throws ConfigurationException {
         final FileTemplate[] templates = myCurrentTab.getTemplates();
         final List<String> allNames = new ArrayList<>();
         FileTemplate itemWithError = null;
         boolean errorInName = true;
-        String errorString = null;
+        LocalizeValue errorMessage = LocalizeValue.empty();
         for (FileTemplate template : templates) {
             final String currName = template.getName();
-            if (currName.length() == 0) {
+            if (currName.isEmpty()) {
                 itemWithError = template;
-                errorString = IdeLocalize.errorPleaseSpecifyTemplateName().get();
+                errorMessage = IdeLocalize.errorPleaseSpecifyTemplateName();
                 break;
             }
             if (allNames.contains(currName)) {
                 itemWithError = template;
-                errorString = "Template with name \'" + currName + "\' already exists. Please specify a different template name";
+                errorMessage = LanguageLocalize.dialogMessageTemplateWithNameAlreadyExists(currName);
                 break;
             }
             allNames.add(currName);
@@ -516,7 +522,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
             myTabbedPane.setSelectedIndex(Arrays.asList(myTabs).indexOf(list));
             selectTemplate(itemWithError);
             list.selectTemplate(itemWithError);
-            ApplicationManager.getApplication().invokeLater(() -> {
+            Application.get().invokeLater(() -> {
                 if (_errorInName) {
                     myEditor.focusToNameField();
                 }
@@ -524,7 +530,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
                     myEditor.focusToExtensionField();
                 }
             });
-            throw new ConfigurationException(errorString);
+            throw new ConfigurationException(errorMessage);
         }
     }
 
@@ -597,7 +603,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
     @Override
     public void disposeUIResources() {
         if (myCurrentTab != null) {
-            final PropertiesComponent propertiesComponent = PropertiesComponent.getInstance();
+            final ApplicationPropertiesComponent propertiesComponent = ApplicationPropertiesComponent.getInstance();
             propertiesComponent.setValue(CURRENT_TAB, myCurrentTab.getTitle(), IdeLocalize.tabFiletemplatesTemplates().get());
             final FileTemplate template = myCurrentTab.getSelectedTemplate();
             if (template != null) {
@@ -637,20 +643,26 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
         return StandardConfigurableIds.EDITOR_GROUP;
     }
 
+    @RequiredUIAccess
     public static void editCodeTemplate(@Nonnull final String templateId, Project project) {
         final ShowSettingsUtil util = ShowSettingsUtil.getInstance();
         final AllFileTemplatesConfigurable configurable = new AllFileTemplatesConfigurable(project);
-        util.editConfigurable(project, configurable, () -> {
-            configurable.myTabbedPane.setSelectedIndex(ArrayUtil.indexOf(configurable.myTabs, configurable.myCodeTemplatesList));
-            for (FileTemplate template : configurable.myCodeTemplatesList.getTemplates()) {
-                if (Comparing.equal(templateId, template.getName())) {
-                    configurable.myCodeTemplatesList.selectTemplate(template);
-                    break;
+        util.editConfigurable(
+            project,
+            configurable,
+            () -> {
+                configurable.myTabbedPane.setSelectedIndex(ArrayUtil.indexOf(configurable.myTabs, configurable.myCodeTemplatesList));
+                for (FileTemplate template : configurable.myCodeTemplatesList.getTemplates()) {
+                    if (Comparing.equal(templateId, template.getName())) {
+                        configurable.myCodeTemplatesList.selectTemplate(template);
+                        break;
+                    }
                 }
             }
-        });
+        );
     }
 
+    @RequiredUIAccess
     public void changeScheme(FileTemplatesScheme scheme) {
         if (myEditor != null && myEditor.isModified()) {
             myModified = true;
@@ -658,7 +670,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
                 myEditor.apply();
             }
             catch (ConfigurationException e) {
-                Messages.showErrorDialog(myEditorComponent, e.getMessage(), e.getTitle());
+                Messages.showErrorDialog(myEditorComponent, e.getMessage(), e.getTitleValue().get());
                 return;
             }
         }
@@ -668,6 +680,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
     }
 
     @SuppressWarnings("ToArrayCallWithZeroLengthArrayArgument")
+    @RequiredUIAccess
     private void updateCache() {
         if (isSchemeModified()) {
             if (!myChangesCache.containsKey(myScheme)) {
@@ -685,7 +698,10 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
                 );
                 templates.put(INCLUDES_TEMPLATES_CATEGORY, myIncludesList.getTemplates());
                 templates.put(CODE_TEMPLATES_CATEGORY, myCodeTemplatesList.getTemplates());
-                templates.put(J2EE_TEMPLATES_CATEGORY, myOtherTemplatesList == null ? FileTemplate.EMPTY_ARRAY : myOtherTemplatesList.getTemplates());
+                templates.put(
+                    J2EE_TEMPLATES_CATEGORY,
+                    myOtherTemplatesList == null ? FileTemplate.EMPTY_ARRAY : myOtherTemplatesList.getTemplates()
+                );
                 myChangesCache.put(myScheme, templates);
             }
         }

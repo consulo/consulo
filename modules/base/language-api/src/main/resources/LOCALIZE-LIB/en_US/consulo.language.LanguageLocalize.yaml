@@ -159,10 +159,16 @@ hint.text.can.t.modify.decompiled.code:
 hint.text.couldn.t.find.surround:
     text: Couldn't find Surround With variants applicable to the current context
 dialog.message.live.template.with.empty.abbreviation:
-  text: "A live template with an empty abbreviation has been found in {0} group, such live templates are not allowed"
+    text: "A live template with an empty abbreviation has been found in {0} group, such live templates are not allowed"
 dialog.message.live.template.with.empty.text:
-  text: "A live template ''{0}'' with an empty text has been found in {1} group, such live templates make no sense"
+    text: "A live template ''{0}'' with an empty text has been found in {1} group, such live templates make no sense"
 dialog.message.duplicate.live.templates.in.group:
-  text: "Duplicate ''{0}'' live templates in {1} group"
+    text: "Duplicate ''{0}'' live templates in {1} group"
 command.name.navigate:
-  text: Navigate
+    text: Navigate
+dialog.message.valid.identifier:
+    text: "''{0}'' is not a valid identifier"
+compound.run.configuration.cycle:
+    text: "{0} ''{1}'' causes dependency cycle and cannot be added"
+dialog.message.template.with.name.already.exists:
+    text: "Template with name ''{0}'' already exists. Please specify a different template name"

@@ -170,19 +170,19 @@ public class TemplateListPanel extends JPanel implements Disposable {
             for (TemplateImpl template : templateGroup.getElements()) {
                 if (StringUtil.isEmptyOrSpaces(template.getKey())) {
                     throw new ConfigurationException(
-                        LanguageLocalize.dialogMessageLiveTemplateWithEmptyAbbreviation(templateGroup.getName()).get()
+                        LanguageLocalize.dialogMessageLiveTemplateWithEmptyAbbreviation(templateGroup.getName())
                     );
                 }
 
                 if (StringUtil.isEmptyOrSpaces(template.getString())) {
                     throw new ConfigurationException(
-                        LanguageLocalize.dialogMessageLiveTemplateWithEmptyText(template.getKey(), templateGroup.getName()).get()
+                        LanguageLocalize.dialogMessageLiveTemplateWithEmptyText(template.getKey(), templateGroup.getName())
                     );
                 }
 
                 if (!names.add(template.getKey())) {
                     throw new ConfigurationException(
-                        LanguageLocalize.dialogMessageDuplicateLiveTemplatesInGroup(template.getKey(), templateGroup.getName()).get()
+                        LanguageLocalize.dialogMessageDuplicateLiveTemplatesInGroup(template.getKey(), templateGroup.getName())
                     );
                 }
             }
