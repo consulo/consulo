@@ -52,13 +52,7 @@ public interface ExecutableCommandBuilder<R, THIS extends ExecutableCommandBuild
         return inBulkUpdate ? inBulkUpdate() : (THIS)this;
     }
 
-    @SuppressWarnings("unchecked")
-    default THIS inGlobalUndoAction() {
-        return proxy(runnable -> {
-            CommandProcessor.getInstance().markCurrentCommandAsGlobal(build(EmptyRunnable.INSTANCE).project());
-            runnable.run();
-        });
-    }
+    THIS inGlobalUndoAction();
 
     @SuppressWarnings("unchecked")
     default THIS inGlobalUndoActionIf(boolean globalUndoAction) {
