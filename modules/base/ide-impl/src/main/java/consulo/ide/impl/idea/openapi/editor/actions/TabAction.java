@@ -24,27 +24,26 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
-import consulo.codeEditor.EditorBundle;
-import consulo.codeEditor.action.EditorActionUtil;
-import consulo.dataContext.DataContext;
-import consulo.undoRedo.CommandProcessor;
-import consulo.ide.impl.idea.openapi.editor.*;
-import consulo.codeEditor.action.EditorAction;
-import consulo.codeEditor.action.EditorActionManager;
-import consulo.codeEditor.action.EditorWriteActionHandler;
-import consulo.codeEditor.EditorEx;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUIUtil;
-import consulo.document.ReadOnlyFragmentModificationException;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
-import consulo.project.Project;
-import consulo.util.lang.StringUtil;
+import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.action.EditorAction;
+import consulo.codeEditor.action.EditorActionManager;
+import consulo.codeEditor.action.EditorActionUtil;
+import consulo.codeEditor.action.EditorWriteActionHandler;
+import consulo.codeEditor.localize.CodeEditorLocalize;
+import consulo.dataContext.DataContext;
+import consulo.document.Document;
+import consulo.document.ReadOnlyFragmentModificationException;
+import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
+import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUIUtil;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
-import consulo.annotation.access.RequiredWriteAction;
-import consulo.document.Document;
-
+import consulo.project.Project;
+import consulo.undoRedo.CommandProcessor;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -66,7 +65,7 @@ public class TabAction extends EditorAction {
                 caret = editor.getCaretModel().getPrimaryCaret();
             }
             CommandProcessor.getInstance().setCurrentCommandGroupId(EditorActionUtil.EDIT_COMMAND_GROUP);
-            CommandProcessor.getInstance().setCurrentCommandName(EditorBundle.message("typing.command.name"));
+            CommandProcessor.getInstance().setCurrentCommandName(CodeEditorLocalize.typingCommandName());
             Project project = dataContext.getData(Project.KEY);
             insertTabAtCaret(editor, caret, project);
         }

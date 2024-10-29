@@ -19,24 +19,18 @@
  */
 package consulo.ide.impl.idea.codeInsight.intention.impl.config;
 
-import consulo.application.ApplicationManager;
-import consulo.undoRedo.CommandProcessor;
-import consulo.codeEditor.CodeInsightColors;
+import consulo.application.Application;
+import consulo.codeEditor.*;
+import consulo.codeEditor.util.RangeBlinker;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
-import consulo.codeEditor.EditorEx;
-import consulo.language.editor.highlight.EditorHighlighterFactory;
 import consulo.colorScheme.TextAttributes;
 import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorFactory;
-import consulo.codeEditor.EditorSettings;
-import consulo.codeEditor.LogicalPosition;
-import consulo.virtualFileSystem.fileType.FileType;
 import consulo.document.util.Segment;
+import consulo.language.editor.highlight.EditorHighlighterFactory;
+import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.StringUtil;
-import consulo.codeEditor.util.RangeBlinker;
-import org.jetbrains.annotations.NonNls;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,7 +39,6 @@ import java.util.List;
 
 class IntentionUsagePanel extends JPanel {
     private final EditorEx myEditor;
-    @NonNls
     private static final String SPOT_MARKER = "spot";
     private final RangeBlinker myRangeBlinker;
 
@@ -60,24 +53,12 @@ class IntentionUsagePanel extends JPanel {
 
     public void reset(final String usageText, final FileType fileType) {
         reinitViews();
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                if (myEditor.isDisposed()) {
-                    return;
-                }
-                CommandProcessor.getInstance().runUndoTransparentAction(new Runnable() {
-                    @Override
-                    public void run() {
-                        ApplicationManager.getApplication().runWriteAction(new Runnable() {
-                            @Override
-                            public void run() {
-                                configureByText(usageText, fileType);
-                            }
-                        });
-                    }
-                });
+        SwingUtilities.invokeLater(() -> {
+            if (myEditor.isDisposed()) {
+                return;
             }
+            CommandProcessor.getInstance()
+                .runUndoTransparentAction(() -> Application.get().runWriteAction(()-> configureByText(usageText, fileType)));
         });
     }
 
@@ -91,7 +72,7 @@ class IntentionUsagePanel extends JPanel {
     }
 
     private void setupSpots(Document document) {
-        List<Segment> markers = new ArrayList<Segment>();
+        List<Segment> markers = new ArrayList<>();
         while (true) {
             String text = document.getText();
             final int spotStart = text.indexOf("<" + SPOT_MARKER + ">");

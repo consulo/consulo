@@ -2,6 +2,8 @@
 
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.codeEditor.Caret;
@@ -51,6 +53,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -82,6 +85,7 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
     }
 
     @Override
+    @RequiredWriteAction
     public void executeWriteAction(final Editor editor, final Caret caret, final DataContext dataContext) {
         final Project project = dataContext.getData(Project.KEY);
         if (project != null && !project.isDefault()) {
@@ -98,6 +102,7 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
         }
     }
 
+    @RequiredReadAction
     private void executeWriteActionInner(Editor editor, Caret caret, DataContext dataContext, Project project) {
         CodeInsightSettings settings = CodeInsightSettings.getInstance();
         if (project == null) {
@@ -158,7 +163,7 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
         }
 
         text = document.getCharsSequence();   // update after changes done in preprocessEnter()
-        caretOffset = caretOffsetRef.get().intValue();
+        caretOffset = caretOffsetRef.get();
         boolean isFirstColumn = caretOffset == 0 || text.charAt(caretOffset - 1) == '\n';
         final boolean insertSpace =
             !isFirstColumn && !(caretOffset >= text.length() || text.charAt(caretOffset) == ' ' || text.charAt(caretOffset) == '\t');
@@ -201,6 +206,7 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
         return context;
     }
 
+    @RequiredReadAction
     public static boolean isCommentComplete(PsiComment comment, CodeDocumentationAwareCommenter commenter, Editor editor) {
         for (CommentCompleteHandler handler : CommentCompleteHandler.EP_NAME.getExtensionList()) {
             if (handler.isApplicable(comment, commenter)) {
@@ -300,6 +306,7 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
      * '*comment*&#47; 1;' as comment end. Current approach is to check if next PSI sibling to the current PSI comment is invalid.
      * This method allows to perform such an examination.
      */
+    @RequiredReadAction
     private static boolean isInvalidPsi(@Nonnull PsiElement base) {
         for (PsiElement current = base.getNextSibling(); current != null; current = current.getNextSibling()) {
             if (current instanceof PsiErrorElement) {
@@ -384,6 +391,7 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
         }
 
         @Override
+        @RequiredReadAction
         public void run() {
             CaretModel caretModel = myEditor.getCaretModel();
             try {
@@ -417,14 +425,8 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
                         }
                         else {
                             if (isCommentComplete(comment, commentContext.commenter, myEditor)) {
-                                if (myOffset >= commentEnd) {
-                                    commentContext.docAsterisk = false;
-                                }
-                                else {
-                                    commentContext.docAsterisk = CodeStyleManager.getInstance(getProject())
-                                        .getDocCommentSettings(myFile)
-                                        .isLeadingAsteriskEnabled();
-                                }
+                                commentContext.docAsterisk = myOffset < commentEnd
+                                    && CodeStyleManager.getInstance(getProject()).getDocCommentSettings(myFile).isLeadingAsteriskEnabled();
                                 commentContext.docStart = false;
                             }
                             else {
@@ -518,6 +520,7 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
             }
         }
 
+        @RequiredReadAction
         private void generateJavadoc(CodeDocumentationAwareCommenter commenter) throws IncorrectOperationException {
             CodeInsightSettings settings = CodeInsightSettings.getInstance();
             StringBuilder buffer = new StringBuilder();
@@ -590,6 +593,7 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
         }
 
         @Nullable
+        @RequiredReadAction
         private PsiComment createComment(final CharSequence buffer, final CodeInsightSettings settings) throws IncorrectOperationException {
             myDocument.insertString(myOffset, buffer);
 
@@ -604,7 +608,7 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
             }
 
             CodeStyleManager codeStyleManager = CodeStyleManager.getInstance(getProject());
-            final Ref<PsiComment> commentRef = Ref.create(comment);
+            final SimpleReference<PsiComment> commentRef = SimpleReference.create(comment);
             codeStyleManager.runWithDocCommentFormattingDisabled(myFile, () -> formatComment(commentRef, codeStyleManager));
             comment = commentRef.get();
 
@@ -625,7 +629,8 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
             return comment;
         }
 
-        private void formatComment(Ref<PsiComment> commentRef, CodeStyleManager codeStyleManager) {
+        @RequiredReadAction
+        private void formatComment(SimpleReference<PsiComment> commentRef, CodeStyleManager codeStyleManager) {
             PsiComment comment = commentRef.get();
             RangeMarker commentMarker =
                 myDocument.createRangeMarker(comment.getTextRange().getStartOffset(), comment.getTextRange().getEndOffset());
@@ -635,18 +640,20 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
         }
 
         @Nullable
+        @RequiredReadAction
         private PsiComment createJavaDocStub(final CodeInsightSettings settings, final PsiComment comment, final Project project) {
             if (settings.JAVADOC_STUB_ON_ENTER) {
                 final DocumentationProvider langDocumentationProvider =
                     LanguageDocumentationProvider.forLanguageComposite(comment.getParent().getLanguage());
 
                 @Nullable final CodeDocumentationProvider docProvider;
-                if (langDocumentationProvider instanceof CompositeDocumentationProvider) {
-                    docProvider = ((CompositeDocumentationProvider)langDocumentationProvider).getFirstCodeDocumentationProvider();
+                if (langDocumentationProvider instanceof CompositeDocumentationProvider compositeDocumentationProvider) {
+                    docProvider = compositeDocumentationProvider.getFirstCodeDocumentationProvider();
                 }
                 else {
-                    docProvider =
-                        langDocumentationProvider instanceof CodeDocumentationProvider ? (CodeDocumentationProvider)langDocumentationProvider : null;
+                    docProvider = langDocumentationProvider instanceof CodeDocumentationProvider codeDocumentationProvider
+                        ? codeDocumentationProvider
+                        : null;
                 }
 
                 if (docProvider != null) {
@@ -699,6 +706,7 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
             document.deleteString(startOffset, endOffset);
         }
 
+        @RequiredReadAction
         private boolean insertDocAsterisk(
             int lineStart,
             boolean docAsterisk,

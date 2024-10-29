@@ -2,15 +2,21 @@
 
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.ApplicationManager;
-import consulo.codeEditor.*;
+import consulo.application.Application;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorHighlighter;
+import consulo.codeEditor.HighlighterIterator;
+import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.action.ActionPlan;
 import consulo.codeEditor.action.TabOutScopesTracker;
 import consulo.codeEditor.action.TypedAction;
 import consulo.codeEditor.internal.ExtensionTypedActionHandler;
+import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
+import consulo.document.DocumentWindow;
 import consulo.document.RangeMarker;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
@@ -18,7 +24,6 @@ import consulo.ide.impl.idea.codeInsight.template.impl.editorActions.TypedAction
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ide.impl.idea.openapi.editor.impl.DefaultRawTypedHandler;
 import consulo.ide.impl.idea.openapi.editor.impl.TypedActionImpl;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
@@ -33,7 +38,6 @@ import consulo.language.editor.highlight.BraceMatcher;
 import consulo.language.editor.highlight.NontrivialBraceMatcher;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.file.LanguageFileType;
-import consulo.document.DocumentWindow;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.parser.ParserDefinition;
@@ -45,9 +49,10 @@ import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
+import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.fileType.FileType;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -128,6 +133,7 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
     }
 
     @Override
+    @RequiredUIAccess
     public void execute(@Nonnull final Editor originalEditor, final char charTyped, @Nonnull final DataContext dataContext) {
         final Project project = dataContext.getData(Project.KEY);
         final PsiFile originalFile;
@@ -222,7 +228,9 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
                 return;
             }
 
-            if (('(' == charTyped || '[' == charTyped || '{' == charTyped) && CodeInsightSettings.getInstance().AUTOINSERT_PAIR_BRACKET && fileType != PlainTextFileType.INSTANCE) {
+            if (('(' == charTyped || '[' == charTyped || '{' == charTyped)
+                && CodeInsightSettings.getInstance().AUTOINSERT_PAIR_BRACKET
+                && fileType != PlainTextFileType.INSTANCE) {
                 handleAfterLParen(editor, fileType, charTyped);
             }
             else if ('}' == charTyped) {
@@ -251,16 +259,18 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
     }
 
     private static void type(Editor editor, char charTyped) {
-        CommandProcessor.getInstance().setCurrentCommandName(EditorBundle.message("typing.in.editor.command.name"));
+        CommandProcessor.getInstance().setCurrentCommandName(CodeEditorLocalize.typingInEditorCommandName().get());
         EditorModificationUtil.insertStringAtCaret(editor, String.valueOf(charTyped), true, true);
     }
 
+    @RequiredReadAction
     private static void autoPopupParameterInfo(@Nonnull Editor editor, char charTyped, @Nonnull Project project, @Nonnull PsiFile file) {
         if ((charTyped == '(' || charTyped == ',') && !isInsideStringLiteral(editor, file)) {
             AutoPopupController.getInstance(project).autoPopupParameterInfo(editor, null);
         }
     }
 
+    @RequiredReadAction
     public static void autoPopupCompletion(@Nonnull Editor editor, char charTyped, @Nonnull Project project, @Nonnull PsiFile file) {
         if (charTyped == '.' || isAutoPopup(editor, file, charTyped)) {
             AutoPopupController.getInstance(project).autoPopupMemberLookup(editor, null);
@@ -273,6 +283,7 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
         }
     }
 
+    @RequiredReadAction
     private static boolean isAutoPopup(@Nonnull Editor editor, @Nonnull PsiFile file, char charTyped) {
         final int offset = editor.getCaretModel().getOffset() - 1;
         if (offset >= 0) {
@@ -290,6 +301,7 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
         return false;
     }
 
+    @RequiredReadAction
     private static boolean isInsideStringLiteral(@Nonnull Editor editor, @Nonnull PsiFile file) {
         int offset = editor.getCaretModel().getOffset();
         PsiElement element = file.findElementAt(offset);
@@ -609,22 +621,27 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
         return quoteHandler.isInsideLiteral(iterator);
     }
 
+    @RequiredUIAccess
     private static void indentClosingBrace(@Nonnull Project project, @Nonnull Editor editor) {
         indentBrace(project, editor, '}');
     }
 
+    @RequiredUIAccess
     public static void indentOpenedBrace(@Nonnull Project project, @Nonnull Editor editor) {
         indentBrace(project, editor, '{');
     }
 
+    @RequiredUIAccess
     private static void indentOpenedParenth(@Nonnull Project project, @Nonnull Editor editor) {
         indentBrace(project, editor, '(');
     }
 
+    @RequiredUIAccess
     private static void indentClosingParenth(@Nonnull Project project, @Nonnull Editor editor) {
         indentBrace(project, editor, ')');
     }
 
+    @RequiredUIAccess
     private static void indentBrace(@Nonnull final Project project, @Nonnull final Editor editor, final char braceChar) {
         final int offset = editor.getCaretModel().getOffset() - 1;
         final Document document = editor.getDocument();
@@ -670,7 +687,7 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
                 handler.beginUndoablePostProcessing();
 
                 final int finalLBraceOffset = lBraceOffset;
-                ApplicationManager.getApplication().runWriteAction(() -> {
+                Application.get().runWriteAction(() -> {
                     try {
                         int newOffset;
                         if (finalLBraceOffset != -1) {

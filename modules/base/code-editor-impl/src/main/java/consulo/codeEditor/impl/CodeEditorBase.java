@@ -3,7 +3,6 @@ package consulo.codeEditor.impl;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
 import consulo.application.util.Dumpable;
 import consulo.application.util.Queryable;
@@ -318,6 +317,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
 
     private class MyEditable implements CutProvider, CopyProvider, PasteProvider, DeleteProvider, DumbAware {
         @Override
+        @RequiredUIAccess
         public void performCopy(@Nonnull DataContext dataContext) {
             executeAction(IdeActions.ACTION_EDITOR_COPY, dataContext);
         }
@@ -333,6 +333,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
         }
 
         @Override
+        @RequiredUIAccess
         public void performCut(@Nonnull DataContext dataContext) {
             executeAction(IdeActions.ACTION_EDITOR_CUT, dataContext);
         }
@@ -348,6 +349,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
         }
 
         @Override
+        @RequiredUIAccess
         public void performPaste(@Nonnull DataContext dataContext) {
             executeAction(IdeActions.ACTION_EDITOR_PASTE, dataContext);
         }
@@ -364,6 +366,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
         }
 
         @Override
+        @RequiredUIAccess
         public void deleteElement(@Nonnull DataContext dataContext) {
             executeAction(IdeActions.ACTION_EDITOR_DELETE, dataContext);
         }
@@ -373,6 +376,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
             return !isViewer();
         }
 
+        @RequiredUIAccess
         private void executeAction(@Nonnull String actionId, @Nonnull DataContext dataContext) {
             EditorAction action = (EditorAction)ActionManager.getInstance().getAction(actionId);
             if (action != null) {
@@ -383,6 +387,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
 
     private class EditorDocumentAdapter implements PrioritizedDocumentListener {
         @Override
+        @RequiredUIAccess
         public void beforeDocumentChange(@Nonnull DocumentEvent e) {
             beforeChangedUpdate(e);
         }
@@ -494,6 +499,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
 
     private MyEditable myEditable;
 
+    @RequiredUIAccess
     public CodeEditorBase(@Nonnull Document document, boolean viewer, @Nullable Project project, @Nonnull EditorKind kind) {
         assertIsDispatchThread();
 
@@ -507,10 +513,9 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
 
         mySettings = new SettingsImpl(this, project, kind);
 
-        MarkupModelEx documentMarkup = (MarkupModelEx)DocumentMarkupModel.forDocument(myDocument, myProject, true);
+        MarkupModelEx documentMarkup = DocumentMarkupModel.forDocument(myDocument, myProject, true);
 
         myDocumentMarkupModel = new EditorFilteringMarkupModelEx(this, documentMarkup);
-
 
         myPopupHandlers.add(new DefaultPopupHandler());
 
@@ -657,8 +662,9 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
         }
     }
 
+    @RequiredUIAccess
     private void beforeChangedUpdate(DocumentEvent e) {
-        ApplicationManager.getApplication().assertIsDispatchThread();
+        Application.get().assertIsDispatchThread();
 
         myDocumentChangeInProgress = true;
         if (isStickySelection()) {
@@ -751,6 +757,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
         myIsRendererMode = isRendererMode;
     }
 
+    @Override
     public boolean shouldSoftWrapsBeForced() {
         if (myProject != null && PsiDocumentManager.getInstance(myProject).isDocumentBlockedByPsi(myDocument)) {
             // Disable checking for files in intermediate states - e.g. for files during refactoring.
@@ -921,7 +928,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
         if (application.isUnitTestMode()) {
             return;
         }
-        application.invokeLater(this::stopDumb, application.getCurrentModalityState(), () -> isDisposed());
+        application.invokeLater(this::stopDumb, application.getCurrentModalityState(), this::isDisposed);
     }
 
     @Override
@@ -978,6 +985,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
     }
 
     @Override
+    @RequiredUIAccess
     public void setInsertMode(boolean mode) {
         assertIsDispatchThread();
         boolean oldValue = myIsInsertMode;
@@ -1031,6 +1039,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
     }
 
     @Override
+    @RequiredUIAccess
     public void setColumnMode(boolean mode) {
         assertIsDispatchThread();
         boolean oldValue = myIsColumnMode;
@@ -1153,6 +1162,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
     }
 
     @Override
+    @RequiredUIAccess
     public void setColorsScheme(@Nonnull EditorColorsScheme scheme) {
         assertIsDispatchThread();
         myScheme = scheme;
@@ -1182,6 +1192,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
     }
 
     @Override
+    @RequiredUIAccess
     public void setHighlighter(@Nonnull final EditorHighlighter highlighter) {
         if (isReleased) {
             return; // do not set highlighter to the released editor
@@ -1212,6 +1223,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
 
     @Nonnull
     @Override
+    @RequiredUIAccess
     public EditorHighlighter getHighlighter() {
         assertReadAccess();
         return myHighlighter;
@@ -1224,7 +1236,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
 
     @RequiredReadAction
     public static void assertReadAccess() {
-        ApplicationManager.getApplication().assertReadAccessAllowed();
+        Application.get().assertReadAccessAllowed();
     }
 
     public void setDropHandler(@Nonnull EditorDropHandler dropHandler) {

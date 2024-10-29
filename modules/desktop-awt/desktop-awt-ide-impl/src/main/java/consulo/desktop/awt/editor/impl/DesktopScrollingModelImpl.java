@@ -24,17 +24,17 @@ import consulo.codeEditor.VisualPosition;
 import consulo.codeEditor.event.VisibleAreaEvent;
 import consulo.codeEditor.event.VisibleAreaListener;
 import consulo.codeEditor.impl.CodeEditorScrollingModelBase;
+import consulo.codeEditor.impl.VisibleEditorsTracker;
 import consulo.disposer.Disposer;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.codeEditor.impl.VisibleEditorsTracker;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.text.AsyncEditorLoader;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Animator;
 import consulo.ui.ex.awt.Interpolable;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.SystemProperties;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -55,6 +55,7 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
 
     private final DocumentAdapter myDocumentListener = new DocumentAdapter() {
         @Override
+        @RequiredUIAccess
         public void beforeDocumentChange(DocumentEvent e) {
             if (!myEditor.getDocument().isInBulkUpdate()) {
                 cancelAnimatedScrolling(true);
@@ -66,6 +67,7 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
         private Rectangle myLastViewRect;
 
         @Override
+        @RequiredUIAccess
         public void stateChanged(ChangeEvent event) {
             Rectangle viewRect = getVisibleArea();
             VisibleAreaEvent visibleAreaEvent = new VisibleAreaEvent(myEditor, myLastViewRect, viewRect);
@@ -96,6 +98,7 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
      *
      * @return <code>true</code> if the vertical viewport position has been adjusted; <code>false</code> otherwise
      */
+    @RequiredUIAccess
     private boolean adjustVerticalOffsetIfNecessary() {
         // There is a possible case that the editor is configured to show virtual space at file bottom and requested position is located
         // somewhere around. We don't want to position viewport in a way that most of its area is used to represent that virtual empty space.
@@ -113,6 +116,7 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
 
     @Nonnull
     @Override
+    @RequiredUIAccess
     public Rectangle getVisibleArea() {
         assertIsDispatchThread();
         return myEditor.getScrollPane().getViewport().getViewRect();
@@ -120,6 +124,7 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
 
     @Nonnull
     @Override
+    @RequiredUIAccess
     public Rectangle getVisibleAreaOnScrollingFinished() {
         assertIsDispatchThread();
         if (SystemProperties.isTrueSmoothScrollingEnabled()) {
@@ -133,17 +138,20 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
     }
 
     @Override
+    @RequiredUIAccess
     public void scrollToCaret(@Nonnull ScrollType scrollType) {
         assertIsDispatchThread();
         myEditor.validateSize();
         AsyncEditorLoader.performWhenLoaded(myEditor, () -> scrollTo(myEditor.getCaretModel().getVisualPosition(), scrollType));
     }
 
+    @RequiredUIAccess
     private void scrollTo(@Nonnull VisualPosition pos, @Nonnull ScrollType scrollType) {
         Point targetLocation = myEditor.visualPositionToXY(pos);
         scrollTo(targetLocation, scrollType);
     }
 
+    @RequiredUIAccess
     private void scrollTo(@Nonnull Point targetLocation, @Nonnull ScrollType scrollType) {
         AnimatedScrollingRunnable canceledThread = cancelAnimatedScrolling(false);
         Rectangle viewRect = canceledThread != null ? canceledThread.getTargetVisibleArea() : getVisibleArea();
@@ -152,17 +160,20 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
     }
 
     @Override
+    @RequiredUIAccess
     public void scrollTo(@Nonnull LogicalPosition pos, @Nonnull ScrollType scrollType) {
         assertIsDispatchThread();
 
         AsyncEditorLoader.performWhenLoaded(myEditor, () -> scrollTo(myEditor.logicalPositionToXY(pos), scrollType));
     }
 
+    @RequiredUIAccess
     private static void assertIsDispatchThread() {
         Application.get().assertIsDispatchThread();
     }
 
     @Override
+    @RequiredUIAccess
     public void runActionOnScrollingFinished(@Nonnull Runnable action) {
         assertIsDispatchThread();
 
@@ -174,6 +185,7 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
         action.run();
     }
 
+    @Override
     public boolean isAnimationEnabled() {
         return !myAnimationDisabled;
     }
@@ -266,6 +278,7 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
     }
 
     @Nullable
+    @RequiredUIAccess
     public JScrollBar getVerticalScrollBar() {
         assertIsDispatchThread();
         JScrollPane scrollPane = myEditor.getScrollPane();
@@ -273,17 +286,20 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
     }
 
     @Nullable
+    @RequiredUIAccess
     public JScrollBar getHorizontalScrollBar() {
         assertIsDispatchThread();
         return myEditor.getScrollPane().getHorizontalScrollBar();
     }
 
     @Override
+    @RequiredUIAccess
     public int getVerticalScrollOffset() {
         return getOffset(getVerticalScrollBar());
     }
 
     @Override
+    @RequiredUIAccess
     public int getHorizontalScrollOffset() {
         return getOffset(getHorizontalScrollBar());
     }
@@ -298,10 +314,12 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
     }
 
     @Override
+    @RequiredUIAccess
     public void scrollVertically(int scrollOffset) {
         scroll(getHorizontalScrollOffset(), scrollOffset);
     }
 
+    @RequiredUIAccess
     private void _scrollVertically(int scrollOffset) {
         assertIsDispatchThread();
 
@@ -312,10 +330,12 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
     }
 
     @Override
+    @RequiredUIAccess
     public void scrollHorizontally(int scrollOffset) {
         scroll(scrollOffset, getVerticalScrollOffset());
     }
 
+    @RequiredUIAccess
     private void _scrollHorizontally(int scrollOffset) {
         assertIsDispatchThread();
 
@@ -325,6 +345,7 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
     }
 
     @Override
+    @RequiredUIAccess
     public void scroll(int hOffset, int vOffset) {
         if (myAccumulateViewportChanges) {
             myAccumulatedXOffset = hOffset;
@@ -343,12 +364,10 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
         else if (CommandProcessor.getInstance().getCurrentCommand() == null) {
             useAnimation = myEditor.getComponent().isShowing();
         }
-        else if (editorsTracker.getCurrentCommandStart() - editorsTracker.getLastCommandFinish() <
-            AnimatedScrollingRunnable.SCROLL_DURATION) {
-            useAnimation = false;
-        }
         else {
-            useAnimation = editorsTracker.wasEditorVisibleOnCommandStart(myEditor);
+            useAnimation =
+                editorsTracker.getCurrentCommandStart() - editorsTracker.getLastCommandFinish() >= AnimatedScrollingRunnable.SCROLL_DURATION
+                    && editorsTracker.wasEditorVisibleOnCommandStart(myEditor);
         }
 
         cancelAnimatedScrolling(false);
@@ -379,11 +398,14 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
         }
     }
 
+    @Override
+    @RequiredUIAccess
     public void finishAnimation() {
         cancelAnimatedScrolling(true);
     }
 
     @Nullable
+    @RequiredUIAccess
     private AnimatedScrollingRunnable cancelAnimatedScrolling(boolean scrollToTarget) {
         AnimatedScrollingRunnable request = myCurrentAnimationRequest;
         myCurrentAnimationRequest = null;
@@ -393,11 +415,13 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
         return request;
     }
 
+    @Override
     public void dispose() {
         myEditor.getDocument().removeDocumentListener(myDocumentListener);
         myEditor.getScrollPane().getViewport().removeChangeListener(myViewportChangeListener);
     }
 
+    @RequiredUIAccess
     public void beforeModalityStateChanged() {
         cancelAnimatedScrolling(true);
     }
@@ -412,6 +436,7 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
     }
 
     @Override
+    @RequiredUIAccess
     public void flushViewportChanges() {
         myAccumulateViewportChanges = false;
         if (myAccumulatedXOffset >= 0 && myAccumulatedYOffset >= 0) {
@@ -421,6 +446,7 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
         }
     }
 
+    @RequiredUIAccess
     void onBulkDocumentUpdateStarted() {
         cancelAnimatedScrolling(true);
     }
@@ -479,6 +505,7 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
 
             myAnimator = new Animator("Animated scroller", myStepCount, SCROLL_DURATION, false, true) {
                 @Override
+                @RequiredUIAccess
                 public void paintNow(int frame, int totalFrames, int cycle) {
                     double time = ((double)(frame + 1)) / (double)totalFrames;
                     double fraction = timeToFraction(time);
@@ -491,6 +518,7 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
                 }
 
                 @Override
+                @RequiredUIAccess
                 protected void paintCycleEnd() {
                     if (!isDisposed()) { // Animator will invoke paintCycleEnd() even if it was disposed
                         finish(true);
@@ -502,11 +530,13 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
         }
 
         @Nonnull
+        @RequiredUIAccess
         public Rectangle getTargetVisibleArea() {
             Rectangle viewRect = getVisibleArea();
             return new Rectangle(myEndHOffset, myEndVOffset, viewRect.width, viewRect.height);
         }
 
+        @RequiredUIAccess
         public void cancel(boolean scrollToTarget) {
             assertIsDispatchThread();
             finish(scrollToTarget);
@@ -516,6 +546,7 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
             myPostRunnables.add(runnable);
         }
 
+        @RequiredUIAccess
         private void finish(boolean scrollToTarget) {
             if (scrollToTarget || !myPostRunnables.isEmpty()) {
                 _scrollHorizontally(myEndHOffset);

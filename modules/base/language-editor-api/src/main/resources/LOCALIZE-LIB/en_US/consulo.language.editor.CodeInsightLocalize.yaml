@@ -499,7 +499,9 @@ javadoc.method.overrides:
 javadoc.method.specified.by:
   text: 'Specified by:'
 javadoc.external.fetch.error.message:
-  text: 'Cannot fetch remote documentation: {0}'
+  text: "Cannot fetch remote documentation: internal error"
+documentation.message.documentation.is.not.available:
+  text: "Documentation is not available until indexes are built."
 searching.for.implementations:
   text: Searching For Implementations...
 goto.implementation.chooserTitle:

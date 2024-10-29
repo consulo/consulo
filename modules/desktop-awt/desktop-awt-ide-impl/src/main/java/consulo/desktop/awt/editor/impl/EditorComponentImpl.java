@@ -17,7 +17,6 @@ package consulo.desktop.awt.editor.impl;
 
 import consulo.application.Application;
 import consulo.application.util.Queryable;
-import consulo.application.util.function.Computable;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.*;
 import consulo.codeEditor.action.EditorActionManager;
@@ -59,7 +58,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.intellij.lang.annotations.MagicConstant;
-import org.jetbrains.annotations.NonNls;
 
 import javax.accessibility.*;
 import javax.swing.*;
@@ -74,6 +72,7 @@ import java.awt.im.InputMethodRequests;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 public class EditorComponentImpl extends JTextComponent
     implements EditorHolder, Scrollable, DataProvider, Queryable, TypingTarget, Accessible, IdeFocusTraversalPolicy.PassThroughComponent {
@@ -299,7 +298,6 @@ public class EditorComponentImpl extends JTextComponent
         myEditor.putInfo(info);
     }
 
-    @NonNls
     @Override
     public String toString() {
         return "EditorComponent file=" + myEditor.getVirtualFile();
@@ -529,7 +527,7 @@ public class EditorComponentImpl extends JTextComponent
         @Override
         public String getText(final int offset, final int length) throws BadLocationException {
             return Application.get().runReadAction(
-                (Computable<String>)() -> myEditor.getDocument().getText(new TextRange(offset, offset + length))
+                (Supplier<String>)() -> myEditor.getDocument().getText(new TextRange(offset, offset + length))
             );
         }
 

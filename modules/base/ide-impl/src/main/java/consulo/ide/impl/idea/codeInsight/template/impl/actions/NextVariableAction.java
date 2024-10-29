@@ -24,15 +24,16 @@
  */
 package consulo.ide.impl.idea.codeInsight.template.impl.actions;
 
-import consulo.language.editor.CodeInsightBundle;
-import consulo.language.editor.impl.internal.template.TemplateManagerImpl;
-import consulo.language.editor.impl.internal.template.TemplateStateImpl;
-import consulo.dataContext.DataContext;
-import consulo.undoRedo.CommandProcessor;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.dataContext.DataContext;
+import consulo.language.editor.impl.internal.template.TemplateManagerImpl;
+import consulo.language.editor.impl.internal.template.TemplateStateImpl;
+import consulo.language.editor.localize.CodeInsightLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.undoRedo.CommandProcessor;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -44,10 +45,11 @@ public class NextVariableAction extends EditorAction {
 
     private static class Handler extends EditorActionHandler {
         @Override
-        protected void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
+        @RequiredUIAccess
+        protected void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
             TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
             assert templateState != null;
-            CommandProcessor.getInstance().setCurrentCommandName(CodeInsightBundle.message("template.next.variable.command"));
+            CommandProcessor.getInstance().setCurrentCommandName(CodeInsightLocalize.templateNextVariableCommand());
             templateState.nextTab();
         }
 

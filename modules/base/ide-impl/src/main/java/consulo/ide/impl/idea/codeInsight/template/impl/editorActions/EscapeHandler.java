@@ -22,11 +22,12 @@ import consulo.codeEditor.SelectionModel;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.ExtensionEditorActionHandler;
 import consulo.dataContext.DataContext;
-import consulo.language.editor.impl.internal.template.TemplateManagerImpl;
-import consulo.language.editor.impl.internal.template.TemplateStateImpl;
-import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;
+import consulo.language.editor.impl.internal.template.TemplateManagerImpl;
+import consulo.language.editor.impl.internal.template.TemplateStateImpl;
+import consulo.language.editor.localize.CodeInsightLocalize;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.IdeActions;
 import consulo.undoRedo.CommandProcessor;
 import jakarta.annotation.Nonnull;
@@ -37,7 +38,8 @@ public class EscapeHandler extends EditorActionHandler implements ExtensionEdito
     private EditorActionHandler myOriginalHandler;
 
     @Override
-    public void execute(Editor editor, DataContext dataContext) {
+    @RequiredUIAccess
+    public void execute(@Nonnull Editor editor, DataContext dataContext) {
         TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
         if (templateState != null && !templateState.isFinished()) {
             SelectionModel selectionModel = editor.getSelectionModel();
@@ -49,7 +51,7 @@ public class EscapeHandler extends EditorActionHandler implements ExtensionEdito
             // If there is no selected value in completion that user definitely wants to finish template
             boolean lookupIsEmpty = lookup == null || lookup.getCurrentItem() == null;
             if (!selectionModel.hasSelection() && lookupIsEmpty) {
-                CommandProcessor.getInstance().setCurrentCommandName(CodeInsightBundle.message("finish.template.command"));
+                CommandProcessor.getInstance().setCurrentCommandName(CodeInsightLocalize.finishTemplateCommand());
                 templateState.gotoEnd(true);
                 return;
             }
@@ -63,10 +65,7 @@ public class EscapeHandler extends EditorActionHandler implements ExtensionEdito
     @Override
     public boolean isEnabled(Editor editor, DataContext dataContext) {
         final TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
-        if (templateState != null && !templateState.isFinished()) {
-            return true;
-        }
-        return myOriginalHandler.isEnabled(editor, dataContext);
+        return templateState != null && !templateState.isFinished() || myOriginalHandler.isEnabled(editor, dataContext);
     }
 
     @Override

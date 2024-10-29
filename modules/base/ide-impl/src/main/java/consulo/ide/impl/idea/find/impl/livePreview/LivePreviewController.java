@@ -1,27 +1,28 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.find.impl.livePreview;
 
-import consulo.ide.impl.idea.find.*;
-import consulo.ide.impl.idea.find.impl.FindResultImpl;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.SelectionModel;
+import consulo.codeEditor.event.SelectionEvent;
+import consulo.codeEditor.event.SelectionListener;
+import consulo.disposer.Disposable;
+import consulo.document.Document;
+import consulo.document.RangeMarker;
+import consulo.document.event.BulkAwareDocumentListener;
+import consulo.document.event.DocumentListener;
+import consulo.document.util.TextRange;
 import consulo.find.FindManager;
 import consulo.find.FindModel;
 import consulo.find.FindResult;
+import consulo.ide.impl.idea.find.EditorSearchSession;
+import consulo.ide.impl.idea.find.FindUtil;
+import consulo.ide.impl.idea.find.impl.FindResultImpl;
 import consulo.language.util.ReadonlyStatusHandlerUtil;
-import consulo.undoRedo.CommandProcessor;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.document.RangeMarker;
-import consulo.codeEditor.SelectionModel;
-import consulo.document.event.BulkAwareDocumentListener;
-import consulo.document.event.DocumentListener;
-import consulo.codeEditor.event.SelectionEvent;
-import consulo.codeEditor.event.SelectionListener;
 import consulo.project.Project;
-import consulo.document.util.TextRange;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.util.Alarm;
-import consulo.disposer.Disposable;
-
+import consulo.undoRedo.CommandProcessor;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -135,7 +136,7 @@ public class LivePreviewController implements LivePreview.Delegate, FindUtil.Rep
             mySearchResults.updateThreadSafe(copy, allowedToChangedEditorSelection, null, stamp)
                 .doWhenRejected(() -> updateInBackground(findModel, allowedToChangedEditorSelection));
         };
-        if (ApplicationManager.getApplication().isUnitTestMode()) {
+        if (Application.get().isUnitTestMode()) {
             request.run();
         }
         else {
@@ -163,6 +164,7 @@ public class LivePreviewController implements LivePreview.Delegate, FindUtil.Rep
     }
 
     @Nullable
+    @RequiredUIAccess
     public TextRange performReplace(final FindResult occurrence, final String replacement, final Editor editor) {
         Project project = mySearchResults.getProject();
         if (myReplaceDenied || !ReadonlyStatusHandlerUtil.ensureDocumentWritable(project, editor.getDocument())) {
@@ -183,6 +185,7 @@ public class LivePreviewController implements LivePreview.Delegate, FindUtil.Rep
         return result;
     }
 
+    @RequiredUIAccess
     private void performReplaceAll(Editor e) {
         Project project = mySearchResults.getProject();
         if (!ReadonlyStatusHandlerUtil.ensureDocumentWritable(project, e.getDocument())) {
@@ -235,6 +238,7 @@ public class LivePreviewController implements LivePreview.Delegate, FindUtil.Rep
         return mySearchResults.getEditor();
     }
 
+    @RequiredUIAccess
     public void performReplace() throws FindManager.MalformedReplacementStringException {
         mySuppressUpdate = true;
         String replacement = getStringToReplace(getEditor(), mySearchResults.getCursor());
@@ -255,6 +259,7 @@ public class LivePreviewController implements LivePreview.Delegate, FindUtil.Rep
         mySearchResults.exclude(mySearchResults.getCursor());
     }
 
+    @RequiredUIAccess
     public void performReplaceAll() {
         performReplaceAll(getEditor());
     }

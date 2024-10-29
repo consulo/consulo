@@ -1,9 +1,9 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.psi.impl.source;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.event.ApplicationListener;
 import consulo.application.progress.ProgressManager;
 import consulo.disposer.Disposable;
@@ -13,7 +13,6 @@ import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.document.util.TextRangeUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
-import consulo.language.codeStyle.ExternalFormatProcessor;
 import consulo.ide.impl.psi.impl.source.codeStyle.CodeFormatterFacade;
 import consulo.ide.impl.psi.impl.source.codeStyle.CodeStyleManagerImpl;
 import consulo.ide.impl.psi.impl.source.codeStyle.IndentHelperImpl;
@@ -42,6 +41,7 @@ import consulo.language.pom.event.TreeChangeEvent;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.JBIterable;
@@ -67,7 +67,7 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
     private static final Key<Boolean> REPARSE_PENDING = Key.create("REPARSE_PENDING");
 
     private static class Holder {
-        private static final boolean STORE_REFORMAT_ORIGINATOR_STACKTRACE = ApplicationManager.getApplication().isInternal();
+        private static final boolean STORE_REFORMAT_ORIGINATOR_STACKTRACE = Application.get().isInternal();
     }
 
     private final ThreadLocal<Context> myContext = ThreadLocal.withInitial(Context::new);
@@ -77,27 +77,31 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
         myProject = project;
         myPsiManager = psiManager;
 
-        project.getApplication().addApplicationListener(new ApplicationListener() {
-            @Override
-            public void writeActionStarted(@Nonnull final Object action) {
-                if (processor != null) {
-                    final Project project1 = processor.getCurrentCommandProject();
-                    if (project1 == myProject) {
-                        incrementPostponedCounter();
+        project.getApplication().addApplicationListener(
+            new ApplicationListener() {
+                @Override
+                public void writeActionStarted(@Nonnull final Object action) {
+                    if (processor != null) {
+                        final Project project1 = processor.getCurrentCommandProject();
+                        if (project1 == myProject) {
+                            incrementPostponedCounter();
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void writeActionFinished(@Nonnull final Object action) {
-                if (processor != null) {
-                    final Project project1 = processor.getCurrentCommandProject();
-                    if (project1 == myProject) {
-                        decrementPostponedCounter();
+                @Override
+                @RequiredUIAccess
+                public void writeActionFinished(@Nonnull final Object action) {
+                    if (processor != null) {
+                        final Project project1 = processor.getCurrentCommandProject();
+                        if (project1 == myProject) {
+                            decrementPostponedCounter();
+                        }
                     }
                 }
-            }
-        }, project);
+            },
+            project
+        );
     }
 
     @Override
@@ -128,6 +132,7 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
     }
 
     @Override
+    @RequiredUIAccess
     public void postponeFormattingInside(@Nonnull final Runnable runnable) {
         postponeFormattingInside(() -> {
             runnable.run();
@@ -136,6 +141,7 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
     }
 
     @Override
+    @RequiredUIAccess
     public <T> T postponeFormattingInside(@Nonnull Supplier<T> computable) {
         myProject.getApplication().assertIsDispatchThread();
         try {
@@ -151,6 +157,7 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
         getContext().myPostponedCounter++;
     }
 
+    @RequiredUIAccess
     private void decrementPostponedCounter() {
         Application application = myProject.getApplication();
         myProject.getApplication().assertIsWriteThread();
@@ -173,7 +180,7 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
         atomic(new Runnable() {
             @Override
             public void run() {
-                if (isDisabled() || getContext().myPostponedCounter == 0 && !ApplicationManager.getApplication().isUnitTestMode()) {
+                if (isDisabled() || getContext().myPostponedCounter == 0 && !Application.get().isUnitTestMode()) {
                     return;
                 }
                 TreeAspect treeAspect = myProject.getExtensionPoint(PomModelAspect.class).findExtensionOrFail(TreeAspect.class);
@@ -367,6 +374,7 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
         list.add(child);
     }
 
+    @RequiredUIAccess
     private void doPostponedFormattingInner(@Nonnull FileViewProvider key) {
         List<ASTNode> astNodes = getContext().myReformatElements.remove(key);
         final Document document = key.getDocument();
@@ -381,8 +389,8 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
         }
 
         PsiManager manager = key.getManager();
-        if (manager instanceof PsiManagerEx) {
-            FileManager fileManager = ((PsiManagerEx)manager).getFileManager();
+        if (manager instanceof PsiManagerEx managerEx) {
+            FileManager fileManager = managerEx.getFileManager();
             FileViewProvider viewProvider = fileManager.findCachedViewProvider(virtualFile);
             if (viewProvider != key) { // viewProvider was invalidated e.g. due to language level change
                 if (viewProvider == null) {
@@ -433,6 +441,7 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
         }
     }
 
+    @RequiredUIAccess
     private void reparseByTextIfNeeded(@Nonnull FileViewProvider viewProvider, @Nonnull Document document) {
         if (PsiDocumentManager.getInstance(myProject).isCommitted(document)) {
             Set<PsiFile> rootsToReparse = new HashSet<>();
@@ -619,6 +628,7 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
                 private boolean inGeneratedContext = !isGenerated;
 
                 @Override
+                @RequiredReadAction
                 protected boolean visitNode(TreeElement element) {
                     if (nodesToProcess.contains(element)) {
                         return false;
@@ -648,6 +658,7 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
                     return true;
                 }
 
+                @RequiredReadAction
                 private Iterable<TextRange> getEnabledRanges(@Nonnull PsiElement element) {
                     List<TextRange> disabledRanges = new ArrayList<>();
                     for (DisabledIndentRangesProvider rangesProvider : DisabledIndentRangesProvider.EP_NAME.getExtensions()) {
@@ -843,6 +854,7 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
         }
 
         @Override
+        @RequiredUIAccess
         public void execute(@Nonnull FileViewProvider viewProvider) {
             final PsiFile file = viewProvider.getPsi(viewProvider.getBaseLanguage());
             final FormatTextRanges textRanges = myRanges.ensureNonEmpty();

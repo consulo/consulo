@@ -17,27 +17,27 @@ package consulo.desktop.awt.uiOld.mac;
 
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.LaterInvocator;
-import consulo.undoRedo.CommandProcessor;
-import consulo.ide.impl.idea.openapi.command.CommandProcessorEx;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.component.ComponentManager;
-import consulo.fileChooser.IdeaFileChooser;
+import consulo.desktop.awt.ui.OwnerOptional;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDialog;
+import consulo.fileChooser.IdeaFileChooser;
 import consulo.fileChooser.PathChooserDialog;
+import consulo.ide.impl.idea.openapi.command.CommandProcessorEx;
 import consulo.ide.impl.idea.openapi.fileChooser.impl.FileChooserUtil;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.localize.UILocalize;
+import consulo.undoRedo.CommandProcessor;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.concurrent.AsyncResult;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.application.ui.wm.IdeFocusManager;
-import consulo.ui.ex.UIBundle;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.desktop.awt.ui.OwnerOptional;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.concurrent.AsyncResult;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -58,25 +58,25 @@ public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialo
     private final FileChooserDescriptor myFileChooserDescriptor;
     private final WeakReference<Component> myParent;
     private final Project myProject;
-    private final String myTitle;
+    private final LocalizeValue myTitle;
     private VirtualFile[] virtualFiles;
 
     public MacPathChooserDialog(FileChooserDescriptor descriptor, Component parent, Project project) {
-
         myFileChooserDescriptor = descriptor;
         myParent = new WeakReference<>(parent);
         myProject = project;
         myTitle = getChooserTitle(descriptor);
 
-        Consumer<Dialog> dialogConsumer = owner -> myFileDialog = new FileDialog(owner, myTitle, FileDialog.LOAD);
-        Consumer<Frame> frameConsumer = owner -> myFileDialog = new FileDialog(owner, myTitle, FileDialog.LOAD);
+        Consumer<Dialog> dialogConsumer = owner -> myFileDialog = new FileDialog(owner, myTitle.get(), FileDialog.LOAD);
+        Consumer<Frame> frameConsumer = owner -> myFileDialog = new FileDialog(owner, myTitle.get(), FileDialog.LOAD);
 
         OwnerOptional.fromComponent(parent).ifDialog(dialogConsumer).ifFrame(frameConsumer).ifNull(frameConsumer);
     }
 
-    private static String getChooserTitle(final FileChooserDescriptor descriptor) {
-        final String title = descriptor.getTitle();
-        return title != null ? title : UIBundle.message("file.chooser.default.title");
+    @Nonnull
+    private static LocalizeValue getChooserTitle(final FileChooserDescriptor descriptor) {
+        final LocalizeValue title = descriptor.getTitleValue();
+        return title != LocalizeValue.empty() ? title : UILocalize.fileChooserDefaultTitle();
     }
 
     @Nonnull
@@ -160,10 +160,10 @@ public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialo
             }
             catch (Exception e) {
                 if (parent == null) {
-                    Messages.showErrorDialog(myProject, e.getMessage(), myTitle);
+                    Messages.showErrorDialog(myProject, e.getMessage(), myTitle.get());
                 }
                 else {
-                    Messages.showErrorDialog(parent, e.getMessage(), myTitle);
+                    Messages.showErrorDialog(parent, e.getMessage(), myTitle.get());
                 }
 
                 return;
@@ -174,13 +174,14 @@ public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialo
                 return;
             }
         }
-        if (callback instanceof IdeaFileChooser.FileChooserConsumer) {
-            ((IdeaFileChooser.FileChooserConsumer)callback).cancelled();
+        if (callback instanceof IdeaFileChooser.FileChooserConsumer fileChooserConsumer) {
+            fileChooserConsumer.cancelled();
         }
     }
 
     @Nonnull
     @Override
+    @RequiredUIAccess
     public VirtualFile[] choose(@Nullable ComponentManager project, @Nonnull VirtualFile... toSelectFiles) {
         VirtualFile toSelect = toSelectFiles.length > 0 ? toSelectFiles[0] : null;
         choose(toSelect, files -> {
@@ -242,9 +243,9 @@ public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialo
                     commandProcessor.leaveModal();
                     LaterInvocator.leaveModal(myFileDialog);
                     if (parent != null) {
-                        IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> {
-                            IdeFocusManager.getGlobalInstance().requestFocus(parent, true);
-                        });
+                        IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(
+                            () -> IdeFocusManager.getGlobalInstance().requestFocus(parent, true)
+                        );
                     }
                 }
             }
@@ -262,10 +263,10 @@ public class MacPathChooserDialog implements PathChooserDialog, FileChooserDialo
                 }
                 catch (Exception e) {
                     if (parent == null) {
-                        Messages.showErrorDialog(myProject, e.getMessage(), myTitle);
+                        Messages.showErrorDialog(myProject, e.getMessage(), myTitle.get());
                     }
                     else {
-                        Messages.showErrorDialog(parent, e.getMessage(), myTitle);
+                        Messages.showErrorDialog(parent, e.getMessage(), myTitle.get());
                     }
 
                     result.setRejected();

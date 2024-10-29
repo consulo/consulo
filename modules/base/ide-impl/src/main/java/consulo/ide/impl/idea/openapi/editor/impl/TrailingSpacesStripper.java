@@ -30,7 +30,7 @@ import consulo.document.FileDocumentManager;
 import consulo.document.event.FileDocumentManagerListener;
 import consulo.document.impl.DocumentImpl;
 import consulo.ide.impl.idea.openapi.project.ProjectUtil;
-import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.util.collection.ArrayUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.document.DocumentWindow;
 import consulo.project.Project;

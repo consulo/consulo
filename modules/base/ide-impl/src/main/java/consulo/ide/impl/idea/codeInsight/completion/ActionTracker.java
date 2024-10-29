@@ -43,20 +43,26 @@ class ActionTracker {
     ActionTracker(Editor editor, Disposable parentDisposable) {
         myEditor = editor;
         myProject = editor.getProject();
-        ActionManager.getInstance().addAnActionListener(new AnActionListener.Adapter() {
-            @Override
-            public void beforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
-                myActionsHappened = true;
-            }
-        }, parentDisposable);
-        myEditor.getDocument().addDocumentListener(new DocumentAdapter() {
-            @Override
-            public void documentChanged(DocumentEvent e) {
-                if (!myIgnoreDocumentChanges) {
+        ActionManager.getInstance().addAnActionListener(
+            new AnActionListener.Adapter() {
+                @Override
+                public void beforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
                     myActionsHappened = true;
                 }
-            }
-        }, parentDisposable);
+            },
+            parentDisposable
+        );
+        myEditor.getDocument().addDocumentListener(
+            new DocumentAdapter() {
+                @Override
+                public void documentChanged(DocumentEvent e) {
+                    if (!myIgnoreDocumentChanges) {
+                        myActionsHappened = true;
+                    }
+                }
+            },
+            parentDisposable
+        );
     }
 
     void ignoreCurrentDocumentChange() {

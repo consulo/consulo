@@ -53,7 +53,7 @@ import static consulo.desktop.awt.fileChooser.impl.system.windows2.IFileOpenDial
 
 /**
  * @author VISTALL
- * @since 24/09/2021
+ * @since 2021-09-24
  */
 public class WinPathChooserDialog2 implements FileChooserDialog {
     private final FileChooserDescriptor myChooserDescriptor;

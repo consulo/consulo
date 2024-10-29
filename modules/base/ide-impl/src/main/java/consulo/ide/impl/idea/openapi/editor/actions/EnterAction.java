@@ -24,19 +24,18 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
-import consulo.codeEditor.EditorBundle;
-import consulo.dataContext.DataContext;
-import consulo.undoRedo.CommandProcessor;
-import consulo.ide.impl.idea.openapi.editor.*;
-import consulo.codeEditor.action.EditorAction;
-import consulo.codeEditor.action.EditorWriteActionHandler;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUIUtil;
 import consulo.annotation.access.RequiredWriteAction;
-import consulo.document.Document;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
-
+import consulo.codeEditor.action.EditorAction;
+import consulo.codeEditor.action.EditorWriteActionHandler;
+import consulo.codeEditor.localize.CodeEditorLocalize;
+import consulo.dataContext.DataContext;
+import consulo.document.Document;
+import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
+import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUIUtil;
+import consulo.undoRedo.CommandProcessor;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -54,7 +53,7 @@ public class EnterAction extends EditorAction {
         @RequiredWriteAction
         @Override
         public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
-            CommandProcessor.getInstance().setCurrentCommandName(EditorBundle.message("typing.command.name"));
+            CommandProcessor.getInstance().setCurrentCommandName(CodeEditorLocalize.typingCommandName());
             insertNewLineAtCaret(editor);
         }
 

@@ -31,6 +31,7 @@ import consulo.ide.impl.idea.history.integration.ui.models.HistoryDialogModel;
 import consulo.ide.impl.idea.history.utils.LocalHistoryLog;
 import consulo.localHistory.*;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.ShutDownTracker;
@@ -188,6 +189,7 @@ public class LocalHistoryImpl extends LocalHistory implements Disposable {
     private Label label(final LabelImpl impl) {
         return new Label() {
             @Override
+            @RequiredUIAccess
             public void revert(@Nonnull Project project, @Nonnull VirtualFile file) throws LocalHistoryException {
                 revertToLabel(project, file, impl);
             }
@@ -233,6 +235,7 @@ public class LocalHistoryImpl extends LocalHistory implements Disposable {
         return myGateway;
     }
 
+    @RequiredUIAccess
     private void revertToLabel(@Nonnull Project project, @Nonnull VirtualFile f, @Nonnull LabelImpl impl) throws LocalHistoryException {
         HistoryDialogModel dirHistoryModel = f.isDirectory()
             ? new DirectoryHistoryDialogModel(project, myGateway, myVcs, f)

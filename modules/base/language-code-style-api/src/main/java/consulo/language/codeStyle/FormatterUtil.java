@@ -153,10 +153,7 @@ public class FormatterUtil {
         while (prevNode != null && (isWhitespaceOrEmpty(prevNode) || isOneOf(prevNode, skipTypes))) {
             prevNode = prevNode.getTreePrev();
         }
-        if (prevNode == null) {
-            return false;
-        }
-        return prevNode.getElementType() == expectedType;
+        return prevNode != null && prevNode.getElementType() == expectedType;
     }
 
     public static boolean isPrecededBy(@Nullable ASTNode node, TokenSet expectedTypes) {
@@ -172,10 +169,7 @@ public class FormatterUtil {
         while (prevNode != null && (isWhitespaceOrEmpty(prevNode) || isOneOf(prevNode, skipTypes))) {
             prevNode = prevNode.getTreePrev();
         }
-        if (prevNode == null) {
-            return false;
-        }
-        return expectedTypes.contains(prevNode.getElementType());
+        return prevNode != null && expectedTypes.contains(prevNode.getElementType());
     }
 
     public static boolean hasPrecedingSiblingOfType(@Nullable ASTNode node, IElementType expectedSiblingType, IElementType... skipTypes) {
@@ -203,10 +197,7 @@ public class FormatterUtil {
         while (nextNode != null && (isWhitespaceOrEmpty(nextNode) || isOneOf(nextNode, skipTypes))) {
             nextNode = nextNode.getTreeNext();
         }
-        if (nextNode == null) {
-            return false;
-        }
-        return nextNode.getElementType() == expectedType;
+        return nextNode != null && nextNode.getElementType() == expectedType;
     }
 
     public static boolean isIncomplete(@Nullable ASTNode node) {
@@ -217,10 +208,7 @@ public class FormatterUtil {
         if (lastChild == null) {
             return false;
         }
-        if (lastChild.getElementType() == TokenType.ERROR_ELEMENT) {
-            return true;
-        }
-        return isIncomplete(lastChild);
+        return lastChild.getElementType() == TokenType.ERROR_ELEMENT || isIncomplete(lastChild);
     }
 
     public static boolean containsWhiteSpacesOnly(@Nullable ASTNode node) {

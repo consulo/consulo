@@ -10,11 +10,10 @@ import consulo.language.editor.documentation.DocumentationProvider;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiQualifiedNamedElement;
-import consulo.util.lang.ObjectUtil;
-import org.jetbrains.annotations.Contract;
-
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Contract;
 
 import java.util.concurrent.TimeUnit;
 
@@ -45,9 +44,8 @@ public class QuickDocUtil {
         while (!(result = runInReadActionWithWriteActionPriority(
             action,
             progressIndicator == null ? null : new SensitiveProgressWrapper(progressIndicator)
-        )) &&
-            (progressIndicator == null || !progressIndicator.isCanceled()) &&
-            System.currentTimeMillis() < deadline) {
+        )) && (progressIndicator == null || !progressIndicator.isCanceled())
+            && System.currentTimeMillis() < deadline) {
             try {
                 TimeUnit.MILLISECONDS.sleep(pauseBetweenRetries);
             }
@@ -64,7 +62,7 @@ public class QuickDocUtil {
      * progress indicator ({@link ProgressManager#getProgressIndicator()}).
      */
     public static boolean runInReadActionWithWriteActionPriorityWithRetries(
-        @Nonnull final Runnable action,
+        @RequiredUIAccess @Nonnull final Runnable action,
         long timeout,
         long pauseBetweenRetries
     ) {
@@ -84,7 +82,8 @@ public class QuickDocUtil {
         @Nullable String navigationInfo
     ) {
         if (navigationInfo != null) {
-            String fqn = element instanceof PsiQualifiedNamedElement ? ((PsiQualifiedNamedElement)element).getQualifiedName() : null;
+            String fqn =
+                element instanceof PsiQualifiedNamedElement qualifiedNamedElement ? qualifiedNamedElement.getQualifiedName() : null;
             String fullText = provider.generateDoc(element, originalElement);
             return HintUtil.prepareHintText(DocPreviewUtil.buildPreview(navigationInfo, fqn, fullText), HintUtil.getInformationHint());
         }

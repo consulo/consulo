@@ -41,7 +41,7 @@ import consulo.ide.impl.idea.openapi.command.CommandProcessorEx;
 import consulo.ide.impl.idea.openapi.ui.impl.AbstractDialog;
 import consulo.ide.impl.idea.openapi.ui.impl.HeadlessDialog;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
-import consulo.ide.impl.idea.reference.SoftReference;
+import consulo.util.lang.ref.SoftReference;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
@@ -52,6 +52,7 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.IdeFrameUtil;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.AppIcon;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -337,7 +338,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
     }
 
     /**
-     * @see javax.swing.JDialog#validate
+     * @see JDialog#validate
      */
     @Override
     public void validate() {
@@ -345,7 +346,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
     }
 
     /**
-     * @see javax.swing.JDialog#repaint
+     * @see JDialog#repaint
      */
     @Override
     public void repaint() {
@@ -378,7 +379,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
     }
 
     /**
-     * @see java.awt.Window#pack
+     * @see Window#pack
      */
     @Override
     public void pack() {
@@ -507,6 +508,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
 
     @Nonnull
     @Override
+    @RequiredUIAccess
     public AsyncResult<Void> showAsync() {
         LOG.assertTrue(EventQueue.isDispatchThread(), "Access is allowed from event dispatch thread only");
 
@@ -579,8 +581,8 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
     }
 
     private class AnCancelAction extends AnAction implements DumbAware {
-
         @Override
+        @RequiredUIAccess
         public void update(AnActionEvent e) {
             Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
             e.getPresentation().setEnabled(false);
@@ -622,6 +624,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
         }
 
         @Override
+        @RequiredUIAccess
         public void actionPerformed(AnActionEvent e) {
             myWrapper.doCancelAction(e.getInputEvent());
         }
@@ -654,11 +657,8 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
             setFocusTraversalPolicy(new LayoutFocusTraversalPolicy() {
                 @Override
                 protected boolean accept(Component aComponent) {
-                    if (UIUtil.isFocusProxy(aComponent)) {
-                        return false;
+                    return !UIUtil.isFocusProxy(aComponent) && super.accept(aComponent);
                     }
-                    return super.accept(aComponent);
-                }
             });
 
             myFocusedCallback = focused;
@@ -693,8 +693,8 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
         @Override
         public Object getData(@Nonnull Key<?> dataId) {
             final DialogWrapper wrapper = myDialogWrapper.get();
-            if (wrapper instanceof DataProvider) {
-                return ((DataProvider)wrapper).getData(dataId);
+            if (wrapper instanceof DataProvider dataProvider) {
+                return dataProvider.getData(dataId);
             }
             if (wrapper instanceof TypeSafeDataProvider) {
                 TypeSafeDataProviderAdapter adapter = new TypeSafeDataProviderAdapter((TypeSafeDataProvider)wrapper);
@@ -874,6 +874,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
         }
 
         @Override
+        @RequiredUIAccess
         public Component getMostRecentFocusOwner() {
             if (!myOpened) {
                 final DialogWrapper wrapper = getDialogWrapper();
