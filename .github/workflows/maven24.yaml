@@ -20,6 +20,6 @@ jobs:
       uses: actions/setup-java@v1
       with:
         distribution: 'zulu'
-        java-version: 24-beta
+        java-version: 24.0.49-beta
     - name: Build with Maven
       run: mvn -U -T 1C -Dmaven.javadoc.skip=true -B -V clean package
