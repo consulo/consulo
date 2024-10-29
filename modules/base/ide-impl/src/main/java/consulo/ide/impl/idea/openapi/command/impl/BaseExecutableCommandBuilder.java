@@ -25,6 +25,14 @@ import consulo.util.lang.function.ThrowableSupplier;
 public class BaseExecutableCommandBuilder<R, THIS extends ExecutableCommandBuilder<R, THIS>>
     extends BaseCommandBuilder<THIS>  implements ExecutableCommandBuilder<R, THIS> {
 
+    protected boolean myGlobalUndoAction = false;
+
+    @Override
+    public THIS inGlobalUndoAction() {
+        myGlobalUndoAction = true;
+        return self();
+    }
+
     @Override
     public ExecutionResult<R> execute(ThrowableSupplier<R, ? extends Throwable> executable) {
         return ExecutionResult.execute(executable);
