@@ -57,7 +57,7 @@
 
         <maven.assembly.plugin>3.6.0</maven.assembly.plugin>
         <maven.jar.plugin>3.3.0</maven.jar.plugin>
-        <maven.compiler.plugin>3.11.0</maven.compiler.plugin>
+        <maven.compiler.plugin>3.13.0</maven.compiler.plugin>
         <maven.surefire.plugin>3.1.0</maven.surefire.plugin>
         <maven.source.plugin>3.2.1</maven.source.plugin>
 
