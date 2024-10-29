@@ -301,13 +301,11 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
                             .startTemplateWithPrefix(myEditor, template, null, argument)
                     );
             }
-            else if (item instanceof CustomLiveTemplateLookupElement customLiveTemplateLookupElement) {
-                if (myFile != null) {
-                    CommandProcessor.getInstance().newCommand()
-                        .project(myProject)
-                        .inWriteAction()
-                        .run(() -> customLiveTemplateLookupElement.expandTemplate(myEditor, myFile));
-                }
+            else if (item instanceof CustomLiveTemplateLookupElement customLiveTemplateLookupElement && myFile != null) {
+                CommandProcessor.getInstance().newCommand()
+                    .project(myProject)
+                    .inWriteAction()
+                    .run(() -> customLiveTemplateLookupElement.expandTemplate(myEditor, myFile));
             }
         }
     }
