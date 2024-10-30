@@ -28,37 +28,40 @@ import java.util.function.Supplier;
  * @since 11-Sep-17
  */
 public class UIServlet extends VaadinServlet {
-  public record RootUIInfo(Supplier<UIBuilder> builder) {
-  }
+    public record RootUIInfo(Supplier<UIBuilder> builder) {
+    }
 
-  private final Supplier<UIBuilder> myBuilderSupplier;
+    private final Supplier<UIBuilder> myBuilderSupplier;
 
-  public UIServlet(Supplier<UIBuilder> aBuilderSupplier, String urlPrefix) {
-    myBuilderSupplier = aBuilderSupplier;
-  }
+    public UIServlet(Supplier<UIBuilder> aBuilderSupplier, String urlPrefix) {
+        myBuilderSupplier = aBuilderSupplier;
+    }
 
-  @Override
-  protected VaadinServletService createServletService(DeploymentConfiguration deploymentConfiguration) throws ServiceException {
-    VaadinServletService service = new VaadinServletService(this, deploymentConfiguration);
-    service.init();
-    service.setClassLoader(UIServlet.class.getClassLoader());
-    return service;
-  }
+    @Override
+    protected VaadinServletService createServletService(DeploymentConfiguration deploymentConfiguration) throws ServiceException {
+        VaadinServletService service = new VaadinServletService(this, deploymentConfiguration);
+        service.init();
+        service.setClassLoader(UIServlet.class.getClassLoader());
+        return service;
+    }
 
-  @Override
-  protected void servletInitialized() throws ServletException {
-    getService().addSessionInitListener((SessionInitListener)se -> {
-      VaadinService source = se.getSource();
+    @Override
+    protected void servletInitialized() throws ServletException {
+        super.servletInitialized();
+        
+        getService().addSessionInitListener((SessionInitListener) se -> {
+            VaadinService source = se.getSource();
 
-      source.addUIInitListener(event -> {
-        ComponentUtil.setData(event.getUI(), RootUIInfo.class, new RootUIInfo(myBuilderSupplier));
-      });
+            source.addUIInitListener(event -> {
+                ComponentUtil.setData(event.getUI(), RootUIInfo.class, new RootUIInfo(myBuilderSupplier));
+            });
 
-      RouteRegistry registry = source.getRouter().getRegistry();
+            
+            RouteRegistry registry = source.getRouter().getRegistry();
 
-      registry.clean();
+            registry.clean();
 
-      registry.setRoute("/", VaadinRootLayout.class, List.of());
-    });
-  }
+            registry.setRoute("/", VaadinRootLayout.class, List.of());
+        });
+    }
 }

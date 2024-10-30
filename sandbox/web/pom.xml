@@ -62,6 +62,32 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>consulo.maven</groupId>
+                <artifactId>maven-consulo-plugin</artifactId>
+                <extensions>true</extensions>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>build-index</goal>
+                        </goals>
+                        <configuration>
+                            <pluginRoots>
+                                <pluginRoot>
+                                    ${project.build.directory}/consulo-sandbox-web-${project.version}-main/Consulo/platform/buildSNAPSHOT/modules/consulo
+                                </pluginRoot>
+                                <pluginRoot>
+                                    ${project.build.directory}/consulo-sandbox-web-${project.version}-main/Consulo/platform/buildSNAPSHOT/modules/consulo.web
+                                </pluginRoot>
+                                <pluginRoot>
+                                    ${project.build.directory}/consulo-sandbox-web-${project.version}-main/Consulo/platform/buildSNAPSHOT/plugins/consulo.sandbox.plugin
+                                </pluginRoot>
+                            </pluginRoots>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
@@ -379,6 +405,10 @@
             <artifactId>jackson-databind</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.eclipse.jetty.websocket</groupId>
             <artifactId>websocket-jakarta-server</artifactId>
         </dependency>
@@ -461,6 +491,14 @@
         <dependency>
             <groupId>it.unimi.dsi</groupId>
             <artifactId>fastutil</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-fileupload2-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-fileupload2-jakarta</artifactId>
         </dependency>
     </dependencies>
 </project>
