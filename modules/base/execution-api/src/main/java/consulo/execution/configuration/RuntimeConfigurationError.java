@@ -15,16 +15,31 @@
  */
 package consulo.execution.configuration;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.execution.RuntimeConfigurationException;
 import consulo.execution.localize.ExecutionLocalize;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
 
 public class RuntimeConfigurationError extends RuntimeConfigurationException {
-  public RuntimeConfigurationError(final String message) {
-    super(message, ExecutionLocalize.errorCommonTitle().get());
-  }
+    public RuntimeConfigurationError(@Nonnull LocalizeValue message) {
+        this(message, null);
+    }
 
-  public RuntimeConfigurationError(final String message, final Runnable quickFix) {
-    super(message, ExecutionLocalize.errorCommonTitle().get());
-    setQuickFix(quickFix);
-  }
+    public RuntimeConfigurationError(@Nonnull LocalizeValue message, Runnable quickFix) {
+        super(message, ExecutionLocalize.warningCommonTitle());
+        setQuickFix(quickFix);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public RuntimeConfigurationError(String message) {
+        this(message, null);
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public RuntimeConfigurationError(String message, Runnable quickFix) {
+        this(LocalizeValue.ofNullable(message), quickFix);
+    }
 }

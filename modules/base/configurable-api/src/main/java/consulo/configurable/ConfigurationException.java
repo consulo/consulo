@@ -15,30 +15,55 @@
  */
 package consulo.configurable;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.configurable.localize.ConfigurableLocalize;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
+
 public class ConfigurationException extends Exception {
-  public static final String DEFAULT_TITLE = OptionsBundle.message("cannot.save.settings.default.dialog.title");
-  private String myTitle = DEFAULT_TITLE;
-  private Runnable myQuickFix;
+    public static final LocalizeValue DEFAULT_TITLE = ConfigurableLocalize.cannotSaveSettingsDefaultDialogTitle();
+    @Nonnull
+    private LocalizeValue myTitle = DEFAULT_TITLE;
+    private Runnable myQuickFix;
 
-  public ConfigurationException(String message) {
-    super(message);
-  }
+    public ConfigurationException(@Nonnull LocalizeValue message) {
+        this(message, LocalizeValue.empty());
+    }
 
-  public ConfigurationException(String message, String title) {
-    super(message);
-    myTitle = title;
-  }
+    public ConfigurationException(@Nonnull LocalizeValue message, @Nonnull LocalizeValue title) {
+        super(message.get());
+        myTitle = title;
+    }
 
-  public String getTitle() {
-    return myTitle;
-  }
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public ConfigurationException(String message) {
+        this(message, null);
+    }
 
-  public void setQuickFix(Runnable quickFix) {
-    myQuickFix = quickFix;
-  }
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public ConfigurationException(String message, String title) {
+        this(LocalizeValue.ofNullable(message), LocalizeValue.ofNullable(title));
+    }
 
-  public Runnable getQuickFix() {
-    return myQuickFix;
-  }
+    //TODO: rename into getTitle after deprecation removal
+    public LocalizeValue getTitleValue() {
+        return myTitle;
+    }
 
+    @Deprecated
+    @DeprecationInfo("Use getTitleValue()")
+    public String getTitle() {
+        LocalizeValue titleValue = getTitleValue();
+        return titleValue == LocalizeValue.empty() ? null : titleValue.get();
+    }
+
+    public void setQuickFix(Runnable quickFix) {
+        myQuickFix = quickFix;
+    }
+
+    public Runnable getQuickFix() {
+        return myQuickFix;
+    }
 }
