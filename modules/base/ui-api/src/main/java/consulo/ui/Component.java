@@ -37,7 +37,6 @@ import java.util.function.Supplier;
  * @since 09-Jun-16
  */
 public interface Component extends UserDataHolder {
-
     @RequiredUIAccess
     default void addBorder(@Nonnull BorderPosition borderPosition) {
         addBorder(borderPosition, BorderStyle.LINE, ComponentColors.BORDER, 1);
@@ -192,8 +191,10 @@ public interface Component extends UserDataHolder {
      * @return runner for unregister listener
      */
     @Nonnull
-    <C extends Component, E extends ComponentEvent<C>> Disposable addListener(@Nonnull Class<? extends E> eventClass,
-                                                                              @Nonnull ComponentEventListener<C, E> listener);
+    <C extends Component, E extends ComponentEvent<C>> Disposable addListener(
+        @Nonnull Class<? extends E> eventClass,
+        @Nonnull ComponentEventListener<C, E> listener
+    );
 
     @Nonnull
     <C extends Component, E extends ComponentEvent<C>> ComponentEventListener<C, E> getListenerDispatcher(@Nonnull Class<E> eventClass);

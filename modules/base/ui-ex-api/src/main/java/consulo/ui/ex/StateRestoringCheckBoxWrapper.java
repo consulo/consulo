@@ -26,61 +26,61 @@ import jakarta.annotation.Nonnull;
  * @since 06-Jul-24
  */
 public final class StateRestoringCheckBoxWrapper {
-  private final CheckBox myCheckBox;
-  private boolean myIsSelectedWhenSelectable;
+    private final CheckBox myCheckBox;
+    private boolean myIsSelectedWhenSelectable;
 
-  @RequiredUIAccess
-  public StateRestoringCheckBoxWrapper(LocalizeValue text) {
-    myCheckBox = CheckBox.create(text);
-  }
-
-  public Boolean getValue() {
-    return myCheckBox.getValue();
-  }
-
-  @RequiredUIAccess
-  public void setValue(Boolean value) {
-    myCheckBox.setValue(value);
-  }
-
-  @Nonnull
-  public Component getComponent() {
-    return myCheckBox;
-  }
-
-  /**
-   * The method should be used instead of setEnabled(false) or disable() in order to support selected state saving/recovering
-   * Remembers the selected state of the checkbox when the checkbox is enabled, disables it
-   * and sets the selected state according to tha parameter pased
-   *
-   * @param isSelected the parameter telling whetheer the checkbox is selected when disabled
-   */
-  @RequiredUIAccess
-  public void makeUnselectable(boolean isSelected) {
-    if (myCheckBox.isEnabled()) {
-      myIsSelectedWhenSelectable = myCheckBox.getValue();
-      myCheckBox.setEnabled(false);
+    @RequiredUIAccess
+    public StateRestoringCheckBoxWrapper(LocalizeValue text) {
+        myCheckBox = CheckBox.create(text);
     }
-    myCheckBox.setValue(isSelected);
-  }
 
-  /**
-   * The method should be used instead of setEnabled(true) or enable() in order to support selected state saving/recovering
-   * Enables the checkbox and restores the selected state of the checkbox to the one, that it had before the makeUnselectable() method was called
-   * that was before the checkbox was disabled
-   */
-  @RequiredUIAccess
-  public void makeSelectable() {
-    if (!myCheckBox.isEnabled()) {
-      myCheckBox.setEnabled(true);
-      myCheckBox.setValue(myIsSelectedWhenSelectable);
+    public Boolean getValue() {
+        return myCheckBox.getValue();
     }
-  }
 
-  public boolean isSelectedWhenSelectable() {
-    if (myCheckBox.isEnabled()) {
-      return myCheckBox.getValue();
+    @RequiredUIAccess
+    public void setValue(Boolean value) {
+        myCheckBox.setValue(value);
     }
-    return myIsSelectedWhenSelectable;
-  }
+
+    @Nonnull
+    public Component getComponent() {
+        return myCheckBox;
+    }
+
+    /**
+     * The method should be used instead of setEnabled(false) or disable() in order to support selected state saving/recovering
+     * Remembers the selected state of the checkbox when the checkbox is enabled, disables it
+     * and sets the selected state according to tha parameter pased
+     *
+     * @param isSelected the parameter telling whetheer the checkbox is selected when disabled
+     */
+    @RequiredUIAccess
+    public void makeUnselectable(boolean isSelected) {
+        if (myCheckBox.isEnabled()) {
+            myIsSelectedWhenSelectable = myCheckBox.getValue();
+            myCheckBox.setEnabled(false);
+        }
+        myCheckBox.setValue(isSelected);
+    }
+
+    /**
+     * The method should be used instead of setEnabled(true) or enable() in order to support selected state saving/recovering
+     * Enables the checkbox and restores the selected state of the checkbox to the one, that it had before the makeUnselectable() method was called
+     * that was before the checkbox was disabled
+     */
+    @RequiredUIAccess
+    public void makeSelectable() {
+        if (!myCheckBox.isEnabled()) {
+            myCheckBox.setEnabled(true);
+            myCheckBox.setValue(myIsSelectedWhenSelectable);
+        }
+    }
+
+    public boolean isSelectedWhenSelectable() {
+        if (myCheckBox.isEnabled()) {
+            return myCheckBox.getValue();
+        }
+        return myIsSelectedWhenSelectable;
+    }
 }
