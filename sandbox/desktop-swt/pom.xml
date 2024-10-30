@@ -55,6 +55,32 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>consulo.maven</groupId>
+                <artifactId>maven-consulo-plugin</artifactId>
+                <extensions>true</extensions>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>build-index</goal>
+                        </goals>
+                        <configuration>
+                            <pluginRoots>
+                                <pluginRoot>
+                                    ${project.build.directory}/consulo-sandbox-desktop-swt-${project.version}-main/Consulo/platform/buildSNAPSHOT/modules/consulo
+                                </pluginRoot>
+                                <pluginRoot>
+                                    ${project.build.directory}/consulo-sandbox-desktop-swt-${project.version}-main/Consulo/platform/buildSNAPSHOT/modules/consulo.desktop.swt
+                                </pluginRoot>
+                                <pluginRoot>
+                                    ${project.build.directory}/consulo-sandbox-desktop-swt-${project.version}-main/Consulo/platform/buildSNAPSHOT/plugins/consulo.sandbox.plugin
+                                </pluginRoot>
+                            </pluginRoots>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
