@@ -20,11 +20,14 @@
 | [HTML & XML](https://github.com/consulo/consulo-xml)        | 🟢 | 🟢 | 🟢 | 🟢
 | [XPath](https://github.com/consulo/consulo-xpath)        | 🟢 | 🟢 | 🟢 | 🟢
 | [JSON](https://github.com/consulo/consulo-javascript)       | 🟢 | 🟢 | 🟢 | 🟢
+| [Handlebars Templates](https://github.com/consulo/consulo-handlebars)       | 🟢 | 🟢 | 🟢 | 🟢
+| [Closure Templates](https://github.com/consulo/consulo-soy)       | 🟢 | 🟢 | 🟢 | 🟢
 | [CSS](https://github.com/consulo/consulo-css)               | 🔵 | 🔵 | 🔵 | 🔴
 | [TOML](https://github.com/consulo/consulo-toml)               | 🟢 | 🟢 | 🔵 | 🔵
 | [Markdown](https://github.com/consulo/consulo-markdown)               | 🟢 | 🟢 | 🔵 | 🔵
 | [SQL](https://github.com/consulo/consulo-database)          | 🔵<br><sup>(incubating)</sup> | 🔴 | 🔴 | 🔴
 | [Regexp](https://github.com/consulo/consulo-regexp)       | 🟢 | 🟢 | 🟢 | 🟢
+| [Protobuf](https://github.com/consulo/consulo-google-protobuf)       | 🟢 | 🟢 | 🟢 | 🟢
 
 * __Parsing__ — lexical analysis and syntactic tree construction. This provides basic syntax highlighting (comments are grey, string literals are green, etc.)
 * __Resolving__ — semantic analysis. Provides links between function calls and function definitions. So you may middle-click on method call and IDE shows you method definition or you may middle-click on method definition and IDE shows you all calls to this method.
