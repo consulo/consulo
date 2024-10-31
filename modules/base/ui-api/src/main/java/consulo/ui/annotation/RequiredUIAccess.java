@@ -19,7 +19,7 @@ import java.lang.annotation.*;
 
 /**
  * @author VISTALL
- * @since 09-Jun-16
+ * @since 2016-06-09
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
