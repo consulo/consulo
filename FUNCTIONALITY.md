@@ -35,10 +35,14 @@
 | Name | Support |
 | ---- | :-------: |
 | Java ▸ [Lombok](https://github.com/consulo/consulo-lombok)       | 🟢
+| Java ▸ [JUnit](https://github.com/consulo/consulo-junit)       | 🟢
+| Java ▸ [TestNG](https://github.com/consulo/consulo-testng)       | 🟢
+| Java ▸ [Jackson](https://github.com/consulo/consulo-java-jackson)       | 🔵 <br><sup>(incubating)</sup>
 | Java ▸ [Spring](https://github.com/consulo/incubating-consulo-spring)       | 🔵 <br><sup>(incubating)</sup>
 | Java ▸ [Hibernate](https://github.com/consulo/incubating-consulo-hibernate) | 🔴 <br><sup>(planned but delayed)</sup>
 | Java ▸ JPA                                                                  | 🔴 <br><sup>(planned but delayed)</sup>
 | C# ▸ [Razor](https://github.com/consulo/incubating-consulo-razor)           | 🔵 <br><sup>(incubating)</sup>
+| C# ▸ [NUnit](https://github.com/consulo/consulo-nunit)           | 🔵 <br><sup>(incubating)</sup>
 
 ### Runtime Platforms
 | Name | Importing | Running | Debugging |
