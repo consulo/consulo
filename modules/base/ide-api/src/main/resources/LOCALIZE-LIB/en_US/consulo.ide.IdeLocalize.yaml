@@ -2665,3 +2665,7 @@ popup.title.edit.shortcuts:
   text: Edit Shortcuts
 project.directory.is.not.writable:
   text: Directory ''{0}'' doesn''t seem to be writeable. Please choose another location.
+action.ToggleAction.pin.window.text:
+  text: Pin Window
+action.ToggleAction.pin.window.description:
+  text: Pin Window

@@ -15,15 +15,19 @@
  */
 package consulo.ui.ex;
 
+import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
+import consulo.ui.ValueComponent;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ComponentEventListener;
+import consulo.ui.event.ValueComponentEvent;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 06-Jul-24
+ * @since 2024-07-06
  */
 public final class StateRestoringCheckBoxWrapper {
     private final CheckBox myCheckBox;
@@ -46,6 +50,12 @@ public final class StateRestoringCheckBoxWrapper {
     @Nonnull
     public Component getComponent() {
         return myCheckBox;
+    }
+
+    public Disposable addValueListener(
+        @Nonnull ComponentEventListener<ValueComponent<Boolean>, ValueComponentEvent<Boolean>> valueListener
+    ) {
+        return myCheckBox.addValueListener(valueListener);
     }
 
     /**

@@ -34,7 +34,7 @@ import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 09-Jun-16
+ * @since 2016-01-09
  */
 public interface Component extends UserDataHolder {
     @RequiredUIAccess
