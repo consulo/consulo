@@ -15,10 +15,7 @@
  */
 package consulo.virtualFileSystem.fileType;
 
-import consulo.annotation.DeprecationInfo;
-
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * @author yole
@@ -31,11 +28,4 @@ public interface FileTypeConsumer {
   void consume(@Nonnull FileType fileType, final String extensions);
 
   void consume(@Nonnull FileType fileType, final FileNameMatcher... matchers);
-
-  @Nullable
-  @Deprecated
-  @DeprecationInfo("This method sometimes can return null. Better use plugin optional dependency feature")
-  default FileType getStandardFileTypeByName(@Nonnull String name) {
-    return null;
-  }
 }

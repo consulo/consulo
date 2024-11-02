@@ -305,12 +305,6 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
         register(fileType, new ArrayList<>(Arrays.asList(matchers)));
       }
 
-      @Override
-      public FileType getStandardFileTypeByName(@Nonnull final String name) {
-        final StandardFileType type = myStandardFileTypes.get(name);
-        return type != null ? type.fileType : null;
-      }
-
       private void register(@Nonnull FileType fileType, @Nonnull List<FileNameMatcher> fileNameMatchers) {
         final StandardFileType type = myStandardFileTypes.get(fileType.getId());
         if (type != null) {
