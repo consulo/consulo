@@ -1755,16 +1755,12 @@
       <reference ref="ExternalToolsGroup"/>
       <separator/>
       <reference ref="ProjectViewPopupMenuSettingsGroup"/>
-      <group id="RemoveBom.Group">
-        <action id="RemoveBom" class="consulo.ide.impl.idea.openapi.editor.actions.RemoveBomAction"/>
-        <add-to-group group-id="FilePropertiesGroup" anchor="after" relative-to-action="ChangeFileEncodingAction"/>
-        <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="ChangeFileEncodingAction"/>
-      </group>
-      <group id="AddBom.Group">
-        <action id="AddBom" class="consulo.ide.impl.idea.openapi.editor.actions.AddBomAction"/>
-        <add-to-group group-id="FilePropertiesGroup" anchor="after" relative-to-action="RemoveBom"/>
-        <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="RemoveBom"/>
-      </group>
+    </group>
+
+    <group id="Bom.Group">
+      <action id="AddBom" class="consulo.ide.impl.idea.openapi.editor.actions.AddBomAction"/>
+      <action id="RemoveBom" class="consulo.ide.impl.idea.openapi.editor.actions.RemoveBomAction"/>
+      <add-to-group group-id="FilePropertiesGroup" anchor="after" relative-to-action="ChangeFileEncodingAction"/>
     </group>
 
     <group id="RevealGroup" popup="true">
