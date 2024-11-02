@@ -21,6 +21,7 @@ import com.github.weisj.jsvg.parser.SVGLoader;
 import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.impl.internal.ModalityStateImpl;
 import consulo.desktop.awt.ui.impl.alert.DesktopAlertFactory;
+import consulo.desktop.awt.ui.impl.htmlView.DesktopAWTHtmlViewImpl;
 import consulo.desktop.awt.ui.impl.image.*;
 import consulo.desktop.awt.ui.impl.image.reference.DesktopAWTImageKey;
 import consulo.desktop.awt.ui.impl.image.reference.DesktopAWTPNGImageReference;
@@ -492,7 +493,7 @@ public class DesktopUIInternalImpl extends UIInternal {
   @Nonnull
   @Override
   public HtmlView _Components_htmlView() {
-    return new DesktopHtmlViewImpl();
+    return new DesktopAWTHtmlViewImpl();
   }
 
   @Nonnull

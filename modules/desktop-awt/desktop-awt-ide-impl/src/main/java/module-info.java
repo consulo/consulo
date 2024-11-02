@@ -19,6 +19,8 @@ open module consulo.desktop.awt.ide.impl {
   requires io.netty.resolver;
   requires io.netty.transport;
 
+  requires cobra.core;
+
   requires org.apache.commons.imaging;
 
   requires consulo.container.api;

@@ -149,7 +149,7 @@ public class UITester {
       layout.add(Hyperlink.create("Some Link", (e) -> Alerts.okInfo(LocalizeValue.of("Clicked!!!")).showAsync()));
 
       HtmlView component = HtmlView.create();
-      component.withValue("<html><body><b>Some Bold Text</b> Test</body></html>");
+      component.render(new HtmlView.RenderData("<html><body><b>Some Bold Text</b> Test</body></html>"));
       layout.add(component);
       return layout;
     }

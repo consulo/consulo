@@ -252,7 +252,27 @@
             <groupId>consulo.internal.sound</groupId>
             <artifactId>javazoom.mp3</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4-runtime</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.unbescape</groupId>
+            <artifactId>unbescape</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>consulo.internal.org.cobraparser</groupId>
+            <artifactId>cobra-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.cssbox</groupId>
+            <artifactId>jstyleparser</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.w3c.css</groupId>
+            <artifactId>sac</artifactId>
+        </dependency>
+        
         <!--optional dependency-->
         <dependency>
             <groupId>net.java.dev.jna</groupId>

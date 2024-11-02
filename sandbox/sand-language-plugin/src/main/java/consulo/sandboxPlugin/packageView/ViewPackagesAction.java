@@ -18,6 +18,7 @@ package consulo.sandboxPlugin.packageView;
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionParentRef;
 import consulo.annotation.component.ActionRef;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.repository.ui.RepositoryDialogFactory;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -33,23 +34,24 @@ import jakarta.inject.Inject;
  */
 @ActionImpl(id = "ViewPackagesAction", parents = @ActionParentRef(@ActionRef(id = IdeActions.TOOLS_MENU)))
 public class ViewPackagesAction extends DumbAwareAction {
-  private final SandPackageManagementService myManagementService;
+    private final SandPackageManagementService myManagementService;
 
-  @Inject
-  public ViewPackagesAction(SandPackageManagementService managementService) {
-    myManagementService = managementService;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    if (project == null) {
-      return;
+    @Inject
+    public ViewPackagesAction(SandPackageManagementService managementService) {
+        super(LocalizeValue.localizeTODO("View Packages"));
+        myManagementService = managementService;
     }
 
-    RepositoryDialogFactory dialogFactory = project.getInstance(RepositoryDialogFactory.class);
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            return;
+        }
 
-    dialogFactory.showManagePackagesDialogAsync(myManagementService, null);
-  }
+        RepositoryDialogFactory dialogFactory = project.getInstance(RepositoryDialogFactory.class);
+
+        dialogFactory.showManagePackagesDialogAsync(myManagementService, null);
+    }
 }

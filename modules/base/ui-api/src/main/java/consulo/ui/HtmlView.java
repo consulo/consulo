@@ -21,30 +21,32 @@ import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.internal.UIInternal;
 import jakarta.annotation.Nonnull;
 
+import java.net.URL;
+
 /**
  * @author VISTALL
  * @since 24/11/2021
- *
+ * <p>
  * Simple html view. HTML5, CSS3, JS not supported. WebView can be used as replacement, if need more powerful html view
  */
-public interface HtmlView extends Component, ValueComponent<String> {
-  @Nonnull
-  static HtmlView create() {
-    return UIInternal.get()._Components_htmlView();
-  }
+public interface HtmlView extends Component {
+    record RenderData(@Nonnull String html, @Nonnull String inlineCss, @Nonnull URL[] externalCsses) {
+        public RenderData(@Nonnull String html) {
+            this(html, "", new URL[0]);
+        }
+    }
 
-  void setEditable(boolean editable);
+    @Nonnull
+    static HtmlView create() {
+        return UIInternal.get()._Components_htmlView();
+    }
 
-  boolean isEditable();
+    void render(@Nonnull RenderData renderData);
 
-  @Nonnull
-  default HtmlView withEditable(boolean editable) {
-    setEditable(editable);
-    return this;
-  }
+    void scrollToMarkdownSrcOffset(final int offset);
 
-  @Nonnull
-  default Disposable addHyperlinkListener(@Nonnull ComponentEventListener<Component, HyperlinkEvent> hyperlinkListener) {
-    return addListener(HyperlinkEvent.class, hyperlinkListener);
-  }
+    @Nonnull
+    default Disposable addHyperlinkListener(@Nonnull ComponentEventListener<Component, HyperlinkEvent> hyperlinkListener) {
+        return addListener(HyperlinkEvent.class, hyperlinkListener);
+    }
 }

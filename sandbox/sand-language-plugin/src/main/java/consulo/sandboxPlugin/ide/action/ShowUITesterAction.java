@@ -18,6 +18,7 @@ package consulo.sandboxPlugin.ide.action;
 import consulo.annotation.component.ActionRef;
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionParentRef;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.sandboxPlugin.ui.UITester;
@@ -38,7 +39,8 @@ public class ShowUITesterAction extends DumbAwareAction {
 
   @Inject
   public ShowUITesterAction(DialogService dialogService) {
-    myDialogService = dialogService;
+      super(LocalizeValue.localizeTODO("Show UI Tester"));
+      myDialogService = dialogService;
   }
 
   @RequiredUIAccess

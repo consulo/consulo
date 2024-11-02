@@ -14,43 +14,48 @@
   - limitations under the License.
   -->
 <component>
-  <!--FIXME [VISTALL] this file is copy file without _mac prefix. It's need due mac distribution have own path-->
-  <dependencySets>
-    <dependencySet>
-      <outputDirectory>Consulo.app/Contents/platform/buildSNAPSHOT/modules/consulo.desktop.awt/lib</outputDirectory>
-      <unpack>false</unpack>
-      <includes>
-        <include>consulo:consulo-desktop-ide-impl</include>
-        <include>consulo:consulo-desktop-awt-ide-impl</include>
-      </includes>
-    </dependencySet>
+    <!--FIXME [VISTALL] this file is copy file without _mac prefix. It's need due mac distribution have own path-->
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>Consulo.app/Contents/platform/buildSNAPSHOT/modules/consulo.desktop.awt/lib</outputDirectory>
+            <unpack>false</unpack>
+            <includes>
+                <include>consulo:consulo-desktop-ide-impl</include>
+                <include>consulo:consulo-desktop-awt-ide-impl</include>
+                <include>org.antlr:antlr4-runtime</include>
+                <include>org.unbescape:unbescape</include>
+                <include>consulo.internal.org.cobraparser:cobra-core</include>
+                <include>net.sf.cssbox:jstyleparser</include>
+                <include>org.w3c.css:sac</include>
+            </includes>
+        </dependencySet>
 
-    <dependencySet>
-      <outputDirectory>Consulo.app/Contents/platform/buildSNAPSHOT/boot</outputDirectory>
-      <unpack>false</unpack>
-      <scope>runtime</scope>
-      <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
-      <includes>
-        <include>consulo:consulo-container-api</include>
-        <include>consulo:consulo-container-impl</include>
-        <include>consulo:consulo-desktop-awt-bootstrap</include>
-        <include>consulo:consulo-desktop-bootstrap</include>
-        <include>consulo:consulo-bootstrap</include>
-        <include>consulo:consulo-util-nodep</include>
-      </includes>
-    </dependencySet>
+        <dependencySet>
+            <outputDirectory>Consulo.app/Contents/platform/buildSNAPSHOT/boot</outputDirectory>
+            <unpack>false</unpack>
+            <scope>runtime</scope>
+            <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
+            <includes>
+                <include>consulo:consulo-container-api</include>
+                <include>consulo:consulo-container-impl</include>
+                <include>consulo:consulo-desktop-awt-bootstrap</include>
+                <include>consulo:consulo-desktop-bootstrap</include>
+                <include>consulo:consulo-bootstrap</include>
+                <include>consulo:consulo-util-nodep</include>
+            </includes>
+        </dependencySet>
 
-    <dependencySet>
-      <outputDirectory>Consulo.app/Contents/platform/buildSNAPSHOT/boot/spi</outputDirectory>
-      <unpack>false</unpack>
-      <scope>runtime</scope>
-      <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
-      <includes>
-        <include>consulo.internal.sound:jogg</include>
-        <include>consulo.internal.sound:jvorbis</include>
-        <include>consulo.internal.sound:javazoom.jlayer</include>
-        <include>consulo.internal.sound:javazoom.mp3</include>
-      </includes>
-    </dependencySet>
-  </dependencySets>
+        <dependencySet>
+            <outputDirectory>Consulo.app/Contents/platform/buildSNAPSHOT/boot/spi</outputDirectory>
+            <unpack>false</unpack>
+            <scope>runtime</scope>
+            <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
+            <includes>
+                <include>consulo.internal.sound:jogg</include>
+                <include>consulo.internal.sound:jvorbis</include>
+                <include>consulo.internal.sound:javazoom.jlayer</include>
+                <include>consulo.internal.sound:javazoom.mp3</include>
+            </includes>
+        </dependencySet>
+    </dependencySets>
 </component>
