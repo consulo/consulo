@@ -20,7 +20,9 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.TextEditorWithPreview;
 import consulo.fileEditor.TextEditorWithPreviewFactory;
+import consulo.ui.ex.action.ActionToolbar;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
 
 /**
@@ -32,7 +34,10 @@ import jakarta.inject.Singleton;
 public class DesktopAWTTextEditorWithPreviewFactory implements TextEditorWithPreviewFactory {
     @Nonnull
     @Override
-    public TextEditorWithPreview create(@Nonnull TextEditor editor, @Nonnull FileEditor preview, @Nonnull String editorName) {
-        return new TextEditorWithPreviewImpl(editor, preview, editorName);
+    public TextEditorWithPreview create(@Nonnull TextEditor editor,
+                                        @Nonnull FileEditor preview,
+                                        @Nullable ActionToolbar leftToolbarActionToolbar,
+                                        @Nonnull String editorName) {
+        return new TextEditorWithPreviewImpl(editor, preview, leftToolbarActionToolbar, editorName);
     }
 }
