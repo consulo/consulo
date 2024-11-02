@@ -19,6 +19,7 @@ import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AccessToken;
 import consulo.component.util.ModificationTracker;
+import consulo.localize.LocalizeValue;
 import consulo.project.DumbModeTask;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -34,93 +35,84 @@ import jakarta.inject.Singleton;
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.LIGHT_TEST)
 public class LightDumbService extends DumbService implements ModificationTracker {
-  private long modificationTracker;
+    private long modificationTracker;
 
-  private final Project myProject;
+    private final Project myProject;
 
-  @Inject
-  public LightDumbService(Project project) {
-    myProject = project;
-  }
+    @Inject
+    public LightDumbService(Project project) {
+        myProject = project;
+    }
 
-  @Override
-  public ModificationTracker getModificationTracker() {
-    return this;
-  }
+    @Override
+    public ModificationTracker getModificationTracker() {
+        return this;
+    }
 
-  @Override
-  public boolean isDumb() {
-    return false;
-  }
+    @Override
+    public boolean isDumb() {
+        return false;
+    }
 
-  @Override
-  public void runWhenSmart(@Nonnull Runnable runnable) {
+    @Override
+    public void runWhenSmart(@Nonnull Runnable runnable) {
+    }
 
-  }
+    @Override
+    public void waitForSmartMode() {
+    }
 
-  @Override
-  public void waitForSmartMode() {
+    @Override
+    public void smartInvokeLater(@Nonnull Runnable runnable) {
+    }
 
-  }
+    @Override
+    public void smartInvokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState) {
+    }
 
-  @Override
-  public void smartInvokeLater(@Nonnull Runnable runnable) {
+    @Override
+    public void queueTask(@Nonnull DumbModeTask task) {
+    }
 
-  }
+    @Override
+    public void cancelTask(@Nonnull DumbModeTask task) {
+    }
 
-  @Override
-  public void smartInvokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState) {
+    @Override
+    public void completeJustSubmittedTasks() {
+    }
 
-  }
+    @Override
+    public void showDumbModeNotification(@Nonnull LocalizeValue message) {
+    }
 
-  @Override
-  public void queueTask(@Nonnull DumbModeTask task) {
+    @Override
+    public Project getProject() {
+        return myProject;
+    }
 
-  }
+    @Override
+    public void setAlternativeResolveEnabled(boolean enabled) {
+    }
 
-  @Override
-  public void cancelTask(@Nonnull DumbModeTask task) {
+    @Override
+    public boolean isAlternativeResolveEnabled() {
+        return false;
+    }
 
-  }
+    @Nonnull
+    @Override
+    public AccessToken startHeavyActivityStarted(@Nonnull LocalizeValue activityName) {
+        return AccessToken.EMPTY_ACCESS_TOKEN;
+    }
 
-  @Override
-  public void completeJustSubmittedTasks() {
+    @Override
+    public boolean isSuspendedDumbMode() {
+        return false;
+    }
 
-  }
-
-  @Override
-  public void showDumbModeNotification(@Nonnull String message) {
-
-  }
-
-  @Override
-  public Project getProject() {
-    return myProject;
-  }
-
-  @Override
-  public void setAlternativeResolveEnabled(boolean enabled) {
-
-  }
-
-  @Override
-  public boolean isAlternativeResolveEnabled() {
-    return false;
-  }
-
-  @Nonnull
-  @Override
-  public AccessToken startHeavyActivityStarted(@Nonnull String activityName) {
-    return AccessToken.EMPTY_ACCESS_TOKEN;
-  }
-
-  @Override
-  public boolean isSuspendedDumbMode() {
-    return false;
-  }
-
-  @Override
-  public long getModificationCount() {
-    return modificationTracker;
-  }
+    @Override
+    public long getModificationCount() {
+        return modificationTracker;
+    }
 }

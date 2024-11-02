@@ -54,6 +54,7 @@ import org.jetbrains.annotations.TestOnly;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
@@ -61,153 +62,177 @@ import java.util.regex.Pattern;
 @Singleton
 @ServiceImpl
 public class InspectionManagerEx extends InspectionManagerBase {
-  private static final Pattern HTML_PATTERN = Pattern.compile("<[^<>]*>");
-  private final NotNullLazyValue<ContentManager> myContentManager;
-  private final Set<GlobalInspectionContextImpl> myRunningContexts = new HashSet<GlobalInspectionContextImpl>();
-  private final AtomicBoolean myToolsAreInitialized = new AtomicBoolean(false);
-  private GlobalInspectionContextImpl myGlobalInspectionContext;
+    private static final Pattern HTML_PATTERN = Pattern.compile("<[^<>]*>");
+    private final NotNullLazyValue<ContentManager> myContentManager;
+    private final Set<GlobalInspectionContextImpl> myRunningContexts = new HashSet<GlobalInspectionContextImpl>();
+    private final AtomicBoolean myToolsAreInitialized = new AtomicBoolean(false);
+    private GlobalInspectionContextImpl myGlobalInspectionContext;
 
-  @Inject
-  public InspectionManagerEx(final Project project) {
-    super(project);
-    if (ApplicationManager.getApplication().isHeadlessEnvironment()) {
-      myContentManager = new NotNullLazyValue<ContentManager>() {
-        @Nonnull
-        @Override
-        protected ContentManager compute() {
-          ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-          toolWindowManager.registerToolWindow(ToolWindowId.INSPECTION, true, ToolWindowAnchor.BOTTOM, project);
-          return ContentFactory.getInstance().createContentManager(new TabbedPaneContentUI(), true, project);
+    @Inject
+    public InspectionManagerEx(final Project project) {
+        super(project);
+        if (ApplicationManager.getApplication().isHeadlessEnvironment()) {
+            myContentManager = new NotNullLazyValue<ContentManager>() {
+                @Nonnull
+                @Override
+                protected ContentManager compute() {
+                    ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
+                    toolWindowManager.registerToolWindow(ToolWindowId.INSPECTION, true, ToolWindowAnchor.BOTTOM, project);
+                    return ContentFactory.getInstance().createContentManager(new TabbedPaneContentUI(), true, project);
+                }
+            };
         }
-      };
-    }
-    else {
-      myContentManager = new NotNullLazyValue<ContentManager>() {
-        @Nonnull
-        @Override
-        protected ContentManager compute() {
-          ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-          ToolWindow toolWindow =
-                  toolWindowManager.registerToolWindow(ToolWindowId.INSPECTION, true, ToolWindowAnchor.BOTTOM, project);
-          ContentManager contentManager = toolWindow.getContentManager();
-          toolWindow.setIcon(AllIcons.Toolwindows.ToolWindowInspection);
-          new ContentManagerWatcher(toolWindow, contentManager);
-          return contentManager;
+        else {
+            myContentManager = new NotNullLazyValue<ContentManager>() {
+                @Nonnull
+                @Override
+                protected ContentManager compute() {
+                    ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
+                    ToolWindow toolWindow =
+                        toolWindowManager.registerToolWindow(ToolWindowId.INSPECTION, true, ToolWindowAnchor.BOTTOM, project);
+                    ContentManager contentManager = toolWindow.getContentManager();
+                    toolWindow.setIcon(AllIcons.Toolwindows.ToolWindowInspection);
+                    new ContentManagerWatcher(toolWindow, contentManager);
+                    return contentManager;
+                }
+            };
         }
-      };
     }
-  }
 
-  @Nullable
-  public static SuppressIntentionAction[] getSuppressActions(@Nonnull InspectionToolWrapper toolWrapper) {
-    final InspectionTool tool = toolWrapper.getTool();
-    if (tool instanceof CustomSuppressableInspectionTool) {
-      return ((CustomSuppressableInspectionTool)tool).getSuppressActions(null);
-    }
-    final List<LocalQuickFix> actions = new ArrayList<LocalQuickFix>(Arrays.asList(tool.getBatchSuppressActions(null)));
-    if (actions.isEmpty()) {
-      final Language language = toolWrapper.getLanguage();
-      if (language != null) {
-        final List<InspectionSuppressor> suppressors = InspectionSuppressor.forLanguage(language);
-        for (InspectionSuppressor suppressor : suppressors) {
-          final SuppressQuickFix[] suppressActions = suppressor.getSuppressActions(null, tool.getShortName());
-          Collections.addAll(actions, suppressActions);
+    @Nullable
+    public static SuppressIntentionAction[] getSuppressActions(@Nonnull InspectionToolWrapper toolWrapper) {
+        final InspectionTool tool = toolWrapper.getTool();
+        if (tool instanceof CustomSuppressableInspectionTool) {
+            return ((CustomSuppressableInspectionTool)tool).getSuppressActions(null);
         }
-      }
-    }
-    return ContainerUtil.map2Array(actions, SuppressIntentionAction.class, fix -> SuppressIntentionActionFromFix.convertBatchToSuppressIntentionAction((SuppressQuickFix)fix));
-  }
-
-  private static void processText(@Nonnull @NonNls String descriptionText,
-                                  @Nonnull InspectionToolWrapper tool,
-                                  @Nonnull SearchableOptionsRegistrar myOptionsRegistrar) {
-    if (ApplicationManager.getApplication().isDisposed()) return;
-    final Set<String> words = myOptionsRegistrar.getProcessedWordsWithoutStemming(descriptionText);
-    for (String word : words) {
-      myOptionsRegistrar.addOption(word, tool.getShortName(), tool.getDisplayName(), InspectionToolsConfigurable.ID, "Inspections");
-    }
-  }
-
-  @Nonnull
-  public ProblemDescriptor createProblemDescriptor(@Nonnull final PsiElement psiElement,
-                                                   @Nonnull final String descriptionTemplate,
-                                                   @Nonnull final ProblemHighlightType highlightType,
-                                                   @Nullable final HintAction hintAction,
-                                                   boolean onTheFly,
-                                                   final LocalQuickFix... fixes) {
-    return new ProblemDescriptorImpl(psiElement, psiElement, descriptionTemplate, fixes, highlightType, false, null, hintAction, onTheFly);
-  }
-
-  @Override
-  @Nonnull
-  public GlobalInspectionContextImpl createNewGlobalContext(boolean reuse) {
-    final GlobalInspectionContextImpl inspectionContext;
-    if (reuse) {
-      if (myGlobalInspectionContext == null) {
-        myGlobalInspectionContext = inspectionContext = new GlobalInspectionContextImpl(getProject(), myContentManager);
-      }
-      else {
-        inspectionContext = myGlobalInspectionContext;
-      }
-    }
-    else {
-      inspectionContext = new GlobalInspectionContextImpl(getProject(), myContentManager);
-    }
-    myRunningContexts.add(inspectionContext);
-    return inspectionContext;
-  }
-
-  public void setProfile(final String name) {
-    myCurrentProfileName = name;
-  }
-
-  public void closeRunningContext(GlobalInspectionContextImpl globalInspectionContext){
-    myRunningContexts.remove(globalInspectionContext);
-  }
-
-  @Nonnull
-  public Set<GlobalInspectionContextImpl> getRunningContexts() {
-    return myRunningContexts;
-  }
-
-  @Nonnull
-  @Deprecated
-  public ProblemDescriptor createProblemDescriptor(@Nonnull final PsiElement psiElement,
-                                                   @Nonnull final String descriptionTemplate,
-                                                   @Nonnull final ProblemHighlightType highlightType,
-                                                   @Nullable final HintAction hintAction,
-                                                   final LocalQuickFix... fixes) {
-
-    return new ProblemDescriptorImpl(psiElement, psiElement, descriptionTemplate, fixes, highlightType, false, null, hintAction, true);
-  }
-
-  @TestOnly
-  public NotNullLazyValue<ContentManager> getContentManager() {
-    return myContentManager;
-  }
-
-  public void buildInspectionSearchIndexIfNecessary() {
-    if (!myToolsAreInitialized.getAndSet(true)) {
-      final SearchableOptionsRegistrar myOptionsRegistrar = SearchableOptionsRegistrar.getInstance();
-      final InspectionToolRegistrar toolRegistrar = InspectionToolRegistrar.getInstance();
-      final Application app = ApplicationManager.getApplication();
-      if (app.isUnitTestMode() || app.isHeadlessEnvironment()) return;
-
-      app.executeOnPooledThread(new Runnable(){
-        @Override
-        public void run() {
-          List<InspectionToolWrapper> tools = toolRegistrar.createTools();
-          for (InspectionToolWrapper toolWrapper : tools) {
-            processText(toolWrapper.getDisplayName().toLowerCase(), toolWrapper, myOptionsRegistrar);
-
-            final String description = toolWrapper.loadDescription();
-            if (description != null) {
-              @NonNls String descriptionText = HTML_PATTERN.matcher(description).replaceAll(" ");
-              processText(descriptionText, toolWrapper, myOptionsRegistrar);
+        final List<LocalQuickFix> actions = new ArrayList<LocalQuickFix>(Arrays.asList(tool.getBatchSuppressActions(null)));
+        if (actions.isEmpty()) {
+            final Language language = toolWrapper.getLanguage();
+            if (language != null) {
+                final List<InspectionSuppressor> suppressors = InspectionSuppressor.forLanguage(language);
+                for (InspectionSuppressor suppressor : suppressors) {
+                    final SuppressQuickFix[] suppressActions = suppressor.getSuppressActions(null, tool.getShortName());
+                    Collections.addAll(actions, suppressActions);
+                }
             }
-          }
         }
-      });
+        return ContainerUtil.map2Array(
+            actions,
+            SuppressIntentionAction.class,
+            fix -> SuppressIntentionActionFromFix.convertBatchToSuppressIntentionAction((SuppressQuickFix)fix)
+        );
     }
-  }
+
+    private static void processText(
+        @Nonnull @NonNls String descriptionText,
+        @Nonnull InspectionToolWrapper tool,
+        @Nonnull SearchableOptionsRegistrar myOptionsRegistrar
+    ) {
+        if (ApplicationManager.getApplication().isDisposed()) {
+            return;
+        }
+        final Set<String> words = myOptionsRegistrar.getProcessedWordsWithoutStemming(descriptionText);
+        for (String word : words) {
+            myOptionsRegistrar.addOption(word, tool.getShortName(), tool.getDisplayName(), InspectionToolsConfigurable.ID, "Inspections");
+        }
+    }
+
+    @Nonnull
+    public ProblemDescriptor createProblemDescriptor(
+        @Nonnull final PsiElement psiElement,
+        @Nonnull final String descriptionTemplate,
+        @Nonnull final ProblemHighlightType highlightType,
+        @Nullable final HintAction hintAction,
+        boolean onTheFly,
+        final LocalQuickFix... fixes
+    ) {
+        return new ProblemDescriptorImpl(
+            psiElement,
+            psiElement,
+            descriptionTemplate,
+            fixes,
+            highlightType,
+            false,
+            null,
+            hintAction,
+            onTheFly
+        );
+    }
+
+    @Override
+    @Nonnull
+    public GlobalInspectionContextImpl createNewGlobalContext(boolean reuse) {
+        final GlobalInspectionContextImpl inspectionContext;
+        if (reuse) {
+            if (myGlobalInspectionContext == null) {
+                myGlobalInspectionContext = inspectionContext = new GlobalInspectionContextImpl(getProject(), myContentManager);
+            }
+            else {
+                inspectionContext = myGlobalInspectionContext;
+            }
+        }
+        else {
+            inspectionContext = new GlobalInspectionContextImpl(getProject(), myContentManager);
+        }
+        myRunningContexts.add(inspectionContext);
+        return inspectionContext;
+    }
+
+    public void setProfile(final String name) {
+        myCurrentProfileName = name;
+    }
+
+    public void closeRunningContext(GlobalInspectionContextImpl globalInspectionContext) {
+        myRunningContexts.remove(globalInspectionContext);
+    }
+
+    @Nonnull
+    public Set<GlobalInspectionContextImpl> getRunningContexts() {
+        return myRunningContexts;
+    }
+
+    @Nonnull
+    @Deprecated
+    public ProblemDescriptor createProblemDescriptor(
+        @Nonnull final PsiElement psiElement,
+        @Nonnull final String descriptionTemplate,
+        @Nonnull final ProblemHighlightType highlightType,
+        @Nullable final HintAction hintAction,
+        final LocalQuickFix... fixes
+    ) {
+
+        return new ProblemDescriptorImpl(psiElement, psiElement, descriptionTemplate, fixes, highlightType, false, null, hintAction, true);
+    }
+
+    @TestOnly
+    public NotNullLazyValue<ContentManager> getContentManager() {
+        return myContentManager;
+    }
+
+    public void buildInspectionSearchIndexIfNecessary() {
+        if (!myToolsAreInitialized.getAndSet(true)) {
+            final SearchableOptionsRegistrar myOptionsRegistrar = SearchableOptionsRegistrar.getInstance();
+            final InspectionToolRegistrar toolRegistrar = InspectionToolRegistrar.getInstance();
+            final Application app = ApplicationManager.getApplication();
+            if (app.isUnitTestMode() || app.isHeadlessEnvironment()) {
+                return;
+            }
+
+            app.executeOnPooledThread(new Runnable() {
+                @Override
+                public void run() {
+                    List<InspectionToolWrapper> tools = toolRegistrar.createTools();
+                    for (InspectionToolWrapper toolWrapper : tools) {
+                        processText(toolWrapper.getDisplayName().toLowerCase(), toolWrapper, myOptionsRegistrar);
+
+                        final String description = toolWrapper.loadDescription();
+                        if (description != null) {
+                            @NonNls String descriptionText = HTML_PATTERN.matcher(description).replaceAll(" ");
+                            processText(descriptionText, toolWrapper, myOptionsRegistrar);
+                        }
+                    }
+                }
+            });
+        }
+    }
 }

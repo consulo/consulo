@@ -2641,3 +2641,31 @@ action.Anonymous.text.live.templates:
   text: Live Templates
 dialog.title.choose.color:
   text: Choose Color
+progress.performing.indexing.tasks:
+  text: Performing indexing tasks
+dumb.service.indexing.paused.due.to:
+  text: Indexing paused due to {0}
+action.Anonymous.text.add.keyboard.shortcut:
+  text: Add Keyboard Shortcut
+action.Anonymous.text.add.mouse.shortcut:
+  text: Add Mouse Shortcut
+action.Anonymous.text.add.abbreviation:
+  text: Add Abbreviation
+action.Anonymous.text.reset.shortcuts:
+  text: Reset Shortcuts
+dialog.title.abbreviation:
+  text: Abbreviation
+label.enter.new.abbreviation:
+  text: "Enter new abbreviation:"
+action.text.remove.abbreviation.0:
+  text: Remove Abbreviation ''{0}''
+action.text.remove.0:
+  text: Remove {0}
+popup.title.edit.shortcuts:
+  text: Edit Shortcuts
+project.directory.is.not.writable:
+  text: Directory ''{0}'' doesn''t seem to be writeable. Please choose another location.
+action.ToggleAction.pin.window.text:
+  text: Pin Window
+action.ToggleAction.pin.window.description:
+  text: Pin Window

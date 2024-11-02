@@ -180,3 +180,7 @@ filter.shortcut.action.text:
   text: Find Actions by Shortcut
 disable.mnemonic.in.controls.check.box:
   text: Disable mnemonics in controls
+edit.shortcut.action.text:
+  text: Edit Shortcut
+edit.shortcut.action.description:
+  text: Edit shortcut

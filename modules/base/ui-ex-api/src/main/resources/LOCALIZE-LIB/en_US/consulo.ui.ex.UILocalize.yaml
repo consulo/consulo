@@ -368,3 +368,5 @@ status.bar.write.thread.widget.name:
   text: Write Thread
 status.bar.column.status.tooltip.text:
   text: Column selection mode
+master.detail.err.empty.name:
+  text: Name should contain non-space characters

@@ -33,6 +33,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.style.StandardColors;
 import consulo.util.io.FileUtil;
@@ -55,476 +56,489 @@ import java.util.Set;
  * @since Aug 15, 2002
  */
 public abstract class BaseSdkEditor implements UnnamedConfigurable {
-  private static final Logger LOG = Logger.getInstance(BaseSdkEditor.class);
+    private static final Logger LOG = Logger.getInstance(BaseSdkEditor.class);
 
-  @Nonnull
-  protected final Sdk mySdk;
-  private final Map<OrderRootType, SdkPathEditor> myPathEditors = new HashMap<>();
+    @Nonnull
+    protected final Sdk mySdk;
+    private final Map<OrderRootType, SdkPathEditor> myPathEditors = new HashMap<>();
 
-  private TextBoxWithExtensions myHomeComponent;
-  private final Map<SdkType, AdditionalDataConfigurable> myAdditionalDataConfigurables = new HashMap<>();
-  private final Map<AdditionalDataConfigurable, JComponent> myAdditionalDataComponents = new HashMap<>();
-  private JPanel myAdditionalDataPanel;
-  private final SdkModificator myEditedSdkModificator = new EditedSdkModificator();
+    private TextBoxWithExtensions myHomeComponent;
+    private final Map<SdkType, AdditionalDataConfigurable> myAdditionalDataConfigurables = new HashMap<>();
+    private final Map<AdditionalDataConfigurable, JComponent> myAdditionalDataComponents = new HashMap<>();
+    private JPanel myAdditionalDataPanel;
+    private final SdkModificator myEditedSdkModificator = new EditedSdkModificator();
 
-  // GUI components
-  private JPanel myMainPanel;
+    // GUI components
+    private JPanel myMainPanel;
 
-  @Nonnull
-  private final SdkModel mySdkModel;
-  private JLabel myHomeFieldLabel;
-  private String myVersionString;
+    @Nonnull
+    private final SdkModel mySdkModel;
+    private JLabel myHomeFieldLabel;
+    private String myVersionString;
 
-  private String myInitialName;
-  private String myInitialPath;
+    private String myInitialName;
+    private String myInitialPath;
 
-  public BaseSdkEditor(@Nonnull SdkModel sdkModel, @Nonnull SdkImpl sdk) {
-    mySdkModel = sdkModel;
-    mySdk = sdk;
-    initSdk(sdk);
-  }
-
-  private void initSdk(@Nonnull Sdk sdk) {
-    myInitialName = mySdk.getName();
-    myInitialPath = mySdk.getHomePath();
-
-    final AdditionalDataConfigurable additionalDataConfigurable = getAdditionalDataConfigurable();
-    if (additionalDataConfigurable != null) {
-      additionalDataConfigurable.setSdk(sdk);
-    }
-    if (myMainPanel != null) {
-      reset();
-    }
-  }
-
-  @RequiredUIAccess
-  @Override
-  public JComponent createComponent(@Nonnull Disposable parentUIDisposable) {
-    if (myMainPanel == null) {
-      createMainPanel(parentUIDisposable);
-    }
-    return myMainPanel;
-  }
-
-  private void createMainPanel(Disposable parentUIDisposable) {
-    if (myMainPanel != null) {
-      throw new IllegalArgumentException();
+    @RequiredUIAccess
+    public BaseSdkEditor(@Nonnull SdkModel sdkModel, @Nonnull SdkImpl sdk) {
+        mySdkModel = sdkModel;
+        mySdk = sdk;
+        initSdk(sdk);
     }
 
-    myMainPanel = new JPanel(new GridBagLayout());
+    @RequiredUIAccess
+    private void initSdk(@Nonnull Sdk sdk) {
+        myInitialName = mySdk.getName();
+        myInitialPath = mySdk.getHomePath();
 
-    for (OrderRootType type : OrderRootType.getAllTypes()) {
-      if (showTabForType(type)) {
-        final OrderRootTypeUIFactory factory = OrderRootTypeUIFactory.forOrderType(type);
-        if (factory == null) {
-          LOG.error("OrderRootTypeUIFactory is not defined for order root type: " + type);
-          continue;
+        final AdditionalDataConfigurable additionalDataConfigurable = getAdditionalDataConfigurable();
+        if (additionalDataConfigurable != null) {
+            additionalDataConfigurable.setSdk(sdk);
         }
-        final SdkPathEditor pathEditor = factory.createPathEditor(mySdk);
-        if (pathEditor != null) {
-          pathEditor.setAddBaseDir(mySdk.getHomeDirectory());
-          myPathEditors.put(type, pathEditor);
+        if (myMainPanel != null) {
+            reset();
         }
-      }
     }
 
-    JComponent centerComponent = createCenterComponent(parentUIDisposable);
-
-    myHomeComponent = TextBoxWithExtensions.create();
-    myHomeComponent.withEditable(false);
-
-    boolean changePathSupported =
-      !mySdk.isPredefined() && ((SdkType)mySdk.getSdkType()).supportsUserAdd() && !(mySdk.getSdkType() instanceof UnknownSdkType);
-    if (changePathSupported) {
-      myHomeComponent.setExtensions(new TextBoxWithExtensions.Extension(
-        false,
-        PlatformIconGroup.nodesFolderopened(),
-        null,
-        e -> doSelectHomePath()
-      ));
+    @RequiredUIAccess
+    @Override
+    public JComponent createComponent(@Nonnull Disposable parentUIDisposable) {
+        if (myMainPanel == null) {
+            createMainPanel(parentUIDisposable);
+        }
+        return myMainPanel;
     }
 
-    myHomeFieldLabel = new JLabel(ProjectLocalize.sdkConfigureTypeHomePath().get());
-    myMainPanel.add(
-      myHomeFieldLabel,
-      new GridBagConstraints(
-        0,
-        GridBagConstraints.RELATIVE,
-        1,
-        1,
-        0.0,
-        0.0,
-        GridBagConstraints.WEST,
-        GridBagConstraints.NONE,
-        JBUI.insets(2, 10, 2, 2),
-        0,
-        0
-      )
-    );
-    myMainPanel.add(
-      TargetAWT.to(myHomeComponent),
-      new GridBagConstraints(
-        1,
-        GridBagConstraints.RELATIVE,
-        1,
-        1,
-        1.0,
-        0.0,
-        GridBagConstraints.CENTER,
-        GridBagConstraints.HORIZONTAL,
-        JBUI.insets(2, 2, 2, 10),
-        0,
-        0
-      )
-    );
+    private void createMainPanel(Disposable parentUIDisposable) {
+        if (myMainPanel != null) {
+            throw new IllegalArgumentException();
+        }
 
-    myAdditionalDataPanel = new JPanel(new BorderLayout());
-    myMainPanel.add(
-      myAdditionalDataPanel,
-      new GridBagConstraints(
-        0,
-        GridBagConstraints.RELATIVE,
-        2,
-        1,
-        1.0,
-        0.0,
-        GridBagConstraints.CENTER,
-        GridBagConstraints.BOTH,
-        JBUI.insetsTop(2),
-        0,
-        0
-      )
-    );
+        myMainPanel = new JPanel(new GridBagLayout());
 
-    myMainPanel.add(
-      centerComponent,
-      new GridBagConstraints(
-        0,
-        GridBagConstraints.RELATIVE,
-        2,
-        1,
-        1.0,
-        1.0,
-        GridBagConstraints.CENTER,
-        GridBagConstraints.BOTH,
-        JBUI.insetsTop(2),
-        0,
-        0
-      )
-    );
-  }
+        for (OrderRootType type : OrderRootType.getAllTypes()) {
+            if (showTabForType(type)) {
+                final OrderRootTypeUIFactory factory = OrderRootTypeUIFactory.forOrderType(type);
+                if (factory == null) {
+                    LOG.error("OrderRootTypeUIFactory is not defined for order root type: " + type);
+                    continue;
+                }
+                final SdkPathEditor pathEditor = factory.createPathEditor(mySdk);
+                if (pathEditor != null) {
+                    pathEditor.setAddBaseDir(mySdk.getHomeDirectory());
+                    myPathEditors.put(type, pathEditor);
+                }
+            }
+        }
 
-  @Nonnull
-  protected abstract JComponent createCenterComponent(Disposable parentUIDisposable);
+        JComponent centerComponent = createCenterComponent(parentUIDisposable);
 
-  protected boolean showTabForType(OrderRootType type) {
-    return ((SdkType)mySdk.getSdkType()).isRootTypeApplicable(type);
-  }
+        myHomeComponent = TextBoxWithExtensions.create();
+        myHomeComponent.withEditable(false);
 
-  @Nonnull
-  public SdkPathEditor getPathEditor(@Nonnull OrderRootType rootType) {
-    return myPathEditors.get(rootType);
-  }
+        boolean changePathSupported =
+            !mySdk.isPredefined() && ((SdkType)mySdk.getSdkType()).supportsUserAdd() && !(mySdk.getSdkType() instanceof UnknownSdkType);
+        if (changePathSupported) {
+            myHomeComponent.setExtensions(new TextBoxWithExtensions.Extension(
+                false,
+                PlatformIconGroup.nodesFolderopened(),
+                null,
+                e -> doSelectHomePath()
+            ));
+        }
 
-  @RequiredUIAccess
-  @Override
-  public boolean isModified() {
-    if (myMainPanel == null) {
-      return false;
-    }
-    boolean isModified = !Comparing.equal(mySdk.getName(), myInitialName);
-    isModified =
-      isModified || !Comparing.equal(FileUtil.toSystemIndependentName(getHomeValue()), FileUtil.toSystemIndependentName(myInitialPath));
-    for (PathEditor pathEditor : myPathEditors.values()) {
-      isModified = isModified || pathEditor.isModified();
-    }
-    final AdditionalDataConfigurable configurable = getAdditionalDataConfigurable();
-    if (configurable != null) {
-      isModified = isModified || configurable.isModified();
-    }
-    return isModified;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void apply() throws ConfigurationException {
-    if (!Comparing.equal(myInitialName, mySdk.getName())) {
-      if (mySdk.getName().isEmpty()) {
-        throw new ConfigurationException(ProjectLocalize.sdkListNameRequiredError().get());
-      }
-    }
-    myInitialName = mySdk.getName();
-    myInitialPath = mySdk.getHomePath();
-    final SdkModificator sdkModificator = mySdk.getSdkModificator();
-    SdkType sdkType = (SdkType)mySdk.getSdkType();
-    // we can change home path only when user can add sdk via interface
-    if (sdkType.supportsUserAdd()) {
-      sdkModificator.setHomePath(getHomeValue().replace(File.separatorChar, '/'));
-    }
-    for (SdkPathEditor pathEditor : myPathEditors.values()) {
-      pathEditor.apply(sdkModificator);
-    }
-    Application.get().runWriteAction(sdkModificator::commitChanges);
-    final AdditionalDataConfigurable configurable = getAdditionalDataConfigurable();
-    if (configurable != null) {
-      configurable.apply();
-    }
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void reset() {
-    final SdkModificator sdkModificator = mySdk.getSdkModificator();
-    for (OrderRootType type : myPathEditors.keySet()) {
-      myPathEditors.get(type).reset(sdkModificator);
-    }
-    sdkModificator.commitChanges();
-    setHomePathValue(mySdk.getHomePath().replace('/', File.separatorChar));
-    myVersionString = null;
-    myHomeFieldLabel.setText(ProjectLocalize.sdkConfigureTypeHomePath().get());
-    updateAdditionalDataComponent();
-    final AdditionalDataConfigurable configurable = getAdditionalDataConfigurable();
-    if (configurable != null) {
-      configurable.reset();
-    }
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void disposeUIResources() {
-    for (final SdkType sdkType : myAdditionalDataConfigurables.keySet()) {
-      final AdditionalDataConfigurable configurable = myAdditionalDataConfigurables.get(sdkType);
-      configurable.disposeUIResources();
-    }
-    myMainPanel = null;
-    myAdditionalDataConfigurables.clear();
-    myAdditionalDataComponents.clear();
-  }
-
-  private String getHomeValue() {
-    return myHomeComponent.getValueOrError().trim();
-  }
-
-  private void clearAllPaths() {
-    for (PathEditor editor : myPathEditors.values()) {
-      editor.clearList();
-    }
-  }
-
-  private void setHomePathValue(String absolutePath) {
-    if (myHomeComponent == null) {
-      return;
-    }
-
-    myHomeComponent.setValue(absolutePath);
-    final ColorValue fg;
-    if (absolutePath != null && !absolutePath.isEmpty()) {
-      final File homeDir = new File(absolutePath);
-      boolean homeMustBeDirectory;
-
-      SdkType sdkType = (SdkType)mySdk.getSdkType();
-      if (sdkType instanceof BundleType bundleType) {
-        homeMustBeDirectory = bundleType.getHomeChooserDescriptor(mySdk.getPlatform()).isChooseFolders();
-      }
-      else {
-        homeMustBeDirectory = sdkType.getHomeChooserDescriptor().isChooseFolders();
-      }
-
-      fg = homeDir.exists() && homeDir.isDirectory() == homeMustBeDirectory ? null : StandardColors.RED;
-    }
-    else {
-      fg = null;
-    }
-    myHomeComponent.setForegroundColor(fg);
-  }
-
-  @RequiredUIAccess
-  private void doSelectHomePath() {
-    final SdkType sdkType = (SdkType)mySdk.getSdkType();
-    if (sdkType instanceof BundleType bundleType) {
-      SdkUtil.selectSdkHome(mySdk.getPlatform(), bundleType, path -> doSetHomePath(path.toString(), sdkType));
-    }
-    else {
-      SdkUtil.selectSdkHome(sdkType, path -> doSetHomePath(path, sdkType));
-    }
-  }
-
-  private void doSetHomePath(final String homePath, final SdkType sdkType) {
-    if (homePath == null) {
-      return;
-    }
-    setHomePathValue(homePath.replace('/', File.separatorChar));
-
-    final String newSdkName = suggestSdkName(homePath);
-    ((SdkImpl)mySdk).setName(newSdkName);
-
-    try {
-      final Sdk dummySdk = (Sdk)mySdk.clone();
-      SdkModificator sdkModificator = dummySdk.getSdkModificator();
-      sdkModificator.setHomePath(homePath);
-      sdkModificator.removeAllRoots();
-      sdkModificator.commitChanges();
-
-      sdkType.setupSdkPaths(dummySdk);
-
-      clearAllPaths();
-      myVersionString = dummySdk.getVersionString();
-      if (myVersionString == null) {
-        Messages.showMessageDialog(
-          ProjectLocalize.sdkJavaCorruptError(homePath).get(),
-          ProjectLocalize.sdkJavaCorruptTitle().get(),
-          Messages.getErrorIcon()
+        myHomeFieldLabel = new JLabel(ProjectLocalize.sdkConfigureTypeHomePath().get());
+        myMainPanel.add(
+            myHomeFieldLabel,
+            new GridBagConstraints(
+                0,
+                GridBagConstraints.RELATIVE,
+                1,
+                1,
+                0.0,
+                0.0,
+                GridBagConstraints.WEST,
+                GridBagConstraints.NONE,
+                JBUI.insets(2, 10, 2, 2),
+                0,
+                0
+            )
         );
-      }
-      sdkModificator = dummySdk.getSdkModificator();
-      for (OrderRootType type : myPathEditors.keySet()) {
-        myPathEditors.get(type).addPaths(sdkModificator.getRoots(type));
-      }
-      mySdkModel.getMulticaster().sdkHomeSelected(dummySdk, homePath);
-    }
-    catch (CloneNotSupportedException e) {
-      LOG.error(e); // should not happen in normal program
-    }
-  }
+        myMainPanel.add(
+            TargetAWT.to(myHomeComponent),
+            new GridBagConstraints(
+                1,
+                GridBagConstraints.RELATIVE,
+                1,
+                1,
+                1.0,
+                0.0,
+                GridBagConstraints.CENTER,
+                GridBagConstraints.HORIZONTAL,
+                JBUI.insets(2, 2, 2, 10),
+                0,
+                0
+            )
+        );
 
-  private String suggestSdkName(final String homePath) {
-    final String currentName = mySdk.getName();
-    final String suggestedName = ((SdkType)mySdk.getSdkType()).suggestSdkName(currentName, homePath);
-    if (Comparing.equal(currentName, suggestedName)) return currentName;
-    String newSdkName = suggestedName;
-    final Set<String> allNames = new HashSet<>();
-    Sdk[] sdks = mySdkModel.getSdks();
-    for (Sdk sdk : sdks) {
-      allNames.add(sdk.getName());
-    }
-    int i = 0;
-    while (allNames.contains(newSdkName)) {
-      newSdkName = suggestedName + " (" + ++i + ")";
-    }
-    return newSdkName;
-  }
+        myAdditionalDataPanel = new JPanel(new BorderLayout());
+        myMainPanel.add(
+            myAdditionalDataPanel,
+            new GridBagConstraints(
+                0,
+                GridBagConstraints.RELATIVE,
+                2,
+                1,
+                1.0,
+                0.0,
+                GridBagConstraints.CENTER,
+                GridBagConstraints.BOTH,
+                JBUI.insetsTop(2),
+                0,
+                0
+            )
+        );
 
-  private void updateAdditionalDataComponent() {
-    myAdditionalDataPanel.removeAll();
-    final AdditionalDataConfigurable configurable = getAdditionalDataConfigurable();
-    if (configurable != null) {
-      JComponent component = myAdditionalDataComponents.get(configurable);
-      if (component == null) {
-        component = configurable.createComponent();
-        myAdditionalDataComponents.put(configurable, component);
-      }
-      myAdditionalDataPanel.add(component, BorderLayout.CENTER);
-    }
-  }
-
-  @Nullable
-  private AdditionalDataConfigurable getAdditionalDataConfigurable() {
-    return initAdditionalDataConfigurable(mySdk);
-  }
-
-  @Nullable
-  private AdditionalDataConfigurable initAdditionalDataConfigurable(Sdk sdk) {
-    final SdkType sdkType = (SdkType)sdk.getSdkType();
-    AdditionalDataConfigurable configurable = myAdditionalDataConfigurables.get(sdkType);
-    if (configurable == null) {
-      configurable = sdkType.createAdditionalDataConfigurable(mySdkModel, myEditedSdkModificator);
-      if (configurable != null) {
-        myAdditionalDataConfigurables.put(sdkType, configurable);
-      }
-    }
-    return configurable;
-  }
-
-  private class EditedSdkModificator implements SdkModificator {
-    @Override
-    public String getName() {
-      return mySdk.getName();
-    }
-
-    @Override
-    public void setName(String name) {
-      ((SdkImpl)mySdk).setName(name);
-    }
-
-    @Override
-    public String getHomePath() {
-      return getHomeValue();
-    }
-
-    @Override
-    public void setHomePath(String path) {
-      doSetHomePath(path, (SdkType)mySdk.getSdkType());
+        myMainPanel.add(
+            centerComponent,
+            new GridBagConstraints(
+                0,
+                GridBagConstraints.RELATIVE,
+                2,
+                1,
+                1.0,
+                1.0,
+                GridBagConstraints.CENTER,
+                GridBagConstraints.BOTH,
+                JBUI.insetsTop(2),
+                0,
+                0
+            )
+        );
     }
 
     @Nonnull
-    @Override
-    public Path getHomeNioPath() {
-      return Path.of(getHomeValue());
+    protected abstract JComponent createCenterComponent(Disposable parentUIDisposable);
+
+    protected boolean showTabForType(OrderRootType type) {
+        return ((SdkType)mySdk.getSdkType()).isRootTypeApplicable(type);
     }
 
-    @Override
-    public void setHomeNioPath(@Nonnull Path path) {
-      setHomePath(path.toAbsolutePath().toString());
+    @Nonnull
+    public SdkPathEditor getPathEditor(@Nonnull OrderRootType rootType) {
+        return myPathEditors.get(rootType);
     }
 
+    @RequiredUIAccess
     @Override
-    public String getVersionString() {
-      return myVersionString != null ? myVersionString : mySdk.getVersionString();
+    public boolean isModified() {
+        if (myMainPanel == null) {
+            return false;
+        }
+        boolean isModified = !Comparing.equal(mySdk.getName(), myInitialName);
+        isModified = isModified || !Comparing.equal(
+            FileUtil.toSystemIndependentName(getHomeValue()),
+            FileUtil.toSystemIndependentName(myInitialPath)
+        );
+        for (PathEditor pathEditor : myPathEditors.values()) {
+            isModified = isModified || pathEditor.isModified();
+        }
+        final AdditionalDataConfigurable configurable = getAdditionalDataConfigurable();
+        if (configurable != null) {
+            isModified = isModified || configurable.isModified();
+        }
+        return isModified;
     }
 
+    @RequiredUIAccess
     @Override
-    public void setVersionString(String versionString) {
-      throw new UnsupportedOperationException(); // not supported for this editor
+    public void apply() throws ConfigurationException {
+        if (!Comparing.equal(myInitialName, mySdk.getName())) {
+            if (mySdk.getName().isEmpty()) {
+                throw new ConfigurationException(ProjectLocalize.sdkListNameRequiredError());
+            }
+        }
+        myInitialName = mySdk.getName();
+        myInitialPath = mySdk.getHomePath();
+        final SdkModificator sdkModificator = mySdk.getSdkModificator();
+        SdkType sdkType = (SdkType)mySdk.getSdkType();
+        // we can change home path only when user can add sdk via interface
+        if (sdkType.supportsUserAdd()) {
+            sdkModificator.setHomePath(getHomeValue().replace(File.separatorChar, '/'));
+        }
+        for (SdkPathEditor pathEditor : myPathEditors.values()) {
+            pathEditor.apply(sdkModificator);
+        }
+        Application.get().runWriteAction(sdkModificator::commitChanges);
+        final AdditionalDataConfigurable configurable = getAdditionalDataConfigurable();
+        if (configurable != null) {
+            configurable.apply();
+        }
     }
 
+    @RequiredUIAccess
     @Override
-    public SdkAdditionalData getSdkAdditionalData() {
-      return mySdk.getSdkAdditionalData();
+    public void reset() {
+        final SdkModificator sdkModificator = mySdk.getSdkModificator();
+        for (OrderRootType type : myPathEditors.keySet()) {
+            myPathEditors.get(type).reset(sdkModificator);
+        }
+        sdkModificator.commitChanges();
+        setHomePathValue(mySdk.getHomePath().replace('/', File.separatorChar));
+        myVersionString = null;
+        myHomeFieldLabel.setText(ProjectLocalize.sdkConfigureTypeHomePath().get());
+        updateAdditionalDataComponent();
+        final AdditionalDataConfigurable configurable = getAdditionalDataConfigurable();
+        if (configurable != null) {
+            configurable.reset();
+        }
     }
 
+    @RequiredUIAccess
     @Override
-    public void setSdkAdditionalData(SdkAdditionalData data) {
-      throw new UnsupportedOperationException(); // not supported for this editor
+    public void disposeUIResources() {
+        for (final SdkType sdkType : myAdditionalDataConfigurables.keySet()) {
+            final AdditionalDataConfigurable configurable = myAdditionalDataConfigurables.get(sdkType);
+            configurable.disposeUIResources();
+        }
+        myMainPanel = null;
+        myAdditionalDataConfigurables.clear();
+        myAdditionalDataComponents.clear();
     }
 
-    @Override
-    public VirtualFile[] getRoots(OrderRootType rootType) {
-      final PathEditor editor = myPathEditors.get(rootType);
-      if (editor == null) {
-        throw new IllegalStateException("no editor for root type " + rootType);
-      }
-      return editor.getRoots();
+    private String getHomeValue() {
+        return myHomeComponent.getValueOrError().trim();
     }
 
-    @Override
-    public void addRoot(@Nonnull VirtualFile root, @Nonnull OrderRootType rootType) {
-      myPathEditors.get(rootType).addPaths(root);
+    private void clearAllPaths() {
+        for (PathEditor editor : myPathEditors.values()) {
+            editor.clearList();
+        }
     }
 
-    @Override
-    public void removeRoot(@Nonnull VirtualFile root, @Nonnull OrderRootType rootType) {
-      myPathEditors.get(rootType).removePaths(root);
+    @RequiredUIAccess
+    private void setHomePathValue(String absolutePath) {
+        if (myHomeComponent == null) {
+            return;
+        }
+
+        myHomeComponent.setValue(absolutePath);
+        final ColorValue fg;
+        if (absolutePath != null && !absolutePath.isEmpty()) {
+            final File homeDir = new File(absolutePath);
+            boolean homeMustBeDirectory;
+
+            SdkType sdkType = (SdkType)mySdk.getSdkType();
+            if (sdkType instanceof BundleType bundleType) {
+                homeMustBeDirectory = bundleType.getHomeChooserDescriptor(mySdk.getPlatform()).isChooseFolders();
+            }
+            else {
+                homeMustBeDirectory = sdkType.getHomeChooserDescriptor().isChooseFolders();
+            }
+
+            fg = homeDir.exists() && homeDir.isDirectory() == homeMustBeDirectory ? null : StandardColors.RED;
+        }
+        else {
+            fg = null;
+        }
+        myHomeComponent.setForegroundColor(fg);
     }
 
-    @Override
-    public void removeRoots(OrderRootType rootType) {
-      myPathEditors.get(rootType).clearList();
+    @RequiredUIAccess
+    private void doSelectHomePath() {
+        final SdkType sdkType = (SdkType)mySdk.getSdkType();
+        if (sdkType instanceof BundleType bundleType) {
+            SdkUtil.selectSdkHome(mySdk.getPlatform(), bundleType, path -> doSetHomePath(path.toString(), sdkType));
+        }
+        else {
+            SdkUtil.selectSdkHome(sdkType, path -> doSetHomePath(path, sdkType));
+        }
     }
 
-    @Override
-    public void removeAllRoots() {
-      for (PathEditor editor : myPathEditors.values()) {
-        editor.clearList();
-      }
+    @RequiredUIAccess
+    private void doSetHomePath(final String homePath, final SdkType sdkType) {
+        if (homePath == null) {
+            return;
+        }
+        setHomePathValue(homePath.replace('/', File.separatorChar));
+
+        final String newSdkName = suggestSdkName(homePath);
+        ((SdkImpl)mySdk).setName(newSdkName);
+
+        try {
+            final Sdk dummySdk = (Sdk)mySdk.clone();
+            SdkModificator sdkModificator = dummySdk.getSdkModificator();
+            sdkModificator.setHomePath(homePath);
+            sdkModificator.removeAllRoots();
+            sdkModificator.commitChanges();
+
+            sdkType.setupSdkPaths(dummySdk);
+
+            clearAllPaths();
+            myVersionString = dummySdk.getVersionString();
+            if (myVersionString == null) {
+                Messages.showMessageDialog(
+                    ProjectLocalize.sdkJavaCorruptError(homePath).get(),
+                    ProjectLocalize.sdkJavaCorruptTitle().get(),
+                    UIUtil.getErrorIcon()
+                );
+            }
+            sdkModificator = dummySdk.getSdkModificator();
+            for (OrderRootType type : myPathEditors.keySet()) {
+                myPathEditors.get(type).addPaths(sdkModificator.getRoots(type));
+            }
+            mySdkModel.getMulticaster().sdkHomeSelected(dummySdk, homePath);
+        }
+        catch (CloneNotSupportedException e) {
+            LOG.error(e); // should not happen in normal program
+        }
     }
 
-    @Override
-    public void commitChanges() {
+    private String suggestSdkName(final String homePath) {
+        final String currentName = mySdk.getName();
+        final String suggestedName = ((SdkType)mySdk.getSdkType()).suggestSdkName(currentName, homePath);
+        if (Comparing.equal(currentName, suggestedName)) {
+            return currentName;
+        }
+        String newSdkName = suggestedName;
+        final Set<String> allNames = new HashSet<>();
+        Sdk[] sdks = mySdkModel.getSdks();
+        for (Sdk sdk : sdks) {
+            allNames.add(sdk.getName());
+        }
+        int i = 0;
+        while (allNames.contains(newSdkName)) {
+            newSdkName = suggestedName + " (" + ++i + ")";
+        }
+        return newSdkName;
     }
 
-    @Override
-    public boolean isWritable() {
-      return true;
+    @RequiredUIAccess
+    private void updateAdditionalDataComponent() {
+        myAdditionalDataPanel.removeAll();
+        final AdditionalDataConfigurable configurable = getAdditionalDataConfigurable();
+        if (configurable != null) {
+            JComponent component = myAdditionalDataComponents.get(configurable);
+            if (component == null) {
+                component = configurable.createComponent();
+                myAdditionalDataComponents.put(configurable, component);
+            }
+            myAdditionalDataPanel.add(component, BorderLayout.CENTER);
+        }
     }
-  }
+
+    @Nullable
+    private AdditionalDataConfigurable getAdditionalDataConfigurable() {
+        return initAdditionalDataConfigurable(mySdk);
+    }
+
+    @Nullable
+    private AdditionalDataConfigurable initAdditionalDataConfigurable(Sdk sdk) {
+        final SdkType sdkType = (SdkType)sdk.getSdkType();
+        AdditionalDataConfigurable configurable = myAdditionalDataConfigurables.get(sdkType);
+        if (configurable == null) {
+            configurable = sdkType.createAdditionalDataConfigurable(mySdkModel, myEditedSdkModificator);
+            if (configurable != null) {
+                myAdditionalDataConfigurables.put(sdkType, configurable);
+            }
+        }
+        return configurable;
+    }
+
+    private class EditedSdkModificator implements SdkModificator {
+        @Nonnull
+        @Override
+        public String getName() {
+            return mySdk.getName();
+        }
+
+        @Override
+        public void setName(@Nonnull String name) {
+            ((SdkImpl)mySdk).setName(name);
+        }
+
+        @Override
+        public String getHomePath() {
+            return getHomeValue();
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void setHomePath(String path) {
+            doSetHomePath(path, (SdkType)mySdk.getSdkType());
+        }
+
+        @Nonnull
+        @Override
+        public Path getHomeNioPath() {
+            return Path.of(getHomeValue());
+        }
+
+        @Override
+        @RequiredUIAccess
+        public void setHomeNioPath(@Nonnull Path path) {
+            setHomePath(path.toAbsolutePath().toString());
+        }
+
+        @Override
+        public String getVersionString() {
+            return myVersionString != null ? myVersionString : mySdk.getVersionString();
+        }
+
+        @Override
+        public void setVersionString(String versionString) {
+            throw new UnsupportedOperationException(); // not supported for this editor
+        }
+
+        @Override
+        public SdkAdditionalData getSdkAdditionalData() {
+            return mySdk.getSdkAdditionalData();
+        }
+
+        @Override
+        public void setSdkAdditionalData(SdkAdditionalData data) {
+            throw new UnsupportedOperationException(); // not supported for this editor
+        }
+
+        @Nonnull
+        @Override
+        public VirtualFile[] getRoots(@Nonnull OrderRootType rootType) {
+            final PathEditor editor = myPathEditors.get(rootType);
+            if (editor == null) {
+                throw new IllegalStateException("no editor for root type " + rootType);
+            }
+            return editor.getRoots();
+        }
+
+        @Override
+        public void addRoot(@Nonnull VirtualFile root, @Nonnull OrderRootType rootType) {
+            myPathEditors.get(rootType).addPaths(root);
+        }
+
+        @Override
+        public void removeRoot(@Nonnull VirtualFile root, @Nonnull OrderRootType rootType) {
+            myPathEditors.get(rootType).removePaths(root);
+        }
+
+        @Override
+        public void removeRoots(@Nonnull OrderRootType rootType) {
+            myPathEditors.get(rootType).clearList();
+        }
+
+        @Override
+        public void removeAllRoots() {
+            for (PathEditor editor : myPathEditors.values()) {
+                editor.clearList();
+            }
+        }
+
+        @Override
+        public void commitChanges() {
+        }
+
+        @Override
+        public boolean isWritable() {
+            return true;
+        }
+    }
 }
