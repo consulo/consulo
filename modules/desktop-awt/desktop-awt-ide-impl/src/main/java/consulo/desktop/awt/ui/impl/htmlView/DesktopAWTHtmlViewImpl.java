@@ -26,7 +26,7 @@ import consulo.util.io.StreamUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.Range;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.cobraparser.html.HtmlRendererContext;
@@ -50,6 +50,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.net.URL;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -82,7 +83,10 @@ public class DesktopAWTHtmlViewImpl extends SwingComponentDelegate<DesktopAWTHtm
     }
 
     @Override
-    public void render(@Nonnull RenderData renderData) {
+    @Nonnull
+    public CompletableFuture<?> render(@Nonnull RenderData renderData) {
+        CompletableFuture<?> future = new CompletableFuture<>();
+
         MyHtmlPanel panel = toAWTComponent();
 
         ConsuloHtmlRendererContext context = panel.myContext;
@@ -114,12 +118,17 @@ public class DesktopAWTHtmlViewImpl extends SwingComponentDelegate<DesktopAWTHtm
                     document.finishModifications();
 
                     panel.setDocument(document, context);
+
+                    future.complete(null);
                 }
             }
             catch (final IOException | SAXException ioe) {
+                future.completeExceptionally(ioe);
                 throw new IllegalStateException("Unexpected condition.", ioe);
             }
         });
+
+        return future;
     }
 
     @Override
@@ -128,7 +137,11 @@ public class DesktopAWTHtmlViewImpl extends SwingComponentDelegate<DesktopAWTHtm
 
         SwingUtilities.invokeLater(() -> {
             final NodeImpl root = panel.getRootNode();
-            final Ref<Pair<Node, Integer>> resultY = new Ref<>();
+            if (root == null) {
+                return;
+            }
+
+            final SimpleReference<Pair<Node, Integer>> resultY = new SimpleReference<>();
             root.visit(new NodeVisitor() {
                 @Override
                 public void visit(Node node) {

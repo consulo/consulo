@@ -22,6 +22,7 @@ import consulo.ui.internal.UIInternal;
 import jakarta.annotation.Nonnull;
 
 import java.net.URL;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -41,8 +42,12 @@ public interface HtmlView extends Component {
         return UIInternal.get()._Components_htmlView();
     }
 
-    void render(@Nonnull RenderData renderData);
+    @Nonnull
+    CompletableFuture<?> render(@Nonnull RenderData renderData);
 
+    /**
+     * Use only of result of processing {@link #render(RenderData)}
+     */
     void scrollToMarkdownSrcOffset(final int offset);
 
     @Nonnull
