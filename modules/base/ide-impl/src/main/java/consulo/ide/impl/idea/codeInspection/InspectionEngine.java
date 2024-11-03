@@ -24,14 +24,15 @@ import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.editor.impl.inspection.reference.RefManagerImpl;
 import consulo.language.editor.impl.inspection.scheme.GlobalInspectionToolWrapper;
+import consulo.language.editor.impl.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.language.editor.impl.internal.highlight.Divider;
+import consulo.language.editor.impl.internal.inspection.ProblemsHolderImpl;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.reference.RefElement;
 import consulo.language.editor.inspection.reference.RefEntity;
 import consulo.language.editor.inspection.reference.RefVisitor;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
-import consulo.language.editor.impl.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementVisitor;
@@ -41,9 +42,9 @@ import consulo.logging.Logger;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartHashSet;
 import consulo.util.lang.function.Conditions;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
@@ -174,7 +175,7 @@ public class InspectionEngine {
     List<Entry<LocalInspectionToolWrapper, Set<String>>> entries = new ArrayList<>(toolToSpecifiedDialectIds.entrySet());
     final Map<String, List<ProblemDescriptor>> resultDescriptors = new ConcurrentHashMap<>();
     Predicate<Entry<LocalInspectionToolWrapper, Set<String>>> processor = entry -> {
-      ProblemsHolder holder = new ProblemsHolder(iManager, file, isOnTheFly);
+      ProblemsHolderImpl holder = new ProblemsHolderImpl(iManager, file, isOnTheFly);
       final LocalInspectionTool tool = entry.getKey().getTool();
       Object toolState = entry.getKey().getToolState().getState();
       Set<String> dialectIdsSpecifiedForTool = entry.getValue();
@@ -213,7 +214,7 @@ public class InspectionEngine {
 
         final List<ProblemDescriptor> descriptors = new ArrayList<>();
         if (globalTool instanceof GlobalSimpleInspectionTool simpleTool) {
-          ProblemsHolder problemsHolder = new ProblemsHolder(inspectionManager, file, false);
+          ProblemsHolderImpl problemsHolder = new ProblemsHolderImpl(inspectionManager, file, false);
           ProblemDescriptionsProcessor collectProcessor = new ProblemDescriptionsProcessor() {
             @Nullable
             @Override

@@ -20,27 +20,23 @@
  */
 package consulo.ide.impl.idea.codeInspection.offlineViewer;
 
-import consulo.language.editor.util.CollectHighlightsUtil;
-import consulo.language.editor.highlight.HighlightingLevelManager;
-import consulo.language.editor.inspection.*;
-import consulo.language.editor.impl.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.ide.impl.idea.codeInspection.ex.QuickFixWrapper;
 import consulo.ide.impl.idea.codeInspection.offline.OfflineProblemDescriptor;
-import consulo.language.editor.inspection.reference.RefElement;
-import consulo.language.editor.inspection.reference.RefEntity;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionToolPresentation;
 import consulo.ide.impl.idea.codeInspection.ui.ProblemDescriptionNode;
 import consulo.language.Language;
-import consulo.virtualFileSystem.status.FileStatus;
+import consulo.language.editor.highlight.HighlightingLevelManager;
+import consulo.language.editor.impl.inspection.scheme.LocalInspectionToolWrapper;
+import consulo.language.editor.impl.internal.inspection.ProblemsHolderImpl;
+import consulo.language.editor.inspection.*;
+import consulo.language.editor.inspection.reference.RefElement;
+import consulo.language.editor.inspection.reference.RefEntity;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.intention.IntentionAction;
-import consulo.language.psi.PsiUtilCore;
+import consulo.language.editor.util.CollectHighlightsUtil;
 import consulo.language.file.FileViewProvider;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiElementVisitor;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiNamedElement;
-
+import consulo.language.psi.*;
+import consulo.virtualFileSystem.status.FileStatus;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -97,7 +93,7 @@ public class OfflineProblemDescriptorNode extends ProblemDescriptionNode {
         final PsiElement psiElement = ((RefElement)element).getPsiElement();
         if (psiElement != null) {
           PsiFile containingFile = psiElement.getContainingFile();
-          final ProblemsHolder holder = new ProblemsHolder(inspectionManager, containingFile, false);
+          final ProblemsHolderImpl holder = new ProblemsHolderImpl(inspectionManager, containingFile, false);
           final LocalInspectionTool localTool = ((LocalInspectionToolWrapper)myToolWrapper).getTool();
           Object localToolState = myToolWrapper.getToolState().getState();
           final int startOffset = psiElement.getTextRange().getStartOffset();

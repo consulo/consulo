@@ -184,27 +184,4 @@ public abstract class LocalInspectionTool extends InspectionTool {
   @Deprecated
   public void inspectionFinished(@Nonnull LocalInspectionToolSession session) {
   }
-
-  @Nonnull
-  public List<ProblemDescriptor> processFile(@Nonnull PsiFile file, @Nonnull InspectionManager manager, @Nonnull Object state) {
-    final ProblemsHolder holder = new ProblemsHolder(manager, file, false);
-    LocalInspectionToolSession session = new LocalInspectionToolSession(file, 0, file.getTextLength());
-    final PsiElementVisitor customVisitor = buildVisitor(holder, false, session, state);
-    LOG.assertTrue(!(customVisitor instanceof PsiRecursiveVisitor),
-                   "The visitor returned from LocalInspectionTool.buildVisitor() must not be recursive: " + customVisitor);
-
-    inspectionStarted(session, false, state);
-
-    file.accept(new PsiRecursiveElementWalkingVisitor() {
-      @Override
-      public void visitElement(PsiElement element) {
-        element.accept(customVisitor);
-        super.visitElement(element);
-      }
-    });
-
-    inspectionFinished(session, holder, state);
-
-    return holder.getResults();
-  }
 }

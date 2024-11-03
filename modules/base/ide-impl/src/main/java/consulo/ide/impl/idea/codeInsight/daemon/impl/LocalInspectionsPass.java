@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ApplicationManager;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.progress.ProgressIndicator;
@@ -52,6 +53,7 @@ import consulo.language.editor.impl.internal.highlight.Divider;
 import consulo.language.editor.impl.internal.highlight.ProgressableTextEditorHighlightingPass;
 import consulo.language.editor.impl.internal.highlight.TransferToEDTQueue;
 import consulo.language.editor.impl.internal.highlight.UpdateHighlightersUtilImpl;
+import consulo.language.editor.impl.internal.inspection.ProblemsHolderImpl;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
 import consulo.language.editor.inspection.*;
@@ -367,7 +369,8 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         ApplicationManager.getApplication().assertReadAccessAllowed();
         final LocalInspectionTool tool = toolWrapper.getTool();
         final boolean[] applyIncrementally = {isOnTheFly};
-        ProblemsHolder holder = new ProblemsHolder(iManager, getFile(), isOnTheFly) {
+        ProblemsHolder holder = new ProblemsHolderImpl(iManager, getFile(), isOnTheFly) {
+            @RequiredReadAction
             @Override
             public void registerProblem(@Nonnull ProblemDescriptor descriptor) {
                 super.registerProblem(descriptor);
@@ -896,7 +899,8 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
             if (host != null && myIgnoreSuppressed && SuppressionUtil.inspectionResultSuppressed(host, tool)) {
                 continue;
             }
-            ProblemsHolder holder = new ProblemsHolder(iManager, injectedPsi, isOnTheFly) {
+            ProblemsHolder holder = new ProblemsHolderImpl(iManager, injectedPsi, isOnTheFly) {
+                @RequiredReadAction
                 @Override
                 public void registerProblem(@Nonnull ProblemDescriptor descriptor) {
                     super.registerProblem(descriptor);

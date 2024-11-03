@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
@@ -15,6 +16,7 @@ import consulo.language.editor.highlight.HighlightingLevelManager;
 import consulo.language.editor.impl.inspection.scheme.GlobalInspectionToolWrapper;
 import consulo.language.editor.impl.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.language.editor.impl.internal.daemon.DaemonProgressIndicator;
+import consulo.language.editor.impl.internal.inspection.ProblemsHolderImpl;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.scheme.InspectionManager;
@@ -137,7 +139,8 @@ public class DoNotShowInspectionIntentionMenuContributor implements IntentionMen
             final Object toolState = toolWrapper.getToolState().getState();
             final HighlightDisplayKey key = HighlightDisplayKey.find(toolWrapper.getShortName());
             final String displayName = toolWrapper.getDisplayName();
-            final ProblemsHolder holder = new ProblemsHolder(InspectionManager.getInstance(project), hostFile, true) {
+            final ProblemsHolder holder = new ProblemsHolderImpl(InspectionManager.getInstance(project), hostFile, true) {
+                @RequiredReadAction
                 @Override
                 public void registerProblem(@Nonnull ProblemDescriptor problemDescriptor) {
                     super.registerProblem(problemDescriptor);

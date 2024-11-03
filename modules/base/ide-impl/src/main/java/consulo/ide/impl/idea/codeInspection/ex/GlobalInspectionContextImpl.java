@@ -48,6 +48,7 @@ import consulo.language.editor.impl.inspection.GlobalInspectionContextBase;
 import consulo.language.editor.impl.inspection.reference.RefManagerImpl;
 import consulo.language.editor.impl.inspection.scheme.GlobalInspectionToolWrapper;
 import consulo.language.editor.impl.inspection.scheme.LocalInspectionToolWrapper;
+import consulo.language.editor.impl.internal.inspection.ProblemsHolderImpl;
 import consulo.language.editor.impl.internal.inspection.scheme.ToolsImpl;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.localize.InspectionLocalize;
@@ -527,7 +528,7 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
                     @RequiredReadAction
                     public boolean test(GlobalInspectionToolWrapper toolWrapper) {
                         GlobalSimpleInspectionTool tool = (GlobalSimpleInspectionTool)toolWrapper.getTool();
-                        ProblemsHolder holder = new ProblemsHolder(inspectionManager, file, false);
+                        ProblemsHolder holder = new ProblemsHolderImpl(inspectionManager, file, false);
                         ProblemDescriptionsProcessor problemDescriptionProcessor = getProblemDescriptionProcessor(toolWrapper, wrappersMap);
                         tool.checkFile(
                             file,
