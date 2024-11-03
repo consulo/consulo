@@ -26,7 +26,7 @@
                 <include>org.unbescape:unbescape</include>
                 <include>consulo.internal.org.cobraparser:cobra-core</include>
                 <include>net.sf.cssbox:jstyleparser</include>
-                <include>org.w3c.css:sac</include>
+                <include>xml-apis:xml-apis-ext</include>
             </includes>
         </dependencySet>
 
