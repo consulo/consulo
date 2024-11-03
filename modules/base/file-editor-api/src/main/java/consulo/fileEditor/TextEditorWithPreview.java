@@ -15,9 +15,16 @@
  */
 package consulo.fileEditor;
 
+import jakarta.annotation.Nonnull;
+
 /**
  * @author VISTALL
  * @since 2024-09-13
  */
 public interface TextEditorWithPreview extends FileEditor {
+    @Nonnull
+    TextEditor getTextEditor();
+
+    @Nonnull
+    FileEditor getPreviewEditor();
 }

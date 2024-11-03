@@ -61,6 +61,18 @@ public class TextEditorWithPreviewImpl extends UserDataHolderBase implements Tex
         myName = editorName;
     }
 
+    @Nonnull
+    @Override
+    public TextEditor getTextEditor() {
+        return myEditor;
+    }
+
+    @Nonnull
+    @Override
+    public FileEditor getPreviewEditor() {
+        return myPreview;
+    }
+
     @Nullable
     @Override
     public BackgroundEditorHighlighter getBackgroundHighlighter() {
