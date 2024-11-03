@@ -161,18 +161,6 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
         return toAWTComponent().getTextValue();
     }
 
-    @Nullable
-    @Override
-    public String getTooltipText() {
-        return toAWTComponent().getToolTipText();
-    }
-
-    @Override
-    @RequiredUIAccess
-    public void setToolTipText(@Nullable String text) {
-        toAWTComponent().setToolTipText(text);
-    }
-
     @Override
     public void setForegroundColor(ColorValue colorValue) {
         toAWTComponent().setForegroundColor(colorValue);

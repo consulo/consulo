@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.wm.impl;
 
+import consulo.localize.LocalizeValue;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetWrapper;
 import consulo.ui.Component;
@@ -91,7 +92,7 @@ public class UnifiedStatusBarWidgetWrapper {
     public void beforeUpdate() {
       String text = myWidgetPresentation.getText();
       myLabel.setText(text);
-      myLabel.setToolTipText(myWidgetPresentation.getTooltipText());
+      myLabel.setToolTipText(LocalizeValue.ofNullable(myWidgetPresentation.getTooltipText()));
       myLabel.setVisible(!text.isEmpty());
     }
 

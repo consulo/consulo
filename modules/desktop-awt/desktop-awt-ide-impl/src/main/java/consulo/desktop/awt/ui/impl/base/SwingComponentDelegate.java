@@ -42,6 +42,7 @@ import consulo.ui.impl.BorderInfo;
 import consulo.ui.impl.UIDataObject;
 import consulo.ui.util.TextWithMnemonic;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -119,6 +120,19 @@ public class SwingComponentDelegate<T extends java.awt.Component> implements Com
 
     public void focus() {
         toAWTComponent().requestFocus();
+    }
+
+    @Nonnull
+    @Override
+    public LocalizeValue getToolTipText() {
+        JComponent component = (JComponent) toAWTComponent();
+        return LocalizeValue.ofNullable(component.getToolTipText());
+    }
+
+    @Override
+    public void setToolTipText(@Nonnull LocalizeValue value) {
+        JComponent component = (JComponent) toAWTComponent();
+        component.setToolTipText(StringUtil.nullize(value.get()));
     }
 
     @Nonnull

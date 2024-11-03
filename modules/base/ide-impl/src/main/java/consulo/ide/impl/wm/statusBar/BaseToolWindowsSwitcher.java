@@ -20,6 +20,7 @@ import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.wm.StatusBar;
 import consulo.ui.Component;
@@ -64,7 +65,7 @@ public class BaseToolWindowsSwitcher implements Disposable, UISettingsListener {
 
   @RequiredUIAccess
   public void update() {
-    myLabel.setToolTipText(null);
+    myLabel.setToolTipText(LocalizeValue.empty());
     if (isActive()) {
       boolean changes = false;
 
@@ -85,7 +86,7 @@ public class BaseToolWindowsSwitcher implements Disposable, UISettingsListener {
     }
     else {
       myLabel.setVisible(false);
-      myLabel.setToolTipText(null);
+      myLabel.setToolTipText(LocalizeValue.empty());
     }
   }
 

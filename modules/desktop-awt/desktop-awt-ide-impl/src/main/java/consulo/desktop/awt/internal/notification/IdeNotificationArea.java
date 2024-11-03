@@ -19,6 +19,7 @@ import consulo.application.Application;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.component.messagebus.MessageBusConnection;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.internal.NotificationIconBuilder;
 import consulo.project.ui.notification.Notification;
@@ -90,7 +91,7 @@ public class IdeNotificationArea implements CustomStatusBarWidget, IconLikeCusto
     applyIconToStatusAndToolWindow(project, NotificationIconBuilder.getIcon(notifications.stream().map(Notification::getType).toList()));
 
     int count = notifications.size();
-    myLabel.setToolTipText(count > 0 ? String.format("%s notification%s pending", count, count == 1 ? "" : "s") : "No new notifications");
+    myLabel.setToolTipText(LocalizeValue.localizeTODO(count > 0 ? String.format("%s notification%s pending", count, count == 1 ? "" : "s") : "No new notifications"));
 
     myStatusBar.updateWidget(getId());
   }

@@ -60,17 +60,6 @@ public class DesktopSwtLabelImpl extends SWTComponentDelegate<org.eclipse.swt.wi
     myText = text;
   }
 
-  @Nullable
-  @Override
-  public String getTooltipText() {
-    return null;
-  }
-
-  @Override
-  public void setToolTipText(@Nullable String text) {
-
-  }
-
   @Override
   public void setImage(@Nullable Image icon) {
 

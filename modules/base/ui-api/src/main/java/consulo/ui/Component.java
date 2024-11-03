@@ -16,6 +16,7 @@
 package consulo.ui;
 
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
@@ -184,6 +185,21 @@ public interface Component extends UserDataHolder {
     @Nonnull
     default Component withCursor(@Nullable Cursor cursor) {
         setCursor(cursor);
+        return this;
+    }
+
+    default void setToolTipText(@Nonnull LocalizeValue value) {
+        throw new AbstractMethodError("not supported");
+    }
+
+    @Nonnull
+    default LocalizeValue getToolTipText() {
+        return LocalizeValue.empty();
+    }
+
+    @Nonnull
+    default Component withToolTipText(@Nonnull LocalizeValue value) {
+        setToolTipText(value);
         return this;
     }
 

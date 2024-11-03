@@ -56,16 +56,6 @@ public abstract class WebLabelBase<V extends VaadinLabelComponentBase> extends V
     getVaadinComponent().setTextValue(text);
   }
 
-  @Nullable
-  @Override
-  public String getTooltipText() {
-    return null;
-  }
-
-  @Override
-  public void setToolTipText(@Nullable String text) {
-  }
-
   @Override
   public void setImage(@Nullable Image icon) {
     toVaadinComponent().setImage(icon);

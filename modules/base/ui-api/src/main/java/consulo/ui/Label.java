@@ -64,11 +64,6 @@ public interface Label extends Component, Mnemonicable, FocusableComponent {
   @RequiredUIAccess
   void setText(@Nonnull LocalizeValue text);
 
-  @Nullable
-  String getTooltipText();
-
-  void setToolTipText(@Nullable String text);
-
   void setImage(@Nullable Image icon);
 
   @Nullable

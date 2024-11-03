@@ -132,6 +132,7 @@ public class UITester {
 
       CheckBox checkBox = CheckBox.create(LocalizeValue.of("Check box"));
       checkBox.addValueListener(event -> Alerts.okInfo(LocalizeValue.of("checkBox")).showAsync());
+      checkBox.setToolTipText(LocalizeValue.of("Some Tooltip"));
 
       layout.add(AdvancedLabel.create().updatePresentation(presentation -> {
         presentation.append(LocalizeValue.of("Advanced "), TextAttribute.REGULAR_BOLD);
