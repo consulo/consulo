@@ -2,7 +2,6 @@ package consulo.localize.internal;
 
 import consulo.localize.LocalizeKey;
 import consulo.localize.LocalizeValue;
-import consulo.localize.internal.DefaultLocalizeValue;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -73,6 +72,12 @@ public final class DefaultLocalizeKey implements LocalizeKey {
     @Override
     public LocalizeValue getValue(Object arg0, Object arg1, Object arg2, Object arg3, Object arg4) {
         return new DefaultLocalizeValue(this, arg0, arg1, arg2, arg3, arg4);
+    }
+
+    @Nonnull
+    @Override
+    public LocalizeValue getValue(Object[] args) {
+        return new DefaultLocalizeValue(this, args);
     }
 
     @Override
