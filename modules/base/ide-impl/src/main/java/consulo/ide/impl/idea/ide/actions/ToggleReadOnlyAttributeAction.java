@@ -25,6 +25,7 @@ import consulo.dataContext.DataContext;
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.util.io.ReadOnlyAttributeUtil;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -51,6 +52,8 @@ public class ToggleReadOnlyAttributeAction extends AnAction implements DumbAware
         return VfsUtil.toVirtualFileArray(filesList);
     }
 
+    @Override
+    @RequiredUIAccess
     public void update(AnActionEvent e) {
         VirtualFile[] files = getFiles(e.getDataContext());
         e.getPresentation().setEnabled(files.length > 0);
@@ -66,16 +69,15 @@ public class ToggleReadOnlyAttributeAction extends AnAction implements DumbAware
                 }
             }
             if (allReadOnly) {
-                e.getPresentation().setText(files.length > 1 ? "Make Files Writable" : "Make File Writable");
+                e.getPresentation().setTextValue(ActionLocalize.actionTogglereadonlyattributeFiles(1, files.length));
             }
             else if (allWritable) {
-                e.getPresentation().setText(files.length > 1 ? "Make Files Read-only" : "Make File Read-only");
+                e.getPresentation().setTextValue(ActionLocalize.actionTogglereadonlyattributeFiles(0, files.length));
             }
             else {
-                e.getPresentation().setText("Toggle Read-only Attribute");
+                e.getPresentation().setTextValue(ActionLocalize.actionTogglereadonlyattributeText());
             }
         }
-
     }
 
     @Override

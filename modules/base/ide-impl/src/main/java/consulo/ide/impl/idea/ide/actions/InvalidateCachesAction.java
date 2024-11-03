@@ -4,6 +4,7 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.actions.InvalidateCacheDialog;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -15,12 +16,8 @@ public class InvalidateCachesAction extends AnAction implements DumbAware {
     private final Application myApplication;
 
     public InvalidateCachesAction(Application application) {
+        super(invalidateCachesTitle(application), ActionLocalize.actionInvalidatecachesDescription());
         myApplication = application;
-        getTemplatePresentation().setTextValue(
-            application.isRestartCapable()
-                ? ActionLocalize.actionInvalidatecachesText()
-                : ActionLocalize.actionInvalidatecachesNorestartText()
-        );
     }
 
     @RequiredUIAccess
@@ -28,5 +25,12 @@ public class InvalidateCachesAction extends AnAction implements DumbAware {
     public void actionPerformed(@Nonnull AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         new InvalidateCacheDialog(myApplication, project).showAsync();
+    }
+
+    @Nonnull
+    private static LocalizeValue invalidateCachesTitle(Application application) {
+        return application.isRestartCapable()
+            ? ActionLocalize.actionInvalidatecachesText()
+            : ActionLocalize.actionInvalidatecachesNorestartText();
     }
 }
