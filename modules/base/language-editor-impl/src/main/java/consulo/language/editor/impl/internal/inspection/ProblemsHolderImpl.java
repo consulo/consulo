@@ -16,21 +16,20 @@
 package consulo.language.editor.impl.internal.inspection;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.document.util.TextRange;
 import consulo.language.editor.inspection.*;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.psi.ExternallyDefinedPsiElement;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.xml.XmlStringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.Nls;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,21 +44,47 @@ public class ProblemsHolderImpl implements ProblemsHolder {
     private final boolean myOnTheFly;
     private final List<ProblemDescriptor> myProblems = new ArrayList<>();
 
+    private class MyProblemBuilder extends AbstractProblemBuilder {
+        private boolean created = false;
+
+        public MyProblemBuilder(LocalizeValue descriptionTemplate) {
+            super(descriptionTemplate);
+            onTheFly(ProblemsHolderImpl.this.myOnTheFly);
+        }
+
+        @Override
+        @RequiredReadAction
+        public void create() {
+            if (created) {
+                throw new IllegalStateException("Must not call .create() twice");
+            }
+            registerProblem(new ProblemDescriptorBase(
+                myStartElement,
+                myEndElement,
+                myDescriptionTemplate.get(),
+                myLocalQuickFixes,
+                myHighlightType,
+                myIsAfterEndOfLine,
+                myRangeInElement,
+                myShowTooltip,
+                myOnTheFly
+            ));
+            created = true;
+        }
+    }
+
+    @Nonnull
     public ProblemsHolderImpl(@Nonnull InspectionManager manager, @Nonnull PsiFile file, boolean onTheFly) {
         myManager = manager;
         myFile = file;
         myOnTheFly = onTheFly;
     }
 
-    @RequiredReadAction
+    @Nonnull
     @Override
-    public void registerProblem(
-        @Nonnull PsiElement psiElement,
-        @Nonnull @Nls(capitalization = Nls.Capitalization.Sentence) String descriptionTemplate,
-        @Nonnull ProblemHighlightType highlightType,
-        @Nullable LocalQuickFix... fixes
-    ) {
-        registerProblem(myManager.createProblemDescriptor(psiElement, descriptionTemplate, myOnTheFly, fixes, highlightType));
+    @SuppressWarnings("unchecked")
+    public ProblemBuilder newProblem(LocalizeValue descriptionTemplate) {
+        return new MyProblemBuilder(descriptionTemplate);
     }
 
     @Override
@@ -87,123 +112,65 @@ public class ProblemsHolderImpl implements ProblemsHolder {
 
     @RequiredReadAction
     private void redirectProblem(@Nonnull final ProblemDescriptor problem, @Nonnull final PsiElement target) {
-        final PsiElement original = problem.getPsiElement();
-        final VirtualFile vFile = original.getContainingFile().getVirtualFile();
+        PsiElement original = problem.getPsiElement();
+        VirtualFile vFile = original.getContainingFile().getVirtualFile();
         assert vFile != null;
-        final String path = FileUtil.toSystemIndependentName(vFile.getPath());
-
+        String path = FileUtil.toSystemIndependentName(vFile.getPath());
         String description = XmlStringUtil.stripHtml(problem.getDescriptionTemplate());
 
-        final String template = InspectionsBundle.message(
-            "inspection.redirect.template",
-            description,
-            path,
-            original.getTextRange().getStartOffset(),
-            vFile.getName()
-        );
+        LocalizeValue descriptionTemplate =
+            InspectionLocalize.inspectionRedirectTemplate(description, path, original.getTextRange().getStartOffset(), vFile.getName());
 
-
-        final InspectionManager manager = InspectionManager.getInstance(original.getProject());
-        final ProblemDescriptor newProblem =
-            manager.createProblemDescriptor(target, template, (LocalQuickFix) null, problem.getHighlightType(), isOnTheFly());
-        registerProblem(newProblem);
+        newProblem(descriptionTemplate)
+            .range(target)
+            .highlightType(problem.getHighlightType())
+            .create();
     }
 
-    @RequiredReadAction
     @Override
+    @RequiredReadAction
     public void registerProblem(@Nonnull PsiReference reference, String descriptionTemplate, ProblemHighlightType highlightType) {
-        List<LocalQuickFix> quickFixes = new ArrayList<>();
-        PsiReferenceLocalQuickFixProvider.EP.forEachExtensionSafe(
-            myFile.getProject(),
-            provider -> provider.addQuickFixes(reference, quickFixes::add)
-        );
-        registerProblemForReference(reference, highlightType, descriptionTemplate, quickFixes.toArray(LocalQuickFix.ARRAY_FACTORY));
-    }
-
-    @RequiredReadAction
-    @Override
-    public void registerProblemForReference(
-        @Nonnull PsiReference reference,
-        @Nonnull ProblemHighlightType highlightType,
-        @Nonnull String descriptionTemplate,
-        @Nullable LocalQuickFix... fixes
-    ) {
-        ProblemDescriptor descriptor = myManager.createProblemDescriptor(
-            reference.getElement(),
-            reference.getRangeInElement(),
-            descriptionTemplate,
-            highlightType,
-            myOnTheFly,
-            fixes
-        );
-        registerProblem(descriptor);
+        newProblem(LocalizeValue.of(descriptionTemplate))
+            .range(reference)
+            .highlightType(highlightType)
+            .withFixes(collectQuickFixes(reference))
+            .create();
     }
 
     @Override
     @RequiredReadAction
     public void registerProblem(@Nonnull PsiReference reference) {
-        registerProblem(reference, ProblemsHolder.unresolvedReferenceMessage(reference).get(), ProblemHighlightType.LIKE_UNKNOWN_SYMBOL);
+        newProblem(LocalizeValue.of(ProblemsHolder.unresolvedReferenceMessage(reference).get()))
+            .range(reference)
+            .highlightType(ProblemHighlightType.LIKE_UNKNOWN_SYMBOL)
+            .withFixes(collectQuickFixes(reference))
+            .create();
     }
 
-    /**
-     * Creates highlighter for the specified place in the file.
-     *
-     * @param psiElement     The highlighter will be created at the text range od this element. This psiElement must be in the current file.
-     * @param message        Message for this highlighter. Will also serve as a tooltip.
-     * @param highlightType  The level of highlighter.
-     * @param rangeInElement The (sub)range (must be inside (0..psiElement.getTextRange().getLength()) to create highlighter in.
-     *                       If you want to highlight only part of the supplied psiElement. Pass null otherwise.
-     * @param fixes          (Optional) fixes to appear for this highlighter.
-     */
-    @Override
-    @RequiredReadAction
-    public void registerProblem(
-        @Nonnull final PsiElement psiElement,
-        @Nonnull final String message,
-        @Nonnull ProblemHighlightType highlightType,
-        @Nullable TextRange rangeInElement,
-        @Nullable LocalQuickFix... fixes
-    ) {
-
-        final ProblemDescriptor descriptor =
-            myManager.createProblemDescriptor(psiElement, rangeInElement, message, highlightType, myOnTheFly, fixes);
-        registerProblem(descriptor);
-    }
-
-    @Override
-    @RequiredReadAction
-    public void registerProblem(
-        @Nonnull final PsiElement psiElement,
-        @Nullable TextRange rangeInElement,
-        @Nonnull final String message,
-        @Nullable LocalQuickFix... fixes
-    ) {
-        final ProblemDescriptor descriptor = myManager.createProblemDescriptor(
-            psiElement,
-            rangeInElement,
-            message,
-            ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
-            myOnTheFly,
-            fixes
+    private LocalQuickFix[] collectQuickFixes(@Nonnull PsiReference reference) {
+        List<LocalQuickFix> quickFixes = new ArrayList<>();
+        PsiReferenceLocalQuickFixProvider.EP.forEachExtensionSafe(
+            myFile.getProject(),
+            provider -> provider.addQuickFixes(reference, quickFixes::add)
         );
-        registerProblem(descriptor);
+        return quickFixes.toArray(LocalQuickFix.ARRAY_FACTORY);
     }
 
-    @Override
     @Nonnull
+    @Override
     public List<ProblemDescriptor> getResults() {
         return myProblems;
     }
 
-    @Override
     @Nonnull
+    @Override
     public ProblemDescriptor[] getResultsArray() {
         final List<ProblemDescriptor> problems = getResults();
         return problems.toArray(new ProblemDescriptor[problems.size()]);
     }
 
-    @Override
     @Nonnull
+    @Override
     public final InspectionManager getManager() {
         return myManager;
     }
@@ -223,14 +190,14 @@ public class ProblemsHolderImpl implements ProblemsHolder {
         return myOnTheFly;
     }
 
-    @Override
     @Nonnull
+    @Override
     public PsiFile getFile() {
         return myFile;
     }
 
-    @Override
     @Nonnull
+    @Override
     public final Project getProject() {
         return myManager.getProject();
     }

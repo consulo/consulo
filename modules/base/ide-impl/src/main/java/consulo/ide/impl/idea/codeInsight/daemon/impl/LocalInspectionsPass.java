@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
@@ -28,6 +28,7 @@ import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
 import consulo.component.ProcessCanceledException;
 import consulo.document.Document;
+import consulo.document.DocumentWindow;
 import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.codeInspection.InspectionEngine;
@@ -39,7 +40,6 @@ import consulo.ide.impl.idea.codeInspection.ui.InspectionToolPresentation;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
 import consulo.ide.impl.idea.util.ConcurrencyUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.language.Language;
 import consulo.language.editor.Pass;
@@ -71,22 +71,21 @@ import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
 import consulo.language.editor.rawHighlight.SeverityProvider;
 import consulo.language.file.FileViewProvider;
-import consulo.document.DocumentWindow;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.style.StyleManager;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.Trinity;
-import consulo.util.lang.function.Condition;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -100,7 +99,7 @@ import java.util.function.Predicate;
 public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass {
     private static final Logger LOG = Logger.getInstance(LocalInspectionsPass.class);
     public static final TextRange EMPTY_PRIORITY_RANGE = TextRange.EMPTY_RANGE;
-    private static final Condition<PsiFile> SHOULD_INSPECT_FILTER =
+    private static final Predicate<PsiFile> SHOULD_INSPECT_FILTER =
         file -> HighlightingLevelManager.getInstance(file.getProject()).shouldInspect(file);
     private final TextRange myPriorityRange;
     private final boolean myIgnoreSuppressed;
@@ -163,6 +162,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
     }
 
     @Override
+    @RequiredReadAction
     protected void collectInformationWithProgress(@Nonnull ProgressIndicator progress) {
         try {
             if (!HighlightingLevelManager.getInstance(myProject).shouldInspect(getFile())) {
@@ -179,6 +179,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         result.clear();
     }
 
+    @RequiredReadAction
     public void doInspectInBatch(
         @Nonnull final GlobalInspectionContextImpl context,
         @Nonnull final InspectionManager iManager,
@@ -214,6 +215,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         );
     }
 
+    @RequiredReadAction
     private void addDescriptorsFromInjectedResults(@Nonnull InspectionManager iManager, @Nonnull GlobalInspectionContextImpl context) {
         InjectedLanguageManager ilManager = InjectedLanguageManager.getInstance(myProject);
         PsiDocumentManager documentManager = PsiDocumentManager.getInstance(myProject);
@@ -263,6 +265,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         }
     }
 
+    @RequiredReadAction
     private void inspect(
         @Nonnull final List<LocalInspectionToolWrapper> toolWrappers,
         @Nonnull final InspectionManager iManager,
@@ -332,7 +335,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         Processor<Map.Entry<LocalInspectionToolWrapper, Set<String>>> processor = pair -> {
             LocalInspectionToolWrapper toolWrapper = pair.getKey();
             Set<String> dialectIdsSpecifiedForTool = pair.getValue();
-            ((ApplicationEx)ApplicationManager.getApplication()).executeByImpatientReader(() -> runToolOnElements(
+            ((ApplicationEx)Application.get()).executeByImpatientReader(() -> runToolOnElements(
                 toolWrapper,
                 dialectIdsSpecifiedForTool,
                 iManager,
@@ -353,6 +356,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         return init;
     }
 
+    @RequiredReadAction
     private void runToolOnElements(
         @Nonnull final LocalInspectionToolWrapper toolWrapper,
         Set<String> dialectIdsSpecifiedForTool,
@@ -366,12 +370,12 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
     ) {
         indicator.checkCanceled();
 
-        ApplicationManager.getApplication().assertReadAccessAllowed();
+        Application.get().assertReadAccessAllowed();
         final LocalInspectionTool tool = toolWrapper.getTool();
         final boolean[] applyIncrementally = {isOnTheFly};
         ProblemsHolder holder = new ProblemsHolderImpl(iManager, getFile(), isOnTheFly) {
-            @RequiredReadAction
             @Override
+            @RequiredReadAction
             public void registerProblem(@Nonnull ProblemDescriptor descriptor) {
                 super.registerProblem(descriptor);
                 if (applyIncrementally[0]) {
@@ -411,9 +415,10 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         @Nonnull List<InspectionContext> init,
         @Nonnull final Set<String> elementDialectIds
     ) {
+        @RequiredReadAction
         Predicate<InspectionContext> processor = context -> {
             indicator.checkCanceled();
-            ApplicationManager.getApplication().assertReadAccessAllowed();
+            Application.get().assertReadAccessAllowed();
             InspectionEngine.acceptElements(elements, context.visitor, elementDialectIds, context.dialectIdsSpecifiedForTool);
             advanceProgress(1);
 
@@ -449,7 +454,8 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         if (injected.isEmpty()) {
             return;
         }
-        Processor<PsiFile> processor = injectedPsi -> {
+        @RequiredReadAction
+        Predicate<PsiFile> processor = injectedPsi -> {
             doInspectInjectedPsi(injectedPsi, onTheFly, indicator, iManager, inVisibleRange, wrappers);
             return true;
         };
@@ -464,6 +470,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
     }
 
     @Nullable
+    @RequiredReadAction
     private HighlightInfoImpl highlightInfoFromDescriptor(
         @Nonnull ProblemDescriptor problemDescriptor,
         @Nonnull HighlightInfoType highlightInfoType,
@@ -514,6 +521,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
                 private final PsiDocumentManager documentManager = PsiDocumentManager.getInstance(myProject);
 
                 @Override
+                @RequiredReadAction
                 public boolean process(Trinity<ProblemDescriptor, LocalInspectionToolWrapper, ProgressIndicator> trinity) {
                     ProgressIndicator indicator = trinity.getThird();
                     if (indicator.isCanceled()) {
@@ -568,6 +576,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
 
     private final Set<Pair<TextRange, String>> emptyActionRegistered = Collections.synchronizedSet(new HashSet<Pair<TextRange, String>>());
 
+    @RequiredReadAction
     private void addDescriptorIncrementally(
         @Nonnull final ProblemDescriptor descriptor,
         @Nonnull final LocalInspectionToolWrapper tool,
@@ -607,6 +616,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
     }
 
     @Override
+    @RequiredUIAccess
     protected void applyInformationWithProgress() {
         UpdateHighlightersUtil.setHighlightersToEditor(
             myProject,
@@ -619,6 +629,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         );
     }
 
+    @RequiredReadAction
     private void addHighlightsFromResults(@Nonnull List<HighlightInfo> outInfos, @Nonnull ProgressIndicator indicator) {
         InspectionProfile inspectionProfile = InspectionProjectProfileManager.getInstance(myProject).getInspectionProfile();
         PsiDocumentManager documentManager = PsiDocumentManager.getInstance(myProject);
@@ -661,6 +672,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         }
     }
 
+    @RequiredReadAction
     private void createHighlightsForDescriptor(
         @Nonnull List<HighlightInfo> outInfos,
         @Nonnull Set<Pair<TextRange, String>> emptyActionRegistered,
@@ -733,6 +745,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
     }
 
     @Nullable
+    @RequiredReadAction
     private HighlightInfoImpl createHighlightInfo(
         @Nonnull ProblemDescriptor descriptor,
         @Nonnull LocalInspectionToolWrapper tool,
@@ -740,7 +753,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         @Nonnull Set<Pair<TextRange, String>> emptyActionRegistered,
         @Nonnull PsiElement element
     ) {
-        @NonNls String message = ProblemDescriptorUtil.renderDescriptionMessage(descriptor, element);
+        String message = ProblemDescriptorUtil.renderDescriptionMessage(descriptor, element);
 
         final HighlightDisplayKey key = HighlightDisplayKey.find(tool.getShortName());
         final InspectionProfile inspectionProfile = myProfileWrapper.getInspectionProfile();
@@ -749,24 +762,20 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         }
 
         HighlightInfoType type = new HighlightInfoType.HighlightInfoTypeImpl(level.getSeverity(element), level.getAttributesKey());
-        final String plainMessage = message.startsWith("<html>")
+        String plainMessage = message.startsWith("<html>")
             ? StringUtil.unescapeXml(XmlStringUtil.stripHtml(message).replaceAll("<[^>]*>", ""))
             : message;
-        @NonNls final String link = " <a href=\"#inspection/" + tool.getShortName() + "\"" +
+        String link = " <a href=\"#inspection/" + tool.getShortName() + "\"" +
             (StyleManager.get().getCurrentStyle().isDark() ? " color=\"7AB4C9\" " : "") +
             ">" +
             DaemonLocalize.inspectionExtendedDescription().get() +
             "</a> " +
             myShortcutText;
 
-        @NonNls String tooltip = null;
+        String tooltip = null;
         if (descriptor.showTooltip()) {
             tooltip = XmlStringUtil.wrapInHtml(
-                (
-                    message.startsWith("<html>")
-                        ? XmlStringUtil.stripHtml(message)
-                        : XmlStringUtil.escapeString(message)
-                ) + link
+                (message.startsWith("<html>") ? XmlStringUtil.stripHtml(message) : XmlStringUtil.escapeString(message)) + link
             );
         }
         HighlightInfoImpl highlightInfo = highlightInfoFromDescriptor(descriptor, type, plainMessage, tooltip, element);
@@ -793,8 +802,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
                 }
             }
         }
-        HintAction hintAction = descriptor instanceof ProblemDescriptorImpl
-            ? ((ProblemDescriptorImpl)descriptor).getHintAction() : null;
+        HintAction hintAction = descriptor instanceof ProblemDescriptorImpl problemDescriptor ? problemDescriptor.getHintAction() : null;
         if (hintAction != null) {
             QuickFixAction.registerQuickFixAction(highlightInfo, hintAction, key);
             needEmptyAction = false;
@@ -802,9 +810,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         if (((ProblemDescriptorBase)descriptor).getEnforcedTextAttributes() != null) {
             needEmptyAction = false;
         }
-        if (needEmptyAction && emptyActionRegistered.add(
-            Pair.create(highlightInfo.getFixTextRange(), tool.getShortName())
-        )) {
+        if (needEmptyAction && emptyActionRegistered.add(Pair.create(highlightInfo.getFixTextRange(), tool.getShortName()))) {
             IntentionAction emptyIntentionAction = new EmptyIntentionAction(tool.getDisplayName());
             QuickFixAction.registerQuickFixAction(highlightInfo, emptyIntentionAction, key);
         }
@@ -816,6 +822,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         final Set<PsiElement> result = new LinkedHashSet<>();
         final PsiElementVisitor visitor = new PsiRecursiveElementVisitor() {
             @Override
+            @RequiredReadAction
             public void visitElement(PsiElement element) {
                 ProgressManager.checkCanceled();
                 PsiElement child = element.getFirstChild();
@@ -855,14 +862,13 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
             if (!profile.isToolEnabled(HighlightDisplayKey.find(toolWrapper.getShortName()), getFile())) {
                 continue;
             }
-            LocalInspectionToolWrapper wrapper = null;
-            if (toolWrapper instanceof LocalInspectionToolWrapper) {
-                wrapper = (LocalInspectionToolWrapper)toolWrapper;
-            }
-            else if (toolWrapper instanceof GlobalInspectionToolWrapper) {
-                final GlobalInspectionToolWrapper globalInspectionToolWrapper = (GlobalInspectionToolWrapper)toolWrapper;
-                wrapper = globalInspectionToolWrapper.getSharedLocalInspectionToolWrapper();
-            }
+
+            LocalInspectionToolWrapper wrapper = toolWrapper instanceof LocalInspectionToolWrapper liWrapper
+                ? liWrapper
+                : toolWrapper instanceof GlobalInspectionToolWrapper giWrapper
+                ? giWrapper.getSharedLocalInspectionToolWrapper()
+                : null;
+
             if (wrapper == null) {
                 continue;
             }
@@ -875,6 +881,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         return enabled;
     }
 
+    @RequiredReadAction
     private void doInspectInjectedPsi(
         @Nonnull PsiFile injectedPsi,
         final boolean isOnTheFly,
@@ -900,8 +907,8 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
                 continue;
             }
             ProblemsHolder holder = new ProblemsHolderImpl(iManager, injectedPsi, isOnTheFly) {
-                @RequiredReadAction
                 @Override
+                @RequiredReadAction
                 public void registerProblem(@Nonnull ProblemDescriptor descriptor) {
                     super.registerProblem(descriptor);
                     if (isOnTheFly && inVisibleRange) {

@@ -48,6 +48,7 @@ public class DoNotShowInspectionIntentionMenuContributor implements IntentionMen
     private static final Logger LOG = Logger.getInstance(DoNotShowInspectionIntentionMenuContributor.class);
 
     @Override
+    @RequiredReadAction
     public void collectActions(
         @Nonnull Editor hostEditor,
         @Nonnull PsiFile hostFile,
@@ -76,6 +77,7 @@ public class DoNotShowInspectionIntentionMenuContributor implements IntentionMen
     /**
      * Can be invoked in EDT, each inspection should be fast
      */
+    @RequiredReadAction
     private static void collectIntentionsFromDoNotShowLeveledInspections(
         @Nonnull final Project project,
         @Nonnull final PsiFile hostFile,
@@ -100,18 +102,18 @@ public class DoNotShowInspectionIntentionMenuContributor implements IntentionMen
             return;
         }
 
-        final List<LocalInspectionToolWrapper> intentionTools = new ArrayList<>();
-        final InspectionProfile profile = InspectionProjectProfileManager.getInstance(project).getInspectionProfile();
-        final InspectionToolWrapper[] tools = profile.getInspectionTools(hostFile);
+        List<LocalInspectionToolWrapper> intentionTools = new ArrayList<>();
+        InspectionProfile profile = InspectionProjectProfileManager.getInstance(project).getInspectionProfile();
+        InspectionToolWrapper[] tools = profile.getInspectionTools(hostFile);
         for (InspectionToolWrapper toolWrapper : tools) {
-            if (toolWrapper instanceof GlobalInspectionToolWrapper) {
-                toolWrapper = ((GlobalInspectionToolWrapper)toolWrapper).getSharedLocalInspectionToolWrapper();
+            if (toolWrapper instanceof GlobalInspectionToolWrapper globalInspectionToolWrapper) {
+                toolWrapper = globalInspectionToolWrapper.getSharedLocalInspectionToolWrapper();
             }
-            if (toolWrapper instanceof LocalInspectionToolWrapper && !((LocalInspectionToolWrapper)toolWrapper).isUnfair()) {
-                final HighlightDisplayKey key = HighlightDisplayKey.find(toolWrapper.getShortName());
+            if (toolWrapper instanceof LocalInspectionToolWrapper localInspectionToolWrapper && !localInspectionToolWrapper.isUnfair()) {
+                HighlightDisplayKey key = HighlightDisplayKey.find(toolWrapper.getShortName());
                 if (profile.isToolEnabled(key, hostFile)
                     && HighlightDisplayLevel.DO_NOT_SHOW.equals(profile.getErrorLevel(key, hostFile))) {
-                    intentionTools.add((LocalInspectionToolWrapper)toolWrapper);
+                    intentionTools.add(localInspectionToolWrapper);
                 }
             }
         }
@@ -140,32 +142,31 @@ public class DoNotShowInspectionIntentionMenuContributor implements IntentionMen
             final HighlightDisplayKey key = HighlightDisplayKey.find(toolWrapper.getShortName());
             final String displayName = toolWrapper.getDisplayName();
             final ProblemsHolder holder = new ProblemsHolderImpl(InspectionManager.getInstance(project), hostFile, true) {
-                @RequiredReadAction
                 @Override
+                @RequiredReadAction
                 public void registerProblem(@Nonnull ProblemDescriptor problemDescriptor) {
                     super.registerProblem(problemDescriptor);
-                    if (problemDescriptor instanceof ProblemDescriptorBase) {
-                        final TextRange range = ((ProblemDescriptorBase)problemDescriptor).getTextRange();
-                        if (range != null && range.containsOffset(offset)) {
-                            final QuickFix[] fixes = problemDescriptor.getFixes();
-                            if (fixes != null) {
-                                for (int k = 0; k < fixes.length; k++) {
-                                    final IntentionAction intentionAction = QuickFixWrapper.wrap(problemDescriptor, k);
-                                    final HighlightInfoImpl.IntentionActionDescriptor actionDescriptor =
-                                        new HighlightInfoImpl.IntentionActionDescriptor(
-                                            intentionAction,
-                                            null,
-                                            displayName,
-                                            null,
-                                            key,
-                                            null,
-                                            HighlightSeverity.INFORMATION
-                                        );
-                                    (problemDescriptor.getHighlightType() == ProblemHighlightType.ERROR
-                                        ? intentions.errorFixesToShow
-                                        : intentions.intentionsToShow).add(actionDescriptor);
-                                }
-                            }
+                    TextRange range = problemDescriptor instanceof ProblemDescriptorBase problemDescriptorBase
+                        ? problemDescriptorBase.getTextRange()
+                        : null;
+                    QuickFix[] fixes = range != null && range.containsOffset(offset) ? problemDescriptor.getFixes() : null;
+                    if (fixes != null) {
+                        for (int k = 0; k < fixes.length; k++) {
+                            IntentionAction intentionAction = QuickFixWrapper.wrap(problemDescriptor, k);
+                            HighlightInfoImpl.IntentionActionDescriptor actionDescriptor = new HighlightInfoImpl.IntentionActionDescriptor(
+                                intentionAction,
+                                null,
+                                displayName,
+                                null,
+                                key,
+                                null,
+                                HighlightSeverity.INFORMATION
+                            );
+                            List<HighlightInfoImpl.IntentionActionDescriptor> intentionActionDescriptors =
+                                problemDescriptor.getHighlightType() == ProblemHighlightType.ERROR
+                                    ? intentions.errorFixesToShow
+                                    : intentions.intentionsToShow;
+                            intentionActionDescriptors.add(actionDescriptor);
                         }
                     }
                 }
