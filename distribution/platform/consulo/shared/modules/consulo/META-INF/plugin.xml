@@ -519,8 +519,7 @@
             <action id="ImportSettings" class="consulo.ide.impl.idea.ide.actions.ImportSettingsAction"/>
             <action id="ExportSettings" class="consulo.ide.impl.idea.ide.actions.ExportSettingsAction"/>
           </group>
-          <action id="ShowStartupManagerAction" class="consulo.ide.impl.actions.ShowStartupManagerAction"
-                  text="Customize Manager"/>
+          <action id="ShowStartupManagerAction" class="consulo.ide.impl.actions.ShowStartupManagerAction"/>
         </group>
         <separator/>
         <action id="SaveAll" class="consulo.ide.impl.idea.ide.actions.SaveAllAction"
@@ -531,7 +530,7 @@
 
         <action id="ChangeFileEncodingAction" class="consulo.ide.impl.idea.openapi.vfs.encoding.ChangeFileEncodingAction"/>
 
-        <group id="ChangeLineSeparators" text="Line Separators" popup="true">
+        <group id="ChangeLineSeparators" popup="true">
           <action id="ConvertToWindowsLineSeparators"
                   class="consulo.ide.impl.idea.codeStyle.ConvertToWindowsLineSeparatorsAction"/>
           <action id="ConvertToUnixLineSeparators" class="consulo.ide.impl.idea.codeStyle.ConvertToUnixLineSeparatorsAction"/>

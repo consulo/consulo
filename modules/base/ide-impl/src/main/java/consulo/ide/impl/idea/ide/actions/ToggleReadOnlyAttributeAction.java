@@ -25,6 +25,7 @@ import consulo.dataContext.DataContext;
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.util.io.ReadOnlyAttributeUtil;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -39,67 +40,68 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class ToggleReadOnlyAttributeAction extends AnAction implements DumbAware {
-  static VirtualFile[] getFiles(DataContext dataContext){
-    ArrayList<VirtualFile> filesList = new ArrayList<>();
-    VirtualFile[] files = dataContext.getData(VirtualFile.KEY_OF_ARRAY);
-    for (int i = 0; files != null && i < files.length; i++){
-      VirtualFile file = files[i];
-      if (file.isInLocalFileSystem()) {
-        filesList.add(file);
-      }
-    }
-    return VfsUtil.toVirtualFileArray(filesList);
-  }
-
-  public void update(AnActionEvent e){
-    VirtualFile[] files=getFiles(e.getDataContext());
-    e.getPresentation().setEnabled(files.length>0);
-    if (files.length > 0) {
-      boolean allReadOnly = true;
-      boolean allWritable = true;
-      for (VirtualFile file : files) {
-        if (file.isWritable()) {
-          allReadOnly = false;
+    static VirtualFile[] getFiles(DataContext dataContext) {
+        ArrayList<VirtualFile> filesList = new ArrayList<>();
+        VirtualFile[] files = dataContext.getData(VirtualFile.KEY_OF_ARRAY);
+        for (int i = 0; files != null && i < files.length; i++) {
+            VirtualFile file = files[i];
+            if (file.isInLocalFileSystem()) {
+                filesList.add(file);
+            }
         }
-        else {
-          allWritable = false;
-        }
-      }
-      if (allReadOnly) {
-        e.getPresentation().setText(files.length > 1 ? "Make Files Writable" : "Make File Writable");
-      }
-      else if (allWritable) {
-        e.getPresentation().setText(files.length > 1 ? "Make Files Read-only" : "Make File Read-only");
-      }
-      else {
-        e.getPresentation().setText("Toggle Read-only Attribute");
-      }
+        return VfsUtil.toVirtualFileArray(filesList);
     }
 
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void actionPerformed(@Nonnull final AnActionEvent e){
-    Application.get().runWriteAction(() -> {
-      // Save all documents. We won't be able to save changes to the files that became read-only afterwards.
-      FileDocumentManager.getInstance().saveAllDocuments();
-
-      try {
-        VirtualFile[] files=getFiles(e.getDataContext());
-        for (VirtualFile file : files) {
-          ReadOnlyAttributeUtil.setReadOnlyAttribute(file, file.isWritable());
+    @Override
+    @RequiredUIAccess
+    public void update(AnActionEvent e) {
+        VirtualFile[] files = getFiles(e.getDataContext());
+        e.getPresentation().setEnabled(files.length > 0);
+        if (files.length > 0) {
+            boolean allReadOnly = true;
+            boolean allWritable = true;
+            for (VirtualFile file : files) {
+                if (file.isWritable()) {
+                    allReadOnly = false;
+                }
+                else {
+                    allWritable = false;
+                }
+            }
+            if (allReadOnly) {
+                e.getPresentation().setTextValue(ActionLocalize.actionTogglereadonlyattributeFiles(1, files.length));
+            }
+            else if (allWritable) {
+                e.getPresentation().setTextValue(ActionLocalize.actionTogglereadonlyattributeFiles(0, files.length));
+            }
+            else {
+                e.getPresentation().setTextValue(ActionLocalize.actionTogglereadonlyattributeText());
+            }
         }
-      }
-      catch (IOException exc) {
-        Project project = e.getData(Project.KEY);
-        Messages.showMessageDialog(
-          project,
-          exc.getMessage(),
-          CommonLocalize.titleError().get(),
-          UIUtil.getErrorIcon()
-        );
-      }
-    });
-  }
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull final AnActionEvent e) {
+        Application.get().runWriteAction(() -> {
+            // Save all documents. We won't be able to save changes to the files that became read-only afterwards.
+            FileDocumentManager.getInstance().saveAllDocuments();
+
+            try {
+                VirtualFile[] files = getFiles(e.getDataContext());
+                for (VirtualFile file : files) {
+                    ReadOnlyAttributeUtil.setReadOnlyAttribute(file, file.isWritable());
+                }
+            }
+            catch (IOException exc) {
+                Project project = e.getData(Project.KEY);
+                Messages.showMessageDialog(
+                    project,
+                    exc.getMessage(),
+                    CommonLocalize.titleError().get(),
+                    UIUtil.getErrorIcon()
+                );
+            }
+        });
+    }
 }

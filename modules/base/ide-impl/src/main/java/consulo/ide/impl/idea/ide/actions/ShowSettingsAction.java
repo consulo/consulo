@@ -16,48 +16,64 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.application.AllIcons;
-import consulo.application.CommonBundle;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.setting.ShowSettingsUtil;
+import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
 public class ShowSettingsAction extends AnAction implements DumbAware {
-  private final Provider<ShowSettingsUtil> myShowSettingsUtil;
+    private final Provider<ShowSettingsUtil> myShowSettingsUtil;
 
-  @Inject
-  public ShowSettingsAction(Provider<ShowSettingsUtil> showSettingsUtil) {
-    super(
-      CommonBundle.settingsAction(),
-      CommonBundle.settingsActionDescription(),
-      AllIcons.General.Settings
-    );
-    myShowSettingsUtil = showSettingsUtil;
-  }
-
-  @Override
-  public void update(AnActionEvent e) {
-    if (Platform.current().os().isMac() && e.getPlace().equals(ActionPlaces.MAIN_MENU)) {
-      // It's called from Preferences in App menu.
-      e.getPresentation().setVisible(false);
-    }
-    if (e.getPlace().equals(ActionPlaces.WELCOME_SCREEN)) {
-      e.getPresentation().setText(CommonBundle.settingsTitle());
-    }
-  }
-
-  public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(Project.KEY);
-    if (project == null) {
-      project = ProjectManager.getInstance().getDefaultProject();
+    @Inject
+    public ShowSettingsAction(Provider<ShowSettingsUtil> showSettingsUtil) {
+        super(settingsTitle(), settingsDescription(), AllIcons.General.Settings);
+        myShowSettingsUtil = showSettingsUtil;
     }
 
-    myShowSettingsUtil.get().showSettingsDialog(project);
-  }
+    @Override
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent e) {
+        if (Platform.current().os().isMac() && e.getPlace().equals(ActionPlaces.MAIN_MENU)) {
+            // It's called from Preferences in App menu.
+            e.getPresentation().setVisible(false);
+        }
+        if (e.getPlace().equals(ActionPlaces.WELCOME_SCREEN)) {
+            e.getPresentation().setTextValue(settingsTitle());
+        }
+    }
+
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        if (project == null) {
+            project = ProjectManager.getInstance().getDefaultProject();
+        }
+
+        myShowSettingsUtil.get().showSettingsDialog(project);
+    }
+
+    @Nonnull
+    private static LocalizeValue settingsTitle() {
+        return Platform.current().os().isMac()
+            ? CommonLocalize.actionSettingsMac()
+            : CommonLocalize.actionSettings();
+    }
+
+    @Nonnull
+    private static LocalizeValue settingsDescription() {
+        return Platform.current().os().isMac()
+            ? CommonLocalize.actionSettingsDescriptionMac()
+            : CommonLocalize.actionSettingsDescription();
+    }
 }
