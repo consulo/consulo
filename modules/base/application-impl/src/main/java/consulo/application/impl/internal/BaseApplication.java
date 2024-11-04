@@ -15,6 +15,7 @@
  */
 package consulo.application.impl.internal;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.application.AccessToken;
@@ -447,7 +448,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
         super.dispose();
 
-        invokeLater(() -> releaseWriteIntentLock(), ModalityState.nonModal());
+        invokeLater(this::releaseWriteIntentLock, ModalityState.nonModal());
 
         AppScheduledExecutorService service = (AppScheduledExecutorService)concurrency.getScheduledExecutorService();
         service.shutdownAppScheduledExecutorService();
@@ -625,7 +626,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
      * if there is a pending write action.
      */
     @Override
-    public void executeByImpatientReader(@Nonnull Runnable runnable) throws ApplicationUtil.CannotRunReadActionException {
+    public void executeByImpatientReader(@RequiredReadAction @Nonnull Runnable runnable) throws ApplicationUtil.CannotRunReadActionException {
         if (isDispatchThread()) {
             runnable.run();
         }
@@ -730,6 +731,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     }
 
     @Override
+    @RequiredReadAction
     public boolean hasWriteAction(@Nonnull Class<?> actionClass) {
         assertReadAccessAllowed();
 

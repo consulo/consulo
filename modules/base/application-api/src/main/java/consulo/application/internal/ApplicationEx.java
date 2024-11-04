@@ -15,6 +15,7 @@
  */
 package consulo.application.internal;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
@@ -158,7 +159,7 @@ public interface ApplicationEx extends Application {
 
     boolean isInImpatientReader();
 
-    default void executeByImpatientReader(@Nonnull Runnable runnable) throws ApplicationUtil.CannotRunReadActionException {
+    default void executeByImpatientReader(@RequiredReadAction @Nonnull Runnable runnable) throws ApplicationUtil.CannotRunReadActionException {
         throw new UnsupportedOperationException();
     }
 
