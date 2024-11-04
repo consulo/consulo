@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.codeInspection.actions;
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.analysis.BaseAnalysisAction;
 import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextImpl;
-import consulo.ide.impl.idea.codeInspection.ex.InspectionManagerEx;
+import consulo.ide.impl.idea.codeInspection.ex.InspectionManagerImpl;
 import consulo.ide.impl.idea.openapi.options.ex.SingleConfigurableEditor;
 import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
 import consulo.ide.impl.idea.profile.codeInspection.ui.ErrorsConfigurable;
@@ -80,7 +80,7 @@ public class CodeInspectionAction extends BaseAnalysisAction {
 
   private GlobalInspectionContextImpl getGlobalInspectionContext(Project project) {
     if (myGlobalInspectionContext == null) {
-      myGlobalInspectionContext = ((InspectionManagerEx)InspectionManager.getInstance(project)).createNewGlobalContext(false);
+      myGlobalInspectionContext = ((InspectionManagerImpl)InspectionManager.getInstance(project)).createNewGlobalContext(false);
     }
     return myGlobalInspectionContext;
   }
@@ -116,7 +116,7 @@ public class CodeInspectionAction extends BaseAnalysisAction {
     dockLayout.center(profiles);
     layout.add(dockLayout);
 
-    final InspectionManagerEx manager = (InspectionManagerEx)InspectionManager.getInstance(project);
+    final InspectionManagerImpl manager = (InspectionManagerImpl)InspectionManager.getInstance(project);
     final InspectionProfileManager profileManager = InspectionProfileManager.getInstance();
     final InspectionProjectProfileManager projectProfileManager = InspectionProjectProfileManager.getInstance(project);
     reloadProfiles(profiles, model, profileManager, projectProfileManager, manager);
@@ -161,7 +161,7 @@ public class CodeInspectionAction extends BaseAnalysisAction {
                               MutableListModel<InspectionProfile> model,
                               InspectionProfileManager inspectionProfileManager,
                               InspectionProjectProfileManager inspectionProjectProfileManager,
-                              InspectionManagerEx inspectionManager) {
+                              InspectionManagerImpl inspectionManager) {
     final InspectionProfile selectedProfile = getGlobalInspectionContext(inspectionManager.getProject()).getCurrentProfile();
 
     List<InspectionProfile> resultItems = new ArrayList<>();
@@ -178,9 +178,9 @@ public class CodeInspectionAction extends BaseAnalysisAction {
   }
 
   private static class MySingleConfigurableEditor extends SingleConfigurableEditor {
-    private final InspectionManagerEx myManager;
+    private final InspectionManagerImpl myManager;
 
-    public MySingleConfigurableEditor(final Project project, final ErrorsConfigurable configurable, InspectionManagerEx manager) {
+    public MySingleConfigurableEditor(final Project project, final ErrorsConfigurable configurable, InspectionManagerImpl manager) {
       super(project, configurable, createDimensionKey(configurable));
       myManager = manager;
       setTitle(configurable.getDisplayName());

@@ -287,7 +287,7 @@ public class QuickFixAction extends AnAction {
         @Nonnull Set<PsiElement> selectedElements,
         @Nonnull InspectionToolWrapper toolWrapper
     ) {
-        InspectionManagerEx managerEx = (InspectionManagerEx)InspectionManager.getInstance(project);
+        InspectionManagerImpl managerEx = (InspectionManagerImpl)InspectionManager.getInstance(project);
         final Set<GlobalInspectionContextImpl> runningContexts = managerEx.getRunningContexts();
         for (GlobalInspectionContextImpl context : runningContexts) {
             for (PsiElement element : selectedElements) {

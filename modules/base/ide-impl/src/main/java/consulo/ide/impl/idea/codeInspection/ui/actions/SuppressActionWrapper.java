@@ -7,7 +7,7 @@ package consulo.ide.impl.idea.codeInspection.ui.actions;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextImpl;
-import consulo.ide.impl.idea.codeInspection.ex.InspectionManagerEx;
+import consulo.ide.impl.idea.codeInspection.ex.InspectionManagerImpl;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionTreeNode;
 import consulo.ide.impl.idea.codeInspection.ui.ProblemDescriptionNode;
 import consulo.ide.impl.idea.codeInspection.ui.RefElementNode;
@@ -45,7 +45,7 @@ import java.util.Set;
 
 public class SuppressActionWrapper extends ActionGroup implements CompactActionGroup {
     private final Project myProject;
-    private final InspectionManagerEx myManager;
+    private final InspectionManagerImpl myManager;
     private final Set<InspectionTreeNode> myNodesToSuppress = new HashSet<>();
     private final InspectionToolWrapper myToolWrapper;
     private static final Logger LOG = Logger.getInstance(SuppressActionWrapper.class);
@@ -57,7 +57,7 @@ public class SuppressActionWrapper extends ActionGroup implements CompactActionG
     ) {
         super(InspectionLocalize.suppressInspectionProblem(), false);
         myProject = project;
-        myManager = (InspectionManagerEx)InspectionManager.getInstance(myProject);
+        myManager = (InspectionManagerImpl)InspectionManager.getInstance(myProject);
         for (TreePath path : paths) {
             final Object node = path.getLastPathComponent();
             if (!(node instanceof TreeNode)) {
@@ -77,7 +77,7 @@ public class SuppressActionWrapper extends ActionGroup implements CompactActionG
     @Override
     @Nonnull
     public SuppressTreeAction[] getChildren(@Nullable final AnActionEvent e) {
-        final SuppressIntentionAction[] suppressActions = InspectionManagerEx.getSuppressActions(myToolWrapper);
+        final SuppressIntentionAction[] suppressActions = InspectionManagerImpl.getSuppressActions(myToolWrapper);
         if (suppressActions == null || suppressActions.length == 0) {
             return new SuppressTreeAction[0];
         }
@@ -134,7 +134,7 @@ public class SuppressActionWrapper extends ActionGroup implements CompactActionG
     @RequiredUIAccess
     public void update(@Nonnull AnActionEvent e) {
         super.update(e);
-        e.getPresentation().setEnabled(InspectionManagerEx.getSuppressActions(myToolWrapper) != null);
+        e.getPresentation().setEnabled(InspectionManagerImpl.getSuppressActions(myToolWrapper) != null);
     }
 
     @RequiredReadAction

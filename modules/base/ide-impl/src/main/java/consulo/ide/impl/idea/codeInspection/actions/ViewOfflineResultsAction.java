@@ -31,7 +31,7 @@ import consulo.fileChooser.IdeaFileChooser;
 import consulo.ide.impl.idea.analysis.PerformAnalysisInBackgroundOption;
 import consulo.ide.impl.idea.codeInspection.InspectionApplication;
 import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextImpl;
-import consulo.ide.impl.idea.codeInspection.ex.InspectionManagerEx;
+import consulo.ide.impl.idea.codeInspection.ex.InspectionManagerImpl;
 import consulo.ide.impl.idea.codeInspection.offline.OfflineProblemDescriptor;
 import consulo.ide.impl.idea.codeInspection.offlineViewer.OfflineInspectionRVContentProvider;
 import consulo.ide.impl.idea.codeInspection.offlineViewer.OfflineViewParseUtil;
@@ -226,7 +226,7 @@ public class ViewOfflineResultsAction extends AnAction implements DumbAware {
     @Nonnull String title
   ) {
     final AnalysisScope scope = new AnalysisScope(project);
-    final InspectionManagerEx managerEx = (InspectionManagerEx)InspectionManager.getInstance(project);
+    final InspectionManagerImpl managerEx = (InspectionManagerImpl)InspectionManager.getInstance(project);
     final GlobalInspectionContextImpl context = managerEx.createNewGlobalContext(false);
     context.setExternalProfile(inspectionProfile);
     context.setCurrentScope(scope);

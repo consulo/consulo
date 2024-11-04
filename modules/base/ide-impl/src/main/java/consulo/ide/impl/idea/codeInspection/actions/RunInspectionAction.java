@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.codeInspection.actions;
 import consulo.application.Application;
 import consulo.content.scope.SearchScope;
 import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.ide.impl.idea.codeInspection.ex.InspectionManagerEx;
+import consulo.ide.impl.idea.codeInspection.ex.InspectionManagerImpl;
 import consulo.ide.impl.idea.ide.actions.GotoActionBase;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNameFilter;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNamePopup;
@@ -93,7 +93,7 @@ public class RunInspectionAction extends GotoActionBase {
     PsiElement psiElement,
     PsiFile psiFile
   ) {
-    final InspectionManagerEx managerEx = (InspectionManagerEx)InspectionManager.getInstance(project);
+    final InspectionManagerImpl managerEx = (InspectionManagerImpl)InspectionManager.getInstance(project);
     final Module module = virtualFile != null ? ModuleUtilCore.findModuleForFile(virtualFile, project) : null;
 
     AnalysisScope analysisScope = null;

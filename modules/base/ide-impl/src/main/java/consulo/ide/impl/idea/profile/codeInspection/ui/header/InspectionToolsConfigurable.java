@@ -32,7 +32,7 @@ import consulo.disposer.Disposer;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.IdeaFileChooser;
-import consulo.ide.impl.idea.codeInspection.ex.InspectionManagerEx;
+import consulo.ide.impl.idea.codeInspection.ex.InspectionManagerImpl;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
@@ -98,7 +98,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
   public InspectionToolsConfigurable(@Nonnull final InspectionProjectProfileManager projectProfileManager,
                                      InspectionProfileManager profileManager) {
 
-    ((InspectionManagerEx)InspectionManager.getInstance(projectProfileManager.getProject())).buildInspectionSearchIndexIfNecessary();
+    ((InspectionManagerImpl)InspectionManager.getInstance(projectProfileManager.getProject())).buildInspectionSearchIndexIfNecessary();
     myProjectProfileManager = projectProfileManager;
     myProfileManager = profileManager;
   }

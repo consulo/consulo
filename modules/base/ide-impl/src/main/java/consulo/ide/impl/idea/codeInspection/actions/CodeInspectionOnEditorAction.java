@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.codeInspection.actions;
 import consulo.dataContext.DataContext;
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextImpl;
-import consulo.ide.impl.idea.codeInspection.ex.InspectionManagerEx;
+import consulo.ide.impl.idea.codeInspection.ex.InspectionManagerImpl;
 import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.inspection.scheme.InspectionManager;
@@ -48,7 +48,7 @@ public class CodeInspectionOnEditorAction extends AnAction {
 
   protected static void analyze(Project project, PsiFile psiFile) {
     FileDocumentManager.getInstance().saveAllDocuments();
-    final InspectionManagerEx inspectionManagerEx = (InspectionManagerEx)InspectionManager.getInstance(project);
+    final InspectionManagerImpl inspectionManagerEx = (InspectionManagerImpl)InspectionManager.getInstance(project);
     final AnalysisScope scope = new AnalysisScope(psiFile);
     final GlobalInspectionContextImpl inspectionContext = inspectionManagerEx.createNewGlobalContext(false);
     inspectionContext.setCurrentScope(scope);

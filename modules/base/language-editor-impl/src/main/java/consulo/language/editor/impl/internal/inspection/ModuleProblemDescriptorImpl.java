@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInspection.ex;
+package consulo.language.editor.impl.internal.inspection;
 
 import consulo.language.editor.inspection.CommonProblemDescriptorBase;
 import consulo.language.editor.inspection.ModuleProblemDescriptor;

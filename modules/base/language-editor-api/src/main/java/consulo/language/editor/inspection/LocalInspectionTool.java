@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.inspection;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
@@ -27,7 +28,6 @@ import jakarta.annotation.Nullable;
 import org.intellij.lang.annotations.Language;
 import org.intellij.lang.annotations.Pattern;
 
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -93,6 +93,8 @@ public abstract class LocalInspectionTool extends InspectionTool {
    * @return <code>null</code> if no problems found or not applicable at file level.
    */
   @Nullable
+  @Deprecated
+  @DeprecationInfo("Prefer #buildVisitor()")
   public ProblemDescriptor[] checkFile(@Nonnull PsiFile file, @Nonnull InspectionManager manager, boolean isOnTheFly) {
     return null;
   }
@@ -142,10 +144,13 @@ public abstract class LocalInspectionTool extends InspectionTool {
   public PsiElementVisitor buildVisitor(@Nonnull final ProblemsHolder holder, final boolean isOnTheFly) {
     return new PsiElementVisitor() {
       @Override
+      @RequiredReadAction
+      @SuppressWarnings("deprecation")
       public void visitFile(PsiFile file) {
         addDescriptors(checkFile(file, holder.getManager(), isOnTheFly));
       }
 
+      @RequiredReadAction
       private void addDescriptors(final ProblemDescriptor[] descriptors) {
         if (descriptors != null) {
           for (ProblemDescriptor descriptor : descriptors) {

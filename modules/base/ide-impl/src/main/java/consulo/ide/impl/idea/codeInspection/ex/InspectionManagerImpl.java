@@ -27,33 +27,27 @@ import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.util.NotNullLazyValue;
-import consulo.ide.impl.idea.codeInspection.InspectionManagerBase;
 import consulo.ide.impl.idea.ide.ui.search.SearchableOptionsRegistrar;
 import consulo.ide.impl.idea.profile.codeInspection.ui.header.InspectionToolsConfigurable;
-import consulo.ide.impl.idea.ui.content.TabbedPaneContentUI;
 import consulo.language.Language;
+import consulo.language.editor.impl.internal.inspection.InspectionManagerBase;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionToolRegistrar;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
-import consulo.language.editor.intention.HintAction;
 import consulo.language.editor.intention.SuppressIntentionAction;
-import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
-import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.toolWindow.ContentManagerWatcher;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.util.collection.ContainerUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.TestOnly;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -61,42 +55,30 @@ import java.util.regex.Pattern;
 
 @Singleton
 @ServiceImpl
-public class InspectionManagerEx extends InspectionManagerBase {
+public class InspectionManagerImpl extends InspectionManagerBase {
     private static final Pattern HTML_PATTERN = Pattern.compile("<[^<>]*>");
     private final NotNullLazyValue<ContentManager> myContentManager;
-    private final Set<GlobalInspectionContextImpl> myRunningContexts = new HashSet<GlobalInspectionContextImpl>();
+    private final Set<GlobalInspectionContextImpl> myRunningContexts = new HashSet<>();
     private final AtomicBoolean myToolsAreInitialized = new AtomicBoolean(false);
     private GlobalInspectionContextImpl myGlobalInspectionContext;
 
     @Inject
-    public InspectionManagerEx(final Project project) {
+    public InspectionManagerImpl(final Project project) {
         super(project);
-        if (ApplicationManager.getApplication().isHeadlessEnvironment()) {
-            myContentManager = new NotNullLazyValue<ContentManager>() {
-                @Nonnull
-                @Override
-                protected ContentManager compute() {
-                    ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
+        
+        myContentManager = new NotNullLazyValue<>() {
+            @Nonnull
+            @Override
+            protected ContentManager compute() {
+                ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
+                ToolWindow toolWindow =
                     toolWindowManager.registerToolWindow(ToolWindowId.INSPECTION, true, ToolWindowAnchor.BOTTOM, project);
-                    return ContentFactory.getInstance().createContentManager(new TabbedPaneContentUI(), true, project);
-                }
-            };
-        }
-        else {
-            myContentManager = new NotNullLazyValue<ContentManager>() {
-                @Nonnull
-                @Override
-                protected ContentManager compute() {
-                    ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-                    ToolWindow toolWindow =
-                        toolWindowManager.registerToolWindow(ToolWindowId.INSPECTION, true, ToolWindowAnchor.BOTTOM, project);
-                    ContentManager contentManager = toolWindow.getContentManager();
-                    toolWindow.setIcon(AllIcons.Toolwindows.ToolWindowInspection);
-                    new ContentManagerWatcher(toolWindow, contentManager);
-                    return contentManager;
-                }
-            };
-        }
+                ContentManager contentManager = toolWindow.getContentManager();
+                toolWindow.setIcon(AllIcons.Toolwindows.ToolWindowInspection);
+                ContentManagerWatcher.watchContentManager(toolWindow, contentManager);
+                return contentManager;
+            }
+        };
     }
 
     @Nullable
@@ -105,7 +87,7 @@ public class InspectionManagerEx extends InspectionManagerBase {
         if (tool instanceof CustomSuppressableInspectionTool) {
             return ((CustomSuppressableInspectionTool)tool).getSuppressActions(null);
         }
-        final List<LocalQuickFix> actions = new ArrayList<LocalQuickFix>(Arrays.asList(tool.getBatchSuppressActions(null)));
+        final List<LocalQuickFix> actions = new ArrayList<>(Arrays.asList(tool.getBatchSuppressActions(null)));
         if (actions.isEmpty()) {
             final Language language = toolWrapper.getLanguage();
             if (language != null) {
@@ -124,7 +106,7 @@ public class InspectionManagerEx extends InspectionManagerBase {
     }
 
     private static void processText(
-        @Nonnull @NonNls String descriptionText,
+        @Nonnull String descriptionText,
         @Nonnull InspectionToolWrapper tool,
         @Nonnull SearchableOptionsRegistrar myOptionsRegistrar
     ) {
@@ -135,28 +117,6 @@ public class InspectionManagerEx extends InspectionManagerBase {
         for (String word : words) {
             myOptionsRegistrar.addOption(word, tool.getShortName(), tool.getDisplayName(), InspectionToolsConfigurable.ID, "Inspections");
         }
-    }
-
-    @Nonnull
-    public ProblemDescriptor createProblemDescriptor(
-        @Nonnull final PsiElement psiElement,
-        @Nonnull final String descriptionTemplate,
-        @Nonnull final ProblemHighlightType highlightType,
-        @Nullable final HintAction hintAction,
-        boolean onTheFly,
-        final LocalQuickFix... fixes
-    ) {
-        return new ProblemDescriptorImpl(
-            psiElement,
-            psiElement,
-            descriptionTemplate,
-            fixes,
-            highlightType,
-            false,
-            null,
-            hintAction,
-            onTheFly
-        );
     }
 
     @Override
@@ -189,24 +149,6 @@ public class InspectionManagerEx extends InspectionManagerBase {
     @Nonnull
     public Set<GlobalInspectionContextImpl> getRunningContexts() {
         return myRunningContexts;
-    }
-
-    @Nonnull
-    @Deprecated
-    public ProblemDescriptor createProblemDescriptor(
-        @Nonnull final PsiElement psiElement,
-        @Nonnull final String descriptionTemplate,
-        @Nonnull final ProblemHighlightType highlightType,
-        @Nullable final HintAction hintAction,
-        final LocalQuickFix... fixes
-    ) {
-
-        return new ProblemDescriptorImpl(psiElement, psiElement, descriptionTemplate, fixes, highlightType, false, null, hintAction, true);
-    }
-
-    @TestOnly
-    public NotNullLazyValue<ContentManager> getContentManager() {
-        return myContentManager;
     }
 
     public void buildInspectionSearchIndexIfNecessary() {

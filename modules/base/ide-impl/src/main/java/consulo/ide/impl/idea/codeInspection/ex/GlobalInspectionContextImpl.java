@@ -865,7 +865,7 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
 
     @Override
     public void cleanup() {
-        ((InspectionManagerEx)InspectionManager.getInstance(getProject())).closeRunningContext(this);
+        ((InspectionManagerImpl)InspectionManager.getInstance(getProject())).closeRunningContext(this);
         for (Tools tools : myTools.values()) {
             for (ScopeToolState state : tools.getTools()) {
                 InspectionToolWrapper toolWrapper = state.getTool();

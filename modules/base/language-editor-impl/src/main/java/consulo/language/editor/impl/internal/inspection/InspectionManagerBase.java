@@ -13,28 +13,61 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInspection;
+package consulo.language.editor.impl.internal.inspection;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.codeInspection.ex.ModuleProblemDescriptorImpl;
-import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;
-import consulo.language.psi.PsiElement;
+import consulo.language.editor.inspection.scheme.InspectionProjectProfileManager;
+import consulo.language.psi.*;
+import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.project.Project;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 
+import java.util.List;
+
 public abstract class InspectionManagerBase extends InspectionManager {
+    private static final Logger LOG = Logger.getInstance(InspectionManagerBase.class);
+
     private final Project myProject;
-    @NonNls
     protected String myCurrentProfileName;
 
     public InspectionManagerBase(Project project) {
         myProject = project;
+    }
+
+    @RequiredReadAction
+    @Override
+    @Nonnull
+    public List<ProblemDescriptor> runLocalToolLocaly(@Nonnull LocalInspectionTool tool, @Nonnull PsiFile file, @Nonnull Object state) {
+        final ProblemsHolder holder = new ProblemsHolderImpl(this, file, false);
+        LocalInspectionToolSession session = new LocalInspectionToolSession(file, 0, file.getTextLength());
+        final PsiElementVisitor customVisitor = tool.buildVisitor(holder, false, session, state);
+        LOG.assertTrue(!(customVisitor instanceof PsiRecursiveVisitor),
+            "The visitor returned from LocalInspectionTool.buildVisitor() must not be recursive: " + customVisitor);
+
+        tool.inspectionStarted(session, false, state);
+
+        file.accept(new PsiRecursiveElementWalkingVisitor() {
+            @Override
+            public void visitElement(PsiElement element) {
+                element.accept(customVisitor);
+                super.visitElement(element);
+            }
+        });
+
+        tool.inspectionFinished(session, holder, state);
+
+        return holder.getResults();
+    }
+
+    @Nonnull
+    @Override
+    public ProblemsHolder createProblemsHolder(@Nonnull PsiFile file, boolean onTheFly) {
+        return new ProblemsHolderImpl(this, file, onTheFly);
     }
 
     @Override
@@ -242,6 +275,7 @@ public abstract class InspectionManagerBase extends InspectionManager {
         return createProblemDescriptor(psiElement, descriptionTemplate, showTooltip, highlightType, true, fixes);
     }
 
+    @Override
     public String getCurrentProfile() {
         if (myCurrentProfileName == null) {
             final InspectionProjectProfileManager profileManager = InspectionProjectProfileManager.getInstance(getProject());

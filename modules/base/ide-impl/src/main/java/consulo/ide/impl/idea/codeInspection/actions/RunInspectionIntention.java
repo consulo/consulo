@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.codeInspection.actions;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.ui.scope.AnalysisUIOptions;
 import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextImpl;
-import consulo.ide.impl.idea.codeInspection.ex.InspectionManagerEx;
+import consulo.ide.impl.idea.codeInspection.ex.InspectionManagerImpl;
 import consulo.language.editor.impl.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
 import consulo.language.editor.ui.awt.scope.BaseAnalysisActionDialog;
@@ -75,7 +75,7 @@ public class RunInspectionIntention implements IntentionAction, HighPriorityActi
 
   @Override
   public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-    final InspectionManagerEx managerEx = (InspectionManagerEx)InspectionManager.getInstance(project);
+    final InspectionManagerImpl managerEx = (InspectionManagerImpl)InspectionManager.getInstance(project);
     final Module module = ModuleUtilCore.findModuleForPsiElement(file);
     AnalysisScope analysisScope = new AnalysisScope(file);
     final VirtualFile virtualFile = file.getVirtualFile();
@@ -104,7 +104,7 @@ public class RunInspectionIntention implements IntentionAction, HighPriorityActi
 
   public static void rerunInspection(
     @Nonnull InspectionToolWrapper toolWrapper,
-    @Nonnull InspectionManagerEx managerEx,
+    @Nonnull InspectionManagerImpl managerEx,
     @Nonnull AnalysisScope scope,
     PsiElement psiElement
   ) {
@@ -114,7 +114,7 @@ public class RunInspectionIntention implements IntentionAction, HighPriorityActi
 
   public static GlobalInspectionContextImpl createContext(
     @Nonnull InspectionToolWrapper toolWrapper,
-    @Nonnull InspectionManagerEx managerEx,
+    @Nonnull InspectionManagerImpl managerEx,
     PsiElement psiElement
   ) {
     final InspectionProfileImpl rootProfile =

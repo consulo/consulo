@@ -15,17 +15,21 @@
  */
 package consulo.language.editor.inspection.scheme;
 
+import consulo.annotation.UsedInPlugin;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.document.util.TextRange;
 import consulo.language.editor.inspection.*;
 import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import consulo.module.Module;
 import consulo.project.Project;
-import org.jetbrains.annotations.Contract;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Contract;
+
+import java.util.List;
 
 /**
  * @author max
@@ -38,6 +42,18 @@ public abstract class InspectionManager {
 
     @Nonnull
     public abstract Project getProject();
+
+    /**
+     * Used in java plugin
+     */
+    @Nonnull
+    @UsedInPlugin
+    @RequiredReadAction
+    public abstract List<ProblemDescriptor> runLocalToolLocaly(@Nonnull LocalInspectionTool tool, @Nonnull PsiFile file, @Nonnull Object state);
+
+    @Nonnull
+    @UsedInPlugin
+    public abstract ProblemsHolder createProblemsHolder(@Nonnull PsiFile file, boolean onTheFly);
 
     @Contract(pure = true)
     public abstract ModuleProblemDescriptor createProblemDescriptor(
@@ -96,15 +112,6 @@ public abstract class InspectionManager {
         LocalQuickFix... fixes
     );
 
-    /**
-     * @param psiElement
-     * @param rangeInElement      null means the text range of the element
-     * @param descriptionTemplate
-     * @param highlightType
-     * @param onTheFly
-     * @param fixes
-     * @return
-     */
     @Nonnull
     public abstract ProblemDescriptor createProblemDescriptor(
         @Nonnull final PsiElement psiElement,
@@ -129,7 +136,8 @@ public abstract class InspectionManager {
     @Nonnull
     /**
      * use {@link #createProblemDescriptor(PsiElement, String, boolean, LocalQuickFix, ProblemHighlightType)} instead
-     */ public abstract ProblemDescriptor createProblemDescriptor(
+     */
+    public abstract ProblemDescriptor createProblemDescriptor(
         @Nonnull PsiElement psiElement,
         @Nonnull String descriptionTemplate,
         LocalQuickFix fix,
@@ -140,7 +148,8 @@ public abstract class InspectionManager {
     @Nonnull
     /**
      * use {@link #createProblemDescriptor(PsiElement, String, boolean, LocalQuickFix[], ProblemHighlightType)} instead
-     */ public abstract ProblemDescriptor createProblemDescriptor(
+     */
+    public abstract ProblemDescriptor createProblemDescriptor(
         @Nonnull PsiElement psiElement,
         @Nonnull String descriptionTemplate,
         LocalQuickFix[] fixes,
@@ -151,7 +160,8 @@ public abstract class InspectionManager {
     @Nonnull
     /**
      * use {@link #createProblemDescriptor(PsiElement, String, LocalQuickFix[], ProblemHighlightType, boolean, boolean)} instead
-     */ public abstract ProblemDescriptor createProblemDescriptor(
+     */
+    public abstract ProblemDescriptor createProblemDescriptor(
         @Nonnull PsiElement psiElement,
         @Nonnull String descriptionTemplate,
         LocalQuickFix[] fixes,
@@ -163,7 +173,8 @@ public abstract class InspectionManager {
     @Nonnull
     /**
      * use {@link #createProblemDescriptor(PsiElement, PsiElement, String, ProblemHighlightType, boolean, LocalQuickFix...)} instead
-     */ public abstract ProblemDescriptor createProblemDescriptor(
+     */
+    public abstract ProblemDescriptor createProblemDescriptor(
         @Nonnull PsiElement startElement,
         @Nonnull PsiElement endElement,
         @Nonnull String descriptionTemplate,
@@ -176,7 +187,8 @@ public abstract class InspectionManager {
     @Nonnull
     /**
      * use {@link #createProblemDescriptor(PsiElement, TextRange, String, ProblemHighlightType, boolean, LocalQuickFix...)} instead
-     */ public abstract ProblemDescriptor createProblemDescriptor(
+     */
+    public abstract ProblemDescriptor createProblemDescriptor(
         @Nonnull final PsiElement psiElement,
         final TextRange rangeInElement,
         @Nonnull final String descriptionTemplate,
