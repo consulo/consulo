@@ -15,6 +15,9 @@
  */
 package consulo.application.impl.internal;
 
+import consulo.logging.Logger;
+import consulo.util.lang.ControlFlowException;
+
 import java.util.concurrent.Callable;
 
 /**
@@ -22,24 +25,36 @@ import java.util.concurrent.Callable;
  * @since 2020-05-24
  */
 public class RunnableAsCallable implements Callable<Void> {
-  private final Runnable myRunnable;
+    private final Runnable myRunnable;
+    private final Logger myLogger;
 
-  RunnableAsCallable(Runnable runnable) {
-    myRunnable = runnable;
-  }
+    RunnableAsCallable(Runnable runnable, Logger logger) {
+        myRunnable = runnable;
+        myLogger = logger;
+    }
 
-  public Runnable getRunnable() {
-    return myRunnable;
-  }
+    public Runnable getRunnable() {
+        return myRunnable;
+    }
 
-  @Override
-  public Void call() throws Exception {
-    myRunnable.run();
-    return null;
-  }
+    @Override
+    public Void call() throws Exception {
+        try {
+            myRunnable.run();
+        }
+        catch (Throwable e) {
+            if (!(e instanceof ControlFlowException)) {
+                myLogger.error(e);
+            }
+        }
+        finally {
+            Thread.interrupted(); // reset interrupted status
+        }
+        return null;
+    }
 
-  @Override
-  public String toString() {
-    return myRunnable.toString();
-  }
+    @Override
+    public String toString() {
+        return myRunnable.toString();
+    }
 }

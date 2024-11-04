@@ -37,7 +37,6 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.application.util.ApplicationUtil;
 import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.application.util.concurrent.PooledThreadExecutor;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
@@ -371,13 +370,13 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     @Nonnull
     @Override
     public Future<?> executeOnPooledThread(@Nonnull final Runnable action) {
-        return PooledThreadExecutor.getInstance().submit(new RunnableAsCallable(action));
+        return getInstance(ApplicationConcurrency.class).getExecutorService().submit(new RunnableAsCallable(action, LOG));
     }
 
     @Nonnull
     @Override
     public <T> Future<T> executeOnPooledThread(@Nonnull final Callable<T> action) {
-        return PooledThreadExecutor.getInstance().submit(new Callable<T>() {
+        return getInstance(ApplicationConcurrency.class).getExecutorService().submit(new Callable<T>() {
             @Override
             public T call() {
                 try {
@@ -387,7 +386,9 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
                     // ignore
                 }
                 catch (Throwable t) {
-                    LOG.error(t);
+                    if (!(t instanceof ProcessCanceledException)) {
+                        LOG.error(t);
+                    }
                 }
                 finally {
                     Thread.interrupted(); // reset interrupted status
