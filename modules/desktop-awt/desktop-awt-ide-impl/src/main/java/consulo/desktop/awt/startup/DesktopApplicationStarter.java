@@ -143,7 +143,12 @@ public class DesktopApplicationStarter extends ApplicationStarter {
 
         System.setProperty("sun.awt.noerasebackground", "true");
 
-        invokeAtUIAndWait(IdeEventQueue::initialize);// replace system event queue
+        // replace system event queue and set exception handler
+        invokeAtUIAndWait(() -> {
+            Thread thread = Thread.currentThread();
+            thread.setUncaughtExceptionHandler((t, e) -> Logger.getInstance(IdeEventQueue.class).error(e));
+            IdeEventQueue.initialize();
+        });
 
         ForkJoinPool pool = ForkJoinPool.commonPool();
 
