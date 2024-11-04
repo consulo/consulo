@@ -28,7 +28,7 @@ import jakarta.annotation.Nullable;
 
 public class ConfirmationDialog extends OptionsMessageDialog {
     private final VcsShowConfirmationOption myOption;
-    private LocalizeValue myDoNotShowAgainMessage;
+    private LocalizeValue myDoNotShowAgainMessage = LocalizeValue.empty();
     private final LocalizeValue myOkActionName;
     private final LocalizeValue myCancelActionName;
 
