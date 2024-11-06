@@ -16,116 +16,60 @@
 package consulo.desktop.awt.ui.impl.textBox;
 
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
-import consulo.desktop.awt.ui.impl.validableComponent.DocumentSwingValidator;
+import consulo.desktop.awt.ui.impl.validableComponent.SwingValidableComponent;
 import consulo.ui.Component;
 import consulo.ui.IntBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ValueComponentEvent;
-import consulo.ui.ex.awt.JBTextField;
-import consulo.ui.ex.awt.event.DocumentAdapter;
-import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import javax.swing.event.DocumentEvent;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
-import javax.swing.text.PlainDocument;
-import java.awt.*;
+import javax.swing.*;
 import java.util.Objects;
-import java.util.function.Function;
 
 /**
  * @author VISTALL
  * @since 2020-04-19
  */
-public class DesktopIntBoxImpl extends DocumentSwingValidator<Integer, JBTextField> implements IntBox {
-    private static class Listener extends DocumentAdapter {
-        private final DesktopIntBoxImpl myTextField;
-        private final Function<DocumentEvent, Integer> myPrevValueGetter;
-
-        public Listener(DesktopIntBoxImpl textField, Function<DocumentEvent, Integer> prevValueGetter) {
-            myTextField = textField;
-            myPrevValueGetter = prevValueGetter;
+public class DesktopIntBoxImpl extends SwingValidableComponent<Integer, DesktopIntBoxImpl.MyJSpinner> implements IntBox {
+    class MyJSpinner extends JSpinner implements FromSwingComponentWrapper {
+        public void setRange(int value, int min, int max) {
+            setModel(new SpinnerNumberModel(value, min, max, 1));
         }
-
-        @Override
-        @RequiredUIAccess
-        protected void textChanged(DocumentEvent e) {
-            myTextField.valueChanged(myPrevValueGetter.apply(e));
-        }
-    }
-
-    class MyJBTextField extends JBTextField implements FromSwingComponentWrapper {
 
         @Nonnull
         @Override
         public Component toUIComponent() {
             return DesktopIntBoxImpl.this;
         }
-
-        @Override
-        public void setText(String t) {
-            super.setText(t);
-        }
     }
-
-    private Integer myMinValue;
-    private Integer myMaxValue;
 
     public DesktopIntBoxImpl(int value) {
-        MyJBTextField field = new MyJBTextField();
-        field.setDocument(new PlainDocument() {
-            @Override
-            public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
-                char[] source = str.toCharArray();
-                char[] result = new char[source.length];
-                int j = 0;
-
-                for (int i = 0; i < result.length; i++) {
-                    if (Character.isDigit(source[i])) {
-                        result[j++] = source[i];
-                    }
-                    else {
-                        Toolkit.getDefaultToolkit().beep();
-                    }
-                }
-                super.insertString(offs, new String(result, 0, j), a);
-            }
+        MyJSpinner field = new MyJSpinner();
+        field.setRange(value, Integer.MIN_VALUE, Integer.MAX_VALUE);
+        field.addChangeListener(e -> {
+            MyJSpinner source = (MyJSpinner) e.getSource();
+            valueChanged(getValue(source));
         });
-        field.setText("0");
-
-        TextFieldPlaceholderFunction.install(field);
         initialize(field);
-        addDocumentListenerForValidator(field.getDocument());
+    }
 
-        field.getDocument().addDocumentListener(new Listener(this, this::getPrevValue));
-        setValue(value);
+    private static int getValue(JSpinner spinner) {
+        Object value = spinner.getValue();
+        if (value instanceof Number number) {
+            return number.intValue();
+        }
+        return 0;
     }
 
     @Override
-    protected Integer getPrevValue(DocumentEvent e) {
-        Document document = e.getDocument();
-        String text = null;
-        try {
-            text = document.getText(0, document.getLength());
-        }
-        catch (BadLocationException e1) {
-            throw new IllegalArgumentException(e1);
-        }
-        return StringUtil.isEmpty(text) ? 0 : Integer.parseInt(text);
-    }
-
-    @Override
+    @RequiredUIAccess
     public void setRange(int min, int max) {
-        myMinValue = min;
-        myMaxValue = max;
+        toAWTComponent().setRange(getValue(), min, max);
     }
 
     @Override
     public void setPlaceholder(@Nullable String text) {
-        toAWTComponent().getEmptyText().setText(text);
     }
 
     @SuppressWarnings("unchecked")
@@ -136,13 +80,13 @@ public class DesktopIntBoxImpl extends DocumentSwingValidator<Integer, JBTextFie
 
     @Override
     public Integer getValue() {
-        String text = toAWTComponent().getText();
-        return StringUtil.isEmpty(text) ? 0 : Integer.parseInt(text);
+        return getValue(toAWTComponent());
     }
 
     @RequiredUIAccess
     @Override
     public void setValue(Integer value, boolean fireListeners) {
-        toAWTComponent().setText(String.valueOf(Objects.requireNonNull(value, "Value must be not null")));
+        Integer valueNonNull = Objects.requireNonNull(value, "Value must be not null");
+        toAWTComponent().setValue(valueNonNull);
     }
 }

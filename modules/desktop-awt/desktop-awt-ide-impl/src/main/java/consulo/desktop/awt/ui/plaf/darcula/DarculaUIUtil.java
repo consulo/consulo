@@ -2,17 +2,18 @@
 package consulo.desktop.awt.ui.plaf.darcula;
 
 import consulo.desktop.awt.ui.IdeEventQueue;
+import consulo.ide.impl.idea.util.ui.table.JBTableRowEditor;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
-import consulo.ide.impl.idea.util.ui.table.JBTableRowEditor;
 import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.JBValue;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.MacUIUtil;
-
+import consulo.util.lang.ObjectUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicHTML;
@@ -69,6 +70,12 @@ public class DarculaUIUtil {
     };
 
     abstract public void setGraphicsColor(Graphics2D g, boolean focused);
+  }
+
+  @Nullable
+  public static Outline getOutline(@Nonnull JComponent component) {
+    String outline = ObjectUtil.tryCast(component.getClientProperty("JComponent.outline"), String.class);
+    return outline == null ? null : Outline.valueOf(outline);
   }
 
   /**

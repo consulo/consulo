@@ -80,6 +80,9 @@ public class WinIconLookup implements IconLookup {
     else if (name.equals("comboDropTriangle")) {
       width = 10;
       height = 6;
+    } else if (name.startsWith("spinner")) {
+      width = 10;
+      height = 6;
     }
 
 
