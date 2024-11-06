@@ -1,6 +1,7 @@
 // Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.impl.internal;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AccessToken;
 import consulo.application.impl.internal.progress.CoreProgressManager;
 import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
@@ -12,16 +13,16 @@ import consulo.util.collection.ConcurrentList;
 import consulo.util.collection.Lists;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.LockSupport;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * <p>Read-Write lock optimised for mostly reads.
- * Scales better than {@link java.util.concurrent.locks.ReentrantReadWriteLock} with a number of readers due to reduced contention
+ * Scales better than {@link ReentrantReadWriteLock} with a number of readers due to reduced contention
  * thanks to thread local structures.
  * The lock has writer preference, i.e. no reader can obtain read lock while there is a writer pending.
  * NOT reentrant.
@@ -71,9 +72,13 @@ public final class ReadMostlyRWLock {
         }
 
         @Override
-        @NonNls
         public String toString() {
-            return "Reader{" + "thread=" + thread + ", readRequested=" + readRequested + ", blocked=" + blocked + ", impatientReads=" + impatientReads + '}';
+            return "Reader{" +
+                "thread=" + thread +
+                ", readRequested=" + readRequested +
+                ", blocked=" + blocked +
+                ", impatientReads=" + impatientReads +
+                '}';
         }
     }
 
@@ -178,7 +183,8 @@ public final class ReadMostlyRWLock {
      * will fail (i.e. throw {@link ApplicationUtil.CannotRunReadActionException})
      * if there is a pending write lock request.
      */
-    public void executeByImpatientReader(@Nonnull Runnable runnable) throws ApplicationUtil.CannotRunReadActionException {
+    public void executeByImpatientReader(@RequiredReadAction @Nonnull Runnable runnable)
+        throws ApplicationUtil.CannotRunReadActionException {
         checkReadThreadAccess();
         Reader status = R.get();
         boolean old = status.impatientReads;

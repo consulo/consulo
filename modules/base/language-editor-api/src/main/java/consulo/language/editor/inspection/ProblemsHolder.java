@@ -16,6 +16,7 @@
 
 package consulo.language.editor.inspection;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.language.editor.inspection.scheme.InspectionManager;
@@ -36,22 +37,38 @@ import java.util.List;
  * @author max
  */
 public interface ProblemsHolder {
+    @Nonnull
+    ProblemBuilder newProblem(LocalizeValue descriptionTemplate);
+
+    @Deprecated
+    @DeprecationInfo("Use #newProblem()...create()")
     @RequiredReadAction
     default void registerProblem(
         @Nonnull PsiElement psiElement,
         @Nonnull @Nls(capitalization = Nls.Capitalization.Sentence) String descriptionTemplate,
         @Nullable LocalQuickFix... fixes
     ) {
-        registerProblem(psiElement, descriptionTemplate, ProblemHighlightType.GENERIC_ERROR_OR_WARNING, fixes);
+        newProblem(LocalizeValue.of(descriptionTemplate))
+            .range(psiElement)
+            .withFixes(fixes)
+            .create();
     }
 
+    @Deprecated
+    @DeprecationInfo("Use #newProblem()...create()")
     @RequiredReadAction
-    void registerProblem(
+    default void registerProblem(
         @Nonnull PsiElement psiElement,
         @Nonnull @Nls(capitalization = Nls.Capitalization.Sentence) String descriptionTemplate,
         @Nonnull ProblemHighlightType highlightType,
         @Nullable LocalQuickFix... fixes
-    );
+    ) {
+        newProblem(LocalizeValue.of(descriptionTemplate))
+            .range(psiElement)
+            .withFixes(fixes)
+            .highlightType(highlightType)
+            .create();
+    }
 
     @RequiredReadAction
     void registerProblem(@Nonnull ProblemDescriptor problemDescriptor);
@@ -59,13 +76,21 @@ public interface ProblemsHolder {
     @RequiredReadAction
     void registerProblem(@Nonnull PsiReference reference, String descriptionTemplate, ProblemHighlightType highlightType);
 
+    @Deprecated
+    @DeprecationInfo("Use #newProblem()...create()")
     @RequiredReadAction
-    void registerProblemForReference(
+    default void registerProblemForReference(
         @Nonnull PsiReference reference,
         @Nonnull ProblemHighlightType highlightType,
         @Nonnull String descriptionTemplate,
         @Nullable LocalQuickFix... fixes
-    );
+    ) {
+        newProblem(LocalizeValue.of(descriptionTemplate))
+            .range(reference)
+            .highlightType(highlightType)
+            .withFixes(fixes)
+            .create();
+    }
 
     @RequiredReadAction
     void registerProblem(@Nonnull PsiReference reference);
@@ -73,27 +98,44 @@ public interface ProblemsHolder {
     /**
      * Creates highlighter for the specified place in the file.
      *
-     * @param psiElement     The highlighter will be created at the text range od this element. This psiElement must be in the current file.
-     * @param message        Message for this highlighter. Will also serve as a tooltip.
-     * @param highlightType  The level of highlighter.
-     * @param rangeInElement The (sub)range (must be inside (0..psiElement.getTextRange().getLength()) to create highlighter in.
-     *                       If you want to highlight only part of the supplied psiElement. Pass null otherwise.
-     * @param fixes          (Optional) fixes to appear for this highlighter.
+     * @param psiElement          The highlighter will be created at the text range od this element.
+     *                            This psiElement must be in the current file.
+     * @param descriptionTemplate Message for this highlighter. Will also serve as a tooltip.
+     * @param highlightType       The level of highlighter.
+     * @param rangeInElement      The (sub)range (must be inside (0..psiElement.getTextRange().getLength()) to create highlighter in.
+     *                            If you want to highlight only part of the supplied psiElement. Pass null otherwise.
+     * @param fixes               (Optional) fixes to appear for this highlighter.
      */
-    void registerProblem(
+    @Deprecated
+    @DeprecationInfo("Use #newProblem()...create()")
+    @RequiredReadAction
+    default void registerProblem(
         @Nonnull PsiElement psiElement,
-        @Nonnull String message,
+        @Nonnull String descriptionTemplate,
         @Nonnull ProblemHighlightType highlightType,
         @Nullable TextRange rangeInElement,
         @Nullable LocalQuickFix... fixes
-    );
+    ) {
+        newProblem(LocalizeValue.of(descriptionTemplate))
+            .range(psiElement, rangeInElement)
+            .withFixes(fixes)
+            .highlightType(highlightType)
+            .create();
+    }
 
-    void registerProblem(
+    @Deprecated
+    @RequiredReadAction
+    default void registerProblem(
         @Nonnull final PsiElement psiElement,
         @Nullable TextRange rangeInElement,
-        @Nonnull String message,
+        @Nonnull String descriptionTemplate,
         @Nullable LocalQuickFix... fixes
-    );
+    ) {
+        newProblem(LocalizeValue.of(descriptionTemplate))
+            .range(psiElement, rangeInElement)
+            .withFixes(fixes)
+            .create();
+    }
 
     @Nonnull
     List<ProblemDescriptor> getResults();

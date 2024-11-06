@@ -15,7 +15,7 @@ action.ContextHelp.text:
 action.ContextHelp.description:
   text: Show context help
 action.ToggleReadOnlyAttribute.files:
-  text: Make {2,choice,1#File|2#Files} {0,choice,0#Read-Only|1#Writable}
+  text: Make {1,choice,1#File|2#Files} {0,choice,0#Read-Only|1#Writable}
 action.RunConfiguration.text:
   text: Select Run/Debug Configuration
 action.SwitchCoverage.text:
@@ -520,6 +520,10 @@ action.ImportSettings.text:
   text: Import Settings…
 action.ImportSettings.description:
   text: Import global settings
+action.ShowStartupManagerAction.text:
+  text: Customize Manager
+action.ShowStartupManagerAction.description:
+  text: Theme selection
 action.ImportFromJBuilder.text:
   text: Import _From JBuilder…
 action.ImportFromJBuilder.description:
@@ -2462,6 +2466,8 @@ group.AnalyzeJavaMenu.description:
   text: Analyze Java Menu
 action.InvalidateCaches.text:
   text: Invalidate Caches / Restart…
+action.InvalidateCaches.norestart.text:
+  text: Invalidate Caches…
 action.InvalidateCaches.description:
   text: Force rebuild of all caches and indices on next startup
 group.ToolsBasicGroup.text:
@@ -2852,6 +2858,8 @@ group.TouchBarDefault.text:
   text: Default
 group.RunDashboard.Filter.text:
   text: Configuration Status
+group.ChangeLineSeparators.text:
+  text: Line Separators
 group.RunDashboard.GroupBy.text:
   text: Configuration
 group.ServiceView.OpenInNewTabGroup.text:
