@@ -13,24 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.undoRedo.builder;
+package consulo.undoRedo.internal.builder;
 
+import consulo.application.Application;
 import consulo.document.Document;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.undoRedo.CommandDescriptor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.UndoConfirmationPolicy;
+import consulo.undoRedo.builder.CommandBuilder;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author UNV
  * @since 2024-10-21
  */
-public abstract class ProxyCommandBuilder<THIS extends CommandBuilder<THIS>, THAT extends CommandBuilder<THAT>>
-    implements CommandBuilder<THIS> {
+public abstract class BaseCommandBuilderWrapper<THIS extends CommandBuilder<THIS>, THAT extends WrappableCommandBuilder<THAT>>
+    implements WrappableCommandBuilder<THIS> {
     protected THAT mySubBuilder;
 
-    protected ProxyCommandBuilder(THAT subBuilder) {
+    protected BaseCommandBuilderWrapper(THAT subBuilder) {
         mySubBuilder = subBuilder;
     }
 
@@ -73,6 +76,16 @@ public abstract class ProxyCommandBuilder<THIS extends CommandBuilder<THIS>, THA
     @Override
     public CommandDescriptor build(@Nonnull Runnable command) {
         return mySubBuilder.build(command);
+    }
+
+    @Override
+    public Application getApplication() {
+        return mySubBuilder.getApplication();
+    }
+
+    @Override
+    public CommandProcessor getCommandProcessor() {
+        return mySubBuilder.getCommandProcessor();
     }
 
     @SuppressWarnings("unchecked")

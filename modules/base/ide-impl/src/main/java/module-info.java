@@ -19,6 +19,7 @@ open module consulo.ide.impl {
   requires consulo.desktop.awt.hacking;
   requires consulo.desktop.awt.eawt.wrapper;
 
+  requires transitive consulo.undo.redo.api;
   requires transitive consulo.annotation;
   requires transitive consulo.proxy;
   requires transitive consulo.platform.api;
@@ -53,7 +54,6 @@ open module consulo.ide.impl {
   requires transitive consulo.compiler.api;
   requires transitive consulo.language.editor.api;
   requires transitive consulo.document.impl;
-  requires transitive consulo.undo.redo.api;
   requires transitive consulo.file.editor.api;
   requires transitive consulo.compiler.artifact.api;
   requires transitive consulo.ide.api;

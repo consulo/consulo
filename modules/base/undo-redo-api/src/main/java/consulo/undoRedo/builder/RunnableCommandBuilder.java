@@ -18,21 +18,15 @@ package consulo.undoRedo.builder;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 
-import java.util.function.Consumer;
 import java.util.function.Supplier;
-
-import static consulo.undoRedo.builder.ThrowableRunnableCommandBuilder.ProxyThrowableRunnableCommandBuilder;
 
 /**
  * @author UNV
  * @since 2024-10-28
  */
 public interface RunnableCommandBuilder<R, THIS extends RunnableCommandBuilder<R, THIS>> extends ExecutableCommandBuilder<R, THIS> {
-    @SuppressWarnings("unchecked")
-    default public <E extends Exception, PRX extends ProxyThrowableRunnableCommandBuilder<R, E, PRX, THIS>>
-    ThrowableRunnableCommandBuilder<R, E, ? extends ThrowableRunnableCommandBuilder> canThrow(Class<E> exceptionClass) {
-        return new ProxyThrowableRunnableCommandBuilder<R, E, PRX, THIS>((THIS)this, Runnable::run, exceptionClass);
-    }
+    <E extends Exception, PRX extends ThrowableRunnableCommandBuilder<R, E, PRX>>
+    PRX canThrow(Class<E> exceptionClass);
 
     default void run(@RequiredUIAccess @Nonnull Runnable runnable) {
         execute(() -> {
@@ -43,19 +37,5 @@ public interface RunnableCommandBuilder<R, THIS extends RunnableCommandBuilder<R
 
     default R compute(@RequiredUIAccess @Nonnull Supplier<R> supplier) {
         return execute(supplier::get).get();
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    default THIS proxy(@RequiredUIAccess @Nonnull Consumer<Runnable> runner) {
-        return (THIS)new ProxyRunnableCommandBuilder<R, THIS, THIS>((THIS)this, runner);
-    }
-
-    class ProxyRunnableCommandBuilder<R, THIS extends RunnableCommandBuilder<R, THIS>, THAT extends ExecutableCommandBuilder<R, THAT>>
-        extends ProxyExecutableCommandBuilder<R, THIS, THAT> implements RunnableCommandBuilder<R, THIS> {
-
-        public ProxyRunnableCommandBuilder(THAT subBuilder, @Nonnull Consumer<Runnable> runner) {
-            super(subBuilder, runner);
-        }
     }
 }

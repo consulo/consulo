@@ -60,7 +60,7 @@ import java.util.concurrent.Future;
 
 /**
  * @author VISTALL
- * @since 15/11/2021
+ * @since 2021-11-15
  */
 public class WhatsNewVirtualFileEditor extends UserDataHolderBase implements FileEditor {
 

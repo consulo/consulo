@@ -41,36 +41,4 @@ public interface ThrowableRunnableCommandBuilder<R, E extends Throwable, THIS ex
     default R compute(@RequiredUIAccess @Nonnull ThrowableSupplier<R, E> supplier) throws E {
         return execute(supplier).get(getExceptionClass());
     }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    default THIS proxy(@Nonnull Consumer<Runnable> runner) {
-        return (THIS)new ProxyThrowableRunnableCommandBuilder<R, E, THIS, THIS>(
-            (THIS)this,
-            runner,
-            getExceptionClass()
-        );
-    }
-
-    class ProxyThrowableRunnableCommandBuilder<
-            R,
-            E extends Throwable,
-            THIS extends ThrowableRunnableCommandBuilder<R, E, THIS>,
-            THAT extends ExecutableCommandBuilder<R, THAT>
-        >
-        extends ProxyExecutableCommandBuilder<R, THIS, THAT>
-        implements ThrowableRunnableCommandBuilder<R, E, THIS> {
-
-        private final Class<E> myExceptionClass;
-
-        public ProxyThrowableRunnableCommandBuilder(THAT subBuilder, @Nonnull Consumer<Runnable> runner, Class<E> exceptionClass) {
-            super(subBuilder, runner);
-            myExceptionClass = exceptionClass;
-        }
-
-        @Override
-        public Class<E> getExceptionClass() {
-            return myExceptionClass;
-        }
-    }
 }

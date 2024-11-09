@@ -47,6 +47,7 @@ import consulo.document.DocumentReferenceManager;
 import consulo.document.FileDocumentManager;
 import consulo.document.event.DocumentEvent;
 import consulo.document.util.TextRange;
+import consulo.undoRedo.internal.builder.WrappableRunnableCommandBuilder;
 import consulo.language.Language;
 import consulo.language.codeStyle.CodeStyle;
 import consulo.language.editor.highlight.EditorHighlighterFactory;
@@ -868,7 +869,7 @@ public class DiffImplUtil {
             CommandProcessor.getInstance().<R>newCommand()
                 .inWriteAction();
 
-            return commandBuilder.proxy(runnable -> {
+            return ((WrappableRunnableCommandBuilder<R, ?>)commandBuilder).innerWrap(runnable -> {
                 CommandDescriptor descriptor = commandBuilder.build(runnable);
                 if (!makeWritable(descriptor.project(), descriptor.document())) {
                     VirtualFile file = FileDocumentManager.getInstance().getFile(descriptor.document());
