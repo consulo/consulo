@@ -23,6 +23,7 @@ import consulo.container.plugin.PluginId;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 
 /**
@@ -31,29 +32,29 @@ import java.io.File;
 @Deprecated
 @DeprecationInfo("Use consulo.container.plugin.PluginManager")
 public class PluginManager extends PluginManagerCore {
-  public static boolean isPluginInstalled(PluginId id) {
-    return getPlugin(id) != null;
-  }
+    public static boolean isPluginInstalled(PluginId id) {
+        return getPlugin(id) != null;
+    }
 
-  @Nullable
-  public static PluginDescriptor getPlugin(PluginId id) {
-    return consulo.container.plugin.PluginManager.findPlugin(id);
-  }
+    @Nullable
+    public static PluginDescriptor getPlugin(PluginId id) {
+        return consulo.container.plugin.PluginManager.findPlugin(id);
+    }
 
-  @Nullable
-  @Deprecated
-  public static File getPluginPath(@Nonnull Class<?> pluginClass) {
-    ClassLoader temp = pluginClass.getClassLoader();
-    assert temp instanceof PluginClassLoader : "classloader is not plugin";
-    PluginClassLoader classLoader = (PluginClassLoader)temp;
-    PluginId pluginId = classLoader.getPluginId();
-    PluginDescriptor plugin = consulo.container.plugin.PluginManager.findPlugin(pluginId);
-    assert plugin != null : "plugin is not found";
-    return plugin.getPath();
-  }
+    @Nullable
+    @Deprecated
+    public static File getPluginPath(@Nonnull Class<?> pluginClass) {
+        ClassLoader temp = pluginClass.getClassLoader();
+        assert temp instanceof PluginClassLoader : "classloader is not plugin";
+        PluginClassLoader classLoader = (PluginClassLoader)temp;
+        PluginId pluginId = classLoader.getPluginId();
+        PluginDescriptor plugin = consulo.container.plugin.PluginManager.findPlugin(pluginId);
+        assert plugin != null : "plugin is not found";
+        return plugin.getPath();
+    }
 
-  @Deprecated
-  public static void handleComponentError(@Nonnull Throwable t, @Nullable Class componentClass, @Nullable Object config) {
-    StartupUtil.handleComponentError(t, componentClass, config);
-  }
+    @Deprecated
+    public static void handleComponentError(@Nonnull Throwable t, @Nullable Class componentClass, @Nullable Object config) {
+        StartupUtil.handleComponentError(t, componentClass, config);
+    }
 }

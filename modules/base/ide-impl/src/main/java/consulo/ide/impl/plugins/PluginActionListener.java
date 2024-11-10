@@ -27,7 +27,7 @@ import jakarta.annotation.Nonnull;
  */
 @TopicAPI(ComponentScope.APPLICATION)
 public interface PluginActionListener {
-  void pluginsInstalled(@Nonnull PluginId[] pluginIds);
+    void pluginsInstalled(@Nonnull PluginId[] pluginIds);
 
-  void pluginsUninstalled(@Nonnull PluginId[] pluginIds);
+    void pluginsUninstalled(@Nonnull PluginId[] pluginIds);
 }

@@ -24,11 +24,13 @@ import consulo.container.plugin.PluginId;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.IdeBundle;
+import consulo.ide.localize.IdeLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 
 /**
@@ -36,101 +38,105 @@ import javax.swing.*;
  * @since 2020-06-26
  */
 @ExtensionImpl
-public class PluginsConfigurable implements SearchableConfigurable, Configurable.NoScroll, Configurable.HoldPreferredFocusedComponent, Configurable.NoMargin, ApplicationConfigurable {
-  public static final String ID = "platformAndPlugins";
+public class PluginsConfigurable implements SearchableConfigurable, Configurable.NoScroll,
+    Configurable.HoldPreferredFocusedComponent, Configurable.NoMargin, ApplicationConfigurable {
+    public static final String ID = "platformAndPlugins";
 
-  private PluginsPanel myPanel;
+    private PluginsPanel myPanel;
 
-  @Inject
-  public PluginsConfigurable() {
-  }
-
-  @RequiredUIAccess
-  @Nullable
-  @Override
-  public JComponent createComponent(@Nonnull Disposable parentDisposable) {
-    if (myPanel == null) {
-      myPanel = new PluginsPanel();
-      Disposer.register(parentDisposable, myPanel);
+    @Inject
+    public PluginsConfigurable() {
     }
-    return myPanel.getComponent();
-  }
 
-  @Override
-  public String getDisplayName() {
-    return IdeBundle.message("title.plugins");
-  }
-
-  @Nullable
-  @Override
-  public String getHelpTopic() {
-    String suffix = "";
-    if (myPanel != null) {
-      int selectedIndex = myPanel.getSelectedIndex();
-
-      switch (selectedIndex) {
-        case PluginsPanel.INSTALLED:
-          suffix = "/#installed";
-          break;
-        case PluginsPanel.FROM_REPOSITORY:
-          suffix = "/#from-repository";
-          break;
-      }
+    @RequiredUIAccess
+    @Nullable
+    @Override
+    public JComponent createComponent(@Nonnull Disposable parentDisposable) {
+        if (myPanel == null) {
+            myPanel = new PluginsPanel();
+            Disposer.register(parentDisposable, myPanel);
+        }
+        return myPanel.getComponent();
     }
-    return getId() + suffix;
-  }
 
-  @Nonnull
-  @Override
-  public String getId() {
-    return ID;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public boolean isModified() {
-    return myPanel != null && myPanel.isModified();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void apply() throws ConfigurationException {
-    if (myPanel != null) {
-      myPanel.apply();
+    @Nonnull
+    @Override
+    public String getDisplayName() {
+        return IdeLocalize.titlePlugins().get();
     }
-  }
 
-  @RequiredUIAccess
-  @Override
-  public void reset() {
-    if (myPanel != null) {
-      myPanel.reset();
+    @Nullable
+    @Override
+    public String getHelpTopic() {
+        String suffix = "";
+        if (myPanel != null) {
+            int selectedIndex = myPanel.getSelectedIndex();
+
+            switch (selectedIndex) {
+                case PluginsPanel.INSTALLED:
+                    suffix = "/#installed";
+                    break;
+                case PluginsPanel.FROM_REPOSITORY:
+                    suffix = "/#from-repository";
+                    break;
+            }
+        }
+        return getId() + suffix;
     }
-  }
 
-  @RequiredUIAccess
-  @Override
-  public void disposeUIResources() {
-    myPanel = null;
-  }
+    @Nonnull
+    @Override
+    public String getId() {
+        return ID;
+    }
 
-  @Override
-  @Nullable
-  public Runnable enableSearch(final String option) {
-    return () -> {
-      if (myPanel != null) myPanel.filter(option);
-    };
-  }
+    @RequiredUIAccess
+    @Override
+    public boolean isModified() {
+        return myPanel != null && myPanel.isModified();
+    }
 
-  public void selectInstalled(PluginId pluginId) {
-    myPanel.selectInstalled(pluginId);
-  }
+    @RequiredUIAccess
+    @Override
+    public void apply() throws ConfigurationException {
+        if (myPanel != null) {
+            myPanel.apply();
+        }
+    }
 
-  public void selectAvailable(PluginId pluginId) {
-    myPanel.selectAvailable(pluginId);
-  }
+    @RequiredUIAccess
+    @Override
+    public void reset() {
+        if (myPanel != null) {
+            myPanel.reset();
+        }
+    }
 
-  public void select(PluginId pluginId) {
-    myPanel.getSelected().select(pluginId);
-  }
+    @RequiredUIAccess
+    @Override
+    public void disposeUIResources() {
+        myPanel = null;
+    }
+
+    @Override
+    @Nullable
+    public Runnable enableSearch(final String option) {
+        return () -> {
+            if (myPanel != null) {
+                myPanel.filter(option);
+            }
+        };
+    }
+
+    public void selectInstalled(PluginId pluginId) {
+        myPanel.selectInstalled(pluginId);
+    }
+
+    public void selectAvailable(PluginId pluginId) {
+        myPanel.selectAvailable(pluginId);
+    }
+
+    public void select(PluginId pluginId) {
+        myPanel.getSelected().select(pluginId);
+    }
 }

@@ -22,41 +22,41 @@ import consulo.util.collection.ArrayUtil;
  * @since 30-Aug-16
  */
 public class PluginJsonNode {
-  public class ExtensionPreview {
-    public String apiPluginId;
-    public String apiClassName;
-    public String implId;
-  }
+    public class ExtensionPreview {
+        public String apiPluginId;
+        public String apiClassName;
+        public String implId;
+    }
 
-  public static class Checksum {
-    public String sha3_256;
-  }
+    public static class Checksum {
+        public String sha3_256;
+    }
 
-  public static class Permission {
-    public String type;
+    public static class Permission {
+        public String type;
 
-    public String[] options;
-  }
+        public String[] options;
+    }
 
-  public String id;
-  public String name;
-  public String description;
-  public String category;
-  public String vendor;
-  public String url;
-  public int downloads;
-  public Long length;
-  public Long date;
-  public String version;
-  public String iconBytes;
-  public String iconDarkBytes;
-  public String platformVersion;
-  public String[] downloadUrls = ArrayUtil.EMPTY_STRING_ARRAY;
-  public String[] dependencies;
-  public String[] optionalDependencies;
-  public boolean experimental;
-  public Permission[] permissions;
-  public String[] tags;
-  public Checksum checksum = new Checksum();
-  public ExtensionPreview[] extensionPreviews = new ExtensionPreview[0];
+    public String id;
+    public String name;
+    public String description;
+    public String category;
+    public String vendor;
+    public String url;
+    public int downloads;
+    public Long length;
+    public Long date;
+    public String version;
+    public String iconBytes;
+    public String iconDarkBytes;
+    public String platformVersion;
+    public String[] downloadUrls = ArrayUtil.EMPTY_STRING_ARRAY;
+    public String[] dependencies;
+    public String[] optionalDependencies;
+    public boolean experimental;
+    public Permission[] permissions;
+    public String[] tags;
+    public Checksum checksum = new Checksum();
+    public ExtensionPreview[] extensionPreviews = new ExtensionPreview[0];
 }

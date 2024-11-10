@@ -42,123 +42,126 @@ import java.util.Set;
  * @author Konstantin Bulenkov
  */
 public class UninstallPluginAction extends AnAction implements DumbAware {
-  private final PluginTable pluginTable;
-  private final PluginManagerMain host;
+    private final PluginTable pluginTable;
+    private final PluginManagerMain host;
 
-  public UninstallPluginAction(PluginManagerMain mgr, PluginTable table) {
-    super(
-      IdeLocalize.actionUninstallPlugin(),
-      IdeLocalize.actionUninstallPlugin(),
-      AllIcons.Actions.Uninstall
-    );
+    public UninstallPluginAction(PluginManagerMain mgr, PluginTable table) {
+        super(
+            IdeLocalize.actionUninstallPlugin(),
+            IdeLocalize.actionUninstallPlugin(),
+            AllIcons.Actions.Uninstall
+        );
 
-    pluginTable = table;
-    host = mgr;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    Presentation presentation = e.getPresentation();
-    if (!pluginTable.isShowing()) {
-      presentation.setEnabled(false);
-      return;
+        pluginTable = table;
+        host = mgr;
     }
-    PluginDescriptor[] selection = pluginTable.getSelectedObjects();
-    boolean enabled = (selection != null);
 
-    if (enabled) {
-      for (PluginDescriptor descriptor : selection) {
-        if (descriptor.isLoaded()) {
-          if (descriptor.isDeleted() || PluginIds.isPlatformPlugin(descriptor.getPluginId())) {
-            enabled = false;
-            break;
-          }
+    @RequiredUIAccess
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
+        if (!pluginTable.isShowing()) {
+            presentation.setEnabled(false);
+            return;
         }
-        if (descriptor instanceof PluginNode) {
-          enabled = false;
-          break;
+        PluginDescriptor[] selection = pluginTable.getSelectedObjects();
+        boolean enabled = (selection != null);
+
+        if (enabled) {
+            for (PluginDescriptor descriptor : selection) {
+                if (descriptor.isLoaded()) {
+                    if (descriptor.isDeleted() || PluginIds.isPlatformPlugin(descriptor.getPluginId())) {
+                        enabled = false;
+                        break;
+                    }
+                }
+                if (descriptor instanceof PluginNode) {
+                    enabled = false;
+                    break;
+                }
+            }
         }
-      }
-    }
-    presentation.setEnabled(enabled);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    uninstall(host, pluginTable.getSelectedObjects());
-    pluginTable.updateUI();
-  }
-
-  public static void uninstall(PluginManagerMain host, PluginDescriptor... selection) {
-    LocalizeValue message;
-
-    if (selection.length == 1) {
-      message = IdeLocalize.promptUninstallPlugin(selection[0].getName());
-    }
-    else {
-      message = IdeLocalize.promptUninstallSeveralPlugins(selection.length);
-    }
-    if (Messages.showYesNoDialog(
-      host.getMainPanel(),
-      message.get(),
-      IdeLocalize.titlePluginUninstall().get(),
-      Messages.getQuestionIcon()
-    ) != Messages.YES) {
-      return;
+        presentation.setEnabled(enabled);
     }
 
-    List<PluginId> uninstalledPluginIds = new ArrayList<>();
-    for (PluginDescriptor descriptor : selection) {
-
-      boolean actualDelete = true;
-
-      //  Get the list of plugins which depend on this one. If this list is
-      //  not empty - issue warning instead of simple prompt.
-      List<PluginDescriptor> dependant = host.getDependentList(descriptor);
-      if (dependant.size() > 0) {
-        message = IdeLocalize.severalPluginsDependOn0ContinueToRemove(descriptor.getName());
-        actualDelete = (Messages.showYesNoDialog(
-          host.getMainPanel(),
-          message.get(),
-          IdeLocalize.titlePluginUninstall().get(),
-          Messages.getQuestionIcon()
-        ) == Messages.YES);
-      }
-
-      if (actualDelete && uninstallPlugin(descriptor, host)) {
-        uninstalledPluginIds.add(descriptor.getPluginId());
-      }
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        uninstall(host, pluginTable.getSelectedObjects());
+        pluginTable.updateUI();
     }
 
-    if (!uninstalledPluginIds.isEmpty()) {
-      Application.get().getMessageBus().syncPublisher(PluginActionListener.class).pluginsUninstalled(uninstalledPluginIds.toArray(PluginId[]::new));
+    public static void uninstall(PluginManagerMain host, PluginDescriptor... selection) {
+        LocalizeValue message;
+
+        if (selection.length == 1) {
+            message = IdeLocalize.promptUninstallPlugin(selection[0].getName());
+        }
+        else {
+            message = IdeLocalize.promptUninstallSeveralPlugins(selection.length);
+        }
+        if (Messages.showYesNoDialog(
+            host.getMainPanel(),
+            message.get(),
+            IdeLocalize.titlePluginUninstall().get(),
+            Messages.getQuestionIcon()
+        ) != Messages.YES) {
+            return;
+        }
+
+        List<PluginId> uninstalledPluginIds = new ArrayList<>();
+        for (PluginDescriptor descriptor : selection) {
+
+            boolean actualDelete = true;
+
+            //  Get the list of plugins which depend on this one. If this list is
+            //  not empty - issue warning instead of simple prompt.
+            List<PluginDescriptor> dependant = host.getDependentList(descriptor);
+            if (dependant.size() > 0) {
+                message = IdeLocalize.severalPluginsDependOn0ContinueToRemove(descriptor.getName());
+                actualDelete = (Messages.showYesNoDialog(
+                    host.getMainPanel(),
+                    message.get(),
+                    IdeLocalize.titlePluginUninstall().get(),
+                    Messages.getQuestionIcon()
+                ) == Messages.YES);
+            }
+
+            if (actualDelete && uninstallPlugin(descriptor, host)) {
+                uninstalledPluginIds.add(descriptor.getPluginId());
+            }
+        }
+
+        if (!uninstalledPluginIds.isEmpty()) {
+            Application.get()
+                .getMessageBus()
+                .syncPublisher(PluginActionListener.class)
+                .pluginsUninstalled(uninstalledPluginIds.toArray(PluginId[]::new));
+        }
     }
-  }
 
-  public static boolean uninstallPlugin(PluginDescriptor descriptor, @Nullable PluginManagerMain host) {
-    PluginId pluginId = descriptor.getPluginId();
+    public static boolean uninstallPlugin(PluginDescriptor descriptor, @Nullable PluginManagerMain host) {
+        PluginId pluginId = descriptor.getPluginId();
 
-    try {
-      PluginInstallUtil.prepareToUninstall(pluginId);
+        try {
+            PluginInstallUtil.prepareToUninstall(pluginId);
 
-      PluginManagerCore.markAsDeletedPlugin(descriptor);
-      
-      final Set<PluginId> installedPlugins = InstalledPluginsState.getInstance().getInstalledPlugins();
-      while (installedPlugins.contains(pluginId)) {
-        installedPlugins.remove(pluginId);
-      }
-      if (host != null) {
-        host.setRequireShutdown(descriptor.isEnabled());
-      }
+            PluginManagerCore.markAsDeletedPlugin(descriptor);
 
-      return true;
+            final Set<PluginId> installedPlugins = InstalledPluginsState.getInstance().getInstalledPlugins();
+            while (installedPlugins.contains(pluginId)) {
+                installedPlugins.remove(pluginId);
+            }
+            if (host != null) {
+                host.setRequireShutdown(descriptor.isEnabled());
+            }
+
+            return true;
+        }
+        catch (IOException e) {
+            PluginManagerMain.LOG.error(e);
+        }
+
+        return false;
     }
-    catch (IOException e) {
-      PluginManagerMain.LOG.error(e);
-    }
-
-    return false;
-  }
 }

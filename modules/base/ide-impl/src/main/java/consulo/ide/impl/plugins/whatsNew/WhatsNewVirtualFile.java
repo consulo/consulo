@@ -25,17 +25,17 @@ import consulo.virtualFileSystem.light.TextLightVirtualFileBase;
  * @since 15/11/2021
  */
 public class WhatsNewVirtualFile extends TextLightVirtualFileBase implements VirtualFileWithoutContent, SkipFromDocumentHistory {
-  public WhatsNewVirtualFile(LocalizeValue fileNameText) {
-    super(fileNameText.get().replace("_", ""), WhatsNewVirtualFileType.INSTANCE, System.currentTimeMillis());
-  }
+    public WhatsNewVirtualFile(LocalizeValue fileNameText) {
+        super(fileNameText.get().replace("_", ""), WhatsNewVirtualFileType.INSTANCE, System.currentTimeMillis());
+    }
 
-  @Override
-  public boolean isValid() {
-    return true;
-  }
+    @Override
+    public boolean isValid() {
+        return true;
+    }
 
-  @Override
-  public boolean equals(Object obj) {
-    return obj instanceof WhatsNewVirtualFile;
-  }
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof WhatsNewVirtualFile;
+    }
 }

@@ -72,456 +72,462 @@ import java.util.stream.Collectors;
  * @since Dec 25, 2003
  */
 public abstract class PluginManagerMain implements Disposable {
-  public static final NotificationGroup ourPluginsLifecycleGroup = new NotificationGroup(
-    "Plugins Lifecycle Group",
-    NotificationDisplayType.STICKY_BALLOON,
-    true
-  );
-
-  public static Logger LOG = Logger.getInstance(PluginManagerMain.class);
-
-  private boolean requireShutdown = false;
-
-  private Wrapper myRoot;
-
-  private PluginDescriptionPanel myDescriptionPanel;
-
-  protected JPanel myTablePanel;
-  protected PluginTableModel myPluginsModel;
-  protected PluginTable myPluginTable;
-
-  protected final MyPluginsFilter myFilter = new MyPluginsFilter();
-  private boolean myDisposed = false;
-  private boolean myBusy = false;
-
-  private InstalledPluginsManagerMain myInstalledTab;
-  private AvailablePluginsManagerMain myAvailableTab;
-
-  public PluginManagerMain() {
-  }
-
-  protected void init() {
-    myRoot = new Wrapper();
-
-    OnePixelSplitter splitter = new OnePixelSplitter(false, 0.5f);
-    myRoot.setContent(splitter);
-
-    myDescriptionPanel = new PluginDescriptionPanel();
-
-    splitter.setSecondComponent(myDescriptionPanel.getPanel());
-
-    myTablePanel = new JPanel(new BorderLayout());
-    splitter.setFirstComponent(myTablePanel);
-
-    PluginTable table = createTable();
-    myPluginTable = table;
-
-    installTableActions();
-    myTablePanel.add(ScrollPaneFactory.createScrollPane(table, true), BorderLayout.CENTER);
-
-    final JPanel header = new JPanel(new BorderLayout()) {
-      @Override
-      protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        g.setColor(UIUtil.getPanelBackground());
-        g.fillRect(0, 0, getWidth(), getHeight());
-      }
-    };
-    header.setBorder(new CustomLineBorder(0, 0, JBUI.scale(1), 0));
-
-    LabelPopup sortLabel = new LabelPopup(LocalizeValue.localizeTODO("Sort by:"), labelPopup -> createSortersGroup());
-
-    header.add(myFilter, BorderLayout.CENTER);
-    JPanel rightHelpPanel = new JPanel(new HorizontalLayout(JBUI.scale(5)));
-    rightHelpPanel.add(sortLabel);
-    addCustomFilters(rightHelpPanel::add);
-
-    BorderLayoutPanel botton = new BorderLayoutPanel();
-    botton.setBorder(new CustomLineBorder(JBUI.scale(1), 0, 0, 0));
-    header.add(botton.addToRight(rightHelpPanel), BorderLayout.SOUTH);
-
-    myTablePanel.add(header, BorderLayout.NORTH);
-
-    final TableModelListener modelListener = e -> {
-      String text = "name";
-      if (myPluginsModel.isSortByStatus()) {
-        text = "status";
-      }
-      else if (myPluginsModel.isSortByRating()) {
-        text = "rating";
-      }
-      else if (myPluginsModel.isSortByDownloads()) {
-        text = "downloads";
-      }
-      else if (myPluginsModel.isSortByUpdated()) {
-        text = "updated";
-      }
-      sortLabel.setPrefixedText(LocalizeValue.of(text));
-    };
-    myPluginTable.getModel().addTableModelListener(modelListener);
-    modelListener.tableChanged(null);
-  }
-
-  protected void addCustomFilters(Consumer<JComponent> adder) {
-
-  }
-
-  @Nonnull
-  protected abstract PluginTable createTable();
-
-  @Override
-  public void dispose() {
-    myDisposed = true;
-  }
-
-  public boolean isDisposed() {
-    return myDisposed;
-  }
-
-  public void filter(String filter) {
-    myFilter.setSelectedItem(filter);
-  }
-
-  public void reset() {
-    UiNotifyConnector.doWhenFirstShown(getPluginTable(), () -> {
-      requireShutdown = false;
-      TableUtil.ensureSelectionExists(getPluginTable());
-    });
-  }
-
-  public PluginTable getPluginTable() {
-    return myPluginTable;
-  }
-
-  public PluginTableModel getPluginsModel() {
-    return myPluginsModel;
-  }
-
-  protected void installTableActions() {
-    myPluginTable.getSelectionModel().addListSelectionListener(e -> refresh());
-
-    //PopupHandler.installUnknownPopupHandler(pluginTable, getActionGroup(false), ActionManager.getInstance());
-
-    new MySpeedSearchBar(myPluginTable);
-  }
-
-  @RequiredUIAccess
-  public void refresh() {
-    final PluginDescriptor[] descriptors = myPluginTable.getSelectedObjects();
-    List<PluginDescriptor> allPlugins = myPluginsModel.getAllPlugins();
-    myDescriptionPanel.update(
-      descriptors != null && descriptors.length == 1 ? descriptors[0] : null,
-      this,
-      allPlugins,
-      myFilter.getFilter()
+    public static final NotificationGroup ourPluginsLifecycleGroup = new NotificationGroup(
+        "Plugins Lifecycle Group",
+        NotificationDisplayType.STICKY_BALLOON,
+        true
     );
-  }
 
-  public void setRequireShutdown(boolean val) {
-    requireShutdown |= val;
-  }
+    public static Logger LOG = Logger.getInstance(PluginManagerMain.class);
 
-  public List<PluginDescriptor> getDependentList(PluginDescriptor pluginDescriptor) {
-    return myPluginsModel.dependent(pluginDescriptor);
-  }
+    private boolean requireShutdown = false;
 
-  protected void modifyPluginsList(List<PluginDescriptor> list) {
-    PluginDescriptor selected = myPluginTable.getSelectedObject();
-    myPluginsModel.updatePluginsList(list);
-    myPluginsModel.filter(myFilter.getFilter().toLowerCase());
-    if (selected != null) {
-      select(selected.getPluginId());
+    private Wrapper myRoot;
+
+    private PluginDescriptionPanel myDescriptionPanel;
+
+    protected JPanel myTablePanel;
+    protected PluginTableModel myPluginsModel;
+    protected PluginTable myPluginTable;
+
+    protected final MyPluginsFilter myFilter = new MyPluginsFilter();
+    private boolean myDisposed = false;
+    private boolean myBusy = false;
+
+    private InstalledPluginsManagerMain myInstalledTab;
+    private AvailablePluginsManagerMain myAvailableTab;
+
+    public PluginManagerMain() {
     }
-  }
 
-  public abstract ActionGroup getActionGroup();
+    protected void init() {
+        myRoot = new Wrapper();
 
-  @Nonnull
-  protected PluginManagerMain getAvailable() {
-    return Objects.requireNonNull(myAvailableTab);
-  }
+        OnePixelSplitter splitter = new OnePixelSplitter(false, 0.5f);
+        myRoot.setContent(splitter);
 
-  @Nonnull
-  protected PluginManagerMain getInstalled() {
-    return Objects.requireNonNull(myInstalledTab);
-  }
+        myDescriptionPanel = new PluginDescriptionPanel();
 
-  public void setAvailableTab(AvailablePluginsManagerMain availableTab) {
-    myAvailableTab = availableTab;
-  }
+        splitter.setSecondComponent(myDescriptionPanel.getPanel());
 
-  public void setInstalledTab(InstalledPluginsManagerMain installedTab) {
-    myInstalledTab = installedTab;
-  }
+        myTablePanel = new JPanel(new BorderLayout());
+        splitter.setFirstComponent(myTablePanel);
 
-  public JPanel getMainPanel() {
-    return myRoot;
-  }
+        PluginTable table = createTable();
+        myPluginTable = table;
 
-  /**
-   * Start a new thread which downloads new list of plugins from the site in
-   * the background and updates a list of plugins in the table.
-   *
-   * @param earlyAccessProgramManager
-   */
-  protected void loadPluginsFromHostInBackground(EarlyAccessProgramManager earlyAccessProgramManager) {
-    setDownloadStatus(true);
+        installTableActions();
+        myTablePanel.add(ScrollPaneFactory.createScrollPane(table, true), BorderLayout.CENTER);
 
-    Application.get().executeOnPooledThread(() -> {
-      SimpleReference<List<PluginDescriptor>> ref = SimpleReference.create();
-      List<String> errorMessages = new ArrayList<>();
+        final JPanel header = new JPanel(new BorderLayout()) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.setColor(UIUtil.getPanelBackground());
+                g.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };
+        header.setBorder(new CustomLineBorder(0, 0, JBUI.scale(1), 0));
 
-      try {
-        ref.set(RepositoryHelper.loadOnlyPluginsFromRepository(
-          null,
-          UpdateSettings.getInstance().getChannel(),
-          earlyAccessProgramManager
-        ));
-      }
-      catch (Throwable e) {
-        LOG.info(e);
-        errorMessages.add(e.getMessage());
-      }
+        LabelPopup sortLabel = new LabelPopup(LocalizeValue.localizeTODO("Sort by:"), labelPopup -> createSortersGroup());
 
-      UIUtil.invokeLaterIfNeeded(() -> {
-        setDownloadStatus(false);
-        List<PluginDescriptor> list = ref.get();
+        header.add(myFilter, BorderLayout.CENTER);
+        JPanel rightHelpPanel = new JPanel(new HorizontalLayout(JBUI.scale(5)));
+        rightHelpPanel.add(sortLabel);
+        addCustomFilters(rightHelpPanel::add);
 
-        if (list != null) {
-          modifyPluginsList(list);
-          propagateUpdates(list);
-        }
-        if (!errorMessages.isEmpty()) {
-          if (Messages.showOkCancelDialog(
-            IdeLocalize.errorListOfPluginsWasNotLoaded(StringUtil.join(errorMessages, ", ")).get(),
-            IdeLocalize.titlePlugins().get(),
-            CommonLocalize.buttonRetry().get(),
-            CommonLocalize.buttonCancel().get(),
-            Messages.getErrorIcon()
-          ) == Messages.OK) {
-            loadPluginsFromHostInBackground(earlyAccessProgramManager);
-          }
-        }
-      });
-    });
-  }
+        BorderLayoutPanel botton = new BorderLayoutPanel();
+        botton.setBorder(new CustomLineBorder(JBUI.scale(1), 0, 0, 0));
+        header.add(botton.addToRight(rightHelpPanel), BorderLayout.SOUTH);
 
-  protected abstract void propagateUpdates(List<PluginDescriptor> list);
+        myTablePanel.add(header, BorderLayout.NORTH);
 
-  protected void setDownloadStatus(boolean status) {
-    myPluginTable.setPaintBusy(status);
-    myBusy = status;
-  }
+        final TableModelListener modelListener = e -> {
+            String text = "name";
+            if (myPluginsModel.isSortByStatus()) {
+                text = "status";
+            }
+            else if (myPluginsModel.isSortByRating()) {
+                text = "rating";
+            }
+            else if (myPluginsModel.isSortByDownloads()) {
+                text = "downloads";
+            }
+            else if (myPluginsModel.isSortByUpdated()) {
+                text = "updated";
+            }
+            sortLabel.setPrefixedText(LocalizeValue.of(text));
+        };
+        myPluginTable.getModel().addTableModelListener(modelListener);
+        modelListener.tableChanged(null);
+    }
 
-  @RequiredUIAccess
-  protected void loadAvailablePlugins() {
-    EarlyAccessProgramManager earlyAccessProgramManager =
-      ConfigurableSession.get().getOrCopy(Application.get(), EarlyAccessProgramManager.class);
+    protected void addCustomFilters(Consumer<JComponent> adder) {
 
-    loadPluginsFromHostInBackground(earlyAccessProgramManager);
-  }
+    }
 
-  public boolean isRequireShutdown() {
-    return requireShutdown;
-  }
+    @Nonnull
+    protected abstract PluginTable createTable();
 
-  public void ignoreChanges() {
-    requireShutdown = false;
-  }
-
-  public boolean isModified() {
-    return requireShutdown;
-  }
-
-  public String apply() {
-    final String applyMessage = canApply();
-    if (applyMessage != null) return applyMessage;
-    setRequireShutdown(true);
-    return null;
-  }
-
-  @Nullable
-  protected String canApply() {
-    return null;
-  }
-
-  protected DefaultActionGroup createSortersGroup() {
-    final DefaultActionGroup group = new DefaultActionGroup("Sort by", true);
-    group.addAction(new SortByStatusAction(myPluginTable, myPluginsModel));
-    return group;
-  }
-
-  public static class MyHyperlinkListener implements HyperlinkListener {
     @Override
-    public void hyperlinkUpdate(HyperlinkEvent e) {
-      if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-        JEditorPane pane = (JEditorPane)e.getSource();
-        if (e instanceof HTMLFrameHyperlinkEvent) {
-          HTMLFrameHyperlinkEvent evt = (HTMLFrameHyperlinkEvent)e;
-          HTMLDocument doc = (HTMLDocument)pane.getDocument();
-          doc.processHTMLFrameHyperlinkEvent(evt);
+    public void dispose() {
+        myDisposed = true;
+    }
+
+    public boolean isDisposed() {
+        return myDisposed;
+    }
+
+    public void filter(String filter) {
+        myFilter.setSelectedItem(filter);
+    }
+
+    public void reset() {
+        UiNotifyConnector.doWhenFirstShown(getPluginTable(), () -> {
+            requireShutdown = false;
+            TableUtil.ensureSelectionExists(getPluginTable());
+        });
+    }
+
+    public PluginTable getPluginTable() {
+        return myPluginTable;
+    }
+
+    public PluginTableModel getPluginsModel() {
+        return myPluginsModel;
+    }
+
+    protected void installTableActions() {
+        myPluginTable.getSelectionModel().addListSelectionListener(e -> refresh());
+
+        //PopupHandler.installUnknownPopupHandler(pluginTable, getActionGroup(false), ActionManager.getInstance());
+
+        new MySpeedSearchBar(myPluginTable);
+    }
+
+    @RequiredUIAccess
+    public void refresh() {
+        final PluginDescriptor[] descriptors = myPluginTable.getSelectedObjects();
+        List<PluginDescriptor> allPlugins = myPluginsModel.getAllPlugins();
+        myDescriptionPanel.update(
+            descriptors != null && descriptors.length == 1 ? descriptors[0] : null,
+            this,
+            allPlugins,
+            myFilter.getFilter()
+        );
+    }
+
+    public void setRequireShutdown(boolean val) {
+        requireShutdown |= val;
+    }
+
+    public List<PluginDescriptor> getDependentList(PluginDescriptor pluginDescriptor) {
+        return myPluginsModel.dependent(pluginDescriptor);
+    }
+
+    protected void modifyPluginsList(List<PluginDescriptor> list) {
+        PluginDescriptor selected = myPluginTable.getSelectedObject();
+        myPluginsModel.updatePluginsList(list);
+        myPluginsModel.filter(myFilter.getFilter().toLowerCase());
+        if (selected != null) {
+            select(selected.getPluginId());
+        }
+    }
+
+    public abstract ActionGroup getActionGroup();
+
+    @Nonnull
+    protected PluginManagerMain getAvailable() {
+        return Objects.requireNonNull(myAvailableTab);
+    }
+
+    @Nonnull
+    protected PluginManagerMain getInstalled() {
+        return Objects.requireNonNull(myInstalledTab);
+    }
+
+    public void setAvailableTab(AvailablePluginsManagerMain availableTab) {
+        myAvailableTab = availableTab;
+    }
+
+    public void setInstalledTab(InstalledPluginsManagerMain installedTab) {
+        myInstalledTab = installedTab;
+    }
+
+    public JPanel getMainPanel() {
+        return myRoot;
+    }
+
+    /**
+     * Start a new thread which downloads new list of plugins from the site in
+     * the background and updates a list of plugins in the table.
+     *
+     * @param earlyAccessProgramManager
+     */
+    protected void loadPluginsFromHostInBackground(EarlyAccessProgramManager earlyAccessProgramManager) {
+        setDownloadStatus(true);
+
+        Application.get().executeOnPooledThread(() -> {
+            SimpleReference<List<PluginDescriptor>> ref = SimpleReference.create();
+            List<String> errorMessages = new ArrayList<>();
+
+            try {
+                ref.set(RepositoryHelper.loadOnlyPluginsFromRepository(
+                    null,
+                    UpdateSettings.getInstance().getChannel(),
+                    earlyAccessProgramManager
+                ));
+            }
+            catch (Throwable e) {
+                LOG.info(e);
+                errorMessages.add(e.getMessage());
+            }
+
+            UIUtil.invokeLaterIfNeeded(() -> {
+                setDownloadStatus(false);
+                List<PluginDescriptor> list = ref.get();
+
+                if (list != null) {
+                    modifyPluginsList(list);
+                    propagateUpdates(list);
+                }
+                if (!errorMessages.isEmpty()) {
+                    if (Messages.showOkCancelDialog(
+                        IdeLocalize.errorListOfPluginsWasNotLoaded(StringUtil.join(errorMessages, ", ")).get(),
+                        IdeLocalize.titlePlugins().get(),
+                        CommonLocalize.buttonRetry().get(),
+                        CommonLocalize.buttonCancel().get(),
+                        Messages.getErrorIcon()
+                    ) == Messages.OK) {
+                        loadPluginsFromHostInBackground(earlyAccessProgramManager);
+                    }
+                }
+            });
+        });
+    }
+
+    protected abstract void propagateUpdates(List<PluginDescriptor> list);
+
+    protected void setDownloadStatus(boolean status) {
+        myPluginTable.setPaintBusy(status);
+        myBusy = status;
+    }
+
+    @RequiredUIAccess
+    protected void loadAvailablePlugins() {
+        EarlyAccessProgramManager earlyAccessProgramManager =
+            ConfigurableSession.get().getOrCopy(Application.get(), EarlyAccessProgramManager.class);
+
+        loadPluginsFromHostInBackground(earlyAccessProgramManager);
+    }
+
+    public boolean isRequireShutdown() {
+        return requireShutdown;
+    }
+
+    public void ignoreChanges() {
+        requireShutdown = false;
+    }
+
+    public boolean isModified() {
+        return requireShutdown;
+    }
+
+    public String apply() {
+        final String applyMessage = canApply();
+        if (applyMessage != null) {
+            return applyMessage;
+        }
+        setRequireShutdown(true);
+        return null;
+    }
+
+    @Nullable
+    protected String canApply() {
+        return null;
+    }
+
+    protected DefaultActionGroup createSortersGroup() {
+        final DefaultActionGroup group = new DefaultActionGroup("Sort by", true);
+        group.addAction(new SortByStatusAction(myPluginTable, myPluginsModel));
+        return group;
+    }
+
+    public static class MyHyperlinkListener implements HyperlinkListener {
+        @Override
+        public void hyperlinkUpdate(HyperlinkEvent e) {
+            if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                JEditorPane pane = (JEditorPane)e.getSource();
+                if (e instanceof HTMLFrameHyperlinkEvent) {
+                    HTMLFrameHyperlinkEvent evt = (HTMLFrameHyperlinkEvent)e;
+                    HTMLDocument doc = (HTMLDocument)pane.getDocument();
+                    doc.processHTMLFrameHyperlinkEvent(evt);
+                }
+                else {
+                    URL url = e.getURL();
+                    if (url != null) {
+                        BrowserUtil.browse(url);
+                    }
+                }
+            }
+        }
+    }
+
+    private static class MySpeedSearchBar extends SpeedSearchBase<PluginTable> {
+        public MySpeedSearchBar(PluginTable cmp) {
+            super(cmp);
+        }
+
+        @Override
+        protected int convertIndexToModel(int viewIndex) {
+            return getComponent().convertRowIndexToModel(viewIndex);
+        }
+
+        @Override
+        public int getSelectedIndex() {
+            return myComponent.getSelectedRow();
+        }
+
+        @Override
+        public Object[] getAllElements() {
+            return myComponent.getElements();
+        }
+
+        @Override
+        public String getElementText(Object element) {
+            return ((PluginDescriptor)element).getName();
+        }
+
+        @Override
+        public void selectElement(Object element, String selectedText) {
+            for (int i = 0; i < myComponent.getRowCount(); i++) {
+                if (myComponent.getObjectAt(i).getName().equals(((PluginDescriptor)element).getName())) {
+                    myComponent.setRowSelectionInterval(i, i);
+                    TableUtil.scrollSelectionToVisible(myComponent);
+                    break;
+                }
+            }
+        }
+    }
+
+    public void select(PluginId pluginId) {
+        myPluginTable.select(pluginId);
+    }
+
+    protected static boolean isAccepted(String filter, Set<String> search, PluginDescriptor descriptor) {
+        if (StringUtil.isEmpty(filter)) {
+            return true;
+        }
+        if (isAccepted(search, filter, descriptor.getName())) {
+            return true;
         }
         else {
-          URL url = e.getURL();
-          if (url != null) {
-            BrowserUtil.browse(url);
-          }
+            final String description = descriptor.getDescription();
+            if (description != null && isAccepted(search, filter, description)) {
+                return true;
+            }
+            for (LocalizeValue tag : getLocalizedTags(descriptor)) {
+                if (isAccepted(search, filter, tag.getValue())) {
+                    return true;
+                }
+            }
+            final String changeNotes = descriptor.getChangeNotes();
+            if (changeNotes != null && isAccepted(search, filter, changeNotes)) {
+                return true;
+            }
         }
-      }
-    }
-  }
-
-  private static class MySpeedSearchBar extends SpeedSearchBase<PluginTable> {
-    public MySpeedSearchBar(PluginTable cmp) {
-      super(cmp);
+        return false;
     }
 
-    @Override
-    protected int convertIndexToModel(int viewIndex) {
-      return getComponent().convertRowIndexToModel(viewIndex);
-    }
-
-    @Override
-    public int getSelectedIndex() {
-      return myComponent.getSelectedRow();
-    }
-
-    @Override
-    public Object[] getAllElements() {
-      return myComponent.getElements();
-    }
-
-    @Override
-    public String getElementText(Object element) {
-      return ((PluginDescriptor)element).getName();
-    }
-
-    @Override
-    public void selectElement(Object element, String selectedText) {
-      for (int i = 0; i < myComponent.getRowCount(); i++) {
-        if (myComponent.getObjectAt(i).getName().equals(((PluginDescriptor)element).getName())) {
-          myComponent.setRowSelectionInterval(i, i);
-          TableUtil.scrollSelectionToVisible(myComponent);
-          break;
+    @Nonnull
+    public static Collection<LocalizeValue> getLocalizedTags(PluginDescriptor pluginDescriptor) {
+        Set<String> tags = pluginDescriptor.getTags();
+        if (!tags.isEmpty()) {
+            return tags.stream().map(PluginManagerMain::getTagLocalizeValue).collect(Collectors.toList());
         }
-      }
-    }
-  }
 
-  public void select(PluginId pluginId) {
-    myPluginTable.select(pluginId);
-  }
-
-  protected static boolean isAccepted(String filter, Set<String> search, PluginDescriptor descriptor) {
-    if (StringUtil.isEmpty(filter)) return true;
-    if (isAccepted(search, filter, descriptor.getName())) {
-      return true;
+        return List.of(LocalizeValue.of(pluginDescriptor.getCategory()));
     }
-    else {
-      final String description = descriptor.getDescription();
-      if (description != null && isAccepted(search, filter, description)) {
-        return true;
-      }
-      for (LocalizeValue tag : getLocalizedTags(descriptor)) {
-        if (isAccepted(search, filter, tag.getValue())) {
-          return true;
+
+    @Nonnull
+    public static LocalizeValue getTagLocalizeValue(@Nonnull String tagId) {
+        return LocalizeKey.of(RepositoryTagLocalize.ID, tagId).getValue();
+    }
+
+    private static boolean isAccepted(final Set<String> search, @Nonnull final String filter, @Nonnull final String description) {
+        if (StringUtil.containsIgnoreCase(description, filter)) {
+            return true;
         }
-      }
-      final String changeNotes = descriptor.getChangeNotes();
-      if (changeNotes != null && isAccepted(search, filter, changeNotes)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  @Nonnull
-  public static Collection<LocalizeValue> getLocalizedTags(PluginDescriptor pluginDescriptor) {
-    Set<String> tags = pluginDescriptor.getTags();
-    if (!tags.isEmpty()) {
-      return tags.stream().map(PluginManagerMain::getTagLocalizeValue).collect(Collectors.toList());
+        final SearchableOptionsRegistrar optionsRegistrar = SearchableOptionsRegistrar.getInstance();
+        final HashSet<String> descriptionSet = new HashSet<>(search);
+        descriptionSet.removeAll(optionsRegistrar.getProcessedWords(description));
+        return descriptionSet.isEmpty();
     }
 
-    return List.of(LocalizeValue.of(pluginDescriptor.getCategory()));
-  }
+    @NonNls
+    public static void notifyPluginsWereInstalled(
+        @Nonnull Collection<? extends PluginDescriptor> installed,
+        Project project
+    ) {
+        String pluginName = installed.size() == 1 ? installed.iterator().next().getName() : null;
+        notifyPluginsWereUpdated(
+            pluginName != null ? "Plugin \'" + pluginName + "\' was successfully installed" : "Plugins were installed",
+            project
+        );
+    }
 
-  @Nonnull
-  public static LocalizeValue getTagLocalizeValue(@Nonnull String tagId) {
-    return LocalizeKey.of(RepositoryTagLocalize.ID, tagId).getValue();
-  }
+    public static void notifyPluginsWereUpdated(final String title, final Project project) {
+        final ApplicationEx app = (ApplicationEx)Application.get();
+        final LocalizeValue appName = app.getName();
+        final boolean restartCapable = app.isRestartCapable();
+        String message = restartCapable
+            ? IdeLocalize.messageIdeaRestartRequired(appName).get()
+            : IdeLocalize.messageIdeaShutdownRequired(appName).get();
+        message += "<br><a href=" + (restartCapable ? "\"restart\">Restart now" : "\"shutdown\">Shutdown") + "</a>";
+        ourPluginsLifecycleGroup.createNotification(
+            title,
+            XmlStringUtil.wrapInHtml(message),
+            NotificationType.INFORMATION,
+            (notification, event) -> {
+                notification.expire();
+                if (restartCapable) {
+                    app.restart(true);
+                }
+                else {
+                    app.exit(true, true);
+                }
+            }
+        ).notify(project);
+    }
 
-  private static boolean isAccepted(final Set<String> search, @Nonnull final String filter, @Nonnull final String description) {
-    if (StringUtil.containsIgnoreCase(description, filter)) return true;
-    final SearchableOptionsRegistrar optionsRegistrar = SearchableOptionsRegistrar.getInstance();
-    final HashSet<String> descriptionSet = new HashSet<>(search);
-    descriptionSet.removeAll(optionsRegistrar.getProcessedWords(description));
-    return descriptionSet.isEmpty();
-  }
+    public class MyPluginsFilter extends FilterComponent {
 
-  @NonNls
-  public static void notifyPluginsWereInstalled(
-    @Nonnull Collection<? extends PluginDescriptor> installed,
-    Project project
-  ) {
-    String pluginName = installed.size() == 1 ? installed.iterator().next().getName() : null;
-    notifyPluginsWereUpdated(
-      pluginName != null ? "Plugin \'" + pluginName + "\' was successfully installed" : "Plugins were installed",
-      project
-    );
-  }
-
-  public static void notifyPluginsWereUpdated(final String title, final Project project) {
-    final ApplicationEx app = (ApplicationEx)Application.get();
-    final LocalizeValue appName = app.getName();
-    final boolean restartCapable = app.isRestartCapable();
-    String message = restartCapable
-      ? IdeLocalize.messageIdeaRestartRequired(appName).get()
-      : IdeLocalize.messageIdeaShutdownRequired(appName).get();
-    message += "<br><a href=" + (restartCapable ? "\"restart\">Restart now" : "\"shutdown\">Shutdown") + "</a>";
-    ourPluginsLifecycleGroup.createNotification(
-      title,
-      XmlStringUtil.wrapInHtml(message),
-      NotificationType.INFORMATION,
-      (notification, event) -> {
-        notification.expire();
-        if (restartCapable) {
-          app.restart(true);
+        public MyPluginsFilter() {
+            super("PLUGIN_FILTER", 5);
+            getTextEditor().setBorder(JBUI.Borders.empty(2));
         }
-        else {
-          app.exit(true, true);
+
+        @Override
+        public void filter() {
+            myPluginsModel.filter(getFilter().toLowerCase());
+            TableUtil.ensureSelectionExists(getPluginTable());
         }
-      }
-    ).notify(project);
-  }
-
-  public class MyPluginsFilter extends FilterComponent {
-
-    public MyPluginsFilter() {
-      super("PLUGIN_FILTER", 5);
-      getTextEditor().setBorder(JBUI.Borders.empty(2));
     }
 
-    @Override
-    public void filter() {
-      myPluginsModel.filter(getFilter().toLowerCase());
-      TableUtil.ensureSelectionExists(getPluginTable());
-    }
-  }
+    protected class RefreshAction extends DumbAwareAction {
+        public RefreshAction() {
+            super("Reload List of Plugins", "Reload list of plugins", AllIcons.Actions.Refresh);
+        }
 
-  protected class RefreshAction extends DumbAwareAction {
-    public RefreshAction() {
-      super("Reload List of Plugins", "Reload list of plugins", AllIcons.Actions.Refresh);
-    }
+        @Override
+        public void actionPerformed(AnActionEvent e) {
+            loadAvailablePlugins();
+            myFilter.setFilter("");
+        }
 
-    @Override
-    public void actionPerformed(AnActionEvent e) {
-      loadAvailablePlugins();
-      myFilter.setFilter("");
+        @Override
+        public void update(AnActionEvent e) {
+            e.getPresentation().setEnabled(!myBusy);
+        }
     }
-
-    @Override
-    public void update(AnActionEvent e) {
-      e.getPresentation().setEnabled(!myBusy);
-    }
-  }
 }

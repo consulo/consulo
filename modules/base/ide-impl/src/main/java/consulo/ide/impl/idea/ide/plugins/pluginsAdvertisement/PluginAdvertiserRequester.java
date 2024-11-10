@@ -74,9 +74,10 @@ public class PluginAdvertiserRequester {
 
         return CompletableFuture.supplyAsync(() -> {
             List<PluginDescriptor> pluginDescriptors = List.of();
-            
+
             try {
-                pluginDescriptors = RepositoryHelper.loadOnlyPluginsFromRepository(null,
+                pluginDescriptors = RepositoryHelper.loadOnlyPluginsFromRepository(
+                    null,
                     updateSettings.getChannel(),
                     EarlyAccessProgramManager.getInstance()
                 );

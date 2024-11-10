@@ -115,10 +115,12 @@ public class PluginNode extends PluginDescriptorStub implements PluginDescritorW
         if (extensionPreviews != null && extensionPreviews.length > 0) {
             myPluginExtensionPreviews = new ArrayList<>(extensionPreviews.length);
             for (PluginJsonNode.ExtensionPreview extension : extensionPreviews) {
-                myPluginExtensionPreviews.add(new ExtensionPreview(PluginId.getId(extension.apiPluginId),
+                myPluginExtensionPreviews.add(new ExtensionPreview(
+                    PluginId.getId(extension.apiPluginId),
                     extension.apiClassName,
                     PluginId.getId(jsonPlugin.id),
-                    extension.implId));
+                    extension.implId
+                ));
             }
         }
 
@@ -347,7 +349,7 @@ public class PluginNode extends PluginDescriptorStub implements PluginDescritorW
 
     @Override
     public boolean equals(Object object) {
-        return object instanceof PluginNode && id.equals(((PluginNode) object).getPluginId());
+        return object instanceof PluginNode && id.equals(((PluginNode)object).getPluginId());
     }
 
     public void addDependency(PluginId... depends) {

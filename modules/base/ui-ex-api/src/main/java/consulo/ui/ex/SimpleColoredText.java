@@ -21,100 +21,101 @@ import consulo.util.lang.StringUtil;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 
 public class SimpleColoredText implements ColoredTextContainer {
-  private final ArrayList<String> myTexts;
-  private final ArrayList<SimpleTextAttributes> myAttributes;
-  private String myCachedToString = null;
+    private final ArrayList<String> myTexts;
+    private final ArrayList<SimpleTextAttributes> myAttributes;
+    private String myCachedToString = null;
 
-  public SimpleColoredText() {
-    myTexts = new ArrayList<String>(3);
-    myAttributes = new ArrayList<SimpleTextAttributes>(3);
-  }
-
-  public SimpleColoredText(@Nonnull String fragment, @Nonnull SimpleTextAttributes attributes) {
-    this();
-    append(fragment, attributes);
-  }
-
-  @Override
-  public void append(@Nonnull String fragment, @Nonnull SimpleTextAttributes attributes){
-    myTexts.add(fragment);
-    myCachedToString = null;
-    myAttributes.add(attributes);
-  }
-
-  public void insert(int index, @Nonnull String fragment, @Nonnull SimpleTextAttributes attributes) {
-    myTexts.add(index, fragment);
-    myCachedToString = null;
-    myAttributes.add(index, attributes);
-  }
-
-  @Override
-  public void append(@Nonnull String fragment, @Nonnull SimpleTextAttributes attributes, Object tag) {
-    append(fragment, attributes);
-  }
-
-  @Override
-  public void setIcon(@Nullable Image icon) {
-  }
-
-  @Override
-  public void setToolTipText(@Nullable String text) {
-  }
-
-  @Nonnull
-  @Override
-  public CharSequence getCharSequence(boolean mainOnly) {
-    return toString();
-  }
-
-  @Nonnull
-  @Override
-  public ColoredIterator iterator() {
-    throw new UnsupportedOperationException();
-  }
-
-  public void clear() {
-    myTexts.clear();
-    myCachedToString = null;
-    myAttributes.clear();
-  }
-
-  public void appendToComponent(@Nonnull ColoredTextContainer component) {
-    int size = myTexts.size();
-    for (int i = 0; i < size; i++) {
-      String text = myTexts.get(i);
-      SimpleTextAttributes attribute = myAttributes.get(i);
-      component.append(text, attribute);
+    public SimpleColoredText() {
+        myTexts = new ArrayList<String>(3);
+        myAttributes = new ArrayList<SimpleTextAttributes>(3);
     }
-  }
 
-  @Override
-  public String toString() {
-    if (myCachedToString == null) {
-      myCachedToString = StringUtil.join(myTexts, "");
+    public SimpleColoredText(@Nonnull String fragment, @Nonnull SimpleTextAttributes attributes) {
+        this();
+        append(fragment, attributes);
     }
-    return myCachedToString;
-  }
 
-  public ArrayList<String> getTexts() {
-    return myTexts;
-  }
-
-  public ArrayList<SimpleTextAttributes> getAttributes() {
-    return myAttributes;
-  }
-
-  public SimpleColoredText derive(SimpleTextAttributes attributes, boolean override) {
-    SimpleColoredText result = new SimpleColoredText();
-    for (int i = 0; i < myTexts.size(); i++) {
-      SimpleTextAttributes overridden = override
-                                        ? SimpleTextAttributes.merge(myAttributes.get(i), attributes)
-                                        : SimpleTextAttributes.merge(attributes, myAttributes.get(i));
-      result.append(myTexts.get(i), overridden);
+    @Override
+    public void append(@Nonnull String fragment, @Nonnull SimpleTextAttributes attributes) {
+        myTexts.add(fragment);
+        myCachedToString = null;
+        myAttributes.add(attributes);
     }
-    return result;
-  }
+
+    public void insert(int index, @Nonnull String fragment, @Nonnull SimpleTextAttributes attributes) {
+        myTexts.add(index, fragment);
+        myCachedToString = null;
+        myAttributes.add(index, attributes);
+    }
+
+    @Override
+    public void append(@Nonnull String fragment, @Nonnull SimpleTextAttributes attributes, Object tag) {
+        append(fragment, attributes);
+    }
+
+    @Override
+    public void setIcon(@Nullable Image icon) {
+    }
+
+    @Override
+    public void setToolTipText(@Nullable String text) {
+    }
+
+    @Nonnull
+    @Override
+    public CharSequence getCharSequence(boolean mainOnly) {
+        return toString();
+    }
+
+    @Nonnull
+    @Override
+    public ColoredIterator iterator() {
+        throw new UnsupportedOperationException();
+    }
+
+    public void clear() {
+        myTexts.clear();
+        myCachedToString = null;
+        myAttributes.clear();
+    }
+
+    public void appendToComponent(@Nonnull ColoredTextContainer component) {
+        int size = myTexts.size();
+        for (int i = 0; i < size; i++) {
+            String text = myTexts.get(i);
+            SimpleTextAttributes attribute = myAttributes.get(i);
+            component.append(text, attribute);
+        }
+    }
+
+    @Override
+    public String toString() {
+        if (myCachedToString == null) {
+            myCachedToString = StringUtil.join(myTexts, "");
+        }
+        return myCachedToString;
+    }
+
+    public ArrayList<String> getTexts() {
+        return myTexts;
+    }
+
+    public ArrayList<SimpleTextAttributes> getAttributes() {
+        return myAttributes;
+    }
+
+    public SimpleColoredText derive(SimpleTextAttributes attributes, boolean override) {
+        SimpleColoredText result = new SimpleColoredText();
+        for (int i = 0; i < myTexts.size(); i++) {
+            SimpleTextAttributes overridden = override
+                ? SimpleTextAttributes.merge(myAttributes.get(i), attributes)
+                : SimpleTextAttributes.merge(attributes, myAttributes.get(i));
+            result.append(myTexts.get(i), overridden);
+        }
+        return result;
+    }
 }

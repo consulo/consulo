@@ -35,6 +35,7 @@ import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
 
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 
 /**
@@ -42,145 +43,145 @@ import javax.swing.*;
  * @since 2020-06-26
  */
 public class PluginsPanel implements Disposable {
-  public static final int FROM_REPOSITORY = 0;
-  public static final int INSTALLED = 1;
+    public static final int FROM_REPOSITORY = 0;
+    public static final int INSTALLED = 1;
 
-  public static final Key<PluginsPanel> KEY = Key.create("PluginsPanel");
+    public static final Key<PluginsPanel> KEY = Key.create("PluginsPanel");
 
-  private JBEditorTabs myTabs;
+    private JBEditorTabs myTabs;
 
-  private InstalledPluginsManagerMain myInstalledPluginsPanel;
+    private InstalledPluginsManagerMain myInstalledPluginsPanel;
 
-  private AvailablePluginsManagerMain myAvailablePluginsManagerMain;
+    private AvailablePluginsManagerMain myAvailablePluginsManagerMain;
 
-  public PluginsPanel() {
-    myTabs = new JBEditorTabs(null, ActionManager.getInstance(), IdeFocusManager.getGlobalInstance(), this);
+    public PluginsPanel() {
+        myTabs = new JBEditorTabs(null, ActionManager.getInstance(), IdeFocusManager.getGlobalInstance(), this);
 
-    Wrapper fromRepository = new Wrapper();
-    TabInfo repositoryTab = new TabInfo(fromRepository);
-    repositoryTab.setText("From Repository");
-    myTabs.addTab(repositoryTab);
+        Wrapper fromRepository = new Wrapper();
+        TabInfo repositoryTab = new TabInfo(fromRepository);
+        repositoryTab.setText("From Repository");
+        myTabs.addTab(repositoryTab);
 
-    Wrapper installedWrapper = new Wrapper();
-    TabInfo installedTab = new TabInfo(installedWrapper);
-    installedTab.setText("Installed");
-    myTabs.addTab(installedTab);
+        Wrapper installedWrapper = new Wrapper();
+        TabInfo installedTab = new TabInfo(installedWrapper);
+        installedTab.setText("Installed");
+        myTabs.addTab(installedTab);
 
-    myInstalledPluginsPanel = new InstalledPluginsManagerMain();
-    Disposer.register(this, myInstalledPluginsPanel);
-    installedWrapper.setContent(myInstalledPluginsPanel.getMainPanel());
+        myInstalledPluginsPanel = new InstalledPluginsManagerMain();
+        Disposer.register(this, myInstalledPluginsPanel);
+        installedWrapper.setContent(myInstalledPluginsPanel.getMainPanel());
 
-    myAvailablePluginsManagerMain = new AvailablePluginsManagerMain();
-    Disposer.register(this, myAvailablePluginsManagerMain);
-    fromRepository.setContent(myAvailablePluginsManagerMain.getMainPanel());
+        myAvailablePluginsManagerMain = new AvailablePluginsManagerMain();
+        Disposer.register(this, myAvailablePluginsManagerMain);
+        fromRepository.setContent(myAvailablePluginsManagerMain.getMainPanel());
 
-    myInstalledPluginsPanel.setInstalledTab(myInstalledPluginsPanel);
-    myInstalledPluginsPanel.setAvailableTab(myAvailablePluginsManagerMain);
+        myInstalledPluginsPanel.setInstalledTab(myInstalledPluginsPanel);
+        myInstalledPluginsPanel.setAvailableTab(myAvailablePluginsManagerMain);
 
-    myAvailablePluginsManagerMain.setInstalledTab(myInstalledPluginsPanel);
-    myAvailablePluginsManagerMain.setAvailableTab(myAvailablePluginsManagerMain);
+        myAvailablePluginsManagerMain.setInstalledTab(myInstalledPluginsPanel);
+        myAvailablePluginsManagerMain.setAvailableTab(myAvailablePluginsManagerMain);
 
-    repositoryTab.setActions(myAvailablePluginsManagerMain.getActionGroup(), "FromRepositoryGroup");
-    installedTab.setActions(myInstalledPluginsPanel.getActionGroup(), "InstallGroup");
+        repositoryTab.setActions(myAvailablePluginsManagerMain.getActionGroup(), "FromRepositoryGroup");
+        installedTab.setActions(myInstalledPluginsPanel.getActionGroup(), "InstallGroup");
 
-    int pluginsCount = PluginManager.getPluginsCount();
-    // set default Repository tab if no plugins installed
-    select(pluginsCount == 0 ? myAvailablePluginsManagerMain : myInstalledPluginsPanel);
+        int pluginsCount = PluginManager.getPluginsCount();
+        // set default Repository tab if no plugins installed
+        select(pluginsCount == 0 ? myAvailablePluginsManagerMain : myInstalledPluginsPanel);
 
-    DataManager.registerDataProvider(myTabs.getComponent(), dataId -> {
-      if (dataId == KEY) {
-        return this;
-      }
+        DataManager.registerDataProvider(myTabs.getComponent(), dataId -> {
+            if (dataId == KEY) {
+                return this;
+            }
 
-      return null;
-    });
-  }
-
-  public void filter(String option) {
-    select(myInstalledPluginsPanel);
-
-    myInstalledPluginsPanel.filter(option);
-  }
-
-  public void selectInstalled(PluginId pluginId) {
-    myInstalledPluginsPanel.select(pluginId);
-  }
-
-  public void selectAvailable(PluginId pluginId) {
-    myAvailablePluginsManagerMain.select(pluginId);
-  }
-
-  public void select(PluginManagerMain main) {
-    int index;
-    if (main == myInstalledPluginsPanel) {
-      index = INSTALLED;
-    }
-    else if (main == myAvailablePluginsManagerMain) {
-      index = FROM_REPOSITORY;
-    }
-    else {
-      throw new UnsupportedOperationException();
+            return null;
+        });
     }
 
-    TabInfo tabAt = myTabs.getTabAt(index);
-    myTabs.select(tabAt, false);
-  }
+    public void filter(String option) {
+        select(myInstalledPluginsPanel);
 
-  public int getSelectedIndex() {
-    TabInfo selectedInfo = myTabs.getSelectedInfo();
-    if (selectedInfo == null) {
-      return INSTALLED;
+        myInstalledPluginsPanel.filter(option);
     }
 
-    return myTabs.getIndexOf(selectedInfo);
-  }
-
-  @Nonnull
-  public PluginManagerMain getSelected() {
-    int index = getSelectedIndex();
-
-    if(index == FROM_REPOSITORY) {
-      return myAvailablePluginsManagerMain;
+    public void selectInstalled(PluginId pluginId) {
+        myInstalledPluginsPanel.select(pluginId);
     }
 
-    return myInstalledPluginsPanel;
-  }
-
-  public JComponent getComponent() {
-    return myTabs.getComponent();
-  }
-
-  @Override
-  public void dispose() {
-  }
-
-  public void reset() {
-    myInstalledPluginsPanel.reset();
-    myAvailablePluginsManagerMain.reset();
-  }
-
-  public boolean isModified() {
-    return myInstalledPluginsPanel.isModified() || myAvailablePluginsManagerMain.isModified();
-  }
-
-  public void apply() throws ConfigurationException {
-    String applyMessage = myInstalledPluginsPanel.apply();
-    myAvailablePluginsManagerMain.apply();
-
-    if (applyMessage != null) {
-      throw new ConfigurationException(applyMessage);
+    public void selectAvailable(PluginId pluginId) {
+        myAvailablePluginsManagerMain.select(pluginId);
     }
 
-    if (myInstalledPluginsPanel.isRequireShutdown()) {
-      final Application app = Application.get();
+    public void select(PluginManagerMain main) {
+        int index;
+        if (main == myInstalledPluginsPanel) {
+            index = INSTALLED;
+        }
+        else if (main == myAvailablePluginsManagerMain) {
+            index = FROM_REPOSITORY;
+        }
+        else {
+            throw new UnsupportedOperationException();
+        }
 
-      int response = app.isRestartCapable() ? PluginInstallUtil.showRestartIDEADialog() : PluginInstallUtil.showShutDownIDEADialog();
-      if (response == Messages.YES) {
-        app.restart(true);
-      }
-      else {
-        myInstalledPluginsPanel.ignoreChanges();
-      }
+        TabInfo tabAt = myTabs.getTabAt(index);
+        myTabs.select(tabAt, false);
     }
-  }
+
+    public int getSelectedIndex() {
+        TabInfo selectedInfo = myTabs.getSelectedInfo();
+        if (selectedInfo == null) {
+            return INSTALLED;
+        }
+
+        return myTabs.getIndexOf(selectedInfo);
+    }
+
+    @Nonnull
+    public PluginManagerMain getSelected() {
+        int index = getSelectedIndex();
+
+        if (index == FROM_REPOSITORY) {
+            return myAvailablePluginsManagerMain;
+        }
+
+        return myInstalledPluginsPanel;
+    }
+
+    public JComponent getComponent() {
+        return myTabs.getComponent();
+    }
+
+    @Override
+    public void dispose() {
+    }
+
+    public void reset() {
+        myInstalledPluginsPanel.reset();
+        myAvailablePluginsManagerMain.reset();
+    }
+
+    public boolean isModified() {
+        return myInstalledPluginsPanel.isModified() || myAvailablePluginsManagerMain.isModified();
+    }
+
+    public void apply() throws ConfigurationException {
+        String applyMessage = myInstalledPluginsPanel.apply();
+        myAvailablePluginsManagerMain.apply();
+
+        if (applyMessage != null) {
+            throw new ConfigurationException(applyMessage);
+        }
+
+        if (myInstalledPluginsPanel.isRequireShutdown()) {
+            final Application app = Application.get();
+
+            int response = app.isRestartCapable() ? PluginInstallUtil.showRestartIDEADialog() : PluginInstallUtil.showShutDownIDEADialog();
+            if (response == Messages.YES) {
+                app.restart(true);
+            }
+            else {
+                myInstalledPluginsPanel.ignoreChanges();
+            }
+        }
+    }
 }

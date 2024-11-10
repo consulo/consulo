@@ -54,7 +54,8 @@ import java.util.concurrent.Future;
 public class PluginAdvertiserImpl implements PluginAdvertiser {
     private static final Logger LOG = Logger.getInstance(PluginAdvertiserImpl.class);
 
-    public static final NotificationGroup ourGroup = new NotificationGroup("Plugins Suggestion", NotificationDisplayType.STICKY_BALLOON, true);
+    public static final NotificationGroup ourGroup =
+        new NotificationGroup("Plugins Suggestion", NotificationDisplayType.STICKY_BALLOON, true);
 
     private final ApplicationConcurrency myApplicationConcurrency;
     private final Project myProject;
@@ -64,9 +65,11 @@ public class PluginAdvertiserImpl implements PluginAdvertiser {
     private Future<?> myTaskFuture = CompletableFuture.completedFuture(null);
 
     @Inject
-    public PluginAdvertiserImpl(ApplicationConcurrency applicationConcurrency,
-                                Project project,
-                                PluginAdvertiserRequester pluginAdvertiserRequester) {
+    public PluginAdvertiserImpl(
+        ApplicationConcurrency applicationConcurrency,
+        Project project,
+        PluginAdvertiserRequester pluginAdvertiserRequester
+    ) {
         myApplicationConcurrency = applicationConcurrency;
         myProject = project;
         myPluginAdvertiserRequester = pluginAdvertiserRequester;

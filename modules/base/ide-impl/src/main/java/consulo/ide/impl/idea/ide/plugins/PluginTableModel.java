@@ -33,183 +33,183 @@ import java.util.Set;
  * @author Konstantin Bulenkov
  */
 public abstract class PluginTableModel extends AbstractTableModel implements SortableColumnModel {
-  protected static final String NAME = "Name";
-  protected ColumnInfo[] columns;
-  protected List<PluginDescriptor> view;
-  private RowSorter.SortKey myDefaultSortKey;
-  protected final List<PluginDescriptor> filtered = new ArrayList<>();
-  private boolean mySortByStatus;
-  private boolean mySortByRating;
-  private boolean mySortByDownloads;
-  private boolean mySortByUpdated;
+    protected static final String NAME = "Name";
+    protected ColumnInfo[] columns;
+    protected List<PluginDescriptor> view;
+    private RowSorter.SortKey myDefaultSortKey;
+    protected final List<PluginDescriptor> filtered = new ArrayList<>();
+    private boolean mySortByStatus;
+    private boolean mySortByRating;
+    private boolean mySortByDownloads;
+    private boolean mySortByUpdated;
 
-  protected PluginTableModel() {
-  }
+    protected PluginTableModel() {
+    }
 
-  public PluginTableModel(ColumnInfo... columns) {
-    this.columns = columns;
-  }
+    public PluginTableModel(ColumnInfo... columns) {
+        this.columns = columns;
+    }
 
-  public void setSortKey(final RowSorter.SortKey sortKey) {
-    myDefaultSortKey = sortKey;
-  }
+    public void setSortKey(final RowSorter.SortKey sortKey) {
+        myDefaultSortKey = sortKey;
+    }
 
-  @Override
-  public int getColumnCount() {
-    return columns.length;
-  }
+    @Override
+    public int getColumnCount() {
+        return columns.length;
+    }
 
-  @Override
-  public ColumnInfo[] getColumnInfos() {
-    return columns;
-  }
+    @Override
+    public ColumnInfo[] getColumnInfos() {
+        return columns;
+    }
 
-  @Override
-  public boolean isSortable() {
-    return true;
-  }
+    @Override
+    public boolean isSortable() {
+        return true;
+    }
 
-  @Override
-  public void setSortable(boolean aBoolean) {
-    // do nothing cause it's always sortable
-  }
+    @Override
+    public void setSortable(boolean aBoolean) {
+        // do nothing cause it's always sortable
+    }
 
-  @Override
-  public String getColumnName(int column) {
-    return columns[column].getName();
-  }
+    @Override
+    public String getColumnName(int column) {
+        return columns[column].getName();
+    }
 
-  public PluginDescriptor getObjectAt (int row) {
-    return view.get(row);
-  }
+    public PluginDescriptor getObjectAt(int row) {
+        return view.get(row);
+    }
 
-  @Override
-  public Object getRowValue(int row) {
-    return getObjectAt(row);
-  }
+    @Override
+    public Object getRowValue(int row) {
+        return getObjectAt(row);
+    }
 
-  @Override
-  public RowSorter.SortKey getDefaultSortKey() {
-    return myDefaultSortKey;
-  }
+    @Override
+    public RowSorter.SortKey getDefaultSortKey() {
+        return myDefaultSortKey;
+    }
 
-  @Override
-  public int getRowCount() {
-    return view.size();
-  }
+    @Override
+    public int getRowCount() {
+        return view.size();
+    }
 
-  @Override
-  public Object getValueAt(int rowIndex, int columnIndex) {
-    return columns[columnIndex].valueOf(getObjectAt(rowIndex));
-  }
+    @Override
+    public Object getValueAt(int rowIndex, int columnIndex) {
+        return columns[columnIndex].valueOf(getObjectAt(rowIndex));
+    }
 
-  @Override
-  public boolean isCellEditable(final int rowIndex, final int columnIndex) {
-    return columns[columnIndex].isCellEditable(getObjectAt(rowIndex));
-  }
+    @Override
+    public boolean isCellEditable(final int rowIndex, final int columnIndex) {
+        return columns[columnIndex].isCellEditable(getObjectAt(rowIndex));
+    }
 
-  @Override
-  public void setValueAt(final Object aValue, final int rowIndex, final int columnIndex) {
-    columns[columnIndex].setValue(getObjectAt(rowIndex), aValue);
-    fireTableCellUpdated(rowIndex, columnIndex);
-  }
+    @Override
+    public void setValueAt(final Object aValue, final int rowIndex, final int columnIndex) {
+        columns[columnIndex].setValue(getObjectAt(rowIndex), aValue);
+        fireTableCellUpdated(rowIndex, columnIndex);
+    }
 
-  public List<PluginDescriptor> dependent(PluginDescriptor plugin) {
-    List<PluginDescriptor> list = new ArrayList<>();
-    for (PluginDescriptor any : getAllPlugins()) {
-      if (any.isLoaded()) {
-        PluginId[] dep = any.getDependentPluginIds();
-        for (PluginId id : dep) {
-          if (id == plugin.getPluginId()) {
-            list.add(any);
-            break;
-          }
+    public List<PluginDescriptor> dependent(PluginDescriptor plugin) {
+        List<PluginDescriptor> list = new ArrayList<>();
+        for (PluginDescriptor any : getAllPlugins()) {
+            if (any.isLoaded()) {
+                PluginId[] dep = any.getDependentPluginIds();
+                for (PluginId id : dep) {
+                    if (id == plugin.getPluginId()) {
+                        list.add(any);
+                        break;
+                    }
+                }
+            }
         }
-      }
+        return list;
     }
-    return list;
-  }
 
-  public abstract void updatePluginsList(List<PluginDescriptor> list);
+    public abstract void updatePluginsList(List<PluginDescriptor> list);
 
-  public void filter(List<PluginDescriptor> filtered){
-    fireTableDataChanged();
-  }
-
-  protected void filter(String filter) {
-    final SearchableOptionsRegistrar optionsRegistrar = SearchableOptionsRegistrar.getInstance();
-    final Set<String> search = optionsRegistrar.getProcessedWords(filter);
-
-    final ArrayList<PluginDescriptor> desc = new ArrayList<>();
-
-    final List<PluginDescriptor> toProcess = toProcess();
-    for (PluginDescriptor descriptor : filtered) {
-      if (!toProcess.contains(descriptor)) {
-        toProcess.add(descriptor);
-      }
+    public void filter(List<PluginDescriptor> filtered) {
+        fireTableDataChanged();
     }
-    filtered.clear();
-    for (PluginDescriptor descriptor : toProcess) {
-      if (isPluginDescriptorAccepted(descriptor) &&
-          PluginManagerMain.isAccepted(filter, search, descriptor)) {
-        desc.add(descriptor);
-      }
-      else {
-        filtered.add(descriptor);
-      }
+
+    protected void filter(String filter) {
+        final SearchableOptionsRegistrar optionsRegistrar = SearchableOptionsRegistrar.getInstance();
+        final Set<String> search = optionsRegistrar.getProcessedWords(filter);
+
+        final ArrayList<PluginDescriptor> desc = new ArrayList<>();
+
+        final List<PluginDescriptor> toProcess = toProcess();
+        for (PluginDescriptor descriptor : filtered) {
+            if (!toProcess.contains(descriptor)) {
+                toProcess.add(descriptor);
+            }
+        }
+        filtered.clear();
+        for (PluginDescriptor descriptor : toProcess) {
+            if (isPluginDescriptorAccepted(descriptor) &&
+                PluginManagerMain.isAccepted(filter, search, descriptor)) {
+                desc.add(descriptor);
+            }
+            else {
+                filtered.add(descriptor);
+            }
+        }
+        filter(desc);
     }
-    filter(desc);
-  }
 
-  protected ArrayList<PluginDescriptor> toProcess() {
-    return new ArrayList<>(view);
-  }
+    protected ArrayList<PluginDescriptor> toProcess() {
+        return new ArrayList<>(view);
+    }
 
-  public abstract int getNameColumn();
+    public abstract int getNameColumn();
 
-  public abstract boolean isPluginDescriptorAccepted(PluginDescriptor descriptor);
+    public abstract boolean isPluginDescriptorAccepted(PluginDescriptor descriptor);
 
-  public void sort() {
-    Collections.sort(view, columns[getNameColumn()].getComparator());
-    fireTableDataChanged();
-  }
+    public void sort() {
+        Collections.sort(view, columns[getNameColumn()].getComparator());
+        fireTableDataChanged();
+    }
 
-  public boolean isSortByStatus() {
-    return mySortByStatus;
-  }
+    public boolean isSortByStatus() {
+        return mySortByStatus;
+    }
 
-  public void setSortByStatus(boolean sortByStatus) {
-    mySortByStatus = sortByStatus;
-  }
+    public void setSortByStatus(boolean sortByStatus) {
+        mySortByStatus = sortByStatus;
+    }
 
-  public boolean isSortByRating() {
-    return mySortByRating;
-  }
+    public boolean isSortByRating() {
+        return mySortByRating;
+    }
 
-  public void setSortByRating(boolean sortByRating) {
-    mySortByRating = sortByRating;
-  }
+    public void setSortByRating(boolean sortByRating) {
+        mySortByRating = sortByRating;
+    }
 
-  public boolean isSortByDownloads() {
-    return mySortByDownloads;
-  }
+    public boolean isSortByDownloads() {
+        return mySortByDownloads;
+    }
 
-  public void setSortByDownloads(boolean sortByDownloads) {
-    mySortByDownloads = sortByDownloads;
-  }
+    public void setSortByDownloads(boolean sortByDownloads) {
+        mySortByDownloads = sortByDownloads;
+    }
 
-  public boolean isSortByUpdated() {
-    return mySortByUpdated;
-  }
+    public boolean isSortByUpdated() {
+        return mySortByUpdated;
+    }
 
-  public void setSortByUpdated(boolean sortByUpdated) {
-    mySortByUpdated = sortByUpdated;
-  }
+    public void setSortByUpdated(boolean sortByUpdated) {
+        mySortByUpdated = sortByUpdated;
+    }
 
-  public List<PluginDescriptor> getAllPlugins() {
-    final ArrayList<PluginDescriptor> list = new ArrayList<>();
-    list.addAll(view);
-    list.addAll(filtered);
-    return list;
-  }
+    public List<PluginDescriptor> getAllPlugins() {
+        final ArrayList<PluginDescriptor> list = new ArrayList<>();
+        list.addAll(view);
+        list.addAll(filtered);
+        return list;
+    }
 }

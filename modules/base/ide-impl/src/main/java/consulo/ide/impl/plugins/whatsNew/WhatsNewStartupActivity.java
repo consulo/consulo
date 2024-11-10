@@ -28,6 +28,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -36,27 +37,32 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 @ExtensionImpl(id = "WhatsNew", order = "after OpenFilesActivity")
 public class WhatsNewStartupActivity implements PostStartupActivity, DumbAware {
-  private final Application myApplication;
-  private final Provider<UpdateHistory> myUpdateHistoryProvider;
+    private final Application myApplication;
+    private final Provider<UpdateHistory> myUpdateHistoryProvider;
 
-  private final AtomicBoolean myAlreadyShow = new AtomicBoolean();
+    private final AtomicBoolean myAlreadyShow = new AtomicBoolean();
 
-  @Inject
-  public WhatsNewStartupActivity(Application application, Provider<UpdateHistory> updateHistoryProvider) {
-    myApplication = application;
-    myUpdateHistoryProvider = updateHistoryProvider;
-  }
-
-  @Override
-  public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
-    if(myAlreadyShow.compareAndSet(false, true)) {
-      UpdateHistory updateHistory = myUpdateHistoryProvider.get();
-
-      if (updateHistory.isShowChangeLog()) {
-        updateHistory.setShowChangeLog(false);
-
-        uiAccess.give(() -> FileEditorManager.getInstance(project).openFile(new WhatsNewVirtualFile(IdeLocalize.whatsnewActionCustomText(myApplication.getName())), true));
-      }
+    @Inject
+    public WhatsNewStartupActivity(Application application, Provider<UpdateHistory> updateHistoryProvider) {
+        myApplication = application;
+        myUpdateHistoryProvider = updateHistoryProvider;
     }
-  }
+
+    @Override
+    public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+        if (myAlreadyShow.compareAndSet(false, true)) {
+            UpdateHistory updateHistory = myUpdateHistoryProvider.get();
+
+            if (updateHistory.isShowChangeLog()) {
+                updateHistory.setShowChangeLog(false);
+
+                uiAccess.give(
+                    () -> FileEditorManager.getInstance(project).openFile(
+                        new WhatsNewVirtualFile(IdeLocalize.whatsnewActionCustomText(myApplication.getName())),
+                        true
+                    )
+                );
+            }
+        }
+    }
 }

@@ -25,31 +25,31 @@ import consulo.container.plugin.PluginDescriptor;
  * @author Konstantin Bulenkov
  */
 public abstract class AbstractSortByAction extends ToggleAction {
-  protected final PluginTable myTable;
-  protected final PluginTableModel myModel;
+    protected final PluginTable myTable;
+    protected final PluginTableModel myModel;
 
-  public AbstractSortByAction(String name, PluginTable table, PluginTableModel model) {
-    super(name, name, null);
-    myTable = table;
-    myModel = model;
-  }
-
-  public abstract boolean isSelected();
-
-  protected abstract void setSelected(boolean state);
-
-  @Override
-  public final boolean isSelected(AnActionEvent e) {
-    return isSelected();
-  }
-
-  @Override
-  public final void setSelected(AnActionEvent e, boolean state) {
-    PluginDescriptor selected = myTable.getSelectedObject();
-    setSelected(state);
-    myModel.sort();
-    if (selected != null) {
-      myTable.select(selected.getPluginId());
+    public AbstractSortByAction(String name, PluginTable table, PluginTableModel model) {
+        super(name, name, null);
+        myTable = table;
+        myModel = model;
     }
-  }
+
+    public abstract boolean isSelected();
+
+    protected abstract void setSelected(boolean state);
+
+    @Override
+    public final boolean isSelected(AnActionEvent e) {
+        return isSelected();
+    }
+
+    @Override
+    public final void setSelected(AnActionEvent e, boolean state) {
+        PluginDescriptor selected = myTable.getSelectedObject();
+        setSelected(state);
+        myModel.sort();
+        if (selected != null) {
+            myTable.select(selected.getPluginId());
+        }
+    }
 }

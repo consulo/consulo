@@ -22,17 +22,17 @@ import consulo.ide.impl.idea.ide.plugins.PluginTableModel;
  * @author Konstantin Bulenkov
  */
 public class SortByDownloadsAction extends AbstractSortByAction {
-  public SortByDownloadsAction(PluginTable table, PluginTableModel model) {
-    super("Downloads", table, model);
-  }
+    public SortByDownloadsAction(PluginTable table, PluginTableModel model) {
+        super("Downloads", table, model);
+    }
 
-  @Override
-  public boolean isSelected() {
-    return myModel.isSortByDownloads();
-  }
+    @Override
+    public boolean isSelected() {
+        return myModel.isSortByDownloads();
+    }
 
-  @Override
-  protected void setSelected(boolean state) {
-    myModel.setSortByDownloads(state);
-  }
+    @Override
+    protected void setSelected(boolean state) {
+        myModel.setSortByDownloads(state);
+    }
 }

@@ -47,251 +47,261 @@ import java.util.stream.Collectors;
  * @author lloix
  */
 public class InstallPluginAction extends AnAction implements DumbAware {
-  private static final Set<PluginDescriptor> ourInstallingNodes = new HashSet<>();
+    private static final Set<PluginDescriptor> ourInstallingNodes = new HashSet<>();
 
-  private final PluginManagerMain myCurrentPage;
+    private final PluginManagerMain myCurrentPage;
 
-  public InstallPluginAction(PluginManagerMain currentPage) {
-    super(IdeLocalize.actionDownloadAndInstallPlugin(), IdeLocalize.actionDownloadAndInstallPlugin(), AllIcons.Actions.Install);
+    public InstallPluginAction(PluginManagerMain currentPage) {
+        super(IdeLocalize.actionDownloadAndInstallPlugin(), IdeLocalize.actionDownloadAndInstallPlugin(), AllIcons.Actions.Install);
 
-    myCurrentPage = currentPage;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void update(@Nonnull AnActionEvent e) {
-    Presentation presentation = e.getPresentation();
-    PluginDescriptor[] selection = getPluginTable().getSelectedObjects();
-    boolean enabled = (selection != null);
-
-    if (enabled) {
-      for (PluginDescriptor descr : selection) {
-        presentation.setTextValue(IdeLocalize.actionDownloadAndInstallPlugin());
-        presentation.setDescriptionValue(IdeLocalize.actionDownloadAndInstallPlugin());
-        enabled &= !ourInstallingNodes.contains(descr);
-        if (descr instanceof PluginNode) {
-          enabled &= !PluginManagerColumnInfo.isDownloaded(descr);
-          if (((PluginNode)descr).getInstallStatus() == PluginNode.STATUS_INSTALLED) {
-            presentation.setTextValue(IdeLocalize.actionUpdatePlugin());
-            presentation.setDescriptionValue(IdeLocalize.actionUpdatePlugin());
-            enabled &= InstalledPluginsTableModel.hasNewerVersion(descr.getPluginId());
-          }
-        }
-        else if (descr.isLoaded()) {
-          presentation.setTextValue(IdeLocalize.actionUpdatePlugin());
-          presentation.setDescriptionValue(IdeLocalize.actionUpdatePlugin());
-          PluginId id = descr.getPluginId();
-          enabled = enabled && InstalledPluginsTableModel.hasNewerVersion(id);
-        }
-      }
+        myCurrentPage = currentPage;
     }
 
-    presentation.setEnabled(enabled);
-  }
+    @RequiredUIAccess
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        Presentation presentation = e.getPresentation();
+        PluginDescriptor[] selection = getPluginTable().getSelectedObjects();
+        boolean enabled = (selection != null);
 
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    install(e.getData(Project.KEY), null);
-  }
-
-  @RequiredUIAccess
-  public void install(@Nullable Project project, @Nullable final Runnable onSuccess) {
-    PluginDescriptor[] selection = getPluginTable().getSelectedObjects();
-    PluginManagerMain installed = myCurrentPage.getInstalled();
-    PluginManagerMain available = myCurrentPage.getAvailable();
-
-    final List<PluginDescriptor> list = new ArrayList<>();
-    for (PluginDescriptor descr : selection) {
-      PluginNode pluginNode = null;
-      if (descr instanceof PluginNode) {
-        pluginNode = (PluginNode)descr;
-      }
-      else if (descr.isLoaded()) {
-        final PluginId pluginId = descr.getPluginId();
-        pluginNode = new PluginNode(pluginId);
-        pluginNode.setName(descr.getName());
-        pluginNode.setExperimental(descr.isExperimental());
-        pluginNode.addDependency(descr.getDependentPluginIds());
-        pluginNode.addOptionalDependency(descr.getOptionalDependentPluginIds());
-        pluginNode.setSize("-1");
-      }
-
-      if (pluginNode != null) {
-        if (pluginNode.isExperimental()) {
-          if (Messages.showOkCancelDialog(
-            "Are you sure install experimental plugin? Plugin can make IDE unstable, and may not implement expected features",
-            Application.get().getName().get(),
-            Messages.getWarningIcon()
-          ) != Messages.OK) {
-            return;
-          }
+        if (enabled) {
+            for (PluginDescriptor descr : selection) {
+                presentation.setTextValue(IdeLocalize.actionDownloadAndInstallPlugin());
+                presentation.setDescriptionValue(IdeLocalize.actionDownloadAndInstallPlugin());
+                enabled &= !ourInstallingNodes.contains(descr);
+                if (descr instanceof PluginNode) {
+                    enabled &= !PluginManagerColumnInfo.isDownloaded(descr);
+                    if (((PluginNode)descr).getInstallStatus() == PluginNode.STATUS_INSTALLED) {
+                        presentation.setTextValue(IdeLocalize.actionUpdatePlugin());
+                        presentation.setDescriptionValue(IdeLocalize.actionUpdatePlugin());
+                        enabled &= InstalledPluginsTableModel.hasNewerVersion(descr.getPluginId());
+                    }
+                }
+                else if (descr.isLoaded()) {
+                    presentation.setTextValue(IdeLocalize.actionUpdatePlugin());
+                    presentation.setDescriptionValue(IdeLocalize.actionUpdatePlugin());
+                    PluginId id = descr.getPluginId();
+                    enabled = enabled && InstalledPluginsTableModel.hasNewerVersion(id);
+                }
+            }
         }
 
-        list.add(pluginNode);
-        ourInstallingNodes.add(pluginNode);
-      }
-      final InstalledPluginsTableModel pluginsModel = (InstalledPluginsTableModel)installed.getPluginsModel();
-      final Set<PluginDescriptor> disabled = new HashSet<>();
-      final Set<PluginDescriptor> disabledDependants = new HashSet<>();
-      for (PluginDescriptor node : list) {
-        final PluginId pluginId = node.getPluginId();
-        if (pluginsModel.isDisabled(pluginId)) {
-          disabled.add(node);
-        }
-        for (PluginId dependantId : node.getDependentPluginIds()) {
-          final PluginDescriptor pluginDescriptor = PluginManager.getPlugin(dependantId);
-          if (pluginDescriptor != null && pluginsModel.isDisabled(dependantId)) {
-            disabledDependants.add(pluginDescriptor);
-          }
-        }
-      }
-      if (suggestToEnableInstalledPlugins(pluginsModel, disabled, disabledDependants, list)) {
-        installed.setRequireShutdown(true);
-      }
+        presentation.setEnabled(enabled);
     }
-    final Consumer<Collection<PluginDescriptor>> afterCallback = pluginNodes -> {
-      if (pluginNodes.isEmpty()) {
-        return;
-      }
-      UIUtil.invokeLaterIfNeeded(() -> installedPluginsToModel(pluginNodes));
 
-      if (!installed.isDisposed()) {
-        UIUtil.invokeLaterIfNeeded(() -> {
-          getPluginTable().updateUI();
-          installed.setRequireShutdown(true);
-        });
-      }
-      else {
-        boolean needToRestart = false;
-        for (PluginDescriptor node : pluginNodes) {
-          final PluginDescriptor pluginDescriptor = PluginManager.getPlugin(node.getPluginId());
-          if (pluginDescriptor == null || pluginDescriptor.isEnabled()) {
-            needToRestart = true;
-            break;
-          }
-        }
-
-        if (needToRestart) {
-          PluginManagerMain.notifyPluginsWereInstalled(pluginNodes, null);
-        }
-      }
-
-      if (onSuccess != null) {
-        onSuccess.run();
-      }
-
-      ourInstallingNodes.removeAll(pluginNodes);
-    };
-    downloadAndInstallPlugins(project, list, available.getPluginsModel().getAllPlugins(), afterCallback);
-  }
-
-  public static boolean downloadAndInstallPlugins(@Nullable Project project,
-                                                  @Nonnull final List<PluginDescriptor> toInstall,
-                                                  @Nonnull final List<PluginDescriptor> allPlugins,
-                                                  @Nullable final Consumer<Collection<PluginDescriptor>> afterCallback) {
-    Set<PluginDescriptor> pluginsForInstallWithDependencies = PluginInstallUtil.getPluginsForInstall(toInstall, allPlugins);
-
-    List<PlatformOrPluginNode> remap = pluginsForInstallWithDependencies.stream().map(x -> new PlatformOrPluginNode(x.getPluginId(), null, x)).collect(Collectors.toList());
-    PlatformOrPluginUpdateResult result = new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL, remap);
-    Predicate<PluginId> greenNodeStrategy = pluginId -> {
-      // do not mark target node as green, only depend
-      for (PluginDescriptor node : toInstall) {
-        if (node.getPluginId().equals(pluginId)) {
-          return false;
-        }
-      }
-      return true;
-    };
-    PlatformOrPluginDialog dialog = new PlatformOrPluginDialog(project, result, greenNodeStrategy, afterCallback);
-    if (pluginsForInstallWithDependencies.size() == toInstall.size()) {
-      dialog.doOKAction();
-      return true;
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        install(e.getData(Project.KEY), null);
     }
-    else {
-      return dialog.showAndGet();
+
+    @RequiredUIAccess
+    public void install(@Nullable Project project, @Nullable final Runnable onSuccess) {
+        PluginDescriptor[] selection = getPluginTable().getSelectedObjects();
+        PluginManagerMain installed = myCurrentPage.getInstalled();
+        PluginManagerMain available = myCurrentPage.getAvailable();
+
+        final List<PluginDescriptor> list = new ArrayList<>();
+        for (PluginDescriptor descr : selection) {
+            PluginNode pluginNode = null;
+            if (descr instanceof PluginNode) {
+                pluginNode = (PluginNode)descr;
+            }
+            else if (descr.isLoaded()) {
+                final PluginId pluginId = descr.getPluginId();
+                pluginNode = new PluginNode(pluginId);
+                pluginNode.setName(descr.getName());
+                pluginNode.setExperimental(descr.isExperimental());
+                pluginNode.addDependency(descr.getDependentPluginIds());
+                pluginNode.addOptionalDependency(descr.getOptionalDependentPluginIds());
+                pluginNode.setSize("-1");
+            }
+
+            if (pluginNode != null) {
+                if (pluginNode.isExperimental()) {
+                    if (Messages.showOkCancelDialog(
+                        "Are you sure install experimental plugin? Plugin can make IDE unstable, and may not implement expected features",
+                        Application.get().getName().get(),
+                        Messages.getWarningIcon()
+                    ) != Messages.OK) {
+                        return;
+                    }
+                }
+
+                list.add(pluginNode);
+                ourInstallingNodes.add(pluginNode);
+            }
+            final InstalledPluginsTableModel pluginsModel = (InstalledPluginsTableModel)installed.getPluginsModel();
+            final Set<PluginDescriptor> disabled = new HashSet<>();
+            final Set<PluginDescriptor> disabledDependants = new HashSet<>();
+            for (PluginDescriptor node : list) {
+                final PluginId pluginId = node.getPluginId();
+                if (pluginsModel.isDisabled(pluginId)) {
+                    disabled.add(node);
+                }
+                for (PluginId dependantId : node.getDependentPluginIds()) {
+                    final PluginDescriptor pluginDescriptor = PluginManager.getPlugin(dependantId);
+                    if (pluginDescriptor != null && pluginsModel.isDisabled(dependantId)) {
+                        disabledDependants.add(pluginDescriptor);
+                    }
+                }
+            }
+            if (suggestToEnableInstalledPlugins(pluginsModel, disabled, disabledDependants, list)) {
+                installed.setRequireShutdown(true);
+            }
+        }
+        final Consumer<Collection<PluginDescriptor>> afterCallback = pluginNodes -> {
+            if (pluginNodes.isEmpty()) {
+                return;
+            }
+            UIUtil.invokeLaterIfNeeded(() -> installedPluginsToModel(pluginNodes));
+
+            if (!installed.isDisposed()) {
+                UIUtil.invokeLaterIfNeeded(() -> {
+                    getPluginTable().updateUI();
+                    installed.setRequireShutdown(true);
+                });
+            }
+            else {
+                boolean needToRestart = false;
+                for (PluginDescriptor node : pluginNodes) {
+                    final PluginDescriptor pluginDescriptor = PluginManager.getPlugin(node.getPluginId());
+                    if (pluginDescriptor == null || pluginDescriptor.isEnabled()) {
+                        needToRestart = true;
+                        break;
+                    }
+                }
+
+                if (needToRestart) {
+                    PluginManagerMain.notifyPluginsWereInstalled(pluginNodes, null);
+                }
+            }
+
+            if (onSuccess != null) {
+                onSuccess.run();
+            }
+
+            ourInstallingNodes.removeAll(pluginNodes);
+        };
+        downloadAndInstallPlugins(project, list, available.getPluginsModel().getAllPlugins(), afterCallback);
     }
-  }
 
-  private static boolean suggestToEnableInstalledPlugins(final InstalledPluginsTableModel pluginsModel,
-                                                         final Set<PluginDescriptor> disabled,
-                                                         final Set<PluginDescriptor> disabledDependants,
-                                                         final List<PluginDescriptor> list) {
-    if (!disabled.isEmpty() || !disabledDependants.isEmpty()) {
-      String message = "";
-      if (disabled.size() == 1) {
-        message += "Updated plugin '" + disabled.iterator().next().getName() + "' is disabled.";
-      }
-      else if (!disabled.isEmpty()) {
-        message += "Updated plugins " + StringUtil.join(disabled, PluginDescriptor::getName, ", ") + " are disabled.";
-      }
+    public static boolean downloadAndInstallPlugins(
+        @Nullable Project project,
+        @Nonnull final List<PluginDescriptor> toInstall,
+        @Nonnull final List<PluginDescriptor> allPlugins,
+        @Nullable final Consumer<Collection<PluginDescriptor>> afterCallback
+    ) {
+        Set<PluginDescriptor> pluginsForInstallWithDependencies = PluginInstallUtil.getPluginsForInstall(toInstall, allPlugins);
 
-      if (!disabledDependants.isEmpty()) {
-        message += "<br>";
-        message += "Updated plugin" + (list.size() > 1 ? "s depend " : " depends ") + "on disabled";
-        if (disabledDependants.size() == 1) {
-          message += " plugin '" + disabledDependants.iterator().next().getName() + "'.";
+        List<PlatformOrPluginNode> remap = pluginsForInstallWithDependencies.stream()
+            .map(x -> new PlatformOrPluginNode(x.getPluginId(), null, x))
+            .collect(Collectors.toList());
+        PlatformOrPluginUpdateResult result = new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL, remap);
+        Predicate<PluginId> greenNodeStrategy = pluginId -> {
+            // do not mark target node as green, only depend
+            for (PluginDescriptor node : toInstall) {
+                if (node.getPluginId().equals(pluginId)) {
+                    return false;
+                }
+            }
+            return true;
+        };
+        PlatformOrPluginDialog dialog = new PlatformOrPluginDialog(project, result, greenNodeStrategy, afterCallback);
+        if (pluginsForInstallWithDependencies.size() == toInstall.size()) {
+            dialog.doOKAction();
+            return true;
         }
         else {
-          message += " plugins " + StringUtil.join(disabledDependants, PluginDescriptor::getName, ", ") + ".";
+            return dialog.showAndGet();
         }
-      }
-      message += " Disabled plugins and plugins which depends on disabled plugins won't be activated after restart.";
-
-      int result;
-      if (!disabled.isEmpty() && !disabledDependants.isEmpty()) {
-        result = Messages.showYesNoCancelDialog(
-          XmlStringUtil.wrapInHtml(message),
-          CommonLocalize.titleWarning().get(),
-          "Enable all",
-          "Enable updated plugin" + (disabled.size() > 1 ? "s" : ""),
-          CommonLocalize.buttonCancel().get(),
-          Messages.getQuestionIcon()
-        );
-        if (result == Messages.CANCEL) return false;
-      }
-      else {
-        message += "<br>Would you like to enable ";
-        if (!disabled.isEmpty()) {
-          message += "updated plugin" + (disabled.size() > 1 ? "s" : "");
-        }
-        else {
-          //noinspection SpellCheckingInspection
-          message += "plugin dependenc" + (disabledDependants.size() > 1 ? "ies" : "y");
-        }
-        message += "?</body></html>";
-        result = Messages.showYesNoDialog(message, CommonLocalize.titleWarning().get(), Messages.getQuestionIcon());
-        if (result == Messages.NO) return false;
-      }
-
-      if (result == Messages.YES) {
-        disabled.addAll(disabledDependants);
-        pluginsModel.enableRows(disabled.toArray(new PluginDescriptor[disabled.size()]), true);
-      }
-      else if (result == Messages.NO && !disabled.isEmpty()) {
-        pluginsModel.enableRows(disabled.toArray(new PluginDescriptor[disabled.size()]), true);
-      }
-      return true;
-    }
-    return false;
-  }
-
-  private void installedPluginsToModel(Collection<PluginDescriptor> list) {
-    for (PluginDescriptor pluginNode : list) {
-      final PluginId id = pluginNode.getPluginId();
-      final InstalledPluginsState pluginsState = InstalledPluginsState.getInstance();
-
-      pluginsState.getInstalledPlugins().add(id);
-      pluginsState.getOutdatedPlugins().remove(id);
     }
 
-    final InstalledPluginsTableModel installedPluginsModel = (InstalledPluginsTableModel)myCurrentPage.getInstalled().getPluginsModel();
-    for (PluginDescriptor node : list) {
-      installedPluginsModel.appendOrUpdateDescriptor(node);
-    }
-  }
+    private static boolean suggestToEnableInstalledPlugins(
+        final InstalledPluginsTableModel pluginsModel,
+        final Set<PluginDescriptor> disabled,
+        final Set<PluginDescriptor> disabledDependants,
+        final List<PluginDescriptor> list
+    ) {
+        if (!disabled.isEmpty() || !disabledDependants.isEmpty()) {
+            String message = "";
+            if (disabled.size() == 1) {
+                message += "Updated plugin '" + disabled.iterator().next().getName() + "' is disabled.";
+            }
+            else if (!disabled.isEmpty()) {
+                message += "Updated plugins " + StringUtil.join(disabled, PluginDescriptor::getName, ", ") + " are disabled.";
+            }
 
-  public PluginTable getPluginTable() {
-    return myCurrentPage.getAvailable().getPluginTable();
-  }
+            if (!disabledDependants.isEmpty()) {
+                message += "<br>";
+                message += "Updated plugin" + (list.size() > 1 ? "s depend " : " depends ") + "on disabled";
+                if (disabledDependants.size() == 1) {
+                    message += " plugin '" + disabledDependants.iterator().next().getName() + "'.";
+                }
+                else {
+                    message += " plugins " + StringUtil.join(disabledDependants, PluginDescriptor::getName, ", ") + ".";
+                }
+            }
+            message += " Disabled plugins and plugins which depends on disabled plugins won't be activated after restart.";
+
+            int result;
+            if (!disabled.isEmpty() && !disabledDependants.isEmpty()) {
+                result = Messages.showYesNoCancelDialog(
+                    XmlStringUtil.wrapInHtml(message),
+                    CommonLocalize.titleWarning().get(),
+                    "Enable all",
+                    "Enable updated plugin" + (disabled.size() > 1 ? "s" : ""),
+                    CommonLocalize.buttonCancel().get(),
+                    Messages.getQuestionIcon()
+                );
+                if (result == Messages.CANCEL) {
+                    return false;
+                }
+            }
+            else {
+                message += "<br>Would you like to enable ";
+                if (!disabled.isEmpty()) {
+                    message += "updated plugin" + (disabled.size() > 1 ? "s" : "");
+                }
+                else {
+                    //noinspection SpellCheckingInspection
+                    message += "plugin dependenc" + (disabledDependants.size() > 1 ? "ies" : "y");
+                }
+                message += "?</body></html>";
+                result = Messages.showYesNoDialog(message, CommonLocalize.titleWarning().get(), Messages.getQuestionIcon());
+                if (result == Messages.NO) {
+                    return false;
+                }
+            }
+
+            if (result == Messages.YES) {
+                disabled.addAll(disabledDependants);
+                pluginsModel.enableRows(disabled.toArray(new PluginDescriptor[disabled.size()]), true);
+            }
+            else if (result == Messages.NO && !disabled.isEmpty()) {
+                pluginsModel.enableRows(disabled.toArray(new PluginDescriptor[disabled.size()]), true);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private void installedPluginsToModel(Collection<PluginDescriptor> list) {
+        for (PluginDescriptor pluginNode : list) {
+            final PluginId id = pluginNode.getPluginId();
+            final InstalledPluginsState pluginsState = InstalledPluginsState.getInstance();
+
+            pluginsState.getInstalledPlugins().add(id);
+            pluginsState.getOutdatedPlugins().remove(id);
+        }
+
+        final InstalledPluginsTableModel installedPluginsModel = (InstalledPluginsTableModel)myCurrentPage.getInstalled().getPluginsModel();
+        for (PluginDescriptor node : list) {
+            installedPluginsModel.appendOrUpdateDescriptor(node);
+        }
+    }
+
+    public PluginTable getPluginTable() {
+        return myCurrentPage.getAvailable().getPluginTable();
+    }
 }

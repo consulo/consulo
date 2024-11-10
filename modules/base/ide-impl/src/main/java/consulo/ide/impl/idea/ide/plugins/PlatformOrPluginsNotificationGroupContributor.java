@@ -29,9 +29,9 @@ import java.util.function.Consumer;
  */
 @ExtensionImpl
 public class PlatformOrPluginsNotificationGroupContributor implements NotificationGroupContributor {
-  @Override
-  public void contribute(@Nonnull Consumer<NotificationGroup> registrator) {
-    registrator.accept(PluginManagerMain.ourPluginsLifecycleGroup);
-    registrator.accept(PlatformOrPluginUpdateChecker.ourGroup);
-  }
+    @Override
+    public void contribute(@Nonnull Consumer<NotificationGroup> registrator) {
+        registrator.accept(PluginManagerMain.ourPluginsLifecycleGroup);
+        registrator.accept(PlatformOrPluginUpdateChecker.ourGroup);
+    }
 }

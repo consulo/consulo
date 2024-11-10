@@ -24,19 +24,20 @@ import consulo.container.plugin.PluginManager;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Set;
 
 @ExtensionImpl
 public class DisabledPluginsUsagesCollector extends UsagesCollector {
-  @Override
-  @Nonnull
-  public String getGroupId() {
-    return "consulo.platform.base:disable.plugins";
-  }
+    @Override
+    @Nonnull
+    public String getGroupId() {
+        return "consulo.platform.base:disable.plugins";
+    }
 
-  @Override
-  @Nonnull
-  public Set<UsageDescriptor> getUsages(@Nullable Project project) {
-    return ContainerUtil.map2Set(PluginManager.getDisabledPlugins(), id -> new UsageDescriptor(id.getIdString(), 1));
-  }
+    @Override
+    @Nonnull
+    public Set<UsageDescriptor> getUsages(@Nullable Project project) {
+        return ContainerUtil.map2Set(PluginManager.getDisabledPlugins(), id -> new UsageDescriptor(id.getIdString(), 1));
+    }
 }

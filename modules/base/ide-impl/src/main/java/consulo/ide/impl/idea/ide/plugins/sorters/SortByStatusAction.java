@@ -19,20 +19,20 @@ import consulo.ide.impl.idea.ide.plugins.PluginTable;
 import consulo.ide.impl.idea.ide.plugins.PluginTableModel;
 
 /**
-* @author Konstantin Bulenkov
-*/
+ * @author Konstantin Bulenkov
+ */
 public class SortByStatusAction extends AbstractSortByAction {
-  public SortByStatusAction(PluginTable pluginTable, PluginTableModel pluginsModel) {
-    super("Status", pluginTable, pluginsModel);
-  }
+    public SortByStatusAction(PluginTable pluginTable, PluginTableModel pluginsModel) {
+        super("Status", pluginTable, pluginsModel);
+    }
 
-  @Override
-  public boolean isSelected() {
-    return myModel.isSortByStatus();
-  }
+    @Override
+    public boolean isSelected() {
+        return myModel.isSortByStatus();
+    }
 
-  @Override
-  public void setSelected(boolean state) {
-    myModel.setSortByStatus(state);
-  }
+    @Override
+    public void setSelected(boolean state) {
+        myModel.setSortByStatus(state);
+    }
 }

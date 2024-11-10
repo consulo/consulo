@@ -22,17 +22,17 @@ import consulo.ide.impl.idea.ide.plugins.PluginTableModel;
  * @author Konstantin Bulenkov
  */
 public class SortByRatingAction extends AbstractSortByAction {
-  public SortByRatingAction(PluginTable table, PluginTableModel model) {
-    super("Rating", table, model);
-  }
+    public SortByRatingAction(PluginTable table, PluginTableModel model) {
+        super("Rating", table, model);
+    }
 
-  @Override
-  public boolean isSelected() {
-    return myModel.isSortByRating();
-  }
+    @Override
+    public boolean isSelected() {
+        return myModel.isSortByRating();
+    }
 
-  @Override
-  protected void setSelected(boolean state) {
-    myModel.setSortByRating(state);
-  }
+    @Override
+    protected void setSelected(boolean state) {
+        myModel.setSortByRating(state);
+    }
 }

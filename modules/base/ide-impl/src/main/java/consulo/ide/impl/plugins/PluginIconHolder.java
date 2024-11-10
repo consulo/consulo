@@ -34,53 +34,56 @@ import java.util.function.Supplier;
  * @since 07/12/2020
  */
 public class PluginIconHolder {
-  private static final String PLUGIN_ICON_KEY = "PLUGIN_ICON_KEY";
+    private static final String PLUGIN_ICON_KEY = "PLUGIN_ICON_KEY";
 
-  public static final int ICON_SIZE = 32;
+    public static final int ICON_SIZE = 32;
 
-  private static final Logger LOG = Logger.getInstance(PluginIconHolder.class);
+    private static final Logger LOG = Logger.getInstance(PluginIconHolder.class);
 
-  private static final Supplier<Image> ourDecoratedDefaultImage = LazyValue.notNull(() -> decorateIcon(PlatformIconGroup.nodesPlugin()));
+    private static final Supplier<Image> ourDecoratedDefaultImage = LazyValue.notNull(() -> decorateIcon(PlatformIconGroup.nodesPlugin()));
 
-  @Nonnull
-  public static Image get(@Nonnull PluginDescriptor pluginDescriptor) {
-    return deferImage(pluginDescriptor, it -> ImageEffects.canvas(ICON_SIZE, ICON_SIZE, canvas2D -> {
-      // canvas state will dropped on theme change
-      Image pluginImage = initializeImage(pluginDescriptor);
+    @Nonnull
+    public static Image get(@Nonnull PluginDescriptor pluginDescriptor) {
+        return deferImage(pluginDescriptor, it -> ImageEffects.canvas(ICON_SIZE, ICON_SIZE, canvas2D -> {
+            // canvas state will dropped on theme change
+            Image pluginImage = initializeImage(pluginDescriptor);
 
-      canvas2D.drawImage(pluginImage, 0, 0);
-    }));
-  }
-
-  public static void put(@Nonnull PluginDescriptor descriptor, @Nonnull Image image) {
-    deferImage(descriptor, it -> decorateIcon(image));
-  }
-
-  private static Image deferImage(PluginDescriptor pluginDescriptor, Function<PluginDescriptor, Image> imageFunc) {
-    Image base = ourDecoratedDefaultImage.get();
-
-    return pluginDescriptor.computeUserData(PLUGIN_ICON_KEY, s -> IconDeferrer.getInstance().defer(base, pluginDescriptor.getPluginId(), pluginId -> imageFunc.apply(pluginDescriptor)));
-  }
-
-  @Nonnull
-  public static Image decorateIcon(@Nonnull Image image) {
-    return ImageEffects.resize(image, ICON_SIZE, ICON_SIZE);
-  }
-
-  @Nonnull
-  private static Image initializeImage(@Nonnull PluginDescriptor pluginDescriptor) {
-    byte[] iconBytes = pluginDescriptor.getIconBytes(StyleManager.get().getCurrentStyle().isDark());
-    if (iconBytes.length == 0) {
-      return decorateIcon(PlatformIconGroup.nodesPlugin());
+            canvas2D.drawImage(pluginImage, 0, 0);
+        }));
     }
 
-    try {
-      return decorateIcon(Image.fromStream(Image.ImageType.SVG, new UnsyncByteArrayInputStream(iconBytes)));
-    }
-    catch (Throwable e) {
-      LOG.warn(e);
+    public static void put(@Nonnull PluginDescriptor descriptor, @Nonnull Image image) {
+        deferImage(descriptor, it -> decorateIcon(image));
     }
 
-    return decorateIcon(PlatformIconGroup.nodesPlugin());
-  }
+    private static Image deferImage(PluginDescriptor pluginDescriptor, Function<PluginDescriptor, Image> imageFunc) {
+        Image base = ourDecoratedDefaultImage.get();
+
+        return pluginDescriptor.computeUserData(
+            PLUGIN_ICON_KEY,
+            s -> IconDeferrer.getInstance().defer(base, pluginDescriptor.getPluginId(), pluginId -> imageFunc.apply(pluginDescriptor))
+        );
+    }
+
+    @Nonnull
+    public static Image decorateIcon(@Nonnull Image image) {
+        return ImageEffects.resize(image, ICON_SIZE, ICON_SIZE);
+    }
+
+    @Nonnull
+    private static Image initializeImage(@Nonnull PluginDescriptor pluginDescriptor) {
+        byte[] iconBytes = pluginDescriptor.getIconBytes(StyleManager.get().getCurrentStyle().isDark());
+        if (iconBytes.length == 0) {
+            return decorateIcon(PlatformIconGroup.nodesPlugin());
+        }
+
+        try {
+            return decorateIcon(Image.fromStream(Image.ImageType.SVG, new UnsyncByteArrayInputStream(iconBytes)));
+        }
+        catch (Throwable e) {
+            LOG.warn(e);
+        }
+
+        return decorateIcon(PlatformIconGroup.nodesPlugin());
+    }
 }

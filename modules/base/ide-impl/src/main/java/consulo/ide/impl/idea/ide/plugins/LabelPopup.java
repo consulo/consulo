@@ -35,28 +35,34 @@ import java.util.function.Function;
  * @since 03/12/2020
  */
 public class LabelPopup extends JLabel {
-  private final LocalizeValue myPrefix;
+    private final LocalizeValue myPrefix;
 
-  public LabelPopup(LocalizeValue prefix, Function<LabelPopup, ? extends ActionGroup> groupBuilder) {
-    myPrefix = prefix;
-    setForeground(UIUtil.getLabelDisabledForeground());
-    setBorder(JBUI.Borders.empty(1, 1, 1, 5));
-    setIcon(TargetAWT.to(PlatformIconGroup.generalArrowdown()));
-    setHorizontalTextPosition(SwingConstants.LEADING);
+    public LabelPopup(LocalizeValue prefix, Function<LabelPopup, ? extends ActionGroup> groupBuilder) {
+        myPrefix = prefix;
+        setForeground(UIUtil.getLabelDisabledForeground());
+        setBorder(JBUI.Borders.empty(1, 1, 1, 5));
+        setIcon(TargetAWT.to(PlatformIconGroup.generalArrowdown()));
+        setHorizontalTextPosition(SwingConstants.LEADING);
 
-    new ClickListener() {
-      @Override
-      public boolean onClick(@Nonnull MouseEvent event, int clickCount) {
-        LabelPopup component = LabelPopup.this;
-        JBPopupFactory.getInstance()
-                .createActionGroupPopup(myPrefix.get(), groupBuilder.apply(component), DataManager.getInstance().getDataContext(component), JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, true)
-                .showUnderneathOf(component);
-        return true;
-      }
-    }.installOn(this);
-  }
+        new ClickListener() {
+            @Override
+            public boolean onClick(@Nonnull MouseEvent event, int clickCount) {
+                LabelPopup component = LabelPopup.this;
+                JBPopupFactory.getInstance()
+                    .createActionGroupPopup(
+                        myPrefix.get(),
+                        groupBuilder.apply(component),
+                        DataManager.getInstance().getDataContext(component),
+                        JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
+                        true
+                    )
+                    .showUnderneathOf(component);
+                return true;
+            }
+        }.installOn(this);
+    }
 
-  public void setPrefixedText(LocalizeValue tagValue) {
-    setText(LocalizeValue.join(myPrefix, LocalizeValue.space(), tagValue).get());
-  }
+    public void setPrefixedText(LocalizeValue tagValue) {
+        setText(LocalizeValue.join(myPrefix, LocalizeValue.space(), tagValue).get());
+    }
 }

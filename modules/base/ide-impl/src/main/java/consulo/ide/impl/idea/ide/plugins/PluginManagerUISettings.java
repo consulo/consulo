@@ -35,31 +35,31 @@ import org.jdom.Element;
 @ServiceImpl
 @State(name = "PluginManagerConfigurable", storages = @Storage("plugin_ui.xml"))
 public class PluginManagerUISettings implements PersistentStateComponent<Element>, PerformInBackgroundOption {
-  public boolean UPDATE_IN_BACKGROUND = false;
+    public boolean UPDATE_IN_BACKGROUND = false;
 
-  public static PluginManagerUISettings getInstance() {
-    return ServiceManager.getService(PluginManagerUISettings.class);
-  }
+    public static PluginManagerUISettings getInstance() {
+        return ServiceManager.getService(PluginManagerUISettings.class);
+    }
 
-  @Override
-  public Element getState() {
-    Element element = new Element("state");
-    XmlSerializer.serializeInto(this, element);
-    return element;
-  }
+    @Override
+    public Element getState() {
+        Element element = new Element("state");
+        XmlSerializer.serializeInto(this, element);
+        return element;
+    }
 
-  @Override
-  public void loadState(final Element element) {
-    XmlSerializer.deserializeInto(this, element);
-  }
+    @Override
+    public void loadState(final Element element) {
+        XmlSerializer.deserializeInto(this, element);
+    }
 
-  @Override
-  public boolean shouldStartInBackground() {
-    return UPDATE_IN_BACKGROUND;
-  }
+    @Override
+    public boolean shouldStartInBackground() {
+        return UPDATE_IN_BACKGROUND;
+    }
 
-  @Override
-  public void processSentToBackground() {
-    UPDATE_IN_BACKGROUND = true;
-  }
+    @Override
+    public void processSentToBackground() {
+        UPDATE_IN_BACKGROUND = true;
+    }
 }

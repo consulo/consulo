@@ -37,61 +37,68 @@ import java.io.IOException;
 import java.util.Objects;
 
 class InstallPluginFromDiskAction extends DumbAwareAction {
-  private InstalledPluginsManagerMain myInstalledPluginsManagerMain;
+    private InstalledPluginsManagerMain myInstalledPluginsManagerMain;
 
-  InstallPluginFromDiskAction(InstalledPluginsManagerMain installedPluginsManagerMain) {
-    super("Install plugin from disk...", null, PlatformIconGroup.actionsInstall());
-    myInstalledPluginsManagerMain = installedPluginsManagerMain;
-  }
+    InstallPluginFromDiskAction(InstalledPluginsManagerMain installedPluginsManagerMain) {
+        super("Install plugin from disk...", null, PlatformIconGroup.actionsInstall());
+        myInstalledPluginsManagerMain = installedPluginsManagerMain;
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    final FileChooserDescriptor descriptor = new FileChooserDescriptor(false, false, true, true, false, false) {
-      @RequiredUIAccess
-      @Override
-      public boolean isFileSelectable(VirtualFile file) {
-        return Objects.equals(file.getExtension(), PluginManager.CONSULO_PLUGIN_EXTENSION);
-      }
-    };
-    descriptor.setTitle("Choose Plugin File");
-    descriptor.setDescription("'consulo-plugin' files are accepted");
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        final FileChooserDescriptor descriptor = new FileChooserDescriptor(false, false, true, true, false, false) {
+            @RequiredUIAccess
+            @Override
+            public boolean isFileSelectable(VirtualFile file) {
+                return Objects.equals(file.getExtension(), PluginManager.CONSULO_PLUGIN_EXTENSION);
+            }
+        };
+        descriptor.setTitle("Choose Plugin File");
+        descriptor.setDescription("'consulo-plugin' files are accepted");
 
-    FileChooser.chooseFile(descriptor, null, myInstalledPluginsManagerMain.getMainPanel(), null).doWhenDone(virtualFile -> {
-      final File file = VfsUtilCore.virtualToIoFile(virtualFile);
-      try {
-        final PluginDescriptor pluginDescriptor = InstalledPluginsManagerMain.loadDescriptorFromArchive(file);
-        if (pluginDescriptor == null) {
-          Messages.showErrorDialog("Fail to load plugin descriptor from file " + file.getName(), CommonBundle.getErrorTitle());
-          return;
-        }
-        if (PluginValidator.isIncompatible(pluginDescriptor)) {
-          Messages.showErrorDialog("Plugin " + pluginDescriptor.getName() + " is incompatible with current installation",
-                                   CommonBundle.getErrorTitle());
-          return;
-        }
-        final PluginDescriptor alreadyInstalledPlugin = PluginManager.findPlugin(pluginDescriptor.getPluginId());
-        if (alreadyInstalledPlugin != null) {
-          final File oldFile = alreadyInstalledPlugin.getPath();
-          if (oldFile != null) {
-            StartupActionScriptManager.addActionCommand(new StartupActionScriptManager.DeleteCommand(oldFile));
-          }
-        }
-        if (((InstalledPluginsTableModel)myInstalledPluginsManagerMain.myPluginsModel).appendOrUpdateDescriptor(pluginDescriptor)) {
-          PluginDownloader.install(file, file.getName(), false);
-          myInstalledPluginsManagerMain.select(pluginDescriptor.getPluginId());
-          myInstalledPluginsManagerMain.checkInstalledPluginDependencies(pluginDescriptor);
-          myInstalledPluginsManagerMain.setRequireShutdown(true);
-        }
-        else {
-          Messages.showInfoMessage(myInstalledPluginsManagerMain.getMainPanel(),
-                                   "Plugin " + pluginDescriptor.getName() + " was already installed",
-                                   CommonBundle.getWarningTitle());
-        }
-      }
-      catch (IOException ex) {
-        Messages.showErrorDialog(ex.getMessage(), CommonBundle.getErrorTitle());
-      }
-    });
-  }
+        FileChooser.chooseFile(descriptor, null, myInstalledPluginsManagerMain.getMainPanel(), null).doWhenDone(virtualFile -> {
+            final File file = VfsUtilCore.virtualToIoFile(virtualFile);
+            try {
+                final PluginDescriptor pluginDescriptor = InstalledPluginsManagerMain.loadDescriptorFromArchive(file);
+                if (pluginDescriptor == null) {
+                    Messages.showErrorDialog(
+                        "Fail to load plugin descriptor from file " + file.getName(),
+                        CommonBundle.getErrorTitle()
+                    );
+                    return;
+                }
+                if (PluginValidator.isIncompatible(pluginDescriptor)) {
+                    Messages.showErrorDialog(
+                        "Plugin " + pluginDescriptor.getName() + " is incompatible with current installation",
+                        CommonBundle.getErrorTitle()
+                    );
+                    return;
+                }
+                final PluginDescriptor alreadyInstalledPlugin = PluginManager.findPlugin(pluginDescriptor.getPluginId());
+                if (alreadyInstalledPlugin != null) {
+                    final File oldFile = alreadyInstalledPlugin.getPath();
+                    if (oldFile != null) {
+                        StartupActionScriptManager.addActionCommand(new StartupActionScriptManager.DeleteCommand(oldFile));
+                    }
+                }
+                if (((InstalledPluginsTableModel)myInstalledPluginsManagerMain.myPluginsModel).appendOrUpdateDescriptor(pluginDescriptor)) {
+                    PluginDownloader.install(file, file.getName(), false);
+                    myInstalledPluginsManagerMain.select(pluginDescriptor.getPluginId());
+                    myInstalledPluginsManagerMain.checkInstalledPluginDependencies(pluginDescriptor);
+                    myInstalledPluginsManagerMain.setRequireShutdown(true);
+                }
+                else {
+                    Messages.showInfoMessage(
+                        myInstalledPluginsManagerMain.getMainPanel(),
+                        "Plugin " + pluginDescriptor.getName() + " was already installed",
+                        CommonBundle.getWarningTitle()
+                    );
+                }
+            }
+            catch (IOException ex) {
+                Messages.showErrorDialog(ex.getMessage(), CommonBundle.getErrorTitle());
+            }
+        });
+    }
 }

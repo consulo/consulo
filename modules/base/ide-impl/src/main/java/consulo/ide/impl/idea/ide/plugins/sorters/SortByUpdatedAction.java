@@ -22,17 +22,17 @@ import consulo.ide.impl.idea.ide.plugins.PluginTableModel;
  * @author Konstantin Bulenkov
  */
 public class SortByUpdatedAction extends AbstractSortByAction {
-  public SortByUpdatedAction(PluginTable table, PluginTableModel model) {
-    super("Last Updated", table, model);
-  }
+    public SortByUpdatedAction(PluginTable table, PluginTableModel model) {
+        super("Last Updated", table, model);
+    }
 
-  @Override
-  public boolean isSelected() {
-    return myModel.isSortByUpdated();
-  }
+    @Override
+    public boolean isSelected() {
+        return myModel.isSortByUpdated();
+    }
 
-  @Override
-  protected void setSelected(boolean state) {
-    myModel.setSortByUpdated(state);
-  }
+    @Override
+    protected void setSelected(boolean state) {
+        myModel.setSortByUpdated(state);
+    }
 }

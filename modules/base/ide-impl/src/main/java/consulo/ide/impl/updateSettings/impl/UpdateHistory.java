@@ -27,6 +27,7 @@ import jakarta.inject.Singleton;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -39,51 +40,51 @@ import java.util.TreeMap;
 @ServiceImpl
 @State(name = "UpdateHistory", storages = @Storage(value = "updateHistory.xml", roamingType = RoamingType.DISABLED))
 public class UpdateHistory implements PersistentStateComponent<UpdateHistory.State> {
-  public static class State {
-    public Map<String, String> pluginVersions = new TreeMap<>();
+    public static class State {
+        public Map<String, String> pluginVersions = new TreeMap<>();
 
-    public boolean showChangeLog;
+        public boolean showChangeLog;
 
-    public boolean showExperimentalWarning = true;
-  }
+        public boolean showExperimentalWarning = true;
+    }
 
-  private State myState = new State();
+    private State myState = new State();
 
-  public void replaceHistory(Map<String, String> history) {
-    myState.pluginVersions.putAll(history);
+    public void replaceHistory(Map<String, String> history) {
+        myState.pluginVersions.putAll(history);
 
-    myState.showChangeLog = true;
-  }
+        myState.showChangeLog = true;
+    }
 
-  public void setShowChangeLog(boolean value) {
-    myState.showChangeLog = value;
-  }
+    public void setShowChangeLog(boolean value) {
+        myState.showChangeLog = value;
+    }
 
-  public boolean isShowChangeLog() {
-    return myState.showChangeLog;
-  }
+    public boolean isShowChangeLog() {
+        return myState.showChangeLog;
+    }
 
-  public void setShowExperimentalWarning(boolean value) {
-    myState.showExperimentalWarning = value;
-  }
+    public void setShowExperimentalWarning(boolean value) {
+        myState.showExperimentalWarning = value;
+    }
 
-  public boolean isShowExperimentalWarning() {
-    return myState.showExperimentalWarning;
-  }
+    public boolean isShowExperimentalWarning() {
+        return myState.showExperimentalWarning;
+    }
 
-  @Nonnull
-  public String getHistoryVersion(PluginId pluginId, String defaultVersion) {
-    return myState.pluginVersions.getOrDefault(pluginId.getIdString(), defaultVersion);
-  }
+    @Nonnull
+    public String getHistoryVersion(PluginId pluginId, String defaultVersion) {
+        return myState.pluginVersions.getOrDefault(pluginId.getIdString(), defaultVersion);
+    }
 
-  @Nullable
-  @Override
-  public State getState() {
-    return myState;
-  }
+    @Nullable
+    @Override
+    public State getState() {
+        return myState;
+    }
 
-  @Override
-  public void loadState(State state) {
-    myState = state;
-  }
+    @Override
+    public void loadState(State state) {
+        myState = state;
+    }
 }

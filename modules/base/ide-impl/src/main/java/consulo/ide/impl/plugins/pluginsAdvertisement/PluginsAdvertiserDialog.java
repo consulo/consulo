@@ -51,7 +51,11 @@ public class PluginsAdvertiserDialog extends WholeWestDialogWrapper {
     private boolean myUserAccepted;
     private final Map<PluginId, Boolean> myDownloadState;
 
-    public PluginsAdvertiserDialog(@Nullable Project project, @Nonnull List<PluginDescriptor> allPlugins, @Nonnull List<PluginDescriptor> toInstallPlugins) {
+    public PluginsAdvertiserDialog(
+        @Nullable Project project,
+        @Nonnull List<PluginDescriptor> allPlugins,
+        @Nonnull List<PluginDescriptor> toInstallPlugins
+    ) {
         super(project);
         myAllPlugins = allPlugins;
         myDownloadState = new HashMap<>(toInstallPlugins.size());
@@ -103,7 +107,8 @@ public class PluginsAdvertiserDialog extends WholeWestDialogWrapper {
     @Override
     protected void doOKAction() {
         Application application = Application.get();
-        List<PluginDescriptor> loadedPluginDescriptors = application.getInstance(PluginAdvertiserRequester.class).getLoadedPluginDescriptors();
+        List<PluginDescriptor> loadedPluginDescriptors =
+            application.getInstance(PluginAdvertiserRequester.class).getLoadedPluginDescriptors();
         List<PluginDescriptor> toDownload = myToInstallPlugins.stream().filter(it -> myDownloadState.get(it.getPluginId())).toList();
         myUserAccepted = InstallPluginAction
             .downloadAndInstallPlugins(myProject, toDownload, loadedPluginDescriptors, ideaPluginDescriptors -> {

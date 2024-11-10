@@ -31,6 +31,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.Pair;
 
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.util.List;
 import java.util.Locale;
@@ -41,115 +42,122 @@ import java.util.function.Consumer;
  * User: anna
  */
 public class AvailablePluginsManagerMain extends PluginManagerMain {
-  public static final String MANAGE_REPOSITORIES = "Manage repositories...";
+    public static final String MANAGE_REPOSITORIES = "Manage repositories...";
 
-  public AvailablePluginsManagerMain() {
-    super();
-    init();
-    /*final JButton manageRepositoriesBtn = new JButton(MANAGE_REPOSITORIES);
-    if (myVendorFilter == null) {
-      manageRepositoriesBtn.setMnemonic('m');
-      manageRepositoriesBtn.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          if (ShowSettingsUtil.getInstance().editConfigurable(myActionsPanel, new PluginHostsConfigurable())) {
-            final List<String> pluginHosts = UpdateSettingsImpl.getInstance().getStoredPluginHosts();
-            if (!pluginHosts.contains(((AvailablePluginsTableModel)pluginsModel).getRepository())) {
-              ((AvailablePluginsTableModel)pluginsModel).setRepository(AvailablePluginsTableModel.ALL, myFilter.getFilter().toLowerCase());
+    public AvailablePluginsManagerMain() {
+        super();
+        init();
+        /*
+        final JButton manageRepositoriesBtn = new JButton(MANAGE_REPOSITORIES);
+        if (myVendorFilter == null) {
+            manageRepositoriesBtn.setMnemonic('m');
+            manageRepositoriesBtn.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (ShowSettingsUtil.getInstance().editConfigurable(myActionsPanel, new PluginHostsConfigurable())) {
+                        final List<String> pluginHosts = UpdateSettingsImpl.getInstance().getStoredPluginHosts();
+                        if (!pluginHosts.contains(((AvailablePluginsTableModel)pluginsModel).getRepository())) {
+                            ((AvailablePluginsTableModel)pluginsModel).setRepository(
+                                AvailablePluginsTableModel.ALL,
+                                myFilter.getFilter().toLowerCase()
+                            );
+                        }
+                        loadAvailablePlugins();
+                    }
+                }
+            });
+            myActionsPanel.add(manageRepositoriesBtn, BorderLayout.EAST);
+        }
+        */
+
+        /*
+        final JButton httpProxySettingsButton = new JButton(IdeBundle.message("button.http.proxy.settings"));
+        httpProxySettingsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (HttpProxyManagerImpl.editConfigurable(getMainPanel())) {
+                    loadAvailablePlugins();
+                }
             }
-            loadAvailablePlugins();
-          }
-        }
-      });
-      myActionsPanel.add(manageRepositoriesBtn, BorderLayout.EAST);
-    } */
-
-   /* final JButton httpProxySettingsButton = new JButton(IdeBundle.message("button.http.proxy.settings"));
-    httpProxySettingsButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        if (HttpProxyManagerImpl.editConfigurable(getMainPanel())) {
-          loadAvailablePlugins();
-        }
-      }
-    });
-    myActionsPanel.add(httpProxySettingsButton, BorderLayout.WEST);    */
-  }
-
-  @Nonnull
-  @Override
-  protected PluginTable createTable() {
-    myPluginsModel = new AvailablePluginsTableModel();
-    PluginTable table = new PluginTable(myPluginsModel);
-    table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-    return table;
-  }
-
-  @Override
-  protected void addCustomFilters(Consumer<JComponent> adder) {
-    LabelPopup categoryPopup = new LabelPopup(LocalizeValue.localizeTODO("Tag:"), this::createCategoryFilters);
-
-    adder.accept(categoryPopup);
-
-    updateCategoryPopup(categoryPopup);
-  }
-
-  private void updateCategoryPopup(LabelPopup labelPopup) {
-    Pair<String, LocalizeValue> tag = ((AvailablePluginsTableModel)myPluginsModel).getTargetTagInfo();
-    labelPopup.setPrefixedText(tag.getSecond());
-  }
-
-  @Nonnull
-  private ActionGroup createCategoryFilters(LabelPopup labelPopup) {
-    final Map<String, LocalizeValue> availableCategories = ((AvailablePluginsTableModel)myPluginsModel).getAvailableTags();
-
-    ActionGroup.Builder builder = ActionGroup.newImmutableBuilder();
-    Pair<String, LocalizeValue> unspecifiedTagInfo = AvailablePluginsTableModel.getUnspecifiedTagInfo();
-    builder.add(createFilterByCategoryAction(unspecifiedTagInfo.getFirst(), unspecifiedTagInfo.getSecond(), labelPopup));
-    for (final Map.Entry<String, LocalizeValue> entry : availableCategories.entrySet()) {
-      builder.add(createFilterByCategoryAction(entry.getKey(), entry.getValue(), labelPopup));
+        });
+        myActionsPanel.add(httpProxySettingsButton, BorderLayout.WEST);
+        */
     }
-    return builder.build();
-  }
 
-  private AnAction createFilterByCategoryAction(String tagId, LocalizeValue tagLocalizeValue, LabelPopup labelPopup) {
-    return new DumbAwareAction(tagLocalizeValue) {
-      @RequiredUIAccess
-      @Override
-      public void actionPerformed(@Nonnull AnActionEvent e) {
-        final String filter = myFilter.getFilter().toLowerCase(Locale.ROOT);
-        ((AvailablePluginsTableModel)myPluginsModel).setTargetTag(tagId, tagLocalizeValue, filter);
-        updateCategoryPopup(labelPopup);
-      }
-    };
-  }
-
-  @Override
-  protected DefaultActionGroup createSortersGroup() {
-    final DefaultActionGroup group = super.createSortersGroup();
-    group.addAction(new SortByDownloadsAction(myPluginTable, myPluginsModel));
-    if (PluginDescriptionPanel.ENABLED_STARS) {
-      group.addAction(new SortByRatingAction(myPluginTable, myPluginsModel));
+    @Nonnull
+    @Override
+    protected PluginTable createTable() {
+        myPluginsModel = new AvailablePluginsTableModel();
+        PluginTable table = new PluginTable(myPluginsModel);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        return table;
     }
-    group.addAction(new SortByUpdatedAction(myPluginTable, myPluginsModel));
-    return group;
-  }
 
-  @Override
-  public void reset() {
-    UiNotifyConnector.doWhenFirstShown(getPluginTable(), this::loadAvailablePlugins);
-    super.reset();
-  }
+    @Override
+    protected void addCustomFilters(Consumer<JComponent> adder) {
+        LabelPopup categoryPopup = new LabelPopup(LocalizeValue.localizeTODO("Tag:"), this::createCategoryFilters);
 
-  @Override
-  public ActionGroup getActionGroup() {
-    DefaultActionGroup actionGroup = new DefaultActionGroup();
-    actionGroup.addAction(new RefreshAction());
-    return actionGroup;
-  }
+        adder.accept(categoryPopup);
 
-  @Override
-  protected void propagateUpdates(List<PluginDescriptor> list) {
-    getInstalled().modifyPluginsList(list);
-  }
+        updateCategoryPopup(categoryPopup);
+    }
+
+    private void updateCategoryPopup(LabelPopup labelPopup) {
+        Pair<String, LocalizeValue> tag = ((AvailablePluginsTableModel)myPluginsModel).getTargetTagInfo();
+        labelPopup.setPrefixedText(tag.getSecond());
+    }
+
+    @Nonnull
+    private ActionGroup createCategoryFilters(LabelPopup labelPopup) {
+        final Map<String, LocalizeValue> availableCategories = ((AvailablePluginsTableModel)myPluginsModel).getAvailableTags();
+
+        ActionGroup.Builder builder = ActionGroup.newImmutableBuilder();
+        Pair<String, LocalizeValue> unspecifiedTagInfo = AvailablePluginsTableModel.getUnspecifiedTagInfo();
+        builder.add(createFilterByCategoryAction(unspecifiedTagInfo.getFirst(), unspecifiedTagInfo.getSecond(), labelPopup));
+        for (final Map.Entry<String, LocalizeValue> entry : availableCategories.entrySet()) {
+            builder.add(createFilterByCategoryAction(entry.getKey(), entry.getValue(), labelPopup));
+        }
+        return builder.build();
+    }
+
+    private AnAction createFilterByCategoryAction(String tagId, LocalizeValue tagLocalizeValue, LabelPopup labelPopup) {
+        return new DumbAwareAction(tagLocalizeValue) {
+            @RequiredUIAccess
+            @Override
+            public void actionPerformed(@Nonnull AnActionEvent e) {
+                final String filter = myFilter.getFilter().toLowerCase(Locale.ROOT);
+                ((AvailablePluginsTableModel)myPluginsModel).setTargetTag(tagId, tagLocalizeValue, filter);
+                updateCategoryPopup(labelPopup);
+            }
+        };
+    }
+
+    @Override
+    protected DefaultActionGroup createSortersGroup() {
+        final DefaultActionGroup group = super.createSortersGroup();
+        group.addAction(new SortByDownloadsAction(myPluginTable, myPluginsModel));
+        if (PluginDescriptionPanel.ENABLED_STARS) {
+            group.addAction(new SortByRatingAction(myPluginTable, myPluginsModel));
+        }
+        group.addAction(new SortByUpdatedAction(myPluginTable, myPluginsModel));
+        return group;
+    }
+
+    @Override
+    public void reset() {
+        UiNotifyConnector.doWhenFirstShown(getPluginTable(), this::loadAvailablePlugins);
+        super.reset();
+    }
+
+    @Override
+    public ActionGroup getActionGroup() {
+        DefaultActionGroup actionGroup = new DefaultActionGroup();
+        actionGroup.addAction(new RefreshAction());
+        return actionGroup;
+    }
+
+    @Override
+    protected void propagateUpdates(List<PluginDescriptor> list) {
+        getInstalled().modifyPluginsList(list);
+    }
 }

@@ -25,6 +25,7 @@ import consulo.ui.ex.awt.ColumnInfo;
 import consulo.container.plugin.PluginDescriptor;
 
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -38,92 +39,106 @@ import java.util.Map;
  * @since 22-Jun-17
  */
 public class PluginAdvertiserPluginModel extends PluginTableModel {
-  private static class MyPluginManagerColumnInfo extends PluginManagerColumnInfo {
-    public MyPluginManagerColumnInfo(PluginTableModel model) {
-      super(PluginManagerColumnInfo.COLUMN_NAME, model);
-    }
-
-    @Override
-    public TableCellRenderer getRenderer(final PluginDescriptor pluginDescriptor) {
-      return new PluginsTableRenderer(pluginDescriptor, false);
-    }
-
-    @Override
-    protected boolean isSortByName() {
-      return true;
-    }
-  }
-
-  private static class DownloadCheckboxColumnInfo extends ColumnInfo<PluginDescriptor, Boolean> {
-    private final Map<PluginId, Boolean> myDownloadMap;
-
-    public DownloadCheckboxColumnInfo(Map<PluginId, Boolean> downloadMap) {
-      super("");
-      myDownloadMap = downloadMap;
-    }
-
-    @Override
-    public Boolean valueOf(PluginDescriptor ideaPluginDescriptor) {
-      return myDownloadMap.get(ideaPluginDescriptor.getPluginId());
-    }
-
-    @Override
-    public boolean isCellEditable(final PluginDescriptor ideaPluginDescriptor) {
-      return true;
-    }
-
-    @Override
-    public Class getColumnClass() {
-      return Boolean.class;
-    }
-
-    @Override
-    public TableCellEditor getEditor(final PluginDescriptor o) {
-      return new BooleanTableCellEditor();
-    }
-
-    @Override
-    public TableCellRenderer getRenderer(final PluginDescriptor ideaPluginDescriptor) {
-      return new BooleanTableCellRenderer() {
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-          return super.getTableCellRendererComponent(table, value == null ? Boolean.TRUE : value, isSelected, hasFocus, row, column);
+    private static class MyPluginManagerColumnInfo extends PluginManagerColumnInfo {
+        public MyPluginManagerColumnInfo(PluginTableModel model) {
+            super(PluginManagerColumnInfo.COLUMN_NAME, model);
         }
-      };
+
+        @Override
+        public TableCellRenderer getRenderer(final PluginDescriptor pluginDescriptor) {
+            return new PluginsTableRenderer(pluginDescriptor, false);
+        }
+
+        @Override
+        protected boolean isSortByName() {
+            return true;
+        }
+    }
+
+    private static class DownloadCheckboxColumnInfo extends ColumnInfo<PluginDescriptor, Boolean> {
+        private final Map<PluginId, Boolean> myDownloadMap;
+
+        public DownloadCheckboxColumnInfo(Map<PluginId, Boolean> downloadMap) {
+            super("");
+            myDownloadMap = downloadMap;
+        }
+
+        @Override
+        public Boolean valueOf(PluginDescriptor ideaPluginDescriptor) {
+            return myDownloadMap.get(ideaPluginDescriptor.getPluginId());
+        }
+
+        @Override
+        public boolean isCellEditable(final PluginDescriptor ideaPluginDescriptor) {
+            return true;
+        }
+
+        @Override
+        public Class getColumnClass() {
+            return Boolean.class;
+        }
+
+        @Override
+        public TableCellEditor getEditor(final PluginDescriptor o) {
+            return new BooleanTableCellEditor();
+        }
+
+        @Override
+        public TableCellRenderer getRenderer(final PluginDescriptor ideaPluginDescriptor) {
+            return new BooleanTableCellRenderer() {
+                @Override
+                public Component getTableCellRendererComponent(
+                    JTable table,
+                    Object value,
+                    boolean isSelected,
+                    boolean hasFocus,
+                    int row,
+                    int column
+                ) {
+                    return super.getTableCellRendererComponent(
+                        table,
+                        value == null ? Boolean.TRUE : value,
+                        isSelected,
+                        hasFocus,
+                        row,
+                        column
+                    );
+                }
+            };
+        }
+
+        @Override
+        public void setValue(final PluginDescriptor ideaPluginDescriptor, Boolean value) {
+            myDownloadMap.put(ideaPluginDescriptor.getPluginId(), value);
+        }
+
+        @Override
+        public int getWidth(JTable table) {
+            return new JCheckBox().getPreferredSize().width;
+        }
+    }
+
+    public PluginAdvertiserPluginModel(Map<PluginId, Boolean> downloadState, @Nonnull List<PluginDescriptor> pluginDescriptors) {
+        columns = new ColumnInfo[]{new MyPluginManagerColumnInfo(this), new DownloadCheckboxColumnInfo(downloadState)};
+        view = new ArrayList<>();
+        updatePluginsList(pluginDescriptors);
     }
 
     @Override
-    public void setValue(final PluginDescriptor ideaPluginDescriptor, Boolean value) {
-      myDownloadMap.put(ideaPluginDescriptor.getPluginId(), value);
+    public void updatePluginsList(List<PluginDescriptor> list) {
+        view.clear();
+        filtered.clear();
+        view.addAll(list);
+        fireTableDataChanged();
     }
 
     @Override
-    public int getWidth(JTable table) {
-      return new JCheckBox().getPreferredSize().width;
+    public int getNameColumn() {
+        return 0;
     }
-  }
 
-  public PluginAdvertiserPluginModel(Map<PluginId, Boolean> downloadState, @Nonnull List<PluginDescriptor> pluginDescriptors) {
-    columns = new ColumnInfo[]{new MyPluginManagerColumnInfo(this), new DownloadCheckboxColumnInfo(downloadState)};
-    view = new ArrayList<>();
-    updatePluginsList(pluginDescriptors);
-  }
-
-  @Override
-  public void updatePluginsList(List<PluginDescriptor> list) {
-    view.clear();
-    filtered.clear();
-    view.addAll(list);
-    fireTableDataChanged();
-  }
-
-  @Override
-  public int getNameColumn() {
-    return 0;
-  }
-
-  @Override
-  public boolean isPluginDescriptorAccepted(PluginDescriptor descriptor) {
-    return false;
-  }
+    @Override
+    public boolean isPluginDescriptorAccepted(PluginDescriptor descriptor) {
+        return false;
+    }
 }

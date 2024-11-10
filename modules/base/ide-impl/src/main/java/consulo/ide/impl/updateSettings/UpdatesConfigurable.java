@@ -41,46 +41,46 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionImpl
 public class UpdatesConfigurable extends SimpleConfigurableByProperties implements Configurable, ApplicationConfigurable {
-  @Nonnull
-  @Override
-  public String getId() {
-    return "updateSettings";
-  }
+    @Nonnull
+    @Override
+    public String getId() {
+        return "updateSettings";
+    }
 
-  @Nonnull
-  @Override
-  public String getDisplayName() {
-    return "Update Settings";
-  }
+    @Nonnull
+    @Override
+    public String getDisplayName() {
+        return "Update Settings";
+    }
 
-  @Nullable
-  @Override
-  public String getParentId() {
-    return StandardConfigurableIds.PLATFORM_AND_PLUGINS_GROUP;
-  }
+    @Nullable
+    @Override
+    public String getParentId() {
+        return StandardConfigurableIds.PLATFORM_AND_PLUGINS_GROUP;
+    }
 
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  protected Component createLayout(PropertyBuilder propertyBuilder, @Nonnull Disposable uiDisposable) {
-    UpdateSettings updateSettings = UpdateSettings.getInstance();
+    @RequiredUIAccess
+    @Nonnull
+    @Override
+    protected Component createLayout(PropertyBuilder propertyBuilder, @Nonnull Disposable uiDisposable) {
+        UpdateSettings updateSettings = UpdateSettings.getInstance();
 
-    VerticalLayout layout = VerticalLayout.create();
+        VerticalLayout layout = VerticalLayout.create();
 
-    VerticalLayout repoLayout = VerticalLayout.create();
-    layout.add(LabeledLayout.create(LocalizeValue.localizeTODO("Repository settings"), repoLayout));
+        VerticalLayout repoLayout = VerticalLayout.create();
+        layout.add(LabeledLayout.create(LocalizeValue.localizeTODO("Repository settings"), repoLayout));
 
-    CheckBox enableUpdates = CheckBox.create(LocalizeValue.localizeTODO("Enabled updates?"));
-    propertyBuilder.add(enableUpdates, updateSettings::isEnable, updateSettings::setEnable);
+        CheckBox enableUpdates = CheckBox.create(LocalizeValue.localizeTODO("Enabled updates?"));
+        propertyBuilder.add(enableUpdates, updateSettings::isEnable, updateSettings::setEnable);
 
-    ComboBox<UpdateChannel> channelComboBox =
-      ComboBox.<UpdateChannel>builder().fillByEnum(UpdateChannel.class, it -> !it.isObsolete(), Object::toString).build();
-    channelComboBox.setEnabled(updateSettings.isEnable()); // set default state
-    propertyBuilder.add(channelComboBox, updateSettings::getChannel, updateSettings::setChannel);
-    enableUpdates.addValueListener(event -> channelComboBox.setEnabled(event.getValue()));
+        ComboBox<UpdateChannel> channelComboBox =
+            ComboBox.<UpdateChannel>builder().fillByEnum(UpdateChannel.class, it -> !it.isObsolete(), Object::toString).build();
+        channelComboBox.setEnabled(updateSettings.isEnable()); // set default state
+        propertyBuilder.add(channelComboBox, updateSettings::getChannel, updateSettings::setChannel);
+        enableUpdates.addValueListener(event -> channelComboBox.setEnabled(event.getValue()));
 
-    repoLayout.add(HorizontalLayout.create().add(enableUpdates));
-    repoLayout.add(LabeledBuilder.sided(LocalizeValue.localizeTODO("Channel"), channelComboBox));
-    return layout;
-  }
+        repoLayout.add(HorizontalLayout.create().add(enableUpdates));
+        repoLayout.add(LabeledBuilder.sided(LocalizeValue.localizeTODO("Channel"), channelComboBox));
+        return layout;
+    }
 }
