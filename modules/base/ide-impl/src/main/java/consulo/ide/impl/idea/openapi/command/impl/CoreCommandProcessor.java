@@ -10,8 +10,12 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandDescriptor;
+import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.event.CommandEvent;
 import consulo.undoRedo.event.CommandListener;
+import consulo.undoRedo.internal.builder.BaseCommandBuilder;
+import consulo.undoRedo.internal.builder.BaseExecutableCommandBuilder;
+import consulo.undoRedo.internal.builder.WrappableRunnableCommandBuilder;
 import consulo.util.collection.Lists;
 import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.function.ThrowableSupplier;
@@ -24,17 +28,34 @@ import java.util.List;
 import java.util.Stack;
 
 public class CoreCommandProcessor extends CommandProcessorEx {
-    private class MyCommandBuilder<R> extends MyStartableCommandBuilder<R> {
+    protected interface WrappableStartableCommandBuilder<R, THIS extends WrappableStartableCommandBuilder<R, THIS>>
+        extends StartableCommandBuilder<R, THIS>, WrappableRunnableCommandBuilder<R, THIS> {
+    }
+
+    protected class MyStartableCommandBuilder<R, THIS extends MyStartableCommandBuilder<R, THIS>>
+        extends BaseExecutableCommandBuilder<R, THIS> implements WrappableStartableCommandBuilder<R, THIS> {
+
+        @Override
+        public CommandProcessor getCommandProcessor() {
+            return CoreCommandProcessor.this;
+        }
+
+        @Override
+        public Application getApplication() {
+            return CoreCommandProcessor.this.myApplication;
+        }
+
+        @Override
+        @RequiredUIAccess
+        public CommandToken start() {
+            return startCommand(build(EmptyRunnable.INSTANCE));
+        }
+
         @Override
         @RequiredUIAccess
         public ExecutionResult<R> execute(ThrowableSupplier<R, ? extends Throwable> executable) {
             SimpleReference<ExecutionResult<R>> result = SimpleReference.create();
-            executeCommand(build(() -> {
-                if (myGlobalUndoAction) {
-                    markCurrentCommandAsGlobal(build(EmptyRunnable.INSTANCE).project());
-                }
-                result.set(super.execute(executable));
-            }));
+            executeCommand(build(() -> result.set(super.execute(executable))));
             return result.get();
         }
     }
@@ -168,8 +189,8 @@ public class CoreCommandProcessor extends CommandProcessorEx {
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public <R> StartableCommandBuilder<R> newCommand() {
-        return new MyCommandBuilder();
+    public <T> StartableCommandBuilder<T, ? extends StartableCommandBuilder<T, ?>> newCommand() {
+        return new MyStartableCommandBuilder();
     }
 
     @RequiredUIAccess

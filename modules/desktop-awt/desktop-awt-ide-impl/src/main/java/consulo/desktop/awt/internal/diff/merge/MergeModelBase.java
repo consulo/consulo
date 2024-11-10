@@ -28,6 +28,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.*;
 import consulo.undoRedo.builder.RunnableCommandBuilder;
+import consulo.undoRedo.internal.builder.WrappableRunnableCommandBuilder;
 import consulo.util.collection.SmartList;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
@@ -241,10 +242,10 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
     public <R> RunnableCommandBuilder<R, ? extends RunnableCommandBuilder<R, ?>> newMergeCommand(@Nullable IntList affectedChanges) {
         IntList allAffectedChanges = affectedChanges != null ? collectAffectedChanges(affectedChanges) : null;
 
-        return (RunnableCommandBuilder<R, ? extends RunnableCommandBuilder<R,?>>)DiffImplUtil.newWriteCommand()
+        return ((WrappableRunnableCommandBuilder<R, ? extends RunnableCommandBuilder<R,?>>)DiffImplUtil.newWriteCommand())
             .project(myProject)
             .document(myDocument)
-            .proxy(runnable -> {
+            .outerWrap(runnable -> {
                 LOG.assertTrue(!myInsideCommand);
 
                 // We should restore states after changes in document (by DocumentUndoProvider) to avoid corruption by our onBeforeDocumentChange()
