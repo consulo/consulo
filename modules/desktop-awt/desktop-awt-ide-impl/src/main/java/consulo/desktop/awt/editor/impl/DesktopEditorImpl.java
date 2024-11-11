@@ -1298,6 +1298,8 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
     @Override
     protected void bulkUpdateStarted() {
+        super.bulkUpdateStarted();
+
         myView.getPreferredSize(); // make sure size is calculated (in case it will be required while bulk mode is active)
 
         ((DesktopScrollingModelImpl)myScrollingModel).onBulkDocumentUpdateStarted();
