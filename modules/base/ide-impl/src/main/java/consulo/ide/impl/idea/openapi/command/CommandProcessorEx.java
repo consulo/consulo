@@ -2,7 +2,9 @@
 package consulo.ide.impl.idea.openapi.command;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.ide.impl.idea.openapi.command.impl.BaseExecutableCommandBuilder;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.undoRedo.internal.builder.BaseExecutableCommandBuilder;
+import consulo.undoRedo.internal.builder.WrappableRunnableCommandBuilder;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.undoRedo.CommandDescriptor;
@@ -17,16 +19,9 @@ import jakarta.annotation.Nullable;
  * @author max
  */
 public abstract class CommandProcessorEx extends CommandProcessor {
-    public interface StartableCommandBuilder<R> extends RunnableCommandBuilder<R, StartableCommandBuilder<R>> {
+    public interface StartableCommandBuilder<R, THIS extends StartableCommandBuilder<R, THIS>> extends RunnableCommandBuilder<R, THIS> {
+        @RequiredUIAccess
         CommandToken start();
-    }
-
-    protected class MyStartableCommandBuilder<R> extends BaseExecutableCommandBuilder<R, StartableCommandBuilder<R>>
-        implements StartableCommandBuilder<R> {
-        @Override
-        public CommandToken start() {
-            return startCommand(build(EmptyRunnable.INSTANCE));
-        }
     }
 
     public abstract void enterModal();
@@ -35,16 +30,16 @@ public abstract class CommandProcessorEx extends CommandProcessor {
 
     @Nonnull
     @Override
-    public <R> StartableCommandBuilder<R> newCommand() {
-        return new MyStartableCommandBuilder<>();
-    }
+    public abstract <T> StartableCommandBuilder<T, ? extends StartableCommandBuilder<T, ?>> newCommand();
 
     @Nullable
+    @RequiredUIAccess
     protected abstract CommandToken startCommand(CommandDescriptor commandDescriptor);
 
     @Deprecated
     @DeprecationInfo("Use #newCommand().start()")
     @Nullable
+    @RequiredUIAccess
     public CommandToken startCommand(
         @Nullable Project project,
         String name,

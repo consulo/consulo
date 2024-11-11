@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.command.impl;
+package consulo.undoRedo.internal.builder;
 
 import consulo.document.Document;
 import consulo.localize.LocalizeValue;

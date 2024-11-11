@@ -13,25 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.command.impl;
+package consulo.undoRedo.internal.builder;
 
-import consulo.undoRedo.builder.ExecutableCommandBuilder;
 import consulo.util.lang.function.ThrowableSupplier;
 
 /**
  * @author UNV
  * @since 2024-10-28
  */
-public class BaseExecutableCommandBuilder<R, THIS extends ExecutableCommandBuilder<R, THIS>>
-    extends BaseCommandBuilder<THIS>  implements ExecutableCommandBuilder<R, THIS> {
-
-    protected boolean myGlobalUndoAction = false;
-
-    @Override
-    public THIS inGlobalUndoAction() {
-        myGlobalUndoAction = true;
-        return self();
-    }
+public abstract class BaseExecutableCommandBuilder<R, THIS extends WrappableExecutableCommandBuilder<R, THIS>>
+    extends BaseCommandBuilder<THIS> implements WrappableExecutableCommandBuilder<R, THIS> {
 
     @Override
     public ExecutionResult<R> execute(ThrowableSupplier<R, ? extends Throwable> executable) {

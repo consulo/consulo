@@ -32,20 +32,14 @@ import java.util.function.Consumer;
  * @since 2024-10-28
  */
 public interface ExecutableCommandBuilder<R, THIS extends ExecutableCommandBuilder<R, THIS>> extends CommandBuilder<THIS> {
-    @SuppressWarnings("unchecked")
-    default THIS inLater() {
-        return proxy(runnable -> Application.get().invokeLater(runnable));
-    }
+    THIS inLater();
 
     @SuppressWarnings("unchecked")
     default THIS inLaterIf(boolean inLater) {
         return inLater ? inLater() : (THIS)this;
     }
 
-    @SuppressWarnings("unchecked")
-    default THIS inBulkUpdate() {
-        return proxy(runnable -> DocumentUtil.executeInBulk(build(EmptyRunnable.INSTANCE).document(), true, runnable));
-    }
+    THIS inBulkUpdate();
 
     @SuppressWarnings("unchecked")
     default THIS inBulkUpdateIf(boolean inBulkUpdate) {
@@ -59,24 +53,13 @@ public interface ExecutableCommandBuilder<R, THIS extends ExecutableCommandBuild
         return globalUndoAction ? inGlobalUndoAction() : (THIS)this;
     }
 
-    @SuppressWarnings("unchecked")
-    default THIS inUndoTransparentAction() {
-        return proxy(runnable -> CommandProcessor.getInstance().runUndoTransparentAction(runnable));
-    }
+    THIS inUndoTransparentAction();
 
-    @SuppressWarnings("unchecked")
-    default THIS inWriteAction() {
-        return proxy(runnable -> Application.get().runWriteAction(runnable));
-    }
+    THIS inWriteAction();
 
     @SuppressWarnings("unchecked")
     default THIS inWriteActionIf(boolean writeAction) {
         return writeAction ? inWriteAction() : (THIS)this;
-    }
-
-    @SuppressWarnings("unchecked")
-    default THIS proxy(@RequiredUIAccess @Nonnull Consumer<Runnable> runner) {
-        return (THIS)new ProxyExecutableCommandBuilder<R, THIS, THIS>((THIS)this, runner);
     }
 
     ExecutionResult<R> execute(ThrowableSupplier<R, ? extends Throwable> executable);
