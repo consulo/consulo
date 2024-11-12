@@ -15,6 +15,7 @@
  */
 package consulo.http;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
@@ -50,6 +51,8 @@ public interface HttpProxyManager {
    * @throws IOException in case of any I/O troubles or if created connection isn't instance of HttpURLConnection.
    */
   @Nonnull
+  @Deprecated
+  @DeprecationInfo("Prefer HttpRequests")
   default HttpURLConnection openHttpConnection(@Nonnull String location) throws IOException {
     URLConnection urlConnection = openConnection(location);
     if (urlConnection instanceof HttpURLConnection) {
@@ -61,6 +64,8 @@ public interface HttpProxyManager {
   }
 
   @Nonnull
+  @Deprecated
+  @DeprecationInfo("Prefer HttpRequests")
   URLConnection openConnection(@Nonnull String location) throws IOException;
 
   boolean isHttpProxyEnabled();

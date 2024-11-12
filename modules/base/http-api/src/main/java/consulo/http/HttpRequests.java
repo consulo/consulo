@@ -417,10 +417,6 @@ public final class HttpRequests {
         url = "https:" + url.substring(5);
       }
 
-      if (url.startsWith("https:") && ApplicationManager.getApplication() != null) {
-        CertificateManager.getInstance();
-      }
-
       URLConnection connection;
       if (!builder.myUseProxy) {
         connection = new URL(url).openConnection(Proxy.NO_PROXY);
@@ -435,6 +431,10 @@ public final class HttpRequests {
       if (connection instanceof HttpURLConnection httpURLConnection) {
         // we will control redirection by code lower
         httpURLConnection.setInstanceFollowRedirects(false);
+      }
+
+      if (connection instanceof HttpsURLConnection httpsURLConnection) {
+        httpsURLConnection.setSSLSocketFactory(CertificateManager.getInstance().getSslContext().getSocketFactory());
       }
 
       connection.setConnectTimeout(builder.myConnectTimeout);

@@ -5,6 +5,8 @@ import consulo.http.IdeHttpClientHelpers;
 import consulo.task.util.RequestFailedException;
 import consulo.task.util.TaskUtil;
 import consulo.util.io.CharsetToolkit;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.apache.http.*;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
@@ -16,15 +18,12 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.conn.routing.HttpRoute;
-import org.apache.http.conn.ssl.X509HostnameVerifier;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.HttpContext;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
@@ -61,10 +60,8 @@ public abstract class NewBaseRepositoryImpl extends BaseRepository {
     CertificateManager certificateManager = CertificateManager.getInstance();
     HttpClientBuilder builder = HttpClients.custom()
       .setDefaultRequestConfig(createRequestConfig())
-      .setSslcontext(certificateManager.getSslContext())
-      // TODO: use custom one for additional certificate check
-      //.setHostnameVerifier(SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER)
-      .setHostnameVerifier((X509HostnameVerifier)certificateManager.getHostnameVerifier())
+      .setSSLContext(certificateManager.getSslContext())
+      .setSSLHostnameVerifier(certificateManager.getHostnameVerifier())
       .setDefaultCredentialsProvider(createCredentialsProvider())
       .addInterceptorFirst(PREEMPTIVE_BASIC_AUTH)
       .addInterceptorLast(createRequestInterceptor());
