@@ -19,6 +19,9 @@ import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
+import java.util.Locale;
+import java.util.Map;
+
 /**
  * @author VISTALL
  * @since 24/09/2021
@@ -30,7 +33,7 @@ public final class JoinLocalizeValue extends BaseLocalizeValue {
 
     @Nonnull
     @Override
-    protected String getUnformattedText(@Nonnull LocalizeManager localizeManager) {
+    protected Map.Entry<Locale, String> getUnformattedText(@Nonnull LocalizeManager localizeManager) {
         throw new UnsupportedOperationException("this method will never called");
     }
 

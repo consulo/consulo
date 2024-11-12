@@ -11,6 +11,7 @@ module consulo.localize.impl {
     requires consulo.proxy;
 
     requires org.yaml.snakeyaml;
+    requires com.ibm.icu;
 
     provides consulo.localize.LocalizeManager with consulo.localize.impl.LocalizeManagerImpl;
 }

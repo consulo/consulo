@@ -19,6 +19,8 @@ import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
+import java.util.Locale;
+import java.util.Map;
 import java.util.function.BiFunction;
 
 /**
@@ -37,8 +39,8 @@ public final class MapLocalizeValue extends BaseLocalizeValue {
 
     @Nonnull
     @Override
-    protected String getUnformattedText(@Nonnull LocalizeManager localizeManager) {
+    protected Map.Entry<Locale, String> getUnformattedText(@Nonnull LocalizeManager localizeManager) {
         String value = myDelegate.getValue();
-        return myMapper.apply(localizeManager, value);
+        return Map.entry(localizeManager.getLocale(), myMapper.apply(localizeManager, value));
     }
 }

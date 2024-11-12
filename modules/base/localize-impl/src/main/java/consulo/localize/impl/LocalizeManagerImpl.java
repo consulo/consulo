@@ -15,6 +15,7 @@
  */
 package consulo.localize.impl;
 
+import com.ibm.icu.text.MessageFormat;
 import consulo.container.classloader.PluginClassLoader;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
@@ -34,7 +35,6 @@ import jakarta.annotation.Nullable;
 
 import java.io.IOException;
 import java.net.URL;
-import java.text.MessageFormat;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
@@ -234,42 +234,34 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
 
     @Nonnull
     @Override
-    public String getUnformattedText(@Nonnull LocalizeKey key) {
+    public Map.Entry<Locale, String> getUnformattedText(@Nonnull LocalizeKey key) {
         if (!myInitialized.get()) {
             throw new IllegalArgumentException("not initialized");
         }
 
         if (StringUtil.isEmptyOrSpaces(key.getKey())) {
-            return "";
+            return Map.entry(myCurrentLocale, "");
         }
 
         String value = getValue(key, myCurrentLocale);
         if (value != null) {
-            return value;
+            return Map.entry(myCurrentLocale, value);
         }
 
         value = getValue(key, ourDefaultLocale);
         if (value != null) {
-            return value;
+            return Map.entry(ourDefaultLocale, value);
         }
 
         LOG.warn("Can't find localize value: " + key + ", current locale: " + myCurrentLocale);
-        return key.toString();
+        return Map.entry(ourDefaultLocale, key.toString());
     }
 
     @Nonnull
     @Override
-    public String formatText(String unformattedText, Object... arg) {
-        return format(unformattedText, arg);
-    }
-
-    @Nonnull
-    private static String format(@Nonnull String value, @Nonnull Object... params) {
-        if (params.length > 0 && value.indexOf('{') >= 0) {
-            return MessageFormat.format(value, params);
-        }
-
-        return value;
+    public String formatText(String unformattedText, Locale locale, Object... args) {
+        MessageFormat format = new MessageFormat(unformattedText, locale);
+        return format.format(args);
     }
 
     @Nullable

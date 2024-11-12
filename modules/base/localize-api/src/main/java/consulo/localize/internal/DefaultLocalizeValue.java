@@ -19,6 +19,9 @@ import consulo.localize.LocalizeKey;
 import consulo.localize.LocalizeManager;
 import jakarta.annotation.Nonnull;
 
+import java.util.Locale;
+import java.util.Map;
+
 /**
  * @author VISTALL
  * @since 2020-05-20
@@ -37,7 +40,7 @@ public final class DefaultLocalizeValue extends BaseLocalizeValue {
 
     @Nonnull
     @Override
-    protected String getUnformattedText(@Nonnull LocalizeManager localizeManager) {
+    protected Map.Entry<Locale, String> getUnformattedText(@Nonnull LocalizeManager localizeManager) {
         return localizeManager.getUnformattedText(myLocalizeKey);
     }
 }

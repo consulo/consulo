@@ -19,6 +19,9 @@ import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
+import java.util.Locale;
+import java.util.Map;
+
 /**
  * @author VISTALL
  * @since 2020-07-30
@@ -53,11 +56,11 @@ abstract class BaseLocalizeValue implements LocalizeValue {
     }
 
     @Nonnull
-    protected abstract String getUnformattedText(@Nonnull LocalizeManager localizeManager);
+    protected abstract Map.Entry<Locale, String> getUnformattedText(@Nonnull LocalizeManager localizeManager);
 
     @Nonnull
     protected String calcValue(LocalizeManager manager) {
-        String unformattedText = getUnformattedText(manager);
+        Map.Entry<Locale, String> unformattedText = getUnformattedText(manager);
         if (myArgs.length > 0) {
             Object[] args = new Object[myArgs.length];
             // change LocalizeValue if found in args
@@ -67,10 +70,10 @@ abstract class BaseLocalizeValue implements LocalizeValue {
                 args[i] = oldValue instanceof LocalizeValue oldLocalizeValue ? oldLocalizeValue.getValue() : oldValue;
             }
 
-            return manager.formatText(unformattedText, args);
+            return manager.formatText(unformattedText.getValue(), unformattedText.getKey(), args);
         }
         else {
-            return unformattedText;
+            return unformattedText.getValue();
         }
     }
 

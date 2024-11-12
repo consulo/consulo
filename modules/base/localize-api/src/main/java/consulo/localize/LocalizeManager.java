@@ -21,6 +21,7 @@ import consulo.disposer.Disposable;
 import jakarta.annotation.Nonnull;
 
 import java.util.Locale;
+import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.Set;
 
@@ -51,7 +52,7 @@ public abstract class LocalizeManager {
      * @throws IllegalArgumentException if key is invalid
      */
     @Nonnull
-    public abstract String getUnformattedText(@Nonnull LocalizeKey key);
+    public abstract Map.Entry<Locale, String> getUnformattedText(@Nonnull LocalizeKey key);
 
     @Nonnull
     public abstract Locale parseLocale(@Nonnull String localeText);
@@ -75,5 +76,5 @@ public abstract class LocalizeManager {
     public abstract long getModificationCount();
 
     @Nonnull
-    public abstract String formatText(String unformattedText, Object... arg);
+    public abstract String formatText(String unformattedText, Locale locale, Object... args);
 }
