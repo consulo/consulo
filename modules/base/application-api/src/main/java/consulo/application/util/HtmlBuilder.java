@@ -1,11 +1,11 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.util;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.util.HtmlChunk.Element;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NonNls;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,8 +44,33 @@ public final class HtmlBuilder {
      * @return this builder
      */
     @Contract("_ -> this")
-    public HtmlBuilder append(@Nonnull @Nls String text) {
+    public HtmlBuilder append(@Nonnull String text) {
         return append(HtmlChunk.text(text));
+    }
+
+    /**
+     * Appends a text chunk to this builder
+     *
+     * @param text localized text to append (must not be escaped by caller).
+     *             All {@code '\n'} characters will be converted to {@code <br/>}
+     * @return this builder
+     */
+    @Contract("_ -> this")
+    public HtmlBuilder append(@Nonnull LocalizeValue text) {
+        return append(HtmlChunk.text(text.get()));
+    }
+
+    /**
+     * Appends a raw html text to this builder. Should be used with care.
+     * The purpose of this method is to be able to externalize the text with embedded link. E.g.:
+     * {@code "Click <a href=\"...\">here</a> for details"}.
+     *
+     * @param rawHtml localized raw HTML content. It's the responsibility of the caller to balance tags and escape HTML entities.
+     * @return this builder
+     */
+    @Contract("_ -> this")
+    public HtmlBuilder appendRaw(@Nonnull LocalizeValue rawHtml) {
+        return append(HtmlChunk.raw(rawHtml.get()));
     }
 
     /**
@@ -57,8 +82,20 @@ public final class HtmlBuilder {
      * @return this builder
      */
     @Contract("_ -> this")
-    public HtmlBuilder appendRaw(@Nonnull @Nls String rawHtml) {
+    public HtmlBuilder appendRaw(@Nonnull String rawHtml) {
         return append(HtmlChunk.raw(rawHtml));
+    }
+
+    /**
+     * Appends a link element to this builder
+     *
+     * @param target link target (href)
+     * @param text   localized link text
+     * @return this builder
+     */
+    @Contract("_, _ -> this")
+    public HtmlBuilder appendLink(@Nonnull String target, @Nonnull LocalizeValue text) {
+        return append(HtmlChunk.link(target, text));
     }
 
     /**
@@ -68,8 +105,10 @@ public final class HtmlBuilder {
      * @param text   link text
      * @return this builder
      */
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     @Contract("_, _ -> this")
-    public HtmlBuilder appendLink(@Nonnull @NonNls String target, @Nonnull @Nls String text) {
+    public HtmlBuilder appendLink(@Nonnull String target, @Nonnull String text) {
         return append(HtmlChunk.link(target, text));
     }
 
@@ -142,7 +181,7 @@ public final class HtmlBuilder {
      */
     @Contract(pure = true)
     @Nonnull
-    public Element wrapWith(@Nonnull @NonNls String tag) {
+    public Element wrapWith(@Nonnull String tag) {
         return HtmlChunk.tag(tag).children(myChunks.toArray(new HtmlChunk[0]));
     }
 

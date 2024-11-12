@@ -1,13 +1,12 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.util;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
 import consulo.util.collection.UnmodifiableHashMap;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.Contract;
 
 import java.util.*;
 import java.util.stream.Collector;
@@ -111,9 +110,12 @@ public abstract class HtmlChunk {
         @Override
         public void appendTo(@Nonnull StringBuilder builder) {
             builder.append('<').append(myTagName);
-            myAttributes.entrySet().stream().sorted(Map.Entry.comparingByKey()).forEach(entry -> {
-                builder.append(' ').append(entry.getKey()).append("=\"").append(StringUtil.escapeXmlEntities(entry.getValue())).append('"');
-            });
+            myAttributes.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .forEach(
+                    entry -> builder.append(' ').append(entry.getKey()).append("=\"")
+                        .append(StringUtil.escapeXmlEntities(entry.getValue())).append('"')
+                );
             if (myChildren.isEmpty()) {
                 builder.append("/>");
             }
@@ -133,13 +135,13 @@ public abstract class HtmlChunk {
          */
         @Contract(pure = true)
         @Nonnull
-        public Element attr(@NonNls String name, String value) {
+        public Element attr(String name, String value) {
             return new Element(myTagName, myAttributes.with(name, value), myChildren);
         }
 
         @Contract(pure = true)
         @Nonnull
-        public Element attr(@NonNls String name, int value) {
+        public Element attr(String name, int value) {
             return new Element(myTagName, myAttributes.with(name, Integer.toString(value)), myChildren);
         }
 
@@ -149,17 +151,29 @@ public abstract class HtmlChunk {
          */
         @Contract(pure = true)
         @Nonnull
-        public Element style(@NonNls String style) {
+        public Element style(String style) {
             return attr("style", style);
+        }
+
+        /**
+         * @param text localized text to add to the list of children (should not be escaped)
+         * @return a new element that is like this element but has an extra text child
+         */
+        @Contract(pure = true)
+        @Nonnull
+        public Element addText(@Nonnull LocalizeValue text) {
+            return child(text(text));
         }
 
         /**
          * @param text text to add to the list of children (should not be escaped)
          * @return a new element that is like this element but has an extra text child
          */
+        @Deprecated
+        @DeprecationInfo("Use variant with LocalizeValue")
         @Contract(pure = true)
         @Nonnull
-        public Element addText(@Nonnull @Nls String text) {
+        public Element addText(@Nonnull String text) {
             return child(text(text));
         }
 
@@ -169,7 +183,17 @@ public abstract class HtmlChunk {
          */
         @Contract(pure = true)
         @Nonnull
-        public Element addRaw(@Nonnull @Nls String text) {
+        public Element addRaw(@Nonnull LocalizeValue text) {
+            return child(raw(text));
+        }
+
+        /**
+         * @param text text to add to the list of children (should not be escaped)
+         * @return a new element that is like this element but has an extra text child
+         */
+        @Contract(pure = true)
+        @Nonnull
+        public Element addRaw(@Nonnull String text) {
             return child(raw(text));
         }
 
@@ -228,7 +252,7 @@ public abstract class HtmlChunk {
      */
     @Contract(pure = true)
     @Nonnull
-    public Element wrapWith(@Nonnull @NonNls String tagName) {
+    public Element wrapWith(@Nonnull String tagName) {
         return new Element(tagName, UnmodifiableHashMap.empty(), Collections.singletonList(this));
     }
 
@@ -284,7 +308,7 @@ public abstract class HtmlChunk {
      */
     @Contract(pure = true)
     @Nonnull
-    public static Element tag(@Nonnull @NonNls String tagName) {
+    public static Element tag(@Nonnull String tagName) {
         return new Element(tagName, UnmodifiableHashMap.empty(), Collections.emptyList());
     }
 
@@ -302,7 +326,7 @@ public abstract class HtmlChunk {
      */
     @Contract(pure = true)
     @Nonnull
-    public static Element div(@Nonnull @NonNls String style) {
+    public static Element div(@Nonnull String style) {
         return Element.DIV.style(style);
     }
 
@@ -320,7 +344,7 @@ public abstract class HtmlChunk {
      */
     @Contract(pure = true)
     @Nonnull
-    public static Element span(@NonNls @Nonnull String style) {
+    public static Element span(@Nonnull String style) {
         return Element.SPAN.style(style);
     }
 
@@ -379,12 +403,12 @@ public abstract class HtmlChunk {
     }
 
     @Nonnull
-    public static Element styleTag(@NonNls @Nonnull String style) {
+    public static Element styleTag(@Nonnull String style) {
         return tag("style").addRaw(style); //NON-NLS
     }
 
     @Nonnull
-    public static Element font(@NonNls @Nonnull String color) {
+    public static Element font(@Nonnull String color) {
         return tag("font").attr("color", color);
     }
 
@@ -435,13 +459,26 @@ public abstract class HtmlChunk {
     /**
      * Creates a HTML text node
      *
+     * @param text localized text to display (no escaping should be done by caller).
+     *             All {@code '\n'} characters will be converted to {@code <br/>}
+     * @return HtmlChunk that represents a HTML text node.
+     */
+    @Contract(pure = true)
+    @Nonnull
+    public static HtmlChunk text(@Nonnull LocalizeValue text) {
+        return text == LocalizeValue.empty() ? empty() : new Text(text.get());
+    }
+
+    /**
+     * Creates a HTML text node
+     *
      * @param text text to display (no escaping should be done by caller).
      *             All {@code '\n'} characters will be converted to {@code <br/>}
      * @return HtmlChunk that represents a HTML text node.
      */
     @Contract(pure = true)
     @Nonnull
-    public static HtmlChunk text(@Nonnull @Nls String text) {
+    public static HtmlChunk text(@Nonnull String text) {
         return text.isEmpty() ? empty() : new Text(text);
     }
 
@@ -464,8 +501,35 @@ public abstract class HtmlChunk {
      */
     @Contract(pure = true)
     @Nonnull
-    public static HtmlChunk raw(@Nonnull @Nls String rawHtml) {
+    public static HtmlChunk raw(@Nonnull LocalizeValue rawHtml) {
+        return rawHtml == LocalizeValue.empty() ? empty() : new Raw(rawHtml.get());
+    }
+
+    /**
+     * Creates a chunk that represents a piece of raw HTML. Should be used with care!
+     * The purpose of this method is to be able to externalize the text with embedded link. E.g.:
+     * {@code "Click <a href=\"...\">here</a> for details"}.
+     *
+     * @param rawHtml raw HTML content. It's the responsibility of the caller to balance tags and escape HTML entities.
+     * @return the HtmlChunk that represents the supplied content.
+     */
+    @Contract(pure = true)
+    @Nonnull
+    public static HtmlChunk raw(@Nonnull String rawHtml) {
         return rawHtml.isEmpty() ? empty() : new Raw(rawHtml);
+    }
+
+    /**
+     * Creates an element that represents a simple HTML link.
+     *
+     * @param target link target (HREF)
+     * @param text   localized link text
+     * @return the Element that represents a link
+     */
+    @Contract(pure = true)
+    @Nonnull
+    public static Element link(@Nonnull String target, @Nonnull LocalizeValue text) {
+        return new Element("a", UnmodifiableHashMap.<String, String>empty().with("href", target), Collections.singletonList(text(text)));
     }
 
     /**
@@ -475,10 +539,12 @@ public abstract class HtmlChunk {
      * @param text   link text
      * @return the Element that represents a link
      */
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
     @Contract(pure = true)
     @Nonnull
-    public static Element link(@Nonnull @NonNls String target, @Nonnull @Nls String text) {
-        return new Element("a", UnmodifiableHashMap.<String, String>empty().with("href", target), Collections.singletonList(text(text)));
+    public static Element link(@Nonnull String target, @Nonnull String text) {
+        return link(target, LocalizeValue.of(text));
     }
 
     /**
