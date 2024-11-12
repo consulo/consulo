@@ -4,19 +4,16 @@ package consulo.module.content;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
-import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
-import java.util.List;
+import java.util.function.Predicate;
 
-@ServiceAPI(value = ComponentScope.PROJECT, lazy = false)
+@ServiceAPI(value = ComponentScope.PROJECT)
 public abstract class PushedFilePropertiesUpdater {
-  public abstract void runConcurrentlyIfPossible(List<Runnable> tasks);
-
   @Nonnull
   public static PushedFilePropertiesUpdater getInstance(@Nonnull Project project) {
-    return project.getComponent(PushedFilePropertiesUpdater.class);
+    return project.getInstance(PushedFilePropertiesUpdater.class);
   }
 
   public abstract void initializeProperties();
@@ -24,7 +21,7 @@ public abstract class PushedFilePropertiesUpdater {
   public abstract void pushAll(final FilePropertyPusher<?>... pushers);
 
   /**
-   * @deprecated Use {@link #filePropertiesChanged(VirtualFile, Condition)}
+   * @deprecated Use {@link #filePropertiesChanged(VirtualFile, Predicate)}
    */
   @Deprecated
   public abstract void filePropertiesChanged(@Nonnull final VirtualFile file);
@@ -37,5 +34,5 @@ public abstract class PushedFilePropertiesUpdater {
    * Invalidates indices and other caches for the given file or its immediate children (in case it's a directory).
    * Only files matching the condition are processed.
    */
-  public abstract void filePropertiesChanged(@Nonnull VirtualFile fileOrDir, @Nonnull Condition<? super VirtualFile> acceptFileCondition);
+  public abstract void filePropertiesChanged(@Nonnull VirtualFile fileOrDir, @Nonnull Predicate<? super VirtualFile> acceptFileCondition);
 }

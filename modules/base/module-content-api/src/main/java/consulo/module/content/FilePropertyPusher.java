@@ -7,9 +7,8 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.module.Module;
 import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.component.messagebus.MessageBus;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -52,87 +51,40 @@ import java.io.IOException;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface FilePropertyPusher<T> {
-  ExtensionPointName<FilePropertyPusher> EP_NAME = ExtensionPointName.create(FilePropertyPusher.class);
+    ExtensionPointName<FilePropertyPusher> EP_NAME = ExtensionPointName.create(FilePropertyPusher.class);
 
-  default void initExtra(@Nonnull Project project) {
-    initExtra(project, project.getMessageBus());
-  }
+    default void initExtra(@Nonnull Project project) {
+    }
 
-  default void afterRootsChanged(@Nonnull Project project) {
-  }
+    default void afterRootsChanged(@Nonnull Project project) {
+    }
 
-  /**
-   * After property was pushed it can be retrieved any time using {@link FilePropertyPusher#getFileDataKey()}
-   * from {@link VirtualFile#getUserData(Key)}.
-   */
-  @Nonnull
-  Key<T> getFileDataKey();
+    /**
+     * After property was pushed it can be retrieved any time using {@see FilePropertyPusher#getFileDataKey()}
+     * from {@link VirtualFile#getUserData(Key)}.
+     */
+    @Nonnull
+    Key<T> getFileDataKey();
 
-  boolean pushDirectoriesOnly();
+    boolean pushDirectoriesOnly();
 
-  @Nonnull
-  T getDefaultValue();
+    @Nonnull
+    T getDefaultValue();
 
-  @Nullable
-  T getImmediateValue(@Nonnull Module module);
+    @Nullable
+    T getImmediateValue(@Nonnull Module module);
 
-  @Nullable
-  T getImmediateValue(@Nonnull Project project, @Nullable VirtualFile file);
+    @Nullable
+    T getImmediateValue(@Nonnull Project project, @Nullable VirtualFile file);
 
-  default boolean acceptsFile(@Nonnull VirtualFile file, @Nonnull Project project) {
-    return acceptsFile(file);
-  }
+    boolean acceptsFile(@Nonnull VirtualFile file, @Nonnull Project project);
 
-  boolean acceptsDirectory(@Nonnull VirtualFile file, @Nonnull Project project);
+    boolean acceptsDirectory(@Nonnull VirtualFile file, @Nonnull Project project);
 
-  /**
-   * This method is called to persist the computed Pusher value (of type T).
-   * The implementation is supposed to call {@link PushedFilePropertiesUpdater#filePropertiesChanged}
-   * if a change is detected to issue the {@para fileOrDir} re-index
-   */
-  void persistAttribute(@Nonnull Project project, @Nonnull VirtualFile fileOrDir, @Nonnull T value) throws IOException;
-
-  //<editor-fold desc="Deprecated APIs" defaultState="collapsed">
-
-  /**
-   * @deprecated use {@link FilePropertyPusher#initExtra(Project)} instead
-   */
-  //@ApiStatus.ScheduledForRemoval(inVersion = "2021.3")
-  @Deprecated
-  @SuppressWarnings("unused")
-  default void initExtra(@Nonnull Project project, @Nonnull MessageBus bus, @Nonnull Engine languageLevelUpdater) {
-    initExtra(project, bus);
-  }
-
-  /**
-   * @deprecated not used anymore
-   */
-  @Deprecated
-  //@ApiStatus.ScheduledForRemoval(inVersion = "2021.3")
-  interface Engine {
-    @SuppressWarnings("unused")
-    void pushAll();
-
-    @SuppressWarnings("unused")
-    void pushRecursively(@Nonnull VirtualFile vile, @Nonnull Project project);
-  }
-
-  /**
-   * @deprecated Please override {@link FilePropertyPusher#acceptsFile(VirtualFile, Project)}
-   */
-  @Deprecated
-  @SuppressWarnings("DeprecatedIsStillUsed")
-  default boolean acceptsFile(@Nonnull VirtualFile file) {
-    return false;
-  }
-
-  /**
-   * @deprecated use {@link #initExtra(Project)}
-   */
-  @Deprecated
-  @SuppressWarnings({"unused", "DeprecatedIsStillUsed"})
-  default void initExtra(@Nonnull Project project, @Nonnull MessageBus bus) {
-  }
-
-  //</editor-fold>
+    /**
+     * This method is called to persist the computed Pusher value (of type T).
+     * The implementation is supposed to call {@link PushedFilePropertiesUpdater#filePropertiesChanged}
+     * if a change is detected to issue the {@param fileOrDir} re-index
+     */
+    void persistAttribute(@Nonnull Project project, @Nonnull VirtualFile fileOrDir, @Nonnull T value) throws IOException;
 }
