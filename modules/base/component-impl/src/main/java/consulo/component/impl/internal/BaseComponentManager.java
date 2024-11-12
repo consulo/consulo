@@ -286,7 +286,9 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
                 }
             }
 
-            stat.dump(getClass().getSimpleName() + " not lazy services initialize", LOG::info);
+            if (i != 1) {
+                stat.dump(getClass().getSimpleName() + " not lazy services initialize", LOG::info);
+            }
         }
         finally {
             myCurrentNotLazyServiceClass = null;
