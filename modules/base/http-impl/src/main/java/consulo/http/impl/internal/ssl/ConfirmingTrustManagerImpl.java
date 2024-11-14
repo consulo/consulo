@@ -164,7 +164,7 @@ public class ConfirmingTrustManagerImpl implements ConfirmingTrustManager {
      * Trust manager that supports modifications of underlying physical key store.
      * It can also notify clients about such modifications, see {@link #addListener(CertificateListener)}.
      *
-     * @see consulo.ide.impl.idea.util.net.ssl.CertificateListener
+     * @see CertificateListener
      */
     public static class MutableTrustManager implements ClientOnlyTrustManager {
         private final String myPath;
