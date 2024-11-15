@@ -2,18 +2,17 @@
 package consulo.ui.ex.action;
 
 import consulo.annotation.component.ActionAPI;
+import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.lang.reflect.ReflectionUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.*;
 
@@ -70,7 +69,7 @@ public abstract class ActionGroup extends AnAction {
     public abstract ActionGroup build();
   }
 
-  private static class ImmutableActionGroup extends ActionGroup {
+  private static class ImmutableActionGroup extends ActionGroup implements DumbAware {
     private AnAction[] myChildren;
 
     private ImmutableActionGroup(AnAction[] chilren) {
@@ -102,6 +101,7 @@ public abstract class ActionGroup extends AnAction {
 
   private boolean myPopup;
   private final PropertyChangeSupport myChangeSupport = new PropertyChangeSupport(this);
+
   public static final ActionGroup EMPTY_GROUP = new ActionGroup() {
     @Nonnull
     @Override
@@ -115,10 +115,7 @@ public abstract class ActionGroup extends AnAction {
   /**
    * The actual value is a Boolean.
    */
-  @NonNls
   private static final String PROP_POPUP = "popup";
-
-  private Boolean myDumbAware;
 
   /**
    * Creates a new {@code ActionGroup} with shortName set to {@code null} and
@@ -257,22 +254,7 @@ public abstract class ActionGroup extends AnAction {
 
   @Override
   public boolean isDumbAware() {
-    if (myDumbAware != null) {
-      return myDumbAware;
-    }
-
-    boolean dumbAware = super.isDumbAware();
-    if (dumbAware) {
-      myDumbAware = Boolean.TRUE;
-    }
-    else {
-      if (myDumbAware == null) {
-        Class<?> declaringClass = ReflectionUtil.getMethodDeclaringClass(getClass(), "update", AnActionEvent.class);
-        myDumbAware = AnAction.class.equals(declaringClass) || ActionGroup.class.equals(declaringClass);
-      }
-    }
-
-    return myDumbAware;
+    return super.isDumbAware() || getClass() == DefaultActionGroup.class;
   }
 
   @Nonnull

@@ -20,6 +20,7 @@ import consulo.annotation.component.ActionParentRef;
 import consulo.annotation.component.ActionRef;
 import consulo.annotation.component.ActionRefAnchor;
 import consulo.application.ApplicationProperties;
+import consulo.application.dumb.DumbAware;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -32,7 +33,7 @@ import jakarta.annotation.Nonnull;
  * @since 2024-09-07
  */
 @ActionImpl(id = "Internal", parents = @ActionParentRef(value = @ActionRef(id = IdeActions.TOOLS_MENU), anchor = ActionRefAnchor.LAST))
-public class InternalActionGroup extends DefaultActionGroup {
+public class InternalActionGroup extends DefaultActionGroup implements DumbAware {
     public InternalActionGroup() {
         super(LocalizeValue.localizeTODO("Internal"), true);
     }
