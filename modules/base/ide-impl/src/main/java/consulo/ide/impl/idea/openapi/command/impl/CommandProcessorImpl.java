@@ -6,7 +6,7 @@ import consulo.application.Application;
 import consulo.document.Document;
 import consulo.fileEditor.CurrentEditorProvider;
 import consulo.fileEditor.FileEditor;
-import consulo.ide.impl.idea.openapi.command.CommandToken;
+import consulo.undoRedo.internal.CommandToken;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;

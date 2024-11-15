@@ -36,7 +36,7 @@ public class ChangeRange {
     this(gw, vcs, changeId, changeId);
   }
 
-  private ChangeRange(IdeaGateway gw, LocalHistoryFacade vcs, @jakarta.annotation.Nullable Long fromChangeId, @jakarta.annotation.Nullable Long toChangeId) {
+  private ChangeRange(IdeaGateway gw, LocalHistoryFacade vcs, @Nullable Long fromChangeId, @Nullable Long toChangeId) {
     myGateway = gw;
     myVcs = vcs;
     myFromChangeId = fromChangeId;

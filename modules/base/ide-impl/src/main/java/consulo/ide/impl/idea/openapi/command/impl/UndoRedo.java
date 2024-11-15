@@ -19,6 +19,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.CommonBundle;
 import consulo.document.Document;
 import consulo.document.DocumentReference;
+import consulo.document.impl.DocumentReferenceByDocument;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorState;
 import consulo.fileEditor.FileEditorStateLevel;

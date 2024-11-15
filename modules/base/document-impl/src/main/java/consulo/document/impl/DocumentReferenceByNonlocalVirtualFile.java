@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,33 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.document.impl;
 
-package consulo.ide.impl.idea.openapi.command.undo;
-
-import consulo.document.Document;
 import consulo.document.DocumentReference;
-import consulo.undoRedo.BasicUndoableAction;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
-public abstract class GlobalUndoableAction extends BasicUndoableAction {
-  public GlobalUndoableAction() {
-  }
+class DocumentReferenceByNonlocalVirtualFile implements DocumentReference {
+  private final VirtualFile myFile;
 
-  public GlobalUndoableAction(DocumentReference... refs) {
-    super(refs);
-  }
-
-  public GlobalUndoableAction(@Nonnull Document... docs) {
-    super(docs);
-  }
-
-  public GlobalUndoableAction(@Nonnull VirtualFile... files) {
-    super(files);
+  DocumentReferenceByNonlocalVirtualFile(@Nonnull VirtualFile file) {
+    myFile = file;
   }
 
   @Override
-  public boolean isGlobal() {
-    return true;
+  @Nullable
+  public Document getDocument() {
+    return FileDocumentManager.getInstance().getDocument(myFile);
+  }
+
+  @Override
+  @Nonnull
+  public VirtualFile getFile() {
+    return myFile;
+  }
+
+  @Override
+  public String toString() {
+    return myFile.toString();
   }
 }

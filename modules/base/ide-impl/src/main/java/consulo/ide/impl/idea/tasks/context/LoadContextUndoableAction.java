@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.tasks.context;
 
-import consulo.ide.impl.idea.openapi.command.undo.GlobalUndoableAction;
+import consulo.undoRedo.GlobalUndoableAction;
 import consulo.task.impl.internal.context.WorkingContextManager;
 import consulo.undoRedo.UnexpectedUndoException;
 import consulo.task.Task;

@@ -13,35 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.command.impl;
 
-import consulo.util.io.FileUtil;
+package consulo.undoRedo;
 
-public class DocumentFilePath {
-  private final String myPath;
+import consulo.document.Document;
+import consulo.document.DocumentReference;
+import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 
-  public DocumentFilePath(String path) {
-    myPath = path;
+public abstract class GlobalUndoableAction extends BasicUndoableAction {
+  public GlobalUndoableAction() {
   }
 
-  public String getPath() {
-    return myPath;
+  public GlobalUndoableAction(DocumentReference... refs) {
+    super(refs);
   }
 
-  @Override
-  public String toString() {
-    return myPath;
+  public GlobalUndoableAction(@Nonnull Document... docs) {
+    super(docs);
   }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    return FileUtil.pathsEqual(myPath, ((DocumentFilePath)o).myPath);
+  public GlobalUndoableAction(@Nonnull VirtualFile... files) {
+    super(files);
   }
 
   @Override
-  public int hashCode() {
-    return FileUtil.pathHashCode(myPath);
+  public boolean isGlobal() {
+    return true;
   }
 }

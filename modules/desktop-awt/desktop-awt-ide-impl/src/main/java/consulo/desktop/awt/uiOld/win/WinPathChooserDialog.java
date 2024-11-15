@@ -24,7 +24,7 @@ import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDialog;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.fileChooser.PathChooserDialog;
-import consulo.ide.impl.idea.openapi.command.CommandProcessorEx;
+import consulo.undoRedo.internal.CommandProcessorEx;
 import consulo.ide.impl.idea.openapi.fileChooser.impl.FileChooserUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;

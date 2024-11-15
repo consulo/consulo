@@ -13,36 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.command.impl;
+package consulo.document.impl;
 
 import consulo.document.DocumentReference;
 import consulo.document.Document;
+import consulo.document.FileDocumentManager;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-public class DocumentReferenceByDocument implements DocumentReference {
-  private final Document myDocument;
+public class DocumentReferenceByVirtualFile implements DocumentReference {
+  private VirtualFile myFile;
 
-  DocumentReferenceByDocument(@Nonnull Document document) {
-    myDocument = document;
-  }
-
-  @Override
-  @Nonnull
-  public Document getDocument() {
-    return myDocument;
+  DocumentReferenceByVirtualFile(@Nonnull VirtualFile file) {
+    myFile = file;
   }
 
   @Override
   @Nullable
+  public Document getDocument() {
+    assert myFile.isValid() : "should not be called on references to deleted file: " + myFile;
+    return FileDocumentManager.getInstance().getDocument(myFile);
+  }
+
+  @Override
+  @Nonnull
   public VirtualFile getFile() {
-    return null;
+    return myFile;
   }
 
   @Override
   public String toString() {
-    CharSequence text = myDocument.getCharsSequence();
-    return text.subSequence(0, Math.min(80, text.length())).toString();
+    return myFile.toString();
+  }
+
+  public void update(VirtualFile f) {
+    myFile = f;
   }
 }

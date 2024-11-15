@@ -1,17 +1,14 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.openapi.command;
+package consulo.undoRedo.internal;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.undoRedo.internal.builder.BaseExecutableCommandBuilder;
-import consulo.undoRedo.internal.builder.WrappableRunnableCommandBuilder;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandDescriptor;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.undoRedo.builder.RunnableCommandBuilder;
-import consulo.util.lang.EmptyRunnable;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

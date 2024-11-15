@@ -20,7 +20,7 @@ import consulo.application.util.ConcurrentFactoryMap;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.util.ModificationTracker;
 import consulo.ide.ServiceManager;
-import consulo.ide.impl.idea.openapi.command.undo.GlobalUndoableAction;
+import consulo.undoRedo.GlobalUndoableAction;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ide.impl.idea.util.FileContentUtil;
 import consulo.ide.impl.intelliLang.inject.InjectorUtils;
