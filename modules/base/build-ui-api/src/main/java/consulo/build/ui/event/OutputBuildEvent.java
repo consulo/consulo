@@ -20,7 +20,7 @@ import jakarta.annotation.Nonnull;
 /**
  * @author Vladislav.Soroka
  */
-public interface OutputBuildEvent {
+public interface OutputBuildEvent extends BuildEvent {
   @Nonnull
   @BuildEventsNls.Message
   String getMessage();
