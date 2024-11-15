@@ -23,8 +23,8 @@ import com.sun.jna.Pointer;
 import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.PointerByReference;
 import com.sun.jna.win32.W32APIOptions;
-
 import jakarta.annotation.Nonnull;
+
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
@@ -34,79 +34,85 @@ import java.util.List;
  * @since 24.01.15
  */
 public class WindowsVersionHelper {
-  public interface Version extends Library {
-    Version INSTANCE = (Version)Native.load("Version", Version.class, W32APIOptions.UNICODE_OPTIONS);
+    public interface Version extends Library {
+        Version INSTANCE = (Version) Native.load("Version", Version.class, W32APIOptions.UNICODE_OPTIONS);
 
-    public int GetFileVersionInfoSizeW(String lptstrFilename, int dwDummy);
+        public int GetFileVersionInfoSizeW(String lptstrFilename, int dwDummy);
 
-    public boolean GetFileVersionInfoW(String lptstrFilename, int dwHandle, int dwLen, Pointer lpData);
+        public boolean GetFileVersionInfoW(String lptstrFilename, int dwHandle, int dwLen, Pointer lpData);
 
-    public int VerQueryValueW(Pointer pBlock, String lpSubBlock, PointerByReference lplpBuffer, IntByReference puLen);
-  }
+        public int VerQueryValueW(Pointer pBlock, String lpSubBlock, PointerByReference lplpBuffer, IntByReference puLen);
+    }
 
-  public static class VS_FIXEDFILEINFO extends com.sun.jna.Structure {
-    private static final List __FIELDS =
+    public static class VS_FIXEDFILEINFO extends com.sun.jna.Structure {
+        private static final List __FIELDS =
             Arrays.asList("dwSignature", "dwStrucVersion", "dwFileVersionMS", "dwFileVersionLS", "dwProductVersionMS", "dwProductVersionLS", "dwFileFlagsMask", "dwFileFlags", "dwFileOS", "dwFileType",
-                          "dwFileSubtype", "dwFileDateMS", "dwFileDateLS");
+                "dwFileSubtype", "dwFileDateMS", "dwFileDateLS");
 
-    public int dwSignature;
-    public int dwStrucVersion;
-    public int dwFileVersionMS;
-    public int dwFileVersionLS;
-    public int dwProductVersionMS;
-    public int dwProductVersionLS;
-    public int dwFileFlagsMask;
-    public int dwFileFlags;
-    public int dwFileOS;
-    public int dwFileType;
-    public int dwFileSubtype;
-    public int dwFileDateMS;
-    public int dwFileDateLS;
+        public int dwSignature;
+        public int dwStrucVersion;
+        public int dwFileVersionMS;
+        public int dwFileVersionLS;
+        public int dwProductVersionMS;
+        public int dwProductVersionLS;
+        public int dwFileFlagsMask;
+        public int dwFileFlags;
+        public int dwFileOS;
+        public int dwFileType;
+        public int dwFileSubtype;
+        public int dwFileDateMS;
+        public int dwFileDateLS;
 
-    public VS_FIXEDFILEINFO(com.sun.jna.Pointer p) {
-      super(p);
+        public VS_FIXEDFILEINFO(com.sun.jna.Pointer p) {
+            super(p);
+        }
+
+        @Override
+        protected List getFieldOrder() {
+            return __FIELDS;
+        }
     }
 
-    @Override
-    protected List getFieldOrder() {
-      return __FIELDS;
+    @Nonnull
+    public static VS_FIXEDFILEINFO getVersionRaw(String path) {
+        path = path.replace('/', File.separatorChar).replace('\\', File.separatorChar);
+
+        int dwDummy = 0;
+        int versionlength = Version.INSTANCE.GetFileVersionInfoSizeW(path, dwDummy);
+
+        Pointer lpData = new Memory(versionlength);
+
+        PointerByReference lplpBuffer = new PointerByReference();
+        IntByReference puLen = new IntByReference();
+        Version.INSTANCE.GetFileVersionInfoW(path, 0, versionlength, lpData);
+        Version.INSTANCE.VerQueryValueW(lpData, "\\", lplpBuffer, puLen);
+
+        VS_FIXEDFILEINFO lplpBufStructure = new VS_FIXEDFILEINFO(lplpBuffer.getValue());
+        lplpBufStructure.read();
+        return lplpBufStructure;
     }
-  }
 
-  @Nonnull
-  public static String getVersion(String path, int parts) {
-    path = path.replace('/', File.separatorChar).replace('\\', File.separatorChar);
+    @Nonnull
+    public static String getVersion(String path, int parts) {
+        VS_FIXEDFILEINFO rawVersion = getVersionRaw(path);
 
-    int dwDummy = 0;
-    int versionlength = Version.INSTANCE.GetFileVersionInfoSizeW(path, dwDummy);
+        int[] rtnData = new int[4];
+        rtnData[0] = rawVersion.dwFileVersionMS >> 16;
+        rtnData[1] = rawVersion.dwFileVersionMS & 0xffff;
+        rtnData[2] = rawVersion.dwFileVersionLS >> 16;
+        rtnData[3] = rawVersion.dwFileVersionLS & 0xffff;
 
-    Pointer lpData = new Memory(versionlength);
+        if (parts < 0 || parts > 4) {
+            throw new IllegalArgumentException("Must be bigger than 0 and lower 4");
+        }
 
-    PointerByReference lplpBuffer = new PointerByReference();
-    IntByReference puLen = new IntByReference();
-    Version.INSTANCE.GetFileVersionInfoW(path, 0, versionlength, lpData);
-    Version.INSTANCE.VerQueryValueW(lpData, "\\", lplpBuffer, puLen);
-
-    VS_FIXEDFILEINFO lplpBufStructure = new VS_FIXEDFILEINFO(lplpBuffer.getValue());
-    lplpBufStructure.read();
-
-    int[] rtnData = new int[4];
-    rtnData[0] = lplpBufStructure.dwFileVersionMS >> 16;
-    rtnData[1] = lplpBufStructure.dwFileVersionMS & 0xffff;
-    rtnData[2] = lplpBufStructure.dwFileVersionLS >> 16;
-    rtnData[3] = lplpBufStructure.dwFileVersionLS & 0xffff;
-
-    if (parts < 0 || parts >= 4) {
-      throw new IllegalArgumentException("Must be bigger than 0 and lower 4");
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < parts; i++) {
+            if (i != 0) {
+                builder.append(".");
+            }
+            builder.append(rtnData[i]);
+        }
+        return builder.toString();
     }
-    
-    StringBuilder builder = new StringBuilder();
-    for (int i = 0; i < parts; i++) {
-      if (i != 0) {
-        builder.append(".");
-      }
-      builder.append(rtnData[i]);
-    }
-    return builder.toString();
-  }
 }

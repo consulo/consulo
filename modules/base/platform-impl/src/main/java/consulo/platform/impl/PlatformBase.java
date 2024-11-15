@@ -16,13 +16,15 @@
 package consulo.platform.impl;
 
 import consulo.platform.*;
-
 import consulo.util.dataholder.UserDataHolderBase;
 import jakarta.annotation.Nonnull;
+
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -65,7 +67,7 @@ public abstract class PlatformBase extends UserDataHolderBase implements Platfor
   protected PlatformOperatingSystem createOS(Map<String, String> jvmProperties) {
     String osNameLowered = jvmProperties.get("os.name").toLowerCase(Locale.ROOT);
     if (osNameLowered.startsWith("windows")) {
-      return new WindowsOperatingSystemImpl(jvmProperties, System::getenv, System::getenv);
+      return createWindowsOperatingSystem(jvmProperties, System::getenv, System::getenv);
     }
 
     if (osNameLowered.startsWith("mac")) {
@@ -73,6 +75,13 @@ public abstract class PlatformBase extends UserDataHolderBase implements Platfor
     }
 
     return new PlatformOperatingSystemImpl(jvmProperties, System::getenv, System::getenv);
+  }
+
+  @Nonnull
+  protected WindowsOperatingSystemImpl createWindowsOperatingSystem(Map<String, String> jvmProperties,
+                                                                    Function<String, String> getEnvFunc,
+                                                                    Supplier<Map<String, String>> getEnvsSup) {
+      return new LocalWindowsOperationSystemImpl(jvmProperties, getEnvFunc, getEnvsSup);
   }
 
   @Nonnull

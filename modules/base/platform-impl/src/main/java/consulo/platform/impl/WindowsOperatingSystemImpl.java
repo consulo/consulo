@@ -15,8 +15,6 @@
  */
 package consulo.platform.impl;
 
-import com.sun.jna.platform.win32.Kernel32;
-import com.sun.jna.platform.win32.WinNT;
 import consulo.platform.os.WindowsOperatingSystem;
 import jakarta.annotation.Nonnull;
 
@@ -77,41 +75,7 @@ public class WindowsOperatingSystemImpl extends PlatformOperatingSystemImpl impl
         return WindowsVersionHelper.getVersion(path.toString(), parts);
     }
 
-    private boolean isWindows11OrNewerImpl() {
-        // at jdk 17 windows 11 will return in os name, but at old versions of jdk that will be Windows 10
-        try {
-            // windows 2025 has same core & ui as Windows 11
-            boolean windows11OrLater = OS_NAME.contains("Windows 11") || OS_NAME.contains("Windows Server 2025");
-            if (windows11OrLater) {
-                return true;
-            }
-
-            // windows server check
-            if (OS_NAME.contains("Windows Server 2022")) {
-                WinNT.OSVERSIONINFO osversioninfo = new WinNT.OSVERSIONINFO();
-                if (Kernel32.INSTANCE.GetVersionEx(osversioninfo)) {
-                    int dwBuildNumber = osversioninfo.dwBuildNumber.intValue();
-
-                    if (dwBuildNumber >= 26_039) {
-                        return true;
-                    }
-                }
-            }
-            // windows 10 check
-            else if (isWindows10OrNewer()) {
-                WinNT.OSVERSIONINFO osversioninfo = new WinNT.OSVERSIONINFO();
-                if (Kernel32.INSTANCE.GetVersionEx(osversioninfo)) {
-                    int dwBuildNumber = osversioninfo.dwBuildNumber.intValue();
-
-                    if (dwBuildNumber >= 22_000) {
-                        return true;
-                    }
-                }
-            }
-        }
-        catch (Throwable ignored) {
-        }
-
-        return false;
+    protected boolean isWindows11OrNewerImpl() {
+        return OS_NAME.contains("Windows 11") || OS_NAME.contains("Windows Server 2025");
     }
 }
