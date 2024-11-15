@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,9 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.http;
+package consulo.http.adapter.httpclient4;
 
-import consulo.util.lang.StringUtil;
+import consulo.http.HttpProxyManager;
+import consulo.http.internal.IdeHttpClientHelpers;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.NTCredentials;
@@ -24,76 +27,39 @@ import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.config.AuthSchemes;
 import org.apache.http.client.config.RequestConfig;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-
 /**
- * @author Mikhail Golubev
+ * FIXME [VISTALL] maybe need make service for it
+ *
+ * @author VISTALL
+ * @since 2024-11-15
  */
-public class IdeHttpClientHelpers {
-  private IdeHttpClientHelpers() {
-  }
-
-  @Nonnull
-  private static HttpProxyManager getHttpProxyManager() {
-    return HttpProxyManager.getInstance();
-  }
-
-  private static boolean isHttpProxyEnabled() {
-    return getHttpProxyManager().isHttpProxyEnabled();
-  }
-
-  private static boolean isProxyAuthenticationEnabled() {
-    return getHttpProxyManager().isProxyAuthenticationEnabled();
-  }
-
-  @Nonnull
-  private static String getProxyHost() {
-    return StringUtil.notNullize(getHttpProxyManager().getProxyHost());
-  }
-
-  private static int getProxyPort() {
-    return getHttpProxyManager().getProxyPort();
-  }
-
-  @Nonnull
-  private static String getProxyLogin() {
-    return StringUtil.notNullize(getHttpProxyManager().getProxyLogin());
-  }
-
-  @Nonnull
-  private static String getProxyPassword() {
-    return StringUtil.notNullize(getHttpProxyManager().getPlainProxyPassword());
-  }
-
-  public static final class ApacheHttpClient4 {
-
+public class HttpClient4Proxy {
     /**
-     * Install headers for IDE-wide proxy if usage of proxy was enabled in {@link HttpProxyManagerImpl}.
+     * Install headers for IDE-wide proxy if usage of proxy was enabled in {@link HttpProxyManager}
      *
      * @param builder HttpClient's request builder used to configure new client
      * @see #setProxyForUrlIfEnabled(RequestConfig.Builder, String)
      */
     public static void setProxyIfEnabled(@Nonnull RequestConfig.Builder builder) {
-      if (isHttpProxyEnabled()) {
-        builder.setProxy(new HttpHost(getProxyHost(), getProxyPort()));
-      }
+        if (IdeHttpClientHelpers.isHttpProxyEnabled()) {
+            builder.setProxy(new HttpHost(IdeHttpClientHelpers.getProxyHost(), IdeHttpClientHelpers.getProxyPort()));
+        }
     }
 
     /**
-     * Install credentials for IDE-wide proxy if usage of proxy and proxy authentication were enabled in {@link HttpProxyManagerImpl}.
+     * Install credentials for IDE-wide proxy if usage of proxy and proxy authentication were enabled in {@link HttpProxyManager}.
      *
      * @param provider HttpClient's credentials provider used to configure new client
      * @see #setProxyCredentialsForUrlIfEnabled(CredentialsProvider, String)
      */
     public static void setProxyCredentialsIfEnabled(@Nonnull CredentialsProvider provider) {
-      if (isHttpProxyEnabled() && isProxyAuthenticationEnabled()) {
-        final String ntlmUserPassword = getProxyLogin().replace('\\', '/') + ":" + getProxyPassword();
-        provider.setCredentials(new AuthScope(getProxyHost(), getProxyPort(), AuthScope.ANY_REALM, AuthSchemes.NTLM),
-                                new NTCredentials(ntlmUserPassword));
-        provider.setCredentials(new AuthScope(getProxyHost(), getProxyPort()),
-                                new UsernamePasswordCredentials(getProxyLogin(), getProxyPassword()));
-      }
+        if (IdeHttpClientHelpers.isHttpProxyEnabled() && IdeHttpClientHelpers.isProxyAuthenticationEnabled()) {
+            final String ntlmUserPassword = IdeHttpClientHelpers.getProxyLogin().replace('\\', '/') + ":" + IdeHttpClientHelpers.getProxyPassword();
+            provider.setCredentials(new AuthScope(IdeHttpClientHelpers.getProxyHost(), IdeHttpClientHelpers.getProxyPort(), AuthScope.ANY_REALM, AuthSchemes.NTLM),
+                new NTCredentials(ntlmUserPassword));
+            provider.setCredentials(new AuthScope(IdeHttpClientHelpers.getProxyHost(), IdeHttpClientHelpers.getProxyPort()),
+                new UsernamePasswordCredentials(IdeHttpClientHelpers.getProxyLogin(), IdeHttpClientHelpers.getProxyPassword()));
+        }
     }
 
     /**
@@ -104,9 +70,9 @@ public class IdeHttpClientHelpers {
      * @param url     URL to access (only host part is checked)
      */
     public static void setProxyForUrlIfEnabled(@Nonnull RequestConfig.Builder builder, @Nullable String url) {
-      if (getHttpProxyManager().isHttpProxyEnabledForUrl(url)) {
-        setProxyIfEnabled(builder);
-      }
+        if (IdeHttpClientHelpers.getHttpProxyManager().isHttpProxyEnabledForUrl(url)) {
+            setProxyIfEnabled(builder);
+        }
     }
 
     /**
@@ -117,9 +83,8 @@ public class IdeHttpClientHelpers {
      * @param url      URL to access (only host part is checked)
      */
     public static void setProxyCredentialsForUrlIfEnabled(@Nonnull CredentialsProvider provider, @Nullable String url) {
-      if (getHttpProxyManager().isHttpProxyEnabledForUrl(url)) {
-        setProxyCredentialsIfEnabled(provider);
-      }
+        if (IdeHttpClientHelpers.getHttpProxyManager().isHttpProxyEnabledForUrl(url)) {
+            setProxyCredentialsIfEnabled(provider);
+        }
     }
-  }
 }

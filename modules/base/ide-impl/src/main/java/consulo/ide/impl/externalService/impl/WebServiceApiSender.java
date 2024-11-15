@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import consulo.application.Application;
 import consulo.externalService.ExternalService;
 import consulo.externalService.ExternalServiceConfiguration;
+import consulo.http.adapter.httpclient4.HttpClient4Factory;
 import consulo.ide.impl.externalService.AuthorizationFailedException;
 import consulo.ide.impl.externalService.NoContentException;
 import consulo.ide.impl.externalService.NotFoundException;
@@ -33,7 +34,6 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
@@ -48,130 +48,132 @@ import java.util.Map;
  * @since 2020-05-30
  */
 public class WebServiceApiSender {
-  private static final Gson ourGson = new Gson();
+    private static final Gson ourGson = new Gson();
 
-  @Nullable
-  public static <T> T doGet(WebServiceApi serviceApi, String url, Class<T> beanClass) throws IOException {
-    return doGet(serviceApi, url, Map.of(), beanClass);
-  }
-
-  @Nullable
-  public static <T> T doGet(WebServiceApi serviceApi, String url, Map<String, String> parameters, Type beanClass) throws IOException {
-    byte[] bytes = doGetBytes(serviceApi, url, parameters);
-    if (bytes == null) {
-      return null;
+    @Nullable
+    public static <T> T doGet(WebServiceApi serviceApi, String url, Class<T> beanClass) throws IOException {
+        return doGet(serviceApi, url, Map.of(), beanClass);
     }
-    return ourGson.fromJson(new String(bytes, StandardCharsets.UTF_8), beanClass);
-  }
 
-  @Nullable
-  public static byte[] doGetBytes(WebServiceApi serviceApi, String url, Map<String, String> parameters) throws IOException {
-    try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
-      HttpGet request;
-      try {
-        URIBuilder urlBuilder = new URIBuilder(serviceApi.buildUrl(url));
-        for (Map.Entry<String, String> entry : parameters.entrySet()) {
-          urlBuilder.addParameter(entry.getKey(), entry.getValue());
+    @Nullable
+    public static <T> T doGet(WebServiceApi serviceApi, String url, Map<String, String> parameters, Type beanClass) throws IOException {
+        byte[] bytes = doGetBytes(serviceApi, url, parameters);
+        if (bytes == null) {
+            return null;
+        }
+        return ourGson.fromJson(new String(bytes, StandardCharsets.UTF_8), beanClass);
+    }
+
+    @Nullable
+    public static byte[] doGetBytes(WebServiceApi serviceApi, String url, Map<String, String> parameters) throws IOException {
+        HttpClient4Factory client4Factory = Application.get().getInstance(HttpClient4Factory.class);
+        try (CloseableHttpClient httpClient = client4Factory.createBuilder().build()) {
+            HttpGet request;
+            try {
+                URIBuilder urlBuilder = new URIBuilder(serviceApi.buildUrl(url));
+                for (Map.Entry<String, String> entry : parameters.entrySet()) {
+                    urlBuilder.addParameter(entry.getKey(), entry.getValue());
+                }
+
+                request = new HttpGet(urlBuilder.build());
+
+            }
+            catch (URISyntaxException e1) {
+                throw new RuntimeException(e1);
+            }
+
+            String oAuthKey = findOAuthKey(serviceApi);
+
+            if (oAuthKey != null) {
+                request.addHeader("Authorization", "Bearer " + oAuthKey);
+            }
+
+            return httpClient.execute(request, response -> {
+                int statusCode = response.getStatusLine().getStatusCode();
+                switch (statusCode) {
+                    case HttpURLConnection.HTTP_OK:
+                        return EntityUtils.toByteArray(response.getEntity());
+                    case HttpURLConnection.HTTP_UNAUTHORIZED:
+                        throw new AuthorizationFailedException();
+                    case HttpURLConnection.HTTP_NOT_MODIFIED:
+                        throw new NotModifiedException();
+                    case HttpURLConnection.HTTP_NOT_FOUND:
+                        throw new NotFoundException();
+                    case HttpURLConnection.HTTP_NO_CONTENT:
+                        throw new NoContentException();
+                    default:
+                        throw new WebServiceException(DiagnosticLocalize.errorHttpResultCode(statusCode).get(), statusCode);
+                }
+            });
+        }
+    }
+
+    @Nullable
+    public static <T> T doPost(WebServiceApi serviceApi, String url, Object bean, Type resultType) throws IOException {
+        HttpClient4Factory client4Factory = Application.get().getInstance(HttpClient4Factory.class);
+        try (CloseableHttpClient httpClient = client4Factory.createBuilder().build()) {
+            HttpPost request = new HttpPost(serviceApi.buildUrl(url));
+            request.setHeader("Content-Type", "application/json");
+            request.setEntity(new StringEntity(new Gson().toJson(bean), ContentType.APPLICATION_JSON));
+
+            String oAuthKey = findOAuthKey(serviceApi);
+
+            if (oAuthKey != null) {
+                request.addHeader("Authorization", "Bearer " + oAuthKey);
+            }
+
+            return httpClient.execute(request, response -> {
+                int statusCode = response.getStatusLine().getStatusCode();
+                switch (statusCode) {
+                    case HttpURLConnection.HTTP_OK:
+                        String json = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
+                        return ourGson.fromJson(json, resultType);
+                    case 302:
+                    case HttpURLConnection.HTTP_UNAUTHORIZED:
+                        throw new AuthorizationFailedException();
+                    default:
+                        throw new WebServiceException(DiagnosticLocalize.errorHttpResultCode(statusCode).get(), statusCode);
+                }
+            });
+        }
+    }
+
+    private static String findOAuthKey(WebServiceApi api) {
+        ExternalService service = map(api);
+        if (service == null) {
+            return null;
         }
 
-        request = new HttpGet(urlBuilder.build());
+        ExternalServiceConfigurationImpl externalServiceConfiguration =
+            (ExternalServiceConfigurationImpl) Application.get().getInstance(ExternalServiceConfiguration.class);
 
-      }
-      catch (URISyntaxException e1) {
-        throw new RuntimeException(e1);
-      }
-
-      String oAuthKey = findOAuthKey(serviceApi);
-
-      if (oAuthKey != null) {
-        request.addHeader("Authorization", "Bearer " + oAuthKey);
-      }
-
-      return httpClient.execute(request, response -> {
-        int statusCode = response.getStatusLine().getStatusCode();
-        switch (statusCode) {
-          case HttpURLConnection.HTTP_OK:
-            return EntityUtils.toByteArray(response.getEntity());
-          case HttpURLConnection.HTTP_UNAUTHORIZED:
-            throw new AuthorizationFailedException();
-          case HttpURLConnection.HTTP_NOT_MODIFIED:
-            throw new NotModifiedException();
-          case HttpURLConnection.HTTP_NOT_FOUND:
-            throw new NotFoundException();
-          case HttpURLConnection.HTTP_NO_CONTENT:
-            throw new NoContentException();
-          default:
-            throw new WebServiceException(DiagnosticLocalize.errorHttpResultCode(statusCode).get(), statusCode);
+        ThreeState state = externalServiceConfiguration.getState(service);
+        switch (state) {
+            case NO:
+                throw new UnsupportedOperationException("Can't send any data for api: " + api);
+            case YES:
+                return ObjectUtil.notNull(externalServiceConfiguration.getOAuthKey(), "bad-key");
+            case UNSURE:
+            default:
+                return null;
         }
-      });
     }
-  }
 
-  @Nullable
-  public static <T> T doPost(WebServiceApi serviceApi, String url, Object bean, Type resultType) throws IOException {
-    try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
-      HttpPost request = new HttpPost(serviceApi.buildUrl(url));
-      request.setHeader("Content-Type", "application/json");
-      request.setEntity(new StringEntity(new Gson().toJson(bean), ContentType.APPLICATION_JSON));
-
-      String oAuthKey = findOAuthKey(serviceApi);
-
-      if (oAuthKey != null) {
-        request.addHeader("Authorization", "Bearer " + oAuthKey);
-      }
-
-      return httpClient.execute(request, response -> {
-        int statusCode = response.getStatusLine().getStatusCode();
-        switch (statusCode) {
-          case HttpURLConnection.HTTP_OK:
-            String json = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
-            return ourGson.fromJson(json, resultType);
-          case 302:
-          case HttpURLConnection.HTTP_UNAUTHORIZED:
-            throw new AuthorizationFailedException();
-          default:
-            throw new WebServiceException(DiagnosticLocalize.errorHttpResultCode(statusCode).get(), statusCode);
+    @Nullable
+    private static ExternalService map(WebServiceApi api) {
+        switch (api) {
+            case ERROR_REPORTER_API:
+                return ExternalService.ERROR_REPORTING;
+            case STATISTICS_API:
+                return ExternalService.STATISTICS;
+            case DEVELOPER_API:
+                return ExternalService.DEVELOPER_LIST;
+            case STORAGE_API:
+                return ExternalService.STORAGE;
+            case REPOSITORY_API:
+                return null;
+            default:
+                throw new IllegalArgumentException(api.name() + " not supported");
         }
-      });
     }
-  }
-
-  private static String findOAuthKey(WebServiceApi api) {
-    ExternalService service = map(api);
-    if (service == null) {
-      return null;
-    }
-
-    ExternalServiceConfigurationImpl externalServiceConfiguration =
-      (ExternalServiceConfigurationImpl)Application.get().getInstance(ExternalServiceConfiguration.class);
-
-    ThreeState state = externalServiceConfiguration.getState(service);
-    switch (state) {
-      case NO:
-        throw new UnsupportedOperationException("Can't send any data for api: " + api);
-      case YES:
-        return ObjectUtil.notNull(externalServiceConfiguration.getOAuthKey(), "bad-key");
-      case UNSURE:
-      default:
-        return null;
-    }
-  }
-
-  @Nullable
-  private static ExternalService map(WebServiceApi api) {
-    switch (api) {
-      case ERROR_REPORTER_API:
-        return ExternalService.ERROR_REPORTING;
-      case STATISTICS_API:
-        return ExternalService.STATISTICS;
-      case DEVELOPER_API:
-        return ExternalService.DEVELOPER_LIST;
-      case STORAGE_API:
-        return ExternalService.STORAGE;
-      case REPOSITORY_API:
-        return null;
-      default:
-        throw new IllegalArgumentException(api.name() + " not supported");
-    }
-  }
 }

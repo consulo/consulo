@@ -128,6 +128,7 @@
                 <include>consulo:consulo-task-impl</include>
                 <include>consulo:consulo-http-api</include>
                 <include>consulo:consulo-http-impl</include>
+                <include>consulo:consulo-http-adapter-httpclient4</include>
                 <include>consulo:consulo-external-system-api</include>
                 <include>consulo:consulo-external-system-rt</include>
                 <include>consulo:consulo-builtin-web-server-api</include>

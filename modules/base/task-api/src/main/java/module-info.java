@@ -13,6 +13,7 @@ module consulo.task.api {
   requires transitive consulo.code.editor.api;
   requires consulo.language.editor.ui.api;
   requires consulo.http.api;
+  requires consulo.http.adapter.httpclient4;
 
   requires org.apache.httpcomponents.httpcore;
   requires org.apache.httpcomponents.httpclient;

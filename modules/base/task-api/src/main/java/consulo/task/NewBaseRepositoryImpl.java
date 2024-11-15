@@ -1,7 +1,8 @@
 package consulo.task;
 
-import consulo.http.CertificateManager;
-import consulo.http.IdeHttpClientHelpers;
+import consulo.application.Application;
+import consulo.http.adapter.httpclient4.HttpClient4Factory;
+import consulo.http.adapter.httpclient4.HttpClient4Proxy;
 import consulo.task.util.RequestFailedException;
 import consulo.task.util.TaskUtil;
 import consulo.util.io.CharsetToolkit;
@@ -21,7 +22,6 @@ import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.HttpContext;
 
 import java.io.IOException;
@@ -57,11 +57,9 @@ public abstract class NewBaseRepositoryImpl extends BaseRepository {
 
   @Nonnull
   protected HttpClient getHttpClient() {
-    CertificateManager certificateManager = CertificateManager.getInstance();
-    HttpClientBuilder builder = HttpClients.custom()
+    HttpClient4Factory factory = Application.get().getInstance(HttpClient4Factory.class);
+    HttpClientBuilder builder = factory.createBuilder()
       .setDefaultRequestConfig(createRequestConfig())
-      .setSSLContext(certificateManager.getSslContext())
-      .setSSLHostnameVerifier(certificateManager.getHostnameVerifier())
       .setDefaultCredentialsProvider(createCredentialsProvider())
       .addInterceptorFirst(PREEMPTIVE_BASIC_AUTH)
       .addInterceptorLast(createRequestInterceptor());
@@ -88,7 +86,7 @@ public abstract class NewBaseRepositoryImpl extends BaseRepository {
     }
     // Proxy authentication
     if (isUseProxy()) {
-      IdeHttpClientHelpers.ApacheHttpClient4.setProxyCredentialsForUrlIfEnabled(provider, getUrl());
+        HttpClient4Proxy.setProxyCredentialsForUrlIfEnabled(provider, getUrl());
     }
 
     return provider;
@@ -99,7 +97,7 @@ public abstract class NewBaseRepositoryImpl extends BaseRepository {
     TaskSettings tasksSettings = TaskSettings.getInstance();
     RequestConfig.Builder builder = RequestConfig.custom().setConnectTimeout(3000).setSocketTimeout(tasksSettings.CONNECTION_TIMEOUT);
     if (isUseProxy()) {
-      IdeHttpClientHelpers.ApacheHttpClient4.setProxyForUrlIfEnabled(builder, getUrl());
+        HttpClient4Proxy.setProxyForUrlIfEnabled(builder, getUrl());
     }
 
     return builder.build();

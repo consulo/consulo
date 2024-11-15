@@ -24,8 +24,8 @@
                 <include>jakarta.annotation:jakarta.annotation-api</include>
                 <include>consulo:consulo-component-api</include>
                 <include>consulo:consulo-application-api</include>
-                <include>consulo:consulo-bookmark-ui-view-api</include>
                 <include>consulo:consulo-bookmark-api</include>
+                <include>consulo:consulo-bookmark-ui-view-api</include>
                 <include>consulo:consulo-build-ui-api</include>
                 <include>consulo:consulo-build-ui-impl</include>
                 <include>consulo:consulo-ide-impl</include>
@@ -128,6 +128,7 @@
                 <include>consulo:consulo-task-impl</include>
                 <include>consulo:consulo-http-api</include>
                 <include>consulo:consulo-http-impl</include>
+                <include>consulo:consulo-http-adapter-httpclient4</include>
                 <include>consulo:consulo-external-system-api</include>
                 <include>consulo:consulo-external-system-rt</include>
                 <include>consulo:consulo-builtin-web-server-api</include>

@@ -80,6 +80,7 @@ open module consulo.ide.impl {
   requires consulo.external.service.impl;
   requires consulo.language.code.style.ui.api;
   requires consulo.http.impl;
+  requires consulo.http.adapter.httpclient4;
   requires consulo.file.editor.impl;
   requires consulo.compiler.impl;
   requires consulo.execution.impl;
