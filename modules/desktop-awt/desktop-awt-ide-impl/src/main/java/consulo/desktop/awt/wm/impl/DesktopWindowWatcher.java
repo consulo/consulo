@@ -92,6 +92,7 @@ public final class DesktopWindowWatcher implements PropertyChangeListener {
         return;
       }
       if (!myWindow2Info.containsKey(window)) {
+        LOG.warn("Added watcher for window " + e.getNewValue());
         myWindow2Info.put(window, new WindowInfo(window, true));
       }
       myFocusedWindow = window;
@@ -132,9 +133,8 @@ public final class DesktopWindowWatcher implements PropertyChangeListener {
   }
 
   private void dispatchHiddenOrClosed(consulo.ui.Window window) {
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("enter: dispatchClosed(" + window + ")");
-    }
+    LOG.warn("enter: dispatchClosed(" + TargetAWT.to(window) + ")");
+
     synchronized (myLock) {
       final WindowInfo info = myWindow2Info.get(window);
       if (info != null) {
