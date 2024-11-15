@@ -37,6 +37,12 @@ import java.util.List;
 public class BuildEventFactoryImpl implements BuildEventFactory {
     @Nonnull
     @Override
+    public SkippedResult createSkippedResult() {
+        return new SkippedResultImpl();
+    }
+
+    @Nonnull
+    @Override
     public SuccessResult createSuccessResult(boolean isUpToDate) {
         return new SuccessResultImpl(isUpToDate);
     }

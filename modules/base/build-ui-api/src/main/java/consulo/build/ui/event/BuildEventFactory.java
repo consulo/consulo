@@ -35,6 +35,9 @@ import java.util.List;
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface BuildEventFactory {
     @Nonnull
+    SkippedResult createSkippedResult();
+
+    @Nonnull
     default SuccessResult createSuccessResult() {
         return createSuccessResult(false);
     }
