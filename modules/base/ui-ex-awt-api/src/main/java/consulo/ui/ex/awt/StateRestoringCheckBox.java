@@ -25,6 +25,8 @@ import javax.swing.*;
  * When enabled the checkbox behaves like the ordinary checkbox
  * If to use special methods to enable/disable it,
  * it will manage different selected/unselected states for each mode - enabled or disabled
+ *
+ * @see consulo.ui.ex.StateRestoringCheckBoxWrapper
  */
 public class StateRestoringCheckBox extends JCheckBox {
   private boolean myIsSelectedWhenSelectable;

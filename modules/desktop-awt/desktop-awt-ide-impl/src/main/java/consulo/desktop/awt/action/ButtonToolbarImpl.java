@@ -1,18 +1,17 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.action;
 
+import consulo.application.Application;
+import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.ui.ex.action.BasePresentationFactory;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.WeakTimerListener;
-import consulo.ui.ex.internal.ActionManagerEx;
+import consulo.ide.impl.dataContext.BaseDataManager;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.WeakTimerListener;
+import consulo.ui.ModalityState;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.internal.LocalizeValueWithMnemonic;
 import consulo.ui.util.TextWithMnemonic;
-import consulo.dataContext.DataContext;
-import consulo.ide.impl.dataContext.BaseDataManager;
-
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -109,8 +108,8 @@ public class ButtonToolbarImpl extends JPanel {
 
   private final class MyTimerListener implements TimerListener {
     @Override
-    public IdeaModalityState getModalityState() {
-      return IdeaModalityState.stateForComponent(ButtonToolbarImpl.this);
+    public ModalityState getModalityState() {
+      return Application.get().getModalityStateForComponent(ButtonToolbarImpl.this);
     }
 
     @Override
@@ -144,7 +143,7 @@ public class ButtonToolbarImpl extends JPanel {
   }
 
   private void updateActions() {
-    final DataContext dataContext = ((BaseDataManager)myDataManager).getDataContextTest(this);
+    final DataContext dataContext = myDataManager.getDataContext(this);
     for (ActionJButton action : myActions) {
       action.updateAction(dataContext);
     }

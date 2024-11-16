@@ -15,6 +15,7 @@
  */
 package consulo.ui;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIInternal;
 
 import jakarta.annotation.Nonnull;
@@ -35,5 +36,5 @@ public interface AdvancedLabel extends Component {
    * @return this
    */
   @Nonnull
-  AdvancedLabel updatePresentation(@Nonnull Consumer<TextItemPresentation> consumer);
+  AdvancedLabel updatePresentation(@RequiredUIAccess  @Nonnull Consumer<TextItemPresentation> consumer);
 }

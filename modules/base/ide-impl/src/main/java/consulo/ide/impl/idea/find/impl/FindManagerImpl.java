@@ -991,12 +991,12 @@ public class FindManagerImpl extends FindManager {
 
     @Override
     public void findUsagesInScope(@Nonnull PsiElement element, @Nonnull SearchScope searchScope) {
-        myFindUsagesManager.findUsages(element, null, null, false, searchScope);
+        myFindUsagesManager.findUsagesAsync(element, null, null, false, searchScope);
     }
 
     @Override
     public void findUsages(@Nonnull PsiElement element, boolean showDialog) {
-        myFindUsagesManager.findUsages(element, null, null, showDialog, null);
+        myFindUsagesManager.findUsagesAsync(element, null, null, showDialog, null);
     }
 
     @Override
@@ -1016,7 +1016,7 @@ public class FindManagerImpl extends FindManager {
             Document document = editor.getDocument();
             PsiFile psiFile = PsiDocumentManager.getInstance(myProject).getPsiFile(document);
 
-            myFindUsagesManager.findUsages(element, psiFile, fileEditor, false, null);
+            myFindUsagesManager.findUsagesAsync(element, psiFile, fileEditor, false, null);
         }
     }
 

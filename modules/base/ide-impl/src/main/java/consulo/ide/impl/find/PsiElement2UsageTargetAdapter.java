@@ -265,7 +265,7 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, Typ
         PsiElement element = getElement();
         if (element != null) {
             FindUsagesManager findUsagesManager = ((FindManagerImpl)FindManager.getInstance(myPointer.getProject())).getFindUsagesManager();
-            findUsagesManager.findUsages(element, null, null, true, null);
+            findUsagesManager.findUsagesAsync(element, null, null, true, null);
         }
     }
 

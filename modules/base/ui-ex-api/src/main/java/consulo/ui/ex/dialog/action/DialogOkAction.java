@@ -15,13 +15,12 @@
  */
 package consulo.ui.ex.dialog.action;
 
+import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.localize.LocalizeValue;
-import consulo.platform.base.localize.CommonLocalize;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.dialog.Dialog;
-
+import consulo.ui.ex.dialog.DialogDescriptor;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -29,15 +28,26 @@ import jakarta.annotation.Nonnull;
  * @since 13/12/2021
  */
 public class DialogOkAction extends DumbAwareAction {
-  public DialogOkAction() {
-    super(CommonLocalize.buttonOk(), LocalizeValue.of(), null);
-  }
+    public DialogOkAction(@Nonnull LocalizeValue actionText) {
+        super(actionText, LocalizeValue.of(), null);
+    }
 
-  @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    Dialog<Object> data = e.getRequiredData(Dialog.KEY);
+    @RequiredUIAccess
+    @Override
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Dialog data = e.getRequiredData(Dialog.KEY);
 
-    data.doOkAction(data.getDescriptor().getOkValue());
-  }
+        DialogDescriptor descriptor = data.getDescriptor();
+        if (descriptor.canHandle(this, descriptor.getOkValue())) {
+            data.doOkAction(descriptor.getOkValue());
+        }
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void update(@Nonnull AnActionEvent e) {
+        Dialog dialog = e.getData(Dialog.KEY);
+        // dialog will be null on action init
+        e.getPresentation().setEnabled(dialog == null || dialog.getDescriptor().doUpdateOkButtonState());
+    }
 }

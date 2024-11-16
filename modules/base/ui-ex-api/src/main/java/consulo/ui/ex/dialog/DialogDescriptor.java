@@ -17,12 +17,13 @@ package consulo.ui.ex.dialog;
 
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.Component;
 import consulo.ui.Size;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.dialog.action.DialogCancelAction;
 import consulo.ui.ex.dialog.action.DialogOkAction;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -30,46 +31,74 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 13/12/2021
  */
-public abstract class DialogDescriptor<V> {
-  private final LocalizeValue myTitle;
+public abstract class DialogDescriptor {
+    private final LocalizeValue myTitle;
 
-  public DialogDescriptor(@Nonnull LocalizeValue title) {
-    myTitle = title;
-  }
-
-  @Nullable
-  public Size getInitialSize() {
-    return null;
-  }
-
-  @Nonnull
-  public abstract Component createCenterComponent(@Nonnull Disposable uiDisposable);
-
-  @Nullable
-  public V getOkValue() {
-    return null;
-  }
-
-  @Nonnull
-  public AnAction[] createActions(boolean inverseOrder) {
-    if (inverseOrder) {
-      return new AnAction[]{new DialogCancelAction(), new DialogOkAction()};
+    public DialogDescriptor(@Nonnull LocalizeValue title) {
+        myTitle = title;
     }
-    else {
-      return new AnAction[]{new DialogOkAction(), new DialogCancelAction()};
+
+    @Nullable
+    public String getHelpId() {
+        return null;
     }
-  }
 
-  public boolean isSetDefaultContentBorder() {
-    return true;
-  }
+    @Nullable
+    public Size getInitialSize() {
+        return null;
+    }
 
-  @Nonnull
-  public LocalizeValue getTitle() {
-    return myTitle;
-  }
+    @Nonnull
+    @RequiredUIAccess
+    public abstract Component createCenterComponent(@Nonnull Disposable uiDisposable);
 
-  public boolean isDefaultAction(AnAction action) {
-    return action instanceof DialogOkAction;
-  }
+    @Nonnull
+    public DialogValue getOkValue() {
+        return DialogValue.OK_VALUE;
+    }
+
+    @Nonnull
+    public AnAction[] createActions(boolean inverseOrder) {
+        if (inverseOrder) {
+            return new AnAction[]{new DialogCancelAction(), createOkAction()};
+        }
+        else {
+            return new AnAction[]{createOkAction(), new DialogCancelAction()};
+        }
+    }
+
+    public boolean doUpdateOkButtonState() {
+        return true;
+    }
+
+    @Nonnull
+    protected DialogOkAction createOkAction() {
+        return new DialogOkAction(CommonLocalize.buttonOk());
+    }
+
+    public boolean canHandle(@Nonnull AnAction action, @Nullable DialogValue value) {
+        return true;
+    }
+
+    public boolean hasDefaultContentBorder() {
+        return true;
+    }
+
+    public boolean hasBorderAtButtonLayout() {
+        return true;
+    }
+
+    @Nonnull
+    public LocalizeValue getTitle() {
+        return myTitle;
+    }
+
+    @RequiredUIAccess
+    public Component getPreferredFocusedComponent() {
+        return null;
+    }
+
+    public boolean isDefaultAction(AnAction action) {
+        return action instanceof DialogOkAction;
+    }
 }

@@ -38,6 +38,7 @@ module consulo.ui.ex.api {
   exports consulo.ui.ex.toolWindow;
   exports consulo.ui.ex.toolWindow.action;
   exports consulo.ui.ex.dialog;
+  exports consulo.ui.ex.dialog.action;
   exports consulo.ui.ex.wizard;
   exports consulo.ui.ex.errorTreeView;
   exports consulo.ui.ex.localize;

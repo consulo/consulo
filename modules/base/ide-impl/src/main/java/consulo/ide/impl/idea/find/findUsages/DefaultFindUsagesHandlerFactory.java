@@ -21,30 +21,36 @@ import consulo.find.FindUsagesHandlerFactory;
 import consulo.language.findUsage.FindUsagesProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFileSystemItem;
-
 import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
-*/
+ */
 @ExtensionImpl(id = "default", order = "last")
 public final class DefaultFindUsagesHandlerFactory extends FindUsagesHandlerFactory {
-  @Override
-  public boolean canFindUsages(@Nonnull final PsiElement element) {
-    if (element instanceof PsiFileSystemItem) {
-      if (((PsiFileSystemItem)element).getVirtualFile() == null) return false;
+    @Override
+    public boolean canFindUsages(@Nonnull final PsiElement element) {
+        if (element instanceof PsiFileSystemItem) {
+            if (((PsiFileSystemItem) element).getVirtualFile() == null) {
+                return false;
+            }
+        }
+        else if (!FindUsagesProvider.forLanguage(element.getLanguage()).canFindUsagesFor(element)) {
+            return false;
+        }
+        return element.isValid();
     }
-    else if (!FindUsagesProvider.forLanguage(element.getLanguage()).canFindUsagesFor(element)) {
-      return false;
-    }
-    return element.isValid();
-  }
 
-  @Override
-  public FindUsagesHandler createFindUsagesHandler(@Nonnull final PsiElement element, final boolean forHighlightUsages) {
-    if (canFindUsages(element)) {
-      return new FindUsagesHandler(element){};
+    @Override
+    public FindUsagesHandler createFindUsagesHandler(@Nonnull final PsiElement element, final boolean forHighlightUsages) {
+        if (canFindUsages(element)) {
+            return new FindUsagesHandler(element) {
+                @Override
+                public boolean supportConsuloUI() {
+                    return true;
+                }
+            };
+        }
+        return null;
     }
-    return null;
-  }
 }

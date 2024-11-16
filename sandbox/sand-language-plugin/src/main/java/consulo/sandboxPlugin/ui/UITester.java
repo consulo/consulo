@@ -42,7 +42,7 @@ import java.util.function.Function;
  * @since 2020-05-29
  */
 public class UITester {
-  private static class MyWindowWrapper extends DialogDescriptor<Void> {
+  private static class MyWindowWrapper extends DialogDescriptor {
     public MyWindowWrapper() {
       super(LocalizeValue.of("UI Tester"));
     }
@@ -107,7 +107,7 @@ public class UITester {
     }
 
     @Override
-    public boolean isSetDefaultContentBorder() {
+    public boolean hasDefaultContentBorder() {
       return false;
     }
 
@@ -269,6 +269,6 @@ public class UITester {
 
   @RequiredUIAccess
   public static void show(DialogService dialogService) {
-    dialogService.build(null, new MyWindowWrapper()).showAsync();
+    dialogService.build(new MyWindowWrapper()).showAsync();
   }
 }

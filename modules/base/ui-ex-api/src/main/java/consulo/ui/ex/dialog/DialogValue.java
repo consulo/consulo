@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2021 consulo.io
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,24 +15,15 @@
  */
 package consulo.ui.ex.dialog;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ServiceAPI;
-import consulo.ui.Component;
-import consulo.ui.WindowOwner;
-import jakarta.annotation.Nonnull;
-
 /**
  * @author VISTALL
- * @since 13/12/2021
+ * @since 2024-11-16
  */
-@ServiceAPI(ComponentScope.APPLICATION)
-public interface DialogService {
-    @Nonnull
-    Dialog build(@Nonnull DialogDescriptor descriptor);
-
-    @Nonnull
-    Dialog build(@Nonnull Component parent, @Nonnull DialogDescriptor descriptor);
-
-    @Nonnull
-    Dialog build(@Nonnull WindowOwner windowOwner, @Nonnull DialogDescriptor descriptor);
+public interface DialogValue {
+    DialogValue OK_VALUE = new DialogValue() {
+        @Override
+        public String toString() {
+            return "OK_VALUE";
+        }
+    };
 }

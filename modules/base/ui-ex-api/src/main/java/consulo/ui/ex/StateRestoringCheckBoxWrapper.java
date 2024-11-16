@@ -24,8 +24,13 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.ValueComponentEvent;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
+ * When enabled the checkbox behaves like the ordinary checkbox
+ * If to use special methods to enable/disable it,
+ * it will manage different selected/unselected states for each mode - enabled or disabled
+ *
  * @author VISTALL
  * @since 2024-07-06
  */
@@ -49,6 +54,11 @@ public final class StateRestoringCheckBoxWrapper {
 
     @Nonnull
     public Component getComponent() {
+        return myCheckBox;
+    }
+
+    @Nullable
+    public Component getParentComponent() {
         return myCheckBox;
     }
 

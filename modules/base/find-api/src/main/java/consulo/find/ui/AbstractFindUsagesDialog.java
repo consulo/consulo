@@ -15,6 +15,7 @@
  */
 package consulo.find.ui;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposer;
 import consulo.find.FindSettings;
 import consulo.find.FindUsagesOptions;
@@ -35,6 +36,8 @@ import java.awt.event.ActionListener;
 /**
  * @author peter
  */
+@Deprecated
+@DeprecationInfo("Use AbstractFindUsagesDialogDescriptor")
 public abstract class AbstractFindUsagesDialog extends DialogWrapper {
     private final Project myProject;
     protected final FindUsagesOptions myFindUsagesOptions;

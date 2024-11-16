@@ -29,6 +29,8 @@ import consulo.application.util.function.ThrowableComputable;
 import consulo.codeEditor.Editor;
 import consulo.component.ProcessCanceledException;
 import consulo.content.scope.SearchScope;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
 import consulo.document.Document;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorLocation;
@@ -39,12 +41,13 @@ import consulo.find.FindUsagesHandlerFactory;
 import consulo.find.FindUsagesOptions;
 import consulo.find.localize.FindLocalize;
 import consulo.find.ui.AbstractFindUsagesDialog;
+import consulo.find.ui.AbstractFindUsagesDialogDescriptor;
 import consulo.ide.impl.find.PsiElement2UsageTargetAdapter;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
+import consulo.ide.impl.idea.find.impl.FindManagerImpl;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.progress.impl.ProgressManagerImpl;
 import consulo.ide.impl.idea.ui.LightweightHint;
-import consulo.util.collection.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.language.psi.IdePsiManagerImpl;
 import consulo.language.editor.hint.HintManager;
@@ -70,7 +73,10 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.content.Content;
+import consulo.ui.ex.dialog.Dialog;
+import consulo.ui.ex.dialog.DialogService;
 import consulo.usage.*;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
@@ -85,7 +91,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
 /**
- * see {@link consulo.ide.impl.idea.find.impl.FindManagerImpl#getFindUsagesManager()}
+ * see {@link FindManagerImpl#getFindUsagesManager()}
  */
 public class FindUsagesManager {
     private static final Logger LOG = Logger.getInstance(FindUsagesManager.class);
@@ -165,7 +171,7 @@ public class FindUsagesManager {
         }
 
         //todo
-        TextEditor textEditor = (TextEditor)editor;
+        TextEditor textEditor = (TextEditor) editor;
         Document document = textEditor.getEditor().getDocument();
         PsiFile psiFile = PsiDocumentManager.getInstance(myProject).getPsiFile(document);
         if (psiFile == null) {
@@ -242,18 +248,30 @@ public class FindUsagesManager {
      * @param searchScope null means default (stored in options)
      */
     @RequiredUIAccess
-    public void findUsages(
-        @Nonnull PsiElement psiElement,
-        final PsiFile scopeFile,
-        final FileEditor editor,
-        boolean showDialog,
-        @Nullable SearchScope searchScope
-    ) {
+    public void findUsagesAsync(@Nonnull PsiElement psiElement,
+                                PsiFile scopeFile,
+                                FileEditor editor,
+                                boolean showDialog,
+                                @Nullable SearchScope searchScope) {
         FindUsagesHandler handler = getFindUsagesHandler(psiElement, false);
         if (handler == null) {
             return;
         }
 
+        if (handler.supportConsuloUI()) {
+            findUsagesAsyncNew(handler, scopeFile, editor, showDialog, searchScope);
+        }
+        else {
+            findUsagesAsyncOld(handler, scopeFile, editor, showDialog, searchScope);
+        }
+    }
+
+    @RequiredUIAccess
+    private void findUsagesAsyncOld(@Nonnull FindUsagesHandler handler,
+                                    PsiFile scopeFile,
+                                    FileEditor editor,
+                                    boolean showDialog,
+                                    @Nullable SearchScope searchScope) {
         boolean singleFile = scopeFile != null;
         AbstractFindUsagesDialog dialog = handler.getFindUsagesDialog(singleFile, shouldOpenInNewTab(), mustOpenInNewTab());
         if (showDialog) {
@@ -268,6 +286,53 @@ public class FindUsagesManager {
         setOpenInNewTab(dialog.isShowInSeparateWindow());
 
         FindUsagesOptions findUsagesOptions = dialog.calcFindUsagesOptions();
+        if (searchScope != null) {
+            findUsagesOptions.searchScope = searchScope;
+        }
+
+        clearFindingNextUsageInFile();
+
+        startFindUsages(findUsagesOptions, handler, scopeFile, editor);
+    }
+
+    @RequiredUIAccess
+    private void findUsagesAsyncNew(@Nonnull FindUsagesHandler handler,
+                                    PsiFile scopeFile,
+                                    FileEditor editor,
+                                    boolean showDialog,
+                                    @Nullable SearchScope searchScope) {
+        Project project = handler.getProject();
+
+        DialogService dialogService = project.getApplication().getInstance(DialogService.class);
+
+        DataContext context = DataManager.getInstance().getDataContext();
+
+        boolean singleFile = scopeFile != null;
+        AbstractFindUsagesDialogDescriptor desc = handler.createFindUsagesDialogDescriptor(context, singleFile, shouldOpenInNewTab(), mustOpenInNewTab());
+        Dialog dialog = dialogService.build(project, desc);
+
+
+        if (showDialog) {
+            dialog.showAsync().whenComplete((v, throwable) -> {
+                if (v != null) {
+                    onFindDialogClose(desc, handler, searchScope, editor, scopeFile);
+                }
+            });
+        }
+        else {
+            onFindDialogClose(desc, handler, searchScope, editor, scopeFile);
+        }
+    }
+
+    @RequiredUIAccess
+    private void onFindDialogClose(AbstractFindUsagesDialogDescriptor desc,
+                                   FindUsagesHandler handler,
+                                   @Nullable SearchScope searchScope,
+                                   FileEditor editor,
+                                   PsiFile scopeFile) {
+        setOpenInNewTab(desc.isShowInSeparateWindow());
+
+        FindUsagesOptions findUsagesOptions = desc.calcFindUsagesOptions();
         if (searchScope != null) {
             findUsagesOptions.searchScope = searchScope;
         }
@@ -371,7 +436,7 @@ public class FindUsagesManager {
             }
         };
 
-        ((ProgressManagerImpl)ProgressManager.getInstance()).runProcessWithProgressAsynchronously(task, indicator, onComplete);
+        ((ProgressManagerImpl) ProgressManager.getInstance()).runProcessWithProgressAsynchronously(task, indicator, onComplete);
 
         return indicator;
     }
@@ -437,7 +502,7 @@ public class FindUsagesManager {
             ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
             LOG.assertTrue(indicator != null, "Must run under progress. see ProgressManager.run*");
 
-            ((IdePsiManagerImpl)PsiManager.getInstance(project)).dropResolveCacheRegularly(indicator);
+            ((IdePsiManagerImpl) PsiManager.getInstance(project)).dropResolveCacheRegularly(indicator);
 
             if (scopeFile != null) {
                 optionsClone.searchScope = new LocalSearchScope(scopeFile);

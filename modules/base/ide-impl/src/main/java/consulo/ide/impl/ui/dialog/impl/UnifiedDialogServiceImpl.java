@@ -18,13 +18,12 @@ package consulo.ide.impl.ui.dialog.impl;
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ui.Component;
+import consulo.ui.WindowOwner;
 import consulo.ui.ex.dialog.Dialog;
 import consulo.ui.ex.dialog.DialogDescriptor;
 import consulo.ui.ex.dialog.DialogService;
-import jakarta.inject.Singleton;
-
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL
@@ -33,9 +32,21 @@ import jakarta.annotation.Nullable;
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 public class UnifiedDialogServiceImpl implements DialogService {
-  @Nonnull
-  @Override
-  public <V> Dialog<V> build(@Nullable Component parent, @Nonnull DialogDescriptor<V> descriptor) {
-    return null;
-  }
+    @Nonnull
+    @Override
+    public Dialog build(@Nonnull DialogDescriptor descriptor) {
+        return null;
+    }
+
+    @Nonnull
+    @Override
+    public Dialog build(@Nonnull Component parent, @Nonnull DialogDescriptor descriptor) {
+        return null;
+    }
+
+    @Nonnull
+    @Override
+    public Dialog build(@Nonnull WindowOwner windowOwner, @Nonnull DialogDescriptor descriptor) {
+        return null;
+    }
 }
