@@ -16,7 +16,11 @@
     <module>arch/managment-low-java</module>
     <module>arch/global</module>
     <module>arch/ide</module>
+
     <module>arch/bind</module>
+    <module>arch/bind-java</module>
+
+    <module>arch/ide-java</module>
     <module>arch/ide-api-provided</module>
 
     <module>distribution</module>

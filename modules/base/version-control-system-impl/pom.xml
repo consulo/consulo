@@ -15,33 +15,34 @@
   -->
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <parent>
-    <groupId>consulo</groupId>
-    <artifactId>arch.bind</artifactId>
+    <parent>
+        <groupId>consulo</groupId>
+        <artifactId>arch.bind.java</artifactId>
+        <version>3-SNAPSHOT</version>
+        <relativePath>../../../arch/bind-java/pom.xml</relativePath>
+    </parent>
+    
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>consulo-version-control-system-impl</artifactId>
     <version>3-SNAPSHOT</version>
-    <relativePath>../../../arch/bind/pom.xml</relativePath>
-  </parent>
-  <modelVersion>4.0.0</modelVersion>
-  <artifactId>consulo-version-control-system-impl</artifactId>
-  <version>3-SNAPSHOT</version>
-  <packaging>jar</packaging>
+    <packaging>jar</packaging>
 
-  <dependencies>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-version-control-system-api</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-project-ui-impl</artifactId>
-      <version>${project.version}</version>
-    </dependency>
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-version-control-system-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-project-ui-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
-    <!--TODO remove in future-->
-    <dependency>
-      <groupId>consulo.internal</groupId>
-      <artifactId>forms_rt</artifactId>
-    </dependency>
-  </dependencies>
+        <!--TODO remove in future-->
+        <dependency>
+            <groupId>consulo.internal</groupId>
+            <artifactId>forms_rt</artifactId>
+        </dependency>
+    </dependencies>
 </project>

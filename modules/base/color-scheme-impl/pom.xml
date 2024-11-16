@@ -17,25 +17,25 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <parent>
-    <groupId>consulo</groupId>
-    <artifactId>arch.managment</artifactId>
+    <parent>
+        <groupId>consulo</groupId>
+        <artifactId>arch.bind.java</artifactId>
+        <version>3-SNAPSHOT</version>
+        <relativePath>../../../arch/bind-java/pom.xml</relativePath>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>consulo-color-scheme-impl</artifactId>
     <version>3-SNAPSHOT</version>
-    <relativePath>../../../arch/managment/pom.xml</relativePath>
-  </parent>
 
-  <modelVersion>4.0.0</modelVersion>
+    <packaging>jar</packaging>
 
-  <artifactId>consulo-color-scheme-impl</artifactId>
-  <version>3-SNAPSHOT</version>
-
-  <packaging>jar</packaging>
-
-  <dependencies>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-color-scheme-api</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-  </dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo-color-scheme-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 </project>

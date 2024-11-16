@@ -27,7 +27,7 @@
         <relativePath>../managment/pom.xml</relativePath>
     </parent>
 
-    <artifactId>arch.bind</artifactId>
+    <artifactId>arch.bind.java</artifactId>
     <version>3-SNAPSHOT</version>
 
     <packaging>pom</packaging>
