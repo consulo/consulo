@@ -30,8 +30,8 @@ language.extension:
   text: Language Extension
 vcs:
   text: Version Control
-import:
-  text: Import
+project.import:
+  text: Project Import
 run.debugger:
   text: Debugging
 run.coverage:
