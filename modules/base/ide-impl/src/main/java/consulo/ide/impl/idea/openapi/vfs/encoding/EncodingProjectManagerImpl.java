@@ -3,6 +3,7 @@ package consulo.ide.impl.idea.openapi.vfs.encoding;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
+import consulo.application.WriteAction;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.function.Processor;
 import consulo.component.persist.PersistentStateComponent;
@@ -190,6 +191,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
     return getDefaultCharset();
   }
 
+  @Override
   @Nonnull
   public ModificationTracker getModificationTracker() {
     return myModificationTracker;
@@ -228,12 +230,10 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
   }
 
   private static void reload(@Nonnull VirtualFile virtualFile, @Nonnull Project project, @Nonnull FileDocumentManagerImpl documentManager) {
-    ApplicationManager.getApplication().runWriteAction(() -> {
-      ProjectLocator.computeWithPreferredProject(virtualFile, project, () -> {
-        documentManager.contentsChanged(new VFileContentChangeEvent(null, virtualFile, 0, 0, false));
-        return null;
-      });
-    });
+    WriteAction.runLater(() -> ProjectLocator.computeWithPreferredProject(virtualFile, project, () -> {
+      documentManager.contentsChanged(new VFileContentChangeEvent(null, virtualFile, 0, 0, false));
+      return null;
+    }));
   }
 
   @Override

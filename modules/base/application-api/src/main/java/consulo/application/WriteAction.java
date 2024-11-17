@@ -18,63 +18,68 @@ package consulo.application;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.util.function.ThrowableComputable;
-import consulo.util.lang.function.ThrowableRunnable;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.reflect.ReflectionUtil;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.function.Supplier;
 
 public final class WriteAction {
-  @Nonnull
-  @Deprecated
-  @DeprecationInfo("Use AccessRule.writeAsync()")
-  public static AccessToken start() {
-    // get useful information about the write action
-    Class aClass = ObjectUtil.notNull(ReflectionUtil.getGrandCallerClass(), WriteAction.class);
-    return start(aClass);
-  }
-
-  @Nonnull
-  @Deprecated
-  @DeprecationInfo("Use AccessRule.writeAsync()")
-  public static AccessToken start(@Nonnull Class clazz) {
-    return ApplicationManager.getApplication().acquireWriteActionLock(clazz);
-  }
-
-  public static void runAndWait(@RequiredUIAccess @RequiredWriteAction Runnable runnable) {
-    Application application = Application.get();
-    if (application.isDispatchThread()) {
-      run(runnable::run);
+    @Nonnull
+    @Deprecated
+    @DeprecationInfo("Use AccessRule.writeAsync()")
+    public static AccessToken start() {
+        // get useful information about the write action
+        Class aClass = ObjectUtil.notNull(ReflectionUtil.getGrandCallerClass(), WriteAction.class);
+        return start(aClass);
     }
-    else {
-      UIAccess uiAccess = application.getLastUIAccess();
-      uiAccess.giveAndWaitIfNeed(() -> run(runnable::run));
-    }
-  }
 
-  public static <T> T computeAndWait(@RequiredUIAccess @RequiredWriteAction Supplier<T> supplier) {
-    Application application = Application.get();
-    if (application.isDispatchThread()) {
-      return compute(supplier::get);
+    @Nonnull
+    @Deprecated
+    @DeprecationInfo("Use AccessRule.writeAsync()")
+    public static AccessToken start(@Nonnull Class clazz) {
+        return ApplicationManager.getApplication().acquireWriteActionLock(clazz);
     }
-    else {
-      UIAccess uiAccess = application.getLastUIAccess();
-      return uiAccess.giveAndWaitIfNeed(() -> compute(supplier::get));
+
+    public static void runAndWait(@RequiredUIAccess @RequiredWriteAction Runnable runnable) {
+        Application application = Application.get();
+        if (application.isDispatchThread()) {
+            run(runnable::run);
+        }
+        else {
+            UIAccess uiAccess = application.getLastUIAccess();
+            uiAccess.giveAndWaitIfNeed(() -> run(runnable::run));
+        }
     }
-  }
 
-  public static <E extends Throwable> void run(@Nonnull ThrowableRunnable<E> action) throws E {
-    compute(() -> {
-      action.run();
-      return null;
-    });
-  }
+    public static <T> T computeAndWait(@RequiredUIAccess @RequiredWriteAction Supplier<T> supplier) {
+        Application application = Application.get();
+        if (application.isDispatchThread()) {
+            return compute(supplier::get);
+        }
+        else {
+            UIAccess uiAccess = application.getLastUIAccess();
+            return uiAccess.giveAndWaitIfNeed(() -> compute(supplier::get));
+        }
+    }
 
-  public static <T, E extends Throwable> T compute(@Nonnull ThrowableComputable<T, E> action) throws E {
-    Application application = Application.get();
-    return application.runWriteAction(action);
-  }
+    public static <E extends Throwable> void run(@Nonnull ThrowableRunnable<E> action) throws E {
+        compute(() -> {
+            action.run();
+            return null;
+        });
+    }
+
+    public static <T, E extends Throwable> T compute(@Nonnull ThrowableComputable<T, E> action) throws E {
+        Application application = Application.get();
+        return application.runWriteAction(action);
+    }
+
+    public static void runLater(@RequiredUIAccess @RequiredWriteAction Runnable runnable) {
+        Application application = Application.get();
+        application.invokeLater(() -> application.runWriteAction(runnable));
+    }
 }
